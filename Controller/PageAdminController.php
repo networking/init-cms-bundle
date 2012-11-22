@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Sonata\AdminBundle\Controller\CRUDController;
@@ -55,13 +56,13 @@ class PageAdminController extends CRUDController
         return $this->redirect($admin->generateUrl('edit', array('id' => $id)));
     }
 
-    /**
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
+	/**
+	 *
+	 * @param \Networking\InitCmsBundle\Controller\Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
     public function updateFormFieldElementAction(Request $request)
     {
         $twig = $this->get('twig');
@@ -112,11 +113,11 @@ class PageAdminController extends CRUDController
         return new Response($extension->renderer->searchAndRenderBlock($view, 'widget'));
     }
 
-    /**
-     * @param  Symfony\Component\HttpFoundation\Request   $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws AccessDeniedException
-     */
+	/**
+	 * @param \Networking\InitCmsBundle\Controller\Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpFoundation\Request $request
+	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
     public function addLayoutBlockAction(Request $request)
     {
         $twig = $this->get('twig');
@@ -166,4 +167,47 @@ class PageAdminController extends CRUDController
 
         return new Response($extension->renderer->searchAndRenderBlock($view, 'widget'));
     }
+
+	/**
+	 * Handle uploads from the redactor editor
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse
+	 *
+	 * @todo need to make a proper upload script
+	 */
+	public function uploadTextBlockImageAction(Request $request)
+	{
+		$dir = $this->get('request')->getBasePath().'uploads/images/';
+
+
+		$_FILES['file']['type'] = strtolower($_FILES['file']['type']);
+
+		if ($_FILES['file']['type'] == 'image/png'
+		|| $_FILES['file']['type'] == 'image/jpg'
+		|| $_FILES['file']['type'] == 'image/gif'
+		|| $_FILES['file']['type'] == 'image/jpeg'
+		|| $_FILES['file']['type'] == 'image/pjpeg')
+		{
+		    // setting file's mysterious name
+		    $filename = md5(date('YmdHis')).'.jpg';
+
+			if(!file_exists($dir)){
+				mkdir($dir, 0777, true);
+			}
+
+		    $file = $dir.$filename;
+
+		    // copying
+		    copy($_FILES['file']['tmp_name'], $file);
+
+		    // displaying file
+		    $array = array(
+		        'filelink' => '/uploads/images/'.$filename
+		    );
+
+			return new JsonResponse($array);
+
+		}
+	}
 }

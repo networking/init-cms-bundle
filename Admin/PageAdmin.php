@@ -34,6 +34,7 @@ class PageAdmin extends BaseAdmin
         $collection->add('translatePage', 'translate_page/{id}/{locale}', array(), array('method' => 'POST'));
         $collection->add('updateFormFieldElement', 'update_form_fields', array(), array('method' => 'POST'));
         $collection->add('addLayoutBlock', 'add_layout_block', array(), array('method' => 'POST'));
+	    $collection->add('uploadTextBlockImage', 'upload_text_block_image', array(), array('method' => 'POST'));
     }
 
     /**

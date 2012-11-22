@@ -130,7 +130,7 @@
     function onAfterLoad() {
         $('.tinymce').each(function () {
             $(this).redactor({
-                imageUpload:'{{ asset('/bundles/networkingcmspage/demo/image_upload.php') }}'
+                imageUpload:'{{ path('admin_networking_initcms_page_uploadTextBlockImage') }}'
             });
         });
 
