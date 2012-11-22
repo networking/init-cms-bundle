@@ -1,0 +1,12 @@
+{# Currently subnavbar block does not support collapsing #}
+{% block navbar %}
+{% if navbar.getMenu('menu') is not empty %}
+<div class="span2">
+    {{ navbar.getMenu('menu') ?
+        knp_menu_render(navbar.getMenu('menu'), {
+            'currentClass': 'active',
+            'ancestorClass': 'active',
+            'allow_safe_labels': true}) : '' }}
+</div>
+{% endif %}
+{% endblock navbar %}

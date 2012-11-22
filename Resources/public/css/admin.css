@@ -1,0 +1,105 @@
+.sortable li {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.sonata-bc .form-horizontal .sonata-ba-tbody.well .control-label {
+	width: auto;
+	text-align: left
+}
+
+.sonata-bc .modal {
+	width: 66%;
+	margin: -25% 0 0 -33%;
+	top: 50%;
+	left: 50%;
+	right: 0;
+}
+
+.sonata-bc .modal-body {
+	height: 40%;
+}
+
+.sonata-bc .dropzone ul, .sonata-bc .dropzone ol {
+	margin: 0;
+}
+
+.networking-sortable-list .content_preview {
+	margin-bottom: 5px;
+	background-color: white;
+	min-height: 50px;
+	padding: 5px;
+	border: 1px solid #dadada;
+}
+
+.plus_button {
+	text-align: center;
+}
+
+.content_preview .icon-trash {
+	float: right;
+}
+
+.content_preview .icon-pencil {
+	float: right;
+}
+
+.dropzone h6 {
+	font-weight: normal;
+	margin: 0;;
+}
+
+.modal-body label {
+	text-align: left !important;
+}
+
+.sonata-bc legend {
+	font-size: 15px;
+}
+
+.sonata-bc label, .sonata-bc input, .sonata-bc button, .sonata-bc select, .sonata-bc textarea {
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 15px;
+}
+
+.sonata-bc select, .sonata-bc textarea, .sonata-bc input[type="text"], .sonata-bc input[type="password"], .sonata-bc input[type="datetime"], .sonata-bc input[type="datetime-local"], .sonata-bc input[type="date"], .sonata-bc input[type="month"], .sonata-bc input[type="time"], .sonata-bc input[type="week"], .sonata-bc input[type="number"], .sonata-bc input[type="email"], .sonata-bc input[type="url"], .sonata-bc input[type="search"], .sonata-bc input[type="tel"], .sonata-bc input[type="color"], .sonata-bc .uneditable-input {
+	font-size: 12px;
+	line-height: 15px;
+	color: #555;
+}
+
+.sonata-bc select, .sonata-bc input[type="file"] {
+	height: 20px;
+	line-height: 12px;
+}
+
+.sonata-bc .row-fluid [class*="span"] {
+	min-height: 20px;
+}
+
+.sonata-bc .btn {
+	display: inline-block;
+	padding: 2px 7px;
+	font-size: 12px;
+}
+
+.sonata-bc .well-small {
+	padding: 5px;
+}
+
+sonata-bc .well {
+	margin-bottom: 10px;
+}
+legend + .sonata-ba-collapsed-fields {
+	margin-top: 0;
+}
+.sonata-ba-collapsed-fields-close legend:before {
+    content: '- ';
+	padding-left: 0;
+    padding-right: 3px;
+}
+.sonata-bc input, .sonata-bc textarea, .sonata-bc select {
+	width: auto;
+}

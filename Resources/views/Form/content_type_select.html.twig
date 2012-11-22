@@ -1,0 +1,14 @@
+<div id="contentTypeModal" class="modal fade" aria-hidden="true"  role="dialog">
+    <div class="modal-body">
+        <p>What would you like to create?</p>
+        <select id="selectContentType">
+            {% for option in networking_init_cms_content_select() %}
+            <option value="{{ option.class }}">{{ option.name|trans }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:jQuery('#contentTypeModal').data('create', false).modal('hide');" class="btn">Close</a>
+        <a href="javascript:jQuery('#contentTypeModal').data('create', true).modal('hide');" class="btn btn-primary">Create</a>
+    </div>
+</div>

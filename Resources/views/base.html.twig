@@ -1,0 +1,97 @@
+{% extends '::base.html.twig' %}
+
+{% block head_style %}
+{# Override this block to add your own files! #}
+{% stylesheets filter='less,?yui_css'
+   '@NetworkingInitCmsBundle/Resources/public/less/networkingcmspagebundle.less'
+   '@NetworkingInitCmsBundle/Resources/public/css/prettyPhoto.css'
+%}
+<link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+{% endstylesheets %}
+{% endblock head_style %}
+
+{% block head_script %}
+{# Overwrite this block to add your own js here, to get them generated into final files #}
+{% endblock head_script %}
+
+{% block title %}Communication Suite - Base{% endblock title %}
+
+{# From here the body starts #}
+{% block body_start %}
+{% endblock body_start %}
+
+{% block body %}
+    {% block navbar %}
+    {% endblock navbar %}
+
+    {% block container %}
+    <div class="{% block container_class %}container-fluid{% endblock container_class %}">
+        {% block header %}
+        {% endblock header %}
+
+        <div class="content">
+	        {% block page_header %}
+	            <div class="page-header" id="top">
+		            <h1>{{ page.title}}</h1>
+	            </div>
+	        {% endblock page_header %}
+
+            {% block flashes %}
+            {% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+            {% if app.session.flashbag.peekAll|length > 0 %}
+            <div class="row-fluid">
+                <div class="span12">
+                {{ session_flash() }}
+                </div>
+            </div>
+            {% endif %}
+            {% endblock flashes %}
+
+            {% block content_row %}
+            <div class="row-fluid">
+	           	{% block subnavbar %}{% endblock subnavbar %}
+                {% block content %}
+                <div class="span7">
+                    <strong>Hier könnte Ihre Werbung stehen ... </strong>
+                </div>
+                <div class="span3">
+                    {% block content_sidebar %}
+                    <h2>Sidebar</h2>
+                    {% endblock content_sidebar %}
+                </div>
+                {% endblock content %}
+            </div>
+            {% endblock content_row %}
+        </div>
+        <footer>
+            {% block footer %}
+            {% endblock footer %}
+        </footer>
+    </div> <!-- /container -->
+    {% endblock container %}
+    {% block foot_script %}
+    {# To only use a subset or add more js overwrite and copy paste this block
+    To speed up page loads save a copy of jQuery in your project and override this block to include the correct path
+    Otherwise the regeneration is done on every load in dev more with use_controller: true
+     #}
+    {% javascripts
+        'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-transition.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-modal.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-dropdown.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-scrollspy.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-tab.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-tooltip.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-popover.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-alert.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-affix.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-button.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-collapse.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-carousel.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-typeahead.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/jQuery.prettyPhoto.js'
+    %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock foot_script %}
+{% endblock body %}

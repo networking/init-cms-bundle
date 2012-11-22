@@ -1,13 +1,7 @@
-# Bootstrap
-app/bootstrap*
+vendor
+composer.phar
+phpunit.xml
+composer.lock
+.DS_Store
+php-cs-fixer.phar
 
-# Symfony directories
-vendor/*
-*/logs/*
-*/cache/*
-web/uploads/*
-web/bundles/*
-
-# Configuration files
-app/config/parameters.ini
-app/config/parameters.yml

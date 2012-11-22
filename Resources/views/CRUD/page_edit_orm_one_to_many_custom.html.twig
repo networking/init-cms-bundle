@@ -1,0 +1,121 @@
+<div id="field_container_{{ id }}">
+    {% set col = 0 %}
+    {% set increment = 0 %}
+    {% for key, zone in networking_init_cms_get_template_zones() %}
+        {% if (col == 0 or loop.first) %}
+            <div class="row-fluid">
+        {% endif %}
+
+        {% set col = col + zone.span %}
+
+        <div class="span{{ zone.span }}">
+            <div class="dropzone well well-small">
+                <h6>{{ zone.name }}</h6>
+
+                <ul id="zone_{{ zone.name }}" class="sortable">
+                    {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow#}
+                    <li class="networking-sort-zone">
+                        <input type="hidden" id="{{ loop.index }}_zone" value="{{ zone.name }}">
+                        <input type="hidden" id="{{ loop.index }}_sortOrder" value="0">
+                        <div class="plus_button">
+                            <a
+                                href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
+                                onclick="return start_field_retrieve_{{ id }}(this);"
+                                class="sonata-ba-action"
+                                title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}" >
+                                <i class="icon-plus"></i>
+                            </a>
+                        </div>
+                    </li>
+
+                    {# loop through layout blocks #}
+                    {% for nested_group_field_name, nested_group_field in networking_init_cms_sort_form_children(form.children, zone.name) %}
+                    <li class="networking-sortable-list networking-sort-zone">
+                        {# preview of layout block of content #}
+                        <div class="content_preview"  >
+                            <i class="icon-trash"></i>
+                            {{ networking_admin_cms_block(nested_group_field.vars.value) }}
+                            <i class="icon-move"></i> <a href="#" data-target="#expandableForm{{ increment }}" data-toggle="modal" ><i class="icon-pencil"></i></a>
+                        </div>
+
+                        {# modal window hidden content #}
+                        <div class="modal form-horizontal" id="expandableForm{{ increment }}"
+                             style="display: none"
+                             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                            {# loop through form fields #}
+                            {% for field_name, nested_field in nested_group_field.children %}
+                            {% if loop.last %}
+                            </div>
+                            <div class="modal-footer">
+                                {{ form_widget(nested_field) }}
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                <a href="#" onclick="return start_save_content{{ id }}(this);" data-dismiss="modal" class="btn btn-primary">Save changes</a>
+                            </div>
+                            {% else %}
+                                {% if loop.first %}
+                                <div class="modal-body">
+                                {% endif %}
+                                    {% if nested_field.vars.sonata_admin.field_description.type == 'hidden' or nested_field.vars.sonata_admin.field_description.type == '' %}
+                                        {{ form_widget(nested_field) }}
+                                    {% else %}
+                                       <div class="control-group{% if errors|length > 0 %} error{% endif %}">
+                                            {% block label %}
+                                                {% if nested_field.vars.label is defined %}
+                                                    {% if field_name == '_delete' %}
+                                                    {% else %}
+                                                        {% if nested_field.vars['sonata_admin'].admin %}
+                                                            {% set label %}{{ nested_field.vars['sonata_admin'].admin.trans(nested_field.vars.label) }}{% endset %}
+                                                        {% else %}
+                                                            {% set label %}{{ nested_field.vars.label }}{% endset %}
+                                                        {% endif %}
+                                                        {{ form_label(form, label, { 'attr' : {'class' : 'control-label'} }) }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
+                                                {% endif %}
+                                            {% endblock %}
+                                            <div class="controls sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }} {% if errors|length > 0 %}sonata-ba-field-error{% endif %}">
+                                                {{ form_widget(nested_field) }}
+                                                {% if errors|length > 0 %}
+                                                    <div class="help-inline sonata-ba-field-error-messages">
+                                                        {{ form_errors(nested_field) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                             {% endif %}
+                             {% set increment = increment + 1 %}
+                            {% endfor %}
+                        </div>
+                        {# start the block for the plus button #}
+                        <div class="plus_button">
+                            <a
+                                href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
+                                onclick="return start_field_retrieve_{{ id }}(this);"
+                                class="sonata-ba-action"
+                                title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}" >
+                                <i class="icon-plus"></i>
+                            </a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        {% if (col == 12 or loop.last) %}
+            {% set col = 0 %}
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% if app.request.isXmlHttpRequest %}
+        {% include 'NetworkingInitCmsBundle:CRUD:page_edit_orm_one_ajax.html.twig' %}
+    {% else %}
+        {% jsblock 'addToBottom' %}
+        {% include 'NetworkingInitCmsBundle:Form:content_type_select.html.twig' %}
+        {% include 'NetworkingInitCmsBundle:CRUD:page_edit_orm_one_association_script.html.twig' %}
+        {% jsblock 'addToBottomEnd' %}
+    {% endif %}
+</div>

@@ -1,0 +1,220 @@
+services:
+
+    session:
+        class: Symfony\Component\HttpFoundation\Session\Session
+        arguments:
+            - @session.storage
+            - @networking.session.attribute_bag #service id is defined below
+            - @session.flash_bag
+
+    networking.session.attribute_bag:
+        class: Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag
+#
+    networking_init_cms.page.helper.language_switcher:
+        class: Networking\InitCmsBundle\Helper\LanguageSwitcherHelper
+        calls:
+            - [setContainer, [@service_container]]
+
+## Admin Controllers
+# Page Admin Contoller
+
+    networking_init_cms.admin.helper:
+        class: Networking\InitCmsBundle\Admin\AdminHelper
+        arguments:
+            - @sonata.admin.pool
+
+    networking_init_cms.page.admin.page:
+        class: Networking\InitCmsBundle\Admin\PageAdmin
+        arguments: [null, Networking\InitCmsBundle\Entity\Page, NetworkingInitCmsBundle:PageAdmin]
+        calls:
+            - [setTranslationDomain, [Networking\InitCmsBundle]]
+            - [setLanguages, [%networking_init_cms.page.languages%]]
+            - [setContainer, [@service_container]]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Pages }
+
+# Tag Admin Controller
+    networking_init_cms.page.admin.tag:
+        class: Networking\InitCmsBundle\Admin\TagAdmin
+        arguments: [null, Networking\InitCmsBundle\Entity\Tag, SonataAdminBundle:CRUD]
+        call: [setTranslationDomain, [Networking\InitCmsBundle]]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Tags }
+
+# Layout Block Admin Controller
+    networking_init_cms.page.admin.layout_block:
+        class: Networking\InitCmsBundle\Admin\LayoutBlockAdmin
+        arguments: [null, Networking\InitCmsBundle\Entity\LayoutBlock, SonataAdminBundle:CRUD]
+        calls:
+            - [setTranslationDomain, [Networking\InitCmsBundle]]
+            - [setContainer, [@service_container]]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Content }
+
+# Menu Admin Controller
+    networking_init_cms.menu.admin.menu_item:
+        class: Networking\InitCmsBundle\Admin\MenuItemAdmin
+        arguments: [null, Networking\InitCmsBundle\Entity\MenuItem, NetworkingInitCmsBundle:MenuItemAdmin]
+        calls:
+            - [setTranslationDomain, [Networking\InitCmsBundle]]
+            - [setLanguages, [%networking_init_cms.page.languages%]]
+            - [setContainer, [@service_container]]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Menu Items" }
+
+# Twig tinymce live
+    networking_init_cms.twig.extension:
+        class: Networking\InitCmsBundle\Twig\Extension\NetworkingHelperExtension
+        arguments: [ @service_container ]
+        tags:
+          - { name: twig.extension }
+
+# Dynamic routing for CMS Via Page CustomUrl
+    networking_init_cms.controller_mapper:
+        class: Symfony\Cmf\Component\Routing\Mapper\ControllerClassMapper
+        arguments:
+            - {Networking\InitCmsBundle\Entity\Page: "NetworkingInitCmsBundle:Default:index" }
+
+    networking_init_cms.page_class_meta:
+        class: Doctrine\ORM\Mapping\ClassMetadata
+        arguments: [ Networking\InitCmsBundle\Entity\Page ]
+
+    networking_init_cms.page_repository:
+        class: Networking\InitCmsBundle\Entity\PageRepository
+        arguments: [ @doctrine.orm.entity_manager, @networking_init_cms.page_class_meta ]
+        calls:
+          - [ setContainer, [ @service_container] ]
+
+    networking_init_cms.content_route_class_meta:
+        class: Doctrine\ORM\Mapping\ClassMetadata
+        arguments: [ Networking\InitCmsBundle\Entity\ContentRoute ]
+
+    networking_init_cms.content_route_repository:
+        class: Networking\InitCmsBundle\Entity\ContentRouteRepository
+        arguments: [ @doctrine.orm.entity_manager, @networking_init_cms.content_route_class_meta ]
+        calls:
+          - [ setLocaleBySession, [ @session] ]
+          - [ setClassName, [ 'Networking\InitCmsBundle\Entity\Page'] ]
+
+    networking_init_cms.cms_router:
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
+        arguments: [@networking_init_cms.content_route_repository ]
+        calls:
+          - [ setContext, [ @router.request_context] ]
+          - [ setContentRepository, [ @networking_init_cms.page_repository ] ]
+          - [ addControllerMapper, [ @networking_init_cms.controller_mapper ] ]
+        tags:
+          - { name: router, priority: 200}
+
+# Listener for setting up content routes when page created/edited
+    networking_init_cms.page_listner:
+       class:  Networking\InitCmsBundle\EventListener\PageListener
+       tags:
+           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+
+#Listner for setting the correct locale in the session on language changes
+    networking_init_cms.locale_listner:
+        class: Networking\InitCmsBundle\EventListener\LocaleListener
+        arguments:  [ %kernel.default_locale%, @router ]
+        calls:
+            - [setAccessMap, [@security.access_map]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 8 }
+
+
+# Preload uniquer url validator with the entity manager and the service container
+    networking_init_cms.unique_url_validator:
+        class: Networking\InitCmsBundle\Validator\Constraints\UniqueURLValidator
+        arguments: [@doctrine.orm.entity_manager, @service_container]
+        tags:
+          - { name: validator.constraint_validator, alias: networking_init_cms_unique_url_validator }
+
+## Menus
+
+# Declare Main Navigation Factory Class
+    networking_init_cms.menu.navbar_menu_builder:
+        class: Networking\InitCmsBundle\Component\Menu\NavbarMenuBuilder
+        scope: request
+        arguments: [ '@knp_menu.factory', '@security.context', '@service_container' ]
+
+
+# Create the left main menu and right main menu for the frontend
+    networking_init_cms.menu.navbar_main_menu:
+        class: Knp\Menu\MenuItem
+        factory_service: networking_init_cms.menu.navbar_menu_builder
+        factory_method: createMainMenu
+        arguments: [ '@request', path: "#main#"   ]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: main }
+
+    networking_init_cms.menu.navbar_right_menu:
+        class: Knp\Menu\MenuItem
+        factory_service: networking_init_cms.menu.navbar_menu_builder
+        factory_method: createRightSideDropdownMenu
+        arguments: [ '@request', %networking_init_cms.page.languages% ]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: rightMenu }
+
+    networking_init_cms.menu.frontend_top_menu:
+        class: %mopa_bootstrap.navbar.generic%
+        scope: request
+        arguments:
+            - { leftmenu: @networking_init_cms.menu.navbar_main_menu=, rightmenu: @networking_init_cms.menu.navbar_right_menu= }
+            - {}
+            - { title: "Networking", titleRoute: "networking_init_cms_home", fixedTop: true, isFluid: false, template: NetworkingInitCmsBundle:Navbar:navbar.html.twig }
+        tags:
+            - { name: mopa_bootstrap.navbar, alias: cmsNavbar }
+
+# Create the side menu for the frontend
+    networking_init_cms.menu.navbar_sub_menu:
+        class: Knp\Menu\MenuItem
+        factory_service: networking_init_cms.menu.navbar_menu_builder
+        factory_method: createNavbarsSubnavMenu
+        arguments: [ '@request']
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: subMenu }
+
+
+    networking_init_cms.menu.frontend_side_menu:
+        class: %mopa_bootstrap.navbar.generic%
+        arguments:
+            # first argument: a named array of menues:
+            - { menu: @networking_init_cms.menu.navbar_sub_menu= }
+            - {}
+            # third argument: a named array of options
+            - { template: NetworkingInitCmsBundle:Navbar:subnavbar.html.twig }
+        tags:
+            # The alias is used to retrieve the navbar in templates
+            - { name: mopa_bootstrap.navbar, alias: subNavbar }
+
+# Create the language menu for the admin area
+    networking_init_cms.menu.navbar_admin_lang_menu:
+        class: Knp\Menu\MenuItem
+        factory_service: networking_init_cms.menu.navbar_menu_builder
+        factory_method: createAdminLangMenu
+        arguments: [ '@request', %networking_init_cms.page.languages%]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: adminLangMenu }
+
+    networking_init_cms.menu.admin_lang_menu:
+        class: %mopa_bootstrap.navbar.generic%
+        arguments:
+            # first argument: a named array of menues:
+            - { menu: @networking_init_cms.menu.navbar_admin_lang_menu= }
+            - {}
+            # third argument: a named array of options
+            - { fixedTop: false, isFluid: false, template: NetworkingInitCmsBundle:Navbar:langnav.html.twig}
+        tags:
+            # The alias is used to retrieve the navbar in templates
+            - { name: mopa_bootstrap.navbar, alias: adminLangNavbar }
+
+# Load the debug extension for twig templates
+    networking_init_cms.twig.extension.debug:
+        class:  Twig_Extension_Debug
+        tags:
+             - { name: 'twig.extension' }

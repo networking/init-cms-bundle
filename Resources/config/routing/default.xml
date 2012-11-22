@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+	<route id="networking_init_cms_home" pattern="/">
+		<default key="_controller">NetworkingInitCmsBundle:Default:home</default>
+	</route>
+
+	<route id="networking_init_cms_admin" pattern="/admin/">
+		<default key="_controller">NetworkingInitCmsBundle:Default:admin</default>
+	</route>
+
+	<route id="networking_init_change_admin_language" pattern="/change_admin_language/{locale}">
+		<default key="_controller">NetworkingInitCmsBundle:Default:changeAdminLanguage</default>
+		<requirement key="locale">.+</requirement>
+		<requirement key="_method">GET|POST</requirement>
+	</route>
+
+	<route id="networking_init_change_language" pattern="/change_language/{locale}">
+		<default key="_controller">NetworkingInitCmsBundle:Default:changeLanguage</default>
+		<requirement key="locale">.+</requirement>
+		<requirement key="_method">GET|POST</requirement>
+	</route>
+
+</routes>

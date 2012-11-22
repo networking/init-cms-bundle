@@ -1,0 +1,38 @@
+{% extends 'NetworkingInitCmsBundle::base.html.twig' %}
+
+{% block title %}Communication Suite - Layout{% endblock title %}
+{% block container_class %}container{% endblock container_class %}
+
+{% block navbar %}
+{{ mopa_bootstrap_navbar('cmsNavbar') }}
+{% endblock navbar %}
+{% block subnavbar %}{{ mopa_bootstrap_navbar('subNavbar') }}{% endblock subnavbar %}
+
+{% block content_row %}
+{{ parent() }}
+{% if showTemplate is defined or showForm is defined %}
+<div class="row-fluid">
+	{% if showForm is defined %}
+	<div class="span6">
+		<p><strong>FormType Code</strong></p>
+		<pre class="prettyprint">{{ showForm }}</pre>
+	</div>
+	{% endif %}
+	{% if showTemplate is defined %}
+	<div class="span6">
+		<p><strong>Template Code</strong></p>
+		<pre class="prettyprint">{{ showTemplate }}</pre>
+	</div>
+	{% endif %}
+</div>
+{% endif %}
+{% endblock content_row %}
+
+{% block foot_script %}
+{{ parent() }}
+<script type="text/javascript">
+	$(document).ready(function () {
+		window.prettyPrint && prettyPrint();
+	});
+</script>
+{% endblock foot_script %}

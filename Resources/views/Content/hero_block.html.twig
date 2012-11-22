@@ -1,0 +1,25 @@
+{% if text is defined %}
+<div class="span5">
+	{{ text | raw }}
+</div>
+{% endif %}
+{% if mediaItems is defined %}
+<div class="span7">
+	<div id="heroCarousel" class="carousel slide">
+		<!-- Carousel items -->
+		<div class="carousel-inner">
+			{% for mediaItem in mediaItems %}
+			<div class="item">
+				<img src="{% path mediaItem.media, 'big' %}" alt="" />
+				<div class="carousel-caption">
+					<p>{{ mediaItem.media.getDescription }}</p>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<!-- Carousel nav -->
+		<a class="carousel-control left" href="#heroCarousel" data-slide="prev">&lsaquo;</a>
+		<a class="carousel-control right" href="#heroCarousel" data-slide="next">&rsaquo;</a>
+	</div>
+</div>
+{% endif %}

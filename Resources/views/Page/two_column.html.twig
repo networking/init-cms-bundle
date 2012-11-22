@@ -1,0 +1,65 @@
+{% extends 'NetworkingInitCmsBundle::layout.html.twig' %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+    <div class="span{% if block('subnavbar') %}10{% else %}12{% endif %}">
+        {% if page.layoutBlock('left-top') is not empty %}
+            <div class="hero-unit">
+                <div class="row-fluid">
+                    {% for layoutBlock in page.layoutBlock('left-top') %}
+                        {{ networking_init_cms_block('NetworkingInitCmsBundle:Content:hero_block.html.twig', layoutBlock) }}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="row-fluid">
+            {% if page.layoutBlock('right-top')|length > 0 or page.layoutBlock('right-middle')|length > 0 %}
+                <div class="span7">
+                    <div class="middle">
+                        {% for layoutBlock in page.layoutBlock('left-middle') %}
+                            {{ networking_init_cms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock) }}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="span5">
+                    {% block content_sidebar %}
+                        <div class="top well">
+                            {% for layoutBlock in page.layoutBlock('right-top') %}
+                                {{ networking_init_cms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock) }}
+                            {% endfor %}
+                            {% render "NetworkingNewsBundle:News:recentArticles" with {'max': 3} %}
+                        </div>
+                        <div class="middle">
+                            {% for layoutBlock in page.layoutBlock('right-middle') %}
+                                {{ networking_init_cms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock) }}
+                            {% endfor %}
+                        </div>
+                    {% endblock content_sidebar %}
+                </div>
+            {% else %}
+                <div class="span12">
+                    <div class="middle">
+                        {% for layoutBlock in page.layoutBlock('left-middle') %}
+                            {{ networking_init_cms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+{% block foot_script %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        (function ($) {
+            $('.carousel').carousel();
+            $("a[rel^='prettyPhoto']").prettyPhoto();
+        })(jQuery);
+    </script>
+{% endblock %}

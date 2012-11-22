@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="fr" datatype="plaintext" original="" >
+        <body>
+            <trans-unit id="action_delete">
+                <source>hello.name</source>
+                <target>Bonjour %name%</target>
+            </trans-unit>
+	        <trans-unit id="change_language">
+                <source>Change Language</source>
+                <target>Langue</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
