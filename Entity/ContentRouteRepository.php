@@ -22,97 +22,104 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  */
 class ContentRouteRepository extends EntityRepository implements RouteRepositoryInterface
 {
-    protected $locale;
+	protected $locale;
 
-    protected $className;
+	protected $className;
 
-    /**
-     * @param $className
-     */
-    public function setClassName($className = null)
-    {
-        $this->className = $className;
-    }
+	/**
+	 * @param $className
+	 */
+	public function setClassName($className = null)
+	{
+		$this->className = $className;
+	}
 
-    /**
-     * @param $locale
-     */
-    public function setLocaleBySession(Session $session)
-    {
-        $this->setLocale($session->get('_locale'));
-    }
+	/**
+	 * @param $locale
+	 */
+	public function setLocaleBySession(Session $session)
+	{
+		$this->setLocale($session->get('_locale'));
+	}
 
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-    }
+	public function setLocale($locale)
+	{
+		$this->locale = $locale;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getRouteByName($name, $parameters = array())
-    {
-        $dynamicRouteName = DynamicRouter::ROUTE_GENERATE_DUMMY_NAME;
-        if ($name !== $dynamicRouteName) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getRouteByName($name, $parameters = array())
+	{
+		$dynamicRouteName = DynamicRouter::ROUTE_GENERATE_DUMMY_NAME;
+		if ($name !== $dynamicRouteName) {
 
-            throw new RouteNotFoundException("Route name '$name' does not begin with the route name prefix '{ $dynamicRouteName }'");
-        }
+			throw new RouteNotFoundException("Route name '$name' does not begin with the route name prefix '{ $dynamicRouteName }'");
+		}
 
-        $parameters['classType'] = $this->className;
+		$parameters['classType'] = $this->className;
 
-        $route = $this->findOneBy($parameters);
+		$route = $this->findOneBy($parameters);
 
-        if (!$route) {
-            throw new RouteNotFoundException("No route found for name '$name'");
-        }
+		if (!$route) {
+			throw new RouteNotFoundException("No route found for name '$name'");
+		}
 
-        $this->initializeContentRoute($route);
+		$this->initializeContentRoute($route);
 
-        return $route;
-    }
+		return $route;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public function findManyByUrl($url)
-    {
-        $collection = new RouteCollection();
+	/**
+	 * {@inheritDoc}
+	 */
+	public function findManyByUrl($url)
+	{
+		$collection = new RouteCollection();
 
-        /** @var $connection \Doctrine\DBAL\Connection */
-        $connection = $this->getEntityManager()->getConnection();
-        if (!$connection->connect() && !$connection->isConnected()) return $collection;
+		/** @var $connection \Doctrine\DBAL\Connection */
+		$connection = $this->getEntityManager()->getConnection();
+		try {
+			$connection->connect();
+		} catch (\Exception $e) {
+			return $collection;
+		}
 
-        $params = array('path' => $url);
+		if (!$connection->isConnected()) return $collection;
 
-        if ($this->locale) {
-            $params['locale'] = $this->locale;
-        }
 
-        /** @var $contentRoute ContentRoute */
-        $contentRoutes = $this->findBy($params);
+		$params = array('path' => $url);
 
-        foreach ($contentRoutes as $key => $contentRoute) {
-            $this->initializeContentRoute($contentRoute);
-            $collection->add(DynamicRouter::ROUTE_GENERATE_DUMMY_NAME . preg_replace('/[^a-z0-9A-Z_.]/', '_', $key), $contentRoute);
-        }
+		if ($this->locale) {
+			$params['locale'] = $this->locale;
+		}
 
-        return $collection;
-    }
+		/** @var $contentRoute ContentRoute */
+		$contentRoutes = $this->findBy($params);
 
-    protected function initializeContentRoute(ContentRoute &$contentRoute)
-    {
-        $content = $this->getRouteContent($contentRoute);
-        $contentRoute->initializeRoute($content);
-    }
+		foreach ($contentRoutes as $key => $contentRoute) {
+			$this->initializeContentRoute($contentRoute);
+			$collection->add(DynamicRouter::ROUTE_GENERATE_DUMMY_NAME . preg_replace('/[^a-z0-9A-Z_.]/', '_', $key), $contentRoute);
+		}
 
-    /**
-     * @param  ContentRoute $contentRoute
-     * @return object
-     */
-    protected function getRouteContent(ContentRoute $contentRoute)
-    {
-        $repository = $this->getEntityManager()->getRepository($this->className);
+		return $collection;
+	}
 
-        return $repository->find($contentRoute->getObjectId());
-    }
+	protected function initializeContentRoute(ContentRoute &$contentRoute)
+	{
+		$content = $this->getRouteContent($contentRoute);
+		$contentRoute->initializeRoute($content);
+	}
+
+	/**
+	 * @param  ContentRoute $contentRoute
+	 * @return object
+	 */
+	protected function getRouteContent(ContentRoute $contentRoute)
+	{
+		$repository = $this->getEntityManager()->getRepository($this->className);
+
+		return $repository->find($contentRoute->getObjectId());
+	}
 }
