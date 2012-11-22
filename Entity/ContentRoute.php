@@ -237,6 +237,7 @@ class ContentRoute extends AbstractRoute
         $template = new Template(array('template' => $this->getTemplate(), 'vars' => array()));
 
         return array(
+	        'route_params' => '',
             '_locale' => $this->getLocale(),
             '_controller' => $this->getController(),
             '_template' => $template

@@ -60,7 +60,9 @@ class ContentRouteRepository extends EntityRepository implements RouteRepository
 
 		$parameters['classType'] = $this->className;
 
-		$route = $this->findOneBy($parameters);
+		/** @var $route ContentRoute */
+		$route = $this->findOneBy($parameters['route_params']);
+
 
 		if (!$route) {
 			throw new RouteNotFoundException("No route found for name '$name'");
