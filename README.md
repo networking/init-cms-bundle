@@ -54,3 +54,4 @@ remember your password.
 
 ```
 php app/console networking:cms:install
+```
