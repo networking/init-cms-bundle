@@ -8,7 +8,7 @@ sonata_admin:
     dashboard:
         blocks:
             # display two dashboard blocks
-            - { position: left,  type: sonata.admin.block.admin_list, settings: { groups: [Pages, News] } }
+            - { position: left,  type: sonata.admin.block.admin_list, settings: { groups: [Pages] } }
             - { position: right, type: sonata.admin.block.admin_list, settings: { groups: [Media, Users] } }
 
         groups:
@@ -21,6 +21,6 @@ sonata_admin:
             Users:
                 label: Users
                 items: [sonata.user.admin.user, sonata.user.admin.group ]
-            News:
-                label: News
-                items: [networking_cms.news.admin.article]
+#            News:
+#                label: News
+#                items: [networking_cms.news.admin.article]

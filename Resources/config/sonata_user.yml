@@ -10,9 +10,3 @@ sonata_user:
             class:          Sonata\UserBundle\Admin\Entity\GroupAdmin
             controller:     SonataAdminBundle:CRUD
             translation:    SonataUserBundle
-
-services:
-  sonata.admin.extension:
-          class: Application\Sonata\UserBundle\Admin\Model\UserAdmin
-          tags:
-              - { name: sonata.admin.extension, target: sonata.user.admin.user }

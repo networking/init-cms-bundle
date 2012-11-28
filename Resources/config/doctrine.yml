@@ -57,5 +57,5 @@ doctrine:
 
                     SonataMediaBundle: ~
                     FOSUserBundle: ~
-                    ApplicationSonataUserBundle: ~
+#                    ApplicationSonataUserBundle: ~
                     SonataUserBundle: ~

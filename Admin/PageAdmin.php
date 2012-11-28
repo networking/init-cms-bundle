@@ -19,6 +19,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Admin\AdminInterface;
 
 use Networking\InitCmsBundle\Entity\Page;
 use Networking\InitCmsBundle\Entity\PageRepository;
@@ -215,12 +216,12 @@ class PageAdmin extends BaseAdmin
                 ->end();
     }
 
-    /**
-     * @param \Knp\Menu\ItemInterface $menu
-     * @param $action
-     * @param \Sonata\AdminBundle\Admin\Admin $childAdmin
-     */
-    protected function configureSideMenu(MenuItemInterface $menu, $action, Admin $childAdmin = null)
+	/**
+	 * @param \Knp\Menu\ItemInterface $menu
+	 * @param $action
+	 * @param AdminInterface $childAdmin
+	 */
+	protected function configureSideMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
     {
 
         if (!in_array($action, array('edit'))) {
