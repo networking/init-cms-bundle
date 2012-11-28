@@ -1,0 +1,26 @@
+sonata_admin:
+    title:      Networking CMS
+    title_logo: /bundles/sonataadmin/logo_title.png
+    templates:
+        layout:  NetworkingInitCmsBundle::admin_layout.html.twig
+        edit:    NetworkingInitCmsBundle:CRUD:edit.html.twig
+        list:    NetworkingInitCmsBundle:CRUD:list.html.twig
+    dashboard:
+        blocks:
+            # display two dashboard blocks
+            - { position: left,  type: sonata.admin.block.admin_list, settings: { groups: [Pages, News] } }
+            - { position: right, type: sonata.admin.block.admin_list, settings: { groups: [Media, Users] } }
+
+        groups:
+            Pages:
+                label: Pages
+                items: [networking_init_cms.page.admin.page, networking_init_cms.page.admin.tag, networking_init_cms.menu.admin.menu_item]
+            Media:
+                label: Media
+                items: [sonata.media.admin.media, sonata.media.admin.gallery]
+            Users:
+                label: Users
+                items: [sonata.user.admin.user, sonata.user.admin.group ]
+            News:
+                label: News
+                items: [networking_cms.news.admin.article]

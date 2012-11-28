@@ -1,0 +1,18 @@
+sonata_user:
+    security_acl: true
+    admin:                  # Admin Classes
+        user:
+            class:          Sonata\UserBundle\Admin\Entity\UserAdmin
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+
+        group:
+            class:          Sonata\UserBundle\Admin\Entity\GroupAdmin
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+
+services:
+  sonata.admin.extension:
+          class: Application\Sonata\UserBundle\Admin\Model\UserAdmin
+          tags:
+              - { name: sonata.admin.extension, target: sonata.user.admin.user }

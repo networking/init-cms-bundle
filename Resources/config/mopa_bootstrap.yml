@@ -1,0 +1,14 @@
+mopa_bootstrap:
+    navbar: ~
+    form:
+        collection:
+            widget_remove_btn:
+                icon: trash
+            widget_add_btn:
+                icon: plus-sign
+        #show_legend: false # default is true
+        #show_child_legend: false # default is true
+        #error_type: block # or inline which is default
+#    initializr:
+#        google:
+#            analytics: UA-17161773-2
