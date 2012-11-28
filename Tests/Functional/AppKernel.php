@@ -29,9 +29,14 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         return array(
-            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \Symfony\Bundle\TwigBundle\TwigBundle(),
-            new \Networking\InitCmsBundle\NetworkingInitCmsBundle(),
+//	        new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+	        new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+	        new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+	        new \Symfony\Bundle\TwigBundle\TwigBundle(),
+	        new \Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+	        new \Sonata\AdminBundle\SonataAdminBundle(),
+	        new \Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
+	        new \Networking\InitCmsBundle\NetworkingInitCmsBundle(),
             new \Networking\InitCmsBundle\Tests\Functional\TestBundle\TestBundle(),
         );
     }
