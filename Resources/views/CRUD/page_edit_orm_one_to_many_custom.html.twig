@@ -56,7 +56,7 @@
                                 {% if loop.first %}
                                 <div class="modal-body">
                                 {% endif %}
-                                    {% if nested_field.vars.sonata_admin.field_description.type == 'hidden' or nested_field.vars.sonata_admin.field_description.type == '' %}
+                                    {% if not nested_field.vars.sonata_admin.field_description or nested_field.vars.sonata_admin.field_description.type == 'hidden' or nested_field.vars.sonata_admin.field_description.type == '' %}
                                         {{ form_widget(nested_field) }}
                                     {% else %}
                                        <div class="control-group{% if errors|length > 0 %} error{% endif %}">

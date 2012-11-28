@@ -1,9 +1,9 @@
 networking_init_cms:
     languages:
+        - {label: English, locale: en_US}
         - {label: Deutsch, locale: de_CH}
         - {label: Française, locale: fr_CH}
         - {label: Italiano, locale: it_CH}
-        - {label: English, locale: en_GB}
     templates:
         'NetworkingInitCmsBundle:Page:one_column.html.twig':
             name: "Single Column"
@@ -18,5 +18,14 @@ networking_init_cms:
                 - { name: right-top , span:4}
                 - { name: left-middle , span:8}
                 - { name: right-middle , span:4}
+        'NetworkingNewsBundle:News:news_two_column.html.twig':
+            name: "News/Two Column"
+            zones:
+                - { name: left-top , span:8}
+                - { name: right-top , span:4}
+                - { name: left-middle , span:8}
+                - { name: right-middle , span:4}
+
     content_types:
         - { name: 'Text' , class: 'Networking\InitCmsBundle\Entity\Text'}
+        - { name: 'Gallery' , class: 'Networking\GalleryBundle\Entity\Gallery'}

@@ -1,0 +1,245 @@
+imports:
+    - { resource: @NetworkingInitCmsBundle/Resources/config/security_config.yml }
+    - { resource: @ApplicationSonataMediaBundle/Resources/config/doctrine_orm_admin.xml }
+    - { resource: @MopaRemoteUpdateBundle/Resources/config/config.yml }
+
+
+# Assetic Configuration
+assetic:
+    debug:          %kernel.debug%
+    use_controller: false
+    filters:
+        less:
+            node: /usr/local/bin/node
+            node_paths: [/usr/local/lib/node_modules/]
+            apply_to: "\.less$"
+        cssrewrite: ~
+        cssembed:
+            jar: %kernel.root_dir%/Resources/java/cssembed-0.3.6.jar
+            apply_to: "\.css$|\.less$"
+        yui_css:
+            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
+            apply_to: "\.css_compile$"
+        yui_js:
+            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   %database_driver%
+        host:     %database_host%
+        port:     %database_port%
+        dbname:   %database_name%
+        user:     %database_user%
+        password: %database_password%
+        charset:  UTF8
+        types:
+            json: Sonata\Doctrine\Types\JsonType
+
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+
+        default_entity_manager:   default
+        entity_managers:
+            default:
+                auto_mapping: true
+                connection:       default
+                filters:
+                    softdeleteable:
+                        class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                        enabled: true
+                mappings:
+                    gedmo_translatable:
+                        type: annotation
+                        prefix: Gedmo\Translatable\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
+                        alias: GedmoTranslatable # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    gedmo_translator:
+                        type: annotation
+                        prefix: Gedmo\Translator\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translator/Entity"
+                        alias: GedmoTranslator # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    gedmo_loggable:
+                        type: annotation
+                        prefix: Gedmo\Loggable\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
+                        alias: GedmoLoggable # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    gedmo_tree:
+                        type: annotation
+                        prefix: Gedmo\Tree\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                        alias: GedmoTree # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    gedmo_sortable:
+                        type: annotation
+                        prefix: Gedmo\Sortable\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Sortable/Entity"
+                        alias: GedmoSortable # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+
+                    SonataMediaBundle: ~
+                    FOSUserBundle: ~
+                    ApplicationSonataUserBundle: ~
+                    SonataUserBundle: ~
+
+sonata_media:
+    default_context: default
+    db_driver: doctrine_orm # or doctrine_mongodb
+    contexts:
+        default:  # the default context is mandatory
+            providers:
+                - sonata.media.provider.dailymotion
+                - sonata.media.provider.youtube
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 800, quality: 70}
+                admin: { width: 100, quality: 70}
+    cdn:
+        server:
+            path: /uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  %kernel.root_dir%/../web/uploads/media
+            create:     false
+
+#    providers:
+#        image:
+#            resizer: sonata.media.resizer.square
+
+stof_doctrine_extensions:
+    default_locale: %locale%
+    orm:
+        default:
+            tree: true
+            translatable: true
+            timestampable: true
+            loggable: true
+            sortable: true
+            softdeleteable: true
+            sluggable: true
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: %mailer_transport%
+    host:      %mailer_host%
+    username:  %mailer_user%
+    password:  %mailer_password%
+    spool:     { type: memory }
+
+
+mopa_bootstrap:
+    navbar: ~
+    form:
+        collection:
+            widget_remove_btn:
+                icon: trash
+            widget_add_btn:
+                icon: plus-sign
+        #show_legend: false # default is true
+        #show_child_legend: false # default is true
+        #error_type: block # or inline which is default
+#    initializr:
+#        google:
+#            analytics: UA-17161773-2
+
+
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb'
+    firewall_name:  main
+    user_class:     Application\Sonata\UserBundle\Entity\User
+    group:
+        group_class: Application\Sonata\UserBundle\Entity\Group
+    from_email:
+            address:        webmaster@example.com
+            sender_name:    net working Team
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+
+        sonata.block.service.text:
+        sonata.block.service.action:
+        sonata.block.service.rss:
+
+sonata_admin:
+    title:      Networking CMS
+    title_logo: /bundles/sonataadmin/logo_title.png
+    templates:
+        layout:  NetworkingInitCmsBundle::admin_layout.html.twig
+        edit:    NetworkingInitCmsBundle:CRUD:edit.html.twig
+        list:    NetworkingInitCmsBundle:CRUD:list.html.twig
+    dashboard:
+        blocks:
+            # display two dashboard blocks
+            - { position: left,  type: sonata.admin.block.admin_list, settings: { groups: [Pages, News] } }
+            - { position: right, type: sonata.admin.block.admin_list, settings: { groups: [Media, Users] } }
+
+        groups:
+            Pages:
+                label: Pages
+                items: [networking_init_cms.page.admin.page, networking_init_cms.page.admin.tag, networking_init_cms.menu.admin.menu_item]
+            Media:
+                label: Media
+                items: [sonata.media.admin.media, sonata.media.admin.gallery]
+            Users:
+                label: Users
+                items: [sonata.user.admin.user, sonata.user.admin.group ]
+            News:
+                label: News
+                items: [networking_cms.news.admin.article]
+
+
+
+sonata_user:
+    security_acl: true
+    admin:                  # Admin Classes
+        user:
+            class:          Sonata\UserBundle\Admin\Entity\UserAdmin
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+
+        group:
+            class:          Sonata\UserBundle\Admin\Entity\GroupAdmin
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+
+sonata_formatter:
+    formatters:
+        markdown:
+            service: sonata.formatter.text.markdown
+            extensions:
+                - sonata.formatter.twig.control_flow
+                - sonata.formatter.twig.gist
+#                - sonata.media.formatter.twig
+
+sonata_doctrine_orm_admin:
+    # default value is null, so doctrine uses the value defined in the configuration
+    entity_manager: ~
+
+    templates: ~
+
+
+services:
+  sonata.admin.extension:
+          class: Application\Sonata\UserBundle\Admin\Model\UserAdmin
+          tags:
+              - { name: sonata.admin.extension, target: sonata.user.admin.user }
+
+symfony_cmf_routing_extra:
+    chain:
+        routers_by_id:
+            # enable the symfony default router with a lower priority
+            router.default: 100
+        # whether the chain router should replace the default router. defaults to true
+        # if you set this to false, the router is just available as service
+        # symfony_cmf_routing_extra.router and you  need to do somthing to trigger it
+        # replace_symfony_router: true
