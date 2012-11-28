@@ -55,7 +55,6 @@ doctrine:
                         alias: GedmoSortable # this one is optional and will default to the name set for the mapping
                         is_bundle: false
 
-                    SonataMediaBundle: ~
                     FOSUserBundle: ~
-#                    ApplicationSonataUserBundle: ~
+                    SonataMediaBundle: ~
                     SonataUserBundle: ~

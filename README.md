@@ -5,7 +5,6 @@ networking init CMS
 NOT CORRECT.**
 
 
-
 This bundle forms the basis of the networking init CMS, The project is being
 developed by the small hard working team at [net working AG][1] in Zürich.
 
@@ -27,6 +26,7 @@ last closing } (curly brace). This will tell composer where to find the bundle.
 
 This is just a temporary measure until we add the package to packagist.org
 
+    ,
     "repositories":[
         {
             "type":"package",
@@ -48,10 +48,16 @@ This is just a temporary measure until we add the package to packagist.org
 
 Next run the composer require command:
 
-	composer require networking/init-cms-bundle
+	php composer.phar require networking/init-cms-bundle
+
+You will be prompted to specify a version constraint,
+
+	Please provide a version constraint for the networking/init-cms-bundle requirement:
+
+Please enter "dev-master" for the time being.
 
 This will install the init cms bundle and all its dependencies in your
-vendor folder.
+vendor folder, and add the bundle to the list of requirements in your composer.json
 
 ### Add to AppKernel
 
@@ -91,157 +97,134 @@ Add the following lines to your application kernel
 	    );
 	}
 
+2) Configure the init CMS
+-------------------------
+
+### Configure CMS config.yml
+
+The CMS uses many different bundles which all require specific configurations. You can easily import our main
+cms_config.ym file into your projects config.yml which will overwrite many of your projects configurations and
+insert the necessary configuration to get the project running (with exception to assetic which must be manually
+entered).
+
+Just replace the following line
+	imports:
+	 ....
+	 - { resource: security.yml }
+	 ...
+
+with
+	- { resource: @NetworkingInitCmsBundle/Resources/config/cms/cms_config.yml }
+
+Alternatively you can view all the individual config files and manually insert the configuration into your project.
+
+### Configure Doctrine
+
+Now we need copy the contents of the @NetworkingInitCmsBundle/Resources/config/cms/doctrine.yml file into your config.yml
+file, this is important as it contains information about entity mappings and behaviours
+
+### Configure Assetic (See [MopaBootstrapBundle][3])
+
+If you are not using [symfony-bootstrap](http://github.com/phiamo/symfony-bootstrap) you must configure assetic to use less,
+and make sure you have node installed.
+
+Yui CSS and CSS Embed are very nice and recommended.
+To make full use of bootstraps capabilites they are not needed, neither is less but its up to you
+
+Here is an example configuration for your config.yml:
+Make sure you have java installed
+
+``` yaml
+assetic:
+    filters:
+        less:
+            node: /usr/bin/node
+            node_paths: [/opt/lessc/lib, /usr/lib/node_modules]
+            apply_to: "\.less$"
+        cssrewrite: ~
+        cssembed:
+            jar: %kernel.root_dir%/Resources/java/cssembed-0.3.6.jar
+            apply_to: "\.css$|\.less$"
+        yui_css:
+            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
+            apply_to: "\.css$"
+        yui_js:
+            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
+```
+
+Do not forget to add the jars to your app.
+
+If you encounter the following Error:
+
+```
+An exception has been thrown during the compilation of a template ("You must add MopaBootstrapBundle to the assetic.bundle config to use the {% stylesheets %} tag in MopaBootstrapBundle::base.html.twig.") in "/YourProject/vendor/mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/views/base.html.twig".
+```
+
+It's because the Bundle is not added to the bundles: [ ] config option in the assetic config.
+
+``` yaml
+assetic:
+    debug:          %kernel.debug%
+    use_controller: false
+    bundles:        [ ] # <-
+    filters:
+    ....
+```
+
+You need to either remove that config var (to use assetic for all Bundles) or add the MopaBootstrapBundle
+
+If your are using cssembed, you might notice problems when embedding bootrap via less:
+
+[RuntimeException]
+  [ERROR] /path/to/your/bundle/Resources/public/less/../img/glyphicons-halflings.png (No such file or directory)
+
+this is due to cssembed and bootstrap not working so nicely with relative paths.
+
+The most easies ways is to copy the glyphicons-halflings.png to your public img folder
+
+``` bash
+cp /your/path/to/bootstrap/img/glyphicons-halflings.png to /path/to/your/bundle/Resources/public/img/
+```
+
+so cssembed finds the file in the corresponding position
+
+**IMPORTANT** change the assetic "use_controller" parameter from "true" to "false" in your config_dev.yml
+
+
+
+### Configure Routing
+
+Insert the following config into your routing.yml to include the init CMS routes.
+
+	NetworkingInitCmsBundle:
+        resource: "@NetworkingInitCmsBundle/Resources/config/routing.yml"
+        prefix:   /
+
+### Enable translations
+
+In order for the translations to work it is important to activate the translations in the framework configuration.
+
+Comment in the translator parameter in your config.yml file:
+
+	#config.yml
+	framework:
+        #esi:             ~
+        translator:      { fallback: %locale% }
+
+3) Extend the Sonata User and Media bundles
+-------------------------------------------
+
+In order to make full use of the the SonataUserBundle and the SonataMediaBundle we need to extend them and then
+include the new extend applications in the AppKernel.php file.
+
 ### Configure and extend the user bundle
 
-This part is taken straight from the SonataUserBundle [configuration][3], here it is again
-word for word:
+We use the [SonataUserBundle][4] for access control. In order to use the bundle completely it is necessary
+to extend the bundle.
 
-When using ACL, the UserBundle can prevent ``normal`` user to change settings
-of ``super-admin`` users, to enable this add to the configuration:
+	php app/console sonata:easy-extends:generate SonataUserBundle --dest=src
 
-.. code-block:: yaml
-
-    # app/config/config.yml
-    sonata_user:
-        security_acl: true
-
-
-    # app/config/security.yml
-    security:
-        # [...]
-        acl:
-            connection: default
-
-Doctrine Configuration
-~~~~~~~~~~~~~~~~~~~~~~
-Then add these bundles in the config mapping definition (or enable `auto_mapping <http://symfony.com/doc/2.0/reference/configuration/doctrine.html#configuration-overview>`_):
-
-.. code-block:: yaml
-
-    # app/config/config.yml
-
-    fos_user:
-        db_driver:      orm # can be orm or odm
-        firewall_name:  main
-        user_class:     Application\Sonata\UserBundle\Entity\User
-
-        group:
-            group_class: Application\Sonata\UserBundle\Entity\Group
-
-    doctrine:
-        orm:
-            entity_managers:
-                default:
-                    mappings:
-                        ApplicationSonataUserBundle: ~
-                        SonataUserBundle: ~
-
-        dbal:
-            types:
-                json: Sonata\Doctrine\Types\JsonType
-
-Integrating the bundle into the Sonata Admin Bundle
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Add the related security routing information
-
-.. code-block:: yaml
-
-    sonata_user:
-        resource: '@SonataUserBundle/Resources/config/routing/admin_security.xml'
-        prefix: /admin
-
-Then add a new custom firewall handlers for the admin
-
-.. code-block:: yaml
-
-    security:
-        role_hierarchy:
-            ROLE_ADMIN:       [ROLE_USER, ROLE_SONATA_ADMIN]
-            ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
-            SONATA:
-                - ROLE_SONATA_PAGE_ADMIN_PAGE_EDIT  # if you are using acl then this line must be commented
-
-        providers:
-            fos_userbundle:
-                id: fos_user.user_manager
-
-        firewalls:
-            # -> custom firewall for the admin area of the URL
-            admin:
-                switch_user:        true
-                context:            user
-                pattern:            /admin(.*)
-                form_login:
-                    provider:       fos_userbundle
-                    login_path:     /admin/login
-                    use_forward:    false
-                    check_path:     /admin/login_check
-                    failure_path:   null
-                    use_referer:    true
-                logout:
-                    path:           /admin/logout
-                    target:         /admin/login
-
-                anonymous:    true
-            # -> end custom configuration
-
-            # defaut login area for standard users
-            main:
-                switch_user:        true
-                context:            user
-                pattern:            .*
-                form_login:
-                    provider:       fos_userbundle
-                    login_path:     /login
-                    use_forward:    false
-                    check_path:     /login_check
-                    failure_path:   null
-                logout:             true
-                anonymous:          true
-
-The last part is to define 3 new access control rules :
-
-.. code-block:: yaml
-
-    security:
-        access_control:
-            # URL of FOSUserBundle which need to be available to anonymous users
-            - { path: ^/_wdt, role: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/_profiler, role: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-
-            # -> custom access control for the admin area of the URL
-            - { path: ^/admin/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/admin/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/admin/login-check$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-            # -> end
-
-            - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-
-            # Secured part of the site
-            # This config requires being logged for the whole site and having the admin role for the admin part.
-            # Change these rules to adapt them to your needs
-            - { path: ^/admin, role: [ROLE_ADMIN, ROLE_SONATA_ADMIN] }
-            - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
-
-
-Using the roles
----------------
-
-Each admin has its own roles, use the user form to assign them to other users.
-The available roles to assign to others are limited to the roles available to
-the user editing the form.
-
-Extending the Bundle
---------------------
-At this point, the bundle is functionnal, but not quite ready yet. You need to
-generate the correct entities for the media::
-
-    php app/console sonata:easy-extends:generate SonataUserBundle
-
-If you specify no parameter, the files are generated in app/Application/Sonata...
-but you can specify the path with ``--dest=src``
+Files will be generated in the src/Application/Sonata/UserBundle directory.
 
 .. note::
 
@@ -271,87 +254,24 @@ Now, add the new `Application` Bundle into the kernel:
         }
     }
 
+    # app/config/config.yml
+          doctrine:
+              orm:
+                  entity_managers:
+                      default:
+                          mappings:
+                              ApplicationSonataUserBundle: ~
+
+
 ### Configure and extend the media bundle
 
-We have to do pretty much the same for the media bundle, this is taken from the [SonataMediaBundle configuration][4]
+We have to do pretty much the same for the media bundle, this is taken from the [SonataMediaBundle configuration][5]
 
-First we add the routing to the routing.yml file
-
-.. code-block:: yaml
-
-    gallery:
-        resource: '@SonataMediaBundle/Resources/config/routing/gallery.xml'
-        prefix: /media/gallery
-
-    media:
-        resource: '@SonataMediaBundle/Resources/config/routing/media.xml'
-        prefix: /media
-
-
-Then you must configure the interaction with the orm and add the mediaBundles settings:
-
-.. code-block:: yaml
-
-    # app/config/config.yml
-
-    doctrine:
-        orm:
-            entity_managers:
-                default:
-                    mappings:
-                        SonataMediaBundle: ~
-
-    sonata_media:
-        default_context: default
-        db_driver: doctrine_orm # or doctrine_mongodb
-        contexts:
-            default:  # the default context is mandatory
-                providers:
-                    - sonata.media.provider.dailymotion
-                    - sonata.media.provider.youtube
-                    - sonata.media.provider.image
-                    - sonata.media.provider.file
-
-                formats:
-                    small: { width: 100 , quality: 70}
-                    big:   { width: 500 , quality: 70}
-
-        cdn:
-            server:
-                path: /uploads/media # http://media.sonata-project.org/
-
-        filesystem:
-            local:
-                directory:  %kernel.root_dir%/../web/uploads/media
-                create:     false
-
-.. note::
-
-    You can define formats per provider type. You might want to set
-    a transversal ``admin`` format to be used by the ``mediaadmin`` class.
-
-Also, you can determine the resizer to use; the default value is
-``sonata.media.resizer.simple`` but you can change it to ``sonata.media.resizer.square``
-
-.. code-block:: yaml
-
-    # app/config/config.yml
-
-    sonata_media:
-        providers:
-            image:
-                resizer: sonata.media.resizer.square
-
-.. note::
-
-    The square resizer works like the simple resizer when the image format has
-    only the width. But if you specify the height the resizer crop the image in
-    the lower size.
 
 At this point, the bundle is not yet ready. You need to generate the correct
 entities for the media::
 
-    php app/console sonata:easy-extends:generate SonataMediaBundle
+    php app/console sonata:easy-extends:generate SonataMediaBundle --dest=src
 
 .. note::
 
@@ -392,12 +312,6 @@ Now that your module is generated, you can register it
                           ApplicationSonataMediaBundle: ~
 
 
-Now, you can build up your database:
-
-.. code-block:: sh
-
-    app/console doctrine:schema:[create|update]
-
 
 If they are not already created, you need to add specific folder to allow uploads from users:
 
@@ -405,9 +319,50 @@ If they are not already created, you need to add specific folder to allow upload
 
     mkdir web/uploads
     mkdir web/uploads/media
+    mkdir web/uploads/images
     chmod -R 0777 web/uploads
 
+4) Create DB schema, insert admin user and insert fixtures
+----------------------------------------------------------
+
+**IMPORTANT NOTE** Backup your DB before the next step
+
+There is a command that will set up the DB tables, insert a super admin user and insert some test data to get you going.
+This command will however purge the DB when loading the fixtures. You will be prompted to enter a username, email
+address and password, these will get you into the backend.
+
+	php app/console networking:cms:install
+
+If you decided to let composer install twitters bootstrap, you might want to activate auto symlinking and checking, after composer update/install.
+So add this to your existing scripts section in your composer json:
+(recommended!)
+
+   ```json
+   {
+       "scripts": {
+           "post-install-cmd": [
+               "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
+           ],
+           "post-update-cmd": [
+               "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
+           ]
+       }
+   }
+   ```
+
+There is also a console command to check and / or install this symlink:
+
+   ```bash
+   php app/console mopa:bootstrap:install
+   ```
+
+With these steps taken, bootstrap should be install into vendor/twitter/bootstrap/ and a symlink
+been created into vendor/mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/bootstrap.
+
 Then you can visit your admin dashboard on http://my-server/admin/dashboard
+
 [1]:  http://web.networking.ch
 [2]:  https://github.com/networking/init-cms-sandbox/
-[3]:  http://sonata-project.org/bundles/user/master/doc/reference/installation.html#configuration
+[3]:  https://github.com/phiamo/MopaBootstrapBundle
+[4]:  http://sonata-project.org/bundles/user/master/doc/reference/installation.html#configuration
+[5]:  http://sonata-project.org/bundles/media/master/doc/reference/installation.html#configuration
