@@ -35,12 +35,11 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * home
-	 * :( i have to mock the tested object
   	 */
 	public function testHomeAction()
 	{
 	    $this->markTestIncomplete(
-		    'This test has not been implemented yet.'
+		    'Too much mocking here.'
 	    );
 
 		$mockPage = new \Networking\InitCmsBundle\Entity\Page;
@@ -70,7 +69,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 	public function testAdminAction()
 	{
 		$this->markTestIncomplete(
-		    'This test has not been implemented yet.'
+		    'Too much mocking here.'
 	    );
 		$controller = $this->getMock('\Networking\InitCmsBundle\Controller\DefaultController', array('adminAction', 'generateUrl', 'redirect'));
 		$this->assertInstanceOf('Networking\InitCmsBundle\Controller\DefaultController', $controller, 'Controller ist a DefaultController');
@@ -90,4 +89,71 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$response = $controller->adminAction();
 		$this->assertEquals($response, 'url', 'all just mocked up!');
 	}
+
+	public function testChangeAdminLanguageAction()
+	{
+		// session
+		$session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
+				->disableOriginalConstructor()
+				->getMock();
+		$session->expects($this->once())
+				->method('set')
+				->with($this->equalTo('admin/_locale'),
+			$this->equalTo('xy')
+		);
+		// request
+		$request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+				->disableOriginalConstructor()
+				->getMock();
+		$request->expects($this->once())
+				->method('getSession')
+				->will($this->returnValue($session));
+		// request headers
+		$headers = $this->getMock('\Symfony\Component\HttpFoundation\HeaderBag');
+		$headers->expects($this->once())
+			->method('get')
+			->will($this->returnValue('/test/'))
+			->with($this->equalTo('referer'));
+		$request->headers = $headers;
+		// controller test
+		$controller = new DefaultController();
+		$response = $controller->changeAdminLanguageAction($request, 'xy');
+		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
+	}
+
+	public function testChangeLanguageAction()
+	{
+		$this->markTestIncomplete(
+		    'Too much mocking.'
+	    );
+//		// session
+//		$session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
+//				->disableOriginalConstructor()
+//				->getMock();
+//		$session->expects($this->once())
+//				->method('set')
+//				->with($this->equalTo('_locale'),
+//			$this->equalTo('xy')
+//		);
+//		// request
+//		$request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+//				->disableOriginalConstructor()
+//				->getMock();
+//		$request->expects($this->once())
+//				->method('getSession')
+//				->will($this->returnValue($session));
+//		// request headers
+//		$headers = $this->getMock('\Symfony\Component\HttpFoundation\HeaderBag');
+//		$headers->expects($this->once())
+//			->method('get')
+//			->will($this->returnValue('/test/'))
+//			->with($this->equalTo('referer'));
+//		$request->headers = $headers;
+		$controller = new DefaultController();
+		$this->assertInstanceOf('Networking\InitCmsBundle\Controller\DefaultController', $controller, 'Controller ist a DefaultController');
+//		$response = $controller->changeLanguageAction($request, 'xy');
+//		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
+	}
+
 }
+
