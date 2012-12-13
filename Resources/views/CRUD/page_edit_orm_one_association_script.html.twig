@@ -169,7 +169,7 @@
             var button = '<button class="btn btn-danger" data-dismiss="modal" id="delete_button_' + inputId + '" type="button">{% trans from 'SonataAdminBundle' %}action_delete{% endtrans %}</button>';
             $(this).parent().append(button);
             $('#delete_button_' + inputId).bind('click', function () {
-                if (confirm('{% trans %}page_admin.confirm{% endtrans %}')) {
+                if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationdomain) }}')) {
                     $('#' + inputId).attr('checked', 'checked');
                     $(this).closest('li.networking-sortable-list').hide();
                     $(this).closest('li').find("[required='required']").each( function(idx, element) {

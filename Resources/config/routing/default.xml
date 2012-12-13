@@ -4,9 +4,13 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-	<route id="networking_init_cms_home" pattern="/">
-		<default key="_controller">NetworkingInitCmsBundle:Default:home</default>
+	<route id="networking_init_cms_default" pattern="">
+		<default key="_controller">NetworkingInitCmsBundle:Default:index</default>
 	</route>
+
+	<route id="networking_init_cms_home" pattern="/">
+			<default key="_controller">NetworkingInitCmsBundle:Default:home</default>
+		</route>
 
 	<route id="networking_init_cms_admin" pattern="/admin/">
 		<default key="_controller">NetworkingInitCmsBundle:Default:admin</default>

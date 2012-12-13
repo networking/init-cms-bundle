@@ -61,7 +61,7 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         $homePage->setTitle('Homepage '.$locale);
         $homePage->setMetaKeyword('homepage');
         $homePage->setMetaDescription('This is the homepage');
-        $homePage->setIsActive(true);
+        $homePage->setStatus(Page::STATUS_PUBLISHED);
         $homePage->setIsHome(true);
         $homePage->setTemplate($this->getFirstTemplate());
         $homePage->setNavigationTitle('homepage');

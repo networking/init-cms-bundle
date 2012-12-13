@@ -18,7 +18,7 @@
             <div class="row-fluid">
                 {% for name, form_group in admin.formgroups %}
                     {% if loop.first %}<div class="span9">{% endif %}
-                    <fieldset {% if form_group.collapsed %}class="sonata-ba-fielset-collapsed"{% endif %}>
+                    <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
                         <legend>
                             {% if form_group.collapsed %}
                                 <a href="" class="sonata-ba-collapsed" title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationdomain) }}</a>
@@ -36,15 +36,16 @@
                         </div>
                     </fieldset>
                     {% if loop.first %}</div><div class="span3">
-                        <fieldset class="sonata-ba-fielset-collapsed">
+                        {% if admin.sidemenu(action).count() %}
+                        <fieldset class="sonata-ba-fieldset-collapsed">
                             <legend>
-                                <a href="" class="sonata-ba-collapsed" title="auf-/zuklappen">{{ "Translations"|trans({}, admin.translationdomain) }}</a>
+                                <a href="" class="sonata-ba-collapsed" title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ "legend.translate_page"|trans({}, admin.translationdomain) }}</a>
                             </legend>
                             <div class="sonata-ba-collapsed-fields" style="display: none">
                                 {{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}
                             </div>
                         </fieldset>
-
+                        {% endif %}
 
                     {% endif %}
                     {% if loop.last %}</div>{% endif %}

@@ -107,15 +107,15 @@ file that was distributed with this source code.
     {% else %}
         <div class="control-group{% if errors|length > 0%} error{%endif%}" id="sonata-ba-field-container-{{ id }}">
             {% if sonata_admin.field_description.options.no_label is defined and sonata_admin.field_description.options.no_label %}
-            <p></p>
+                   {# do nothing #}
             {% else %}
-            {% block label %}
-                {% if sonata_admin.field_description.options.name is defined %}
-                    {{ form_label(form, sonata_admin.field_description.options.name, { 'attr' : {'class' : 'control-label'} }) }}
-                {% else %}
-                    {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
-                {% endif %}
-            {% endblock %}
+                {% block label %}
+                    {% if sonata_admin.field_description.options.name is defined %}
+                        {{ form_label(form, sonata_admin.field_description.options.name, { 'attr' : {'class' : 'control-label'} }) }}
+                    {% else %}
+                        {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
+                    {% endif %}
+                {% endblock %}
             {% endif %}
 
             <div class="{% if  sonata_admin.field_description.options.no_label is defined and not sonata_admin.field_description.options.no_label %}controls{% endif %} sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }} {% if errors|length > 0 %}sonata-ba-field-error{% endif %}">

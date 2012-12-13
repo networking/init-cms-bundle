@@ -1,0 +1,35 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% set page = object %}
+{% extends page.getTemplate %}
+{% block head_style %}
+    {{ parent() }}
+    <style>
+        .sonata-preview-form-container fieldset {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block formactions %}
+    <input class="btn btn-success" type="submit" name="btn_preview_approve"
+           value="{{ 'btn_preview_approve'|trans({}, 'SonataAdminBundle') }}"/>
+    <input class="btn btn-danger" type="submit" name="btn_preview_decline"
+           value="{{ 'btn_preview_decline'|trans({}, 'SonataAdminBundle') }}"/>
+{% endblock %}
+
+{% block form %}
+    <div class="sonata-preview-form-container">
+        {% use 'SonataAdminBundle:CRUD:base_edit_form.html.twig' with form as parentForm %}
+        {{ block('parentForm') }}
+    </div>
+{% endblock %}
+

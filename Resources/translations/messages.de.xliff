@@ -8,15 +8,11 @@
             </trans-unit>
 	        <trans-unit id="link_breadcrumb_dashboard">
                 <source>breadcrumb.link_dashboard</source>
-                <target>dashboard</target>
+                <target>&#8962;</target>
             </trans-unit>
 	        <trans-unit id="change_language">
                 <source>Change Language</source>
                 <target>Sprache</target>
-            </trans-unit>
-	        <trans-unit id="are_you_sure">
-                <source>page_admin.confirm</source>
-                <target>Sind Sie wirklich sicher?</target>
             </trans-unit>
         </body>
     </file>

@@ -110,12 +110,14 @@
             </div>
         {% endif %}
     {% endfor %}
+    {# add dependent javascript based on if the request is ajax or not #}
     {% if app.request.isXmlHttpRequest %}
         {% include 'NetworkingInitCmsBundle:CRUD:page_edit_orm_one_ajax.html.twig' %}
     {% else %}
+        {# addToBottom adds the content in the block to the end of the page #}
         {% jsblock 'addToBottom' %}
         {% include 'NetworkingInitCmsBundle:Form:content_type_select.html.twig' %}
-        {% include 'NetworkingInitCmsBundle:CRUD:page_edit_orm_one_association_script.html.twig' %}
+        {% include 'NetworkingInitCmsBundle:CRUD:page_edit_orm_one_association_script.html.twig' with {'admin': sonata_admin.admin} %}
         {% jsblock 'addToBottomEnd' %}
     {% endif %}
 </div>

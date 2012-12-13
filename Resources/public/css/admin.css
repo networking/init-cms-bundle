@@ -103,3 +103,6 @@ legend + .sonata-ba-collapsed-fields {
 .sonata-bc input, .sonata-bc textarea, .sonata-bc select {
 	width: auto;
 }
+.sonata-ba-collapsed-fields {
+	padding-top: 20px;
+}

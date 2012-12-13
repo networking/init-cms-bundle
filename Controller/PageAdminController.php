@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\AdminBundle\Admin\Admin as SontataAdmin;
 
@@ -209,5 +212,41 @@ class PageAdminController extends CRUDController
 			return new JsonResponse($array);
 
 		}
+	}
+
+	/**
+	 * @param ProxyQueryInterface $selectedModelQuery
+	 * @return RedirectResponse
+	 * @throws AccessDeniedException
+	 */
+	public function batchActionPublish(ProxyQueryInterface $selectedModelQuery)
+	{
+	    if ($this->admin->isGranted('EDIT') === false || $this->admin->isGranted('DELETE') === false)
+	    {
+	        throw new AccessDeniedException();
+	    }
+
+	    $modelManager = $this->admin->getModelManager();
+
+	    $selectedModels = $selectedModelQuery->execute();
+
+
+	    // do the merge work here
+
+	    try {
+	        foreach ($selectedModels as $selectedModel) {
+		        $selectedModel->setStatus(Page::STATUS_PUBLISHED);
+	        }
+
+	        $modelManager->update($selectedModel);
+	    } catch (\Exception $e) {
+	        $this->get('session')->setFlash('sonata_flash_error', 'flash_batch_publish_error');
+
+	        return new RedirectResponse($this->admin->generateUrl('list',$this->admin->getFilterParameters()));
+	    }
+
+	    $this->get('session')->setFlash('sonata_flash_success', 'flash_batch_publish_success');
+
+	    return new RedirectResponse($this->admin->generateUrl('list',$this->admin->getFilterParameters()));
 	}
 }

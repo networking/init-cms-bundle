@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="">
+		<body>
+			<trans-unit id="action_delete">
+				<source>hello.name</source>
+				<target>Hallo %name%</target>
+			</trans-unit>
+			<trans-unit id="link_breadcrumb_dashboard">
+				<source>breadcrumb.link_dashboard</source>
+				<target>&#8962;</target>
+			</trans-unit>
+			<trans-unit id="breadcrumb.link_page_list">
+				<source>breadcrumb.link_page_list</source>
+				<target>Page List</target>
+			</trans-unit>
+			<trans-unit id="breadcrumb.link_page_edit">
+				<source>breadcrumb.link_page_edit</source>
+				<target>Edit Page</target>
+			</trans-unit>
+			<trans-unit id="are_you_sure">
+				<source>page_admin.confirm</source>
+				<target>Are you sure?</target>
+			</trans-unit>
+			<trans-unit id="form.label_is_home">
+				<source>form.label_is_home</source>
+				<target>Is Homepage</target>
+			</trans-unit>
+			<trans-unit id="form.label_locale">
+				<source>form.label_locale</source>
+				<target>Locale</target>
+			</trans-unit>
+			<trans-unit id="form.label_template">
+				<source>form.label_template</source>
+				<target>Page Layout</target>
+			</trans-unit>
+			<trans-unit id="form.label_title">
+				<source>form.label_title</source>
+				<target>Page Title</target>
+			</trans-unit>
+			<trans-unit id="form.label_navigation_title">
+				<source>form.label_navigation_title</source>
+				<target>Navigation label</target>
+			</trans-unit>
+			<trans-unit id="form.label_url">
+				<source>form.label_url</source>
+				<target>SEO url</target>
+			</trans-unit>
+			<trans-unit id="form.label_parent">
+				<source>form.label_parent</source>
+				<target>Parent page</target>
+			</trans-unit>
+			<trans-unit id="form.label_show_in_navigation">
+				<source>form.label_show_in_navigation</source>
+				<target>Show in the navigation</target>
+			</trans-unit>
+			<trans-unit id="form.label_meta_keyword">
+				<source>form.label_meta_keyword</source>
+				<target>Meta keywords</target>
+			</trans-unit>
+			<trans-unit id="form.label_meta_description">
+				<source>form.label_meta_description</source>
+				<target>Meta description</target>
+			</trans-unit>
+			<trans-unit id="form.label_status ">
+				<source>form.label_status</source>
+				<target>Publish status</target>
+			</trans-unit>
+			<trans-unit id="form.label_visibility">
+				<source>form.label_visibility</source>
+				<target>Visibility</target>
+			</trans-unit>
+			<trans-unit id="form.label_active_from">
+				<source>form.label_active_from</source>
+				<target>Publish from</target>
+			</trans-unit>
+			<trans-unit id="form.label_tags">
+				<source>form.label_tags</source>
+				<target>Tags</target>
+			</trans-unit>
+			<trans-unit id="legend.translate_page">
+				<source>legend.translate_page</source>
+				<target>Page Translations</target>
+			</trans-unit>
+			<trans-unit id="legend.page_settings">
+				<source>legend.page_settings</source>
+				<target>Page Settings</target>
+			</trans-unit>
+			<trans-unit id="legend.page_tags">
+				<source>legend.page_tags</source>
+				<target>Page Tags</target>
+			</trans-unit>
+			<trans-unit id="legend.page_content">
+				<source>legend.page_content</source>
+				<target>Page Content</target>
+			</trans-unit>
+			<trans-unit id="status_draft">
+				<source>status_draft</source>
+				<target>Draft</target>
+			</trans-unit>
+			<trans-unit id="status_review">
+				<source>status_review</source>
+				<target>Review</target>
+			</trans-unit>
+			<trans-unit id="status_published">
+				<source>status_published</source>
+				<target>Published</target>
+			</trans-unit>
+			<trans-unit id="visibility_public">
+				<source>visibility_public</source>
+				<target>Public</target>
+			</trans-unit>
+			<trans-unit id="visibility_protected">
+				<source>visibility_protected</source>
+				<target>Protected</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

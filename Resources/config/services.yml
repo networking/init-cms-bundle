@@ -27,11 +27,11 @@ services:
         class: Networking\InitCmsBundle\Admin\PageAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\Page, NetworkingInitCmsBundle:PageAdmin]
         calls:
-            - [setTranslationDomain, [Networking\InitCmsBundle]]
+            - [setTranslationDomain, [PageAdmin]]
             - [setLanguages, [%networking_init_cms.page.languages%]]
             - [setContainer, [@service_container]]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Pages }
+            - { name: sonata.admin, manager_type: orm, label: Pages, label_translator_strategy: sonata.admin.label.strategy.underscore }
 
 # Tag Admin Controller
     networking_init_cms.page.admin.tag:
@@ -39,7 +39,7 @@ services:
         arguments: [null, Networking\InitCmsBundle\Entity\Tag, SonataAdminBundle:CRUD]
         call: [setTranslationDomain, [Networking\InitCmsBundle]]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Tags }
+            - { name: sonata.admin, manager_type: orm, label: Tags, label_translator_strategy: sonata.admin.label.strategy.underscore }
 
 # Layout Block Admin Controller
     networking_init_cms.page.admin.layout_block:
@@ -49,7 +49,7 @@ services:
             - [setTranslationDomain, [Networking\InitCmsBundle]]
             - [setContainer, [@service_container]]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Content }
+            - { name: sonata.admin, manager_type: orm, label: Content, label_translator_strategy: sonata.admin.label.strategy.underscore }
 
 # Menu Admin Controller
     networking_init_cms.menu.admin.menu_item:
@@ -60,7 +60,7 @@ services:
             - [setLanguages, [%networking_init_cms.page.languages%]]
             - [setContainer, [@service_container]]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: "Menu Items" }
+            - { name: sonata.admin, manager_type: orm, label: "Menu Items", label_translator_strategy: sonata.admin.label.strategy.underscore }
 
 # Twig tinymce live
     networking_init_cms.twig.extension:

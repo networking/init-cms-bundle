@@ -29,7 +29,8 @@ class MenuItemAdmin extends BaseAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
 
-        $collection->add('navigation');
+        $collection->add('editMenu', '{id}/edit_menu');
+	    $collection->add('createMenu', 'create_menu');
         $collection->add('ajaxNavigation', 'ajax_navigation', array(), array('_method' => 'GET|POST'));
     }
 
@@ -79,8 +80,8 @@ class MenuItemAdmin extends BaseAdmin
                                     ->setParameter(':locale', $locale);
                         }
                     )
-                )
-                ->add('path', 'text', array('read_only' => true));
+                );
+//                ->add('path', 'text', array('read_only' => true));
     }
 
     /**
@@ -164,4 +165,9 @@ class MenuItemAdmin extends BaseAdmin
                 ->assertMaxLength(array('limit' => 255))
                 ->end();
     }
+
+	public function setIsMenu($status)
+	{
+
+	}
 }
