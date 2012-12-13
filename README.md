@@ -1,17 +1,13 @@
 networking init CMS
 ===================
 
-**IMPORTANT NOTICE: THIS PROJECT IS CURRENTLY IN A DEVELOPPMENT STAGE - THE README DOCUMENTATION IS CURRENTLY
-NOT CORRECT.**
-
-
 This bundle forms the basis of the networking init CMS, The project is being
 developed by the small hard working team at [net working AG][1] in Zürich.
 
 **IMPORTANT NOTICE** This project is very much in an Alpha stage.
 It is not advisable to use this for a production web site.
 
-If you would like to git up and  running with a CMS in you Symfony
+If you would like to git up and running with a CMS in you Symfony
 application you can either install this bundle in an  existing project
 or download and install the [networking init CMS sandbox][2]
 
@@ -108,13 +104,15 @@ insert the necessary configuration to get the project running (with exception to
 entered).
 
 Just replace the following line
-	imports:
+```	imports:
 	 ....
 	 - { resource: security.yml }
 	 ...
-
+```
 with
+```
 	- { resource: @NetworkingInitCmsBundle/Resources/config/cms/cms_config.yml }
+```
 
 Alternatively you can view all the individual config files and manually insert the configuration into your project.
 
@@ -138,8 +136,8 @@ Make sure you have java installed
 assetic:
     filters:
         less:
-            node: /usr/bin/node
-            node_paths: [/opt/lessc/lib, /usr/lib/node_modules]
+            node: /usr/local/bin/node
+            node_paths: [/usr/local/lib/node_modules/]
             apply_to: "\.less$"
         cssrewrite: ~
         cssembed:
@@ -322,7 +320,13 @@ If they are not already created, you need to add specific folder to allow upload
     mkdir web/uploads/images
     chmod -R 0777 web/uploads
 
-4) Create DB schema, insert admin user and insert fixtures
+4) Install assets
+-----------------
+```bash
+   php app/console mopa:bootstrap:symlink:less
+```
+
+5) Create DB schema, insert admin user and insert fixtures
 ----------------------------------------------------------
 
 **IMPORTANT NOTE** Backup your DB before the next step
@@ -353,12 +357,14 @@ So add this to your existing scripts section in your composer json:
 There is also a console command to check and / or install this symlink:
 
    ```bash
-   php app/console mopa:bootstrap:install
+   php app/console mopa:bootstrap:symlink:less
    ```
 
 With these steps taken, bootstrap should be install into vendor/twitter/bootstrap/ and a symlink
 been created into vendor/mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/bootstrap.
 
+6) You have installed the init CMS bundle
+-----------------------------------------
 Then you can visit your admin dashboard on http://my-server/admin/dashboard
 
 [1]:  http://web.networking.ch
