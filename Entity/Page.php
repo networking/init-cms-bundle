@@ -137,7 +137,7 @@ class Page implements RouteAwareInterface
 	/**
 	 * @var string $navigationTitle
 	 *
-	 * @ORM\Column(name="navigation_title", type="string", length=255)
+	 * @ORM\Column(name="navigation_title", type="string", length=255, nullable=true)
 	 */
 	protected $navigationTitle;
 
@@ -183,7 +183,7 @@ class Page implements RouteAwareInterface
 	/**
 	 * @var \Datetime $activeTill
 	 *
-	 * @ORM\Column(name="activeTill", type="date")
+	 * @ORM\Column(name="activeTill", type="date", nullable=true)
 	 */
 	protected $activeTill;
 

@@ -114,6 +114,10 @@
 				<source>visibility_protected</source>
 				<target>Protected</target>
 			</trans-unit>
+            <trans-unit id="translation.message_saved">
+                <source>translation.message_saved</source>
+                <target>The page was successfully translated</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

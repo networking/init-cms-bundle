@@ -47,11 +47,10 @@ class PageAdminController extends CRUDController
         $pageCopy->setLocale($locale);
         $pageCopy->setTemplate($page->getTemplate());
         $pageCopy->setOriginal($page);
-
         $em->persist($pageCopy);
-
         $em->flush();
-        $this->get('session')->setFlash('sonata_flash_success', 'The page was successfully translated');
+
+        $this->get('session')->setFlash('sonata_flash_success', $this->translate('message.translation_saved'));
 
         /** @var $admin \Networking\InitCmsBundle\Admin\PageAdmin */
         $admin = $this->container->get('networking_init_cms.page.admin.page');
@@ -59,13 +58,13 @@ class PageAdminController extends CRUDController
         return $this->redirect($admin->generateUrl('edit', array('id' => $id)));
     }
 
-	/**
-	 *
-	 * @param \Networking\InitCmsBundle\Controller\Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpFoundation\Request $request
-	 *
-	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
+    /**
+     *
+     * @param \Networking\InitCmsBundle\Controller\Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpFoundation\Request $request
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function updateFormFieldElementAction(Request $request)
     {
         $twig = $this->get('twig');
@@ -116,11 +115,11 @@ class PageAdminController extends CRUDController
         return new Response($extension->renderer->searchAndRenderBlock($view, 'widget'));
     }
 
-	/**
-	 * @param \Networking\InitCmsBundle\Controller\Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpFoundation\Request $request
-	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
+    /**
+     * @param \Networking\InitCmsBundle\Controller\Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpFoundation\Request $request
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function addLayoutBlockAction(Request $request)
     {
         $twig = $this->get('twig');
@@ -171,82 +170,165 @@ class PageAdminController extends CRUDController
         return new Response($extension->renderer->searchAndRenderBlock($view, 'widget'));
     }
 
-	/**
-	 * Handle uploads from the redactor editor
-	 *
-	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 *
-	 * @todo need to make a proper upload script
-	 */
-	public function uploadTextBlockImageAction(Request $request)
-	{
-		$dir = $this->get('request')->getBasePath().'uploads/images/';
+    /**
+     * Handle uploads from the redactor editor
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @todo need to make a proper upload script
+     */
+    public function uploadTextBlockImageAction(Request $request)
+    {
+        $dir = $this->get('request')->getBasePath() . 'uploads/images/';
 
 
-		$_FILES['file']['type'] = strtolower($_FILES['file']['type']);
+        $_FILES['file']['type'] = strtolower($_FILES['file']['type']);
 
-		if ($_FILES['file']['type'] == 'image/png'
-		|| $_FILES['file']['type'] == 'image/jpg'
-		|| $_FILES['file']['type'] == 'image/gif'
-		|| $_FILES['file']['type'] == 'image/jpeg'
-		|| $_FILES['file']['type'] == 'image/pjpeg')
-		{
-		    // setting file's mysterious name
-		    $filename = md5(date('YmdHis')).'.jpg';
+        if ($_FILES['file']['type'] == 'image/png'
+            || $_FILES['file']['type'] == 'image/jpg'
+            || $_FILES['file']['type'] == 'image/gif'
+            || $_FILES['file']['type'] == 'image/jpeg'
+            || $_FILES['file']['type'] == 'image/pjpeg'
+        ) {
+            // setting file's mysterious name
+            $filename = md5(date('YmdHis')) . '.jpg';
 
-			if(!file_exists($dir)){
-				mkdir($dir, 0777, true);
-			}
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
 
-		    $file = $dir.$filename;
+            $file = $dir . $filename;
 
-		    // copying
-		    copy($_FILES['file']['tmp_name'], $file);
+            // copying
+            copy($_FILES['file']['tmp_name'], $file);
 
-		    // displaying file
-		    $array = array(
-		        'filelink' => '/uploads/images/'.$filename
-		    );
+            // displaying file
+            $array = array(
+                'filelink' => '/uploads/images/' . $filename
+            );
 
-			return new JsonResponse($array);
+            return new JsonResponse($array);
 
-		}
-	}
+        }
+    }
 
-	/**
-	 * @param ProxyQueryInterface $selectedModelQuery
-	 * @return RedirectResponse
-	 * @throws AccessDeniedException
-	 */
-	public function batchActionPublish(ProxyQueryInterface $selectedModelQuery)
-	{
-	    if ($this->admin->isGranted('EDIT') === false || $this->admin->isGranted('DELETE') === false)
-	    {
-	        throw new AccessDeniedException();
-	    }
+    /**
+     * @param ProxyQueryInterface $selectedModelQuery
+     * @return RedirectResponse
+     * @throws AccessDeniedException
+     */
+    public function batchActionPublish(ProxyQueryInterface $selectedModelQuery)
+    {
+        if ($this->admin->isGranted('EDIT') === false || $this->admin->isGranted('DELETE') === false) {
+            throw new AccessDeniedException();
+        }
 
-	    $modelManager = $this->admin->getModelManager();
+        $modelManager = $this->admin->getModelManager();
 
-	    $selectedModels = $selectedModelQuery->execute();
+        $selectedModels = $selectedModelQuery->execute();
 
 
-	    // do the merge work here
+        // do the merge work here
 
-	    try {
-	        foreach ($selectedModels as $selectedModel) {
-		        $selectedModel->setStatus(Page::STATUS_PUBLISHED);
-	        }
+        try {
+            foreach ($selectedModels as $selectedModel) {
+                $selectedModel->setStatus(Page::STATUS_PUBLISHED);
+            }
 
-	        $modelManager->update($selectedModel);
-	    } catch (\Exception $e) {
-	        $this->get('session')->setFlash('sonata_flash_error', 'flash_batch_publish_error');
+            $modelManager->update($selectedModel);
+        } catch (\Exception $e) {
+            $this->get('session')->setFlash('sonata_flash_error', 'flash_batch_publish_error');
 
-	        return new RedirectResponse($this->admin->generateUrl('list',$this->admin->getFilterParameters()));
-	    }
+            return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+        }
 
-	    $this->get('session')->setFlash('sonata_flash_success', 'flash_batch_publish_success');
+        $this->get('session')->setFlash('sonata_flash_success', 'flash_batch_publish_success');
 
-	    return new RedirectResponse($this->admin->generateUrl('list',$this->admin->getFilterParameters()));
-	}
+        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function updateLayoutBlockSortAction(Request $request)
+    {
+        $layoutBlocks = $request->get('layoutBlocks');
+        $zone = $request->get('zone');
+
+        if ($layoutBlocks && is_array($layoutBlocks)) {
+            foreach ($layoutBlocks as $key => $layoutBlockStr) {
+                $sort = ++$key;
+                $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
+                $repo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock');
+
+                try {
+                    $layoutBlock = $repo->find($blockId);
+                } catch (\Exception $e) {
+                    $message = $e->getMessage();
+
+                    return new JsonResponse(array('status' => 'error', 'message' => $message));
+                }
+
+                $layoutBlock->setSortOrder($sort);
+                $layoutBlock->setZone($zone);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($layoutBlock);
+            }
+
+            $em->flush();
+        }
+
+        $status = ($zone == 'right-top') ? 'success': 'success';
+
+//        if($status == 'error'){
+//            return new JsonResponse(
+//                        array(
+//                            'status' => $status,
+//                            'message' => $this->translate('message.layout_blocks_sorted', array('zone' => $zone))
+//                        ),
+//                        500
+//                    );
+//        }
+
+        return new JsonResponse(
+            array(
+                'status' => $status,
+                'message' => $this->translate('message.layout_blocks_sorted', array('zone' => $zone))
+            )
+        );
+    }
+
+    public function deleteLayoutBlockAction(Request $request)
+    {
+        $layoutBlockStr = $request->get('layoutBlock');
+
+        if ($layoutBlockStr) {
+            $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
+            $repo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock');
+
+            try {
+                $layoutBlock = $repo->find($blockId);
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+
+                return new JsonResponse(array('status' => 'error', 'message' => $message));
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($layoutBlock);
+            $em->remove($layoutBlock);
+            $em->flush();
+        }
+        return new JsonResponse(array('status' => 'success', 'message' => $this->translate('message.layout_block_deleted')));
+    }
+
+    public function translate($string, $params = array(), $domain = null)
+    {
+        $translationDomain = $domain ? $domain : $this->admin->getTranslationDomain();
+
+        return $this->get('translator')->trans($string, $params, $translationDomain);
+    }
 }

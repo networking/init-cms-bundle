@@ -30,7 +30,8 @@
 
                     {# loop through layout blocks #}
                     {% for nested_group_field_name, nested_group_field in networking_init_cms_sort_form_children(form.children, zone.name) %}
-                    <li class="networking-sortable-list networking-sort-zone">
+                    <li class="networking-sortable-list networking-sort-zone" id="layoutBlock_{{ nested_group_field.vars.value.id }}">
+
                         {# preview of layout block of content #}
                         <div class="content_preview"  >
                             <i class="icon-trash"></i>

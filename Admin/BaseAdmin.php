@@ -61,7 +61,6 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
         foreach ($this->languages as $language) {
             $locale[$language['locale']] = $language['label'];
         }
-
         return $locale;
     }
 }

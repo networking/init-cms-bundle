@@ -2,208 +2,263 @@
 <!-- edit one association -->
 <script type="text/javascript">
 
-    // handle the update bind
-    var field_update_{{ id }} = function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var data = {};
-        var form = jQuery(this).closest('form');
-        var url = '{{ url('admin_networking_initcms_page_updateFormFieldElement', {
+// handle the update bind
+var field_update_{{ id }} = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var data = {};
+    var form = jQuery(this).closest('form');
+    var url = '{{ url('admin_networking_initcms_page_updateFormFieldElement', {
                         'code':      sonata_admin.admin.root.code,
                         'elementId': id,
                         'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
                         'uniqid':    sonata_admin.admin.root.uniqid
                     } + sonata_admin.field_description.getOption('link_parameters', {})) }}';
-        doAjaxSubmit(url, form, data);
-    };
+    doAjaxSubmit(url, form, data);
+};
 
-    // handle the add link
-    var field_add_{{ id }} = function (event) {
+// handle the add link
+var field_add_{{ id }} = function (event) {
 
-        event.preventDefault();
-        event.stopPropagation();
-        var addLink = event.target;
-        $('#contentTypeModal').modal('show');
+    event.preventDefault();
+    event.stopPropagation();
+    var addLink = event.target;
+    jQuery('#contentTypeModal').modal('show');
 
-        $('#contentTypeModal').on('hidden', function (event) {
-            if ($(this).data('create')) {
-                var classType = $('#selectContentType').val();
-                var liItem = jQuery(addLink).closest('li');
-                var zone = liItem.find("[id$='_zone']").val();
-                var sortOrder = liItem.find("[id$='_sortOrder']").val();
-                sortOrder++;
-                console.log(sortOrder);
-                liItem.parent().find('li.networking-sortable-list input[id$="_sortOrder"]').each(function (index, value) {
-                    if (jQuery(value).val() >= sortOrder) {
-                        var newSortOrder = jQuery(value).val()+1;
-                        jQuery(value).val(newSortOrder);
-                    }
-                });
+    jQuery('#contentTypeModal').on('hidden', function (event) {
+        if (jQuery(this).data('create')) {
+            var classType = jQuery('#selectContentType').val();
+            var liItem = jQuery(addLink).closest('li');
+            var zone = liItem.find("[id$='_zone']").val();
+            var sortOrder = liItem.find("[id$='_sortOrder']").val();
+            sortOrder++;
+            console.log(sortOrder);
+            liItem.parent().find('li.networking-sortable-list input[id$="_sortOrder"]').each(function (index, value) {
+                if (jQuery(value).val() >= sortOrder) {
+                    var newSortOrder = jQuery(value).val() + 1;
+                    jQuery(value).val(newSortOrder);
+                }
+            });
 
-                var data = {zone:zone, sortOrder:sortOrder, classType:classType };
-                var form = jQuery(addLink).closest('form');
-                var url = '{{ url('admin_networking_initcms_page_addLayoutBlock', {
+            var data = {zone:zone, sortOrder:sortOrder, classType:classType };
+            var form = jQuery(addLink).closest('form');
+            var url = '{{ url('admin_networking_initcms_page_addLayoutBlock', {
                                             'code':      sonata_admin.admin.root.code,
                                             'elementId': id,
                                             'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
                                             'uniqid':    sonata_admin.admin.root.uniqid
                                         } + sonata_admin.field_description.getOption('link_parameters', {})) }}';
-                doAjaxSubmit(url, form, data);
+            doAjaxSubmit(url, form, data);
+        }
+    });
+};
+
+function start_save_content{{ id }}(link) {
+    link.onclick = null;
+
+    // add the jQuery event to the a element
+    jQuery(link)
+            .click(field_update_{{ id }})
+            .trigger('click')
+    ;
+
+    return false;
+}
+
+function doAjaxSubmit(url, form, data) {
+
+    data['_xml_http_request'] = true;
+    // the ajax post
+    jQuery(form).ajaxSubmit({
+        url:url,
+        type:"POST",
+        dataType:'html',
+        data:data,
+        success:function (html) {
+            jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
+            if (jQuery(form + 'input[type="file"]').length > 0) {
+                jQuery(form).attr('enctype', 'multipart/form-data');
+                jQuery(form).attr('encoding', 'multipart/form-data');
             }
-        });
-    };
 
-    function start_save_content{{ id }}(link){
-        link.onclick = null;
+            jQuery('#sonata-ba-field-container-{{ id }}').trigger('sonata.add_element');
+            jQuery('#field_container_{{ id }}').trigger('sonata.add_element');
 
-        // add the jQuery event to the a element
-        jQuery(link)
-                .click(field_update_{{ id }})
-                .trigger('click')
-        ;
-
-        return false;
-    }
-
-    function doAjaxSubmit(url, form, data) {
-
-        data['_xml_http_request'] = true;
-        // the ajax post
-        jQuery(form).ajaxSubmit({
-            url:url,
-            type:"POST",
-            dataType:'html',
-            data:data,
-            success:function (html) {
-                jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
-                if (jQuery(form + 'input[type="file"]').length > 0) {
-                    jQuery(form).attr('enctype', 'multipart/form-data');
-                    jQuery(form).attr('encoding', 'multipart/form-data');
+            jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
+                if (i + 1 == data.sortOrder) {
+                    jQuery(value).modal('show');
                 }
-
-                jQuery('#sonata-ba-field-container-{{ id }}').trigger('sonata.add_element');
-                jQuery('#field_container_{{ id }}').trigger('sonata.add_element');
-
-                jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
-                    if (i+1 == data.sortOrder) {
-                        jQuery(value).modal('show');
-                    }
-                })
-            }
-        });
-    }
-
-    var field_widget_{{ id }} = false;
-
-    // this function initialize the popup
-    // this can be only done this way has popup can be cascaded
-    function start_field_retrieve_{{ id }}(link) {
-        link.onclick = null;
-
-        // initialize component
-        field_widget_{{ id }} = jQuery("#field_widget_{{ id }}");
-
-        // add the jQuery event to the a element
-        jQuery(link)
-                .click(field_add_{{ id }})
-                .trigger('click')
-        ;
-
-        return false;
-    }
-
-    function apply_position_value_{{ id }}() {
-        // update the input value position
-        jQuery('ul.sortable').each(function (index, value) {
-            var index = 0;
-            jQuery(value).find("li.networking-sort-zone").each(function (i, v) {
-                if(!jQuery(v).find("input[id$='_delete']").is(':checked')){
-                    jQuery(v).find("[id$='_sortOrder']").val(index);
-                    index++;
-                }
-
-            });
-
-        });
-    }
-
-    function onAfterLoad() {
-        $('.tinymce').each(function () {
-            $(this).redactor({
-                imageUpload:'{{ path('admin_networking_initcms_page_uploadTextBlockImage') }}'
-            });
-        });
-
-        jQuery('div#field_container_{{ id }} ul.sortable').sortable({
-            handle:'i.icon-move',
-            opacity:0.6,
-            forcePlaceholderSize:true,
-            placeholder:"ui-state-highlight",
-            items:'li.networking-sortable-list',
-            connectWith:".sortable",
-            stop:function (event, ui) {
-                apply_position_value_{{ id }}();
-            },
-            receive:function (event, ui) {
-                var zone = $(this).attr('id').substr(5);
-                var liItem = $(ui.item);
-                liItem.find("[id$='_zone']").val(zone);
-                apply_position_value_{{ id }}();
-
-            }
-        });
-
-        jQuery('.sortable').droppable({
-            accept:"li.networking-sortable-list",
-            create:function (event, ui) {
-                var zone = $(this).attr('id').substr(5);
-                $(this).find("[id$='_zone']").val(zone);
-            }
-        });
-        apply_position_value_{{ id }}();
-
-        $("input[id$='_delete']", "li.networking-sortable-list").each(function () {
-            var inputId = $(this).attr('id');
-            $(this).hide();
-
-            var button = '<button class="btn btn-danger" data-dismiss="modal" id="delete_button_' + inputId + '" type="button">{% trans from 'SonataAdminBundle' %}action_delete{% endtrans %}</button>';
-            $(this).parent().append(button);
-            $('#delete_button_' + inputId).bind('click', function () {
-                if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationdomain) }}')) {
-                    $('#' + inputId).attr('checked', 'checked');
-                    $(this).closest('li.networking-sortable-list').hide();
-                    $(this).closest('li').find("[required='required']").each( function(idx, element) {
-                            $(element).removeAttr('required');
-                        });
-                    apply_position_value_{{ id }}();
-                }
-            });
-        });
-
-        $('.content_preview i.icon-trash').each(function(){
-            var icon = $(this);
-            icon.bind('click', function(){
-                $(this).closest('li').find('[id^="delete_button"]').trigger('click');
             })
+        }
+    });
+}
 
+var field_widget_{{ id }} = false;
+
+// this function initialize the popup
+// this can be only done this way has popup can be cascaded
+function start_field_retrieve_{{ id }}(link) {
+    link.onclick = null;
+
+    // initialize component
+    field_widget_{{ id }} = jQuery("#field_widget_{{ id }}");
+
+    // add the jQuery event to the a element
+    jQuery(link)
+            .click(field_add_{{ id }})
+            .trigger('click')
+    ;
+
+    return false;
+}
+
+function apply_position_value_{{ id }}() {
+    // update the input value position
+    jQuery('ul.sortable').each(function (index, value) {
+        var index = 0;
+        jQuery(value).find("li.networking-sort-zone").each(function (i, v) {
+            if (!jQuery(v).find("input[id$='_delete']").is(':checked')) {
+                jQuery(v).find("[id$='_sortOrder']").val(index);
+                index++;
+            }
         });
+    });
+}
 
-        jQuery("select[id^='{{ id }}']").filter("select[id$='_classType']").bind('change', field_update_{{ id }});
-    }
+function saveLayoutBlockSort(callback) {
+    var end = jQuery('ul.sortable').size();
+    var XHRs = [];
+    var reply = '';
+    jQuery('ul.sortable').each(function (index, value) {
+        var zone = jQuery(value).attr('id').substr(5);
+        var sortedIDs = jQuery(value).sortable("toArray", {key:"layoutBlock" });
+        XHRs.push(submitLayoutSort(sortedIDs, zone));
+    });
 
-    (function ($) {
+    jQuery.when.apply(jQuery, XHRs).done(function (jqXhr) {
+        if (callback != undefined) {
+            callback(jqXhr)
+        }
+    }).fail(function (jqXhr) {
+                if (callback != undefined) {
+                    callback(jqXhr)
+                }
+            });
 
-        // refresh the sortable option when a new element is added
-        jQuery('#sonata-ba-field-container-{{ id }}').bind('sonata.add_element', function () {
+}
+
+function submitLayoutSort(sortIds, zone) {
+    var dfd = jQuery.Deferred();
+    jQuery.ajax({
+        url:'{{ url('admin_networking_initcms_page_updateLayoutBlockSort') }}',
+        data:{layoutBlocks:sortIds, zone:zone},
+        type:'get',
+        success:function (jqXhr) {
+            if (jqXhr.status == 'error') {
+                dfd.reject(jqXhr);
+            } else {
+                dfd.resolve(jqXhr);
+            }
+        }
+    });
+
+    return dfd.promise();
+}
+
+function onAfterLoad() {
+
+    apply_position_value_{{ id }}();
+
+    jQuery('.tinymce').each(function () {
+        jQuery(this).redactor({
+            imageUpload:'{{ path('admin_networking_initcms_page_uploadTextBlockImage') }}'
+        });
+    });
+
+    jQuery('div#field_container_{{ id }} ul.sortable').sortable({
+        handle:'i.icon-move',
+        opacity:0.6,
+        forcePlaceholderSize:true,
+        placeholder:"ui-state-highlight",
+        items:'li.networking-sortable-list',
+        connectWith:".sortable",
+        stop:function (event, ui) {
             apply_position_value_{{ id }}();
+            saveLayoutBlockSort(function(xhr){
+                console.log('movement stopped');
+                createMessageBox(xhr.status, xhr.message);
+            });
+
+        },
+        receive:function (event, ui) {
+            var zone = jQuery(this).attr('id').substr(5);
+            var liItem = jQuery(ui.item);
+            liItem.find("[id$='_zone']").val(zone);
+            apply_position_value_{{ id }}();
+        }
+    });
+
+    jQuery('.sortable').droppable({
+        accept:"li.networking-sortable-list",
+        create:function (event, ui) {
+            var zone = jQuery(this).attr('id').substr(5);
+            jQuery(this).find("[id$='_zone']").val(zone);
+        }
+    });
+
+    jQuery("input[id$='_delete']", "li.networking-sortable-list").each(function () {
+        var inputId = jQuery(this).attr('id');
+        jQuery(this).hide();
+
+        var button = '<button class="btn btn-danger" data-dismiss="modal" id="delete_button_' + inputId + '" type="button">{% trans from 'SonataAdminBundle' %}action_delete{% endtrans %}</button>';
+        jQuery(this).parent().append(button);
+        jQuery('#delete_button_' + inputId).bind('click', function () {
+            if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationdomain) }}')) {
+
+                var liElement = jQuery(this).closest('li.networking-sortable-list');
+                jQuery.ajax({
+                    url:'{{ url('admin_networking_initcms_page_deleteLayoutBlock') }}',
+                    data:{layoutBlock:liElement.attr('id')},
+                    success:function (r) {
+                        createMessageBox(r.status, r.message);
+                    }
+                });
+                liElement.remove();
+                apply_position_value_{{ id }}();
+                saveLayoutBlockSort();
+            }
         });
+    });
 
-        jQuery("select[id$='_template']").bind('change', field_update_{{ id }});
+    jQuery('.content_preview i.icon-trash').each(function () {
+        var icon = jQuery(this);
+        icon.bind('click', function () {
+            jQuery(this).closest('li').find('[id^="delete_button"]').trigger('click');
+        })
 
+    });
 
-        onAfterLoad();
+    jQuery("select[id^='{{ id }}']").filter("select[id$='_classType']").bind('change', field_update_{{ id }});
+}
 
-    })(jQuery);
+function createMessageBox(status, message) {
+    var messageHtml = '<div class="alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
+
+    jQuery('.notice-block').html(messageHtml).fadeIn().delay(2400).fadeOut();
+}
+
+(function ($) {
+
+    // refresh the sortable option when a new element is added
+    jQuery('#sonata-ba-field-container-{{ id }}').bind('sonata.add_element', function () {
+        apply_position_value_{{ id }}();
+    });
+
+    jQuery("select[id$='_template']").bind('change', field_update_{{ id }});
+
+    onAfterLoad();
+
+})(jQuery);
 </script>
 
 <!-- / edit one association -->

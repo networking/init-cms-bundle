@@ -37,6 +37,8 @@ class PageAdmin extends BaseAdmin
         $collection->add('updateFormFieldElement', 'update_form_fields', array(), array('method' => 'POST'));
         $collection->add('addLayoutBlock', 'add_layout_block', array(), array('method' => 'POST'));
 	    $collection->add('uploadTextBlockImage', 'upload_text_block_image', array(), array('method' => 'POST'));
+	    $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', array(), array('method' => 'GET'));
+	    $collection->add('deleteLayoutBlock', 'delete_layout_block', array(), array('method' => 'GET'));
     }
 
     /**
@@ -108,8 +110,7 @@ class PageAdmin extends BaseAdmin
                     ))
                 ->add('title')
                 ->add('url', null, array('required' => $isHomeReadOnly));
-//                ->add('navigationTitle')
-//                ->add('showInNavigation', null, array('required' => false));
+
 
         if ($isHomeReadOnly) {
             $formMapper
@@ -148,13 +149,13 @@ class PageAdmin extends BaseAdmin
                             'input' => 'datetime'
                             )
                     )
-                ->end()
-                ->with(
-	                $translator->trans('legend.page_tags', array(), $this->translationDomain),
-	                array('collapsed' => true)
-                    )
-                ->add('tags', 'sonata_type_model', array('required' => false, 'expanded' => true, 'multiple' => true))
                 ->end();
+//                ->with(
+//	                $translator->trans('legend.page_tags', array(), $this->translationDomain),
+//	                array('collapsed' => true)
+//                    )
+//                ->add('tags', 'sonata_type_model', array('required' => false, 'expanded' => true, 'multiple' => true))
+//                ->end();
 
     }
 
