@@ -39,10 +39,10 @@ class PageAdminController extends CRUDController
         $pageCopy->setUrl($page->getUrl());
         $pageCopy->setMetaKeyword($page->getMetaKeyword());
         $pageCopy->setMetaDescription($page->getMetaDescription());
-        $pageCopy->setNavigationTitle($page->getNavigationTitle());
+//        $pageCopy->setNavigationTitle($page->getNavigationTitle());
         $pageCopy->setActiveFrom($page->getActiveFrom());
-        $pageCopy->setActiveTill($page->getActiveTill());
-        $pageCopy->setShowInNavigation($page->getShowInNavigation());
+//        $pageCopy->setActiveTill($page->getActiveTill());
+//        $pageCopy->setShowInNavigation($page->getShowInNavigation());
         $pageCopy->setIsHome($page->getIsHome());
         $pageCopy->setLocale($locale);
         $pageCopy->setTemplate($page->getTemplate());
