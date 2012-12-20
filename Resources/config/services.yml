@@ -15,6 +15,11 @@ services:
         calls:
             - [setContainer, [@service_container]]
 
+    networking_init_cms.layoutsnapshot_serializer_handler:
+        class: Networking\InitCmsBundle\Serializer\Handler\LayoutSnapshotHandler
+        tags:
+          - {name : jms_serializer.handler, type: layoutSnapshot, format: xml}
+
 ## Admin Controllers
 # Page Admin Contoller
 
@@ -73,7 +78,7 @@ services:
     networking_init_cms.controller_mapper:
         class: Symfony\Cmf\Component\Routing\Mapper\ControllerClassMapper
         arguments:
-            - {Networking\InitCmsBundle\Entity\Page: "NetworkingInitCmsBundle:Default:index" }
+            - {Networking\InitCmsBundle\Entity\Page: "NetworkingInitCmsBundle:Default:index", Networking\InitCmsBundle\Entity\PageSnapshot: "NetworkingInitCmsBundle:Default:live"}
 
     networking_init_cms.page_class_meta:
         class: Doctrine\ORM\Mapping\ClassMetadata
@@ -109,6 +114,20 @@ services:
 # Listener for setting up content routes when page created/edited
     networking_init_cms.page_listner:
        class:  Networking\InitCmsBundle\EventListener\PageListener
+       calls:
+                 - [ setSerializer, [@serializer]]
+       tags:
+           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+
+    networking_init_cms.layout_block_listner:
+       class:  Networking\InitCmsBundle\EventListener\LayoutBlockListener
+       tags:
+           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+
+    networking_init_cms.version_listner:
+       class:  Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionListener
        tags:
            - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
            - { name: doctrine.event_listener, event: postPersist, method: postPersist }
@@ -140,7 +159,7 @@ services:
 
 
 # Create the left main menu and right main menu for the frontend
-    networking_init_cms.menu.navbar_main_menu:
+    networking_init_cms.menu.frontend_main_menu_left:
         class: Knp\Menu\MenuItem
         factory_service: networking_init_cms.menu.navbar_menu_builder
         factory_method: createMainMenu
@@ -149,7 +168,7 @@ services:
         tags:
             - { name: knp_menu.menu, alias: main }
 
-    networking_init_cms.menu.navbar_right_menu:
+    networking_init_cms.menu.frontend_main_menu_right:
         class: Knp\Menu\MenuItem
         factory_service: networking_init_cms.menu.navbar_menu_builder
         factory_method: createRightSideDropdownMenu
@@ -158,18 +177,18 @@ services:
         tags:
             - { name: knp_menu.menu, alias: rightMenu }
 
-    networking_init_cms.menu.frontend_top_menu:
+    networking_init_cms.menu.frontend_top_menu_template:
         class: %mopa_bootstrap.navbar.generic%
         scope: request
         arguments:
-            - { leftmenu: @networking_init_cms.menu.navbar_main_menu=, rightmenu: @networking_init_cms.menu.navbar_right_menu= }
+            - { leftmenu: @networking_init_cms.menu.frontend_main_menu_left=, rightmenu: @networking_init_cms.menu.frontend_main_menu_right= }
             - {}
             - { title: "Networking", titleRoute: "networking_init_cms_home", fixedTop: true, isFluid: false, template: NetworkingInitCmsBundle:Navbar:navbar.html.twig }
         tags:
             - { name: mopa_bootstrap.navbar, alias: cmsNavbar }
 
 # Create the side menu for the frontend
-    networking_init_cms.menu.navbar_sub_menu:
+    networking_init_cms.menu.frontend_sub_menu:
         class: Knp\Menu\MenuItem
         factory_service: networking_init_cms.menu.navbar_menu_builder
         factory_method: createNavbarsSubnavMenu
@@ -179,11 +198,11 @@ services:
             - { name: knp_menu.menu, alias: subMenu }
 
 
-    networking_init_cms.menu.frontend_side_menu:
+    networking_init_cms.menu.frontend_sub_menu_template:
         class: %mopa_bootstrap.navbar.generic%
         arguments:
             # first argument: a named array of menues:
-            - { menu: @networking_init_cms.menu.navbar_sub_menu= }
+            - { menu: @networking_init_cms.menu.frontend_sub_menu= }
             - {}
             # third argument: a named array of options
             - { template: NetworkingInitCmsBundle:Navbar:subnavbar.html.twig }
@@ -192,7 +211,7 @@ services:
             - { name: mopa_bootstrap.navbar, alias: subNavbar }
 
 # Create the language menu for the admin area
-    networking_init_cms.menu.navbar_admin_lang_menu:
+    networking_init_cms.menu.admin_lang_menu:
         class: Knp\Menu\MenuItem
         factory_service: networking_init_cms.menu.navbar_menu_builder
         factory_method: createAdminLangMenu
@@ -201,17 +220,44 @@ services:
         tags:
             - { name: knp_menu.menu, alias: adminLangMenu }
 
-    networking_init_cms.menu.admin_lang_menu:
+    networking_init_cms.menu.admin_lang_menu_template:
         class: %mopa_bootstrap.navbar.generic%
         arguments:
             # first argument: a named array of menues:
-            - { menu: @networking_init_cms.menu.navbar_admin_lang_menu= }
+            - { menu: @networking_init_cms.menu.admin_lang_menu= }
             - {}
             # third argument: a named array of options
             - { fixedTop: false, isFluid: false, template: NetworkingInitCmsBundle:Navbar:langnav.html.twig}
         tags:
             # The alias is used to retrieve the navbar in templates
             - { name: mopa_bootstrap.navbar, alias: adminLangNavbar }
+
+# Create the view status menu
+    networking_init_cms.menu.view_status_menu_builder:
+        class: Networking\InitCmsBundle\Component\Menu\ViewStatusMenuBuilder
+        scope: request
+        arguments: [ '@knp_menu.factory', '@security.context', '@service_container' ]
+
+    networking_init_cms.menu.view_status_menu:
+        class: Knp\Menu\MenuItem
+        factory_service: networking_init_cms.menu.view_status_menu_builder
+        factory_method: createViewStatusMenu
+        arguments: [ '@request']
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: viewStatusMenu }
+
+    networking_init_cms.menu.view_status_menu_template:
+        class: %mopa_bootstrap.navbar.generic%
+        arguments:
+            # first argument: a named array of menues:
+            - { menu: @networking_init_cms.menu.view_status_menu= }
+            - {}
+            # third argument: a named array of options
+            - { fixedTop: false, isFluid: false, template: NetworkingInitCmsBundle:Navbar:view_status.html.twig}
+        tags:
+            # The alias is used to retrieve the navbar in templates
+            - { name: mopa_bootstrap.navbar, alias: viewStatusMenuBlock }
 
 # Load the debug extension for twig templates
     networking_init_cms.twig.extension.debug:

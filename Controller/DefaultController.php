@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Networking\InitCmsBundle\Entity\Page;
+use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 
 /**
@@ -25,127 +26,173 @@ use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
  */
 class DefaultController extends Controller
 {
-	/**
-	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @return array
-	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-	 */
-	public function indexAction(Request $request)
-	{
-		/** @var $page Page */
-		$page = $request->get('_content');
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return array
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function indexAction(Request $request)
+    {
+        /** @var $page Page */
+        $page = $request->get('_content');
 
-		if ($page->getVisibility() != Page::VISIBILITY_PUBLIC) {
-			if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-			        throw new AccessDeniedException();
-			    }
-		}
+        if ($page->getVisibility() != Page::VISIBILITY_PUBLIC) {
+            if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+                throw new AccessDeniedException();
+            }
+        }
 
-		if($page->getStatus() != Page::STATUS_PUBLISHED){
-			if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
-				$message = 'The requested page has the status "'.$page->getStatus().'", please login to view page';
-				throw $this->createNotFoundException($message);
-			}
-		}
+        if ($page->getStatus() != Page::STATUS_PUBLISHED) {
+            if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+                $message = 'The requested page has the status "' . $page->getStatus() . '", please login to view page';
+                throw $this->createNotFoundException($message);
+            }
+        }
 
-		return array('page' => $page);
-	}
+        return array('page' => $page);
+    }
 
-	/**
-	 * @Route("/admin/", name="networking_init_cms_admin")
-	 */
-	public function adminAction()
-	{
-		$url = $this->generateUrl('sonata_admin_dashboard');
 
-		return $this->redirect($url);
-	}
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return array
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function liveAction(Request $request)
+    {
+        /** @var $page PageSnapshot */
+        $pageSnapshot = $request->get('_content');
 
-	/**
-	 * @Route("/", name="networking_init_cms_home")
-	 *
-	 * @return array
-	 */
-	public function homeAction()
-	{
-		$repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+        /** @var $page Page */
+        $page = $this->get('serializer')->deserialize($pageSnapshot->getVersionedData(), 'Networking\InitCmsBundle\Entity\Page', 'json');
 
-		$page = $repository->findOneBy(array('isHome' => true, 'locale' => $this->getRequest()->getLocale()));
+        if ($page->getVisibility() != Page::VISIBILITY_PUBLIC) {
+            if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+                throw new AccessDeniedException();
+            }
+        }
 
-		return array('page' => $page);
-	}
+        return array('page' => $page);
+    }
 
-	/**
-	 * @param Request $request
-	 * @param $locale
-	 *
-	 * @Route("/change_admin_language/{locale}", name="change_admin_language", requirements={"locale" = ".+"})
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 */
-	public function changeAdminLanguageAction(Request $request, $locale)
-	{
-		$request->getSession()->set('admin/_locale', $locale);
+    /**
+     * @Route("/admin/", name="networking_init_cms_admin")
+     */
+    public function adminAction()
+    {
+        $url = $this->generateUrl('sonata_admin_dashboard');
 
-		return new RedirectResponse($request->headers->get('referer'));
-	}
+        return $this->redirect($url);
+    }
 
-	/**
-	 * @param Request $request
-	 * @param $locale
-	 *
-	 * @Route("/change_language/{locale}", name="networking_init_change_language", requirements={"locale" = ".+"})
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 */
-	public function changeLanguageAction(Request $request, $locale)
-	{
-		$params = array();
+    /**
+     * @Route("/", name="networking_init_cms_home")
+     *
+     * @return array
+     */
+    public function homeAction()
+    {
+        $repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
 
-		$oldLocale = $request->getLocale();
+        $page = $repository->findOneBy(array('isHome' => true, 'locale' => $this->getRequest()->getLocale()));
 
-		if (($oldLocale == $locale)) {
-			return new RedirectResponse($request->headers->get('referer'));
-		}
-		$translationRoute = $this->getTranslationRoute($request->headers->get('referer'), $locale);
+        return array('page' => $page);
+    }
 
-		$request->getSession()->set('_locale', $locale);
+    /**
+     * @param Request $request
+     * @param $locale
+     *
+     * @Route("/change_admin_language/{locale}", name="change_admin_language", requirements={"locale" = ".+"})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function changeAdminLanguageAction(Request $request, $locale)
+    {
+        $request->getSession()->set('admin/_locale', $locale);
 
-		if (!is_array($translationRoute)) {
-			$routeName = $translationRoute;
-		} else {
-			$routeName = $translationRoute['_route'];
-			unset($translationRoute['_route']);
-			foreach ($translationRoute as $key => $var) {
-				$params[$key] = $var;
-			}
-		}
+        return new RedirectResponse($request->headers->get('referer'));
+    }
 
-		$parts = parse_url($request->headers->get('referer'));
+    /**
+     * @param Request $request
+     * @param $locale
+     *
+     * @Route("/change_language/{locale}", name="networking_init_change_language", requirements={"locale" = ".+"})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function changeLanguageAction(Request $request, $locale)
+    {
+        $params = array();
 
-		if (array_key_exists('query', $parts) && $parts['query']) {
-			parse_str($parts['query'], $query);
+        $oldLocale = $request->getLocale();
 
-			$params = array_merge($query, $params);
-		}
+        if (($oldLocale == $locale)) {
+            return new RedirectResponse($request->headers->get('referer'));
+        }
+        $translationRoute = $this->getTranslationRoute($request->headers->get('referer'), $locale);
 
-		$newURL = $this->get('router')->generate($routeName, $params);
+        $request->getSession()->set('_locale', $locale);
 
-		return new RedirectResponse($newURL);
+        if (!is_array($translationRoute)) {
+            $routeName = $translationRoute;
+        } else {
+            $routeName = $translationRoute['_route'];
+            unset($translationRoute['_route']);
+            foreach ($translationRoute as $key => $var) {
+                $params[$key] = $var;
+            }
+        }
 
-	}
+        $parts = parse_url($request->headers->get('referer'));
 
-	/**
-	 * @param $referer
-	 * @param $locale
-	 * @return array|\Symfony\Cmf\Component\Routing\RouteObjectInterface
-	 */
-	protected function getTranslationRoute($referer, $locale)
-	{
-		/** @var $languageSwitcherHelper LanguageSwitcherHelper */
-		$languageSwitcherHelper = $this->get('networking_init_cms.page.helper.language_switcher');
+        if (array_key_exists('query', $parts) && $parts['query']) {
+            parse_str($parts['query'], $query);
 
-		$oldURL = $languageSwitcherHelper->getPathInfo($referer);
+            $params = array_merge($query, $params);
+        }
 
-		return $languageSwitcherHelper->getTranslationRoute($oldURL, $locale);
-	}
+        $newURL = $this->get('router')->generate($routeName, $params);
+
+        return new RedirectResponse($newURL);
+
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function viewDraftAction(Request $request, $path)
+    {
+        $request->getSession()->set('_viewStatus', Page::STATUS_DRAFT);
+
+        return new RedirectResponse(urldecode($path));
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *@ return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function viewLiveAction(Request $request, $path)
+    {
+        $request->getSession()->set('_viewStatus', Page::STATUS_PUBLISHED);
+
+        return new RedirectResponse(urldecode($path));
+    }
+
+    /**
+     * @param $referer
+     * @param $locale
+     * @return array|\Symfony\Cmf\Component\Routing\RouteObjectInterface
+     */
+    protected function getTranslationRoute($referer, $locale)
+    {
+        /** @var $languageSwitcherHelper LanguageSwitcherHelper */
+        $languageSwitcherHelper = $this->get('networking_init_cms.page.helper.language_switcher');
+
+        $oldURL = $languageSwitcherHelper->getPathInfo($referer);
+
+        return $languageSwitcherHelper->getTranslationRoute($oldURL, $locale);
+    }
 }

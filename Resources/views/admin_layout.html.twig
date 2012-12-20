@@ -88,6 +88,7 @@ file that was distributed with this source code.
 
             {% if admin_pool is defined %}
                 {% block logo %}
+                    {{ mopa_bootstrap_navbar('viewStatusMenuBlock') }}
                     {{ mopa_bootstrap_navbar('adminLangNavbar') }}
                     <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
                         {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}

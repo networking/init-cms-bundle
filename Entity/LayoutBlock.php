@@ -4,12 +4,20 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Entity\Page;
+use Networking\InitCmsBundle\Entity\ContentInterface;
+use JMS\SerializerBundle\Annotation\ExclusionPolicy;
+use JMS\SerializerBundle\Annotation\Exclude;
+use JMS\SerializerBundle\Annotation\Type;
+use JMS\SerializerBundle\Annotation\XmlList;
+use JMS\SerializerBundle\Annotation\XmlMap;
 
 /**
  * Networking\InitCmsBundle\Entity\LayoutBlock
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="layout_block")
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\LayoutBlockRepository")
+ *
+ * @ExclusionPolicy("none")
  */
 class LayoutBlock implements ContentInterface
 {
@@ -19,6 +27,7 @@ class LayoutBlock implements ContentInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Type("integer")
      */
     protected $id;
 
@@ -26,19 +35,22 @@ class LayoutBlock implements ContentInterface
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     * @Type("string")
      */
     protected $name;
 
     /**
      * @var string $zone
-     *
      * @ORM\Column(name="zone", type="string")
+     * @Type("string")
      */
     protected $zone;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="layoutBlock", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="layoutBlock", cascade={"all"})
      * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @Exclude
      */
     protected $page;
 
@@ -46,6 +58,7 @@ class LayoutBlock implements ContentInterface
      * @var string $classType
      *
      * @ORM\Column(name="class_type", type="string")
+     * @Type("string")
      */
     protected $classType;
 
@@ -53,13 +66,14 @@ class LayoutBlock implements ContentInterface
      * @var int $objectId
      *
      * @ORM\Column(name="object_id", type="integer", nullable=true)
+     * @Type("integer")
      */
     protected $objectId;
 
     /**
      * @var boolean $isActive
-     *
      * @ORM\Column(name="is_active", type="boolean")
+     * @Type("integer")
      */
     protected $isActive = true;
 
@@ -67,6 +81,7 @@ class LayoutBlock implements ContentInterface
      * @var \DateTime $createdAt
      *
      * @ORM\Column(name="created_at", type="datetime")
+     * @Type("DateTime")
      */
     protected $createdAt;
 
@@ -74,32 +89,46 @@ class LayoutBlock implements ContentInterface
      * @var \DateTime $updatedAt
      *
      * @ORM\Column(name="updated_at", type="datetime")
+     * @Type("DateTime")
      */
     protected $updatedAt;
 
     /**
      * @var integer $sortOrder
-     *
      * @ORM\Column(name="sort_order", type="integer", nullable=true)
+     * @Type("integer")
      */
     protected $sortOrder;
 
     /**
      * @var array $content
+     * @Exclude
      */
     protected $content = array();
 
     /**
      * @var string $oldClassType
+     * @Type("string")
      */
     protected $origClassType;
+
+    /**
+     * @var boolean $isSnapshot
+     * @Type("boolean")
+     */
+    protected $isSnapshot = false;
+
+    /**
+     * @var array $snapshotContent
+     * @Type("ArrayCollection")
+     */
+    protected $snapshotContent;
 
     /**
      * @ORM\PrePersist
      */
     public function onPrePersist()
     {
-
         $this->createdAt = $this->updatedAt = new \DateTime("now");
     }
 
@@ -356,6 +385,9 @@ class LayoutBlock implements ContentInterface
         return $this->name;
     }
 
+    /**
+     * @return array
+     */
     public function getContent()
     {
         return $this->content;
@@ -382,6 +414,42 @@ class LayoutBlock implements ContentInterface
 
     }
 
+    /**
+     * @param boolean $isSnapshot
+     */
+    public function setIsSnapshot($isSnapshot)
+    {
+        $this->isSnapshot = $isSnapshot;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsSnapshot()
+    {
+        return $this->isSnapshot;
+    }
+
+    /**
+     * @param array $snapshotContent
+     */
+    public function setSnapshotContent($snapshotContent)
+    {
+        $this->snapshotContent = $snapshotContent;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSnapshotContent()
+    {
+        return $this->snapshotContent[0];
+    }
+
     public function getTemplateOptions()
     {
         return false;
@@ -395,5 +463,14 @@ class LayoutBlock implements ContentInterface
     public function getAdminContent()
     {
         return false;
+    }
+
+    public function takeSnapshot($content)
+    {
+        if (!is_array($content)) {
+            $content = array($content);
+        }
+        $this->isSnapshot = true;
+        $this->snapshotContent = new \Doctrine\Common\Collections\ArrayCollection($content);
     }
 }

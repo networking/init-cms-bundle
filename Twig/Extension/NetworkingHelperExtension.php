@@ -104,10 +104,19 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $id
      * @return mixed
      */
-    public function networking_init_cms_block($template, LayoutBlock $content)
+    public function networking_init_cms_block($template, LayoutBlock $layoutBlock)
     {
-        $contentItem = $this->getService('doctrine')->getRepository($content->getClassType())->find($content->getObjectId());
+        if(!$serializedContent = $layoutBlock->getSnapshotContent()){
+            // Draft View
+            $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
+
+        } else {
+            // Live View
+            $contentItem = $this->getService('serializer')->deserialize($serializedContent, $layoutBlock->getClassType(), 'json');
+        }
+
         $options = $contentItem->getTemplateOptions();
+
 
         return $this->getService('templating')->render($template, $options);
     }
@@ -125,8 +134,10 @@ class NetworkingHelperExtension extends \Twig_Extension
             $contentItem = $this->getService('doctrine')->getRepository($content->getClassType())->find($content->getObjectId());
         } else {
             $classType = $content->getClassType();
+
             $contentItem = new $classType();
         }
+
         $adminContent = $contentItem->getAdminContent();
 
         return $this->getService('templating')->render($adminContent['template'], $adminContent['content']);

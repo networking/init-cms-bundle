@@ -10,6 +10,10 @@ use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Entity\ContentRoute;
 use Networking\InitCmsBundle\Entity\MenuItem;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+use JMS\SerializerBundle\Annotation\ExclusionPolicy;
+use JMS\SerializerBundle\Annotation\Expose;
+use JMS\SerializerBundle\Annotation\Type;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,12 +24,14 @@ use Symfony\Cmf\Component\Routing\RouteAwareInterface;
 /**
  * Networking\InitCmsBundle\Entity\Page
  * @Gedmo\Tree(type="materializedPath")
+ * @Gedmo\Loggable
  *
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="page", uniqueConstraints={@ORM\UniqueConstraint(name="path_idx", columns={"path", "locale"})})
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\PageRepository")
+ * @ExclusionPolicy("all")
  */
-class Page implements RouteAwareInterface
+class Page implements RouteAwareInterface, VersionableInterface
 {
 
     const PATH_SEPARATOR = '/';
@@ -46,6 +52,8 @@ class Page implements RouteAwareInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
+     * @Type("integer")
      */
     protected $id;
 
@@ -53,6 +61,8 @@ class Page implements RouteAwareInterface
      * @var \Datetime $createdAt
      *
      * @ORM\Column(name="created_at", type="datetime")
+     * @Expose
+     * @Type("DateTime")
      */
     protected $createdAt;
 
@@ -60,25 +70,32 @@ class Page implements RouteAwareInterface
      * @var \Datetime $updatedAt
      *
      * @ORM\Column(name="updated_at", type="datetime")
+     * @Expose
+     * @Type("DateTime")
      */
     protected $updatedAt;
 
     /**
      * @var string $title
+     
      * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank()
+     * @Expose
+     * @Type("string")
      */
     protected $title;
 
     /**
      * @var string $url
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
+     * @Expose
+     * @Type("string")
      */
     protected $url;
 
     /**
      * @var string $slug
-     *
+     
      * @Gedmo\TreePathSource
      * @Gedmo\Slug(fields={"url"}, separator="-", updatable=true, unique=false)
      * @ORM\Column(name="slug", type="string", length=255, nullable=true)
@@ -87,6 +104,7 @@ class Page implements RouteAwareInterface
 
     /**
      * @var string $path
+     
      * @Gedmo\TreePath(separator="/")
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
@@ -94,26 +112,32 @@ class Page implements RouteAwareInterface
 
     /**
      * @Gedmo\TreeLevel
+     
      * @ORM\Column(name="lvl", type="integer", nullable=true)
      */
     protected $level;
 
     /**
      * @var string $metaKeyword
-     *
+     
      * @ORM\Column(name="meta_keyword", type="string", length=255)
+     * @Expose
+     * @Type("string")
      */
     protected $metaKeyword;
 
     /**
      * @var string $metaDescription
-     *
+     
      * @ORM\Column(name="meta_description", type="text")
+     * @Expose
+     * @Type("string")
      */
     protected $metaDescription;
 
     /**
      * @Gedmo\TreeParent
+
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="children", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
@@ -136,8 +160,11 @@ class Page implements RouteAwareInterface
 
 
     /**
-     * @ORM\OneToMany(targetEntity="LayoutBlock", mappedBy="page", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\LayoutBlock", cascade={"persist"}, mappedBy="page", orphanRemoval=true)
      * @OrderBy({"sortOrder" = "ASC"})
+     *
+     * @Expose
+     * @Type("ArrayCollection<Networking\InitCmsBundle\Entity\LayoutBlock>")
      */
     protected $layoutBlock;
 
@@ -148,14 +175,14 @@ class Page implements RouteAwareInterface
 
     /**
      * @var boolean $isHome
-     *
-     * @ORM\Column(name="isHome", type="boolean", nullable=true)
+     
+     * @ORM\Column(name="is_home", type="boolean", nullable=true)
      */
     protected $isHome = false;
 
     /**
      * @var string $status
-     *
+     
      * @ORM\Column(name="status", type="string", columnDefinition="ENUM('draft', 'review', 'published') NOT NULL")
      */
     protected $status = self::STATUS_DRAFT;
@@ -170,27 +197,25 @@ class Page implements RouteAwareInterface
     /**
      * @var \Datetime $activeFrom
      *
-     * @ORM\Column(name="activeFrom", type="date", nullable=true)
+     * @ORM\Column(name="active_from", type="date", nullable=true)
      */
     protected $activeFrom;
 
     /**
      * @var string $locale
-     *
+     
      * @ORM\Column(name="locale", type="string", length=5)
      */
     protected $locale;
 
     /**
      * @var ArrayCollection $translations
-     *
      * @ORM\ManyToMany(targetEntity="Page", mappedBy="originals")
      */
     protected $translations;
 
     /**
      * @var Page $original
-     *
      * @ORM\ManyToMany(targetEntity="Page", inversedBy="translations", cascade={"persist"})
      * @ORM\JoinTable(name="page_translation",
      *      joinColumns={@ORM\JoinColumn(name="translation_id", referencedColumnName="id")},
@@ -201,7 +226,6 @@ class Page implements RouteAwareInterface
 
     /**
      * @var ArrayCollection $tags
-     *
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="pages")
      * @ORM\JoinTable(name="page_tags")
      * @OrderBy({"name" = "ASC"})
@@ -210,12 +234,25 @@ class Page implements RouteAwareInterface
 
     /**
      * @var ContentRoute $contentRoute
-     *
+     
      * @ORM\OneToOne(targetEntity="Networking\InitCmsBundle\Entity\ContentRoute", cascade={"persist"})
      * @ORM\JoinColumn(name="content_route_id")
      */
     protected $contentRoute;
 
+    /**
+     * @var ArrayCollection $snapshots
+     *
+     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\PageSnapshot", mappedBy="page")
+     * @OrderBy({"version" = "DESC"})
+     */
+    protected $snapshots;
+
+    protected $snapshotClassType = 'Networking\InitCmsBundle\Entity\PageSnapshot';
+
+    /**
+     * @var string $oldTitle
+     */
     protected $oldTitle;
 
     public function __construct()
@@ -931,6 +968,34 @@ class Page implements RouteAwareInterface
         return $this->contentRoute;
     }
 
+
+    /**
+     * @param $snapshots
+     * @return Page
+     */
+    public function setSnapshots($snapshots)
+    {
+        if (gettype($snapshots) == "array") {
+            $snapshots = new ArrayCollection($snapshots);
+        }
+
+        foreach ($snapshots as $snapshot) {
+            $snapshot->setPage($this);
+        }
+
+        $this->snapshots = $snapshots;
+
+        return $this;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection $snapshots
+     */
+    public function getSnapshots()
+    {
+        return $this->snapshots;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -968,18 +1033,18 @@ class Page implements RouteAwareInterface
     /**
      * @return string
      */
-    public function getFullPath()
+    public function getTemplate()
     {
-        return $this->contentRoute->getPath();
+        if (!$this->contentRoute) return;
+        return $this->contentRoute->getTemplate();
     }
 
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getFullPath()
     {
-        if (!$this->contentRoute) return;
-        return $this->contentRoute->getTemplate();
+        return $this->contentRoute->getPath();
     }
 
     /**
@@ -1045,5 +1110,50 @@ class Page implements RouteAwareInterface
             self::VISIBILITY_PUBLIC => 'visibility_public',
             self::VISIBILITY_PROTECTED => 'visibility_protected'
         );
+    }
+
+    /**
+     * @return PageSnapshot
+     */
+    public function getSnapshot()
+    {
+        $pageSnapshots = $this->getSnapshots();
+
+        return $pageSnapshots->first();
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getSnapshotClassType()
+    {
+        return $this->snapshotClassType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentVersion()
+    {
+        if($this->getSnapshot())
+        {
+            $version = $this->getSnapshot()->getVersion();
+            return ++$version;
+        } else {
+            return 1;
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->id;
+    }
+
+    public function hasListener()
+    {
+        return 'Networking\InitCmsBundle\EventListener\PageListener';
     }
 }

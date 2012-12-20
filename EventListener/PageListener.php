@@ -2,38 +2,27 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
-
-use Networking\InitCmsBundle\Entity\ContentRoute;
-use Networking\InitCmsBundle\Entity\Page;
+use Doctrine\ORM\Event\LifecycleEventArgs,
+    JMS\SerializerBundle\Serializer\SerializerInterface,
+    Networking\InitCmsBundle\Entity\ContentRoute,
+    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\PageSnapshot;
 
 class PageListener
 {
     /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     * @var SerializerInterface $serializer
      */
-    public function postUpdate(LifecycleEventArgs $args)
+    protected $serializer;
+
+    public function setSerializer(SerializerInterface $serializer)
     {
-        /** @var $entity Page */
-        $entity = $args->getEntity();
-        $em = $args->getEntityManager();
-
-        if ($entity instanceof Page) {
-
-            $contentRoute = $entity->getContentRoute();
-            $contentRoute->setPath($this->getPageRoutePath($entity->getPath()));
-
-            foreach ($entity->getAllChildren() as $child) {
-                $contentRoute = $child->getContentRoute();
-                $contentRoute->setPath($this->getPageRoutePath($child->getPath()));
-                $em->persist($child);
-            }
-
-            $em->flush();
-        }
+        $this->serializer = $serializer;
     }
 
     /**
+     * On Page Create
+     *
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
      */
     public function postPersist(LifecycleEventArgs $args)
@@ -52,6 +41,41 @@ class PageListener
                 $em->flush();
             }
 
+            if ($entity->getStatus() == Page::STATUS_PUBLISHED) {
+
+                $this->makeSnapshot($entity, $em);
+            }
+        }
+    }
+
+    /**
+     * On Page Update
+     *
+     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     */
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+        /** @var $entity Page */
+        $entity = $args->getEntity();
+        $em = $args->getEntityManager();
+
+        if ($entity instanceof Page) {
+
+            $contentRoute = $entity->getContentRoute();
+            $contentRoute->setPath(self::getPageRoutePath($entity->getPath()));
+
+            foreach ($entity->getAllChildren() as $child) {
+                $contentRoute = $child->getContentRoute();
+                $contentRoute->setPath($this->getPageRoutePath($child->getPath()));
+                $em->persist($child);
+            }
+
+            $em->flush();
+
+            if ($entity->getStatus() == Page::STATUS_PUBLISHED) {
+
+                $this->makeSnapshot($entity, $em);
+            }
         }
     }
 
@@ -59,7 +83,7 @@ class PageListener
      * @param $path
      * @return string
      */
-    public function getPageRoutePath($path)
+    public static function getPageRoutePath($path)
     {
         $pathArray = explode(Page::PATH_SEPARATOR, $path);
 
@@ -73,5 +97,37 @@ class PageListener
         }
 
         return $path;
+    }
+
+
+    public function makeSnapshot(Page $page, \Doctrine\ORM\EntityManager $em)
+    {
+        $pageSnapshot = new PageSnapshot($page);
+
+        foreach ($page->getLayoutBlock() as $layoutBlock) {
+            /** @var $layoutBlock \Networking\InitCmsBundle\Entity\LayoutBlock  */
+            $layoutBlockContent = $em->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
+            $layoutBlock->takeSnapshot($this->serializer->serialize($layoutBlockContent, 'json'));
+        }
+
+        $pageSnapshot->setVersionedData($this->serializer->serialize($page, 'json'))
+                     ->setPage($page);
+
+        if ($oldPageSnapshot = $page->getSnapshot()) {
+            $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
+        } else {
+            $snapshotContentRoute = new ContentRoute();
+        }
+
+        $pageSnapshot->setContentRoute($snapshotContentRoute);
+
+        $em->persist($pageSnapshot);
+        $em->flush();
+
+        $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
+        $snapshotContentRoute->setObjectId($pageSnapshot->getId());
+
+        $em->persist($snapshotContentRoute);
+        $em->flush();
     }
 }

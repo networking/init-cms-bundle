@@ -20,6 +20,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormBuilder;
 
+use Networking\InitCmsBundle\Entity\Page;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Admin\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Entity\ContentInterface;

@@ -18,6 +18,9 @@ use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\AdminBundle\Admin\Admin as SontataAdmin;
 
+/**
+ *
+ */
 class PageAdminController extends CRUDController
 {
 
@@ -281,26 +284,18 @@ class PageAdminController extends CRUDController
             $em->flush();
         }
 
-        $status = ($zone == 'right-top') ? 'success': 'success';
-
-//        if($status == 'error'){
-//            return new JsonResponse(
-//                        array(
-//                            'status' => $status,
-//                            'message' => $this->translate('message.layout_blocks_sorted', array('zone' => $zone))
-//                        ),
-//                        500
-//                    );
-//        }
-
         return new JsonResponse(
             array(
-                'status' => $status,
+                'status' => 'success',
                 'message' => $this->translate('message.layout_blocks_sorted', array('zone' => $zone))
             )
         );
     }
 
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function deleteLayoutBlockAction(Request $request)
     {
         $layoutBlockStr = $request->get('layoutBlock');
@@ -325,10 +320,63 @@ class PageAdminController extends CRUDController
         return new JsonResponse(array('status' => 'success', 'message' => $this->translate('message.layout_block_deleted')));
     }
 
+    /**
+     * @param $string
+     * @param array $params
+     * @param null $domain
+     * @return mixed
+     */
     public function translate($string, $params = array(), $domain = null)
     {
         $translationDomain = $domain ? $domain : $this->admin->getTranslationDomain();
 
         return $this->get('translator')->trans($string, $params, $translationDomain);
+    }
+
+    /**
+     * return the Response object associated to the view action
+     *
+     * @param null $id
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return Response
+     */
+    public function showAction($id = null)
+    {
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+
+        $object = $this->admin->getObject($id);
+
+        $em = $this->getDoctrine()->getManager();
+        /** @var $repo \Gedmo\Loggable\Entity\Repository\LogEntryRepository*/
+        $repo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:PageSnapshot');
+
+        $article = $repo->findOneBy(array('pageId' => $id), array('id' => 'DESC'));
+
+
+        $content = unserialize($article->getContent());
+        var_dump($article->getContentRoute());
+        foreach ($content as $layoutBlock){
+            var_dump($layoutBlock);
+        }
+        die;
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('VIEW', $object)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->admin->setSubject($object);
+
+        return $this->render($this->admin->getTemplate('show'), array(
+            'action'   => 'show',
+            'object'   => $object,
+            'elements' => $this->admin->getShow(),
+        ));
     }
 }
