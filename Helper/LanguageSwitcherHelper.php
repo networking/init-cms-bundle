@@ -3,11 +3,13 @@
 namespace Networking\InitCmsBundle\Helper;
 
 use Networking\InitCmsBundle\Entity\Page;
+use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LanguageSwitcherHelper implements ContainerAwareInterface
 {
@@ -50,22 +52,42 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
         /** @var $router RouterInterface */
         $route = $this->router->match($oldUrl);
 
-        if(!array_key_exists('_content', $route)) return $route;
+
+        if (!array_key_exists('_content', $route)) return $route;
 
         $content = $route['_content'];
+
 
         if ($content instanceof Page) {
 
             $translation = $content->getAllTranslations()->get($locale);
 
-            if ( is_null($translation)) {
+            if (is_null($translation)) {
                 return array('_route' => 'networking_init_cms_home');
             }
 
             return $translation->getContentRoute()->initializeRoute($translation);
         }
 
-        return $route;
+        if ($content instanceof PageSnapshot) {
+            $content = $this->container->get('serializer')->deserialize($content->getVersionedData(), 'Networking\InitCmsBundle\Entity\Page', 'json');
+
+
+            $translations = array_merge($content->getOriginals(), $content->getTranslations());
+
+            $snapshotId = isset($translations[$locale]) ? $translations[$locale] : false;
+
+            if ($snapshotId) {
+                /** @var $snapshot PageSnapshot */
+                $snapshot = $this->container->get('doctrine')->getRepository($content->getSnapshotClassType())->findOneBy(array('resourceId' => $snapshotId));
+
+                if ($snapshot) {
+                    return $snapshot->getRoute();
+                }
+            }
+        }
+
+        throw new NotFoundHttpException(sprintf('No valid translation in "%s" found for page "%s"', $locale, $content->getTitle()));
 
     }
 
@@ -110,11 +132,11 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
             return '/';
         } elseif (null === $baseUrl) {
             return $referrer;
-        } elseif ( $pos = strpos($pathInfo,$host )) {
+        } elseif ($pos = strpos($pathInfo, $host)) {
             $pathInfo = substr($pathInfo, $pos + strlen($host));
         }
 
-        return (string) $pathInfo;
+        return (string)$pathInfo;
     }
 
     /**

@@ -29,7 +29,6 @@ use Symfony\Cmf\Component\Routing\RouteAwareInterface;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="page", uniqueConstraints={@ORM\UniqueConstraint(name="path_idx", columns={"path", "locale"})})
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\PageRepository")
- * @ExclusionPolicy("all")
  */
 class Page implements RouteAwareInterface, VersionableInterface
 {
@@ -52,8 +51,6 @@ class Page implements RouteAwareInterface, VersionableInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Expose
-     * @Type("integer")
      */
     protected $id;
 
@@ -61,8 +58,6 @@ class Page implements RouteAwareInterface, VersionableInterface
      * @var \Datetime $createdAt
      *
      * @ORM\Column(name="created_at", type="datetime")
-     * @Expose
-     * @Type("DateTime")
      */
     protected $createdAt;
 
@@ -70,32 +65,24 @@ class Page implements RouteAwareInterface, VersionableInterface
      * @var \Datetime $updatedAt
      *
      * @ORM\Column(name="updated_at", type="datetime")
-     * @Expose
-     * @Type("DateTime")
      */
     protected $updatedAt;
 
     /**
      * @var string $title
-     
      * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank()
-     * @Expose
-     * @Type("string")
      */
     protected $title;
 
     /**
      * @var string $url
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
-     * @Expose
-     * @Type("string")
      */
     protected $url;
 
     /**
      * @var string $slug
-     
      * @Gedmo\TreePathSource
      * @Gedmo\Slug(fields={"url"}, separator="-", updatable=true, unique=false)
      * @ORM\Column(name="slug", type="string", length=255, nullable=true)
@@ -104,7 +91,6 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var string $path
-     
      * @Gedmo\TreePath(separator="/")
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
@@ -112,14 +98,12 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @Gedmo\TreeLevel
-     
      * @ORM\Column(name="lvl", type="integer", nullable=true)
      */
     protected $level;
 
     /**
      * @var string $metaKeyword
-     
      * @ORM\Column(name="meta_keyword", type="string", length=255)
      * @Expose
      * @Type("string")
@@ -128,7 +112,6 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var string $metaDescription
-     
      * @ORM\Column(name="meta_description", type="text")
      * @Expose
      * @Type("string")
@@ -137,7 +120,6 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @Gedmo\TreeParent
-
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="children", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
@@ -163,8 +145,6 @@ class Page implements RouteAwareInterface, VersionableInterface
      * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\LayoutBlock", cascade={"persist"}, mappedBy="page", orphanRemoval=true)
      * @OrderBy({"sortOrder" = "ASC"})
      *
-     * @Expose
-     * @Type("ArrayCollection<Networking\InitCmsBundle\Entity\LayoutBlock>")
      */
     protected $layoutBlock;
 
@@ -175,14 +155,12 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var boolean $isHome
-     
      * @ORM\Column(name="is_home", type="boolean", nullable=true)
      */
     protected $isHome = false;
 
     /**
      * @var string $status
-     
      * @ORM\Column(name="status", type="string", columnDefinition="ENUM('draft', 'review', 'published') NOT NULL")
      */
     protected $status = self::STATUS_DRAFT;
@@ -203,7 +181,6 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var string $locale
-     
      * @ORM\Column(name="locale", type="string", length=5)
      */
     protected $locale;
@@ -234,7 +211,6 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var ContentRoute $contentRoute
-     
      * @ORM\OneToOne(targetEntity="Networking\InitCmsBundle\Entity\ContentRoute", cascade={"persist"})
      * @ORM\JoinColumn(name="content_route_id")
      */
@@ -1135,8 +1111,7 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     public function getCurrentVersion()
     {
-        if($this->getSnapshot())
-        {
+        if ($this->getSnapshot()) {
             $version = $this->getSnapshot()->getVersion();
             return ++$version;
         } else {
@@ -1155,5 +1130,61 @@ class Page implements RouteAwareInterface, VersionableInterface
     public function hasListener()
     {
         return 'Networking\InitCmsBundle\EventListener\PageListener';
+    }
+
+    public function convertParentToInteger()
+    {
+        if ($this->parent) {
+            return $this->parent->getId();
+        }
+
+        return 0;
+    }
+
+    public function convertParentsToArray()
+    {
+        if (!is_array($this->parents)) {
+            $this->parents = array();
+        }
+
+        return $this->parents;
+    }
+
+    public function convertChildrenToIntegerArray()
+    {
+        $children = array();
+
+        foreach($this->getChildren() as $child){
+            $children[] = $child->getId();
+        }
+
+        return $children;
+    }
+
+    public function prepareMenuItemsForSerialization()
+    {
+        return $this->getMenuItem();
+    }
+
+    public function convertTranslationsToIntegerArray()
+    {
+        $translations = array();
+
+        foreach ( $this->translations as $translation) {
+            $translations[$translation->getLocale()] = $translation->getId();
+        }
+
+        return $translations;
+    }
+
+    public function convertOriginalsToIntegerArray()
+    {
+        $originals = array();
+
+        foreach ( $this->originals as $original) {
+            $originals[$original->getLocale()] = $original->getId();
+        }
+
+        return $originals;
     }
 }

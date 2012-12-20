@@ -68,6 +68,7 @@ class DefaultController extends Controller
         /** @var $page Page */
         $page = $this->get('serializer')->deserialize($pageSnapshot->getVersionedData(), 'Networking\InitCmsBundle\Entity\Page', 'json');
 
+
         if ($page->getVisibility() != Page::VISIBILITY_PUBLIC) {
             if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
