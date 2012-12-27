@@ -1,31 +1,41 @@
 {% extends base_template %}
 
 {% block stylesheets %}
-{{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/a2lixtranslationform/css/a2lix_translation.css') }}" type="text/css" media="all" />
-    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/js/redactor/redactor.css') }}" type="text/css" media="all" />
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/a2lixtranslationform/css/a2lix_translation.css') }}" type="text/css"
+          media="all"/>
+    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/js/redactor/redactor.css') }}" type="text/css"
+          media="all"/>
 {% endblock stylesheets %}
 
 
 {% block title %}
     {% if admin.id(object) %}
-        {{ "title_edit"|trans({'%name%': admin.toString(object) }, 'SonataAdminBundle') }} - {{object.status|trans}}
+        {{ "title_edit"|trans({'%name%': admin.toString(object) }, 'SonataAdminBundle') }} - {{ object.status|trans }}
     {% else %}
         {{ "title_create"|trans({}, 'SonataAdminBundle') }}
     {% endif %}
-{% endblock%}
+{% endblock %}
 
 {% block actions %}
     <div class="sonata-actions">
         {% if admin.hasroute('show') and admin.id(object) and admin.isGranted('VIEW', object) and admin.show|length > 0 %}
-            <a class="btn sonata-action-element" href="{{ admin.generateObjectUrl('show', object) }}">{{ 'link_action_show'|trans({}, 'SonataAdminBundle') }}</a>
+            <a class="btn sonata-action-element"
+               href="{{ admin.generateObjectUrl('show', object) }}">{{ 'link_action_show'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
         {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
-            <a class="btn sonata-action-element" href="{{ admin.generateObjectUrl('history', object) }}">{{ 'link_action_history'|trans({}, 'SonataAdminBundle') }}</a>
+            <a class="btn sonata-action-element"
+               href="{{ admin.generateObjectUrl('history', object) }}">{{ 'link_action_history'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
         {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
-        {% if admin.hasroute('list') and admin.isGranted('LIST')%}
-            <a class="btn sonata-action-element" href="{{ admin.generateUrl('list') }}">{{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
+        {% if admin.hasroute('list') and admin.isGranted('LIST') %}
+            <a class="btn sonata-action-element"
+               href="{{ admin.generateUrl('list') }}">{{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
+        {% endif %}
+        {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) %}
+            {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
+            <a class="btn btn-danger"
+               href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
     </div>
 {% endblock %}

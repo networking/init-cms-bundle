@@ -181,7 +181,7 @@ services:
         class: %mopa_bootstrap.navbar.generic%
         scope: request
         arguments:
-            - { leftmenu: @networking_init_cms.menu.frontend_main_menu_left=, rightmenu: @networking_init_cms.menu.frontend_main_menu_right= }
+            - { leftmenu: @networking_init_cms.menu.frontend_main_menu_left=, rightmenu: @networking_init_cms.menu.frontend_main_menu_right=, status_menu: @networking_init_cms.menu.view_status_menu= }
             - {}
             - { title: "Networking", titleRoute: "networking_init_cms_home", fixedTop: true, isFluid: false, template: NetworkingInitCmsBundle:Navbar:navbar.html.twig }
         tags:
@@ -251,7 +251,7 @@ services:
         class: %mopa_bootstrap.navbar.generic%
         arguments:
             # first argument: a named array of menues:
-            - { menu: @networking_init_cms.menu.view_status_menu= }
+            - { status_menu: @networking_init_cms.menu.view_status_menu= }
             - {}
             # third argument: a named array of options
             - { fixedTop: false, isFluid: false, template: NetworkingInitCmsBundle:Navbar:view_status.html.twig}

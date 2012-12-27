@@ -4,7 +4,7 @@
 {% block container_class %}container{% endblock container_class %}
 
 {% block navbar %}
-{{ mopa_bootstrap_navbar('cmsNavbar') }}
+{{ mopa_bootstrap_navbar('cmsNavbar', {'user': app.user} ) }}
 {% endblock navbar %}
 {% block subnavbar %}{{ mopa_bootstrap_navbar('subNavbar') }}{% endblock subnavbar %}
 

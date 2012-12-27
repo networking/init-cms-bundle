@@ -1,0 +1,31 @@
+Networking\InitCmsBundle\Entity\LayoutBlock:
+    properties:
+        id:
+            type: integer
+        name:
+            type: string
+        zone:
+            type: string
+        page:
+            exclude: true
+        classType:
+            type: string
+        objectId:
+            type: integer
+        isActive:
+            type: boolean
+        sortOrder:
+            type: integer
+        content:
+            exclude: true
+        origClassType:
+            exclude: true
+        isSnapshot:
+            type: boolean
+        snapshotContent:
+            type: ArrayCollection
+        createdAt:
+            type: DateTime
+        updatedAt:
+            type: DateTime
+

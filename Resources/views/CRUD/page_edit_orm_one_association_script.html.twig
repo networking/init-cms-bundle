@@ -184,7 +184,7 @@ function onAfterLoad() {
         connectWith:".sortable",
         stop:function (event, ui) {
             apply_position_value_{{ id }}();
-            saveLayoutBlockSort(function(xhr){
+            saveLayoutBlockSort(function (xhr) {
                 console.log('movement stopped');
                 createMessageBox(xhr.status, xhr.message);
             });

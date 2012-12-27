@@ -164,22 +164,36 @@ class DefaultController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function viewDraftAction(Request $request, $path)
+    public function viewDraftAction(Request $request, $path = null)
     {
-        $request->getSession()->set('_viewStatus', Page::STATUS_DRAFT);
-
-        return new RedirectResponse(urldecode($path));
+        return $this->changePageStatus($request, Page::STATUS_DRAFT, $path);
     }
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
-     *@ return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function viewLiveAction(Request $request, $path)
+    public function viewLiveAction(Request $request, $path = null)
     {
-        $request->getSession()->set('_viewStatus', Page::STATUS_PUBLISHED);
+        return $this->changePageStatus($request, Page::STATUS_PUBLISHED, $path);
+    }
 
-        return new RedirectResponse(urldecode($path));
+    private function changePageStatus(Request $request, $status, $path)
+    {
+        if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+            $message = 'Please login to carry out this action';
+            throw $this->createNotFoundException($message);
+        }
+
+        $request->getSession()->set('_viewStatus', $status);
+
+        if ($path) {
+            $url = urldecode($path);
+        } else {
+            $url = $this->get('router')->generate('networking_init_cms_default');
+        }
+
+        return new RedirectResponse($url);
     }
 
     /**

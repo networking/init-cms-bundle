@@ -28,16 +28,22 @@
 		<requirement key="_method">GET|POST</requirement>
 	</route>
 
-	<route id="networking_init_view_draft" pattern="/view_draft/{path}">
+    <route id="networking_init_view_draft" pattern="/view_draft/{path}">
+   		<default key="_controller">NetworkingInitCmsBundle:Default:viewDraft</default>
+           <requirement key="path">(.*)?</requirement>
+   	</route>
+
+	<route id="networking_init_view_draft_no_param" pattern="/view_draft">
 		<default key="_controller">NetworkingInitCmsBundle:Default:viewDraft</default>
-        <default  key="path">1</default>
-		<requirement key="path">.*</requirement>
 	</route>
 
 	<route id="networking_init_view_live" pattern="/view_live/{path}">
 		<default key="_controller">NetworkingInitCmsBundle:Default:viewLive</default>
-        <default key="path">1</default>
-		<requirement key="path">.*</requirement>
+		<requirement key="path">(.*)?</requirement>
 	</route>
+
+    <route id="networking_init_view_live_no_param" pattern="/view_live">
+   		<default key="_controller">NetworkingInitCmsBundle:Default:viewLive</default>
+   	</route>
 
 </routes>

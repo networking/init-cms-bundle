@@ -2,12 +2,10 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Networking\InitCmsBundle\Entity\LayoutBlock;
-use Networking\InitCmsBundle\Entity\ContentInterface;
+use Doctrine\ORM\Mapping as ORM,
+    Networking\InitCmsBundle\Entity\LayoutBlock,
+    Networking\InitCmsBundle\Entity\ContentInterface;
 
-use JMS\SerializerBundle\Annotation\Exclude,
-    JMS\SerializerBundle\Annotation\Type;
 
 /**
  * Networking\InitCmsBundle\Entity\Content
@@ -24,7 +22,6 @@ class Text implements ContentInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Type("integer")
      */
     protected $id;
 
@@ -33,28 +30,24 @@ class Text implements ContentInterface
      *
      * @ORM\OneToOne(targetEntity="LayoutBlock", cascade={"persist"})
      * @ORM\JoinColumn(name="layout_block_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Exclude
      */
     protected $layoutBlock;
 
     /**
      * @var text $content
      * @ORM\Column(name="text", type="text", nullable=true)
-     * @Type("string")
      */
     protected $text;
 
     /**
      * @var \DateTime $createdAt
      * @ORM\Column(name="created_at", type="datetime")
-     * @Type("DateTime")
      */
     protected $createdAt;
 
     /**
      * @var \DateTime $updatedAt
      * @ORM\Column(name="updated_at", type="datetime")
-     * @Type("DateTime")
      */
     protected $updatedAt;
 

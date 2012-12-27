@@ -35,12 +35,6 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     const PATH_SEPARATOR = '/';
 
-    const STATUS_DRAFT = 'draft';
-
-    const STATUS_REVIEW = 'review';
-
-    const STATUS_PUBLISHED = 'published';
-
     const VISIBILITY_PUBLIC = 'public';
 
     const VISIBILITY_PROTECTED = 'protected';
@@ -224,6 +218,9 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     protected $snapshots;
 
+    /**
+     * @var string
+     */
     protected $snapshotClassType = 'Networking\InitCmsBundle\Entity\PageSnapshot';
 
     /**

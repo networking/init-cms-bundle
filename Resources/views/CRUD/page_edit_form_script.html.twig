@@ -1,0 +1,36 @@
+{% autoescape false %}
+<script type="text/javascript">
+
+
+    function start_save_page_settings(link) {
+        link.onclick = null;
+
+        // add the jQuery event to the a element
+        jQuery(link)
+                .click(update_page_settings)
+                .trigger('click')
+        ;
+
+        return false;
+    }
+
+
+    var update_page_settings = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var form = jQuery(this).closest('form');
+        var url = form.action
+        jQuery(form).ajaxSubmit({
+            url:form.action,
+            type:"POST",
+            dataType:'json',
+            data:{ _xml_http_request:true },
+            success:function (xhr) {
+                jQuery('.page-header h1').html(xhr.titleBlock);
+                jQuery('#pageSettings').replaceWith(xhr.pageSettings.content);
+                $('#pageSettingFields').modal('hide');
+            }
+        });
+    };
+</script>
+{% endautoescape %}

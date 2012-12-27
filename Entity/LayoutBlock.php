@@ -2,22 +2,16 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Networking\InitCmsBundle\Entity\Page;
-use Networking\InitCmsBundle\Entity\ContentInterface;
-use JMS\SerializerBundle\Annotation\ExclusionPolicy;
-use JMS\SerializerBundle\Annotation\Exclude;
-use JMS\SerializerBundle\Annotation\Type;
-use JMS\SerializerBundle\Annotation\XmlList;
-use JMS\SerializerBundle\Annotation\XmlMap;
+use Doctrine\ORM\Mapping as ORM,
+    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\ContentInterface,
+    Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Networking\InitCmsBundle\Entity\LayoutBlock
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="layout_block")
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\LayoutBlockRepository")
- *
- * @ExclusionPolicy("none")
  */
 class LayoutBlock implements ContentInterface
 {
@@ -27,7 +21,6 @@ class LayoutBlock implements ContentInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Type("integer")
      */
     protected $id;
 
@@ -35,22 +28,21 @@ class LayoutBlock implements ContentInterface
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=true)
-     * @Type("string")
      */
     protected $name;
 
     /**
      * @var string $zone
+     *
      * @ORM\Column(name="zone", type="string")
-     * @Type("string")
      */
     protected $zone;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="layoutBlock", cascade={"all"})
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var Page $page
      *
-     * @Exclude
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="layoutBlock")
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $page;
 
@@ -58,7 +50,6 @@ class LayoutBlock implements ContentInterface
      * @var string $classType
      *
      * @ORM\Column(name="class_type", type="string")
-     * @Type("string")
      */
     protected $classType;
 
@@ -66,22 +57,27 @@ class LayoutBlock implements ContentInterface
      * @var int $objectId
      *
      * @ORM\Column(name="object_id", type="integer", nullable=true)
-     * @Type("integer")
      */
     protected $objectId;
 
     /**
      * @var boolean $isActive
+     *
      * @ORM\Column(name="is_active", type="boolean")
-     * @Type("integer")
      */
     protected $isActive = true;
+
+    /**
+     * @var integer $sortOrder
+     *
+     * @ORM\Column(name="sort_order", type="integer", nullable=true)
+     */
+    protected $sortOrder;
 
     /**
      * @var \DateTime $createdAt
      *
      * @ORM\Column(name="created_at", type="datetime")
-     * @Type("DateTime")
      */
     protected $createdAt;
 
@@ -89,40 +85,41 @@ class LayoutBlock implements ContentInterface
      * @var \DateTime $updatedAt
      *
      * @ORM\Column(name="updated_at", type="datetime")
-     * @Type("DateTime")
      */
     protected $updatedAt;
 
     /**
-     * @var integer $sortOrder
-     * @ORM\Column(name="sort_order", type="integer", nullable=true)
-     * @Type("integer")
-     */
-    protected $sortOrder;
-
-    /**
      * @var array $content
-     * @Exclude
      */
     protected $content = array();
 
     /**
      * @var string $oldClassType
-     * @Type("string")
      */
     protected $origClassType;
 
     /**
      * @var boolean $isSnapshot
-     * @Type("boolean")
      */
     protected $isSnapshot = false;
 
     /**
-     * @var array $snapshotContent
-     * @Type("ArrayCollection")
+     * @var ArrayCollection $snapshotContent
      */
     protected $snapshotContent;
+
+    public function __construct()
+    {
+        $this->snapshotContent = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     /**
      * @ORM\PrePersist
@@ -154,7 +151,7 @@ class LayoutBlock implements ContentInterface
     /**
      * Set name
      *
-     * @param  string      $name
+     * @param  string  $name
      * @return LayoutBlock
      */
     public function setName($name)
@@ -177,7 +174,7 @@ class LayoutBlock implements ContentInterface
     /**
      * Set zone
      *
-     * @param  string      $zone
+     * @param  string $zone
      * @return LayoutBlock
      */
     public function setZone($zone)
@@ -200,7 +197,7 @@ class LayoutBlock implements ContentInterface
     /**
      * Set page
      *
-     * @param  Page        $page
+     * @param  Page $page
      * @return LayoutBlock
      */
     public function setPage(Page $page)
@@ -359,7 +356,7 @@ class LayoutBlock implements ContentInterface
     }
 
     /**
-     * @param  int         $sortOrder
+     * @param  int $sortOrder
      * @return LayoutBlock
      */
     public function setSortOrder($sortOrder)
@@ -378,14 +375,6 @@ class LayoutBlock implements ContentInterface
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->name;
-    }
-
-    /**
      * @return array
      */
     public function getContent()
@@ -395,7 +384,7 @@ class LayoutBlock implements ContentInterface
 
     /**
      * @param $content
-     * @param  null        $key
+     * @param  null $key
      * @return LayoutBlock
      */
     public function setContent($content, $key = null)
@@ -416,6 +405,7 @@ class LayoutBlock implements ContentInterface
 
     /**
      * @param boolean $isSnapshot
+     * @return \Networking\InitCmsBundle\Entity\LayoutBlock
      */
     public function setIsSnapshot($isSnapshot)
     {
@@ -434,10 +424,14 @@ class LayoutBlock implements ContentInterface
 
     /**
      * @param array $snapshotContent
+     * @return \Networking\InitCmsBundle\Entity\LayoutBlock
      */
     public function setSnapshotContent($snapshotContent)
     {
-        $this->snapshotContent = $snapshotContent;
+        if (!is_array($snapshotContent)) {
+            $snapshotContent = array($snapshotContent);
+        }
+        $this->snapshotContent = new ArrayCollection($snapshotContent);
 
         return $this;
     }
@@ -450,27 +444,37 @@ class LayoutBlock implements ContentInterface
         return $this->snapshotContent[0];
     }
 
+    /**
+     * @param $content
+     */
+    public function takeSnapshot($snapshotContent)
+    {
+
+        $this->isSnapshot = true;
+        $this->setSnapshotContent($snapshotContent);
+    }
+
+    /**
+     * @return array|bool
+     */
     public function getTemplateOptions()
     {
         return false;
     }
 
+    /**
+     * @return array|bool
+     */
     public static function getFieldDefinition()
     {
         return false;
     }
 
+    /**
+     * @return array|bool
+     */
     public function getAdminContent()
     {
         return false;
-    }
-
-    public function takeSnapshot($content)
-    {
-        if (!is_array($content)) {
-            $content = array($content);
-        }
-        $this->isSnapshot = true;
-        $this->snapshotContent = new \Doctrine\Common\Collections\ArrayCollection($content);
     }
 }

@@ -9,12 +9,14 @@
  */
 namespace Networking\InitCmsBundle\Component\Menu;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\DependencyInjection\Container;
-use Mopa\Bundle\BootstrapBundle\Navbar\AbstractNavbarMenuBuilder;
-use Knp\Menu\FactoryInterface;
-use Knp\Menu\Iterator\RecursiveItemIterator;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface,
+    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\Security\Core\SecurityContextInterface,
+    Symfony\Component\DependencyInjection\Container,
+    Mopa\Bundle\BootstrapBundle\Navbar\AbstractNavbarMenuBuilder,
+    Knp\Menu\FactoryInterface,
+    Knp\Menu\Iterator\RecursiveItemIterator;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -55,33 +57,61 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
     public function createViewStatusMenu(Request $request)
     {
-        $path = '';
+        // Default to homepage
+        $liveRoute = $draftRoute = $this->serviceContainer->get('router')->generate('networking_init_cms_default');
 
         $menu = $this->factory->createItem('root');
 
+        $entity = null;
 
         if ($this->isLoggedIn) {
             $menu->setChildrenAttribute('class', 'nav pull-right');
 
             if ($sonataAdminParam = $request->get('_sonata_admin')) {
-                /** @var $sonataAdmin \Sonata\AdminBundle\Admin\Admin */
+                // we are in the admin area
                 $sonataAdmin = $this->serviceContainer->get($sonataAdminParam);
                 if ($id = $request->get('id')) {
-                    /** @var $entity \Networking\InitCmsBundle\Entity\Page */
                     $entity = $sonataAdmin->getObject($id);
-                    $path = $this->router->generate($entity->getRoute());
                 }
+            } else {
+                // we are in the frontend
+                $entity = $request->get('_content');
             }
 
-//            $admin = $adminHelper->pool->getInstance('networking_init_cms.page.admin.page');
+            if ($entity instanceof VersionableInterface) {
+                if ($snapShot = $entity->getSnapshot()) {
+                    $liveRoute = $this->router->generate($snapShot->getRoute());
+                }
+                $draftRoute = $this->router->generate($entity->getRoute());
 
+                $editUrl = $this->router->generate('admin_networking_initcms_page_edit', array('id' => urlencode($entity->getId())));
+            } elseif ($entity instanceof ResourceVersionInterface) {
+                $liveRoute = $this->router->generate($entity->getRoute());
+                $draftRoute = $this->router->generate($entity->getPage()->getRoute());
 
-            $menu->addChild('Draft', array('uri' => $this->router->generate('networking_init_view_draft', array('path' => urlencode($path)))));
-            $menu->addChild('Live', array('uri' => $this->router->generate('networking_init_view_live', array('path' => urlencode($path)))));
+                $editUrl = $this->router->generate('admin_networking_initcms_page_edit', array('id' => urlencode($entity->getPage()->getId())));
+
+            }
+
+            if(!$sonataAdminParam){
+                $menu->addChild('edit', array('uri' => $editUrl));
+            }
+
+            $draftPath = $this->router->generate('networking_init_view_draft', array('path' => urlencode($draftRoute)));
+            $livePath = $this->router->generate('networking_init_view_live', array('path' => urlencode($liveRoute)));
+
+            // Set active url based on which status is in the session
+            if ($this->serviceContainer->get('session')->get('_viewStatus') === VersionableInterface::STATUS_PUBLISHED) {
+                $menu->setCurrentUri($livePath);
+            } else {
+                $menu->setCurrentUri($draftPath);
+            }
+
+            $menu->addChild('Draft', array('uri' => $draftPath));
+            $menu->addChild('Live', array('uri' => $livePath));
 
             $this->addDivider($menu, true);
         }
-
 
         return $menu;
     }

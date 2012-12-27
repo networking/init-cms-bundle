@@ -1,7 +1,5 @@
 {% block navbar %}
-   {{ navbar.getMenu('menu') ?
-            knp_menu_render(navbar.getMenu('menu'), {
-                'currentClass': 'active',
-                'ancestorClass': 'active',
-                'allow_safe_labels': true}) : '' }}
+   {{ navbar.getMenu('status_menu') ?
+        knp_menu_render(navbar.getMenu('status_menu'), {  'currentClass': 'active', 'ancestorClass': 'active', 'allow_safe_labels': true})
+    : '' }}
 {% endblock navbar %}

@@ -317,6 +317,22 @@ class MenuItem implements \IteratorAggregate
         return $children;
     }
 
+    public function getChildrenByStatus($status)
+    {
+        $children = new ArrayCollection();
+        foreach ($this->getChildren() as $child) {
+            if($status === Page::STATUS_PUBLISHED){
+                if (!$child->getPage()->getSnapshot()) continue;
+            }
+            $children->add($child);
+        }
+
+        return $children;
+
+    }
+
+
+
     /**
      * @param $path
      */

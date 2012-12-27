@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
-class MenuItemFilterIterator extends \FilterIterator
+class MenuSubItemFilterIterator extends \FilterIterator
 {
     /**
      * @var

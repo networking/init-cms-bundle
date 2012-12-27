@@ -1,0 +1,12 @@
+Networking\InitCmsBundle\Entity\Text:
+    properties:
+        id:
+            type: integer
+        layoutBlock:
+            exclude: true
+        text:
+            type: string
+        createdAt:
+            type: DateTime
+        updatedAt:
+            type: DateTime
