@@ -2,173 +2,162 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Entity\MenuItem;
-use Networking\InitCmsBundle\Entity\MenuItemRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sonata\AdminBundle\Controller\CRUDController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Networking\InitCmsBundle\Entity\MenuItem,
+    Networking\InitCmsBundle\Entity\MenuItemRepository,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
+    Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
+    Sonata\AdminBundle\Controller\CRUDController,
+    Symfony\Component\HttpFoundation\JsonResponse,
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
+    Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ *
+ */
 class MenuItemAdminController extends CRUDController
 {
 
-	public function listAction()
-	{
-		return $this->navigationAction();
-	}
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listAction()
+    {
+        return $this->navigationAction();
+    }
 
-	public function editMenuAction($id)
-	{
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws AccessDeniedException
+     */
+    public function createAction()
+    {
+        if ($this->admin->hasActiveSubClass()) {
+            $subclass = $this->get('request')->get('subclass');
+            if ($subclass == 'menu') {
+                $this->admin->setIsRoot(true);
+            }
+        }
 
-		$templateKey = 'edit';
+        return parent::createAction();
+    }
 
-		$id = $this->get('request')->get($this->admin->getIdParameter());
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws NotFoundHttpException
+     * @throws AccessDeniedException
+     */
+    public function editAction($id = null)
+    {
+        $id = $this->get('request')->get($this->admin->getIdParameter());
 
-		$object = $this->admin->getObject($id);
+        $object = $this->admin->getObject($id);
 
-		if (!$object) {
-			throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
-		}
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
 
-		if (false === $this->admin->isGranted('EDIT', $object)) {
-			throw new AccessDeniedException();
-		}
+        if (false === $this->admin->isGranted('EDIT', $object)) {
+            throw new AccessDeniedException();
+        }
 
-		$this->admin->setSubject($object);
-		$this->admin->setIsMenu(true);
+        if($object->getId() === $object->getRoot()){
+            $this->admin->setIsRoot(true);
+        }
 
-		/** @var $form \Symfony\Component\Form\Form */
-		$form = $this->admin->getForm();
-		$form->setData($object);
+        return parent::editAction($id);
+    }
 
-		if ($this->get('request')->getMethod() == 'POST') {
-			$form->bind($this->get('request'));
+    /**
+     * @Template()
+     */
+    public function navigationAction()
+    {
 
-			$isFormValid = $form->isValid();
+        $router = $this->get('router');
+        $menus = array();
+        /** @var $repository MenuItemRepository */
+        $repository = $this->getDoctrine()
+            ->getRepository('NetworkingInitCmsBundle:MenuItem');
 
-			// persist if the form was valid and if in preview mode the preview was approved
-			if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
-				$this->admin->update($object);
-				$this->get('session')->setFlash('sonata_flash_success', 'flash_edit_success');
+        $rootNodes = $repository->getRootNodesByLocale($this->getRequest()->getLocale());
 
-				if ($this->isXmlHttpRequest()) {
-					return $this->renderJson(array(
-						'result' => 'ok',
-						'objectId' => $this->admin->getNormalizedIdentifier($object)
-					));
-				}
+        $childOpen = function ($node) {
+            return sprintf('<li id="listItem_%s">', $node['id']);
+        };
 
-				// redirect to edit mode
-				return $this->redirectTo($object);
-			}
+        $nodeDecorator = function ($node) use ($router) {
+            return sprintf(
+                '<div><a href="%s">%s</a></div>',
+                $router->generate('admin_networking_initcms_menuitem_edit', array('id' => $node['id'])),
+                $node['name']
+            );
+        };
 
-			// show an error message if the form failed validation
-			if (!$isFormValid) {
-				$this->get('session')->setFlash('sonata_flash_error', 'flash_edit_error');
-			} elseif ($this->isPreviewRequested()) {
-				// enable the preview template if the form was valid and preview was requested
-				$templateKey = 'preview';
-			}
-		}
+        foreach ($rootNodes as $rootNode) {
+            $navigation = $repository->childrenHierarchy(
+                $rootNode,
+                null,
+                array(
+                    'decorate' => true,
+                    'childOpen' => $childOpen,
+                    'childClose' => '</li>',
+                    'nodeDecorator' => $nodeDecorator
+                ),
+                true
+            );
+            $menus[] = $navigation;
+        }
 
-		$view = $form->createView();
+        return $this->render('NetworkingInitCmsBundle:MenuItemAdmin:navigation.html.twig', array('menus' => $menus, 'action' => 'navigation'));
+    }
 
-		// set the theme for the current Admin Form
-		$this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+    /**
+     * @param $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function ajaxNavigationAction(Request $request)
+    {
+        $operation = $request->request->get('operation') ? $request->request->get('operation') : $request->query->get('operation');
 
-		return $this->render($this->admin->getTemplate($templateKey), array(
-			'action' => 'edit',
-			'form' => $view,
-			'object' => $object,
-		));
-	}
+        return new JsonResponse($this->$operation());
+    }
 
-	/**
-	 * @Template()
-	 */
-	public function navigationAction()
-	{
+    /**
+     * @return array
+     */
+    public function updateNodes()
+    {
+        $request = $this->getRequest();
+        $nodes = $request->query->get('nodes') ? $request->query->get('nodes') : array();
 
-		$router = $this->get('router');
-		$menus = array();
-		/** @var $repository MenuItemRepository */
-		$repository = $this->getDoctrine()
-				->getRepository('NetworkingInitCmsBundle:MenuItem');
+        $repository = $this->getDoctrine()
+            ->getRepository('NetworkingInitCmsBundle:MenuItem');
 
-		$rootNodes = $repository->getRootNodesByLocale($this->getRequest()->getLocale());
+        $em = $this->get('doctrine.orm.entity_manager');
+        foreach ($nodes as $node) {
+            $parent = null;
+            /** @var $menuItem MenuItem */
+            $menuItem = $repository->find($node['item_id']);
+            if (!$menuItem->getPage()) continue;
 
-		$childOpen = function ($node) {
-			return sprintf('<li id="listItem_%s">', $node['id']);
-		};
+            if ($node['parent_id']) {
+                $parent = $repository->find($node['parent_id']);
+            }
 
-		$nodeDecorator = function ($node) use ($router) {
-			return sprintf(
-				'<div><a href="%s">%s</a></div>',
-				$router->generate('admin_networking_initcms_menuitem_edit', array('id' => $node['id'])),
-				$node['name']
-			);
-		};
+            $menuItem->setParent($parent);
+            $menuItem->setLft($node['left']);
+            $menuItem->setRgt($node['right']);
+            $menuItem->setLvl($node['depth']);
+            $em->persist($menuItem);
+        }
 
-		foreach ($rootNodes as $rootNode) {
-			$navigation = $repository->childrenHierarchy(
-				$rootNode,
-				null,
-				array(
-					'decorate' => true,
-					'childOpen' => $childOpen,
-					'childClose' => '</li>',
-					'nodeDecorator' => $nodeDecorator
-				),
-				true
-			);
-			$menus[] = $navigation;
-		}
+        $em->flush();
 
-		return $this->render('NetworkingInitCmsBundle:MenuItemAdmin:navigation.html.twig', array('menus' => $menus, 'action' => 'navigation'));
-	}
+        $response = array('status' => 1);
 
-	/**
-	 * @param $request
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 */
-	public function ajaxNavigationAction(Request $request)
-	{
-		$operation = $request->request->get('operation') ? $request->request->get('operation') : $request->query->get('operation');
-
-		return new JsonResponse($this->$operation());
-	}
-
-	public function updateNodes()
-	{
-		$request = $this->getRequest();
-		$nodes = $request->query->get('nodes') ? $request->query->get('nodes') : array();
-
-		$repository = $this->getDoctrine()
-				->getRepository('NetworkingInitCmsBundle:MenuItem');
-
-		$em = $this->get('doctrine.orm.entity_manager');
-		foreach ($nodes as $node) {
-			$parent = null;
-			/** @var $menuItem MenuItem */
-			$menuItem = $repository->find($node['item_id']);
-			if (!$menuItem->getPage()) continue;
-
-			if ($node['parent_id']) {
-				$parent = $repository->find($node['parent_id']);
-			}
-
-			$menuItem->setParent($parent);
-			$menuItem->setLft($node['left']);
-			$menuItem->setRgt($node['right']);
-			$menuItem->setLvl($node['depth']);
-			$em->persist($menuItem);
-		}
-
-		$em->flush();
-
-		$response = array('status' => 1);
-
-		return $response;
-	}
+        return $response;
+    }
 }

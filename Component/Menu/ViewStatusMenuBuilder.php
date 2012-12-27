@@ -64,6 +64,8 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
         $entity = null;
 
+        $editUrl = null;
+
         if ($this->isLoggedIn) {
             $menu->setChildrenAttribute('class', 'nav pull-right');
 
@@ -93,7 +95,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
             }
 
-            if(!$sonataAdminParam){
+            if(!$sonataAdminParam && $editUrl){
                 $menu->addChild('edit', array('uri' => $editUrl));
             }
 

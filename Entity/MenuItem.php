@@ -77,6 +77,12 @@ class MenuItem implements \IteratorAggregate
     protected $children;
 
     /**
+     * @var bool
+     * @ORM\Column(name="is_root", type="boolean")
+     */
+    protected $isRoot = false;
+
+    /**
      * @var string $locale;
      *
      * @ORM\Column(name="locale")
@@ -256,6 +262,22 @@ class MenuItem implements \IteratorAggregate
     }
 
     /**
+     * @param boolean $isRoot
+     */
+    public function setIsRoot($isRoot)
+    {
+        $this->isRoot = $isRoot;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsRoot()
+    {
+        return $this->isRoot;
+    }
+
+    /**
      * @param  MenuItem $menuItem
      * @return MenuItem
      */
@@ -291,9 +313,12 @@ class MenuItem implements \IteratorAggregate
      * @param  MenuItem $menuItem
      * @return MenuItem
      */
-    public function setMenu(MenuItem $menuItem)
+    public function setMenu(MenuItem $menuItem = null)
     {
-        $this->setParent($menuItem);
+        if($menuItem)
+        {
+            $this->setParent($menuItem);
+        }
 
         return $this;
     }
