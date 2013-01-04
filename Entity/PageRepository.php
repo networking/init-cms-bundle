@@ -40,7 +40,7 @@ class PageRepository extends MaterializedPathRepository implements ContentReposi
     public function getParentPages($locale, $id = null)
     {
         $qb = $this->createQueryBuilder('p');
-
+        $qb->where($qb->expr()->isNull('p.isHome').' OR p.isHome <> 1');
         if ($id) {
             /** @var $page Page */
             $page = $this->find($id);
@@ -54,11 +54,13 @@ class PageRepository extends MaterializedPathRepository implements ContentReposi
             $qb->andWhere($qb->expr()->neq('p.id', $id));
         }
 
+
+
         $qb->andWhere('p.locale = :locale');
-        $qb->andWhere($qb->expr()->isNull('p.isHome'));
         $qb->orderBy('p.path', 'ASC');
 
         $qb->setParameter(':locale', $locale);
+
 
         return $qb;
     }

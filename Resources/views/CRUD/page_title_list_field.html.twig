@@ -1,0 +1,5 @@
+{% extends 'NetworkingInitCmsBundle:CRUD:cms_list_field.html.twig' %}
+
+{% block field %}
+    <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}"   class="link-page-edit" data-page_id="{{ admin.id(object) }}">{{ value }}</a>
+{% endblock %}

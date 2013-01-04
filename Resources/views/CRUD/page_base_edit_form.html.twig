@@ -6,17 +6,10 @@
     {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
 </div>
 {% elseif app.request.isxmlhttprequest %}
-    {% for name, form_group in admin.formgroups %}
-        {% if not loop.first %}
-                <ul id="pageSettings">
-                    {% for field_name in form_group.fields %}
-                        {% if admin.formfielddescriptions[field_name] is defined %}
-                            <li>
-                                {{ networking_init_cms_get_field_to_string('NetworkingInitCmsBundle:Form:page_edit_object_to_text.html.twig', form.vars.value, form[field_name]) }}
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
+    {% set form_group = admin.formgroups.page_settings %}
+    {% for field_name in form_group.fields %}
+        {% if admin.formfielddescriptions[field_name] is defined %}
+                {{ networking_init_cms_get_field_to_string('NetworkingInitCmsBundle:Form:page_edit_object_to_text.html.twig', form.vars.value, form[field_name]) }}
         {% endif %}
     {% endfor %}
 {% else %}
@@ -31,59 +24,108 @@
 
         {% block sonata_pre_fieldsets %}{% endblock %}
 
-        <div class="row-fluid">
-            {% for name, form_group in admin.formgroups %}
-                {% if loop.first %}<div class="span9">{% endif %}
-                <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
-                    <legend>
-                        {% if form_group.collapsed %}
-                            <a href="" class="sonata-ba-collapsed"
-                               title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationdomain) }}</a>
-                        {% else %}
-                            {{ name|trans({}, admin.translationdomain) }}
-                        {% endif %}
-                    </legend>
-                    {% if loop.first %}
-                        <div class="sonata-ba-collapsed-fields">
+        <div class="span7">
+            {% set form_group = admin.formgroups.page_content %}
+            {% for field_name in form_group.fields %}
+                {% if admin.formfielddescriptions[field_name] is defined %}
+                    {{ form_row(form[field_name]) }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="span3">
+            <div class="accordion" id="accordion1">
+                {# page status accordion #}
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" 
+                           href="#collapseZero">
+                            <div class="accordion-caret"><b class="caret"></b></div>
+                            {{ 'legend.page_status'|trans({}, admin.translationdomain) }} -
+                            <i class="{% if object.status == 'draft' %}color-draft{% endif %} page_status">{{ object.status|trans({}, admin.translationdomain) }}</i>
+                        </a>
+                    </div>
+                    <div id="collapseZero" class="accordion-body collapse in">
+                        <div class="accordion-inner" style="min-height:70px;">
+                            {% set form_group = admin.formgroups.page_status %}
                             {% for field_name in form_group.fields %}
                                 {% if admin.formfielddescriptions[field_name] is defined %}
                                     {{ form_row(form[field_name]) }}
                                 {% endif %}
                             {% endfor %}
+                            <button type="submit" class="btn" onclick="return start_save_page_settings(this);">{{ 'button.apply'|trans({}, admin.translationdomain) }}</button>
+                            <a href="#" style="margin-left: 50px;">{{ 'button.cancel_draft'|trans({}, admin.translationdomain) }}</a>
                         </div>
-                    {% else %}
-                        <div class="sonata-ba-collapsed-fields">
-                            <ul id="pageSettings">
-
+                    </div>
+                </div>
+                {% if admin.translationLanguages.count() %}
+                {# translation accordion #}
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" 
+                           href="#collapseOne">
+                            <div class="accordion-caret"><b class="caret"></b></div>
+                            {{ 'legend.translations'|trans({}, admin.translationdomain) }}
+                        </a>
+                    </div>
+                    <div id="collapseOne" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                           <div id="translationSettings">
+                               {% include 'NetworkingInitCmsBundle:CRUD:page_translation_settings.html.twig' %}
+                           </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {# menu accordion #}
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" 
+                           href="#collapseTwo">
+                            <div class="accordion-caret"><b class="caret"></b></div>
+                            {{ 'legend.menu_connections'|trans({}, admin.translationdomain) }}
+                        </a>
+                    </div>
+                    <div id="collapseTwo" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                        {% for rootNode in rootMenus %}
+                            <label> {{ 'label.menu_link'|trans({'%menu_name%': rootNode.name}, admin.translationdomain) }}
+                                <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}" >
+                                    {{ 'link.add'|trans({}, admin.translationDomain) }}</a></label>
+                                    {% for menuItem in object.getMenuItemByRoot(rootNode.id) %}
+                                    &nbsp;&nbsp;{{ menuItem.name }} <a href="{{ url('admin_networking_initcms_menuitem_list')}}">{{ 'link.edit'|trans({}, admin.translationDomain) }}</a><br />
+                                    {% endfor %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {# page settings accordion #}
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" 
+                           href="#collapseThree">
+                            <div class="accordion-caret"><b class="caret"></b></div>
+                            {{ 'legend.page_settings'|trans({}, admin.translationdomain) }}
+                        </a>
+                    </div>
+                    <div id="collapseThree" class="accordion-body collapse in">
+                        <div class="accordion-inner" style="min-height:70px;">
+                            <div class="pull-right">
+                                <a href="#" data-target="#pageSettingFields" data-toggle="modal">
+                                    <i class="icon-pencil"></i>
+                                </a>
+                            </div>
+                            <div id="pageSettings">
+                                {% set form_group = admin.formgroups.page_settings %}
                                 {% for field_name in form_group.fields %}
                                     {% if admin.formfielddescriptions[field_name] is defined %}
-                                        <li>
                                             {{ networking_init_cms_get_field_to_string('NetworkingInitCmsBundle:Form:page_edit_object_to_text.html.twig', form.vars.value, form[field_name]) }}
-                                        </li>
                                     {% endif %}
                                 {% endfor %}
-                            </ul>
-                            <a href="#" data-target="#pageSettingFields" data-toggle="modal"><i
-                                    class="icon-pencil"></i></a>
-                        </div>
-                    {% endif %}
-                </fieldset>
-                {% if loop.first %}</div><div class="span3">
-                    {% if admin.sidemenu(action).count() %}
-                        <fieldset class="sonata-ba-fieldset-collapsed">
-                            <legend>
-                                <a href="" class="sonata-ba-collapsed"
-                                   title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ "legend.translate_page"|trans({}, admin.translationdomain) }}</a>
-                            </legend>
-                            <div class="sonata-ba-collapsed-fields" style="display: none">
-                                {{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}
                             </div>
-                        </fieldset>
-                    {% endif %}
-
-                {% endif %}
-                {% if loop.last %}</div>{% endif %}
-            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {% block sonata_post_fieldsets %}{% endblock %}
@@ -125,10 +167,10 @@
 
         </div>
         <!-- end modal page form -->
-        </div>
     </form>
     {% jsblock 'addToBottom' %}
     {% include 'NetworkingInitCmsBundle:CRUD:page_edit_form_script.html.twig' with {'admin': admin} %}
+    {% include 'NetworkingInitCmsBundle:CRUD:page_translation_script.html.twig' with {'admin': admin} %}
     {% jsblock 'addToBottomEnd' %}
 
 

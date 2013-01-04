@@ -1,0 +1,22 @@
+{{ 'info.translations'|trans({}, admin.translationDomain) }}
+<br/>
+{% for locale, language in admin.translationLanguages %}
+    <br/>{{ language.short_label }} -
+    {% if language.translation %}
+        {{ language.translation.title }}
+        <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}">
+            {{ 'link.edit'|trans({}, admin.translationDomain) }}
+        </a> | <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}">
+            {{ 'link.unlink'|trans({}, admin.translationDomain) }}
+        </a>
+    {% else %}
+        <i class="info-soft">{{ 'info.empty'|trans({}, admin.translationDomain) }}</i>
+        <a href="{{ admin.generateUrl('translatePage', {'id': object.id, 'locale': locale }) }}">
+            {{ 'link.translate'|trans({}, admin.translationDomain) }}
+        </a> | <a href="{{ admin.generateUrl('link', {'id': object.id, 'locale': locale }) }}" class="translation-dialog-link">
+            {{ 'link.link'|trans({}, admin.translationDomain) }}
+        </a>
+    {% endif %}
+{% endfor %}
+<div class="modal hide fade" tabindex="-1" role="dialog" id="translation_dialog">
+</div>

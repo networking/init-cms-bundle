@@ -99,6 +99,7 @@ file that was distributed with this source code.
 {% endspaceless %}
 {% endblock choice_widget %}
 
+
 {% block field_row %}
     {% if sonata_admin is not defined or not sonata_admin_enabled or not sonata_admin.field_description %}
         {{ form_label(form, label|default(null)) }}

@@ -1,0 +1,72 @@
+{% extends 'SonataAdminBundle:CRUD:base_list.html.twig' %}
+
+{% block list_table %}
+    <div id="menuTabs">
+        {% include "NetworkingInitCmsBundle:CRUD:menu_tabs.html.twig" %}
+    </div>
+{% endblock %}
+
+
+{% block actions %}
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                <div class="accordion-caret"><b class="caret"></b></div>
+                {{ admin.trans('legend.menu.actions') }}
+            </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse in"
+        ">
+        <div class="accordion-inner">
+            {% include 'NetworkingInitCmsBundle:Core:menu_create_button.html.twig' %}
+            <br/><br/>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block list_filters %}
+    {% if admin.datagrid.filters %}
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                    <div class="accordion-caret"><b class="caret"></b></div>
+                    {{ 'label_filters'|trans({}, 'SonataAdminBundle') }}
+                </a>
+            </div>
+            <div id="collapseOne" class="accordion-body collapse in">
+                <div class="accordion-inner" style="min-height:70px;">
+                    <form action="{{ admin.generateUrl('list') }}" method="GET">
+                        {% for filter in admin.datagrid.filters %}
+                            <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                            {{ form_widget(form.children[filter.formName].children['type']) }}
+                            {{ form_widget(form.children[filter.formName].children['value']) }}
+                        {% endfor %}
+                        <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                        {% set foo = form.children['_page'].setRendered() %}
+                        {{ form_rest(form) }}
+
+                        <input type="submit" class="btn"
+                               value="{{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}"/>
+
+                        <a class="btn"
+                           href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/navigation.css') }}" type="text/css"
+          media="all"/>
+{% endblock stylesheets %}
+{% block footer %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}"
+            type="text/javascript"></script>
+    {% include "NetworkingInitCmsBundle:CRUD:menu_list_script.html.twig" %}
+{% endblock %}

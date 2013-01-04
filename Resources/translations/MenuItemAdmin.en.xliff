@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="">
+		<body>
+			<trans-unit id="button.create.menu_item">
+				<source>button.create.menu_item</source>
+				<target>Add menu entry</target>
+			</trans-unit>
+            <trans-unit id="legend.menu.actions">
+                <source>legend.menu.actions</source>
+                <target>Actions on selected Menu</target>
+            </trans-unit>
+            <trans-unit id="filter.label_locale">
+                <source>filter.label_locale</source>
+                <target>Language</target>
+            </trans-unit>
+            <trans-unit id="button.menu.edit">
+                <source>button.menu.edit</source>
+                <target>Edit Menu</target>
+            </trans-unit>
+            <trans-unit id="button.menu.delete">
+                <source>button.menu.delete</source>
+                <target>Delete Menu</target>
+            </trans-unit>
+            <trans-unit id="title.page">
+                <source>title.page</source>
+                <target>Page</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_menu_item_navigation">
+                <source>breadcrumb.link_menu_item_navigation</source>
+                <target>Menus</target>
+            </trans-unit>
+		</body>
+	</file>
+</xliff>

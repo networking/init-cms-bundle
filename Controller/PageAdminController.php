@@ -21,7 +21,7 @@ use Sonata\AdminBundle\Admin\Admin as SontataAdmin;
 /**
  *
  */
-class PageAdminController extends CRUDController
+class PageAdminController extends CmsCRUDController
 {
 
     /**
@@ -29,10 +29,10 @@ class PageAdminController extends CRUDController
      */
     public function translatePageAction(Request $request, $id, $locale)
     {
-        $repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+        $er = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
 
         /** @var $page Page */
-        $page = $repository->find($id);
+        $page = $er->find($id);
 
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -59,6 +59,104 @@ class PageAdminController extends CRUDController
         $admin = $this->container->get('networking_init_cms.page.admin.page');
 
         return $this->redirect($admin->generateUrl('edit', array('id' => $id)));
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $id
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function linkAction(Request $request, $id, $locale)
+    {
+        $er = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+
+        /** @var $page Page */
+        $page = $er->find($id);
+
+        if (!$page) {
+            throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
+        }
+
+        if ($this->getRequest()->getMethod() == 'POST') {
+
+              $linkPageId = $this->getRequest()->get('page');
+              if(!$linkPageId){
+                  $this->get('session')->setFlash('sonata_flash_error', 'flash_link_error');
+              } else {
+                  /** @var $linkPage Page */
+                  $linkPage = $er->find($linkPageId);
+
+                  $page->addTranslation($linkPage);
+
+                  $em = $this->getDoctrine()->getManager();
+                  $em->persist($page);
+                  $em->flush();
+
+                  if($this->isXmlHttpRequest()){
+
+                      $html = $this->renderView(
+                          'NetworkingInitCmsBundle:CRUD:page_translation_settings.html.twig',
+                          array('object' => $page, 'admin' => $this->admin));
+                      return $this->renderJson(array(
+                                             'result' => 'ok',
+                                             'html' => $html
+                                         ));
+                  }
+
+
+                  $this->get('session')->setFlash('sonata_flash_success', 'flash_link_success');
+
+                  return new RedirectResponse($this->admin->generateUrl('edit', array('id' => $page->getId())));
+              }
+        }
+
+        $pages = $er->findBy(array('locale' => $locale));
+
+        if (count($pages)) {
+            $pages = new \Doctrine\Common\Collections\ArrayCollection($pages);
+            $originalLocale = $page->getLocale();
+            $pages = $pages->filter(function (Page $linkPage) use($originalLocale) {
+                return !in_array($originalLocale, $linkPage->getTranslatedLocales());
+
+            });
+        }
+
+        return $this->render(
+            'NetworkingInitCmsBundle:CRUD:page_translation_link_list.html.twig',
+            array(
+                'page' => $page,
+                'pages' => $pages,
+                'locale' => $locale,
+                'original_language' => \Locale::getDisplayLanguage($page->getLocale()),
+                'language' => \Locale::getDisplayLanguage($locale),
+                'admin' => $this->admin
+            )
+        );
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $id
+     * @param $translationId
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function unlinkAction(Request $request, $id, $translationId)
+    {
+        $er = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+
+        /** @var $page Page */
+        $page = $er->find($id);
+
+        if (!$page) {
+            throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
+        }
+
+        $locale = $page->getLocale();
+
+        $qb = $er->createQueryBuilder('p');
+        $qb->where('locale != :locale');
+
+
     }
 
     /**
@@ -360,8 +458,8 @@ class PageAdminController extends CRUDController
         $this->admin->setSubject($object);
 
         return $this->render($this->admin->getTemplate('show'), array(
-            'action'   => 'show',
-            'object'   => $object,
+            'action' => 'show',
+            'object' => $object,
             'elements' => $this->admin->getShow(),
         ));
     }
@@ -405,34 +503,33 @@ class PageAdminController extends CRUDController
 
             $isFormValid = $form->isValid();
 
-             // persist if the form was valid and if in preview mode the preview was approved
+            // persist if the form was valid and if in preview mode the preview was approved
             if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
                 $this->admin->update($object);
-                $this->get('session')->setFlash('sonata_flash_success', 'flash_edit_success');
-
-                $translator = $this->get('translator');
 
                 if ($this->isXmlHttpRequest()) {
 
                     $view = $form->createView();
 
-                            // set the theme for the current Admin Form
-                            $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+                    // set the theme for the current Admin Form
+                    $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
                     $pageSettingsTemplate = $this->render($this->admin->getTemplate($templateKey), array(
-                                'action' => 'edit',
-                                'form'   => $view,
-                                'object' => $object,
-                            ));
+                        'action' => 'edit',
+                        'form' => $view,
+                        'object' => $object,
+                    ));
 
                     return $this->renderJson(array(
-                        'result'    => 'ok',
-                        'objectId'  => $this->admin->getNormalizedIdentifier($object),
-                        'titleBlock' => $translator->trans('title_edit', array('%name%' => $object->__toString()), 'SonataAdminBundle'). ' - '.$object->getStatus(),
+                        'result' => 'ok',
+                        'objectId' => $this->admin->getNormalizedIdentifier($object),
+                        'title' => $object->__toString(),
+                        'status' => $this->admin->trans($object->getStatus()),
                         'pageSettings' => $pageSettingsTemplate
                     ));
                 }
 
+                $this->get('session')->setFlash('sonata_flash_success', 'flash_edit_success');
                 // redirect to edit mode
                 return $this->redirectTo($object);
             }
@@ -451,32 +548,15 @@ class PageAdminController extends CRUDController
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
+        $menuEr = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:MenuItem');
+
+        $rootMenus = $menuEr->findBy(array('isRoot' => 1, 'locale' => $object->getLocale()));
+
         return $this->render($this->admin->getTemplate($templateKey), array(
             'action' => 'edit',
-            'form'   => $view,
+            'form' => $view,
             'object' => $object,
+            'rootMenus' => $rootMenus
         ));
     }
-
-    /**
-         * @param mixed   $data
-         * @param integer $status
-         * @param array   $headers
-         *
-         * @return Response with json encoded data
-         */
-        public function renderJson($data, $status = 200, $headers = array())
-        {
-            // fake content-type so browser does not show the download popup when this
-            // response is rendered through an iframe (used by the jquery.form.js plugin)
-            //  => don't know yet if it is the best solution
-            if ($this->get('request')->get('_xml_http_request')
-               && strpos($this->get('request')->headers->get('Content-Type'), 'multipart/form-data') === 0) {
-                $headers['Content-Type'] = 'text/plain';
-            } else {
-                $headers['Content-Type'] = 'application/json';
-            }
-            $data = $this->get('serializer')->serialize($data, 'json');
-            return new Response($data, $status, $headers);
-        }
 }

@@ -27,6 +27,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->scalarNode('label')->isRequired()->end()
+                            ->scalarNode('short_label')->end()
                             ->scalarNode('locale')->isRequired()->end()
                         ->end()
                     ->end()

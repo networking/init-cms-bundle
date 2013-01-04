@@ -20,25 +20,32 @@ use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 
 use Networking\InitCmsBundle\Entity\Page;
 use Networking\InitCmsBundle\Entity\PageRepository;
 use Knp\Menu\ItemInterface as MenuItemInterface;
+use Sonata\AdminBundle\Form\Extension\Field\Type\FormTypeFieldExtension;
 
 class PageAdmin extends BaseAdmin
 {
-	public $supportsPreviewMode = true;
+    protected $baseRoutePattern = 'cms/pages';
+
+    public $supportsPreviewMode = true;
+
     /**
      * @param \Sonata\AdminBundle\Route\RouteCollection $collection
      */
     protected function configureRoutes(RouteCollection $collection)
     {
-        $collection->add('translatePage', 'translate_page/{id}/{locale}', array(), array('method' => 'POST'));
+        $collection->add('translatePage', 'translate_page/{id}/locale/{locale}', array(), array('method' => 'POST'));
         $collection->add('updateFormFieldElement', 'update_form_fields', array(), array('method' => 'POST'));
         $collection->add('addLayoutBlock', 'add_layout_block', array(), array('method' => 'POST'));
-	    $collection->add('uploadTextBlockImage', 'upload_text_block_image', array(), array('method' => 'POST'));
-	    $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', array(), array('method' => 'GET'));
-	    $collection->add('deleteLayoutBlock', 'delete_layout_block', array(), array('method' => 'GET'));
+        $collection->add('uploadTextBlockImage', 'upload_text_block_image', array(), array('method' => 'POST'));
+        $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', array(), array('method' => 'GET'));
+        $collection->add('deleteLayoutBlock', 'delete_layout_block', array(), array('method' => 'GET'));
+        $collection->add('link', 'link/{id}/locale/{locale}', array(), array('method' => 'GET'));
+        $collection->add('unlink', 'unlink/{id}/translation/{translationId}', array(), array('method' => 'GET'));
     }
 
     /**
@@ -47,7 +54,8 @@ class PageAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $this->setFormTheme(array('NetworkingInitCmsBundle:Form:page_form_admin_fields.html.twig'));
-		$translator = $this->getTranslator();
+
+
         try {
             $request = $this->getRequest();
         } catch (\RuntimeException $e) {
@@ -59,7 +67,7 @@ class PageAdmin extends BaseAdmin
         /** @var $repository PageRepository */
         $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
 
-        if ( $id = $request->get('id')) {
+        if ($id = $request->get('id')) {
             $page = $repository->find($id);
             $locale = $page->getLocale();
         }
@@ -68,88 +76,96 @@ class PageAdmin extends BaseAdmin
 
         $isHomeReadOnly = (!$isHomePage || $isHomePage->getId() == $id) ? false : true;
 
-        $formMapper->with(
-			                $translator->trans('legend.page_content', array(), $this->translationDomain)
-				        )
-	                ->add('layoutBlock',
-	                    'sonata_type_collection',
-	                    array(
-	                        'required' => true,
-	                        'by_reference' => false
-	                    ),
-	                    array(
-	                        'edit' => 'inline',
-	                        'inline' => 'table',
-	                        'sortable' => 'sortOrder',
-	                        'no_label' => true
-	                    ))
-	                ->end();
+        if ($id) {
+            $formMapper->with('page_content')
+                ->add('layoutBlock',
+                'sonata_type_collection',
+                array(
+                    'required' => true,
+                    'by_reference' => false
+                ),
+                array(
+                    'edit' => 'inline',
+                    'inline' => 'table',
+                    'sortable' => 'sortOrder',
+                    'no_label' => true
+                ))
+                ->end();
+
+            $formMapper->with('page_status')
+                ->add('status',
+                'sonata_type_translatable_choice',
+                array(
+                    'choices' => Page::getStatusList(),
+                    'catalogue' => $this->translationDomain,
+                    'attr' => array('class' => ''))
+            )->end();
+
+        }
+
+        $formMapper->with('page_settings');
+
+        if (!$isHomeReadOnly || $isHomePage->getId() == $id) {
+            $formMapper->add('isHome', null, array('read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly));
+        }
 
         $formMapper
-                ->with(
-			        $translator->trans('legend.page_settings', array(), $this->translationDomain),
-	                array('collapsed' => $id));
-
-	    if(!$isHomeReadOnly || $isHomePage->getId() == $id){
-		    $formMapper->add('isHome', null, array('read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly));
-	    }
-
-	    $formMapper
-                ->add('locale',
-                    'choice',
-                    array(
-                        'choices' => $this->getLocaleChoices(),
-                        'read_only' => $id,
-                        'disabled' => $id,
-                        'preferred_choices' => array($locale)
-                    ))
-                ->add('template',
-                    'choice',
-                    array(
-                        'choices' => $this->getPageTemplates()
-                    ))
-                ->add('title')
-                ->add('url', null, array('required' => $isHomeReadOnly));
-
-
+            ->add('locale',
+            'choice',
+            array(
+                'choices' => $this->getLocaleChoices(),
+                'read_only' => $id,
+                'disabled' => $id,
+                'preferred_choices' => array($locale)
+            ))
+            ->add('title')
+            ->add('url', null, array('required' => $isHomeReadOnly), array('display_method' => 'getFullPath'));
         if ($isHomeReadOnly) {
             $formMapper
                 ->add('parent',
-                    'entity',
-                    array(
-                        'property' => 'AdminTitle',
-                        'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
-                        'required' => false,
-                        'query_builder' => $repository->getParentPages($locale, $id),
-                    ));
+                'entity',
+                array(
+                    'property' => 'AdminTitle',
+                    'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
+                    'required' => false,
+                    'query_builder' => $repository->getParentPages($locale, $id),
+                ));
         }
+
         $formMapper
-                ->add('metaKeyword', null, array('required' => true))
-                ->add('metaDescription', null, array('required' => true))
-                ->add('status',
-	                    'sonata_type_translatable_choice',
-	                    array(
-		                    'choices' => Page::getStatusList(),
-		                    'catalogue' => $this->translationDomain
-	                    )
-                    )
-		        ->add('visibility',
-                        'sonata_type_translatable_choice',
-                        array(
-                            'choices' => Page::getVisibilityList(),
-	                        'catalogue' => $this->translationDomain
-                        )
-                    )
-                ->add('activeFrom',
-	                    'date',
-	                    array(
-                            'widget' => 'choice',
-		                    'format' => 'd.MMM.y',
-                            'years' => range(Date('Y'), 2010),
-                            'input' => 'datetime'
-                            )
-                    )
-                ->end();
+            ->add('metaKeyword', null, array('required' => true))
+            ->add('metaDescription', null, array('required' => true))
+            ->add('visibility',
+            'sonata_type_translatable_choice',
+            array(
+                'choices' => Page::getVisibilityList(),
+                'catalogue' => $this->translationDomain
+            )
+        )
+            ->add('template',
+            'choice',
+            array(
+                'expanded' => true,
+                'choices' => $this->getPageTemplates()
+            ))
+            ->end();
+
+        $formMapper->setHelps(array(
+            'url' => $this->translator->trans('url.helper.text', array(), $this->translationDomain)
+        ));
+
+//        $formMapper->getFormBuilder()->setAttributes(array('class' => 'span3'));
+//        die;
+
+//            ->add('activeFrom',
+//            'date',
+//            array(
+//                'widget' => 'choice',
+//                'format' => 'd.MMM.y',
+//                'years' => range(Date('Y'), 2010),
+//                'input' => 'datetime'
+//            )
+//        )
 //                ->with(
 //	                $translator->trans('legend.page_tags', array(), $this->translationDomain),
 //	                array('collapsed' => true)
@@ -165,22 +181,30 @@ class PageAdmin extends BaseAdmin
      */
     public function getTemplate($name)
     {
+
         switch ($name) {
-	        case 'show':
-		        return 'NetworkingInitCmsBundle:CRUD:page_show.html.twig';
-		        break;
-	        case 'preview':
-		        return 'NetworkingInitCmsBundle:CRUD:page_preview.html.twig';
-		        break;
-	        case 'edit':
-		        return 'NetworkingInitCmsBundle:CRUD:page_edit.html.twig';
-		        break;
-	        case 'preview':
-		        return 'NetworkingInitCmsBundle:CRUD:page_preview.html.twig';
-		        break;
-	        default:
-		        return parent::getTemplate($name);
-		        break;
+            case 'show':
+                return 'NetworkingInitCmsBundle:CRUD:page_show.html.twig';
+                break;
+            case 'preview':
+                return 'NetworkingInitCmsBundle:CRUD:page_preview.html.twig';
+                break;
+            case 'edit':
+                if ($this->getSubject()->getId()) {
+                    return 'NetworkingInitCmsBundle:CRUD:page_edit.html.twig';
+                } else {
+                    return 'NetworkingInitCmsBundle:CRUD:page_create.html.twig';
+                }
+                break;
+            case 'preview':
+                return 'NetworkingInitCmsBundle:CRUD:page_preview.html.twig';
+                break;
+            case 'list':
+                return 'NetworkingInitCmsBundle:CRUD:page_list.html.twig';
+                break;
+            default:
+                return parent::getTemplate($name);
+                break;
         }
     }
 
@@ -190,30 +214,63 @@ class PageAdmin extends BaseAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-                ->add('title')
-                ->add('slug')
-                ->add('tags')
-                ->add('locale',
-                    'doctrine_orm_callback',
-                    array('callback' => array($this, 'getByLocale')),
-                    'choice',
-                    array(
-                        'empty_value' => false,
-                        'choices' => $this->getLocaleChoices(),
-                        'preferred_choices' => array($this->getRequest()->getLocale())
-                    ));
+            ->add('locale',
+            'doctrine_orm_callback',
+            array(
+                'callback' => array($this, 'getByLocale'
+                )),
+            'choice',
+            array(
+                'empty_value' => false,
+                'choices' => $this->getLocaleChoices(),
+                'preferred_choices' => array($this->getRequest()->getLocale())
+            ))
+            ->add('title', 'networking_init_cms_simple_string')
+            ->add('path',
+            'doctrine_orm_callback',
+            array('callback' => array($this, 'matchPath'))
+        );
     }
 
     /**
-     * @param $queryBuilder
+     * @param \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder
      * @param $alias
      * @param $field
-     * @param $value
+     * @param $data
      * @return bool
      */
-    public function getByLocale($queryBuilder, $alias, $field, $value)
+    public function matchPath(ProxyQuery $queryBuilder, $alias, $field, $data)
     {
-        if (!$locale = $value['value']) {
+        if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
+            return;
+        }
+        $data['value'] = trim($data['value']);
+
+        if (strlen($data['value']) == 0) {
+            return;
+        }
+
+        $fieldName = 'path';
+
+        $queryBuilder->leftJoin(sprintf('%s.contentRoute', $alias), 'c');
+        $parameterName = sprintf('%s_%s', $fieldName, $queryBuilder->getUniqueParameterId());
+
+        $queryBuilder->andWhere(sprintf('%s.%s LIKE :%s', 'c', $fieldName, $parameterName));
+        $queryBuilder->setParameter(sprintf(':%s', $parameterName), '%' . $data['value'] . '%');
+
+        return true;
+    }
+
+    /**
+     * @param \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder
+     * @param $alias
+     * @param $field
+     * @param $data
+     * @return bool
+     */
+    public function getByLocale($queryBuilder, $alias, $field, $data)
+    {
+        if (!$locale = $data['value']) {
             $locale = $this->getRequest()->getLocale();
         }
         $queryBuilder->andWhere(sprintf('%s.locale = :locale', $alias));
@@ -230,16 +287,17 @@ class PageAdmin extends BaseAdmin
     {
 
         $listMapper
-                ->addIdentifier('adminTitle')
-                ->add('locale', null, array('sortable' => false))
-                ->add('status', null, array('sortable' => false))
-		        ->add('visibility', null, array('sortable' => false));
+            ->addIdentifier('adminTitle', 'string', array('template' => 'NetworkingInitCmsBundle:CRUD:page_title_list_field.html.twig'))
+//                ->add('locale', null, array('sortable' => false))
+            ->add('status', null, array('label' => '.', 'sortable' => false, 'template' => 'NetworkingInitCmsBundle:CRUD:page_status_list_field.html.twig'))
+            ->add('fullPath', null, array('sortable' => false, 'template' => 'NetworkingInitCmsBundle:CRUD:page_title_list_field.html.twig'));
 
         $listMapper->add('_action', 'actions', array(
-            'actions' => array(
-                'view' => array(),
-                'edit' => array(),
-                'delete' => array()
+                'label' => '.',
+                'template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action.html.twig',
+                'actions' => array(
+                    'edit' => array('template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action_edit.html.twig'),
+                    'delete' => array('template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action_delete.html.twig')
                 )
             )
         );
@@ -251,33 +309,33 @@ class PageAdmin extends BaseAdmin
      */
     public function validate(ErrorElement $errorElement, $object)
     {
-	    $errorElement
-			    ->with('title')
-				    ->assertNotBlank()
-				    ->assertMaxLength(array('limit' => 255))
-			    ->end()
-			    ->with('metaKeyword')
-			        ->assertNotBlank()
-			    ->end()
-			    ->with('metaDescription')
-				    ->assertNotBlank()
-			    ->end();
+        $errorElement
+            ->with('title')
+            ->assertNotBlank()
+            ->assertMaxLength(array('limit' => 255))
+            ->end()
+            ->with('metaKeyword')
+            ->assertNotBlank()
+            ->end()
+            ->with('metaDescription')
+            ->assertNotBlank()
+            ->end();
 
-	    if(!$object->getIsHome()){
-		    $errorElement
-				    ->with('url')
-				        ->assertNotBlank()
-				        ->assertMaxLength(array('limit' => 255))
-				    ->end();
-	    }
+        if (!$object->getIsHome()) {
+            $errorElement
+                ->with('url')
+                ->assertNotBlank()
+                ->assertMaxLength(array('limit' => 255))
+                ->end();
+        }
     }
 
-	/**
-	 * @param \Knp\Menu\ItemInterface $menu
-	 * @param $action
-	 * @param AdminInterface $childAdmin
-	 */
-	protected function configureSideMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
+    /**
+     * @param \Knp\Menu\ItemInterface $menu
+     * @param $action
+     * @param AdminInterface $childAdmin
+     */
+    protected function configureSideMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
     {
 
         if (!in_array($action, array('edit'))) {
@@ -286,7 +344,7 @@ class PageAdmin extends BaseAdmin
 
         $admin = $this->isChild() ? $this->getParent() : $this;
 
-        if(!$id = $this->getRequest()->get('id')) return;
+        if (!$id = $this->getRequest()->get('id')) return;
 
         /** @var $repository PageRepository */
         $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
@@ -319,6 +377,46 @@ class PageAdmin extends BaseAdmin
         }
     }
 
+    public function getTranslationLanguages()
+    {
+        $translationLanguages = new \Doctrine\Common\Collections\ArrayCollection();
+
+        if (!$id = $this->getRequest()->get('id')) return;
+
+        /** @var $repository PageRepository */
+        $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
+
+        /** @var $page Page */
+        $page = $repository->find($id);
+
+        $translatedLocales = $page->getAllTranslations();
+
+        $originalLocale = $page->getLocale();
+
+        foreach ($this->languages as $language) {
+
+            if ($language['locale'] == $originalLocale) continue;
+
+            if ($translatedLocales->containsKey($language['locale'])) {
+                $translationLanguages->set($language['locale'],
+                    array(
+                        'short_label' => $language['short_label'],
+                        'translation' => $translatedLocales->get($language['locale'])
+                    ));
+
+            } else {
+                $translationLanguages->set($language['locale'],
+                    array(
+                        'short_label' => $language['short_label'],
+                        'translation' => false
+                    ));
+            }
+
+        }
+
+        return $translationLanguages;
+    }
+
     /**
      * Get the page templates from the configuration and create an array to use in the
      * choice field in the admin form
@@ -337,24 +435,25 @@ class PageAdmin extends BaseAdmin
         return $choices;
     }
 
-	/**
-	 * @return array
-	 */
-	public function getBatchActions()
-	{
-	    // retrieve the default (currently only the delete action) actions
-	    $actions = parent::getBatchActions();
+    /**
+     * @return array
+     */
+    public function getBatchActions()
+    {
+        return array();
+        // retrieve the default (currently only the delete action) actions
+        $actions = parent::getBatchActions();
 
-	    // check user permissions
-	    if($this->hasRoute('edit') && $this->isGranted('EDIT') && $this->hasRoute('delete') && $this->isGranted('DELETE')){
-	        $actions['publish']= array(
-	            'label'            => $this->trans('action_publish', array(), $this->translationDomain),
-	            'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
-	        );
+        // check user permissions
+        if ($this->hasRoute('edit') && $this->isGranted('EDIT') && $this->hasRoute('delete') && $this->isGranted('DELETE')) {
+            $actions['publish'] = array(
+                'label' => $this->trans('action_publish', array(), $this->translationDomain),
+                'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
+            );
 
-	    }
+        }
 
-	    return $actions;
-	}
+        return $actions;
+    }
 
 }

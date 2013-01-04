@@ -112,7 +112,6 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             $menu->addChild('Draft', array('uri' => $draftPath));
             $menu->addChild('Live', array('uri' => $livePath));
 
-            $this->addDivider($menu, true);
         }
 
         return $menu;

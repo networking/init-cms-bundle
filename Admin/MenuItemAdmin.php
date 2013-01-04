@@ -22,6 +22,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
 
 class MenuItemAdmin extends BaseAdmin
 {
+    protected $baseRoutePattern = 'cms/menu';
 
     protected $isRoot = false;
 
@@ -30,10 +31,8 @@ class MenuItemAdmin extends BaseAdmin
      */
     protected function configureRoutes(RouteCollection $collection)
     {
-
-        $collection->add('editMenu', '{id}/edit_menu');
-        $collection->add('createMenu', 'create_menu');
-        $collection->add('ajaxNavigation', 'ajax_navigation', array(), array('_method' => 'GET|POST'));
+        $collection->add('createFromPage', 'create_from_page/root_id/{rootId}/page_id/{pageId}', array(), array('_method' => 'GET|POST', 'rootId', 'pageId'));
+        $collection->add('ajaxController', 'ajax_navigation', array(), array('_method' => 'GET|POST'));
     }
 
     /**
@@ -41,25 +40,38 @@ class MenuItemAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $locale = $this->getRequest()->getLocale();
+        if (!$locale = $this->getRequest()->get('locale')) {
+            $locale = $this->getRequest()->getLocale();
+        }
 
-        $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:MenuItem');
+        $er = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:MenuItem');
         $id = $this->getRequest()->get('id');
 
         if ($id) {
-            $menuItem = $repository->find($id);
+            $menuItem = $er->find($id);
             $locale = $menuItem->getLocale();
         }
 
+        if ($rootId = $this->getRequest()->get('root_id')) {
+            $root = $er->find($rootId);
+        } else {
+            $root = $er->findOneBy(array('isRoot' => 1, 'locale' => $locale));
+        }
+
+        if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
+            $this->isRoot = true;
+        } elseif ($this->getSubject()->getIsRoot()) {
+            $this->isRoot = true;
+        }
 
         $formMapper
             ->add('name');
 
         $formMapper->add('locale', 'hidden', array('data' => $locale));
 
-        if($this->isRoot){
-           $formMapper->add('isRoot', 'hidden', array('data' => true));
-        }else {
+        if ($this->isRoot) {
+            $formMapper->add('isRoot', 'hidden', array('data' => true));
+        } else {
             $formMapper
                 ->add('page',
                 'entity',
@@ -81,6 +93,7 @@ class MenuItemAdmin extends BaseAdmin
                 array(
                     'class' => 'Networking\InitCmsBundle\Entity\MenuItem',
                     'required' => true,
+                    'preferred_choices' => array($root),
                     'query_builder' => function (EntityRepository $er) use ($locale) {
                         $qb = $er->createQueryBuilder('m');
 
@@ -107,21 +120,6 @@ class MenuItemAdmin extends BaseAdmin
         }
 
         $datagridMapper
-            ->add('name')
-            ->add('page', null, array(),
-            'entity',
-            array(
-                'class' => 'Networking\InitCmsBundle\Entity\Page',
-                'property' => 'AdminTitle',
-                'query_builder' => function (EntityRepository $er) use ($locale) {
-                    $qb = $er->createQueryBuilder('p');
-                    $qb->where('p.locale = :locale')
-                        ->orderBy('p.path', 'asc');
-                    $qb->setParameter(':locale', $locale);
-
-                    return $qb;
-                },
-            ))
             ->add('locale',
             'doctrine_orm_callback',
             array('callback' => array($this, 'getByLocale')),
@@ -180,6 +178,17 @@ class MenuItemAdmin extends BaseAdmin
     public function setIsRoot($isRoot)
     {
         $this->isRoot = $isRoot;
+    }
+
+    public function getTemplate($name)
+    {
+        switch ($name) {
+            case 'list':
+                return 'NetworkingInitCmsBundle:CRUD:menu_list.html.twig';
+                break;
+            default:
+                return parent::getTemplate($name);
+        }
     }
 
 }

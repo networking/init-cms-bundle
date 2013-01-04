@@ -15,11 +15,11 @@ namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
  */
 interface VersionableInterface
 {
-    const STATUS_DRAFT = 'draft';
+    const STATUS_DRAFT = 'status_draft';
 
-    const STATUS_REVIEW = 'review';
+    const STATUS_REVIEW = 'status_review';
 
-    const STATUS_PUBLISHED = 'published';
+    const STATUS_PUBLISHED = 'status_published';
 
     /**
      * @return mixed

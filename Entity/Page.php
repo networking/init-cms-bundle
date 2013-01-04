@@ -33,10 +33,19 @@ use Symfony\Cmf\Component\Routing\RouteAwareInterface;
 class Page implements RouteAwareInterface, VersionableInterface
 {
 
+    /**
+     *
+     */
     const PATH_SEPARATOR = '/';
 
+    /**
+     *
+     */
     const VISIBILITY_PUBLIC = 'public';
 
+    /**
+     *
+     */
     const VISIBILITY_PROTECTED = 'protected';
 
     /**
@@ -228,6 +237,9 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     protected $oldTitle;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->translations = new ArrayCollection();
@@ -658,6 +670,9 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $this;
     }
 
+    /**
+     *
+     */
     public function orderLayoutBlocks()
     {
         $layoutBlocks = $this->layoutBlock->toArray();
@@ -669,6 +684,11 @@ class Page implements RouteAwareInterface, VersionableInterface
         }
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @return int
+     */
     private function compareSortOrder($a, $b)
     {
         return strcmp($a->getSortOrder(), $b->getSortOrder());
@@ -727,6 +747,13 @@ class Page implements RouteAwareInterface, VersionableInterface
     public function getMenuItem()
     {
         return $this->menuItem;
+    }
+
+    public function getMenuItemByRoot($rootId)
+    {
+        return $this->menuItem->filter(function ($menuItem) use ($rootId) {
+                        return ($menuItem->getRoot() == $rootId);
+                    });
     }
 
     /**
@@ -852,6 +879,18 @@ class Page implements RouteAwareInterface, VersionableInterface
     }
 
     /**
+     * @param Page $page
+     * @return Page
+     */
+    public function addTranslation(Page $page)
+    {
+        $this->translations->add($page);
+        $page->setOriginal($this);
+
+        return $this;
+    }
+
+    /**
      * @param  array $translations
      * @return page
      */
@@ -860,10 +899,6 @@ class Page implements RouteAwareInterface, VersionableInterface
 
         if (gettype($translations) == "array") {
             $translations = new ArrayCollection($translations);
-        }
-
-        foreach ($translations as $translation) {
-            $translation->setPage($this);
         }
 
         $this->translations = $translations;
@@ -895,6 +930,9 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $locales;
     }
 
+    /**
+     * @return string
+     */
     public function getAdminTitle()
     {
         $countParents = count($this->getParents());
@@ -1077,6 +1115,9 @@ class Page implements RouteAwareInterface, VersionableInterface
         );
     }
 
+    /**
+     * @return array
+     */
     public static function getVisibilityList()
     {
         return array(
@@ -1124,11 +1165,17 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function hasListener()
     {
         return 'Networking\InitCmsBundle\EventListener\PageListener';
     }
 
+    /**
+     * @return int
+     */
     public function convertParentToInteger()
     {
         if ($this->parent) {
@@ -1138,6 +1185,9 @@ class Page implements RouteAwareInterface, VersionableInterface
         return 0;
     }
 
+    /**
+     * @return array
+     */
     public function convertParentsToArray()
     {
         if (!is_array($this->parents)) {
@@ -1147,6 +1197,9 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $this->parents;
     }
 
+    /**
+     * @return array
+     */
     public function convertChildrenToIntegerArray()
     {
         $children = array();
@@ -1158,11 +1211,17 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $children;
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function prepareMenuItemsForSerialization()
     {
         return $this->getMenuItem();
     }
 
+    /**
+     * @return array
+     */
     public function convertTranslationsToIntegerArray()
     {
         $translations = array();
@@ -1174,6 +1233,9 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $translations;
     }
 
+    /**
+     * @return array
+     */
     public function convertOriginalsToIntegerArray()
     {
         $originals = array();

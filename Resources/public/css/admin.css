@@ -20,11 +20,16 @@
 .sonata-bc .modal-body {
 	height: 40%;
 }
-
-.sonata-bc .dropzone ul, .sonata-bc .dropzone ol {
+.dropzone.well-small{
+    padding: 4px;
+}
+.dropzone ul, .dropzone ol {
 	margin: 0;
 }
-
+.dropzone h6 {
+	font-weight: normal;
+	margin: 0;;
+}
 .networking-sortable-list .content_preview {
 	margin-bottom: 5px;
 	background-color: white;
@@ -45,10 +50,7 @@
 	float: right;
 }
 
-.dropzone h6 {
-	font-weight: normal;
-	margin: 0;;
-}
+
 
 .modal-body label {
 	text-align: left !important;

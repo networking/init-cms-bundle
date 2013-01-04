@@ -11,10 +11,16 @@
 
 {% block title %}
     {% if admin.id(object) %}
-        {{ "title_edit"|trans({'%name%': admin.toString(object) }, 'SonataAdminBundle') }} - {{ object.status|trans }}
+        {{ admin.toString(object) }}
     {% else %}
         {{ "title_create"|trans({}, 'SonataAdminBundle') }}
     {% endif %}
+{% endblock %}
+
+{% block top_actions %}
+    <div class="pull-right level-headline-icon">
+                    <a href="javascript:history.back();"><div class="close-button-medium"></div></a>
+                </div>
 {% endblock %}
 
 {% block actions %}

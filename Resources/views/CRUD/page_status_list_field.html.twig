@@ -1,0 +1,5 @@
+{% extends 'NetworkingInitCmsBundle:CRUD:cms_list_field.html.twig' %}
+
+{% block field %}
+    <span class="{% if object.status == 'status_draft' %}color-draft{% else %}info-soft{% endif %}">{{ value|trans({}, admin.translationDomain) }}</span>
+{% endblock %}

@@ -7,6 +7,9 @@ services:
             - @networking.session.attribute_bag #service id is defined below
             - @session.flash_bag
 
+    networking_ini_cms.event_dispatcher:
+        class: Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher
+
     networking.session.attribute_bag:
         class: Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag
 #
@@ -14,6 +17,19 @@ services:
         class: Networking\InitCmsBundle\Helper\LanguageSwitcherHelper
         calls:
             - [setContainer, [@service_container]]
+
+    networking_init_cms.helper.bundle_guesser:
+        class: Networking\InitCmsBundle\Helper\BundleGuesser
+
+    networking_init_cms.filter.type.simple_string:
+        class: Networking\InitCmsBundle\Filter\SimpleStringFilter
+        tags:
+            - {name: sonata.admin.filter.type, alias: networking_init_cms_simple_string}
+
+    networking.admin.form.extension.field:
+        class: Networking\InitCmsBundle\Form\Extension\Field\Type\FormTypeFieldExtension
+        tags:
+          - { name: form.type_extension, alias: form}
 
 ## Admin Controllers
 # Page Admin Contoller
@@ -56,12 +72,12 @@ services:
         class: Networking\InitCmsBundle\Admin\MenuItemAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\MenuItem, NetworkingInitCmsBundle:MenuItemAdmin]
         calls:
-            - [setTranslationDomain, [Networking\InitCmsBundle]]
+            - [setTranslationDomain, [MenuItemAdmin]]
             - [setLanguages, [%networking_init_cms.page.languages%]]
             - [setContainer, [@service_container]]
             - [setSubClasses, [{"menu": Networking\InitCmsBundle\Entity\MenuItem, "menu item": Networking\InitCmsBundle\Entity\MenuItem}]]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: "Menu Items", label_translator_strategy: sonata.admin.label.strategy.underscore }
+            - { name: sonata.admin, manager_type: orm, icon: happy, label: "Menus", label_translator_strategy: sonata.admin.label.strategy.underscore }
 
 # Twig tinymce live
     networking_init_cms.twig.extension:
@@ -110,8 +126,16 @@ services:
 # Listener for setting up content routes when page created/edited
     networking_init_cms.page_listner:
        class:  Networking\InitCmsBundle\EventListener\PageListener
+       arguments: [@session ]
        calls:
                  - [ setSerializer, [@serializer]]
+       tags:
+           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+
+    networking_init_cms.last_edited_listener:
+       class:  Networking\InitCmsBundle\EventListener\LastEditedListener
+       arguments: [@session ]
        tags:
            - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
            - { name: doctrine.event_listener, event: postPersist, method: postPersist }

@@ -1,0 +1,5 @@
+{% if  admin.isGranted('CREATE')%}
+    <a class="btn btn-custom menu-dialog-link" href="{{ admin.generateUrl('create', {'subclass': 'menu item'}) }}">
+        <i class="icon-plus icon-white"></i> {{ 'button.create.menu_item'|trans({}, admin.translationDomain) }}
+    </a>
+{% endif %}

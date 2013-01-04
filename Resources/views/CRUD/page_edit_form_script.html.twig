@@ -1,7 +1,6 @@
 {% autoescape false %}
 <script type="text/javascript">
 
-
     function start_save_page_settings(link) {
         link.onclick = null;
 
@@ -10,10 +9,8 @@
                 .click(update_page_settings)
                 .trigger('click')
         ;
-
         return false;
     }
-
 
     var update_page_settings = function (event) {
         event.preventDefault();
@@ -26,8 +23,14 @@
             dataType:'json',
             data:{ _xml_http_request:true },
             success:function (xhr) {
-                jQuery('.page-header h1').html(xhr.titleBlock);
-                jQuery('#pageSettings').replaceWith(xhr.pageSettings.content);
+                if (xhr.status == "{{ 'draft'|trans({}, admin.translationDomain) }}") {
+                    jQuery('.page_status').addClass('color-draft');
+                } else {
+                    jQuery('.page_status').removeClass('color-draft');
+                }
+                jQuery('.page_status').html(xhr.status);
+                jQuery('.page_title h1').html(xhr.title);
+                jQuery('#pageSettings').html(xhr.pageSettings.content);
                 $('#pageSettingFields').modal('hide');
             }
         });

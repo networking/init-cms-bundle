@@ -1,0 +1,30 @@
+<ul class="nav nav-tabs">
+    {% for key, menu in menus %}
+        <li {% if loop.first %}class="active"{% endif %}>
+            <a href="#menu_{{ menu.rootNode.id }}" data-toggle="tab">{{ menu.rootNode.name }}
+            </a>
+
+        </li>
+    {% endfor %}
+    <li>
+        <a href="{{ admin.generateUrl('create', {'subclass': 'menu'}) }}" class="menu-dialog-link"><i class="icon icon-plus"></i></a>
+    </li>
+</ul>
+
+
+<div class="tab-content">
+    {% for key, menu in menus %}
+        <div class="tab-pane navigation sortable {% if loop.first %}active{% endif %}" id="menu_{{ menu.rootNode.id }}">
+            <a href="{{ admin.generateUrl('edit', {'subclass': 'menu', 'id': menu.rootNode.id}) }}" class="btn btn-custom menu-dialog-link">
+            <i class="icon-white icon-pencil"></i> {{ 'button.menu.edit'|trans({}, admin.translationDomain) }}
+            </a>
+            <a href="{{ admin.generateUrl('delete', {'subclass': 'menu', 'id': menu.rootNode.id}) }}" class="btn btn-custom menu-dialog-link">
+            <i class="icon-white icon-trash"></i> {{ 'button.menu.delete'|trans({}, admin.translationDomain) }}
+            </a>
+            {{ menu.navigation|raw }}
+        </div>
+    {% endfor %}
+</div>
+
+<div class="modal hide fade" tabindex="-1" role="dialog" id="menu_dialog">
+</div>

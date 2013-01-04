@@ -3,6 +3,7 @@
 namespace Networking\InitCmsBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs,
+    Symfony\Component\HttpFoundation\Session\Session,
     JMS\SerializerBundle\Serializer\SerializerInterface,
     Networking\InitCmsBundle\Entity\ContentRoute,
     Networking\InitCmsBundle\Entity\Page,
@@ -10,10 +11,20 @@ use Doctrine\ORM\Event\LifecycleEventArgs,
 
 class PageListener
 {
+
     /**
      * @var SerializerInterface $serializer
      */
     protected $serializer;
+
+    /**
+     * @var Session $session
+     */
+    protected $session;
+
+    public function __construct(Session $session){
+        $this->session = $session;
+    }
 
     public function setSerializer(SerializerInterface $serializer)
     {
@@ -28,6 +39,7 @@ class PageListener
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
+
         $em = $args->getEntityManager();
 
         if ($entity instanceof Page) {
@@ -55,12 +67,13 @@ class PageListener
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
+
         /** @var $entity Page */
         $entity = $args->getEntity();
+
         $em = $args->getEntityManager();
 
         if ($entity instanceof Page) {
-
             $contentRoute = $entity->getContentRoute();
             $contentRoute->setPath(self::getPageRoutePath($entity->getPath()));
 

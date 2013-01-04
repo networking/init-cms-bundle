@@ -104,7 +104,7 @@
 			</trans-unit>
 			<trans-unit id="status_published">
 				<source>status_published</source>
-				<target>Published</target>
+				<target>Published (live)</target>
 			</trans-unit>
 			<trans-unit id="visibility_public">
 				<source>visibility_public</source>
@@ -117,6 +117,80 @@
             <trans-unit id="translation.message_saved">
                 <source>translation.message_saved</source>
                 <target>The page was successfully translated</target>
+            </trans-unit>
+            <trans-unit id="admin.menu.dashboard">
+                <source>admin.menu.dashboard</source>
+                <target>Dashborad</target>
+            </trans-unit>
+            <trans-unit id="button.apply">
+                <source>button.apply</source>
+                <target>Apply</target>
+            </trans-unit>
+            <trans-unit id="button.cancel_draft">
+                <source>button.cancel_draft</source>
+                <target>Cancel draft</target>
+            </trans-unit>
+            <trans-unit id="legend.page_status">
+                <source>legend.page_status</source>
+                <target>Page Status</target>
+            </trans-unit>
+            <trans-unit id="legend.translations">
+                <source>legend.translations</source>
+                <target>Translations</target>
+            </trans-unit>
+            <trans-unit id="legend.filters">
+                <source>legend.filters</source>
+                <target>Filters</target>
+            </trans-unit>
+            <trans-unit id="legend.actions">
+                <source>legend.actions</source>
+                <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="label.menu_link">
+                <source>label.menu_link</source>
+                <target>Menu "%menu_name%"</target>
+            </trans-unit>
+            <trans-unit id="link.add">
+                <source>link.add</source>
+                <target>Add</target>
+            </trans-unit>
+            <trans-unit id="link.edit">
+                <source>link.edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="link.translate">
+                <source>link.translate</source>
+                <target>Translate (copy)</target>
+            </trans-unit>
+            <trans-unit id="link.link">
+                <source>link.link</source>
+                <target>Link</target>
+            </trans-unit>
+            <trans-unit id="link.unlink">
+                <source>link.unlink</source>
+                <target>Unlink</target>
+            </trans-unit>
+            <trans-unit id="info.empty">
+                <source>info.empty</source>
+                <target>Empty</target>
+            </trans-unit>
+            <trans-unit id="info.translations">
+                <source>info.translations</source>
+                <target>Page alternatives in other languages</target>
+            </trans-unit>
+            <trans-unit id="legend.menu_connections">
+                <source>legend.menu_connections</source>
+                <target>Menu Connections</target>
+            </trans-unit>
+            <trans-unit id="message.translation_link">
+                <source>message.translation_link</source>
+                <target>Here you can create a connection to an existing page in the selected language of %language%.
+                    Only pages in %language% which do not already have a translation in the %original_language% are listed below.
+                    Select the page in %language% that you would like to link with "%object%", then click the submit button.</target>
+            </trans-unit>
+            <trans-unit id="title.translation_link">
+                <source>title.translation_link</source>
+                <target>Link "%object%" page to a %language% page</target>
             </trans-unit>
 		</body>
 	</file>

@@ -93,6 +93,8 @@ class NetworkingHelperExtension extends \Twig_Extension
             'networking_init_cms_sort_form_children' => new \Twig_Function_Method($this, 'networking_init_cms_sort_form_children', array('is_safe' => array('html'))),
             'networking_admin_cms_block' => new \Twig_Function_Method($this, 'networking_admin_cms_block', array('is_safe' => array('html'))),
             'networking_init_cms_content_select' => new \Twig_Function_Method($this, 'networking_init_cms_content_select', array('is_safe' => array('html'))),
+            'networking_init_cms_get_admin_icon' => new \Twig_Function_Method($this, 'networking_init_cms_get_admin_icon', array('is_safe' => array('html'))),
+            'networking_init_cms_get_current_admin_locale' => new \Twig_Function_Method($this, 'networking_init_cms_get_current_admin_locale', array('is_safe' => array('html'))),
         );
     }
 
@@ -106,7 +108,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     public function networking_init_cms_block($template, LayoutBlock $layoutBlock)
     {
-        if(!$serializedContent = $layoutBlock->getSnapshotContent()){
+        if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
             $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
 
@@ -157,6 +159,111 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function networking_init_cms_content_select()
     {
         return $this->container->getParameter('networking_init_cms.page.content_types');
+    }
+
+    /**
+     * Guess which icon should represent an entity admin
+     *
+     * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
+     * @param string $size
+     * @param bool $active
+     * @return string
+     *
+     * @todo This is a bit of a hack. Need to provide a better way of providing admin icons
+     */
+    public function networking_init_cms_get_admin_icon(\Sonata\AdminBundle\Admin\AdminInterface $admin, $size = 'small', $active = false)
+    {
+        $state = $active ? '_active' : '';
+        $imagePath = '/bundles/networkinginitcms/img/icons/icon_blank_' . $size . $state . '.png';
+
+        $bundleGuesser = $this->container->get('networking_init_cms.helper.bundle_guesser');
+        $bundleGuesser->initialize($admin);
+        $bundle = $bundleGuesser->getBundleShortName();
+        $path = $this->container->get('kernel')->getBundle($bundle)->getPath();
+
+        $iconName = 'icon_' . strtolower($admin->getLabel()) . '_' . $size . $state;
+
+        $folders = array('img/icons', 'image/icons', 'img', 'image');
+
+        $imageType = array('gif', 'png', 'jpg', 'jpeg');
+
+        foreach ($folders as $folder) {
+            foreach ($imageType as $type) {
+                $icon = $folder . DIRECTORY_SEPARATOR . $iconName . '.' . $type;
+                if (file_exists($path . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $icon)) {
+                    $imagePath = 'bundles' . DIRECTORY_SEPARATOR . str_replace('bundle', '', strtolower($bundle)) . DIRECTORY_SEPARATOR . $icon;
+                }
+            }
+        }
+
+        return $imagePath;
+    }
+
+    public function networking_init_cms_get_current_admin_locale(\Sonata\AdminBundle\Admin\AdminInterface $admin)
+    {
+        if ($subject = $admin->getSubject()) {
+            return $this->getFieldValue($subject, 'locale');
+        } elseif ($filter = $admin->getDatagrid()->getFilter('locale')) {
+            $data = $filter->getValue();
+            if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
+                return $this->getCurrentLocale();
+            }
+
+            $data['value'] = trim($data['value']);
+
+            if (strlen($data['value']) == 0) {
+                return $this->getCurrentLocale();
+            }
+
+            return $data['value'];
+        }
+
+        return $this->getCurrentLocale();
+    }
+
+    private function getCurrentLocale()
+    {
+        return $this->container->get('request')->getLocale();
+    }
+
+    /**
+     * @param $class
+     * @return string
+     */
+    public function networking_init_cms_resource_bundle($class)
+    {
+        return strtolower(str_replace('bundle', '', $this->getBundleName($class)));
+    }
+
+    /**
+     * @param $class
+     * @return string
+     */
+    public function getBundleName($class)
+    {
+        $reflector = new \ReflectionClass(get_class($class));
+
+        return ($p1 = strpos($ns = $reflector->getNamespaceName(), '\\')) === false ? $ns :
+            substr($ns, 0, ($p2 = strpos($ns, '\\', $p1 + 1)) === false ? strlen($ns) : $p2);
+    }
+
+    /**
+     * @param $class
+     * @return string
+     */
+    public function getShortName($class)
+    {
+        $reflector = new \ReflectionClass(get_class($class));
+        return $reflector->getShortName();
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getBundleShortName($class)
+    {
+        return str_replace('\\', '', $this->getBundleName($class));
     }
 
     /**
@@ -269,6 +376,8 @@ class NetworkingHelperExtension extends \Twig_Extension
         $fieldDescription = $formView->vars['sonata_admin']['field_description'];
         $value = '';
 
+
+
         switch ($fieldDescription->getType()) {
             case 'boolean':
                 $value = $fieldDescription->getValue($object);
@@ -284,7 +393,7 @@ class NetworkingHelperExtension extends \Twig_Extension
                 $preferredChoices = $formView->vars['preferred_choices'];
                 $choices = array_merge($choices, $preferredChoices);
                 $selected = $fieldDescription->getValue($object);
-                if(is_object($selected)){
+                if (is_object($selected)) {
                     $selected = (string)$selected->getId();
                 }
                 foreach ($choices as $choice) {
@@ -302,6 +411,10 @@ class NetworkingHelperExtension extends \Twig_Extension
             default:
                 var_dump($fieldDescription->getType());
                 break;
+        }
+
+        if($displayMethod = $fieldDescription->getOption('display_method')){
+            $value = $this->getFieldValue($object, $fieldDescription->getFieldName(), $displayMethod);
         }
 
         $options = array(
