@@ -29,7 +29,7 @@ class PageAdminController extends CmsCRUDController
      */
     public function translatePageAction(Request $request, $id, $locale)
     {
-        $er = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+        $er = $this->getDoctrine()->getRepository($this->admin->getClass());
 
         /** @var $page Page */
         $page = $er->find($id);
@@ -68,7 +68,7 @@ class PageAdminController extends CmsCRUDController
      */
     public function linkAction(Request $request, $id, $locale)
     {
-        $er = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+        $er = $this->getDoctrine()->getRepository($this->admin->getClass());
 
         /** @var $page Page */
         $page = $er->find($id);
@@ -79,35 +79,35 @@ class PageAdminController extends CmsCRUDController
 
         if ($this->getRequest()->getMethod() == 'POST') {
 
-              $linkPageId = $this->getRequest()->get('page');
-              if(!$linkPageId){
-                  $this->get('session')->setFlash('sonata_flash_error', 'flash_link_error');
-              } else {
-                  /** @var $linkPage Page */
-                  $linkPage = $er->find($linkPageId);
+            $linkPageId = $this->getRequest()->get('page');
+            if (!$linkPageId) {
+                $this->get('session')->setFlash('sonata_flash_error', 'flash_link_error');
+            } else {
+                /** @var $linkPage Page */
+                $linkPage = $er->find($linkPageId);
 
-                  $page->addTranslation($linkPage);
+                $page->addTranslation($linkPage);
 
-                  $em = $this->getDoctrine()->getManager();
-                  $em->persist($page);
-                  $em->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($page);
+                $em->flush();
 
-                  if($this->isXmlHttpRequest()){
+                if ($this->isXmlHttpRequest()) {
 
-                      $html = $this->renderView(
-                          'NetworkingInitCmsBundle:CRUD:page_translation_settings.html.twig',
-                          array('object' => $page, 'admin' => $this->admin));
-                      return $this->renderJson(array(
-                                             'result' => 'ok',
-                                             'html' => $html
-                                         ));
-                  }
+                    $html = $this->renderView(
+                        'NetworkingInitCmsBundle:CRUD:page_translation_settings.html.twig',
+                        array('object' => $page, 'admin' => $this->admin));
+                    return $this->renderJson(array(
+                        'result' => 'ok',
+                        'html' => $html
+                    ));
+                }
 
 
-                  $this->get('session')->setFlash('sonata_flash_success', 'flash_link_success');
+                $this->get('session')->setFlash('sonata_flash_success', 'flash_link_success');
 
-                  return new RedirectResponse($this->admin->generateUrl('edit', array('id' => $page->getId())));
-              }
+                return new RedirectResponse($this->admin->generateUrl('edit', array('id' => $page->getId())));
+            }
         }
 
         $pages = $er->findBy(array('locale' => $locale));
@@ -115,7 +115,7 @@ class PageAdminController extends CmsCRUDController
         if (count($pages)) {
             $pages = new \Doctrine\Common\Collections\ArrayCollection($pages);
             $originalLocale = $page->getLocale();
-            $pages = $pages->filter(function (Page $linkPage) use($originalLocale) {
+            $pages = $pages->filter(function (Page $linkPage) use ($originalLocale) {
                 return !in_array($originalLocale, $linkPage->getTranslatedLocales());
 
             });
@@ -142,7 +142,7 @@ class PageAdminController extends CmsCRUDController
      */
     public function unlinkAction(Request $request, $id, $translationId)
     {
-        $er = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+        $er = $this->getDoctrine()->getRepository($this->admin->getClass());
 
         /** @var $page Page */
         $page = $er->find($id);
@@ -151,10 +151,44 @@ class PageAdminController extends CmsCRUDController
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
         }
 
-        $locale = $page->getLocale();
+        if ($this->getRequest()->getMethod() == 'DELETE') {
 
-        $qb = $er->createQueryBuilder('p');
-        $qb->where('locale != :locale');
+            $translations = $page->getAllTranslations()->filter(function(Page $page) use ($translationId){
+                return $page->getId() == $translationId;
+            });
+            $translation = $translations->first();
+
+            $page->removeTranslation($translation);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($page);
+            $em->flush();
+
+            if ($this->isXmlHttpRequest()) {
+
+                $html = $this->renderView(
+                    'NetworkingInitCmsBundle:CRUD:page_translation_settings.html.twig',
+                    array('object' => $page, 'admin' => $this->admin));
+                return $this->renderJson(array(
+                    'result' => 'ok',
+                    'html' => $html
+                ));
+            }
+
+
+            $this->get('session')->setFlash('sonata_flash_success', 'flash_link_success');
+
+            return new RedirectResponse($this->admin->generateUrl('edit', array('id' => $page->getId())));
+        }
+
+        return $this->render(
+            'NetworkingInitCmsBundle:CRUD:page_translation_unlink.html.twig',
+            array(
+                'page' => $page,
+                'translationId' => $translationId,
+                'admin' => $this->admin
+            )
+        );
 
 
     }
@@ -559,4 +593,25 @@ class PageAdminController extends CmsCRUDController
             'rootMenus' => $rootMenus
         ));
     }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function parentPageListAction(Request $request)
+    {
+        $locale = $request->get('locale');
+        $pages = array();
+        $er = $this->getDoctrine()->getRepository($this->admin->getClass());
+
+        if($result = $er->getParentPagesChoices($locale)) {
+            foreach ($result as $page) {
+                $pages[$page->getId()] = array($page->getAdminTitle() );
+            }
+        }
+
+        return $this->renderJson($pages);
+    }
+
+
 }

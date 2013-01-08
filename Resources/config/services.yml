@@ -31,6 +31,12 @@ services:
         tags:
           - { name: form.type_extension, alias: form}
 
+    networking.admin.form.type.autocomplete:
+        class: Networking\InitCmsBundle\Form\Type\AutocompleteType
+        tags:
+          - { name: form.type, alias: networking_type_autocomplete}
+
+
 ## Admin Controllers
 # Page Admin Contoller
 

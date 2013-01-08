@@ -39,13 +39,14 @@ class PageAdmin extends BaseAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('translatePage', 'translate_page/{id}/locale/{locale}', array(), array('method' => 'POST'));
+        $collection->add('parentPageList', 'parent_page/', array(), array('method' => 'GET'));
         $collection->add('updateFormFieldElement', 'update_form_fields', array(), array('method' => 'POST'));
         $collection->add('addLayoutBlock', 'add_layout_block', array(), array('method' => 'POST'));
         $collection->add('uploadTextBlockImage', 'upload_text_block_image', array(), array('method' => 'POST'));
         $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', array(), array('method' => 'GET'));
         $collection->add('deleteLayoutBlock', 'delete_layout_block', array(), array('method' => 'GET'));
         $collection->add('link', 'link/{id}/locale/{locale}', array(), array('method' => 'GET'));
-        $collection->add('unlink', 'unlink/{id}/translation/{translationId}', array(), array('method' => 'GET'));
+        $collection->add('unlink', 'unlink/{id}/translation_id/{translationId}', array(), array('method' => 'GET|DELETE'));
     }
 
     /**
@@ -62,7 +63,7 @@ class PageAdmin extends BaseAdmin
             $request = $this->container->get('request');
         }
 
-        $locale = $request->getLocale();
+        $locale = $request->get('locale') ? $request->get('locale') : $request->getLocale();
 
         /** @var $repository PageRepository */
         $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
@@ -123,12 +124,13 @@ class PageAdmin extends BaseAdmin
         if ($isHomeReadOnly) {
             $formMapper
                 ->add('parent',
-                'entity',
+                'networking_type_autocomplete',
                 array(
+                    'attr' => array('style'=>"width:220px"),
                     'property' => 'AdminTitle',
                     'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
                     'required' => false,
-                    'query_builder' => $repository->getParentPages($locale, $id),
+                    'query_builder' => $repository->getParentPagesQuery($locale, $id),
                 ));
         }
 

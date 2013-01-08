@@ -37,7 +37,7 @@ class PageRepository extends MaterializedPathRepository implements ContentReposi
      * @param  null                       $id
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getParentPages($locale, $id = null)
+    public function getParentPagesQuery($locale, $id = null)
     {
         $qb = $this->createQueryBuilder('p');
         $qb->where($qb->expr()->isNull('p.isHome').' OR p.isHome <> 1');
@@ -63,6 +63,13 @@ class PageRepository extends MaterializedPathRepository implements ContentReposi
 
 
         return $qb;
+    }
+
+    public function getParentPagesChoices($locale, $id = null)
+    {
+        $qb = $this->getParentPagesQuery($locale, $id);
+
+        return $qb->getQuery()->execute();
     }
 
 }

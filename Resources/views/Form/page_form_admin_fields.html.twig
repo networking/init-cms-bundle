@@ -141,3 +141,17 @@ file that was distributed with this source code.
         INVALID MODE : {{ id }} - type : sonata_type_collection - mapping : {{ sonata_admin.field_description.mappingtype }}
     {% endif %}
 {% endblock %}
+
+{% block networking_type_autocomplete_widget %}
+    {{ block('choice_widget') }}
+    <script>
+        $(document).ready(function() {
+        (function($){
+            $("#{{ id }}").select2({
+                placeholder: "{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
+                allowClear: true
+            });
+        })(jQuery);
+        });
+    </script>
+{% endblock %}

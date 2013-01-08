@@ -6,8 +6,13 @@
         {{ language.translation.title }}
         <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}">
             {{ 'link.edit'|trans({}, admin.translationDomain) }}
-        </a> | <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}">
+        </a> | <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}" class="translation-dialog-link">
+            {% if language.translation.isDirectTranslation(object) %}
             {{ 'link.unlink'|trans({}, admin.translationDomain) }}
+            {% else %}
+                {% set directTranslation = language.translation.getDirectTranslationFor(object) %}
+            <i class="info-soft"> -> <a href="{{ admin.generateUrl('edit', {'id': directTranslation.id}) }}"> {% filter upper %}{{ directTranslation.locale|slice(0,2) }}{% endfilter %} </i>
+            {% endif %}
         </a>
     {% else %}
         <i class="info-soft">{{ 'info.empty'|trans({}, admin.translationDomain) }}</i>

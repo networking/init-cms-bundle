@@ -195,7 +195,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     protected $translations;
 
     /**
-     * @var Page $original
+     * @var ArrayCollection $originals
      * @ORM\ManyToMany(targetEntity="Page", inversedBy="translations", cascade={"persist"})
      * @ORM\JoinTable(name="page_translation",
      *      joinColumns={@ORM\JoinColumn(name="translation_id", referencedColumnName="id")},
@@ -871,11 +871,35 @@ class Page implements RouteAwareInterface, VersionableInterface
     }
 
     /**
-     * @return Page
+     * @return ArrayCollection
      */
     public function getOriginals()
     {
         return $this->originals;
+    }
+
+    /**
+     * @param Page $page
+     * @return bool
+     */
+    public function isDirectTranslation(Page $page)
+    {
+        if($this->originals->contains($page)) {
+            return true;
+        } elseif ($this->translations->contains($page)){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getDirectTranslationFor(Page $page)
+    {
+        foreach($this->getAllTranslations() as $translation){
+            if($translation->isDirectTranslation($page)){
+                return $translation;
+            }
+        }
     }
 
     /**
@@ -889,6 +913,19 @@ class Page implements RouteAwareInterface, VersionableInterface
 
         return $this;
     }
+
+    /**
+     * @param Page $page
+     * @return Page
+     */
+    public function removeTranslation(Page $page)
+    {
+        $this->translations->removeElement($page);
+        $page->getOriginals()->removeElement($this);
+
+        return $this;
+    }
+
 
     /**
      * @param  array $translations

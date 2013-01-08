@@ -2,10 +2,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/a2lixtranslationform/css/a2lix_translation.css') }}" type="text/css"
-          media="all"/>
-    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/js/redactor/redactor.css') }}" type="text/css"
-          media="all"/>
+    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/select2.css') }}" type="text/css"
+              media="all"/>
 {% endblock stylesheets %}
 
 
@@ -50,6 +48,6 @@
 {% endblock %}
 
 {% block footer %}
-    <script src="{{ asset('/bundles/networkinginitcms/js/redactor/redactor.js') }}"></script>
+    <script src="{{ asset('/bundles/networkinginitcms/js/select2.min.js') }}"></script>
     {{ parent() }}
 {% endblock %}
