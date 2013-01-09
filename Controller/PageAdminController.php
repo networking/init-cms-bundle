@@ -2,21 +2,23 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Entity\Page;
-use Networking\InitCmsBundle\Entity\LayoutBlock;
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
-use Sonata\AdminBundle\Controller\CRUDController;
-use Sonata\AdminBundle\Admin\Admin as SontataAdmin;
+use Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\PageSnapshot,
+    Networking\InitCmsBundle\Helper\PageHelper,
+    Networking\InitCmsBundle\Entity\LayoutBlock,
+    Networking\InitCmsBundle\Entity\ContentRoute,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
+    Symfony\Component\HttpFoundation\JsonResponse,
+    Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
+    Symfony\Component\Security\Core\Exception\AccessDeniedException,
+    Symfony\Component\HttpFoundation\RedirectResponse,
+    JMS\SerializerBundle\Serializer\SerializerInterface,
+    Sonata\AdminBundle\Datagrid\ProxyQueryInterface,
+    Sonata\AdminBundle\Controller\CRUDController,
+    Sonata\AdminBundle\Admin\Admin as SontataAdmin;
 
 /**
  *
@@ -153,7 +155,7 @@ class PageAdminController extends CmsCRUDController
 
         if ($this->getRequest()->getMethod() == 'DELETE') {
 
-            $translations = $page->getAllTranslations()->filter(function(Page $page) use ($translationId){
+            $translations = $page->getAllTranslations()->filter(function (Page $page) use ($translationId) {
                 return $page->getId() == $translationId;
             });
             $translation = $translations->first();
@@ -289,6 +291,7 @@ class PageAdminController extends CmsCRUDController
             'classType' => $request->get('classType')
         );
 
+
         $helper->setNewLayoutBlockParameters($data);
         list($fieldDescription, $form) = $helper->appendFormFieldElement($admin, $subject, $elementId);
 
@@ -355,7 +358,7 @@ class PageAdminController extends CmsCRUDController
      */
     public function batchActionPublish(ProxyQueryInterface $selectedModelQuery)
     {
-        if ($this->admin->isGranted('EDIT') === false || $this->admin->isGranted('DELETE') === false) {
+        if ($this->admin->isGranted('PUBLISH') === false) {
             throw new AccessDeniedException();
         }
 
@@ -369,9 +372,10 @@ class PageAdminController extends CmsCRUDController
         try {
             foreach ($selectedModels as $selectedModel) {
                 $selectedModel->setStatus(Page::STATUS_PUBLISHED);
+                $modelManager->update($selectedModel);
+                $this->makeSnapshot($selectedModel);
             }
 
-            $modelManager->update($selectedModel);
         } catch (\Exception $e) {
             $this->get('session')->setFlash('sonata_flash_error', 'flash_batch_publish_error');
 
@@ -411,17 +415,25 @@ class PageAdminController extends CmsCRUDController
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($layoutBlock);
+                $em->flush();
             }
-
-            $em->flush();
         }
 
-        return new JsonResponse(
-            array(
-                'status' => 'success',
-                'message' => $this->translate('message.layout_blocks_sorted', array('zone' => $zone))
-            )
+        $data = array(
+            'status' => 'success',
+            'message' => $this->translate('message.layout_blocks_sorted', array('zone' => $zone))
         );
+
+        if ($layoutBlocks) {
+            $pageStatus = $this->renderView('NetworkingInitCmsBundle:CRUD:page_status_buttons.html.twig', array(
+                'admin' => $this->admin,
+                'object' => $layoutBlock->getPage()
+            ));
+            $data['pageStatusSettings'] = $pageStatus;
+            $data['pageStatus'] = $this->admin->trans($layoutBlock->getPage()->getStatus());
+        }
+
+        return new JsonResponse($data);
     }
 
     /**
@@ -541,6 +553,10 @@ class PageAdminController extends CmsCRUDController
             if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
                 $this->admin->update($object);
 
+                if ($object->getStatus() == Page::STATUS_PUBLISHED) {
+                    $this->makeSnapshot($object);
+                }
+
                 if ($this->isXmlHttpRequest()) {
 
                     $view = $form->createView();
@@ -548,18 +564,20 @@ class PageAdminController extends CmsCRUDController
                     // set the theme for the current Admin Form
                     $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
+
                     $pageSettingsTemplate = $this->render($this->admin->getTemplate($templateKey), array(
                         'action' => 'edit',
                         'form' => $view,
                         'object' => $object,
                     ));
 
+
                     return $this->renderJson(array(
                         'result' => 'ok',
                         'objectId' => $this->admin->getNormalizedIdentifier($object),
                         'title' => $object->__toString(),
-                        'status' => $this->admin->trans($object->getStatus()),
-                        'pageSettings' => $pageSettingsTemplate
+                        'pageStatus' => $this->admin->trans($object->getStatus()),
+                        'pageSettings' => $pageSettingsTemplate->getContent()
                     ));
                 }
 
@@ -604,13 +622,202 @@ class PageAdminController extends CmsCRUDController
         $pages = array();
         $er = $this->getDoctrine()->getRepository($this->admin->getClass());
 
-        if($result = $er->getParentPagesChoices($locale)) {
+        if ($result = $er->getParentPagesChoices($locale)) {
             foreach ($result as $page) {
-                $pages[$page->getId()] = array($page->getAdminTitle() );
+                $pages[$page->getId()] = array($page->getAdminTitle());
             }
         }
 
         return $this->renderJson($pages);
+    }
+
+    /**
+     * @param null $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function draftAction($id = null)
+    {
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+
+        return $this->changeStatus($id, Page::STATUS_DRAFT);
+    }
+
+    /**
+     * @param null $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function reviewAction($id = null)
+    {
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+
+        return $this->changeStatus($id, Page::STATUS_REVIEW);
+    }
+
+    /**
+     * @param $id
+     * @param $status
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    protected function changeStatus($id, $status)
+    {
+
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('EDIT', $object)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->admin->setSubject($object);
+
+        $form = $this->admin->getForm();
+
+
+        $object->setStatus($status);
+
+
+        // persist if the form was valid and if in preview mode the preview was approved
+        $this->admin->update($object);
+
+
+        if ($this->isXmlHttpRequest()) {
+
+            $view = $form->createView();
+
+            // set the theme for the current Admin Form
+            $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+
+            $pageSettingsTemplate = $this->render($this->admin->getTemplate('edit'), array(
+                'action' => 'edit',
+                'form' => $view,
+                'object' => $object,
+            ));
+
+            return $this->renderJson(array(
+                'result' => 'ok',
+                'objectId' => $this->admin->getNormalizedIdentifier($object),
+                'title' => $object->__toString(),
+                'status' => $this->admin->trans($object->getStatus()),
+                'pageSettings' => $pageSettingsTemplate
+            ));
+        }
+
+        $this->get('session')->setFlash('sonata_flash_success', 'flash_status_success');
+
+        return $this->redirect($this->admin->generateObjectUrl('edit', $object));
+    }
+
+    /**
+     * @param null $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @Template()
+     */
+    public function publishAction($id = null)
+    {
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('PUBLISH', $object)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->admin->setSubject($object);
+
+        $form = $this->admin->getForm();
+
+
+        $object->setStatus(Page::STATUS_PUBLISHED);
+
+
+        // persist if the form was valid and if in preview mode the preview was approved
+        $this->admin->update($object);
+
+        if ($object->getStatus() == Page::STATUS_PUBLISHED) {
+            $this->makeSnapshot($object);
+        }
+
+        if ($this->isXmlHttpRequest()) {
+
+            $view = $form->createView();
+
+            // set the theme for the current Admin Form
+            $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+
+            $pageSettingsTemplate = $this->render($this->admin->getTemplate('edit'), array(
+                'action' => 'edit',
+                'form' => $view,
+                'object' => $object,
+            ));
+
+            return $this->renderJson(array(
+                'result' => 'ok',
+                'objectId' => $this->admin->getNormalizedIdentifier($object),
+                'title' => $object->__toString(),
+                'status' => $this->admin->trans($object->getStatus()),
+                'pageSettings' => $pageSettingsTemplate
+            ));
+        }
+
+        $this->get('session')->setFlash('sonata_flash_success', 'flash_publish_success');
+
+        return $this->redirect($this->admin->generateObjectUrl('edit', $object));
+    }
+
+    /**
+     * Create a snapshot of a published page
+     *
+     * @param \Networking\InitCmsBundle\Entity\Page $page
+     */
+    private function makeSnapshot(Page $page)
+    {
+        if (!$this->admin->isGranted('PUBLISH', $page)) {
+            return;
+        }
+
+        $pageSnapshot = new PageSnapshot($page);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $serializer = $this->get('serializer');
+
+        foreach ($page->getLayoutBlock() as $layoutBlock) {
+            /** @var $layoutBlock \Networking\InitCmsBundle\Entity\LayoutBlock */
+            $layoutBlockContent = $em->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
+            $layoutBlock->takeSnapshot($serializer->serialize($layoutBlockContent, 'json'));
+        }
+
+        $pageSnapshot->setVersionedData($serializer->serialize($page, 'json'))
+            ->setPage($page);
+
+        if ($oldPageSnapshot = $page->getSnapshot()) {
+            $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
+        } else {
+            $snapshotContentRoute = new ContentRoute();
+        }
+
+        $pageSnapshot->setContentRoute($snapshotContentRoute);
+
+        $em->persist($pageSnapshot);
+        $em->flush();
+
+        $snapshotContentRoute->setPath(PageHelper::getPageRoutePath($page->getPath()));
+        $snapshotContentRoute->setObjectId($pageSnapshot->getId());
+
+        $em->persist($snapshotContentRoute);
+        $em->flush();
     }
 
 

@@ -6,12 +6,12 @@
     {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
 </div>
 {% elseif app.request.isxmlhttprequest %}
-    {% set form_group = admin.formgroups.page_settings %}
-    {% for field_name in form_group.fields %}
-        {% if admin.formfielddescriptions[field_name] is defined %}
-                {{ networking_init_cms_get_field_to_string('NetworkingInitCmsBundle:Form:page_edit_object_to_text.html.twig', form.vars.value, form[field_name]) }}
-        {% endif %}
-    {% endfor %}
+    <div id="pageStatusSettings">
+        {% include 'NetworkingInitCmsBundle:CRUD:page_status_buttons.html.twig' %}
+    </div>
+    <div id="pageSettings">
+        {% include 'NetworkingInitCmsBundle:CRUD:page_settings_fields.html.twig' %}
+    </div>
 {% else %}
     <form class="form-vertical"
           action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
@@ -41,19 +41,14 @@
                            href="#collapseZero">
                             <div class="accordion-caret"><b class="caret"></b></div>
                             {{ 'legend.page_status'|trans({}, admin.translationdomain) }} -
-                            <i class="{% if object.status == 'draft' %}color-draft{% endif %} page_status">{{ object.status|trans({}, admin.translationdomain) }}</i>
+                            <i class="{% if not object.isPublished() %}color-draft{% endif %} page_status">{{ object.status|trans({}, admin.translationdomain) }}</i>
                         </a>
                     </div>
                     <div id="collapseZero" class="accordion-body collapse in">
-                        <div class="accordion-inner" style="min-height:70px;">
-                            {% set form_group = admin.formgroups.page_status %}
-                            {% for field_name in form_group.fields %}
-                                {% if admin.formfielddescriptions[field_name] is defined %}
-                                    {{ form_row(form[field_name]) }}
-                                {% endif %}
-                            {% endfor %}
-                            <button type="submit" class="btn" onclick="return start_save_page_settings(this);">{{ 'button.apply'|trans({}, admin.translationdomain) }}</button>
-                            <a href="#" style="margin-left: 50px;">{{ 'button.cancel_draft'|trans({}, admin.translationdomain) }}</a>
+                        <div class="accordion-inner" style="min-height:70px;" >
+                            <div id="pageStatusSettings">
+                            {% include 'NetworkingInitCmsBundle:CRUD:page_status_buttons.html.twig' %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,12 +110,7 @@
                                 </a>
                             </div>
                             <div id="pageSettings">
-                                {% set form_group = admin.formgroups.page_settings %}
-                                {% for field_name in form_group.fields %}
-                                    {% if admin.formfielddescriptions[field_name] is defined %}
-                                            {{ networking_init_cms_get_field_to_string('NetworkingInitCmsBundle:Form:page_edit_object_to_text.html.twig', form.vars.value, form[field_name]) }}
-                                    {% endif %}
-                                {% endfor %}
+                                {% include 'NetworkingInitCmsBundle:CRUD:page_settings_fields.html.twig' %}
                             </div>
                         </div>
                     </div>

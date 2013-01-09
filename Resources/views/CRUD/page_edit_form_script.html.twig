@@ -23,14 +23,18 @@
             dataType:'json',
             data:{ _xml_http_request:true },
             success:function (xhr) {
-                if (xhr.status == "{{ 'draft'|trans({}, admin.translationDomain) }}") {
+                if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
                     jQuery('.page_status').addClass('color-draft');
                 } else {
                     jQuery('.page_status').removeClass('color-draft');
                 }
-                jQuery('.page_status').html(xhr.status);
+                var pageSettings = jQuery(xhr.pageSettings).filter('#pageSettings').html();
+                var pageStatus = jQuery(xhr.pageSettings).filter('#pageStatusSettings').html();
+
+                jQuery('.page_status').html(xhr.pageStatus);
                 jQuery('.page_title h1').html(xhr.title);
-                jQuery('#pageSettings').html(xhr.pageSettings.content);
+                jQuery('#pageSettings').html(pageSettings);
+                jQuery('#pageStatusSettings').html(pageStatus);
                 $('#pageSettingFields').modal('hide');
             }
         });

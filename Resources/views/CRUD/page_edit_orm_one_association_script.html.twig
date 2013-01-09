@@ -135,13 +135,13 @@ function saveLayoutBlockSort(callback) {
         XHRs.push(submitLayoutSort(sortedIDs, zone));
     });
 
-    jQuery.when.apply(jQuery, XHRs).done(function (jqXhr) {
+    jQuery.when.apply(jQuery, XHRs).done(function (xhr) {
         if (callback != undefined) {
-            callback(jqXhr)
+            callback(xhr)
         }
-    }).fail(function (jqXhr) {
+    }).fail(function (xhr) {
                 if (callback != undefined) {
-                    callback(jqXhr)
+                    callback(xhr)
                 }
             });
 
@@ -153,11 +153,20 @@ function submitLayoutSort(sortIds, zone) {
         url:'{{ url('admin_networking_initcms_page_updateLayoutBlockSort') }}',
         data:{layoutBlocks:sortIds, zone:zone},
         type:'get',
-        success:function (jqXhr) {
-            if (jqXhr.status == 'error') {
-                dfd.reject(jqXhr);
+        success:function (xhr) {
+            if (xhr.status == 'error') {
+                dfd.reject(xhr);
             } else {
-                dfd.resolve(jqXhr);
+                if (xhr.pageStatusSettings != undefined) jQuery('#pageStatusSettings').html(xhr.pageStatusSettings);
+                if (xhr.pageStatus != undefined) {
+                    if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
+                        jQuery('.page_status').addClass('color-draft');
+                    } else {
+                        jQuery('.page_status').removeClass('color-draft');
+                    }
+                    jQuery('.page_status').html(xhr.pageStatus);
+                }
+                dfd.resolve(xhr);
             }
         }
     });
@@ -185,7 +194,6 @@ function onAfterLoad() {
         stop:function (event, ui) {
             apply_position_value_{{ id }}();
             saveLayoutBlockSort(function (xhr) {
-                console.log('movement stopped');
                 createMessageBox(xhr.status, xhr.message);
             });
 

@@ -46,6 +46,9 @@ class PageAdmin extends BaseAdmin
         $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', array(), array('method' => 'GET'));
         $collection->add('deleteLayoutBlock', 'delete_layout_block', array(), array('method' => 'GET'));
         $collection->add('link', 'link/{id}/locale/{locale}', array(), array('method' => 'GET'));
+        $collection->add('draft', 'draft/{id}', array(), array('method' => 'GET'));
+        $collection->add('review', 'review/{id}', array(), array('method' => 'GET'));
+        $collection->add('publish', 'publish/{id}', array(), array('method' => 'GET'));
         $collection->add('unlink', 'unlink/{id}/translation_id/{translationId}', array(), array('method' => 'GET|DELETE'));
     }
 
@@ -77,32 +80,23 @@ class PageAdmin extends BaseAdmin
 
         $isHomeReadOnly = (!$isHomePage || $isHomePage->getId() == $id) ? false : true;
 
-        if ($id) {
-            $formMapper->with('page_content')
-                ->add('layoutBlock',
-                'sonata_type_collection',
-                array(
-                    'required' => true,
-                    'by_reference' => false
-                ),
-                array(
-                    'edit' => 'inline',
-                    'inline' => 'table',
-                    'sortable' => 'sortOrder',
-                    'no_label' => true
-                ))
-                ->end();
 
-            $formMapper->with('page_status')
-                ->add('status',
-                'sonata_type_translatable_choice',
-                array(
-                    'choices' => Page::getStatusList(),
-                    'catalogue' => $this->translationDomain,
-                    'attr' => array('class' => ''))
-            )->end();
 
-        }
+        $formMapper->with('page_content')
+            ->add('layoutBlock',
+            'sonata_type_collection',
+            array(
+                'required' => true,
+                'by_reference' => false
+            ),
+            array(
+                'edit' => 'inline',
+                'inline' => 'table',
+                'sortable' => 'sortOrder',
+                'no_label' => true
+            ))
+            ->end();
+
 
         $formMapper->with('page_settings');
 

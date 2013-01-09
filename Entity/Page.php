@@ -593,6 +593,34 @@ class Page implements RouteAwareInterface, VersionableInterface
      *
      * @return bool
      */
+    public function isDraft()
+    {
+        return ($this->status == self::STATUS_DRAFT);
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isReview()
+    {
+        return ($this->status == self::STATUS_REVIEW);
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return ($this->status == self::STATUS_PUBLISHED);
+    }
+
+    /**
+     *
+     * @return bool
+     * @deprecated please use isPublished
+     */
     public function isActive()
     {
         return ($this->status == self::STATUS_PUBLISHED);
@@ -1145,11 +1173,14 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     public static function getStatusList()
     {
-        return array(
+
+        $status = array(
             self::STATUS_DRAFT => 'status_draft',
             self::STATUS_REVIEW => 'status_review',
-            self::STATUS_PUBLISHED => 'status_published'
+            self::STATUS_PUBLISHED =>  'status_published'
         );
+
+        return $status;
     }
 
     /**

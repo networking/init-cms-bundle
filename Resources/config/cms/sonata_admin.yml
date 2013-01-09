@@ -1,4 +1,18 @@
 sonata_admin:
+    security:
+        handler: sonata.admin.security.handler.acl
+        # acl security information
+        information:
+           GUEST:    [VIEW, LIST]
+           STAFF:    [EDIT, LIST, CREATE]
+           EDITOR:   [OPERATOR, EXPORT]
+           ADMIN:    [MASTER]
+           PUBLISHER: [PUBLISH]
+        # permissions not related to an object instance and also to be available when objects do not exist
+        # the DELETE admin permission means the user is allowed to batch delete objects
+        admin_permissions: [CREATE, LIST, DELETE, UNDELETE, EXPORT, OPERATOR, MASTER]
+        # permission related to the objects
+        object_permissions: [VIEW, EDIT, DELETE, UNDELETE, OPERATOR, MASTER, OWNER, PUBLISH]
     title:      Networking CMS
     title_logo: /bundles/sonataadmin/logo_title.png
     templates:

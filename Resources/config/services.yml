@@ -133,8 +133,6 @@ services:
     networking_init_cms.page_listner:
        class:  Networking\InitCmsBundle\EventListener\PageListener
        arguments: [@session ]
-       calls:
-                 - [ setSerializer, [@serializer]]
        tags:
            - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
            - { name: doctrine.event_listener, event: postPersist, method: postPersist }
