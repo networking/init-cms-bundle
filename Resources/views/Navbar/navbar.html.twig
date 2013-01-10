@@ -21,7 +21,7 @@
                 {% if navbar.hasOption('title') %}<a class="brand"
                                                      href="{{ path(navbar.getOption('titleRoute')) }}">{{ navbar.getOption('title') }}</a>{% endif %}
                 <div class="nav-collapse">
-                    {{ navbar.hasMenu('leftmenu') ? knp_menu_render(navbar.getMenu('leftmenu'), {'depth':1, 'currentClass': 'active', 'ancestorClass': 'active', 'allow_safe_labels': 'true'}) : '' }}
+                    {{ navbar.hasMenu('pageMenu') ? knp_menu_render(navbar.getMenu('pageMenu'), {'depth':1, 'currentClass': 'active', 'ancestorClass': 'active', 'allow_safe_labels': 'true'}) : '' }}
                     {% if navbar.hasFormView('searchform') %}
                         {%- set form_view = navbar.getFormView('searchform') -%}
                         {%- set form_type = navbar.getFormType('searchform') -%}
@@ -33,7 +33,8 @@
                             {{ form_widget(form_view) }}
                         </form>
                     {% endif %}
-                    {{ navbar.hasMenu('rightmenu') ? knp_menu_render(navbar.getMenu('rightmenu'), {'currentClass': 'active', 'ancestorClass': 'active', 'allow_safe_labels': 'true'}) : '' }}
+                    {{ navbar.hasMenu('langMenu') ? knp_menu_render(navbar.getMenu('langMenu'), {'currentClass': 'active', 'ancestorClass': '', 'allow_safe_labels': 'true'}) : '' }}
+                    {{ navbar.hasMenu('cmsMenu') ? knp_menu_render(navbar.getMenu('cmsMenu'), {'currentClass': 'active', 'allow_safe_labels': 'true'}) : '' }}
                 </div>
             </div>
         </div>

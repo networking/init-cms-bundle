@@ -110,22 +110,38 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      * @param $languages
      * @return \Knp\Menu\ItemInterface
      */
-    public function createRightSideDropdownMenu(Request $request, $languages)
+    public function createCMSMenu(Request $request, $languages)
     {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav pull-right');
 
         if ($this->isLoggedIn) {
-            $menu->addChild('Abmelden', array('route' => 'fos_user_security_logout'));
+            $menu->addChild($this->get('translator')->trans('logout'), array('route' => 'fos_user_security_logout'));
             if ($this->securityContext->isGranted('ROLE_SONATA_ADMIN')) {
                 $menu->addChild('CMS Admin', array('route' => 'sonata_admin_dashboard'));
             }
         } else {
-            $menu->addChild('Anmelden', array('route' => 'fos_user_security_login'));
-            $menu->addChild('Registrieren', array('route' => 'fos_user_registration_register'));
+            $menu->addChild($this->get('translator')->trans('login'), array('route' => 'fos_user_security_login'));
+            $menu->addChild($this->get('translator')->trans('register'), array('route' => 'fos_user_registration_register'));
         }
 
-        $this->addDivider($menu, true);
+
+
+        return $menu;
+    }
+
+    /**
+     * Creates the login and change language navigation for the right side of the top frontend navigation
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $languages
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function createFrontendLangMenu(Request $request, $languages)
+    {
+        $menu = $this->factory->createItem('root');
+        $menu->setChildrenAttribute('class', 'nav pull-right');
+
 
         $this->createNavbarsLangMenu($menu, $languages, $request->getLocale());
 
@@ -232,7 +248,12 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
     public function createFromNode(Menu $node)
     {
         if($this->viewStatus == Page::STATUS_PUBLISHED){
-            $route = $node->getPage()->getSnapshot()->getRoute();
+            if($snapshot = $node->getPage()->getSnapshot())
+            {
+                $route = $snapshot->getRoute();
+            }else{
+                return;
+            }
         } else {
             $route = $node->getPage()->getRoute();
         }
@@ -263,6 +284,8 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function createNavbarsLangMenu(&$menu, array $languages, $currentLanguage, $route = 'networking_init_change_language')
     {
+        $this->addDivider($menu, true);
+
         $dropdown = $this->createDropdownMenuItem($menu, $this->serviceContainer->get('translator')->trans('Change Language'), true, array('icon' => 'caret'));
 
         foreach ($languages as $language) {

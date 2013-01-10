@@ -8,21 +8,53 @@
  * file that was distributed with this source code.
  */
 namespace Networking\InitCmsBundle\EventListener;
+
 use Doctrine\ORM\Event\LifecycleEventArgs,
+    JMS\SerializerBundle\Serializer\Serializer,
     Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Entity\LayoutBlock;
+
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LayoutBlockListener
 {
 
+    protected $serializer;
+
+    public function __construct(Serializer $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
     /**
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
      */
     public function postPersist(LifecycleEventArgs $args)
     {
-        $this->autoPageDraft($args);
+        $layoutBlock = $args->getEntity();
+        if ($layoutBlock instanceof LayoutBlock) {
+            if ($contentObject = $layoutBlock->getSnapshotContent()) {
+                $contentObject = $this->serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
+
+                if ($contentObject instanceof \Networking\GalleryBundle\Entity\Gallery) {
+                    $er = $args->getEntityManager()->getRepository('Application\Sonata\MediaBundle\Entity\Gallery');
+                    $gallery = $er->find($contentObject->getMediaGallery()->getId());
+                    $contentObject->setMediaGallery($gallery);
+                }
+
+                $em = $args->getEntityManager();
+                $contentObject->setLayoutBlock($layoutBlock);
+                $em->persist($contentObject);
+                $em->flush();
+
+                $layoutBlock->setObjectId($contentObject->getId());
+                $em->persist($layoutBlock);
+                $em->flush();
+            } else {
+                $this->autoPageDraft($args);
+            }
+        }
     }
 
     /**
@@ -30,7 +62,27 @@ class LayoutBlockListener
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
-        $this->autoPageDraft($args);
+        $layoutBlock = $args->getEntity();
+        if ($layoutBlock instanceof LayoutBlock) {
+
+
+            if (!$layoutBlock->getSnapshotContent()) {
+                $this->autoPageDraft($args);
+            }
+        }
+    }
+
+    /**
+     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     */
+    public function preRemove(LifecycleEventArgs $args)
+    {
+        $layoutBlock = $args->getEntity();
+        if ($layoutBlock instanceof LayoutBlock) {
+            if (!$layoutBlock->getSnapshotContent() && !$layoutBlock->getIsSnapshot()) {
+                $this->autoPageDraft($args);
+            }
+        }
     }
 
     /**
@@ -39,7 +91,7 @@ class LayoutBlockListener
     public function autoPageDraft(LifecycleEventArgs $args)
     {
         $layoutBlock = $args->getEntity();
-        if($layoutBlock instanceof LayoutBlock){
+        if ($layoutBlock instanceof LayoutBlock) {
 
             $page = $layoutBlock->getPage();
             $page->setStatus(Page::STATUS_DRAFT);

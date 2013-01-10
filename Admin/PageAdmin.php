@@ -49,6 +49,7 @@ class PageAdmin extends BaseAdmin
         $collection->add('draft', 'draft/{id}', array(), array('method' => 'GET'));
         $collection->add('review', 'review/{id}', array(), array('method' => 'GET'));
         $collection->add('publish', 'publish/{id}', array(), array('method' => 'GET'));
+        $collection->add('cancelDraft', 'cancel_draft/{id}', array(), array('method' => 'GET'));
         $collection->add('unlink', 'unlink/{id}/translation_id/{translationId}', array(), array('method' => 'GET|DELETE'));
     }
 
@@ -81,21 +82,22 @@ class PageAdmin extends BaseAdmin
         $isHomeReadOnly = (!$isHomePage || $isHomePage->getId() == $id) ? false : true;
 
 
-
-        $formMapper->with('page_content')
-            ->add('layoutBlock',
-            'sonata_type_collection',
-            array(
-                'required' => true,
-                'by_reference' => false
-            ),
-            array(
-                'edit' => 'inline',
-                'inline' => 'table',
-                'sortable' => 'sortOrder',
-                'no_label' => true
-            ))
-            ->end();
+        if ($id || $request->isXmlHttpRequest()) {
+            $formMapper->with('page_content')
+                ->add('layoutBlock',
+                'sonata_type_collection',
+                array(
+                    'required' => true,
+                    'by_reference' => false
+                ),
+                array(
+                    'edit' => 'inline',
+                    'inline' => 'table',
+                    'sortable' => 'sortOrder',
+                    'no_label' => true
+                ))
+                ->end();
+        }
 
 
         $formMapper->with('page_settings');
@@ -120,7 +122,7 @@ class PageAdmin extends BaseAdmin
                 ->add('parent',
                 'networking_type_autocomplete',
                 array(
-                    'attr' => array('style'=>"width:220px"),
+                    'attr' => array('style' => "width:220px"),
                     'property' => 'AdminTitle',
                     'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
                     'required' => false,

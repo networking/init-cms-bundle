@@ -145,7 +145,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\LayoutBlock", cascade={"persist"}, mappedBy="page", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\LayoutBlock", cascade={"persist", "detach"}, mappedBy="page", orphanRemoval=true)
      * @OrderBy({"sortOrder" = "ASC"})
      *
      */
@@ -214,7 +214,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var ContentRoute $contentRoute
-     * @ORM\OneToOne(targetEntity="Networking\InitCmsBundle\Entity\ContentRoute", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Networking\InitCmsBundle\Entity\ContentRoute", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="content_route_id")
      */
     protected $contentRoute;
@@ -222,7 +222,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     /**
      * @var ArrayCollection $snapshots
      *
-     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\PageSnapshot", mappedBy="page")
+     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\PageSnapshot", mappedBy="page", cascade={"remove"})
      * @OrderBy({"version" = "DESC"})
      */
     protected $snapshots;
@@ -679,6 +679,23 @@ class Page implements RouteAwareInterface, VersionableInterface
     }
 
     /**
+     * Remove all layout blocks from page object (and DB)
+     * reset the layout blocks with new ones or from a published page
+     *
+     * @param $publishedBlocks
+     */
+    public function resetLayoutBlock($publishedBlocks)
+    {
+        foreach ($this->layoutBlock as $block) {
+            $block->setIsSnapshot(true);
+            $this->layoutBlock->removeElement($block);
+        }
+
+        $this->setLayoutBlock($publishedBlocks);
+
+    }
+
+    /**
      * @param $layoutBlocks
      * @return Page
      */
@@ -780,8 +797,8 @@ class Page implements RouteAwareInterface, VersionableInterface
     public function getMenuItemByRoot($rootId)
     {
         return $this->menuItem->filter(function ($menuItem) use ($rootId) {
-                        return ($menuItem->getRoot() == $rootId);
-                    });
+            return ($menuItem->getRoot() == $rootId);
+        });
     }
 
     /**
@@ -912,9 +929,9 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     public function isDirectTranslation(Page $page)
     {
-        if($this->originals->contains($page)) {
+        if ($this->originals->contains($page)) {
             return true;
-        } elseif ($this->translations->contains($page)){
+        } elseif ($this->translations->contains($page)) {
             return true;
         }
 
@@ -923,8 +940,8 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     public function getDirectTranslationFor(Page $page)
     {
-        foreach($this->getAllTranslations() as $translation){
-            if($translation->isDirectTranslation($page)){
+        foreach ($this->getAllTranslations() as $translation) {
+            if ($translation->isDirectTranslation($page)) {
                 return $translation;
             }
         }
@@ -1177,7 +1194,7 @@ class Page implements RouteAwareInterface, VersionableInterface
         $status = array(
             self::STATUS_DRAFT => 'status_draft',
             self::STATUS_REVIEW => 'status_review',
-            self::STATUS_PUBLISHED =>  'status_published'
+            self::STATUS_PUBLISHED => 'status_published'
         );
 
         return $status;
@@ -1253,6 +1270,17 @@ class Page implements RouteAwareInterface, VersionableInterface
         return 0;
     }
 
+    public function convertIntegerToPage($id)
+    {
+        $page = null;
+
+        if ($id) {
+            $page = new Page();
+        }
+
+        return $page;
+    }
+
     /**
      * @return array
      */
@@ -1272,7 +1300,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     {
         $children = array();
 
-        foreach($this->getChildren() as $child){
+        foreach ($this->getChildren() as $child) {
             $children[] = $child->getId();
         }
 
@@ -1294,7 +1322,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     {
         $translations = array();
 
-        foreach ( $this->translations as $translation) {
+        foreach ($this->translations as $translation) {
             $translations[$translation->getLocale()] = $translation->getId();
         }
 
@@ -1308,7 +1336,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     {
         $originals = array();
 
-        foreach ( $this->originals as $original) {
+        foreach ($this->originals as $original) {
             $originals[$original->getLocale()] = $original->getId();
         }
 
