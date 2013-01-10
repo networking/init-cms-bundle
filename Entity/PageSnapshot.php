@@ -43,7 +43,7 @@ class PageSnapshot implements RouteAwareInterface, ResourceVersionInterface
 
     /**
      * @var ContentRoute $contentRoute
-     * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\ContentRoute", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\ContentRoute", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="content_route_id")
      */
     protected $contentRoute;

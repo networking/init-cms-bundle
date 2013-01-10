@@ -2,7 +2,7 @@
 <script type="text/javascript">
     var translationDialog;
 
-    function initializeDialog() {
+    function initializeTranslationDialog() {
         if (!translationDialog) {
             translationDialog = jQuery('#translation_dialog');
             translationDialog.modal({
@@ -14,15 +14,15 @@
                 jQuery('input[type=submit]', this).off();
             });
             jQuery(document.body).append(translationDialog);
-            jQuery('form', translationDialog).live('submit', submitAjaxForm);
+            jQuery('form', translationDialog).live('submit', submitTranslationAjaxForm);
         }
     }
 
-    function createAjaxDialog(event) {
+    function createTranslationAjaxDialog(event) {
         event.preventDefault();
         event.stopPropagation();
 
-        initializeDialog();
+        initializeTranslationDialog();
 
         var a = jQuery(this);
         var url = a.attr('href');
@@ -41,7 +41,7 @@
         });
     }
 
-    function submitAjaxForm(event) {
+    function submitTranslationAjaxForm(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -61,7 +61,7 @@
     }
 
     (function ($) {
-        $('.translation-dialog-link').live('click', createAjaxDialog);
+        $('.translation-dialog-link').live('click', createTranslationAjaxDialog);
 
     })(jQuery);
 </script>

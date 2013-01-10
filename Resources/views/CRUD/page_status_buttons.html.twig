@@ -21,6 +21,9 @@
 
 </div>
 <p>&nbsp;</p>
-<a href="#" class="{% if object.isPublished() %}disabled{% endif %}"
-       {% if object.isPublished() %}onclick="return false"{% endif %}>
+{% if not object.isPublished() and object.getSnapshot() %}
+<a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}" class="status-dialog-link">
         {{ 'button.cancel_draft'|trans({}, admin.translationdomain) }}</a>
+{% endif %}
+<div class="modal hide fade" tabindex="-1" role="dialog" id="status_dialog">
+</div>

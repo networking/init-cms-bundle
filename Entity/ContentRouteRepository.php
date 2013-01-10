@@ -10,22 +10,21 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
-use Symfony\Cmf\Component\Routing\RouteRepositoryInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Cmf\Component\Routing\DynamicRouter;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use Networking\InitCmsBundle\Entity\ContentRoute;
+use Doctrine\ORM\EntityRepository,
+    Symfony\Cmf\Component\Routing\RouteRepositoryInterface,
+    Symfony\Component\HttpFoundation\Session\Session,
+    Symfony\Component\Routing\RouteCollection,
+    Symfony\Cmf\Component\Routing\DynamicRouter,
+    Symfony\Component\Routing\Exception\RouteNotFoundException,
+    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface,
+    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface,
+    Networking\InitCmsBundle\Entity\ContentRoute,
+    Networking\InitCmsBundle\Entity\Page;
 
 
 class ContentRouteRepository extends EntityRepository implements RouteRepositoryInterface
 {
-    const STATUS_DRAFT = 'draft';
 
-    const STATUS_PUBLISHED = 'published';
     /**
      * @var $locale
      */
@@ -55,7 +54,7 @@ class ContentRouteRepository extends EntityRepository implements RouteRepository
     {
         $this->setLocale($session->get('_locale'));
 
-        $viewStatus = $session->get('_viewStatus') ? $session->get('_viewStatus') : self::STATUS_PUBLISHED;
+        $viewStatus = $session->get('_viewStatus') ? $session->get('_viewStatus') : Page::STATUS_PUBLISHED;
 
         $this->setViewStatus($viewStatus);
     }
@@ -132,9 +131,9 @@ class ContentRouteRepository extends EntityRepository implements RouteRepository
 
             $content = $this->getRouteContent($contentRoute);
 
-            if ($this->viewStatus == self::STATUS_DRAFT && ($content instanceof ResourceVersionInterface)) {
+            if ($this->viewStatus == Page::STATUS_DRAFT && ($content instanceof ResourceVersionInterface)) {
                 continue;
-            } elseif($this->viewStatus == self::STATUS_PUBLISHED && ($content instanceof VersionableInterface)){
+            } elseif ($this->viewStatus == Page::STATUS_PUBLISHED && ($content instanceof VersionableInterface)) {
                 continue;
             }
 

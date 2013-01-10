@@ -89,6 +89,7 @@ function doAjaxSubmit(url, form, data) {
                     jQuery(value).modal('show');
                 }
             })
+            saveLayoutBlockSort();;
         }
     });
 }
@@ -224,16 +225,18 @@ function onAfterLoad() {
             if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationdomain) }}')) {
 
                 var liElement = jQuery(this).closest('li.networking-sortable-list');
+
                 jQuery.ajax({
                     url:'{{ url('admin_networking_initcms_page_deleteLayoutBlock') }}',
                     data:{layoutBlock:liElement.attr('id')},
                     success:function (r) {
                         createMessageBox(r.status, r.message);
+                        apply_position_value_{{ id }}();
+                        saveLayoutBlockSort();
                     }
                 });
                 liElement.remove();
-                apply_position_value_{{ id }}();
-                saveLayoutBlockSort();
+
             }
         });
     });
@@ -252,7 +255,7 @@ function onAfterLoad() {
 function createMessageBox(status, message) {
     var messageHtml = '<div class="alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
 
-    jQuery('.notice-block').html(messageHtml).fadeIn().delay(2400).fadeOut();
+    jQuery('.notice-block').html(messageHtml).fadeIn();
 }
 
 (function ($) {

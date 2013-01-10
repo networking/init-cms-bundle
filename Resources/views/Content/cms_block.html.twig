@@ -2,18 +2,22 @@
 {{ text | raw }}
 {% endif %}
 
-{% if mediaItems is defined %}
+{% if mediaGallery is defined %}
 
 <ul class="thumbnails">
-	{% for mediaItem in mediaItems %}
+	{% for mediaItem in mediaGallery.galleryHasMedias %}
 
   <li class="span2">
     <div class="thumbnail">
-	    <a href="{% path mediaItem.media, 'big' %}" rel="prettyPhoto[{{ mediaItem.gallery.name }}]">
+	    <a href="{% path mediaItem.media, 'big' %}" rel="prettyPhoto[{{ mediaGallery.name }}]">
 		    {% thumbnail mediaItem.media, 'small'%}
 	    </a>
+      {% if  mediaItem.media.name is defined %}
       <h5>{{ mediaItem.media.name }}</h5>
+      {% endif %}
+        {% if  mediaItem.media.description is defined %}
       <p>{{ mediaItem.media.description }}</p>
+       {% endif %}
     </div>
   </li>
 	{% endfor %}

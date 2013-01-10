@@ -18,7 +18,8 @@ use Networking\InitCmsBundle\Entity\Page,
     JMS\SerializerBundle\Serializer\SerializerInterface,
     Sonata\AdminBundle\Datagrid\ProxyQueryInterface,
     Sonata\AdminBundle\Controller\CRUDController,
-    Sonata\AdminBundle\Admin\Admin as SontataAdmin;
+    Sonata\AdminBundle\Admin\Admin as SontataAdmin,
+    Sonata\AdminBundle\Exception\NoValueException;
 
 /**
  *
@@ -710,6 +711,98 @@ class PageAdminController extends CmsCRUDController
         $this->get('session')->setFlash('sonata_flash_success', 'flash_status_success');
 
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
+    }
+
+    /**
+     * @param null $id
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function cancelDraftAction($id = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+        /** @var $draftPage Page */
+        $draftPage = $this->admin->getObject($id);
+
+
+        if (!$draftPage) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('EDIT', $draftPage)) {
+            throw new AccessDeniedException();
+        }
+
+        if ($this->getRequest()->getMethod() == 'POST') {
+
+            $pageSnapshot = $draftPage->getSnapshot();
+            $contentRoute = $draftPage->getContentRoute();
+            $em->clear();
+
+            /** @var $serializer Serializer */
+            $serializer = $this->get('serializer');
+
+            /** @var $publishedPage Page */
+            $publishedPage = $serializer->deserialize($pageSnapshot->getVersionedData(), 'Networking\InitCmsBundle\Entity\Page', 'json');
+
+            // Save the layout blocks in a temp variable so that we can
+            // assure the correct layout blocks will be saved and not
+            // merged with the layout blocks from the draft page
+            $tmpLayoutBlocks = $publishedPage->getLayoutBlock();
+
+
+            // tell the entity manager to handle our published page
+            // as if it came from the DB and not a serialized object
+            $publishedPage = $em->merge($publishedPage);
+
+            $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
+            $contentRoute->setPath($pageSnapshot->getContentRoute()->getPath());
+            $em->merge($contentRoute);
+
+            $publishedPage->setContentRoute($contentRoute);
+
+            // Set the layout blocks of the NOW managed entity to
+            // exactly that of the published version
+            $publishedPage->resetLayoutBlock($tmpLayoutBlocks);
+
+            $em->persist($publishedPage);
+            $em->flush();
+
+            if ($this->getRequest()->isXmlHttpRequest()) {
+                $form = $this->admin->getForm();
+                $form->setData($publishedPage);
+
+                $pageSettingsTemplate = $this->render($this->admin->getTemplate('edit'), array(
+                    'action' => 'edit',
+                    'form' => $form->createView(),
+                    'object' => $publishedPage,
+                ));
+
+                return $this->renderJson(array(
+                    'result' => 'ok',
+                    'objectId' => $this->admin->getNormalizedIdentifier($publishedPage),
+                    'title' => $publishedPage->__toString(),
+                    'pageStatus' => $this->admin->trans($publishedPage->getStatus()),
+                    'pageSettings' => $pageSettingsTemplate->getContent()
+                ));
+            }
+
+
+            return $this->redirect($this->admin->generateObjectUrl('edit', $publishedPage));
+
+        }
+
+        return $this->render(
+            'NetworkingInitCmsBundle:CRUD:page_cancel_draft.html.twig',
+            array(
+                'action' => 'cancelDraft',
+                'page' => $draftPage,
+                'admin' => $this->admin
+            )
+        );
     }
 
     /**

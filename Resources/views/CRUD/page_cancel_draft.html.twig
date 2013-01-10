@@ -1,0 +1,61 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends base_template %}
+
+{% block actions %}
+    <div class="sonata-actions">
+        {% if admin.hasRoute('edit') and admin.isGranted('EDIT', page) %}
+            <a class="btn sonata-action-element"
+               href="{{ admin.generateObjectUrl('edit', page) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
+        {% endif %}
+        {% if admin.hasRoute('create') and admin.isGranted('CREATE') %}
+            <a class="btn sonata-action-element"
+               href="{{ admin.generateUrl('create') }}">{{ 'link_action_create'|trans({}, 'SonataAdminBundle') }}</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
+
+{% block content %}
+    <div class="sonata-ba-delete">
+        {% if app.request.isxmlhttprequest %}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>{{ 'title.cancel_draft'|trans({}, admin.translationDomain) }}</h3>
+            </div>
+        {% else %}
+            <h1>{{ 'title.cancel_draft'|trans({}, admin.translationDomain) }}</h1>
+        {% endif %}
+
+        <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
+            {{ 'info.cancel_draft'|trans({'%object%': page}, admin.translationDomain) }}
+        </div>
+        <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
+            <form method="POST" action="{{ admin.generateUrl('cancelDraft', {id: page.id}) }}">
+                {% if app.request.isxmlhttprequest %}
+                    <button class="btn" data-dismiss="modal"
+                            aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+                    <input type="submit" class="btn btn-danger"
+                           value="{{ 'button.confirm_cancel_draft'|trans({}, admin.translationDomain) }}"/>
+                {% else %}
+                    <input type="submit" class="btn btn-danger"
+                           value="{{ 'button.confirm_cancel_draft'|trans({}, admin.translationDomain) }}"/>
+
+                    <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn">
+                                            {{ 'button.cancel'|trans({}, admin.translationDomain) }}
+                                        </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -192,6 +192,34 @@
                 <source>title.translation_link</source>
                 <target>Link "%object%" page to a %language% page</target>
             </trans-unit>
+            <trans-unit id="button.draft">
+                <source>button.draft</source>
+                <target>Draft</target>
+            </trans-unit>
+            <trans-unit id="button.review">
+                <source>button.review</source>
+                <target>Review</target>
+            </trans-unit>
+            <trans-unit id="button.publish">
+                <source>button.publish</source>
+                <target>Publish</target>
+            </trans-unit>
+            <trans-unit id="title.cancel_draft">
+                <source>title.cancel_draft</source>
+                <target>Cancel Draft</target>
+            </trans-unit>
+            <trans-unit id="info.cancel_draft">
+                <source>info.cancel_draft</source>
+                <target>Would you like to revert this page "%object%" to the last published version?</target>
+            </trans-unit>
+            <trans-unit id="button.confirm_cancel_draft">
+                <source>button.confirm_cancel_draft</source>
+                <target>Yes, revert</target>
+            </trans-unit>
+            <trans-unit id="button.cancel">
+                <source>button.cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -115,6 +115,12 @@ class NetworkingHelperExtension extends \Twig_Extension
         } else {
             // Live View
             $contentItem = $this->getService('serializer')->deserialize($serializedContent, $layoutBlock->getClassType(), 'json');
+
+//            if($layoutBlock->getClassType() == 'Networking\GalleryBundle\Entity\Gallery')
+//            {
+//                var_dump($contentItem->getMediaGallery()->getName());
+//                            die;
+//            }
         }
 
         $options = $contentItem->getTemplateOptions();
@@ -132,9 +138,11 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     public function networking_admin_cms_block(LayoutBlock $content)
     {
+
         if ($content->getObjectId()) {
             $contentItem = $this->getService('doctrine')->getRepository($content->getClassType())->find($content->getObjectId());
         } else {
+
             $classType = $content->getClassType();
 
             $contentItem = new $classType();
@@ -388,6 +396,7 @@ class NetworkingHelperExtension extends \Twig_Extension
                 break;
             case 'choice':
             case 'sonata_type_translatable_choice':
+            case 'networking_type_autocomplete':
             case 'entity':
                 $choices = $formView->vars['choices'];
                 $preferredChoices = $formView->vars['preferred_choices'];

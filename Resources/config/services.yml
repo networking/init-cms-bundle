@@ -132,10 +132,11 @@ services:
 # Listener for setting up content routes when page created/edited
     networking_init_cms.page_listner:
        class:  Networking\InitCmsBundle\EventListener\PageListener
-       arguments: [@session ]
+       arguments: [@session, @service_container ]
        tags:
            - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
            - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+           - { name: jms_serializer.event_subscriber }
 
     networking_init_cms.last_edited_listener:
        class:  Networking\InitCmsBundle\EventListener\LastEditedListener
@@ -146,9 +147,11 @@ services:
 
     networking_init_cms.layout_block_listner:
        class:  Networking\InitCmsBundle\EventListener\LayoutBlockListener
+       arguments: [@serializer]
        tags:
            - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
            - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
 
     networking_init_cms.version_listner:
        class:  Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionListener
@@ -159,12 +162,10 @@ services:
 #Listner for setting the correct locale in the session on language changes
     networking_init_cms.locale_listner:
         class: Networking\InitCmsBundle\EventListener\LocaleListener
-        arguments:  [ %kernel.default_locale%, @router ]
-        calls:
-            - [setAccessMap, [@security.access_map]]
+        arguments:  [ @security.access_map, @security.context,  %networking_init_cms.page.languages%, %kernel.default_locale%, @router ]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 8 }
-
+            - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin, priority: 10}
 
 # Preload uniquer url validator with the entity manager and the service container
     networking_init_cms.unique_url_validator:
@@ -192,20 +193,29 @@ services:
         tags:
             - { name: knp_menu.menu, alias: main }
 
-    networking_init_cms.menu.frontend_main_menu_right:
+    networking_init_cms.menu.frontend_main_menu_cms:
         class: Knp\Menu\MenuItem
         factory_service: networking_init_cms.menu.navbar_menu_builder
-        factory_method: createRightSideDropdownMenu
+        factory_method: createCMSMenu
         arguments: [ '@request', %networking_init_cms.page.languages% ]
         scope: request
         tags:
-            - { name: knp_menu.menu, alias: rightMenu }
+            - { name: knp_menu.menu, alias: cmsMenu }
+
+    networking_init_cms.menu.frontend_main_menu_language:
+        class: Knp\Menu\MenuItem
+        factory_service: networking_init_cms.menu.navbar_menu_builder
+        factory_method: createFrontendLangMenu
+        arguments: [ '@request', %networking_init_cms.page.languages% ]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: langMenu }
 
     networking_init_cms.menu.frontend_top_menu_template:
         class: %mopa_bootstrap.navbar.generic%
         scope: request
         arguments:
-            - { leftmenu: @networking_init_cms.menu.frontend_main_menu_left=, rightmenu: @networking_init_cms.menu.frontend_main_menu_right=, status_menu: @networking_init_cms.menu.view_status_menu= }
+            - { pageMenu: @networking_init_cms.menu.frontend_main_menu_left=, cmsMenu: @networking_init_cms.menu.frontend_main_menu_cms=, langMenu: @networking_init_cms.menu.frontend_main_menu_language=, status_menu: @networking_init_cms.menu.view_status_menu= }
             - {}
             - { title: "Networking", titleRoute: "networking_init_cms_home", fixedTop: true, isFluid: false, template: NetworkingInitCmsBundle:Navbar:navbar.html.twig }
         tags:
