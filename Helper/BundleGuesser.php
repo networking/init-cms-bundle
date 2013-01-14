@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  */
 namespace Networking\InitCmsBundle\Helper;
+
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
@@ -19,6 +20,10 @@ class BundleGuesser
      */
     protected $reflector;
 
+    /**
+     * @param $class
+     * @return BundleGuesser
+     */
     public function initialize($class)
     {
 

@@ -15,8 +15,14 @@ use Doctrine\ORM\EntityManager;
  */
 class VersionManager
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager $em
+     */
     private $_em;
 
+    /**
+     * @param \Doctrine\ORM\EntityManager $em
+     */
     public function __construct(EntityManager $em)
     {
         $this->_em = $em;
@@ -25,6 +31,10 @@ class VersionManager
         );
     }
 
+    /**
+     * @param VersionableInterface $resource
+     * @return array
+     */
     public function getVersions(VersionableInterface $resource)
     {
         $query = $this->_em->createQuery(

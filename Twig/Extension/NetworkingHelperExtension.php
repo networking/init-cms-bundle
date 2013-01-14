@@ -1,4 +1,13 @@
 <?php
+
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Networking\InitCmsBundle\Entity\LayoutBlock;
@@ -8,9 +17,7 @@ use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Twig Extension for TinyMce support.
- *
- * @author naydav <web@naydav.com>
+ * @author net working AG <info@networking.ch>
  */
 class NetworkingHelperExtension extends \Twig_Extension
 {
@@ -207,6 +214,10 @@ class NetworkingHelperExtension extends \Twig_Extension
         return $imagePath;
     }
 
+    /**
+     * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
+     * @return mixed|string
+     */
     public function getCurrentAdminLocale(\Sonata\AdminBundle\Admin\AdminInterface $admin)
     {
         $locale = '';
@@ -232,6 +243,9 @@ class NetworkingHelperExtension extends \Twig_Extension
         return $locale;
     }
 
+    /**
+     * @return mixed
+     */
     private function getCurrentLocale()
     {
         return $this->container->get('request')->getLocale();

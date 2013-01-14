@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -13,6 +21,7 @@ use Sonata\AdminBundle\DependencyInjection\SonataAdminExtension;
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ * @author net working AG <info@networking.ch>
  */
 class NetworkingInitCmsExtension extends Extension
 {

@@ -1,27 +1,26 @@
 <?php
-namespace Networking\InitCmsBundle\Twig\TokenParser;
-/**
- * Created by JetBrains PhpStorm.
- * User: yorkie
- * Date: 18.10.12
- * Time: 11:02
- * To change this template use File | Settings | File Templates.
+
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+namespace Networking\InitCmsBundle\Twig\TokenParser;
+
 
 use Twig_TokenParser;
 use Twig_Token;
 use Networking\InitCmsBundle\Twig\Node\JSNode;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class JSTokenParser extends Twig_TokenParser
 {
 
-    /**
-     * Parses a token and returns a node.
-     *
-     * @param Twig_Token $token A Twig_Token instance
-     *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
-     */
     /**
      * Parses a token and returns a node.
      *
@@ -41,7 +40,6 @@ class JSTokenParser extends Twig_TokenParser
     /**
      * Gets the tag name associated with this token parser.
      *
-     * @param string The tag name
      */
     public function getTag()
     {

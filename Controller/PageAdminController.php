@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Entity\Page,
@@ -22,7 +31,7 @@ use Networking\InitCmsBundle\Entity\Page,
     Sonata\AdminBundle\Exception\NoValueException;
 
 /**
- *
+ * @author net working AG <info@networking.ch>
  */
 class PageAdminController extends CmsCRUDController
 {

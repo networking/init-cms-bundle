@@ -11,6 +11,9 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class MenuSubItemFilterIterator extends \FilterIterator
 {
     /**

@@ -11,14 +11,26 @@
 namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 
 /**
+ * @author net working AG <info@networking.ch>
+ */
+/**
  *
  */
 interface VersionableInterface
 {
+    /**
+     * @var string
+     */
     const STATUS_DRAFT = 'status_draft';
 
+    /**
+     * @var string
+     */
     const STATUS_REVIEW = 'status_review';
 
+    /**
+     * @var string
+     */
     const STATUS_PUBLISHED = 'status_published';
 
     /**

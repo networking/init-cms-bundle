@@ -21,24 +21,29 @@ use Doctrine\ORM\EntityRepository,
     Networking\InitCmsBundle\Entity\ContentRoute,
     Networking\InitCmsBundle\Entity\Page;
 
-
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class ContentRouteRepository extends EntityRepository implements RouteRepositoryInterface
 {
 
     /**
-     * @var $locale
+     * @var string $locale
      */
     protected $locale;
 
+    /**
+     * @var string $viewStatus
+     */
     protected $viewStatus;
 
     /**
-     * @var $className
+     * @var string $className
      */
     protected $className;
 
     /**
-     * @param $className
+     * @param string $className
      */
     public function setClassName($className = null)
     {
@@ -67,6 +72,9 @@ class ContentRouteRepository extends EntityRepository implements RouteRepository
         $this->locale = $locale;
     }
 
+    /**
+     * @param $viewStatus
+     */
     public function setViewStatus($viewStatus)
     {
         $this->viewStatus = $viewStatus;

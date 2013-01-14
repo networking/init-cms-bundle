@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Helper;
 
 use Networking\InitCmsBundle\Entity\Page;
@@ -11,6 +19,9 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class LanguageSwitcherHelper implements ContainerAwareInterface
 {
     /**
@@ -213,6 +224,11 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
      * @param string $prefix The prefix not encoded
      *
      * @return string|false The prefix as it is encoded in $string, or false
+     */
+    /**
+     * @param $string
+     * @param $prefix
+     * @return bool
      */
     protected function getUrlencodedPrefix($string, $prefix)
     {

@@ -117,6 +117,12 @@ class PageHelper
         return preg_replace(array('/(^|_| )+(.)/e', '/\.(.)/e'), array("strtoupper('\\2')", "'_'.strtoupper('\\1')"), $property);
     }
 
+    /**
+     * @param $path
+     * @param $id
+     * @param $slug
+     * @return mixed
+     */
     public static function replaceSlugInPath($path, $id, $slug)
     {
 

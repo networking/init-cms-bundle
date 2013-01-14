@@ -22,6 +22,8 @@ use Networking\InitCmsBundle\Entity\Page;
  *
  * @ORM\Table(name="tag")
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\TagRepository")
+ *
+ *  @author net working AG <info@networking.ch>
  */
 class Tag
 {
@@ -61,6 +63,9 @@ class Tag
      */
     protected $pages;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->pages = new ArrayCollection();

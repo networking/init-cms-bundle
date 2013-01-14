@@ -20,10 +20,19 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
     Sonata\AdminBundle\Route\RouteCollection,
     Doctrine\ORM\EntityRepository;
 
+/**
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class MenuItemAdmin extends BaseAdmin
 {
+    /**
+     * @var string
+     */
     protected $baseRoutePattern = 'cms/menu';
 
+    /**
+     * @var bool
+     */
     protected $isRoot = false;
 
     /**
@@ -173,11 +182,18 @@ class MenuItemAdmin extends BaseAdmin
             ->end();
     }
 
+    /**
+     * @param $isRoot
+     */
     public function setIsRoot($isRoot)
     {
         $this->isRoot = $isRoot;
     }
 
+    /**
+     * @param string $name
+     * @return null|string
+     */
     public function getTemplate($name)
     {
         switch ($name) {

@@ -1,10 +1,12 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: yorkie
- * Date: 30.07.12
- * Time: 09:51
- * To change this template use File | Settings | File Templates.
+
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
@@ -17,6 +19,10 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManager;
+
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class UniqueURLValidator extends ConstraintValidator
 {
     /**
@@ -28,6 +34,10 @@ class UniqueURLValidator extends ConstraintValidator
      */
     protected $request;
 
+    /**
+     * @param \Doctrine\ORM\EntityManager $em
+     * @param \Symfony\Component\DependencyInjection\Container $container
+     */
     public function __construct(EntityManager $em, Container $container)
     {
         $this->em = $em;

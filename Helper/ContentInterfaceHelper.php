@@ -1,16 +1,21 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: yorkie
- * Date: 31.10.12
- * Time: 14:48
- * To change this template use File | Settings | File Templates.
+
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 namespace Networking\InitCmsBundle\Helper;
 
 use Networking\InitCmsBundle\Entity\ContentInterface;
 use Sonata\AdminBundle\Exception\NoValueException;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class ContentInterfaceHelper
 {
     /**

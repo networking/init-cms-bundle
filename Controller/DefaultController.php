@@ -22,7 +22,7 @@ use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 
 /**
- *
+ * @author net working AG <info@networking.ch>
  */
 class DefaultController extends Controller
 {

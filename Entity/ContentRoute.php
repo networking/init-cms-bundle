@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +24,8 @@ use Symfony\Cmf\Component\Routing\RouteAwareInterface;
  * @ORM\UniqueConstraint(name="path_idx", columns={"path", "locale", "class_type"})
  * })
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\ContentRouteRepository")
+ *
+ * @author net working AG <info@networking.ch>
  */
 class ContentRoute extends AbstractRoute
 {
@@ -76,6 +86,9 @@ class ContentRoute extends AbstractRoute
      */
     protected $locale;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->menuItem = new ArrayCollection();
@@ -232,6 +245,9 @@ class ContentRoute extends AbstractRoute
         return $this->template;
     }
 
+    /**
+     * @return array
+     */
     public function getDefaults()
     {
         $template = new Template(array('template' => $this->getTemplate(), 'vars' => array()));

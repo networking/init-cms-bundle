@@ -9,6 +9,9 @@
  */
 namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 
+/**
+ *  @author net working AG <info@networking.ch>
+ */
 interface ResourceVersionInterface
 {
 

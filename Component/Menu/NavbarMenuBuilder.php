@@ -22,6 +22,9 @@ use Symfony\Component\HttpFoundation\Request,
     Networking\InitCmsBundle\Component\Menu\MenuSubItemFilterIterator,
     Networking\InitCmsBundle\Entity\Page;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
 {
     /**

@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Entity\Page;
 
 /**
- *
+ * @author net working AG <info@networking.ch>
  */
 class LoadPages extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {

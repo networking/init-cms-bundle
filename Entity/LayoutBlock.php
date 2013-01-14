@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
@@ -12,6 +20,8 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="layout_block")
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\LayoutBlockRepository")
+ *
+ * @author net working AG <info@networking.ch>
  */
 class LayoutBlock implements ContentInterface
 {
@@ -108,6 +118,9 @@ class LayoutBlock implements ContentInterface
      */
     protected $snapshotContent;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->snapshotContent = new ArrayCollection();

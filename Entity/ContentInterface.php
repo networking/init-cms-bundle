@@ -1,12 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Entity;
+
 /**
- * Created by JetBrains PhpStorm.
- * User: yorkie
- * Date: 05.09.12
- * Time: 14:53
- * To change this template use File | Settings | File Templates.
+ * @author net working AG <info@networking.ch>
  */
 interface ContentInterface
 {

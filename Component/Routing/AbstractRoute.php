@@ -15,7 +15,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
 /**
- *
+ * @author net working AG <info@networking.ch>
  */
 abstract class AbstractRoute extends SymfonyRoute implements RouteObjectInterface
 {

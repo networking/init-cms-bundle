@@ -1,20 +1,24 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: yorkie
- * Date: 18.10.12
- * Time: 11:13
- * To change this template use File | Settings | File Templates.
+
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 namespace Networking\InitCmsBundle\Twig\Node;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class JSNode extends \Twig_Node
 {
     /**
-     * @param  \Twig_NodeInterface $value
-     * @param  integer             $lineno
-     * @param  string              $tag    (optional)
-     * @return void
+     * @param \Twig_NodeInterface $method
+     * @param array $lineno
+     * @param null $tag
      */
     public function __construct(\Twig_NodeInterface $method, $lineno, $tag = null)
     {

@@ -15,6 +15,7 @@ use Networking\InitCmsBundle\Component\Routing\AbstractRoute;
 
 /**
  * Dummy Route Class for creating routes on the run. Used when building navigation items
+ *  @author net working AG <info@networking.ch>
  */
 class CMSRoute extends AbstractRoute
 {

@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -14,12 +22,21 @@ use Networking\InitCmsBundle\Entity\Page;
  * @ORM\Table(name="cms_menu")
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\MenuItemRepository")
  * @ORM\HasLifecycleCallbacks
+ *
+ * @author net working AG <info@networking.ch>
  */
 class MenuItem implements \IteratorAggregate
 {
+    /**
+     * @var string
+     */
+    const PATH_SEPARATOR = '/';
+
+    /**
+     * @var array $options
+     */
     protected $options = array();
 
-    const PATH_SEPARATOR = '/';
 
     /**
      * @ORM\Id
@@ -89,6 +106,9 @@ class MenuItem implements \IteratorAggregate
      */
     protected $locale;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -241,6 +261,10 @@ class MenuItem implements \IteratorAggregate
         return $this->rgt;
     }
 
+    /**
+     * @param $root
+     * @return MenuItem
+     */
     public function setRoot($root)
     {
         $this->root = $root;
@@ -256,6 +280,9 @@ class MenuItem implements \IteratorAggregate
         return $this->root;
     }
 
+    /**
+     * @return MenuItem
+     */
     public function getMenu()
     {
         return $this->getRootParent($this);
@@ -331,6 +358,9 @@ class MenuItem implements \IteratorAggregate
         return $this->children;
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getActiveChildren()
     {
         $children = new ArrayCollection();
@@ -342,6 +372,10 @@ class MenuItem implements \IteratorAggregate
         return $children;
     }
 
+    /**
+     * @param $status
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getChildrenByStatus($status)
     {
         $children = new ArrayCollection();

@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs,
@@ -10,6 +18,9 @@ use Doctrine\ORM\Event\LifecycleEventArgs,
     JMS\SerializerBundle\Serializer\EventDispatcher\EventSubscriberInterface,
     JMS\SerializerBundle\Serializer\EventDispatcher\Event;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class PageListener implements EventSubscriberInterface
 {
 
@@ -23,12 +34,19 @@ class PageListener implements EventSubscriberInterface
      */
     protected $container;
 
+    /**
+     * @param \Symfony\Component\HttpFoundation\Session\Session $session
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
     public function __construct(Session $session, ContainerInterface $container)
     {
         $this->session = $session;
         $this->container = $container;
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return array(
@@ -115,6 +133,9 @@ class PageListener implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param \JMS\SerializerBundle\Serializer\EventDispatcher\Event $event
+     */
     public function onPostDeserialize(Event $event)
     {
         /** @var $page Page */

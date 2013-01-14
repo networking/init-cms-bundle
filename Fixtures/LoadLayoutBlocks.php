@@ -21,7 +21,7 @@ use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Entity\Text;
 
 /**
- *
+ * @author net working AG <info@networking.ch>
  */
 class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {

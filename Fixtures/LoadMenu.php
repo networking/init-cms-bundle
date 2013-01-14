@@ -1,10 +1,12 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: yorkie
- * Date: 01.11.12
- * Time: 16:26
- * To change this template use File | Settings | File Templates.
+
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 namespace Networking\InitCmsBundle\Fixtures;
 
@@ -16,6 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Networking\InitCmsBundle\Entity\MenuItem;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
@@ -31,6 +36,9 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
         $this->container = $container;
     }
 
+    /**
+     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $languages = $this->container->getParameter('networking_init_cms.page.languages');

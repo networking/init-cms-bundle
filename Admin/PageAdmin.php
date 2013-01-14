@@ -27,10 +27,19 @@ use Networking\InitCmsBundle\Entity\PageRepository;
 use Knp\Menu\ItemInterface as MenuItemInterface;
 use Sonata\AdminBundle\Form\Extension\Field\Type\FormTypeFieldExtension;
 
+/**
+ *
+ */
 class PageAdmin extends BaseAdmin
 {
+    /**
+     * @var string
+     */
     protected $baseRoutePattern = 'cms/pages';
 
+    /**
+     * @var bool
+     */
     public $supportsPreviewMode = true;
 
     /**

@@ -20,8 +20,14 @@ use Doctrine\ORM\Event\LifecycleEventArgs,
 class LayoutBlockListener
 {
 
+    /**
+     * @var \JMS\SerializerBundle\Serializer\Serializer $serializer
+     */
     protected $serializer;
 
+    /**
+     * @param \JMS\SerializerBundle\Serializer\Serializer $serializer
+     */
     public function __construct(Serializer $serializer)
     {
         $this->serializer = $serializer;

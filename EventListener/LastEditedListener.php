@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface,
@@ -10,6 +18,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface,
     Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Entity\MenuItem;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class LastEditedListener implements EventSubscriberInterface
 {
 

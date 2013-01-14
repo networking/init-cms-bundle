@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
@@ -13,6 +21,8 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="text")
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\TextRepository")
+ *
+ *  @author net working AG <info@networking.ch>
  */
 class Text implements ContentInterface
 {
@@ -199,6 +209,9 @@ class Text implements ContentInterface
         return array('text' => $this->getText());
     }
 
+    /**
+     * @return array
+     */
     public function getAdminContent()
     {
         return array(

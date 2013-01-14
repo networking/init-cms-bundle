@@ -20,6 +20,9 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
 use Networking\InitCmsBundle\EventListener\LayoutBlockFormListener;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class LayoutBlockAdmin extends BaseAdmin
 {
 

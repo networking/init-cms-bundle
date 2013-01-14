@@ -1,4 +1,13 @@
 <?php
+
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -9,15 +18,18 @@ use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 class LocaleListener implements EventSubscriberInterface
 {
     /**
-     * @var
+     * @var string $router
      */
     private $router;
 
     /**
-     * @var
+     * @var string $defaultLocale
      */
     private $defaultLocale;
 

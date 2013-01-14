@@ -16,6 +16,9 @@ use Sonata\AdminBundle\Admin\Admin;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * @author net working AG <info@networking.ch>
+ */
 abstract class BaseAdmin extends Admin implements ContainerAwareInterface
 {
     /**

@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -29,6 +37,8 @@ use Symfony\Cmf\Component\Routing\RouteAwareInterface;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="page", uniqueConstraints={@ORM\UniqueConstraint(name="path_idx", columns={"path", "locale"})})
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\PageRepository")
+ *
+ * @author net working AG <info@networking.ch>
  */
 class Page implements RouteAwareInterface, VersionableInterface
 {
@@ -794,6 +804,10 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $this->menuItem;
     }
 
+    /**
+     * @param $rootId
+     * @return \Doctrine\Common\Collections\Collection
+     */
     public function getMenuItemByRoot($rootId)
     {
         return $this->menuItem->filter(function ($menuItem) use ($rootId) {
@@ -938,6 +952,10 @@ class Page implements RouteAwareInterface, VersionableInterface
         return false;
     }
 
+    /**
+     * @param Page $page
+     * @return mixed
+     */
     public function getDirectTranslationFor(Page $page)
     {
         foreach ($this->getAllTranslations() as $translation) {
@@ -1270,6 +1288,10 @@ class Page implements RouteAwareInterface, VersionableInterface
         return 0;
     }
 
+    /**
+     * @param $id
+     * @return Page|null
+     */
     public function convertIntegerToPage($id)
     {
         $page = null;
