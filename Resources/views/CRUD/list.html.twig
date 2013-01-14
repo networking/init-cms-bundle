@@ -1,13 +1,21 @@
-{% extends 'SonataAdminBundle:CRUD:base_list.html.twig' %}
+{% extends 'NetworkingInitCmsBundle:CRUD:base_list.html.twig' %}
 
 {% block actions %}
-     <div class="sonata-actions">
-         <ul>
-             {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
-         </ul>
-     </div>
- {% endblock %}
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                <div class="accordion-caret"><b class="caret"></b></div>
+                {{ 'legend.actions'|trans({}, admin.translationDomain) }}
+            </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse in">
+            <div class="accordion-inner">
+                {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
+                <br/><br/>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 {% block list_table %}
-    <legend><strong>{% trans %}List{% endtrans %}</strong></legend>
     {{ parent() }}
 {% endblock %}

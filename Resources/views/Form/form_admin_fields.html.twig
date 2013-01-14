@@ -201,4 +201,17 @@ file that was distributed with this source code.
         </div>
     {% endspaceless %}
 {% endblock %}
+{% block networking_type_autocomplete_widget %}
+    {{ block('choice_widget') }}
+    <script>
+        $(document).ready(function() {
+        (function($){
+            $("#{{ id }}").select2({
+                placeholder: "{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
+                allowClear: true
+            });
+        })(jQuery);
+        });
+    </script>
+{% endblock %}
 

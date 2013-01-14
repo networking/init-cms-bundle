@@ -11,7 +11,7 @@
             {{ 'link.unlink'|trans({}, admin.translationDomain) }}
             {% else %}
                 {% set directTranslation = language.translation.getDirectTranslationFor(object) %}
-            <i class="info-soft"> -> <a href="{{ admin.generateUrl('edit', {'id': directTranslation.id}) }}"> {% filter upper %}{{ directTranslation.locale|slice(0,2) }}{% endfilter %} </i>
+            <i class="info-soft"> -> <a href="{{ admin.generateUrl('edit', {'id': directTranslation.id}) }}"> {{ directTranslation.locale|slice(0,2)|upper }}</i>
             {% endif %}
         </a>
     {% else %}

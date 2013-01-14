@@ -9,7 +9,7 @@ file that was distributed with this source code.
 
 #}
 
-{% extends 'NetworkingInitCmsBundle:Form:networking_form_admin_fields.html.twig' %}
+{% extends 'NetworkingInitCmsBundle:Form:form_admin_fields.html.twig' %}
 
 {# Custom Sonata Admin Extension #}
 {% block sonata_admin_orm_one_to_one_widget %}
@@ -25,7 +25,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block sonata_admin_orm_one_to_many_widget %}
-    {% include 'NetworkingInitCmsBundle:CRUD:page_edit_orm_one_to_many_custom.html.twig' %}
+    {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_orm_one_to_many_custom.html.twig' %}
 {% endblock %}
 
 {% block sonata_type_model_widget %}
@@ -140,18 +140,4 @@ file that was distributed with this source code.
     {% else %}
         INVALID MODE : {{ id }} - type : sonata_type_collection - mapping : {{ sonata_admin.field_description.mappingtype }}
     {% endif %}
-{% endblock %}
-
-{% block networking_type_autocomplete_widget %}
-    {{ block('choice_widget') }}
-    <script>
-        $(document).ready(function() {
-        (function($){
-            $("#{{ id }}").select2({
-                placeholder: "{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
-                allowClear: true
-            });
-        })(jQuery);
-        });
-    </script>
 {% endblock %}

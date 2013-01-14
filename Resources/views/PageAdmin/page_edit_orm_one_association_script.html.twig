@@ -8,14 +8,22 @@ var field_update_{{ id }} = function (event) {
     event.stopPropagation();
     var data = {};
     var form = jQuery(this).closest('form');
-    var url = '{{ url('admin_networking_initcms_page_updateFormFieldElement', {
-                        'code':      sonata_admin.admin.root.code,
-                        'elementId': id,
-                        'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
-                        'uniqid':    sonata_admin.admin.root.uniqid
-                    } + sonata_admin.field_description.getOption('link_parameters', {})) }}';
-    doAjaxSubmit(url, form, data);
+
+    updateLayoutBlocks(form, data);
+
 };
+
+function updateLayoutBlocks(form, data) {
+
+    var url = '{{ url('admin_networking_initcms_page_updateFormFieldElement', {
+                            'code':      sonata_admin.admin.root.code,
+                            'elementId': id,
+                            'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
+                            'uniqid':    sonata_admin.admin.root.uniqid
+                        } + sonata_admin.field_description.getOption('link_parameters', {})) }}';
+    doAjaxSubmit(url, form, data);
+
+}
 
 // handle the add link
 var field_add_{{ id }} = function (event) {
@@ -88,8 +96,8 @@ function doAjaxSubmit(url, form, data) {
                 if (i + 1 == data.sortOrder) {
                     jQuery(value).modal('show');
                 }
-            })
-            saveLayoutBlockSort();;
+            });
+            saveLayoutBlockSort();
         }
     });
 }
@@ -195,7 +203,7 @@ function onAfterLoad() {
         stop:function (event, ui) {
             apply_position_value_{{ id }}();
             saveLayoutBlockSort(function (xhr) {
-                createMessageBox(xhr.status, xhr.message);
+                createMessageBox(xhr.messageStatus, xhr.message);
             });
 
         },
@@ -229,8 +237,8 @@ function onAfterLoad() {
                 jQuery.ajax({
                     url:'{{ url('admin_networking_initcms_page_deleteLayoutBlock') }}',
                     data:{layoutBlock:liElement.attr('id')},
-                    success:function (r) {
-                        createMessageBox(r.status, r.message);
+                    success:function (xhr) {
+                        createMessageBox(xhr.messageStatus, xhr.message);
                         apply_position_value_{{ id }}();
                         saveLayoutBlockSort();
                     }
@@ -252,11 +260,6 @@ function onAfterLoad() {
     jQuery("select[id^='{{ id }}']").filter("select[id$='_classType']").bind('change', field_update_{{ id }});
 }
 
-function createMessageBox(status, message) {
-    var messageHtml = '<div class="alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
-
-    jQuery('.notice-block').html(messageHtml).fadeIn();
-}
 
 (function ($) {
 
@@ -264,8 +267,6 @@ function createMessageBox(status, message) {
     jQuery('#sonata-ba-field-container-{{ id }}').bind('sonata.add_element', function () {
         apply_position_value_{{ id }}();
     });
-
-    jQuery("select[id$='_template']").bind('change', field_update_{{ id }});
 
     onAfterLoad();
 

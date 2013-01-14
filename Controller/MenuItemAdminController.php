@@ -33,7 +33,7 @@ class MenuItemAdminController extends CmsCRUDController
             throw new AccessDeniedException();
         }
 
-        $locale = $this->getRequest()->getLocale();
+        $locale = $this->admin->getDefaultLocale();
         $menus = array();
         /** @var $repository MenuItemRepository */
         $repository = $this->getDoctrine()
@@ -54,7 +54,7 @@ class MenuItemAdminController extends CmsCRUDController
         $controller = $this;
         $nodeDecorator = function ($node) use ($admin, $controller, $repository) {
             $node = $repository->find($node['id']);
-            return $controller->renderView('NetworkingInitCmsBundle:CRUD:menu_list_item.html.twig', array('admin' => $admin, 'node' => $node));
+            return $controller->renderView('NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig', array('admin' => $admin, 'node' => $node));
         };
 
         foreach ($rootNodes as $rootNode) {
@@ -86,7 +86,7 @@ class MenuItemAdminController extends CmsCRUDController
 
         if ($this->isXmlHttpRequest()) {
             return $this->renderView(
-                'NetworkingInitCmsBundle:CRUD:menu_tabs.html.twig',
+                'NetworkingInitCmsBundle:MenuItemAdmin:menu_tabs.html.twig',
                 array(
                     'menus' => $menus,
                     'admin' => $this->admin

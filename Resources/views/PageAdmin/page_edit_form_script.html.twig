@@ -36,27 +36,36 @@
                 jQuery('#pageSettings').html(pageSettings);
                 jQuery('#pageStatusSettings').html(pageStatus);
                 $('#pageSettingFields').modal('hide');
+                updateLayoutBlocks(form, {});
+                createMessageBox(xhr.messageStatus, xhr.message);
             }
         });
     };
 
-    (function($){
+    function createMessageBox(status, message) {
+        var messageHtml = '<div class="alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
 
-        $("#{{ admin.getUniqid }}_locale").live('change', function(){
+        jQuery('.notice-block').html(messageHtml).fadeIn();
+    }
+
+
+    (function ($) {
+
+        $("#{{ admin.getUniqid }}_locale").live('change', function () {
             var locale = $(this).val();
             $.getJSON(
-                '{{ admin.generateUrl('parentPageList') }}',
-                {locale: locale},
-                function(data){
-                    var parentPages = $("#{{ admin.getUniqid }}_parent");
-                    parentPages.empty();
-                    parentPages.append($('<option></option>'));
-                    $.each(data, function(k, v){
-                        if(v){
-                            parentPages.append($('<option></option>').val(k).html(v));
-                        }
-                    });
-                }
+                    '{{ admin.generateUrl('parentPageList') }}',
+                    {locale:locale},
+                    function (data) {
+                        var parentPages = $("#{{ admin.getUniqid }}_parent");
+                        parentPages.empty();
+                        parentPages.append($('<option></option>'));
+                        $.each(data, function (k, v) {
+                            if (v) {
+                                parentPages.append($('<option></option>').val(k).html(v));
+                            }
+                        });
+                    }
             )
         })
 

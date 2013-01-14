@@ -63,4 +63,33 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
         }
         return $locale;
     }
+
+    /**
+     * @return int|string
+     */
+    public function getDefaultLocale()
+    {
+
+        if (!array_key_exists($this->getRequest()->getLocale(), $this->getLocaleChoices())) {
+            $shortLocale = substr($this->getRequest()->getLocale(), 0, 2);
+
+            foreach ($this->getLocaleChoices() as $key => $locale) {
+                if (strpos($key, $shortLocale) !== false) {
+                    return $key;
+                }
+            }
+
+
+
+            foreach ($this->getLocaleChoices() as $key => $locale) {
+                if (strpos($key, $this->container->getParameter('locale')) !== false) {
+                    return $key;
+                }
+            }
+
+        } else {
+            return $this->getRequest()->getLocale();
+        }
+
+    }
 }

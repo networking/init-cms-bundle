@@ -220,6 +220,14 @@
                 <source>button.cancel</source>
                 <target>Cancel</target>
             </trans-unit>
+            <trans-unit id="title.delete_translation_link">
+                <source>title.delete_translation_link</source>
+                <target>Remove translation link</target>
+            </trans-unit>
+            <trans-unit id="info.delete_translation_link">
+                <source>info.delete_translation_link</source>
+                <target>Are you sure that you would like to unlink this page with - "%translatedPage%" (%locale%)</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

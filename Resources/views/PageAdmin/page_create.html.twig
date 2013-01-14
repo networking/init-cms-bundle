@@ -2,21 +2,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/a2lixtranslationform/css/a2lix_translation.css') }}" type="text/css"
-          media="all"/>
-    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/js/redactor/redactor.css') }}" type="text/css"
-          media="all"/>
-    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/select2.css') }}" type="text/css"
-                  media="all"/>
 {% endblock stylesheets %}
 
 
 {% block title %}
-    {% if admin.id(object) %}
-        {{ admin.toString(object) }}
-    {% else %}
         {{ "title_create"|trans({}, 'SonataAdminBundle') }}
-    {% endif %}
 {% endblock %}
 
 {% block top_actions %}
@@ -49,14 +39,12 @@
 {% endblock %}
 
 
-{% use 'NetworkingInitCmsBundle:CRUD:page_base_edit_form.html.twig' with form as parentForm %}
+{% use 'NetworkingInitCmsBundle:PageAdmin:page_base_create_form.html.twig' with form as parentForm %}
 
 {% block form %}
     {{ block('parentForm') }}
 {% endblock %}
 
 {% block footer %}
-    <script src="{{ asset('/bundles/networkinginitcms/js/redactor/redactor.js') }}"></script>
-    <script src="{{ asset('/bundles/networkinginitcms/js/select2.min.js') }}"></script>
     {{ parent() }}
 {% endblock %}

@@ -31,14 +31,15 @@ file that was distributed with this source code.
         {% if app.request.isxmlhttprequest %}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h3>
+                <h3>{{ 'title.delete_translation_link'|trans({}, admin.translationDomain) }}</h3>
             </div>
         {% else %}
-            <h1>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h1>
+            <h1>{{ 'title.delete_translation_link'|trans({}, admin.translationDomain) }}</h1>
         {% endif %}
 
         <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
-            {{ 'message_delete_confirmation'|trans({'%object%': page}, 'SonataAdminBundle') }}
+            {% set locale = translatedPage.locale|slice(0,2)|upper %}
+            {{ 'info.delete_translation_link'|trans({'%translatedPage%': translatedPage, '%locale%': locale }, admin.translationDomain) }}
         </div>
         <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
             <form method="POST" action="{{ admin.generateUrl('unlink', {id: page.id, translationId: translationId}) }}">
@@ -47,10 +48,10 @@ file that was distributed with this source code.
                     <button class="btn" data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                     <input type="submit" class="btn btn-danger"
-                           value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
+                           value="{{ 'link.unlink'|trans({}, admin.translationDomain) }}"/>
                 {% else %}
                     <input type="submit" class="btn btn-danger"
-                           value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
+                           value="{{ 'link.unlink'|trans({}, admin.translationDomain) }}"/>
 
                     <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">
                                             {{ 'button.cancel'|trans({}, admin.translationDomain) }}

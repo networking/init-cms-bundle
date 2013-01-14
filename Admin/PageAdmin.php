@@ -182,23 +182,23 @@ class PageAdmin extends BaseAdmin
 
         switch ($name) {
             case 'show':
-                return 'NetworkingInitCmsBundle:CRUD:page_show.html.twig';
+                return 'NetworkingInitCmsBundle:PageAdmin:page_show.html.twig';
                 break;
             case 'preview':
-                return 'NetworkingInitCmsBundle:CRUD:page_preview.html.twig';
+                return 'NetworkingInitCmsBundle:PageAdmin:page_preview.html.twig';
                 break;
             case 'edit':
                 if ($this->getSubject()->getId()) {
-                    return 'NetworkingInitCmsBundle:CRUD:page_edit.html.twig';
+                    return 'NetworkingInitCmsBundle:PageAdmin:page_edit.html.twig';
                 } else {
-                    return 'NetworkingInitCmsBundle:CRUD:page_create.html.twig';
+                    return 'NetworkingInitCmsBundle:PageAdmin:page_create.html.twig';
                 }
                 break;
             case 'preview':
-                return 'NetworkingInitCmsBundle:CRUD:page_preview.html.twig';
+                return 'NetworkingInitCmsBundle:PageAdmin:page_preview.html.twig';
                 break;
             case 'list':
-                return 'NetworkingInitCmsBundle:CRUD:page_list.html.twig';
+                return 'NetworkingInitCmsBundle:PageAdmin:page_list.html.twig';
                 break;
             default:
                 return parent::getTemplate($name);
@@ -221,13 +221,14 @@ class PageAdmin extends BaseAdmin
             array(
                 'empty_value' => false,
                 'choices' => $this->getLocaleChoices(),
-                'preferred_choices' => array($this->getRequest()->getLocale())
+                'preferred_choices' => array($this->getDefaultLocale())
             ))
             ->add('title', 'networking_init_cms_simple_string')
             ->add('path',
             'doctrine_orm_callback',
             array('callback' => array($this, 'matchPath'))
         );
+
     }
 
     /**
@@ -268,14 +269,16 @@ class PageAdmin extends BaseAdmin
      */
     public function getByLocale($queryBuilder, $alias, $field, $data)
     {
+        $active = true;
         if (!$locale = $data['value']) {
-            $locale = $this->getRequest()->getLocale();
+            $locale = $this->getDefaultLocale();
+            $active = false;
         }
         $queryBuilder->andWhere(sprintf('%s.locale = :locale', $alias));
         $queryBuilder->orderBy(sprintf('%s.path', $alias), 'asc');
         $queryBuilder->setParameter(':locale', $locale);
 
-        return true;
+        return $active;
     }
 
     /**
@@ -285,10 +288,10 @@ class PageAdmin extends BaseAdmin
     {
 
         $listMapper
-            ->addIdentifier('adminTitle', 'string', array('template' => 'NetworkingInitCmsBundle:CRUD:page_title_list_field.html.twig'))
+            ->addIdentifier('adminTitle', 'string', array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig'))
 //                ->add('locale', null, array('sortable' => false))
-            ->add('status', null, array('label' => '.', 'sortable' => false, 'template' => 'NetworkingInitCmsBundle:CRUD:page_status_list_field.html.twig'))
-            ->add('fullPath', null, array('sortable' => false, 'template' => 'NetworkingInitCmsBundle:CRUD:page_title_list_field.html.twig'));
+            ->add('status', null, array('label' => '.', 'sortable' => false, 'template' => 'NetworkingInitCmsBundle:PageAdmin:page_status_list_field.html.twig'))
+            ->add('fullPath', null, array('sortable' => false, 'template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig'));
 
         $listMapper->add('_action', 'actions', array(
                 'label' => '.',
@@ -375,6 +378,9 @@ class PageAdmin extends BaseAdmin
         }
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getTranslationLanguages()
     {
         $translationLanguages = new \Doctrine\Common\Collections\ArrayCollection();

@@ -73,11 +73,9 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
             $content = $this->container->get('serializer')->deserialize($content->getVersionedData(), 'Networking\InitCmsBundle\Entity\Page', 'json');
 
 
-            $translations = array_merge($content->getOriginals(), $content->getTranslations());
+            $translation = $content->getAllTranslations()->get($locale);
 
-            $snapshotId = isset($translations[$locale]) ? $translations[$locale] : false;
-
-            if ($snapshotId) {
+            if ($snapshotId = $translation->getId()) {
                 /** @var $snapshot PageSnapshot */
                 $snapshot = $this->container->get('doctrine')->getRepository($content->getSnapshotClassType())->findOneBy(array('resourceId' => $snapshotId));
 

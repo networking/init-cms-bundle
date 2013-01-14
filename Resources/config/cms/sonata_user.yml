@@ -1,5 +1,8 @@
 sonata_user:
     security_acl: true
+    impersonating:
+        route:                networking_init_cms_admin
+        parameters:           { path: /}
     admin:                  # Admin Classes
         user:
             class:          Sonata\UserBundle\Admin\Entity\UserAdmin

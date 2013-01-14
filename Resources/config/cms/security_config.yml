@@ -39,11 +39,17 @@ security:
                 check_path:     /admin/login_check
                 failure_path:   null
                 use_referer:    true
+                default_target_path: /admin/dashboard
             logout:
                 path:           /admin/logout
                 target:         /admin/login
 
             anonymous:    true
+            remember_me:
+                key:      "%secret%"
+                lifetime: 31536000 # 365 days in seconds
+                path:     /
+                domain:   ~
         # -> end custom configuration
 
         # defaut login area for standard users

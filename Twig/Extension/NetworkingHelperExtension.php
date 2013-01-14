@@ -86,15 +86,15 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'networking_init_cms_block' => new \Twig_Function_Method($this, 'networking_init_cms_block', array('is_safe' => array('html'))),
-            'networking_init_cms_get_template_zones' => new \Twig_Function_Method($this, 'networking_init_cms_get_template_zones', array('is_safe' => array('html'))),
-            'networking_init_cms_get_field_to_string' => new \Twig_Function_Method($this, 'networking_init_cms_get_field_to_string', array('is_safe' => array('html'))),
-            'networking_init_cms_get_field_zone' => new \Twig_Function_Method($this, 'networking_init_cms_get_field_zone', array('is_safe' => array('html'))),
-            'networking_init_cms_sort_form_children' => new \Twig_Function_Method($this, 'networking_init_cms_sort_form_children', array('is_safe' => array('html'))),
-            'networking_admin_cms_block' => new \Twig_Function_Method($this, 'networking_admin_cms_block', array('is_safe' => array('html'))),
-            'networking_init_cms_content_select' => new \Twig_Function_Method($this, 'networking_init_cms_content_select', array('is_safe' => array('html'))),
-            'networking_init_cms_get_admin_icon' => new \Twig_Function_Method($this, 'networking_init_cms_get_admin_icon', array('is_safe' => array('html'))),
-            'networking_init_cms_get_current_admin_locale' => new \Twig_Function_Method($this, 'networking_init_cms_get_current_admin_locale', array('is_safe' => array('html'))),
+            'networking_init_cms_block' => new \Twig_Function_Method($this, 'cmsBlock', array('is_safe' => array('html'))),
+            'networking_init_cms_get_template_zones' => new \Twig_Function_Method($this, 'getTemplateZones', array('is_safe' => array('html'))),
+            'networking_init_cms_get_field_to_string' => new \Twig_Function_Method($this, 'getFieldToString', array('is_safe' => array('html'))),
+            'networking_init_cms_get_field_zone' => new \Twig_Function_Method($this, 'getFieldZone', array('is_safe' => array('html'))),
+            'networking_init_cms_sort_form_children' => new \Twig_Function_Method($this, 'sortFormChildren', array('is_safe' => array('html'))),
+            'networking_admin_cms_block' => new \Twig_Function_Method($this, 'adminCmsBlock', array('is_safe' => array('html'))),
+            'networking_init_cms_content_select' => new \Twig_Function_Method($this, 'contentSelect', array('is_safe' => array('html'))),
+            'networking_init_cms_get_admin_icon' => new \Twig_Function_Method($this, 'getAdminIcon', array('is_safe' => array('html'))),
+            'networking_init_cms_get_current_admin_locale' => new \Twig_Function_Method($this, 'getCurrentAdminLocale', array('is_safe' => array('html'))),
         );
     }
 
@@ -106,7 +106,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $id
      * @return mixed
      */
-    public function networking_init_cms_block($template, LayoutBlock $layoutBlock)
+    public function cmsBlock($template, LayoutBlock $layoutBlock)
     {
         if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
@@ -136,7 +136,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $id
      * @return mixed
      */
-    public function networking_admin_cms_block(LayoutBlock $content)
+    public function adminCmsBlock(LayoutBlock $content)
     {
 
         if ($content->getObjectId()) {
@@ -156,7 +156,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     /**
      * @return mixed
      */
-    public function networking_init_cms_get_template_zones()
+    public function getTemplateZones()
     {
         return $this->getZonesByTemplate($this->getCurrentTemplate());
     }
@@ -164,7 +164,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     /**
      * @return mixed
      */
-    public function networking_init_cms_content_select()
+    public function contentSelect()
     {
         return $this->container->getParameter('networking_init_cms.page.content_types');
     }
@@ -179,7 +179,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      *
      * @todo This is a bit of a hack. Need to provide a better way of providing admin icons
      */
-    public function networking_init_cms_get_admin_icon(\Sonata\AdminBundle\Admin\AdminInterface $admin, $size = 'small', $active = false)
+    public function getAdminIcon(\Sonata\AdminBundle\Admin\AdminInterface $admin, $size = 'small', $active = false)
     {
         $state = $active ? '_active' : '';
         $imagePath = '/bundles/networkinginitcms/img/icons/icon_blank_' . $size . $state . '.png';
@@ -207,26 +207,29 @@ class NetworkingHelperExtension extends \Twig_Extension
         return $imagePath;
     }
 
-    public function networking_init_cms_get_current_admin_locale(\Sonata\AdminBundle\Admin\AdminInterface $admin)
+    public function getCurrentAdminLocale(\Sonata\AdminBundle\Admin\AdminInterface $admin)
     {
+        $locale = '';
         if ($subject = $admin->getSubject()) {
             return $this->getFieldValue($subject, 'locale');
         } elseif ($filter = $admin->getDatagrid()->getFilter('locale')) {
             $data = $filter->getValue();
             if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
-                return $this->getCurrentLocale();
+                $locale = $this->getCurrentLocale();
             }
 
             $data['value'] = trim($data['value']);
 
-            if (strlen($data['value']) == 0) {
-                return $this->getCurrentLocale();
+            if (strlen($data['value']) > 0) {
+                $locale = $data['value'];
+            } else {
+                if (method_exists($admin, 'getDefaultLocale')) {
+                    $locale = $admin->getDefaultLocale();
+                }
             }
-
-            return $data['value'];
         }
 
-        return $this->getCurrentLocale();
+        return $locale;
     }
 
     private function getCurrentLocale()
@@ -339,7 +342,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param \Symfony\Component\Form\FormView $formView
      * @return mixed
      */
-    public function networking_init_cms_get_field_zone(\Symfony\Component\Form\FormView $formView)
+    public function getFieldZone(\Symfony\Component\Form\FormView $formView)
     {
         $zones = $this->getZoneNames();
 
@@ -360,12 +363,12 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $zone
      * @return array
      */
-    public function networking_init_cms_sort_form_children($formChildren, $zone)
+    public function sortFormChildren($formChildren, $zone)
     {
         $zones = array();
 
         foreach ($formChildren as $subForms) {
-            if ($this->networking_init_cms_get_field_zone($subForms) == $zone) {
+            if ($this->getFieldZone($subForms) == $zone) {
                 $zones[] = $subForms;
             }
         }
@@ -377,13 +380,12 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $object
      * @param $formView
      */
-    public function networking_init_cms_get_field_to_string($template, $object, \Symfony\Component\Form\FormView $formView, $translationDomain = null)
+    public function getFieldToString($template, $object, \Symfony\Component\Form\FormView $formView, $translationDomain = null)
     {
 
         /** @var $fieldDescription \Sonata\DoctrineORMAdminBundle\Admin\FieldDescription */
         $fieldDescription = $formView->vars['sonata_admin']['field_description'];
         $value = '';
-
 
 
         switch ($fieldDescription->getType()) {
@@ -422,7 +424,7 @@ class NetworkingHelperExtension extends \Twig_Extension
                 break;
         }
 
-        if($displayMethod = $fieldDescription->getOption('display_method')){
+        if ($displayMethod = $fieldDescription->getOption('display_method')) {
             $value = $this->getFieldValue($object, $fieldDescription->getFieldName(), $displayMethod);
         }
 

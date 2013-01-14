@@ -74,8 +74,9 @@ class MenuItemAdmin extends BaseAdmin
         } else {
             $formMapper
                 ->add('page',
-                'entity',
+                'networking_type_autocomplete',
                 array(
+                    'attr' => array('style' => "width:220px"),
                     'class' => 'Networking\InitCmsBundle\Entity\Page',
                     'required' => true,
                     'property' => 'AdminTitle',
@@ -113,11 +114,6 @@ class MenuItemAdmin extends BaseAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-        $locale = $this->getRequest()->getLocale();
-
-        if ($filter = $this->getRequest()->get('filter')) {
-            $locale = $filter['locale']['value'];
-        }
 
         $datagridMapper
             ->add('locale',
@@ -127,7 +123,7 @@ class MenuItemAdmin extends BaseAdmin
             array(
                 'empty_value' => false,
                 'choices' => $this->getLocaleChoices(),
-                'preferred_choices' => array($this->getRequest()->getLocale())
+                'preferred_choices' => array($this->getDefaultLocale())
             ));
     }
 
@@ -139,7 +135,7 @@ class MenuItemAdmin extends BaseAdmin
         $listMapper
             ->addIdentifier('name')
             ->add('path')
-            ->add('page', 'many_to_one', array('template' => 'NetworkingInitCmsBundle:CRUD:page_list_field.html.twig'))
+            ->add('page', 'many_to_one', array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_field.html.twig'))
             ->add('locale')
             ->add('menu');
     }
@@ -151,11 +147,13 @@ class MenuItemAdmin extends BaseAdmin
      * @param $value
      * @return bool
      */
-    public function getByLocale($queryBuilder, $alias, $field, $value)
+    public function getByLocale(\Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder, $alias, $field, $value)
     {
         if (!$locale = $value['value']) {
-            $locale = $this->getRequest()->getLocale();
+            $locale = $this->getDefaultLocale();
         }
+
+
         $queryBuilder->where(sprintf('%s.locale = :locale', $alias));
         $queryBuilder->andWhere($queryBuilder->expr()->isNotNull(sprintf('%s.parent', $alias)));
         $queryBuilder->setParameter(':locale', $locale);
@@ -184,7 +182,7 @@ class MenuItemAdmin extends BaseAdmin
     {
         switch ($name) {
             case 'list':
-                return 'NetworkingInitCmsBundle:CRUD:menu_list.html.twig';
+                return 'NetworkingInitCmsBundle:MenuItemAdmin:menu_list.html.twig';
                 break;
             default:
                 return parent::getTemplate($name);

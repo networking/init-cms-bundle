@@ -37,10 +37,10 @@
             <call method="setTemplates">
                 <argument type="collection">
                     <argument key="layout">NetworkingInitCmsBundle::admin_layout.html.twig</argument>
-                    <argument key="ajax">SonataAdminBundle::ajax_layout.html.twig</argument>
-                    <argument key="edit">SonataAdminBundle:CRUD:edit.html.twig</argument>
-                    <argument key="show">SonataAdminBundle:CRUD:show.html.twig</argument>
-                    <argument key="list">SonataMediaBundle:MediaAdmin:list.html.twig</argument>
+                    <argument key="ajax">NetworkingInitCmsBundle::ajax_layout.html.twig</argument>
+                    <argument key="edit">NetworkingInitCmsBundle:CRUD:edit.html.twig</argument>
+                    <argument key="show">NetworkingInitCmsBundle:CRUD:show.html.twig</argument>
+                    <argument key="list">NetworkingInitCmsBundle:MediaAdmin:list.html.twig</argument>
                 </argument>
             </call>
         </service>
@@ -64,10 +64,10 @@
             <call method="setTemplates">
                 <argument type="collection">
                     <argument key="layout">NetworkingInitCmsBundle::admin_layout.html.twig</argument>
-                    <argument key="ajax">SonataAdminBundle::ajax_layout.html.twig</argument>
-                    <argument key="edit">SonataAdminBundle:CRUD:edit.html.twig</argument>
-                    <argument key="show">SonataAdminBundle:CRUD:show.html.twig</argument>
-                    <argument key="list">SonataMediaBundle:GalleryAdmin:list.html.twig</argument>
+                    <argument key="ajax">NetworkingInitCmsBundle::ajax_layout.html.twig</argument>
+                    <argument key="edit">NetworkingInitCmsBundle:CRUD:edit.html.twig</argument>
+                    <argument key="show">NetworkingInitCmsBundle:CRUD:show.html.twig</argument>
+                    <argument key="list">NetworkingInitCmsBundle:GalleryAdmin:list.html.twig</argument>
                 </argument>
             </call>
         </service>

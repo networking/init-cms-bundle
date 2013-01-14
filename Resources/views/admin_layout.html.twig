@@ -46,6 +46,8 @@ file that was distributed with this source code.
               media="all"/>
         <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap-responsive.min.css') }}"
               type="text/css" media="all"/>
+        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/select2.css') }}" type="text/css"
+                      media="all"/>
     {% endblock %}
 
     {% block javascripts %}
@@ -60,6 +62,7 @@ file that was distributed with this source code.
         <script src="{{ asset('bundles/sonataadmin/jquery/jquery.form.js') }}" type="text/javascript"></script>
         <script src="{{ asset('bundles/sonataadmin/base.js') }}" type="text/javascript"></script>
         <script src="{{ asset('bundles/networkinginitcms/js/respond.min.js') }}"></script>
+        <script src="{{ asset('/bundles/networkinginitcms/js/select2.min.js') }}"></script>
     {% endblock %}
 
     <title>
@@ -101,7 +104,7 @@ file that was distributed with this source code.
                             <li class="dropdown">
                                 <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><span class="font-smaller color-second">{{ app.user }}</span> <b class="caret"></b></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                                    <li><a tabindex="-1" href="http://google.com">Account Settings</a></li>
+                                    <li><a tabindex="-1" href="{{ url('admin_sonata_user_user_edit', {id: app.user.id})}}">Account Settings</a></li>
                                     {% if is_granted('ROLE_PREVIOUS_ADMIN') and sonata_user.impersonating %}
                                     <li><a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters| merge({'_switch_user': '_exit'})) }}">(exit)</a></li>
                                     {% endif %}
@@ -205,7 +208,7 @@ file that was distributed with this source code.
                                 {% endif %}
                             {% endif %}
                             {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
-                                <li class="first-level {% if isActive %}active{% endif %}{% if small %}first-level-small{% endif %} ">
+                                <li class="{% if isActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
                                     <div class="pull-left">
                                         <img src="
                                     {% if isActive %}
@@ -214,7 +217,7 @@ file that was distributed with this source code.
                                         {{ asset(networking_init_cms_get_admin_icon(admin, 'small')) }}
                                     {% endif %}"/></div>
                                     <a href="{{ admin.generateUrl('list') }}">
-                                        <div class="pull-left {% if small %}second{% else %}first{% endif %}-level-text">{{ admin.label|trans({}, admin.translationdomain) }}</div>
+                                        <div class="pull-left first-level-text">{{ admin.label|trans({}, admin.translationdomain) }}</div>
                                     </a>
                                     {% if isActive %}
                                         <div class="pull-right" style="position:relative;">
@@ -295,7 +298,7 @@ file that was distributed with this source code.
                     {% if admin is defined %}
                         {% block language_indicator %}
                             <div class="language-indicator">
-                                {% filter upper %}{{ networking_init_cms_get_current_admin_locale(admin)|slice(0,2) }}{% endfilter %}</div>
+                                {{ networking_init_cms_get_current_admin_locale(admin)|slice(0,2)|upper }}</div>
                         {% endblock %}
                     {% endif %}
                     <div class="icon-medium-inline level-headline-icon"><a href="#" target="_blank">

@@ -164,7 +164,7 @@ class PageListener implements EventSubscriberInterface
                 $translations[$key] = $er->find($translation);
             }
 
-            $page->setOriginals($translations);
+            $page->setTranslations($translations);
         }
     }
 }

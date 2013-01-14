@@ -3,12 +3,12 @@
 	{{ text | raw }}
 </div>
 {% endif %}
-{% if mediaItems is defined %}
+{% if mediaGallery is defined %}
 <div class="span7">
 	<div id="heroCarousel" class="carousel slide">
 		<!-- Carousel items -->
 		<div class="carousel-inner">
-			{% for mediaItem in mediaItems %}
+			{% for mediaItem in mediaGallery.galleryHasMedias %}
 			<div class="item">
 				<img src="{% path mediaItem.media, 'big' %}" alt="" />
 				<div class="carousel-caption">

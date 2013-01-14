@@ -46,3 +46,7 @@ sonata_admin:
 #            News:
 #                label: News
 #                items: [networking_cms.news.admin.article]
+
+sonata_doctrine_orm_admin:
+    templates:
+        form: [ NetworkingInitCmsBundle:Form:form_admin_fields.html.twig ]

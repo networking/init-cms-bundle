@@ -7,10 +7,10 @@
 </div>
 {% elseif app.request.isxmlhttprequest %}
     <div id="pageStatusSettings">
-        {% include 'NetworkingInitCmsBundle:CRUD:page_status_buttons.html.twig' %}
+        {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig' %}
     </div>
     <div id="pageSettings">
-        {% include 'NetworkingInitCmsBundle:CRUD:page_settings_fields.html.twig' %}
+        {% include 'NetworkingInitCmsBundle:PageAdmin:page_settings_fields.html.twig' %}
     </div>
 {% else %}
     <form class="form-vertical"
@@ -47,7 +47,7 @@
                     <div id="collapseZero" class="accordion-body collapse in">
                         <div class="accordion-inner" style="min-height:70px;" >
                             <div id="pageStatusSettings">
-                            {% include 'NetworkingInitCmsBundle:CRUD:page_status_buttons.html.twig' %}
+                            {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig' %}
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                     <div id="collapseOne" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <div id="translationSettings">
-                               {% include 'NetworkingInitCmsBundle:CRUD:page_translation_settings.html.twig' %}
+                               {% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig' %}
                            </div>
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                                 </a>
                             </div>
                             <div id="pageSettings">
-                                {% include 'NetworkingInitCmsBundle:CRUD:page_settings_fields.html.twig' %}
+                                {% include 'NetworkingInitCmsBundle:PageAdmin:page_settings_fields.html.twig' %}
                             </div>
                         </div>
                     </div>
@@ -159,9 +159,9 @@
         <!-- end modal page form -->
     </form>
     {% jsblock 'addToBottom' %}
-    {% include 'NetworkingInitCmsBundle:CRUD:page_edit_form_script.html.twig' with {'admin': admin} %}
-    {% include 'NetworkingInitCmsBundle:CRUD:page_translation_script.html.twig' with {'admin': admin} %}
-    {% include 'NetworkingInitCmsBundle:CRUD:page_status_script.html.twig' with {'admin': admin} %}
+    {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_form_script.html.twig' with {'admin': admin} %}
+    {% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_script.html.twig' with {'admin': admin} %}
+    {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_script.html.twig' with {'admin': admin} %}
     {% jsblock 'addToBottomEnd' %}
 
 

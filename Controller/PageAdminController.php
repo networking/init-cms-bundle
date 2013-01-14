@@ -98,7 +98,7 @@ class PageAdminController extends CmsCRUDController
                 if ($this->isXmlHttpRequest()) {
 
                     $html = $this->renderView(
-                        'NetworkingInitCmsBundle:CRUD:page_translation_settings.html.twig',
+                        'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
                         array('object' => $page, 'admin' => $this->admin));
                     return $this->renderJson(array(
                         'result' => 'ok',
@@ -125,7 +125,7 @@ class PageAdminController extends CmsCRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:CRUD:page_translation_link_list.html.twig',
+            'NetworkingInitCmsBundle:PageAdmin:page_translation_link_list.html.twig',
             array(
                 'page' => $page,
                 'pages' => $pages,
@@ -149,6 +149,7 @@ class PageAdminController extends CmsCRUDController
 
         /** @var $page Page */
         $page = $er->find($id);
+        $translatedPage = $er->find($translationId);
 
         if (!$page) {
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
@@ -170,7 +171,7 @@ class PageAdminController extends CmsCRUDController
             if ($this->isXmlHttpRequest()) {
 
                 $html = $this->renderView(
-                    'NetworkingInitCmsBundle:CRUD:page_translation_settings.html.twig',
+                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
                     array('object' => $page, 'admin' => $this->admin));
                 return $this->renderJson(array(
                     'result' => 'ok',
@@ -185,11 +186,13 @@ class PageAdminController extends CmsCRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:CRUD:page_translation_unlink.html.twig',
+            'NetworkingInitCmsBundle:PageAdmin:page_translation_unlink.html.twig',
             array(
+                'action' => 'unlink',
                 'page' => $page,
                 'translationId' => $translationId,
-                'admin' => $this->admin
+                'admin' => $this->admin,
+                'translatedPage' => $translatedPage
             )
         );
 
@@ -408,7 +411,7 @@ class PageAdminController extends CmsCRUDController
                 } catch (\Exception $e) {
                     $message = $e->getMessage();
 
-                    return new JsonResponse(array('status' => 'error', 'message' => $message));
+                    return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
                 }
 
                 $layoutBlock->setSortOrder($sort);
@@ -421,12 +424,12 @@ class PageAdminController extends CmsCRUDController
         }
 
         $data = array(
-            'status' => 'success',
+            'messageStatus' => 'success',
             'message' => $this->translate('message.layout_blocks_sorted', array('zone' => $zone))
         );
 
         if ($layoutBlocks) {
-            $pageStatus = $this->renderView('NetworkingInitCmsBundle:CRUD:page_status_buttons.html.twig', array(
+            $pageStatus = $this->renderView('NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig', array(
                 'admin' => $this->admin,
                 'object' => $layoutBlock->getPage()
             ));
@@ -454,7 +457,7 @@ class PageAdminController extends CmsCRUDController
             } catch (\Exception $e) {
                 $message = $e->getMessage();
 
-                return new JsonResponse(array('status' => 'error', 'message' => $message));
+                return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -462,7 +465,7 @@ class PageAdminController extends CmsCRUDController
             $em->remove($layoutBlock);
             $em->flush();
         }
-        return new JsonResponse(array('status' => 'success', 'message' => $this->translate('message.layout_block_deleted')));
+        return new JsonResponse(array('messageStatus' => 'success', 'message' => $this->translate('message.layout_block_deleted')));
     }
 
     /**
@@ -577,6 +580,8 @@ class PageAdminController extends CmsCRUDController
                         'result' => 'ok',
                         'objectId' => $this->admin->getNormalizedIdentifier($object),
                         'title' => $object->__toString(),
+                        'messageStatus' => 'success',
+                        'message' => $this->admin->trans('info.page_settings_updated'),
                         'pageStatus' => $this->admin->trans($object->getStatus()),
                         'pageSettings' => $pageSettingsTemplate->getContent()
                     ));
@@ -703,7 +708,7 @@ class PageAdminController extends CmsCRUDController
                 'result' => 'ok',
                 'objectId' => $this->admin->getNormalizedIdentifier($object),
                 'title' => $object->__toString(),
-                'status' => $this->admin->trans($object->getStatus()),
+                'pageStatus' => $this->admin->trans($object->getStatus()),
                 'pageSettings' => $pageSettingsTemplate
             ));
         }
@@ -796,7 +801,7 @@ class PageAdminController extends CmsCRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:CRUD:page_cancel_draft.html.twig',
+            'NetworkingInitCmsBundle:PageAdmin:page_cancel_draft.html.twig',
             array(
                 'action' => 'cancelDraft',
                 'page' => $draftPage,
@@ -859,7 +864,7 @@ class PageAdminController extends CmsCRUDController
                 'result' => 'ok',
                 'objectId' => $this->admin->getNormalizedIdentifier($object),
                 'title' => $object->__toString(),
-                'status' => $this->admin->trans($object->getStatus()),
+                'pageStatus' => $this->admin->trans($object->getStatus()),
                 'pageSettings' => $pageSettingsTemplate
             ));
         }

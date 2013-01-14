@@ -1,0 +1,79 @@
+{% autoescape false %}
+<script type="text/javascript">
+    var statusDialog;
+
+    function initializeStatusDialog() {
+        if (!statusDialog) {
+            statusDialog = jQuery('#status_dialog');
+            statusDialog.modal({
+                height:'auto',
+                width:650,
+                show:false
+            });
+            statusDialog.on('hide', function () {
+                jQuery('input[type=submit]', this).off();
+            });
+            jQuery(document.body).append(statusDialog);
+//            jQuery('form', statusDialog).live('submit', submitTranslationAjaxForm);
+        }
+    }
+
+    function createStatusAjaxDialog(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        initializeStatusDialog();
+
+        var a = jQuery(this);
+        var url = a.attr('href');
+        if (!url) {
+            url = a.attr('ref');
+        }
+
+        jQuery.ajax({
+            url:url,
+            dataType:'html',
+            success:function (html) {
+                // populate the popup container
+                statusDialog.html(html);
+                statusDialog.modal('show');
+            }
+        });
+    }
+
+    {#function submitStatusAjaxForm(event) {#}
+        {#event.preventDefault();#}
+        {#event.stopPropagation();#}
+
+        {#var form = jQuery(this);#}
+
+        {#jQuery(form).ajaxSubmit({#}
+            {#type:form.attr('method'),#}
+            {#url:form.attr('action'),#}
+            {#dataType:'json',#}
+            {#success:function (xhr) {#}
+                {#if (xhr.result == 'ok') {#}
+                    {#if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {#}
+                        {#jQuery('.page_status').addClass('color-draft');#}
+                    {#} else {#}
+                        {#jQuery('.page_status').removeClass('color-draft');#}
+                    {#}#}
+                    {#var pageSettings = jQuery(xhr.pageSettings).filter('#pageSettings').html();#}
+                    {#var pageStatus = jQuery(xhr.pageSettings).filter('#pageStatusSettings').html();#}
+
+                    {#jQuery('.page_status').html(xhr.pageStatus);#}
+                    {#jQuery('.page_title h1').html(xhr.title);#}
+                    {#jQuery('#pageSettings').html(pageSettings);#}
+                    {#jQuery('#pageStatusSettings').html(pageStatus);#}
+                    {#statusDialog.modal('hide');#}
+                {#}#}
+            {#}#}
+        {#});#}
+    {#}#}
+
+    (function ($) {
+        $('.status-dialog-link').live('click', createStatusAjaxDialog);
+
+    })(jQuery);
+</script>
+{% endautoescape %}
