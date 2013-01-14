@@ -166,15 +166,12 @@ class PageAdminController extends CmsCRUDController
 
         if ($this->getRequest()->getMethod() == 'DELETE') {
 
-            $translations = $page->getAllTranslations()->filter(function (Page $page) use ($translationId) {
-                return $page->getId() == $translationId;
-            });
-            $translation = $translations->first();
-
-            $page->removeTranslation($translation);
+            $page->removeTranslation($translatedPage);
+            $translatedPage->removeTranslation($page);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($page);
+            $em->persist($translatedPage);
             $em->flush();
 
             if ($this->isXmlHttpRequest()) {
