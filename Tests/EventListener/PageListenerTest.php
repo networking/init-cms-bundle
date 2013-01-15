@@ -2,20 +2,20 @@
 namespace Networking\InitCmsBundle\Tests\EventListener;
 
 use Networking\InitCmsBundle\EventListener\PageListener;
+use Networking\InitCmsBundle\Helper\PageHelper;
 
 class PageListenerTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
-	 * @covers PageListener::getPageRoutePath()
+	 * @covers PageHelper::getPageRoutePath()
 	 */
 	public function testGetPageRoutePath()
 	{
-		$pageListener = new PageListener();
 
-		$this->assertEquals('/', $pageListener->getPageRoutePath(''), 'empty route is "/"');
-		$this->assertEquals('/hallo', $pageListener->getPageRoutePath('hallo'), 'slash at the beginning');
-		$this->assertEquals('/some/tree/', $pageListener->getPageRoutePath('/some-2/tree-20/'), 'remove -numbers in path');
+		$this->assertEquals('/', PageHelper::getPageRoutePath(''), 'empty route is "/"');
+		$this->assertEquals('/hallo', PageHelper::getPageRoutePath('hallo'), 'slash at the beginning');
+		$this->assertEquals('/some/tree/', PageHelper::getPageRoutePath('/some-2/tree-20/'), 'remove -numbers in path');
 	}
 
 	/**
@@ -24,7 +24,8 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testPostPersist1()
 	{
-		$pageListener = new PageListener();
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
 		$mockArgs = $this->getMockDoctrineLifeCycleEventArgsPersist('\Networking\InitCmsBundle\Entity\Tag');
 		$pageListener->postPersist($mockArgs);
 	}
@@ -34,7 +35,8 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testPostPersist2()
 	{
-		$pageListener = new PageListener();
+		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
 		$mockArgs = $this->getMockDoctrineLifeCycleEventArgsPersist('\Networking\InitCmsBundle\Entity\Page');
 		$pageListener->postPersist($mockArgs);
 	}
@@ -45,7 +47,8 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testPostUpdate1()
 	{
-		$pageListener = new PageListener();
+		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
 
 		$mockDoctrineLifeCycleEventArgsTag = $this->getMockDoctrineLifeCycleEventArgs('\Networking\InitCmsBundle\Entity\Tag');
 		$pageListener->postUpdate($mockDoctrineLifeCycleEventArgsTag);
@@ -59,7 +62,8 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 	 * Mocked method does not exist.
 	 */
 	public function testPostUpdate2(){
-		$pageListener = new PageListener();
+		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
 
 		$mockDoctrineLifeCycleEventArgsPage = $this->getMockDoctrineLifeCycleEventArgs('\Networking\InitCmsBundle\Entity\Page');
 		$pageListener->postUpdate($mockDoctrineLifeCycleEventArgsPage);
@@ -69,7 +73,8 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 	 * postUpdate with Page and 10 children
 	 */
 	public function testPostUpdate3(){
-		$pageListener = new PageListener();
+		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
 
 		$mockDoctrineLifeCycleEventArgsPageMulti = $this->getMockDoctrineLifeCycleEventArgs('\Networking\InitCmsBundle\Entity\Page', 10);
 		$pageListener->postUpdate($mockDoctrineLifeCycleEventArgsPageMulti);
