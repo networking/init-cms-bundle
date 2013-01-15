@@ -28,4 +28,23 @@ file that was distributed with this source code.
 {% endblock %}
 {% block list_table %}
     {{ parent() }}
+    <script>
+               $(document).ready(function () {
+
+                   var ua = navigator.userAgent,
+                           event = (ua.match(/iPad/i)) ? "touchstart" : "click";
+
+
+                   $(".actions-toggle").bind(event, function () {
+                       $('.row-actions').hide();
+                       $(this).parent().children('.row-actions').fadeToggle('fast');
+                       //$(this).parent().children('.row-actions').css('display', 'inline-block');
+                   });
+                   $(".actions-toggle-close").bind(event, function () {
+                       $(this).parent().fadeToggle('fast');
+                   });
+
+                   $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
+               });
+           </script>
 {% endblock %}

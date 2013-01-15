@@ -36,6 +36,10 @@ services:
         tags:
           - { name: form.type, alias: networking_type_autocomplete}
 
+#    sonata.admin.builder.orm_list:
+#        class: Networking\InitCmsBundle\Builder\ListBuilder
+#        arguments: [@sonata.admin.guesser.orm_list_chain]
+
 
 ## Admin Controllers
 # Page Admin Contoller
@@ -59,16 +63,16 @@ services:
     networking_init_cms.page.admin.tag:
         class: Networking\InitCmsBundle\Admin\TagAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\Tag, SonataAdminBundle:CRUD]
-        call: [setTranslationDomain, [Networking\InitCmsBundle]]
+        call: [setTranslationDomain, [PageAdmin]]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Tags, label_translator_strategy: sonata.admin.label.strategy.underscore }
+            - { name: sonata.admin, manager_type: orm, label: Tags, label_translator_strategy: sonata.admin.label.strategy.underscore}
 
 # Layout Block Admin Controller
     networking_init_cms.page.admin.layout_block:
         class: Networking\InitCmsBundle\Admin\LayoutBlockAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\LayoutBlock, SonataAdminBundle:CRUD]
         calls:
-            - [setTranslationDomain, [Networking\InitCmsBundle]]
+            - [setTranslationDomain, [PageAdmin]]
             - [setContainer, [@service_container]]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Content, label_translator_strategy: sonata.admin.label.strategy.underscore }

@@ -31,7 +31,6 @@ class NetworkingInitCmsExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
 
-
         $configuration = new Configuration();
         $defaults = Yaml::parse(__DIR__ . '/../Resources/config/config.yml');
 
@@ -51,6 +50,7 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
+
 
     }
 

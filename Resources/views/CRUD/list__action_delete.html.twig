@@ -1,0 +1,14 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% if admin.isGranted('DELETE', object) and admin.hasRoute('delete') %}
+    <a href="{{ admin.generateObjectUrl('delete', object) }}" class="btn btn-mini button-in-row show-tooltip" data-original-title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}" data-toggle="dropdown" title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}"><i class="icon-trash"></i>
+    </a>
+{% endif %}

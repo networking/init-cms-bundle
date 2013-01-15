@@ -1,0 +1,22 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+<td class="icons" style="text-align: right">
+    <div style="position:relative;" data-debug="test">
+        {% include "NetworkingInitCmsBundle:CRUD:cms_list__action_edit.html.twig" %}
+        <button class="btn btn-mini actions-toggle" data-original-title="Show More" data-toggle="dropdown"> &nbsp;<b class="caret"></b>&nbsp;</button>
+        <div class="row-actions">
+                {% for key, actions in field_description.options.actions %}
+                   {% include actions.template %}
+            {% endfor %}
+            <button class="btn btn-mini actions-toggle-close" data-original-title="Hide More Actions" data-toggle="dropdown"><b class="caret-left caret-button-padding"></b><span class="caret-button-padding-right"></span><!--<img src="./img/helveticons/basic/16x16/Settings 16x16.png" width="12"/>--></button>
+        </div>
+    </div>
+</td>

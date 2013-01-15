@@ -11,21 +11,19 @@
 
 namespace Networking\InitCmsBundle\Admin;
 
-use Networking\InitCmsBundle\Admin\BaseAdmin;
-
-use Sonata\AdminBundle\Admin\Admin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Validator\ErrorElement;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\AdminBundle\Admin\AdminInterface;
-use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
-
-use Networking\InitCmsBundle\Entity\Page;
-use Networking\InitCmsBundle\Entity\PageRepository;
-use Knp\Menu\ItemInterface as MenuItemInterface;
-use Sonata\AdminBundle\Form\Extension\Field\Type\FormTypeFieldExtension;
+use Networking\InitCmsBundle\Admin\BaseAdmin,
+    Sonata\AdminBundle\Admin\Admin,
+    Sonata\AdminBundle\Datagrid\ListMapper,
+    Sonata\AdminBundle\Datagrid\DatagridMapper,
+    Sonata\AdminBundle\Validator\ErrorElement,
+    Sonata\AdminBundle\Form\FormMapper,
+    Sonata\AdminBundle\Route\RouteCollection,
+    Sonata\AdminBundle\Admin\AdminInterface,
+    Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery,
+    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\PageRepository,
+    Knp\Menu\ItemInterface as MenuItemInterface,
+    Sonata\AdminBundle\Form\Extension\Field\Type\FormTypeFieldExtension;
 
 /**
  *
@@ -59,7 +57,12 @@ class PageAdmin extends BaseAdmin
         $collection->add('review', 'review/{id}', array(), array('method' => 'GET'));
         $collection->add('publish', 'publish/{id}', array(), array('method' => 'GET'));
         $collection->add('cancelDraft', 'cancel_draft/{id}', array(), array('method' => 'GET'));
-        $collection->add('unlink', 'unlink/{id}/translation_id/{translationId}', array(), array('method' => 'GET|DELETE'));
+        $collection->add(
+            'unlink',
+            'unlink/{id}/translation_id/{translationId}',
+            array(),
+            array('method' => 'GET|DELETE')
+        );
     }
 
     /**
@@ -93,7 +96,8 @@ class PageAdmin extends BaseAdmin
 
         if ($id || $request->isXmlHttpRequest()) {
             $formMapper->with('page_content')
-                ->add('layoutBlock',
+                ->add(
+                'layoutBlock',
                 'sonata_type_collection',
                 array(
                     'required' => true,
@@ -104,7 +108,8 @@ class PageAdmin extends BaseAdmin
                     'inline' => 'table',
                     'sortable' => 'sortOrder',
                     'no_label' => true
-                ))
+                )
+            )
                 ->end();
         }
 
@@ -116,19 +121,22 @@ class PageAdmin extends BaseAdmin
         }
 
         $formMapper
-            ->add('locale',
+            ->add(
+            'locale',
             'choice',
             array(
                 'choices' => $this->getLocaleChoices(),
                 'read_only' => $id,
                 'disabled' => $id,
                 'preferred_choices' => array($locale)
-            ))
+            )
+        )
             ->add('title')
             ->add('url', null, array('required' => $isHomeReadOnly), array('display_method' => 'getFullPath'));
         if ($isHomeReadOnly) {
             $formMapper
-                ->add('parent',
+                ->add(
+                'parent',
                 'networking_type_autocomplete',
                 array(
                     'attr' => array('style' => "width:220px"),
@@ -136,30 +144,36 @@ class PageAdmin extends BaseAdmin
                     'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
                     'required' => false,
                     'query_builder' => $repository->getParentPagesQuery($locale, $id),
-                ));
+                )
+            );
         }
 
         $formMapper
             ->add('metaKeyword', null, array('required' => true))
             ->add('metaDescription', null, array('required' => true))
-            ->add('visibility',
+            ->add(
+            'visibility',
             'sonata_type_translatable_choice',
             array(
                 'choices' => Page::getVisibilityList(),
                 'catalogue' => $this->translationDomain
             )
         )
-            ->add('template',
+            ->add(
+            'template',
             'choice',
             array(
                 'expanded' => true,
                 'choices' => $this->getPageTemplates()
-            ))
+            )
+        )
             ->end();
 
-        $formMapper->setHelps(array(
-            'url' => $this->translator->trans('url.helper.text', array(), $this->translationDomain)
-        ));
+        $formMapper->setHelps(
+            array(
+                'url' => $this->translator->trans('url.helper.text', array(), $this->translationDomain)
+            )
+        );
 
 //        $formMapper->getFormBuilder()->setAttributes(array('class' => 'span3'));
 //        die;
@@ -221,19 +235,25 @@ class PageAdmin extends BaseAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('locale',
+            ->add(
+            'locale',
             'doctrine_orm_callback',
             array(
-                'callback' => array($this, 'getByLocale'
-                )),
+                'callback' => array(
+                    $this,
+                    'getByLocale'
+                )
+            ),
             'choice',
             array(
                 'empty_value' => false,
                 'choices' => $this->getLocaleChoices(),
                 'preferred_choices' => array($this->getDefaultLocale())
-            ))
+            )
+        )
             ->add('title', 'networking_init_cms_simple_string')
-            ->add('path',
+            ->add(
+            'path',
             'doctrine_orm_callback',
             array('callback' => array($this, 'matchPath'))
         );
@@ -297,12 +317,34 @@ class PageAdmin extends BaseAdmin
     {
 
         $listMapper
-            ->addIdentifier('adminTitle', 'string', array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig'))
+            ->addIdentifier(
+            'adminTitle',
+            'string',
+            array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig')
+        )
 //                ->add('locale', null, array('sortable' => false))
-            ->add('status', null, array('label' => '.', 'sortable' => false, 'template' => 'NetworkingInitCmsBundle:PageAdmin:page_status_list_field.html.twig'))
-            ->add('fullPath', null, array('sortable' => false, 'template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig'));
+            ->add(
+            'status',
+            null,
+            array(
+                'label' => '.',
+                'sortable' => false,
+                'template' => 'NetworkingInitCmsBundle:PageAdmin:page_status_list_field.html.twig'
+            )
+        )
+            ->add(
+            'fullPath',
+            null,
+            array(
+                'sortable' => false,
+                'template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig'
+            )
+        );
 
-        $listMapper->add('_action', 'actions', array(
+        $listMapper->add(
+            '_action',
+            'actions',
+            array(
                 'label' => '.',
                 'template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action.html.twig',
                 'actions' => array(
@@ -354,7 +396,9 @@ class PageAdmin extends BaseAdmin
 
         $admin = $this->isChild() ? $this->getParent() : $this;
 
-        if (!$id = $this->getRequest()->get('id')) return;
+        if (!$id = $this->getRequest()->get('id')) {
+            return;
+        }
 
         /** @var $repository PageRepository */
         $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
@@ -380,7 +424,12 @@ class PageAdmin extends BaseAdmin
             } else {
                 $menu->addChild(
                     $this->trans('Translate %language%', array('%language%' => $language['label'])),
-                    array('uri' => $admin->generateUrl('translatePage', array('id' => $id, 'locale' => $language['locale'])))
+                    array(
+                        'uri' => $admin->generateUrl(
+                            'translatePage',
+                            array('id' => $id, 'locale' => $language['locale'])
+                        )
+                    )
                 );
             }
 
@@ -411,18 +460,22 @@ class PageAdmin extends BaseAdmin
             if ($language['locale'] == $originalLocale) continue;
 
             if ($translatedLocales->containsKey($language['locale'])) {
-                $translationLanguages->set($language['locale'],
+                $translationLanguages->set(
+                    $language['locale'],
                     array(
                         'short_label' => $language['short_label'],
                         'translation' => $translatedLocales->get($language['locale'])
-                    ));
+                    )
+                );
 
             } else {
-                $translationLanguages->set($language['locale'],
+                $translationLanguages->set(
+                    $language['locale'],
                     array(
                         'short_label' => $language['short_label'],
                         'translation' => false
-                    ));
+                    )
+                );
             }
 
         }
@@ -458,7 +511,10 @@ class PageAdmin extends BaseAdmin
         $actions = parent::getBatchActions();
 
         // check user permissions
-        if ($this->hasRoute('edit') && $this->isGranted('EDIT') && $this->hasRoute('delete') && $this->isGranted('DELETE')) {
+        if ($this->hasRoute('edit') && $this->isGranted('EDIT') && $this->hasRoute('delete') && $this->isGranted(
+            'DELETE'
+        )
+        ) {
             $actions['publish'] = array(
                 'label' => $this->trans('action_publish', array(), $this->translationDomain),
                 'ask_confirmation' => true // If true, a confirmation will be asked before performing the action

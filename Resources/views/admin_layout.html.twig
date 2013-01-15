@@ -104,9 +104,9 @@ file that was distributed with this source code.
                             <li class="dropdown">
                                 <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><span class="font-smaller color-second">{{ app.user }}</span> <b class="caret"></b></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                                    <li><a tabindex="-1" href="{{ url('admin_sonata_user_user_edit', {id: app.user.id})}}">Account Settings</a></li>
+                                    <li><a tabindex="-1" href="{{ url('admin_sonata_user_user_edit', {id: app.user.id})}}">{{ 'label.account_settings'|trans({}, 'PageAdmin') }}</a></li>
                                     {% if is_granted('ROLE_PREVIOUS_ADMIN') and sonata_user.impersonating %}
-                                    <li><a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters| merge({'_switch_user': '_exit'})) }}">(exit)</a></li>
+                                    <li><a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters| merge({'_switch_user': '_exit'})) }}">({{ 'label.exit'|trans({}, 'PageAdmin') }})</a></li>
                                     {% endif %}
                                     <li><a href="{{ url('sonata_user_admin_security_logout') }}">{{ 'user_block_logout'|trans({}, 'SonataUserBundle') }}</a></li>
                                 </ul>
@@ -127,9 +127,6 @@ file that was distributed with this source code.
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            {% if admin_pool is defined %}
-
-            {% endif %}
         </div>
     </div>
 </div>
@@ -310,25 +307,32 @@ file that was distributed with this source code.
 
 
             {% block sonata_admin_content %}
-
+                <div class="row row-content-wide">
                 {% if _preview is not empty %}
-                    <div class="sonata-ba-preview">{{ _preview|raw }}</div>
+                    <div class="sonata-ba-preview span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _preview|raw }}</div>
                 {% endif %}
 
                 {% if _content is not empty %}
-                    <div class="sonata-ba-content">{{ _content|raw }}</div>
+                    <div class="sonata-ba-content span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _content|raw }}</div>
                 {% endif %}
 
                 {% if _show is not empty %}
-                    <div class="sonata-ba-show">{{ _show|raw }}</div>
+                    <div class="sonata-ba-show span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _show|raw }}</div>
                 {% endif %}
 
                 {% if _form is not empty %}
-                    <div class="row row-content-wide">{{ _form|raw }}</div>
+                    <div>{{ _form|raw }}</div>
                 {% endif %}
 
+
+                {% if _side_menu is not empty %}
+                            <div class="sidebar span2">
+                                <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
+                            </div>
+                        {% endif %}
+
                 {% if _list_table is not empty or _list_filters is not empty %}
-                    <div class="row">
+
                         <div class="span7">
                             {{ _list_table|raw }}
                         </div>
@@ -338,16 +342,12 @@ file that was distributed with this source code.
                                 {% block actions %}{% endblock %}
                             </div>
                         </div>
-                    </div>
-                {% endif %}
 
+                {% endif %}
+                </div>
             {% endblock %}
         </div>
-        {% if _side_menu is not empty %}
-            <div class="sidebar span2">
-                <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
-            </div>
-        {% endif %}
+
 
 
     </div>

@@ -26,8 +26,7 @@ class TagAdmin extends Admin
     {
         $formMapper
             ->add('name')
-            ->add('active', null, array('required' => false))
-        ;
+            ->add('active', null, array('required' => false));
     }
 
     /**
@@ -37,8 +36,7 @@ class TagAdmin extends Admin
     {
         $datagridMapper
             ->add('name')
-            ->add('pages')
-        ;
+            ->add('pages');
     }
 
     /**
@@ -50,7 +48,16 @@ class TagAdmin extends Admin
             ->addIdentifier('name')
             ->add('slug')
             ->add('active')
-        ;
+            ->add(
+            '_action',
+            'actions',
+            array(
+                'actions' => array(
+                    'edit' => array(),
+                    'delete' => array()
+                )
+            )
+        );
     }
 
     /**
@@ -61,8 +68,7 @@ class TagAdmin extends Admin
     {
         $errorElement
             ->with('name')
-                ->assertMaxLength(array('limit' => 255))
-            ->end()
-        ;
+            ->assertMaxLength(array('limit' => 255))
+            ->end();
     }
 }

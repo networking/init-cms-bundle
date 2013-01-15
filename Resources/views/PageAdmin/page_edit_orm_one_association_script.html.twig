@@ -193,13 +193,22 @@ function submitLayoutSort(sortIds, zone) {
     return dfd.promise();
 }
 
+function uploadError(xhr)
+{
+    alert(xhr.error);
+    console.log(xhr);
+}
+
 function onAfterLoad() {
 
     apply_position_value_{{ id }}();
 
     jQuery('.tinymce').each(function () {
         jQuery(this).redactor({
-            imageUpload:'{{ path('admin_networking_initcms_page_uploadTextBlockImage') }}'
+            imageUpload:'{{ path('admin_networking_initcms_page_uploadTextBlockImage') }}',
+            imageUploadErrorCallback: function(editor, xhr){
+                uploadError(xhr)
+            }
         });
     });
 

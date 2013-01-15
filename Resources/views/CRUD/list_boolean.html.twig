@@ -1,0 +1,37 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% extends 'NetworkingInitCmsBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+{% spaceless %}
+{% if field_description.options.editable is defined and field_description.options.editable and admin.isGranted('EDIT', object) %}
+    {% if value %}
+        <a href="{{ url('sonata_admin_set_object_field_value', { 'context': 'list', 'field': field_description.name, 'objectId': admin.id(object), 'value': 0, 'code': admin.code(object) }) }}" class="sonata-ba-action sonata-ba-edit-inline">
+            <i class="icon-ok-circle"></i>
+            {%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}
+        </a>
+    {% else %}
+        <a href="{{ url('sonata_admin_set_object_field_value', { 'context': 'list', 'field': field_description.name, 'objectId': admin.id(object), 'value': 1, 'code': admin.code(object) }) }}" class="sonata-ba-action sonata-ba-edit-inline">
+            <i class="icon-ban-circle"></i>
+            {%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}
+        </a>
+    {% endif %}
+{% else %}
+    {% if value %}
+        <i class="icon-ok-circle"></i>
+        {%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}
+    {% else %}
+        <i class="icon-ban-circle"></i>
+        {%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}
+    {% endif %}
+{% endif %}
+{% endspaceless %}
+{% endblock %}

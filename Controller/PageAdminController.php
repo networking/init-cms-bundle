@@ -28,7 +28,10 @@ use Networking\InitCmsBundle\Entity\Page,
     Sonata\AdminBundle\Datagrid\ProxyQueryInterface,
     Sonata\AdminBundle\Controller\CRUDController,
     Sonata\AdminBundle\Admin\Admin as SontataAdmin,
-    Sonata\AdminBundle\Exception\NoValueException;
+    Sonata\AdminBundle\Exception\NoValueException,
+    Sonata\MediaBundle\Admin\ORM\MediaAdmin,
+    Sonata\MediaBundle\Provider\MediaProviderInterface,
+    Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -108,11 +111,15 @@ class PageAdminController extends CmsCRUDController
 
                     $html = $this->renderView(
                         'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
-                        array('object' => $page, 'admin' => $this->admin));
-                    return $this->renderJson(array(
-                        'result' => 'ok',
-                        'html' => $html
-                    ));
+                        array('object' => $page, 'admin' => $this->admin)
+                    );
+
+                    return $this->renderJson(
+                        array(
+                            'result' => 'ok',
+                            'html' => $html
+                        )
+                    );
                 }
 
 
@@ -127,10 +134,12 @@ class PageAdminController extends CmsCRUDController
         if (count($pages)) {
             $pages = new \Doctrine\Common\Collections\ArrayCollection($pages);
             $originalLocale = $page->getLocale();
-            $pages = $pages->filter(function (Page $linkPage) use ($originalLocale) {
-                return !in_array($originalLocale, $linkPage->getTranslatedLocales());
+            $pages = $pages->filter(
+                function (Page $linkPage) use ($originalLocale) {
+                    return !in_array($originalLocale, $linkPage->getTranslatedLocales());
 
-            });
+                }
+            );
         }
 
         return $this->render(
@@ -178,11 +187,15 @@ class PageAdminController extends CmsCRUDController
 
                 $html = $this->renderView(
                     'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
-                    array('object' => $page, 'admin' => $this->admin));
-                return $this->renderJson(array(
-                    'result' => 'ok',
-                    'html' => $html
-                ));
+                    array('object' => $page, 'admin' => $this->admin)
+                );
+
+                return $this->renderJson(
+                    array(
+                        'result' => 'ok',
+                        'html' => $html
+                    )
+                );
             }
 
 
@@ -318,47 +331,98 @@ class PageAdminController extends CmsCRUDController
         return new Response($extension->renderer->searchAndRenderBlock($view, 'widget'));
     }
 
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $providerName
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function doFileUpload(Request $request, $providerName = 'sonata.media.provider.image')
+    {
+        $file = $request->files->get('file');
+
+        if ($file instanceof UploadedFile && $file->isValid()) {
+
+
+            try {
+                /** @var $mediaManager \Sonata\MediaBundle\Admin\Manager\DoctrineORMManager */
+                $mediaManager = $this->get('sonata.media.manager.media');
+
+                /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
+                $mediaAdmin = $this->get('sonata.media.admin.media');
+
+                /** @var $provider \Sonata\MediaBundle\Provider\MediaProviderInterface */
+                $provider = $this->get($providerName);
+
+                $context = $mediaAdmin->getPool()->getDefaultContext();
+
+                $mediaClass = $mediaAdmin->getClass();
+
+                /** @var $media \Sonata\MediaBundle\Model\MediaInterface */
+                $media = new $mediaClass();
+
+                $media->setProviderName($provider->getName());
+
+                $media->setContext($context);
+
+                $media->setName($file->getClientOriginalName());
+
+
+                $media->setBinaryContent($file);
+                $mediaManager->save($media);
+
+
+                $path = $provider->generatePublicUrl($media, 'reference');
+
+
+                $array = array(
+                    'filelink' => $path
+                );
+
+                $status = 200;
+            } catch (\Exception $e) {
+                $array = array('error' => $e->getMessage());
+                $status = 500;
+            }
+        } elseif ($file instanceof UploadedFile && !$file->isValid()) {
+            $array = array('error' => $file->getError());
+            $status = 500;
+        } else {
+            $array = array(
+                'error' => $this->admin->trans(
+                    'error.file_upload_size',
+                    array('%max_server_size%' => ini_get('upload_max_filesize'))
+                )
+            );
+            $status = 500;
+        }
+
+        return new JsonResponse($array, $status);
+    }
+
     /**
      * Handle uploads from the redactor editor
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
-     * @todo need to make a proper upload script
      */
     public function uploadTextBlockImageAction(Request $request)
     {
-        $dir = $this->get('request')->getBasePath() . 'uploads/images/';
+        return $this->doFileUpload($request);
+    }
 
 
-        $_FILES['file']['type'] = strtolower($_FILES['file']['type']);
-
-        if ($_FILES['file']['type'] == 'image/png'
-            || $_FILES['file']['type'] == 'image/jpg'
-            || $_FILES['file']['type'] == 'image/gif'
-            || $_FILES['file']['type'] == 'image/jpeg'
-            || $_FILES['file']['type'] == 'image/pjpeg'
-        ) {
-            // setting file's mysterious name
-            $filename = md5(date('YmdHis')) . '.jpg';
-
-            if (!file_exists($dir)) {
-                mkdir($dir, 0777, true);
-            }
-
-            $file = $dir . $filename;
-
-            // copying
-            copy($_FILES['file']['tmp_name'], $file);
-
-            // displaying file
-            $array = array(
-                'filelink' => '/uploads/images/' . $filename
-            );
-
-            return new JsonResponse($array);
-
-        }
+    /**
+     * Handle uploads from the redactor editor
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     */
+    public function uploadTextBlockFileAction(Request $request)
+    {
+        return $this->doFileUpload($request, 'sonata.media.provider.file');
     }
 
     /**
@@ -435,10 +499,13 @@ class PageAdminController extends CmsCRUDController
         );
 
         if ($layoutBlocks) {
-            $pageStatus = $this->renderView('NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig', array(
-                'admin' => $this->admin,
-                'object' => $layoutBlock->getPage()
-            ));
+            $pageStatus = $this->renderView(
+                'NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig',
+                array(
+                    'admin' => $this->admin,
+                    'object' => $layoutBlock->getPage()
+                )
+            );
             $data['pageStatusSettings'] = $pageStatus;
             $data['pageStatus'] = $this->admin->trans($layoutBlock->getPage()->getStatus());
         }
@@ -471,7 +538,11 @@ class PageAdminController extends CmsCRUDController
             $em->remove($layoutBlock);
             $em->flush();
         }
-        return new JsonResponse(array('messageStatus' => 'success', 'message' => $this->translate('message.layout_block_deleted')));
+
+        return new JsonResponse(array(
+            'messageStatus' => 'success',
+            'message' => $this->translate('message.layout_block_deleted')
+        ));
     }
 
     /**
@@ -513,11 +584,14 @@ class PageAdminController extends CmsCRUDController
 
         $this->admin->setSubject($object);
 
-        return $this->render($this->admin->getTemplate('show'), array(
-            'action' => 'show',
-            'object' => $object,
-            'elements' => $this->admin->getShow(),
-        ));
+        return $this->render(
+            $this->admin->getTemplate('show'),
+            array(
+                'action' => 'show',
+                'object' => $object,
+                'elements' => $this->admin->getShow(),
+            )
+        );
     }
 
     /**
@@ -575,25 +649,31 @@ class PageAdminController extends CmsCRUDController
                     $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
 
-                    $pageSettingsTemplate = $this->render($this->admin->getTemplate($templateKey), array(
-                        'action' => 'edit',
-                        'form' => $view,
-                        'object' => $object,
-                    ));
+                    $pageSettingsTemplate = $this->render(
+                        $this->admin->getTemplate($templateKey),
+                        array(
+                            'action' => 'edit',
+                            'form' => $view,
+                            'object' => $object,
+                        )
+                    );
 
 
-                    return $this->renderJson(array(
-                        'result' => 'ok',
-                        'objectId' => $this->admin->getNormalizedIdentifier($object),
-                        'title' => $object->__toString(),
-                        'messageStatus' => 'success',
-                        'message' => $this->admin->trans('info.page_settings_updated'),
-                        'pageStatus' => $this->admin->trans($object->getStatus()),
-                        'pageSettings' => $pageSettingsTemplate->getContent()
-                    ));
+                    return $this->renderJson(
+                        array(
+                            'result' => 'ok',
+                            'objectId' => $this->admin->getNormalizedIdentifier($object),
+                            'title' => $object->__toString(),
+                            'messageStatus' => 'success',
+                            'message' => $this->admin->trans('info.page_settings_updated'),
+                            'pageStatus' => $this->admin->trans($object->getStatus()),
+                            'pageSettings' => $pageSettingsTemplate->getContent()
+                        )
+                    );
                 }
 
                 $this->get('session')->setFlash('sonata_flash_success', 'flash_edit_success');
+
                 // redirect to edit mode
                 return $this->redirectTo($object);
             }
@@ -616,12 +696,15 @@ class PageAdminController extends CmsCRUDController
 
         $rootMenus = $menuEr->findBy(array('isRoot' => 1, 'locale' => $object->getLocale()));
 
-        return $this->render($this->admin->getTemplate($templateKey), array(
-            'action' => 'edit',
-            'form' => $view,
-            'object' => $object,
-            'rootMenus' => $rootMenus
-        ));
+        return $this->render(
+            $this->admin->getTemplate($templateKey),
+            array(
+                'action' => 'edit',
+                'form' => $view,
+                'object' => $object,
+                'rootMenus' => $rootMenus
+            )
+        );
     }
 
     /**
@@ -704,19 +787,24 @@ class PageAdminController extends CmsCRUDController
             // set the theme for the current Admin Form
             $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
-            $pageSettingsTemplate = $this->render($this->admin->getTemplate('edit'), array(
-                'action' => 'edit',
-                'form' => $view,
-                'object' => $object,
-            ));
+            $pageSettingsTemplate = $this->render(
+                $this->admin->getTemplate('edit'),
+                array(
+                    'action' => 'edit',
+                    'form' => $view,
+                    'object' => $object,
+                )
+            );
 
-            return $this->renderJson(array(
-                'result' => 'ok',
-                'objectId' => $this->admin->getNormalizedIdentifier($object),
-                'title' => $object->__toString(),
-                'pageStatus' => $this->admin->trans($object->getStatus()),
-                'pageSettings' => $pageSettingsTemplate
-            ));
+            return $this->renderJson(
+                array(
+                    'result' => 'ok',
+                    'objectId' => $this->admin->getNormalizedIdentifier($object),
+                    'title' => $object->__toString(),
+                    'pageStatus' => $this->admin->trans($object->getStatus()),
+                    'pageSettings' => $pageSettingsTemplate
+                )
+            );
         }
 
         $this->get('session')->setFlash('sonata_flash_success', 'flash_status_success');
@@ -757,7 +845,11 @@ class PageAdminController extends CmsCRUDController
             $serializer = $this->get('serializer');
 
             /** @var $publishedPage Page */
-            $publishedPage = $serializer->deserialize($pageSnapshot->getVersionedData(), 'Networking\InitCmsBundle\Entity\Page', 'json');
+            $publishedPage = $serializer->deserialize(
+                $pageSnapshot->getVersionedData(),
+                'Networking\InitCmsBundle\Entity\Page',
+                'json'
+            );
 
             // Save the layout blocks in a temp variable so that we can
             // assure the correct layout blocks will be saved and not
@@ -786,19 +878,24 @@ class PageAdminController extends CmsCRUDController
                 $form = $this->admin->getForm();
                 $form->setData($publishedPage);
 
-                $pageSettingsTemplate = $this->render($this->admin->getTemplate('edit'), array(
-                    'action' => 'edit',
-                    'form' => $form->createView(),
-                    'object' => $publishedPage,
-                ));
+                $pageSettingsTemplate = $this->render(
+                    $this->admin->getTemplate('edit'),
+                    array(
+                        'action' => 'edit',
+                        'form' => $form->createView(),
+                        'object' => $publishedPage,
+                    )
+                );
 
-                return $this->renderJson(array(
-                    'result' => 'ok',
-                    'objectId' => $this->admin->getNormalizedIdentifier($publishedPage),
-                    'title' => $publishedPage->__toString(),
-                    'pageStatus' => $this->admin->trans($publishedPage->getStatus()),
-                    'pageSettings' => $pageSettingsTemplate->getContent()
-                ));
+                return $this->renderJson(
+                    array(
+                        'result' => 'ok',
+                        'objectId' => $this->admin->getNormalizedIdentifier($publishedPage),
+                        'title' => $publishedPage->__toString(),
+                        'pageStatus' => $this->admin->trans($publishedPage->getStatus()),
+                        'pageSettings' => $pageSettingsTemplate->getContent()
+                    )
+                );
             }
 
 
@@ -860,19 +957,24 @@ class PageAdminController extends CmsCRUDController
             // set the theme for the current Admin Form
             $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
-            $pageSettingsTemplate = $this->render($this->admin->getTemplate('edit'), array(
-                'action' => 'edit',
-                'form' => $view,
-                'object' => $object,
-            ));
+            $pageSettingsTemplate = $this->render(
+                $this->admin->getTemplate('edit'),
+                array(
+                    'action' => 'edit',
+                    'form' => $view,
+                    'object' => $object,
+                )
+            );
 
-            return $this->renderJson(array(
-                'result' => 'ok',
-                'objectId' => $this->admin->getNormalizedIdentifier($object),
-                'title' => $object->__toString(),
-                'pageStatus' => $this->admin->trans($object->getStatus()),
-                'pageSettings' => $pageSettingsTemplate
-            ));
+            return $this->renderJson(
+                array(
+                    'result' => 'ok',
+                    'objectId' => $this->admin->getNormalizedIdentifier($object),
+                    'title' => $object->__toString(),
+                    'pageStatus' => $this->admin->trans($object->getStatus()),
+                    'pageSettings' => $pageSettingsTemplate
+                )
+            );
         }
 
         $this->get('session')->setFlash('sonata_flash_success', 'flash_publish_success');
@@ -885,7 +987,7 @@ class PageAdminController extends CmsCRUDController
      *
      * @param \Networking\InitCmsBundle\Entity\Page $page
      */
-    private function makeSnapshot(Page $page)
+    protected function makeSnapshot(Page $page)
     {
         if (!$this->admin->isGranted('PUBLISH', $page)) {
             return;
