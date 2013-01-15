@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
 
 class InstallCommand extends Command
 {
@@ -24,7 +25,15 @@ class InstallCommand extends Command
     protected function configure()
     {
         $this->setName('networking:cms:install')
-                ->setDescription('Install the Networiking Init cms');
+                ->setDescription('Install the Networking Init cms')
+//                ->setDefinition(
+//                    array(
+//                        new InputArgument('username', InputArgument::REQUIRED, 'The owner (username) of all automatically generated objects'),
+//                        new InputArgument('user_entity', InputArgument::REQUIRED, 'The Handler for users if unsure, try "ApplicationSonataUserBundle:User"')
+//                    )
+//                )
+        ;
+
     }
 
     /**
@@ -35,9 +44,15 @@ class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->createDB($output);
+        $this->initACL($output);
+        $this->sonataSetupACL($output);
         $this->loadFixtures($output);
         $this->createAdminUser($output);
         $this->dumpAssetic($output);
+
+//        $username   = $input->getArgument('username');
+//        $userEntity   = $input->getArgument('user_entity');
+//        $this->sonataGenerateObjectACL($output, $username, $userEntity);
     }
 
     /**
@@ -56,6 +71,102 @@ class InstallCommand extends Command
         $input = new ArrayInput($arguments);
 
         return $command->run($input, $output);
+    }
+
+    /**
+     * @param $output
+     * @return int
+     */
+    private function initACL($output)
+    {
+        $command = $this->getApplication()->find('init:acl');
+
+        $arguments = array(
+            'command' => 'init:acl'
+        );
+
+        $input = new ArrayInput($arguments);
+
+        return $command->run($input, $output);
+    }
+
+    /**
+     * @param $output
+     * @return int
+     */
+    private function sonataSetupACL($output)
+    {
+        $command = $this->getApplication()->find('sonata:admin:setup-acl');
+
+        $arguments = array(
+            'command' => 'sonata:admin:setup-acl'
+        );
+
+        $input = new ArrayInput($arguments);
+
+        return $command->run($input, $output);
+    }
+
+    /**
+     * unused at the moment
+     * @param $output
+     * @param $username
+     * @param string $bundle
+     * @return int
+     */
+    private function sonataGenerateObjectACL($output, $username, $bundle='ApplicationSonataUserBundle:User')
+    {
+        $command = $this->getApplication()->find('sonata:admin:generate-object-acl');
+
+        $arguments = array(
+            'command' => 'sonata:admin:generate-object-acl',
+            '--object_owner' => $username,
+            '--user_entity' => $bundle
+        );
+
+        $input = new ArrayInput($arguments);
+
+        return $command->run($input, $output);
+    }
+
+    /**
+     * interact
+     * unused at the moment
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @throws \Exception
+     */
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+//        if (!$input->getArgument('username')) {
+//            $username = $this->getHelper('dialog')->askAndValidate(
+//                $output,
+//                'Please choose an existing username.'."\n".'He will be the owner of all automatically generated objects: ',
+//                function($username) {
+//                    if (empty($username)) {
+//                        throw new \Exception('Username can not be empty');
+//                    }
+//
+//                    return $username;
+//                }
+//            );
+//            $input->setArgument('username', $username);
+//        }
+//
+//        if (!$input->getArgument('user_entity')) {
+//            $userEntity = $this->getHelper('dialog')->askAndValidate(
+//                $output,
+//                'Please choose a user_entity (f.e. "ApplicationSonataUserBundle:User"): ',
+//                function($userEntity) {
+//                    if (empty($userEntity)) {
+//                        throw new \Exception('user_entity can not be empty');
+//                    }
+//
+//                    return $userEntity;
+//                }
+//            );
+//            $input->setArgument('user_entity', $userEntity);
+//        }
     }
 
     /**

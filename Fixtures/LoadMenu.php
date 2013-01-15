@@ -58,6 +58,7 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
 
         $menuRoot->setName('#main#');
         $menuRoot->setLocale($locale);
+        $menuRoot->setIsRoot(true);
         $menuRoot->setLvl(1);
         $menuRoot->setLft(1);
         $menuRoot->setRgt(2);

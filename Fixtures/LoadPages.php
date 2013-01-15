@@ -44,16 +44,18 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
     {
         $languages = $this->container->getParameter('networking_init_cms.page.languages');
 
-        foreach ($languages as $lang) {
-            $this->createHomePages($manager, $lang['locale']);
+        foreach ($languages as $key => $lang) {
+            $this->createHomePages($manager, $lang['locale'], $key, $languages);
         }
     }
 
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
-     * @param $locale
+     * @param string $locale
+     * @param integer $key
+     * @param array $languages
      */
-    public function createHomePages(ObjectManager $manager, $locale)
+    public function createHomePages(ObjectManager $manager, $locale, $key, $languages)
     {
         $homePage = new Page();
 
@@ -64,10 +66,14 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         $homePage->setStatus(Page::STATUS_PUBLISHED);
         $homePage->setIsHome(true);
         $homePage->setTemplate($this->getFirstTemplate());
-        $homePage->setNavigationTitle('homepage');
-        $homePage->setShowInNavigation(true);
         $homePage->setActiveFrom(new \DateTime('now'));
-        $homePage->setActiveTill(new \DateTime('+ 5 years'));
+
+        // set original for translations
+        if($key > 0)
+        {
+            $firstPage = $this->getReference('homepage_'.$languages['0']['locale']);
+            $homePage->setOriginal($firstPage);
+        }
 
         $manager->persist($homePage);
         $manager->flush();

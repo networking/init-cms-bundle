@@ -10,7 +10,11 @@
 namespace Networking\InitCmsBundle\Helper;
 
 use Networking\InitCmsBundle\Entity\Page,
-    Sonata\AdminBundle\Exception\NoValueException;
+    Sonata\AdminBundle\Exception\NoValueException,
+    Symfony\Component\DependencyInjection\ContainerInterface,
+    Doctrine\ORM\EntityManager,
+    Networking\InitCmsBundle\Entity\PageSnapshot,
+    Networking\InitCmsBundle\Entity\ContentRoute;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -128,4 +132,51 @@ class PageHelper
 
         return preg_replace('#(.+/)?.*(-' . $id . '/)#', '$1' . $slug . '$2', $path);
     }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @param Page $page
+     */
+    public function makePageSnapshot($page)
+    {
+        $serializer = $this->container->get('serializer');
+        $manager = $this->container->get('doctrine')->getManager();
+
+        foreach ($page->getLayoutBlock() as $layoutBlock) {
+            /** @var $layoutBlock \Networking\InitCmsBundle\Entity\LayoutBlock */
+            $layoutBlockContent = $manager->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
+            $layoutBlock->takeSnapshot($serializer->serialize($layoutBlockContent, 'json'));
+        }
+        /** @var $pageSnapshot \Networking\InitCmsBundle\Entity\PageSnapshot */
+        $pageSnapshot = new PageSnapshot($page);
+
+        $pageSnapshot->setVersionedData($serializer->serialize($page, 'json'))
+            ->setPage($page);
+
+        if ($oldPageSnapshot = $page->getSnapshot()) {
+            $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
+        } else {
+            /** @var $snapshotContentRoute \Networking\InitCmsBundle\Entity\ContentRoute */
+            $snapshotContentRoute = new ContentRoute();
+        }
+
+        $pageSnapshot->setContentRoute($snapshotContentRoute);
+
+        $manager->persist($pageSnapshot);
+        $manager->flush();
+
+        $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
+        $snapshotContentRoute->setObjectId($pageSnapshot->getId());
+
+        $manager->persist($snapshotContentRoute);
+        $manager->flush();
+    }
+
 }

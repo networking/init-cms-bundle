@@ -21,6 +21,11 @@ services:
     networking_init_cms.helper.bundle_guesser:
         class: Networking\InitCmsBundle\Helper\BundleGuesser
 
+    networking_init_cms.helper.page_helper:
+        class: Networking\InitCmsBundle\Helper\PageHelper
+        calls:
+            - [setContainer, [@service_container]]
+
     networking_init_cms.filter.type.simple_string:
         class: Networking\InitCmsBundle\Filter\SimpleStringFilter
         tags:
