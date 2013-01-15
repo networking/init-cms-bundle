@@ -1183,7 +1183,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     public function getRecursiveTranslations(&$translationsArray)
     {
         // find all possible translations
-        if ($this->getTranslations()->count()) {
+        if (!$this->getTranslations()->isEmpty()) {
             foreach ($this->getTranslations() as $translation) {
                 // if we already meet you stop and go on with the next
                 $translationsArray[$translation->getLocale()] = $translation;
@@ -1193,7 +1193,7 @@ class Page implements RouteAwareInterface, VersionableInterface
         }
 
         // find all possible originals
-        if ($this->getOriginals()->count()) {
+        if (!$this->getOriginals()->isEmpty()) {
             foreach ($this->getOriginals() as $translation) {
                 // if we already meet you stop and go on with the next
                 if (array_key_exists($translation->getLocale(), $translationsArray)) return;

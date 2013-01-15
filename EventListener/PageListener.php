@@ -159,6 +159,8 @@ class PageListener implements EventSubscriberInterface
             }
 
             $page->setParents($parents);
+        } else {
+            $page->setParents(array());
         }
 
         if ($children = $page->getChildren()) {
@@ -168,6 +170,8 @@ class PageListener implements EventSubscriberInterface
             }
 
             $page->setChildren($children);
+        } else {
+            $page->setChildren(array());
         }
 
         if ($originals = $page->getOriginals()) {
@@ -177,15 +181,17 @@ class PageListener implements EventSubscriberInterface
             }
 
             $page->setOriginals($originals);
+        } else {
+            $page->setOriginals(array());
         }
-
         if ($translations = $page->getTranslations()) {
             $er = $doctrine->getRepository('NetworkingInitCmsBundle:Page');
             foreach ($translations as $key => $translation) {
                 $translations[$key] = $er->find($translation);
             }
-
             $page->setTranslations($translations);
+        } else {
+            $page->setTranslations(array());
         }
     }
 }
