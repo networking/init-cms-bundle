@@ -30,11 +30,3 @@ sonata_media:
 #        image:
 #            resizer: sonata.media.resizer.square
 
-sonata_formatter:
-    formatters:
-        markdown:
-            service: sonata.formatter.text.markdown
-            extensions:
-                - sonata.formatter.twig.control_flow
-                - sonata.formatter.twig.gist
-#                - sonata.media.formatter.twig
