@@ -94,6 +94,11 @@ class ContentRoute extends AbstractRoute
         $this->menuItem = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->path;
+    }
+
     /**
      * Initializes the object to function as a route
      *

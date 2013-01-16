@@ -1,3 +1,7 @@
+parameters:
+    networking_init_cms.controllers_by_alias: {'Networking\InitCmsBundle\Entity\Page': "NetworkingInitCmsBundle:Default:index", 'Networking\InitCmsBundle\Entity\PageSnapshot': "NetworkingInitCmsBundle:Default:live"}
+
+
 services:
 
     session:
@@ -102,10 +106,14 @@ services:
           - { name: twig.extension }
 
 # Dynamic routing for CMS Via Page CustomUrl
-    networking_init_cms.controller_mapper:
-        class: Symfony\Cmf\Component\Routing\Mapper\ControllerClassMapper
-        arguments:
-            - {Networking\InitCmsBundle\Entity\Page: "NetworkingInitCmsBundle:Default:index", Networking\InitCmsBundle\Entity\PageSnapshot: "NetworkingInitCmsBundle:Default:live"}
+    networking_init_cms.enhancer_controllers_by_content:
+        class: Symfony\Cmf\Component\Routing\Enhancer\RouteContentEnhancer
+        arguments: ['_route', '_content']
+
+    networking_init_cms.enhancer_controllers_by_class:
+        class: Symfony\Cmf\Component\Routing\Enhancer\FieldByClassEnhancer
+        arguments: ['_content', '_controller', %networking_init_cms.controllers_by_alias%]
+
 
     networking_init_cms.page_class_meta:
         class: Doctrine\ORM\Mapping\ClassMetadata
@@ -130,13 +138,39 @@ services:
 
     networking_init_cms.cms_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
-        arguments: [@networking_init_cms.content_route_repository ]
+        arguments: [@router.request_context, @networking_init_cms.nested_matcher, @networking_init_cms.generator]
         calls:
-          - [ setContext, [ @router.request_context] ]
-          - [ setContentRepository, [ @networking_init_cms.page_repository ] ]
-          - [ addControllerMapper, [ @networking_init_cms.controller_mapper ] ]
+#          - [ setContainer, [ @service_container] ]
+          - [ addRouteEnhancer, [@networking_init_cms.enhancer_controllers_by_content] ]
+          - [ addRouteEnhancer, [@networking_init_cms.enhancer_controllers_by_class] ]
         tags:
-          - { name: router, priority: 200}
+          - { name: router, priority: 300 }
+
+    networking_init_cms.nested_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        arguments: [@networking_init_cms.content_route_repository]
+        calls:
+          - [ setFinalMatcher, [ @networking.final_matcher] ]
+
+    networking.final_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\ConfigurableUrlMatcher
+        arguments: [Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher]
+
+    networking_init_cms.generator:
+        class: Symfony\Cmf\Bundle\RoutingExtraBundle\Routing\ContentAwareGenerator
+        arguments: [@networking_init_cms.content_route_repository, @logger]
+        calls:
+          - [ setContainer, [ @service_container] ]
+          - [ setContentRepository, [@networking_init_cms.page_repository] ]
+
+#    networking_init_cms.cms_router:
+#        class: Symfony\Cmf\Component\Routing\DynamicRouter
+#        arguments: [@router.request_context, @networking_init_cms.content_route_repository,  ]
+#        calls:
+#          - [ setContentRepository, [ @networking_init_cms.page_repository ] ]
+#          - [ addControllerMapper, [ @networking_init_cms.controller_mapper ] ]
+#        tags:
+#          - { name: router, priority: 200}
 
 # Listener for setting up content routes when page created/edited
     networking_init_cms.page_listner:

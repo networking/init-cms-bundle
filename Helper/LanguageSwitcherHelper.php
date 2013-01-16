@@ -61,8 +61,7 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
     {
 
         /** @var $router RouterInterface */
-        $route = $this->router->match($oldUrl);
-
+        $route = $this->router->matchRequest(Request::create($oldUrl));
 
         if (!array_key_exists('_content', $route)) return $route;
 
