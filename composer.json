@@ -33,6 +33,7 @@
         "mopa/remote-update-bundle":"dev-master",
         "symfony-cmf/routing-extra-bundle":"dev-master",
         "networking/media-bundle":"dev-master",
+        "networking/gallery-bundle":"dev-master",
         "networking/user-bundle":"dev-master"
     },
     "autoload":{
