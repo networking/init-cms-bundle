@@ -3,6 +3,9 @@ sonata_user:
     impersonating:
         route:                networking_init_cms_admin
         parameters:           { path: /}
+    class:
+        user: Networking\UserBundle\Entity\User
+        group: Networking\UserBundle\Entity\Group
     admin:                  # Admin Classes
         user:
             class:          Sonata\UserBundle\Admin\Entity\UserAdmin

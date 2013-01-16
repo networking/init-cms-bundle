@@ -174,7 +174,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var string $status
-     * @ORM\Column(name="status", type="string", columnDefinition="ENUM('draft', 'review', 'published') NOT NULL")
+     * @ORM\Column(name="status", type="string", columnDefinition="ENUM('status_draft', 'status_review', 'status_published') NOT NULL")
      */
     protected $status = self::STATUS_DRAFT;
 

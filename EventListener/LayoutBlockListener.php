@@ -44,7 +44,7 @@ class LayoutBlockListener
                 $contentObject = $this->serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
 
                 if ($contentObject instanceof \Networking\GalleryBundle\Entity\Gallery) {
-                    $er = $args->getEntityManager()->getRepository('Application\Sonata\MediaBundle\Entity\Gallery');
+                    $er = $args->getEntityManager()->getRepository('Networking\MediaBundle\Entity\Gallery');
                     $gallery = $er->find($contentObject->getMediaGallery()->getId());
                     $contentObject->setMediaGallery($gallery);
                 }

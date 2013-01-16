@@ -1,44 +1,46 @@
 {
-    "name": "networking/init-cms-bundle",
-    "description": "This Bundle is a basic cms based on symfony",
-    "keywords": ["symfony", "cms"],
-    "type": "symfony-bundle",
-    "license": "MIT",
-    "authors": [
+    "name":"networking/init-cms-bundle",
+    "description":"This Bundle is a basic cms based on symfony",
+    "keywords":["symfony", "cms"],
+    "type":"symfony-bundle",
+    "license":"MIT",
+    "authors":[
         {
-            "name":     "Yorkie Chadwick",
-            "homepage": "http://web.networking.ch",
-            "email":    "y.chadwick@networking.ch"
+            "name":"Yorkie Chadwick",
+            "homepage":"http://web.networking.ch",
+            "email":"y.chadwick@networking.ch"
         }
     ],
-    "require": {
-        "php":             ">=5.3.3",
-	    "doctrine/orm":">=2.2.3,<2.4-dev",
-	    "doctrine/doctrine-fixtures-bundle":"dev-master",
-	    "sonata-project/admin-bundle":"dev-master",
+    "require":{
+        "php":">=5.3.3",
+        "doctrine/orm":">=2.2.3,<2.4-dev",
+        "doctrine/doctrine-fixtures-bundle":"dev-master",
+        "sonata-project/admin-bundle":"dev-master",
         "sonata-project/doctrine-orm-admin-bundle":"dev-master",
         "sonata-project/user-bundle":"dev-master",
         "sonata-project/formatter-bundle":"dev-master",
         "sonata-project/media-bundle":"dev-master",
-	    "sonata-project/cache-bundle":"dev-master",
-	    "stof/doctrine-extensions-bundle":"dev-master",
-        "a2lix/translation-form-bundle": "dev-master",
-	    "friendsofsymfony/user-bundle":"dev-master",
-	    "mopa/bootstrap-bundle":"dev-master",
+        "sonata-project/cache-bundle":"dev-master",
+        "stof/doctrine-extensions-bundle":"dev-master",
+        "a2lix/translation-form-bundle":"dev-master",
+        "friendsofsymfony/user-bundle":"dev-master",
+        "mopa/bootstrap-bundle":"dev-master",
         "mopa/bootstrap-sandbox-bundle":"dev-master",
         "twitter/bootstrap":"master",
         "knplabs/knp-paginator-bundle":"dev-master",
         "knplabs/knp-menu-bundle":"1.1.*",
         "craue/formflow-bundle":"dev-master",
         "mopa/remote-update-bundle":"dev-master",
-	    "symfony-cmf/routing-extra-bundle":"dev-master"
+        "symfony-cmf/routing-extra-bundle":"dev-master",
+        "networking/media-bundle":"dev-master",
+        "networking/user-bundle":"dev-master"
     },
-    "autoload": {
-        "psr-0": {
-            "Networking\\InitCmsBundle": ""
+    "autoload":{
+        "psr-0":{
+            "Networking\\InitCmsBundle":""
         }
     },
-    "target-dir" : "Networking/InitCmsBundle",
+    "target-dir":"Networking/InitCmsBundle",
     "repositories":[
         {
             "type":"package",
@@ -51,12 +53,20 @@
                     "reference":"master"
                 }
             }
+        },
+        {
+            "url":"git@github.com:networking/media-bundle.git",
+            "type":"vcs"
+        },
+        {
+            "url":"git@github.com:networking/user-bundle.git",
+            "type":"vcs"
         }
     ],
     "minimum-stability":"dev",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.1-dev"
+    "extra":{
+        "branch-alias":{
+            "dev-master":"2.1-dev"
         }
     }
 }

@@ -98,10 +98,10 @@ class NetworkingHelperExtension extends \Twig_Extension
             'networking_init_cms_get_field_to_string' => new \Twig_Function_Method($this, 'getFieldToString', array('is_safe' => array('html'))),
             'networking_init_cms_get_field_zone' => new \Twig_Function_Method($this, 'getFieldZone', array('is_safe' => array('html'))),
             'networking_init_cms_sort_form_children' => new \Twig_Function_Method($this, 'sortFormChildren', array('is_safe' => array('html'))),
-            'networking_admin_cms_block' => new \Twig_Function_Method($this, 'adminCmsBlock', array('is_safe' => array('html'))),
             'networking_init_cms_content_select' => new \Twig_Function_Method($this, 'contentSelect', array('is_safe' => array('html'))),
             'networking_init_cms_get_admin_icon' => new \Twig_Function_Method($this, 'getAdminIcon', array('is_safe' => array('html'))),
             'networking_init_cms_get_current_admin_locale' => new \Twig_Function_Method($this, 'getCurrentAdminLocale', array('is_safe' => array('html'))),
+            'networking_admin_cms_block' => new \Twig_Function_Method($this, 'adminCmsBlock', array('is_safe' => array('html'))),
         );
     }
 
@@ -122,12 +122,6 @@ class NetworkingHelperExtension extends \Twig_Extension
         } else {
             // Live View
             $contentItem = $this->getService('serializer')->deserialize($serializedContent, $layoutBlock->getClassType(), 'json');
-
-//            if($layoutBlock->getClassType() == 'Networking\GalleryBundle\Entity\Gallery')
-//            {
-//                var_dump($contentItem->getMediaGallery()->getName());
-//                            die;
-//            }
         }
 
         $options = $contentItem->getTemplateOptions();
