@@ -15,8 +15,8 @@ use Doctrine\ORM\Event\LifecycleEventArgs,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Helper\PageHelper,
-    JMS\SerializerBundle\Serializer\EventDispatcher\EventSubscriberInterface,
-    JMS\SerializerBundle\Serializer\EventDispatcher\Event;
+    JMS\Serializer\EventDispatcher\EventSubscriberInterface,
+    JMS\Serializer\EventDispatcher\Event;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -134,7 +134,7 @@ class PageListener implements EventSubscriberInterface
     }
 
     /**
-     * @param \JMS\SerializerBundle\Serializer\EventDispatcher\Event $event
+     * @param \JMS\Serializer\EventDispatcher\Event $event
      */
     public function onPostDeserialize(Event $event)
     {

@@ -10,7 +10,7 @@
 namespace Networking\InitCmsBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs,
-    JMS\SerializerBundle\Serializer\Serializer,
+    JMS\Serializer\Serializer,
     Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Entity\LayoutBlock;
 
@@ -21,12 +21,12 @@ class LayoutBlockListener
 {
 
     /**
-     * @var \JMS\SerializerBundle\Serializer\Serializer $serializer
+     * @var \JMS\Serializer\Serializer $serializer
      */
     protected $serializer;
 
     /**
-     * @param \JMS\SerializerBundle\Serializer\Serializer $serializer
+     * @param \JMS\Serializer\Serializer $serializer
      */
     public function __construct(Serializer $serializer)
     {
