@@ -57,7 +57,6 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             'IS_AUTHENTICATED_REMEMBERED'
         )
         ) {
-            var_dump('hello');
             $this->isLoggedIn = true;
         }
         $this->serviceContainer = $serviceContainer;
