@@ -17,16 +17,16 @@ sonata_admin:
     title_logo: /bundles/sonataadmin/logo_title.png
     templates:
         layout:  NetworkingInitCmsBundle::admin_layout.html.twig
-        ajax:    SonataAdminBundle::ajax_layout.html.twig
+        ajax:    NetworkingInitCmsBundle::ajax_layout.html.twig
         list:    NetworkingInitCmsBundle:CRUD:list.html.twig
-        show:    SonataAdminBundle:CRUD:show.html.twig
+        show:    NetworkingInitCmsBundle:CRUD:show.html.twig
         edit:    NetworkingInitCmsBundle:CRUD:edit.html.twig
-        preview: SonataAdminBundle:CRUD:preview.html.twig
+        preview: NetworkingInitCmsBundle:CRUD:preview.html.twig
         delete:  NetworkingInitCmsBundle:CRUD:delete.html.twig
         # default values of helper templates
-        short_object_description: SonataAdminBundle:Helper:short-object-description.html.twig
+        short_object_description: NetworkingInitCmsBundle:Helper:short-object-description.html.twig
         # default values of block templates, they should extend the base_block template
-        list_block: SonataAdminBundle:Block:block_admin_list.html.twig
+        list_block: NetworkingInitCmsBundle:Block:block_admin_list.html.twig
     dashboard:
         blocks:
             # display two dashboard blocks
@@ -52,31 +52,31 @@ sonata_doctrine_orm_admin:
         form: [ NetworkingInitCmsBundle:Form:form_admin_fields.html.twig ]
         types:
             list:
-                _action:    NetworkingInitCmsBundle:CRUD:list__action.html.twig
                 array:      NetworkingInitCmsBundle:CRUD:list_array.html.twig
-                boolean:    SonataAdminBundle:CRUD:list_boolean.html.twig
-                date:       SonataAdminBundle:CRUD:list_date.html.twig
-                time:       SonataAdminBundle:CRUD:list_time.html.twig
-                datetime:   SonataAdminBundle:CRUD:list_datetime.html.twig
-                text:       SonataAdminBundle:CRUD:base_list_field.html.twig
-                trans:      SonataAdminBundle:CRUD:list_trans.html.twig
-                string:     SonataAdminBundle:CRUD:base_list_field.html.twig
-                smallint:   SonataAdminBundle:CRUD:base_list_field.html.twig
-                bigint:     SonataAdminBundle:CRUD:base_list_field.html.twig
-                integer:    SonataAdminBundle:CRUD:base_list_field.html.twig
-                decimal:    SonataAdminBundle:CRUD:base_list_field.html.twig
-                identifier: SonataAdminBundle:CRUD:base_list_field.html.twig
+                boolean:    NetworkingInitCmsBundle:CRUD:list_boolean.html.twig
+                date:       NetworkingInitCmsBundle:CRUD:list_date.html.twig
+                time:       NetworkingInitCmsBundle:CRUD:list_time.html.twig
+                datetime:   NetworkingInitCmsBundle:CRUD:list_datetime.html.twig
+                text:       NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                trans:      NetworkingInitCmsBundle:CRUD:list_trans.html.twig
+                string:     NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                smallint:   NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                bigint:     NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                integer:    NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                decimal:    NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                identifier: NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
 
             show:
-                array:      SonataAdminBundle:CRUD:show_array.html.twig
-                boolean:    SonataAdminBundle:CRUD:show_boolean.html.twig
-                date:       SonataAdminBundle:CRUD:show_date.html.twig
-                time:       SonataAdminBundle:CRUD:show_time.html.twig
-                datetime:   SonataAdminBundle:CRUD:show_datetime.html.twig
-                text:       SonataAdminBundle:CRUD:base_show_field.html.twig
-                trans:      SonataAdminBundle:CRUD:show_trans.html.twig
-                string:     SonataAdminBundle:CRUD:base_show_field.html.twig
-                smallint:   SonataAdminBundle:CRUD:base_show_field.html.twig
-                bigint:     SonataAdminBundle:CRUD:base_show_field.html.twig
-                integer:    SonataAdminBundle:CRUD:base_show_field.html.twig
-                decimal:    SonataAdminBundle:CRUD:base_show_field.html.twig
+                array:      NetworkingInitCmsBundle:CRUD:show_array.html.twig
+                boolean:    NetworkingInitCmsBundle:CRUD:show_boolean.html.twig
+                date:       NetworkingInitCmsBundle:CRUD:show_date.html.twig
+                time:       NetworkingInitCmsBundle:CRUD:show_time.html.twig
+                datetime:   NetworkingInitCmsBundle:CRUD:show_datetime.html.twig
+                text:       NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                trans:      NetworkingInitCmsBundle:CRUD:show_trans.html.twig
+                string:     NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                smallint:   NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                bigint:     NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                integer:    NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                decimal:    NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                birthday:       NetworkingInitCmsBundle:CRUD:show_date.html.twig

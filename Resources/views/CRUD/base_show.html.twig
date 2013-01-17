@@ -1,0 +1,60 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends base_template %}
+
+{% block actions %}
+    <div class="sonata-actions">
+        {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object)%}
+            <a class="btn sonata-action-element" href="{{ admin.generateObjectUrl('edit', object) }}">
+                <i class="icon-edit"></i>
+                {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
+        {% endif %}
+        {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
+            <a class="btn sonata-action-element" href="{{ admin.generateObjectUrl('history', object) }}">
+                <i class="icon-book"></i>
+                {{ 'link_action_history'|trans({}, 'SonataAdminBundle') }}</a>
+        {% endif %}
+        {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
+        {% if admin.hasroute('list') and admin.isGranted('LIST')%}
+            <a class="btn sonata-action-element" href="{{ admin.generateUrl('list') }}">
+                <i class="icon-list"></i>
+                {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
+
+{% block show %}
+    <div class="sonata-ba-view">
+        {% for name, view_group in admin.showgroups %}
+            <table class="table table-bordered">
+                {% if name %}
+                    <tr class="sonata-ba-view-title">
+                        <td colspan="2">
+                            {{ admin.trans(name) }}
+                        </td>
+                    </tr>
+                {% endif %}
+
+                {% for field_name in view_group.fields %}
+                    <tr class="sonata-ba-view-container">
+                        {% if elements[field_name] is defined %}
+                            {{ elements[field_name]|render_view_element(object) }}
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </div>
+{% endblock %}
+
