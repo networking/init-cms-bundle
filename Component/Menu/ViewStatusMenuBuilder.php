@@ -45,12 +45,20 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      * @param \Symfony\Component\DependencyInjection\Container          $serviceContainer
      */
-    public function __construct(FactoryInterface $factory, SecurityContextInterface $securityContext, Container $serviceContainer)
-    {
+    public function __construct(
+        FactoryInterface $factory,
+        SecurityContextInterface $securityContext,
+        Container $serviceContainer
+    ) {
         parent::__construct($factory);
 
         $this->securityContext = $securityContext;
-        $this->isLoggedIn = $this->securityContext->isGranted('IS_AUTHENTICATED_FULLY');
+        if ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $this->securityContext->isGranted(
+            'IS_AUTHENTICATED_REMEMBER'
+        )
+        ) {
+            $this->isLoggedIn = true;
+        }
         $this->serviceContainer = $serviceContainer;
         $this->router = $this->serviceContainer->get('router');
     }
@@ -86,16 +94,22 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                 }
                 $draftRoute = $this->router->generate($entity->getRoute());
 
-                $editUrl = $this->router->generate('admin_networking_initcms_page_edit', array('id' => urlencode($entity->getId())));
+                $editUrl = $this->router->generate(
+                    'admin_networking_initcms_page_edit',
+                    array('id' => urlencode($entity->getId()))
+                );
             } elseif ($entity instanceof ResourceVersionInterface) {
                 $liveRoute = $this->router->generate($entity->getRoute());
                 $draftRoute = $this->router->generate($entity->getPage()->getRoute());
 
-                $editUrl = $this->router->generate('admin_networking_initcms_page_edit', array('id' => urlencode($entity->getPage()->getId())));
+                $editUrl = $this->router->generate(
+                    'admin_networking_initcms_page_edit',
+                    array('id' => urlencode($entity->getPage()->getId()))
+                );
 
             }
 
-            if(!$sonataAdminParam && $editUrl){
+            if (!$sonataAdminParam && $editUrl) {
                 $menu->addChild('edit', array('uri' => $editUrl));
             }
 
@@ -103,7 +117,10 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             $livePath = $this->router->generate('networking_init_view_live', array('path' => urlencode($liveRoute)));
 
             // Set active url based on which status is in the session
-            if ($this->serviceContainer->get('session')->get('_viewStatus') === VersionableInterface::STATUS_PUBLISHED) {
+            if ($this->serviceContainer->get('session')->get(
+                '_viewStatus'
+            ) === VersionableInterface::STATUS_PUBLISHED
+            ) {
                 $menu->setCurrentUri($livePath);
             } else {
                 $menu->setCurrentUri($draftPath);

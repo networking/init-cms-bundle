@@ -54,12 +54,20 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      * @param \Symfony\Component\DependencyInjection\Container          $serviceContainer
      */
-    public function __construct(FactoryInterface $factory, SecurityContextInterface $securityContext, Container $serviceContainer)
-    {
+    public function __construct(
+        FactoryInterface $factory,
+        SecurityContextInterface $securityContext,
+        Container $serviceContainer
+    ) {
         parent::__construct($factory);
 
         $this->securityContext = $securityContext;
-        $this->isLoggedIn = $this->securityContext->isGranted('IS_AUTHENTICATED_FULLY');
+        if ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $this->securityContext->isGranted(
+            'IS_AUTHENTICATED_REMEMBER'
+        )
+        ) {
+            $this->isLoggedIn = true;
+        }
         $this->serviceContainer = $serviceContainer;
         $this->router = $this->serviceContainer->get('router');
 
@@ -85,9 +93,13 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
         $menu->setCurrentUri($request->getRequestUri());
 
         /** @var $mainMenu Menu */
-        $mainMenu = $repository->findOneBy(array('name' => $path, 'locale' => $this->serviceContainer->get('request')->getLocale()));
+        $mainMenu = $repository->findOneBy(
+            array('name' => $path, 'locale' => $this->serviceContainer->get('request')->getLocale())
+        );
 
-        if (!$mainMenu) return $menu;
+        if (!$mainMenu) {
+            return $menu;
+        }
 
         $menuIterator = new \RecursiveIteratorIterator(
             new RecursiveItemIterator($mainMenu->getChildrenByStatus($this->viewStatus)),
@@ -125,9 +137,11 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
             }
         } else {
             $menu->addChild($this->get('translator')->trans('login'), array('route' => 'fos_user_security_login'));
-            $menu->addChild($this->get('translator')->trans('register'), array('route' => 'fos_user_registration_register'));
+            $menu->addChild(
+                $this->get('translator')->trans('register'),
+                array('route' => 'fos_user_registration_register')
+            );
         }
-
 
 
         return $menu;
@@ -186,9 +200,13 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
         $menu->setCurrentUri($request->getRequestUri());
 
         /** @var $mainMenu Menu */
-        $mainMenu = $repository->findOneBy(array('name' => $path, 'locale' => $this->serviceContainer->get('request')->getLocale()));
+        $mainMenu = $repository->findOneBy(
+            array('name' => $path, 'locale' => $this->serviceContainer->get('request')->getLocale())
+        );
 
-        if (!$mainMenu) return $menu;
+        if (!$mainMenu) {
+            return $menu;
+        }
 
         /** @var $menuIterator \ArrayIterator */
         $menuIterator = new \RecursiveIteratorIterator(
@@ -202,7 +220,9 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
             $root = $item->getParentByLevel(2);
         }
 
-        if (!$root) return false;
+        if (!$root) {
+            return false;
+        }
 
         $menuIterator = new \RecursiveIteratorIterator(
             new RecursiveItemIterator($root->getChildren()),
@@ -250,11 +270,10 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function createFromNode(Menu $node)
     {
-        if($this->viewStatus == Page::STATUS_PUBLISHED){
-            if($snapshot = $node->getPage()->getSnapshot())
-            {
+        if ($this->viewStatus == Page::STATUS_PUBLISHED) {
+            if ($snapshot = $node->getPage()->getSnapshot()) {
                 $route = $snapshot->getRoute();
-            }else{
+            } else {
                 return;
             }
         } else {
@@ -285,14 +304,26 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      * @param $currentLanguage
      * @param string $route
      */
-    public function createNavbarsLangMenu(&$menu, array $languages, $currentLanguage, $route = 'networking_init_change_language')
-    {
+    public function createNavbarsLangMenu(
+        &$menu,
+        array $languages,
+        $currentLanguage,
+        $route = 'networking_init_change_language'
+    ) {
         $this->addDivider($menu, true);
 
-        $dropdown = $this->createDropdownMenuItem($menu, $this->serviceContainer->get('translator')->trans('Change Language'), true, array('icon' => 'caret'));
+        $dropdown = $this->createDropdownMenuItem(
+            $menu,
+            $this->serviceContainer->get('translator')->trans('Change Language'),
+            true,
+            array('icon' => 'caret')
+        );
 
         foreach ($languages as $language) {
-            $node = $dropdown->addChild($language['label'], array('uri' => $this->router->generate($route, array('locale' => $language['locale']))));
+            $node = $dropdown->addChild(
+                $language['label'],
+                array('uri' => $this->router->generate($route, array('locale' => $language['locale'])))
+            );
 
             if ($language['locale'] == $currentLanguage) {
                 $node->setCurrent(true);
