@@ -270,20 +270,28 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function createFromNode(Menu $node)
     {
-        if ($this->viewStatus == Page::STATUS_PUBLISHED) {
-            if ($snapshot = $node->getPage()->getSnapshot()) {
-                $route = $snapshot->getRoute();
-            } else {
-                return;
-            }
+        $linkAttributes = array();
+        if ($node->getRedirectUrl()) {
+            $uri = $node->getRedirectUrl();
+            $linkAttributes['target'] = '_blank';
         } else {
-            $route = $node->getPage()->getRoute();
+            if ($this->viewStatus == Page::STATUS_PUBLISHED) {
+                if ($snapshot = $node->getPage()->getSnapshot()) {
+                    $route = $snapshot->getRoute();
+                    $uri = $this->router->generate($route);
+                } else {
+                    return;
+                }
+            } else {
+                $route = $node->getPage()->getRoute();
+                $uri = $this->router->generate($route);
+            }
         }
         $options = array(
-            'uri' => $this->router->generate($route),
+            'uri' => $uri,
             'label' => $node->getName(),
             'attributes' => array(),
-            'linkAttributes' => array(),
+            'linkAttributes' => $linkAttributes,
             'childrenAttributes' => array(),
             'labelAttributes' => array(),
             'extras' => array(),
