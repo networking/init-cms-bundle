@@ -99,20 +99,9 @@ file that was distributed with this source code.
                     {% endif %}
                 </div>
                 <div class="span2 align-center">
-                    {% if app.user %}
-                        <ul class="nav">
-                            <li class="dropdown">
-                                <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><span class="font-smaller color-second">{{ app.user }}</span> <b class="caret"></b></a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                                    <li><a tabindex="-1" href="{{ url('admin_networking_user_user_edit', {id: app.user.id})}}">{{ 'label.account_settings'|trans({}, 'PageAdmin') }}</a></li>
-                                    {% if is_granted('ROLE_PREVIOUS_ADMIN') and sonata_user.impersonating %}
-                                    <li><a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters| merge({'_switch_user': '_exit'})) }}">({{ 'label.exit'|trans({}, 'PageAdmin') }})</a></li>
-                                    {% endif %}
-                                    <li><a href="{{ url('sonata_user_admin_security_logout') }}">{{ 'user_block_logout'|trans({}, 'SonataUserBundle') }}</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                       {% endif %}
+                    {% if admin_pool is defined %}
+                    {% include admin_pool.getTemplate('user_block') %}
+                    {% endif %}
                 </div>
                 <div class="span5">
                     {% if admin_pool is defined %}
