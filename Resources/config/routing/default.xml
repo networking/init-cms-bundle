@@ -46,4 +46,15 @@
    		<default key="_controller">NetworkingInitCmsBundle:Default:viewLive</default>
    	</route>
 
+    <route id="networking_init_cms_help" pattern="/admin/help/{adminCode}/{action}">
+            <default key="_controller">NetworkingInitCmsBundle:Default:adminHelp</default>
+            <requirement key="adminCode">.+</requirement>
+        	<requirement key="action">(.*)?</requirement>
+    </route>
+
+    <route id="networking_init_cms_help_dashboard" pattern="/admin/help/{adminCode}">
+            <default key="_controller">NetworkingInitCmsBundle:Default:adminHelp</default>
+            <requirement key="adminCode">.+</requirement>
+    </route>
+
 </routes>

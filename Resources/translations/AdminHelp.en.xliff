@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="help_title">
+                <source>help_title</source>
+                <target>Help for: %admin_title% %action%</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.page.admin.page.edit">
+                <source>networking_init_cms.page.admin.page.edit</source>
+                <target>Page edit</target>
+            </trans-unit>
+            <trans-unit id="action.list">
+                <source>action.list</source>
+                <target>List</target>
+            </trans-unit>
+            <trans-unit id="action.edit">
+                <source>action.edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="action.delete">
+                <source>action.delete</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="action.create">
+                <source>action.create</source>
+                <target>Create</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

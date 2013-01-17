@@ -17,6 +17,7 @@ file that was distributed with this source code.
 {% set _content      = block('content') %}
 {% set _title        = block('title') %}
 {% set _breadcrumb   = block('breadcrumb') %}
+{% set _help_text    = block('help_text') %}
 {% set isActive      = false %}
 {% if admin is defined %}
     {% set currentAdmin = admin %}
@@ -262,6 +263,7 @@ file that was distributed with this source code.
             </div>
             <div class="row content-head">
                 <div class="span5 page_title">
+
                     {% if _title is not empty or action is defined %}
                     <h1>
                         {% if _title is not empty %}
@@ -287,9 +289,18 @@ file that was distributed with this source code.
                                 {{ networking_init_cms_get_current_admin_locale(admin)|slice(0,2)|upper }}</div>
                         {% endblock %}
                     {% endif %}
-                    <div class="icon-medium-inline level-headline-icon"><a href="#" target="_blank">
+                    {% if _help_text is empty %}
+                        {% if admin is not defined %}
+                            {% set adminCode = 'dashboard' %}
+                            {% set actionHelp = '' %}
+                        {% else %}
+                            {% set adminCode = admin.code %}
+                            {% set actionHelp = action %}
+                        {% endif %}
+                    <div class="icon-medium-inline level-headline-icon"><a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}" target="_blank">
                         <div class="info_button_medium"></div>
                     </a></div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -304,6 +315,10 @@ file that was distributed with this source code.
                 {% if _content is not empty %}
                     <div class="sonata-ba-content span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _content|raw }}</div>
                 {% endif %}
+
+                    {% if _help_text is not empty %}
+                                        <div class="sonata-ba-content span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _help_text|raw }}</div>
+                                    {% endif %}
 
                 {% if _show is not empty %}
                     <div class="sonata-ba-show span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _show|raw }}</div>
