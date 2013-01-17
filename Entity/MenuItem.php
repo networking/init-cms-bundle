@@ -52,9 +52,15 @@ class MenuItem implements \IteratorAggregate
 
     /**
      * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Page", inversedBy="menuItem", cascade={"persist"})
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", nullable=true)
      */
     protected $page;
+
+
+    /**
+     * @ORM\Column(name="redirect_url", type="string", length=255, nullable=true)
+     */
+    protected $redirectUrl;
 
     /**
      * @Gedmo\TreeLeft
@@ -112,7 +118,6 @@ class MenuItem implements \IteratorAggregate
     public function __construct()
     {
         $this->children = new ArrayCollection();
-
     }
 
     /**
@@ -120,7 +125,7 @@ class MenuItem implements \IteratorAggregate
      */
     public function __toString()
     {
-        return (string) $this->name;
+        return (string)$this->name;
     }
 
     /**
@@ -145,7 +150,7 @@ class MenuItem implements \IteratorAggregate
      * @param  Page     $page
      * @return MenuItem
      */
-    public function setPage(Page $page)
+    public function setPage(Page $page = null)
     {
         $this->page = $page;
 
@@ -160,6 +165,26 @@ class MenuItem implements \IteratorAggregate
     public function getPage()
     {
         return $this->page;
+    }
+
+    /**
+     * @param $redirectUrl
+     */
+    public function setRedirectUrl($redirectUrl)
+    {
+
+        $this->redirectUrl = $redirectUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRedirectUrl()
+    {
+
+        return $this->redirectUrl;
     }
 
     /**
@@ -310,7 +335,9 @@ class MenuItem implements \IteratorAggregate
      */
     public function getRootParent(MenuItem $menuItem)
     {
-        if (!$menuItem->getId()) return false;
+        if (!$menuItem->getId()) {
+            return false;
+        }
 
         if ($parent = $menuItem->getParent()) {
             return $this->getRootParent($parent);
@@ -325,9 +352,13 @@ class MenuItem implements \IteratorAggregate
      */
     public function getParentByLevel($level = 1)
     {
-        if ($level === $this->getLvl()) return $this;
+        if ($level === $this->getLvl()) {
+            return $this;
+        }
 
-        if (!$this->getParent()) return false;
+        if (!$this->getParent()) {
+            return false;
+        }
 
         if ($level === $this->getParent()->getLvl()) {
             return $this->getParent();
@@ -342,8 +373,7 @@ class MenuItem implements \IteratorAggregate
      */
     public function setMenu(MenuItem $menuItem = null)
     {
-        if($menuItem)
-        {
+        if ($menuItem) {
             $this->setParent($menuItem);
         }
 
@@ -365,7 +395,9 @@ class MenuItem implements \IteratorAggregate
     {
         $children = new ArrayCollection();
         foreach ($this->getChildren() as $child) {
-            if (!$child->getPage()->isActive()) continue;
+            if (!$child->getPage()->isActive()) {
+                continue;
+            }
             $children->add($child);
         }
 
@@ -380,16 +412,16 @@ class MenuItem implements \IteratorAggregate
     {
         $children = new ArrayCollection();
         foreach ($this->getChildren() as $child) {
-            if($status === Page::STATUS_PUBLISHED){
-                if (!$child->getPage()->getSnapshot()) continue;
+            if ($status === Page::STATUS_PUBLISHED) {
+                if (!$child->getPage()->getSnapshot()) {
+                    continue;
+                }
             }
             $children->add($child);
         }
 
         return $children;
-
     }
-
 
 
     /**
@@ -405,7 +437,10 @@ class MenuItem implements \IteratorAggregate
      */
     public function getPath()
     {
-        if (!$this->getPage()) return;
+        if (!$this->getPage()) {
+            return;
+        }
+
         return $this->getPage()->getContentRoute()->getPath();
     }
 
@@ -414,7 +449,10 @@ class MenuItem implements \IteratorAggregate
      */
     public function getRouteId()
     {
-        if (!$this->getPage()) return;
+        if (!$this->getPage()) {
+            return;
+        }
+
         return $this->getPage()->getContentRoute()->getId();
     }
 
@@ -447,5 +485,5 @@ class MenuItem implements \IteratorAggregate
     {
         return $this->children->getIterator();
     }
-
 }
+

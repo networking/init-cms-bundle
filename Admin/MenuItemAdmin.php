@@ -73,47 +73,48 @@ class MenuItemAdmin extends BaseAdmin
             $this->isRoot = true;
         }
 
-        $formMapper
-            ->add('name');
+        $formMapper->add('name');
 
         $formMapper->add('locale', 'hidden', array('data' => $locale));
+
 
         if ($this->isRoot) {
             $formMapper->add('isRoot', 'hidden', array('data' => true));
         } else {
+            $formMapper->add('redirect_url', 'url', array('required'=>false));
             $formMapper
                 ->add('page',
-                'networking_type_autocomplete',
-                array(
-                    'attr' => array('style' => "width:220px"),
-                    'class' => 'Networking\InitCmsBundle\Entity\Page',
-                    'required' => true,
-                    'property' => 'AdminTitle',
-                    'query_builder' => function (EntityRepository $er) use ($locale) {
-                        $qb = $er->createQueryBuilder('p');
+                    'networking_type_autocomplete',
+                    array(
+                        'attr' => array('style' => "width:220px"),
+                        'class' => 'Networking\InitCmsBundle\Entity\Page',
+                        'required' => false,
+                        'property' => 'AdminTitle',
+                        'query_builder' => function (EntityRepository $er) use ($locale) {
+                            $qb = $er->createQueryBuilder('p');
 
-                        return $qb->where('p.locale = :locale')
-                            ->orderBy('p.path', 'asc')
-                            ->setParameter(':locale', $locale);
-                    },
+                            return $qb->where('p.locale = :locale')
+                                ->orderBy('p.path', 'asc')
+                                ->setParameter(':locale', $locale);
+                        },
+                    )
                 )
-            )
                 ->add('menu',
-                'entity',
-                array(
-                    'class' => 'Networking\InitCmsBundle\Entity\MenuItem',
-                    'required' => true,
-                    'preferred_choices' => array($root),
-                    'query_builder' => function (EntityRepository $er) use ($locale) {
-                        $qb = $er->createQueryBuilder('m');
+                    'entity',
+                    array(
+                        'class' => 'Networking\InitCmsBundle\Entity\MenuItem',
+                        'required' => true,
+                        'preferred_choices' => array($root),
+                        'query_builder' => function (EntityRepository $er) use ($locale) {
+                            $qb = $er->createQueryBuilder('m');
 
-                        return $qb->where('m.isRoot = 1')
-                            ->andWhere('m.locale = :locale')
-                            ->orderBy('m.name')
-                            ->setParameter(':locale', $locale);
-                    }
-                )
-            );
+                            return $qb->where('m.isRoot = 1')
+                                ->andWhere('m.locale = :locale')
+                                ->orderBy('m.name')
+                                ->setParameter(':locale', $locale);
+                        }
+                    )
+                );
         }
 //                ->add('path', 'text', array('read_only' => true));
     }
@@ -145,6 +146,7 @@ class MenuItemAdmin extends BaseAdmin
             ->addIdentifier('name')
             ->add('path')
             ->add('page', 'many_to_one', array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_field.html.twig'))
+            ->add('redirect_url')
             ->add('locale')
             ->add('menu');
     }
