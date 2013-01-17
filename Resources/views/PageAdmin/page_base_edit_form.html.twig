@@ -47,7 +47,7 @@ file that was distributed with this source code.
                 {# page status accordion #}
                 <div class="accordion-group">
                     <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" 
+                        <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseZero">
                             <div class="accordion-caret"><b class="caret"></b></div>
                             {{ 'legend.page_status'|trans({}, admin.translationdomain) }} -
@@ -55,36 +55,36 @@ file that was distributed with this source code.
                         </a>
                     </div>
                     <div id="collapseZero" class="accordion-body collapse in">
-                        <div class="accordion-inner" style="min-height:70px;" >
+                        <div class="accordion-inner" style="min-height:70px;">
                             <div id="pageStatusSettings">
-                            {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig' %}
+                                {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig' %}
                             </div>
                         </div>
                     </div>
                 </div>
                 {% if admin.translationLanguages.count() %}
-                {# translation accordion #}
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" 
-                           href="#collapseOne">
-                            <div class="accordion-caret"><b class="caret"></b></div>
-                            {{ 'legend.translations'|trans({}, admin.translationdomain) }}
-                        </a>
-                    </div>
-                    <div id="collapseOne" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                           <div id="translationSettings">
-                               {% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig' %}
-                           </div>
+                    {# translation accordion #}
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse"
+                               href="#collapseOne">
+                                <div class="accordion-caret"><b class="caret"></b></div>
+                                {{ 'legend.translations'|trans({}, admin.translationdomain) }}
+                            </a>
+                        </div>
+                        <div id="collapseOne" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <div id="translationSettings">
+                                    {% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig' %}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
                 {% endif %}
                 {# menu accordion #}
                 <div class="accordion-group">
                     <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" 
+                        <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseTwo">
                             <div class="accordion-caret"><b class="caret"></b></div>
                             {{ 'legend.menu_connections'|trans({}, admin.translationdomain) }}
@@ -92,21 +92,23 @@ file that was distributed with this source code.
                     </div>
                     <div id="collapseTwo" class="accordion-body collapse">
                         <div class="accordion-inner">
-                        {% for rootNode in rootMenus %}
-                            <label> {{ 'label.menu_link'|trans({'%menu_name%': rootNode.name}, admin.translationdomain) }}
-                                <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}" >
-                                    {{ 'link.add'|trans({}, admin.translationDomain) }}</a></label>
-                                    {% for menuItem in object.getMenuItemByRoot(rootNode.id) %}
-                                    &nbsp;&nbsp;{{ menuItem.name }} <a href="{{ url('admin_networking_initcms_menuitem_list')}}">{{ 'link.edit'|trans({}, admin.translationDomain) }}</a><br />
-                                    {% endfor %}
-                        {% endfor %}
+                            {% for rootNode in rootMenus %}
+                                <label> {{ 'label.menu_link'|trans({'%menu_name%': rootNode.name}, admin.translationdomain) }}
+                                    <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}">
+                                        {{ 'link.add'|trans({}, admin.translationDomain) }}</a></label>
+                                {% for menuItem in object.getMenuItemByRoot(rootNode.id) %}
+                                    &nbsp;&nbsp;{{ menuItem.name }} <a
+                                        href="{{ url('admin_networking_initcms_menuitem_list') }}">{{ 'link.edit'|trans({}, admin.translationDomain) }}</a>
+                                    <br/>
+                                {% endfor %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
                 {# page settings accordion #}
                 <div class="accordion-group">
                     <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" 
+                        <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseThree">
                             <div class="accordion-caret"><b class="caret"></b></div>
                             {{ 'legend.page_settings'|trans({}, admin.translationdomain) }}
@@ -141,6 +143,8 @@ file that was distributed with this source code.
             <div class="modal-footer">
                 {% if app.request.isxmlhttprequest %}
                     {% if admin.id(object) %}
+                        <button class="btn" data-dismiss="modal"
+                                aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                         <input type="submit" class="btn btn-primary" name="btn_update"
                                value="{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}"/>
                     {% else %}
@@ -153,6 +157,8 @@ file that was distributed with this source code.
                                value="{{ 'btn_preview'|trans({}, 'SonataAdminBundle') }}"/>
                     {% endif %}
                     {% if admin.id(object) %}
+                        <button class="btn" data-dismiss="modal"
+                                aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                         <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
                                onclick="return start_save_page_settings(this);"
                                value="{{ 'btn_update_and_edit_again'|trans({}, 'SonataAdminBundle') }}"/>

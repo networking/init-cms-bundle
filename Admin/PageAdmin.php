@@ -38,7 +38,7 @@ class PageAdmin extends BaseAdmin
     /**
      * @var bool
      */
-    public $supportsPreviewMode = true;
+//    public $supportsPreviewMode = true;
 
     /**
      * @param \Sonata\AdminBundle\Route\RouteCollection $collection
@@ -327,7 +327,7 @@ class PageAdmin extends BaseAdmin
             'status',
             null,
             array(
-                'label' => '.',
+                'label' => ' ',
                 'sortable' => false,
                 'template' => 'NetworkingInitCmsBundle:PageAdmin:page_status_list_field.html.twig'
             )
@@ -345,7 +345,7 @@ class PageAdmin extends BaseAdmin
             '_action',
             'actions',
             array(
-                'label' => '.',
+                'label' => ' ',
                 'template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action.html.twig',
                 'actions' => array(
                     'edit' => array('template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action_edit.html.twig'),

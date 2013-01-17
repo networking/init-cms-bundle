@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Networking\InitCmsBundle\Entity\Page;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -66,7 +67,11 @@ class DefaultController extends Controller
         $pageSnapshot = $request->get('_content');
 
         /** @var $page Page */
-        $page = $this->get('serializer')->deserialize($pageSnapshot->getVersionedData(), 'Networking\InitCmsBundle\Entity\Page', 'json');
+        $page = $this->get('serializer')->deserialize(
+            $pageSnapshot->getVersionedData(),
+            'Networking\InitCmsBundle\Entity\Page',
+            'json'
+        );
 
 
         if ($page->getVisibility() != Page::VISIBILITY_PUBLIC) {
@@ -178,6 +183,13 @@ class DefaultController extends Controller
         return $this->changePageStatus($request, Page::STATUS_PUBLISHED, $path);
     }
 
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $status
+     * @param $path
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     private function changePageStatus(Request $request, $status, $path)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
@@ -209,5 +221,35 @@ class DefaultController extends Controller
         $oldURL = $languageSwitcherHelper->getPathInfo($referer);
 
         return $languageSwitcherHelper->getTranslationRoute($oldURL, $locale);
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $admin
+     * @param $action
+     * @return void
+     * @Template()
+     */
+    public function adminHelpAction(Request $request, $adminCode, $action = '')
+    {
+        $parameters = array();
+
+        if ($adminCode == 'dashboard') {
+            $parameters['admin_help_code'] = $adminCode . '.' . $action;
+            $parameters['admin_title'] = $this->get('translator')->trans($adminCode, array(), 'AdminHelp');
+            $parameters['action'] = $this->get('translator')->trans('action.' . $action, array(), 'AdminHelp');
+
+        } else {
+            $admin = $this->container->get('sonata.admin.pool')->getAdminByAdminCode($adminCode);
+            $admin->setRequest($request);
+
+            $parameters['admin'] = $admin;
+            $parameters['admin_help_code'] = $adminCode . '.' . $action;
+            $parameters['admin_title'] = $admin->trans($admin->getLabel());
+            $parameters['action'] = $admin->trans('action.' . $action, array(), 'AdminHelp');
+        }
+        $parameters['admin_pool'] = $this->get('sonata.admin.pool');
+
+        return $parameters;
     }
 }

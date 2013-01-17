@@ -18,9 +18,7 @@ or download and install the [networking init CMS sandbox][2]
 
 
 Add the following to the end of you composer.json, before the
-last closing } (curly brace). This will tell composer where to find the bundle.
-
-This is just a temporary measure until we add the package to packagist.org
+last closing } (curly brace). This will tell composer where to find the twitter bootstrap repository.
 
     ,
     "repositories":[
@@ -35,10 +33,6 @@ This is just a temporary measure until we add the package to packagist.org
                     "reference":"master"
                 }
             }
-        },
-        {
-            "url":"git@github.com:networking/init-cms-bundle.git",
-            "type":"vcs"
         }
     ]
 
@@ -209,106 +203,6 @@ Comment in the translator parameter in your config.yml file:
         #esi:             ~
         translator:      { fallback: %locale% }
 
-3) Extend the Sonata User and Media bundles
--------------------------------------------
-
-In order to make full use of the the SonataUserBundle and the SonataMediaBundle we need to extend them and then
-include the new extend applications in the AppKernel.php file.
-
-### Configure and extend the user bundle
-
-We use the [SonataUserBundle][4] for access control. In order to use the bundle completely it is necessary
-to extend the bundle.
-
-	php app/console sonata:easy-extends:generate SonataUserBundle --dest=src
-
-Files will be generated in the src/Application/Sonata/UserBundle directory.
-
-.. note::
-
-    The command will generate domain objects in an ``Application`` namespace.
-    So you can point entities' associations to a global and common namespace.
-    This will make Entities sharing easier as your models will allow to
-    point to a global namespace. For instance the user will be
-    ``Application\Sonata\UserBundle\Entity\User``.
-
-Now, add the new `Application` Bundle into the kernel:
-
-.. code-block:: php
-
-    <?php
-
-    // AppKernel.php
-    class AppKernel {
-        public function registerbundles()
-        {
-            return array(
-                // Application Bundles
-                // ...
-                new Application\Sonata\UserBundle\ApplicationSonataUserBundle(),
-                // ...
-
-            )
-        }
-    }
-
-    # app/config/config.yml
-          doctrine:
-              orm:
-                  entity_managers:
-                      default:
-                          mappings:
-                              ApplicationSonataUserBundle: ~
-
-
-### Configure and extend the media bundle
-
-We have to do pretty much the same for the media bundle, this is taken from the [SonataMediaBundle configuration][5]
-
-
-At this point, the bundle is not yet ready. You need to generate the correct
-entities for the media::
-
-    php app/console sonata:easy-extends:generate SonataMediaBundle --dest=src
-
-.. note::
-
-    To be able to generate domain objects, you need to have a database driver configure in your project.
-    If it's not the case, just follow this:
-    http://symfony.com/doc/current/book/doctrine.html#configuring-the-database
-
-.. note::
-
-    The command will generate domain objects in an ``Application`` namespace.
-    So you can point entities' associations to a global and common namespace.
-    This will make Entities sharing very easier as your models will allow to
-    point to a global namespace. For instance the media will be
-    ``Application\Sonata\MediaBundle\Entity\Media``.
-
-
-Now that your module is generated, you can register it
-
-.. code-block:: php
-
-    <?php
-    // app/appkernel.php
-    public function registerbundles()
-    {
-        return array(
-            ...
-            new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
-            ...
-        );
-    }
-
-    # app/config/config.yml
-      doctrine:
-          orm:
-              entity_managers:
-                  default:
-                      mappings:
-                          ApplicationSonataMediaBundle: ~
-
 
 
 If they are not already created, you need to add specific folder to allow uploads from users:
@@ -320,13 +214,13 @@ If they are not already created, you need to add specific folder to allow upload
     mkdir web/uploads/images
     chmod -R 0777 web/uploads
 
-4) Install assets
+3) Install assets
 -----------------
 ```bash
    php app/console mopa:bootstrap:symlink:less
 ```
 
-5) Create DB schema, insert admin user and insert fixtures
+4) Create DB schema, insert admin user and insert fixtures
 ----------------------------------------------------------
 
 **IMPORTANT NOTE** Backup your DB before the next step
