@@ -1,4 +1,8 @@
 sonata_media:
+    class:
+        media:              Networking\MediaBundle\Entity\Media
+        gallery:            Networking\MediaBundle\Entity\Gallery
+        gallery_has_media:  Networking\MediaBundle\Entity\GalleryHasMedia
     default_context: default
     db_driver: doctrine_orm # or doctrine_mongodb
     contexts:
@@ -26,11 +30,3 @@ sonata_media:
 #        image:
 #            resizer: sonata.media.resizer.square
 
-sonata_formatter:
-    formatters:
-        markdown:
-            service: sonata.formatter.text.markdown
-            extensions:
-                - sonata.formatter.twig.control_flow
-                - sonata.formatter.twig.gist
-#                - sonata.media.formatter.twig

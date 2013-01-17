@@ -10,7 +10,7 @@
 namespace Networking\InitCmsBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs,
-    JMS\SerializerBundle\Serializer\Serializer,
+    JMS\Serializer\Serializer,
     Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Entity\LayoutBlock;
 
@@ -21,12 +21,12 @@ class LayoutBlockListener
 {
 
     /**
-     * @var \JMS\SerializerBundle\Serializer\Serializer $serializer
+     * @var \JMS\Serializer\Serializer $serializer
      */
     protected $serializer;
 
     /**
-     * @param \JMS\SerializerBundle\Serializer\Serializer $serializer
+     * @param \JMS\Serializer\Serializer $serializer
      */
     public function __construct(Serializer $serializer)
     {
@@ -44,7 +44,7 @@ class LayoutBlockListener
                 $contentObject = $this->serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
 
                 if ($contentObject instanceof \Networking\GalleryBundle\Entity\Gallery) {
-                    $er = $args->getEntityManager()->getRepository('Application\Sonata\MediaBundle\Entity\Gallery');
+                    $er = $args->getEntityManager()->getRepository('Networking\MediaBundle\Entity\Gallery');
                     $gallery = $er->find($contentObject->getMediaGallery()->getId());
                     $contentObject->setMediaGallery($gallery);
                 }

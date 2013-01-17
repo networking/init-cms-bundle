@@ -18,13 +18,13 @@ networking_init_cms:
                 - { name: right-top , span:4}
                 - { name: left-middle , span:8}
                 - { name: right-middle , span:4}
-        'NetworkingNewsBundle:News:news_two_column.html.twig':
-            name: "News/Two Column"
-            zones:
-                - { name: left-top , span:8}
-                - { name: right-top , span:4}
-                - { name: left-middle , span:8}
-                - { name: right-middle , span:4}
+#        'NetworkingNewsBundle:News:news_two_column.html.twig':
+#            name: "News/Two Column"
+#            zones:
+#                - { name: left-top , span:8}
+#                - { name: right-top , span:4}
+#                - { name: left-middle , span:8}
+#                - { name: right-middle , span:4}
 
     content_types:
         - { name: 'Text' , class: 'Networking\InitCmsBundle\Entity\Text'}

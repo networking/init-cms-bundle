@@ -39,7 +39,7 @@ file that was distributed with this source code.
                             {% for layoutBlock in page.layoutBlock('right-top') %}
                                 {{ networking_init_cms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock) }}
                             {% endfor %}
-                            {% render "NetworkingNewsBundle:News:recentArticles" with {'max': 3} %}
+                            {#{% render "NetworkingNewsBundle:News:recentArticles" with {'max': 3} %}#}
                         </div>
                         <div class="middle">
                             {% for layoutBlock in page.layoutBlock('right-middle') %}

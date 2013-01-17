@@ -5427,3 +5427,10 @@ li.table-row-style .menu-item-link {
 .modal form{
     margin: 0;
 }
+.sonata-ba-list-field-header-batch{
+    width: 15px;
+}
+
+.table th.sonata-ba-list-field-header-actions{
+    text-align: right;
+}

@@ -19,9 +19,6 @@ use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Entity\ContentRoute;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use JMS\SerializerBundle\Annotation\ExclusionPolicy;
-use JMS\SerializerBundle\Annotation\Expose;
-use JMS\SerializerBundle\Annotation\Type;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -118,16 +115,12 @@ class Page implements RouteAwareInterface, VersionableInterface
     /**
      * @var string $metaKeyword
      * @ORM\Column(name="meta_keyword", type="string", length=255)
-     * @Expose
-     * @Type("string")
      */
     protected $metaKeyword;
 
     /**
      * @var string $metaDescription
      * @ORM\Column(name="meta_description", type="text")
-     * @Expose
-     * @Type("string")
      */
     protected $metaDescription;
 
@@ -174,7 +167,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var string $status
-     * @ORM\Column(name="status", type="string", columnDefinition="ENUM('draft', 'review', 'published') NOT NULL")
+     * @ORM\Column(name="status", type="string", columnDefinition="ENUM('status_draft', 'status_review', 'status_published') NOT NULL")
      */
     protected $status = self::STATUS_DRAFT;
 

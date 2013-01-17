@@ -1,9 +1,9 @@
 symfony_cmf_routing_extra:
     chain:
-        routers_by_id:
-            # enable the symfony default router with a lower priority
-            router.default: 100
-        # whether the chain router should replace the default router. defaults to true
-        # if you set this to false, the router is just available as service
-        # symfony_cmf_routing_extra.router and you  need to do somthing to trigger it
-        # replace_symfony_router: true
+         routers_by_id:
+             # enable the symfony default router with a lower priority
+             router.default: 100
+         # whether the chain router should replace the default router. defaults to true
+         # if you set this to false, the router is just available as service
+         # symfony_cmf_routing_extra.router and you  need to do somthing to trigger it
+         # replace_symfony_router: true
