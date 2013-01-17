@@ -54,14 +54,6 @@
                     "reference":"master"
                 }
             }
-        },
-        {
-            "url":"git@github.com:networking/media-bundle.git",
-            "type":"vcs"
-        },
-        {
-            "url":"git@github.com:networking/user-bundle.git",
-            "type":"vcs"
         }
     ],
     "minimum-stability":"dev",
