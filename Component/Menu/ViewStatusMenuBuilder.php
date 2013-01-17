@@ -54,9 +54,10 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
         $this->securityContext = $securityContext;
         if ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $this->securityContext->isGranted(
-            'IS_AUTHENTICATED_REMEMBER'
+            'IS_AUTHENTICATED_REMEMBERED'
         )
         ) {
+            var_dump('hello');
             $this->isLoggedIn = true;
         }
         $this->serviceContainer = $serviceContainer;
