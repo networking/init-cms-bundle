@@ -76,6 +76,9 @@ function submitAjaxForm(event) {
                     jQuery('a[href="' + lastTab + '"]').tab('show');
                 }
             }
+        },
+        error:function(xhr, textStatus, errorThrown) {
+            menuDialog.html(xhr.responseText);
         }
     });
 }

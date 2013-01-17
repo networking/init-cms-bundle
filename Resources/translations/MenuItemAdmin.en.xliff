@@ -30,6 +30,10 @@
                 <source>breadcrumb.link_menu_item_navigation</source>
                 <target>Menus</target>
             </trans-unit>
+            <trans-unit id="menu.page_or_url.required">
+                <source>menu.page_or_url.required</source>
+                <target>Either a page or a redirect url must be set.</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

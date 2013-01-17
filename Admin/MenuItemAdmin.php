@@ -82,6 +82,9 @@ class MenuItemAdmin extends BaseAdmin
             $formMapper->add('isRoot', 'hidden', array('data' => true));
         } else {
             $formMapper->add('redirect_url', 'url', array('required'=>false));
+            $formMapper->add('link_target', 'text', array('required'=>false));
+            $formMapper->add('link_class', 'text', array('required'=>false));
+            $formMapper->add('link_rel', 'text', array('required'=>false));
             $formMapper
                 ->add('page',
                     'networking_type_autocomplete',
@@ -147,6 +150,9 @@ class MenuItemAdmin extends BaseAdmin
             ->add('path')
             ->add('page', 'many_to_one', array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_field.html.twig'))
             ->add('redirect_url')
+            ->add('link_target')
+            ->add('link_class')
+            ->add('link_rel')
             ->add('locale')
             ->add('menu');
     }
@@ -178,10 +184,14 @@ class MenuItemAdmin extends BaseAdmin
      */
     public function validate(ErrorElement $errorElement, $object)
     {
-        $errorElement
-            ->with('name')
-            ->assertMaxLength(array('limit' => 255))
-            ->end();
+        if(!$object->getIsRoot()){
+            if (!$object->getRedirectUrl() AND !$object->getPage()) {
+                $errorElement
+                    ->with('menu_page_or_url_required')
+                    ->addViolation($this->translator->trans('menu.page_or_url.required', array(), $this->translationDomain))
+                    ->end();
+            }
+        }
     }
 
     /**

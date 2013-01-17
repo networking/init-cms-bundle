@@ -270,10 +270,8 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function createFromNode(Menu $node)
     {
-        $linkAttributes = array();
         if ($node->getRedirectUrl()) {
             $uri = $node->getRedirectUrl();
-            $linkAttributes['target'] = '_blank';
         } else {
             if ($this->viewStatus == Page::STATUS_PUBLISHED) {
                 if ($snapshot = $node->getPage()->getSnapshot()) {
@@ -291,7 +289,7 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
             'uri' => $uri,
             'label' => $node->getName(),
             'attributes' => array(),
-            'linkAttributes' => $linkAttributes,
+            'linkAttributes' => $node->getLinkAttributes(),
             'childrenAttributes' => array(),
             'labelAttributes' => array(),
             'extras' => array(),

@@ -63,6 +63,21 @@ class MenuItem implements \IteratorAggregate
     protected $redirectUrl;
 
     /**
+     * @ORM\Column(name="link_target", type="string", length=255, nullable=true)
+     */
+    protected $linkTarget;
+
+    /**
+     * @ORM\Column(name="link_class", type="string", length=255, nullable=true)
+     */
+    protected $linkClass;
+
+    /**
+     * @ORM\Column(name="link_rel", type="string", length=255, nullable=true)
+     */
+    protected $linkRel;
+
+    /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
@@ -485,5 +500,80 @@ class MenuItem implements \IteratorAggregate
     {
         return $this->children->getIterator();
     }
+
+
+    /**
+     * @param $linkClass
+     * @return MenuItem
+     */
+    public function setLinkClass($linkClass)
+    {
+        $this->linkClass = $linkClass;
+        return $this;
+    }
+
+    /**
+     * @return String
+     */
+    public function getLinkClass()
+    {
+        return $this->linkClass;
+    }
+
+    /**
+     * @param $linkRel
+     * @return MenuItem
+     */
+    public function setLinkRel($linkRel)
+    {
+        $this->linkRel = $linkRel;
+        return $this;
+    }
+
+    /**
+     * @return String
+     */
+    public function getLinkRel()
+    {
+        return $this->linkRel;
+    }
+
+    /**
+     * @param $linkTarget
+     * @return MenuItem
+     */
+    public function setLinkTarget($linkTarget)
+    {
+        $this->linkTarget = $linkTarget;
+        return $this;
+    }
+
+    /**
+     * @return String
+     */
+    public function getLinkTarget()
+    {
+        return $this->linkTarget;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLinkAttributes()
+    {
+        $linkAttributes = array();
+
+        if(!empty($this->linkTarget)){
+            $linkAttributes['target'] = $this->linkTarget;
+        }
+        if(!empty($this->linkClass)){
+            $linkAttributes['class'] = $this->linkClass;
+        }
+        if(!empty($this->linkRel)){
+            $linkAttributes['rel'] = $this->linkRel;
+        }
+        return $linkAttributes;
+    }
+
 }
 
