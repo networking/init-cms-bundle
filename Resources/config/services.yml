@@ -341,3 +341,25 @@ services:
         class:  Twig_Extension_Debug
         tags:
              - { name: 'twig.extension' }
+
+
+### monolog logging
+    networking_init_cms.logger:
+        class: Symfony\Bridge\Monolog\Logger
+        arguments: [newo]
+        calls:
+            - [pushHandler, [@networking_init_cms.handler]]
+
+    networking_init_cms.handler:
+        class: Monolog\Handler\StreamHandler
+        # 200 = INFO, see Monolog::Logger for the values of log levels
+        arguments: [%kernel.logs_dir%/%kernel.environment%.changed_entities.log, 200]
+
+    networking_init_cms.entity_changed_listener:
+        class: Networking\InitCmsBundle\EventListener\EntityChangedListener
+        arguments: [@service_container, @networking_init_cms.logger]
+        tags:
+           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
+           - { name: monolog.logger, channel: newo}
