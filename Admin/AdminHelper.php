@@ -1,6 +1,7 @@
 <?php
 
-/*
+/**
+ * This file is part of the Networking package.
  * This file is part of the Networking package.
  *
  * (c) net working AG <info@networking.ch>
