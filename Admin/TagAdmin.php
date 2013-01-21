@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Networking package.
  *
  * (c) net working AG <info@networking.ch>
@@ -52,6 +52,7 @@ class TagAdmin extends Admin
             '_action',
             'actions',
             array(
+                'label' => ' ',
                 'actions' => array(
                     'edit' => array(),
                     'delete' => array()

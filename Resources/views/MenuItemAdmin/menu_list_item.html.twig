@@ -27,16 +27,17 @@ file that was distributed with this source code.
            </a>
            <button class="btn btn-mini actions-toggle show-tooltip" data-original-title="Show Options" >&nbsp;<b class="caret"></b>&nbsp;</button>
            <div class="row-actions">
-               <a  href="{{ admin.generateUrl('delete', {id: node.id}) }}"
-                  class="menu-dialog-link btn btn-mini button-in-row"
-                      data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"data-page_id="{{ node.id }}">
-                      <i class="icon-trash"></i>
-              </a>
+
                <a  href="{{ admin.generateUrl('edit', {id: node.id}) }}"
                   class="menu-dialog-link btn btn-mini button-in-row"
                       data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}" data-page_id="{{ node.id }}">
                       <i class="icon-pencil"></i>
               </a>
+               <a  href="{{ admin.generateUrl('delete', {id: node.id}) }}"
+                                class="menu-dialog-link btn btn-mini button-in-row"
+                                    data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"data-page_id="{{ node.id }}">
+                                    <i class="icon-trash"></i>
+                            </a>
                <button class="btn btn-mini actions-toggle-close"><b class="caret-left caret-button-padding"></b><span class="caret-button-padding-right"></span></button>
            </div>
        </div>

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Networking package.
  *
  * (c) net working AG <info@networking.ch>
@@ -346,10 +346,9 @@ class PageAdmin extends BaseAdmin
             'actions',
             array(
                 'label' => ' ',
-                'template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action.html.twig',
                 'actions' => array(
-                    'edit' => array('template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action_edit.html.twig'),
-                    'delete' => array('template' => 'NetworkingInitCmsBundle:CRUD:cms_list__action_delete.html.twig')
+                    'edit' => array(),
+                    'delete' => array()
                 )
             )
         );
