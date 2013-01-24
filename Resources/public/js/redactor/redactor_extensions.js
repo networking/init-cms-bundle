@@ -267,7 +267,7 @@ RedactorPlugins.cssPlugin = {
 
         var callback = $.proxy(function (obj, e, key) {
             this.saveSelection();
-            this.insertFromMyModal(obj, e, key);
+            this.addStyles(obj, e, key);
 
         }, this);
 
@@ -297,18 +297,20 @@ RedactorPlugins.cssPlugin = {
         this.addBtn('css', 'Css Classes', function () {
         }, dropdown);
     },
-    insertFromMyModal:function (obj, e, key) {
+    addStyles:function (obj, e, key) {
         this.setBuffer();
 
         var text = this.getSelectedHtml();
         var node = this.getCurrentNode();
         var selectedNode = this.getSelectedNode();
 
-
         if (key == 'remove') {
+            if (!jQuery(node).hasClass('redactor_editor') && !jQuery(node).hasClass('redactor_box')) {
             jQuery(node).removeClass();
+            }
         }
         else if (key == 'removeFormatting') {
+
             if (!jQuery(node).hasClass('redactor_editor') && !jQuery(node).hasClass('redactor_box')) {
                 jQuery(node).stripTags();
             }
