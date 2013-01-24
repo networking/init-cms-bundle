@@ -50,12 +50,21 @@ class EntityChangedListener
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
      * @param string $method
      */
-    protected function getLoggingInfo(LifecycleEventArgs $args, $method='')
+    protected function getLoggingInfo(LifecycleEventArgs $args, $method = '')
     {
         $entity = $args->getEntity();
         $security = $this->container->get('security.context');
-        $username = $security->getToken()->getUser()->getUsername();
-        $this->logger->info(sprintf('entity %s', $method), array('username'=>$username, 'class'=>get_class($entity), 'id'=>$entity->getId()));
+        if ($security->getToken()) {
+            $username = $security->getToken()->getUser()->getUsername();
+
+        } else {
+            $username = 'doctrine:fixtures:load!';
+        }
+        $this->logger->info(
+            sprintf('entity %s', $method),
+            array('username' => $username, 'class' => get_class($entity), 'id' => $entity->getId())
+        );
+
     }
 
 }
