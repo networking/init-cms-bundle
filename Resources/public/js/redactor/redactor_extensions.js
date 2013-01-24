@@ -301,7 +301,7 @@ RedactorPlugins.cssPlugin = {
     },
     insertFromMyModal:function (obj, e, key) {
         this.setBuffer();
-        this.restoreSelection();
+
         var text = this.getSelectedHtml();
         var node = this.getCurrentNode();
         var selectedNode = this.getSelectedNode();
@@ -325,7 +325,9 @@ RedactorPlugins.cssPlugin = {
             }
 
         }
-
+        this.saveSelection();
+        this.restoreSelection();
+        this.syncCode();
 
     },
     showTable:function () {
