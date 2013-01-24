@@ -265,8 +265,6 @@ RedactorPlugins.cssPlugin = {
     init:function (options) {
         // Modal's callback
 
-        console.log(this.opts);
-
         var callback = $.proxy(function (obj, e, key) {
             this.saveSelection();
             this.insertFromMyModal(obj, e, key);
@@ -294,7 +292,7 @@ RedactorPlugins.cssPlugin = {
             dropdown[k] = {title:e, callback:callback};
         });
 
-        $('.redactor_toolbar').remove();
+        this.$toolbar.remove()
         this.buildToolbar();
         this.addBtn('css', 'Css Classes', function () {
         }, dropdown);
@@ -311,7 +309,6 @@ RedactorPlugins.cssPlugin = {
             jQuery(node).removeClass();
         }
         else if (key == 'removeFormatting') {
-            console.log(jQuery(node).attr('class'));
             if (!jQuery(node).hasClass('redactor_editor') && !jQuery(node).hasClass('redactor_box')) {
                 jQuery(node).stripTags();
             }
@@ -492,7 +489,6 @@ RedactorPlugins.cssPlugin = {
         this.document.execCommand('insertunorderedlist', false, null);
         var list = jQuery(this.getCurrentNode()).find('li');
 
-        console.log(list.length);
         if (list.length < 1) {
 
             var span = jQuery(this.getParentNode()).children('span');
