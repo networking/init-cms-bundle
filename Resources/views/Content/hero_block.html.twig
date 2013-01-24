@@ -9,16 +9,16 @@ file that was distributed with this source code.
 
 #}
 {% if text is defined %}
-<div class="{% if mediaItems is defined %}span5{% else %}span12{% endif %}">
+<div class="{% if gallery is defined %}span5{% else %}span12{% endif %}">
 	{{ text | raw }}
 </div>
 {% endif %}
-{% if mediaItems is defined %}
+{% if gallery is defined %}
 <div class="span7">
 	<div id="heroCarousel" class="carousel slide">
 		<!-- Carousel items -->
 		<div class="carousel-inner">
-			{% for mediaItem in mediaItems %}
+			{% for mediaItem in gallery.galleryHasMedias %}
 			<div class="item">
 				<img src="{% path mediaItem.media, 'big' %}" alt="" />
 				<div class="carousel-caption">

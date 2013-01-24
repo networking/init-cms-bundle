@@ -12,14 +12,14 @@ file that was distributed with this source code.
 {{ text | raw }}
 {% endif %}
 
-{% if mediaItems is defined %}
+{% if gallery is defined %}
 
 <ul class="thumbnails">
-	{% for mediaItem in mediaItems %}
+	{% for mediaItem in gallery.galleryHasMedias %}
 
   <li>
     <div class="thumbnail">
-	    <a href="{% path mediaItem.media, 'big' %}" rel="prettyPhoto[{{ mediaItem.gallery.name }}]">
+	    <a href="{% path mediaItem.media, 'big' %}" rel="prettyPhoto[{{ gallery.name }}]">
 		    {% thumbnail mediaItem.media, 'small'%}
 	    </a>
       {% if  mediaItem.media.name is defined %}
