@@ -260,8 +260,9 @@ class ContentRoute extends AbstractRoute
         return array(
 	        'route_params' => '',
             '_locale' => $this->getLocale(),
-            '_controller' => $this->getController(),
-            '_template' => $template
+            self::CONTROLLER_NAME => $this->getController(),
+            self::TEMPLATE_NAME => $template,
+            self::CONTENT_OBJECT => $this->content
         );
     }
 }
