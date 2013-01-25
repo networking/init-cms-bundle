@@ -20,7 +20,7 @@ class JSNode extends \Twig_Node
      * @param array $lineno
      * @param null $tag
      */
-    public function __construct(\Twig_NodeInterface $method, $lineno, $tag = null)
+    public function __construct(\Twig_Node $method, $lineno, $tag = null)
     {
         parent::__construct(array('method' => $method), array(), $lineno, $tag);
     }
