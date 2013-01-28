@@ -1,4 +1,5 @@
 if (typeof RedactorPlugins === 'undefined') var RedactorPlugins = {};
+var path = [];
 var cssPluginOptions = {
     modal_table:String() +
         '<div id="redactor_modal_content">' +
@@ -41,6 +42,35 @@ var cssPluginOptions = {
         '<a href="javascript:void(null);" id="redactor_image_delete_btn" class="redactor_modal_btn">' + RLANG._delete + '</a>&nbsp;&nbsp;&nbsp;' +
         '<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
         '<input type="button" name="save" class="redactor_modal_btn" id="redactorSaveBtn" value="' + RLANG.save + '" />' +
+        '</div>',
+
+    modal_file:String() +
+        '<div id="redactor_modal_content">' +
+        '<div id="redactor_tabs">' +
+        '<a href="javascript:void(null);" class="redactor_tabs_act">' + RLANG.upload + '</a>' +
+        '<a href="javascript:void(null);">' + RLANG.choose + '</a>' +
+        '</div>' +
+        '<form id="redactorUploadFileForm" method="post" action="" enctype="multipart/form-data">' +
+
+        '<div id="redactor_tab1" class="redactor_tab">' +
+        '<label>Name (optional)</label>' +
+        '<input type="text" id="redactor_filename" class="redactor_input" />' +
+        '<div style="margin-top: 7px;">' +
+        '<input type="file" id="redactor_file" name="file" />' +
+        '</div>' +
+        '</div>' +
+        '<div id="redactor_tab2" class="redactor_tab" style="display: none;">' +
+        '<label>Name (optional)</label>' +
+        '<input type="text" id="redactor_filename_file" class="redactor_input" />' +
+        '<div id="redactor_file_box"></div>' +
+        '<label><input type="checkbox" id="redactor_link_blank"> ' + RLANG.link_new_tab + '</label>' +
+        '</div>' +
+
+        '</form><br>' +
+        '</div>' +
+        '<div id="redactor_modal_footer">' +
+        '<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+        '<input type="button" class="redactor_modal_btn" id="redactor_insert_link_btn" value="' + RLANG.insert + '" />' +
         '</div>',
     toolbar:{
         html:{
@@ -271,6 +301,15 @@ RedactorPlugins.cssPlugin = {
 
         }, this);
 
+        this.path = [];
+        var editor = $('.redactor_editor');
+        var $obj = this;
+        for (var i = 0, len = editor.length; i < len; ++i) {
+            editor[i].onclick = function (evt) {
+                $obj.updateTagTree(evt)
+            };
+
+        }
 
         var dropdown = {
             removeFormatting:{
@@ -283,12 +322,14 @@ RedactorPlugins.cssPlugin = {
             }
         }
 
+        $('.redactor_box').append('<div class="redactor_path_bar"></div>');
+
+
         var styles = this.opts.cssStyles;
         this.opts = $.extend(this.opts, cssPluginOptions);
 
+
         jQuery.each(styles, function (k, e) {
-
-
             dropdown[k] = {title:e, callback:callback};
         });
 
@@ -306,7 +347,7 @@ RedactorPlugins.cssPlugin = {
 
         if (key == 'remove') {
             if (!jQuery(node).hasClass('redactor_editor') && !jQuery(node).hasClass('redactor_box')) {
-            jQuery(node).removeClass();
+                jQuery(node).removeClass();
             }
         }
         else if (key == 'removeFormatting') {
@@ -501,8 +542,317 @@ RedactorPlugins.cssPlugin = {
                 span.replaceWith(span.text());
             })
         }
+    },
+    // INSERT FILE
+    showFile:function () {
+        this.saveSelection();
+
+        var callback = $.proxy(function () {
+
+            this.insert_link_node = false;
+            var sel = this.getSelection();
+            var url = '', text = '', target = '';
 
 
+            if (this.browser('msie')) {
+                var parent = this.getParentNode();
+                if (parent.nodeName === 'A') {
+                    this.insert_link_node = $(parent);
+                    text = this.insert_link_node.text();
+                    url = this.insert_link_node.attr('href');
+                    target = this.insert_link_node.attr('target');
+
+                }
+                else {
+                    if (this.oldIE()) {
+                        text = sel.text;
+                    }
+                    else {
+                        text = sel.toString();
+                    }
+                }
+            }
+            else {
+                if (sel && sel.anchorNode && sel.anchorNode.parentNode.tagName === 'A') {
+                    url = $(sel.anchorNode.parentNode).attr('href');
+                    text = sel.anchorNode.parentNode.text;
+                    target = sel.anchorNode.parentNode.target;
+
+                    if (sel.toString() === '') {
+                        this.insert_link_node = sel.anchorNode.parentNode;
+                    }
+                } else {
+                    text = sel.toString();
+                }
+            }
+
+            $('#redactor_filename').val(text);
+            $('#redactor_filename_file').val(text);
+
+            if (target === '_blank') {
+                $('#redactor_link_blank').attr('checked', true);
+            }
+
+            // json
+            if (this.opts.fileGetJson !== false) {
+                $.getJSON(this.opts.fileGetJson, $.proxy(function (data) {
+
+                    var folders = {};
+                    var z = 0;
+
+                    // folders
+                    $.each(data, $.proxy(function (key, val) {
+                        if (typeof val.folder !== 'undefined') {
+                            z++;
+                            folders[val.folder] = z;
+                        }
+
+                    }, this));
+
+                    var folderclass = false;
+                    $.each(data, $.proxy(function (key, val) {
+                        // title
+                        var filetitle = '';
+                        if (typeof val.title !== 'undefined') {
+                            filetitle = val.title;
+                        }
+
+                        var folderkey = 0;
+                        if (!$.isEmptyObject(folders) && typeof val.folder !== 'undefined') {
+                            folderkey = folders[val.folder];
+                            if (folderclass === false) {
+                                folderclass = '.redactorfolder' + folderkey;
+                            }
+                        }
+
+                        var link = $('<input type="radio" name="redactor_file_name"  class="redactorfolder redactorfolder' + folderkey + '" value="' + val.path + '"><label>' + filetitle + '</label></br>');
+                        $('#redactor_file_box').append(link);
+
+
+                    }, this));
+
+                    $('input[value="' + url + '"]').attr('checked', true);
+                    $('#redactor_insert_link_btn').click($.proxy(this.fileSetLink, this));
+
+                    // folders
+                    if (!$.isEmptyObject(folders)) {
+                        $('.redactorfolder').hide();
+                        $(folderclass).show();
+
+                        var onchangeFunc = function (e) {
+                            $('.redactorfolder').hide();
+                            $('.redactorfolder' + $(e.target).val()).show();
+                        }
+
+                        var select = $('<select id="redactor_file_box_select">');
+                        $.each(folders, function (k, v) {
+                            select.append($('<option value="' + v + '">' + k + '</option>'));
+                        });
+
+                        $('#redactor_file_box').before(select);
+                        select.change(onchangeFunc);
+                    }
+
+                }, this));
+            }
+            else {
+                $('#redactor_tabs a').eq(1).remove();
+            }
+
+
+            // dragupload
+            if (this.opts.uploadCrossDomain === false && this.isMobile() === false) {
+                $('#redactor_file').dragupload(
+                    {
+                        url:this.opts.fileUpload,
+                        uploadFields:this.opts.uploadFields,
+                        success:$.proxy(this.fileUploadCallback, this),
+                        error:$.proxy(this.opts.fileUploadErrorCallback, this)
+                    });
+            }
+
+            this.uploadInit('redactor_file',
+                {
+                    auto:true,
+                    url:this.opts.fileUpload,
+                    success:$.proxy(this.fileUploadCallback, this),
+                    error:$.proxy(this.opts.fileUploadErrorCallback, this)
+                });
+
+        }, this);
+
+        this.modalInit(RLANG.file, this.opts.modal_file, 500, callback);
+    },
+    insertLink:function () {
+        var tab_selected = $('#redactor_tab_selected').val();
+        var link = '', text = '', target = '';
+
+        if (tab_selected === '1') // url
+        {
+            link = $('#redactor_link_url').val();
+            text = $('#redactor_link_url_text').val();
+
+            if ($('#redactor_link_blank').attr('checked')) {
+                if (this.insert_link_node) {
+                    target = '_blank';
+                } else {
+                    target = ' target="_blank"';
+                }
+            }
+
+            // test url
+            var pattern = '/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
+            //var pattern = '((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}';
+            var re = new RegExp('^(http|ftp|https)://' + pattern, 'i');
+            var re2 = new RegExp('^' + pattern, 'i');
+            if (link.search(re) == -1 && link.search(re2) == 0 && this.opts.protocol !== false) {
+                link = this.opts.protocol + link;
+            }
+
+        }
+        else if (tab_selected === '2') // mailto
+        {
+            link = 'mailto:' + $('#redactor_link_mailto').val();
+            text = $('#redactor_link_mailto_text').val();
+        }
+        else if (tab_selected === '3') // anchor
+        {
+            link = '#' + $('#redactor_link_anchor').val();
+            text = $('#redactor_link_anchor_text').val();
+        }
+
+        this._insertLink('<a href="' + link + '"' + target + '>' + text + '</a>', $.trim(text), link, target);
+
+    },
+    fileSetLink:function (e) {
+
+
+        var target = '';
+        var link = $('input[name="redactor_file_name"]:checked').val()
+        var text = $('#redactor_filename_file').val();
+
+        if ($('#redactor_link_blank').attr('checked')) {
+            if (this.insert_link_node) {
+                target = '_blank';
+            } else {
+                target = ' target="_blank"';
+            }
+        }
+
+        // test url
+        var pattern = '/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
+        //var pattern = '((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}';
+        var re = new RegExp('^(http|ftp|https)://' + pattern, 'i');
+        var re2 = new RegExp('^' + pattern, 'i');
+        if (link.search(re) == -1 && link.search(re2) == 0 && this.opts.protocol !== false) {
+            link = this.opts.protocol + link;
+        }
+
+        this._insertLink('<a href="' + link + '"' + target + '>' + text + '</a>', $.trim(text), link, target);
+        return false;
+    },
+    updateTagTree:function (evt) {
+        var path = [];
+        var list = [];
+        if (!evt) evt = window.event;
+        var element = evt.target || evt.srcElement;
+        $('.redactor_path_bar').html('');
+        var p = $('.redactor_path_bar');
+        var searchName = '';
+        while (element && !$(element).hasClass('redactor_editor')) {
+            var tagName = element.localName;
+            var id = '#';
+            var className = '.';
+            if (element.id) {
+                tagName = tagName + id + element.id;
+            }
+            if (element.className) {
+                tagName = tagName + className + element.className;
+            }
+
+            searchName = tagName + ' ' + searchName;
+            var k = this.getNodeIndex(element);
+            var parentIndex = this.getNodeIndex(element.parentNode);
+
+
+            list.push(element);
+
+            var link = $('<a href="javascript:void(null);" class="redactor_path_link" id="pathItem_' + this.getNodeDepth() + '"> ' + tagName + '</a>');
+            link.click($.proxy(this.hightLightNode, this, {'tagName':tagName, 'depth':this.getNodeDepth(element), 'index': k, 'parentIndex': parentIndex}));
+            if (p.children().length > 0) {
+                p.prepend('\u00a0\u00bb ');
+                p.prepend(link);
+            } else {
+                p.append(link);
+            }
+
+
+
+
+            element = element.parentNode;
+        }
+    },
+    hightLightNode:function (args) {
+        console.log(args);
+
+        var nodes = $(this.$editor).find(args.tagName);
+        var editor = this;
+        var node = null;
+        $.each(nodes, function(k, element){
+
+            console.log(editor.getNodeIndex(element));
+            var k = editor.getNodeIndex(element);
+            var parentIndex = editor.getNodeIndex(element.parentNode);
+
+            if(editor.getNodeDepth(element) == args.depth && k == args.index && parentIndex == args.parentIndex){
+                node = element;
+            }
+
+        });
+        this.selectItem(node);
+    },
+    getNodeIndex: function(element){
+        var k = -1, e = element;
+
+        while (e && !$(e).hasClass('redactor_editor')) {
+            if ("previousSibling" in e) {
+                e = e.previousSibling;
+
+                k = k + 1;
+            }
+            else if("parentNode" in e){
+                e = e.parentNode;
+
+                k = k + 1;
+            }
+            else {
+                k = -1;
+                break;
+            }
+        }
+        return k;
+    },
+    getNodeDepth:function (node) {
+        var selectedNode = node != null ? node : this.getCurrentNode()
+        var nodeDepth = $(selectedNode).parents().length;
+        var editorDepth = this.$el.parents().length;
+        return (nodeDepth - editorDepth);
+    },
+    selectItem:function(text) {
+        var doc = document
+            , range, selection
+        ;
+        if (doc.body.createTextRange) { //ms
+            range = doc.body.createTextRange();
+            range.moveToElementText(text);
+            range.select();
+        } else if (window.getSelection) { //all others
+            selection = window.getSelection();
+            range = doc.createRange();
+            range.selectNodeContents(text);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
     }
 }
 

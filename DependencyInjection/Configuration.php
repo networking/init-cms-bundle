@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->scalarNode('name')->isRequired()->end()
+                            ->scalarNode('icon')->end()
                             ->arrayNode('zones')
                             ->requiresAtLeastOneElement()
                                 ->prototype('array')

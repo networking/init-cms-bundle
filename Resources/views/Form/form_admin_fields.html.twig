@@ -215,3 +215,23 @@ file that was distributed with this source code.
     </script>
 {% endblock %}
 
+{% block networking_type_iconradio_widget %}
+    {% spaceless %}
+        {% if expanded %}
+            <div {{ block('widget_container_attributes') }}>
+                {% for key, child in form %}
+                    <div style="float:left;{% if key > 0 and key is odd %}margin-left:40px;{% endif %}">
+                        {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
+                        {% if icons[choices[key].value] %}
+                            <img src="{{ asset(icons[choices[key].value]) }}" />
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div style="height:30px;clear:both;"></div>
+            </div>
+        {% else %}
+            {# just let the choice widget render the select tag #}
+            {{ block('choice_widget') }}
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}
