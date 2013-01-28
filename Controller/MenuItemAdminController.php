@@ -27,6 +27,7 @@ use Networking\InitCmsBundle\Entity\MenuItem,
 class MenuItemAdminController extends CmsCRUDController
 {
 
+    protected $currentMenuLanguage = '';
 
     /**
      * return the Response object associated to the list action
@@ -41,7 +42,6 @@ class MenuItemAdminController extends CmsCRUDController
             throw new AccessDeniedException();
         }
         $menus = array();
-        $locale = '';
 
         /** @var $repository MenuItemRepository */
         $repository = $this->getDoctrine()
@@ -52,27 +52,32 @@ class MenuItemAdminController extends CmsCRUDController
          * use the submitted locale for list, else set the locale
          * to the users default within the availble CMS frontend languages
          */
-        if ($filterParameters = $this->admin->getFilterParameters()) {
+        if ($postArray = $this->getRequest()->get($this->admin->getUniqid())) {
+
+            // posted locale
+            if (array_key_exists('locale', $this->getRequest()->get($this->admin->getUniqid()))) {
+                $this->currentMenuLanguage = $postArray['locale'];
+            }
+        } elseif ($filterParameters = $this->admin->getFilterParameters()) {
+
             // filter locale
             if (array_key_exists('locale', $filterParameters) && $filterParameters['locale']['value']) {
-                $locale = $filterParameters['locale']['value'];
+                $this->currentMenuLanguage = $filterParameters['locale']['value'];
             }
-        } elseif ($postArray = $this->getRequest()->get($this->admin->getUniqid())) {
-            // posted locale
-            if (array_key_exists('locale', $postArray)) {
-                $locale = $postArray['locale'];
-            }
-        } else {
-            // fallback to default
-            $locale = $this->admin->getDefaultLocale();
         }
 
-        if(!$locale){
+        if (!$this->currentMenuLanguage) {
+            // fallback to default
+            $this->currentMenuLanguage = $this->admin->getDefaultLocale();
+        }
+
+
+        if (!$this->currentMenuLanguage) {
             throw new \Sonata\AdminBundle\Exception\NoValueException('No locale has been provided to generate a menu list');
         }
 
         //use one of the locale to filter the list of menu entries (see above
-        $rootNodes = $repository->getRootNodesByLocale($locale);
+        $rootNodes = $repository->getRootNodesByLocale($this->currentMenuLanguage);
 
         $childOpen = function ($node) {
             return sprintf('<li class="table-row-style" id="listItem_%s">', $node['id']);
@@ -157,7 +162,9 @@ class MenuItemAdminController extends CmsCRUDController
 
         if ($this->getRequest()->getMethod() == 'DELETE') {
             try {
+                $this->currentMenuLanguage = $object->getLocale();
                 $this->admin->delete($object);
+
                 if ($this->isXmlHttpRequest()) {
                     return $this->renderJson(
                         array(
