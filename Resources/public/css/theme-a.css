@@ -5439,6 +5439,11 @@ li.table-row-style .menu-item-link {
     text-align: right;
 }
 
-.networking-sort-zone .modal{
+.page-form .modal{
+    margin-left: -350px;
+    margin-top: -350px;
     width: 700px;
+}
+.page-form .modal-body{
+    max-height: 650px;
 }

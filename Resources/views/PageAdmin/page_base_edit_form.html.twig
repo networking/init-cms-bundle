@@ -23,7 +23,7 @@ file that was distributed with this source code.
         {% include 'NetworkingInitCmsBundle:PageAdmin:page_settings_fields.html.twig' %}
     </div>
 {% else %}
-    <form class="form-vertical"
+    <form class="form-vertical page-form"
           action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
           method="POST">
         {% if form.vars.errors|length > 0 %}
