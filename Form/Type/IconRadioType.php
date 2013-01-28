@@ -29,14 +29,6 @@ class IconRadioType extends ChoiceType
     /**
      * @return string
      */
-    public function getParent()
-    {
-        return 'choice';
-    }
-
-    /**
-     * @return string
-     */
     public function getName()
     {
         return 'networking_type_iconradio';
@@ -52,6 +44,7 @@ class IconRadioType extends ChoiceType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        parent::buildView($view, $form, $options);
         $view->vars = array_replace($view->vars, array(
             'icons' => $options['icons'],
         ));
