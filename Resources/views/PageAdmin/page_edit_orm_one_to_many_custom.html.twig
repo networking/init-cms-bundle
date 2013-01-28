@@ -60,8 +60,8 @@ file that was distributed with this source code.
                             </div>
                             <div class="modal-footer">
                                 {{ form_widget(nested_field) }}
-                                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                <a href="#" onclick="return start_save_content{{ id }}(this);" data-dismiss="modal" class="btn btn-primary">Save changes</a>
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
+                                <a href="#" onclick="return start_save_content{{ id }}(this);" data-dismiss="modal" class="btn btn-primary">{{ 'button.save'|trans({}, 'PageAdmin') }}</a>
                             </div>
                             {% else %}
                                 {% if loop.first %}
@@ -87,6 +87,7 @@ file that was distributed with this source code.
                                                 {% endif %}
                                             {% endblock %}
                                             <div class="controls sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }} {% if errors|length > 0 %}sonata-ba-field-error{% endif %}">
+
                                                 {{ form_widget(nested_field) }}
                                                 {% if errors|length > 0 %}
                                                     <div class="help-inline sonata-ba-field-error-messages">

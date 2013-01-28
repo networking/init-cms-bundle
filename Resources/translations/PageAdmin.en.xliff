@@ -240,10 +240,13 @@
                 <source>label.exit</source>
                 <target>Exit</target>
             </trans-unit>
-
             <trans-unit id="error.file_upload_size">
                 <source>error.file_upload_size</source>
                 <target>File Size to big. Maximum file upload: %max_server_size%</target>
+            </trans-unit>
+            <trans-unit id="button.save">
+                <source>button.save</source>
+                <target>Save</target>
             </trans-unit>
         </body>
     </file>
