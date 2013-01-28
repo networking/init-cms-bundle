@@ -85,7 +85,7 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
 
             $translation = $content->getAllTranslations()->get($locale);
 
-            if ($snapshotId = $translation->getId()) {
+            if ($translation && $snapshotId = $translation->getId()) {
                 /** @var $snapshot PageSnapshot */
                 $snapshot = $this->container->get('doctrine')->getRepository($content->getSnapshotClassType())->findOneBy(array('resourceId' => $snapshotId));
 

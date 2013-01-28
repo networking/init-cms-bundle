@@ -11,7 +11,6 @@ file that was distributed with this source code.
 {% autoescape false %}
 <!-- edit one association -->
 <script type="text/javascript">
-
 // handle the update bind
 var field_update_{{ id }} = function (event) {
     event.preventDefault();
@@ -193,8 +192,7 @@ function submitLayoutSort(sortIds, zone) {
     return dfd.promise();
 }
 
-function uploadError(xhr)
-{
+function uploadError(xhr) {
     alert(xhr.error);
     console.log(xhr);
 }
@@ -203,12 +201,19 @@ function onAfterLoad() {
 
     apply_position_value_{{ id }}();
 
+
     jQuery('.tinymce').each(function () {
+
         jQuery(this).redactor({
-            imageUpload:'{{ path('admin_networking_initcms_page_uploadTextBlockImage') }}',
-            imageUploadErrorCallback: function(editor, xhr){
+            focus:true,
+            imageGetJson:'{{ path('admin_networking_media_media_uploadedTextBlockImage') }}',
+            imageUpload:'{{ path('admin_networking_media_media_uploadTextBlockImage') }}',
+            imageUploadErrorCallback:function (editor, xhr) {
                 uploadError(xhr)
-            }
+            },
+            plugins:['cssPlugin'],
+            cssStyles:{'color-draft':'the color blue', 'white':'Very tame'},
+            minHeight:300
         });
     });
 
@@ -289,8 +294,10 @@ function onAfterLoad() {
 
     onAfterLoad();
 
+
 })(jQuery);
 </script>
 
 <!-- / edit one association -->
 {% endautoescape %}
+

@@ -45,18 +45,18 @@ file that was distributed with this source code.
             <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
 
                 {{ 'message.translation_link'|trans({'%object%': page, '%original_language%': original_language, '%language%': language}, admin.translationDomain) }}
+                <table class="table table-hover table-compact">
+                    <thead>
+                    <tr>
+                        <th style="width:5%"></th>
+                        <th id="working-title"
+                            style="width:25%">{{ 'page.title'|trans({}, admin.translationDomain) }}</th>
+                        <th id="page-status" style="width:10%"></th>
+                        <th id="page-url" style="width:50%">URL</th>
+                    </tr>
+                    </thead>
+                    {% for page in pages %}
 
-                {% for page in pages %}
-                    <table class="table table-hover table-compact">
-                        <thead>
-                        <tr>
-                            <th style="width:5%"></th>
-                            <th id="working-title"
-                                style="width:25%">{{ 'page.title'|trans({}, admin.translationDomain) }}</th>
-                            <th id="page-status" style="width:10%"></th>
-                            <th id="page-url" style="width:50%">URL</th>
-                        </tr>
-                        </thead>
                         <tr>
                             <td style="vertical-align: middle;"><input type="radio" name="page" value="{{ page.id }}"/>
                             </td>
@@ -67,8 +67,9 @@ file that was distributed with this source code.
                             <td style="vertical-align: middle;">{{ page.fullPath }}</td>
 
                         </tr>
-                    </table>
-                {% endfor %}
+
+                    {% endfor %}
+                </table>
 
             </div>
             <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
@@ -77,7 +78,8 @@ file that was distributed with this source code.
                 {#<input type="hidden" value="DELETE" name="_method" />#}
 
                 {% if app.request.isxmlhttprequest %}
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+                    <button class="btn" data-dismiss="modal"
+                            aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                 {% else %}
                     <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">
                         {{ 'button.cancel'|trans({}, admin.translationDomain) }}
@@ -85,7 +87,7 @@ file that was distributed with this source code.
                 {% endif %}
 
                 <input type="submit" class="btn btn-custom"
-                                           value="{{ 'link.link'|trans({}, admin.translationDomain) }}"/>
+                       value="{{ 'link.link'|trans({}, admin.translationDomain) }}"/>
 
                 {#{% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}#}
                 {#{{ 'delete_or'|trans({}, 'SonataAdminBundle') }}#}

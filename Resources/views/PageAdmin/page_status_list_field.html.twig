@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'NetworkingInitCmsBundle:CRUD:cms_list_field.html.twig' %}
+{% extends 'NetworkingInitCmsBundle:CRUD:base_list_field.html.twig' %}
 
 {% block field %}
     <span class="{% if object.status == 'status_draft' %}color-draft{% else %}info-soft{% endif %}">{{ value|trans({}, admin.translationDomain) }}</span>

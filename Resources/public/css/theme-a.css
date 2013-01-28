@@ -5434,3 +5434,7 @@ li.table-row-style .menu-item-link {
 .table th.sonata-ba-list-field-header-actions{
     text-align: right;
 }
+
+.networking-sort-zone .modal{
+    width: 700px;
+}
