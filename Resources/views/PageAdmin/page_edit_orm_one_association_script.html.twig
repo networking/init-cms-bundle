@@ -211,6 +211,8 @@ function onAfterLoad() {
             imageUploadErrorCallback:function (editor, xhr) {
                 uploadError(xhr)
             },
+            fileGetJson: '{{ path('admin_networking_media_media_uploadedTextBlockFile') }}',
+            fileUpload:'{{ path('admin_networking_media_media_uploadTextBlockFile') }}',
             plugins:['cssPlugin'],
             cssStyles:{'color-draft':'the color blue', 'white':'Very tame'},
             minHeight:300
