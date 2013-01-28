@@ -53,6 +53,15 @@ class MenuItemAdmin extends BaseAdmin
             $locale = $this->getRequest()->getLocale();
         }
 
+        $uniqId = $this->getUniqid();
+
+        if($postArray = $this->getRequest()->get($uniqId)){
+           if(array_key_exists('locale', $postArray)){
+               $locale = $postArray['locale'];
+           }
+        }
+
+
         $er = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:MenuItem');
         $id = $this->getRequest()->get('id');
 

@@ -40,19 +40,38 @@ class MenuItemAdminController extends CmsCRUDController
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
-
-        $locale = $this->admin->getDefaultLocale();
         $menus = array();
+        $locale = '';
+
         /** @var $repository MenuItemRepository */
         $repository = $this->getDoctrine()
             ->getRepository('NetworkingInitCmsBundle:MenuItem');
 
+        /*
+         * if the list was filtered or a new menu entry was posted,
+         * use the submitted locale for list, else set the locale
+         * to the users default within the availble CMS frontend languages
+         */
         if ($filterParameters = $this->admin->getFilterParameters()) {
+            // filter locale
             if (array_key_exists('locale', $filterParameters) && $filterParameters['locale']['value']) {
                 $locale = $filterParameters['locale']['value'];
             }
+        } elseif ($postArray = $this->getRequest()->get($this->admin->getUniqid())) {
+            // posted locale
+            if (array_key_exists('locale', $postArray)) {
+                $locale = $postArray['locale'];
+            }
+        } else {
+            // fallback to default
+            $locale = $this->admin->getDefaultLocale();
         }
 
+        if(!$locale){
+            throw new \Sonata\AdminBundle\Exception\NoValueException('No locale has been provided to generate a menu list');
+        }
+
+        //use one of the locale to filter the list of menu entries (see above
         $rootNodes = $repository->getRootNodesByLocale($locale);
 
         $childOpen = function ($node) {
@@ -62,7 +81,11 @@ class MenuItemAdminController extends CmsCRUDController
         $controller = $this;
         $nodeDecorator = function ($node) use ($admin, $controller, $repository) {
             $node = $repository->find($node['id']);
-            return $controller->renderView('NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig', array('admin' => $admin, 'node' => $node));
+
+            return $controller->renderView(
+                'NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig',
+                array('admin' => $admin, 'node' => $node)
+            );
         };
 
         foreach ($rootNodes as $rootNode) {
@@ -102,13 +125,16 @@ class MenuItemAdminController extends CmsCRUDController
             );
         }
 
-        return $this->render($this->admin->getTemplate('list'), array(
-            'action' => 'list',
-            'form' => $formView,
-            'datagrid' => $datagrid,
-            'menus' => $menus,
-            'action' => 'navigation'
-        ));
+        return $this->render(
+            $this->admin->getTemplate('list'),
+            array(
+                'action' => 'list',
+                'form' => $formView,
+                'datagrid' => $datagrid,
+                'menus' => $menus,
+                'action' => 'navigation'
+            )
+        );
     }
 
 
@@ -133,19 +159,23 @@ class MenuItemAdminController extends CmsCRUDController
             try {
                 $this->admin->delete($object);
                 if ($this->isXmlHttpRequest()) {
-                    return $this->renderJson(array(
-                        'result' => 'ok',
-                        'objectId' => $this->admin->getNormalizedIdentifier($object)
-                    ));
+                    return $this->renderJson(
+                        array(
+                            'result' => 'ok',
+                            'objectId' => $this->admin->getNormalizedIdentifier($object)
+                        )
+                    );
                 } else {
                     $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
                 }
             } catch (ModelManagerException $e) {
                 if ($this->isXmlHttpRequest()) {
-                    return $this->renderJson(array(
-                        'result' => 'error',
-                        'objectId' => $this->admin->getNormalizedIdentifier($object)
-                    ));
+                    return $this->renderJson(
+                        array(
+                            'result' => 'error',
+                            'objectId' => $this->admin->getNormalizedIdentifier($object)
+                        )
+                    );
                 } else {
                     $this->get('session')->setFlash('sonata_flash_error', 'flash_delete_error');
                 }
@@ -155,10 +185,13 @@ class MenuItemAdminController extends CmsCRUDController
             return new RedirectResponse($this->admin->generateUrl('list'));
         }
 
-        return $this->render($this->admin->getTemplate('delete'), array(
-            'object' => $object,
-            'action' => 'delete'
-        ));
+        return $this->render(
+            $this->admin->getTemplate('delete'),
+            array(
+                'object' => $object,
+                'action' => 'delete'
+            )
+        );
     }
 
     /**
@@ -204,7 +237,9 @@ class MenuItemAdminController extends CmsCRUDController
      */
     public function ajaxControllerAction(Request $request)
     {
-        $operation = $request->request->get('operation') ? $request->request->get('operation') : $request->query->get('operation');
+        $operation = $request->request->get('operation') ? $request->request->get('operation') : $request->query->get(
+            'operation'
+        );
 
         return new JsonResponse($this->$operation());
     }
@@ -224,7 +259,9 @@ class MenuItemAdminController extends CmsCRUDController
         foreach ($nodes as $node) {
             /** @var $menuItem MenuItem */
             $menuItem = $repository->find($node['item_id']);
-            if (!$menuItem->getPage()) continue;
+            if (!$menuItem->getPage()) {
+                continue;
+            }
 
             if ($node['parent_id']) {
                 $parent = $repository->find($node['parent_id']);
