@@ -45,6 +45,13 @@ services:
         tags:
           - { name: form.type, alias: networking_type_autocomplete}
 
+    networking.admin.form.type.iconradio:
+        class: Networking\InitCmsBundle\Form\Type\IconradioType
+        arguments:
+            - "%networking_init_cms.page.templates%"
+        tags:
+          - { name: form.type, alias: networking_type_iconradio}
+
 #    sonata.admin.builder.orm_list:
 #        class: Networking\InitCmsBundle\Builder\ListBuilder
 #        arguments: [@sonata.admin.guesser.orm_list_chain]

@@ -407,6 +407,7 @@ class NetworkingHelperExtension extends \Twig_Extension
             case 'choice':
             case 'sonata_type_translatable_choice':
             case 'networking_type_autocomplete':
+            case 'networking_type_iconradio':
             case 'entity':
                 $choices = $formView->vars['choices'];
                 $preferredChoices = $formView->vars['preferred_choices'];

@@ -161,10 +161,10 @@ class PageAdmin extends BaseAdmin
         )
             ->add(
             'template',
-            'choice',
+            'networking_type_iconradio',
             array(
                 'expanded' => true,
-                'choices' => $this->getPageTemplates()
+                'choices' => $this->getPageTemplates(),
             )
         )
             ->end();
@@ -499,6 +499,19 @@ class PageAdmin extends BaseAdmin
 
         return $choices;
     }
+
+    protected function getPageTemplateIcons()
+    {
+        $icons = array();
+
+        $templates = $this->container->getParameter('networking_init_cms.page.templates');
+        foreach ($templates as $key => $template) {
+            $icons[$key] = isset($template['icon'])?$template['icon']:'';
+        }
+
+        return $icons;
+    }
+
 
     /**
      * @return array
