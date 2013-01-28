@@ -117,11 +117,17 @@ class NetworkingHelperExtension extends \Twig_Extension
     {
         if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
-            $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
+            $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find(
+                $layoutBlock->getObjectId()
+            );
 
         } else {
             // Live View
-            $contentItem = $this->getService('serializer')->deserialize($serializedContent, $layoutBlock->getClassType(), 'json');
+            $contentItem = $this->getService('serializer')->deserialize(
+                $serializedContent,
+                $layoutBlock->getClassType(),
+                'json'
+            );
         }
 
         $options = $contentItem->getTemplateOptions();
@@ -141,7 +147,9 @@ class NetworkingHelperExtension extends \Twig_Extension
     {
 
         if ($content->getObjectId()) {
-            $contentItem = $this->getService('doctrine')->getRepository($content->getClassType())->find($content->getObjectId());
+            $contentItem = $this->getService('doctrine')->getRepository($content->getClassType())->find(
+                $content->getObjectId()
+            );
         } else {
 
             $classType = $content->getClassType();
@@ -190,7 +198,9 @@ class NetworkingHelperExtension extends \Twig_Extension
         $bundle = $bundleGuesser->getBundleShortName();
         $path = $this->container->get('kernel')->getBundle($bundle)->getPath();
 
-        $iconName = 'icon_' . strtolower($admin->getLabel()) . '_' . $size . $state;
+        $slug = self::slugify($admin->getLabel());
+
+        $iconName = 'icon_' . $slug . '_' . $size . $state;
 
         $folders = array('img/icons', 'image/icons', 'img', 'image');
 
@@ -199,13 +209,49 @@ class NetworkingHelperExtension extends \Twig_Extension
         foreach ($folders as $folder) {
             foreach ($imageType as $type) {
                 $icon = $folder . DIRECTORY_SEPARATOR . $iconName . '.' . $type;
-                if (file_exists($path . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $icon)) {
-                    $imagePath = 'bundles' . DIRECTORY_SEPARATOR . str_replace('bundle', '', strtolower($bundle)) . DIRECTORY_SEPARATOR . $icon;
+                if (file_exists(
+                    $path . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $icon
+                )
+                ) {
+                    $imagePath = 'bundles' . DIRECTORY_SEPARATOR . str_replace(
+                        'bundle',
+                        '',
+                        strtolower($bundle)
+                    ) . DIRECTORY_SEPARATOR . $icon;
                 }
             }
         }
 
         return $imagePath;
+    }
+
+    /**
+     * Modifies a string to remove all non ASCII characters and spaces.
+     */
+    static public function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\\pL\d]+~u', '_', $text);
+
+        // trim
+        $text = trim($text, '_');
+
+        // transliterate
+        if (function_exists('iconv')) {
+            $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        }
+
+        // lowercase
+        $text = strtolower($text);
+
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
     }
 
     /**
@@ -273,6 +319,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function getShortName($class)
     {
         $reflector = new \ReflectionClass(get_class($class));
+
         return $reflector->getShortName();
     }
 
@@ -388,8 +435,12 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $object
      * @param $formView
      */
-    public function getFieldToString($template, $object, \Symfony\Component\Form\FormView $formView, $translationDomain = null)
-    {
+    public function getFieldToString(
+        $template,
+        $object,
+        \Symfony\Component\Form\FormView $formView,
+        $translationDomain = null
+    ) {
 
         /** @var $fieldDescription \Sonata\DoctrineORMAdminBundle\Admin\FieldDescription */
         $fieldDescription = $formView->vars['sonata_admin']['field_description'];
@@ -486,7 +537,11 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     public static function camelize($property)
     {
-        return preg_replace(array('/(^|_| )+(.)/e', '/\.(.)/e'), array("strtoupper('\\2')", "'_'.strtoupper('\\1')"), $property);
+        return preg_replace(
+            array('/(^|_| )+(.)/e', '/\.(.)/e'),
+            array("strtoupper('\\2')", "'_'.strtoupper('\\1')"),
+            $property
+        );
     }
 
     /**

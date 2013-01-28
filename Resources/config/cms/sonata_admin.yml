@@ -30,16 +30,19 @@ sonata_admin:
     dashboard:
         blocks:
             # display two dashboard blocks
-            - { position: left,  type: sonata.admin.block.admin_list, settings: { groups: [Pages] } }
-            - { position: right, type: sonata.admin.block.admin_list, settings: { groups: [Media, Users] } }
+            - { position: left,  type: sonata.admin.block.admin_list, settings: { groups: [Pages, Media] } }
+            - { position: right, type: sonata.admin.block.admin_list, settings: { groups: [Config, Users] } }
 
         groups:
             Pages:
                 label: Pages
-                items: [networking_init_cms.page.admin.page, networking_init_cms.menu.admin.menu_item, networking_init_cms.page.admin.tag]
+                items: [networking_init_cms.page.admin.page, networking_init_cms.menu.admin.menu_item]
             Media:
                 label: Media
-                items: [sonata.media.admin.media, sonata.media.admin.gallery]
+                items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.page.admin.tag]
+            Config:
+                label: Config
+                items: [networking_init_cms.page.admin.help_text]
             Users:
                 label: Users
                 items: [sonata.user.admin.user, sonata.user.admin.group ]

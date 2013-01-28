@@ -11,9 +11,39 @@ file that was distributed with this source code.
 {% extends "NetworkingInitCmsBundle::admin_layout.html.twig" %}
 
 {% block title %}
-  {{ "help_title" | trans({'%admin_title%':admin_title, '%action%':action}, "AdminHelp")}}
+    {{ help_text.title }}
 {% endblock%}
 
+{% block language_indicator %}
+{% endblock %}
+
+{% block sonata_top_bar_nav %}
+    <ul>
+
+    {% for element in help_nav %}
+        <h2>{{ element.group_name }}</h2>
+            <ul>
+            {% for row in element.group_items %}
+                {% if adminCode == row.adminCode and action == row.action %}
+                    {% set strongTag = '<strong>' %}
+                    {% set strongEndTag = '</strong>' %}
+                {% else %}
+                    {% set strongTag = '' %}
+                    {% set strongEndTag = '' %}
+                {% endif %}
+
+                <li>{{ strongTag | raw }}<a href="{{ url('networking_init_cms_help', {'adminCode':row.adminCode,'action':row.action}) }}" >{{ row.title }}</a>{{ strongEndTag | raw }}</li>
+
+
+
+
+            {% endfor %}
+            </ul>
+    {% endfor %}
+
+
+{% endblock %}
+
 {% block help_text %}
-    {{ admin_help_code | trans({}, "AdminHelp") }}
+    {{ help_text.text | raw }}
 {% endblock%}

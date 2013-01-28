@@ -1,0 +1,34 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% autoescape false %}
+<script type="text/javascript">
+    (function ($) {
+        $('.tinymce').each(function () {
+            $(this).redactor({
+                focus:true,
+                            imageGetJson:'{{ path('admin_networking_media_media_uploadedTextBlockImage') }}',
+                            imageUpload:'{{ path('admin_networking_media_media_uploadTextBlockImage') }}',
+                            imageUploadErrorCallback:function (editor, xhr) {
+                                uploadError(xhr)
+                            },
+                            plugins:['cssPlugin'],
+                            cssStyles:{'color-draft':'the color blue', 'white':'Very tame'},
+                            minHeight:300
+            });
+        });
+
+    })(jQuery);
+
+    function uploadError(xhr) {
+        alert(xhr.error);
+    }
+</script>
+{% endautoescape %}

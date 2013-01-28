@@ -76,6 +76,18 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, label: Tags, label_translator_strategy: sonata.admin.label.strategy.underscore}
 
+# HelpText Admin Controller
+    networking_init_cms.page.admin.help_text:
+        class: Networking\InitCmsBundle\Admin\HelpTextAdmin
+        arguments: [null, Networking\InitCmsBundle\Entity\HelpText, SonataAdminBundle:CRUD]
+        calls:
+            - [setTranslationDomain, [AdminHelp]]
+            - [setLanguages, [%networking_init_cms.page.languages%]]
+            - [setContainer, [@service_container]]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: 'Help Text', label_translator_strategy: sonata.admin.label.strategy.underscore}
+
+
 # Layout Block Admin Controller
     networking_init_cms.page.admin.layout_block:
         class: Networking\InitCmsBundle\Admin\LayoutBlockAdmin
@@ -209,6 +221,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 8 }
             - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin, priority: 10}
+
+#Listener which checks for is_deletable field
+    networking_init_cms.entity_delete_listener:
+        class: Networking\InitCmsBundle\EventListener\EntityDeleteListener
+        tags:
+           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
 
 # Preload uniquer url validator with the entity manager and the service container
     networking_init_cms.unique_url_validator:

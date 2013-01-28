@@ -1563,7 +1563,11 @@ legend + .control-group {
   float: left;
   width: 160px;
   padding-top: 5px;
+  overflow: hidden;
   /*text-align: right;*/
+}
+.form-horizontal .sonata-ba-field{
+    margin-left: 165px;
 }
 .form-horizontal .controls {
   *display: inline-block;

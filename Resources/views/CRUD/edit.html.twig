@@ -20,4 +20,6 @@ file that was distributed with this source code.
 {% block footer %}
     {{ parent() }}
     <script src="{{ asset('/bundles/networkinginitcms/js/redactor/redactor.js') }}"></script>
+    <script src="{{ asset('/bundles/networkinginitcms/js/redactor/redactor_extensions.js') }}"></script>
+    {% include 'NetworkingInitCmsBundle:CRUD:edit_script.html.twig' %}
 {% endblock %}

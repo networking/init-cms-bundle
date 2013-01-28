@@ -119,7 +119,7 @@ file that was distributed with this source code.
                 {% endblock %}
             {% endif %}
 
-            <div class="{% if  sonata_admin.field_description.options.no_label is defined and not sonata_admin.field_description.options.no_label %}controls{% endif %} sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }} {% if errors|length > 0 %}sonata-ba-field-error{% endif %}">
+            <div class="{% if  sonata_admin.field_description.options.no_label is defined and not sonata_admin.field_description.options.no_label %}controls{% endif %}sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }} {% if errors|length > 0 %}sonata-ba-field-error{% endif %}">
 
                 {{ form_widget(form) }}
 
