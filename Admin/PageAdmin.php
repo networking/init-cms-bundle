@@ -115,10 +115,6 @@ class PageAdmin extends BaseAdmin
 
         $formMapper->with('page_settings');
 
-        if (!$isHomeReadOnly || $isHomePage->getId() == $id) {
-            $formMapper->add('isHome', null, array('read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly));
-        }
-
         $formMapper
             ->add(
             'locale',
@@ -130,8 +126,8 @@ class PageAdmin extends BaseAdmin
                 'preferred_choices' => array($locale)
             )
         )
-            ->add('title')
-            ->add('url', null, array('required' => $isHomeReadOnly), array('display_method' => 'getFullPath'));
+            ->add('title');
+
         if ($isHomeReadOnly) {
             $formMapper
                 ->add(
@@ -146,6 +142,7 @@ class PageAdmin extends BaseAdmin
                 )
             );
         }
+        $formMapper->add('url', null, array('required' => $isHomeReadOnly), array('display_method' => 'getFullPath'));
 
         $formMapper
             ->add('metaKeyword', null, array('required' => true))
@@ -165,7 +162,14 @@ class PageAdmin extends BaseAdmin
                 'expanded' => true,
                 'choices' => $this->getPageTemplates(),
             )
-        )
+        );
+
+        if (!$isHomeReadOnly || $isHomePage->getId() == $id) {
+            $formMapper->add('isHome', null, array('label'=>'label_is_home', 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly));
+        }
+
+        // end of group: page_settings
+        $formMapper
             ->end();
 
         $formMapper->setHelps(

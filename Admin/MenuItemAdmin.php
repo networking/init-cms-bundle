@@ -82,21 +82,33 @@ class MenuItemAdmin extends BaseAdmin
             $this->isRoot = true;
         }
 
-        $formMapper->add('name');
-
         $formMapper->add('locale', 'hidden', array('data' => $locale));
 
+        $formMapper
+            ->with('Name',
+                    array(
+                        'collapsed' => false,
+                        'description' => false
+                    )
+            )
+            ->add('name')
+            ->end();
 
         if ($this->isRoot) {
             $formMapper->add('isRoot', 'hidden', array('data' => true));
         } else {
-            $formMapper->add('redirect_url', 'url', array('required'=>false));
-            $formMapper->add('link_target', 'text', array('required'=>false));
-            $formMapper->add('link_class', 'text', array('required'=>false));
-            $formMapper->add('link_rel', 'text', array('required'=>false));
+
+            // start group page_or_url
+            $formMapper
+                ->with('Target (page or url)',
+                    array(
+                        'collapsed' => false,
+                        'description' => $this->translator->trans('form.legend_page_or_url', array(), $this->translationDomain)
+                    )
+                );
             $formMapper
                 ->add('page',
-                    'networking_type_autocomplete',
+                'networking_type_autocomplete',
                     array(
                         'attr' => array('style' => "width:220px"),
                         'class' => 'Networking\InitCmsBundle\Entity\Page',
@@ -110,25 +122,42 @@ class MenuItemAdmin extends BaseAdmin
                                 ->setParameter(':locale', $locale);
                         },
                     )
-                )
-                ->add('menu',
-                    'entity',
-                    array(
-                        'class' => 'Networking\InitCmsBundle\Entity\MenuItem',
-                        'required' => true,
-                        'preferred_choices' => array($root),
-                        'query_builder' => function (EntityRepository $er) use ($locale) {
-                            $qb = $er->createQueryBuilder('m');
+            );
+            $formMapper->add('redirect_url', 'url', array('required'=>false));
+            $formMapper->end();
 
-                            return $qb->where('m.isRoot = 1')
-                                ->andWhere('m.locale = :locale')
-                                ->orderBy('m.name')
-                                ->setParameter(':locale', $locale);
-                        }
-                    )
-                );
+            // start group optionals
+            $formMapper
+                ->with('Options',
+                    array(
+                        'collapsed' => true,
+                        'description' => $this->translator->trans('form.legend_options', array(), $this->translationDomain)
+                    ))
+                ->add('link_target', 'choice', array('choices'=>array('_blank', '_self', '_parent', '_top'), 'required'=>false))
+                ->add('link_class', 'text', array('required'=>false))
+                ->add('link_rel', 'text', array('required'=>false))
+                ->end();
+
+            $formMapper->add('menu', 'hidden', array('data' => $root));
+
+//            $formMapper
+//                ->add('menu',
+//                'entity',
+//                array(
+//                    'class' => 'Networking\InitCmsBundle\Entity\MenuItem',
+//                    'required' => true,
+//                    'preferred_choices' => array($root),
+//                    'query_builder' => function (EntityRepository $er) use ($locale) {
+//                        $qb = $er->createQueryBuilder('m');
+//
+//                        return $qb->where('m.isRoot = 1')
+//                            ->andWhere('m.locale = :locale')
+//                            ->orderBy('m.name')
+//                            ->setParameter(':locale', $locale);
+//                    }
+//                )
+//            );
         }
-//                ->add('path', 'text', array('read_only' => true));
     }
 
     /**
