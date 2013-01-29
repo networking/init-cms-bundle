@@ -120,7 +120,7 @@
             </trans-unit>
             <trans-unit id="admin.menu.dashboard">
                 <source>admin.menu.dashboard</source>
-                <target>Dashborad</target>
+                <target>Dashboard</target>
             </trans-unit>
             <trans-unit id="button.apply">
                 <source>button.apply</source>
