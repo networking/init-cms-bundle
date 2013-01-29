@@ -8,12 +8,19 @@
 @adminNavbarBorder: darken(@adminNavbarBackground, 12%);
 @adminNavbarLinkBackgroundActive: darken(@adminNavbarBackground, 5%);
 @adminNavbarText: #777777;
+body {
+  padding-top: @navbarHeight * 2;
+
+}
 
 .navbar-initcms {
-
+  line-height: 130%;
+  top: 0px !important;
   color: @adminNavbarText; // Inner for background effects
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px; // Gradient is applied to its own element because overflow visible is not honored by IE when filter is present
+  z-index: 2000;
+
   .navbar-inner {
     #gradient > .vertical(@adminNavbarBackgroundHighlight, @adminNavbarBackground);
     border: 1px solid @adminNavbarBorder;
@@ -64,13 +71,27 @@
     font-weight: 200;
     color: @adminNavbarText;
   }
-}
+   a.brand:hover{
+    color: #0088cc;
+  }
 
-.navbar-initcms.navbar-fixed-top {
-  position: fixed !important;
+  .info-very-soft {
+    color: #cccccc;
+  }
+
+  .color-second {
+    color: #999999;
+  }
+
+  .navbar-inner, .navbar-static-top .navbar-inner {
+    border-width: 0 0 1px;
+  }
+  .align-center{
+    text-align: center;
+  }
 }
 
 .navbar-fixed-top {
-  position: relative !important;
+  top: @navbarHeight;
 }
 
