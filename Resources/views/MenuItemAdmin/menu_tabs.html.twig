@@ -17,7 +17,8 @@ file that was distributed with this source code.
         </li>
     {% endfor %}
     <li>
-        <a href="{{ admin.generateUrl('create', {'subclass': 'menu'}) }}" class="menu-dialog-link"><i class="icon icon-plus"></i></a>
+        <a href="{{ admin.generateUrl('create', {'subclass': 'menu'}) }}" class="menu-dialog-link"><i
+                class="icon icon-plus"></i></a>
     </li>
 </ul>
 
@@ -25,12 +26,35 @@ file that was distributed with this source code.
 <div class="tab-content">
     {% for key, menu in menus %}
         <div class="tab-pane navigation sortable {% if loop.first %}active{% endif %}" id="menu_{{ menu.rootNode.id }}">
-            <a href="{{ admin.generateUrl('edit', {'subclass': 'menu', 'id': menu.rootNode.id}) }}" class="btn btn-custom menu-dialog-link">
-            <i class="icon-white icon-pencil"></i> {{ 'button.menu.edit'|trans({}, admin.translationDomain) }}
-            </a>
-            <a href="{{ admin.generateUrl('delete', {'subclass': 'menu', 'id': menu.rootNode.id}) }}" class="btn btn-custom menu-dialog-link">
-            <i class="icon-white icon-trash"></i> {{ 'button.menu.delete'|trans({}, admin.translationDomain) }}
-            </a>
+
+            <div class="pull-left">
+                {% include 'NetworkingInitCmsBundle:Core:menu_create_button.html.twig' %}
+            </div>
+
+            <div class="pull-right">
+                <a href="{{ admin.generateUrl('edit', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
+                   class="colored-link menu-dialog-link">
+                    {{ 'button.menu.settings'|trans({}, admin.translationDomain) }}
+                </a> |
+                <a href="{{ admin.generateUrl('delete', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
+                   class="colored-link menu-dialog-link">
+                    {{ 'button.menu.delete'|trans({}, admin.translationDomain) }}
+                </a>
+            </div>
+            <div class="clearfix">&nbsp;</div>
+
+            <p>&nbsp;</p>
+
+            <div class="table-style-labels">
+                <div class="pull-left menu-item-link-label">
+                    {{ 'label.menu_item_name'|trans({}, admin.translationDomain) }}
+                </div>
+
+                <div class="pull-right menu-item-link-label">
+                    {{ 'label.linked_resource'|trans({}, admin.translationDomain) }}
+                </div>
+                <div class="clearfix">&nbsp;</div>
+            </div>
             {{ menu.navigation|raw }}
         </div>
     {% endfor %}

@@ -14,9 +14,9 @@
                 <source>filter.label_locale</source>
                 <target>Language</target>
             </trans-unit>
-            <trans-unit id="button.menu.edit">
-                <source>button.menu.edit</source>
-                <target>Edit Menu</target>
+            <trans-unit id="button.menu.settings">
+                <source>button.menu.settings</source>
+                <target>Menu settings</target>
             </trans-unit>
             <trans-unit id="button.menu.delete">
                 <source>button.menu.delete</source>
@@ -29,6 +29,14 @@
             <trans-unit id="breadcrumb.link_menu_item_navigation">
                 <source>breadcrumb.link_menu_item_navigation</source>
                 <target>Menus</target>
+            </trans-unit>
+            <trans-unit id="label.linked_resource">
+                <source>label.linked_resource</source>
+                <target>Linked Resource</target>
+            </trans-unit>
+            <trans-unit id="label.menu_item_name">
+                <source>label.menu_item_name</source>
+                <target>Menu Item Name</target>
             </trans-unit>
             <trans-unit id="menu.page_or_url.required">
                 <source>menu.page_or_url.required</source>

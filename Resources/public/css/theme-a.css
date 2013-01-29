@@ -5021,6 +5021,9 @@ body {
 .initcms a {
   color: #666666;
 }
+.initcms a.colored-link {
+  color: #0088cc;
+}
 .initcms a:hover {
   text-decoration: none;
   color: #0088cc;
@@ -5034,13 +5037,21 @@ body {
   color: #0088cc;
 }
 .initcms .nav-tabs > li > a {
-  background-color: #eee;
-  border-bottom: 1px solid #dddddd;
-}
-.initcms .nav-tabs > li > a:hover {
   background-color: #f6f6f6;
   border-bottom: 1px solid #dddddd;
 }
+.initcms .nav-tabs > li.active > a {
+  background-color: #fff;
+  border-bottom: 1px solid #fff;
+}
+.initcms .nav-tabs > li > a:hover {
+  background-color: #fff;
+}
+/*
+.initcms .nav {
+    margin-bottom: 0;
+}
+*/
 .initcms .accordion-heading a {
   text-decoration: none;
   color: #666666;
@@ -5269,6 +5280,10 @@ body {
   margin-top: 30px;
   margin-left: 0px;
 }
+.tab-sub-menu {
+  padding: 0 20px;
+  margin-bottom: 15px;
+}
 .content-main {
   padding-top: 0px;
   background: #fff;
@@ -5401,6 +5416,13 @@ li.table-row-style .menu-item-link {
   width: 150px;
   font-style: italic;
   padding-left: 50px;
+}
+.table-style-labels {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.menu-item-link-label {
+  width: 150px;
 }
 .icon-in-row-small {
   margin-right: 10px;
