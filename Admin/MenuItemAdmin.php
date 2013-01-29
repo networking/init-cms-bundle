@@ -18,7 +18,8 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
     Sonata\AdminBundle\Validator\ErrorElement,
     Sonata\AdminBundle\Form\FormMapper,
     Sonata\AdminBundle\Route\RouteCollection,
-    Doctrine\ORM\EntityRepository;
+    Doctrine\ORM\EntityRepository,
+    Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -82,22 +83,15 @@ class MenuItemAdmin extends BaseAdmin
             $this->isRoot = true;
         }
 
-        $formMapper->add('locale', 'hidden', array('data' => $locale));
-
         $formMapper
-            ->with('Name',
-                    array(
-                        'collapsed' => false,
-                        'description' => false
-                    )
-            )
-            ->add('name')
-            ->end();
+            ->add('locale', 'hidden', array('data' => $locale))
+            ->add('name');
+
 
         if ($this->isRoot) {
             $formMapper->add('isRoot', 'hidden', array('data' => true));
         } else {
-
+//            $formMapper->add('menu', 'hidden', array('data' => $root->getId()));
             // start group page_or_url
             $formMapper
                 ->with('Target (page or url)',
@@ -138,25 +132,15 @@ class MenuItemAdmin extends BaseAdmin
                 ->add('link_rel', 'text', array('required'=>false))
                 ->end();
 
-            $formMapper->add('menu', 'hidden', array('data' => $root));
+            $entityManager = $this->container->get('Doctrine')->getEntityManager();
 
-//            $formMapper
-//                ->add('menu',
-//                'entity',
-//                array(
-//                    'class' => 'Networking\InitCmsBundle\Entity\MenuItem',
-//                    'required' => true,
-//                    'preferred_choices' => array($root),
-//                    'query_builder' => function (EntityRepository $er) use ($locale) {
-//                        $qb = $er->createQueryBuilder('m');
-//
-//                        return $qb->where('m.isRoot = 1')
-//                            ->andWhere('m.locale = :locale')
-//                            ->orderBy('m.name')
-//                            ->setParameter(':locale', $locale);
-//                    }
-//                )
-//            );
+            $transformer = new MenuItemToNumberTransformer($entityManager);
+
+            $menuField = $formMapper->getFormBuilder()->create('menu', 'hidden',  array('data' => $root, 'data_class' => null));
+            $menuField->addModelTransformer($transformer);
+            $formMapper
+                    ->add($menuField, 'hidden');
+
         }
     }
 
