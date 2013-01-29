@@ -42,7 +42,7 @@ file that was distributed with this source code.
 
                     {% for name, form_group in admin.formgroups %}
                         <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
-                            {% if not app.request.isxmlhttprequest and admin.formgroups|length > 1 %}
+                            {% if admin.formgroups|length > 1 and name != admin.label %}
                                 <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
                                     {% if form_group.collapsed %}
                                         <a href="" class="sonata-ba-collapsed"
@@ -54,9 +54,6 @@ file that was distributed with this source code.
                             {% endif %}
 
                             <div class="sonata-ba-collapsed-fields">
-                                {% if form_group.description != false %}
-                                    <p>{{ form_group.description|raw }}</p>
-                                {% endif %}
 
                                 {% for field_name in form_group.fields %}
                                     {% if admin.formfielddescriptions[field_name] is defined %}
