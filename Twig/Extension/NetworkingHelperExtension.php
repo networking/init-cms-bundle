@@ -453,9 +453,9 @@ class NetworkingHelperExtension extends \Twig_Extension
         switch ($fieldDescription->getType()) {
             case 'boolean':
                 if($fieldDescription->getValue($object)){
-                    $value = $this->getService('translator')->trans('positive', array(), $translationDomain);
+                    $value = 'positive';
                 } else {
-                    $value = $this->getService('translator')->trans('negative', array(), $translationDomain);
+                    $value = 'negative';
                 }
                 break;
             case 'string':
@@ -498,7 +498,7 @@ class NetworkingHelperExtension extends \Twig_Extension
         $options = array(
             'page' => $object,
             'field' => $fieldDescription->getName(),
-            'value' => $value,
+            'value' => $this->getService('translator')->trans($value, array(), $translationDomain),
             'translation_domain' => $translationDomain
         );
 
