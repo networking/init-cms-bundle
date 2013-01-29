@@ -401,7 +401,7 @@ class PageAdminController extends CmsCRUDController
 
         $data = array(
             'messageStatus' => 'success',
-            'message' => $this->translate('message.layout_blocks_sorted', array('zone' => $zone))
+            'message' => $this->admin->trans('message.layout_blocks_sorted', array('zone' => $zone))
         );
 
         if ($layoutBlocks) {
@@ -713,7 +713,7 @@ class PageAdminController extends CmsCRUDController
             );
         }
 
-        $this->get('session')->setFlash('sonata_flash_success', 'flash_status_success');
+        $this->get('session')->setFlash('sonata_flash_success', $this->admin->trans('flash_status_success'));
 
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
     }
@@ -883,7 +883,7 @@ class PageAdminController extends CmsCRUDController
             );
         }
 
-        $this->get('session')->setFlash('sonata_flash_success', 'flash_publish_success');
+        $this->get('session')->setFlash('sonata_flash_success', $this->admin->trans('flash_publish_success'));
 
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
     }

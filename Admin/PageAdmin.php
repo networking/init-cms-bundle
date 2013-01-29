@@ -145,8 +145,6 @@ class PageAdmin extends BaseAdmin
         $formMapper->add('url', null, array('required' => $isHomeReadOnly), array('display_method' => 'getFullPath'));
 
         $formMapper
-            ->add('metaKeyword', null, array('required' => true))
-            ->add('metaDescription', null, array('required' => true))
             ->add(
             'visibility',
             'sonata_type_translatable_choice',
@@ -154,15 +152,16 @@ class PageAdmin extends BaseAdmin
                 'choices' => Page::getVisibilityList(),
                 'catalogue' => $this->translationDomain
             )
-        )
+            )
             ->add(
             'template',
             'networking_type_iconradio',
             array(
                 'expanded' => true,
                 'choices' => $this->getPageTemplates(),
-            )
-        );
+            ))
+            ->add('metaKeyword', null, array('required' => true))
+            ->add('metaDescription', null, array('required' => true));
 
         if (!$isHomeReadOnly || $isHomePage->getId() == $id) {
             $formMapper->add('isHome', null, array('label'=>'label_is_home', 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly));

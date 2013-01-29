@@ -70,9 +70,9 @@
                 <source>form.label_visibility</source>
                 <target>Visibility</target>
             </trans-unit>
-            <trans-unit id="form.label_active_from">
-                <source>form.label_active_from</source>
-                <target>Publish from</target>
+            <trans-unit id="form.label_is_active">
+                <source>form.label_is_active</source>
+                <target>Is active</target>
             </trans-unit>
             <trans-unit id="form.label_tags">
                 <source>form.label_tags</source>
@@ -310,7 +310,7 @@
             </trans-unit>
             <trans-unit id="url">
                 <source>url</source>
-                <target>Url</target>
+                <target>URL</target>
             </trans-unit>
             <trans-unit id="metaKeyword">
                 <source>metaKeyword</source>
@@ -339,6 +339,18 @@
             <trans-unit id="negative">
                 <source>negative</source>
                 <target>No</target>
+            </trans-unit>
+            <trans-unit id="flash_status_success">
+                <source>flash_status_success</source>
+                <target>Status successfully changed</target>
+            </trans-unit>
+            <trans-unit id="flash_publish_success">
+                <source>flash_publish_success</source>
+                <target>Page is now published</target>
+            </trans-unit>
+            <trans-unit id="message.layout_blocks_sorted">
+                <source>message.layout_blocks_sorted</source>
+                <target>Blocks are now sorted</target>
             </trans-unit>
         </body>
     </file>
