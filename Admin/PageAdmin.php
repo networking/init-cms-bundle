@@ -78,7 +78,11 @@ class PageAdmin extends BaseAdmin
             $request = $this->container->get('request');
         }
 
-        $locale = $request->get('locale') ? $request->get('locale') : $request->getLocale();
+        $locale = $request->get('locale') ? $request->get('locale') : $this->getSubject()->getLocale();
+
+        if(!$locale){
+            throw new \Symfony\Component\Form\Exception\CreationException('Cannot create a page without a language');
+        }
 
         /** @var $repository PageRepository */
         $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
@@ -91,7 +95,6 @@ class PageAdmin extends BaseAdmin
         $isHomePage = $repository->findOneBy(array('isHome' => true, 'locale' => $locale));
 
         $isHomeReadOnly = (!$isHomePage || $isHomePage->getId() == $id) ? false : true;
-
 
         if ($id || $request->isXmlHttpRequest()) {
             $formMapper->with('page_content')
