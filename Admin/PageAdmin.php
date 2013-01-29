@@ -152,19 +152,24 @@ class PageAdmin extends BaseAdmin
                 'choices' => Page::getVisibilityList(),
                 'catalogue' => $this->translationDomain
             )
-            )
+        )
             ->add(
             'template',
             'networking_type_iconradio',
             array(
                 'expanded' => true,
                 'choices' => $this->getPageTemplates(),
-            ))
+            )
+        )
             ->add('metaKeyword', null, array('required' => true))
             ->add('metaDescription', null, array('required' => true));
 
         if (!$isHomeReadOnly || $isHomePage->getId() == $id) {
-            $formMapper->add('isHome', null, array('label'=>'label_is_home', 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly));
+            $formMapper->add(
+                'isHome',
+                null,
+                array('label' => 'label_is_home', 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly)
+            );
         }
 
         // end of group: page_settings
@@ -373,6 +378,16 @@ class PageAdmin extends BaseAdmin
             ->with('metaDescription')
             ->assertNotBlank()
             ->end();
+        $errorElement
+            ->with('locale')
+            ->assertNotNull(array())
+            ->assertNotBlank()
+            ->end();
+        $errorElement
+            ->with('template')
+            ->assertNotNull(array())
+            ->assertNotBlank()
+            ->end();
 
         if (!$object->getIsHome()) {
             $errorElement
@@ -382,6 +397,7 @@ class PageAdmin extends BaseAdmin
                 ->end();
         }
     }
+
 
     /**
      * @param \Knp\Menu\ItemInterface $menu
@@ -412,7 +428,9 @@ class PageAdmin extends BaseAdmin
         $originalLocale = $page->getLocale();
         foreach ($this->languages as $language) {
 
-            if ($language['locale'] == $originalLocale) continue;
+            if ($language['locale'] == $originalLocale) {
+                continue;
+            }
 
             if ($translatedLocales->containsKey($language['locale'])) {
 
@@ -444,7 +462,9 @@ class PageAdmin extends BaseAdmin
     {
         $translationLanguages = new \Doctrine\Common\Collections\ArrayCollection();
 
-        if (!$id = $this->getRequest()->get('id')) return;
+        if (!$id = $this->getRequest()->get('id')) {
+            return;
+        }
 
         /** @var $repository PageRepository */
         $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
@@ -458,7 +478,9 @@ class PageAdmin extends BaseAdmin
 
         foreach ($this->languages as $language) {
 
-            if ($language['locale'] == $originalLocale) continue;
+            if ($language['locale'] == $originalLocale) {
+                continue;
+            }
 
             if ($translatedLocales->containsKey($language['locale'])) {
                 $translationLanguages->set(
@@ -508,7 +530,7 @@ class PageAdmin extends BaseAdmin
 
         $templates = $this->container->getParameter('networking_init_cms.page.templates');
         foreach ($templates as $key => $template) {
-            $icons[$key] = isset($template['icon'])?$template['icon']:'';
+            $icons[$key] = isset($template['icon']) ? $template['icon'] : '';
         }
 
         return $icons;
