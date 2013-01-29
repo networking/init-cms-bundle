@@ -779,10 +779,10 @@ fieldset {
 legend {
   display: block;
   width: 100%;
-  padding: 0;
-  margin-bottom: 20px;
-  font-size: 21px;
-  line-height: 40px;
+  padding: 0 0 5px 0;
+  /*margin-bottom: 20px;*/
+  /*font-size: 21px;*/
+  /*line-height: 40px;*/
   color: #333333;
   border: 0;
   border-bottom: 1px solid #e5e5e5;
@@ -796,9 +796,9 @@ input,
 button,
 select,
 textarea {
-  font-size: 14px;
+  /*font-size: 14px;*/
   font-weight: normal;
-  line-height: 20px;
+  /*line-height: 20px;*/
 }
 input,
 button,
@@ -828,7 +828,7 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
   display: inline-block;
-  height: 20px;
+  height: 15px;
   padding: 4px 6px;
   margin-bottom: 10px;
   font-size: 14px;
@@ -1547,7 +1547,7 @@ legend + .control-group {
   -webkit-margin-top-collapse: separate;
 }
 .form-horizontal .control-group {
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
   *zoom: 1;
 }
 .form-horizontal .control-group:before,
@@ -5468,4 +5468,31 @@ li.table-row-style .menu-item-link {
 }
 .page-form .modal-body{
     max-height: 650px;
+}
+
+legend + .sonata-ba-collapsed-fields {
+    margin-top: 18px;
+    -webkit-margin-top-collapse: separate;
+}
+
+legend.sonata-ba-fieldset-collapsed-description + .sonata-ba-collapsed-fields {
+    margin-top: 0;
+}
+
+.sonata-ba-collapsed-fields > p {
+    margin-bottom: 18px;
+}
+
+
+.sonata-ba-fieldset-collapsed legend:before {
+    content: '+ ';
+}
+
+.sonata-ba-collapsed-fields-close legend:before {
+    content: '- ';
+    padding-left: 5px;
+}
+.modal-body legend{
+    font-size: 14px;
+    font-weight: bolder;
 }
