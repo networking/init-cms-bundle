@@ -9,6 +9,7 @@ file that was distributed with this source code.
 
 #}
 {% extends 'MopaBootstrapBundle::base.html.twig' %}
+{% use "NetworkingInitCmsBundle:Navbar:admin_navbar.html.twig" %}
 
 {% block head_style %}
 {# Override this block to add your own files! #}
@@ -18,6 +19,7 @@ file that was distributed with this source code.
 %}
 <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
 {% endstylesheets %}
+    {{ block('admin_style') }}
 {% endblock head_style %}
 
 {% block head_script %}
@@ -31,6 +33,8 @@ file that was distributed with this source code.
 {% endblock body_start %}
 
 {% block body %}
+
+    {{ block('admin_navbar') }}
     {% block navbar %}
     {% endblock navbar %}
 

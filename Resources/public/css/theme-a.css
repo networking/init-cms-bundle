@@ -5101,13 +5101,13 @@ body {
   color: #999999;
 }
 .color-draft {
-  color: #ff8a00;
+  color: #ff8a00 !important;
 }
 .color-review {
-  color: #ff8a00;
+  color: #ff8a00 !important;
 }
 .color-published {
-  color: #999999;
+  color: #999999 !important;
 }
 .font-micro {
   font-size: 10px;

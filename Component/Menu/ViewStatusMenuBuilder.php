@@ -70,14 +70,20 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
         $menu = $this->factory->createItem('root');
 
+        $sonataAdmin = null;
+
         $entity = null;
 
-        $editUrl = null;
 
         if ($this->isLoggedIn) {
+
+            $editPath = $this->router->generate(
+                                        'sonata_admin_dashboard');
+
             $menu->setChildrenAttribute('class', 'nav pull-right');
 
             if ($sonataAdminParam = $request->get('_sonata_admin')) {
+
                 // we are in the admin area
                 $sonataAdmin = $this->serviceContainer->get($sonataAdminParam);
                 if ($id = $request->get('id')) {
@@ -94,7 +100,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                 }
                 $draftRoute = $this->router->generate($entity->getRoute());
 
-                $editUrl = $this->router->generate(
+                $editPath = $this->router->generate(
                     'admin_networking_initcms_page_edit',
                     array('id' => urlencode($entity->getId()))
                 );
@@ -102,22 +108,23 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                 $liveRoute = $this->router->generate($entity->getRoute());
                 $draftRoute = $this->router->generate($entity->getPage()->getRoute());
 
-                $editUrl = $this->router->generate(
+                $editPath = $this->router->generate(
                     'admin_networking_initcms_page_edit',
                     array('id' => urlencode($entity->getPage()->getId()))
                 );
 
             }
 
-            if (!$sonataAdminParam && $editUrl) {
-                $menu->addChild('edit', array('uri' => $editUrl));
-            }
+
 
             $draftPath = $this->router->generate('networking_init_view_draft', array('path' => urlencode($draftRoute)));
             $livePath = $this->router->generate('networking_init_view_live', array('path' => urlencode($liveRoute)));
 
             // Set active url based on which status is in the session
-            if ($this->serviceContainer->get('session')->get(
+
+            if($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin){
+                $menu->setCurrentUri($editPath);
+            }elseif ($this->serviceContainer->get('session')->get(
                 '_viewStatus'
             ) === VersionableInterface::STATUS_PUBLISHED
             ) {
@@ -125,9 +132,9 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             } else {
                 $menu->setCurrentUri($draftPath);
             }
-
-            $menu->addChild('Draft', array('uri' => $draftPath));
-            $menu->addChild('Live', array('uri' => $livePath));
+            $menu->addChild('Edit View', array('uri' => $editPath));
+            $menu->addChild('Draft view', array('uri' => $draftPath, 'linkAttributes' =>array('class' => 'color-draft')));
+            $menu->addChild('Live view', array('uri' => $livePath));
 
         }
 

@@ -30,7 +30,12 @@ use Networking\InitCmsBundle\Entity\HelpTextRepository;
 class DefaultController extends Controller
 {
 
-
+    protected function getAdminPool(){
+        if($this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')){
+            return $this->get('sonata.admin.pool');
+        }
+        return false;
+    }
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return array
@@ -55,7 +60,7 @@ class DefaultController extends Controller
             }
         }
 
-        return array('page' => $page);
+        return array('page' => $page, 'admin_pool' => $this->getAdminPool());
     }
 
 
@@ -84,7 +89,7 @@ class DefaultController extends Controller
             }
         }
 
-        return array('page' => $page);
+        return array('page' => $page, 'admin_pool' => $this->getAdminPool());
     }
 
     /**

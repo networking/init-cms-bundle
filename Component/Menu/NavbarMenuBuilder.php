@@ -132,9 +132,6 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
 
         if ($this->isLoggedIn) {
             $menu->addChild($this->get('translator')->trans('logout'), array('route' => 'fos_user_security_logout'));
-            if ($this->securityContext->isGranted('ROLE_SONATA_ADMIN')) {
-                $menu->addChild('CMS Admin', array('route' => 'sonata_admin_dashboard'));
-            }
         } else {
             $menu->addChild($this->get('translator')->trans('login'), array('route' => 'fos_user_security_login'));
             $menu->addChild(
