@@ -85,7 +85,7 @@ class PageAdminController extends CmsCRUDController
      */
     public function deleteAction($id)
     {
-        $id     = $this->get('request')->get($this->admin->getIdParameter());
+        $id = $this->get('request')->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
         if (!$object) {
@@ -99,6 +99,17 @@ class PageAdminController extends CmsCRUDController
         if ($this->getRequest()->getMethod() == 'DELETE') {
             try {
                 $this->admin->delete($object);
+                if ($this->isXmlHttpRequest()) {
+                    return $this->renderJson(
+                        array(
+                            'result' => 'ok',
+                            'objectId' => $this->admin->getNormalizedIdentifier($object),
+                            'url' => $this->admin->generateUrl('list', array('locale' => $object->getLocale()))
+                        )
+                    );
+                } else {
+                    $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
+                }
                 $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
             } catch (ModelManagerException $e) {
                 $this->get('session')->setFlash('sonata_flash_error', 'flash_delete_error');
@@ -107,10 +118,13 @@ class PageAdminController extends CmsCRUDController
             return new RedirectResponse($this->admin->generateUrl('list', array('locale' => $object->getLocale())));
         }
 
-        return $this->render($this->admin->getTemplate('delete'), array(
-            'object' => $object,
-            'action' => 'delete'
-        ));
+        return $this->render(
+            $this->admin->getTemplate('delete'),
+            array(
+                'object' => $object,
+                'action' => 'delete'
+            )
+        );
     }
 
     /**
