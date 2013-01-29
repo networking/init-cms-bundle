@@ -72,9 +72,18 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
      */
     public function getDefaultLocale()
     {
+        if(!$this->getRequest()->get('locale')){
+            $locale = $this->getRequest()->getLocale();
+        }else{
+            $locale = $this->getRequest()->get('locale');
+        }
 
-        if (!array_key_exists($this->getRequest()->getLocale(), $this->getLocaleChoices())) {
-            $shortLocale = substr($this->getRequest()->getLocale(), 0, 2);
+        if (!array_key_exists($locale, $this->getLocaleChoices())) {
+            if(strlen($locale) > 2){
+                $shortLocale = substr($locale, 0, 2);
+            }else{
+                $shortLocale = $locale;
+            }
 
             foreach ($this->getLocaleChoices() as $key => $locale) {
                 if (strpos($key, $shortLocale) !== false) {
@@ -91,7 +100,7 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
             }
 
         } else {
-            return $this->getRequest()->getLocale();
+            return $locale;
         }
 
     }
