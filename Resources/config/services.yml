@@ -285,7 +285,7 @@ services:
         arguments:
             - { pageMenu: @networking_init_cms.menu.frontend_main_menu_left=, loginMenu: @networking_init_cms.menu.frontend_main_menu_login=, langMenu: @networking_init_cms.menu.frontend_main_menu_language=}
             - {}
-            - { title: "The Olive Tree", titleRoute: "networking_init_cms_home", fixedTop: true, isFluid: true, template: NetworkingInitCmsBundle:Navbar:navbar.html.twig }
+            - { title: "The Olive Tree", titleRoute: "networking_init_cms_home", fixedTop: true, isFluid: false, template: NetworkingInitCmsBundle:Navbar:navbar.html.twig }
         tags:
             - { name: mopa_bootstrap.navbar, alias: cmsNavbar }
 
