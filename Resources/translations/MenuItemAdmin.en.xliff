@@ -42,6 +42,58 @@
                 <source>menu.page_or_url.required</source>
                 <target>Either a page or a redirect url must be set.</target>
             </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>Search</target>
+            </trans-unit>
+            <trans-unit id="label_filters">
+                <source>label_filters</source>
+                <target>Search Menus</target>
+            </trans-unit>
+            <trans-unit id="link_reset_filter">
+                <source>link_reset_filter</source>
+                <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="form.label_name">
+                <source>form.label_name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="form.label_page">
+                <source>form.label_page</source>
+                <target>Page</target>
+            </trans-unit>
+            <trans-unit id="form.label_redirect_url">
+                <source>form.label_redirect_url</source>
+                <target>Url</target>
+            </trans-unit>
+            <trans-unit id="label_redirect_url">
+                <source>label_redirect_url</source>
+                <target>Url</target>
+            </trans-unit>
+            <trans-unit id="form.label_link_target">
+                <source>form.label_link_target</source>
+                <target>Link Target</target>
+            </trans-unit>
+            <trans-unit id="form.label_link_class">
+                <source>form.label_link_class</source>
+                <target>Link Class</target>
+            </trans-unit>
+            <trans-unit id="form.label_link_rel">
+                <source>form.label_link_rel</source>
+                <target>Link Relation</target>
+            </trans-unit>
+            <trans-unit id="form.legend_page_or_url">
+                <source>form.legend_page_or_url</source>
+                <target>Target (page or url)</target>
+            </trans-unit>
+            <trans-unit id="form.legend_name">
+                <source>form.legend_name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="form.legend_options">
+                <source>form.legend_options</source>
+                <target>Options</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

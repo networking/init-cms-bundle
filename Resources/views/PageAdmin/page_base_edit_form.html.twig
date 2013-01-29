@@ -95,7 +95,7 @@ file that was distributed with this source code.
                             {% for rootNode in rootMenus %}
                                 <label> {{ 'label.menu_link'|trans({'%menu_name%': rootNode.name}, admin.translationdomain) }}
                                     <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}">
-                                        {{ 'link.add'|trans({}, admin.translationDomain) }}</a></label>
+                                        {{ 'link_add_page_to_menu'|trans({}, admin.translationDomain) }}</a></label>
                                 {% for menuItem in object.getMenuItemByRoot(rootNode.id) %}
                                     &nbsp;&nbsp;{{ menuItem.name }} <a
                                         href="{{ url('admin_networking_initcms_menuitem_list') }}">{{ 'link.edit'|trans({}, admin.translationDomain) }}</a>

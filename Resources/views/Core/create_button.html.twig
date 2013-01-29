@@ -12,11 +12,11 @@ file that was distributed with this source code.
 {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
     {% if admin.subClasses is empty %}
         <a class="btn btn-custom" href="{{ admin.generateUrl('create', {locale: networking_init_cms_get_current_admin_locale(admin) }) }}">
-            <i class="icon-white icon-plus"></i> {{ 'link_action_create'|trans({}, 'SonataAdminBundle') }}</a>
+            <i class="icon-white icon-plus"></i> {{ 'link_action_create'|trans({}, admin.translationDomain) }}</a>
     {% else %}
         <span class="btn-group sonata-action-element">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                {{ 'link_action_create'|trans({}, 'SonataAdminBundle') }}
+                {{ 'link_action_create'|trans({}, admin.translationDomain) }}
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">

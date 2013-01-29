@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_list">
                 <source>breadcrumb.link_page_list</source>
-                <target>Page List</target>
+                <target>Pages</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_edit">
                 <source>breadcrumb.link_page_edit</source>
@@ -28,7 +28,7 @@
             </trans-unit>
             <trans-unit id="form.label_locale">
                 <source>form.label_locale</source>
-                <target>Locale</target>
+                <target>Language</target>
             </trans-unit>
             <trans-unit id="form.label_template">
                 <source>form.label_template</source>
@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="form.label_title">
                 <source>form.label_title</source>
-                <target>Page Title</target>
+                <target>Working Title</target>
             </trans-unit>
             <trans-unit id="form.label_navigation_title">
                 <source>form.label_navigation_title</source>
@@ -44,7 +44,7 @@
             </trans-unit>
             <trans-unit id="form.label_url">
                 <source>form.label_url</source>
-                <target>SEO url</target>
+                <target>URL</target>
             </trans-unit>
             <trans-unit id="form.label_parent">
                 <source>form.label_parent</source>
@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="legend.page_settings">
                 <source>legend.page_settings</source>
-                <target>Page Settings</target>
+                <target>Settings &amp; SEO</target>
             </trans-unit>
             <trans-unit id="legend.page_tags">
                 <source>legend.page_tags</source>
@@ -132,7 +132,7 @@
             </trans-unit>
             <trans-unit id="legend.page_status">
                 <source>legend.page_status</source>
-                <target>Page Status</target>
+                <target>Publishing Status</target>
             </trans-unit>
             <trans-unit id="legend.translations">
                 <source>legend.translations</source>
@@ -140,7 +140,7 @@
             </trans-unit>
             <trans-unit id="legend.filters">
                 <source>legend.filters</source>
-                <target>Filters</target>
+                <target>Search Pages</target>
             </trans-unit>
             <trans-unit id="legend.actions">
                 <source>legend.actions</source>
@@ -181,6 +181,10 @@
             <trans-unit id="legend.menu_connections">
                 <source>legend.menu_connections</source>
                 <target>Menu Connections</target>
+            </trans-unit>
+            <trans-unit id="link_add_page_to_menu">
+                <source>link_add_page_to_menu</source>
+                <target>Add to menu</target>
             </trans-unit>
             <trans-unit id="message.translation_link">
                 <source>message.translation_link</source>
@@ -247,6 +251,94 @@
             <trans-unit id="button.save">
                 <source>button.save</source>
                 <target>Save</target>
+            </trans-unit>
+            <trans-unit id="list.label_admin_title">
+                <source>list.label_admin_title</source>
+                <target>Working Title</target>
+            </trans-unit>
+            <trans-unit id="list.label_full_path">
+                <source>list.label_full_path</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="filter.label_locale">
+                <source>filter.label_locale</source>
+                <target>Language</target>
+            </trans-unit>
+            <trans-unit id="filter.label_title">
+                <source>filter.label_title</source>
+                <target>Working Title</target>
+            </trans-unit>
+            <trans-unit id="filter.label_path">
+                <source>filter.label_path</source>
+                <target>URL (?)</target>
+            </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>Search</target>
+            </trans-unit>
+            <trans-unit id="label_filters">
+                <source>label_filters</source>
+                <target>Search Pages</target>
+            </trans-unit>
+            <trans-unit id="link_reset_filter">
+                <source>link_reset_filter</source>
+                <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Add Page</target>
+            </trans-unit>
+            <trans-unit id="link_add">
+                <source>link_add</source>
+                <target>Add Page</target>
+            </trans-unit>
+            <trans-unit id="label_change_status">
+                <source>label_change_status</source>
+                <target>Change Status</target>
+            </trans-unit>
+            <trans-unit id="isHome">
+                <source>isHome</source>
+                <target>Is Homepage</target>
+            </trans-unit>
+            <trans-unit id="locale">
+                <source>locale</source>
+                <target>Language</target>
+            </trans-unit>
+            <trans-unit id="title">
+                <source>title</source>
+                <target>Working Title</target>
+            </trans-unit>
+            <trans-unit id="url">
+                <source>url</source>
+                <target>Url</target>
+            </trans-unit>
+            <trans-unit id="metaKeyword">
+                <source>metaKeyword</source>
+                <target>Meta Keyword</target>
+            </trans-unit>
+            <trans-unit id="metaDescription">
+                <source>metaDescription</source>
+                <target>Meta Description</target>
+            </trans-unit>
+            <trans-unit id="metaTitle">
+                <source>metaTitle</source>
+                <target>Meta Title</target>
+            </trans-unit>
+            <trans-unit id="visiblity">
+                <source>visibility</source>
+                <target>Visibility</target>
+            </trans-unit>
+            <trans-unit id="template">
+                <source>template</source>
+                <target>Page Layout</target>
+            </trans-unit>
+            <trans-unit id="positive">
+                <source>positive</source>
+                <target>Yes</target>
+            </trans-unit>
+            <trans-unit id="negative">
+                <source>negative</source>
+                <target>No</target>
             </trans-unit>
         </body>
     </file>

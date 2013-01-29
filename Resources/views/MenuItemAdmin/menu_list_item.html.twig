@@ -15,7 +15,7 @@ file that was distributed with this source code.
         {% if node.page %}
             {{ 'title.page'|trans({}, admin.translationDomain) }}:</span> <a  href="{{ path('admin_networking_initcms_page_edit', {id: node.page.id}) }}">{{ node.page.title }}</a>
         {% elseif node.redirectUrl %}
-            {{ 'title.redirect_url'|trans({}, admin.translationDomain) }}:</span> <a target="_blank" href="{{ node.redirectUrl }}">{{ node.redirectUrl }}</a>
+            {{ 'label_redirect_url'|trans({}, admin.translationDomain) }}:</span> <a target="_blank" href="{{ node.redirectUrl }}">{{ node.redirectUrl }}</a>
         {% endif %}
     </div>
     <div class="icons pull-right">

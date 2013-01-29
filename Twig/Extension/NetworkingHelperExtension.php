@@ -432,8 +432,11 @@ class NetworkingHelperExtension extends \Twig_Extension
     }
 
     /**
+     * @param $template
      * @param $object
-     * @param $formView
+     * @param \Symfony\Component\Form\FormView $formView
+     * @param null $translationDomain
+     * @return mixed
      */
     public function getFieldToString(
         $template,
@@ -449,7 +452,11 @@ class NetworkingHelperExtension extends \Twig_Extension
 
         switch ($fieldDescription->getType()) {
             case 'boolean':
-                $value = $fieldDescription->getValue($object);
+                if($fieldDescription->getValue($object)){
+                    $value = $this->getService('translator')->trans('positive', array(), $translationDomain);
+                } else {
+                    $value = $this->getService('translator')->trans('negative', array(), $translationDomain);
+                }
                 break;
             case 'string':
             case 'text';

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="label_filters">
+                <source>label_filters</source>
+                <target>Search</target>
+            </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>HALLO Search</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

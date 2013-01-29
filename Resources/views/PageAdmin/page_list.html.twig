@@ -281,7 +281,7 @@ file that was distributed with this source code.
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
                     <div class="accordion-caret"><b class="caret"></b></div>
-                    {{ 'label_filters'|trans({}, 'SonataAdminBundle') }}
+                    {{ 'label_filters'|trans({}, admin.translationDomain) }}
                 </a>
             </div>
             <div id="collapseOne" class="accordion-body collapse in">
@@ -297,10 +297,10 @@ file that was distributed with this source code.
                         {{ form_rest(form) }}
 
                         <input type="submit" class="btn"
-                               value="{{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}"/>
+                               value="{{ 'btn_filter'|trans({}, admin.translationDomain) }}"/>
 
                         <a class="btn"
-                           href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
+                           href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, admin.translationDomain) }}</a>
 
                     </form>
                 </div>

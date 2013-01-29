@@ -22,7 +22,7 @@ file that was distributed with this source code.
 
 {% block title %}
     {% if admin.id(object) %}
-        {{ admin.toString(object) }}
+        {{ admin.toString(object) }} <span class="info-soft font-small">({{ 'list.label_admin_title'|trans({}, admin.translationDomain) }})</span>
     {% else %}
         {{ "title_create"|trans({}, 'SonataAdminBundle') }}
     {% endif %}
