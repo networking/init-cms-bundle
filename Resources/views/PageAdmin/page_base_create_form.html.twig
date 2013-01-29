@@ -16,6 +16,7 @@
 
                 {% block sonata_pre_fieldsets %}{% endblock %}
 
+                {{ form_rest(form) }}
 
                 {% set form_group = admin.formgroups.page_settings %}
                 {% for field_name in form_group.fields %}
@@ -24,7 +25,7 @@
                     {% endif %}
                 {% endfor %}
 
-                {{ form_rest(form) }}
+
 
                 {% block sonata_post_fieldsets %}{% endblock %}
 

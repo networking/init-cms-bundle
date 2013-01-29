@@ -96,6 +96,17 @@ class PageAdmin extends BaseAdmin
 
         $isHomeReadOnly = (!$isHomePage || $isHomePage->getId() == $id) ? false : true;
 
+
+
+        if (!$isHomePage) {
+            $formMapper->add(
+                'isHome',
+                'sonata_type_boolean',
+                array('expanded' => true, 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly)
+            );
+        }
+
+
         if ($id || $request->isXmlHttpRequest()) {
             $formMapper->with('page_content')
                 ->add(
@@ -166,14 +177,6 @@ class PageAdmin extends BaseAdmin
         )
             ->add('metaKeyword', null, array('required' => true))
             ->add('metaDescription', null, array('required' => true));
-
-        if (!$isHomeReadOnly || $isHomePage->getId() == $id) {
-            $formMapper->add(
-                'isHome',
-                null,
-                array('label' => 'label_is_home', 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly)
-            );
-        }
 
         // end of group: page_settings
         $formMapper
