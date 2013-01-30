@@ -101,8 +101,8 @@ class PageAdmin extends BaseAdmin
         if (!$isHomePage) {
             $formMapper->add(
                 'isHome',
-                'sonata_type_boolean',
-                array('expanded' => true, 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly)
+                'checkbox',
+                array('label_render' => false, 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly)
             );
         }
 
@@ -157,7 +157,17 @@ class PageAdmin extends BaseAdmin
                 )
             );
         }
-        $formMapper->add('url', null, array('required' => $isHomeReadOnly), array('display_method' => 'getFullPath'));
+        $formMapper
+            ->add(
+                'url',
+                null,
+                array(
+                    'required' => $isHomeReadOnly,
+                    'help_label' => 'url.placeholder',
+                    'help_inline' => 'url.helper.text'
+                ),
+                array('display_method' => 'getFullPath')
+            );
 
         $formMapper
             ->add(
@@ -183,11 +193,11 @@ class PageAdmin extends BaseAdmin
         $formMapper
             ->end();
 
-        $formMapper->setHelps(
-            array(
-                'url' => $this->translator->trans('url.helper.text', array(), $this->translationDomain)
-            )
-        );
+//        $formMapper->setHelps(
+//            array(
+//                'url' => $this->translator->trans('url.helper.text', array(), $this->translationDomain)
+//            )
+//        );
 
 //        $formMapper->getFormBuilder()->setAttributes(array('class' => 'span3'));
 //        die;
