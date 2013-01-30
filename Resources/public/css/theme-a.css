@@ -5024,7 +5024,7 @@ body {
 .initcms a.colored-link {
   color: #0088cc;
 }
-.initcms a:hover {
+.initcms a:hover:not(.btn) {
   text-decoration: none;
   color: #0088cc;
 }
