@@ -63,7 +63,7 @@ class HelpTextAdmin extends BaseAdmin
             )
         )
             ->add('translationKey')
-            ->add('title')
+            ->add('title', null, array('required' => true))
             ->add(
             'text',
             'textarea',
@@ -121,6 +121,41 @@ class HelpTextAdmin extends BaseAdmin
         $queryBuilder->setParameter(':locale', $locale);
 
         return $active;
+    }
+
+    /**
+     * @param \Sonata\AdminBundle\Validator\ErrorElement $errorElement
+     * @param mixed                                      $object
+     */
+    public function validate(ErrorElement $errorElement, $object)
+    {
+        $errorElement
+            ->with('locale')
+            ->assertNotNull(array())
+            ->assertNotBlank()
+            ->end();
+        $errorElement
+            ->with('translationKey')
+            ->assertNotNull(array())
+            ->assertNotBlank()
+            ->assertMaxLength(array('limit' => 255))
+            ->end();
+        $errorElement
+            ->with('title')
+            ->assertNotNull(array())
+            ->assertNotBlank()
+            ->end();
+        $errorElement
+            ->with('text')
+            ->assertNotNull(array())
+            ->assertNotBlank()
+            ->end();
+        if(strlen(strip_tags($object->getText())) <= 5){
+            $errorElement
+                ->with('textMinLength')
+                ->addViolation($this->translator->trans('helptext.text.minlength', array(), $this->translationDomain))
+                ->end();
+        }
     }
 
 }
