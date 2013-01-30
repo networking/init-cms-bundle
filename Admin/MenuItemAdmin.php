@@ -212,6 +212,12 @@ class MenuItemAdmin extends BaseAdmin
      */
     public function validate(ErrorElement $errorElement, $object)
     {
+        $errorElement
+            ->with('name')
+            ->assertNotNull(array())
+            ->assertNotBlank()
+            ->end();
+
         if(!$object->getIsRoot()){
             if (!$object->getRedirectUrl() AND !$object->getPage()) {
                 $errorElement
@@ -219,6 +225,12 @@ class MenuItemAdmin extends BaseAdmin
                     ->addViolation($this->translator->trans('menu.page_or_url.required', array(), $this->translationDomain))
                     ->end();
             }
+
+            $errorElement
+                ->with('menu')
+                ->assertNotNull(array())
+                ->assertNotBlank()
+                ->end();
         }
     }
 
