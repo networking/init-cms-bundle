@@ -69,7 +69,13 @@ class TagAdmin extends Admin
     {
         $errorElement
             ->with('name')
+            ->assertNotNull(array())
+            ->assertNotBlank()
             ->assertMaxLength(array('limit' => 255))
+            ->end();
+        $errorElement
+            ->with('active')
+            ->assertNotNull(array())
             ->end();
     }
 }
