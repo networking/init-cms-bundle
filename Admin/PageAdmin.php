@@ -102,7 +102,8 @@ class PageAdmin extends BaseAdmin
             $formMapper->add(
                 'isHome',
                 'checkbox',
-                array('label_render' => false, 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly)
+                array('label_render' => false, 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly),
+                array('inline' => true)
             );
         }
 
