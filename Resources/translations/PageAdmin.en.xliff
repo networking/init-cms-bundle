@@ -368,6 +368,14 @@
                 <source>info.create.layout_block</source>
                 <target>Select the type of content you would like to create from the select list below</target>
             </trans-unit>
+            <trans-unit id="url.helper.text">
+                <source>url.helper.text</source>
+                <target>e.g. "news" or "office_zuerich"</target>
+            </trans-unit>
+            <trans-unit id="url.placeholder">
+                <source>url.placeholder</source>
+                <target>/</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
