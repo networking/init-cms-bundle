@@ -37,6 +37,12 @@ class MenuItemAdmin extends BaseAdmin
     protected $isRoot = false;
 
     /**
+     * @var array $linkTargets
+     */
+    protected $linkTargets = array('_blank' => '_blank', '_self' => '_self', '_parent' => '_parent', '_top' => '_top');
+
+
+    /**
      * @param \Sonata\AdminBundle\Route\RouteCollection $collection
      */
     protected function configureRoutes(RouteCollection $collection)
@@ -127,7 +133,7 @@ class MenuItemAdmin extends BaseAdmin
                         'collapsed' => true,
                         'description' => $this->translator->trans('form.legend_options', array(), $this->translationDomain)
                     ))
-                ->add('link_target', 'choice', array('choices'=>array('_blank', '_self', '_parent', '_top'), 'required'=>false))
+                ->add('link_target', 'choice', array('choices'=>$this->getTranslatedLinkTargets(), 'required'=>false))
                 ->add('link_class', 'text', array('required'=>false))
                 ->add('link_rel', 'text', array('required'=>false))
                 ->end();
@@ -239,4 +245,17 @@ class MenuItemAdmin extends BaseAdmin
         }
     }
 
+    /**
+     * returns all translated link targets
+     * @return array
+     */
+    public function getTranslatedLinkTargets()
+    {
+        $translatedLinkTargets = array();
+        foreach($this->linkTargets as $key => $value)
+        {
+            $translatedLinkTargets[$key] = $this->translator->trans($value, array(), $this->translationDomain);
+        }
+        return $translatedLinkTargets;
+    }
 }

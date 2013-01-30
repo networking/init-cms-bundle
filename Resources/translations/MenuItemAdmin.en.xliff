@@ -94,6 +94,22 @@
                 <source>form.legend_options</source>
                 <target>Options</target>
             </trans-unit>
-		</body>
-	</file>
+            <trans-unit id="_blank">
+                <source>_blank</source>
+                <target>Shows the link target in a new browser window or tab</target>
+            </trans-unit>
+            <trans-unit id="_self">
+                <source>_self</source>
+                <target>Shows the link target in the current browser window</target>
+            </trans-unit>
+            <trans-unit id="_parent">
+                <source>_parent</source>
+                <target>Shows the link target in the parent frame</target>
+            </trans-unit>
+            <trans-unit id="_top">
+                <source>_top</source>
+                <target>Cancels all frames, and shows the link target in full browser window</target>
+            </trans-unit>
+        </body>
+    </file>
 </xliff>
