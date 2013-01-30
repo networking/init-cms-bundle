@@ -5065,7 +5065,7 @@ body {
 .initcms .accordion-inner {
   padding-top: 15px;
 }
-.initcms .accordion-inner a {
+.initcms .accordion-inner a:not(.btn) {
   color: #0088cc;
 }
 .initcms .accordion-inner label {
