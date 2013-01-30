@@ -451,6 +451,9 @@ class NetworkingHelperExtension extends \Twig_Extension
 
 
         switch ($fieldDescription->getType()) {
+            case 'hidden':
+                $value = $fieldDescription->getValue($object);
+                break;
             case 'boolean':
                 if($fieldDescription->getValue($object)){
                     $value = 'positive';
