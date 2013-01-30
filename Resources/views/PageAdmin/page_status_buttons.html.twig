@@ -12,15 +12,15 @@ file that was distributed with this source code.
 <div class="btn-group">
     {#<button type="submit" class="btn" onclick="return start_save_page_settings(this);">#}
     {#{{ 'button.apply'|trans({}, admin.translationdomain) }}</button>#}
-    {% if object.isDraft() %}
-    <a href="{{ admin.generateUrl('review', {id: object.id}) }}" class=" btn btn-mini">
+
+    <a href="{{ admin.generateUrl('review', {id: object.id}) }}" class=" btn btn-mini {% if object.isReview() %}disabled{% endif %}" {% if object.isReview() %}onclick="return false"{% endif %}>
         {{ 'button.review'|trans({}, admin.translationdomain) }}
     </a>
-    {% elseif object.isReview() or object.isPublished() %}
-        <a href="{{ admin.generateUrl('draft', {id: object.id}) }}" class="btn btn-mini">
+
+        <a href="{{ admin.generateUrl('draft', {id: object.id}) }}" class="btn btn-mini {% if object.isDraft() %}disabled{% endif %}" {% if object.isDraft() %}onclick="return false"{% endif %}>
             {{ 'button.draft'|trans({}, admin.translationdomain) }}
         </a>
-    {% endif %}
+
 
     {% if admin.isGranted('PUBLISH') %}
         <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
@@ -34,7 +34,7 @@ file that was distributed with this source code.
 <p>&nbsp;</p>
 {% if not object.isPublished() and object.getSnapshot() %}
 <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}" class="status-dialog-link">
-        {{ 'button.cancel_draft'|trans({}, admin.translationdomain) }}</a>
+        {{ 'link.revert_to_publish'|trans({}, admin.translationdomain) }}</a>
 {% endif %}
 <div class="modal hide fade" tabindex="-1" role="dialog" id="status_dialog">
 </div>

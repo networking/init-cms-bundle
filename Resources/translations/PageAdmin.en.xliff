@@ -217,7 +217,7 @@
             </trans-unit>
             <trans-unit id="title.cancel_draft">
                 <source>title.cancel_draft</source>
-                <target>Cancel Draft</target>
+                <target>Revert to last published</target>
             </trans-unit>
             <trans-unit id="info.cancel_draft">
                 <source>info.cancel_draft</source>
@@ -376,9 +376,14 @@
                 <source>url.placeholder</source>
                 <target>/</target>
             </trans-unit>
+
             <trans-unit id="meta_title.helper.text">
                 <source>meta_title.helper.text</source>
                 <target>Title that is shown in the browser</target>
+            </trans-unit>
+            <trans-unit id="link.revert_to_publish">
+                <source>link.revert_to_publish</source>
+                <target>Revert to last published state</target>
             </trans-unit>
         </body>
     </file>
