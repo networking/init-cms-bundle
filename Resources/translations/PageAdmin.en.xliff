@@ -352,6 +352,18 @@
                 <source>message.layout_blocks_sorted</source>
                 <target>Blocks are now sorted</target>
             </trans-unit>
+            <trans-unit id="info.page_settings_updated">
+                <source>info.page_settings_updated</source>
+                <target>Page settings successfully updated</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_deleted">
+                <source>message.layout_block_deleted</source>
+                <target>Layout block successfully removed</target>
+            </trans-unit>
+            <trans-unit id="info.create.layout_block">
+                <source>info.create.layout_block</source>
+                <target>Select the type of content you would like to create from the select list below</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
