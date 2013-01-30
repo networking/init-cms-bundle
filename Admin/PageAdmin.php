@@ -56,6 +56,7 @@ class PageAdmin extends BaseAdmin
         $collection->add('review', 'review/{id}', array(), array('method' => 'GET'));
         $collection->add('publish', 'publish/{id}', array(), array('method' => 'GET'));
         $collection->add('cancelDraft', 'cancel_draft/{id}', array(), array('method' => 'GET'));
+        $collection->add('getPath', 'get_path/', array(), array('method' => 'GET'));
         $collection->add(
             'unlink',
             'unlink/{id}/translation_id/{translationId}',
@@ -103,7 +104,7 @@ class PageAdmin extends BaseAdmin
                 'isHome',
                 'checkbox',
                 array('label_render' => false, 'read_only' => $isHomeReadOnly, 'disabled' => $isHomeReadOnly),
-                array('inline' => true)
+                array('inline_block' => true)
             );
         }
 
@@ -158,17 +159,32 @@ class PageAdmin extends BaseAdmin
                 )
             );
         }
-        $formMapper
-            ->add(
-                'url',
-                null,
-                array(
-                    'required' => $isHomeReadOnly,
-                    'help_label' => 'url.placeholder',
-                    'help_inline' => 'url.helper.text'
-                ),
-                array('display_method' => 'getFullPath')
-            );
+        if($this->getSubject()->getId()){
+            $formMapper
+                ->add(
+                    'url',
+                    null,
+                    array(
+                        'required' => $isHomeReadOnly,
+                        'help_label' => $this->getSubject()->getFullPath(),
+                        'help_inline' => 'url.helper.text'
+                    ),
+                    array('display_method' => 'getFullPath')
+                );
+        }else{
+            $formMapper
+                ->add(
+                    'url',
+                    null,
+                    array(
+                        'required' => $isHomeReadOnly,
+                        'help_label' => '/',
+                        'help_inline' => 'url.helper.text'
+                    ),
+                    array('display_method' => 'getFullPath')
+                );
+        }
+
 
         $formMapper
             ->add(

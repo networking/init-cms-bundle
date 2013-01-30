@@ -984,5 +984,19 @@ class PageAdminController extends CmsCRUDController
         $em->flush();
     }
 
+    public function getPathAction(Request $request)
+    {
+        $id = $request->get('page_id');
+
+        $object = $this->admin->getObject($id);
+        if($id && $object){
+            $path = $object->getFullPath();
+        } else {
+            $path = '/';
+        }
+
+        return $this->renderJson(array('path' => $path));
+    }
+
 
 }

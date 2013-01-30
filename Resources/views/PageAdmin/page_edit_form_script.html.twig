@@ -77,7 +77,32 @@ file that was distributed with this source code.
                         });
                     }
             )
-        })
+        });
+
+        $("#{{ admin.uniqid }}_parent").on("change", function (e) {
+            var path = $('#{{ admin.uniqid }}_url').val();
+            var pageId = e.val
+            if (pageId == '') {
+                $('#help_{{ admin.uniqid }}_url').html('/' + path);
+            } else {
+                if (pageId == undefined) {
+                    pageId = $("#{{ admin.uniqid }}_parent").val();
+                }
+                $.getJSON(
+                        '{{ admin.generateUrl('getPath') }}',
+                        {'page_id':pageId},
+                        function (xhr) {
+
+                            $('#help_{{ admin.uniqid }}_url').html(xhr.path + path + '/');
+                        }
+                );
+            }
+
+        });
+
+        $('#{{ admin.uniqid }}_url').bind('change', function () {
+            $("#{{ admin.uniqid }}_parent").trigger('change');
+        });
 
     })(jQuery);
 

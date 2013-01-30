@@ -53,16 +53,17 @@ file that was distributed with this source code.
                 {{- label|trans({}, sonata_admin.admin.translationDomain) -}}
             {% endif %}
             {{ required ? '*' : '' }}
-            {% if help_label %}
-                <p class="help-block info-soft" id="help_{{ id }}">
-                    {% if not sonata_admin.admin %}
-                        {{- help_label|trans({}, translation_domain) -}}
-                    {% else %}
-                        {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
-                    {% endif %}
-                </p>
-            {% endif %}
+
             </label>
+            {% if help_label %}
+                            <p class="help-block info-soft" id="help_{{ id }}">
+                                {% if not sonata_admin.admin %}
+                                    {{- help_label|trans({}, translation_domain) -}}
+                                {% else %}
+                                    {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
+                                {% endif %}
+                            </p>
+                        {% endif %}
         {% endif %}
     {% endspaceless %}
 {% endblock form_label %}
@@ -125,11 +126,12 @@ file that was distributed with this source code.
         {{ form_widget(form) }}
         {{ block('form_message') }}
     {% else %}
-        {% set inline = false %}
-        {% if sonata_admin.field_description.options.inline is defined and sonata_admin.field_description.options.inline %}
-        {% set inline = true %}
+        {% set inline_block = false %}
+        {% if sonata_admin.field_description.options.inline_block is defined and sonata_admin.field_description.options.inline_block %}
+            {% set inline_block = true %}
         {% endif %}
-        <div class="control-group{% if errors|length > 0 %} error{% endif %}{% if inline %} form-horizontal{% endif %}" id="sonata-ba-field-container-{{ id }}">
+        <div class="control-group{% if errors|length > 0 %} error{% endif %}{% if inline_block %} form-horizontal{% endif %}"
+             id="sonata-ba-field-container-{{ id }}">
             {% if sonata_admin.field_description.options.no_label is defined and sonata_admin.field_description.options.no_label %}
                 {# do nothing #}
             {% else %}
@@ -226,7 +228,7 @@ file that was distributed with this source code.
     {% endspaceless %}
 {% endblock %}
 {% block networking_type_autocomplete_widget %}
-    {{ block('choice_widget') }}
+    {{ form_widget(form) }}
     <script>
         $(document).ready(function () {
             (function ($) {

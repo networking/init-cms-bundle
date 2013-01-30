@@ -1580,6 +1580,7 @@ legend + .control-group {
 }
 .form-horizontal .help-block {
   margin-bottom: 0;
+    margin-left: 165px;
 }
 .form-horizontal input + .help-block,
 .form-horizontal select + .help-block,
