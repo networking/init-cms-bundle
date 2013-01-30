@@ -10,6 +10,10 @@
                 <source>btn_filter</source>
                 <target>HALLO Search</target>
             </trans-unit>
+            <trans-unit id="label_export_download">
+                <source>label_export_download</source>
+                <target>Download your results in the following formats</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
