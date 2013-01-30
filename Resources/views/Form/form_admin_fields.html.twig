@@ -11,92 +11,110 @@ file that was distributed with this source code.
 {% extends 'SonataDoctrineORMAdminBundle:Form:form_admin_fields.html.twig' %}
 {# Labels #}
 {% block form_label %}
-{% spaceless %}
-    {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " control-label" }) %}
+    {% spaceless %}
+        {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " control-label" }) %}
 
-    {% if not compound %}
-        {% set label_attr = label_attr|merge({'for': id}) %}
-    {% endif %}
-    {% if required %}
-        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
-    {% endif %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
 
-    {% if label is empty %}
-        {% set label = name|humanize %}
-    {% endif %}
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
 
-    {% if in_list_checkbox is defined and in_list_checkbox and widget is defined %}
-        <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+        {% if in_list_checkbox is defined and in_list_checkbox and widget is defined %}
+            <label{% for attrname,attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
             {{ widget|raw }}
             <span>
-                {% if not sonata_admin.admin%}
+                {% if not sonata_admin.admin %}
                     {{- label|trans({}, translation_domain) -}}
                 {% else %}
                     {{- label|trans({}, sonata_admin.admin.translationDomain) -}}
-                {% endif%}
+                {% endif %}
             </span>
-        </label>
-    {% else %}
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-            {% if not sonata_admin.admin%}
+            {% if help_label %}
+                <p class="help-block info-soft" id="help_{{ id }}">
+                    {% if not sonata_admin.admin %}
+                        {{- help_label|trans({}, translation_domain) -}}
+                    {% else %}
+                        {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
+                    {% endif %}
+                </p>
+            {% endif %}
+            </label>
+        {% else %}
+            <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+            {% if not sonata_admin.admin %}
                 {{- label|trans({}, translation_domain) -}}
             {% else %}
                 {{- label|trans({}, sonata_admin.admin.translationDomain) -}}
-            {% endif%}
+            {% endif %}
             {{ required ? '*' : '' }}
-        </label>
-    {% endif %}
-{% endspaceless %}
+            {% if help_label %}
+                <p class="help-block info-soft" id="help_{{ id }}">
+                    {% if not sonata_admin.admin %}
+                        {{- help_label|trans({}, translation_domain) -}}
+                    {% else %}
+                        {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
+                    {% endif %}
+                </p>
+            {% endif %}
+            </label>
+        {% endif %}
+    {% endspaceless %}
 {% endblock form_label %}
 
 {% block widget_container_attributes_choice_widget %}
     {% spaceless %}
         id="{{ id }}"
-        {% for attrname,attrvalue in attr %}{{attrname}}="{% if attrname == 'class' %}unstyled {% endif%}{{attrvalue}}" {% endfor %}
-        {% if "class" not in attr %}class="unstyled"{%endif %}
+        {% for attrname,attrvalue in attr %}{{ attrname }}="{% if attrname == 'class' %}unstyled {% endif %}{{ attrvalue }}" {% endfor %}
+        {% if "class" not in attr %}class="unstyled"{% endif %}
     {% endspaceless %}
 {% endblock %}
 
 {% block choice_widget_expanded %}
-{% spaceless %}
-    <ul {{ block('widget_container_attributes') }}>
-        {% for child in form %}
-            <li>
-                {{ form_widget(child) }}
-                {{ form_label(child) }}
-            </li>
-        {% endfor %}
-    </ul>
-{% endspaceless %}
+    {% spaceless %}
+        <ul {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                <li>
+                    {{ form_widget(child) }}
+                    {{ form_label(child) }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endspaceless %}
 {% endblock choice_widget_expanded %}
 
 {% block choice_widget %}
-{% spaceless %}
-    {% if expanded %}
-        <ul {{ block('widget_container_attributes_choice_widget') }}>
-        {% for child in form %}
-            <li>
-                {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-        {% if empty_value is not none %}
-            <option value="">{{ empty_value|trans }}</option>
+    {% spaceless %}
+        {% if expanded %}
+            <ul {{ block('widget_container_attributes_choice_widget') }}>
+                {% for child in form %}
+                    <li>
+                        {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+                {% if empty_value is not none %}
+                    <option value="">{{ empty_value|trans }}</option>
+                {% endif %}
+                {% if preferred_choices|length > 0 %}
+                    {% set options = preferred_choices %}
+                    {{ block('widget_choice_options') }}
+                    {% if choices|length > 0 %}
+                        <option disabled="disabled">{{ separator }}</option>
+                    {% endif %}
+                {% endif %}
+                {% set options = choices %}
+                {{ block('widget_choice_options') }}
+            </select>
         {% endif %}
-        {% if preferred_choices|length > 0 %}
-            {% set options = preferred_choices %}
-            {{ block('widget_choice_options') }}
-            {% if choices|length > 0 %}
-                <option disabled="disabled">{{ separator }}</option>
-            {% endif %}
-        {% endif %}
-        {% set options = choices %}
-        {{ block('widget_choice_options') }}
-    </select>
-    {% endif %}
-{% endspaceless %}
+    {% endspaceless %}
 {% endblock choice_widget %}
 
 
@@ -105,10 +123,11 @@ file that was distributed with this source code.
         {{ form_label(form, label|default(null)) }}
         {{ form_errors(form) }}
         {{ form_widget(form) }}
+        {{ block('form_message') }}
     {% else %}
-        <div class="control-group{% if errors|length > 0%} error{%endif%}" id="sonata-ba-field-container-{{ id }}">
+        <div class="control-group{% if errors|length > 0 %} error{% endif %}" id="sonata-ba-field-container-{{ id }}">
             {% if sonata_admin.field_description.options.no_label is defined and sonata_admin.field_description.options.no_label %}
-                   {# do nothing #}
+                {# do nothing #}
             {% else %}
                 {% block label %}
                     {% if sonata_admin.field_description.options.name is defined %}
@@ -122,7 +141,7 @@ file that was distributed with this source code.
             <div class="{% if  sonata_admin.field_description.options.no_label is defined and not sonata_admin.field_description.options.no_label %}controls{% endif %}sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }} {% if errors|length > 0 %}sonata-ba-field-error{% endif %}">
 
                 {{ form_widget(form) }}
-
+                {{ block('form_message') }}
                 {% if errors|length > 0 %}
                     <div class="help-inline sonata-ba-field-error-messages">
                         {{ form_errors(form) }}
@@ -138,33 +157,33 @@ file that was distributed with this source code.
 {% endblock field_row %}
 
 {% block collection_widget_row %}
-{% spaceless %}
-    <div class="sonata-collection-row">
-        {% if allow_delete %}
-            <a href="#" class="sonata-collection-delete"></a>
-        {% endif %}
-        {{ form_row(child) }}
-    </div>
-{% endspaceless %}
+    {% spaceless %}
+        <div class="sonata-collection-row">
+            {% if allow_delete %}
+                <a href="#" class="sonata-collection-delete"></a>
+            {% endif %}
+            {{ form_row(child) }}
+        </div>
+    {% endspaceless %}
 {% endblock %}
 
 {% block collection_widget %}
-{% spaceless %}
-    {% if prototype is defined %}
-        {% set child = prototype %}
-        {% set attr = attr|merge({'data-prototype': block('collection_widget_row') }) %}
-    {% endif %}
-    <div {{ block('widget_container_attributes') }}>
-        {{ form_errors(form) }}
-        {% for child in form %}
-            {{ block('collection_widget_row') }}
-        {% endfor %}
-        {{ form_rest(form) }}
-        {% if allow_add %}
-            <div><a href="#" class="sonata-collection-add"></a></div>
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set child = prototype %}
+            {% set attr = attr|merge({'data-prototype': block('collection_widget_row') }) %}
         {% endif %}
-    </div>
-{% endspaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            {% for child in form %}
+                {{ block('collection_widget_row') }}
+            {% endfor %}
+            {{ form_rest(form) }}
+            {% if allow_add %}
+                <div><a href="#" class="sonata-collection-add"></a></div>
+            {% endif %}
+        </div>
+    {% endspaceless %}
 {% endblock collection_widget %}
 
 {% block sonata_type_immutable_array_widget %}
@@ -185,7 +204,8 @@ file that was distributed with this source code.
 
 {% block sonata_type_immutable_array_widget_row %}
     {% spaceless %}
-        <div class="control-group{% if errors|length > 0%} error{%endif%}" id="sonata-ba-field-container-{{ id }}-{{ key }}">
+        <div class="control-group{% if errors|length > 0 %} error{% endif %}"
+             id="sonata-ba-field-container-{{ id }}-{{ key }}">
 
             {{ form_label(child) }}
 
@@ -204,16 +224,27 @@ file that was distributed with this source code.
 {% block networking_type_autocomplete_widget %}
     {{ block('choice_widget') }}
     <script>
-        $(document).ready(function() {
-        (function($){
-            $("#{{ id }}").select2({
-                placeholder: "{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
-                allowClear: true
-            });
-        })(jQuery);
+        $(document).ready(function () {
+            (function ($) {
+                $("#{{ id }}").select2({
+                    placeholder:"{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
+                    allowClear:true
+                });
+            })(jQuery);
         });
     </script>
 {% endblock %}
+
+{% block form_help %}
+    {% spaceless %}
+        {% if 'checkbox' not in form.vars.block_prefixes %}{# checkbox widget/choice widget problem see https://github.com/phiamo/MopaBootstrapBundle/commit/67406a16b38e5b622fffdd5b9c8a8707ca73f493#commitcomment-1295951 # #}
+            {% if help_inline %}<p
+                    class="help-inline info-soft">{{ help_inline|trans({}, sonata_admin.admin.translationDomain)|raw }}</p>{% endif %}
+        {% endif %}
+        {% if help_block %}<p
+                class="help-block">{{ help_block|trans({}, sonata_admin.admin.translationDomain)|raw }}</p>{% endif %}
+    {% endspaceless %}
+{% endblock form_help %}
 
 {% block networking_type_iconradio_widget %}
     {% spaceless %}
@@ -223,7 +254,7 @@ file that was distributed with this source code.
                     <div style="float:left;{% if key > 0 and key is odd %}margin-left:40px;{% endif %}">
                         {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
                         {% if icons[choices[key].value] %}
-                            <img src="{{ asset(icons[choices[key].value]) }}" />
+                            <img src="{{ asset(icons[choices[key].value]) }}"/>
                         {% endif %}
                     </div>
                 {% endfor %}
