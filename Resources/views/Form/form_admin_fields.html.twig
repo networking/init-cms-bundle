@@ -125,7 +125,11 @@ file that was distributed with this source code.
         {{ form_widget(form) }}
         {{ block('form_message') }}
     {% else %}
-        <div class="control-group{% if errors|length > 0 %} error{% endif %}" id="sonata-ba-field-container-{{ id }}">
+        {% set inline = false %}
+        {% if sonata_admin.field_description.options.inline is defined and sonata_admin.field_description.options.inline %}
+        {% set inline = true %}
+        {% endif %}
+        <div class="control-group{% if errors|length > 0 %} error{% endif %}{% if inline %} form-horizontal{% endif %}" id="sonata-ba-field-container-{{ id }}">
             {% if sonata_admin.field_description.options.no_label is defined and sonata_admin.field_description.options.no_label %}
                 {# do nothing #}
             {% else %}
