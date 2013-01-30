@@ -53,7 +53,8 @@ class PageAdminController extends CmsCRUDController
 
         $pageCopy = new Page();
 
-        $pageCopy->setTitle($page->getTitle());
+        $pageCopy->setWorkingTitle($page->getWorkingTitle());
+        $pageCopy->setMetaTitle($page->getMetaTitle());
         $pageCopy->setUrl($page->getUrl());
         $pageCopy->setMetaKeyword($page->getMetaKeyword());
         $pageCopy->setMetaDescription($page->getMetaDescription());
