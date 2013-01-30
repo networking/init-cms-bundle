@@ -8,4 +8,10 @@ function createInitCmsMessageBox(status, message) {
     $('.notice-block').on('DOMNodeInserted', function () {
         $(this).fadeIn().delay('3000').fadeOut(500);
     });
+
+    $('.notice-block').each(function(k, e){
+        if($(e).html() != ''){
+            $(e).fadeIn().delay('3000').fadeOut(500);
+        }
+    });
 })(jQuery);
