@@ -12,7 +12,6 @@
 namespace Networking\InitCmsBundle\Fixtures;
 
 use Networking\InitCmsBundle\Entity\Page,
-    Networking\InitCmsBundle\Entity\PageSnapshot,
     Networking\InitCmsBundle\Entity\ContentRoute,
     Networking\InitCmsBundle\Helper\PageHelper,
     Doctrine\Common\DataFixtures\AbstractFixture,

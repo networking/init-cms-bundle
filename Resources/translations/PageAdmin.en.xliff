@@ -34,9 +34,13 @@
                 <source>form.label_template</source>
                 <target>Page Layout</target>
             </trans-unit>
-            <trans-unit id="form.label_title">
-                <source>form.label_title</source>
+            <trans-unit id="form.label_working_title">
+                <source>form.label_working_title</source>
                 <target>Working Title</target>
+            </trans-unit>
+            <trans-unit id="form.label_meta_title">
+                <source>form.label_meta_title</source>
+                <target>Meta Title</target>
             </trans-unit>
             <trans-unit id="form.label_navigation_title">
                 <source>form.label_navigation_title</source>
@@ -304,8 +308,8 @@
                 <source>locale</source>
                 <target>Language</target>
             </trans-unit>
-            <trans-unit id="title">
-                <source>title</source>
+            <trans-unit id="workingTitle">
+                <source>workingTitle</source>
                 <target>Working Title</target>
             </trans-unit>
             <trans-unit id="url">
@@ -371,6 +375,10 @@
             <trans-unit id="url.placeholder">
                 <source>url.placeholder</source>
                 <target>/</target>
+            </trans-unit>
+            <trans-unit id="meta_title.helper.text">
+                <source>meta_title.helper.text</source>
+                <target>Title that is shown in the browser</target>
             </trans-unit>
         </body>
     </file>

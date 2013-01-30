@@ -13,7 +13,7 @@ file that was distributed with this source code.
 {% for locale, language in admin.translationLanguages %}
     <br/>{{ language.short_label }} -
     {% if language.translation %}
-        {{ language.translation.title }}
+        {{ language.translation.workingTitle }}
         <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}">
             {{ 'link.edit'|trans({}, admin.translationDomain) }}
         </a> | <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}" class="translation-dialog-link">

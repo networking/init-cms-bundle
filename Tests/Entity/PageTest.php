@@ -19,7 +19,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$obj = new Page();
 		$title = 'hello page';
 		$this->assertNull($obj->getTitle());
-		$obj->setTitle($title);
+		$obj->setWorkingTitle($title);
 		$this->assertEquals($title, $obj->getTitle());
 	}
 
@@ -32,11 +32,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array(), $obj->getParents());
 
 		$parent1 = new Page();
-		$parent1->setTitle('parent1');
+		$parent1->setWorkingTitle('parent1');
 		$parent2 = new Page();
-		$parent2->setTitle('parent2');
+		$parent2->setWorkingTitle('parent2');
 		$parent3 = new Page();
-		$parent3->setTitle('parent3');
+		$parent3->setWorkingTitle('parent3');
 		$parents = array($parent1, $parent2, $parent3);
 		$obj->setParents($parents);
 		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Entity\Page', $obj->getParents());
@@ -49,11 +49,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 	public function testAddChildren()
 	{
 		$obj = new Page();
-		$obj->setTitle('original page');
+		$obj->setWorkingTitle('original page');
 		$this->assertEquals(null, $obj->getChildren());
 
 		$child1 = new Page();
-		$child1->setTitle('child1');
+		$child1->setWorkingTitle('child1');
 		$obj->addChildren($child1);
 		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Entity\Page', $obj->getChildren());
 		$chilly = $obj->getChildren();
@@ -61,7 +61,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('original page', $chilly[0]->getParent()->getTitle());
 
 		$child2 = new Page();
-		$child2->setTitle('child2');
+		$child2->setWorkingTitle('child2');
 		$obj->addChildren($child2);
 		$chilly = $obj->getAllChildren();
 		$this->assertEquals('child2', $chilly[0]->getTitle()); // new children are first
