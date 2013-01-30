@@ -83,6 +83,7 @@ file that was distributed with this source code.
                                        value="{{ 'btn_create'|trans({}, 'SonataAdminBundle') }}"/>
                             {% endif %}
                         {% else %}
+                            <a class="btn" href="{{ admin.generateObjectUrl('list', object) }}">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</a>
                             {% if admin.supportsPreviewMode %}
                                 <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
                                        value="{{ 'btn_preview'|trans({}, 'SonataAdminBundle') }}"/>
