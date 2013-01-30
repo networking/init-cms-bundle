@@ -79,11 +79,18 @@ class Page implements RouteAwareInterface, VersionableInterface
     protected $updatedAt;
 
     /**
-     * @var string $title
-     * @ORM\Column(name="title", type="string", length=255)
+     * @var string $workingTitle
+     * @ORM\Column(name="working_title", type="string", length=255)
      * @Assert\NotBlank()
      */
-    protected $title;
+    protected $workingTitle;
+
+    /**
+     * @var string $metaTitle
+     * @ORM\Column(name="meta_title", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    protected $metaTitle;
 
     /**
      * @var string $url
@@ -317,27 +324,58 @@ class Page implements RouteAwareInterface, VersionableInterface
     }
 
     /**
-     * Set title
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->workingTitle;
+    }
+
+    /**
+     * Set workingTitle
      *
      * @param  string $title
      * @return Page
      */
-    public function setTitle($title)
+    public function setWorkingTitle($title)
     {
-        $this->oldTitle = $this->title;
-        $this->title = $title;
+        $this->oldTitle = $this->workingTitle;
+        $this->workingTitle = $title;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Get workingTitle
      *
      * @return string
      */
-    public function getTitle()
+    public function getWorkingTitle()
     {
-        return $this->title;
+        return $this->workingTitle;
+    }
+
+    /**
+     * Set metaTitle
+     *
+     * @param  string $title
+     * @return Page
+     */
+    public function setMetaTitle($title)
+    {
+        $this->metaTitle = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get metaTitle
+     *
+     * @return string
+     */
+    public function getMetaTitle()
+    {
+        return empty($this->metaTitle)?$this->workingTitle:$this->metaTitle;
     }
 
     /**
@@ -847,7 +885,7 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     public function __toString()
     {
-        if (!$this->title) {
+        if (!$this->workingTitle) {
             if ($this->oldTitle) {
                 return $this->oldTitle;
             }
@@ -855,7 +893,7 @@ class Page implements RouteAwareInterface, VersionableInterface
             return '-------';
         }
 
-        return $this->title;
+        return $this->workingTitle;
     }
 
     /**
@@ -1034,7 +1072,7 @@ class Page implements RouteAwareInterface, VersionableInterface
             $prefix .= '- ';
         }
 
-        return $prefix . '' . $this->getTitle();
+        return $prefix . '' . $this->getWorkingTitle();
     }
 
     /**

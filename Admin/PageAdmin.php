@@ -143,7 +143,7 @@ class PageAdmin extends BaseAdmin
 
         }
 
-        $formMapper->add('title');
+        $formMapper->add('workingTitle');
         if ($isHomeReadOnly) {
             $formMapper
                 ->add(
@@ -187,6 +187,7 @@ class PageAdmin extends BaseAdmin
                 'choices' => $this->getPageTemplates(),
             )
         )
+            ->add('metaTitle', null, array('required' => true, 'help_inline' => 'meta_title.helper.text'))
             ->add('metaKeyword', null, array('required' => true))
             ->add('metaDescription', null, array('required' => true));
 
@@ -276,7 +277,7 @@ class PageAdmin extends BaseAdmin
                 'preferred_choices' => array($this->getDefaultLocale())
             )
         )
-            ->add('title', 'networking_init_cms_simple_string')
+            ->add('workingTitle', 'networking_init_cms_simple_string')
             ->add(
             'path',
             'doctrine_orm_callback',
@@ -386,7 +387,7 @@ class PageAdmin extends BaseAdmin
     public function validate(ErrorElement $errorElement, $object)
     {
         $errorElement
-            ->with('title')
+            ->with('workingTitle')
             ->assertNotBlank()
             ->assertMaxLength(array('limit' => 255))
             ->end()
