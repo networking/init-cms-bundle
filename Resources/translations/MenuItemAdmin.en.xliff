@@ -4,7 +4,7 @@
 		<body>
 			<trans-unit id="button.create.menu_item">
 				<source>button.create.menu_item</source>
-				<target>Add menu entry</target>
+				<target>Create a link in the menu</target>
 			</trans-unit>
             <trans-unit id="legend.menu.actions">
                 <source>legend.menu.actions</source>
@@ -94,6 +94,7 @@
                 <source>form.legend_options</source>
                 <target>Options</target>
             </trans-unit>
+
             <trans-unit id="_blank">
                 <source>_blank</source>
                 <target>Shows the link target in a new browser window or tab</target>
@@ -110,6 +111,15 @@
                 <source>_top</source>
                 <target>Cancels all frames, and shows the link target in full browser window</target>
             </trans-unit>
-        </body>
-    </file>
+
+            <trans-unit id="form.label_description">
+                <source>form.label_description</source>
+                <target>Menu description</target>
+            </trans-unit>
+            <trans-unit id="info.please_enter_description">
+                <source>info.please_enter_description</source>
+                <target>You haven't entered a description for you menu yet. How about letting others know where this menu appears and what it is for</target>
+            </trans-unit>
+		</body>
+	</file>
 </xliff>

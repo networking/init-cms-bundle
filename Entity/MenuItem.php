@@ -127,6 +127,13 @@ class MenuItem implements \IteratorAggregate
      */
     protected $locale;
 
+
+    /**
+     * @var text $description
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    protected $description;
+
     /**
      *
      */
@@ -491,6 +498,24 @@ class MenuItem implements \IteratorAggregate
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * @param \Networking\InitCmsBundle\Entity\text $description
+     * @return \Networking\InitCmsBundle\Entity\MenuItem
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return \Networking\InitCmsBundle\Entity\text
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

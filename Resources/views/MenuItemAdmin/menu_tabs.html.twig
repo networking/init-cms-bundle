@@ -26,23 +26,35 @@ file that was distributed with this source code.
 <div class="tab-content">
     {% for key, menu in menus %}
         <div class="tab-pane navigation sortable {% if loop.first %}active{% endif %}" id="menu_{{ menu.rootNode.id }}">
-
-            <div class="pull-left">
-                {% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' %}
+            <div class="row">
+                <div class="span7">
+                    {% if menu.rootNode.description %}
+                    <p>{{ menu.rootNode.description }}</p>
+                    {% else %}
+                        <p>{{ 'info.please_enter_description'|trans({}, admin.translationDomain) }}</p>
+                    {% endif %}
+                </div>
+                <div class="span3">
+                    <div class="pull-right">
+                                    <a href="{{ admin.generateUrl('edit', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
+                                       class="colored-link menu-dialog-link">
+                                        {{ 'button.menu.settings'|trans({}, admin.translationDomain) }}
+                                    </a> |
+                                    <a href="{{ admin.generateUrl('delete', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
+                                       class="colored-link menu-dialog-link">
+                                        {{ 'button.menu.delete'|trans({}, admin.translationDomain) }}
+                                    </a>
+                                </div>
+                </div>
             </div>
 
-            <div class="pull-right">
-                <a href="{{ admin.generateUrl('edit', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
-                   class="colored-link menu-dialog-link">
-                    {{ 'button.menu.settings'|trans({}, admin.translationDomain) }}
-                </a> |
-                <a href="{{ admin.generateUrl('delete', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
-                   class="colored-link menu-dialog-link">
-                    {{ 'button.menu.delete'|trans({}, admin.translationDomain) }}
-                </a>
-            </div>
+
+
             <div class="clearfix">&nbsp;</div>
 
+            <p>&nbsp;</p>
+
+            {% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' %}
             <p>&nbsp;</p>
 
             <div class="table-style-labels">
@@ -56,6 +68,9 @@ file that was distributed with this source code.
                 <div class="clearfix">&nbsp;</div>
             </div>
             {{ menu.navigation|raw }}
+            <p>&nbsp;</p>
+                {% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' %}
+
         </div>
     {% endfor %}
 </div>
