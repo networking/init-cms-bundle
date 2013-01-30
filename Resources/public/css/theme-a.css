@@ -5018,7 +5018,7 @@ body {
   font-size: 20px;
   font-weight: normal;
 }
-.initcms a {
+.initcms a:not(.btn) {
   color: #666666;
 }
 .initcms a.colored-link {
