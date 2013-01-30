@@ -187,7 +187,7 @@ class PageAdmin extends BaseAdmin
                 'choices' => $this->getPageTemplates(),
             )
         )
-            ->add('metaTitle', null, array('required' => true))
+            ->add('metaTitle', null, array('required' => true, 'help_inline' => 'meta_title.helper.text'))
             ->add('metaKeyword', null, array('required' => true))
             ->add('metaDescription', null, array('required' => true));
 
