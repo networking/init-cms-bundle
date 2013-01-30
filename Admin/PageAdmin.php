@@ -391,8 +391,8 @@ class PageAdmin extends BaseAdmin
             array(
                 'label' => ' ',
                 'actions' => array(
-                    'edit' => array(),
-                    'delete' => array()
+                    'delete' => array(),
+                    'edit' => array()
                 )
             )
         );
