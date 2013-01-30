@@ -213,7 +213,7 @@ function onAfterLoad() {
             fileGetJson: '{{ path('admin_networking_media_media_uploadedTextBlockFile') }}',
             fileUpload:'{{ path('admin_networking_media_media_uploadTextBlockFile') }}',
             plugins:['cssPlugin'],
-            cssStyles:{'color-draft':'the color blue', 'white':'Very tame'},
+            cssStyles:{'color-draft':'orange', 'white':'background white'},
             minHeight:300
         });
     });
@@ -228,7 +228,7 @@ function onAfterLoad() {
         stop:function (event, ui) {
             apply_position_value_{{ id }}();
             saveLayoutBlockSort(function (xhr) {
-                createMessageBox(xhr.messageStatus, xhr.message);
+                createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             });
 
         },
@@ -263,7 +263,7 @@ function onAfterLoad() {
                     url:'{{ url('admin_networking_initcms_page_deleteLayoutBlock') }}',
                     data:{layoutBlock:liElement.attr('id')},
                     success:function (xhr) {
-                        createMessageBox(xhr.messageStatus, xhr.message);
+                        createInitCmsMessageBox(xhr.messageStatus, xhr.message);
                         apply_position_value_{{ id }}();
                         saveLayoutBlockSort();
                     }
