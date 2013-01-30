@@ -25,7 +25,11 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block sonata_admin_orm_one_to_many_widget %}
-    {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_orm_one_to_many_custom.html.twig' %}
+    {% if sonata_admin.field_description.name == 'layoutBlock' %}
+    {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks.html.twig' %}
+    {% else %}
+        {% include 'SonataDoctrineORMAdminBundle:CRUD:edit_orm_one_to_many.html.twig' %}
+    {% endif %}
 {% endblock %}
 
 {% block sonata_type_model_widget %}
