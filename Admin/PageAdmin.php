@@ -129,19 +129,20 @@ class PageAdmin extends BaseAdmin
 
         $formMapper->with('page_settings');
 
-        $formMapper
-            ->add(
-            'locale',
-            'choice',
-            array(
-                'choices' => $this->getLocaleChoices(),
-                'read_only' => $id,
-                'disabled' => $id,
-                'preferred_choices' => array($locale)
-            )
-        )
-            ->add('title');
+        if(!$this->getSubject()->getId()){
+            $formMapper
+                ->add(
+                    'locale',
+                    'choice',
+                    array(
+                        'choices' => $this->getLocaleChoices(),
+                        'preferred_choices' => array($locale)
+                        )
+                    );
 
+        }
+
+        $formMapper->add('title');
         if ($isHomeReadOnly) {
             $formMapper
                 ->add(
