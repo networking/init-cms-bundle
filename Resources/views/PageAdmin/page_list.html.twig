@@ -29,14 +29,12 @@ file that was distributed with this source code.
 
         @media only screen and (min-width: 980px) {
             #pages_fullpath, tr td:nth-child(3) {
-                display: block;
                 visibility: visible;
             }
         }
 
         @media only screen and (min-width: 1200px) {
             #pages_fullpath, tr td:nth-child(3) {
-                display: block;
                 visibility: visible;
             }
         }
@@ -119,7 +117,8 @@ file that was distributed with this source code.
                     <tfoot>
                     <tr>
                         <th colspan="{{ admin.list.elements|length - 1 }}">
-                            {{ admin.datagrid.pager.page }} / {{ admin.datagrid.pager.lastpage }}
+                            {{ block('batch') }}
+
                             {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
                                 -
                                 {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
@@ -139,7 +138,7 @@ file that was distributed with this source code.
                     {% if admin.datagrid.pager.haveToPaginate() %}
                         <tr>
                             <td colspan="{{ admin.list.elements|length }}">
-
+                                {{ admin.datagrid.pager.page }} / {{ admin.datagrid.pager.lastpage }}
                                 <div class="pagination pagination-centered">
                                     <ul>
 
@@ -195,40 +194,7 @@ file that was distributed with this source code.
             </table>
 
 
-            {% if batchactions|length > 0 %}
-                {% block batch %}
-                    <script type="text/javascript">
-                        {% block batch_javascript %}
-                        jQuery(document).ready(function ($) {
-                            $('#list_batch_checkbox').click(function () {
-                                $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
-                            });
-                            $("td.sonata-ba-list-field-batch input[type='checkbox']").change(function () {
-                                $(this).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
-                            });
-                        });
-                        {% endblock %}
-                    </script>
 
-                    <div class="actions sonata-ba-list-actions">
-                        {% block batch_actions %}
-                            <select name="action">
-                                {% for action, options in batchactions %}
-                                    <option value="{{ action }}">{{ options.label }}</option>
-                                {% endfor %}
-                            </select>
-
-                            <label class="checkbox">
-                                <input type="checkbox" name="all_elements"/>
-                                {{ 'all_elements'|trans({}, 'SonataAdminBundle') }}
-                            </label>
-
-                            <input type="submit" class="btn btn-primary"
-                                   value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}"/>
-                        {% endblock %}
-                    </div>
-                {% endblock %}
-            {% endif %}
         </form>
 
     {% else %}
@@ -238,7 +204,7 @@ file that was distributed with this source code.
     {% endif %}
     {% if not  app.request.isxmlhttprequest %}
         <div class="modal hide fade" tabindex="-1" role="dialog" id="page_dialog">
-               </div>
+        </div>
         </div>
     {% endif %}
 {% endblock %}
@@ -280,4 +246,39 @@ file that was distributed with this source code.
 {% block footer %}
     {{ parent() }}
     {% include "NetworkingInitCmsBundle:PageAdmin:page_list_script.html.twig" %}
+{% endblock %}
+
+{% block batch %}
+    {% if batchactions|length > 0 %}
+
+
+    <script type="text/javascript">
+        {% block batch_javascript %}
+        jQuery(document).ready(function ($) {
+            $('#list_batch_checkbox').click(function () {
+                $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
+            });
+            $("td.sonata-ba-list-field-batch input[type='checkbox']").change(function () {
+                $(this).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
+            });
+        });
+        {% endblock %}
+    </script>
+
+    <div class="actions initcms-list-actions">
+        {% block batch_actions %}
+            <input type="checkbox" name="all_elements"/>
+            <select name="action">
+                {% for action, options in batchactions %}
+                    <option value="{{ action }}">{{ options.label }}</option>
+                {% endfor %}
+            </select>
+
+
+
+            <input type="submit" class="btn btn-primary"
+                   value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}"/>
+        {% endblock %}
+    </div>
+    {% endif %}
 {% endblock %}

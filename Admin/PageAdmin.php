@@ -30,6 +30,8 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
  */
 class PageAdmin extends BaseAdmin
 {
+    protected $maxPerPage = 500;
+
     /**
      * @var string
      */
@@ -577,23 +579,31 @@ class PageAdmin extends BaseAdmin
      */
     public function getBatchActions()
     {
-        return array();
-        // retrieve the default (currently only the delete action) actions
-        $actions = parent::getBatchActions();
+         // retrieve the default (currently only the delete action) actions
+        $actions = array();
 
         // check user permissions
-        if ($this->hasRoute('edit') && $this->isGranted('EDIT') && $this->hasRoute('delete') && $this->isGranted(
-            'DELETE'
-        )
-        ) {
+        if ($this->isGranted('PUBLISH')) {
             $actions['publish'] = array(
-                'label' => $this->trans('action_publish', array(), $this->translationDomain),
+                'label' => $this->trans('label.action_publish', array(), $this->translationDomain),
                 'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
             );
 
         }
 
+        if ($this->hasRoute('delete') && $this->isGranted('DELETE')) {
+                    $actions['delete'] = array(
+                        'label'            => $this->trans('action_delete', array(), 'SonataAdminBundle'),
+                        'ask_confirmation' => true, // by default always true
+                    );
+                }
+
         return $actions;
+    }
+
+    public function getExportFormats()
+    {
+        return array();
     }
 
 }

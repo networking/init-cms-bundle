@@ -385,6 +385,10 @@
                 <source>link.revert_to_publish</source>
                 <target>Revert to last published state</target>
             </trans-unit>
+            <trans-unit id="label.action_publish">
+                <source>label.action_publish</source>
+                <target>Publish selected pages</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

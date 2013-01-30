@@ -5497,3 +5497,6 @@ legend.sonata-ba-fieldset-collapsed-description + .sonata-ba-collapsed-fields {
     font-size: 14px;
     font-weight: bolder;
 }
+.initcms-list-actions select, .initcms-list-actions input{
+    margin-bottom: 0px;;
+}
