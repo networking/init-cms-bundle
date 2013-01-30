@@ -329,24 +329,24 @@ file that was distributed with this source code.
                 {% endif %}
 
 
-                {% if _side_menu is not empty %}
-                            <div class="sidebar span2">
-                                <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
-                            </div>
-                        {% endif %}
+
 
                 {% if _list_table is not empty or _list_filters is not empty %}
 
-                        <div class="span7">
-                            {{ _list_table|raw }}
-                        </div>
-                        <div class="span3">
+                        <div class="span{% if _side_menu is not empty %}8{% else %}10{% endif %}">
                             <div class="accordion" id="accordion1">
                                 {{ _list_filters|raw }}
                                 {% block actions %}{% endblock %}
                             </div>
+                            {{ _list_table|raw }}
                         </div>
 
+                {% endif %}
+
+                {% if _side_menu is not empty %}
+                    <div class="sidebar span2">
+                        <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
+                    </div>
                 {% endif %}
                 </div>
             {% endblock %}
