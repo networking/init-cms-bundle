@@ -137,6 +137,10 @@ file that was distributed with this source code.
              style="display: none"
              role="dialog" aria-labelledby="{{ "legend.page_settings"|trans({}, admin.translationdomain) }}"
              aria-hidden="true">
+            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3>{{ 'legend.page_settings'|trans({}, admin.translationdomain) }}</h3>
+                        </div>
             <div class="modal-body">
                 {{ form_rest(form) }}
             </div>
