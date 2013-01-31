@@ -28,8 +28,9 @@
 		<requirement key="_method">GET|POST</requirement>
 	</route>
 
-    <route id="networking_init_view_draft" pattern="/view_draft/{path}">
+    <route id="networking_init_view_draft" pattern="/view_draft/{locale}:{path}">
    		<default key="_controller">NetworkingInitCmsBundle:Default:viewDraft</default>
+           <requirement key="locale">(.*)?</requirement>
            <requirement key="path">(.*)?</requirement>
    	</route>
 
@@ -37,8 +38,9 @@
 		<default key="_controller">NetworkingInitCmsBundle:Default:viewDraft</default>
 	</route>
 
-	<route id="networking_init_view_live" pattern="/view_live/{path}">
+	<route id="networking_init_view_live" pattern="/view_live/{locale}:{path}">
 		<default key="_controller">NetworkingInitCmsBundle:Default:viewLive</default>
+		<requirement key="locale">(.*)?</requirement>
 		<requirement key="path">(.*)?</requirement>
 	</route>
 

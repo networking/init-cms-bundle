@@ -11,6 +11,8 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository,
+    Symfony\Component\DependencyInjection\ContainerInterface,
+    Symfony\Component\DependencyInjection\ContainerAwareInterface,
     Symfony\Cmf\Component\Routing\RouteProviderInterface,
     Symfony\Component\HttpFoundation\Session\Session,
     Symfony\Component\Routing\RouteCollection,
@@ -24,24 +26,19 @@ use Doctrine\ORM\EntityRepository,
 /**
  * @author net working AG <info@networking.ch>
  */
-class ContentRouteRepository extends EntityRepository implements RouteProviderInterface
+class ContentRouteRepository extends EntityRepository implements RouteProviderInterface, ContainerAwareInterface
 {
     const ROUTE_GENERATE_DUMMY_NAME = 'networking_init_dynamic_route';
-
-    /**
-     * @var string $locale
-     */
-    protected $locale;
-
-    /**
-     * @var string $viewStatus
-     */
-    protected $viewStatus;
 
     /**
      * @var string $className
      */
     protected $className;
+
+    /**
+     * @var Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    protected $container;
 
 
     /**
@@ -52,35 +49,15 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
         $this->className = $className;
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Session\Session $session
-     * @return void
-     * @internal param $locale
-     */
-    public function setLocaleBySession(Session $session)
-    {
-        $this->setLocale($session->get('_locale'));
-
-        $viewStatus = $session->get('_viewStatus') ? $session->get('_viewStatus') : Page::STATUS_PUBLISHED;
-
-        $this->setViewStatus($viewStatus);
-    }
 
     /**
-     * @param $locale
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
-    public function setLocale($locale)
+    public function setContainer(ContainerInterface $container = null)
     {
-        $this->locale = $locale;
+        $this->container = $container;
     }
 
-    /**
-     * @param $viewStatus
-     */
-    public function setViewStatus($viewStatus)
-    {
-        $this->viewStatus = $viewStatus;
-    }
 
     /**
      * {@inheritDoc}
@@ -150,8 +127,10 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
 
         $params = array('path' => $searchUrl);
 
-        if ($this->locale) {
-            $params['locale'] = $this->locale;
+        $locale = $this->container->get('request')->getLocale();
+
+        if ($locale) {
+            $params['locale'] = $locale;
         }
 
         $contentRoutes = $this->findBy($params);
@@ -161,9 +140,12 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
 
             $content = $this->getRouteContent($contentRoute);
 
-            if ($this->viewStatus == Page::STATUS_DRAFT && ($content instanceof ResourceVersionInterface)) {
+            $session = $this->container->get('session');
+            $viewStatus = $session->get('_viewStatus') ? $session->get('_viewStatus') : Page::STATUS_PUBLISHED;
+
+            if ($viewStatus == Page::STATUS_DRAFT && ($content instanceof ResourceVersionInterface)) {
                 continue;
-            } elseif ($this->viewStatus == Page::STATUS_PUBLISHED && ($content instanceof VersionableInterface)) {
+            } elseif ($viewStatus == Page::STATUS_PUBLISHED && ($content instanceof VersionableInterface)) {
                 continue;
             }
 

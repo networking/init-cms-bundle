@@ -376,7 +376,6 @@
                 <source>url.placeholder</source>
                 <target>/</target>
             </trans-unit>
-
             <trans-unit id="meta_title.helper.text">
                 <source>meta_title.helper.text</source>
                 <target>Title that is shown in the browser</target>
@@ -388,6 +387,31 @@
             <trans-unit id="label.action_publish">
                 <source>label.action_publish</source>
                 <target>Publish selected pages</target>
+            </trans-unit>
+            <trans-unit id="info.layout_block_empty">
+                <source>info.layout_block_empty</source>
+                <target>This part of your page is empty. Click on the + icon above to enter your first piece of
+                    content, or drag a content item from one of the other content areas into this one. </target>
+            </trans-unit>
+            <trans-unit id="legend.create_menu">
+                <source>legend.create_menu</source>
+                <target>Create an item in the menu "%menu_name%" for this page</target>
+            </trans-unit>
+            <trans-unit id="legend.edit_menu">
+                <source>legend.edit_menu</source>
+                <target>Edit selected menu item</target>
+            </trans-unit>
+            <trans-unit id="info.create_menu_item">
+                <source>info.create_menu_item</source>
+                <target>If you choose to continue, you will be directed to the menu manager where an item will be created for you using the page title. All you need to do is position it where you would like.</target>
+            </trans-unit>
+            <trans-unit id="info.edit_menu_item">
+                <source>info.edit_menu_item</source>
+                <target>If you choose to continue, you will be directed to the menu manager where you can edit the selected menu item.</target>
+            </trans-unit>
+            <trans-unit id="button.continue">
+                <source>button.continue</source>
+                <target>Continue</target>
             </trans-unit>
         </body>
     </file>

@@ -104,6 +104,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                     'admin_networking_initcms_page_edit',
                     array('id' => urlencode($entity->getId()))
                 );
+                $language = $entity->getRoute()->getLocale();
             } elseif ($entity instanceof ResourceVersionInterface) {
                 $liveRoute = $this->router->generate($entity->getRoute());
                 $draftRoute = $this->router->generate($entity->getPage()->getRoute());
@@ -112,13 +113,15 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                     'admin_networking_initcms_page_edit',
                     array('id' => urlencode($entity->getPage()->getId()))
                 );
-
+                $language = $entity->getRoute()->getLocale();
             }
 
+            if(!isset($language)){
+                $language = $request->getLocale();
+            }
 
-
-            $draftPath = $this->router->generate('networking_init_view_draft', array('path' => urlencode($draftRoute)));
-            $livePath = $this->router->generate('networking_init_view_live', array('path' => urlencode($liveRoute)));
+            $draftPath = $this->router->generate('networking_init_view_draft', array('locale' => $language,'path' => urlencode($draftRoute)));
+            $livePath = $this->router->generate('networking_init_view_live', array('locale' => $language, 'path' => urlencode($liveRoute)));
 
             // Set active url based on which status is in the session
 
