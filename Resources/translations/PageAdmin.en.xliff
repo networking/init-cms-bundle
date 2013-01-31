@@ -413,6 +413,10 @@
                 <source>button.continue</source>
                 <target>Continue</target>
             </trans-unit>
+            <trans-unit id="label.show_no_more">
+                <source>label.show_no_more</source>
+                <target>Please don't show me this again</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

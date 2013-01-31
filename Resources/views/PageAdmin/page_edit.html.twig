@@ -73,6 +73,13 @@ file that was distributed with this source code.
                     </div>
         <div class="modal-body">
             <div id="menu_info_text"></div>
+            <p>&nbsp;</p>
+            <div>
+                <label class="checkbox" for="show_now_confirm_dialog">
+                    <input type="checkbox" id="show_now_confirm_dialog" name="show_now_confirm_dialog" />
+                    {{ 'label.show_no_more'|trans({}, admin.translationDomain) }}
+                </label>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal"

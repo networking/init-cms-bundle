@@ -52,6 +52,26 @@ file that was distributed with this source code.
         });
     };
 
+    function openMenuDialog(event, ui) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        $('#confirmMenuCreation').modal('show');
+        var confirm = $('#confirmMenuCreation').find('#btn_create_menu');
+        var url = ui.href;
+        $('#show_now_confirm_dialog').attr('checked', false);
+
+        $(confirm).bind('click', function () {
+            if ($('#show_now_confirm_dialog').attr('checked')) {
+                window.location = url+ '?show_now_confirm_dialog=1';
+            }else {
+                window.location = url;
+            }
+
+
+        });
+    }
+
     (function ($) {
 
         $("#{{ admin.getUniqid }}_locale").live('change', function () {
@@ -92,6 +112,7 @@ file that was distributed with this source code.
             }
 
         });
+        {% if not app.user.getAdminSetting('menuAdmin.show_now_confirm_dialog') %}
 
         $('#{{ admin.uniqid }}_url').bind('change', function () {
             $("#{{ admin.uniqid }}_parent").trigger('change');
@@ -109,19 +130,10 @@ file that was distributed with this source code.
             openMenuDialog(event, this);
 
         });
+        {% endif %}
 
 
     })(jQuery);
-
-    function openMenuDialog(event, ui) {
-        event.preventDefault();
-        event.stopPropagation();
-        $('#confirmMenuCreation').modal('show');
-        var confirm = $('#confirmMenuCreation').find('#btn_create_menu');
-        $(confirm).bind('click', function () {
-            window.location = ui.href;
-        });
-    }
 
 </script>
 {% endautoescape %}

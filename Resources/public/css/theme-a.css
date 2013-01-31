@@ -1085,7 +1085,7 @@ input[type="checkbox"] {
     *margin-top: 0;
     /* IE7 */
 
-    margin-top: 1px   \9;
+    margin-top: 1px;
     /* IE8-9 */
 
     line-height: normal;
