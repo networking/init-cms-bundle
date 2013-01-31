@@ -30,70 +30,40 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
      * @var array
      */
     private $textArray = array(
-        'en_US' => array(
-            'not_found' => array(
-                'title' => 'Not Found ',
-                'text' => 'No Help Text found for this item',
-                'is_deletable' => '0'
-            ),
-            'dashboard' => array(
-                'title' => 'Dashboard',
-                'text' => 'Dashboard Text',
-                'is_deletable' => '1'
-            ),
-            'networking_init_cms.menu.admin.menu_item.edit' => array(
-                'title' => 'Menu Item Edit',
-                'text' => 'Menu Item Edit Help Text',
-                'is_deletable' => '1'
-            ),
-            'networking_init_cms.page.admin.page.edit' => array(
-                'title' => 'Page Edit',
-                'text' => 'Page edit help text',
-                'is_deletable' => '1'
-            ),
-            'networking_init_cms.page.admin.page.list' => array(
-                'title' => 'Page List',
-                'text' => 'Page List help text',
-                'is_deletable' => '1'
-            ),
-            'networking_init_cms.menu.admin.menu_item.navigation' => array(
-                'title' => 'Menu Item Navigation',
-                'text' => 'Menu Item Navigation Help Text',
-                'is_deletable' => '1'
-            )
+        'not_found' => array(
+                    'title' => 'not_found.title',
+                    'text' => 'not_found.text',
+                    'is_deletable' => '0'
+                ),
+        'overview' => array(
+                    'title' => 'overview.title',
+                    'text' => 'overview.text',
+                    'is_deletable' => '1'
+                ),
+        'dashboard' => array(
+            'title' => 'dashboard.title',
+            'text' => 'dashboard.text',
+            'is_deletable' => '1'
         ),
-        'de_CH' => array(
-            'not_found' => array(
-                'title' => 'nicht gefunden ',
-                'text' => 'Kein Hilfe Text',
-                'is_deletable' => '0'
-            ),
-            'dashboard' => array(
-                'title' => 'Dashboard',
-                'text' => 'Dashboard Text',
-                'is_deletable' => '1'
-            ),
-            'networking_init_cms.menu.admin.menu_item.edit' => array(
-                'title' => 'Menu Bearbeiten',
-                'text' => 'Menu bearbeiten hilfe text',
-                'is_deletable' => '1'
-            ),
-            'networking_init_cms.page.admin.page.edit' => array(
-                'title' => 'Page Edit',
-                'text' => 'Page edit help text',
-                'is_deletable' => '1'
-            ),
-            'networking_init_cms.page.admin.page.list' => array(
-                'title' => 'Page List',
-                'text' => 'Page List help text',
-                'is_deletable' => '1'
-            ),
-            'networking_init_cms.menu.admin.menu_item.navigation' => array(
-                'title' => 'Menu Item Navigation',
-                'text' => 'Menu Item Navigation Help Text',
-                'is_deletable' => '1'
-            )
-
+        'networking_init_cms.menu.admin.menu_item.edit' => array(
+            'title' => 'networking_init_cms.menu.admin.menu_item.edit.title',
+            'text' => 'networking_init_cms.menu.admin.menu_item.edit.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.page.admin.page.edit' => array(
+            'title' => 'networking_init_cms.page.admin.page.edit.title',
+            'text' => 'networking_init_cms.page.admin.page.edit.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.page.admin.page.list' => array(
+            'title' => 'networking_init_cms.page.admin.page.list.title',
+            'text' => 'networking_init_cms.page.admin.page.list.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.menu.admin.menu_item.navigation' => array(
+            'title' => 'networking_init_cms.menu.admin.menu_item.navigation.title',
+            'text' => 'networking_init_cms.menu.admin.menu_item.navigation.text',
+            'is_deletable' => '1'
         )
     );
 
@@ -111,22 +81,25 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
      */
     public function load(ObjectManager $manager)
     {
-        foreach ($this->textArray as $locale => $value) {
-            foreach ($value as $translationKey => $row) {
+        $languages = $this->container->getParameter('networking_init_cms.page.languages');
+        foreach ($languages as  $lang) {
+            $this->container->get('translator')->setLocale($lang['locale']);
+            foreach ($this->textArray as $translationKey => $row) {
 
                 $this->createHelpText(
                     $manager,
-                    $locale,
+                    $lang['locale'],
                     $translationKey,
-                    $row['title'],
-                    $row['text'],
+                    $this->container->get('translator')->trans($row['title'], array(), 'AdminHelp'),
+                    $this->container->get('translator')->trans($row['text'], array(), 'AdminHelp'),
                     $row['is_deletable']
                 );
             }
-            //unset($translator);
-
         }
+
+
     }
+
 
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager

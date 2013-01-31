@@ -58,6 +58,8 @@ class HelpText
     protected $title;
 
 
+
+
     /**
      * @var string $isDeletable
      *
