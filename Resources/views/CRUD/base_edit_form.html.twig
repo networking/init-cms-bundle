@@ -53,7 +53,7 @@ file that was distributed with this source code.
                                 </legend>
                             {% endif %}
 
-                            <div class="sonata-ba-collapsed-fields">
+                            <div class="sonata-ba-collapsed-fields"  {% if form_group.collapsed %}style="display: none;"{% endif %}>
 
                                 {% for field_name in form_group.fields %}
                                     {% if admin.formfielddescriptions[field_name] is defined %}

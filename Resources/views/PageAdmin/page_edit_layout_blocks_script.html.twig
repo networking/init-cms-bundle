@@ -210,7 +210,7 @@ function onAfterLoad() {
             imageUploadErrorCallback:function (editor, xhr) {
                 uploadError(xhr)
             },
-            fileGetJson: '{{ path('admin_networking_media_media_uploadedTextBlockFile') }}',
+            fileGetJson:'{{ path('admin_networking_media_media_uploadedTextBlockFile') }}',
             fileUpload:'{{ path('admin_networking_media_media_uploadTextBlockFile') }}',
             plugins:['cssPlugin'],
             cssStyles:{'color-draft':'orange', 'white':'background white'},
@@ -230,13 +230,34 @@ function onAfterLoad() {
             saveLayoutBlockSort(function (xhr) {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             });
-
         },
         receive:function (event, ui) {
             var zone = jQuery(this).attr('id').substr(5);
             var liItem = jQuery(ui.item);
             liItem.find("[id$='_zone']").val(zone);
             apply_position_value_{{ id }}();
+            $(this).find(".empty_layout_block").hide();
+        },
+        change:function (event, ui) {
+            var listItems = $(this).find('.networking-sortable-list');
+
+            if (listItems.length < 2) {
+                $(this).find(".empty_layout_block").show();
+            } else {
+                $(this).find(".empty_layout_block").hide();
+            }
+        },
+        over:function (event, ui) {
+            $(this).find(".empty_layout_block").hide();
+        }
+    });
+
+    jQuery('div#field_container_{{ id }} ul.sortable').on('sortout', function (event, ui) {
+        var listItems = $(this).find('.networking-sortable-list');
+        if (listItems.length < 1) {
+            $(this).find(".empty_layout_block").show();
+        } else {
+            $(this).find(".empty_layout_block").hide();
         }
     });
 
@@ -246,6 +267,8 @@ function onAfterLoad() {
             var zone = jQuery(this).attr('id').substr(5);
             jQuery(this).find("[id$='_zone']").val(zone);
         }
+
+
     });
 
     jQuery("input[id$='_delete']", "li.networking-sortable-list").each(function () {
@@ -258,6 +281,8 @@ function onAfterLoad() {
             if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationdomain) }}')) {
 
                 var liElement = jQuery(this).closest('li.networking-sortable-list');
+                var parent = jQuery(liElement).parent();
+
 
                 jQuery.ajax({
                     url:'{{ url('admin_networking_initcms_page_deleteLayoutBlock') }}',
@@ -269,6 +294,7 @@ function onAfterLoad() {
                     }
                 });
                 liElement.remove();
+                jQuery(parent).trigger('sortout');
 
             }
         });

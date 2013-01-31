@@ -389,6 +389,11 @@
                 <source>label.action_publish</source>
                 <target>Publish selected pages</target>
             </trans-unit>
+            <trans-unit id="info.layout_block_empty">
+                <source>info.layout_block_empty</source>
+                <target>This part of your page is empty. Click on the + icon above to enter your first piece of
+                    content, or drag a content item from one of the other content areas into this one. </target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
