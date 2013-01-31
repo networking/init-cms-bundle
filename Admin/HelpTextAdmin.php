@@ -99,9 +99,9 @@ class HelpTextAdmin extends BaseAdmin
                 'preferred_choices' => array($this->getDefaultLocale())
             )
 
-        )
-        ->add('title', null, array('hidden' => true), null, array())
-        ->add('text', null, array(), null, array());
+        );
+       // ->add('title', null, array('hidden' => true), null, array())
+        //->add('text', null, array(), null, array());
 
     }
 
