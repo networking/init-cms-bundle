@@ -176,19 +176,25 @@ class DefaultController extends Controller
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $locale
+     * @param string/null $path
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function viewDraftAction(Request $request, $path = null)
+    public function viewDraftAction(Request $request, $locale, $path = null)
     {
+        $request->getSession()->set('_locale', $locale);
         return $this->changePageStatus($request, Page::STATUS_DRAFT, $path);
     }
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $locale
+     * @param string/null $path
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function viewLiveAction(Request $request, $path = null)
+    public function viewLiveAction(Request $request, $locale, $path = null)
     {
+        $request->getSession()->set('_locale', $locale);
         return $this->changePageStatus($request, Page::STATUS_PUBLISHED, $path);
     }
 

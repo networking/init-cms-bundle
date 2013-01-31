@@ -90,39 +90,31 @@ class LocaleListener implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        if (!$request->getSession()) {
-            return;
-        }
-
         if (!$request) {
             return;
         }
 
-        $patterns = $this->accessMap->getPatterns($request);
+        if (!$request->getSession()) {
+            return;
+        }
 
+        $patterns = $this->accessMap->getPatterns($request);
         //@todo find a better solution to know if we are in the admin area or not
         $localeType = (in_array('ROLE_ADMIN', $patterns[0])) ? 'admin/_locale' : '_locale';
 
-
-        if ($request->hasPreviousSession()) {
-            $request->setDefaultLocale($request->getSession()->get($localeType, $this->defaultLocale));
-        } else {
-            $preferredLocale = $this->getPreferredLocale($request);
-            $request->getSession()->set($localeType, $preferredLocale);
-            $request->setDefaultLocale($preferredLocale);
-        }
-
-
-        if ($locale = $request->attributes->get('_locale')) {
-
-            $request->setLocale($locale);
-
-            if ($request->hasPreviousSession()) {
-
-                $request->getSession()->set($localeType, $request->getLocale());
-            }
-        } else {
+        /*
+         * handle locale:
+         * 1. priority: defined in session
+         * 2. priority: defined in browser or default
+         */
+        if($request->hasPreviousSession()) {
+            // there is a session -> use that
             $request->setLocale($request->getSession()->get($localeType));
+        } else {
+            // nothing set, get the preferred locale and use it
+            $preferredLocale = $this->getPreferredLocale($request);
+            $request->setLocale($preferredLocale);
+            $request->getSession()->set($localeType, $preferredLocale);
         }
 
         if (null !== $this->router) {
