@@ -94,11 +94,11 @@ file that was distributed with this source code.
                         <div class="accordion-inner">
                             {% for rootNode in rootMenus %}
                                 <label> {{ 'label.menu_link'|trans({'%menu_name%': rootNode.name}, admin.translationdomain) }}
-                                    <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}">
+                                    <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}" class="menu_add_link" title="{{ 'legend.create_menu'|trans({'%menu_name%': rootNode.name }, admin.translationDomain) }}">
                                         {{ 'link_add_page_to_menu'|trans({}, admin.translationDomain) }}</a></label>
                                 {% for menuItem in object.getMenuItemByRoot(rootNode.id) %}
                                     &nbsp;&nbsp;{{ menuItem.name }} <a
-                                        href="{{ url('admin_networking_initcms_menuitem_list') }}">{{ 'link.edit'|trans({}, admin.translationDomain) }}</a>
+                                        href="{{ url('admin_networking_initcms_menuitem_list') }}" class="menu_edit_link">{{ 'link.edit'|trans({}, admin.translationDomain) }}</a>
                                     <br/>
                                 {% endfor %}
                             {% endfor %}
