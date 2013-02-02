@@ -214,6 +214,12 @@ function setUpSortTree() {
         $('a[href="' + lastTab + '"]').tab('show');
     }
 
+
+    $('#hidden_filters').on('show hide', function () {
+        $('#filter_toggle').toggleClass('icon-plus');
+        $('#filter_toggle').toggleClass('icon-minus');
+    });
+
 })(jQuery);
 </script>
 {% endautoescape %}
