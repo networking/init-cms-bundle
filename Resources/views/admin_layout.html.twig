@@ -338,10 +338,8 @@ file that was distributed with this source code.
                 {% if _list_table is not empty or _list_filters is not empty %}
 
                         <div class="span{% if _side_menu is not empty %}8{% else %}10{% endif %}">
-                            <div class="accordion" id="accordion1">
-                                {{ _list_filters|raw }}
-                                {% block actions %}{% endblock %}
-                            </div>
+                            {{ _list_filters|raw }}
+                            {% block actions %}{% endblock %}
                             {{ _list_table|raw }}
                         </div>
 

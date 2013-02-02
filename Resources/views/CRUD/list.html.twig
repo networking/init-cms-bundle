@@ -11,20 +11,8 @@ file that was distributed with this source code.
 {% extends 'NetworkingInitCmsBundle:CRUD:base_list.html.twig' %}
 
 {% block actions %}
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                <div class="accordion-caret"><b class="caret"></b></div>
-                {{ 'legend.actions'|trans({}, admin.translationDomain) }}
-            </a>
-        </div>
-        <div id="collapseTwo" class="accordion-body collapse in">
-            <div class="accordion-inner">
-                {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
-                <br/><br/>
-            </div>
-        </div>
-    </div>
+    {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
+
 {% endblock %}
 {% block list_table %}
     {{ parent() }}
