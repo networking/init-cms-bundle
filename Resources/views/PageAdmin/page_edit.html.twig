@@ -30,8 +30,8 @@ file that was distributed with this source code.
 
 {% block top_actions %}
     <div class="pull-right level-headline-icon">
-                    <a href="javascript:history.back();"><div class="close-button-medium"></div></a>
-                </div>
+       <a class="btn btn-custom btn-small" href="{{ admin.generateUrl('list', {'locale': object.locale}) }}"> &larr; Back</a>
+    </div>
 {% endblock %}
 
 {% block actions %}

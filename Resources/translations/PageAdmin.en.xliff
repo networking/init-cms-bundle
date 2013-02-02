@@ -60,11 +60,11 @@
             </trans-unit>
             <trans-unit id="form.label_meta_keyword">
                 <source>form.label_meta_keyword</source>
-                <target>Meta keywords</target>
+                <target>Meta Keywords</target>
             </trans-unit>
             <trans-unit id="form.label_meta_description">
                 <source>form.label_meta_description</source>
-                <target>Meta description</target>
+                <target>Meta Description</target>
             </trans-unit>
             <trans-unit id="form.label_status ">
                 <source>form.label_status</source>
@@ -416,6 +416,44 @@
             <trans-unit id="label.show_no_more">
                 <source>label.show_no_more</source>
                 <target>Please don't show me this again</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Create a new Page</target>
+            </trans-unit>
+            <trans-unit id="info.page_create">
+                <source>info.page_create</source>
+                <target>Please fill out the important page fields below before we move on to adding content. After the page is created you will
+                be directed to the page edit view. You can always edit these settings in the page edit view, simply look for the edit icon under
+                Settings &amp; SEO.</target>
+            </trans-unit>
+            <trans-unit id="locale.helper.text">
+                <source>locale.helper.text</source>
+                <target>Content language of this page</target>
+            </trans-unit>
+            <trans-unit id="working_title.helper.text">
+                <source>working_title.helper.text</source>
+                <target>Internal page title. Not shown in frontend</target>
+            </trans-unit>
+            <trans-unit id="parent.helper.text">
+                <source>parent.helper.text</source>
+                <target>Parent URL for this page.</target>
+            </trans-unit>
+            <trans-unit id="visibility.helper.text">
+                <source>visibility.helper.text</source>
+                <target>Public or password protected page</target>
+            </trans-unit>
+            <trans-unit id="template.helper.text">
+                <source>template.helper.text</source>
+                <target>The layout that would you like your page to the</target>
+            </trans-unit>
+            <trans-unit id="meta_settings">
+                <source>meta_settings</source>
+                <target>Page Meta Settings</target>
+            </trans-unit>
+            <trans-unit id="filter.label_status">
+                <source>filter.label_status</source>
+                <target>Page Status</target>
             </trans-unit>
         </body>
     </file>

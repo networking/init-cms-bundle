@@ -4,11 +4,13 @@
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        <div class="span7">
+        <div class="span10">
+            <p>{{ 'info.page_create'|trans({}, 'PageAdmin') }}</p>
             <form class="form-vertical"
                   action="{{ admin.generateUrl('create', {'id': admin.id(object), 'uniqid': admin.uniqid, 'locale': app.request.get('locale'), 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
                   method="POST">
                 {% if form.vars.errors|length > 0 %}
+                    {{ dump(form.vars.errors) }}
                     <div class="sonata-ba-form-error">
                         {{ form_errors(form) }}
                     </div>
@@ -16,7 +18,7 @@
 
                 {% block sonata_pre_fieldsets %}{% endblock %}
 
-                {{ form_rest(form) }}
+
 
                 {% set form_group = admin.formgroups.page_settings %}
                 {% for field_name in form_group.fields %}
@@ -25,6 +27,29 @@
                     {% endif %}
                 {% endfor %}
 
+                {% set form_group = admin.formgroups.meta_settings %}
+
+                <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
+                        <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
+                            {% if form_group.collapsed %}
+                                <a href="" class="sonata-ba-collapsed"
+                                   title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationdomain) }}</a>
+                            {% else %}
+                                {{ 'meta_settings'|trans({}, admin.translationdomain) }}
+                            {% endif %}
+                        </legend>
+
+                    <div class="sonata-ba-collapsed-fields"  {% if form_group.collapsed %}style="display: none;"{% endif %}>
+
+                        {% for field_name in form_group.fields %}
+                            {% if admin.formfielddescriptions[field_name] is defined %}
+                                {{ form_row(form[field_name]) }}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </fieldset>
+
+                {{ form_rest(form) }}
 
 
                 {% block sonata_post_fieldsets %}{% endblock %}

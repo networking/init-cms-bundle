@@ -132,6 +132,14 @@ file that was distributed with this source code.
         });
         {% endif %}
 
+        $('#review_status').live('click', function(){
+            if($(this).attr('checked')){
+                window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
+            } else {
+                window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
+            }
+        })
+
 
     })(jQuery);
 

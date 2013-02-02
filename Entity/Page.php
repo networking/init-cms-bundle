@@ -81,20 +81,20 @@ class Page implements RouteAwareInterface, VersionableInterface
     /**
      * @var string $workingTitle
      * @ORM\Column(name="working_title", type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"default"})
      */
     protected $workingTitle;
 
     /**
      * @var string $metaTitle
-     * @ORM\Column(name="meta_title", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="meta_title", type="string", length=255, nullable=true)
      */
     protected $metaTitle;
 
     /**
      * @var string $url
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
+     * @Assert\NotBlank(groups={"not_home"})
      */
     protected $url;
 
@@ -121,13 +121,13 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var string $metaKeyword
-     * @ORM\Column(name="meta_keyword", type="string", length=255)
+     * @ORM\Column(name="meta_keyword", type="string", length=255, nullable=true)
      */
     protected $metaKeyword;
 
     /**
      * @var string $metaDescription
-     * @ORM\Column(name="meta_description", type="text")
+     * @ORM\Column(name="meta_description", type="text", nullable=true)
      */
     protected $metaDescription;
 
@@ -265,6 +265,10 @@ class Page implements RouteAwareInterface, VersionableInterface
     public function onPrePersist()
     {
         $this->createdAt = $this->updatedAt = new \DateTime("now");
+
+        if(!$this->metaTitle){
+            $this->setMetaTitle($this->workingTitle);
+        }
     }
 
     /**
@@ -1394,5 +1398,13 @@ class Page implements RouteAwareInterface, VersionableInterface
         }
 
         return $originals;
+    }
+
+    public function getStatusLabel()
+    {
+        if($this->isPublished()){
+            return self::STATUS_PUBLISHED;
+        }
+        return self::STATUS_DRAFT;
     }
 }

@@ -8,21 +8,42 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-<label>{{ 'label_change_status'|trans({}, admin.translationDomain)}}</label>
-<div class="btn-group">
+
+<div>
+    <h3 class="pull-left {% if not object.isPublished %}color-draft{% endif %}">
+        {{ object.statusLabel|trans({}, admin.translationdomain) }}
+    </h3>
+    {% if not object.isPublished %}
+    <div class="pull-right" style="padding-top: 20px;">
+        {% set path = path(object.route()) %}
+        <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path}) }}" class="btn btn-custom btn-small">
+            <i class="icon-eye-open  icon-white"></i>
+            {{ 'preview'|trans({}, admin.translationDomain) }}</a>
+    </div>
+    {% endif %}
+</div>
+<div class="clearfix">&nbsp;</div>
+
+{#<label>{{ 'label_change_status'|trans({}, admin.translationDomain)}}</label>#}
+
     {#<button type="submit" class="btn" onclick="return start_save_page_settings(this);">#}
     {#{{ 'button.apply'|trans({}, admin.translationdomain) }}</button>#}
 
-    <a href="{{ admin.generateUrl('review', {id: object.id}) }}" class=" btn btn-mini {% if object.isReview() %}disabled{% endif %}" {% if object.isReview() %}onclick="return false"{% endif %}>
-        {{ 'button.review'|trans({}, admin.translationdomain) }}
+
+    {% if not object.isPublished %}
+        <label class="checkbox" >
+            <input type="checkbox" id="review_status" name="review_status"  {% if object.isReview %}checked="checked"{% endif %}/>
+            {{ 'button.review'|trans({}, admin.translationdomain) }}</label>
+
+    {% endif %}
+    {% if object.isPublished %}
+    <a href="{{ admin.generateUrl('draft', {id: object.id}) }}" class="btn btn-mini {% if object.isDraft() %}disabled{% endif %}" {% if object.isDraft() %}onclick="return false"{% endif %}>
+        {{ 'button.draft'|trans({}, admin.translationdomain) }}
     </a>
-
-        <a href="{{ admin.generateUrl('draft', {id: object.id}) }}" class="btn btn-mini {% if object.isDraft() %}disabled{% endif %}" {% if object.isDraft() %}onclick="return false"{% endif %}>
-            {{ 'button.draft'|trans({}, admin.translationdomain) }}
-        </a>
+    {% endif %}
 
 
-    {% if admin.isGranted('PUBLISH') %}
+    {% if admin.isGranted('PUBLISH') and not object.isPublished %}
         <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
            class="btn btn-mini {% if object.isPublished() %}disabled{% endif %}"
            {% if object.isPublished() %}onclick="return false"{% endif %}>
@@ -30,7 +51,7 @@ file that was distributed with this source code.
         </a>
     {% endif %}
 
-</div>
+
 <p>&nbsp;</p>
 {% if not object.isPublished() and object.getSnapshot() %}
 <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}" class="status-dialog-link">

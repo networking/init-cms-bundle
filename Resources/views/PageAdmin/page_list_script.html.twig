@@ -97,6 +97,11 @@ file that was distributed with this source code.
 
         initializeDialog();
 
+        $('#hidden_filters').on('show hide', function () {
+            $('#filter_toggle').toggleClass('icon-plus');
+            $('#filter_toggle').toggleClass('icon-minus');
+        });
+
 
     })(jQuery);
 </script>
