@@ -77,10 +77,11 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
         if ($this->isLoggedIn) {
 
-            $editPath = $this->router->generate(
-                                        'sonata_admin_dashboard');
 
+            $editPath = false;
             $menu->setChildrenAttribute('class', 'nav pull-right');
+
+            $dashboardUrl = $this->router->generate('sonata_admin_dashboard');
 
             if ($sonataAdminParam = $request->get('_sonata_admin')) {
 
@@ -126,7 +127,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             // Set active url based on which status is in the session
 
             if($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin){
-                $menu->setCurrentUri($editPath);
+                $menu->setCurrentUri($dashboardUrl);
             }elseif ($this->serviceContainer->get('session')->get(
                 '_viewStatus'
             ) === VersionableInterface::STATUS_PUBLISHED
@@ -135,9 +136,27 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             } else {
                 $menu->setCurrentUri($draftPath);
             }
-            $menu->addChild('Edit View', array('uri' => $editPath));
-            $menu->addChild('Draft view', array('uri' => $draftPath, 'linkAttributes' =>array('class' => 'color-draft')));
-            $menu->addChild('Live view', array('uri' => $livePath));
+            if($editPath && !$sonataAdmin){
+
+                $menu->addChild('Edit', array('label' => ''  ,'linkAttributes' => array('class' =>'icon-pencil', 'style' => 'padding:0; margin: 10px 15px 10px;'), 'uri' => $editPath));
+            }
+            $menu->addChild('Admin', array('uri' => $dashboardUrl));
+            $viewStatus = $this->serviceContainer->get('session')->get('_viewStatus');
+            $translator = $this->serviceContainer->get('translator');
+
+            $dropdown = $this->createDropdownMenuItem(
+                        $menu,
+                        $translator->trans('link.website_'.$viewStatus, array(), 'NetworkingInitCmsAdminGeneral'),
+                        true,
+                        array('icon' => 'caret')
+                    );
+
+            if($draftPath){
+                $dropdown->addChild('Draft view', array('uri' => $draftPath, 'linkAttributes' =>array('class' => 'color-draft')));
+            }
+            if($livePath){
+                $dropdown->addChild('Live view', array('uri' => $livePath));
+            }
 
         }
 

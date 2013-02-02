@@ -455,6 +455,10 @@
                 <source>filter.label_status</source>
                 <target>Page Status</target>
             </trans-unit>
+            <trans-unit id="filter.label_working_title">
+                <source>filter.label_working_title</source>
+                <target>Working Title</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
