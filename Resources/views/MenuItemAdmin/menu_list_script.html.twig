@@ -47,7 +47,7 @@ function createAjaxDialog(event) {
     jQuery.ajax({
         url:url,
         dataType:'html',
-        data:{'root_id':lastTab.substr(6), 'locale':jQuery('#filter_locale_value').val()},
+        data:{'locale':jQuery('#filter_locale_value').val()},
         success:function (html) {
             // populate the popup container
             menuDialog.html(html);

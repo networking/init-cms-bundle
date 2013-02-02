@@ -4,7 +4,7 @@
 		<body>
 			<trans-unit id="button.create.menu_item">
 				<source>button.create.menu_item</source>
-				<target>Create a link in the menu</target>
+				<target>New link in menu</target>
 			</trans-unit>
             <trans-unit id="legend.menu.actions">
                 <source>legend.menu.actions</source>
