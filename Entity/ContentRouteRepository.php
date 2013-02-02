@@ -127,7 +127,7 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
 
         $params = array('path' => $searchUrl);
 
-        $locale = $this->container->get('request')->getLocale();
+        $locale = $this->container->get('session')->get('_locale');
 
         if ($locale) {
             $params['locale'] = $locale;
