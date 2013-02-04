@@ -151,7 +151,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             }
             if($editPath && !$sonataAdmin){
 
-                $menu->addChild('Edit', array('label' => ''  ,'linkAttributes' => array('class' =>'icon-pencil', 'style' => 'padding:0; margin: 10px 15px 10px;'), 'uri' => $editPath));
+                $menu->addChild('Edit', array('label' => ''  ,'linkAttributes' => array('class' =>'icon-pencil icon-white', 'style' => 'padding:0; margin: 10px 15px 10px;'), 'uri' => $editPath));
             }
             $menu->addChild('Admin', array('uri' => $dashboardUrl));
             $viewStatus = $this->serviceContainer->get('session')->get('_viewStatus');
