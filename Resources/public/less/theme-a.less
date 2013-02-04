@@ -24,7 +24,7 @@
 @import "tables";
 
 // Components: common
-@import "sprites";
+@import "font-awesome";
 @import "dropdowns";
 @import "wells";
 @import "component-animations";
@@ -89,27 +89,25 @@ body {
     font-weight: normal;
 }
 
-
-.initcms a {
-    color: @linkColor2;
+.initcms a:not(.btn) {
+    color: #666666;
 }
 
 .initcms a.colored-link {
     color: @linkColor;
 }
 
-.initcms a:hover {
+.initcms a:hover:not(.btn) {
     text-decoration: none;
     color: @linkColor;
 }
 
-
-.initcms .table a{
+.initcms .table a:not(.btn){
     text-decoration: none;
     color:@textColor;
 }
 
-.initcms .table a:hover{
+.initcms .table a:hover:not(.btn){
     text-decoration: none;
     color: @linkColor;
 }
@@ -146,7 +144,7 @@ body {
     padding-top:15px;
 }
 
-.initcms .accordion-inner a {
+.initcms .accordion-inner a:not(.btn) {
     color: @linkColor;
 }
 
