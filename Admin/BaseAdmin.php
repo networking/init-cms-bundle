@@ -34,7 +34,7 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
     /**
      * @var Array $trackedActions
      */
-    protected $trackedActions = array('list');
+    protected $trackedActions = array('list', 'edit');
 
 
     /**

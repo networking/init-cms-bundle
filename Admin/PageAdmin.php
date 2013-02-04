@@ -52,10 +52,6 @@ class PageAdmin extends BaseAdmin
      */
     protected $repository = '';
 
-    /**
-     * @var Array $trackedActions
-     */
-    protected $trackedActions = array('list', 'edit');
 
     /**
      * @param \Sonata\AdminBundle\Route\RouteCollection $collection
