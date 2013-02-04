@@ -8,6 +8,21 @@
 @adminNavbarBorder: darken(@adminNavbarBackground, 12%);
 @adminNavbarLinkBackgroundActive: darken(@adminNavbarBackground, 5%);
 @adminNavbarText: #777777;
+
+@navbarInverseText:                      @grayLight;
+@navbarInverseLinkColor:                 @grayLight;
+@navbarInverseLinkColorHover:            @grayLight;
+@navbarInverseLinkColorActive:           @navbarInverseLinkColorHover;
+@navbarInverseLinkBackgroundHover:       transparent;
+@navbarInverseLinkBackgroundActive:      #ffffff;
+
+@navbarInverseSearchBackground:          lighten(@navbarInverseBackground, 25%);
+@navbarInverseSearchBackgroundFocus:     @white;
+@navbarInverseSearchBorder:              @navbarInverseBackground;
+@navbarInverseSearchPlaceholderColor:    #ccc;
+
+@navbarInverseBrandColor:                @navbarInverseLinkColor;
+
 body {
   padding-top: @navbarHeight * 2;
 
@@ -16,50 +31,30 @@ body {
 .navbar-initcms {
   line-height: 130%;
   top: 0px !important;
-  color: @adminNavbarText; // Inner for background effects
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px; // Gradient is applied to its own element because overflow visible is not honored by IE when filter is present
   z-index: 2000;
 
-  .navbar-inner {
-    #gradient > .vertical(@adminNavbarBackgroundHighlight, @adminNavbarBackground);
-    border: 1px solid @adminNavbarBorder;
-  }
-
-// Dividers in navbar
-// -------------------------
-  .divider-vertical {
-    border-left: 1px solid @adminNavbarBackground;
-    border-right: 1px solid @adminNavbarBackgroundHighlight;
-  }
-// Links
-  .nav > li > a {
-    text-shadow: 0 1px 0 @adminNavbarBackgroundHighlight;
-  }
-
-// Active nav items
-  .nav > .active > a,
-  .nav > .active > a:hover,
-  .nav > .active > a:focus {
-    background-color: @adminNavbarLinkBackgroundActive;
-  }
-
-  .btn-navbar {
-    .buttonBackground(darken(@adminNavbarBackgroundHighlight, 5%), darken(@adminNavbarBackground, 5%));
-  }
-
-  .brand,
-  .nav > li > a {
-    text-shadow: 0 1px 0 @adminNavbarBackgroundHighlight;
-  }
-  .color-draft {
-    color: #ff8a00 !important;
-  }
-
+// Dropdowns
   .nav li.dropdown.open > .dropdown-toggle,
   .nav li.dropdown.active > .dropdown-toggle,
   .nav li.dropdown.open.active > .dropdown-toggle {
-    background-color: @adminNavbarBackgroundHighlight;
+    background-color: @navbarInverseLinkBackgroundActive;
+    color: @navbarInverseLinkColorActive;
+  }
+  .nav li.dropdown > .dropdown-toggle .caret {
+    border-top-color: @navbarInverseLinkColor;
+    border-bottom-color: @navbarInverseLinkColor;
+  }
+  .nav li.dropdown.open > .dropdown-toggle .caret,
+  .nav li.dropdown.active > .dropdown-toggle .caret,
+  .nav li.dropdown.open.active > .dropdown-toggle .caret {
+    border-top-color: @navbarInverseLinkColorActive;
+    border-bottom-color: @navbarInverseLinkColorActive;
+  }
+
+  .color-draft {
+    color: #ff8a00 !important;
   }
 
   .brand {
@@ -69,7 +64,6 @@ body {
     margin-left: -20px;
     font-size: 20px;
     font-weight: 200;
-    color: @adminNavbarText;
   }
    a.brand:hover{
     color: #0088cc;
