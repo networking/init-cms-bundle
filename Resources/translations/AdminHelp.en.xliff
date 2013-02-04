@@ -27,62 +27,277 @@
                 <target>Create</target>
             </trans-unit>
 
-
+            <!-- overview -->
             <trans-unit id="overview.title">
                 <source>overview.title</source>
                 <target>Overview</target>
             </trans-unit>
             <trans-unit id="overview.text">
                 <source>overview.text</source>
-                <target>Overview</target>
+                <target><![CDATA[
+                    <p>
+                               This Help section covers only the basic core functionality of the cms including Pages, Menus, Media and Users.
+                   </p>
+
+                   <p><h2>Terms</h2></p>
+                   <p><table id="table24404" class=""><tbody><tr><td>Page</td><td>holds content<br></td></tr><tr><td>URL<br></td><td>a string that reflects a page (e.g. "/company/employees")<br></td></tr><tr><td>Menu item<br></td><td>a single link in a menu with its name and URL<br></td></tr><tr><td>Menu<br></td><td>a set of menu items<br></td></tr><tr><td>Media<br></td><td>media files used in the content (e.g. Images, Videos)<br></td></tr><tr><td>User<br></td><td>a person with a login to your website</td></tr></tbody></table></p>
+
+                   <p><h2>The Glue</h2></p>
+                   <p>Pages hold a set of contents. A page is always accessible through its unique URL. Pages are independent from Menus.
+                               <br>
+                               <br>A menu item has a name and links to a Page or to a custom URL.
+                           </p>
+
+                   <p><h2>Basic Workflow</h2></p>
+                   <p>
+                               1. Add a new Page
+                               <br />2. Edit the new Page
+                               <br />3. Create a Menu item and link to the new Page &nbsp; &nbsp; &nbsp; &nbsp;</p> ]]>
+
+                </target>
             </trans-unit>
-            <trans-unit id="not_found.title">
-                <source>not_found.title</source>
-                <target>Not found</target>
-            </trans-unit>
-            <trans-unit id="not_found.text">
-                <source>not_found.text</source>
-                <target>No help text found</target>
-            </trans-unit>
+
+            <!-- dashboard -->
             <trans-unit id="dashboard.title">
                 <source>dashboard.title</source>
                 <target>Dashboard</target>
             </trans-unit>
             <trans-unit id="dashboard.text">
                 <source>dashboard.text</source>
-                <target>Dashboard Text</target>
+                <target>Dashboard</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.edit.title">
-                <source>networking_init_cms.menu.admin.menu_item.edit.title</source>
-                <target>Menu Edit</target>
-            </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.edit.text">
-                <source>networking_init_cms.menu.admin.menu_item.edit.text</source>
-                <target>medu edit text</target>
-            </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.edit.title">
-                <source>networking_init_cms.page.admin.page.edit.title</source>
-                <target>page edit</target>
-            </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.edit.text">
-                <source>networking_init_cms.page.admin.page.edit.text</source>
-                <target>page edit text</target>
-            </trans-unit>
+
+            <!-- pages -->
             <trans-unit id="networking_init_cms.page.admin.page.list.title">
                 <source>networking_init_cms.page.admin.page.list.title</source>
-                <target>Page List 123</target>
+                <target>Page</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.list.text">
                 <source>networking_init_cms.page.admin.page.list.text</source>
-                <target>Page List Text</target>
+                <target><![CDATA[  <p><h2>Page URL</h2></p>
+                <p>
+                            A Page is accessible through it's unique URL.
+                            <br>Every Page has exactly one URL string (e.g. "/company/employees")
+                </p>
+                <p><h2>Page Language</h2></p>
+                <p>Every Page belongs to exactly one Language.
+                            <br>So every Language has it's own Pages.
+                </p>
+
+
+                <p><h2>Pages &amp; Menus</h2>
+                <p>Pages and Menus are seperate things. A menu item can link to a Page.</p>
+
+                <p><h2>Page Working Title</h2></p>
+                <p>
+                            The Page Working Title is a string of your own choice to
+                identify your Page in the admin section. It is an internal term and will
+                 never be displayed on the website.
+                        </p>
+
+                <p><h2>Page Template</h2></p>
+                <p>The layout of a Page is defined through it's assigned template.
+                            <br>A Template can have more than one zone (e.g. Header Full Width, Left Column, Right Column).
+
+                            <br>
+                            <br>Sometimes a project has multiple Templates to choose from.
+                            <br>Each Page has exactly one Template assigned. &nbsp; &nbsp; &nbsp; &nbsp;</p>
+                   </p> ]]></target>
             </trans-unit>
+
+            <trans-unit id="networking_init_cms.page.admin.page.create.title">
+                <source>networking_init_cms.page.admin.page.create.title</source>
+                <target>Page create</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.page.admin.page.create.text">
+                <source>networking_init_cms.page.admin.page.create.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <trans-unit id="networking_init_cms.page.admin.page.edit.title">
+                <source>networking_init_cms.page.admin.page.edit.title</source>
+                <target>Page edit</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.page.admin.page.edit.text">
+                <source>networking_init_cms.page.admin.page.edit.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <!-- menu -->
             <trans-unit id="networking_init_cms.menu.admin.menu_item.navigation.title">
                 <source>networking_init_cms.menu.admin.menu_item.navigation.title</source>
-                <target>Menu navigation</target>
+                <target>Menu</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.menu.admin.menu_item.navigation.text">
                 <source>networking_init_cms.menu.admin.menu_item.navigation.text</source>
-                <target>Menu navigation text</target>
+                <target><![CDATA[ <p>
+                            A websites can have multiple menus, for example a "Main" Menu and a "secondary" Menu.
+                            <br>
+                            <br>A Menu usually has several menu items.
+
+                        </p>
+
+
+                <p><h2>Menu Language</h2></p>
+                <p>
+                            A Menu belongs to the selected Language only.
+                            <br>Thus every Language has it's own menus.
+                        </p>
+
+                <p><h2>Menu Item</h2></p>
+                <p>
+                            A menu item consists of a name and corresponding link (URL).
+                            <br>Menu items can be organized hierarchically. In other words, a menu item can have a parent menu item.
+                        </p>
+
+                <p><h2>Menu Item Name</h2></p>
+                <p>
+                            The Name of a menu item can be any string of your choice.
+                            <br>If you like you can use the same term as for the Page Working Title it links to, but you can also name it anything else.
+                </p>
+
+                <p><h2>Menu Item Link</h2></p>
+                <p>A menu item links to a Page or to a custom URL.
+                            <br>Different menu items can link to the same Page. &nbsp; &nbsp; &nbsp; &nbsp;</p><p></p>  ]]></target>
+            </trans-unit>
+
+
+            <trans-unit id="networking_init_cms.menu.admin.menu_item.create.title">
+                <source>networking_init_cms.menu.admin.menu_item.create.title</source>
+                <target>Menu create</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.menu.admin.menu_item.create.text">
+                <source>networking_init_cms.menu.admin.menu_item.create.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <trans-unit id="networking_init_cms.menu.admin.menu_item.edit.title">
+                <source>networking_init_cms.menu.admin.menu_item.edit.title</source>
+                <target>Menu edit</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.menu.admin.menu_item.edit.text">
+                <source>networking_init_cms.menu.admin.menu_item.edit.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+
+            <!-- media -->
+            <trans-unit id="sonata.media.admin.media.list.title">
+                <source>sonata.media.admin.media.list.title</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.media.list.text">
+                <source>sonata.media.admin.media.list.text</source>
+                <target><![CDATA[ <p><h2>Media Formats</h2></p>
+
+                                        <p>Possible Media formats include:
+                                                  <ul>
+                                                        <li>Image (.jpg, .png)</li>
+                                                        <li>PDF documents (.pdf)</li>
+                                                        <li>Video (h246, mpeg)</li>
+                                                        <li>Audio (.mp3)</li>
+                                                    </ul>
+
+                                           </p>
+
+                                        <h2>Upload</h2>
+                                        <p>Media Files are uploaded through the Mediamanager. &nbsp; &nbsp; &nbsp; &nbsp;</p>]]></target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.media.create.title">
+                <source>sonata.media.admin.media.create.title</source>
+                <target>Media create</target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.media.create.text">
+                <source>sonata.media.admin.media.create.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.media.edit.title">
+                <source>sonata.media.admin.media.edit.title</source>
+                <target>Media edit</target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.media.edit.text">
+                <source>sonata.media.admin.media.edit.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <!-- gallery -->
+
+            <trans-unit id="sonata.media.admin.gallery.list.title">
+                <source>sonata.media.admin.gallery.list.title</source>
+                <target>Gallery</target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.gallery.list.text">
+                <source>sonata.media.admin.gallery.list.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.gallery.create.title">
+                <source>sonata.media.admin.gallery.create.title</source>
+                <target>Gallery create</target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.gallery.create.text">
+                <source>sonata.media.admin.gallery.create.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.gallery.edit.title">
+                <source>sonata.media.admin.gallery.edit.title</source>
+                <target>Gallery edit</target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.gallery.edit.text">
+                <source>sonata.media.admin.gallery.edit.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <!-- user -->
+
+            <trans-unit id="sonata.media.admin.user.list.title">
+                <source>sonata.media.admin.user.list.title</source>
+                <target>User</target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.user.list.text">
+                <source>sonata.media.admin.user.list.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.user.create.title">
+                <source>sonata.media.admin.user.create.title</source>
+                <target>user create</target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.user.create.text">
+                <source>sonata.media.admin.user.create.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.user.edit.title">
+                <source>sonata.media.admin.user.edit.title</source>
+                <target>user edit</target>
+            </trans-unit>
+
+            <trans-unit id="sonata.media.admin.user.edit.text">
+                <source>sonata.media.admin.gallery.edit.text</source>
+                <target><![CDATA[   ]]></target>
+            </trans-unit>
+
+
+            <!-- default -->
+
+            <trans-unit id="not_found.title">
+                <source>not_found.title</source>
+                <target>Not found.</target>
+            </trans-unit>
+            <trans-unit id="not_found.text">
+                <source>not_found.text</source>
+                <target><![CDATA[ <strong>No help text found</strong> ]]></target>
             </trans-unit>
 
 

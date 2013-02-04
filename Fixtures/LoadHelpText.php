@@ -30,24 +30,26 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
      * @var array
      */
     private $textArray = array(
-        'not_found' => array(
-                    'title' => 'not_found.title',
-                    'text' => 'not_found.text',
-                    'is_deletable' => '0'
-                ),
+
         'overview' => array(
-                    'title' => 'overview.title',
-                    'text' => 'overview.text',
-                    'is_deletable' => '1'
-                ),
+            'title' => 'overview.title',
+            'text' => 'overview.text',
+            'is_deletable' => '1'
+        ),
         'dashboard' => array(
             'title' => 'dashboard.title',
             'text' => 'dashboard.text',
             'is_deletable' => '1'
         ),
-        'networking_init_cms.menu.admin.menu_item.edit' => array(
-            'title' => 'networking_init_cms.menu.admin.menu_item.edit.title',
-            'text' => 'networking_init_cms.menu.admin.menu_item.edit.text',
+        //pages
+        'networking_init_cms.page.admin.page.list' => array(
+            'title' => 'networking_init_cms.page.admin.page.list.title',
+            'text' => 'networking_init_cms.page.admin.page.list.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.page.admin.page.create' => array(
+            'title' => 'networking_init_cms.page.admin.page.create.title',
+            'text' => 'networking_init_cms.page.admin.page.create.text',
             'is_deletable' => '1'
         ),
         'networking_init_cms.page.admin.page.edit' => array(
@@ -55,16 +57,80 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
             'text' => 'networking_init_cms.page.admin.page.edit.text',
             'is_deletable' => '1'
         ),
-        'networking_init_cms.page.admin.page.list' => array(
-            'title' => 'networking_init_cms.page.admin.page.list.title',
-            'text' => 'networking_init_cms.page.admin.page.list.text',
-            'is_deletable' => '1'
-        ),
+        //menu
+
         'networking_init_cms.menu.admin.menu_item.navigation' => array(
             'title' => 'networking_init_cms.menu.admin.menu_item.navigation.title',
             'text' => 'networking_init_cms.menu.admin.menu_item.navigation.text',
             'is_deletable' => '1'
+        ),
+        'networking_init_cms.menu.admin.menu_item.create' => array(
+            'title' => 'networking_init_cms.menu.admin.menu_item.create.title',
+            'text' => 'networking_init_cms.menu.admin.menu_item.create.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.menu.admin.menu_item.edit' => array(
+            'title' => 'networking_init_cms.menu.admin.menu_item.edit.title',
+            'text' => 'networking_init_cms.menu.admin.menu_item.edit.text',
+            'is_deletable' => '1'
+        ),
+        //media
+
+        'sonata.media.admin.media.list' => array(
+            'title' => 'sonata.media.admin.media.list.title',
+            'text' => 'sonata.media.admin.media.list.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.media.create' => array(
+            'title' => 'sonata.media.admin.media.create.title',
+            'text' => 'sonata.media.admin.media.create.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.media.edit' => array(
+            'title' => 'sonata.media.admin.media.edit.title',
+            'text' => 'sonata.media.admin.media.edit.text',
+            'is_deletable' => '1'
+        ),
+        //gallery
+        'sonata.media.admin.gallery.list' => array(
+            'title' => 'sonata.media.admin.gallery.list.title',
+            'text' => 'sonata.media.admin.gallery.list.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.gallery.create' => array(
+            'title' => 'sonata.media.admin.gallery.create.title',
+            'text' => 'sonata.media.admin.gallery.create.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.gallery.edit' => array(
+            'title' => 'sonata.media.admin.gallery.edit.title',
+            'text' => 'sonata.media.admin.gallery.edit.text',
+            'is_deletable' => '1'
+        ),
+        //user
+        'sonata.media.admin.user.list' => array(
+            'title' => 'sonata.media.admin.user.list.title',
+            'text' => 'sonata.media.admin.user.list.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.user.create' => array(
+            'title' => 'sonata.media.admin.user.create.title',
+            'text' => 'sonata.media.admin.user.create.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.user.edit' => array(
+            'title' => 'sonata.media.admin.user.edit.title',
+            'text' => 'sonata.media.admin.user.edit.text',
+            'is_deletable' => '1'
+        ),
+        //not found
+        'not_found' => array(
+            'title' => 'not_found.title',
+            'text' => 'not_found.text',
+            'is_deletable' => '0'
         )
+
+
     );
 
 
@@ -82,7 +148,7 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
     public function load(ObjectManager $manager)
     {
         $languages = $this->container->getParameter('networking_init_cms.page.languages');
-        foreach ($languages as  $lang) {
+        foreach ($languages as $lang) {
             $this->container->get('translator')->setLocale($lang['locale']);
             foreach ($this->textArray as $translationKey => $row) {
 
