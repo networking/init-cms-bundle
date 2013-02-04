@@ -6522,10 +6522,11 @@ li.empty_layout_block {
 
 .select2-container .select2-choice {
     line-height: 20px !important;
+    height: 20px !important;
 }
 
-.select2-container .select2-choice {
-    height: 20px !important;
+.select2-container .select2-choice abbr{
+    top: 4px !important;
 }
 
 .select2-container .select2-choice div b {
