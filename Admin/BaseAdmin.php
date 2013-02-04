@@ -32,6 +32,12 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
     protected $container;
 
     /**
+     * @var Array $trackedActions
+     */
+    protected $trackedActions = array('list', 'edit');
+
+
+    /**
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
     public function setContainer(ContainerInterface $container = null)
@@ -104,4 +110,23 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
         }
 
     }
+
+    /**
+     * @param $trackedActions
+     * @return BaseAdmin
+     */
+    public function setTrackedActions($trackedActions)
+    {
+        $this->trackedActions = $trackedActions;
+        return $this;
+    }
+
+    /**
+     * @return Array
+     */
+    public function getTrackedActions()
+    {
+        return $this->trackedActions;
+    }
+
 }

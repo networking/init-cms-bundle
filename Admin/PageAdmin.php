@@ -52,6 +52,7 @@ class PageAdmin extends BaseAdmin
      */
     protected $repository = '';
 
+
     /**
      * @param \Sonata\AdminBundle\Route\RouteCollection $collection
      */
