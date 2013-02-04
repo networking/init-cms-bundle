@@ -10,6 +10,34 @@ file that was distributed with this source code.
 #}
 {% extends "NetworkingInitCmsBundle::admin_layout.html.twig" %}
 
+
+{% block init_cms_top_nav %}
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="span10">
+                        {% if admin_pool is defined %}
+                            <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+                                {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
+                                <span class="info-very-soft">initcms - </span>{{ admin_pool.title }}
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="span2 "><p class="pull-right">close button</p></div>
+
+                </div>
+
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block title %}
     {{ help_text.title }}
 {% endblock%}

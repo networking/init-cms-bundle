@@ -89,7 +89,8 @@ class HelpTextAdmin extends BaseAdmin
                 'callback' => array(
                     $this,
                     'getByLocale'
-                )
+                ),
+                'hidden' => false
             ),
             'choice',
             array(
@@ -99,6 +100,8 @@ class HelpTextAdmin extends BaseAdmin
             )
 
         );
+       // ->add('title', null, array('hidden' => true), null, array())
+        //->add('text', null, array(), null, array());
 
     }
 

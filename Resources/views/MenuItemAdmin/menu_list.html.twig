@@ -35,36 +35,63 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block list_filters %}
-    {% if admin.datagrid.filters %}
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                    <div class="accordion-caret"><b class="caret"></b></div>
-                    {{ 'label_filters'|trans({}, admin.translationDomain) }}
-                </a>
-            </div>
-            <div id="collapseOne" class="accordion-body collapse">
-                <div class="accordion-inner" style="min-height:70px;">
-                    <form action="{{ admin.generateUrl('list') }}" method="GET">
-                        {% for filter in admin.datagrid.filters %}
-                            <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-                            {{ form_widget(form.children[filter.formName].children['type']) }}
-                            {{ form_widget(form.children[filter.formName].children['value']) }}
-                        {% endfor %}
-                        <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
-                        {% set foo = form.children['_page'].setRendered() %}
-                        {{ form_rest(form) }}
+    {% if admin.datagrid.filters and not app.request.isxmlhttprequest %}
 
-                        <input type="submit" class="btn"
-                               value="{{ 'btn_filter'|trans({}, admin.translationDomain) }}"/>
+        <form action="{{ admin.generateUrl('list') }}" method="GET" class="form-inline filters">
 
-                        <a class="btn"
-                           href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, admin.translationDomain) }}</a>
+            {% set filter_main = '' %}
+            {% set filter_hidden = '' %}
+            {% for filter in admin.datagrid.filters %}
 
-                    </form>
+                {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
+                    {% set filter_main %}
+                    {{ filter_main }}
+                    {{ form_widget(form.children[filter.formName].children['type']) }}
+                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label)} }) }}
+                    {% endset %}
+                {% else %}
+                    {% set filter_hidden %}
+                    {{ filter_hidden }}
+                    <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                    {{ form_widget(form.children[filter.formName].children['type']) }}
+                    {{ form_widget(form.children[filter.formName].children['value']) }}
+                    {% endset %}
+                {% endif %}
+            {% endfor %}
+            {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
+
+            <div>
+                <div class="pull-left">
+                    {{ filter_main }}
+                    {% if filter_hidden %}
+                    <i class="icon-plus" id="filter_toggle" data-toggle="collapse" data-target="#hidden_filters"></i>
+                    {% endif %}
                 </div>
+                <div class="pull-right">
+                    <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                    {% set foo = form.children['_page'].setRendered() %}
+                    {{ form_rest(form) }}
+
+                    <input type="submit" class="btn btn-small"
+                           value="{{ 'btn_filter'|trans({}, admin.translationDomain) }}"/>
+
+                    <a class="btn btn-small"
+                       href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, admin.translationDomain) }}</a>
+                </div>
+                <div class="clearfix">&nbsp;</div>
             </div>
-        </div>
+
+
+            <div id="hidden_filters" class="collapse">
+                {% if filter_hidden != '' %}
+                    {# add div with hidden / show function #}
+                    {{ filter_hidden }}
+
+                {% endif %}
+            </div>
+
+        </form>
+
     {% endif %}
 {% endblock %}
 

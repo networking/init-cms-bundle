@@ -30,8 +30,8 @@ file that was distributed with this source code.
 
 {% block top_actions %}
     <div class="pull-right level-headline-icon">
-                    <a href="javascript:history.back();"><div class="close-button-medium"></div></a>
-                </div>
+       <a class="btn btn-custom btn-small" href="{{ admin.generateUrl('list', {'locale': object.locale}) }}"> &larr; Back</a>
+    </div>
 {% endblock %}
 
 {% block actions %}
@@ -58,10 +58,37 @@ file that was distributed with this source code.
 {% endblock %}
 
 
-{% use 'NetworkingInitCmsBundle:PageAdmin:page_base_edit_form.html.twig' with form as parentForm %}
+{% use 'NetworkingInitCmsBundle:PageAdmin:page_edit_form.html.twig' with form as parentForm %}
 
 {% block form %}
     {{ block('parentForm') }}
+    <!-- start modal page form -->
+    <div class="modal form-horizontal" id="confirmMenuCreation"
+         style="display: none"
+         role="dialog" aria-labelledby="{{ "legend.create_menu_item"|trans({}, admin.translationdomain) }}"
+         aria-hidden="true">
+        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3>{{ 'legend.create_menu_item'|trans({}, admin.translationdomain) }}</h3>
+                    </div>
+        <div class="modal-body">
+            <div id="menu_info_text"></div>
+            <p>&nbsp;</p>
+            <div>
+                <label class="checkbox" for="show_now_confirm_dialog">
+                    <input type="checkbox" id="show_now_confirm_dialog" name="show_now_confirm_dialog" />
+                    {{ 'label.show_no_more'|trans({}, admin.translationDomain) }}
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal"
+                    aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+            <button type="submit" class="btn btn-primary" id="btn_create_menu" name="btn_create_menu">
+                  {{ 'button.continue'|trans({}, admin.translationDomain) }} &rarr;</button>
+        </div>
+    </div>
+    <!-- end modal page form -->
 {% endblock %}
 
 {% block footer %}

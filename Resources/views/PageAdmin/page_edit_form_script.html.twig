@@ -52,9 +52,27 @@ file that was distributed with this source code.
         });
     };
 
+    function openMenuDialog(event, ui) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        $('#confirmMenuCreation').modal('show');
+        var confirm = $('#confirmMenuCreation').find('#btn_create_menu');
+        var url = ui.href;
+        $('#show_now_confirm_dialog').attr('checked', false);
+
+        $(confirm).bind('click', function () {
+            if ($('#show_now_confirm_dialog').attr('checked')) {
+                window.location = url+ '?show_now_confirm_dialog=1';
+            }else {
+                window.location = url;
+            }
+
+
+        });
+    }
+
     (function ($) {
-
-
 
         $("#{{ admin.getUniqid }}_locale").live('change', function () {
             var locale = $(this).val();
@@ -94,10 +112,34 @@ file that was distributed with this source code.
             }
 
         });
+        {% if not app.user.getAdminSetting('menuAdmin.show_now_confirm_dialog') %}
 
         $('#{{ admin.uniqid }}_url').bind('change', function () {
             $("#{{ admin.uniqid }}_parent").trigger('change');
         });
+
+        $('.menu_add_link').live('click', function (event) {
+            $('#menu_info_text').html("{{ 'info.create_menu_item'|trans({}, admin.translationDomain) }}");
+            $('#confirmMenuCreation .modal-header h3').html(this.title);
+            openMenuDialog(event, this);
+        });
+
+        $('.menu_edit_link').live('click', function (event) {
+            $('#menu_info_text').html('{{ 'info.edit_menu_item'|trans({}, admin.translationDomain) }}');
+            $('#confirmMenuCreation .modal-header h3').html('{{ 'legend.edit_menu'|trans({}, admin.translationDomain) }}');
+            openMenuDialog(event, this);
+
+        });
+        {% endif %}
+
+        $('#review_status').live('click', function(){
+            if($(this).attr('checked')){
+                window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
+            } else {
+                window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
+            }
+        })
+
 
     })(jQuery);
 

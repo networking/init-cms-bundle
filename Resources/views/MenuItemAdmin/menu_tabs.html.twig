@@ -8,6 +8,11 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
+{% if page_id is defined and page_id %}
+<div class="pull-right">
+    <a class="btn btn-custom btn-small" href="{{ path('admin_networking_initcms_page_edit', {'id': page_id}) }}">&larr; Back to page</a>
+</div>
+{% endif %}
 <ul class="nav nav-tabs">
     {% for key, menu in menus %}
         <li {% if loop.first %}class="active"{% endif %}>
@@ -21,7 +26,6 @@ file that was distributed with this source code.
                 class="icon icon-plus"></i></a>
     </li>
 </ul>
-
 
 <div class="tab-content">
     {% for key, menu in menus %}
@@ -54,7 +58,7 @@ file that was distributed with this source code.
 
             <p>&nbsp;</p>
 
-            {% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' %}
+            {% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' with {'root_id': menu.rootNode.id} %}
             <p>&nbsp;</p>
 
             <div class="table-style-labels">
@@ -69,7 +73,7 @@ file that was distributed with this source code.
             </div>
             {{ menu.navigation|raw }}
             <p>&nbsp;</p>
-                {% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' %}
+                {% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' with {'root_id': menu.rootNode.id} %}
 
         </div>
     {% endfor %}

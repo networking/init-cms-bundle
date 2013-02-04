@@ -6,7 +6,7 @@
 
 
 {% block title %}
-        {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+        {{ "title_create"|trans({}, admin.translationDomain) }}
 {% endblock %}
 
 {% block top_actions %}
@@ -39,7 +39,7 @@
 {% endblock %}
 
 
-{% use 'NetworkingInitCmsBundle:PageAdmin:page_base_create_form.html.twig' with form as parentForm %}
+{% use 'NetworkingInitCmsBundle:PageAdmin:page_create_form.html.twig' with form as parentForm %}
 
 {% block form %}
     {{ block('parentForm') }}

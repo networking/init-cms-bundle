@@ -36,13 +36,13 @@ file that was distributed with this source code.
                 {% endif %}
             </span>
             {% if help_label %}
-                <p class="help-block info-soft" id="help_{{ id }}">
+                <div class="help-label info-soft" id="help_{{ id }}">
                     {% if not sonata_admin.admin %}
                         {{- help_label|trans({}, translation_domain) -}}
                     {% else %}
                         {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
                     {% endif %}
-                </p>
+                </div>
             {% endif %}
             </label>
         {% else %}
@@ -56,14 +56,14 @@ file that was distributed with this source code.
 
             </label>
             {% if help_label %}
-                            <p class="help-block info-soft" id="help_{{ id }}">
-                                {% if not sonata_admin.admin %}
-                                    {{- help_label|trans({}, translation_domain) -}}
-                                {% else %}
-                                    {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
-                                {% endif %}
-                            </p>
-                        {% endif %}
+                <div class="help-label info-soft" id="help_{{ id }}">
+                    {% if not sonata_admin.admin %}
+                        {{- help_label|trans({}, translation_domain) -}}
+                    {% else %}
+                        {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
+                    {% endif %}
+                </div>
+            {% endif %}
         {% endif %}
     {% endspaceless %}
 {% endblock form_label %}
@@ -148,14 +148,11 @@ file that was distributed with this source code.
 
                 {{ form_widget(form) }}
                 {{ block('form_message') }}
+
                 {% if errors|length > 0 %}
-                    <div class="help-inline sonata-ba-field-error-messages">
+                    <div class="help-block sonata-ba-field-error-messages">
                         {{ form_errors(form) }}
                     </div>
-                {% endif %}
-
-                {% if sonata_admin.field_description.help %}
-                    <span class="help-block sonata-ba-field-help">{{ sonata_admin.field_description.help }}</span>
                 {% endif %}
             </div>
         </div>
@@ -241,14 +238,23 @@ file that was distributed with this source code.
     </script>
 {% endblock %}
 
+{% block form_message %}
+{% spaceless %}
+    {{ block('form_help') }}
+{% endspaceless %}
+{% endblock form_message %}
+
 {% block form_help %}
     {% spaceless %}
         {% if 'checkbox' not in form.vars.block_prefixes %}{# checkbox widget/choice widget problem see https://github.com/phiamo/MopaBootstrapBundle/commit/67406a16b38e5b622fffdd5b9c8a8707ca73f493#commitcomment-1295951 # #}
             {% if help_inline %}<p
                     class="help-inline info-soft">{{ help_inline|trans({}, sonata_admin.admin.translationDomain)|raw }}</p>{% endif %}
         {% endif %}
-        {% if help_block %}<p
-                class="help-block">{{ help_block|trans({}, sonata_admin.admin.translationDomain)|raw }}</p>{% endif %}
+        {% if help_block %}
+            <span class="help-block">{{ help_block|trans({}, sonata_admin.admin.translationDomain)|raw }}</span>{% endif %}
+        {% if sonata_admin is defined and sonata_admin.field_description.help %}
+            <span class="help-block sonata-ba-field-help">{{ sonata_admin.field_description.help }}</span>
+        {% endif %}
     {% endspaceless %}
 {% endblock form_help %}
 
@@ -257,14 +263,14 @@ file that was distributed with this source code.
         {% if expanded %}
             <div {{ block('widget_container_attributes') }}>
                 {% for key, child in form %}
-                    <div style="float:left;{% if key > 0 and key is odd %}margin-left:40px;{% endif %}">
+                    <div class="pull-left" style="{% if key > 0 and key is odd %}margin-left:20px;{% endif %}">
                         {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
                         {% if icons[choices[key].value] %}
-                            <img src="{{ asset(icons[choices[key].value]) }}"/>
+                            <img src="{{ asset(icons[choices[key].value]) }}" width="175px"/>
                         {% endif %}
                     </div>
                 {% endfor %}
-                <div style="height:30px;clear:both;"></div>
+                <div class="clearfix"></div>
             </div>
         {% else %}
             {# just let the choice widget render the select tag #}

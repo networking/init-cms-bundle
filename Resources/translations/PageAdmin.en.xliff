@@ -60,11 +60,11 @@
             </trans-unit>
             <trans-unit id="form.label_meta_keyword">
                 <source>form.label_meta_keyword</source>
-                <target>Meta keywords</target>
+                <target>Meta Keywords</target>
             </trans-unit>
             <trans-unit id="form.label_meta_description">
                 <source>form.label_meta_description</source>
-                <target>Meta description</target>
+                <target>Meta Description</target>
             </trans-unit>
             <trans-unit id="form.label_status ">
                 <source>form.label_status</source>
@@ -376,7 +376,6 @@
                 <source>url.placeholder</source>
                 <target>/</target>
             </trans-unit>
-
             <trans-unit id="meta_title.helper.text">
                 <source>meta_title.helper.text</source>
                 <target>Title that is shown in the browser</target>
@@ -388,6 +387,77 @@
             <trans-unit id="label.action_publish">
                 <source>label.action_publish</source>
                 <target>Publish selected pages</target>
+            </trans-unit>
+            <trans-unit id="info.layout_block_empty">
+                <source>info.layout_block_empty</source>
+                <target>This part of your page is empty. Click on the + icon above to enter your first piece of
+                    content, or drag a content item from one of the other content areas into this one. </target>
+            </trans-unit>
+            <trans-unit id="legend.create_menu">
+                <source>legend.create_menu</source>
+                <target>Create an item in the menu "%menu_name%" for this page</target>
+            </trans-unit>
+            <trans-unit id="legend.edit_menu">
+                <source>legend.edit_menu</source>
+                <target>Edit selected menu item</target>
+            </trans-unit>
+            <trans-unit id="info.create_menu_item">
+                <source>info.create_menu_item</source>
+                <target>If you choose to continue, you will be directed to the menu manager where an item will be created for you using the page title. All you need to do is position it where you would like.</target>
+            </trans-unit>
+            <trans-unit id="info.edit_menu_item">
+                <source>info.edit_menu_item</source>
+                <target>If you choose to continue, you will be directed to the menu manager where you can edit the selected menu item.</target>
+            </trans-unit>
+            <trans-unit id="button.continue">
+                <source>button.continue</source>
+                <target>Continue</target>
+            </trans-unit>
+            <trans-unit id="label.show_no_more">
+                <source>label.show_no_more</source>
+                <target>Please don't show me this again</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Create a new Page</target>
+            </trans-unit>
+            <trans-unit id="info.page_create">
+                <source>info.page_create</source>
+                <target>Please fill out the important page fields below before we move on to adding content. After the page is created you will
+                be directed to the page edit view. You can always edit these settings in the page edit view, simply look for the edit icon under
+                Settings &amp; SEO.</target>
+            </trans-unit>
+            <trans-unit id="locale.helper.text">
+                <source>locale.helper.text</source>
+                <target>Content language of this page</target>
+            </trans-unit>
+            <trans-unit id="working_title.helper.text">
+                <source>working_title.helper.text</source>
+                <target>Internal page title. Not shown in frontend</target>
+            </trans-unit>
+            <trans-unit id="parent.helper.text">
+                <source>parent.helper.text</source>
+                <target>Parent URL for this page.</target>
+            </trans-unit>
+            <trans-unit id="visibility.helper.text">
+                <source>visibility.helper.text</source>
+                <target>Public or password protected page</target>
+            </trans-unit>
+            <trans-unit id="template.helper.text">
+                <source>template.helper.text</source>
+                <target>The layout that would you like your page to the</target>
+            </trans-unit>
+            <trans-unit id="meta_settings">
+                <source>meta_settings</source>
+                <target>Page Meta Settings</target>
+            </trans-unit>
+            <trans-unit id="filter.label_status">
+                <source>filter.label_status</source>
+                <target>Page Status</target>
+            </trans-unit>
+            <trans-unit id="filter.label_working_title">
+                <source>filter.label_working_title</source>
+                <target>Working Title</target>
             </trans-unit>
         </body>
     </file>

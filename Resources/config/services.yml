@@ -263,7 +263,7 @@ services:
         class: Knp\Menu\MenuItem
         factory_service: networking_init_cms.menu.navbar_menu_builder
         factory_method: createMainMenu
-        arguments: [ '@request', path: "#main#"   ]
+        arguments: [ '@request', path: "The main menu"   ]
         scope: request
         tags:
             - { name: knp_menu.menu, alias: main }

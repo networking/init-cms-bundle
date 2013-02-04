@@ -19,7 +19,8 @@ use Networking\InitCmsBundle\Entity\MenuItem,
     Symfony\Component\HttpFoundation\JsonResponse,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
-    Symfony\Component\Security\Core\Exception\AccessDeniedException;
+    Symfony\Component\Security\Core\Exception\AccessDeniedException,
+    Networking\UserBundle\Entity\AdminSettings;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -36,11 +37,28 @@ class MenuItemAdminController extends CmsCRUDController
      *
      * @return Response
      */
-    public function listAction()
+    public function listAction($pageId = false)
     {
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
+
+        if($this->getRequest()->get('page_id')){
+            $pageId = $this->getRequest()->get('page_id');
+        }
+
+        $this->get('session')->set('admin/last_page_id', $pageId);
+
+        if ($this->getRequest()->get('show_now_confirm_dialog')) {
+            $user = $this->getUser();
+            $user->setAdminSetting('menuAdmin.show_now_confirm_dialog', true);
+
+            $em = $this->getDoctrine()->getManager();
+
+            $em->persist($user);
+            $em->flush();
+        }
+
         $menus = array();
 
         /** @var $repository MenuItemRepository */
@@ -125,7 +143,8 @@ class MenuItemAdminController extends CmsCRUDController
                 'NetworkingInitCmsBundle:MenuItemAdmin:menu_tabs.html.twig',
                 array(
                     'menus' => $menus,
-                    'admin' => $this->admin
+                    'admin' => $this->admin,
+                    'page_id'   => $pageId
                 )
             );
         }
@@ -137,7 +156,8 @@ class MenuItemAdminController extends CmsCRUDController
                 'form' => $formView,
                 'datagrid' => $datagrid,
                 'menus' => $menus,
-                'action' => 'navigation'
+                'action' => 'navigation',
+                'page_id'   => $pageId
             )
         );
     }
@@ -234,7 +254,7 @@ class MenuItemAdminController extends CmsCRUDController
         $em->flush();
 
 
-        return $this->redirect($this->admin->generateUrl('list'));
+        return $this->redirect($this->admin->generateUrl('list', array('pageId' => $page->getId())));
 
     }
 
@@ -305,7 +325,7 @@ class MenuItemAdminController extends CmsCRUDController
 
         $data = json_decode($response->getContent(), true);
 
-        $data['html'] = $this->listAction();
+        $data['html'] = $this->listAction($this->get('session')->get('admin/last_page_id'));
 
         if ($response instanceof JsonResponse) {
             $response->setData($data);

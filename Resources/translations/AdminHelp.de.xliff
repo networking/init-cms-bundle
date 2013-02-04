@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="">
+    <file source-language="de" datatype="plaintext" original="">
         <body>
             <trans-unit id="help_title">
                 <source>help_title</source>
@@ -8,7 +8,7 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.edit">
                 <source>networking_init_cms.page.admin.page.edit</source>
-                <target>Page edit</target>
+                <target>Seite edit</target>
             </trans-unit>
             <trans-unit id="action.list">
                 <source>action.list</source>
@@ -27,7 +27,6 @@
                 <target>Create</target>
             </trans-unit>
 
-
             <trans-unit id="overview.title">
                 <source>overview.title</source>
                 <target>Overview</target>
@@ -38,11 +37,11 @@
             </trans-unit>
             <trans-unit id="not_found.title">
                 <source>not_found.title</source>
-                <target>Not found</target>
+                <target>nicht gefunden</target>
             </trans-unit>
             <trans-unit id="not_found.text">
                 <source>not_found.text</source>
-                <target>No help text found</target>
+                <target>für diesen Punkt gibt es keinen Hilfetext</target>
             </trans-unit>
             <trans-unit id="dashboard.title">
                 <source>dashboard.title</source>
@@ -70,7 +69,7 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.list.title">
                 <source>networking_init_cms.page.admin.page.list.title</source>
-                <target>Page List 123</target>
+                <target>Page List</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.list.text">
                 <source>networking_init_cms.page.admin.page.list.text</source>

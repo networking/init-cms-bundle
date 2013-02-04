@@ -21,12 +21,16 @@ file that was distributed with this source code.
         <div class="span{{ zone.span }}">
             <div class="dropzone well well-small">
                 <h6>{{ zone.name }}</h6>
+               
 
                 <ul id="zone_{{ zone.name }}" class="sortable">
+
+
                     {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow#}
                     <li class="networking-sort-zone">
                         <input type="hidden" id="{{ loop.index }}_zone" value="{{ zone.name }}">
                         <input type="hidden" id="{{ loop.index }}_sortOrder" value="0">
+
                         <div class="plus_button">
                             <a
                                 href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
@@ -36,6 +40,11 @@ file that was distributed with this source code.
                                 <i class="icon-plus"></i>
                             </a>
                         </div>
+                    </li>
+                    <li class="empty_layout_block" {% if networking_init_cms_sort_form_children(form.children, zone.name)|length > 0 %} style="display: none;"{% endif %}>
+                        <p class="info-soft " >
+                            {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
+                        </p>
                     </li>
 
                     {# loop through layout blocks #}
@@ -113,6 +122,7 @@ file that was distributed with this source code.
                         </div>
                     </li>
                     {% endfor %}
+
                 </ul>
             </div>
         </div>
@@ -129,7 +139,7 @@ file that was distributed with this source code.
         {# addToBottom adds the content in the block to the end of the page #}
         {% jsblock 'addToBottom' %}
         {% include 'NetworkingInitCmsBundle:Form:content_type_select.html.twig' %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_block_script.html.twig' with {'admin': sonata_admin.admin} %}
+        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks_script.html.twig' with {'admin': sonata_admin.admin} %}
         {% jsblock 'addToBottomEnd' %}
     {% endif %}
 </div>

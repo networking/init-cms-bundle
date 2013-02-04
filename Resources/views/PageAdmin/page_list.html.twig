@@ -43,21 +43,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block actions %}
-
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                <div class="accordion-caret"><b class="caret"></b></div>
-                {{ 'legend.actions'|trans({}, admin.translationDomain) }}
-            </a>
-        </div>
-        <div id="collapseTwo" class="accordion-body collapse in">
-            <div class="accordion-inner">
-                {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
-                <br/><br/>
-            </div>
-        </div>
-    </div>
+    {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
 {% endblock %}
 
 {% block list_table %}
@@ -194,7 +180,6 @@ file that was distributed with this source code.
             </table>
 
 
-
         </form>
 
     {% else %}
@@ -211,35 +196,64 @@ file that was distributed with this source code.
 
 {% block list_filters %}
     {% if admin.datagrid.filters and not app.request.isxmlhttprequest %}
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                    <div class="accordion-caret"><b class="caret"></b></div>
-                    {{ 'label_filters'|trans({}, admin.translationDomain) }}
-                </a>
-            </div>
-            <div id="collapseOne" class="accordion-body collapse in">
-                <div class="accordion-inner" style="min-height:70px;">
-                    <form action="{{ admin.generateUrl('list') }}" method="GET">
-                        {% for filter in admin.datagrid.filters %}
-                            <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-                            {{ form_widget(form.children[filter.formName].children['type']) }}
-                            {{ form_widget(form.children[filter.formName].children['value']) }}
-                        {% endfor %}
-                        <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
-                        {% set foo = form.children['_page'].setRendered() %}
-                        {{ form_rest(form) }}
 
-                        <input type="submit" class="btn"
-                               value="{{ 'btn_filter'|trans({}, admin.translationDomain) }}"/>
+        <form action="{{ admin.generateUrl('list') }}" method="GET" class="filters">
 
-                        <a class="btn"
-                           href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, admin.translationDomain) }}</a>
+            {% set filter_main = '' %}
+            {% set filter_hidden = '' %}
+            {% for filter in admin.datagrid.filters %}
 
-                    </form>
+                {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
+                    {% set filter_main %}
+                    {{ filter_main }}
+
+                    {{ form_widget(form.children[filter.formName].children['type']) }}
+                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label)} }) }}
+                    {% endset %}
+                {% else %}
+                    {% set filter_hidden %}
+                    {{ filter_hidden }}
+                    <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                    {{ form_widget(form.children[filter.formName].children['type']) }}
+                    {{ form_widget(form.children[filter.formName].children['value']) }}
+                    {% endset %}
+                {% endif %}
+            {% endfor %}
+            {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
+
+            <div>
+                <div class="pull-left form-inline ">
+                    {{ filter_main }}
+                    {% if filter_hidden %}
+                        <i class="icon-plus" id="filter_toggle" data-toggle="collapse"
+                           data-target="#hidden_filters"></i>
+                    {% endif %}
                 </div>
+                <div class="pull-right">
+                    <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                    {% set foo = form.children['_page'].setRendered() %}
+                    {{ form_rest(form) }}
+
+                    <input type="submit" class="btn btn-small"
+                           value="{{ 'btn_filter'|trans({}, admin.translationDomain) }}"/>
+
+                    <a class="btn btn-small"
+                       href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, admin.translationDomain) }}</a>
+                </div>
+                <div class="clearfix">&nbsp;</div>
             </div>
-        </div>
+
+
+            <div id="hidden_filters" class="collapse">
+                {% if filter_hidden != '' %}
+                    {# add div with hidden / show function #}
+                    {{ filter_hidden }}
+
+                {% endif %}
+            </div>
+
+        </form>
+
     {% endif %}
 {% endblock %}
 
@@ -252,33 +266,33 @@ file that was distributed with this source code.
     {% if batchactions|length > 0 %}
 
 
-    <script type="text/javascript">
-        {% block batch_javascript %}
-        jQuery(document).ready(function ($) {
-            $('#list_batch_checkbox').click(function () {
-                $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
+        <script type="text/javascript">
+            {% block batch_javascript %}
+            jQuery(document).ready(function ($) {
+                $('#list_batch_checkbox').click(function () {
+                    $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
+                });
+                $("td.sonata-ba-list-field-batch input[type='checkbox']").change(function () {
+                    $(this).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
+                });
             });
-            $("td.sonata-ba-list-field-batch input[type='checkbox']").change(function () {
-                $(this).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
-            });
-        });
-        {% endblock %}
-    </script>
+            {% endblock %}
+        </script>
 
-    <div class="actions initcms-list-actions">
-        {% block batch_actions %}
-            <input type="checkbox" name="all_elements"/>
-            <select name="action">
-                {% for action, options in batchactions %}
-                    <option value="{{ action }}">{{ options.label }}</option>
-                {% endfor %}
-            </select>
+        <div class="actions initcms-list-actions">
+            {% block batch_actions %}
+                <input type="checkbox" name="all_elements"/>
+                <select name="action">
+                    {% for action, options in batchactions %}
+                        <option value="{{ action }}">{{ options.label }}</option>
+                    {% endfor %}
+                </select>
 
 
 
-            <input type="submit" class="btn btn-primary"
-                   value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}"/>
-        {% endblock %}
-    </div>
+                <input type="submit" class="btn btn-primary btn-mini"
+                       value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}"/>
+            {% endblock %}
+        </div>
     {% endif %}
 {% endblock %}

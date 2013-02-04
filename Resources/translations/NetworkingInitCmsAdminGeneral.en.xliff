@@ -14,6 +14,14 @@
                 <source>label_export_download</source>
                 <target>Download your results in the following formats</target>
             </trans-unit>
+            <trans-unit id="link.website_status_published">
+                <source>link.website_status_published</source>
+                <target>Website: Published</target>
+            </trans-unit>
+            <trans-unit id="link.website_status_draft">
+                <source>link.website_status_draft</source>
+                <target>Website: Draft</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

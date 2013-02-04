@@ -51,7 +51,7 @@ file that was distributed with this source code.
                            href="#collapseZero">
                             <div class="accordion-caret"><b class="caret"></b></div>
                             {{ 'legend.page_status'|trans({}, admin.translationdomain) }} -
-                            <i class="{% if not object.isPublished() %}color-draft{% endif %} page_status">{{ object.status|trans({}, admin.translationdomain) }}</i>
+                            <i class="{% if not object.isPublished() %}color-draft{% endif %} page_status">{{ object.statusLabel|trans({}, admin.translationdomain) }}</i>
                         </a>
                     </div>
                     <div id="collapseZero" class="accordion-body collapse in">
@@ -92,16 +92,7 @@ file that was distributed with this source code.
                     </div>
                     <div id="collapseTwo" class="accordion-body collapse">
                         <div class="accordion-inner">
-                            {% for rootNode in rootMenus %}
-                                <label> {{ 'label.menu_link'|trans({'%menu_name%': rootNode.name}, admin.translationdomain) }}
-                                    <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}">
-                                        {{ 'link_add_page_to_menu'|trans({}, admin.translationDomain) }}</a></label>
-                                {% for menuItem in object.getMenuItemByRoot(rootNode.id) %}
-                                    &nbsp;&nbsp;{{ menuItem.name }} <a
-                                        href="{{ url('admin_networking_initcms_menuitem_list') }}">{{ 'link.edit'|trans({}, admin.translationDomain) }}</a>
-                                    <br/>
-                                {% endfor %}
-                            {% endfor %}
+                            {% include 'NetworkingInitCmsBundle:PageAdmin:page_menu_settings.html.twig' %}
                         </div>
                     </div>
                 </div>
@@ -142,6 +133,33 @@ file that was distributed with this source code.
                             <h3>{{ 'legend.page_settings'|trans({}, admin.translationdomain) }}</h3>
                         </div>
             <div class="modal-body">
+                {% set form_group = admin.formgroups.page_settings %}
+                                {% for field_name in form_group.fields %}
+                                    {% if admin.formfielddescriptions[field_name] is defined %}
+                                        {{ form_row(form[field_name]) }}
+                                    {% endif %}
+                                {% endfor %}
+                {% set form_group = admin.formgroups.meta_settings %}
+
+                                <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
+                                        <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
+                                            {% if form_group.collapsed %}
+                                                <a href="" class="sonata-ba-collapsed"
+                                                   title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationdomain) }}</a>
+                                            {% else %}
+                                                {{ 'meta_settings'|trans({}, admin.translationdomain) }}
+                                            {% endif %}
+                                        </legend>
+
+                                    <div class="sonata-ba-collapsed-fields"  {% if form_group.collapsed %}style="display: none;"{% endif %}>
+
+                                        {% for field_name in form_group.fields %}
+                                            {% if admin.formfielddescriptions[field_name] is defined %}
+                                                {{ form_row(form[field_name]) }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </fieldset>
                 {{ form_rest(form) }}
             </div>
             <div class="modal-footer">

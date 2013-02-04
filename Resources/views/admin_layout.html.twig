@@ -87,6 +87,8 @@ file that was distributed with this source code.
 <body class="initcms">
 {# initialize block value #}
 
+{% block init_cms_top_nav %}
+
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -120,6 +122,8 @@ file that was distributed with this source code.
         </div>
     </div>
 </div>
+{% endblock %}
+
 <!-- Subhead
 ================================================== -->
 <div style="height:41px;"></div>
@@ -334,10 +338,8 @@ file that was distributed with this source code.
                 {% if _list_table is not empty or _list_filters is not empty %}
 
                         <div class="span{% if _side_menu is not empty %}8{% else %}10{% endif %}">
-                            <div class="accordion" id="accordion1">
-                                {{ _list_filters|raw }}
-                                {% block actions %}{% endblock %}
-                            </div>
+                            {{ _list_filters|raw }}
+                            {% block actions %}{% endblock %}
                             {{ _list_table|raw }}
                         </div>
 
