@@ -285,12 +285,12 @@ file that was distributed with this source code.
                 </div>
                 <div class="span3 context-head">
                     {% block top_actions %}{% endblock %}
-                    {% if admin is defined %}
-                        {% block language_indicator %}
-                            <div class="language-indicator">
-                                {{ networking_init_cms_get_current_admin_locale(admin)|slice(0,2)|upper }}</div>
-                        {% endblock %}
-                    {% endif %}
+                    {#{% if admin is defined %}#}
+                        {#{% block language_indicator %}#}
+                            {#<div class="language-indicator">#}
+                                {#{{ networking_init_cms_get_current_admin_locale(admin)|slice(0,2)|upper }}</div>#}
+                        {#{% endblock %}#}
+                    {#{% endif %}#}
                     {% if _help_text is empty %}
                         {% if admin is not defined %}
                             {% set adminCode = 'dashboard' %}
@@ -299,7 +299,7 @@ file that was distributed with this source code.
                             {% set adminCode = admin.code %}
                             {% set actionHelp = action %}
                         {% endif %}
-                    <div class="icon-medium-inline level-headline-icon"><a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}" target="_blank">
+                    <div class="icon-medium-inline level-headline-icon pull-right"><a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}" target="_blank">
                         <div class="info_button_medium"></div>
                     </a></div>
                     {% endif %}
