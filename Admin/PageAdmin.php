@@ -106,8 +106,13 @@ class PageAdmin extends BaseAdmin
         $this->canCreateHomepage = (!$homePage) ? true : false;
 
         if(!$this->canCreateHomepage){
-            $validationGroups[] = 'not_home';
+            if(!$this->getSubject()->getId() || !$this->getSubject()->isHome())
+            {
+                $validationGroups[] = 'not_home';
+            }
         }
+
+
 
         $this->formOptions['validation_groups'] = $validationGroups;
 
@@ -179,7 +184,9 @@ class PageAdmin extends BaseAdmin
             array('help_inline' => 'working_title.helper.text')
         );
 
-        if (!$this->canCreateHomepage) {
+        if (!$this->canCreateHomepage ) {
+
+            if(!$this->getSubject()->getId() || !$this->getSubject()->isHome())
             $formMapper
                 ->add(
                 'parent',
@@ -207,12 +214,13 @@ class PageAdmin extends BaseAdmin
                 null,
                 array(
                     'required' => $requireUrl,
+                    'read_only' => $this->getSubject()->isHome(),
                     'help_label' => $this->getSubject()->getFullPath(),
                     'help_inline' => 'url.helper.text'
                 ),
                 array('display_method' => 'getFullPath')
             );
-        } else {
+        } elseif(!$this->getSubject()->getId()) {
             $formMapper
                 ->add(
                 'url',
