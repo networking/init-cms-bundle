@@ -43,6 +43,11 @@ class PageAdmin extends BaseAdmin
 //    public $supportsPreviewMode = true;
 
     /**
+     * @var Array $trackedActions
+     */
+    protected $trackedActions = array('list', 'edit');
+
+    /**
      * @param \Sonata\AdminBundle\Route\RouteCollection $collection
      */
     protected function configureRoutes(RouteCollection $collection)
