@@ -34,21 +34,18 @@ file that was distributed with this source code.
         <link rel="stylesheet" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.8.16.custom.css') }}"
               type="text/css" media="all"/>
 
-        {#<link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap.min.css') }}" type="text/css"#}
-              {#media="all"/>#}
-
-
-        <!-- base application asset -->
-        {#<link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/layout.css') }}" type="text/css" media="all"/>#}
-        {#<link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/colors.css') }}" type="text/css" media="all"/>#}
-        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/admin.css') }}" type="text/css"
-              media="all"/>
-        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/theme-a.css') }}" type="text/css"
-              media="all"/>
-        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap-responsive.min.css') }}"
-              type="text/css" media="all"/>
         <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/select2.css') }}" type="text/css"
-                      media="all"/>
+                              media="all"/>
+
+
+
+        {% stylesheets filter='less,?yui_css'
+           '@NetworkingInitCmsBundle/Resources/public/less/theme-a.less'
+        %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+        {% endstylesheets %}
+        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap-responsive.min.css') }}"
+                             type="text/css" media="all"/>
     {% endblock %}
 
     {% block javascripts %}
@@ -89,20 +86,21 @@ file that was distributed with this source code.
 
 {% block init_cms_top_nav %}
 
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
     <div class="navbar-inner">
         <div class="container">
             <div class="row">
+                <div class="span2" class="brand">
+                    <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+                        <span class="info-very-soft">initcms</span>
+                    </a>
+                </div>
                 <div class="span5">
                     {% if admin_pool is defined %}
                         <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
                             {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
-                            <span class="info-very-soft">initcms - </span>{{ admin_pool.title }}
+                            {{ admin_pool.title }}
                         </a>
-                    {% endif %}
-                </div>
-                <div class="span2 align-center">
-                    {% if admin_pool is defined %}
                     {% include admin_pool.getTemplate('user_block') %}
                     {% endif %}
                 </div>
