@@ -42,7 +42,7 @@ class CmsCRUDController extends CRUDController
     {
         parent::configure();
 
-        $this->dispatcher = $this->get('networking_ini_cms.event_dispatcher');
+        $this->dispatcher = $this->get('networking_init_cms.event_dispatcher');
         $lastEditedSubscriber = new LastEditedListener($this->get('session'));
         $this->dispatcher->addSubscriber($lastEditedSubscriber);
     }

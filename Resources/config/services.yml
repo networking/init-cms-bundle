@@ -8,13 +8,13 @@ services:
         class: Symfony\Component\HttpFoundation\Session\Session
         arguments:
             - @session.storage
-            - @networking.session.attribute_bag #service id is defined below
+            - @networking_init_cms.session.attribute_bag #service id is defined below
             - @session.flash_bag
 
-    networking_ini_cms.event_dispatcher:
+    networking_init_cms.event_dispatcher:
         class: Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher
 
-    networking.session.attribute_bag:
+    networking_init_cms.session.attribute_bag:
         class: Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag
 #
     networking_init_cms.page.helper.language_switcher:
@@ -35,26 +35,22 @@ services:
         tags:
             - {name: sonata.admin.filter.type, alias: networking_init_cms_simple_string}
 
-    networking.admin.form.extension.field:
+    networking_init_cms.form.extension.field:
         class: Networking\InitCmsBundle\Form\Extension\Field\Type\FormTypeFieldExtension
         tags:
           - { name: form.type_extension, alias: form}
 
-    networking.admin.form.type.autocomplete:
+    networking_init_cms.form.type.autocomplete:
         class: Networking\InitCmsBundle\Form\Type\AutocompleteType
         tags:
           - { name: form.type, alias: networking_type_autocomplete}
 
-    networking.admin.form.type.iconradio:
+    networking_init_cms.form.type.iconradio:
         class: Networking\InitCmsBundle\Form\Type\IconradioType
         arguments:
             - "%networking_init_cms.page.templates%"
         tags:
           - { name: form.type, alias: networking_type_iconradio}
-
-#    sonata.admin.builder.orm_list:
-#        class: Networking\InitCmsBundle\Builder\ListBuilder
-#        arguments: [@sonata.admin.guesser.orm_list_chain]
 
 
 ## Admin Controllers
@@ -169,9 +165,9 @@ services:
         class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
         arguments: [@networking_init_cms.content_route_repository]
         calls:
-          - [ setFinalMatcher, [ @networking.final_matcher] ]
+          - [ setFinalMatcher, [ @networking_init_cms.final_matcher] ]
 
-    networking.final_matcher:
+    networking_init_cms.final_matcher:
         class: Symfony\Cmf\Component\Routing\NestedMatcher\ConfigurableUrlMatcher
         arguments: [Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher]
 
