@@ -64,20 +64,24 @@ class AdminTrackerListener
                 throw new \RuntimeException(sprintf('Unable to find the admin class related to the current controller (%s)', get_class($this)));
             }
 
-            foreach($this->admin->getTrackedActions() as $trackedAction){
-                // if an action which is flagged as 'to be tracked' is matching the end of the route: add info to session
-                if(preg_match('#'.$trackedAction.'$#', $request->get('_route'), $matches)){
-                    $this->updateTrackedInfo(
-                        $request->getSession(),
-                        '_networking_initcms_admin_tracker',
-                        array(
-                            'url' => $request->getPathInfo(),
-                            'controller' => $this->admin->getBaseControllerName(),
-                            'action' => $trackedAction
-                        )
-                    );
+            if(method_exists($this->admin, 'getTrackedActions')){
+                foreach($this->admin->getTrackedActions() as $trackedAction){
+                    // if an action which is flagged as 'to be tracked' is matching the end of the route: add info to session
+                    if(preg_match('#'.$trackedAction.'$#', $request->get('_route'), $matches)){
+                        $this->updateTrackedInfo(
+                            $request->getSession(),
+                            '_networking_initcms_admin_tracker',
+                            array(
+                                'url' => $request->getPathInfo(),
+                                'controller' => $this->admin->getBaseControllerName(),
+                                'action' => $trackedAction
+                            )
+                        );
+                    }
                 }
             }
+
+
         }
     }
 
