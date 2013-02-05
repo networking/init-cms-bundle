@@ -96,7 +96,7 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
             }
         }
 
-        throw new NotFoundHttpException(sprintf('No valid translation in "%s" found for page "%s"', $locale, $content->getMetaTitle()));
+        throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for content "%s"', $locale, $content->__toString()));
 
     }
 
