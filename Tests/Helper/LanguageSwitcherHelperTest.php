@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Tests\Helper;
 
 use \Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
@@ -18,10 +26,32 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetTranslationRoute()
 	{
-        $this->prepareGetTranslationRoute();
-        $this->markTestSkipped('prepareGetTranslationRoute ');
-        $result = $this->helper->getTranslationRoute('/hell', 'xy');
+        $this->markTestIncomplete('prepareGetTranslationRoute its a mess!');
+        $this->prepareGetTranslationRoute('/foo');
+        $result = $this->helper->getTranslationRoute('/foo', 'de');
 		$this->assertArrayHasKey('_content', $result);
+	}
+
+    private function prepareGetTranslationRoute($oldUrl)
+	{
+		$request = new Request();
+        $request2 = Request::create($oldUrl);
+		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
+		$router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
+				->disableOriginalConstructor()
+				->getMock();
+		$container->expects($this->at(0))
+			->method('get')
+			->will($this->returnValue($request));
+		$container->expects($this->at(1))
+			->method('get')
+			->will($this->returnValue($router));
+        $router->expects($this->at(0))
+			->method('matchRequest')
+			->with($this->equalTo($request2))
+			->will($this->returnValue(array('_content' => 'bar')));
+
+		$this->helper->setContainer($container);
 	}
 
 
@@ -81,27 +111,6 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 	}
 	*/
 
-	private function prepareGetTranslationRoute()
-	{
-		$request = new Request();
-		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
-		$router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
-				->disableOriginalConstructor()
-				->getMock();
-		$container->expects($this->at(0))
-			->method('get')
-			->will($this->returnValue($request));
-		$container->expects($this->at(1))
-			->method('get')
-			->will($this->returnValue($router));
-
-		$router->expects($this->at(0))
-			->method('match')
-			->with($this->equalTo('/hell'))
-			->will($this->returnValue(array('_content' => 'hello')));
-
-		$this->helper->setContainer($container);
-	}
 
 	private function prepareForPrepareBaseUrl()
 	{

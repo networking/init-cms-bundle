@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Tests\EventListener;
 
 use Networking\InitCmsBundle\EventListener\LocaleListener,
@@ -17,18 +25,18 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 		$session->expects($this->once())
 			->method('get')
 			->will($this->returnValue($SessionReturnValue));
-		$session->expects($this->once())
+		$session->expects($this->any())
 			->method('set');
 
 	    $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
 	    $request
-			    ->expects($this->exactly(2))
+			    ->expects($this->any())
 			    ->method('hasPreviousSession')
 	            ->will($this->returnValue(TRUE));
 	    $request
-			    ->expects($this->once())
+			    ->expects($this->any())
 			    ->method('setDefaultLocale');
 	    $request
 			    ->expects($this->once())
@@ -37,7 +45,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 		$request->attributes = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag')
 				->disableOriginalConstructor()
 				->getMock();
-		$request->attributes->expects($this->once())
+		$request->attributes->expects($this->any())
 			->method('get')
 			->will($this->returnValue($AttributeReturnValue));
 

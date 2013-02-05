@@ -1131,6 +1131,8 @@ class Page implements RouteAwareInterface, VersionableInterface
     {
         if (gettype($snapshots) == "array") {
             $snapshots = new ArrayCollection($snapshots);
+        } elseif(! $snapshots instanceof ArrayCollection){
+            $snapshots = new ArrayCollection(array($snapshots));
         }
 
         foreach ($snapshots as $snapshot) {

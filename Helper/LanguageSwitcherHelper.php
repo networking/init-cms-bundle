@@ -55,7 +55,8 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
      *
      * @param $oldUrl
      * @param $locale
-     * @return array|\Symfony\Cmf\Component\Routing\RouteObjectInterface
+     * @return array|\Networking\InitCmsBundle\Entity\ContentRoute
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function getTranslationRoute($oldUrl, $locale)
     {
