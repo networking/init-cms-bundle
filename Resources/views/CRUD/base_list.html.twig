@@ -186,8 +186,10 @@ file that was distributed with this source code.
                 <div class="pull-left form-inline ">
                     {{ filter_main }}
                     {% if filter_hidden %}
-                        <i class="icon-plus" id="filter_toggle" data-toggle="collapse"
-                           data-target="#hidden_filters"></i>
+                        <a data-toggle="collapse" data-target="#hidden_filters">
+                            <i class="icon-caret-right" id="filter_toggle"></i>
+                            {{ 'link.show_more'|trans({}, 'NetworkingInitCmsAdminGeneral') }}
+                        </a>
                     {% endif %}
                 </div>
                 <div class="pull-right">
@@ -215,10 +217,10 @@ file that was distributed with this source code.
 
         </form>
         <script type="text/javascript">
-            (function($){
+            (function ($) {
                 $('#hidden_filters').on('show hide', function () {
-                    $('#filter_toggle').toggleClass('icon-plus');
-                    $('#filter_toggle').toggleClass('icon-minus');
+                    $('#filter_toggle').toggleClass('icon-caret-right');
+                    $('#filter_toggle').toggleClass('icon-caret-down');
                 });
             })(jQuery);
         </script>

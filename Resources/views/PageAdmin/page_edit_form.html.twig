@@ -22,6 +22,49 @@ file that was distributed with this source code.
     <div id="pageSettings">
         {% include 'NetworkingInitCmsBundle:PageAdmin:page_settings_fields.html.twig' %}
     </div>
+    <div id="pageSettingsFieldsModal">
+        {% for notice_level in ['success','error','info', 'warning'] %}
+            {% set session_var = 'sonata_flash_' ~ notice_level %}
+            {% for flash in app.session.flashbag.get(session_var) %}
+                <div class="alert {{ 'alert-' ~ notice_level }}">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    {{ flash|trans([], 'SonataAdminBundle') }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% if form.vars.errors|length > 0 %}
+            <div class="sonata-ba-form-error">
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+        {% set form_group = admin.formgroups.page_settings %}
+        {% for field_name in form_group.fields %}
+            {% if admin.formfielddescriptions[field_name] is defined %}
+                {{ form_row(form[field_name]) }}
+            {% endif %}
+        {% endfor %}
+        {% set form_group = admin.formgroups.meta_settings %}
+
+        <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
+            <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
+                {% if form_group.collapsed %}
+                    <a href="" class="sonata-ba-collapsed"
+                       title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationDomain) }}</a>
+                {% else %}
+                    {{ 'meta_settings'|trans({}, admin.translationDomain) }}
+                {% endif %}
+            </legend>
+
+            <div class="sonata-ba-collapsed-fields" {% if form_group.collapsed %}style="display: none;"{% endif %}>
+
+                {% for field_name in form_group.fields %}
+                    {% if admin.formfielddescriptions[field_name] is defined %}
+                        {{ form_row(form[field_name]) }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </fieldset>
+    </div>
 {% else %}
     <form class="form-vertical page-form"
           action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
@@ -50,8 +93,8 @@ file that was distributed with this source code.
                         <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseZero">
                             <div class="accordion-caret"><b class="caret"></b></div>
-                            {{ 'legend.page_status'|trans({}, admin.translationdomain) }} -
-                            <i class="{% if not object.isPublished() %}color-draft{% endif %} page_status">{{ object.statusLabel|trans({}, admin.translationdomain) }}</i>
+                            {{ 'legend.page_status'|trans({}, admin.translationDomain) }} -
+                            <i class="{% if not object.isPublished() %}color-draft{% endif %} page_status">{{ object.statusLabel|trans({}, admin.translationDomain) }}</i>
                         </a>
                     </div>
                     <div id="collapseZero" class="accordion-body collapse in">
@@ -69,7 +112,7 @@ file that was distributed with this source code.
                             <a class="accordion-toggle" data-toggle="collapse"
                                href="#collapseOne">
                                 <div class="accordion-caret"><b class="caret"></b></div>
-                                {{ 'legend.translations'|trans({}, admin.translationdomain) }}
+                                {{ 'legend.translations'|trans({}, admin.translationDomain) }}
                             </a>
                         </div>
                         <div id="collapseOne" class="accordion-body collapse">
@@ -87,7 +130,7 @@ file that was distributed with this source code.
                         <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseTwo">
                             <div class="accordion-caret"><b class="caret"></b></div>
-                            {{ 'legend.menu_connections'|trans({}, admin.translationdomain) }}
+                            {{ 'legend.menu_connections'|trans({}, admin.translationDomain) }}
                         </a>
                     </div>
                     <div id="collapseTwo" class="accordion-body collapse">
@@ -102,7 +145,7 @@ file that was distributed with this source code.
                         <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseThree">
                             <div class="accordion-caret"><b class="caret"></b></div>
-                            {{ 'legend.page_settings'|trans({}, admin.translationdomain) }}
+                            {{ 'legend.page_settings'|trans({}, admin.translationDomain) }}
                         </a>
                     </div>
                     <div id="collapseThree" class="accordion-body collapse in">
@@ -126,40 +169,49 @@ file that was distributed with this source code.
         <!-- start modal page form -->
         <div class="modal form-horizontal" id="pageSettingFields"
              style="display: none"
-             role="dialog" aria-labelledby="{{ "legend.page_settings"|trans({}, admin.translationdomain) }}"
+             role="dialog" aria-labelledby="{{ "legend.page_settings"|trans({}, admin.translationDomain) }}"
              aria-hidden="true">
             <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h3>{{ 'legend.page_settings'|trans({}, admin.translationdomain) }}</h3>
-                        </div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>{{ 'legend.page_settings'|trans({}, admin.translationDomain) }}</h3>
+            </div>
             <div class="modal-body">
-                {% set form_group = admin.formgroups.page_settings %}
-                                {% for field_name in form_group.fields %}
-                                    {% if admin.formfielddescriptions[field_name] is defined %}
-                                        {{ form_row(form[field_name]) }}
-                                    {% endif %}
-                                {% endfor %}
-                {% set form_group = admin.formgroups.meta_settings %}
+                <div id="pageSettingsFieldsModal">
+                    {% if form.vars.errors|length > 0 %}
+                        <div class="sonata-ba-form-error">
+                            {{ form_errors(form) }}
+                        </div>
+                    {% endif %}
 
-                                <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
-                                        <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
-                                            {% if form_group.collapsed %}
-                                                <a href="" class="sonata-ba-collapsed"
-                                                   title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationdomain) }}</a>
-                                            {% else %}
-                                                {{ 'meta_settings'|trans({}, admin.translationdomain) }}
-                                            {% endif %}
-                                        </legend>
+                    {% set form_group = admin.formgroups.page_settings %}
+                    {% for field_name in form_group.fields %}
+                        {% if admin.formfielddescriptions[field_name] is defined %}
+                            {{ form_row(form[field_name]) }}
+                        {% endif %}
+                    {% endfor %}
+                    {% set form_group = admin.formgroups.meta_settings %}
 
-                                    <div class="sonata-ba-collapsed-fields"  {% if form_group.collapsed %}style="display: none;"{% endif %}>
+                    <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
+                        <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
+                            {% if form_group.collapsed %}
+                                <a href="" class="sonata-ba-collapsed"
+                                   title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationDomain) }}</a>
+                            {% else %}
+                                {{ 'meta_settings'|trans({}, admin.translationDomain) }}
+                            {% endif %}
+                        </legend>
 
-                                        {% for field_name in form_group.fields %}
-                                            {% if admin.formfielddescriptions[field_name] is defined %}
-                                                {{ form_row(form[field_name]) }}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                </fieldset>
+                        <div class="sonata-ba-collapsed-fields"
+                             {% if form_group.collapsed %}style="display: none;"{% endif %}>
+
+                            {% for field_name in form_group.fields %}
+                                {% if admin.formfielddescriptions[field_name] is defined %}
+                                    {{ form_row(form[field_name]) }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                </div>
                 {{ form_rest(form) }}
             </div>
             <div class="modal-footer">

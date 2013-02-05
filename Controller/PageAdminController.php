@@ -29,9 +29,7 @@ use Networking\InitCmsBundle\Entity\Page,
     Sonata\AdminBundle\Controller\CRUDController,
     Sonata\AdminBundle\Admin\Admin as SontataAdmin,
     Sonata\AdminBundle\Exception\NoValueException,
-    Sonata\MediaBundle\Admin\ORM\MediaAdmin,
-    Sonata\MediaBundle\Provider\MediaProviderInterface,
-    Symfony\Component\HttpFoundation\File\UploadedFile;
+    Gedmo\Sluggable\Util\Urlizer;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -984,9 +982,16 @@ class PageAdminController extends CmsCRUDController
         $em->flush();
     }
 
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $path
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getPathAction(Request $request)
     {
         $id = $request->get('page_id');
+
+        $getPath = $request->get('path');
 
         $object = $this->admin->getObject($id);
         if($id && $object){
@@ -995,7 +1000,9 @@ class PageAdminController extends CmsCRUDController
             $path = '/';
         }
 
-        return $this->renderJson(array('path' => $path));
+        $getPath = Urlizer::urlize($getPath);
+
+        return $this->renderJson(array('path' => $path.$getPath));
     }
 
 

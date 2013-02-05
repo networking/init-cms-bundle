@@ -91,12 +91,14 @@ class MenuItemAdmin extends BaseAdmin
 
         $formMapper
             ->add('locale', 'hidden', array('data' => $locale))
-            ->add('name')->add('description');
+            ->add('name');
 
 
 
         if ($this->isRoot) {
-            $formMapper->add('isRoot', 'hidden', array('data' => true));
+            $formMapper
+                ->add('description')
+                ->add('isRoot', 'hidden', array('data' => true));
         } else {
 //            $formMapper->add('menu', 'hidden', array('data' => $root->getId()));
             // start group page_or_url
@@ -215,7 +217,6 @@ class MenuItemAdmin extends BaseAdmin
     {
         $errorElement
             ->with('name')
-            ->assertNotNull(array())
             ->assertNotBlank()
             ->end();
 

@@ -34,21 +34,18 @@ file that was distributed with this source code.
         <link rel="stylesheet" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.8.16.custom.css') }}"
               type="text/css" media="all"/>
 
-        {#<link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap.min.css') }}" type="text/css"#}
-              {#media="all"/>#}
-
-
-        <!-- base application asset -->
-        {#<link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/layout.css') }}" type="text/css" media="all"/>#}
-        {#<link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/colors.css') }}" type="text/css" media="all"/>#}
-        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/admin.css') }}" type="text/css"
-              media="all"/>
-        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/theme-a.css') }}" type="text/css"
-              media="all"/>
-        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap-responsive.min.css') }}"
-              type="text/css" media="all"/>
         <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/select2.css') }}" type="text/css"
-                      media="all"/>
+                              media="all"/>
+
+
+
+        {% stylesheets filter='less,?yui_css'
+           '@NetworkingInitCmsBundle/Resources/public/less/theme-a.less'
+        %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+        {% endstylesheets %}
+        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap-responsive.min.css') }}"
+                             type="text/css" media="all"/>
     {% endblock %}
 
     {% block javascripts %}
@@ -70,7 +67,7 @@ file that was distributed with this source code.
         {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
 
         {% if _title is not empty %}
-            {{ _title|raw }}
+            {{ _title|raw|striptags  }}
         {% else %}
             {% if action is defined %}
                 -
@@ -89,20 +86,21 @@ file that was distributed with this source code.
 
 {% block init_cms_top_nav %}
 
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
     <div class="navbar-inner">
         <div class="container">
             <div class="row">
+                <div class="span2" class="brand">
+                    <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+                        <span class="info-very-soft">initcms</span>
+                    </a>
+                </div>
                 <div class="span5">
                     {% if admin_pool is defined %}
                         <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
                             {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
-                            <span class="info-very-soft">initcms - </span>{{ admin_pool.title }}
+                            {{ admin_pool.title }}
                         </a>
-                    {% endif %}
-                </div>
-                <div class="span2 align-center">
-                    {% if admin_pool is defined %}
                     {% include admin_pool.getTemplate('user_block') %}
                     {% endif %}
                 </div>
@@ -208,7 +206,7 @@ file that was distributed with this source code.
                                         {{ asset(networking_init_cms_get_admin_icon(admin, 'small')) }}
                                     {% endif %}"/></div>
                                     <a href="{{ admin.generateUrl('list') }}">
-                                        <div class="pull-left first-level-text">{{ admin.label|trans({}, admin.translationdomain) }}</div>
+                                        <div class="pull-left first-level-text">{{ admin.label|trans({}, admin.translationDomain) }}</div>
                                     </a>
                                     {% if isActive %}
                                         <div class="pull-right" style="position:relative;">
@@ -220,7 +218,7 @@ file that was distributed with this source code.
                                         <ul class="ul-second-level">
                                             {% for subadmin in admin.getChildren %}
                                                 <li class="second-level">
-                                                    <a href="{{ subadmin.generateUrl('list') }}">{{ subadmin.label|trans({}, subadmin.translationdomain) }}</a>
+                                                    <a href="{{ subadmin.generateUrl('list') }}">{{ subadmin.label|trans({}, subadmin.translationDomain) }}</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
@@ -287,12 +285,12 @@ file that was distributed with this source code.
                 </div>
                 <div class="span3 context-head">
                     {% block top_actions %}{% endblock %}
-                    {% if admin is defined %}
-                        {% block language_indicator %}
-                            <div class="language-indicator">
-                                {{ networking_init_cms_get_current_admin_locale(admin)|slice(0,2)|upper }}</div>
-                        {% endblock %}
-                    {% endif %}
+                    {#{% if admin is defined %}#}
+                        {#{% block language_indicator %}#}
+                            {#<div class="language-indicator">#}
+                                {#{{ networking_init_cms_get_current_admin_locale(admin)|slice(0,2)|upper }}</div>#}
+                        {#{% endblock %}#}
+                    {#{% endif %}#}
                     {% if _help_text is empty %}
                         {% if admin is not defined %}
                             {% set adminCode = 'dashboard' %}
@@ -301,7 +299,7 @@ file that was distributed with this source code.
                             {% set adminCode = admin.code %}
                             {% set actionHelp = action %}
                         {% endif %}
-                    <div class="icon-medium-inline level-headline-icon"><a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}" target="_blank">
+                    <div class="icon-medium-inline level-headline-icon pull-right"><a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}" target="_blank">
                         <div class="info_button_medium"></div>
                     </a></div>
                     {% endif %}

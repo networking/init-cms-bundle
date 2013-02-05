@@ -11,7 +11,7 @@ file that was distributed with this source code.
 
 <div>
     <h3 class="pull-left {% if not object.isPublished %}color-draft{% endif %}">
-        {{ object.statusLabel|trans({}, admin.translationdomain) }}
+        {{ object.statusLabel|trans({}, admin.translationDomain) }}
     </h3>
     {% if not object.isPublished %}
     <div class="pull-right" style="padding-top: 20px;">
@@ -27,18 +27,18 @@ file that was distributed with this source code.
 {#<label>{{ 'label_change_status'|trans({}, admin.translationDomain)}}</label>#}
 
     {#<button type="submit" class="btn" onclick="return start_save_page_settings(this);">#}
-    {#{{ 'button.apply'|trans({}, admin.translationdomain) }}</button>#}
+    {#{{ 'button.apply'|trans({}, admin.translationDomain) }}</button>#}
 
 
     {% if not object.isPublished %}
         <label class="checkbox" >
             <input type="checkbox" id="review_status" name="review_status"  {% if object.isReview %}checked="checked"{% endif %}/>
-            {{ 'button.review'|trans({}, admin.translationdomain) }}</label>
+            {{ 'button.review'|trans({}, admin.translationDomain) }}</label>
 
     {% endif %}
     {% if object.isPublished %}
     <a href="{{ admin.generateUrl('draft', {id: object.id}) }}" class="btn btn-mini {% if object.isDraft() %}disabled{% endif %}" {% if object.isDraft() %}onclick="return false"{% endif %}>
-        {{ 'button.draft'|trans({}, admin.translationdomain) }}
+        {{ 'button.draft'|trans({}, admin.translationDomain) }}
     </a>
     {% endif %}
 
@@ -47,7 +47,7 @@ file that was distributed with this source code.
         <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
            class="btn btn-mini {% if object.isPublished() %}disabled{% endif %}"
            {% if object.isPublished() %}onclick="return false"{% endif %}>
-            {{ 'button.publish'|trans({}, admin.translationdomain) }}
+            {{ 'button.publish'|trans({}, admin.translationDomain) }}
         </a>
     {% endif %}
 
@@ -55,7 +55,7 @@ file that was distributed with this source code.
 <p>&nbsp;</p>
 {% if not object.isPublished() and object.getSnapshot() %}
 <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}" class="status-dialog-link">
-        {{ 'link.revert_to_publish'|trans({}, admin.translationdomain) }}</a>
+        {{ 'link.revert_to_publish'|trans({}, admin.translationDomain) }}</a>
 {% endif %}
 <div class="modal hide fade" tabindex="-1" role="dialog" id="status_dialog">
 </div>

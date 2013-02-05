@@ -278,7 +278,7 @@ function onAfterLoad() {
         var button = '<a href="javascript:void(null);" style="display: none;" id="delete_button_' + inputId + '" type="button">{% trans from 'SonataAdminBundle' %}action_delete{% endtrans %}</a>';
         jQuery(this).parent().append(button);
         jQuery('#delete_button_' + inputId).bind('click', function () {
-            if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationdomain) }}')) {
+            if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
 
                 var liElement = jQuery(this).closest('li.networking-sortable-list');
                 var parent = jQuery(liElement).parent();

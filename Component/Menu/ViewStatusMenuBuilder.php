@@ -66,17 +66,26 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
     public function createViewStatusMenu(Request $request)
     {
         // Default to homepage
-        $liveRoute = $draftRoute = $this->serviceContainer->get('router')->generate('networking_init_cms_default');
+        $liveRoute = null;
 
-        $menu = $this->factory->createItem('root');
+        $livePath = null;
+
+        $draftRoute = null;
+
+        $draftPath = null;
+
+        $menu = false;
 
         $sonataAdmin = null;
 
         $entity = null;
 
+        $defaultHome = $draftRoute = $this->serviceContainer->get('router')->generate('networking_init_cms_default');
+
 
         if ($this->isLoggedIn) {
 
+            $menu = $this->factory->createItem('root');
 
             $editPath = false;
             $menu->setChildrenAttribute('class', 'nav pull-right');
@@ -121,8 +130,12 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                 $language = $request->getLocale();
             }
 
+
             $draftPath = $this->router->generate('networking_init_view_draft', array('locale' => $language,'path' => urlencode($draftRoute)));
-            $livePath = $this->router->generate('networking_init_view_live', array('locale' => $language, 'path' => urlencode($liveRoute)));
+            if($liveRoute)
+            {
+                $livePath = $this->router->generate('networking_init_view_live', array('locale' => $language, 'path' => urlencode($liveRoute)));
+            }
 
             // Set active url based on which status is in the session
 
@@ -138,7 +151,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             }
             if($editPath && !$sonataAdmin){
 
-                $menu->addChild('Edit', array('label' => ''  ,'linkAttributes' => array('class' =>'icon-pencil', 'style' => 'padding:0; margin: 10px 15px 10px;'), 'uri' => $editPath));
+                $menu->addChild('Edit', array('label' => ''  ,'linkAttributes' => array('class' =>'icon-pencil icon-white', 'style' => 'padding:0; margin: 10px 15px 10px;'), 'uri' => $editPath));
             }
             $menu->addChild('Admin', array('uri' => $dashboardUrl));
             $viewStatus = $this->serviceContainer->get('session')->get('_viewStatus');
@@ -156,6 +169,10 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             }
             if($livePath){
                 $dropdown->addChild('Live view', array('uri' => $livePath));
+            }
+
+            if(!$draftPath && !$livePath){
+                $dropdown->addChild('Home Page', array('uri' => $defaultHome));
             }
 
         }

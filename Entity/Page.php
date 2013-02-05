@@ -920,6 +920,14 @@ class Page implements RouteAwareInterface, VersionableInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isHome()
+    {
+        return $this->isHome;
+    }
+
+    /**
      * @param  string $locale
      * @return Page
      */

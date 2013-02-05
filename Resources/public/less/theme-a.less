@@ -1,17 +1,64 @@
-/*!
- * Bootstrap v2.2.1
- *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
- */
 
-// import bootstrap
 
-@import "bootstrap/less/bootstrap.less";
-@import "theme-variables.less";
+// CSS Reset
+@import "reset";
+
+
+// Core variables and mixins
+@import "variables"; // Modify this for custom colors, font-sizes, etc
+@import "mixins";
+
+//initcms variables
+@import "theme-variables";
+
+
+// Grid system and page structure
+@import "scaffolding";
+@import "grid";
+@import "layouts";
+
+// Base CSS
+@import "type";
+@import "code";
+@import "initcms-forms";
+@import "tables";
+
+// Components: common
+@import "font-awesome";
+@import "dropdowns";
+@import "wells";
+@import "component-animations";
+@import "close";
+
+// Components: Buttons & Alerts
+@import "buttons";
+@import "button-groups";
+@import "alerts"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
+
+// Components: Nav
+@import "navs";
+@import "navbar";
+@import "breadcrumbs";
+@import "pagination";
+@import "pager";
+
+// Components: Popovers
+@import "modals";
+@import "tooltip";
+@import "popovers";
+
+// Components: Misc
+@import "thumbnails";
+@import "labels-badges";
+@import "progress-bars";
+@import "accordion";
+@import "carousel";
+@import "hero-unit";
+
+// Utility classes
+@import "utilities";
+
+
 
 // import bootstrap extensions
 //@import "bootstrap_extensions/less/datepicker.less";
@@ -32,95 +79,99 @@ body {
     line-height: 130%;
 }
 
-h1{
+.initcms h1{
     font-size: @fontSizeLarge;
     font-weight: normal;
 }
 
-h2{
+.initcms h2{
     font-size: @fontSizeMedium;
     font-weight: normal;
 }
 
-
-a {
-    color: @linkColor2;
+.initcms a:not(.btn) {
+    color: #666666;
 }
 
+.initcms a.colored-link {
+    color: @linkColor;
+}
 
-a:hover {
+.initcms a:hover:not(.btn) {
     text-decoration: none;
     color: @linkColor;
 }
 
-
-.table a{
+.initcms .table a:not(.btn){
     text-decoration: none;
     color:@textColor;
 }
 
-.table a:hover{
+.initcms .table a:hover:not(.btn){
     text-decoration: none;
     color: @linkColor;
 }
 
 
-.nav-tabs > li > a {
-    background-color: #eee;
-    border-bottom:1px solid #dddddd;
-}
 
-.nav-tabs > li > a:hover {
+.initcms .nav-tabs > li > a {
     background-color: #f6f6f6;
     border-bottom:1px solid #dddddd;
 }
 
+.initcms .nav-tabs > li.active > a {
+    background-color: #fff;
+    border-bottom:1px solid #fff;
+}
 
+.initcms .nav-tabs > li > a:hover {
+    background-color: #fff;
+}
 
-.accordion-heading a {
+.initcms .accordion-heading a {
     text-decoration: none;
     color:@linkColor2;
     background-color:#f8f8f8;
 }
 
-.accordion-heading .accordion-toggle {
+.initcms .accordion-heading .accordion-toggle {
   display: block;
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-.accordion-inner {
+.initcms .accordion-inner {
     padding-top:15px;
 }
 
-.accordion-inner a {
+.initcms .accordion-inner a:not(.btn) {
     color: @linkColor;
 }
 
-.accordion-inner label {
+.initcms .accordion-inner label {
     color: @textColorSoft;
     font-size: 12px;
     margin-bottom: -2px;
 }
 
-.accordion-inner input{
+.initcms .accordion-inner input[type=text]{
     height: 15px;
 }
-.accordion-inner select{
+.initcms .accordion-inner select{
     height: 26px;
 }
 
-.accordion-inner .value-display{
+.initcms .accordion-inner .value-display{
     font-size: 13px;
     margin-bottom: 7px;
 }
 
-.navbar .nav > li > a.inactive
+.initcms .navbar .nav > li > a.inactive
 {
     color: #c9c9c9;
 }
 
-.footer {
+.initcms .footer {
     position:fixed;
     bottom:0;
     width: 100%;
@@ -350,6 +401,10 @@ a:hover {
     margin-left: 0px;
 }
 
+.tab-sub-menu {
+    padding:0 20px;
+    margin-bottom: 15px;
+}
 
 ////////////////
 // Content
@@ -459,7 +514,7 @@ a:hover {
 }
 
 .caret-button-padding {
-    padding-left:4px;
+    padding-left:2px;
 }
 .caret-button-padding-right {
     padding-right:5px;
@@ -488,6 +543,38 @@ a:hover {
     padding-bottom: 2px;
     text-align:right;
     overflow:visible;
+}
+
+
+li.table-row-style {
+    border-top: 1px solid #eee;
+    padding-top:3px;
+    list-style-type: none;
+    margin-top: 3px;
+}
+ul.table-row-style {
+    margin-left:20px;
+}
+
+li.table-row-style .text {
+    padding-top:2px;
+    overflow: hidden;
+    white-space:nowrap;
+}
+
+li.table-row-style .menu-item-link {
+    width: 150px;
+    font-style: italic;
+    padding-left: 50px;
+}
+
+.table-style-labels {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.menu-item-link-label {
+    width: 150px;
 
 }
 
@@ -524,3 +611,160 @@ a:hover {
     font-size: 18px;
 }
 
+//Additions from Yorkie Chadwick
+.modal form {
+    margin: 0;
+}
+
+
+.page-form .modal {
+    margin-left: -350px;
+    margin-top: -350px;
+    width: 700px;
+}
+
+.page-form .modal-body {
+    max-height: 650px;
+}
+
+.initcms-list-actions select, .initcms-list-actions input {
+    margin-bottom: 0px;
+}
+
+.sortable li.ui-state-active, .sortable li.ui-state-highlight {
+    margin-bottom: 20px !important;
+}
+
+.select2-container .select2-choice {
+    line-height: 20px !important;
+    height: 20px !important;
+}
+
+.select2-container .select2-choice abbr{
+    top: 4px !important;
+}
+
+.select2-container .select2-choice div b {
+    background-position: 0 -3px !important;
+}
+
+.select2-dropdown-open .select2-choice div b {
+    background-position: -18px -3px !important;
+}
+
+.filters {
+    background-color: #ECE9E9;
+    padding: 8px;
+}
+.filters .caret{
+    margin-left: 30px;
+    margin-top: 3px;
+    border-top: 8px solid #000000;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+}
+.caret.filter_close {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: top;
+    border-left: 8px solid #000000;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    content: "";
+}
+
+.sortable li {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.sortable li.empty_layout_block {
+    padding: 10px;
+    border: #bbb dashed 1px;
+    min-height: 60px;
+}
+
+.dropzone.well-small{
+    padding: 4px;
+}
+.dropzone ul, .dropzone ol {
+	margin: 0;
+}
+.dropzone h6 {
+	font-weight: normal;
+	margin: 0;
+}
+.networking-sortable-list .content_preview {
+	margin-bottom: 5px;
+	background-color: white;
+	min-height: 50px;
+	padding: 5px;
+	border: 1px solid #dadada;
+}
+
+.plus_button {
+	text-align: center;
+}
+
+.content_preview .icon-trash {
+	float: right;
+}
+
+.content_preview .icon-pencil {
+	float: right;
+}
+
+.modal:focus{
+  outline: none;
+}
+
+// Sontat CSS overwrites
+.initcms{
+  .sonata-ba-list-field-header-batch {
+      width: 15px;
+  }
+
+  .table th.sonata-ba-list-field-header-actions {
+      text-align: right;
+  }
+
+  legend + .sonata-ba-collapsed-fields {
+      margin-top: 18px;
+      -webkit-margin-top-collapse: separate;
+  }
+
+  legend.sonata-ba-fieldset-collapsed-description + .sonata-ba-collapsed-fields {
+    margin: 0;
+  }
+  .sonata-ba-collapsed-fields{
+    padding-top: 20px;
+  }
+
+  .sonata-ba-collapsed-fields > p {
+      margin-bottom: 18px;
+  }
+
+  .sonata-ba-fieldset-collapsed legend:before {
+      content: '+ ';
+  }
+
+  .sonata-ba-collapsed-fields-close legend:before {
+      content: '- ';
+  }
+
+  .sonata-ba-collapsed-fields-close legend:before {
+      content: '- ';
+  	  padding-left: 0;
+      padding-right: 3px;
+  }
+
+  .sonata-bc .well-small {
+  	padding: 5px;
+  }
+
+  .sonata-bc .well {
+  	margin-bottom: 10px;
+  }
+}

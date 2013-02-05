@@ -304,12 +304,12 @@ RedactorPlugins.cssPlugin = {
         this.path = [];
         var editor = $('.redactor_editor');
         var $obj = this;
-        for (var i = 0, len = editor.length; i < len; ++i) {
-            editor[i].onclick = function (evt) {
-                $obj.updateTagTree(evt)
-            };
-
-        }
+//        for (var i = 0, len = editor.length; i < len; ++i) {
+//            editor[i].onclick = function (evt) {
+//                $obj.updateTagTree(evt)
+//            };
+//
+//        }
 
         var dropdown = {
             removeFormatting:{
