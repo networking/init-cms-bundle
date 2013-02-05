@@ -74,7 +74,7 @@ file that was distributed with this source code.
                             {{ block('batch') }}
 
                             {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
-                                {{ "label_export_download"|trans({}, "NetworkingInitCmsAdminGeneral") }}
+                                {{ "label_export_download"|trans({}, "NetworkingInitCmsAdmin") }}
                                 :
 
                                 {% for format in admin.getExportFormats() %}
@@ -188,7 +188,7 @@ file that was distributed with this source code.
                     {% if filter_hidden %}
                         <a data-toggle="collapse" data-target="#hidden_filters">
                             <i class="icon-caret-right" id="filter_toggle"></i>
-                            {{ 'link.show_more'|trans({}, 'NetworkingInitCmsAdminGeneral') }}
+                            {{ 'link.show_more'|trans({}, 'NetworkingInitCmsAdmin') }}
                         </a>
                     {% endif %}
                 </div>

@@ -159,7 +159,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
             $dropdown = $this->createDropdownMenuItem(
                         $menu,
-                        $translator->trans('link.website_'.$viewStatus, array(), 'NetworkingInitCmsAdminGeneral'),
+                        $translator->trans('link.website_'.$viewStatus, array(), 'NetworkingInitCmsAdmin'),
                         true,
                         array('icon' => 'caret')
                     );
