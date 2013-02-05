@@ -225,8 +225,10 @@ file that was distributed with this source code.
                 <div class="pull-left form-inline ">
                     {{ filter_main }}
                     {% if filter_hidden %}
-                        <i class="icon-plus" id="filter_toggle" data-toggle="collapse"
-                           data-target="#hidden_filters"></i>
+                        <a data-toggle="collapse" data-target="#hidden_filters">
+                            <i class="icon-caret-right" id="filter_toggle" ></i>
+                            {{ 'link.show_more'|trans({}, 'NetworkingInitCmsAdminGeneral') }}
+                        </a>
                     {% endif %}
                 </div>
                 <div class="pull-right">
