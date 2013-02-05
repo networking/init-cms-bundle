@@ -13,6 +13,8 @@ use \Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use \Symfony\Component\DependencyInjection\Container;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Networking\InitCmsBundle\Entity\Page;
+use Networking\InitCmsBundle\Entity\Tag;
 
 class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,40 +23,66 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
 	public function setup()
 	{
-		$this->helper = new LanguageSwitcherHelper();
-	}
+        $this->helper = new LanguageSwitcherHelper();
+    }
 
-	public function testGetTranslationRoute()
-	{
-        $this->markTestIncomplete('prepareGetTranslationRoute its a mess!');
-        $this->prepareGetTranslationRoute('/foo');
+
+    public function testGetTranslationRouteWithException()
+    {
+        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+
+        $request = new Request();
+        $request2 = Request::create('/foo');
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container');
+        $router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
+				->disableOriginalConstructor()
+				->getMock();
+        $container->expects($this->at(0))
+			->method('get')
+            ->with('request')
+			->will($this->returnValue($request));
+        $container->expects($this->at(1))
+			->method('get')
+            ->with('router')
+			->will($this->returnValue($router));
+        $router->expects($this->at(0))
+			->method('matchRequest')
+			->with($this->equalTo($request2))
+			->will($this->returnValue(array('_content' => new Tag())));
+
+        $this->helper->setContainer($container);
         $result = $this->helper->getTranslationRoute('/foo', 'de');
-		$this->assertArrayHasKey('_content', $result);
-	}
+    }
 
-    private function prepareGetTranslationRoute($oldUrl)
+    public function testGetTranslationRoute()
 	{
-		$request = new Request();
-        $request2 = Request::create($oldUrl);
+        $page = new Page();
+        $page->setMetaTitle('ExceptionPage');
+
+        $request = new Request();
+        $request2 = Request::create('/foo');
 		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
 		$router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
 				->disableOriginalConstructor()
 				->getMock();
 		$container->expects($this->at(0))
 			->method('get')
+            ->with('request')
 			->will($this->returnValue($request));
 		$container->expects($this->at(1))
 			->method('get')
+            ->with('router')
 			->will($this->returnValue($router));
         $router->expects($this->at(0))
 			->method('matchRequest')
 			->with($this->equalTo($request2))
-			->will($this->returnValue(array('_content' => 'bar')));
+			->will($this->returnValue(array('_content' => $page)));
 
 		$this->helper->setContainer($container);
+        $result = $this->helper->getTranslationRoute('/foo', 'de');
+
+        $this->assertEquals(array("_route" => "networking_init_cms_home"), $result);
 	}
-
-
 
 	public function testGetQueryString()
 	{
