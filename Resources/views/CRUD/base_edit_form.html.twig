@@ -46,9 +46,9 @@ file that was distributed with this source code.
                                 <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
                                     {% if form_group.collapsed %}
                                         <a href="" class="sonata-ba-collapsed"
-                                           title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationdomain) }}</a>
+                                           title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationDomain) }}</a>
                                     {% else %}
-                                        {{ name|trans({}, admin.translationdomain) }}
+                                        {{ name|trans({}, admin.translationDomain) }}
                                     {% endif %}
                                 </legend>
                             {% endif %}

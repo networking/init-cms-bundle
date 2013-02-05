@@ -49,9 +49,9 @@ file that was distributed with this source code.
             <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
                 {% if form_group.collapsed %}
                     <a href="" class="sonata-ba-collapsed"
-                       title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationdomain) }}</a>
+                       title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationDomain) }}</a>
                 {% else %}
-                    {{ 'meta_settings'|trans({}, admin.translationdomain) }}
+                    {{ 'meta_settings'|trans({}, admin.translationDomain) }}
                 {% endif %}
             </legend>
 
@@ -93,8 +93,8 @@ file that was distributed with this source code.
                         <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseZero">
                             <div class="accordion-caret"><b class="caret"></b></div>
-                            {{ 'legend.page_status'|trans({}, admin.translationdomain) }} -
-                            <i class="{% if not object.isPublished() %}color-draft{% endif %} page_status">{{ object.statusLabel|trans({}, admin.translationdomain) }}</i>
+                            {{ 'legend.page_status'|trans({}, admin.translationDomain) }} -
+                            <i class="{% if not object.isPublished() %}color-draft{% endif %} page_status">{{ object.statusLabel|trans({}, admin.translationDomain) }}</i>
                         </a>
                     </div>
                     <div id="collapseZero" class="accordion-body collapse in">
@@ -112,7 +112,7 @@ file that was distributed with this source code.
                             <a class="accordion-toggle" data-toggle="collapse"
                                href="#collapseOne">
                                 <div class="accordion-caret"><b class="caret"></b></div>
-                                {{ 'legend.translations'|trans({}, admin.translationdomain) }}
+                                {{ 'legend.translations'|trans({}, admin.translationDomain) }}
                             </a>
                         </div>
                         <div id="collapseOne" class="accordion-body collapse">
@@ -130,7 +130,7 @@ file that was distributed with this source code.
                         <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseTwo">
                             <div class="accordion-caret"><b class="caret"></b></div>
-                            {{ 'legend.menu_connections'|trans({}, admin.translationdomain) }}
+                            {{ 'legend.menu_connections'|trans({}, admin.translationDomain) }}
                         </a>
                     </div>
                     <div id="collapseTwo" class="accordion-body collapse">
@@ -145,7 +145,7 @@ file that was distributed with this source code.
                         <a class="accordion-toggle" data-toggle="collapse"
                            href="#collapseThree">
                             <div class="accordion-caret"><b class="caret"></b></div>
-                            {{ 'legend.page_settings'|trans({}, admin.translationdomain) }}
+                            {{ 'legend.page_settings'|trans({}, admin.translationDomain) }}
                         </a>
                     </div>
                     <div id="collapseThree" class="accordion-body collapse in">
@@ -169,11 +169,11 @@ file that was distributed with this source code.
         <!-- start modal page form -->
         <div class="modal form-horizontal" id="pageSettingFields"
              style="display: none"
-             role="dialog" aria-labelledby="{{ "legend.page_settings"|trans({}, admin.translationdomain) }}"
+             role="dialog" aria-labelledby="{{ "legend.page_settings"|trans({}, admin.translationDomain) }}"
              aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>{{ 'legend.page_settings'|trans({}, admin.translationdomain) }}</h3>
+                <h3>{{ 'legend.page_settings'|trans({}, admin.translationDomain) }}</h3>
             </div>
             <div class="modal-body">
                 <div id="pageSettingsFieldsModal">
@@ -195,9 +195,9 @@ file that was distributed with this source code.
                         <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
                             {% if form_group.collapsed %}
                                 <a href="" class="sonata-ba-collapsed"
-                                   title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationdomain) }}</a>
+                                   title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationDomain) }}</a>
                             {% else %}
-                                {{ 'meta_settings'|trans({}, admin.translationdomain) }}
+                                {{ 'meta_settings'|trans({}, admin.translationDomain) }}
                             {% endif %}
                         </legend>
 

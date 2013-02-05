@@ -1,8 +1,8 @@
 {#
 
-This file is part of the Sonata package.
+This file is part of the Networking package.
 
-(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+(c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
@@ -24,7 +24,7 @@ file that was distributed with this source code.
                 {% for admin in group.items %}
                     {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
                         <tr>
-                            <td class="sonata-ba-list-label">{{ admin.label|trans({}, admin.translationdomain) }}</td>
+                            <td class="sonata-ba-list-label">{{ admin.label|trans({}, admin.translationDomain) }}</td>
                             <td>
                                 {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
                                     {% if admin.subClasses is empty %}

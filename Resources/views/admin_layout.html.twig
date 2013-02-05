@@ -206,7 +206,7 @@ file that was distributed with this source code.
                                         {{ asset(networking_init_cms_get_admin_icon(admin, 'small')) }}
                                     {% endif %}"/></div>
                                     <a href="{{ admin.generateUrl('list') }}">
-                                        <div class="pull-left first-level-text">{{ admin.label|trans({}, admin.translationdomain) }}</div>
+                                        <div class="pull-left first-level-text">{{ admin.label|trans({}, admin.translationDomain) }}</div>
                                     </a>
                                     {% if isActive %}
                                         <div class="pull-right" style="position:relative;">
@@ -218,7 +218,7 @@ file that was distributed with this source code.
                                         <ul class="ul-second-level">
                                             {% for subadmin in admin.getChildren %}
                                                 <li class="second-level">
-                                                    <a href="{{ subadmin.generateUrl('list') }}">{{ subadmin.label|trans({}, subadmin.translationdomain) }}</a>
+                                                    <a href="{{ subadmin.generateUrl('list') }}">{{ subadmin.label|trans({}, subadmin.translationDomain) }}</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
