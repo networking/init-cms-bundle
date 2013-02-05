@@ -379,7 +379,7 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     public function getMetaTitle()
     {
-        return empty($this->metaTitle)?$this->workingTitle:$this->metaTitle;
+        return $this->metaTitle;
     }
 
     /**
