@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -15,11 +22,6 @@ class DefaultControllerTest extends WebTestCase
 	 */
 	public function testHomepage()
     {
-//	    // -------- Stop here and mark this test as incomplete.
-//	    $this->markTestIncomplete(
-//		    'This test has not been implemented yet.'
-//	    );
-
 	    $client = $this->createClient();
         $router = self::$kernel->getContainer()->get('router');
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\Tests\EventListener;
 
 use Networking\InitCmsBundle\EventListener\LayoutBlockFormListener;
@@ -7,12 +15,8 @@ use Symfony\Component\Form\FormFactoryInterface;
 class LayoutBlockFormListenerTest extends \PHPUnit_Framework_TestCase
 {
 
-
 	public function testPreBindData()
 	{
-		$this->markTestIncomplete(
-		    'Call to undefined method Networking\InitCmsBundle\EventListener\LayoutBlockFormListener::getForm() ???'
-	    );
 		$factory = $this->getMockBuilder('\Symfony\Component\Form\FormFactoryInterface')
 				->disableOriginalConstructor()
 				->getMock();
@@ -20,7 +24,7 @@ class LayoutBlockFormListenerTest extends \PHPUnit_Framework_TestCase
 				->disableOriginalConstructor()
 				->getMock();
 		$listener = new LayoutBlockFormListener($factory, $container);
-		$form = $listener->getForm();
+        $form = new \Object();
 
 		$event = $this->getMockBuilder('\Symfony\Component\Form\FormEvent')
 				->disableOriginalConstructor()
