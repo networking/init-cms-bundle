@@ -10,38 +10,52 @@ file that was distributed with this source code.
 #}
 {% set last_edited = app.session.get('MenuItem.last_edited') %}
 <div class="menu_item {% if last_edited == node.id %}info{% endif %}">
-    <div class="pull-left text" style="margin-right: 10px;"><i class="icon-move"></i>  <a class=" menu-dialog-link" href="{{ admin.generateUrl('edit', {id: node.id}) }}">{{ node.name }}</a></div>
+    <div class="pull-left text" style="margin-right: 10px;"><i class="icon-move"></i> <a class=" menu-dialog-link"
+                                                                                         href="{{ admin.generateUrl('edit', {id: node.id}) }}">{{ node.name }}</a>
+    </div>
     <div class="pull-right text menu-item-link"><span style="color:#999;">
         {% if node.page %}
-            {{ 'title.page'|trans({}, admin.translationDomain) }}:</span> <a  href="{{ path('admin_networking_initcms_page_edit', {id: node.page.id}) }}">{{ node.page.workingTitle }}</a>
+        {{ 'title.page'|trans({}, admin.translationDomain) }}:</span> <a
+            href="{{ path('admin_networking_initcms_page_edit', {id: node.page.id}) }}">{{ node.page.workingTitle }}</a>
         {% elseif node.redirectUrl %}
-            {{ 'label_redirect_url'|trans({}, admin.translationDomain) }}:</span> <a target="_blank" href="{{ node.redirectUrl }}">{{ node.redirectUrl }}</a>
+            {{ 'label_redirect_url'|trans({}, admin.translationDomain) }}:</span> <a target="_blank"
+                                                                                     href="{{ node.redirectUrl }}">{{ node.redirectUrl }}</a>
         {% endif %}
     </div>
     <div class="icons pull-right">
-       <div style="position:relative;">
-           <a  href="{{ admin.generateUrl('edit', {id: node.id}) }}"
-               class="menu-dialog-link btn btn-mini button-in-row link-page-edit"
-                   data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"  data-page_id="{{ node.id }}">
-                   <i class="icon-pencil"></i>
-           </a>
-           <button class="btn btn-mini actions-toggle show-tooltip" data-original-title="Show Options" >&nbsp;<b class="caret"></b>&nbsp;</button>
-           <div class="row-actions">
+        <div style="position:relative;">
+            <a href="{{ admin.generateUrl('edit', {id: node.id}) }}"
+               class="menu-dialog-link btn btn-small button-in-row link-page-edit"
+               data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}" data-page_id="{{ node.id }}">
+                <i class="icon-pencil"></i>
+            </a>
+            {#<button class="btn btn-small actions-toggle show-tooltip" data-original-title="Show Options">#}
+                {#<i class="caret"></i>#}
+            {#</button>#}
+            <button class="btn btn-small actions-toggle" data-original-title="Show More" data-toggle="row-actions">
+                        <i class="icon-caret-down"></i>
+                    </button>
+            <div class="row-actions">
 
 
-               <a  href="{{ admin.generateUrl('delete', {id: node.id}) }}"
-                                class="menu-dialog-link btn btn-mini button-in-row"
-                                    data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"data-page_id="{{ node.id }}">
-                                    <i class="icon-trash"></i>
-                            </a>
-               <a  href="{{ admin.generateUrl('edit', {id: node.id}) }}"
-                                 class="menu-dialog-link btn btn-mini button-in-row"
-                                     data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}" data-page_id="{{ node.id }}">
-                                     <i class="icon-pencil"></i>
-                             </a>
-               <button class="btn btn-mini actions-toggle-close"><b class="caret-left caret-button-padding"></b><span class="caret-button-padding-right"></span></button>
-           </div>
-       </div>
+                <a href="{{ admin.generateUrl('delete', {id: node.id}) }}"
+                   class="menu-dialog-link btn btn-small button-in-row"
+                   data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
+                   data-page_id="{{ node.id }}">
+                    <i class="icon-trash"></i>
+                </a>
+                <a href="{{ admin.generateUrl('edit', {id: node.id}) }}"
+                   class="menu-dialog-link btn btn-small button-in-row"
+                   data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
+                   data-page_id="{{ node.id }}">
+                    <i class="icon-pencil"></i>
+                </a>
+                <button class="btn btn-small actions-toggle-close " data-original-title="Hide More Actions"
+                        data-toggle="row-actions">
+                    <i class="icon-caret-left caret-button-padding"></i>
+                </button>
+            </div>
+        </div>
     </div>
     <div style="clear: both"></div>
 </div>
