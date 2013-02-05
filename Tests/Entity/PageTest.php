@@ -16,10 +16,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
 	public function testOnPrePersist()
 	{
 		$obj = new Page();
+        $obj->setWorkingTitle('working title');
+        $this->assertEquals('', $obj->getMetaTitle());
 		$this->assertEquals(null, $obj->getUpdatedAt());
 		$obj->onPrePersist();
 		$this->assertEquals(new \DateTime('now'), $obj->getUpdatedAt());
 		$this->assertEquals(new \DateTime('now'), $obj->getCreatedAt());
+		$this->assertEquals('working title', $obj->getMetaTitle());
+
 	}
 
 	public function testSetTitle()
@@ -76,10 +80,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('original page', $chilly[0]->getParent()->getTitle());
 	}
 
-	public function testAddLayoutBlock()
-	{
-
-		$this->markTestIncomplete('Tests of Page are incomplete');
-	}
+//	public function testAddLayoutBlock()
+//	{
+//
+//		$this->markTestIncomplete('Tests of Page are incomplete');
+//	}
 
 }
