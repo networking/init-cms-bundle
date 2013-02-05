@@ -80,10 +80,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('original page', $chilly[0]->getParent()->getTitle());
 	}
 
-//	public function testAddLayoutBlock()
-//	{
-//
-//		$this->markTestIncomplete('Tests of Page are incomplete');
-//	}
+//TODO to be extended
 
 }
