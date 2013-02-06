@@ -84,7 +84,7 @@ services:
         class: Networking\InitCmsBundle\Admin\HelpTextAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\HelpText, SonataAdminBundle:CRUD]
         calls:
-            - [setTranslationDomain, [AdminHelp]]
+            - [setTranslationDomain, [HelpTextAdmin]]
             - [setLanguages, [%networking_init_cms.page.languages%]]
             - [setContainer, [@service_container]]
         tags:
