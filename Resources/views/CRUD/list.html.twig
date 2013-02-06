@@ -23,15 +23,13 @@ file that was distributed with this source code.
                     event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
 
-            $(".actions-toggle").bind(event, function () {
+            $(".actions-toggle").live('click', function () {
                 $('.row-actions').hide();
                 $(this).parent().children('.row-actions').fadeToggle('fast');
-                //$(this).parent().children('.row-actions').css('display', 'inline-block');
             });
-            $(".actions-toggle-close").bind(event, function () {
+            $(".actions-toggle-close").live('click', function () {
                 $(this).parent().fadeToggle('fast');
             });
-
             $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
 
             $('#hidden_filters').on('show hide', function () {
