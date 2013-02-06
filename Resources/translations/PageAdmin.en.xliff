@@ -498,8 +498,7 @@
             </trans-unit>
             <trans-unit id="info.copy_page">
                 <source>info.copy_page</source>
-                <target>A copy of this pages  will be made in %language%. WARNING: The pages content will NOT be copied
-                    only the layout, URL and other page settings will be copied. After the page is created, go to translation and
+                <target>A copy of this pages content and settings will be made in %language%.After the page is created, go to translation and
                     click on "Edit" in order to edit the content.
                 </target>
             </trans-unit>

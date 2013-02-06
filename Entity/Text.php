@@ -61,6 +61,11 @@ class Text implements ContentInterface
      */
     protected $updatedAt;
 
+    public function __clone(){
+        $this->id = null;
+        $this->layoutBlock = null;
+    }
+
     /**
      * @ORM\PrePersist
      */

@@ -51,7 +51,7 @@ class LayoutBlock implements ContentInterface
     /**
      * @var Page $page
      *
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="layoutBlock")
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="layoutBlock",cascade={"persist", "detach"})
      * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $page;
@@ -124,6 +124,15 @@ class LayoutBlock implements ContentInterface
     public function __construct()
     {
         $this->snapshotContent = new ArrayCollection();
+    }
+
+    /**
+     *
+     */
+    public function __clone()
+    {
+        $this->id = null;
+        $this->page = null;
     }
 
     /**

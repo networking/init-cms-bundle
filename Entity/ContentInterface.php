@@ -16,6 +16,7 @@ namespace Networking\InitCmsBundle\Entity;
 interface ContentInterface
 {
 
+    public function __clone();
     /**
      * @static
      * @return array

@@ -17,12 +17,13 @@ file that was distributed with this source code.
         {{ language.translation.workingTitle }}
         <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}" class="link-underlined">
             {{ 'link.edit'|trans({}, admin.translationDomain) }}
-        </a> | <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}" class="link-underlined translation-dialog-link">
+        </a> |
             {% if language.translation.isDirectTranslation(object) %}
-            {{ 'link.unlink'|trans({}, admin.translationDomain) }}
+                <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}" class="link-underlined translation-dialog-link">
+            {{ 'link.unlink'|trans({}, admin.translationDomain) }}</a>
             {% else %}
                 {% set directTranslation = language.translation.getDirectTranslationFor(object) %}
-            <i class="info-soft"> -> <a href="{{ admin.generateUrl('edit', {'id': directTranslation.id}) }}"> {{ directTranslation.locale|slice(0,2)|upper }}</i>
+            <i class="info-soft"> via </i><a href="{{ admin.generateUrl('edit', {'id': directTranslation.id}) }}" class="link-underlined"> {{ directTranslation.locale|slice(0,2)|upper }}
             {% endif %}
         </a>
     {% else %}

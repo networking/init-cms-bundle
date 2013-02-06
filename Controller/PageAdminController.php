@@ -43,7 +43,7 @@ class PageAdminController extends CmsCRUDController
     public function translatePageAction(Request $request, $id, $locale)
     {
 
-
+        /** @var $page Page */
         $page = $this->admin->getObject($id);
 
         if (!$page) {
@@ -54,7 +54,7 @@ class PageAdminController extends CmsCRUDController
         if ($this->getRequest()->getMethod() == 'POST') {
 
 
-            $em = $this->get('doctrine.orm.entity_manager');
+            $em = $this->getDoctrine()->getManager();
 
             $pageCopy = new Page();
 
@@ -69,7 +69,26 @@ class PageAdminController extends CmsCRUDController
             $pageCopy->setTemplate($page->getTemplate());
             $pageCopy->setOriginal($page);
 
+
+
             try {
+
+                $layoutBlocks = $page->getLayoutBlock();
+
+                foreach($layoutBlocks as $layoutBlock){
+                    /** @var $newLayoutBlock LayoutBlock */
+                    $newLayoutBlock = clone $layoutBlock;
+
+                    $content = $this->getDoctrine()->getRepository($newLayoutBlock->getClassType())->find($newLayoutBlock->getObjectId());
+                    $newContent = clone $content;
+
+                    $em->persist($newContent);
+                    $em->flush();
+                    $newLayoutBlock->setObjectId($newContent->getId());
+                    $newLayoutBlock->setPage($pageCopy);
+                    $em->persist($newLayoutBlock);
+                }
+
                 $em->persist($pageCopy);
                 $em->flush();
                 $status = 'success';
