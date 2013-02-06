@@ -53,9 +53,11 @@ file that was distributed with this source code.
 
                         {# preview of layout block of content #}
                         <div class="content_preview"  >
-                            <i class="icon-move soft-background"></i>
-                            <i class="icon-trash soft-background"></i>
-                            <i class="icon-pencil soft-background" data-target="#expandableForm{{ increment }}" data-toggle="modal" ></i>
+                            <div class="layout_controls">
+                                <i class="icon-move soft-background"></i>
+                                <i class="icon-trash soft-background"></i>
+                                <i class="icon-pencil soft-background" data-target="#expandableForm{{ increment }}" data-toggle="modal" ></i>
+                            </div>
                             {{ networking_admin_cms_block(nested_group_field.vars.value) }}
 
                         </div>
