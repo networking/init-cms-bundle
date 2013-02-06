@@ -1,16 +1,8 @@
-
-
-// CSS Reset
 @import "reset";
-
 
 // Core variables and mixins
 @import "variables"; // Modify this for custom colors, font-sizes, etc
 @import "mixins";
-
-//initcms variables
-@import "theme-variables";
-
 
 // Grid system and page structure
 @import "scaffolding";
@@ -20,7 +12,7 @@
 // Base CSS
 @import "type";
 @import "code";
-@import "initcms-forms";
+@import "forms";
 @import "tables";
 
 // Components: common
@@ -56,17 +48,10 @@
 @import "hero-unit";
 
 // Utility classes
-@import "utilities";
-
-
-
-// import bootstrap extensions
-//@import "bootstrap_extensions/less/datepicker.less";
-
+@import "utilities"; // Has to be last to override when necessary
 
 //////////////////////////////////
 // override BOOTSTRAP classes
-
 
 html {
     overflow-y: scroll;
@@ -276,12 +261,11 @@ body {
 }
 
 
-
 ///////////////
 // Main Nav (left)
 
 .nav-main{
-    background: url('../img/bg_nav_left.png') repeat right;
+    background: url('@{cssImagePath}/bg_nav_left.png') repeat right;
     border-right: 1px solid #efefef;
     width:100%;
     min-height: 600px;
@@ -326,7 +310,7 @@ body {
     left:-12px;
     width:13px;
     height:13px;
-    background:url('../img/nav_active_corner_top_13.png');
+    background:url('@{cssImagePath}/nav_active_corner_top_13.png');
 }
 .nav-custom .active-corner-bottom {
     position:absolute;
@@ -334,7 +318,7 @@ body {
     left:-12px;
     width:13px;
     height:13px;
-    background:url('../img/nav_active_corner_bottom_13.png');
+    background:url('@{cssImagePath}/nav_active_corner_bottom_13.png');
 }
 
 .nav-custom-small .active-corner-top {
@@ -343,7 +327,7 @@ body {
     left:-12px;
     width:13px;
     height:13px;
-    background:url('../img/nav_active_corner_top_13.png');
+    background:url('@{cssImagePath}/nav_active_corner_top_13.png');
 }
 .nav-custom-small .active-corner-bottom {
     position:absolute;
@@ -351,7 +335,7 @@ body {
     left:-12px;
     width:13px;
     height:13px;
-    background:url('../img/nav_active_corner_bottom_13.png');
+    background:url('@{cssImagePath}/nav_active_corner_bottom_13.png');
 }
 
 
@@ -476,7 +460,7 @@ body {
 }
 
 .info_button_medium {
-    background: url('../img/icons/icon_info_30.png');
+    background: url('@{cssImagePath}/icons/icon_info_30.png');
     width:30px;
     height:30px;
     float:left;
@@ -484,7 +468,7 @@ body {
 }
 
 .close-button-medium {
-    background: url('../img/icons/icon_close_30.png');
+    background: url('@{cssImagePath}/icons/icon_close_30.png');
     width:30px;
     height:30px;
     float:left;
@@ -523,9 +507,6 @@ body {
     width: 0;
 }
 
-.caret-button-padding {
-    padding-left:2px;
-}
 .caret-button-padding-right {
     padding-right:5px;
 }
@@ -609,7 +590,6 @@ li.table-row-style .menu-item-link {
     padding:3px 3px 3px 20px;
     height:24px;
     white-space: nowrap;
-    /*background: url('../img/row_actions_left.png') no-repeat);*/
     -webkit-border-radius: 16px 0px 0px 16px;
     border-radius: 16px 0px 0px 16px;
 }

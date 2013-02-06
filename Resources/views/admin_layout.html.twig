@@ -31,36 +31,26 @@ file that was distributed with this source code.
 
     {% block stylesheets %}
         <!-- jQuery code -->
-        <link rel="stylesheet" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.8.16.custom.css') }}"
-              type="text/css" media="all"/>
-
-        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/select2.css') }}" type="text/css"
-                              media="all"/>
-
-
-
+        <link rel="stylesheet" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.8.16.custom.css') }}" type="text/css" media="all"/>
+        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/select2.css') }}" type="text/css" media="all"/>
         {% stylesheets filter='less,?yui_css'
-           '@NetworkingInitCmsBundle/Resources/public/less/theme-a.less'
+           '@NetworkingInitCmsBundle/Resources/public/less/cms/admin-css.less'
         %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
         {% endstylesheets %}
-        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap-responsive.min.css') }}"
-                             type="text/css" media="all"/>
+        <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/bootstrap-responsive.min.css') }}"type="text/css" media="all"/>
     {% endblock %}
 
     {% block javascripts %}
         <script src="{{ asset('bundles/sonatajquery/jquery-1.8.0.js') }}" type="text/javascript"></script>
         <script src="{{ asset('bundles/sonatajquery/jquery-ui-1.8.23.js') }}" type="text/javascript"></script>
         <script src="{{ asset('bundles/sonatajquery/jquery-ui-i18n.js') }}" type="text/javascript"></script>
-
         <script src="{{ asset('bundles/networkinginitcms/js/bootstrap.min.js') }}" type="text/javascript"></script>
-
-        <script src="{{ asset('bundles/sonataadmin/qtip/jquery.qtip-1.0.0-rc3.min.js') }}"
-                type="text/javascript"></script>
+        <script src="{{ asset('bundles/sonataadmin/qtip/jquery.qtip-1.0.0-rc3.min.js') }}" type="text/javascript"></script>
         <script src="{{ asset('bundles/sonataadmin/jquery/jquery.form.js') }}" type="text/javascript"></script>
         <script src="{{ asset('bundles/sonataadmin/base.js') }}" type="text/javascript"></script>
         <script src="{{ asset('bundles/networkinginitcms/js/respond.min.js') }}"></script>
-        <script src="{{ asset('/bundles/networkinginitcms/js/select2.min.js') }}"></script>
+        <script src="{{ asset('bundles/networkinginitcms/js/select2.min.js') }}"></script>
     {% endblock %}
 
     <title>
