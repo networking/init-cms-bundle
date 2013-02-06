@@ -75,7 +75,7 @@ file that was distributed with this source code.
                     {% if not loop.first %}
                         &gt;
                     {% endif %}
-                    {{ label }}
+                    {{ label|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw|striptags }}
                 {% endfor %}
             {% endif %}
         {% endif %}
@@ -263,8 +263,9 @@ file that was distributed with this source code.
                     <!--<a href="?c=menus"> show all Menus</a>-->
                 </div>
             </div>
+            {% block page_title %}
             <div class="row content-head">
-                <div class="span5 page_title">
+                <div class="span7 page_title">
 
                     {% if _title is not empty or action is defined %}
                     <h1>
@@ -273,16 +274,23 @@ file that was distributed with this source code.
                         {% elseif action is defined %}
                             {% for label, uri in admin.breadcrumbs(action) %}
                                 {% if loop.last %}
-                                    {{ label }}
+                                    {{ label|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
+                        {% if action is defined and action == 'edit' %}
+                            {% set settings = {} %}
+                            {% if object.locale %}
+                             {% set settings = {'locale': object.locale} %}
+                             {% endif %}
+
+                            <a class="link-underlined font-small" href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsAdmin') }}</a>
+                        {% endif %}
                     </h1>
+
                     {% endif %}
                 </div>
-                <div class="span2 context-head">
-                    &nbsp;
-                </div>
+
                 <div class="span3 context-head">
                     {% block top_actions %}{% endblock %}
                     {#{% if admin is defined %}#}
@@ -299,12 +307,13 @@ file that was distributed with this source code.
                             {% set adminCode = admin.code %}
                             {% set actionHelp = action %}
                         {% endif %}
-                    <div class="icon-medium-inline level-headline-icon pull-right"><a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}" target="_blank">
+                    <div class="level-headline-icon pull-right"><a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}" target="_blank">
                         <div class="info_button_medium"></div>
                     </a></div>
                     {% endif %}
                 </div>
             </div>
+            {% endblock %}
 
 
 

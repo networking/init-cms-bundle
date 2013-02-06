@@ -81,16 +81,34 @@ body {
 
 .initcms h1{
     font-size: @fontSizeLarge;
-    font-weight: normal;
+    font-weight: 500;
+    color: @grayDarker;
 }
 
 .initcms h2{
+    font-size: @fontSizeLarge;
+    font-weight: 300;
+    color: @grayLight;
+}
+.initcms h3{
     font-size: @fontSizeMedium;
-    font-weight: normal;
+    font-weight: 500;
+    color: @grayDarker;
+}
+
+.initcms h4{
+    font-size: @fontSizeMedium;
+    font-weight: 300;
+    color: @grayDarker;
+}
+.initcms h5{
+    font-size: @baseFontSize;
+    font-weight: 500;
+    color: @grayDarker;
 }
 
 .initcms a:not(.btn) {
-    color: #666666;
+    color: @grayDark;
 }
 
 .initcms a.colored-link {
@@ -112,8 +130,6 @@ body {
     color: @linkColor;
 }
 
-
-
 .initcms .nav-tabs > li > a {
     background-color: #f6f6f6;
     border-bottom:1px solid #dddddd;
@@ -131,7 +147,6 @@ body {
 .initcms .accordion-heading a {
     text-decoration: none;
     color:@linkColor2;
-    background-color:#f8f8f8;
 }
 
 .initcms .accordion-heading .accordion-toggle {
@@ -144,13 +159,9 @@ body {
     padding-top:15px;
 }
 
-.initcms .accordion-inner a:not(.btn) {
-    color: @linkColor;
-}
-
 .initcms .accordion-inner label {
     color: @textColorSoft;
-    font-size: 12px;
+    font-size: @fontSizeSmall;
     margin-bottom: -2px;
 }
 
@@ -207,13 +218,13 @@ body {
 }
 
 .color-draft {
-    color: @colorDraft;
+    color: @colorDraft !important;
 }
 .color-review {
-    color: @colorReview;
+    color: @colorReview !important;
 }
 .color-published {
-    color: @colorPublished;
+    color: @colorPublished !important;
 }
 
 .font-micro{
@@ -456,8 +467,7 @@ body {
 }
 
 .icon-medium-inline {
-    float:left;
-    margin-right:10px;
+    float:right;
 }
 .icon-medium-right {
     margin-right:0px;
@@ -532,7 +542,7 @@ body {
 // Semi overriding bootstrap
 .table-compact td {
     padding: 8px;
-    font-size: 12px;
+    font-size: @fontSizeSmall;
     line-height: 14px;
     overflow:hidden;
     white-space:nowrap;
@@ -653,8 +663,8 @@ li.table-row-style .menu-item-link {
 }
 
 .filters {
-    background-color: #ECE9E9;
-    padding: 8px;
+    background-color: #ebebeb;
+    padding: 10px;
 }
 .filters .caret{
     margin-left: 30px;
@@ -674,13 +684,13 @@ li.table-row-style .menu-item-link {
     content: "";
 }
 
-.sortable li {
+.dropzone .sortable li {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 }
 
-.sortable li.empty_layout_block {
+.dropzone .sortable li.empty_layout_block {
     padding: 10px;
     border: #bbb dashed 1px;
     min-height: 60px;
@@ -696,7 +706,7 @@ li.table-row-style .menu-item-link {
 	font-weight: normal;
 	margin: 0;
 }
-.networking-sortable-list .content_preview {
+.dropzone .content_preview {
 	margin-bottom: 5px;
 	background-color: white;
 	min-height: 50px;
@@ -707,14 +717,19 @@ li.table-row-style .menu-item-link {
 .plus_button {
 	text-align: center;
 }
-
-.content_preview .icon-trash {
-	float: right;
+[class^="icon-"].soft-background,
+  [class*=" icon-"].soft-background {
+  background-color: #ebebeb;
+  padding: 5px;
 }
 
-.content_preview .icon-pencil {
-	float: right;
-}
+//.content_preview .icon-trash {
+//	float: right;
+//}
+//
+//.content_preview .icon-pencil {
+//	float: right;
+//}
 
 .modal:focus{
   outline: none;
@@ -722,6 +737,47 @@ li.table-row-style .menu-item-link {
 
 // Sontat CSS overwrites
 .initcms{
+
+  .right-bar {
+    border-left: 1px @grayLighter solid;
+    margin-left: 10px;
+    padding-left: 9px;
+    height: 100%;
+  }
+
+  [class^="icon-"],
+  [class*=" icon-"]{
+    display: inline-block;
+    width: 1.25em;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  h1 .info-soft{
+    font-weight: 100;
+  }
+
+  .filters a {
+    font-size: @fontSizeSmall;
+  }
+  a.link-underlined{
+    color: @linkColor;
+    text-decoration: underline;
+  }
+  a.link-nounderline{
+      color: @linkColor;
+      text-decoration: none;
+  }
+  .form-inline.filters.menu-filter {
+    margin-bottom: 0;
+    padding-bottom: 20px;
+  }
+
+  .menu-tabs.nav-tabs{
+    background-color: #ebebeb;
+    padding-left: 10px;
+  }
+
   .sonata-ba-list-field-header-batch {
       width: 15px;
   }
@@ -746,18 +802,18 @@ li.table-row-style .menu-item-link {
       margin-bottom: 18px;
   }
 
-  .sonata-ba-fieldset-collapsed legend:before {
+  #filter_toggle{
+    margin-left: 10px;
+  }
+
+  .sonata-ba-fieldset-collapsed legend:before, .filter-close::before {
       content: '+ ';
   }
 
-  .sonata-ba-collapsed-fields-close legend:before {
-      content: '- ';
-  }
-
-  .sonata-ba-collapsed-fields-close legend:before {
+  .sonata-ba-collapsed-fields-close legend:before, .filter-open::before {
       content: '- ';
   	  padding-left: 0;
-      padding-right: 3px;
+      padding-right: 2px;
   }
 
   .sonata-bc .well-small {

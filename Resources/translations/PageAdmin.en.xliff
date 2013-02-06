@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_list">
                 <source>breadcrumb.link_page_list</source>
-                <target>Pages</target>
+                <target>%span%Organise your%span/% Pages</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_edit">
                 <source>breadcrumb.link_page_edit</source>
@@ -108,7 +108,7 @@
             </trans-unit>
             <trans-unit id="status_published">
                 <source>status_published</source>
-                <target>Published (live)</target>
+                <target>Published</target>
             </trans-unit>
             <trans-unit id="visibility_public">
                 <source>visibility_public</source>
@@ -380,9 +380,13 @@
                 <source>meta_title.helper.text</source>
                 <target>Title that is shown in the browser</target>
             </trans-unit>
+            <trans-unit id="info.revert_to_publish">
+                <source>info.revert_to_publish</source>
+                <target>Revert to published</target>
+            </trans-unit>
             <trans-unit id="link.revert_to_publish">
                 <source>link.revert_to_publish</source>
-                <target>Revert to last published state</target>
+                <target>Discard draft</target>
             </trans-unit>
             <trans-unit id="label.action_publish">
                 <source>label.action_publish</source>
@@ -458,6 +462,22 @@
             <trans-unit id="filter.label_working_title">
                 <source>filter.label_working_title</source>
                 <target>Working Title</target>
+            </trans-unit>
+            <trans-unit id="link.preview">
+                <source>link.preview</source>
+                <target>Preview</target>
+            </trans-unit>
+            <trans-unit id="link.live">
+                <source>link.live</source>
+                <target>View published version</target>
+            </trans-unit>
+            <trans-unit id="or">
+                <source>or</source>
+                <target>or</target>
+            </trans-unit>
+            <trans-unit id="info.last_published_version">
+                <source>info.last_published_version</source>
+                <target>The last published version: %span%%date%%span/%</target>
             </trans-unit>
         </body>
     </file>

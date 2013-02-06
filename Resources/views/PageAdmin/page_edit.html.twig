@@ -27,12 +27,7 @@ file that was distributed with this source code.
         {{ "title_create"|trans({}, 'SonataAdminBundle') }}
     {% endif %}
 {% endblock %}
-
-{% block top_actions %}
-    <div class="pull-right level-headline-icon">
-       <a class="btn btn-custom btn-small" href="{{ admin.generateUrl('list', {'locale': object.locale}) }}"> &larr; Back</a>
-    </div>
-{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block actions %}
     <div class="sonata-actions">

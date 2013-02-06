@@ -78,6 +78,44 @@ file that was distributed with this source code.
         {% block sonata_pre_fieldsets %}{% endblock %}
 
         <div class="span7">
+            <div class="row">
+                <div class="span6">
+                    <h1>
+                                    {% if block('title') is not empty %}
+                                    {{ block('title')|raw }}
+                                    {% elseif action is defined %}
+                                        {% for label, uri in admin.breadcrumbs(action) %}
+                                            {% if loop.last %}
+                                                {{ label|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if action is defined and action == 'edit' %}
+                                        {% set settings = {} %}
+                                        {% if object.locale %}
+                                         {% set settings = {'locale': object.locale} %}
+                                         {% endif %}
+
+                                        <a class="link-underlined font-small" href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsAdmin') }}</a>
+                                    {% endif %}
+                                </h1>
+                </div>
+                <div class="span1">
+                    {% if block('help_text') is empty %}
+                        {% if admin is not defined %}
+                            {% set adminCode = 'dashboard' %}
+                            {% set actionHelp = '' %}
+                        {% else %}
+                            {% set adminCode = admin.code %}
+                            {% set actionHelp = action %}
+                        {% endif %}
+                    <div class="level-headline-icon pull-right"><a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}" target="_blank">
+                        <div class="info_button_medium"></div>
+                    </a></div>
+                    {% endif %}
+                </div>
+            </div>
+
             {% set form_group = admin.formgroups.page_content %}
             {% for field_name in form_group.fields %}
                 {% if admin.formfielddescriptions[field_name] is defined %}
@@ -85,26 +123,13 @@ file that was distributed with this source code.
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="span3">
+        <div class="span3 right-bar">
+            {# page status accordion #}
+            <div id="pageStatusSettings">
+                {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig' %}
+            </div>
+
             <div class="accordion" id="accordion1">
-                {# page status accordion #}
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse"
-                           href="#collapseZero">
-                            <div class="accordion-caret"><b class="caret"></b></div>
-                            {{ 'legend.page_status'|trans({}, admin.translationDomain) }} -
-                            <i class="{% if not object.isPublished() %}color-draft{% endif %} page_status">{{ object.statusLabel|trans({}, admin.translationDomain) }}</i>
-                        </a>
-                    </div>
-                    <div id="collapseZero" class="accordion-body collapse in">
-                        <div class="accordion-inner" style="min-height:70px;">
-                            <div id="pageStatusSettings">
-                                {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig' %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 {% if admin.translationLanguages.count() %}
                     {# translation accordion #}
                     <div class="accordion-group">
@@ -152,7 +177,7 @@ file that was distributed with this source code.
                         <div class="accordion-inner" style="min-height:70px;">
                             <div class="pull-right">
                                 <a href="#" data-target="#pageSettingFields" data-toggle="modal">
-                                    <i class="icon-pencil"></i>
+                                    <i class="icon-pencil soft-background"></i>
                                 </a>
                             </div>
                             <div id="pageSettings">

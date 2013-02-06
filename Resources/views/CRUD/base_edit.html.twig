@@ -13,9 +13,9 @@ file that was distributed with this source code.
 
 {% block title %}
     {% if admin.id(object) %}
-        {{ "title_edit"|trans({'%name%': admin.toString(object) }, 'SonataAdminBundle') }}
+        {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin.label }, 'NetworkingInitCmsAdmin') }}
     {% else %}
-        {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+        {{ "title_create"|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsAdmin') }}
     {% endif %}
 {% endblock %}
 
@@ -23,16 +23,16 @@ file that was distributed with this source code.
     <div class="sonata-actions">
         {% if admin.hasroute('show') and admin.id(object) and admin.isGranted('VIEW', object) and admin.show|length > 0 %}
             <a class="btn sonata-action-element"
-               href="{{ admin.generateObjectUrl('show', object) }}">{{ 'link_action_show'|trans({}, 'SonataAdminBundle') }}</a>
+               href="{{ admin.generateObjectUrl('show', object) }}">{{ 'link_action_show'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
         {% endif %}
         {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
             <a class="btn sonata-action-element"
-               href="{{ admin.generateObjectUrl('history', object) }}">{{ 'link_action_history'|trans({}, 'SonataAdminBundle') }}</a>
+               href="{{ admin.generateObjectUrl('history', object) }}">{{ 'link_action_history'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
         {% endif %}
         {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
         {% if admin.hasroute('list') and admin.isGranted('LIST') %}
             <a class="btn sonata-action-element"
-               href="{{ admin.generateUrl('list') }}">{{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
+               href="{{ admin.generateUrl('list') }}">{{ 'link_action_list'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
         {% endif %}
     </div>
 {% endblock %}

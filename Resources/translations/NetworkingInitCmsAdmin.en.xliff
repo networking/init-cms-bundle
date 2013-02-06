@@ -8,11 +8,15 @@
             </trans-unit>
             <trans-unit id="btn_filter">
                 <source>btn_filter</source>
-                <target>HALLO Search</target>
+                <target>Filter</target>
             </trans-unit>
             <trans-unit id="label_export_download">
                 <source>label_export_download</source>
                 <target>Download your results in the following formats</target>
+            </trans-unit>
+            <trans-unit id="link.website_">
+                <source>link.website_</source>
+                <target>Website</target>
             </trans-unit>
             <trans-unit id="link.website_status_published">
                 <source>link.website_status_published</source>
@@ -21,6 +25,78 @@
             <trans-unit id="link.website_status_draft">
                 <source>link.website_status_draft</source>
                 <target>Website: Draft</target>
+            </trans-unit>
+                <trans-unit id="link.show_more_actions">
+                <source>link.show_more_actions</source>
+                <target>Show more actions</target>
+            </trans-unit>
+            <trans-unit id="link.hide_actions">
+                <source>link.hide_actions</source>
+                <target>Hide actions</target>
+            </trans-unit>
+            <trans-unit id="link.show_more_filters">
+                <source>link.show_more_filters</source>
+                <target>More filter options</target>
+            </trans-unit>
+            <trans-unit id="link_reset_filter">
+                <source>link_reset_filter</source>
+                <target>Clear</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Add %admin_label%</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Add New %admin_label%</target>
+            </trans-unit>
+            <trans-unit id="title_edit">
+                <source>title_edit</source>
+                <target>%admin_label% - Edit "%name%"</target>
+            </trans-unit>
+            <trans-unit id="btn_update">
+                <source>btn_update</source>
+                <target>Update</target>
+            </trans-unit>
+            <trans-unit id="btn_create">
+                <source>btn_create</source>
+                <target>Create</target>
+            </trans-unit>
+            <trans-unit id="btn_preview">
+                <source>btn_preview</source>
+                <target>Preview %admin_label%</target>
+            </trans-unit>
+            <trans-unit id="btn_update_and_edit_again">
+                <source>btn_update_and_edit_again</source>
+                <target>Update %admin_label%</target>
+            </trans-unit>
+            <trans-unit id="btn_update_and_return_to_list">
+                <source>btn_update_and_return_to_list</source>
+                <target>Update %admin_label% and return to list</target>
+            </trans-unit>
+            <trans-unit id="delete_or">
+                <source>delete_or</source>
+                <target>Or</target>
+            </trans-unit>
+            <trans-unit id="btn_create_and_edit_again">
+                <source>btn_create_and_edit_again</source>
+                <target>Add %admin_label% and edit it</target>
+            </trans-unit>
+            <trans-unit id="btn_create_and_return_to_list">
+                <source>btn_create_and_return_to_list</source>
+                <target>Add %admin_label% and return to list</target>
+            </trans-unit>
+            <trans-unit id="btn_create_and_create_a_new_one">
+                <source>btn_create_and_create_a_new_one</source>
+                <target>Add %admin_label% and create another</target>
+            </trans-unit>
+            <trans-unit id="info.filter">
+                <source>info.filter</source>
+                <target>Filter %admin_label%:</target>
+            </trans-unit>
+            <trans-unit id="link.go_to_list">
+                <source>link.go_to_list</source>
+                <target>Go to %admin_label% list</target>
             </trans-unit>
         </body>
     </file>

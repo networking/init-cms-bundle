@@ -4,7 +4,7 @@
 		<body>
 			<trans-unit id="button.create.menu_item">
 				<source>button.create.menu_item</source>
-				<target>New link in menu</target>
+				<target>Add Item</target>
 			</trans-unit>
             <trans-unit id="legend.menu.actions">
                 <source>legend.menu.actions</source>
@@ -28,7 +28,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_menu_item_navigation">
                 <source>breadcrumb.link_menu_item_navigation</source>
-                <target>Menus</target>
+                <target>%span%Organise your%span/% Menus</target>
             </trans-unit>
             <trans-unit id="label.linked_resource">
                 <source>label.linked_resource</source>
@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="label.menu_item_name">
                 <source>label.menu_item_name</source>
-                <target>Menu Item Name</target>
+                <target>Your Menu items</target>
             </trans-unit>
             <trans-unit id="menu.page_or_url.required">
                 <source>menu.page_or_url.required</source>

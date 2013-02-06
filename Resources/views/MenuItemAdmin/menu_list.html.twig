@@ -15,29 +15,12 @@ file that was distributed with this source code.
         {% include "NetworkingInitCmsBundle:MenuItemAdmin:menu_tabs.html.twig" %}
     </div>
 {% endblock %}
-
-
 {% block actions %}
-    {#<div class="accordion-group">#}
-        {#<div class="accordion-heading">#}
-            {#<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">#}
-                {#<div class="accordion-caret"><b class="caret"></b></div>#}
-                {#{{ admin.trans('legend.menu.actions') }}#}
-            {#</a>#}
-        {#</div>#}
-        {#<div id="collapseTwo" class="accordion-body collapse in">#}
-            {#<div class="accordion-inner">#}
-                {#{% include 'NetworkingInitCmsBundle:Core:menu_create_button.html.twig' %}#}
-                {#<br/><br/>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
 {% endblock %}
-
 {% block list_filters %}
     {% if admin.datagrid.filters and not app.request.isxmlhttprequest %}
 
-        <form action="{{ admin.generateUrl('list') }}" method="GET" class="form-inline filters">
+        <form action="{{ admin.generateUrl('list') }}" method="GET" class="form-inline filters menu-filter">
 
             {% set filter_main = '' %}
             {% set filter_hidden = '' %}
@@ -46,37 +29,40 @@ file that was distributed with this source code.
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
                     {{ filter_main }}
-                    {{ form_widget(form.children[filter.formName].children['type']) }}
-                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label)} }) }}
+                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium'}}) }}
+                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
                     {% endset %}
                 {% else %}
                     {% set filter_hidden %}
                     {{ filter_hidden }}
                     <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-                    {{ form_widget(form.children[filter.formName].children['type']) }}
-                    {{ form_widget(form.children[filter.formName].children['value']) }}
+                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium'}}) }}
+                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium'}}) }}
                     {% endset %}
                 {% endif %}
             {% endfor %}
             {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
 
             <div>
-                <div class="pull-left">
+                <div class="pull-left form-inline ">
+                    <strong>{{ 'info.filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsAdmin') }}</strong>
                     {{ filter_main }}
-                    {% if filter_hidden %}
-                    <i class="icon-plus" id="filter_toggle" data-toggle="collapse" data-target="#hidden_filters"></i>
-                    {% endif %}
-                </div>
-                <div class="pull-right">
                     <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
                     {% set foo = form.children['_page'].setRendered() %}
                     {{ form_rest(form) }}
 
                     <input type="submit" class="btn btn-small"
-                           value="{{ 'btn_filter'|trans({}, admin.translationDomain) }}"/>
+                                          value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsAdmin') }}"/>
 
-                    <a class="btn btn-small"
-                       href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, admin.translationDomain) }}</a>
+                    <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}" class="link-underlined">
+                        {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsAdmin') }}
+                    </a>
+                    {% if filter_hidden %}
+                        <a data-toggle="collapse" data-target="#hidden_filters">
+                            <i class="icon-caret-right" id="filter_toggle"></i>
+                            {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsAdmin') }}
+                        </a>
+                    {% endif %}
                 </div>
                 <div class="clearfix">&nbsp;</div>
             </div>

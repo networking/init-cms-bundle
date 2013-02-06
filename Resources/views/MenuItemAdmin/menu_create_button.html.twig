@@ -9,10 +9,7 @@ file that was distributed with this source code.
 
 #}
 {% if  admin.isGranted('CREATE')%}
-    <div class="pull-right">
-        <a class="btn btn-custom btn-small menu-dialog-link" href="{{ admin.generateUrl('create', {'subclass': 'menu item', 'root_id': root_id}) }}">
+        <a class="btn btn-primary btn-small menu-dialog-link" href="{{ admin.generateUrl('create', {'subclass': 'menu item', 'root_id': root_id}) }}">
                 <i class="icon-plus icon-white"></i> {{ 'button.create.menu_item'|trans({}, admin.translationDomain) }}
             </a>
-    </div>
-    <div class="clearfix">&nbsp;</div>
 {% endif %}

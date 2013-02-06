@@ -92,16 +92,14 @@ file that was distributed with this source code.
 
         $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
 
-
         $('.dialog-link').bind('click', createAjaxDialog);
 
         initializeDialog();
 
         $('#hidden_filters').on('show hide', function () {
-            $('#filter_toggle').toggleClass('icon-caret-right');
-            $('#filter_toggle').toggleClass('icon-caret-down');
+            $('#filter_toggle').toggleClass('filter-close');
+            $('#filter_toggle').toggleClass('filter-open');
         });
-
 
     })(jQuery);
 </script>
