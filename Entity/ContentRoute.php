@@ -101,8 +101,8 @@ class ContentRoute extends AbstractRoute
 
     /**
      * Initializes the object to function as a route
-     *
-     * @param $content
+     * @param \Symfony\Cmf\Component\Routing\RouteAwareInterface $content
+     * @return ContentRoute
      */
     public function initializeRoute(RouteAwareInterface $content)
     {
