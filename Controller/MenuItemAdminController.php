@@ -37,14 +37,22 @@ class MenuItemAdminController extends CmsCRUDController
      *
      * @return Response
      */
-    public function listAction($pageId = false)
+    public function listAction($pageId = false, $menuId = false)
     {
+
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
 
         if($this->getRequest()->get('page_id')){
             $pageId = $this->getRequest()->get('page_id');
+        }
+
+        if($this->getRequest()->get('menu_id')){
+            $menuId = $this->getRequest()->get('menu_id');
+            if($menuId){
+                        $this->get('session')->set('MenuItem.last_edited', $menuId);
+                    }
         }
 
         $this->get('session')->set('admin/last_page_id', $pageId);
@@ -149,14 +157,17 @@ class MenuItemAdminController extends CmsCRUDController
             );
         }
 
+
+        $lastEdited = $this->get('session')->get('MenuItem.last_edited');
+
         return $this->render(
             $this->admin->getTemplate('list'),
             array(
-                'action' => 'list',
+                'action' => 'navigation',
                 'form' => $formView,
                 'datagrid' => $datagrid,
                 'menus' => $menus,
-                'action' => 'navigation',
+                'last_edited' => $lastEdited,
                 'page_id'   => $pageId
             )
         );
