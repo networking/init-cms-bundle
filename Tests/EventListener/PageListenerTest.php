@@ -14,8 +14,6 @@ use Networking\InitCmsBundle\Helper\PageHelper;
 
 class PageListenerTest extends \PHPUnit_Framework_TestCase
 {
-    //TODO clean up the whole file!
-
 	/**
 	 * @covers PageHelper::getPageRoutePath()
 	 */
@@ -34,66 +32,8 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 	{
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
 		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
-		$mockArgs = $this->getMockDoctrineLifeCycleEventArgsPersist('\Networking\InitCmsBundle\Entity\Tag');
-		$pageListener->postPersist($mockArgs);
-	}
 
-	/**
-	 * postPersist with Page
-	 */
-	public function testPostPersist_WithPage()
-	{
-		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
-		$mockArgs = $this->getMockDoctrineLifeCycleEventArgsPersist('\Networking\InitCmsBundle\Entity\Page');
-		$pageListener->postPersist($mockArgs);
-	}
-
-	/**
-	 * postUpdate with Tag
-	 * @covers PageListener::postUpdate()
-	 */
-	public function testPostUpdate1()
-	{
-		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
-
-		$mockDoctrineLifeCycleEventArgsTag = $this->getMockDoctrineLifeCycleEventArgs('\Networking\InitCmsBundle\Entity\Tag');
-		$pageListener->postUpdate($mockDoctrineLifeCycleEventArgsTag);
-	}
-
-	/**
-	 * postUpdate with Page and no children
-	 *
-	 * hä?
-	 * Expectation failed for method name is equal to <string:setPath> when invoked 0 time(s).
-	 * Mocked method does not exist.
-	 */
-	public function testPostUpdate2(){
-		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
-
-		$mockDoctrineLifeCycleEventArgsPage = $this->getMockDoctrineLifeCycleEventArgs('\Networking\InitCmsBundle\Entity\Page');
-		$pageListener->postUpdate($mockDoctrineLifeCycleEventArgsPage);
-	}
-
-	/**
-	 * postUpdate with Page and 10 children
-	 */
-	public function testPostUpdate3(){
-		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
-
-		$mockDoctrineLifeCycleEventArgsPageMulti = $this->getMockDoctrineLifeCycleEventArgs('\Networking\InitCmsBundle\Entity\Page', 10);
-		$pageListener->postUpdate($mockDoctrineLifeCycleEventArgsPageMulti);
-	}
-
-	/**
-	 * @return array
-	 */
-	private function getMockEntityWrongClass()
-	{
-		// entity
+        // entity
 		$entity = $this->getMock('\StdClass');
 		$entity->expects($this->never())
 				->method('getContentRoute');
@@ -105,64 +45,44 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 				->method('persist');
 		$em->expects($this->never())
 				->method('flush');
-		return array($entity, $em);
-	}
 
-	/**
-	 * @param $class
-	 * @param int $count
-	 * @return array
-	 */
-	private function getMockEntity($class, $count=0)
-	{
-		// contentRoute
-		$contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath'));
-		$contentRoute->expects($this->once())
-				->method('setPath')
-				->with($this->equalTo('/'));
-
-		// entity
-		$entity = $this->getMock($class);
-		$entity->expects($this->once())
-				->method('getContentRoute')
-				->will($this->returnValue($contentRoute));
-		$entity->expects($this->once())
-			->method('getAllChildren')
-			->will($this->returnValue($this->getMockChildren($count)));
-
-		// em
-		$em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $args = $this
+				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
 				->disableOriginalConstructor()
 				->getMock();
-		$em->expects($this->exactly($count))
-				->method('persist');
-		$em->expects($this->once())
-				->method('flush');
+		// args methods:
+		// getEntity
+		$args->expects($this->once())
+				->method('getEntity')
+				->will($this->returnValue($entity));
+		// getEntityManager
+		$args->expects($this->once())
+			->method('getEntityManager')
+			->will($this->returnValue($em));
 
-		return array($entity, $em);
+		$pageListener->postPersist($args);
 	}
 
 	/**
-	 * @param $class
-	 * @return array
+	 * postPersist with Page
 	 */
-	private function getMockEntityPersist($class)
+	public function testPostPersist_WithPage()
 	{
-		// contentRoute
-		$contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath'));
+		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
+        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath', 'setObjectId'));
 		$contentRoute->expects($this->once())
 				->method('setPath')
 				->with($this->equalTo('/some/random-pi/path'));
-		//TODO this is not called ????
-//		$contentRoute->expects($this->once())
-//				->method('setObjectId')
-//				->with($this->equalTo('108'));
+		$contentRoute->expects($this->once())
+				->method('setObjectId')
+				->with($this->equalTo(108));
 
 		// entity
-		$entity = $this->getMock($class);
+		$entity = $this->getMock('\Networking\InitCmsBundle\Entity\Page');
 		$entity->expects($this->once())
 				->method('getId')
-				->will($this->returnValue('108'));
+				->will($this->returnValue(108));
 		$entity->expects($this->once())
 				->method('getPath')
 				->will($this->returnValue('/some-25465/random-pi/path-4'));
@@ -178,9 +98,159 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 				->method('persist');
 		$em->expects($this->once())
 				->method('flush');
+        $args = $this
+				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
+				->disableOriginalConstructor()
+				->getMock();
+		// args methods:
+		// getEntity
+		$args->expects($this->once())
+				->method('getEntity')
+				->will($this->returnValue($entity));
+		// getEntityManager
+		$args->expects($this->once())
+			->method('getEntityManager')
+			->will($this->returnValue($em));
 
-		return array($entity, $em);
+		$pageListener->postPersist($args);
 	}
+
+	/**
+	 * postUpdate with Tag
+	 * @covers PageListener::postUpdate()
+	 */
+	public function testPostUpdate_WithStdClass()
+	{
+		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
+
+        // entity
+		$entity = $this->getMock('\StdClass');
+		$entity->expects($this->never())
+				->method('getContentRoute');
+		// em
+		$em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+				->disableOriginalConstructor()
+				->getMock();
+		$em->expects($this->never())
+				->method('persist');
+		$em->expects($this->never())
+				->method('flush');
+
+        $args = $this
+				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
+				->disableOriginalConstructor()
+				->getMock();
+		// args methods:
+		// getEntity
+		$args->expects($this->once())
+				->method('getEntity')
+				->will($this->returnValue($entity));
+		// getEntityManager
+		$args->expects($this->once())
+			->method('getEntityManager')
+			->will($this->returnValue($em));
+
+		$pageListener->postUpdate($args);
+	}
+
+	/**
+	 * postUpdate with Page and no children
+	 *
+	 */
+	public function testPostUpdate_WithPage(){
+		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
+
+        // contentRoute
+		$contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath'));
+		$contentRoute->expects($this->once())
+				->method('setPath')
+				->with($this->equalTo('/'));
+
+		// entity
+		$entity = $this->getMock('\Networking\InitCmsBundle\Entity\Page');
+		$entity->expects($this->once())
+				->method('getContentRoute')
+				->will($this->returnValue($contentRoute));
+		$entity->expects($this->once())
+			->method('getAllChildren')
+			->will($this->returnValue($this->getMockChildren(0)));
+
+		// em
+		$em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+				->disableOriginalConstructor()
+				->getMock();
+		$em->expects($this->exactly(0))
+				->method('persist');
+		$em->expects($this->once())
+				->method('flush');
+
+        $args = $this
+				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
+				->disableOriginalConstructor()
+				->getMock();
+		// args methods:
+		// getEntity
+		$args->expects($this->once())
+				->method('getEntity')
+				->will($this->returnValue($entity));
+		// getEntityManager
+		$args->expects($this->once())
+			->method('getEntityManager')
+			->will($this->returnValue($em));
+
+		$pageListener->postUpdate($args);
+	}
+
+	/**
+	 * postUpdate with Page and 10 children
+	 */
+	public function testPostUpdate_WithPageAndTenChildren(){
+		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
+
+        // contentRoute
+		$contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath'));
+		$contentRoute->expects($this->once())
+				->method('setPath')
+				->with($this->equalTo('/'));
+
+		// entity
+		$entity = $this->getMock('\Networking\InitCmsBundle\Entity\Page');
+		$entity->expects($this->once())
+				->method('getContentRoute')
+				->will($this->returnValue($contentRoute));
+		$entity->expects($this->once())
+			->method('getAllChildren')
+			->will($this->returnValue($this->getMockChildren(10)));
+
+		// em
+		$em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+				->disableOriginalConstructor()
+				->getMock();
+		$em->expects($this->exactly(10))
+				->method('persist');
+		$em->expects($this->once())
+				->method('flush');
+
+        $args = $this
+				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
+				->disableOriginalConstructor()
+				->getMock();
+		// args methods:
+		// getEntity
+		$args->expects($this->once())
+				->method('getEntity')
+				->will($this->returnValue($entity));
+		// getEntityManager
+		$args->expects($this->once())
+			->method('getEntityManager')
+			->will($this->returnValue($em));
+
+		$pageListener->postUpdate($args);
+	}
+
 
 	/**
 	 * @param int $count
@@ -209,62 +279,5 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 		}
 		return $array;
 	}
-
-
-	/**
-	 * @param $class
-	 * @param int $count
-	 * @return mixed
-	 */
-	private function getMockDoctrineLifeCycleEventArgs($class, $count=0)
-	{
-
-		if('\Networking\InitCmsBundle\Entity\Page' == $class) {
-			list($entity, $em) = $this->getMockEntity($class, $count);
-		} else {
-			// easy case: the entity is not a Page
-			list($entity, $em) = $this->getMockEntityWrongClass();
-		}
-
-		return $this->getMockArgs($entity, $em);
-
-	}
-
-
-	/**
-	 * @param $class
-	 * @return mixed
-	 */
-	private function getMockDoctrineLifeCycleEventArgsPersist($class)
-	{
-		if('\Networking\InitCmsBundle\Entity\Page' == $class) {
-			list($entity, $em) = $this->getMockEntityPersist($class);
-		} else {
-			list($entity, $em) = $this->getMockEntityWrongClass();
-		}
-
-		return $this->getMockArgs($entity, $em);
-	}
-
-
-	private function getMockArgs($entity=null, $em=null)
-	{
-		$args = $this
-				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
-				->disableOriginalConstructor()
-				->getMock();
-		// args methods:
-		// getEntity
-		$args->expects($this->once())
-				->method('getEntity')
-				->will($this->returnValue($entity));
-		// getEntityManager
-		$args->expects($this->once())
-			->method('getEntityManager')
-			->will($this->returnValue($em));
-
-		return $args;
-	}
-
 
 }
