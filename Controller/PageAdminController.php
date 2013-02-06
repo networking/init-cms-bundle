@@ -456,7 +456,7 @@ class PageAdminController extends CmsCRUDController
 
         if ($layoutBlocks) {
             $pageStatus = $this->renderView(
-                'NetworkingInitCmsBundle:PageAdmin:page_status_buttons.html.twig',
+                'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig',
                 array(
                     'admin' => $this->admin,
                     'object' => $layoutBlock->getPage()
