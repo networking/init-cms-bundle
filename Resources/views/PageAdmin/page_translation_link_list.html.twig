@@ -37,7 +37,7 @@ file that was distributed with this source code.
 
         <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
 
-            {{ 'info.no_pages_for_translation'|trans({}, admin.translationDomain) }}
+            {{ 'info.no_pages_for_translation'|trans({'%language%': language}, admin.translationDomain) }}
         </div>
     {% else %}
 
@@ -86,7 +86,7 @@ file that was distributed with this source code.
                     </a>
                 {% endif %}
 
-                <input type="submit" class="btn btn-custom"
+                <input type="submit" class="btn btn-primary"
                        value="{{ 'link.link'|trans({}, admin.translationDomain) }}"/>
 
                 {#{% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}#}

@@ -11,12 +11,13 @@ file that was distributed with this source code.
 {{ 'info.translations'|trans({}, admin.translationDomain) }}
 <br/>
 {% for locale, language in admin.translationLanguages %}
-    <br/>{{ language.short_label }} -
+    <p>
+        <strong>{{ language.short_label }}</strong><br />
     {% if language.translation %}
         {{ language.translation.workingTitle }}
-        <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}">
+        <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}" class="link-underlined">
             {{ 'link.edit'|trans({}, admin.translationDomain) }}
-        </a> | <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}" class="translation-dialog-link">
+        </a> | <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}" class="link-underlined translation-dialog-link">
             {% if language.translation.isDirectTranslation(object) %}
             {{ 'link.unlink'|trans({}, admin.translationDomain) }}
             {% else %}
@@ -26,12 +27,13 @@ file that was distributed with this source code.
         </a>
     {% else %}
         <i class="info-soft">{{ 'info.empty'|trans({}, admin.translationDomain) }}</i>
-        <a href="{{ admin.generateUrl('translatePage', {'id': object.id, 'locale': locale }) }}">
+        <a href="{{ admin.generateUrl('translatePage', {'id': object.id, 'locale': locale }) }}" class="link-underlined translation-dialog-link">
             {{ 'link.translate'|trans({}, admin.translationDomain) }}
-        </a> | <a href="{{ admin.generateUrl('link', {'id': object.id, 'locale': locale }) }}" class="translation-dialog-link">
+        </a> | <a href="{{ admin.generateUrl('link', {'id': object.id, 'locale': locale }) }}" class="link-underlined translation-dialog-link">
             {{ 'link.link'|trans({}, admin.translationDomain) }}
         </a>
     {% endif %}
+    </p>
 {% endfor %}
 <div class="modal hide fade" tabindex="-1" role="dialog" id="translation_dialog">
 </div>

@@ -64,8 +64,14 @@ file that was distributed with this source code.
             success:function (xhr) {
                 if (xhr.result == 'ok') {
                     jQuery('#translationSettings').html(xhr.html);
-                    translationDialog.modal('hide');
+                    if(xhr.message)
+                    {
+                        createInitCmsMessageBox(xhr.status, xhr.message);
+                    }
+                }else{
+                    createInitCmsMessageBox(xhr.status, xhr.message);
                 }
+                translationDialog.modal('hide');
             }
         });
     }

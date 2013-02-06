@@ -42,37 +42,91 @@ class PageAdminController extends CmsCRUDController
      */
     public function translatePageAction(Request $request, $id, $locale)
     {
-        $er = $this->getDoctrine()->getRepository($this->admin->getClass());
 
-        /** @var $page Page */
-        $page = $er->find($id);
 
-        $em = $this->get('doctrine.orm.entity_manager');
+        $page = $this->admin->getObject($id);
 
-        $pageCopy = new Page();
+        if (!$page) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+        $language = \Locale::getDisplayLanguage($locale);
 
-        $pageCopy->setWorkingTitle($page->getWorkingTitle());
-        $pageCopy->setMetaTitle($page->getMetaTitle());
-        $pageCopy->setUrl($page->getUrl());
-        $pageCopy->setMetaKeyword($page->getMetaKeyword());
-        $pageCopy->setMetaDescription($page->getMetaDescription());
-//        $pageCopy->setNavigationTitle($page->getNavigationTitle());
-        $pageCopy->setActiveFrom($page->getActiveFrom());
-//        $pageCopy->setActiveTill($page->getActiveTill());
-//        $pageCopy->setShowInNavigation($page->getShowInNavigation());
-        $pageCopy->setIsHome($page->getIsHome());
-        $pageCopy->setLocale($locale);
-        $pageCopy->setTemplate($page->getTemplate());
-        $pageCopy->setOriginal($page);
-        $em->persist($pageCopy);
-        $em->flush();
+        if ($this->getRequest()->getMethod() == 'POST') {
 
-        $this->get('session')->setFlash('sonata_flash_success', $this->translate('message.translation_saved'));
 
-        /** @var $admin \Networking\InitCmsBundle\Admin\PageAdmin */
-        $admin = $this->container->get('networking_init_cms.page.admin.page');
+            $em = $this->get('doctrine.orm.entity_manager');
 
-        return $this->redirect($admin->generateUrl('edit', array('id' => $id)));
+            $pageCopy = new Page();
+
+            $pageCopy->setWorkingTitle($page->getWorkingTitle());
+            $pageCopy->setMetaTitle($page->getMetaTitle());
+            $pageCopy->setUrl($page->getUrl());
+            $pageCopy->setMetaKeyword($page->getMetaKeyword());
+            $pageCopy->setMetaDescription($page->getMetaDescription());
+            $pageCopy->setActiveFrom($page->getActiveFrom());
+            $pageCopy->setIsHome($page->getIsHome());
+            $pageCopy->setLocale($locale);
+            $pageCopy->setTemplate($page->getTemplate());
+            $pageCopy->setOriginal($page);
+
+            try {
+                $em->persist($pageCopy);
+                $em->flush();
+                $status = 'success';
+                $message = $this->translate(
+                    'message.translation_saved',
+                    array('%language%' => $language)
+                );
+                $result = 'ok';
+                $html = $this->renderView(
+                                   'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                                   array('object' => $page, 'admin' => $this->admin)
+                               );
+            } catch (\Exception $e) {
+                $status = 'error';
+                $message = $message = $this->translate(
+                    'message.translation_not_saved',
+                    array('%language%' => $language, '%url%' => $page->getFullPath())
+                );
+                $result = 'error';
+                $html = '';
+            }
+
+            if ($this->isXmlHttpRequest()) {
+
+
+                return $this->renderJson(
+                    array(
+                        'result' => $result,
+                        'status' => $status,
+                        'html' => $html,
+                        'message' => $message
+                    )
+                );
+            }
+
+            $this->get('session')->setFlash(
+                'sonata_flash_' . $status,
+                $message
+            );
+
+            /** @var $admin \Networking\InitCmsBundle\Admin\PageAdmin */
+            $admin = $this->container->get('networking_init_cms.page.admin.page');
+
+            return $this->redirect($admin->generateUrl('edit', array('id' => $id)));
+        }
+
+        return $this->render(
+            'NetworkingInitCmsBundle:PageAdmin:page_translation_copy.html.twig',
+            array(
+                'action' => 'copy',
+                'page' => $page,
+                'id' => $id,
+                'locale' => $locale,
+                'language' => $language,
+                'admin' => $this->admin
+            )
+        );
     }
 
     /**
@@ -994,7 +1048,7 @@ class PageAdminController extends CmsCRUDController
         $getPath = $request->get('path');
 
         $object = $this->admin->getObject($id);
-        if($id && $object){
+        if ($id && $object) {
             $path = $object->getFullPath();
         } else {
             $path = '/';
@@ -1002,7 +1056,7 @@ class PageAdminController extends CmsCRUDController
 
         $getPath = Urlizer::urlize($getPath);
 
-        return $this->renderJson(array('path' => $path.$getPath));
+        return $this->renderJson(array('path' => $path . $getPath));
     }
 
 

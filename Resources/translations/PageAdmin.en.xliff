@@ -479,6 +479,34 @@
                 <source>info.last_published_version</source>
                 <target>The last published version: %span%%date%%span/%</target>
             </trans-unit>
+            <trans-unit id="info.no_pages_for_translation">
+                <source>info.no_pages_for_translation</source>
+                <target>The are no pages in %language% available to be linked as a translation of this page.
+                    You may either copy this page (click the link "Translate") or create a brand new page in %language% and then link the two pages.</target>
+            </trans-unit>
+            <trans-unit id="message.translation_saved">
+                <source>message.translation_saved</source>
+                <target>This copy of this page was successfully created in %language%</target>
+            </trans-unit>
+            <trans-unit id="message.translation_not_saved">
+                <source>message.translation_not_saved</source>
+                <target>A copy of the page in %language% could not be created. Check if a page with the URL "%url%" in %language% already exits.</target>
+            </trans-unit>
+            <trans-unit id="title.copy_page">
+                <source>title.copy_page</source>
+                <target>Copy  page "%page_title%" into %language%</target>
+            </trans-unit>
+            <trans-unit id="info.copy_page">
+                <source>info.copy_page</source>
+                <target>A copy of this pages  will be made in %language%. WARNING: The pages content will NOT be copied
+                    only the layout, URL and other page settings will be copied. After the page is created, go to translation and
+                    click on "Edit" in order to edit the content.
+                </target>
+            </trans-unit>
+            <trans-unit id="button.copy_page">
+                <source>button.copy_page</source>
+                <target>Copy the page</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
