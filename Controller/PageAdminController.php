@@ -731,7 +731,8 @@ class PageAdminController extends CmsCRUDController
                 'action' => 'edit',
                 'form' => $view,
                 'object' => $object,
-                'rootMenus' => $rootMenus
+                'rootMenus' => $rootMenus,
+                'language' => \Locale::getDisplayLanguage($object->getLocale())
             )
         );
     }
