@@ -13,7 +13,7 @@ use \Networking\InitCmsBundle\Entity\Text;
 
 class TextTest extends \PHPUnit_Framework_TestCase
 {
-	public function testOnPrePersist()
+	public function testOnPrePersist_ShouldSetDates()
 	{
 		$text = new Text();
 		$this->assertEquals(null, $text->getUpdatedAt());
@@ -22,7 +22,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(new \DateTime('now'), $text->getCreatedAt());
 	}
 
-	public function testOnPreUpdate()
+	public function testOnPreUpdate_ShouldSetUpdatedAt()
 	{
 		$text = new Text();
 		$this->assertEquals(null, $text->getUpdatedAt());
@@ -31,7 +31,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(null, $text->getCreatedAt());
 	}
 
-	public function testGetFieldDefinition()
+	public function testGetFieldDefinition_ShouldDefineNameTypeAndOptions()
 	{
 		$text = new Text();
 		$result = $text->getFieldDefinition();

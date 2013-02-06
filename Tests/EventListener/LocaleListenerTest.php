@@ -16,15 +16,17 @@ use Networking\InitCmsBundle\EventListener\LocaleListener,
 class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 {
 
-	protected function getResponseEventMock($AttributeReturnValue, $SessionReturnValue)
-    {
-
-	    $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\SessionInterface')
+    /*
+     * ???
+     */
+	public function testOnKernelRequest()
+	{
+        $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\SessionInterface')
 				->disableOriginalConstructor()
 				->getMock();
 		$session->expects($this->once())
 			->method('get')
-			->will($this->returnValue($SessionReturnValue));
+			->will($this->returnValue('xy'));
 		$session->expects($this->any())
 			->method('set');
 
@@ -47,7 +49,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 				->getMock();
 		$request->attributes->expects($this->any())
 			->method('get')
-			->will($this->returnValue($AttributeReturnValue));
+			->will($this->returnValue('de'));
 
 	    $request
 			->expects($this->any())
@@ -61,12 +63,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-		return $event;
-    }
 
-
-	public function testOnKernelRequest()
-	{
         $accessMapStub = $this->getMock('\Symfony\Component\Security\Http\AccessMap');
 		$accessMapStub
                 ->expects($this->once())
@@ -77,8 +74,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
 				->getMock();
         $listener = new LocaleListener($accessMapStub, $securityContextStub, array(array('locale'=>'en')), 'en');
-//        $listener->setAccessMap($accessMapStub);
-        $listener->onKernelRequest($this->getResponseEventMock('de', 'xy'));
+        $listener->onKernelRequest($event);
     }
 
 }

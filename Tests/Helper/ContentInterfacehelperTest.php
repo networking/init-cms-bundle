@@ -21,45 +21,43 @@ class ContentInterfaceHelperTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->object = new ContentInterfaceHelper();
 		$this->text = new Text();
-		$this->text->setText('Hey');
+		$this->text->setText('foo');
 	}
 
 	public function testCamelize()
 	{
-		$camel = $this->object->camelize('aha_bebe_tsetse');
-		$this->assertEquals('AhaBebeTsetse', $camel);
-		$camel = $this->object->camelize('text');
-		$this->assertEquals('Text', $camel);
+		$camel = $this->object->camelize('foo_bar');
+		$this->assertEquals('FooBar', $camel);
+		$camel = $this->object->camelize('foo');
+		$this->assertEquals('Foo', $camel);
 	}
 
 	public function testSetFieldValueUnknown()
 	{
-		$x = $this->object->setFieldValue($this->text, 'meeb_moob', 'blubb');
+		$x = $this->object->setFieldValue($this->text, 'other_field', 'bar');
 		$this->assertInstanceOf('Networking\InitCmsBundle\Entity\Text', $x);
-		$this->assertNotEquals('blubb', $this->text->getText());
-	}
+		$this->assertNotEquals('bar', $this->text->getText());
+        $this->assertEquals('foo', $this->text->getText());
+    }
 
 	public function testSetFieldValue()
 	{
-		$x = $this->object->setFieldValue($this->text, 'text', 'blubb');
-		$this->assertInstanceOf('Networking\InitCmsBundle\Entity\Text', $x);
-		$this->assertEquals('blubb', $this->text->getText());
+        $this->object->setFieldValue($this->text, 'text', 'bar');
+		$this->assertEquals('bar', $this->text->getText());
 	}
 
 	public function testGetFieldValue()
 	{
 		$x = $this->object->getFieldValue($this->text, 'text');
-//		$this->assertInstanceOf('Networking\InitCmsBundle\Entity\Text', $x);
-		$this->assertEquals('Hey', $x);
+		$this->assertEquals('foo', $x);
 	}
 
 	/**
 	 * @expectedException Sonata\AdminBundle\Exception\NoValueException
 	 */
-	public function testGetFieldValueException()
+	public function testGetFieldValue_ShouldThrowException()
 	{
-		$x = $this->object->getFieldValue($this->text, 'miib');
-		$this->assertEquals('Hey', $x);
+		$this->object->getFieldValue($this->text, 'bar');
 	}
 
 }

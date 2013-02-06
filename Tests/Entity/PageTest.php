@@ -13,19 +13,28 @@ use \Networking\InitCmsBundle\Entity\Page;
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
-	public function testOnPrePersist()
-	{
-		$obj = new Page();
-        $obj->setWorkingTitle('working title');
-        $this->assertEquals('', $obj->getMetaTitle());
+
+    public function testOnPrePersist_ShouldSetDates()
+    {
+        $obj = new Page();
 		$this->assertEquals(null, $obj->getUpdatedAt());
 		$obj->onPrePersist();
 		$this->assertEquals(new \DateTime('now'), $obj->getUpdatedAt());
 		$this->assertEquals(new \DateTime('now'), $obj->getCreatedAt());
-		$this->assertEquals('working title', $obj->getMetaTitle());
+    }
 
+	public function testOnPrePersist_ShouldSetMetaTitle()
+	{
+		$obj = new Page();
+        $obj->setWorkingTitle('working title');
+        $this->assertEquals('', $obj->getMetaTitle());
+		$obj->onPrePersist();
+		$this->assertEquals('working title', $obj->getMetaTitle());
 	}
 
+    /*
+     * is this test too simple and not useful?
+     */
 	public function testSetTitle()
 	{
 		$obj = new Page();
@@ -68,18 +77,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$child1->setWorkingTitle('child1');
 		$obj->addChildren($child1);
 		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Entity\Page', $obj->getChildren());
-		$chilly = $obj->getChildren();
-		$this->assertEquals('child1', $chilly[0]->getTitle());
-		$this->assertEquals('original page', $chilly[0]->getParent()->getTitle());
+		$children = $obj->getChildren();
+		$this->assertEquals('child1', $children[0]->getTitle());
+		$this->assertEquals('original page', $children[0]->getParent()->getTitle());
 
 		$child2 = new Page();
 		$child2->setWorkingTitle('child2');
 		$obj->addChildren($child2);
-		$chilly = $obj->getAllChildren();
-		$this->assertEquals('child2', $chilly[0]->getTitle()); // new children are first
-		$this->assertEquals('original page', $chilly[0]->getParent()->getTitle());
+		$children = $obj->getAllChildren();
+		$this->assertEquals('child2', $children[0]->getTitle()); // new children are first
+		$this->assertEquals('original page', $children[0]->getParent()->getTitle());
 	}
-
-//TODO to be extended
-
 }

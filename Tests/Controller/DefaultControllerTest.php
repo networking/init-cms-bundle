@@ -9,9 +9,9 @@
  */
 namespace Networking\InitCmsBundle\Tests\Controller;
 
-use Networking\InitCmsBundle\Controller\DefaultController,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
+use \Networking\InitCmsBundle\Controller\DefaultController,
+    \Symfony\Component\HttpFoundation\Request,
+    \Symfony\Component\HttpFoundation\Response,
     \Networking\InitCmsBundle\Entity\Page,
     \Symfony\Component\Security\Core\Exception\AccessDeniedException,
     \Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
@@ -28,6 +28,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 	public function testIndexActionWithAccessDeniedException()
 	{
         $this->setExpectedException('\Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        // because no user is authenticated: a AuthenticationCredentialsNotFoundException
         $this->setExpectedException('Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException');
 
         //Mocks
@@ -53,6 +54,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(false));
+
         $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
             ->disableOriginalConstructor()
             ->getMock();
@@ -74,6 +76,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
     public function testIndexActionWithNotFoundHttpException()
 	{
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        // because no user is authenticated: a AuthenticationCredentialsNotFoundException
         $this->setExpectedException('Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException');
 
         //Mocks
@@ -199,9 +202,11 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 	public function testHomeAction()
 	{
 		$page = new \Networking\InitCmsBundle\Entity\Page;
+        // repo
 		$mockRepo = $this->getMock('\Doctrine\ORM\Repository', array('findOneBy'));
+
+        //Doctrine
 		$mockDoctrine = $this->getMock('\Doctrine\ORM\Repository', array('getRepository'));
-		// it never gets called, because we mock it!
 		$mockDoctrine->expects($this->once())
 				->method('getRepository')
 				->with($this->equalTo('NetworkingInitCmsBundle:Page'))
@@ -210,6 +215,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 				->method('findOneBy')
 				->with($this->equalTo(array('isHome' => true, 'locale' =>'en')))
 				->will($this->returnValue($page));
+
         //request
         $mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
 				->disableOriginalConstructor()
@@ -217,6 +223,8 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
         $mockRequest->expects($this->once())
             ->method('getLocale')
             ->will($this->returnValue('en'));
+
+        //container
 		$mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
             ->disableOriginalConstructor()
             ->getMock();

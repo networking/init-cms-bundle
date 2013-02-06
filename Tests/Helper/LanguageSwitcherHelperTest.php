@@ -18,15 +18,6 @@ use Networking\InitCmsBundle\Entity\Tag;
 
 class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 {
-
-	public $helper = null;
-
-	public function setup()
-	{
-        $this->helper = new LanguageSwitcherHelper();
-    }
-
-
     public function testGetTranslationRouteWithException()
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
@@ -50,8 +41,9 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 			->with($this->equalTo($request2))
 			->will($this->returnValue(array('_content' => new Tag())));
 
-        $this->helper->setContainer($container);
-        $result = $this->helper->getTranslationRoute('/foo', 'de');
+        $helper = new LanguageSwitcherHelper();
+        $helper->setContainer($container);
+        $result = $helper->getTranslationRoute('/foo', 'de');
     }
 
     public function testGetTranslationRoute()
@@ -78,8 +70,9 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 			->with($this->equalTo($request2))
 			->will($this->returnValue(array('_content' => $page)));
 
-		$this->helper->setContainer($container);
-        $result = $this->helper->getTranslationRoute('/foo', 'de');
+        $helper = new LanguageSwitcherHelper();
+		$helper->setContainer($container);
+        $result = $helper->getTranslationRoute('/foo', 'de');
 
         $this->assertEquals(array("_route" => "networking_init_cms_home"), $result);
 	}
@@ -98,9 +91,10 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 			->method('get')
 			->will($this->returnValue($router));
 
-		$this->helper->setContainer($container);
+        $helper = new LanguageSwitcherHelper();
+		$helper->setContainer($container);
 
-		$qs = $this->helper->getQueryString();
+		$qs = $helper->getQueryString();
 		$this->assertNull($qs);
 //		$this->assertNull('string', $qs);
 	}
@@ -108,15 +102,57 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
 	public function testPrepareBaseUrl()
 	{
-		$this->prepareForPrepareBaseUrl();
-		$baseUrl = $this->helper->prepareBaseUrl('/xy/');
+		$serverParams = array(
+			'SCRIPT_FILENAME' => 'xy.php',
+			'SCRIPT_NAME' => 'xy..php',
+			'PHP_SELF' => 'xy',
+			'ORIG_SCRIPT_NAME' => 'xy.php',
+			'ORIG_SCRIPT_NAME' => 'xy.php',
+		);
+		$request = new Request(array(), array(), array(), array(), array(), $serverParams);
+		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
+		$router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
+				->disableOriginalConstructor()
+				->getMock();
+		$container->expects($this->at(0))
+			->method('get')
+			->will($this->returnValue($request));
+		$container->expects($this->at(1))
+			->method('get')
+			->will($this->returnValue($router));
+
+        $helper = new LanguageSwitcherHelper();
+		$helper->setContainer($container);
+
+		$baseUrl = $helper->prepareBaseUrl('/xy/');
 		$this->assertEquals('', $baseUrl);
 	}
 
 	public function testGetPathInfo()
 	{
-		$this->prepareForPrepareBaseUrl();
-		$path = $this->helper->getPathInfo();
+		$serverParams = array(
+			'SCRIPT_FILENAME' => 'xy.php',
+			'SCRIPT_NAME' => 'xy..php',
+			'PHP_SELF' => 'xy',
+			'ORIG_SCRIPT_NAME' => 'xy.php',
+			'ORIG_SCRIPT_NAME' => 'xy.php',
+		);
+		$request = new Request(array(), array(), array(), array(), array(), $serverParams);
+		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
+		$router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
+				->disableOriginalConstructor()
+				->getMock();
+		$container->expects($this->at(0))
+			->method('get')
+			->will($this->returnValue($request));
+		$container->expects($this->at(1))
+			->method('get')
+			->will($this->returnValue($router));
+
+        $helper = new LanguageSwitcherHelper();
+		$helper->setContainer($container);
+
+		$path = $helper->getPathInfo();
 		$this->assertEquals('/', $path);
 	}
 
@@ -138,30 +174,4 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('%20', $result);
 	}
 	*/
-
-
-	private function prepareForPrepareBaseUrl()
-	{
-		$serverParams = array(
-			'SCRIPT_FILENAME' => 'xy.php',
-			'SCRIPT_NAME' => 'xy..php',
-			'PHP_SELF' => 'xy',
-			'ORIG_SCRIPT_NAME' => 'xy.php',
-			'ORIG_SCRIPT_NAME' => 'xy.php',
-		);
-		$request = new Request(array(), array(), array(), array(), array(), $serverParams);
-		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
-		$router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
-				->disableOriginalConstructor()
-				->getMock();
-		$container->expects($this->at(0))
-			->method('get')
-			->will($this->returnValue($request));
-		$container->expects($this->at(1))
-			->method('get')
-			->will($this->returnValue($router));
-
-		$this->helper->setContainer($container);
-	}
-
 }

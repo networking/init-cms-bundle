@@ -14,13 +14,13 @@ use Networking\InitCmsBundle\Helper\PageHelper;
 
 class PageListenerTest extends \PHPUnit_Framework_TestCase
 {
+    //TODO clean up the whole file!
 
 	/**
 	 * @covers PageHelper::getPageRoutePath()
 	 */
 	public function testGetPageRoutePath()
 	{
-
 		$this->assertEquals('/', PageHelper::getPageRoutePath(''), 'empty route is "/"');
 		$this->assertEquals('/hallo', PageHelper::getPageRoutePath('hallo'), 'slash at the beginning');
 		$this->assertEquals('/some/tree/', PageHelper::getPageRoutePath('/some-2/tree-20/'), 'remove -numbers in path');
@@ -30,7 +30,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 	 * postPersist with Tag
 	 * @covers PageListener::postPersist()
 	 */
-	public function testPostPersist1()
+	public function testPostPersist_WithTag()
 	{
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
 		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
@@ -41,7 +41,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * postPersist with Page
 	 */
-	public function testPostPersist2()
+	public function testPostPersist_WithPage()
 	{
 		$container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
 		$pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
