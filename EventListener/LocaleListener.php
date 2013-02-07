@@ -168,16 +168,19 @@ class LocaleListener implements EventSubscriberInterface
     }
 
     /**
+     * try to match browser language with available languages
      * @param $locale
      * @return string
      */
     protected function matchLocaleInAvailableLanguages($locale)
     {
         foreach ($this->availableLanguages as $language) {
-            if (strpos($language['locale'], $locale, 0)) {
+            // browser accept language matches an available language
+            if ($locale == $language['locale']) {
                 return $language['locale'];
             }
-            if (strpos($language['locale'], substr($locale, 0, 2), 0)) {
+            // first part of browser accept language matches an available language
+            if (substr($locale, 0, 2) == substr($language['locale'], 0, 2)) {
                 return $language['locale'];
             }
         }
