@@ -524,7 +524,8 @@ class PageAdmin extends BaseAdmin
                     $language['locale'],
                     array(
                         'short_label' => $language['short_label'],
-                        'translation' => $translatedLocales->get($language['locale'])
+                        'translation' => $translatedLocales->get($language['locale']),
+                        'label' => \Locale::getDisplayLanguage($language['locale'])
                     )
                 );
 
@@ -533,7 +534,8 @@ class PageAdmin extends BaseAdmin
                     $language['locale'],
                     array(
                         'short_label' => $language['short_label'],
-                        'translation' => false
+                        'translation' => false,
+                        'label' => \Locale::getDisplayLanguage($language['locale'])
                     )
                 );
             }

@@ -12,7 +12,7 @@ file that was distributed with this source code.
 <br/>
 {% for locale, language in admin.translationLanguages %}
     <p>
-        <strong>{{ language.short_label }}</strong><br />
+        <strong>{{ language.label }}</strong><br />
     {% if language.translation %}
         {{ language.translation.workingTitle }}
         <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}" class="link-underlined">
