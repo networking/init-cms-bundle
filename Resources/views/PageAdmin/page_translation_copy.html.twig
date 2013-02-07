@@ -28,9 +28,12 @@ file that was distributed with this source code.
         </div>
         <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
             <form method="POST" action="{{ admin.generateUrl('translatePage', {id: page.id, locale: locale}) }}">
+                <input type="hidden" name="locale" value="{{ locale }}" />
+                <input type=hidden name="page_id" value="{{ id }}" />
                 {% if app.request.isxmlhttprequest %}
                     <button class="btn" data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+
                     <input type="submit" class="btn btn-primary"
                            value="{{ 'button.copy_page'|trans({}, admin.translationDomain) }}"/>
                 {% else %}
