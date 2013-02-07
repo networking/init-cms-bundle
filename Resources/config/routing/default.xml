@@ -5,47 +5,47 @@
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
 	<route id="networking_init_cms_default" pattern="">
-		<default key="_controller">NetworkingInitCmsBundle:Default:index</default>
+		<default key="_controller">NetworkingInitCmsBundle:FrontendPage:index</default>
 	</route>
 
 	<route id="networking_init_cms_home" pattern="/">
-			<default key="_controller">NetworkingInitCmsBundle:Default:home</default>
+			<default key="_controller">NetworkingInitCmsBundle:FrontendPage:home</default>
 		</route>
 
 	<route id="networking_init_cms_admin" pattern="/admin/">
-		<default key="_controller">NetworkingInitCmsBundle:Default:admin</default>
+		<default key="_controller">NetworkingInitCmsBundle:FrontendPage:admin</default>
 	</route>
 
 	<route id="networking_init_change_admin_language" pattern="/change_admin_language/{locale}">
-		<default key="_controller">NetworkingInitCmsBundle:Default:changeAdminLanguage</default>
+		<default key="_controller">NetworkingInitCmsBundle:FrontendPage:changeAdminLanguage</default>
 		<requirement key="locale">.+</requirement>
 		<requirement key="_method">GET|POST</requirement>
 	</route>
 
 	<route id="networking_init_change_language" pattern="/change_language/{locale}">
-		<default key="_controller">NetworkingInitCmsBundle:Default:changeLanguage</default>
+		<default key="_controller">NetworkingInitCmsBundle:FrontendPage:changeLanguage</default>
 		<requirement key="locale">.+</requirement>
 		<requirement key="_method">GET|POST</requirement>
 	</route>
 
     <route id="networking_init_view_draft" pattern="/view_draft/{locale}:{path}">
-   		<default key="_controller">NetworkingInitCmsBundle:Default:viewDraft</default>
+   		<default key="_controller">NetworkingInitCmsBundle:FrontendPage:viewDraft</default>
            <requirement key="locale">(.*)?</requirement>
            <requirement key="path">(.*)?</requirement>
    	</route>
 
 	<route id="networking_init_view_draft_no_param" pattern="/view_draft">
-		<default key="_controller">NetworkingInitCmsBundle:Default:viewDraft</default>
+		<default key="_controller">NetworkingInitCmsBundle:FrontendPage:viewDraft</default>
 	</route>
 
 	<route id="networking_init_view_live" pattern="/view_live/{locale}:{path}">
-		<default key="_controller">NetworkingInitCmsBundle:Default:viewLive</default>
+		<default key="_controller">NetworkingInitCmsBundle:FrontendPage:viewLive</default>
 		<requirement key="locale">(.*)?</requirement>
 		<requirement key="path">(.*)?</requirement>
 	</route>
 
     <route id="networking_init_view_live_no_param" pattern="/view_live">
-   		<default key="_controller">NetworkingInitCmsBundle:Default:viewLive</default>
+   		<default key="_controller">NetworkingInitCmsBundle:FrontendPage:viewLive</default>
    	</route>
 
     <route id="networking_init_cms_help" pattern="/admin/help/{adminCode}/{action}">
