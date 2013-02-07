@@ -1,5 +1,5 @@
 parameters:
-    networking_init_cms.controllers_by_alias: {'Networking\InitCmsBundle\Entity\Page': "NetworkingInitCmsBundle:Default:index", 'Networking\InitCmsBundle\Entity\PageSnapshot': "NetworkingInitCmsBundle:Default:live"}
+    networking_init_cms.controllers_by_alias: {'Networking\InitCmsBundle\Entity\Page': "NetworkingInitCmsBundle:FrontendPage:index", 'Networking\InitCmsBundle\Entity\PageSnapshot': "NetworkingInitCmsBundle:FrontendPage:live"}
 
 
 services:
