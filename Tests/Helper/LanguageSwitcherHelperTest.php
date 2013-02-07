@@ -15,10 +15,11 @@ use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Networking\InitCmsBundle\Entity\Page;
 use Networking\InitCmsBundle\Entity\Tag;
+use Networking\InitCmsBundle\Entity\ContentRoute;
 
 class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetTranslationRouteWithException()
+    public function testGetTranslationRoute_WithException()
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
@@ -43,13 +44,13 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
         $helper = new LanguageSwitcherHelper();
         $helper->setContainer($container);
-        $result = $helper->getTranslationRoute('/foo', 'de');
+        $helper->getTranslationRoute('/foo', 'de');
     }
 
-    public function testGetTranslationRoute()
+    public function testGetTranslationRoute_WithNoTranslation_ShouldReturnArray()
 	{
         $page = new Page();
-        $page->setMetaTitle('ExceptionPage');
+        $page->setMetaTitle('Page without Translations');
 
         $request = new Request();
         $request2 = Request::create('/foo');
@@ -76,6 +77,49 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array("_route" => "networking_init_cms_home"), $result);
 	}
+
+    public function testGetTranslationRoute_PageWithTranslation_ShouldReturnContentRoute()
+    {
+        $contentRouteDe = new ContentRoute();
+        $contentRouteEn = new ContentRoute();
+        $dePage = new Page();
+        $dePage->setLocale('de');
+        $dePage->setMetaTitle('German page with english translation');
+        $dePage->setContentRoute($contentRouteDe);
+        $enPage = new Page();
+        $enPage->setLocale('en');
+        $enPage->setMetaTitle('English translation');
+        $enPage->setContentRoute($contentRouteEn);
+        $dePage->setTranslations(array($enPage));
+
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container');
+        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $request2 = Request::create('/foo');
+        $router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
+				->disableOriginalConstructor()
+				->getMock();
+        $routeArray = array('_content' => $dePage);
+        $router->expects($this->once())
+            ->method('matchRequest')
+            ->with($request2)
+            ->will($this->returnValue($routeArray));
+        $container->expects($this->at(0))
+            ->method('get')
+            ->with('request')
+            ->will($this->returnValue($request));
+        $container->expects($this->at(1))
+            ->method('get')
+            ->with('router')
+            ->will($this->returnValue($router));
+
+        $helper = new LanguageSwitcherHelper();
+        $helper->setContainer($container);
+        $result = $helper->getTranslationRoute('/foo', 'en');
+
+        $this->assertInstanceOf('Networking\InitCmsBundle\Entity\ContentRoute', $result);
+
+    }
+
 
 	public function testGetQueryString()
 	{
@@ -155,23 +199,4 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 		$path = $helper->getPathInfo();
 		$this->assertEquals('/', $path);
 	}
-
-	/* these are protected methods
-	public function testGetUrlencodedPrefixFalse()
-	{
-		$result = $this->helper->geturlencodedPrefix('alskfj', 'lsdkfj');
-		$this->assertFalse($result);
-	}
-
-	public function testGetUrlencodedPrefixMatch()
-	{
-		$result = $this->helper->geturlencodedPrefix('alskfj', 'als');
-		$this->assertEquals('als', $result);
-	}
-	public function testGetUrlencodedPrefixMatch2()
-	{
-		$result = $this->helper->geturlencodedPrefix('%20alskf', ' ');
-		$this->assertEquals('%20', $result);
-	}
-	*/
 }
