@@ -74,9 +74,10 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
             $translation = $content->getAllTranslations()->get($locale);
 
             if (is_null($translation)) {
+                //@todo does this make sense, or should we throw an exception
                 return array('_route' => 'networking_init_cms_home');
             }
-
+            //return a contentRoute object
             return $translation->getContentRoute()->initializeRoute($translation);
         }
 
@@ -91,11 +92,13 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
                 $snapshot = $this->container->get('doctrine')->getRepository($content->getSnapshotClassType())->findOneBy(array('resourceId' => $snapshotId));
 
                 if ($snapshot) {
+                    //return a contentRoute object
                     return $snapshot->getRoute();
                 }
             }
         }
 
+        //no valid translation found
         throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for content "%s"', $locale, $content->__toString()));
 
     }
