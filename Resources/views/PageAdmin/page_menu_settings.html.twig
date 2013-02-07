@@ -1,10 +1,14 @@
 {% for rootNode in rootMenus %}
-    <label> {{ 'label.menu_link'|trans({'%menu_name%': rootNode.name}, admin.translationDomain) }}
-        <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}" class="menu_add_link" title="{{ 'legend.create_menu'|trans({'%menu_name%': rootNode.name }, admin.translationDomain) }}">
-            {{ 'link_add_page_to_menu'|trans({}, admin.translationDomain) }}</a></label>
-    {% for menuItem in object.getMenuItemByRoot(rootNode.id) %}
-        &nbsp;&nbsp;{{ menuItem.name }} <a
-            href="{{ url('admin_networking_initcms_menuitem_list', {'page_id': object.id, 'menu_id':menuItem.id}) }}" class="menu_edit_link">{{ 'link.edit'|trans({}, admin.translationDomain) }}</a>
-        <br/>
-    {% endfor %}
+    <p><strong>{{ 'label.menu_link'|trans({'%menu_name%': rootNode.name}, admin.translationDomain) }}</strong><br/>
+        {% for menuItem in object.getMenuItemByRoot(rootNode.id) %}
+            - {{ menuItem.name }} <a
+                href="{{ url('admin_networking_initcms_menuitem_list', {'page_id': object.id, 'menu_id':menuItem.id}) }}" class="link-underlined menu_edit_link">
+            {{ 'link.edit'|trans({}, admin.translationDomain) }}
+        </a>
+            <br/>
+        {% else %}
+            <a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id}) }}" class="btn btn-small menu_add_link" title="{{ 'legend.create_menu'|trans({'%menu_name%': rootNode.name }, admin.translationDomain) }}">
+                            {{ 'link_add_page_to_menu'|trans({}, admin.translationDomain) }}</a>
+        {% endfor %}
+    </p>
 {% endfor %}

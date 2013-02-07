@@ -188,7 +188,7 @@
             </trans-unit>
             <trans-unit id="link_add_page_to_menu">
                 <source>link_add_page_to_menu</source>
-                <target>Add to menu</target>
+                <target>Add page to menu</target>
             </trans-unit>
             <trans-unit id="message.translation_link">
                 <source>message.translation_link</source>
