@@ -118,7 +118,11 @@ class PageHelper
      */
     public static function camelize($property)
     {
-        return preg_replace(array('/(^|_| )+(.)/e', '/\.(.)/e'), array("strtoupper('\\2')", "'_'.strtoupper('\\1')"), $property);
+        return preg_replace(
+            array('/(^|_| )+(.)/e', '/\.(.)/e'),
+            array("strtoupper('\\2')", "'_'.strtoupper('\\1')"),
+            $property
+        );
     }
 
     /**
@@ -142,16 +146,20 @@ class PageHelper
     }
 
     /**
+     * Create a snapshot of a given page.
+     *
      * @param Page $page
      */
-    public function makePageSnapshot($page)
+    public function makePageSnapshot(Page $page)
     {
         $serializer = $this->container->get('serializer');
         $manager = $this->container->get('doctrine')->getManager();
 
         foreach ($page->getLayoutBlock() as $layoutBlock) {
             /** @var $layoutBlock \Networking\InitCmsBundle\Entity\LayoutBlock */
-            $layoutBlockContent = $manager->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
+            $layoutBlockContent = $manager->getRepository($layoutBlock->getClassType())->find(
+                $layoutBlock->getObjectId()
+            );
             $layoutBlock->takeSnapshot($serializer->serialize($layoutBlockContent, 'json'));
         }
         /** @var $pageSnapshot \Networking\InitCmsBundle\Entity\PageSnapshot */
@@ -179,4 +187,55 @@ class PageHelper
         $manager->flush();
     }
 
+    /**
+     * create a copy of a given page object in a given locale
+     *
+     * @param $page
+     * @param $locale
+     * @return \Networking\InitCmsBundle\Entity\Page
+     */
+    public function makeTranslationCopy(Page $page, $locale)
+    {
+        $doctrine = $this->container->get('doctrine');
+        $em = $doctrine->getManager();
+
+        $pageCopy = new Page();
+
+        $pageCopy->setWorkingTitle($page->getWorkingTitle());
+        $pageCopy->setMetaTitle($page->getMetaTitle());
+        $pageCopy->setUrl($page->getUrl());
+        $pageCopy->setMetaKeyword($page->getMetaKeyword());
+        $pageCopy->setMetaDescription($page->getMetaDescription());
+        $pageCopy->setActiveFrom($page->getActiveFrom());
+        $pageCopy->setIsHome($page->getIsHome());
+        $pageCopy->setLocale($locale);
+        $pageCopy->setTemplate($page->getTemplate());
+        $pageCopy->setOriginal($page);
+
+        $layoutBlocks = $page->getLayoutBlock();
+
+        foreach ($layoutBlocks as $layoutBlock) {
+
+            /** @var $newLayoutBlock LayoutBlock */
+            $newLayoutBlock = clone $layoutBlock;
+
+            $content = $doctrine->getRepository($newLayoutBlock->getClassType())->find(
+                $newLayoutBlock->getObjectId()
+            );
+            $newContent = clone $content;
+
+            $em->persist($newContent);
+            $em->flush();
+
+            $newLayoutBlock->setObjectId($newContent->getId());
+            $newLayoutBlock->setPage($pageCopy);
+            $em->persist($newLayoutBlock);
+        }
+
+        $em->persist($pageCopy);
+        $em->flush();
+
+        return $pageCopy;
+
+    }
 }

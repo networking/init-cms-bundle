@@ -38,11 +38,14 @@ class PageAdminController extends CmsCRUDController
 {
 
     /**
-     * @Template()
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $id
+     * @param $locale
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function translatePageAction(Request $request, $id, $locale)
     {
-
         /** @var $page Page */
         $page = $this->admin->getObject($id);
 
@@ -51,46 +54,13 @@ class PageAdminController extends CmsCRUDController
         }
         $language = \Locale::getDisplayLanguage($locale);
 
-        if ($this->getRequest()->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST') {
 
-
-            $em = $this->getDoctrine()->getManager();
-
-            $pageCopy = new Page();
-
-            $pageCopy->setWorkingTitle($page->getWorkingTitle());
-            $pageCopy->setMetaTitle($page->getMetaTitle());
-            $pageCopy->setUrl($page->getUrl());
-            $pageCopy->setMetaKeyword($page->getMetaKeyword());
-            $pageCopy->setMetaDescription($page->getMetaDescription());
-            $pageCopy->setActiveFrom($page->getActiveFrom());
-            $pageCopy->setIsHome($page->getIsHome());
-            $pageCopy->setLocale($locale);
-            $pageCopy->setTemplate($page->getTemplate());
-            $pageCopy->setOriginal($page);
-
-
+            $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
             try {
 
-                $layoutBlocks = $page->getLayoutBlock();
-
-                foreach($layoutBlocks as $layoutBlock){
-                    /** @var $newLayoutBlock LayoutBlock */
-                    $newLayoutBlock = clone $layoutBlock;
-
-                    $content = $this->getDoctrine()->getRepository($newLayoutBlock->getClassType())->find($newLayoutBlock->getObjectId());
-                    $newContent = clone $content;
-
-                    $em->persist($newContent);
-                    $em->flush();
-                    $newLayoutBlock->setObjectId($newContent->getId());
-                    $newLayoutBlock->setPage($pageCopy);
-                    $em->persist($newLayoutBlock);
-                }
-
-                $em->persist($pageCopy);
-                $em->flush();
+                $pageHelper->makeTranslationCopy($page, $locale);
                 $status = 'success';
                 $message = $this->translate(
                     'message.translation_saved',
@@ -98,9 +68,9 @@ class PageAdminController extends CmsCRUDController
                 );
                 $result = 'ok';
                 $html = $this->renderView(
-                                   'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
-                                   array('object' => $page, 'admin' => $this->admin)
-                               );
+                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                    array('object' => $page, 'admin' => $this->admin)
+                );
             } catch (\Exception $e) {
                 $status = 'error';
                 $message = $message = $this->translate(
