@@ -155,8 +155,12 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
 
                 $lastAction = next($lastActions);
+                if($lastAction){
+                    $menu->setCurrentUri($lastAction->url);
+                }else{
+                    $menu->setCurrentUri($dashboardUrl);
+                }
 
-                $menu->setCurrentUri($lastAction->url);
             } elseif ($this->serviceContainer->get('session')->get(
                 '_viewStatus'
             ) === VersionableInterface::STATUS_PUBLISHED
