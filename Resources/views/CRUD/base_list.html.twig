@@ -72,19 +72,9 @@ file that was distributed with this source code.
                     <tr>
                         <th colspan="{{ admin.list.elements|length - 1 }}">
                             {{ block('batch') }}
-
-                            {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
-                                {{ "label_export_download"|trans({}, "NetworkingInitCmsAdmin") }}
-                                :
-
-                                {% for format in admin.getExportFormats() %}
-                                        <a
-                                        href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">{{ format }}</a>{% if not loop.last %},{% endif %}
-                                {% endfor %}
-                            {% endif %}
                         </th>
 
-                        <th>
+                        <th class="align-right">
                             {% transchoice admin.datagrid.pager.nbresults with {'%count%': admin.datagrid.pager.nbresults} from 'SonataAdminBundle' %}
                             list_results_count{% endtranschoice %}
                         </th>
@@ -147,6 +137,14 @@ file that was distributed with this source code.
                     </tfoot>
                 {% endblock %}
             </table>
+            {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
+                <p> {{ "label_export_download"|trans({}, "NetworkingInitCmsAdmin") }}:
+                    {% for format in admin.getExportFormats() %}
+                            <a
+                            href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">{{ format }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
         </form>
     {% else %}
         <p class="notice">
@@ -168,15 +166,15 @@ file that was distributed with this source code.
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
                     {{ filter_main }}
-                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium'}}) }}
+                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium' }}) }}
                     {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
                     {% endset %}
                 {% else %}
                     {% set filter_hidden %}
                     {{ filter_hidden }}
                     <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium'}}) }}
-                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium'}}) }}
+                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium' }}) }}
+                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}) }}
                     {% endset %}
                 {% endif %}
             {% endfor %}
