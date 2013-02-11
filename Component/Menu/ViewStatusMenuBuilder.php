@@ -149,6 +149,10 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             $lastActions = $session->get('_networking_initcms_admin_tracker');
             $lastActions = json_decode($lastActions);
 
+            if(!is_array($lastActions)){
+                $lastActions = array();
+            }
+
 
             // Set active url based on which status is in the session
 
