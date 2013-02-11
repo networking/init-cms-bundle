@@ -75,7 +75,8 @@ services:
     networking_init_cms.page.admin.tag:
         class: Networking\InitCmsBundle\Admin\TagAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\Tag, SonataAdminBundle:CRUD]
-        call: [setTranslationDomain, [PageAdmin]]
+        calls:
+            - [setTranslationDomain, [TagAdmin]]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Tags, label_translator_strategy: sonata.admin.label.strategy.underscore}
 
