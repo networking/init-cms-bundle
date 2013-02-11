@@ -20,7 +20,7 @@ file that was distributed with this source code.
                 height:'auto',
                 width:650,
                 show:false,
-                title:'{{ 'page.workingTitle'|trans({}, admin.translationDomain) }}'
+                title:'{{ 'page.pageName'|trans({}, admin.translationDomain) }}'
             });
             pageDialog.on('hide', function () {
                 jQuery('input[type=submit]', this).off();

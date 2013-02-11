@@ -185,9 +185,9 @@ class PageAdmin extends BaseAdmin
         }
 
         $formMapper->add(
-            'workingTitle',
+            'pageName',
             null,
-            array('help_inline' => 'working_title.helper.text')
+            array('help_inline' => 'page_name.helper.text')
         );
 
         if (!$this->canCreateHomepage) {
@@ -327,7 +327,7 @@ class PageAdmin extends BaseAdmin
                 'preferred_choices' => array($this->getDefaultLocale())
             )
         )
-            ->add('workingTitle', 'networking_init_cms_simple_string')
+            ->add('pageName', 'networking_init_cms_simple_string')
             ->add(
             'path',
             'doctrine_orm_callback',

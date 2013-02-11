@@ -2,10 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="">
         <body>
-            <trans-unit id="action_delete">
-                <source>hello.name</source>
-                <target>Hallo %name%</target>
-            </trans-unit>
             <trans-unit id="link_breadcrumb_dashboard">
                 <source>breadcrumb.link_dashboard</source>
                 <target>&#8962;</target>
@@ -34,9 +30,9 @@
                 <source>form.label_template</source>
                 <target>Page Layout</target>
             </trans-unit>
-            <trans-unit id="form.label_working_title">
-                <source>form.label_working_title</source>
-                <target>Working Title</target>
+            <trans-unit id="form.label_page_name">
+                <source>form.label_page_name</source>
+                <target>Page Name</target>
             </trans-unit>
             <trans-unit id="form.label_meta_title">
                 <source>form.label_meta_title</source>
@@ -258,7 +254,7 @@
             </trans-unit>
             <trans-unit id="list.label_admin_title">
                 <source>list.label_admin_title</source>
-                <target>Working Title</target>
+                <target>Page Name</target>
             </trans-unit>
             <trans-unit id="list.label_full_path">
                 <source>list.label_full_path</source>
@@ -270,7 +266,7 @@
             </trans-unit>
             <trans-unit id="filter.label_title">
                 <source>filter.label_title</source>
-                <target>Working Title</target>
+                <target>Page Name</target>
             </trans-unit>
             <trans-unit id="filter.label_path">
                 <source>filter.label_path</source>
@@ -308,9 +304,9 @@
                 <source>locale</source>
                 <target>Language</target>
             </trans-unit>
-            <trans-unit id="workingTitle">
-                <source>workingTitle</source>
-                <target>Working Title</target>
+            <trans-unit id="pageName">
+                <source>pageName</source>
+                <target>Page Name</target>
             </trans-unit>
             <trans-unit id="url">
                 <source>url</source>
@@ -435,8 +431,8 @@
                 <source>locale.helper.text</source>
                 <target>Content language of this page</target>
             </trans-unit>
-            <trans-unit id="working_title.helper.text">
-                <source>working_title.helper.text</source>
+            <trans-unit id="page_name.helper.text">
+                <source>page_name.helper.text</source>
                 <target>Internal page title. Not shown in frontend</target>
             </trans-unit>
             <trans-unit id="parent.helper.text">
@@ -459,9 +455,9 @@
                 <source>filter.label_status</source>
                 <target>Page Status</target>
             </trans-unit>
-            <trans-unit id="filter.label_working_title">
-                <source>filter.label_working_title</source>
-                <target>Working Title</target>
+            <trans-unit id="filter.label_page_name">
+                <source>filter.label_page_name</source>
+                <target>Page Name</target>
             </trans-unit>
             <trans-unit id="link.preview">
                 <source>link.preview</source>

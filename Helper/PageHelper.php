@@ -201,7 +201,7 @@ class PageHelper
 
         $pageCopy = new Page();
 
-        $pageCopy->setWorkingTitle($page->getWorkingTitle());
+        $pageCopy->setpageName($page->getpageName());
         $pageCopy->setMetaTitle($page->getMetaTitle());
         $pageCopy->setUrl($page->getUrl());
         $pageCopy->setMetaKeyword($page->getMetaKeyword());

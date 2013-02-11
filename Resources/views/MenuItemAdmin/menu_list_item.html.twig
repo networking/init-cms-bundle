@@ -16,7 +16,7 @@ file that was distributed with this source code.
     <div class="pull-right text menu-item-link"><span style="color:#999;">
         {% if node.page %}
         {{ 'title.page'|trans({}, admin.translationDomain) }}:</span> <a
-            href="{{ path('admin_networking_initcms_page_edit', {id: node.page.id}) }}">{{ node.page.workingTitle }}</a>
+            href="{{ path('admin_networking_initcms_page_edit', {id: node.page.id}) }}">{{ node.page.pageName }}</a>
         {% elseif node.redirectUrl %}
             {{ 'label_redirect_url'|trans({}, admin.translationDomain) }}:</span> <a target="_blank"
                                                                                      href="{{ node.redirectUrl }}">{{ node.redirectUrl }}</a>

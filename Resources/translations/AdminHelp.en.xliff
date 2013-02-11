@@ -88,9 +88,9 @@
                 <p><h2>Pages &amp; Menus</h2>
                 <p>Pages and Menus are seperate things. A menu item can link to a Page.</p>
 
-                <p><h2>Page Working Title</h2></p>
+                <p><h2>Page Name</h2></p>
                 <p>
-                            The Page Working Title is a string of your own choice to
+                            The Page Name is a string of your own choice to
                 identify your Page in the admin section. It is an internal term and will
                  never be displayed on the website.
                         </p>
@@ -153,7 +153,7 @@
                 <p><h2>Menu Item Name</h2></p>
                 <p>
                             The Name of a menu item can be any string of your choice.
-                            <br>If you like you can use the same term as for the Page Working Title it links to, but you can also name it anything else.
+                            <br>If you like you can use the same term as for the Page Name it links to, but you can also name it anything else.
                 </p>
 
                 <p><h2>Menu Item Link</h2></p>

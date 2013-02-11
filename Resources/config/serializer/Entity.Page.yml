@@ -6,7 +6,7 @@ Networking\InitCmsBundle\Entity\Page:
             type: DateTime
         updatedAt:
             type: DateTime
-        workingTitle:
+        pageName:
             type: string
         metaTitle:
             type: string

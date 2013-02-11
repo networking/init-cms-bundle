@@ -14,7 +14,7 @@ file that was distributed with this source code.
     <p>
         <strong>{{ language.label }}</strong><br />
     {% if language.translation %}
-        {{ language.translation.workingTitle }}
+        {{ language.translation.pageName }}
         <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}" class="link-underlined">
             {{ 'link.edit'|trans({}, admin.translationDomain) }}
         </a> |
