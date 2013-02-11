@@ -109,15 +109,15 @@
 }
 
 .align-left{
-    text-align:left;
+    text-align:left !important;
 }
 
 .align-center{
-    text-align:center;
+    text-align:center !important;
 }
 
 .align-right{
-    text-align:right;
+    text-align:right !important;
 }
 
 .btn-custom {
@@ -276,7 +276,9 @@
     text-align:right;
     overflow:visible;
 }
-
+.table-compact tfoot tr th {
+    padding-top: 20px
+}
 
 li.table-row-style {
     border-top: 1px solid #eee;
@@ -500,10 +502,6 @@ li.table-row-style .menu-item-link {
       color: @linkColor;
   }
 
-  form{
-    font-size: 12px;
-  }
-  
   .table a{
       text-decoration: none;
       color:@textColor;
@@ -578,7 +576,7 @@ li.table-row-style .menu-item-link {
   }
 
   .nav-main{
-    background: url('@{cssImagePath}/bg_nav_left.png') no-repeat right;
+    background: url('@{cssImagePath}/bg_nav_left_800.png') no-repeat right;
     border-right: 1px solid #efefef;
     width: 100%;
     min-height: 600px;
@@ -608,7 +606,7 @@ li.table-row-style .menu-item-link {
       display:block;
   }
 
-  .nav-custom li.first-level.active {
+  .nav-custom li.first-level.active,  {
       background: #fff;
       padding:6px 0px 6px 5px;
       border-top: 1px solid #efefef;
@@ -623,6 +621,10 @@ li.table-row-style .menu-item-link {
   .nav-custom li.first-level.active a, .nav-custom li.first-level.active i {
     color: @linkColor;
   }
+
+  .nav-custom li.first-level-small.active a, .nav-custom li.first-level-small.active i {
+      color: @linkColor;
+    }
 
   .nav-custom .active-corner-top {
       position:absolute;
