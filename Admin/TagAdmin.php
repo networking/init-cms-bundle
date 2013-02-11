@@ -43,8 +43,7 @@ class TagAdmin extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-            ->add('pages');
+            ->add('name');
     }
 
     /**
