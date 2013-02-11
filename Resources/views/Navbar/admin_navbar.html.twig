@@ -3,7 +3,7 @@
         {% if is_granted('ROLE_SONATA_ADMIN') %}
             {# Override this block to add your own files! #}
             {% stylesheets filter='less,?yui_css'
-            '@NetworkingInitCmsBundle/Resources/public/less/cms/admin-navbar.less' %}
+            '@NetworkingInitCmsBundle/Resources/public/less/admin-navbar.less' %}
             <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
             {% endstylesheets %}
         {% endif %}
@@ -18,12 +18,10 @@
                 <div class="navbar-inner">
                     <div class="container">
                         <div class="row">
-                            <div class="span2" class="brand">
-                                <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                    <span class="info-very-soft">initcms</span>
+                            <div class="span6">
+                                <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
+                                    <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
                                 </a>
-                            </div>
-                            <div class="span5">
                                 {% if admin_pool is defined %}
                                     <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
                                         {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
@@ -32,8 +30,11 @@
                                     {% include admin_pool.getTemplate('user_block') %}
                                 {% endif %}
                             </div>
-                            <div class="span5">
-                                {{ mopa_bootstrap_navbar('viewStatusMenuBlock') }}
+                            <div class="span6">
+                                {% if admin_pool is defined %}
+                                    {{ mopa_bootstrap_navbar('viewStatusMenuBlock') }}
+                                    {#{{ mopa_bootstrap_navbar('adminLangNavbar') }}#}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
