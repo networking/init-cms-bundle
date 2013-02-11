@@ -51,8 +51,6 @@
   margin-left: -20px; // negative indent to left-align the text down the page
   font-size: 20px;
   font-weight: 200;
-  color: @navbarBrandColor;
-  text-shadow: 0 1px 0 @navbarBackgroundHighlight;
   &:hover {
     text-decoration: none;
   }
@@ -372,7 +370,7 @@
 // Inverted navbar
 // -------------------------
 
-.navbar-inverse {
+.initcms .navbar-inverse {
   color: @navbarInverseText;
 
   .navbar-inner {
@@ -380,7 +378,7 @@
     border-color: @navbarInverseBorder;
   }
 
-  .brand,
+   a.brand,
   .nav > li > a {
     color: @navbarInverseLinkColor;
     text-shadow: 0 -1px 0 rgba(0,0,0,.25);

@@ -20,6 +20,14 @@ use Sonata\AdminBundle\Form\FormMapper;
 class TagAdmin extends Admin
 {
     /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return 'icon-tags';
+    }
+
+    /**
      * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
      */
     protected function configureFormFields(FormMapper $formMapper)

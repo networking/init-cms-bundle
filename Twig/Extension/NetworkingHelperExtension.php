@@ -13,7 +13,6 @@ namespace Networking\InitCmsBundle\Twig\Extension;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
 use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -195,8 +194,13 @@ class NetworkingHelperExtension extends \Twig_Extension
 
         $bundleGuesser = $this->container->get('networking_init_cms.helper.bundle_guesser');
         $bundleGuesser->initialize($admin);
-        $bundle = $bundleGuesser->getBundleShortName();
-        $path = $this->container->get('kernel')->getBundle($bundle)->getPath();
+        $bundleName = $bundleGuesser->getBundleShortName();
+        /** @var $kernel \AppKernel */
+        $kernel = $this->container->get('kernel');
+        $bundles = $kernel->getBundle($bundleName, false);
+        $bundle = end($bundles);
+
+        $path = $bundle->getPath();
 
         $slug = self::slugify($admin->getLabel());
 
@@ -209,6 +213,7 @@ class NetworkingHelperExtension extends \Twig_Extension
         foreach ($folders as $folder) {
             foreach ($imageType as $type) {
                 $icon = $folder . DIRECTORY_SEPARATOR . $iconName . '.' . $type;
+
                 if (file_exists(
                     $path . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $icon
                 )
@@ -216,7 +221,7 @@ class NetworkingHelperExtension extends \Twig_Extension
                     $imagePath = 'bundles' . DIRECTORY_SEPARATOR . str_replace(
                         'bundle',
                         '',
-                        strtolower($bundle)
+                        strtolower($bundleName)
                     ) . DIRECTORY_SEPARATOR . $icon;
                 }
             }
@@ -594,6 +599,11 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function render()
     {
         return implode("\n    ", $this->collectedHtml) . "\n";
+    }
+
+    public function getGlobals()
+    {
+        return array('init_cms_editor' => $this->container->getParameter('networking_init_cms.init_cms_editor'));
     }
 
     /**

@@ -15,7 +15,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Yaml\Yaml;
-use Sonata\AdminBundle\DependencyInjection\SonataAdminExtension;
+
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -50,8 +50,7 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
-
-
+        $container->setParameter('networking_init_cms.init_cms_editor', $config['init_cms_editor']);
     }
 
     protected function addShortLabels(array $languages){

@@ -196,7 +196,7 @@ class Text implements ContentInterface
                     'label' => 'Text',
                     'property_path' => false,
                     'attr' => array(
-                        'class' => 'tinymce',
+                        'class' => 'wysiwyg-editor',
                         'style' => 'width: 620px; height: 200px;'
                     )
                 )

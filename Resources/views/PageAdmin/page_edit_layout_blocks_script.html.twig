@@ -17,12 +17,19 @@ var field_update_{{ id }} = function (event) {
     event.stopPropagation();
     var data = {};
     var form = jQuery(this).closest('form');
-
+    {% if init_cms_editor == 'ckeditor' %}
+    jQuery.each(CKEDITOR.instances, function () {
+        var editor = this;
+        editor.setData(editor.getData());
+        jQuery('#' + editor.name).html(editor.getData());
+    });
+    {% endif %}
     updateLayoutBlocks(form, data);
 
 };
 
 function updateLayoutBlocks(form, data) {
+
 
     var url = '{{ url('admin_networking_initcms_page_updateFormFieldElement', {
                             'code':      sonata_admin.admin.root.code,
@@ -30,6 +37,7 @@ function updateLayoutBlocks(form, data) {
                             'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
                             'uniqid':    sonata_admin.admin.root.uniqid
                         } + sonata_admin.field_description.getOption('link_parameters', {})) }}';
+
     doAjaxSubmit(url, form, data);
 
 }
@@ -200,23 +208,12 @@ function onAfterLoad() {
 
     apply_position_value_{{ id }}();
 
+    {% if init_cms_editor == 'ckeditor' %}
+    createCkeditor();
+    {% elseif init_cms_editor == 'redactor' %}
+    createRedactor();
+    {% endif %}
 
-    jQuery('.tinymce').each(function () {
-
-        jQuery(this).redactor({
-            focus:true,
-            imageGetJson:'{{ path('admin_networking_media_media_uploadedTextBlockImage') }}',
-            imageUpload:'{{ path('admin_networking_media_media_uploadTextBlockImage') }}',
-            imageUploadErrorCallback:function (editor, xhr) {
-                uploadError(xhr)
-            },
-            fileGetJson:'{{ path('admin_networking_media_media_uploadedTextBlockFile') }}',
-            fileUpload:'{{ path('admin_networking_media_media_uploadTextBlockFile') }}',
-            plugins:['cssPlugin'],
-            cssStyles:{'color-draft':'orange', 'white':'background white'},
-            minHeight:300
-        });
-    });
 
     jQuery('div#field_container_{{ id }} ul.sortable').sortable({
         handle:'i.icon-move',
@@ -225,7 +222,16 @@ function onAfterLoad() {
         placeholder:"ui-state-highlight",
         items:'li.networking-sortable-list',
         connectWith:".sortable",
+        start:function () {
+            {% if init_cms_editor == 'ckeditor' %}
+            destroyCkeditor();
+            {% endif %}
+        },
         stop:function (event, ui) {
+            {% if init_cms_editor == 'ckeditor' %}
+            createCkeditor();
+            {% endif %}
+
             apply_position_value_{{ id }}();
             saveLayoutBlockSort(function (xhr) {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
@@ -311,13 +317,13 @@ function onAfterLoad() {
     jQuery("select[id^='{{ id }}']").filter("select[id$='_classType']").bind('change', field_update_{{ id }});
 }
 
-
 (function ($) {
 
     // refresh the sortable option when a new element is added
     jQuery('#sonata-ba-field-container-{{ id }}').bind('sonata.add_element', function () {
         apply_position_value_{{ id }}();
     });
+
 
     onAfterLoad();
 

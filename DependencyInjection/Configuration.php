@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('init_cms_editor')->defaultValue('ckeditor')->end()
                 ->arrayNode('languages')
                     ->requiresAtLeastOneElement()
                     ->prototype('array')

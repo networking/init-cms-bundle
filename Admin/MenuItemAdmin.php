@@ -41,6 +41,19 @@ class MenuItemAdmin extends BaseAdmin
      */
     protected $linkTargets = array('_blank' => '_blank', '_self' => '_self', '_parent' => '_parent', '_top' => '_top');
 
+    /**
+     * @var array
+     */
+    protected $trackedActions = array('list');
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return 'icon-align-left';
+    }
+
 
     /**
      * @param \Sonata\AdminBundle\Route\RouteCollection $collection

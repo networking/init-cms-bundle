@@ -7,13 +7,23 @@
 // --------------------------------------------------
 @cssImagePath: '../../img';
 
+
+
+
+
+
+
+
+@baseFontSize:          14px;
+
 // Grays
 // -------------------------
 @black:                 #000;
-@grayDarker:            #222;
+@grayDarker:            #2c2c2c;
 @grayDark:              #333;
 @gray:                  #555;
-@grayLight:             #999;
+@initgray:              #848484;
+@grayLight:             #bcbcbc;
 @grayLighter:           #eee;
 @white:                 #fff;
 
@@ -34,12 +44,18 @@
 // -------------------------
 @bodyBackground:        @white;
 @textColor:             @grayDark;
+@textColorSoft: #bbb;
+@textColorVerySoft: #ccc; /*lighten(@textColor, 60%)*/
 
+@textColor2: @initgray;
 
 // Links
 // -------------------------
-@linkColor:             #08c;
-@linkColorHover:        darken(@linkColor, 15%);
+
+
+@linkColor:             #5cace1;
+@linkColor2:            #4b8dbb;
+@linkColorHover:        darken(@linkColor2, 15%);
 
 
 // Typography
@@ -73,7 +89,7 @@
 @btnBorder:                         #bbb;
 
 @btnPrimaryBackground:              @linkColor;
-@btnPrimaryBackgroundHighlight:     spin(@btnPrimaryBackground, 20%);
+@btnPrimaryBackgroundHighlight:     @linkColor2;
 
 @btnInfoBackground:                 #5bc0de;
 @btnInfoBackgroundHighlight:        #2f96b4;
@@ -112,7 +128,7 @@
 @dropdownLinkBackgroundHover:   @dropdownLinkBackgroundActive;
 
 @dropdownLinkColorActive:       @dropdownLinkColor;
-@dropdownLinkBackgroundActive:  @linkColor;
+@dropdownLinkBackgroundActive:  @grayLight;
 
 
 
@@ -175,12 +191,12 @@
 @navbarInverseBackgroundHighlight:       #222222;
 @navbarInverseBorder:                    #252525;
 
-@navbarInverseText:                      @grayLight;
-@navbarInverseLinkColor:                 @grayLight;
-@navbarInverseLinkColorHover:            @white;
-@navbarInverseLinkColorActive:           @navbarInverseLinkColorHover;
+@navbarInverseText:                      @initgray;
+@navbarInverseLinkColor:                 @initgray;
+@navbarInverseLinkColorHover:            @grayLight;
+@navbarInverseLinkColorActive:           @grayDark;
 @navbarInverseLinkBackgroundHover:       transparent;
-@navbarInverseLinkBackgroundActive:      @navbarInverseBackground;
+@navbarInverseLinkBackgroundActive:      @white;
 
 @navbarInverseSearchBackground:          lighten(@navbarInverseBackground, 25%);
 @navbarInverseSearchBackgroundFocus:     @white;
@@ -276,32 +292,6 @@
 @fluidGridColumnWidth768:      percentage(@gridColumnWidth768/@gridRowWidth768);
 @fluidGridGutterWidth768:      percentage(@gridGutterWidth768/@gridRowWidth768);
 
-
-//overwrites
-@black:                 #000;
-@grayDarker:            #2c2c2c;
-@grayDark:              #333;
-@gray:                  #555;
-@grayLight:             #bcbcbc;
-@grayLighter:           #eee;
-
-@bodyBackground:        @white;     //BootstrapVar
-@primaryButtonBackground: #999;     //BootstrapVar
-
-
-//@textColor: @grayDark; //BootstrapVar(#333)
-@textColorSoft: #bbb;
-@textColorVerySoft: #ccc; /*lighten(@textColor, 60%)*/
-
-@textColor2: #999;
-
-@linkColor:             #5cace1;
-@linkColorHover:        darken(@linkColor, 15%);
-
-@baseFontSize:          13px;
-
-@linkColor2: #666;
-
 @customColor1: orange;
 @customColor2: green;
 
@@ -319,23 +309,3 @@
 @baseFormFontSize: 12px;
 
 @baseFormLineHeight: 15px;
-
-@navbarBackgroundHighlight: #ffffff;
-
-@navbarInverseBackground:                #111111;
-@navbarInverseBackgroundHighlight:       #222222;
-@navbarInverseBorder:                    #252525;
-
-@navbarInverseText:                      @grayLight;
-@navbarInverseLinkColor:                 @grayLight;
-@navbarInverseLinkColorHover:            @grayLight;
-@navbarInverseLinkColorActive:           @navbarInverseLinkColorHover;
-@navbarInverseLinkBackgroundHover:       transparent;
-@navbarInverseLinkBackgroundActive:      #ffffff;
-
-@navbarInverseSearchBackground:          lighten(@navbarInverseBackground, 25%);
-@navbarInverseSearchBackgroundFocus:     @white;
-@navbarInverseSearchBorder:              @navbarInverseBackground;
-@navbarInverseSearchPlaceholderColor:    #ccc;
-
-@navbarInverseBrandColor:                @navbarInverseLinkColor;

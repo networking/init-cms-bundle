@@ -80,8 +80,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
         $entity = null;
 
-        $defaultHome = $draftRoute = $this->serviceContainer->get('router')->generate('networking_init_cms_default');
-
+        $defaultHome = $this->serviceContainer->get('router')->generate('networking_init_cms_default');
 
         if ($this->isLoggedIn) {
 
@@ -100,6 +99,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                     $entity = $sonataAdmin->getObject($id);
                 }
             } else {
+                $frontEnd = true;
                 // we are in the frontend
                 $entity = $request->get('_content');
             }
@@ -126,22 +126,38 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                 $language = $entity->getRoute()->getLocale();
             }
 
-            if(!isset($language)){
+            if (!isset($language)) {
                 $language = $request->getLocale();
             }
 
 
-            $draftPath = $this->router->generate('networking_init_view_draft', array('locale' => $language,'path' => urlencode($draftRoute)));
-            if($liveRoute)
-            {
-                $livePath = $this->router->generate('networking_init_view_live', array('locale' => $language, 'path' => urlencode($liveRoute)));
+            if ($draftRoute) {
+                $draftPath = $this->router->generate(
+                    'networking_init_view_draft',
+                    array('locale' => $language, 'path' => urlencode($draftRoute))
+                );
             }
+            if ($liveRoute) {
+                $livePath = $this->router->generate(
+                    'networking_init_view_live',
+                    array('locale' => $language, 'path' => urlencode($liveRoute))
+                );
+            }
+
+            $session = $this->serviceContainer->get('session');
+            $lastAction = false;
+            $lastActions = $session->get('_networking_initcms_admin_tracker');
+            $lastActions = json_decode($lastActions);
+
 
             // Set active url based on which status is in the session
 
-            if($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin){
-                $menu->setCurrentUri($dashboardUrl);
-            }elseif ($this->serviceContainer->get('session')->get(
+            if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
+
+                $lastAction = next($lastActions);
+
+                $menu->setCurrentUri($lastAction->url);
+            } elseif ($this->serviceContainer->get('session')->get(
                 '_viewStatus'
             ) === VersionableInterface::STATUS_PUBLISHED
             ) {
@@ -149,29 +165,51 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             } else {
                 $menu->setCurrentUri($draftPath);
             }
-            if($editPath && !$sonataAdmin){
+            if ($editPath && !$sonataAdmin) {
 
-                $menu->addChild('Edit', array('label' => ''  ,'linkAttributes' => array('class' =>'icon-pencil icon-white', 'style' => 'padding:0; margin: 10px 15px 10px;'), 'uri' => $editPath));
+                $menu->addChild(
+                    'Edit',
+                    array(
+                        'label' => '',
+                        'linkAttributes' => array(
+                            'class' => 'icon-pencil icon-white',
+                            'style' => 'padding:0; margin: 10px 15px 10px;'
+                        ),
+                        'uri' => $editPath
+                    )
+                );
             }
-            $menu->addChild('Admin', array('uri' => $dashboardUrl));
+
+            if(!$lastAction){
+                $lastAction = reset($lastActions);
+            }
+            $menu->addChild('Admin', array('uri' => '/app_dev.php' . $lastAction->url));
             $viewStatus = $this->serviceContainer->get('session')->get('_viewStatus');
             $translator = $this->serviceContainer->get('translator');
+            $webLink = $translator->trans('link.website_', array(), 'NetworkingInitCmsAdmin');
 
-            $dropdown = $this->createDropdownMenuItem(
-                        $menu,
-                        $translator->trans('link.website_'.$viewStatus, array(), 'NetworkingInitCmsAdmin'),
-                        true,
-                        array('icon' => 'caret')
-                    );
+            if ($editPath && !$sonataAdmin) {
+                $webLink = $translator->trans('link.website_' . $viewStatus, array(), 'NetworkingInitCmsAdmin');
 
-            if($draftPath){
-                $dropdown->addChild('Draft view', array('uri' => $draftPath, 'linkAttributes' =>array('class' => 'color-draft')));
             }
-            if($livePath){
+            $dropdown = $this->createDropdownMenuItem(
+                $menu,
+                $webLink,
+                true,
+                array('icon' => 'caret')
+            );
+
+            if ($draftPath) {
+                $dropdown->addChild(
+                    'Draft view',
+                    array('uri' => $draftPath, 'linkAttributes' => array('class' => 'color-draft'))
+                );
+            }
+            if ($livePath) {
                 $dropdown->addChild('Live view', array('uri' => $livePath));
             }
 
-            if(!$draftPath && !$livePath){
+            if (!$draftPath && !$livePath) {
                 $dropdown->addChild('Home Page', array('uri' => $defaultHome));
             }
 

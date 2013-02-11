@@ -52,6 +52,14 @@ class PageAdmin extends BaseAdmin
      */
     protected $repository = '';
 
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return 'icon-file-alt';
+    }
+
 
     /**
      * @param \Sonata\AdminBundle\Route\RouteCollection $collection
@@ -105,13 +113,11 @@ class PageAdmin extends BaseAdmin
 
         $this->canCreateHomepage = (!$homePage) ? true : false;
 
-        if(!$this->canCreateHomepage){
-            if(!$this->getSubject()->getId() || !$this->getSubject()->isHome())
-            {
+        if (!$this->canCreateHomepage) {
+            if (!$this->getSubject()->getId() || !$this->getSubject()->isHome()) {
                 $validationGroups[] = 'not_home';
             }
         }
-
 
 
         $this->formOptions['validation_groups'] = $validationGroups;
@@ -156,13 +162,13 @@ class PageAdmin extends BaseAdmin
         $formMapper->with('page_settings');
 
         if ($this->canCreateHomepage && !$this->getSubject()->getId()) {
-                   $formMapper->add(
-                       'isHome',
-                       null,
-                       array('label_render' => false, 'required' => false),
-                       array('inline_block' => true)
-                   );
-               }
+            $formMapper->add(
+                'isHome',
+                null,
+                array('label_render' => false, 'required' => false),
+                array('inline_block' => true)
+            );
+        }
 
         if (!$this->getSubject()->getId()) {
             $formMapper
@@ -184,25 +190,26 @@ class PageAdmin extends BaseAdmin
             array('help_inline' => 'working_title.helper.text')
         );
 
-        if (!$this->canCreateHomepage ) {
+        if (!$this->canCreateHomepage) {
 
-            if(!$this->getSubject()->getId() || !$this->getSubject()->isHome())
-            $formMapper
-                ->add(
-                'parent',
-                'networking_type_autocomplete',
-                array(
-                    'help_inline' => 'parent.helper.text',
-                    'attr' => array('style' => "width:220px"),
-                    'property' => 'AdminTitle',
-                    'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
-                    'required' => false,
-                    'query_builder' => $this->repository->getParentPagesQuery(
-                        $this->pageLocale,
-                        $this->getSubject()->getId()
-                    ),
-                )
-            );
+            if (!$this->getSubject()->getId() || !$this->getSubject()->isHome()) {
+                $formMapper
+                    ->add(
+                    'parent',
+                    'networking_type_autocomplete',
+                    array(
+                        'help_inline' => 'parent.helper.text',
+                        'attr' => array('style' => "width:220px"),
+                        'property' => 'AdminTitle',
+                        'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
+                        'required' => false,
+                        'query_builder' => $this->repository->getParentPagesQuery(
+                            $this->pageLocale,
+                            $this->getSubject()->getId()
+                        ),
+                    )
+                );
+            }
         }
 
         $requireUrl = $this->canCreateHomepage ? false : true;
@@ -220,7 +227,7 @@ class PageAdmin extends BaseAdmin
                 ),
                 array('display_method' => 'getFullPath')
             );
-        } elseif(!$this->getSubject()->getId()) {
+        } elseif (!$this->getSubject()->getId()) {
             $formMapper
                 ->add(
                 'url',
@@ -305,28 +312,29 @@ class PageAdmin extends BaseAdmin
     {
         $datagridMapper
             ->add(
-                'locale',
-                'doctrine_orm_callback',
-                array(
-                    'callback' => array(
-                        $this,
-                        'getByLocale'
-                    )
-                ),
-                'choice',
-                array(
-                    'empty_value' => false,
-                    'choices' => $this->getLocaleChoices(),
-                    'preferred_choices' => array($this->getDefaultLocale())
+            'locale',
+            'doctrine_orm_callback',
+            array(
+                'callback' => array(
+                    $this,
+                    'getByLocale'
                 )
+            ),
+            'choice',
+            array(
+                'empty_value' => false,
+                'choices' => $this->getLocaleChoices(),
+                'preferred_choices' => array($this->getDefaultLocale())
             )
+        )
             ->add('workingTitle', 'networking_init_cms_simple_string')
             ->add(
-                'path',
-                'doctrine_orm_callback',
-                array('callback' => array($this, 'matchPath'), 'hidden' => true)
-            )
-            ->add('status',
+            'path',
+            'doctrine_orm_callback',
+            array('callback' => array($this, 'matchPath'), 'hidden' => true)
+        )
+            ->add(
+            'status',
             'doctrine_orm_choice',
             array('hidden' => true),
             'sonata_type_translatable_choice',

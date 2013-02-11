@@ -94,7 +94,7 @@ file that was distributed with this source code.
                         {% endif %}
                         {% if admin.id(object) %}
                             <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
-                                   value="{{ 'btn_update_and_edit_again'|trans({}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsAdmin') }}"/>
                             <input type="submit" class="btn" name="btn_update_and_list"
                                    value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsAdmin') }}"/>
 

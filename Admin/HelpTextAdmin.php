@@ -18,6 +18,19 @@ use Sonata\AdminBundle\Form\FormMapper;
 class HelpTextAdmin extends BaseAdmin
 {
     /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'cms/help';
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return 'icon-question-sign';
+    }
+
+    /**
      * @param \Sonata\AdminBundle\Datagrid\ListMapper $listMapper
      */
     protected function configureListFields(ListMapper $listMapper)
@@ -69,7 +82,7 @@ class HelpTextAdmin extends BaseAdmin
             'textarea',
             array(
                 'attr' => array(
-                    'class' => 'tinymce',
+                    'class' => 'wysiwyg-editor',
                 )
             )
         );
@@ -100,7 +113,7 @@ class HelpTextAdmin extends BaseAdmin
             )
 
         );
-       // ->add('title', null, array('hidden' => true), null, array())
+        // ->add('title', null, array('hidden' => true), null, array())
         //->add('text', null, array(), null, array());
 
     }
@@ -153,7 +166,7 @@ class HelpTextAdmin extends BaseAdmin
             ->assertNotNull(array())
             ->assertNotBlank()
             ->end();
-        if(strlen(strip_tags($object->getText())) <= 5){
+        if (strlen(strip_tags($object->getText())) <= 5) {
             $errorElement
                 ->with('textMinLength')
                 ->addViolation($this->translator->trans('helptext.text.minlength', array(), $this->translationDomain))

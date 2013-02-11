@@ -22,15 +22,13 @@ legend {
   display: block;
   width: 100%;
   padding: 0;
-  color: @grayDark;
+//  color: @grayDark;
   border: 0;
   border-bottom: 1px solid #e5e5e5;
+  font-size: @fontSizeSmall;
 
-  // Small
-  small {
-    font-size: @baseFormLineHeight * .75;
+//    font-size: @baseFormLineHeight * .75;
     color: @grayLight;
-  }
 }
 
 // Set font for forms
@@ -382,6 +380,7 @@ select:focus:required:invalid {
 .help-block,
 .help-inline {
   color: lighten(@textColor, 15%); // lighten the text some for contrast
+  font-size: @fontSizeSmall;
 }
 
 .help-block {

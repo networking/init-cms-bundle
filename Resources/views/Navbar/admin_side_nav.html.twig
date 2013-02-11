@@ -1,0 +1,84 @@
+{% if app.security.token and is_granted('ROLE_SONATA_ADMIN') %}
+    {# Start admin menu #}
+    {% for group in admin_pool.dashboardgroups %}
+        {% if loop.first %}
+            <div class="nav-custom">
+            {% set small = false %}
+        {% else %}
+            <div class="nav-custom nav-custom-small" style="margin-top: 50px;">
+            {% set small = true %}
+        {% endif %}
+        <ul>
+            {% if loop.first %}
+                <li class="first-level {% if admin is not defined %}active{% endif %}"
+                    style="margin-bottom: 0px;">
+                    <a href="{{ url('sonata_admin_dashboard') }}">
+
+                        {% if admin is not defined %}
+                            <div class="pull-right" style="position:relative;">
+                                <div class="active-corner-top"></div>
+                            </div>
+                        {% endif %}
+                        <div class="pull-left"><i class="icon icon-dashboard icon-large"></i>
+                        </div>
+                        <div class="pull-left first-level-text">{{ 'admin.menu.dashboard'|trans({}, 'PageAdmin') }}</div>
+                        <div class="clearfix"></div>
+                        {% if admin is not defined %}
+                            <div class="pull-right" style="position:relative;">
+                                <div class="active-corner-bottom"></div>
+                            </div>
+                        {% endif %}
+
+                    </a>
+                </li>
+            {% endif %}
+            {% for admin in group.items %}
+                {% if currentAdmin is defined %}
+                    {% if admin.code in currentAdmin.getChildren|keys or admin.code == currentAdmin.code %}
+                        {% set isActive = true %}
+                    {% else %}
+                        {% set isActive = false %}
+                    {% endif %}
+                {% endif %}
+                {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
+                    <li class="{% if isActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
+                        <div class="pull-left ">
+                            {% if admin.getIcon() is defined %}
+                                <i class="icon {{ admin.getIcon() }} icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                            {% else %}
+                                <i class="icon icon-circle-blank icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                            {% endif %}
+                         </div>
+                        <a href="{{ admin.generateUrl('list') }}">
+                            <div class="pull-left first-level-text">{{ admin.label|trans({}, admin.translationDomain) }}</div>
+                        </a>
+                        {% if isActive %}
+                            <div class="pull-right" style="position:relative;">
+                                <div class="active-corner-top"></div>
+                            </div>
+                        {% endif %}
+                        <div class="clearfix"></div>
+                        {% if admin.hasChildren %}
+                            <ul class="ul-second-level">
+                                {% for subadmin in admin.getChildren %}
+                                    <li class="second-level">
+                                        <a href="{{ subadmin.generateUrl('list') }}">{{ subadmin.label|trans({}, subadmin.translationDomain) }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% if isActive %}
+                            <div class="pull-right" style="position:relative;">
+                                <div class="active-corner-bottom"></div>
+                            </div>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        </div>
+    {% endfor %}
+
+    {# End admin menu #}
+{% endif %}

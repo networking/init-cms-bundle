@@ -14,9 +14,10 @@ file that was distributed with this source code.
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/a2lixtranslationform/css/a2lix_translation.css') }}" type="text/css"
           media="all"/>
+    {% if init_cms_editor == 'redactor' %}
     <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/js/redactor/redactor.css') }}" type="text/css"
           media="all"/>
-
+    {% endif %}
 {% endblock stylesheets %}
 
 
@@ -86,8 +87,13 @@ file that was distributed with this source code.
     <!-- end modal page form -->
 {% endblock %}
 
-{% block footer %}
+{% block before_body_end %}
+{% if init_cms_editor == 'ckeditor' %}
+    <script type="text/javascript" src="{{ asset('/bundles/ivoryckeditor/ckeditor.js') }}"></script>
+{% elseif init_cms_editor == 'redactor' %}
     <script src="{{ asset('/bundles/networkinginitcms/js/redactor/redactor.js') }}"></script>
     <script src="{{ asset('/bundles/networkinginitcms/js/redactor/redactor_extensions.js') }}"></script>
-    {{ parent() }}
+{% endif %}
+{{ parent() }}
 {% endblock %}
+

@@ -128,5 +128,4 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
     {
         return $this->trackedActions;
     }
-
 }
