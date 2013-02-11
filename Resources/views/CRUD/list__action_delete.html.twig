@@ -11,7 +11,7 @@ file that was distributed with this source code.
 
 
 {% if admin.isGranted('DELETE', object) and admin.hasRoute('delete') and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
-    <a href="{{ admin.generateObjectUrl('delete', object) }}" class="btn btn-small button-in-row show-tooltip dialog-link" id="{{ admin.label }}_{{ object.id }}" data-original-title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}" data-toggle="dropdown" title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}"><i class="icon-trash"></i>
+    <a href="{{ admin.generateObjectUrl('delete', object) }}" class="btn btn-small button-in-row show-tooltip dialog-link" id="{{ admin.getClassnameLabel() }}_{{ object.id }}" data-original-title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}" data-toggle="dropdown" title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}"><i class="icon-trash"></i>
    </a>
 {% endif %}
 
