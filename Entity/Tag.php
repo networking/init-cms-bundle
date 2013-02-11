@@ -51,27 +51,6 @@ class Tag
     protected $slug;
 
     /**
-     * @var boolean $active
-     *
-     * @ORM\Column(name="active", type="boolean")
-     */
-    protected $active;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Page", mappedBy="tags")
-     * @OrderBy({"title" = "ASC"})
-     */
-    protected $pages;
-
-    /**
-     *
-     */
-    public function __construct()
-    {
-        $this->pages = new ArrayCollection();
-    }
-
-    /**
      * Get id
      *
      * @return integer
@@ -126,52 +105,6 @@ class Tag
     public function getSlug()
     {
         return $this->slug;
-    }
-
-    /**
-     * Set active
-     *
-     * @param  boolean $active
-     * @return Tag
-     */
-    public function setActive($active)
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
-    /**
-     * Get active
-     *
-     * @return boolean
-     */
-    public function getActive()
-    {
-        return $this->active;
-    }
-
-    /**
-     * Set page
-     *
-     * @param  Page $page
-     * @return Tag
-     */
-    public function addPages($page)
-    {
-        $this->pages->add($page);
-
-        return $this;
-    }
-
-    /**
-     * Get page
-     *
-     * @return ArrayCollection
-     */
-    public function getPages()
-    {
-        return $this->pages;
     }
 
     /**

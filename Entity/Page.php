@@ -216,7 +216,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var ArrayCollection $tags
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="pages")
+     * @ORM\ManyToMany(targetEntity="Tag")
      * @ORM\JoinTable(name="page_tags")
      * @OrderBy({"name" = "ASC"})
      */
