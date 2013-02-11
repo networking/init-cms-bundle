@@ -33,8 +33,8 @@ class TagAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('name')
-            ->add('active', null, array('required' => false));
+            ->add('name');
+//            ->add('active', null, array('required' => false));
     }
 
     /**
@@ -53,16 +53,14 @@ class TagAdmin extends Admin
     {
         $listMapper
             ->addIdentifier('name')
-            ->add('slug')
-            ->add('active')
             ->add(
             '_action',
             'actions',
             array(
                 'label' => ' ',
                 'actions' => array(
-                    'edit' => array(),
-                    'delete' => array()
+                    'delete' => array(),
+                    'edit' => array()
                 )
             )
         );
@@ -80,9 +78,6 @@ class TagAdmin extends Admin
             ->assertNotBlank()
             ->assertMaxLength(array('limit' => 255))
             ->end();
-        $errorElement
-            ->with('active')
-            ->assertNotNull(array())
-            ->end();
+
     }
 }
