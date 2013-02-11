@@ -1,4 +1,6 @@
 networking_init_cms:
+    languages:
+        - {label: English, locale: en_US}
     content_types:
         - { name: 'Text' , class: 'Networking\InitCmsBundle\Entity\Text'}
         - { name: 'Gallery' , class: 'Networking\GalleryBundle\Entity\Gallery'}
