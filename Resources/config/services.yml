@@ -253,68 +253,68 @@ services:
         class: Networking\InitCmsBundle\Component\Menu\NavbarMenuBuilder
         scope: request
         arguments: [ '@knp_menu.factory', '@security.context', '@service_container' ]
-
-
-# Create the left main menu and right main menu for the frontend
-    networking_init_cms.menu.frontend_main_menu_left:
-        class: Knp\Menu\MenuItem
-        factory_service: networking_init_cms.menu.navbar_menu_builder
-        factory_method: createMainMenu
-        arguments: [ '@request', path: "The main menu"   ]
-        scope: request
-        tags:
-            - { name: knp_menu.menu, alias: main }
-
-    networking_init_cms.menu.frontend_main_menu_login:
-        class: Knp\Menu\MenuItem
-        factory_service: networking_init_cms.menu.navbar_menu_builder
-        factory_method: createCMSMenu
-        arguments: [ '@request', %networking_init_cms.page.languages% ]
-        scope: request
-        tags:
-            - { name: knp_menu.menu, alias: loginMenu }
-
-    networking_init_cms.menu.frontend_main_menu_language:
-        class: Knp\Menu\MenuItem
-        factory_service: networking_init_cms.menu.navbar_menu_builder
-        factory_method: createFrontendLangMenu
-        arguments: [ '@request', %networking_init_cms.page.languages% ]
-        scope: request
-        tags:
-            - { name: knp_menu.menu, alias: langMenu }
-
-    networking_init_cms.menu.frontend_top_menu_template:
-        class: %mopa_bootstrap.navbar.generic%
-        scope: request
-        arguments:
-            - { pageMenu: @networking_init_cms.menu.frontend_main_menu_left=, loginMenu: @networking_init_cms.menu.frontend_main_menu_login=, langMenu: @networking_init_cms.menu.frontend_main_menu_language=}
-            - {}
-            - { title: "The Olive Tree", titleRoute: "networking_init_cms_home", fixedTop: true, isFluid: false, template: NetworkingInitCmsBundle:Navbar:navbar.html.twig }
-        tags:
-            - { name: mopa_bootstrap.navbar, alias: cmsNavbar }
-
-# Create the side menu for the frontend
-    networking_init_cms.menu.frontend_sub_menu:
-        class: Knp\Menu\MenuItem
-        factory_service: networking_init_cms.menu.navbar_menu_builder
-        factory_method: createNavbarsSubnavMenu
-        arguments: [ '@request']
-        scope: request
-        tags:
-            - { name: knp_menu.menu, alias: subMenu }
-
-
-    networking_init_cms.menu.frontend_sub_menu_template:
-        class: %mopa_bootstrap.navbar.generic%
-        arguments:
-            # first argument: a named array of menues:
-            - { menu: @networking_init_cms.menu.frontend_sub_menu= }
-            - {}
-            # third argument: a named array of options
-            - { template: NetworkingInitCmsBundle:Navbar:subnavbar.html.twig }
-        tags:
-            # The alias is used to retrieve the navbar in templates
-            - { name: mopa_bootstrap.navbar, alias: subNavbar }
+#
+#
+## Create the left main menu and right main menu for the frontend
+#    networking_init_cms.menu.frontend_main_menu_left:
+#        class: Knp\Menu\MenuItem
+#        factory_service: networking_init_cms.menu.navbar_menu_builder
+#        factory_method: createMainMenu
+#        arguments: [ '@request', path: "The main menu"   ]
+#        scope: request
+#        tags:
+#            - { name: knp_menu.menu, alias: main }
+#
+#    networking_init_cms.menu.frontend_main_menu_login:
+#        class: Knp\Menu\MenuItem
+#        factory_service: networking_init_cms.menu.navbar_menu_builder
+#        factory_method: createCMSMenu
+#        arguments: [ '@request', %networking_init_cms.page.languages% ]
+#        scope: request
+#        tags:
+#            - { name: knp_menu.menu, alias: loginMenu }
+#
+#    networking_init_cms.menu.frontend_main_menu_language:
+#        class: Knp\Menu\MenuItem
+#        factory_service: networking_init_cms.menu.navbar_menu_builder
+#        factory_method: createFrontendLangMenu
+#        arguments: [ '@request', %networking_init_cms.page.languages% ]
+#        scope: request
+#        tags:
+#            - { name: knp_menu.menu, alias: langMenu }
+#
+#    networking_init_cms.menu.frontend_top_menu_template:
+#        class: %mopa_bootstrap.navbar.generic%
+#        scope: request
+#        arguments:
+#            - { pageMenu: @networking_init_cms.menu.frontend_main_menu_left=, loginMenu: @networking_init_cms.menu.frontend_main_menu_login=, langMenu: @networking_init_cms.menu.frontend_main_menu_language=}
+#            - {}
+#            - { title: "The Olive Tree", titleRoute: "networking_init_cms_home", fixedTop: true, isFluid: false, template: NetworkingInitCmsBundle:Navbar:navbar.html.twig }
+#        tags:
+#            - { name: mopa_bootstrap.navbar, alias: cmsNavbar }
+#
+## Create the side menu for the frontend
+#    networking_init_cms.menu.frontend_sub_menu:
+#        class: Knp\Menu\MenuItem
+#        factory_service: networking_init_cms.menu.navbar_menu_builder
+#        factory_method: createNavbarsSubnavMenu
+#        arguments: [ '@request']
+#        scope: request
+#        tags:
+#            - { name: knp_menu.menu, alias: subMenu }
+#
+#
+#    networking_init_cms.menu.frontend_sub_menu_template:
+#        class: %mopa_bootstrap.navbar.generic%
+#        arguments:
+#            # first argument: a named array of menues:
+#            - { menu: @networking_init_cms.menu.frontend_sub_menu= }
+#            - {}
+#            # third argument: a named array of options
+#            - { template: NetworkingInitCmsBundle:Navbar:subnavbar.html.twig }
+#        tags:
+#            # The alias is used to retrieve the navbar in templates
+#            - { name: mopa_bootstrap.navbar, alias: subNavbar }
 
 # Create the language menu for the admin area
     networking_init_cms.menu.admin_lang_menu:

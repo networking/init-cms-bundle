@@ -83,13 +83,14 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      * @param $path
      * @return \Knp\Menu\ItemInterface
      */
-    public function createMainMenu(Request $request, $path)
+    public function createMainMenu(Request $request, $path, $classes= '')
     {
 
         /** @var $repository MenuItemRepository */
         $repository = $this->serviceContainer->get('doctrine')
             ->getRepository('NetworkingInitCmsBundle:MenuItem');
         $menu = $this->createNavbarMenuItem();
+        $menu->setChildrenAttribute('class', $classes);
         $menu->setCurrentUri($request->getRequestUri());
 
         /** @var $mainMenu Menu */
@@ -146,15 +147,15 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
 
     /**
      * Creates the login and change language navigation for the right side of the top frontend navigation
-     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $languages
+     * @param string $classes
      * @return \Knp\Menu\ItemInterface
      */
-    public function createFrontendLangMenu(Request $request, $languages)
+    public function createFrontendLangMenu(Request $request, $languages, $classes = 'nav pull-right')
     {
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', 'nav pull-right');
+        $menu->setChildrenAttribute('class', $classes);
 
 
         $this->createNavbarsLangMenu($menu, $languages, $request->getLocale());

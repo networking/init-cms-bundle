@@ -87,7 +87,7 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
      */
     protected function getFirstTemplate()
     {
-        $templates = $this->container->getParameter('networking_init_cms.page.templates');
+        $templates = $this->container->getParameter('sandbox_init_cms.page.templates');
 
         foreach ($templates as $key => $template) {
             return $key;
