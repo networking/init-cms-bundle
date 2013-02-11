@@ -43,7 +43,7 @@ class LayoutBlockAdmin extends BaseAdmin
         $entityManager = $this->container->get('Doctrine')->getEntityManager();
         $transformer = new PageToNumberTransformer($entityManager);
         $formMapper
-                ->add('isActive', 'checkbox', array('required' => false, 'label_render' => false))
+//                ->add('isActive', 'checkbox', array('required' => false, 'label_render' => false))
                 ->add('zone',
                     'hidden'
                     )
