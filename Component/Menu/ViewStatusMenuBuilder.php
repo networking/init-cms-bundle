@@ -190,8 +190,16 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
             if(!$lastAction){
                 $lastAction = reset($lastActions);
+
+                if($lastAction){
+                    $menu->addChild('Admin', array('uri' => '/app_dev.php' . $lastAction->url));
+                }else{
+                    $menu->addChild('Admin', array('uri' => $dashboardUrl));
+                }
+            }else{
+                $menu->addChild('Admin', array('uri' => '/app_dev.php' . $lastAction->url));
             }
-            $menu->addChild('Admin', array('uri' => '/app_dev.php' . $lastAction->url));
+
             $viewStatus = $this->serviceContainer->get('session')->get('_viewStatus');
             $translator = $this->serviceContainer->get('translator');
             $webLink = $translator->trans('link.website_', array(), 'NetworkingInitCmsAdmin');
