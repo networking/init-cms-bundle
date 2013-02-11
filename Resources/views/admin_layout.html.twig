@@ -189,7 +189,7 @@ file that was distributed with this source code.
                         {% endif %}
                         {% if action is defined and action == 'edit' %}
                             {% set settings = {} %}
-                            {% if object.locale %}
+                            {% if object.locale is defined %}
                                 {% set settings = {'locale': object.locale} %}
                             {% endif %}
 
