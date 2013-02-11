@@ -10,6 +10,18 @@
                 <source>filter.label_name</source>
                 <target>Tag name</target>
             </trans-unit>
+            <trans-unit id="form.label_name">
+                <source>form.label_name</source>
+                <target>Tag Name</target>
+            </trans-unit>
+            <trans-unit id="list.label_name">
+                <source>list.label_name</source>
+                <target>Tag Name</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_tag_delete">
+                <source>breadcrumb.link_tag_delete</source>
+                <target>Delete this tag</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

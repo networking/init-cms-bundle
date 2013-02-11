@@ -66,6 +66,10 @@
                 <source>btn_create</source>
                 <target>Create</target>
             </trans-unit>
+            <trans-unit id="btn_cancel">
+                <source>btn_cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
             <trans-unit id="btn_preview">
                 <source>btn_preview</source>
                 <target>Preview %admin_label%</target>
