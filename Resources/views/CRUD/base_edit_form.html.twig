@@ -87,7 +87,7 @@ file that was distributed with this source code.
                         {% endif %}
                     {% else %}
                         <a class="btn"
-                           href="{{ admin.generateObjectUrl('list', object) }}">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</a>
+                           href="{{ admin.generateObjectUrl('list', object) }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
                         {% if admin.supportsPreviewMode %}
                             <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
                                    value="{{ 'btn_preview'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>

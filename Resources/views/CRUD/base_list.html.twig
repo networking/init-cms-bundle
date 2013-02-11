@@ -19,6 +19,9 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
 
 {% block list_table %}
+    {% if not  app.request.isxmlhttprequest %}
+        <div id="objectList">
+    {% endif %}
     {% set batchactions = admin.batchactions %}
     {% if admin.datagrid.results|length > 0 %}
         <form action="{{ admin.generateUrl('batch', admin.filterParameters) }}" method="POST">
@@ -150,6 +153,10 @@ file that was distributed with this source code.
         <p class="notice">
             {{ 'no_result'|trans({}, 'SonataAdminBundle') }}
         </p>
+    {% endif %}
+    {% if not  app.request.isxmlhttprequest %}
+        <div class="modal hide fade" tabindex="-1" role="dialog" id="list_dialog"></div>
+        </div>
     {% endif %}
 {% endblock %}
 

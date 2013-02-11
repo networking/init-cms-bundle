@@ -17,6 +17,67 @@ file that was distributed with this source code.
 {% block list_table %}
     {{ parent() }}
     <script>
+
+        var listDialog;
+
+        function initializeDialog() {
+            if (!listDialog) {
+                listDialog = jQuery('#list_dialog');
+                listDialog.modal({
+                    height:'auto',
+                    width:650,
+                    show:false,
+                });
+                listDialog.on('hide', function () {
+                    jQuery('input[type=submit]', this).off();
+                });
+                jQuery(document.body).append(listDialog);
+                jQuery('form', listDialog).live('submit', submitAjaxForm);
+            }
+        }
+
+        function createAjaxDialog(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            initializeDialog();
+
+            var a = jQuery(this);
+            var url = a.attr('href');
+            if (!url) {
+                url = a.attr('ref');
+            }
+
+            jQuery.ajax({
+                url:url,
+                dataType:'html',
+                success:function (html) {
+                    // populate the popup container
+                    listDialog.html(html);
+                    listDialog.modal('show');
+                }
+            });
+        }
+
+        function submitAjaxForm(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var form = jQuery(this);
+
+            jQuery(form).ajaxSubmit({
+                type:form.attr('method'),
+                url:form.attr('action'),
+                success:function (xhr) {
+                    jQuery('#objectList').html(xhr);
+                    listDialog.modal('hide');
+                },
+                error:function (xhr, textStatus, errorThrown) {
+                    listDialog.html(xhr.responseText);
+                }
+            });
+        }
+
         $(document).ready(function () {
 
             var ua = navigator.userAgent,
@@ -30,6 +91,8 @@ file that was distributed with this source code.
             $(".actions-toggle-close").live('click', function () {
                 $(this).parent().fadeToggle('fast');
             });
+            $('.dialog-link').bind('click', createAjaxDialog);
+
             $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
 
             $('#hidden_filters').on('show hide', function () {

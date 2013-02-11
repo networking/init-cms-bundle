@@ -34,7 +34,7 @@ file that was distributed with this source code.
                 <h3>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h3>
             </div>
         {% else %}
-            <h1>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h1>
+            <h3>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h3>
         {% endif %}
 
         <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
@@ -45,10 +45,11 @@ file that was distributed with this source code.
                 <input type="hidden" value="DELETE" name="_method"/>
                 {% if app.request.isxmlhttprequest %}
                     <button class="btn" data-dismiss="modal"
-                            aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+                            aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsAdmin') }}</button>
                     <input type="submit" class="btn btn-danger"
                            value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
                 {% else %}
+                    <a href="{{ admin.generateObjectUrl('list', object) }}" class="btn" >{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
                     <input type="submit" class="btn btn-danger"
                            value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
 
@@ -56,7 +57,7 @@ file that was distributed with this source code.
                         {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
 
                         <a class="btn btn-success"
-                           href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
+                           href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
                     {% endif %}
                 {% endif %}
             </form>
