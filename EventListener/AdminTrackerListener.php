@@ -72,7 +72,7 @@ class AdminTrackerListener
                             $request->getSession(),
                             '_networking_initcms_admin_tracker',
                             array(
-                                'url' => $request->getPathInfo(),
+                                'url' => $request->getRequestUri(),
                                 'controller' => $this->admin->getBaseControllerName(),
                                 'action' => $trackedAction
                             )
