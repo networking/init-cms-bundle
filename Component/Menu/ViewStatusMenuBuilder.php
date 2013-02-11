@@ -145,26 +145,28 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             }
 
             $session = $this->serviceContainer->get('session');
-            $lastAction = false;
+            $lastActionUrl = $dashboardUrl;
             $lastActions = $session->get('_networking_initcms_admin_tracker');
-            $lastActions = json_decode($lastActions);
 
-            if(!is_array($lastActions)){
-                $lastActions = array();
+
+            if($lastActions){
+                $lastActionArray =  json_decode($lastActions);
+                if(count($lastActionArray)){
+                   if($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin){
+                       $lastAction = next($lastActionArray);
+                   } else {
+                       $lastAction = reset($lastActionArray);
+                   }
+                    if($lastAction){
+                        $lastActionUrl = $lastAction->url;
+                    }
+                }
             }
 
 
             // Set active url based on which status is in the session
-
             if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
-
-                $lastAction = next($lastActions);
-                if($lastAction){
-                    $menu->setCurrentUri($lastAction->url);
-                }else{
-                    $menu->setCurrentUri($dashboardUrl);
-                }
-
+                    $menu->setCurrentUri($lastActionUrl);
             } elseif ($this->serviceContainer->get('session')->get(
                 '_viewStatus'
             ) === VersionableInterface::STATUS_PUBLISHED
@@ -188,17 +190,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                 );
             }
 
-            if(!$lastAction){
-                $lastAction = reset($lastActions);
-
-                if($lastAction){
-                    $menu->addChild('Admin', array('uri' => '/app_dev.php' . $lastAction->url));
-                }else{
-                    $menu->addChild('Admin', array('uri' => $dashboardUrl));
-                }
-            }else{
-                $menu->addChild('Admin', array('uri' => '/app_dev.php' . $lastAction->url));
-            }
+            $menu->addChild('Admin', array('uri' => $lastActionUrl));
 
             $viewStatus = $this->serviceContainer->get('session')->get('_viewStatus');
             $translator = $this->serviceContainer->get('translator');
