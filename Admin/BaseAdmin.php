@@ -83,6 +83,12 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
         }else{
             $locale = $this->getRequest()->get('locale');
         }
+        //if the locale is posted in the filter
+        if(is_array($locale)){
+            if(array_key_exists('value', $locale)){
+                $locale = $locale['value'];
+            }
+        }
 
         if (!array_key_exists($locale, $this->getLocaleChoices())) {
             if(strlen($locale) > 2){
