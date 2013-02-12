@@ -1,0 +1,32 @@
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+.sortable ul {
+	margin: 0 0 0 25px;
+	padding: 0;
+	list-style-type: none;
+}
+.sortable ul.ui-sortable{
+    margin: 0;
+}
+.sortable li {
+	margin: 5px 0 0 0;
+	/*padding: 0;*/
+}
+div.menu_item.info{
+    background-color: #D9EDF7;
+}
+
+.placeholder {
+	border: 1px dashed #bdbdbd;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.mjs-nestedSortable-error {
+	background: #fbe3e4;
+	border-color: transparent;
+}
