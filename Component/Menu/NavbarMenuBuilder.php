@@ -187,7 +187,7 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
      * @param  string                                    $path
      * @return bool|\Knp\Menu\ItemInterface
      */
-    public function createNavbarsSubnavMenu(Request $request, $path = '#main#')
+    public function createNavbarsSubnavMenu(Request $request, $path, $classes = 'nav nav-tabs nav-stacked')
     {
         $root = null;
         /** @var $repository MenuItemRepository */
@@ -202,6 +202,8 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
             array('name' => $path, 'locale' => $this->serviceContainer->get('request')->getLocale())
         );
 
+
+
         if (!$mainMenu) {
             return $menu;
         }
@@ -215,7 +217,7 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
         $iterator = new MenuSubItemFilterIterator($menuIterator, $request->getPathInfo());
 
         foreach ($iterator as $item) {
-            $root = $item->getParentByLevel(2);
+            $root = $item->getParentByLevel(1);
         }
 
         if (!$root) {
@@ -227,7 +229,7 @@ class NavbarMenuBuilder extends AbstractNavbarMenuBuilder
             \RecursiveIteratorIterator::SELF_FIRST
         );
 
-        $menu->setChildrenAttribute('class', 'nav nav-tabs nav-stacked');
+        $menu->setChildrenAttribute('class', $classes);
 
         foreach ($menuIterator as $childNode) {
             if ($menuIterator->getDepth() > 0) {
