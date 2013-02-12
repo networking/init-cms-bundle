@@ -92,7 +92,10 @@ class MenuItemAdmin extends BaseAdmin
 
         if ($rootId = $this->getRequest()->get('root_id')) {
             $root = $er->find($rootId);
-        } else {
+        }
+        elseif($id){
+            $root = $er->find($this->getSubject()->getRoot());
+        }else {
             $root = $er->findOneBy(array('isRoot' => 1, 'locale' => $locale));
         }
 
