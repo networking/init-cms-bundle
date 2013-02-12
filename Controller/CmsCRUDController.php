@@ -71,6 +71,12 @@ class CmsCRUDController extends CRUDController
         }
     }
 
+    /**
+     * @param string $view
+     * @param array $parameters
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function render($view, array $parameters = array(), Response $response = null)
     {
         if (array_key_exists('action', $parameters) && $parameters['action'] == 'edit') {
