@@ -69,7 +69,7 @@ services:
             - [setLanguages, [%networking_init_cms.page.languages%]]
             - [setContainer, [@service_container]]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Pages, label_translator_strategy: sonata.admin.label.strategy.underscore }
+            - { name: sonata.admin, manager_type: orm, label: Pages, label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
 
 # Tag Admin Controller
     networking_init_cms.page.admin.tag:
@@ -112,7 +112,7 @@ services:
             - [setContainer, [@service_container]]
             - [setSubClasses, [{"menu": Networking\InitCmsBundle\Entity\MenuItem, "menu item": Networking\InitCmsBundle\Entity\MenuItem}]]
         tags:
-            - { name: sonata.admin, manager_type: orm, icon: happy, label: "Menus", label_translator_strategy: sonata.admin.label.strategy.underscore }
+            - { name: sonata.admin, manager_type: orm, icon: happy, label: "Menus", label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
 
 # Twig tinymce live
     networking_init_cms.twig.extension:
