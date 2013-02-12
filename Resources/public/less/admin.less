@@ -618,13 +618,18 @@ li.table-row-style .menu-item-link {
       box-shadow: 0 16px 16px 0px #fcfcfc;
   }
 
-  .nav-custom li.first-level.active a, .nav-custom li.first-level.active i {
+  .nav-custom li.first-level.active > a, .nav-custom li.first-level.active > div > i {
     color: @linkColor;
   }
 
-  .nav-custom li.first-level-small.active a, .nav-custom li.first-level-small.active i {
+  .nav-custom li.first-level-small.active > a, .nav-custom li.first-level-small.active > div > i {
       color: @linkColor;
-    }
+  }
+
+  .nav-custom li.second-level.active > a{
+    font-weight: 600;
+//    color: @linkColor;
+  }
 
   .nav-custom .active-corner-top {
       position:absolute;
@@ -705,12 +710,8 @@ li.table-row-style .menu-item-link {
       padding-bottom:15px;
   }
 
-  .nav-custom li:hover {
-      color: #0088cc;
-  }
-
-  .nav-custom .active {
-      color:#666;/*color: #ec4ecc;*/
+  .nav-custom li a:hover, .nav-custom li:hover {
+      color: @linkColor;
   }
 
   .nav-custom-more {
