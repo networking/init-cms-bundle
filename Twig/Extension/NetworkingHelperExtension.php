@@ -14,6 +14,7 @@ use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
 use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Sonata\AdminBundle\Admin\AdminInterface;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -101,6 +102,8 @@ class NetworkingHelperExtension extends \Twig_Extension
             'networking_init_cms_get_admin_icon' => new \Twig_Function_Method($this, 'getAdminIcon', array('is_safe' => array('html'))),
             'networking_init_cms_get_current_admin_locale' => new \Twig_Function_Method($this, 'getCurrentAdminLocale', array('is_safe' => array('html'))),
             'networking_admin_cms_block' => new \Twig_Function_Method($this, 'adminCmsBlock', array('is_safe' => array('html'))),
+            'networking_admin_sub_nav' => new \Twig_Function_Method($this, 'adminSubNav', array('is_safe' => array('html'))),
+            'networking_admin_nav_is_active' => new \Twig_Function_Method($this, 'isAdminActive', array('is_safe' => array('html')))
         );
     }
 
@@ -159,6 +162,59 @@ class NetworkingHelperExtension extends \Twig_Extension
         $adminContent = $contentItem->getAdminContent();
 
         return $this->getService('templating')->render($adminContent['template'], $adminContent['content']);
+    }
+
+    public function adminSubNav(AdminInterface $admin, $adminCode = '')
+    {
+        $menu = false;
+
+        if (method_exists($admin, 'getSubNavLinks')) {
+
+            $menu = $admin->getMenuFactory()->createItem('root');
+            $request = $this->container->get('request');
+            $menu->setCurrentUri($request->getRequestUri());
+            $menu->setChildrenAttribute('class', 'ul-second-level');
+
+            foreach ($admin->getSubNavLinks() as $label => $link) {
+                $active = false;
+
+                if ($link instanceof AdminInterface) {
+                    $active = ($link->getCode() ==  $adminCode);
+                    $link = $link->generateUrl('list');
+                }
+
+                $menu->addChild(
+                    $label,
+                    array('uri' => $link, 'attributes' => array('class' => 'second-level'))
+                );
+
+                if($active){
+                    $menu[$label]->setCurrent($active);
+                }
+            }
+        }
+
+        return $menu;
+    }
+
+    public function isAdminActive(AdminInterface $admin, $adminCode = '')
+    {
+        $active = false;
+        if ($adminCode == $admin->getCode()) {
+            $active = true;
+        }
+
+        if (method_exists($admin, 'getSubNavLinks')) {
+            foreach ($admin->getSubNavLinks() as $value) {
+                if ($value instanceof AdminInterface) {
+                    if($value->getCode() == $adminCode){
+                        $active = true;
+                    }
+                }
+            }
+        }
+
+        return $active;
     }
 
     /**
@@ -460,7 +516,7 @@ class NetworkingHelperExtension extends \Twig_Extension
                 $value = $fieldDescription->getValue($object);
                 break;
             case 'boolean':
-                if($fieldDescription->getValue($object)){
+                if ($fieldDescription->getValue($object)) {
                     $value = 'positive';
                 } else {
                     $value = 'negative';

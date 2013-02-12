@@ -59,21 +59,21 @@ file that was distributed with this source code.
     {% endblock %}
 
     <title>
-        {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
+        {#{{ 'Admin'|trans({}, 'SonataAdminBundle') }}#}
 
-        {% if _title is not empty %}
-            {{ _title|raw|striptags }}
-        {% else %}
-            {% if action is defined %}
-                -
-                {% for label, uri in admin.breadcrumbs(action) %}
-                    {% if not loop.first %}
-                        &gt;
-                    {% endif %}
-                    {{ label|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw|striptags }}
-                {% endfor %}
-            {% endif %}
-        {% endif %}
+        {#{% if _title is not empty %}#}
+            {#{{ _title|raw|striptags }}#}
+        {#{% else %}#}
+            {#{% if action is defined %}#}
+                {#-#}
+                {#{% for label, uri in admin.breadcrumbs(action) %}#}
+                    {#{% if not loop.first %}#}
+                        {#&gt;#}
+                    {#{% endif %}#}
+                    {#{{ label|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw|striptags }}#}
+                {#{% endfor %}#}
+            {#{% endif %}#}
+        {#{% endif %}#}
     </title>
 </head>
 <body class="initcms">
@@ -153,7 +153,7 @@ file that was distributed with this source code.
         {% endblock %}
         <div class="{% if block('sidebar_left') %}span10{% else %}span12{% endif %} content-main">
             <div class="notice-block affix span10 " data-spy="affix-top" data-offset-top="10"
-                 style="top: 50px; margin-left: 0;">
+                 style="top: 44px; margin-left: 0;">
                 {% block notice %}
                     {% for notice_level in ['success','error','info', 'warning'] %}
                         {% set session_var = 'sonata_flash_' ~ notice_level %}

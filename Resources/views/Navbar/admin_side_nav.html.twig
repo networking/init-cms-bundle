@@ -34,11 +34,7 @@
             {% endif %}
             {% for admin in group.items %}
                 {% if currentAdmin is defined %}
-                    {% if admin.code in currentAdmin.getChildren|keys or admin.code == currentAdmin.code %}
-                        {% set isActive = true %}
-                    {% else %}
-                        {% set isActive = false %}
-                    {% endif %}
+                    {% set isActive = networking_admin_nav_is_active(admin, currentAdmin.code) %}
                 {% endif %}
                 {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
                     <li class="{% if isActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
@@ -48,7 +44,7 @@
                             {% else %}
                                 <i class="icon icon-circle-blank icon-{% if small %}medium{% else %}large{% endif %}"></i>
                             {% endif %}
-                         </div>
+                        </div>
                         <a href="{{ admin.generateUrl('list') }}">
                             <div class="pull-left first-level-text">{{ admin.label|trans({}, admin.translationDomain) }}</div>
                         </a>
@@ -56,22 +52,22 @@
                             <div class="pull-right" style="position:relative;">
                                 <div class="active-corner-top"></div>
                             </div>
-                        {% endif %}
-                        <div class="clearfix"></div>
-                        {% if admin.hasChildren %}
-                            <ul class="ul-second-level">
-                                {% for subadmin in admin.getChildren %}
-                                    <li class="second-level">
-                                        <a href="{{ subadmin.generateUrl('list') }}">{{ subadmin.label|trans({}, subadmin.translationDomain) }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
+                            <div class="clearfix"></div>
 
-                        {% if isActive %}
+                            {% if networking_admin_sub_nav(admin, currentAdmin.code) %}
+                                {{ knp_menu_render(networking_admin_sub_nav(admin, currentAdmin.code),
+                                {
+                                'depth': 2,
+                                'currentClass': 'active',
+                                'ancestorClass': 'active',
+                                'allow_safe_labels': true}) }}
+                            {% endif %}
+
                             <div class="pull-right" style="position:relative;">
                                 <div class="active-corner-bottom"></div>
                             </div>
+                        {% else %}
+                            <div class="clearfix"></div>
                         {% endif %}
                     </li>
                 {% endif %}
