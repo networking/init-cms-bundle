@@ -30,6 +30,9 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
  */
 class PageAdmin extends BaseAdmin
 {
+    /**
+     * @var int
+     */
     protected $maxPerPage = 500;
 
     /**
