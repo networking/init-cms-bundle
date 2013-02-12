@@ -45,7 +45,7 @@ sonata_admin:
                 items: [networking_init_cms.page.admin.help_text]
             Users:
                 label: Users
-                items: [sonata.user.admin.user, sonata.user.admin.group ]
+                items: [sonata.user.admin.user ]
 #            News:
 #                label: News
 #                items: [networking_cms.news.admin.article]
