@@ -4,9 +4,10 @@ function createInitCmsMessageBox(status, message) {
     jQuery('.notice-block').html(messageHtml);
 }
 function destroyCkeditor() {
-    jQuery.each(CKEDITOR.instances, function () {
+    var editors = CKEDITOR.instances;
+    jQuery.each(editors, function () {
         var instance = this;
-        if (instance) {
+        if (instance && instance.getData()) {
             instance.destroy(true);
         }
     });

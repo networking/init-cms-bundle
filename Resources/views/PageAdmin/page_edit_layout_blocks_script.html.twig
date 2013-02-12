@@ -20,8 +20,11 @@ var field_update_{{ id }} = function (event) {
     {% if init_cms_editor == 'ckeditor' %}
     jQuery.each(CKEDITOR.instances, function () {
         var editor = this;
-        editor.setData(editor.getData());
-        jQuery('#' + editor.name).html(editor.getData());
+        var data = editor.getData();
+        if(data){
+            editor.setData(editor.getData());
+            jQuery('#' + editor.name).html(editor.getData());
+        }
     });
     {% endif %}
     updateLayoutBlocks(form, data);
@@ -57,7 +60,6 @@ var field_add_{{ id }} = function (event) {
             var zone = liItem.find("[id$='_zone']").val();
             var sortOrder = liItem.find("[id$='_sortOrder']").val();
             sortOrder++;
-            console.log(sortOrder);
             liItem.parent().find('li.networking-sortable-list input[id$="_sortOrder"]').each(function (index, value) {
                 if (jQuery(value).val() >= sortOrder) {
                     var newSortOrder = jQuery(value).val() + 1;
@@ -295,12 +297,18 @@ function onAfterLoad() {
                     data:{layoutBlock:liElement.attr('id')},
                     success:function (xhr) {
                         createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                        var editor = liElement.find('.wysiwyg-editor');
+                        if(CKEDITOR.instances[editor.attr('id')]){
+                            CKEDITOR.instances[editor.attr('id')].destroy(true);
+                        }
                         apply_position_value_{{ id }}();
                         saveLayoutBlockSort();
+                        liElement.remove();
+                        jQuery(parent).trigger('sortout');
                     }
                 });
-                liElement.remove();
-                jQuery(parent).trigger('sortout');
+
+
 
             }
         });
