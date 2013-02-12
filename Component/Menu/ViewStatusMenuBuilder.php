@@ -93,11 +93,16 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
             if ($sonataAdminParam = $request->get('_sonata_admin')) {
 
-                // we are in the admin area
-                $sonataAdmin = $this->serviceContainer->get($sonataAdminParam);
-                if ($id = $request->get('id')) {
-                    $entity = $sonataAdmin->getObject($id);
+                $posibleAdmins = explode('|', $sonataAdminParam);
+
+                foreach ($posibleAdmins as $adminCode) {
+                    // we are in the admin area
+                    $sonataAdmin = $this->serviceContainer->get($adminCode);
+                    if ($id = $request->get('id')) {
+                        $entity = $sonataAdmin->getObject($id);
+                    }
                 }
+
             } else {
                 $frontEnd = true;
                 // we are in the frontend
@@ -149,15 +154,15 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
             $lastActions = $session->get('_networking_initcms_admin_tracker');
 
 
-            if($lastActions){
-                $lastActionArray =  json_decode($lastActions);
-                if(count($lastActionArray)){
-                   if($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin){
-                       $lastAction = next($lastActionArray);
-                   } else {
-                       $lastAction = reset($lastActionArray);
-                   }
-                    if($lastAction){
+            if ($lastActions) {
+                $lastActionArray = json_decode($lastActions);
+                if (count($lastActionArray)) {
+                    if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
+                        $lastAction = next($lastActionArray);
+                    } else {
+                        $lastAction = reset($lastActionArray);
+                    }
+                    if ($lastAction) {
                         $lastActionUrl = $lastAction->url;
                     }
                 }
@@ -166,7 +171,7 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
             // Set active url based on which status is in the session
             if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
-                    $menu->setCurrentUri($lastActionUrl);
+                $menu->setCurrentUri($lastActionUrl);
             } elseif ($this->serviceContainer->get('session')->get(
                 '_viewStatus'
             ) === VersionableInterface::STATUS_PUBLISHED
