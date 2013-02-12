@@ -36,16 +36,14 @@ sonata_admin:
         groups:
             Pages:
                 label: Pages
-                items: [networking_init_cms.page.admin.page, networking_init_cms.menu.admin.menu_item]
-            Media:
-                label: Media
-                items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.page.admin.tag]
+                items: [networking_init_cms.page.admin.page, networking_init_cms.menu.admin.menu_item, sonata.media.admin.media]
+#            Media:
+#                label: Media
+#                items: []
             Config:
                 label: Config
-                items: [networking_init_cms.page.admin.help_text]
-            Users:
-                label: Users
-                items: [sonata.user.admin.user ]
+                items: [sonata.user.admin.user, networking_init_cms.page.admin.help_text]
+
 #            News:
 #                label: News
 #                items: [networking_cms.news.admin.article]
