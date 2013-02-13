@@ -7,8 +7,11 @@ function destroyCkeditor() {
     var editors = CKEDITOR.instances;
     jQuery.each(editors, function () {
         var instance = this;
+        try{
         if (instance && instance.getData()) {
             instance.destroy(true);
+        }
+        }catch(err){
         }
     });
 }
