@@ -8,12 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% if page_id is defined and page_id %}
-    <div class="pull-right">
-        <a class="btn btn-custom btn-small"
-           href="{{ path('admin_networking_initcms_page_edit', {'id': page_id}) }}">&larr; Back to page</a>
-    </div>
-{% endif %}
+
 <ul class="menu-tabs nav nav-tabs">
     {% for key, menu in menus %}
         <li {% if loop.first %}class="active"{% endif %}>

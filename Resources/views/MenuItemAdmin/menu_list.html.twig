@@ -19,7 +19,13 @@ file that was distributed with this source code.
 {% endblock %}
 {% block list_filters %}
     {% if admin.datagrid.filters and not app.request.isxmlhttprequest %}
-
+        {% if page_id is defined and page_id %}
+                <div class="pull-right">
+                    <a class="btn btn-custom btn-small"
+                       href="{{ path('admin_networking_initcms_page_edit', {'id': page_id}) }}">&larr; Back to page</a>
+                </div>
+            <p class="clearfix">&nbsp;</p>
+            {% endif %}
         <form action="{{ admin.generateUrl('list') }}" method="GET" class="form-inline filters menu-filter">
 
             {% set filter_main = '' %}
