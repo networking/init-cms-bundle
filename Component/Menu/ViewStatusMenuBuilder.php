@@ -185,11 +185,8 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                 $menu->addChild(
                     'Edit',
                     array(
-                        'label' => '',
-                        'linkAttributes' => array(
-                            'class' => 'icon-pencil icon-white',
-                            'style' => 'padding:0; margin: 10px 15px 10px;'
-                        ),
+                        'label' => '<i class="icon-pencil icon-white"></i> &nbsp;'.$this->serviceContainer->get('translator')->trans('Edit', array(), 'NetworkingInitCmsAdmin'),
+                        'extras' => array('safe_label' => true),
                         'uri' => $editPath
                     )
                 );
