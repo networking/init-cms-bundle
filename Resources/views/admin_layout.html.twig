@@ -119,8 +119,10 @@ file that was distributed with this source code.
 
 <!-- Subhead
 ================================================== -->
+{% block navbar_spacer %}
 <div style="height:41px;"></div>
-<div class="container">
+{% endblock %}
+<div class="{% block container_class %}container{% endblock %}">
     {#{% if _breadcrumb is not empty or action is defined %}#}
     {#<ul class="breadcrumb">#}
     {#{% if _breadcrumb is empty %}#}
@@ -211,6 +213,7 @@ file that was distributed with this source code.
                     {#{{ networking_init_cms_get_current_admin_locale(admin)|slice(0,2)|upper }}</div>#}
                     {#{% endblock %}#}
                     {#{% endif %}#}
+                    {% if app.security.token and is_granted('ROLE_SONATA_ADMIN') %}
                     {% if _help_text is empty %}
                         {% if admin is not defined %}
                             {% set adminCode = 'dashboard' %}
@@ -224,6 +227,7 @@ file that was distributed with this source code.
                                 target="_blank">
                             <div class="info_button_medium"></div>
                         </a></div>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
