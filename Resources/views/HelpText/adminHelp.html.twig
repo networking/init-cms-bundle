@@ -50,7 +50,8 @@ file that was distributed with this source code.
     <ul>
 
     {% for element in help_nav %}
-        <h2>{{ element.group_name }}</h2>
+        {% if element.group_items|length > 0  %}
+        <h4>{{ element.group_name }}</h4>
             <ul>
             {% for row in element.group_items %}
                 {% if adminCode == row.adminCode and action == row.action %}
@@ -68,6 +69,7 @@ file that was distributed with this source code.
 
             {% endfor %}
             </ul>
+        {% endif %}
     {% endfor %}
 
 
