@@ -35,9 +35,9 @@ file that was distributed with this source code.
        {% if object.isPublished() %}onclick="return false"{% endif %}>
         {{ 'button.publish'|trans({}, admin.translationDomain) }}
     </a>
+    {{ 'or'|trans({}, admin.translationDomain) }}
 {% endif %}
 {% if not object.isPublished %}
-    {{ 'or'|trans({}, admin.translationDomain) }}
     {% set path = path(object.route()) %}
     <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path}) }}"
        class="link-underlined">
@@ -45,8 +45,9 @@ file that was distributed with this source code.
 {% endif %}
 
 
-<hr/>
+
 {% if not object.isPublished() and object.getSnapshot() %}
+    <hr/>
     <p class="font-mini">
     {{ 'info.last_published_version'|trans({'%date%':object.getSnapshot().snapshotDate|date("d.m.Y")}, admin.translationDomain)|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}<br/>
 

@@ -348,7 +348,9 @@ li.table-row-style .menu-item-link {
 .modal form {
     margin: 0;
 }
-
+.page-form{
+  margin: 0;
+}
 
 .page-form .modal {
     margin-left: -350px;
@@ -419,6 +421,12 @@ li.table-row-style .menu-item-link {
     padding: 10px;
     border: #bbb dashed 1px;
     min-height: 60px;
+    webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 
 .dropzone.well-small{
@@ -431,12 +439,18 @@ li.table-row-style .menu-item-link {
 	font-weight: normal;
 	margin: 0;
 }
-.dropzone .content_preview {
+.dropzone .content_preview, .dropzone .ui-state-highlight {
 	margin-bottom: 5px;
 	background-color: white;
 	min-height: 50px;
 	padding: 5px;
 	border: 1px solid #dadada;
+    webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 
 .plus_button {
@@ -538,7 +552,6 @@ li.table-row-style .menu-item-link {
 
   .accordion-heading a {
       text-decoration: none;
-      color:@linkColor2;
   }
 
   .accordion-heading .accordion-toggle {
@@ -773,9 +786,16 @@ li.table-row-style .menu-item-link {
       color: @linkColor;
       text-decoration: none;
   }
-  .form-inline.filters.menu-filter {
+  .filters.menu-filter {
     margin-bottom: 0;
     padding-bottom: 20px;
+  }
+  #pageStatusSettings {
+    margin-bottom: 25px;
+  }
+
+  #pageStatusSettings hr {
+    margin: 10px 0;
   }
 
   .menu-tabs.nav-tabs{
