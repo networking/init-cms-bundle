@@ -25,7 +25,6 @@
         "a2lix/translation-form-bundle":"dev-master",
         "friendsofsymfony/user-bundle":"dev-master",
         "mopa/bootstrap-bundle":"dev-master",
-        "mopa/bootstrap-sandbox-bundle":"dev-master",
         "twitter/bootstrap":"master",
         "knplabs/knp-paginator-bundle":"dev-master",
         "knplabs/knp-menu-bundle":"1.1.*",
