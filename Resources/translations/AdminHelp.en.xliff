@@ -74,35 +74,35 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.list.text">
                 <source>networking_init_cms.page.admin.page.list.text</source>
-                <target><![CDATA[  <p><h2>Page URL</h2></p>
-                <p>
-                            A Page is accessible through it's unique URL.
-                            <br>Every Page has exactly one URL string (e.g. "/company/employees")
-                </p>
-                <p><h2>Page Language</h2></p>
-                <p>Every Page belongs to exactly one Language.
-                            <br>So every Language has it's own Pages.
-                </p>
+                <target><![CDATA[  <ul>
+                	<li><a class="link-underlined " href="#filter">Filter Pages</a></li>
+                	<li><a class="link-underlined" href="#add">Add new Page</a></li>
+                	<li><a class="link-underlined" href="#List">List of Pages&nbsp;</a></li>
+                </ul>
 
+                <h2><a id="filter" name="filter"></a>Filter Pages</h2>
 
-                <p><h2>Pages &amp; Menus</h2>
-                <p>Pages and Menus are seperate things. A menu item can link to a Page.</p>
+                <p>The Pages can be filtert by several Parameter.<br />
+                Language and Name is the default and&nbsp;always shown. If more options are required, the filter can be expanded by clicking on &quot;More filter options&quot;.</p>
 
-                <p><h2>Page Name</h2></p>
-                <p>
-                            The Page Name is a string of your own choice to
-                identify your Page in the admin section. It is an internal term and will
-                 never be displayed on the website.
-                        </p>
+                <p><img alt="Filter" src="/bundles/networkinginitcms/images/helptext/pages/pages_list_filter.png" style="width: 600px; height: 102px;" /></p>
 
-                <p><h2>Page Template</h2></p>
-                <p>The layout of a Page is defined through it's assigned template.
-                            <br>A Template can have more than one zone (e.g. Header Full Width, Left Column, Right Column).
+                <p>if more then one option is entered, just Pages, fitting ALL the criteria are shown.&nbsp;</p>
 
-                            <br>
-                            <br>Sometimes a project has multiple Templates to choose from.
-                            <br>Each Page has exactly one Template assigned. &nbsp; &nbsp; &nbsp; &nbsp;</p>
-                   </p> ]]></target>
+                <h2><a id="add" name="add"></a>Add new Page</h2>
+
+                <p>To add a new Page, just click the Add Page Button</p>
+
+                <p><img alt="" src="/bundles/networkinginitcms/images/helptext/pages/pages_list_add.png" style="line-height: 1.6em; width: 93px; height: 39px;" /></p>
+
+                <p>Please go to the <a class="link-underlined " href="/admin/help/networking_init_cms.page.admin.page/create">Create Page Help Text</a> to find more information</p>
+
+                <h2><a id="List" name="List"></a>List of Pages</h2>
+
+                <p><img alt="" src="/bundles/networkinginitcms/images/helptext/pages/pages_list.png" style="width: 600px; height: 202px;" /></p>
+
+                <p>By clicking on the pen icon, the pages can be <a class="link-underlined" href="/admin/help/networking_init_cms.page.admin.page/edit">edited</a>.&nbsp;<br />
+                &nbsp;</p> ]]></target>
             </trans-unit>
 
             <trans-unit id="networking_init_cms.page.admin.page.create.title">
@@ -111,7 +111,30 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.create.text">
                 <source>networking_init_cms.page.admin.page.create.text</source>
-                <target><![CDATA[   ]]></target>
+                <target><![CDATA[    <p>All fields, marked with * are mandatory. But we recommend to fill out all the fields. Every input can be changed later.</p>
+
+                <h2>Overview of the fields</h2>
+
+                <p><strong>Language</strong>&nbsp;Each Page can only belong to one Language. Language Copy for this Page can be made in the next step of the process</p>
+
+                <p><strong>Page Name&nbsp;</strong>Just for internal use, not shown in the frontend</p>
+
+                <p><strong>Parent Page</strong>&nbsp;if another page is related to this one (e.g. About Us =&gt; Contact), the pages can be connected. This will be shown in the list view of the Pages as well in the URL: e.g. http://wwww.site.com/about_us/contact instead of&nbsp;http://wwww.site.com/contact</p>
+
+                <p><strong>URL&nbsp;</strong>only the last part of the URL has to be entered. If there is one ore more parent Pages, they will be automaticly enterd to the URL. No Special Characters can be used in an URL. Those will be automaticly filterd out. Above the input field, the Preview URL is always shown.</p>
+
+                <p><strong>Visibility&nbsp;</strong>a page can be either public and be seen by everyone, or it is protected by a passwort.</p>
+
+                <p><strong>Page Layout&nbsp;</strong>choose the layout, that fits your page the best</p>
+
+                <p><strong>Meta Title</strong>&nbsp;This Title is shown it the Browser Title</p>
+
+                <p><strong>Meta Keywords&nbsp;</strong>Keywords are not shown on the page, but only in the source code of the page. Those are needet by google and other search engines to index your page</p>
+
+                <p><strong>Meta Description&nbsp;</strong>As the keywords above, descrition is only visible in the source code. It&#39;s also used by search engines.</p>
+
+                <p>As soon the &quot;create&quot; button is clicked, the page is saved to the database and the &quot;<a class="link-underlined" href="/admin/help/networking_init_cms.page.admin.page/edit">edit page</a>&quot; is shown.</p>
+                  ]]></target>
             </trans-unit>
 
             <trans-unit id="networking_init_cms.page.admin.page.edit.title">
@@ -120,7 +143,46 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.edit.text">
                 <source>networking_init_cms.page.admin.page.edit.text</source>
-                <target><![CDATA[   ]]></target>
+                <target><![CDATA[    <p>The Edit Form has multiple areas</p>
+
+                <ul>
+                	<li><a class="link-underlined" href="#status">Publishing Status</a></li>
+                	<li><a class="link-underlined" href="#content">Content</a></li>
+                	<li><a class="link-underlined" href="#translations">Translations</a></li>
+                	<li><a class="link-underlined" href="#menu">Menu Connections</a></li>
+                	<li><a class="link-underlined" href="#setting">Settings &amp; SEO</a></li>
+                </ul>
+
+                <p><a id="status" name="status"></a><strong>Publishing Status</strong></p>
+
+                <p>A page can have 3 different status.&nbsp;</p>
+
+                <ol>
+                	<li><strong>Draft</strong><br />
+                	As soon something on the page is edited, the status is changed to &quot;draft&quot;. The changes are not visible on the frontend. if all the changes are made, the status should be changed to review or publish<br />
+                	if necessary, all changes can be discard.</li>
+                	<li><strong>Review</strong><br />
+                	someone has made changes to the page. Before the are put online, the changes should be reviewed.&nbsp;</li>
+                	<li><strong>Published</strong>&nbsp;<br />
+                	if all the changes are correct, the status can be changed to publish. the site is not online.</li>
+                </ol>
+
+                <p><a id="content" name="content"></a><strong>Content</strong></p>
+
+                <p>In the content, the different areas ot the page are displayed (e.g. left column). for each area, multiple blocks can be assigend. those blocks can be either text or galleries. new blocks can be created by clicking on the + icon. existing blocks can be deleted or edited by clicking on the accoring icon.&nbsp;</p>
+
+                <p><a id="translations" name="translations"></a><strong>Translations</strong></p>
+
+                <p>If this page exists in another language, a link to this page can be createt. as alternative option, the page can be copied to another language.</p>
+
+                <p><a id="menu" name="menu"></a><strong>Menu Connections</strong></p>
+
+                <p>all menu connections can be handelt here.</p>
+
+                <p><a id="setting" name="setting"></a><strong>Settings &amp; SEO</strong></p>
+
+                <p>the settings descript in the &quot;<a href="/admin/help/networking_init_cms.page.admin.page/create" title="link-underlined">create page</a>&quot; can be changed by clicking on the pen icon.&nbsp;</p>
+                  ]]></target>
             </trans-unit>
 
             <!-- menu -->
