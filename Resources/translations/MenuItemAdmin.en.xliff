@@ -130,6 +130,10 @@
                 <source>flash_edit_success</source>
                 <target>Menu successfully updated</target>
             </trans-unit>
+            <trans-unit id="flash_delete_success">
+                <source>flash_delete_success</source>
+                <target>Menu item successfully deleted</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>
