@@ -41,7 +41,7 @@ class HelpTextController extends Controller
      */
     public function adminHelpAction(Request $request, $adminCode, $action = '')
     {
-        $parameters = array();
+        $parameters = array('adminCode' => $adminCode, 'action' => $action);
         $defaultAdminCode = array('dashboard', 'overview');
 
         if ($action == '') {
@@ -52,7 +52,7 @@ class HelpTextController extends Controller
         $repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:HelpText');
         $helpText = $repository->getHelpTextByKeyLocale($translationKey, $request->getLocale());
         $parameters['help_text'] = $helpText;
-        if (! in_array($adminCode, $defaultAdminCode)) {
+        if (!in_array($adminCode, $defaultAdminCode)) {
 
             $admin = $this->container->get('sonata.admin.pool')->getAdminByAdminCode($adminCode);
             $admin->setRequest($request);
