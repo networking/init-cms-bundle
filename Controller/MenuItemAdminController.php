@@ -78,6 +78,15 @@ class MenuItemAdminController extends CmsCRUDController
          * use the submitted locale for list, else set the locale
          * to the users default within the availble CMS frontend languages
          */
+
+        if ($menuId) {
+            $menu = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Menuitem')->find($menuId);
+
+            if ($menu) {
+                $this->currentMenuLanguage = $menu->getLocale();
+            }
+
+        }
         if ($postArray = $this->getRequest()->get($this->admin->getUniqid())) {
 
             // posted locale
@@ -141,6 +150,18 @@ class MenuItemAdminController extends CmsCRUDController
 
 
         $datagrid = $this->admin->getDatagrid();
+
+        if ($menuId) {
+            $menu = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Menuitem')->find($menuId);
+
+            if ($menu) {
+                $locale = $menu->getLocale();
+                $datagrid->setValue('locale', null, $locale);
+                $datagrid->buildPager();
+            }
+
+        }
+
         $formView = $datagrid->getForm()->createView();
 
         // set the theme for the current Admin Form
@@ -200,7 +221,9 @@ class MenuItemAdminController extends CmsCRUDController
                     return $this->renderJson(
                         array(
                             'result' => 'ok',
-                            'objectId' => $this->admin->getNormalizedIdentifier($object)
+                            'objectId' => $this->admin->getNormalizedIdentifier($object),
+                            'status' => 'success',
+                                                        'message' => $this->admin->trans('flash_delete_success')
                         )
                     );
                 } else {
@@ -211,7 +234,9 @@ class MenuItemAdminController extends CmsCRUDController
                     return $this->renderJson(
                         array(
                             'result' => 'error',
-                            'objectId' => $this->admin->getNormalizedIdentifier($object)
+                            'objectId' => $this->admin->getNormalizedIdentifier($object),
+                            'status' => 'success',
+                            'message' => $this->admin->trans('flash_delete_error')
                         )
                     );
                 } else {
@@ -265,7 +290,7 @@ class MenuItemAdminController extends CmsCRUDController
         $em->flush();
 
 
-        return $this->redirect($this->admin->generateUrl('list', array('pageId' => $page->getId())));
+        return $this->redirect($this->admin->generateUrl('list', array('page_id' => $page->getId(), 'menu_id' => $menuItem->getId())));
 
     }
 
@@ -342,13 +367,13 @@ class MenuItemAdminController extends CmsCRUDController
 
         $data['html'] = $this->listAction($this->get('session')->get('admin/last_page_id'));
 
-        if(!array_key_exists('message', $data)){
-            if($message = $this->get('session')->getFlash('sonata_flash_success')){
+        if (!array_key_exists('message', $data)) {
+            if ($message = $this->get('session')->getFlash('sonata_flash_success')) {
                 $data['status'] = 'success';
-            }elseif($message = $this->get('session')->getFlash('sonata_flash_error')){
+            } elseif ($message = $this->get('session')->getFlash('sonata_flash_error')) {
                 $data['status'] = 'error';
             }
-            if($message){
+            if ($message) {
                 $data['message'] = $this->admin->trans($message);
             }
         }
