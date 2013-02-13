@@ -10,22 +10,21 @@ file that was distributed with this source code.
 #}
 {% extends "NetworkingInitCmsBundle::admin_layout.html.twig" %}
 
-
 {% block init_cms_top_nav %}
-    <div class="navbar navbar-fixed-top">
+
+    <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
         <div class="navbar-inner">
             <div class="container">
                 <div class="row">
-                    <div class="span10">
-                        {% if admin_pool is defined %}
-                            <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
-                                <span class="info-very-soft">initcms - </span>{{ admin_pool.title }}
-                            </a>
-                        {% endif %}
+                    <div class="span2">
+                        <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
+                            <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
+                        </a>
                     </div>
-                    <div class="span2 "><p class="pull-right"><a href="JavaScript:window.close()">Close</a></p></div>
 
+                    <div class="span10">
+                       <p class="pull-right"><strong><a href="JavaScript:window.close()"><img src="/bundles/networkinginitcms/images/overlay/close.png" border="0" /></a></strong></p>
+                    </div>
                 </div>
 
                 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -37,6 +36,8 @@ file that was distributed with this source code.
         </div>
     </div>
 {% endblock %}
+
+
 
 {% block title %}
     {{ help_text.title }}
