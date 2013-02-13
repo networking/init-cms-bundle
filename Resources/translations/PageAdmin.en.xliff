@@ -502,6 +502,10 @@
                 <source>button.copy_page</source>
                 <target>Copy the page</target>
             </trans-unit>
+            <trans-unit id="title.edit_content">
+                <source>title.edit_content</source>
+                <target>Edit your content</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

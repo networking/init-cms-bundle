@@ -58,14 +58,19 @@ file that was distributed with this source code.
                                 <i class="icon-trash soft-background"></i>
                                 <i class="icon-pencil soft-background" data-target="#expandableForm{{ increment }}" data-toggle="modal" ></i>
                             </div>
-                            {{ networking_admin_cms_block(nested_group_field.vars.value) }}
-
+                            <div data-target="#expandableForm{{ increment }}" data-toggle="modal">
+                                {{ networking_admin_cms_block(nested_group_field.vars.value) }}
+                            </div>
                         </div>
 
                         {# modal window hidden content #}
                         <div class="modal form-horizontal" id="expandableForm{{ increment }}"
                              style="display: none"
                              role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}</h4>
+                                        </div>
 
                             {# loop through form fields #}
                             {% for field_name, nested_field in nested_group_field.children %}

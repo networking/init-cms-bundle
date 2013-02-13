@@ -68,6 +68,7 @@ function submitAjaxForm(event) {
         success:function (xhr) {
             if (xhr.result == 'ok') {
                 jQuery('#menuTabs').html(xhr.html);
+                createInitCmsMessageBox(xhr.status, xhr.message);
                 setUpSortTree();
                 menuDialog.modal('hide');
 
@@ -154,6 +155,9 @@ function setUpSortTree() {
                     {
                         "operation":"updateNodes",
                         "nodes":ret
+                    },
+                    function(xhr){
+                        createInitCmsMessageBox('success', xhr.message);
                     }
             );
 
