@@ -12,6 +12,7 @@ file that was distributed with this source code.
 
 {% block init_cms_top_nav %}
 
+    <!--
     <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
         <div class="navbar-inner">
             <div class="container">
@@ -21,9 +22,41 @@ file that was distributed with this source code.
                             <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
                         </a>
                     </div>
+                    <div class="span2"> <strong>{{ 'Help'|trans({}, 'HelpTextAdmin') }}</strong></div>
 
-                    <div class="span10">
-                       <p class="pull-right"><strong><a href="JavaScript:window.close()"><img src="/bundles/networkinginitcms/images/overlay/close.png" border="0" /></a></strong></p>
+                    <div class="span8">
+                       <p class="pull-right"><strong><a href="JavaScript:window.close()" class="link-underlined">CLOSE</a></strong></p>
+                    </div>
+                </div>
+
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    -->
+
+    <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="span2">
+                        <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
+                            <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
+                        </a>
+                    </div>
+                    <div class="span6" style="font-size: 26px;padding-top: 10px;">{{ 'title.help'|trans({}, 'HelpTextAdmin') }}</div>
+
+                    <div class="span4">
+                        <ul class="nav pull-right">
+                            <li>
+                                <a href="JavaScript:window.close()"
+                                           class="bold">{{ 'link.close'|trans({}, 'HelpTextAdmin') }}</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
@@ -38,43 +71,44 @@ file that was distributed with this source code.
 {% endblock %}
 
 
-
 {% block title %}
     {{ help_text.title }}
-{% endblock%}
+{% endblock %}
 
 {% block language_indicator %}
 {% endblock %}
 
 {% block sonata_top_bar_nav %}
-    <ul>
+<ul>
 
     {% for element in help_nav %}
-        {% if element.group_items|length > 0  %}
-        <h4>{{ element.group_name }}</h4>
+        {% if element.group_items|length > 0 %}
+            <h4>{{ element.group_name }}</h4>
             <ul>
-            {% for row in element.group_items %}
-                {% if adminCode == row.adminCode and action == row.action %}
-                    {% set strongTag = '<strong>' %}
-                    {% set strongEndTag = '</strong>' %}
-                {% else %}
-                    {% set strongTag = '' %}
-                    {% set strongEndTag = '' %}
-                {% endif %}
+                {% for row in element.group_items %}
+                    {% if adminCode == row.adminCode and action == row.action %}
+                        {% set strongTag = '<strong>' %}
+                        {% set strongEndTag = '</strong>' %}
+                    {% else %}
+                        {% set strongTag = '' %}
+                        {% set strongEndTag = '' %}
+                    {% endif %}
 
-                <li>{{ strongTag | raw }}<a href="{{ url('networking_init_cms_help', {'adminCode':row.adminCode,'action':row.action}) }}" >{{ row.title }}</a>{{ strongEndTag | raw }}</li>
+                    <li>{{ strongTag | raw }}<a
+                            href="{{ url('networking_init_cms_help', {'adminCode':row.adminCode,'action':row.action}) }}">{{ row.title }}</a>{{ strongEndTag | raw }}
+                    </li>
 
 
 
 
-            {% endfor %}
+                {% endfor %}
             </ul>
         {% endif %}
     {% endfor %}
 
 
-{% endblock %}
+    {% endblock %}
 
-{% block help_text %}
-    {{ help_text.text | raw }}
-{% endblock%}
+    {% block help_text %}
+        {{ help_text.text | raw }}
+    {% endblock %}

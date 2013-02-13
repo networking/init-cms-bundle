@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" datatype="plaintext" original="">
-		<body>
-			<trans-unit id="list.label_title">
-				<source>list.label_title</source>
-				<target>Help Text Title</target>
-			</trans-unit>
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="list.label_title">
+                <source>list.label_title</source>
+                <target>Help Text Title</target>
+            </trans-unit>
             <trans-unit id="list.label_translation_key">
                 <source>list.label_translation_key</source>
                 <target>Translation Key</target>
@@ -20,7 +20,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_help_text_list">
                 <source>breadcrumb.link_help_text_list</source>
-                <target>%span%Administer your%span/% Help  Texts</target>
+                <target>%span%Administer your%span/% Help Texts</target>
             </trans-unit>
             <trans-unit id="form.label_locale">
                 <source>form.label_locale</source>
@@ -38,6 +38,17 @@
                 <source>form.label_text</source>
                 <target>Text</target>
             </trans-unit>
-		</body>
-	</file>
+
+            <trans-unit id="title.help">
+                <source>title.help</source>
+                <target>Help &amp; User Manual</target>
+            </trans-unit>
+
+            <trans-unit id="link.close">
+                <source>link.close</source>
+                <target>CLOSE</target>
+            </trans-unit>
+
+        </body>
+    </file>
 </xliff>
