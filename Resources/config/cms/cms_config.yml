@@ -9,4 +9,3 @@ imports:
     - { resource: @NetworkingUserBundle/Resources/config/cms/sonata_user.yml }
     - { resource: @NetworkingMediaBundle/Resources/config/cms/sonata_media.yml }
     - { resource: @NetworkingMediaBundle/Resources/config/doctrine_orm_admin.xml }
-    - { resource: @MopaRemoteUpdateBundle/Resources/config/config.yml }
