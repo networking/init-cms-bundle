@@ -44,15 +44,15 @@ class MenuItemAdminController extends CmsCRUDController
             throw new AccessDeniedException();
         }
 
-        if($this->getRequest()->get('page_id')){
+        if ($this->getRequest()->get('page_id')) {
             $pageId = $this->getRequest()->get('page_id');
         }
 
-        if($this->getRequest()->get('menu_id')){
+        if ($this->getRequest()->get('menu_id')) {
             $menuId = $this->getRequest()->get('menu_id');
-            if($menuId){
-                        $this->get('session')->set('MenuItem.last_edited', $menuId);
-                    }
+            if ($menuId) {
+                $this->get('session')->set('MenuItem.last_edited', $menuId);
+            }
         }
 
         $this->get('session')->set('admin/last_page_id', $pageId);
@@ -152,7 +152,7 @@ class MenuItemAdminController extends CmsCRUDController
                 array(
                     'menus' => $menus,
                     'admin' => $this->admin,
-                    'page_id'   => $pageId
+                    'page_id' => $pageId
                 )
             );
         }
@@ -168,7 +168,7 @@ class MenuItemAdminController extends CmsCRUDController
                 'datagrid' => $datagrid,
                 'menus' => $menus,
                 'last_edited' => $lastEdited,
-                'page_id'   => $pageId
+                'page_id' => $pageId
             )
         );
     }
@@ -294,31 +294,35 @@ class MenuItemAdminController extends CmsCRUDController
             ->getRepository('NetworkingInitCmsBundle:MenuItem');
 
         $em = $this->get('doctrine.orm.entity_manager');
-        foreach ($nodes as $node) {
-            /** @var $menuItem MenuItem */
-            $menuItem = $repository->find($node['item_id']);
-            if (!$menuItem->getPage()) {
-                continue;
+        try {
+            foreach ($nodes as $node) {
+                /** @var $menuItem MenuItem */
+                $menuItem = $repository->find($node['item_id']);
+                if (!$menuItem->getPage()) {
+                    continue;
+                }
+
+                if ($node['parent_id']) {
+                    $parent = $repository->find($node['parent_id']);
+                    $menuItem->setParent($parent);
+                } else {
+                    $parent = $repository->find($menuItem->getRoot());
+                    $menuItem->setParent($parent);
+                }
+
+
+                $menuItem->setLft($node['left']);
+                $menuItem->setRgt($node['right']);
+                $menuItem->setLvl($node['depth']);
+                $em->persist($menuItem);
             }
 
-            if ($node['parent_id']) {
-                $parent = $repository->find($node['parent_id']);
-                $menuItem->setParent($parent);
-            } else {
-                $parent = $repository->find($menuItem->getRoot());
-                $menuItem->setParent($parent);
-            }
+            $em->flush();
 
-
-            $menuItem->setLft($node['left']);
-            $menuItem->setRgt($node['right']);
-            $menuItem->setLvl($node['depth']);
-            $em->persist($menuItem);
+            $response = array('status' => 'ok', 'message' => $this->admin->trans('info.menu_sorted'));
+        } catch (\Exception $e) {
+            $response = array('status' => 'error', 'message' => $this->admin->trans('info.menu_sorted_error'));
         }
-
-        $em->flush();
-
-        $response = array('status' => 1);
 
         return $response;
     }
@@ -337,6 +341,17 @@ class MenuItemAdminController extends CmsCRUDController
         $data = json_decode($response->getContent(), true);
 
         $data['html'] = $this->listAction($this->get('session')->get('admin/last_page_id'));
+
+        if(!array_key_exists('message', $data)){
+            if($message = $this->get('session')->getFlash('sonata_flash_success')){
+                $data['status'] = 'success';
+            }elseif($message = $this->get('session')->getFlash('sonata_flash_error')){
+                $data['status'] = 'error';
+            }
+            if($message){
+                $data['message'] = $this->admin->trans($message);
+            }
+        }
 
         if ($response instanceof JsonResponse) {
             $response->setData($data);

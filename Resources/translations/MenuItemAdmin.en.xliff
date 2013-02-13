@@ -122,6 +122,14 @@
                 <source>button.cancel</source>
                 <target>Cancel</target>
             </trans-unit>
+            <trans-unit id="info.menu_sorted">
+                <source>info.menu_sorted</source>
+                <target>Menu items successfully re-ordered</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_success">
+                <source>flash_edit_success</source>
+                <target>Menu successfully updated</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>
