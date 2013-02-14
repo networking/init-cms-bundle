@@ -16,14 +16,15 @@ The following links should get you started with a running cms. We are working ha
 
 Installation
 ------------
-- [CMS installation](Resource/doc/installation.md)
+- [InitCmsBundle installation](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/installation.md)
 
 Documentation
 -------------
-- [Configuring your cms](Resources/doc/configuration.md)
-- [Creating templates](Resources/doc/templates.md)
-- [Creating custom content types](Resources/doc/content_types.md)
-
+- [Configuring your cms](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/configuration.md)
+- [Creating templates](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/templates.md)
+- [Creating custom content types](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/content_types.md)
+- [Creating an Admin user interface](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/admin_ui.md)
+- [Creating custom admin settings](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/custom_admin_settings.md)
 
 License
 -------
