@@ -20,9 +20,9 @@ Installation
 
 Documentation
 -------------
-- [Configuring your cms](Resource/doc/configuration.md)
-- [Creating templates](Resource/doc/templates.md)
-- [Creating custom content types](Resource/doc/content_types.md)
+- [Configuring your cms](Resources/doc/configuration.md)
+- [Creating templates](Resources/doc/templates.md)
+- [Creating custom content types](Resources/doc/content_types.md)
 
 
 License
