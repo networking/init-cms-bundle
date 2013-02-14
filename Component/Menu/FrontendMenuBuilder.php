@@ -32,10 +32,10 @@ class FrontendMenuBuilder extends MenuBuilder
      * Creates the main page navigation for the left side of the top frontend navigation
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param $path
+     * @param $menuName
      * @return \Knp\Menu\ItemInterface
      */
-    public function createMainMenu(Request $request, $path, $classes = '')
+    public function createMainMenu(Request $request, $menuName, $classes = '')
     {
 
         /** @var $repository MenuItemRepository */
@@ -47,7 +47,7 @@ class FrontendMenuBuilder extends MenuBuilder
 
         /** @var $mainMenu Menu */
         $mainMenu = $repository->findOneBy(
-            array('name' => $path, 'locale' => $this->serviceContainer->get('request')->getLocale())
+            array('name' => $menuName, 'locale' => $this->serviceContainer->get('request')->getLocale())
         );
 
         if (!$mainMenu) {
@@ -71,33 +71,16 @@ class FrontendMenuBuilder extends MenuBuilder
         return $menu;
     }
 
-    /**
-     * Creates the login and change language navigation for the right side of the top frontend navigation
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param $languages
-     * @param string $classes
-     * @return \Knp\Menu\ItemInterface
-     */
-    public function createFrontendLangMenu(Request $request, $languages, $classes = 'nav pull-right')
-    {
-        $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', $classes);
-
-
-        $this->createNavbarsLangMenu($menu, $languages, $request->getLocale());
-
-        return $menu;
-    }
 
     /**
      * Create frontend sub navigation on the left hand side of the screen
      *
      * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @param  string                                    $path
+     * @param  string                                    $menuName
      * @param string $classes
      * @return bool|\Knp\Menu\ItemInterface
      */
-    public function createNavbarsSubnavMenu(Request $request, $path, $classes = 'nav nav-tabs nav-stacked')
+    public function createSubnavMenu(Request $request, $menuName, $classes = 'nav nav-tabs nav-stacked')
     {
         $root = null;
         /** @var $repository MenuItemRepository */
@@ -109,7 +92,7 @@ class FrontendMenuBuilder extends MenuBuilder
 
         /** @var $mainMenu Menu */
         $mainMenu = $repository->findOneBy(
-            array('name' => $path, 'locale' => $this->serviceContainer->get('request')->getLocale())
+            array('name' => $menuName, 'locale' => $this->serviceContainer->get('request')->getLocale())
         );
 
 
@@ -154,21 +137,43 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     /**
-     * Used to create a simple navigation for the footer
-     *
+     * Creates the login and change language navigation for the right side of the top frontend navigation
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param $path
+     * @param $languages
      * @param string $classes
      * @return \Knp\Menu\ItemInterface
      */
-    public function createFooterMenu(Request $request, $path, $classes = '')
+    public function createFrontendLangMenu(Request $request, $languages, $classes = 'nav pull-right', $dropDownMenu = false)
     {
-        $repository = $this->serviceContainer->get('doctrine')->getRepository('NetworkingInitCmsBundle:MenuItem');
+        $menu = $this->factory->createItem('root');
+        $menu->setChildrenAttribute('class', $classes);
+
+        if($dropDownMenu){
+            $this->createDropdownLangMenu($menu, $languages, $request->getLocale());
+        }else{
+            $this->createInlineLangMenu($menu, $languages, $request->getLocale());
+        }
+
+        return $menu;
+    }
+
+    /**
+     * Used to create a simple navigation for the footer
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $menuName
+     * @param string $classes
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function createFooterMenu(Request $request, $menuName, $classes = '')
+    {
+        $repository = $this->serviceContainer->get('doctrine')
+            ->getRepository('NetworkingInitCmsBundle:MenuItem');
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
         $menu->setCurrentUri($request->getRequestUri());
         $mainMenu = $repository->findOneBy(
-            array('name' => $path, 'locale' => $this->serviceContainer->get('request')->getLocale())
+            array('name' => $menuName, 'locale' => $this->serviceContainer->get('request')->getLocale())
         );
         if (!$mainMenu) {
             return $menu;
@@ -199,7 +204,7 @@ class FrontendMenuBuilder extends MenuBuilder
      * @param $currentLanguage
      * @param string $route
      */
-    public function createNavbarsLangMenu(
+    public function createDropdownLangMenu(
         &$menu,
         array $languages,
         $currentLanguage,
@@ -224,6 +229,25 @@ class FrontendMenuBuilder extends MenuBuilder
                 $node->setCurrent(true);
             }
         }
-
     }
+
+    public function createInlineLangMenu(
+            &$menu,
+            array $languages,
+            $currentLanguage,
+            $route = 'networking_init_change_language'
+        ) {
+            foreach ($languages as $language) {
+                $node = $menu->addChild(
+                    $language['label'],
+                    array(
+                        'uri' => $this->router->generate($route, array('locale' => $language['locale'])),
+                        'linkAttributes' => array('class' => 'language')
+                    )
+                );
+                if ($language['locale'] == $currentLanguage) {
+                    $node->setCurrent(true);
+                }
+            }
+        }
 }
