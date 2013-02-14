@@ -94,7 +94,7 @@ class PageAdmin extends BaseAdmin
         try {
             $request = $this->getRequest();
         } catch (\RuntimeException $e) {
-            $request = $this->container->get('request');
+            $request = $this->getContainer()->get('request');
         }
 
         $this->pageLocale = $request->get('locale') ? $request->get('locale') : $this->getSubject()->getLocale();
@@ -103,7 +103,7 @@ class PageAdmin extends BaseAdmin
             throw new \Symfony\Component\Form\Exception\CreationException('Cannot create a page without a language');
         }
 
-        $this->repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
+        $this->repository = $this->getContainer()->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
 
         if ($this->getSubject()->getId()) {
             $this->pageLocale = $this->getSubject()->getLocale();
@@ -139,7 +139,7 @@ class PageAdmin extends BaseAdmin
         try {
             $request = $this->getRequest();
         } catch (\RuntimeException $e) {
-            $request = $this->container->get('request');
+            $request = $this->getContainer()->get('request');
         }
 
         if ($this->getSubject()->getId() || $request->isXmlHttpRequest()) {
@@ -466,7 +466,7 @@ class PageAdmin extends BaseAdmin
         }
 
         /** @var $repository PageRepository */
-        $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
+        $repository = $this->getContainer()->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
 
         /** @var $page Page */
         $page = $repository->find($id);
@@ -515,7 +515,7 @@ class PageAdmin extends BaseAdmin
         }
 
         /** @var $repository PageRepository */
-        $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
+        $repository = $this->getContainer()->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
 
         /** @var $page Page */
         $page = $repository->find($id);
@@ -565,7 +565,7 @@ class PageAdmin extends BaseAdmin
     {
         $choices = array();
 
-        $templates = $this->container->getParameter('networking_init_cms.page.templates');
+        $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
         foreach ($templates as $key => $template) {
             $choices[$key] = $template['name'];
         }
@@ -583,7 +583,7 @@ class PageAdmin extends BaseAdmin
         if ($this->getSubject()->getId()) {
             return $this->getSubject()->getTemplate();
         }
-        $templates = $this->container->getParameter('networking_init_cms.page.templates');
+        $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
         reset($templates);
         $defaultTemplate = key($templates);
 
@@ -599,7 +599,7 @@ class PageAdmin extends BaseAdmin
     {
         $icons = array();
 
-        $templates = $this->container->getParameter('networking_init_cms.page.templates');
+        $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
         foreach ($templates as $key => $template) {
             $icons[$key] = isset($template['icon']) ? $template['icon'] : '';
         }

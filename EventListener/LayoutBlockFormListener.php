@@ -11,21 +11,21 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
-
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormBuilder;
-
-use Networking\InitCmsBundle\Entity\Page;
-use Networking\InitCmsBundle\Entity\LayoutBlock;
-use Networking\InitCmsBundle\Admin\LayoutBlockAdmin;
-use Networking\InitCmsBundle\Entity\ContentInterface;
-use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
-use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
+use Doctrine\Bundle\DoctrineBundle\Registry,
+    Doctrine\ORM\EntityManager,
+    Symfony\Component\Form\FormFactoryInterface,
+    Symfony\Component\EventDispatcher\EventSubscriberInterface,
+    Symfony\Component\Form\FormEvents,
+    Symfony\Component\Form\FormEvent,
+    Symfony\Component\Form\FormBuilder,
+    Symfony\Component\Form\FormInterface,
+    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\LayoutBlock,
+    Networking\InitCmsBundle\Admin\LayoutBlockAdmin,
+    Networking\InitCmsBundle\Entity\ContentInterface,
+    Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer,
+    Networking\InitCmsBundle\Helper\ContentInterfaceHelper,
+    Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -49,8 +49,10 @@ class LayoutBlockFormListener implements EventSubscriberInterface
      * @param \Symfony\Component\Form\FormFactoryInterface              $factory
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
-    public function __construct(FormFactoryInterface $factory, \Symfony\Component\DependencyInjection\ContainerInterface $container)
-    {
+    public function __construct(
+        FormFactoryInterface $factory,
+        \Symfony\Component\DependencyInjection\ContainerInterface $container
+    ) {
         $this->factory = $factory;
         $this->container = $container;
         $this->contentInterfaceHelper = new ContentInterfaceHelper;
@@ -63,19 +65,10 @@ class LayoutBlockFormListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-//			FormEvents::PRE_SET_DATA => 'preSetData',
             FormEvents::POST_SET_DATA => 'postSetData',
             FormEvents::PRE_BIND => 'preBindData',
             FormEvents::POST_BIND => 'postBindData'
         );
-    }
-
-    /**
-     * @param \Symfony\Component\Form\FormEvent $event
-     */
-    public function preSetData(FormEvent $event)
-    {
-        /** @var $deleteField FormBuilder */
     }
 
     /**
@@ -96,9 +89,11 @@ class LayoutBlockFormListener implements EventSubscriberInterface
 
             $prefix = LayoutBlockAdmin::CUSTOM_FIELD_PREFIX;
             foreach ($submittedData as $key => $value) {
-                if(!$value) continue;
+                if (!$value) {
+                    continue;
+                }
                 if (substr($key, 0, strlen($prefix)) === $prefix) {
-                        $layoutBlock->setContent($value, substr($key, strlen($prefix)));
+                    $layoutBlock->setContent($value, substr($key, strlen($prefix)));
                 } else {
                     if ($key == 'page') {
                         // if field is Page, turn post value back into a Page Object
@@ -192,6 +187,8 @@ class LayoutBlockFormListener implements EventSubscriberInterface
     }
 
     /**
+     * Adds the form fields for the content object to the layoutBlock form
+     *
      * @param  \Symfony\Component\Form\FormEvent $event
      * @throws \RuntimeException
      */
@@ -200,7 +197,9 @@ class LayoutBlockFormListener implements EventSubscriberInterface
 
         $layoutBlock = $event->getData();
 
-        if (!$layoutBlock) return;
+        if (!$layoutBlock) {
+            return;
+        }
 
         $form = $event->getForm();
 
@@ -219,19 +218,102 @@ class LayoutBlockFormListener implements EventSubscriberInterface
             throw new \RuntimeException('Content Object must implement the ContentInterface');
         }
 
-        $fields = $className::getFieldDefinition();
-        $defaults = null;
+        $this->addFieldsToForm($form, $className, $contentObject);
 
-        foreach ($fields as $field) {
-            if ($contentObject) {
-                $defaults = $this->contentInterfaceHelper->getFieldValue($contentObject, $field['name']);
-            }
-            $form->remove(LayoutBlockAdmin::CUSTOM_FIELD_PREFIX . $field['name']);
-            $form->add($this->factory->createNamed(LayoutBlockAdmin::CUSTOM_FIELD_PREFIX . $field['name'], $field['type'], $defaults, $field['options']));
+    }
+
+    /**
+     * Adds the extra form fields to the layoutBlock form
+     *
+     * @param \Symfony\Component\Form\FormInterface $form
+     * @param $className
+     * @param $contentObject
+     */
+    protected function addFieldsToForm(FormInterface $form, $className, $contentObject)
+    {
+        $annotations = $this->getSonataAnnotationReader()->getFormMapperAnnotations($contentObject);
+
+        if ($annotations) {
+            $this->createFormFieldsWithAnnotations($form, $annotations, $contentObject);
+        } else {
+            $fields = $className::getFieldDefinition();
+            $this->createFormFieldsWithArray($form, $fields, $contentObject);
         }
 
         $form->remove('_delete');
-        $form->add($this->factory->createNamed('_delete', 'checkbox', null, array('required' => false, 'property_path' => false)));
+        $form->add(
+            $this->factory->createNamed(
+                '_delete',
+                'checkbox',
+                null,
+                array('required' => false, 'property_path' => false)
+            )
+        );
+    }
+
+    /**
+     * Uses the annotations to create form fields for the content object
+     *
+     * @param \Symfony\Component\Form\FormInterface $form
+     * @param $annotations
+     * @param $contentObject
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    protected function createFormFieldsWithAnnotations(FormInterface $form, $annotations, $contentObject)
+    {
+        $defaultValue = null;
+
+        foreach ($annotations as $propertyName => $annotation) {
+
+            $fieldName = $annotation->getName() ? : $propertyName;
+
+            if ($contentObject) {
+                $defaultValue = $this->contentInterfaceHelper->getFieldValue($contentObject, $fieldName);
+            }
+            $formInterface = $this->factory->createNamed(
+                LayoutBlockAdmin::CUSTOM_FIELD_PREFIX . $fieldName,
+                $annotation->getType(),
+                $defaultValue,
+                $annotation->getOptions()
+
+            );
+            $form->add($formInterface);
+        }
+
+        return $form;
+    }
+
+    /**
+     * Uses static method to get the form field configuration to create forms fields for
+     * the content object
+     *
+     * @param \Symfony\Component\Form\FormInterface $form
+     * @param $fields
+     * @param $contentObject
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    protected function createFormFieldsWithArray(FormInterface $form, $fields, $contentObject)
+    {
+        $defaultValue = null;
+
+
+        foreach ($fields as $field) {
+            if ($contentObject) {
+                $defaultValue = $this->contentInterfaceHelper->getFieldValue($contentObject, $field['name']);
+            }
+            $form->remove(LayoutBlockAdmin::CUSTOM_FIELD_PREFIX . $field['name']);
+            $form->add(
+                $this->factory->createNamed(
+                    LayoutBlockAdmin::CUSTOM_FIELD_PREFIX . $field['name'],
+                    $field['type'],
+                    $defaultValue,
+                    $field['options']
+                )
+            );
+        }
+
+        return $form;
+
     }
 
     /**
@@ -249,6 +331,24 @@ class LayoutBlockFormListener implements EventSubscriberInterface
         }
 
         return $classType;
+    }
+
+
+    /**
+     * @return SonataAdminAnnotationReader
+     */
+    protected function getSonataAnnotationReader()
+    {
+        return $this->container->get('ibrows_sonataadmin.annotation.reader');
+    }
+
+
+    /**
+     * @return LayoutBlockAdmin
+     */
+    protected function getLayoutBlockAdmin()
+    {
+        return $this->container->get('networking_init_cms.page.admin.layout_block');
     }
 
 }

@@ -82,7 +82,7 @@ class MenuItemAdmin extends BaseAdmin
         }
 
 
-        $er = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:MenuItem');
+        $er = $this->getContainer()->get('Doctrine')->getRepository('NetworkingInitCmsBundle:MenuItem');
         $id = $this->getRequest()->get('id');
 
         if ($id) {
@@ -157,7 +157,7 @@ class MenuItemAdmin extends BaseAdmin
                 ->add('link_rel', 'text', array('required'=>false))
                 ->end();
 
-            $entityManager = $this->container->get('Doctrine')->getEntityManager();
+            $entityManager = $this->getContainer()->get('Doctrine')->getEntityManager();
 
             $transformer = new MenuItemToNumberTransformer($entityManager);
 

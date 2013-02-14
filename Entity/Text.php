@@ -12,7 +12,8 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
     Networking\InitCmsBundle\Entity\LayoutBlock,
-    Networking\InitCmsBundle\Entity\ContentInterface;
+    Networking\InitCmsBundle\Entity\ContentInterface,
+    Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 
 
 /**
@@ -43,9 +44,11 @@ class Text implements ContentInterface
      */
     protected $layoutBlock;
 
+
     /**
      * @var text $content
      * @ORM\Column(name="text", type="text", nullable=true)
+     * @Sonata\FormMapper(name="text", type="textarea", options={"required"=false, "property_path" = false, "attr"={"class"="wysiwyg-editor"}})
      */
     protected $text;
 
@@ -181,32 +184,9 @@ class Text implements ContentInterface
         return $this->updatedAt;
     }
 
-    /**
-     * @static
-     * @return array
-     */
-    public static function getFieldDefinition()
-    {
-        $fields = array(
-            array(
-                'name' => 'text',
-                'type' => 'textarea',
-                'options' => array(
-                    'required' => false,
-                    'label' => 'Text',
-                    'property_path' => false,
-                    'attr' => array(
-                        'class' => 'wysiwyg-editor',
-                        'style' => 'width: 620px; height: 200px;'
-                    )
-                )
-            ),
-        );
-
-        return $fields;
-    }
 
     /**
+     * @param array $params
      * @return array
      */
     public function getTemplateOptions($params = array())

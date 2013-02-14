@@ -11,10 +11,9 @@ Here are a couple of the new features on top of what Sonata already offers.
 
 We have extended the SonataAdmin Admin class and given it one ore two little things which we often need.
 
-1. The BaseAdmin class is container aware
-2. The languages of the CMS are available, this is handing when you need to create choice fields which need to list the avaliable languages of the CMS
-3. You can get the default language based on the available CMS languages (as per CMS config) and the users language.
-4
+1. The languages of the CMS are available, this is handing when you need to create choice fields which need to list the avaliable languages of the CMS
+2. You can get the default language based on the available CMS languages (as per CMS config) and the users language.
+3. You can use the iBrows SonataAdminAnnotationBundle to configure your admin bundles if you prefer.
 
 ###More Help Texts
 

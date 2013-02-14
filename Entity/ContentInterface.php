@@ -17,11 +17,6 @@ interface ContentInterface
 {
 
     public function __clone();
-    /**
-     * @static
-     * @return array
-     */
-    public static function getFieldDefinition();
 
     /**
      * @param array $params

@@ -37,10 +37,10 @@ class LayoutBlockAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
 
-        $listener = new LayoutBlockFormListener($formMapper->getFormBuilder()->getFormFactory(), $this->container);
+        $listener = new LayoutBlockFormListener($formMapper->getFormBuilder()->getFormFactory(), $this->getContainer());
         $formMapper->getFormBuilder()->addEventSubscriber($listener);
 
-        $entityManager = $this->container->get('Doctrine')->getEntityManager();
+        $entityManager = $this->getContainer()->get('Doctrine')->getEntityManager();
         $transformer = new PageToNumberTransformer($entityManager);
         $formMapper
 //                ->add('isActive', 'checkbox', array('required' => false, 'label_render' => false))
@@ -91,7 +91,7 @@ class LayoutBlockAdmin extends BaseAdmin
      */
     public function getContentTypes()
     {
-        $contentTypes = $this->container->getParameter('networking_init_cms.page.content_types');
+        $contentTypes = $this->getContainer()->getParameter('networking_init_cms.page.content_types');
 
         $choices = array();
         foreach ($contentTypes as $contentType) {

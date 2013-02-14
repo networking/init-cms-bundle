@@ -11,15 +11,19 @@
 
 namespace Networking\InitCmsBundle\Admin;
 
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\Admin,
+    Sonata\AdminBundle\Datagrid\ListMapper,
+    Sonata\AdminBundle\Form\FormMapper,
+    Sonata\AdminBundle\Show\ShowMapper,
+    Sonata\AdminBundle\Datagrid\DatagridMapper,
+    Symfony\Component\DependencyInjection\ContainerInterface,
+    Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @author net working AG <info@networking.ch>
  */
-abstract class BaseAdmin extends Admin implements ContainerAwareInterface
+abstract class BaseAdmin extends Admin
 {
     /**
      * @var array $languages
@@ -27,23 +31,9 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
     protected $languages;
 
     /**
-     * @var ContainerInterface $container
-     */
-    protected $container;
-
-    /**
      * @var Array $trackedActions
      */
     protected $trackedActions = array('list', 'edit');
-
-
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
 
     /**
      * Set the language paramenter to contain a list of languages most likely
@@ -70,6 +60,7 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
         foreach ($this->languages as $language) {
             $locale[$language['locale']] = $language['label'];
         }
+
         return $locale;
     }
 
@@ -78,22 +69,22 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
      */
     public function getDefaultLocale()
     {
-        if(!$this->getRequest()->get('locale')){
+        if (!$this->getRequest()->get('locale')) {
             $locale = $this->getRequest()->getLocale();
-        }else{
+        } else {
             $locale = $this->getRequest()->get('locale');
         }
         //if the locale is posted in the filter
-        if(is_array($locale)){
-            if(array_key_exists('value', $locale)){
+        if (is_array($locale)) {
+            if (array_key_exists('value', $locale)) {
                 $locale = $locale['value'];
             }
         }
 
         if (!array_key_exists($locale, $this->getLocaleChoices())) {
-            if(strlen($locale) > 2){
+            if (strlen($locale) > 2) {
                 $shortLocale = substr($locale, 0, 2);
-            }else{
+            } else {
                 $shortLocale = $locale;
             }
 
@@ -104,9 +95,8 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
             }
 
 
-
             foreach ($this->getLocaleChoices() as $key => $locale) {
-                if (strpos($key, $this->container->getParameter('locale')) !== false) {
+                if (strpos($key, $this->getContainer()->getParameter('locale')) !== false) {
                     return $key;
                 }
             }
@@ -124,6 +114,7 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
     public function setTrackedActions($trackedActions)
     {
         $this->trackedActions = $trackedActions;
+
         return $this;
     }
 
@@ -133,5 +124,54 @@ abstract class BaseAdmin extends Admin implements ContainerAwareInterface
     public function getTrackedActions()
     {
         return $this->trackedActions;
+    }
+
+    /**
+     * @param ListMapper $listMapper
+     */
+    protected function configureListFields(ListMapper $listMapper)
+    {
+        $this->getSonataAnnotationReader()->configureListFields($this->getClass(), $listMapper);
+    }
+
+    /**
+     * @param FormMapper $formMapper
+     */
+    protected function configureFormFields(FormMapper $formMapper)
+    {
+        $this->getSonataAnnotationReader()->configureFormFields($this->getClass(), $formMapper);
+    }
+
+    /**
+     * @param ShowMapper $showMapper
+     */
+    protected function configureShowFields(ShowMapper $showMapper)
+    {
+        $this->getSonataAnnotationReader()->configureShowFields($this->getClass(), $showMapper);
+    }
+
+    /**
+     * @param DatagridMapper $datagridMapper
+     */
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
+        $this->getSonataAnnotationReader()->configureDatagridFilters($this->getClass(), $datagridMapper);
+    }
+
+
+    /**
+     * @return ContainerInterface
+     */
+    protected function getContainer()
+    {
+        return $this->getConfigurationPool()->getContainer();
+    }
+
+    /**
+     * @return SonataAdminAnnotationReaderInterface
+     */
+    protected function getSonataAnnotationReader()
+    {
+        return $this->getContainer()->get('ibrows_sonataadmin.annotation.reader');
     }
 }

@@ -61,7 +61,7 @@ class HelpTextAdmin extends BaseAdmin
         try {
             $request = $this->getRequest();
         } catch (\RuntimeException $e) {
-            $request = $this->container->get('request');
+            $request = $this->getContainer()->get('request');
         }
 
         $locale = $request->get('locale') ? $request->get('locale') : $request->getLocale();

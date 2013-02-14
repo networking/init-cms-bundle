@@ -67,7 +67,6 @@ services:
         calls:
             - [setTranslationDomain, [PageAdmin]]
             - [setLanguages, [%networking_init_cms.page.languages%]]
-            - [setContainer, [@service_container]]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Pages, label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
 
@@ -87,7 +86,6 @@ services:
         calls:
             - [setTranslationDomain, [HelpTextAdmin]]
             - [setLanguages, [%networking_init_cms.page.languages%]]
-            - [setContainer, [@service_container]]
         tags:
             - { name: sonata.admin, manager_type: orm, label: 'Help Text', label_translator_strategy: sonata.admin.label.strategy.underscore}
 
@@ -98,7 +96,6 @@ services:
         arguments: [null, Networking\InitCmsBundle\Entity\LayoutBlock, SonataAdminBundle:CRUD]
         calls:
             - [setTranslationDomain, [PageAdmin]]
-            - [setContainer, [@service_container]]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Content, label_translator_strategy: sonata.admin.label.strategy.underscore }
 
@@ -109,7 +106,6 @@ services:
         calls:
             - [setTranslationDomain, [MenuItemAdmin]]
             - [setLanguages, [%networking_init_cms.page.languages%]]
-            - [setContainer, [@service_container]]
             - [setSubClasses, [{"menu": Networking\InitCmsBundle\Entity\MenuItem, "menu item": Networking\InitCmsBundle\Entity\MenuItem}]]
         tags:
             - { name: sonata.admin, manager_type: orm, icon: happy, label: "Menus", label_translator_strategy: sonata.admin.label.strategy.underscore}

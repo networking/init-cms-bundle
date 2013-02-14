@@ -12,62 +12,48 @@ you need to know in order to get your content block in the CMS.
 Luckily it is all very simple, there are only three methods to implement so here they are.
 
 #### Field Definition for the content type form ####
-----------------------------------------------------
-```getFieldDefinition``` This static method is called the form for the content item is created, all you need to do is supply an array of information which will be then used to create the field definitions for your entity.
+
+We use the [IbrowsSonataAdminAnnotationBundle](https://github.com/ibrows/IbrowsSonataAdminAnnotationBundle) to help us configure our admin fields for our content type.
 
 Here is an example from the Text entity
 
 ```
-    public static function getFieldDefinition()
-    {
-        $fields = array(
-            array(
-                'name' => 'text',
-                'type' => 'textarea',
-                'options' => array(
-                    'required' => false,
-                    'label' => 'Text',
-                    'property_path' => false,
-                    'attr' => array(
-                        'class' => 'wysiwyg-editor',
-                        'style' => 'width: 620px; height: 200px;'
-                    )
-                )
-            ),
-        );
-
-        return $fields;
-    }
+/**
+ * @var text $content
+ * @ORM\Column(name="text", type="text", nullable=true)
+ * @Sonata\FormMapper(name="text", type="textarea", options={"required"=false, "property_path" = false, "attr"={"class"="wysiwyg-editor"}})
+ */
+protected $text;
 ```
 
 It pays to have a look at the [SonataAdminBundle](http://sonata-project.org/bundles/admin/master/doc/index.html) and [SonataDoctrineORMBundle](http://sonata-project.org/bundles/doctrine-orm-admin/master/doc/index.html) for more information on field configuration.
 
-#### Display the content in the frontend ####
 ----------------------------------------------------
-
+#### Display the content in the frontend ####
 ```getTemplateOptions``` method is used by the twig extension to help it render the content in the frontend. You are free to return what ever you like, so long as it is an array. How you choose to display the content in the template is up to you.
 
 ```
-    public function getTemplateOptions($params = array())
-    {
-        return array('text' => $this->getText());
-    }
+public function getTemplateOptions($params = array())
+{
+    return array('text' => $this->getText());
+}
 ```
-#### Display the content in the backend ####
+
 ----------------------------------------------------
+#### Display the content in the backend ####
 ```getAdminContent``` this method is very similar to the the get TemplateOptions method except that it takes no parameters and has to return an array consiting of two keys.
 The first key is ***content*** which can contain what ever you like (honestly). The second key is ***template*** which must return a template which will be used to render the content type in the CMS admin area.
 
 ```
-    public function getAdminContent()
-    {
-        $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryHasMedias() : array();
+public function getAdminContent()
+{
+    $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryHasMedias() : array();
 
-        return array(
-            'content' => array('mediaItems' => $mediaItems),
-            'template' => 'NetworkingGalleryBundle:Gallery:admin_gallery_block.html.twig'
-        );
-    }
+    return array(
+        'content' => array('mediaItems' => $mediaItems),
+        'template' => 'NetworkingGalleryBundle:Gallery:admin_gallery_block.html.twig'
+    );
+}
 ```
 
 
