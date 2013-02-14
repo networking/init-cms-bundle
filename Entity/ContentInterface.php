@@ -24,9 +24,10 @@ interface ContentInterface
     public static function getFieldDefinition();
 
     /**
+     * @param array $params
      * @return array
      */
-    public function getTemplateOptions();
+    public function getTemplateOptions($params = array());
 
     /**
      * @return array

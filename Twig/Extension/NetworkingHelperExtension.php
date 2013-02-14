@@ -115,7 +115,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $id
      * @return mixed
      */
-    public function cmsBlock($template, LayoutBlock $layoutBlock)
+    public function cmsBlock($template, LayoutBlock $layoutBlock, $params = array())
     {
         if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
@@ -132,7 +132,9 @@ class NetworkingHelperExtension extends \Twig_Extension
             );
         }
 
-        $options = $contentItem->getTemplateOptions();
+        $options = $contentItem->getTemplateOptions($params);
+
+        $options = array_merge($options, $params);
 
 
         return $this->getService('templating')->render($template, $options);

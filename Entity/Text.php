@@ -209,7 +209,7 @@ class Text implements ContentInterface
     /**
      * @return array
      */
-    public function getTemplateOptions()
+    public function getTemplateOptions($params = array())
     {
         return array('text' => $this->getText());
     }

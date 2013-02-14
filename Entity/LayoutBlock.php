@@ -467,7 +467,9 @@ class LayoutBlock implements ContentInterface
     }
 
     /**
-     * @param $content
+     * @param $snapshotContent
+     * @return void
+     * @internal param $content
      */
     public function takeSnapshot($snapshotContent)
     {
@@ -477,9 +479,10 @@ class LayoutBlock implements ContentInterface
     }
 
     /**
+     * @param array $params
      * @return array|bool
      */
-    public function getTemplateOptions()
+    public function getTemplateOptions($params = array())
     {
         return false;
     }
