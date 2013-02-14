@@ -259,13 +259,13 @@ services:
     networking_init_cms.menu.admin_menu:
         class: Knp\Menu\MenuItem
         factory_service: networking_init_cms.menu.admin_menu_builder
-        factory_method: createViewStatusMenu
+        factory_method: createAdminMenu
         arguments: [ '@request']
         scope: request
         tags:
             - { name: knp_menu.menu, alias: AdminMenu }
 
-    networking_init_cms.menu.view_status_menu_template:
+    networking_init_cms.menu.admin_menu_template:
         class: %mopa_bootstrap.navbar.generic%
         arguments:
             # first argument: a named array of menues:

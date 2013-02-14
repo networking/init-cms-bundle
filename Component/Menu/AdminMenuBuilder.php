@@ -16,7 +16,8 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\DependencyInjection\Container,
     Networking\InitCmsBundle\Component\Menu\MenuBuilder,
     Networking\InitCmsBundle\Entity\Page,
-    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface,
+    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -40,7 +41,7 @@ class AdminMenuBuilder extends MenuBuilder
         return $menu;
     }
 
-    public function createViewStatusMenu(Request $request)
+    public function createAdminMenu(Request $request)
     {
         // Default to homepage
         $liveRoute = null;
@@ -81,7 +82,6 @@ class AdminMenuBuilder extends MenuBuilder
                 }
 
             } else {
-                $frontEnd = true;
                 // we are in the frontend
                 $entity = $request->get('_content');
             }
@@ -157,6 +157,7 @@ class AdminMenuBuilder extends MenuBuilder
             } else {
                 $menu->setCurrentUri($draftPath);
             }
+
             if ($editPath && !$sonataAdmin) {
 
                 $menu->addChild(
