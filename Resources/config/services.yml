@@ -272,7 +272,7 @@ services:
             - { status_menu: @networking_init_cms.menu.admin_menu= }
             - {}
             # third argument: a named array of options
-            - { fixedTop: false, isFluid: false, template: NetworkingInitCmsBundle:Navbar:view_status.html.twig}
+            - { fixedTop: false, isFluid: false, template: NetworkingInitCmsBundle:Navbar:admin_nav_items.html.twig}
         tags:
             # The alias is used to retrieve the navbar in templates
             - { name: mopa_bootstrap.navbar, alias: AdminMenu }
