@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,60 +8,36 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Component\Menu;
 
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface,
-    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface,
-    Symfony\Component\HttpFoundation\Request,
+use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\Security\Core\SecurityContextInterface,
     Symfony\Component\DependencyInjection\Container,
-    Mopa\Bundle\BootstrapBundle\Navbar\AbstractNavbarMenuBuilder,
-    Knp\Menu\FactoryInterface,
-    Knp\Menu\Iterator\RecursiveItemIterator;
+    Networking\InitCmsBundle\Component\Menu\MenuBuilder,
+    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 
 /**
- * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ * @author net working AG <info@networking.ch>
  */
-class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
+class AdminMenuBuilder extends MenuBuilder
 {
     /**
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     * Creates a language navigation for the admin area of the website
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $languages
+     * @return \Knp\Menu\ItemInterface
      */
-    protected $securityContext;
-    /**
-     * @var bool
-     */
-    protected $isLoggedIn;
-    /**
-     * @var \Symfony\Component\DependencyInjection\Container
-     */
-    protected $serviceContainer;
-    /**
-     * @var \Symfony\Cmf\Component\Routing\ChainRouter
-     */
-    protected $router;
+    public function createAdminLangMenu(Request $request, $languages)
+    {
+        $menu = $this->factory->createItem('root');
+        $menu->setChildrenAttribute('class', 'nav pull-right');
 
-    /**
-     * @param \Knp\Menu\FactoryInterface                                $factory
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
-     * @param \Symfony\Component\DependencyInjection\Container          $serviceContainer
-     */
-    public function __construct(
-        FactoryInterface $factory,
-        SecurityContextInterface $securityContext,
-        Container $serviceContainer
-    ) {
-        parent::__construct($factory);
+        $this->createNavbarsLangMenu($menu, $languages, $request->getLocale(), 'networking_init_change_admin_language');
 
-        $this->securityContext = $securityContext;
-        if ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $this->securityContext->isGranted(
-            'IS_AUTHENTICATED_REMEMBERED'
-        )
-        ) {
-            $this->isLoggedIn = true;
-        }
-        $this->serviceContainer = $serviceContainer;
-        $this->router = $this->serviceContainer->get('router');
+        return $menu;
     }
 
     public function createViewStatusMenu(Request $request)
@@ -185,7 +162,9 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
                 $menu->addChild(
                     'Edit',
                     array(
-                        'label' => '<i class="icon-pencil icon-white"></i> &nbsp;'.$this->serviceContainer->get('translator')->trans('Edit', array(), 'NetworkingInitCmsAdmin'),
+                        'label' => '<i class="icon-pencil icon-white"></i> &nbsp;' . $this->serviceContainer->get(
+                            'translator'
+                        )->trans('Edit', array(), 'NetworkingInitCmsAdmin'),
                         'extras' => array('safe_label' => true),
                         'uri' => $editPath
                     )
@@ -227,4 +206,6 @@ class ViewStatusMenuBuilder extends AbstractNavbarMenuBuilder
 
         return $menu;
     }
+
+
 }
