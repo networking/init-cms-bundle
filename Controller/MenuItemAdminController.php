@@ -368,11 +368,21 @@ class MenuItemAdminController extends CmsCRUDController
         $data['html'] = $this->listAction($this->get('session')->get('admin/last_page_id'));
 
         if (!array_key_exists('message', $data)) {
+
             if ($message = $this->get('session')->getFlash('sonata_flash_success')) {
                 $data['status'] = 'success';
             } elseif ($message = $this->get('session')->getFlash('sonata_flash_error')) {
                 $data['status'] = 'error';
+            }elseif($data['result'] == 'ok'){
+                $this->getRequest()->request->all();
+                $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_success';
+                $data['status'] = 'success';
+            }else{
+                $this->getRequest()->request->all();
+                $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_error';
+                $data['status'] = 'error';
             }
+
             if ($message) {
                 $data['message'] = $this->admin->trans($message);
             }
@@ -385,5 +395,11 @@ class MenuItemAdminController extends CmsCRUDController
         }
 
         return $response;
+    }
+
+    public function getCaller() {
+        $trace = debug_backtrace();
+        $name = $trace[2]['function'];
+        return empty($name) ? 'global' : $name;
     }
 }
