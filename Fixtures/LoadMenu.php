@@ -56,7 +56,7 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
     {
         $menuRoot = new MenuItem();
 
-        $menuRoot->setName('#main#');
+        $menuRoot->setName('Main menu');
         $menuRoot->setLocale($locale);
         $menuRoot->setIsRoot(true);
         $menuRoot->setLvl(1);
@@ -73,6 +73,18 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
 
         $manager->persist($homePageMenu);
         $manager->flush();
+
+        $footerRoot = new MenuItem();
+        $footerRoot->setName('Footer menu');
+        $footerRoot->setLocale($locale);
+        $footerRoot->setIsRoot(true);
+        $footerRoot->setLvl(1);
+        $footerRoot->setLft(1);
+        $footerRoot->setRgt(2);
+
+        $manager->persist($footerRoot);
+        $manager->flush();
+
     }
 
     /**
