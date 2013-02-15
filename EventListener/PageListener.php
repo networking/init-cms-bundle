@@ -144,8 +144,10 @@ class PageListener implements EventSubscriberInterface
         $doctrine = $this->container->get('doctrine');
 
 
+        $er = $doctrine->getRepository('NetworkingInitCmsBundle:Page');
+
         if ($parent = $page->getParent()) {
-            $er = $doctrine->getRepository('NetworkingInitCmsBundle:Page');
+
             $parent = $er->find($page->getParent());
             $page->setParent($parent);
         } else {
@@ -153,7 +155,6 @@ class PageListener implements EventSubscriberInterface
         }
 
         if ($parents = $page->getParents()) {
-            $er = $doctrine->getRepository('NetworkingInitCmsBundle:Page');
             foreach ($parents as $key => $parent) {
                 $parents[$key] = $er->find($parent);
             }
@@ -164,7 +165,6 @@ class PageListener implements EventSubscriberInterface
         }
 
         if ($children = $page->getChildren()) {
-            $er = $doctrine->getRepository('NetworkingInitCmsBundle:Page');
             foreach ($children as $key => $child) {
                 $children[$key] = $er->find($child);
             }
@@ -175,7 +175,6 @@ class PageListener implements EventSubscriberInterface
         }
 
         if ($originals = $page->getOriginals()) {
-            $er = $doctrine->getRepository('NetworkingInitCmsBundle:Page');
             foreach ($originals as $key => $original) {
                 $originals[$key] = $er->find($original);
             }
@@ -185,13 +184,14 @@ class PageListener implements EventSubscriberInterface
             $page->setOriginals(array());
         }
         if ($translations = $page->getTranslations()) {
-            $er = $doctrine->getRepository('NetworkingInitCmsBundle:Page');
             foreach ($translations as $key => $translation) {
                 $translations[$key] = $er->find($translation);
             }
             $page->setTranslations($translations);
         } else {
-            $page->setTranslations(array());
+            $originalPageId = $page->getId();
+            $originalPage = $er->find($originalPageId);
+            $page->setTranslations($originalPage->getAllTranslations()->toArray());
         }
     }
 }
