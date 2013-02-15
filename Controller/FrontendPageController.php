@@ -141,11 +141,6 @@ class FrontendPageController extends Controller
     {
         $params = array();
 
-        $oldLocale = $request->getLocale();
-
-        if (($oldLocale == $locale)) {
-            return new RedirectResponse($request->headers->get('referer'));
-        }
         $translationRoute = $this->getTranslationRoute($request->headers->get('referer'), $locale);
 
         $request->getSession()->set('_locale', $locale);
