@@ -132,8 +132,7 @@ file that was distributed with this source code.
             {% endif %}
 
             {# include association code #}
-            {% include 'SonataDoctrineORMAdminBundle:CRUD:edit_orm_one_association_script.html.twig' %}
-
+            {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_association_script.html.twig' %}
         {% else %}
             <span id="field_actions_{{ id }}" >
                 {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
@@ -149,7 +148,8 @@ file that was distributed with this source code.
                 {% endif %}
             </span>
 
-            <div style="display: none" id="field_dialog_{{ id }}">
+
+            <div class="modal form-horizontal" id="field_dialog_{{ id }}" style="display: none" role="dialog" aria-hidden="true">
 
             </div>
 

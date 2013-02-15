@@ -28,7 +28,7 @@ file that was distributed with this source code.
     {% if sonata_admin.field_description.name == 'layoutBlock' %}
     {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks.html.twig' %}
     {% else %}
-        {% include 'SonataDoctrineORMAdminBundle:CRUD:edit_orm_one_to_many.html.twig' %}
+        {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_to_many.html.twig' %}
     {% endif %}
 {% endblock %}
 
@@ -59,6 +59,7 @@ file that was distributed with this source code.
 {% block sonata_type_model_list_widget %}
     <div id="field_container_{{ id }}" class="field-container">
         <span id="field_widget_{{ id }}" >
+
             {% if sonata_admin.field_description.associationadmin.id(sonata_admin.value) %}
                 {% render 'sonata.admin.controller.admin:getShortObjectDescriptionAction' with {}, {
                     'query': {
@@ -66,7 +67,7 @@ file that was distributed with this source code.
                         'objectId': sonata_admin.field_description.associationadmin.id(sonata_admin.value),
                         'uniqid':   sonata_admin.field_description.associationadmin.uniqid
                     }
-                }%}
+                } %}
             {% endif %}
         </span>
         <span style="display: none" >
@@ -110,12 +111,12 @@ file that was distributed with this source code.
             {% endif %}
         </span>
 
-        <div class="container sonata-ba-modal sonata-ba-modal-edit-one-to-one" style="display: none" id="field_dialog_{{ id }}">
-
+        <div class="modal form-horizontal" id="field_dialog_{{ id }}" style="display: none" role="dialog" aria-hidden="true">
         </div>
+
     </div>
 
-    {% include 'SonataDoctrineORMAdminBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
 {% endblock %}
 
 {% block sonata_type_admin_widget %}

@@ -85,7 +85,7 @@ This code manage the many-to-[one|many] association field popup
                 Admin.log('[{{ id }}|field_dialog_form_list] retrieving the list content');
 
                 // populate the popup container
-                field_dialog_{{ id }}.html(html);
+                field_dialog_{{ id }}.html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">'+html +'</div> <div class="modal-footer"></div> ');
 
                 Admin.add_filters(field_dialog_{{ id }});
 
@@ -103,7 +103,7 @@ This code manage the many-to-[one|many] association field popup
                         dataType: 'html',
                         data: {_xml_http_request: true},
                         success: function(html) {
-                           field_dialog_{{ id }}.html(html);
+                            field_dialog_{{ id }}.html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">'+html +'</div> <div class="modal-footer"></div> ');
                         }
                     });
                 });
@@ -114,7 +114,6 @@ This code manage the many-to-[one|many] association field popup
                     width: 980,
                     modal: true,
                     resizable: true,
-                    title: '{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}',
                     zIndex: 9998
                 });
 

@@ -1,1 +1,5 @@
+{% if object.providerName is defined and object.providerName == 'sonata.media.provider.image' %}
+<a href="{{ url }}" target="new">{% thumbnail object, 'admin' with {'width': 75, 'height': 60} %}</a>
+{% else %}
 <a href="{{ url }}" target="new">{{ description }}</a>
+{% endif %}

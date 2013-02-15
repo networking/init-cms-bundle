@@ -76,9 +76,8 @@ file that was distributed with this source code.
             {% endif %}
         </span>
 
-        <div class="container sonata-ba-modal sonata-ba-modal-edit-one-to-one" style="display: none" id="field_dialog_{{ id }}">
-
-        </div>
+        <div class="modal form-horizontal" id="field_dialog_{{ id }}" style="display: none" role="dialog" aria-hidden="true">
+                </div>
     </div>
 
     {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
