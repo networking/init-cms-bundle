@@ -2,11 +2,25 @@ NetworkingInitCmsBundle
 ======================
 Welcome to the networking init cms bundle
 
-This bundle forms the basis of the networking init cms, The project is being
-developed by the small hard working team at [net working AG][1] in Zürich.
+The InitCmsBundle is a small flexible cms core based on symfony 2 which can be used as a standalone CMS or integrated into
+any existing symfony 2 project.
+
+The main features are:
+- Page manager with draft and published states, as well as public or protected (login only) pages, and customised URLs
+- Menu manager to organise multiple menu bars
+- Media manager and gallery manager
+- User manager with ACL access control
+- Help page manager
+
+Other Features:
+- Integrate your own twig templates
+- Create your own content types
+- Based on the SonataAdminBundle so you can easily create your own admin modules
+
+The project is being developed by the small hard working team at [net working AG][1] in Zürich.
 
 **IMPORTANT NOTICE** This project is in an Beta stage.
-It is not advisable to use this for a production web site.
+It is not yet advisable to use this for a production web site.
 
 If you would like to get up and running with a CMS in a symfony 2
 application you can either install this bundle in an  existing project
