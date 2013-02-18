@@ -2,13 +2,59 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="de" datatype="plaintext" original="">
         <body>
+            <trans-unit id="list.label_title">
+                <source>list.label_title</source>
+                <target>Help Text Title</target>
+            </trans-unit>
+            <trans-unit id="list.label_translation_key">
+                <source>list.label_translation_key</source>
+                <target>Translation Key</target>
+            </trans-unit>
+            <trans-unit id="list.label_locale">
+                <source>list.label_locale</source>
+                <target>Website Locale</target>
+            </trans-unit>
+            <trans-unit id="list.pre_title_text">
+                <source>list.pre_title_text</source>
+                <target>Administer your</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_help_text_list">
+                <source>breadcrumb.link_help_text_list</source>
+                <target>%span%Administer your%span/% Help Texts</target>
+            </trans-unit>
+            <trans-unit id="form.label_locale">
+                <source>form.label_locale</source>
+                <target>Help Text language</target>
+            </trans-unit>
+            <trans-unit id="form.label_translation_key">
+                <source>form.label_translation_key</source>
+                <target>Translation key</target>
+            </trans-unit>
+            <trans-unit id="form.label_title">
+                <source>form.label_title</source>
+                <target>Help Text Title</target>
+            </trans-unit>
+            <trans-unit id="form.label_text">
+                <source>form.label_text</source>
+                <target>Text</target>
+            </trans-unit>
+
+            <trans-unit id="title.help">
+                <source>title.help</source>
+                <target>Help &amp; User Manual</target>
+            </trans-unit>
+
+            <trans-unit id="link.close">
+                <source>link.close</source>
+                <target>CLOSE</target>
+            </trans-unit>
             <trans-unit id="help_title">
                 <source>help_title</source>
                 <target>Help for: %admin_title% %action%</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.edit">
                 <source>networking_init_cms.page.admin.page.edit</source>
-                <target>Seite edit</target>
+                <target>Page edit</target>
             </trans-unit>
             <trans-unit id="action.list">
                 <source>action.list</source>

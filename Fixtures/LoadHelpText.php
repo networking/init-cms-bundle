@@ -156,8 +156,8 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
                     $manager,
                     $lang['locale'],
                     $translationKey,
-                    $this->container->get('translator')->trans($row['title'], array(), 'AdminHelp'),
-                    $this->container->get('translator')->trans($row['text'], array(), 'AdminHelp'),
+                    $this->container->get('translator')->trans($row['title'], array(), 'HelpAdmin'),
+                    $this->container->get('translator')->trans($row['text'], array(), 'HelpAdmin'),
                     $row['is_deletable']
                 );
             }

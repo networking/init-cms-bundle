@@ -12,7 +12,7 @@ file that was distributed with this source code.
 {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
         {% if admin.subClasses is empty %}
                 <a class="btn btn-primary btn-small" href="{{ admin.generateUrl('create', {locale: networking_init_cms_get_current_admin_locale(admin) }) }}">
-                    <i class="icon-white icon-plus"></i> {{ 'link_action_create'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}</a>
+                    <i class="icon-white icon-plus"></i> {{ 'link_action_create'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}</a>
             {% else %}
                 <span class="btn-group  btn-small sonata-action-element">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

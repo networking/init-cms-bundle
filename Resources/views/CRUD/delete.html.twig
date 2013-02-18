@@ -47,11 +47,11 @@ file that was distributed with this source code.
                 <input type="hidden" value="DELETE" name="_method"/>
                 {% if app.request.isxmlhttprequest %}
                     <button class="btn" data-dismiss="modal"
-                            aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsAdmin') }}</button>
+                            aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</button>
                     <input type="submit" class="btn btn-danger"
                            value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
                 {% else %}
-                    <a href="{{ admin.generateObjectUrl('list', object) }}" class="btn" >{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
+                    <a href="{{ admin.generateObjectUrl('list', object) }}" class="btn" >{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
                     <input type="submit" class="btn btn-danger"
                            value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
 
@@ -59,7 +59,7 @@ file that was distributed with this source code.
                         {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
 
                         <a class="btn btn-success"
-                           href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
+                           href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'NetworkingInitCmsBundle') }}</a>
                     {% endif %}
                 {% endif %}
             </form>

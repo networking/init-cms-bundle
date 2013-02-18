@@ -165,7 +165,7 @@ class AdminMenuBuilder extends MenuBuilder
                     array(
                         'label' => '<i class="icon-pencil icon-white"></i> &nbsp;' . $this->serviceContainer->get(
                             'translator'
-                        )->trans('Edit', array(), 'NetworkingInitCmsAdmin'),
+                        )->trans('Edit', array(), 'NetworkingInitCmsBundle'),
                         'extras' => array('safe_label' => true),
                         'uri' => $editPath
                     )
@@ -176,10 +176,10 @@ class AdminMenuBuilder extends MenuBuilder
 
             $viewStatus = $this->serviceContainer->get('session')->get('_viewStatus');
             $translator = $this->serviceContainer->get('translator');
-            $webLink = $translator->trans('link.website_', array(), 'NetworkingInitCmsAdmin');
+            $webLink = $translator->trans('link.website_', array(), 'NetworkingInitCmsBundle');
 
             if ($editPath && !$sonataAdmin) {
-                $webLink = $translator->trans('link.website_' . $viewStatus, array(), 'NetworkingInitCmsAdmin');
+                $webLink = $translator->trans('link.website_' . $viewStatus, array(), 'NetworkingInitCmsBundle');
 
             }
             $dropdown = $this->createDropdownMenuItem(

@@ -24,9 +24,9 @@ file that was distributed with this source code.
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3>
                         {% if admin.id(object) %}
-                            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin.getClassnameLabel() }, 'NetworkingInitCmsAdmin') }}
+                            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin.getClassnameLabel() }, 'NetworkingInitCmsBundle') }}
                         {% else %}
-                            {{ "title_create"|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}
+                            {{ "title_create"|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}
                         {% endif %}
                     </h3>
                 </div>
@@ -80,36 +80,36 @@ file that was distributed with this source code.
                                 aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin.getClassnameLabel()}, 'PageAdmin') }}</button>
                         {% if admin.id(object) %}
                             <input type="submit" class="btn btn-primary" name="btn_update"
-                                   value="{{ 'btn_update'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_update'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}"/>
                         {% else %}
                             <input type="submit" class="btn btn-primary" name="btn_create"
-                                   value="{{ 'btn_create'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_create'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}"/>
                         {% endif %}
                     {% else %}
                         <a class="btn"
-                           href="{{ admin.generateObjectUrl('list', object) }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
+                           href="{{ admin.generateObjectUrl('list', object) }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
                         {% if admin.supportsPreviewMode %}
                             <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
-                                   value="{{ 'btn_preview'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_preview'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}"/>
                         {% endif %}
                         {% if admin.id(object) %}
                             <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
-                                   value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}"/>
                             <input type="submit" class="btn" name="btn_update_and_list"
-                                   value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}"/>
 
                             {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
                                 {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
                                 <a class="btn btn-danger"
-                                   href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'NetworkingInitCmsAdmin') }}</a>
+                                   href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'NetworkingInitCmsBundle') }}</a>
                             {% endif %}
                         {% else %}
                             <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
-                                   value="{{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}"/>
                             <input type="submit" class="btn" name="btn_create_and_list"
-                                   value="{{ 'btn_create_and_return_to_list'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_create_and_return_to_list'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}"/>
                             <input class="btn" type="submit" name="btn_create_and_create"
-                                   value="{{ 'btn_create_and_create_a_new_one'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsAdmin') }}"/>
+                                   value="{{ 'btn_create_and_create_a_new_one'|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}"/>
                         {% endif %}
                     {% endif %}
                 </div>
