@@ -73,7 +73,7 @@ services:
 # Tag Admin Controller
     networking_init_cms.page.admin.tag:
         class: Networking\InitCmsBundle\Admin\TagAdmin
-        arguments: [null, Networking\InitCmsBundle\Entity\Tag, SonataAdminBundle:CRUD]
+        arguments: [null, Networking\InitCmsBundle\Entity\Tag, NetworkingInitCmsBundle:CRUD]
         calls:
             - [setTranslationDomain, [TagAdmin]]
         tags:
