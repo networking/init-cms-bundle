@@ -94,6 +94,26 @@
                 <source>form.legend_options</source>
                 <target>Options</target>
             </trans-unit>
+            <trans-unit id="form.label_visibility">
+                <source>form.label_visibility</source>
+                <target>Visibility</target>
+            </trans-unit>
+            <trans-unit id="visibility_public">
+                <source>visibility_public</source>
+                <target>Public</target>
+            </trans-unit>
+            <trans-unit id="visibility_protected">
+                <source>visibility_protected</source>
+                <target>Protected</target>
+            </trans-unit>
+            <trans-unit id="form.label_description">
+                <source>form.label_description</source>
+                <target>Menu description</target>
+            </trans-unit>
+            <trans-unit id="visibility.helper.text">
+                <source>visibility.helper.text</source>
+                <target>Public or password protected menu item</target>
+            </trans-unit>
             <trans-unit id="_blank">
                 <source>_blank</source>
                 <target>Shows the link target in a new browser window or tab</target>
@@ -109,10 +129,6 @@
             <trans-unit id="_top">
                 <source>_top</source>
                 <target>Cancels all frames, and shows the link target in full browser window</target>
-            </trans-unit>
-            <trans-unit id="form.label_description">
-                <source>form.label_description</source>
-                <target>Menu description</target>
             </trans-unit>
             <trans-unit id="info.please_enter_description">
                 <source>info.please_enter_description</source>

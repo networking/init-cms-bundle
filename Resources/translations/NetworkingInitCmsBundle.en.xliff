@@ -6,17 +6,21 @@
                 <source>label_filters</source>
                 <target>Search</target>
             </trans-unit>
-            <trans-unit id="btn_filter">
-                <source>btn_filter</source>
-                <target>Filter</target>
-            </trans-unit>
             <trans-unit id="label_export_download">
                 <source>label_export_download</source>
                 <target>Download your results in the following formats</target>
             </trans-unit>
+            <trans-unit id="info.filter">
+                <source>info.filter</source>
+                <target>Filter %admin_label%:</target>
+            </trans-unit>
             <trans-unit id="link.website_">
                 <source>link.website_</source>
                 <target>Website</target>
+            </trans-unit>
+            <trans-unit id="link.go_to_list">
+                <source>link.go_to_list</source>
+                <target>Go to %admin_label% list</target>
             </trans-unit>
             <trans-unit id="link.website_status_published">
                 <source>link.website_status_published</source>
@@ -66,6 +70,10 @@
                 <source>btn_create</source>
                 <target>Create</target>
             </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>Filter</target>
+            </trans-unit>
             <trans-unit id="btn_cancel">
                 <source>btn_cancel</source>
                 <target>Cancel</target>
@@ -98,13 +106,41 @@
                 <source>btn_create_and_create_a_new_one</source>
                 <target>Add %admin_label% and create another</target>
             </trans-unit>
-            <trans-unit id="info.filter">
-                <source>info.filter</source>
-                <target>Filter %admin_label%:</target>
+            <trans-unit id="flash_delete_success">
+                <source>flash_delete_success</source>
+                <target>The item was successfully deleted.</target>
             </trans-unit>
-            <trans-unit id="link.go_to_list">
-                <source>link.go_to_list</source>
-                <target>Go to %admin_label% list</target>
+            <trans-unit id="flash_delete_error">
+                <source>flash_delete_error</source>
+                <target>Sorry, the item could not be deleted.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_success">
+                <source>flash_edit_success</source>
+                <target>The item was successfully updated.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_error">
+                <source>flash_edit_error</source>
+                <target>An error has occurred, the selected item could not be updated at present</target>
+            </trans-unit>
+            <trans-unit id="flash_create_success">
+                <source>flash_create_success</source>
+                <target>Success, the item was created.</target>
+            </trans-unit>
+            <trans-unit id="flash_create_error">
+                <source>flash_create_error</source>
+                <target>An error has occurred, the item could not be created at present</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_success">
+                <source>flash_batch_delete_success</source>
+                <target>The selected items were successfully deleted</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_error">
+                <source>flash_batch_delete_error</source>
+                <target>The selected items could not be deleted at present</target>
+            </trans-unit>
+            <trans-unit id="no_result">
+                <source>no_result</source>
+                <target>No items found</target>
             </trans-unit>
         </body>
     </file>
