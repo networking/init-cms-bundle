@@ -65,7 +65,7 @@ class LayoutBlockFormListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            FormEvents::POST_SET_DATA => 'postSetData',
+            FormEvents::PRE_SET_DATA => 'preSetData',
             FormEvents::PRE_BIND => 'preBindData',
             FormEvents::POST_BIND => 'postBindData'
         );
@@ -192,7 +192,7 @@ class LayoutBlockFormListener implements EventSubscriberInterface
      * @param  \Symfony\Component\Form\FormEvent $event
      * @throws \RuntimeException
      */
-    public function postSetData(FormEvent $event)
+    public function preSetData(FormEvent $event)
     {
 
         $layoutBlock = $event->getData();
