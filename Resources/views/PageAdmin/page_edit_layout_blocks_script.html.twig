@@ -213,14 +213,15 @@ function uploadError(xhr) {
 }
 
 function onAfterLoad() {
-
-    apply_position_value_{{ id }}();
-
     {% if init_cms_editor == 'ckeditor' %}
     createCkeditor();
     {% elseif init_cms_editor == 'redactor' %}
     createRedactor();
     {% endif %}
+
+    apply_position_value_{{ id }}();
+
+
 
 
     jQuery('div#field_container_{{ id }} ul.sortable').sortable({
