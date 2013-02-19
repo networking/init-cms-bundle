@@ -12,7 +12,7 @@ file that was distributed with this source code.
     <div class="modal-body">
         <p>{{ 'info.create.layout_block'|trans({}, 'PageAdmin') }}</p>
         <select id="selectContentType">
-            {% for option in networking_init_cms_content_select() %}
+            {% for option in get_content_type_options() %}
             <option value="{{ option.class }}">{{ option.name|trans }}</option>
             {% endfor %}
         </select>

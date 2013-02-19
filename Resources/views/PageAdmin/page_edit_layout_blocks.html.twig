@@ -11,7 +11,7 @@ file that was distributed with this source code.
 <div id="field_container_{{ id }}">
     {% set col = 0 %}
     {% set increment = 0 %}
-    {% for key, zone in networking_init_cms_get_template_zones() %}
+    {% for key, zone in get_initcms_template_zones() %}
         {% if (col == 0 or loop.first) %}
             <div class="row-fluid">
         {% endif %}
@@ -41,14 +41,14 @@ file that was distributed with this source code.
                             </a>
                         </div>
                     </li>
-                    <li class="empty_layout_block" {% if networking_init_cms_sort_form_children(form.children, zone.name)|length > 0 %} style="display: none;"{% endif %}>
+                    <li class="empty_layout_block" {% if get_sub_form_by_zone(form.children, zone.name)|length > 0 %} style="display: none;"{% endif %}>
                         <p class="info-soft " >
                             {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
                         </p>
                     </li>
 
                     {# loop through layout blocks #}
-                    {% for nested_group_field_name, nested_group_field in networking_init_cms_sort_form_children(form.children, zone.name) %}
+                    {% for nested_group_field_name, nested_group_field in get_sub_form_by_zone(form.children, zone.name) %}
                     <li class="networking-sortable-list networking-sort-zone" id="layoutBlock_{{ nested_group_field.vars.value.id }}">
 
                         {# preview of layout block of content #}
@@ -59,7 +59,7 @@ file that was distributed with this source code.
                                 <i class="icon-pencil soft-background" data-target="#expandableForm{{ increment }}" data-toggle="modal" ></i>
                             </div>
                             <div data-target="#expandableForm{{ increment }}" data-toggle="modal">
-                                {{ networking_admin_cms_block(nested_group_field.vars.value) }}
+                                {{ render_initcms_admin_block(nested_group_field.vars.value) }}
                             </div>
                         </div>
 
@@ -69,7 +69,7 @@ file that was distributed with this source code.
                              role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}</h4>
+                                            <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }} - {{ render_content_type_name(nested_group_field.vars.value) }}</h4>
                                         </div>
 
                             {# loop through form fields #}
@@ -86,7 +86,11 @@ file that was distributed with this source code.
                                 <div class="modal-body">
                                 {% endif %}
                                     {% if not nested_field.vars.sonata_admin.field_description or nested_field.vars.sonata_admin.field_description.type == 'hidden' or nested_field.vars.sonata_admin.field_description.type == '' %}
-                                        {{ form_widget(nested_field) }}
+                                        {% if nested_field.vars.admin is not defined %}
+                                            {{ form_row(nested_field) }}
+                                        {% else %}
+                                            {{ form_widget(nested_field) }}
+                                        {% endif %}
                                     {% else %}
                                        <div class="control-group{% if errors|length > 0 %} error{% endif %}">
                                             {% block label %}

@@ -17,17 +17,17 @@ file that was distributed with this source code.
 <div class="span10">
 	<div class="top">
 		{% for layoutBlock in page.layoutBlock('top') %}
-		{{ networking_init_cms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
 	</div>
 	<div class="middle">
 		{% for layoutBlock in page.layoutBlock('middle')  %}
-		{{ networking_init_cms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
 	</div>
 	<div class="bottom">
 		{% for layoutBlock in page.layoutBlock('bottom') %}
-		{{ networking_init_cms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
 	</div>
 </div>

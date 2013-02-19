@@ -93,17 +93,18 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'networking_init_cms_block' => new \Twig_Function_Method($this, 'cmsBlock', array('is_safe' => array('html'))),
-            'networking_init_cms_get_template_zones' => new \Twig_Function_Method($this, 'getTemplateZones', array('is_safe' => array('html'))),
-            'networking_init_cms_get_field_to_string' => new \Twig_Function_Method($this, 'getFieldToString', array('is_safe' => array('html'))),
-            'networking_init_cms_get_field_zone' => new \Twig_Function_Method($this, 'getFieldZone', array('is_safe' => array('html'))),
-            'networking_init_cms_sort_form_children' => new \Twig_Function_Method($this, 'sortFormChildren', array('is_safe' => array('html'))),
-            'networking_init_cms_content_select' => new \Twig_Function_Method($this, 'contentSelect', array('is_safe' => array('html'))),
-            'networking_init_cms_get_admin_icon' => new \Twig_Function_Method($this, 'getAdminIcon', array('is_safe' => array('html'))),
-            'networking_init_cms_get_current_admin_locale' => new \Twig_Function_Method($this, 'getCurrentAdminLocale', array('is_safe' => array('html'))),
-            'networking_admin_cms_block' => new \Twig_Function_Method($this, 'adminCmsBlock', array('is_safe' => array('html'))),
-            'networking_admin_sub_nav' => new \Twig_Function_Method($this, 'adminSubNav', array('is_safe' => array('html'))),
-            'networking_admin_nav_is_active' => new \Twig_Function_Method($this, 'isAdminActive', array('is_safe' => array('html')))
+            'render_initcms_block' => new \Twig_Function_Method($this, 'renderInitcmsBlock', array('is_safe' => array('html'))),
+            'get_initcms_template_zones' => new \Twig_Function_Method($this, 'getInitcmsTemplateZones', array('is_safe' => array('html'))),
+            'render_initcms_field_as_string' => new \Twig_Function_Method($this, 'renderInitcmsFieldAsString', array('is_safe' => array('html'))),
+            'get_form_field_zone' => new \Twig_Function_Method($this, 'getFormFieldZone', array('is_safe' => array('html'))),
+            'get_sub_form_by_zone' => new \Twig_Function_Method($this, 'getSubFormsByZone', array('is_safe' => array('html'))),
+            'get_content_type_options' => new \Twig_Function_Method($this, 'getContentTypeOptions', array('is_safe' => array('html'))),
+            'get_initcms_admin_icon_path' => new \Twig_Function_Method($this, 'getInitcmsAdminIconPath', array('is_safe' => array('html'))),
+            'get_current_admin_locale' => new \Twig_Function_Method($this, 'getCurrentAdminLocale', array('is_safe' => array('html'))),
+            'render_initcms_admin_block' => new \Twig_Function_Method($this, 'renderInitcmsAdminBlock', array('is_safe' => array('html'))),
+            'render_content_type_name' => new \Twig_Function_Method($this, 'renderContentTypeName', array('is_safe' => array('html'))),
+            'render_admin_subnav' => new \Twig_Function_Method($this, 'renderAdminSubNav', array('is_safe' => array('html'))),
+            'is_initcms_admin_active' => new \Twig_Function_Method($this, 'isInitcmsAdminActive', array('is_safe' => array('html')))
         );
     }
 
@@ -115,7 +116,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $id
      * @return mixed
      */
-    public function cmsBlock($template, LayoutBlock $layoutBlock, $params = array())
+    public function renderInitcmsBlock($template, LayoutBlock $layoutBlock, $params = array())
     {
         if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
@@ -147,16 +148,16 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $id
      * @return mixed
      */
-    public function adminCmsBlock(LayoutBlock $content)
+    public function renderInitcmsAdminBlock(LayoutBlock $layoutBlock)
     {
 
-        if ($content->getObjectId()) {
-            $contentItem = $this->getService('doctrine')->getRepository($content->getClassType())->find(
-                $content->getObjectId()
+        if ($layoutBlock->getObjectId()) {
+            $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find(
+                $layoutBlock->getObjectId()
             );
         } else {
 
-            $classType = $content->getClassType();
+            $classType = $layoutBlock->getClassType();
 
             $contentItem = new $classType();
         }
@@ -166,7 +167,29 @@ class NetworkingHelperExtension extends \Twig_Extension
         return $this->getService('templating')->render($adminContent['template'], $adminContent['content']);
     }
 
-    public function adminSubNav(AdminInterface $admin, $adminCode = '')
+    public function renderContentTypeName(LayoutBlock $layoutBlock)
+    {
+        if ($layoutBlock->getObjectId()) {
+            $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find(
+                $layoutBlock->getObjectId()
+            );
+        } else {
+
+            $classType = $layoutBlock->getClassType();
+
+            $contentItem = new $classType();
+        }
+
+        if(method_exists($contentItem, 'getContentTypeName')){
+            $name = $contentItem->getContentTypeName();
+        }else{
+            $name = get_class($contentItem);
+        }
+
+        return $this->getService('translator')->trans($name);
+    }
+
+    public function renderAdminSubNav(AdminInterface $admin, $adminCode = '')
     {
         $menu = false;
 
@@ -181,7 +204,7 @@ class NetworkingHelperExtension extends \Twig_Extension
                 $active = false;
 
                 if ($link instanceof AdminInterface) {
-                    $active = ($link->getCode() ==  $adminCode);
+                    $active = ($link->getCode() == $adminCode);
                     $link = $link->generateUrl('list');
                 }
 
@@ -190,7 +213,7 @@ class NetworkingHelperExtension extends \Twig_Extension
                     array('uri' => $link, 'attributes' => array('class' => 'second-level'))
                 );
 
-                if($active){
+                if ($active) {
                     $menu[$label]->setCurrent($active);
                 }
             }
@@ -199,7 +222,7 @@ class NetworkingHelperExtension extends \Twig_Extension
         return $menu;
     }
 
-    public function isAdminActive(AdminInterface $admin, $adminCode = '')
+    public function isInitcmsAdminActive(AdminInterface $admin, $adminCode = '')
     {
         $active = false;
         if ($adminCode == $admin->getCode()) {
@@ -209,7 +232,7 @@ class NetworkingHelperExtension extends \Twig_Extension
         if (method_exists($admin, 'getSubNavLinks')) {
             foreach ($admin->getSubNavLinks() as $value) {
                 if ($value instanceof AdminInterface) {
-                    if($value->getCode() == $adminCode){
+                    if ($value->getCode() == $adminCode) {
                         $active = true;
                     }
                 }
@@ -222,7 +245,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     /**
      * @return mixed
      */
-    public function getTemplateZones()
+    public function getInitcmsTemplateZones()
     {
         return $this->getZonesByTemplate($this->getCurrentTemplate());
     }
@@ -230,7 +253,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     /**
      * @return mixed
      */
-    public function contentSelect()
+    public function getContentTypeOptions()
     {
         return $this->container->getParameter('networking_init_cms.page.content_types');
     }
@@ -245,7 +268,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      *
      * @todo This is a bit of a hack. Need to provide a better way of providing admin icons
      */
-    public function getAdminIcon(\Sonata\AdminBundle\Admin\AdminInterface $admin, $size = 'small', $active = false)
+    public function getInitcmsAdminIconPath(\Sonata\AdminBundle\Admin\AdminInterface $admin, $size = 'small', $active = false)
     {
         $state = $active ? '_active' : '';
         $imagePath = '/bundles/networkinginitcms/img/icons/icon_blank_' . $size . $state . '.png';
@@ -460,7 +483,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param \Symfony\Component\Form\FormView $formView
      * @return mixed
      */
-    public function getFieldZone(\Symfony\Component\Form\FormView $formView)
+    public function getFormFieldZone(\Symfony\Component\Form\FormView $formView)
     {
         $zones = $this->getZoneNames();
 
@@ -477,16 +500,18 @@ class NetworkingHelperExtension extends \Twig_Extension
     }
 
     /**
+     * Gets a list of forms sorted to a particular zone
+     *
      * @param $formChildren
      * @param $zone
      * @return array
      */
-    public function sortFormChildren($formChildren, $zone)
+    public function getSubFormsByZone($formChildren, $zone)
     {
         $zones = array();
 
         foreach ($formChildren as $subForms) {
-            if ($this->getFieldZone($subForms) == $zone) {
+            if ($this->getFormFieldZone($subForms) == $zone) {
                 $zones[] = $subForms;
             }
         }
@@ -501,7 +526,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param null $translationDomain
      * @return mixed
      */
-    public function getFieldToString(
+    public function renderInitcmsFieldAsString(
         $template,
         $object,
         \Symfony\Component\Form\FormView $formView,
