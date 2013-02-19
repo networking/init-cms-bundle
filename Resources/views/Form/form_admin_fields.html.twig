@@ -253,10 +253,16 @@ file that was distributed with this source code.
 
 {% block field_row %}
     {% if sonata_admin is not defined or not sonata_admin_enabled or not sonata_admin.field_description %}
-        {{ form_label(form, label|default(null)) }}
-        {{ form_errors(form) }}
-        {{ form_widget(form) }}
+        {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
+
+        {% if not label_render %}{% set widget_controls = false %}{% endif %}
+        {{ block('widget_control_group_start') }}
+        {{ widget_prefix|raw }} {{ form_widget(form, _context) }} {{ widget_suffix|raw }}
+        {% if widget_remove_btn is defined %}
+            {{ block('form_widget_remove_btn') }}
+        {% endif -%}
         {{ block('form_message') }}
+        {{ block('widget_control_group_end') }}
     {% else %}
         {% set inline_block = false %}
         {% if sonata_admin.field_description.options.inline_block is defined and sonata_admin.field_description.options.inline_block %}
