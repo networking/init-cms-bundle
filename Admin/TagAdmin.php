@@ -59,8 +59,8 @@ class TagAdmin extends Admin
             array(
                 'label' => ' ',
                 'actions' => array(
-                    'delete' => array(),
-                    'edit' => array()
+                    'edit' => array(),
+                    'delete' => array()
                 )
             )
         );
