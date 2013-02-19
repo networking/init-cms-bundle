@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\EventDispatcher\Event,
     Sonata\AdminBundle\Datagrid\ProxyQueryInterface,
-    Sonata\AdminBundle\Controller\CRUDController,
+    Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController,
     Sonata\AdminBundle\Admin\Admin as SontataAdmin,
     Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher,
     Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent,
@@ -29,7 +29,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class CmsCRUDController extends CRUDController
+class CRUDController extends SonataCRUDController
 {
     CONST EDIT_ENTITY = 'crud_controller.edit_entity';
 
@@ -83,7 +83,7 @@ class CmsCRUDController extends CRUDController
 
             $event = new CmsEvent($parameters['object']);
 
-            $this->dispatcher->dispatch(CmsCRUDController::EDIT_ENTITY, $event);
+            $this->dispatcher->dispatch(CRUDController::EDIT_ENTITY, $event);
         }
 
 

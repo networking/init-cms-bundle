@@ -15,17 +15,17 @@ use Networking\InitCmsBundle\Entity\MenuItem,
     Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
-    Sonata\AdminBundle\Controller\CRUDController,
     Symfony\Component\HttpFoundation\JsonResponse,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     Symfony\Component\Security\Core\Exception\AccessDeniedException,
-    Networking\UserBundle\Entity\AdminSettings;
+    Networking\UserBundle\Entity\AdminSettings,
+    Networking\InitCmsBundle\Controller\CRUDController;
 
 /**
  * @author net working AG <info@networking.ch>
  */
-class MenuItemAdminController extends CmsCRUDController
+class MenuItemAdminController extends CRUDController
 {
 
     protected $currentMenuLanguage = '';

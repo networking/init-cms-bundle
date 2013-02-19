@@ -16,6 +16,7 @@ use Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Helper\PageHelper,
     Networking\InitCmsBundle\Entity\LayoutBlock,
     Networking\InitCmsBundle\Entity\ContentRoute,
+    Networking\InitCmsBundle\Controller\CRUDController,
     Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
@@ -26,7 +27,6 @@ use Networking\InitCmsBundle\Entity\Page,
     Symfony\Component\HttpFoundation\RedirectResponse,
     JMS\Serializer\SerializerInterface,
     Sonata\AdminBundle\Datagrid\ProxyQueryInterface,
-    Sonata\AdminBundle\Controller\CRUDController,
     Sonata\AdminBundle\Admin\Admin as SontataAdmin,
     Sonata\AdminBundle\Exception\NoValueException,
     Gedmo\Sluggable\Util\Urlizer;
@@ -34,7 +34,7 @@ use Networking\InitCmsBundle\Entity\Page,
 /**
  * @author net working AG <info@networking.ch>
  */
-class PageAdminController extends CmsCRUDController
+class PageAdminController extends CRUDController
 {
 
     /**
