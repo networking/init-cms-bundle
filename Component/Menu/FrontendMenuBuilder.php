@@ -60,11 +60,13 @@ class FrontendMenuBuilder extends MenuBuilder
         );
 
         foreach ($menuIterator as $childNode) {
-            if ($menuIterator->getDepth() > 0) {
-                $parentMenu = $this->getMenuParentItem($menu, $childNode, $menuIterator->getDepth());
-                $parentMenu->addChild($this->createFromNode($childNode));
-            } else {
-                $menu->addChild($this->createFromNode($childNode));
+            if ($childNode->getVisibility() == Menu::VISIBILITY_PUBLIC || $this->isLoggedIn) {
+                if ($menuIterator->getDepth() > 0) {
+                    $parentMenu = $this->getMenuParentItem($menu, $childNode, $menuIterator->getDepth());
+                    $parentMenu->addChild($this->createFromNode($childNode));
+                } else {
+                    $menu->addChild($this->createFromNode($childNode));
+                }
             }
         }
 
@@ -124,12 +126,14 @@ class FrontendMenuBuilder extends MenuBuilder
         $menu->setChildrenAttribute('class', $classes);
 
         foreach ($menuIterator as $childNode) {
-            if ($menuIterator->getDepth() > 0) {
-                $parentMenu = $this->getMenuParentItem($menu, $childNode, $menuIterator->getDepth());
-                $parentMenu->addChild($this->createFromNode($childNode));
-                $parentMenu->setChildrenAttribute('class', 'nav nav-list');
-            } else {
-                $menu->addChild($this->createFromNode($childNode));
+            if ($childNode->getVisibility() == Menu::VISIBILITY_PUBLIC || $this->isLoggedIn) {
+                if ($menuIterator->getDepth() > 0) {
+                    $parentMenu = $this->getMenuParentItem($menu, $childNode, $menuIterator->getDepth());
+                    $parentMenu->addChild($this->createFromNode($childNode));
+                    $parentMenu->setChildrenAttribute('class', 'nav nav-list');
+                } else {
+                    $menu->addChild($this->createFromNode($childNode));
+                }
             }
         }
 
@@ -143,14 +147,18 @@ class FrontendMenuBuilder extends MenuBuilder
      * @param string $classes
      * @return \Knp\Menu\ItemInterface
      */
-    public function createFrontendLangMenu(Request $request, $languages, $classes = 'nav pull-right', $dropDownMenu = false)
-    {
+    public function createFrontendLangMenu(
+        Request $request,
+        $languages,
+        $classes = 'nav pull-right',
+        $dropDownMenu = false
+    ) {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', $classes);
 
-        if($dropDownMenu){
+        if ($dropDownMenu) {
             $this->createDropdownLangMenu($menu, $languages, $request->getLocale());
-        }else{
+        } else {
             $this->createInlineLangMenu($menu, $languages, $request->getLocale());
         }
 
@@ -232,22 +240,22 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     public function createInlineLangMenu(
-            &$menu,
-            array $languages,
-            $currentLanguage,
-            $route = 'networking_init_change_language'
-        ) {
-            foreach ($languages as $language) {
-                $node = $menu->addChild(
-                    $language['label'],
-                    array(
-                        'uri' => $this->router->generate($route, array('locale' => $language['locale'])),
-                        'linkAttributes' => array('class' => 'language')
-                    )
-                );
-                if ($language['locale'] == $currentLanguage) {
-                    $node->setCurrent(true);
-                }
+        &$menu,
+        array $languages,
+        $currentLanguage,
+        $route = 'networking_init_change_language'
+    ) {
+        foreach ($languages as $language) {
+            $node = $menu->addChild(
+                $language['label'],
+                array(
+                    'uri' => $this->router->generate($route, array('locale' => $language['locale'])),
+                    'linkAttributes' => array('class' => 'language')
+                )
+            );
+            if ($language['locale'] == $currentLanguage) {
+                $node->setCurrent(true);
             }
         }
+    }
 }

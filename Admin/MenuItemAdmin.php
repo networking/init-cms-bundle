@@ -12,6 +12,7 @@
 namespace Networking\InitCmsBundle\Admin;
 
 use Networking\InitCmsBundle\Admin\BaseAdmin,
+    Networking\InitCmsBundle\Entity\MenuItem,
     Sonata\AdminBundle\Admin\Admin,
     Sonata\AdminBundle\Datagrid\ListMapper,
     Sonata\AdminBundle\Datagrid\DatagridMapper,
@@ -152,6 +153,15 @@ class MenuItemAdmin extends BaseAdmin
                         'collapsed' => true,
                         'description' => $this->translator->trans('form.legend_options', array(), $this->translationDomain)
                     ))
+                   ->add(
+                        'visibility',
+                        'sonata_type_translatable_choice',
+                        array(
+                            'help_inline' => 'visibility.helper.text',
+                            'choices' => MenuItem::getVisibilityList(),
+                            'catalogue' => $this->translationDomain
+                        )
+                    )
                 ->add('link_target', 'choice', array('choices'=>$this->getTranslatedLinkTargets(), 'required'=>false))
                 ->add('link_class', 'text', array('required'=>false))
                 ->add('link_rel', 'text', array('required'=>false))

@@ -33,6 +33,16 @@ class MenuItem implements \IteratorAggregate
     const PATH_SEPARATOR = '/';
 
     /**
+     *
+     */
+    const VISIBILITY_PUBLIC = 'public';
+
+    /**
+     *
+     */
+    const VISIBILITY_PROTECTED = 'protected';
+
+    /**
      * @var array $options
      */
     protected $options = array();
@@ -133,6 +143,13 @@ class MenuItem implements \IteratorAggregate
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     protected $description;
+
+    /**
+     * @var string $visibility
+     *
+     * @ORM\Column(name="visibility", type="string", columnDefinition="ENUM('public', 'protected') NOT NULL")
+     */
+    protected $visibility = self::VISIBILITY_PUBLIC;
 
     /**
      *
@@ -507,6 +524,7 @@ class MenuItem implements \IteratorAggregate
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -534,6 +552,7 @@ class MenuItem implements \IteratorAggregate
     public function setLinkClass($linkClass)
     {
         $this->linkClass = $linkClass;
+
         return $this;
     }
 
@@ -552,6 +571,7 @@ class MenuItem implements \IteratorAggregate
     public function setLinkRel($linkRel)
     {
         $this->linkRel = $linkRel;
+
         return $this;
     }
 
@@ -570,6 +590,7 @@ class MenuItem implements \IteratorAggregate
     public function setLinkTarget($linkTarget)
     {
         $this->linkTarget = $linkTarget;
+
         return $this;
     }
 
@@ -582,21 +603,56 @@ class MenuItem implements \IteratorAggregate
     }
 
     /**
+     * Set page visibility
+     *
+     * @param string $visibility
+     * @return MenuItem
+     */
+    public function setVisibility($visibility)
+    {
+        $this->visibility = $visibility;
+
+        return $this;
+    }
+
+    /**
+     * Get page visibility
+     *
+     * @return string
+     */
+    public function getVisibility()
+    {
+        return $this->visibility;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getVisibilityList()
+    {
+        return array(
+            self::VISIBILITY_PUBLIC => 'visibility_public',
+            self::VISIBILITY_PROTECTED => 'visibility_protected'
+        );
+    }
+
+    /**
      * @return array
      */
     public function getLinkAttributes()
     {
         $linkAttributes = array();
 
-        if(!empty($this->linkTarget)){
+        if (!empty($this->linkTarget)) {
             $linkAttributes['target'] = $this->linkTarget;
         }
-        if(!empty($this->linkClass)){
+        if (!empty($this->linkClass)) {
             $linkAttributes['class'] = $this->linkClass;
         }
-        if(!empty($this->linkRel)){
+        if (!empty($this->linkRel)) {
             $linkAttributes['rel'] = $this->linkRel;
         }
+
         return $linkAttributes;
     }
 
