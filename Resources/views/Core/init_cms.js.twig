@@ -42,6 +42,14 @@ function createRedactor() {
 }
 
 (function ($) {
+    $('.modal').on('show', function(){
+        var left = ($(this).width()) /2;
+        var top = ($(this).height()) /2;
+
+        $(this).css('margin-top', '-' +top+'px');
+        $(this).css('margin-left', '-' +left+'px');
+    });
+
     $('.notice-block').on('DOMNodeInserted', function () {
         $(this).fadeIn().delay('3000').fadeOut(500);
     });
