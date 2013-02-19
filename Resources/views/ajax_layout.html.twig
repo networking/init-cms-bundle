@@ -10,11 +10,24 @@ file that was distributed with this source code.
 #}
 
 {% block content %}
+    {% block notice %}
+        {% autoescape false %}
+        <script type="text/javascript">
+            (function ($) {
+                {% for notice_level in ['success','error','info', 'warning'] %}
+                    {% set session_var = 'sonata_flash_' ~ notice_level %}
+                    {% for flash in app.session.flashbag.get(session_var) %}
+                    createInitCmsMessageBox('{{ notice_level }}', '{{ flash|trans([], 'NetworkingInitCmsBundle') }}');
+                    {% endfor %}
+                {% endfor %}
+            })(jQuery);
+        </script>
+        {% endautoescape %}
+    {% endblock %}
     {% block preview %}{% endblock %}
     {% block form %}{% endblock %}
     {% block list %}{% endblock %}
     {% block show %}{% endblock %}
-
     {% block list_filters %}{% endblock %}
     {% block list_table %}{% endblock %}
 {% endblock %}
