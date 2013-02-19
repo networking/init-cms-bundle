@@ -28,4 +28,9 @@ interface ContentInterface
      * @return array
      */
     public function getAdminContent();
+
+    /**
+     * @return string
+     */
+    public function getContentTypeName();
 }

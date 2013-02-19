@@ -502,4 +502,12 @@ class LayoutBlock implements ContentInterface
     {
         return false;
     }
+
+    /**
+     * @return string
+     */
+    public function getContentTypeName()
+    {
+        return 'Layout Content Block';
+    }
 }

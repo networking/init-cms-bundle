@@ -48,7 +48,7 @@ class Text implements ContentInterface
     /**
      * @var text $content
      * @ORM\Column(name="text", type="text", nullable=true)
-     * @Sonata\FormMapper(name="text", type="textarea", options={"required"=false, "property_path" = false, "attr"={"class"="wysiwyg-editor"}})
+     * @Sonata\FormMapper(name="text", type="textarea", options={"label_render" = false, "required"=false, "property_path" = false, "attr"={"class"="wysiwyg-editor"}}, fieldDescriptionOptions={"inline_block" = true})
      */
     protected $text;
 
@@ -203,6 +203,14 @@ class Text implements ContentInterface
             'content' => array('text' => $this),
             'template'  => 'NetworkingInitCmsBundle:Text:admin_text_block.html.twig'
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentTypeName()
+    {
+        return 'Text Block';
     }
 
 }
