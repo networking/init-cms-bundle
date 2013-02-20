@@ -83,7 +83,7 @@ class HelpTextController extends Controller
         $navArray['overview']['group_items']['0']['title'] = $this->get('translator')->trans(
             'overview.title',
             array(),
-            'AdminHelp'
+            'HelpTextAdmin'
         );
 
         $navArray['dashboard']['group_name'] = 'Dashboard';
