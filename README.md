@@ -1,4 +1,4 @@
-NetworkingInitCmsBundle
+NetworkingInitCmsBundle [![Build Status](https://travis-ci.org/networking/init-cms-bundle.png?branch=master)](https://travis-ci.org/networking/init-cms-bundle)
 ======================
 Welcome to the networking init cms bundle
 
