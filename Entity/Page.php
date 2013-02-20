@@ -341,7 +341,7 @@ class Page implements RouteAwareInterface, VersionableInterface
      * @param  string $title
      * @return Page
      */
-    public function setpageName($title)
+    public function setPageName($title)
     {
         $this->oldTitle = $this->pageName;
         $this->pageName = $title;
@@ -354,7 +354,7 @@ class Page implements RouteAwareInterface, VersionableInterface
      *
      * @return string
      */
-    public function getpageName()
+    public function getPageName()
     {
         return $this->pageName;
     }
@@ -1084,7 +1084,7 @@ class Page implements RouteAwareInterface, VersionableInterface
             $prefix .= '- ';
         }
 
-        return $prefix . '' . $this->getpageName();
+        return $prefix . '' . $this->getPageName();
     }
 
     /**

@@ -26,7 +26,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 	public function testOnPrePersist_ShouldSetMetaTitle()
 	{
 		$obj = new Page();
-        $obj->setpageName('page Name');
+        $obj->setPageName('page Name');
         $this->assertEquals('', $obj->getMetaTitle());
 		$obj->onPrePersist();
 		$this->assertEquals('page Name', $obj->getMetaTitle());
@@ -40,7 +40,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$obj = new Page();
 		$title = 'hello page';
 		$this->assertNull($obj->getTitle());
-		$obj->setpageName($title);
+		$obj->setPageName($title);
 		$this->assertEquals($title, $obj->getTitle());
 	}
 
@@ -53,11 +53,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array(), $obj->getParents());
 
 		$parent1 = new Page();
-		$parent1->setpageName('parent1');
+		$parent1->setPageName('parent1');
 		$parent2 = new Page();
-		$parent2->setpageName('parent2');
+		$parent2->setPageName('parent2');
 		$parent3 = new Page();
-		$parent3->setpageName('parent3');
+		$parent3->setPageName('parent3');
 		$parents = array($parent1, $parent2, $parent3);
 		$obj->setParents($parents);
 		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Entity\Page', $obj->getParents());
@@ -70,11 +70,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 	public function testAddChildren()
 	{
 		$obj = new Page();
-		$obj->setpageName('original page');
+		$obj->setPageName('original page');
 		$this->assertEquals(null, $obj->getChildren());
 
 		$child1 = new Page();
-		$child1->setpageName('child1');
+		$child1->setPageName('child1');
 		$obj->addChildren($child1);
 		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Entity\Page', $obj->getChildren());
 		$children = $obj->getChildren();
@@ -82,7 +82,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('original page', $children[0]->getParent()->getTitle());
 
 		$child2 = new Page();
-		$child2->setpageName('child2');
+		$child2->setPageName('child2');
 		$obj->addChildren($child2);
 		$children = $obj->getAllChildren();
 		$this->assertEquals('child2', $children[0]->getTitle()); // new children are first
