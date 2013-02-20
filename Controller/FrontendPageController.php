@@ -30,12 +30,15 @@ use Networking\InitCmsBundle\Entity\HelpTextRepository;
 class FrontendPageController extends Controller
 {
 
-    protected function getAdminPool(){
-        if($this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')){
+    protected function getAdminPool()
+    {
+        if ($this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
             return $this->get('sonata.admin.pool');
         }
+
         return false;
     }
+
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return array
@@ -178,6 +181,7 @@ class FrontendPageController extends Controller
     public function viewDraftAction(Request $request, $locale, $path = null)
     {
         $request->getSession()->set('_locale', $locale);
+
         return $this->changePageStatus($request, Page::STATUS_DRAFT, $path);
     }
 
@@ -190,6 +194,7 @@ class FrontendPageController extends Controller
     public function viewLiveAction(Request $request, $locale, $path = null)
     {
         $request->getSession()->set('_locale', $locale);
+
         return $this->changePageStatus($request, Page::STATUS_PUBLISHED, $path);
     }
 
@@ -231,6 +236,30 @@ class FrontendPageController extends Controller
         $oldURL = $languageSwitcherHelper->getPathInfo($referer);
 
         return $languageSwitcherHelper->getTranslationRoute($oldURL, $locale);
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function translationNotFoundAction(Request $request)
+    {
+        $params = array(
+            'admin_pool' => $this->getAdminPool(),
+            'language' => \Locale::getDisplayLanguage($this->getRequest()->getLocale())
+        );
+
+        return $this->render($this->container->getParameter('networking_init_cms.no_translation_template'), $params);
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function pageNotFoundAction(Request $request)
+    {
+        $params = array('admin_pool' => $this->getAdminPool());
+        return $this->render($this->container->getParameter('networking_init_cms.404_template'), $params);
     }
 
 }

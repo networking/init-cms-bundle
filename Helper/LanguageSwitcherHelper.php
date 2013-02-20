@@ -98,6 +98,14 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
             }
         }
 
+        if($fallBackRoute = $this->container->getParameter('networking_init_cms.translation_fallback_route')){
+            return $fallBackRoute;
+        }
+
+        if($route = $this->router->matchRequest(Request::create('/404'))){
+            return $route;
+        }
+
         //no valid translation found
         throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for content "%s"', $locale, $content->__toString()));
 

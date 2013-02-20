@@ -1,4 +1,7 @@
 networking_init_cms:
+    translation_fallback_route: 'initcms_no_translation'
+    no_translation_template: 'NetworkingInitCmsBundle::no_translation_found.html.twig'
+    404_template: 'NetworkingInitCmsBundle::error_404.html.twig'
     languages:
         - {label: English, locale: en_US}
     content_types:

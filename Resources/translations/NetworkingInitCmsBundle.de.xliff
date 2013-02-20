@@ -156,13 +156,13 @@
             </trans-unit>
             <trans-unit id="title.translation_not_found">
                 <source>title.translation_not_found</source>
-                <target>Translation not found</target>
+                <target>Kein Übersetzung auf %language% gefunden</target>
             </trans-unit>
             <trans-unit id="info.translation_not_found">
                 <source>info.translation_not_found</source>
                 <target>
                     <![CDATA[
-                         <p>It looks like there is no translation for the page you are looking for.</p>
+                         <p>Leider wurde keine Übersetzung auf %language% gefunden für die gewünschte Seite.</p>
                     ]]>
                 </target>
             </trans-unit>

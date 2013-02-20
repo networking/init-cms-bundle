@@ -51,8 +51,17 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
         $container->setParameter('networking_init_cms.init_cms_editor', $config['init_cms_editor']);
+        $container->setParameter('networking_init_cms.translation_fallback_route', $config['translation_fallback_route']);
+        $container->setParameter('networking_init_cms.404_template', $config['404_template']);
+        $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
     }
 
+    /**
+     * Add short labels for languages (e.g. de_CH becomes DE).
+     *
+     * @param array $languages
+     * @return array
+     */
     protected function addShortLabels(array $languages){
         foreach ( $languages as $key => $val){
             if(!array_key_exists('short_label', $val) || !$val['short_label']){
