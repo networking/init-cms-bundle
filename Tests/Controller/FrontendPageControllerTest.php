@@ -16,7 +16,8 @@ use \Networking\InitCmsBundle\Controller\FrontendPageController,
     \Networking\InitCmsBundle\Entity\Page,
     \Symfony\Component\Security\Core\Exception\AccessDeniedException,
     \Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
-    \Symfony\Component\Security\Core\SecurityContext;
+    \Symfony\Component\Security\Core\SecurityContext,
+Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /** @author sonja brodersen s.brodersen@networking.ch*/
 
@@ -280,101 +281,124 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
 	}
 
-	public function testChangeLanguageActionWithCurrentLocal()
-    {
-        $this->markTestIncomplete('change this test');
+//	public function testChangeLanguageActionWithCurrentLocal()
+//    {
+//        $mockHeaders = $this->getMock('\Symfony\Component\HttpFoundation\HeaderBag');
+//		$mockHeaders->expects($this->once())
+//			->method('get')
+//            ->with($this->equalTo('referer'))
+//            ->will($this->returnValue('/the same/'));
+//
+//
+//        $mockSession = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
+//				->disableOriginalConstructor()
+//				->getMock();
+//        $mockSession->expects($this->once())
+//            ->method('set')
+//            ->with('_locale', 'foo');
+//
+//
+//		// request
+//		$mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+//				->disableOriginalConstructor()
+//				->getMock();
+//        $mockRequest->expects($this->once())
+//            ->method('getSession')
+//            ->will($this->returnValue($mockSession));
+//        $mockRequest->headers = $mockHeaders;
+//
+//        $languageSwitcherHelper = new LanguageSwitcherHelper();
+//
+//        $mockRouter = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//
+//        $mockRouter->expects($this->once())
+//            ->method('generate')
+//            ->will($this->returnValue('/some_url/'));
+//
+//        //container
+//		$mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//        $mockContainer->expects($this->at(0))
+//            ->method('get')
+//            ->with('networking_init_cms.page.helper.language_switcher')
+//            ->will($this->returnValue($languageSwitcherHelper));
+//        $mockContainer->expects($this->at(1))
+//            ->method('get')
+//            ->with('router')
+//            ->will($this->returnValue($mockRouter));
+//
+//
+//
+//		$controller = new FrontendPageController();
+//        $controller->setContainer($mockContainer);
+//
+//		$response = $controller->changeLanguageAction($mockRequest, 'foo');
+//        $this->assertEquals('/the same/', $response->getTargetUrl());
+//	}
 
-        $mockHeaders = $this->getMock('\Symfony\Component\HttpFoundation\HeaderBag');
-		$mockHeaders->expects($this->once())
-			->method('get')
-            ->with($this->equalTo('referer'))
-            ->will($this->returnValue('/the same/'));
-
-		// request
-		$mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
-				->disableOriginalConstructor()
-				->getMock();
-        $mockRequest->expects($this->once())
-            ->method('getLocale')
-            ->will($this->returnValue('foo'));
-        $mockRequest->headers = $mockHeaders;
-
-        $languageSwitcherHelper = new LanguageSwitcherHelper();
-
-        //container
-		$mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockContainer->expects($this->once())
-            ->method('get')
-            ->with('networking_init_cms.page.helper.language_switcher')
-            ->will($this->returnValue($languageSwitcherHelper));
 
 
-		$controller = new FrontendPageController();
-        $controller->setContainer($mockContainer);
-
-		$response = $controller->changeLanguageAction($mockRequest, 'foo');
-        $this->assertEquals('/the same/', $response->getTargetUrl());
-	}
-
-    public function testChangeLanguageAction()
-    {
-        $this->markTestIncomplete('change this test');
-        $mockSession = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
-				->disableOriginalConstructor()
-				->getMock();
-        $mockSession->expects($this->once())
-            ->method('set')
-            ->with('_locale', 'foo');
-
-        $mockLangSwitcherHelper = $this->getMock('\Networking\InitCmsBundle\Helper\LanguageSwitcherHelper');
-        $mockLangSwitcherHelper->expects($this->once())
-            ->method('getPathInfo')
-            ->will($this->returnValue('/old url/'));
-        $mockLangSwitcherHelper->expects($this->once())
-            ->method('getTranslationRoute')
-            ->will($this->returnValue('/new url/'));
-        $mockRouter = $this->getMockBuilder('Symfony\Cmf\Bundle\RoutingExtraBundle\Routing\DynamicRouter')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockRouter->expects($this->once())
-            ->method('generate')
-            ->will($this->returnValue('/Router NEW URL/'));
-
-        $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockContainer->expects($this->at(0))
-            ->method('get')
-            ->with('networking_init_cms.page.helper.language_switcher')
-            ->will($this->returnValue($mockLangSwitcherHelper));
-        $mockContainer->expects($this->at(1))
-            ->method('get')
-            ->with('router')
-            ->will($this->returnValue($mockRouter));
-        $mockHeaders = $this->getMock('\Symfony\Component\HttpFoundation\HeaderBag');
-		$mockHeaders->expects($this->any())
-			->method('get')
-			->will($this->returnValue('/the new/'))
-			->with($this->equalTo('referer'));
-
-		// request
-		$mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
-				->disableOriginalConstructor()
-				->getMock();
-        $mockRequest->expects($this->once())
-            ->method('getLocale')
-            ->will($this->returnValue('bar'));
-        $mockRequest->expects($this->once())
-            ->method('getSession')
-            ->will($this->returnValue($mockSession));
-        $mockRequest->headers = $mockHeaders;
-		$controller = new FrontendPageController();
-        $controller->setContainer($mockContainer);
-		$response = $controller->changeLanguageAction($mockRequest, 'foo');
-        $this->assertEquals('/Router NEW URL/', $response->getTargetUrl());
-	}
+//
+//    public function testChangeLanguageAction()
+//    {
+//        $this->markTestIncomplete('change this test');
+//        $mockSession = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
+//				->disableOriginalConstructor()
+//				->getMock();
+//        $mockSession->expects($this->once())
+//            ->method('set')
+//            ->with('_locale', 'foo');
+//
+//        $mockLangSwitcherHelper = $this->getMock('\Networking\InitCmsBundle\Helper\LanguageSwitcherHelper');
+//        $mockLangSwitcherHelper->expects($this->once())
+//            ->method('getPathInfo')
+//            ->will($this->returnValue('/old url/'));
+//        $mockLangSwitcherHelper->expects($this->once())
+//            ->method('getTranslationRoute')
+//            ->will($this->returnValue('/new url/'));
+//        $mockRouter = $this->getMockBuilder('Symfony\Cmf\Bundle\RoutingExtraBundle\Routing\DynamicRouter')
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//        $mockRouter->expects($this->once())
+//            ->method('generate')
+//            ->will($this->returnValue('/Router NEW URL/'));
+//
+//        $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//        $mockContainer->expects($this->at(0))
+//            ->method('get')
+//            ->with('networking_init_cms.page.helper.language_switcher')
+//            ->will($this->returnValue($mockLangSwitcherHelper));
+//        $mockContainer->expects($this->at(1))
+//            ->method('get')
+//            ->with('router')
+//            ->will($this->returnValue($mockRouter));
+//        $mockHeaders = $this->getMock('\Symfony\Component\HttpFoundation\HeaderBag');
+//		$mockHeaders->expects($this->any())
+//			->method('get')
+//			->will($this->returnValue('/the new/'))
+//			->with($this->equalTo('referer'));
+//
+//		// request
+//		$mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+//				->disableOriginalConstructor()
+//				->getMock();
+//        $mockRequest->expects($this->once())
+//            ->method('getLocale')
+//            ->will($this->returnValue('bar'));
+//        $mockRequest->expects($this->once())
+//            ->method('getSession')
+//            ->will($this->returnValue($mockSession));
+//        $mockRequest->headers = $mockHeaders;
+//		$controller = new FrontendPageController();
+//        $controller->setContainer($mockContainer);
+//		$response = $controller->changeLanguageAction($mockRequest, 'foo');
+//        $this->assertEquals('/Router NEW URL/', $response->getTargetUrl());
+//	}
 
 }
 
