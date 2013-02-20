@@ -31,14 +31,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(null, $text->getCreatedAt());
 	}
 
-	public function testGetFieldDefinition_ShouldDefineNameTypeAndOptions()
-	{
-		$text = new Text();
-		$result = $text->getFieldDefinition();
-		$this->assertArrayHasKey('name', $result[0]);
-		$this->assertArrayHasKey('type', $result[0]);
-		$this->assertArrayHasKey('options', $result[0]);
-	}
+
 
 	public function testGetTemplateOptions()
 	{
