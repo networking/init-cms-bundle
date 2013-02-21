@@ -60,8 +60,8 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         $homePage = new Page();
 
         $homePage->setLocale($locale);
-        $homePage->setPageName('Homepage '.$locale);
-        $homePage->setMetaTitle('Homepage '.$locale);
+        $homePage->setPageName('Homepage ' . $locale);
+        $homePage->setMetaTitle('Homepage ' . $locale);
         $homePage->setMetaKeyword('homepage');
         $homePage->setMetaDescription('This is the homepage');
         $homePage->setStatus(Page::STATUS_PUBLISHED);
@@ -70,16 +70,15 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         $homePage->setActiveFrom(new \DateTime('now'));
 
         // set original for translations
-        if($key > 0)
-        {
-            $firstPage = $this->getReference('homepage_'.$languages['0']['locale']);
+        if ($key > 0) {
+            $firstPage = $this->getReference('homepage_' . $languages['0']['locale']);
             $homePage->setOriginal($firstPage);
         }
 
         $manager->persist($homePage);
         $manager->flush();
 
-        $this->addReference('homepage_'.$locale, $homePage);
+        $this->addReference('homepage_' . $locale, $homePage);
     }
 
     /**
@@ -90,7 +89,7 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         $templates = $this->container->getParameter('networking_init_cms.page.templates');
 
         foreach ($templates as $key => $template) {
-            return $key;
+            return $template['template'];
         }
     }
 
