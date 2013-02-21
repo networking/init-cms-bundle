@@ -78,8 +78,6 @@ Add the following lines to your application kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Symfony\Cmf\Bundle\RoutingExtraBundle\SymfonyCmfRoutingExtraBundle(),
             new Networking\InitCmsBundle\NetworkingInitCmsBundle(),
-            new Networking\UserBundle\NetworkingUserBundle(),
-            new Networking\MediaBundle\NetworkingMediaBundle(),
             new Networking\GalleryBundle\NetworkingGalleryBundle(),
 	        // ...
 	    );

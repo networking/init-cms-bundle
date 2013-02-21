@@ -32,9 +32,7 @@
         "symfony-cmf/routing-extra-bundle":"dev-master",
         "jms/serializer-bundle":"master",
         "ibrows/sonata-admin-annotation-bundle": "*",
-        "networking/media-bundle":"dev-master",
         "networking/gallery-bundle":"dev-master",
-        "networking/user-bundle":"dev-master"
     },
     "autoload":{
         "psr-0":{

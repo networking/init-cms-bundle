@@ -27,13 +27,13 @@ function createRedactor() {
     jQuery('.wysiwyg-editor').each(function () {
         jQuery(this).redactor({
             focus:true,
-            imageGetJson:'{{ path('admin_networking_media_media_uploadedTextBlockImage') }}',
-            imageUpload:'{{ path('admin_networking_media_media_uploadTextBlockImage') }}',
+            imageGetJson:'{{ path('admin_networking_initcms_media_uploadedTextBlockImage') }}',
+            imageUpload:'{{ path('admin_networking_initcms_media_uploadTextBlockImage') }}',
             imageUploadErrorCallback:function (editor, xhr) {
                 uploadError(xhr)
             },
-            fileGetJson:'{{ path('admin_networking_media_media_uploadedTextBlockFile') }}',
-            fileUpload:'{{ path('admin_networking_media_media_uploadTextBlockFile') }}',
+            fileGetJson:'{{ path('admin_networking_initcms_media_uploadedTextBlockFile') }}',
+            fileUpload:'{{ path('admin_networking_initcms_media_uploadTextBlockFile') }}',
             plugins:['cssPlugin'],
             cssStyles:{'color-draft':'orange', 'white':'background white'},
             minHeight:300

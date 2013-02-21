@@ -8,8 +8,6 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'SonataAdminBundle:Form:form_admin_fields.html.twig' %}
-
 
 {# Custom Sonata Admin Extension, template override#}
 {% block sonata_admin_orm_one_to_one_widget %}
@@ -208,18 +206,6 @@ file that was distributed with this source code.
     {% endspaceless %}
 {% endblock %}
 
-{% block choice_widget_expanded %}
-    {% spaceless %}
-        <ul {{ block('widget_container_attributes') }}>
-            {% for child in form %}
-                <li>
-                    {{ form_widget(child) }}
-                    {{ form_label(child) }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endspaceless %}
-{% endblock choice_widget_expanded %}
 
 {% block choice_widget %}
     {% spaceless %}
@@ -275,9 +261,13 @@ file that was distributed with this source code.
             {% else %}
                 {% block label %}
                     {% if sonata_admin.field_description.options.name is defined %}
+                        {% if label_render %}
                         {{ form_label(form, sonata_admin.field_description.options.name, { 'attr' : {'class' : 'control-label'} }) }}
+                        {% endif %}
                     {% else %}
+                        {% if label_render %}
                         {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
+                        {% endif %}
                     {% endif %}
                 {% endblock %}
             {% endif %}
@@ -416,3 +406,28 @@ file that was distributed with this source code.
         {% endif %}
     {% endspaceless %}
 {% endblock %}
+
+{% block checkbox_widget %}
+{% spaceless %}
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/> {{ help_inline|trans({}, translation_domain)|raw }}
+{% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% block sonata_security_roles_widget %}
+{% spaceless %}
+    <div class="editable">
+        <h4>{{ 'field.label_roles_editable'|trans({}, "SonataUserBundle") }}</h4>
+        {{ block('choice_widget') }}
+    </div>
+    {% if read_only_choices|length > 0 %}
+    <div class="readonly">
+        <h4>{{ 'field.label_roles_readonly'|trans({}, "SonataUserBundle") }}</h4>
+        <ul>
+        {% for choice in read_only_choices %}
+            <li>{{ choice }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock sonata_security_roles_widget %}

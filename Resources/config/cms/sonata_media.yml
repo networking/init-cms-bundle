@@ -1,0 +1,53 @@
+sonata_media:
+    class:
+        media:              Networking\InitCmsBundle\Entity\Media
+        gallery:            Networking\InitCmsBundle\Entity\Gallery
+        gallery_has_media:  Networking\InitCmsBundle\Entity\GalleryHasMedia
+    default_context: default
+    db_driver: doctrine_orm # or doctrine_mongodb
+    contexts:
+        default:  # the default context is mandatory
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.youtube
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 800, quality: 70}
+                admin: { width: 100, quality: 70}
+
+
+        one_column:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+
+            formats:
+                small: { width: 200 , quality: 70}
+                big:   { width: 800, quality: 70}
+                admin: { width: 200, quality: 70}
+
+        two_column:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.dailymotion
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 390, quality: 70}
+                admin: { width: 100, quality: 70}
+    cdn:
+        server:
+            path: /uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  %kernel.root_dir%/../web/uploads/media
+            create:     false
+
+#    providers:
+#        image:
+#            resizer: sonata.media.resizer.square
+

@@ -1,0 +1,12 @@
+Sonata\InitCmsBundle\Model\GalleryHasMedia:
+    properties:
+        media:
+            type: Networking\InitCmsBundle\Entity\Media
+        position:
+            type: integer
+        updatedAt:
+            type: DateTime
+        createdAt:
+            type: DateTime
+        enabled:
+            type: boolean

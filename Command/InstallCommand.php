@@ -114,7 +114,7 @@ class InstallCommand extends Command
      * @param string $bundle
      * @return int
      */
-    private function sonataGenerateObjectACL($output, $username, $bundle='NetworkingUserBundle:User')
+    private function sonataGenerateObjectACL($output, $username, $bundle='NetworkingInitCmsBundle:User')
     {
         $command = $this->getApplication()->find('sonata:admin:generate-object-acl');
 

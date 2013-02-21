@@ -19,7 +19,7 @@ use Networking\InitCmsBundle\Entity\MenuItem,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     Symfony\Component\Security\Core\Exception\AccessDeniedException,
-    Networking\UserBundle\Entity\AdminSettings,
+    Networking\InitCmsBundle\Entity\AdminSettings,
     Networking\InitCmsBundle\Controller\CRUDController;
 
 /**

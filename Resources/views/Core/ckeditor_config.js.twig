@@ -13,10 +13,10 @@ CKEDITOR.editorConfig = function( config ) {
 	config.plugins = 'dialogui,dialog,about,a11yhelp,basicstyles,blockquote,clipboard,panel,floatpanel,menu,contextmenu,resize,button,toolbar,elementspath,list,indent,enterkey,entities,popup,filebrowser,floatingspace,listblock,richcombo,format,htmlwriter,horizontalrule,wysiwygarea,image,fakeobjects,link,magicline,maximize,pastetext,pastefromword,removeformat,sourcearea,specialchar,menubutton,scayt,stylescombo,tab,table,tabletools,undo,wsc';
 
 	config.skin = 'moono';
-    config.filebrowserUploadUrl= "{{ path('admin_networking_media_media_uploadTextBlockFile') }}";
-    config.filebrowserBrowseUrl= "{{ path('admin_networking_media_media_uploadedTextBlockFile')}}";
-    config.filebrowserImageUploadUrl= "{{ path('admin_networking_media_media_uploadTextBlockImage') }}";
-    config.filebrowserImageBrowseUrl="{{ path('admin_networking_media_media_uploadedTextBlockImage')}}";
+    config.filebrowserUploadUrl= "{{ path('admin_networking_initcms_media_uploadTextBlockFile') }}";
+    config.filebrowserBrowseUrl= "{{ path('admin_networking_initcms_media_uploadedTextBlockFile')}}";
+    config.filebrowserImageUploadUrl= "{{ path('admin_networking_initcms_media_uploadTextBlockImage') }}";
+    config.filebrowserImageBrowseUrl="{{ path('admin_networking_initcms_media_uploadedTextBlockImage')}}";
     config.height = "450px";
 	// %REMOVE_END%
 

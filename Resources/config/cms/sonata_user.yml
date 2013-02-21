@@ -1,0 +1,18 @@
+sonata_user:
+    security_acl: true
+    impersonating:
+        route:                networking_init_cms_admin
+        parameters:           { path: /}
+    class:
+        user: Networking\InitCmsBundle\Entity\User
+        group: Networking\InitCmsBundle\Entity\Group
+    admin:                  # Admin Classes
+        user:
+            class:          Networking\InitCmsBundle\Admin\UserAdmin
+            controller:     NetworkingInitCmsBundle:CRUD
+            translation:    SonataUserBundle
+
+        group:
+            class:          Networking\InitCmsBundle\Admin\GroupAdmin
+            controller:     NetworkingInitCmsBundle:CRUD
+            translation:    SonataUserBundle

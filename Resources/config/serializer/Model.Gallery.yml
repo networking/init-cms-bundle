@@ -1,0 +1,16 @@
+Sonata\InitCmsBundle\Model\Gallery:
+    properties:
+      context:
+          type: string
+      name:
+          type: string
+      enabled:
+          type: boolean
+      updatedAt:
+          type: DateTime
+      createdAt:
+          type: DateTime
+      defaultFormat:
+          type: string
+      galleryHasMedias:
+          type: ArrayCollection<Networking\InitCmsBundle\Entity\GalleryHasMedia>

@@ -1,0 +1,42 @@
+Sonata\InitCmsBundle\Model\Media:
+    properties:
+        name:
+            type: string
+        description:
+            type: string
+        enabled:
+            type: boolean
+        providerName:
+            type: string
+        providerStatus:
+            type: integer
+        providerReference:
+            type: string
+        providerMetadata:
+            type: array
+        width:
+            type: integer
+        height:
+            type: integer
+        length:
+            type: double
+        authorName:
+            type: string
+        context:
+            type: string
+        cdnIsFlushable:
+            type: boolean
+        cdnFlushAt:
+            type: DateTime
+        cdnStatus:
+            type: integer
+        updatedAt:
+            type: DateTime
+        createdAt:
+            type: DateTime
+        contentType:
+            type: string
+        size:
+            type: integer
+        galleryHasMedias:
+            exclude: true
