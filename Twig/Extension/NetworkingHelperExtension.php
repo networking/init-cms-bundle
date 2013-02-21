@@ -167,6 +167,10 @@ class NetworkingHelperExtension extends \Twig_Extension
         return $this->getService('templating')->render($adminContent['template'], $adminContent['content']);
     }
 
+    /**
+     * @param \Networking\InitCmsBundle\Entity\LayoutBlock $layoutBlock
+     * @return mixed
+     */
     public function renderContentTypeName(LayoutBlock $layoutBlock)
     {
         if ($layoutBlock->getObjectId()) {
@@ -189,6 +193,11 @@ class NetworkingHelperExtension extends \Twig_Extension
         return $this->getService('translator')->trans($name);
     }
 
+    /**
+     * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
+     * @param string $adminCode
+     * @return bool|\Knp\Menu\ItemInterface
+     */
     public function renderAdminSubNav(AdminInterface $admin, $adminCode = '')
     {
         $menu = false;
@@ -222,6 +231,11 @@ class NetworkingHelperExtension extends \Twig_Extension
         return $menu;
     }
 
+    /**
+     * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
+     * @param string $adminCode
+     * @return bool
+     */
     public function isInitcmsAdminActive(AdminInterface $admin, $adminCode = '')
     {
         $active = false;
@@ -436,7 +450,8 @@ class NetworkingHelperExtension extends \Twig_Extension
             $template = $page->getTemplate();
         } else {
             $templates = $this->container->getParameter('networking_init_cms.page.templates');
-            $template = key($templates);
+            $firstTemplate = reset($templates);
+            $template = $firstTemplate['template'];
         }
 
         if ($request->getMethod() === 'POST') {
@@ -476,7 +491,14 @@ class NetworkingHelperExtension extends \Twig_Extension
     {
         $templates = $this->container->getParameter('networking_init_cms.page.templates');
 
-        return $templates[$template]['zones'];
+        $results = array_filter($templates, function($var) use ($template){
+                        return $var['template'] == $template;
+                    });
+
+        $template = reset($results);
+
+        return $template['zones'];
+
     }
 
     /**

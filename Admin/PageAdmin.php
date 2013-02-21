@@ -567,7 +567,7 @@ class PageAdmin extends BaseAdmin
 
         $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
         foreach ($templates as $key => $template) {
-            $choices[$key] = $template['name'];
+            $choices[$template['template']] = $template['name'];
         }
 
         return $choices;
@@ -584,8 +584,8 @@ class PageAdmin extends BaseAdmin
             return $this->getSubject()->getTemplate();
         }
         $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
-        reset($templates);
-        $defaultTemplate = key($templates);
+        $firstTemplate = reset($templates);
+        $defaultTemplate = $firstTemplate['template'];
 
         return $defaultTemplate;
     }
@@ -601,7 +601,7 @@ class PageAdmin extends BaseAdmin
 
         $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
         foreach ($templates as $key => $template) {
-            $icons[$key] = isset($template['icon']) ? $template['icon'] : '';
+            $icons[$template['template']] = isset($template['icon']) ? $template['icon'] : '';
         }
 
         return $icons;

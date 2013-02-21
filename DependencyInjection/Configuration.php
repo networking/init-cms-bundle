@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('key')
                     ->prototype('array')
                         ->children()
+                            ->scalarNode('template')->isRequired()->end()
                             ->scalarNode('name')->isRequired()->end()
                             ->scalarNode('icon')->end()
                             ->arrayNode('zones')
