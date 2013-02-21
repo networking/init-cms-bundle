@@ -45,6 +45,7 @@ class AppKernel extends Kernel
 	        new \Sonata\AdminBundle\SonataAdminBundle(),
 	        new \Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
 	        new \Networking\InitCmsBundle\NetworkingInitCmsBundle(),
+            new \Sonata\UserBundle\SonataUserBundle('FOSUserBundle'),
             new \Networking\InitCmsBundle\Tests\Functional\TestBundle\TestBundle(),
         );
     }
