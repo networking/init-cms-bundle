@@ -31,8 +31,7 @@
         "craue/formflow-bundle":"dev-master",
         "symfony-cmf/routing-extra-bundle":"dev-master",
         "jms/serializer-bundle":"master",
-        "ibrows/sonata-admin-annotation-bundle": "*",
-        "networking/gallery-bundle":"dev-master",
+        "ibrows/sonata-admin-annotation-bundle": "*"
     },
     "autoload":{
         "psr-0":{
