@@ -174,14 +174,14 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var string $status
-     * @ORM\Column(name="status", type="string", columnDefinition="ENUM('status_draft', 'status_review', 'status_published') NOT NULL")
+     * @ORM\Column(name="status", type="string", length=50)
      */
     protected $status = self::STATUS_DRAFT;
 
     /**
      * @var string $visibility
      *
-     * @ORM\Column(name="visibility", type="string", columnDefinition="ENUM('public', 'protected') NOT NULL")
+     * @ORM\Column(name="visibility", type="string", length=50)
      */
     protected $visibility = self::VISIBILITY_PUBLIC;
 
@@ -596,6 +596,9 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     public function setStatus($status)
     {
+        if (!in_array($status, array(self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_REVIEW))) {
+            throw new \InvalidArgumentException("Invalid status");
+        }
         $this->status = $status;
 
         return $this;
@@ -619,6 +622,9 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     public function setVisibility($visibility)
     {
+        if (!in_array($visibility, array(self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC))) {
+            throw new \InvalidArgumentException("Invalid visibility");
+        }
         $this->visibility = $visibility;
 
         return $this;

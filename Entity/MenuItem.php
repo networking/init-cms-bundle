@@ -147,7 +147,7 @@ class MenuItem implements \IteratorAggregate
     /**
      * @var string $visibility
      *
-     * @ORM\Column(name="visibility", type="string", columnDefinition="ENUM('public', 'protected') NOT NULL")
+     * @ORM\Column(name="visibility", type="string", length=50)
      */
     protected $visibility = self::VISIBILITY_PUBLIC;
 
@@ -610,6 +610,9 @@ class MenuItem implements \IteratorAggregate
      */
     public function setVisibility($visibility)
     {
+        if (!in_array($visibility, array(self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC))) {
+            throw new \InvalidArgumentException("Invalid visibility");
+        }
         $this->visibility = $visibility;
 
         return $this;

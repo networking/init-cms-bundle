@@ -47,7 +47,7 @@ class GalleryView implements ContentInterface
     /**
      * @var string $galleryType
      *
-     * @ORM\Column(name="gallery_type", type="string", columnDefinition="ENUM('lightbox', 'carousel') NOT NULL")
+     * @ORM\Column(name="gallery_type", type="string", length=50)
      * @Sonata\FormMapper(name="galleryType", type="choice", options={"label" = "form.label_gallery_type", "property_path" = false, "choices" = {"lightbox" = "lightbox", "carousel" = "carousel"}})
      */
     protected $galleryType = 'lightbox';
@@ -189,10 +189,14 @@ class GalleryView implements ContentInterface
 
     /**
      * @param $galleryType
-     * @return Gallery
+     * @return GalleryView
+     * @throws \InvalidArgumentException
      */
     public function setGalleryType($galleryType)
     {
+        if(!in_array($galleryType, array('lightbox', 'carousel'))){
+            throw new \InvalidArgumentException('Gallery type not valid');
+        }
         $this->galleryType = $galleryType;
         return $this;
     }

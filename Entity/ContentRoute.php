@@ -21,7 +21,7 @@ use Symfony\Cmf\Component\Routing\RouteAwareInterface;
  *
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="content_route", uniqueConstraints={
- * @ORM\UniqueConstraint(name="path_idx", columns={"path", "locale", "class_type"})
+ * @ORM\UniqueConstraint(name="content_route_idx", columns={"path", "locale", "class_type"})
  * })
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\ContentRouteRepository")
  *
