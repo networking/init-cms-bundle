@@ -1,4 +1,4 @@
-Sonata\InitCmsBundle\Model\Gallery:
+Sonata\MediaBundle\Model\Gallery:
     properties:
       context:
           type: string

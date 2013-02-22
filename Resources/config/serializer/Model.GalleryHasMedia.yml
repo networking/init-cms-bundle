@@ -1,4 +1,4 @@
-Sonata\InitCmsBundle\Model\GalleryHasMedia:
+Sonata\MediaBundle\Model\GalleryHasMedia:
     properties:
         media:
             type: Networking\InitCmsBundle\Entity\Media

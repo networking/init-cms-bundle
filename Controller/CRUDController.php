@@ -48,30 +48,6 @@ class CRUDController extends SonataCRUDController
     }
 
     /**
-     * @param mixed   $data
-     * @param integer $status
-     * @param array   $headers
-     *
-     * @return Response with json encoded data
-     */
-    public function renderJson($data, $status = 200, $headers = array())
-    {
-
-
-        // fake content-type so browser does not show the download popup when this
-        // response is rendered through an iframe (used by the jquery.form.js plugin)
-        //  => don't know yet if it is the best solution
-        if ($this->get('request')->get('_xml_http_request')
-            && strpos($this->get('request')->headers->get('Content-Type'), 'multipart/form-data') === 0
-        ) {
-            $headers['Content-Type'] = 'text/plain';
-            return new Response(json_encode($data), $status, $headers);
-        } else {
-            return new JsonResponse($data, $status, $headers);
-        }
-    }
-
-    /**
      * @param string $view
      * @param array $parameters
      * @param \Symfony\Component\HttpFoundation\Response $response

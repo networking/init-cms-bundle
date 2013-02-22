@@ -1,4 +1,4 @@
-Sonata\InitCmsBundle\Model\Media:
+Sonata\MediaBundle\Model\Media:
     properties:
         name:
             type: string
