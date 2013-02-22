@@ -163,13 +163,13 @@ class AdminMenuBuilder extends MenuBuilder
                 $menu->addChild(
                     'Edit',
                     array(
-                        'label' => '<i class="icon-pencil icon-white"></i> &nbsp;' . $this->serviceContainer->get(
+                        'label' => $this->serviceContainer->get(
                             'translator'
                         )->trans('Edit', array(), 'NetworkingInitCmsBundle'),
-                        'extras' => array('safe_label' => true),
                         'uri' => $editPath
                     )
                 );
+                $this->addIcon($menu['Edit'], array('icon' => 'pencil icon-white', 'append' => false));
             }
 
             $menu->addChild('Admin', array('uri' => $lastActionUrl));
@@ -186,7 +186,7 @@ class AdminMenuBuilder extends MenuBuilder
                 $menu,
                 $webLink,
                 true,
-                array('icon' => 'caret')
+                array('caret' => true)
             );
 
             if ($draftPath) {
