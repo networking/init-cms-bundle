@@ -126,14 +126,14 @@ file that was distributed with this source code.
         {% if not app.user.getAdminSetting('menuAdmin.show_now_confirm_dialog') %}
 
         $('.menu_add_link').live('click', function (event) {
-            $('#menu_info_text').html("{{ 'info.create_menu_item'|trans({}, admin.translationDomain) }}");
+            $('#menu_info_text').html('{{ 'info.create_menu_item'|trans({}, admin.translationDomain)|replace("\n", ' ') }}');
             $('#confirmMenuCreation .modal-header h3').html(this.title);
             openMenuDialog(event, this);
         });
 
         $('.menu_edit_link').live('click', function (event) {
-            $('#menu_info_text').html('{{ 'info.edit_menu_item'|trans({}, admin.translationDomain) }}');
-            $('#confirmMenuCreation .modal-header h3').html('{{ 'legend.edit_menu'|trans({}, admin.translationDomain) }}');
+            $('#menu_info_text').html('{{ 'info.edit_menu_item'|trans({}, admin.translationDomain)|replace("\n", ' ') }}');
+            $('#confirmMenuCreation .modal-header h3').html('{{ 'legend.edit_menu'|trans({}, admin.translationDomain)|replace("\n", ' ') }}');
             openMenuDialog(event, this);
 
         });
