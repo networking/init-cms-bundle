@@ -17,7 +17,7 @@
         "doctrine/doctrine-fixtures-bundle":"dev-master",
         "sonata-project/admin-bundle":"2.1.x-dev",
         "sonata-project/doctrine-orm-admin-bundle":"2.1.x-dev",
-        "sonata-project/user-bundle":"dev-master#094b5fe412b18a99813cb5cf728f094954d20deb",
+        "sonata-project/user-bundle":"dev-master",
         "sonata-project/formatter-bundle":"dev-master",
         "sonata-project/media-bundle":"dev-master",
         "sonata-project/cache-bundle":"dev-master",
