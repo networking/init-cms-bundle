@@ -54,7 +54,7 @@
             "type": "package",
             "package": {
                 "name": "sonata-project/user-bundle",
-                "version": "master",
+                "version": "dev-master",
                 "source": {
                     "url": "https://github.com/sonata-project/SonataUserBundle.git",
                     "type": "git",
