@@ -23,6 +23,7 @@
         "sonata-project/cache-bundle":"dev-master",
         "stof/doctrine-extensions-bundle":"dev-master",
         "a2lix/translation-form-bundle":"dev-master",
+        "friendsofsymfony/user-bundle": "1.3.* as dev-master",
         "mopa/bootstrap-bundle":"dev-master",
         "twitter/bootstrap":"master",
         "knplabs/knp-paginator-bundle":"dev-master",
