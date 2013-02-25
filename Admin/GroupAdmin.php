@@ -70,8 +70,7 @@ class GroupAdmin extends SonataGroupAdmin
             array(
                 'expanded' => true,
                 'multiple' => true,
-                'required' => false,
-                'label_render' => false
+                'required' => false
             )
         );
     }

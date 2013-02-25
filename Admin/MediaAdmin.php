@@ -126,7 +126,7 @@ class MediaAdmin extends SonataMediaAdmin
             $formMapper->add(
                 'enabled',
                 null,
-                array('label_render' => false, 'required' => false),
+                array('required' => false),
                 array('inline_block' => true)
             );
         }
@@ -135,7 +135,7 @@ class MediaAdmin extends SonataMediaAdmin
             $formMapper->add(
                 'cdnIsFlushable',
                 null,
-                array('label_render' => false, 'required' => false),
+                array('required' => false),
                 array('inline_block' => true)
             );
             $formMapper->reorder(array('name', 'enabled', 'cdnIsFlushable'));

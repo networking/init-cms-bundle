@@ -168,7 +168,7 @@ class PageAdmin extends BaseAdmin
             $formMapper->add(
                 'isHome',
                 null,
-                array('label_render' => false, 'required' => false),
+                array('required' => false),
                 array('inline_block' => true)
             );
         }

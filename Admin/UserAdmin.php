@@ -170,8 +170,7 @@ class UserAdmin extends SonataUserAdmin
                 array(
                     'expanded' => true,
                     'multiple' => true,
-                    'required' => false,
-                    'label_render' => false
+                    'required' => false
                 )
             )
                 ->add('locked', null, array('required' => false), array('inline_block' => true))
