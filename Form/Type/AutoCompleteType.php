@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class AutoCompleteType extends AbstractType
+class AutocompleteType extends AbstractType
 {
     /**
      * @return string

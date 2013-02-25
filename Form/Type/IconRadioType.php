@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface,
 /**
  * @author Sonja Brodersen <s.brodersen@networking.ch>
  */
-class IconRadioType extends ChoiceType
+class IconradioType extends ChoiceType
 {
     private $templates;
 
