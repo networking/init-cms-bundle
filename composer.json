@@ -17,7 +17,7 @@
         "doctrine/doctrine-fixtures-bundle":"dev-master",
         "sonata-project/admin-bundle":"2.1.x-dev",
         "sonata-project/doctrine-orm-admin-bundle":"2.1.x-dev",
-        "sonata-project/user-bundle":"dev-master#32c74dc130b859c0e1b9f0293784a80e806ce9b6",
+        "sonata-project/user-bundle":"dev-master",
         "sonata-project/formatter-bundle":"dev-master",
         "sonata-project/media-bundle":"dev-master",
         "sonata-project/cache-bundle":"dev-master",
@@ -49,6 +49,16 @@
                     "url":"https://github.com/twitter/bootstrap.git",
                     "type":"git",
                     "reference":"master"
+                }
+            },
+            "type": "package",
+            "package": {
+                "name": "sonata-project/user-bundle",
+                "version": "master",
+                "source": {
+                    "url": "https://github.com/sonata-project/SonataUserBundle.git",
+                    "type": "git",
+                    "reference": "32c74dc130b859c0e1b9f0293784a80e806ce9b6"
                 }
             }
         }
