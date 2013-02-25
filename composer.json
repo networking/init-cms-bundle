@@ -31,7 +31,7 @@
         "craue/formflow-bundle":"dev-master",
         "symfony-cmf/routing-extra-bundle":"dev-master",
         "jms/serializer-bundle":"master",
-        "ibrows/sonata-admin-annotation-bundle": "*"
+        "ibrows/sonata-admin-annotation-bundle":"*"
     },
     "autoload":{
         "psr-0":{
@@ -50,17 +50,19 @@
                     "type":"git",
                     "reference":"master"
                 }
-            },
-            "type": "package",
-            "package": {
-                "name": "sonata-project/user-bundle",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/sonata-project/SonataUserBundle.git",
-                    "type": "git",
-                    "reference": "32c74dc130b859c0e1b9f0293784a80e806ce9b6"
-                }
             }
+        },
+        {
+            "package":{
+                "name":"sonata-project/user-bundle",
+                "version":"dev-master",
+                "source":{
+                    "url":"https://github.com/sonata-project/SonataUserBundle.git",
+                    "type":"git",
+                    "reference":"32c74dc130b859c0e1b9f0293784a80e806ce9b6"
+                }
+            },
+            "type":"package"
         }
     ],
     "minimum-stability":"dev"
