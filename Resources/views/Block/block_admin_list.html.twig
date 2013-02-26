@@ -28,7 +28,7 @@ file that was distributed with this source code.
                             <td>
                                 {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
                                     {% if admin.subClasses is empty %}
-                                        <a class="btn" href="{{ admin.generateUrl('create')}}">
+                                        <a class="btn" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin)})}}">
                                             <i class="icon-plus"></i>
                                             {% trans from 'SonataAdminBundle' %}link_add{% endtrans %}
                                         </a>

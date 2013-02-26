@@ -63,26 +63,29 @@ file that was distributed with this source code.
     <div class="span7 page_title">
 
         {% if _title is not empty or action is defined %}
-        <h1>
+
             {% if _title is not empty %}
             {{ _title|raw }}
             {% elseif action is defined %}
+                <h1>
                 {% for label, uri in admin.breadcrumbs(action) %}
                     {% if loop.last %}
-                        {{ label|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}
+                        {{ label|replace({'%span%': '<small>', '%span/%': "</small>"})|raw }}
                     {% endif %}
                 {% endfor %}
-            {% endif %}
-            {% if action is defined and action == 'edit' %}
-                {% set settings = {} %}
-                {% if object.locale is defined %}
-                    {% set settings = {'locale': object.locale} %}
-                {% endif %}
+                    {% if action == 'edit' %}
+                        {% set settings = {} %}
+                        {% if object.locale is defined %}
+                            {% set settings = {'locale': object.locale} %}
+                        {% endif %}
 
-                <a class="link-underlined font-small font-light"
-                   href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                        <a class="link-underlined font-small font-light"
+                           href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                    {% endif %}
+                </h1>
             {% endif %}
-        </h1>
+
+
 
         {% endif %}
     </div>

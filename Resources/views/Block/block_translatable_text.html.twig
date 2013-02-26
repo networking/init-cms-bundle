@@ -1,0 +1,5 @@
+{% extends sonata_block.templates.block_base %}
+
+{% block block %}
+    {{ settings.translation_key|trans({}, settings.translation_domain)|raw }}
+{% endblock %}

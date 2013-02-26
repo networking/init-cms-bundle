@@ -506,6 +506,22 @@
                 <source>title.edit_content</source>
                 <target>Edit your content</target>
             </trans-unit>
+            <trans-unit id="title.page_status_count">
+                <source>title.page_status_count</source>
+                <target>Page Status Summary</target>
+            </trans-unit>
+            <trans-unit id="title.actual_drafts">
+                <source>title.actual_drafts</source>
+                <target>Current Draft pages</target>
+            </trans-unit>
+            <trans-unit id="link.see_all">
+                <source>link.see_all</source>
+                <target>See all pages</target>
+            </trans-unit>
+            <trans-unit id="info.last_edited">
+                <source>info.last_edited</source>
+                <target>Last edited at </target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

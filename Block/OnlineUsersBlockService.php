@@ -13,10 +13,29 @@ use Sonata\BlockBundle\Block\BaseBlockService,
     Sonata\BlockBundle\Model\BlockInterface,
     Sonata\AdminBundle\Form\FormMapper,
     Sonata\AdminBundle\Validator\ErrorElement,
-    Symfony\Component\HttpFoundation\Response;
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
-class TranslatableTextBlockService extends BaseBlockService
+class OnlineUsersBlockService extends BaseBlockService
 {
+    /**
+     * @var \Symfony\Component\Security\Core\SecurityContext $em
+     */
+    protected $em;
+
+    /**
+     * @param string                                                     $name
+     *
+     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
+     */
+    public function __construct($name, EngineInterface $templating, $em)
+    {
+
+
+        $this->name = $name;
+        $this->templating = $templating;
+        $this->em = $em;
+    }
 
     /**
      * {@inheritdoc}
@@ -25,11 +44,13 @@ class TranslatableTextBlockService extends BaseBlockService
     {
         $settings = array_merge($this->getDefaultSettings(), $block->getSettings());
 
+        $users = $this->em->getRepository($settings['user_entity'])->getLatestActivity();
+
         return $this->renderResponse(
-            'NetworkingInitCmsBundle:Block:block_translatable_text.html.twig',
+            'NetworkingInitCmsBundle:Block:block_online_users.html.twig',
             array(
                 'block' => $block,
-                'settings' => $settings
+                'online_users' => $users
             ),
             $response
         );
@@ -48,16 +69,7 @@ class TranslatableTextBlockService extends BaseBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $formMapper->add(
-            'settings',
-            'sonata_type_immutable_array',
-            array(
-                'keys' => array(
-                    array('translation_key', 'text', array()),
-                    array('translation_domain', 'text', array()),
-                )
-            )
-        );
+
     }
 
     /**
@@ -65,7 +77,7 @@ class TranslatableTextBlockService extends BaseBlockService
      */
     public function getName()
     {
-        return 'Translatable Text Block';
+        return 'Online Users Block';
     }
 
     /**
@@ -73,9 +85,6 @@ class TranslatableTextBlockService extends BaseBlockService
      */
     public function getDefaultSettings()
     {
-        return array(
-            'translation_key' => 'Insert your translation key',
-            'translation_domain' => 'Insert the name of the translation domain',
-        );
+        return array('user_entity' => 'NetworkingInitCmsBundle:User');
     }
 }

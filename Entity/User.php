@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM,
  * Networking\InitCmsBundle\Entity\Group
  *
  * @ORM\Table(name="fos_user_user")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\UserRepository")
  */
 class User extends BaseUser
 {
@@ -41,6 +41,11 @@ class User extends BaseUser
      * @ORM\Column(name="admin_settings", type="object", nullable=true)
      */
     protected $adminSettings;
+
+    /**
+     * @var $lastActivity \DateTime
+     */
+    protected $lastActivity;
 
     /**
      * Get id
@@ -93,5 +98,21 @@ class User extends BaseUser
     public function getHash()
     {
         return md5(strtolower(trim($this->email)));
+    }
+
+    /**
+     * @param \DateTime $lastActivity
+     */
+    public function setLastActivity($lastActivity)
+    {
+        $this->updatedAt = $lastActivity;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastActivity()
+    {
+        return $this->updatedAt;
     }
 }
