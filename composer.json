@@ -14,6 +14,7 @@
     "require":{
         "php":">=5.3.3",
         "doctrine/orm":">=2.2.3,<2.4-dev",
+        "friendsofsymfony/user-bundle": "dev-master as v1.3.1",
         "doctrine/doctrine-fixtures-bundle":"dev-master",
         "sonata-project/admin-bundle":"2.1.x-dev",
         "sonata-project/doctrine-orm-admin-bundle":"2.1.x-dev",
@@ -26,7 +27,7 @@
         "knplabs/knp-menu-bundle":"1.1.*",
         "symfony-cmf/routing-extra-bundle":"dev-master",
         "jms/serializer-bundle":"master",
-        "ibrows/sonata-admin-annotation-bundle":"*"
+        "ibrows/sonata-admin-annotation-bundle":"1.1.0"
     },
     "autoload":{
         "psr-0":{
@@ -46,18 +47,6 @@
                     "reference":"master"
                 }
             }
-        },
-        {
-            "package":{
-                "name":"sonata-project/user-bundle",
-                "version":"dev-master",
-                "source":{
-                    "url":"https://github.com/sonata-project/SonataUserBundle.git",
-                    "type":"git",
-                    "reference":"32c74dc130b859c0e1b9f0293784a80e806ce9b6"
-                }
-            },
-            "type":"package"
         }
     ],
     "minimum-stability":"dev"
