@@ -526,16 +526,17 @@ class PageAdminController extends CRUDController
 
             try {
                 $layoutBlock = $repo->find($blockId);
+                if ($layoutBlock) {
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($layoutBlock);
+                    $em->remove($layoutBlock);
+                    $em->flush();
+                }
             } catch (\Exception $e) {
                 $message = $e->getMessage();
 
                 return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
             }
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($layoutBlock);
-            $em->remove($layoutBlock);
-            $em->flush();
         }
 
         return new JsonResponse(array(
