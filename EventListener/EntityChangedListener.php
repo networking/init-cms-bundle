@@ -54,7 +54,8 @@ class EntityChangedListener
     {
         $entity = $args->getEntity();
         $security = $this->container->get('security.context');
-        if ($security->getToken()) {
+        if ($security->getToken() && $security->getToken()->getUser() != 'anon.') {
+
             $username = $security->getToken()->getUser()->getUsername();
 
         } else {
