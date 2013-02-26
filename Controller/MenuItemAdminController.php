@@ -391,7 +391,7 @@ class MenuItemAdminController extends CRUDController
         if ($response instanceof JsonResponse) {
             $response->setData($data);
         } else {
-            $response->setContent($data);
+            $response->setContent(json_encode($data));
         }
 
         return $response;
