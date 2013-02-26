@@ -37,6 +37,9 @@ class UserActivity
      */
     public function onCoreController(FilterControllerEvent $event)
     {
+        if(!$this->context->getToken()){
+            return;
+        }
         $user = $this->context->getToken()->getUser();
         if($user instanceof User)
         {
