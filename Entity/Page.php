@@ -1290,6 +1290,15 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $pageSnapshots->first();
     }
 
+    public function hasPublishedVersion()
+    {
+        if($this->getSnapshots()->count() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @return mixed|string
      */

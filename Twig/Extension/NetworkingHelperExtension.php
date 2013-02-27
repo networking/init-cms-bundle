@@ -361,6 +361,11 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function getCurrentAdminLocale(\Sonata\AdminBundle\Admin\AdminInterface $admin)
     {
         $locale = '';
+
+        if (!$admin->hasRequest()) {
+            $admin->setRequest($this->container->get('request'));
+        }
+
         if ($subject = $admin->getSubject()) {
             return $this->getFieldValue($subject, 'locale');
         } elseif ($filter = $admin->getDatagrid()->getFilter('locale')) {
@@ -373,12 +378,13 @@ class NetworkingHelperExtension extends \Twig_Extension
 
             if (strlen($data['value']) > 0) {
                 $locale = $data['value'];
-            } else {
-                if (method_exists($admin, 'getDefaultLocale')) {
-                    $locale = $admin->getDefaultLocale();
-                }
+            }
+
+            if (!$locale && method_exists($admin, 'getDefaultLocale')) {
+                $locale = $admin->getDefaultLocale();
             }
         }
+
 
         return $locale;
     }
@@ -491,9 +497,12 @@ class NetworkingHelperExtension extends \Twig_Extension
     {
         $templates = $this->container->getParameter('networking_init_cms.page.templates');
 
-        $results = array_filter($templates, function($var) use ($template){
-                        return $var['template'] == $template;
-                    });
+        $results = array_filter(
+            $templates,
+            function ($var) use ($template) {
+                return $var['template'] == $template;
+            }
+        );
 
         $template = reset($results);
 

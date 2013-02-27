@@ -2,8 +2,13 @@
 sonata_block:
     default_contexts: [cms]
     blocks:
+        networking_init_cms.block.service.translatable_text:
+        networking_init_cms.block.service.online_users:
+        networking_init_cms.block.service.pages:
         sonata.admin.block.admin_list:
             contexts:   [admin]
+
+
 
         #sonata.admin_doctrine_orm.block.audit:
         #    contexts:   [admin]

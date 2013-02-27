@@ -132,8 +132,13 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
         if ($locale) {
             $params['locale'] = $locale;
         }
+        try {
+            $contentRoutes = $this->findBy($params);
+        }catch (\Doctrine\DBAL\DBALException $e)     {
 
-        $contentRoutes = $this->findBy($params);
+            return $collection;
+        }
+
 
 
         foreach ($contentRoutes as $key => $contentRoute) {

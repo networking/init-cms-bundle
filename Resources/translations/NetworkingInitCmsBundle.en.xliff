@@ -166,6 +166,27 @@
                     ]]>
                 </target>
             </trans-unit>
+            <trans-unit id="info.welcome_text">
+                <source>info.welcome_text</source>
+                <target>
+                    <![CDATA[
+                         <p>We still have a bit to do here, and welcome suggestions. We would like to make this dashboard
+                         much more personalizeable.</p>
+                    ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="label.last_activity">
+                <source>label.last_activity</source>
+                <target>Last Activity</target>
+            </trans-unit>
+            <trans-unit id="title.last_user_activity">
+                <source>title.last_user_activity</source>
+                <target>Users Currently Online</target>
+            </trans-unit>
+            <trans-unit id="title.dashboard">
+                <source>title.dashboard</source>
+                <target>Welcome to the %admin_title% CMS</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

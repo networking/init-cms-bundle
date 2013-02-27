@@ -17,38 +17,33 @@ sonata_admin:
     title_logo: /bundles/sonataadmin/logo_title.png
     templates:
         user_block: NetworkingInitCmsBundle:Admin:user_block.html.twig
-        layout:  NetworkingInitCmsBundle::admin_layout.html.twig
-        ajax:    NetworkingInitCmsBundle::ajax_layout.html.twig
-        list:    NetworkingInitCmsBundle:CRUD:list.html.twig
-        show:    NetworkingInitCmsBundle:CRUD:show.html.twig
-        edit:    NetworkingInitCmsBundle:CRUD:edit.html.twig
-        preview: NetworkingInitCmsBundle:CRUD:preview.html.twig
-        delete:  NetworkingInitCmsBundle:CRUD:delete.html.twig
-        action:  NetworkingInitCmsBundle:CRUD:action.html.twig
+        layout:     NetworkingInitCmsBundle::admin_layout.html.twig
+        ajax:       NetworkingInitCmsBundle::ajax_layout.html.twig
+        list:       NetworkingInitCmsBundle:CRUD:list.html.twig
+        show:       NetworkingInitCmsBundle:CRUD:show.html.twig
+        edit:       NetworkingInitCmsBundle:CRUD:edit.html.twig
+        preview:    NetworkingInitCmsBundle:CRUD:preview.html.twig
+        delete:     NetworkingInitCmsBundle:CRUD:delete.html.twig
+        action:     NetworkingInitCmsBundle:CRUD:action.html.twig
+        dashboard:  NetworkingInitCmsBundle:Core:dashboard.html.twig
         # default values of helper templates
         short_object_description: NetworkingInitCmsBundle:Helper:short-object-description.html.twig
         # default values of block templates, they should extend the base_block template
         list_block: NetworkingInitCmsBundle:Block:block_admin_list.html.twig
     dashboard:
         blocks:
-            # display two dashboard blocks
-            - { position: left,  type: sonata.admin.block.admin_list, settings: { groups: [Pages, Media] } }
-            - { position: right, type: sonata.admin.block.admin_list, settings: { groups: [Config, Users] } }
+            - { position: top, type: networking_init_cms.block.service.translatable_text, settings: { translation_key: "info.welcome_text", translation_domain: 'NetworkingInitCmsBundle'} }
+            - { position: left, type: networking_init_cms.block.service.pages}
+            - { position: right, type: networking_init_cms.block.service.online_users, settings: {user_entity: 'NetworkingInitCmsBundle:User'}}
 
         groups:
             Pages:
                 label: Pages
                 items: [networking_init_cms.page.admin.page, networking_init_cms.menu.admin.menu_item, sonata.media.admin.media]
-#            Media:
-#                label: Media
-#                items: []
             Config:
                 label: Config
                 items: [sonata.user.admin.user, networking_init_cms.page.admin.help_text]
 
-#            News:
-#                label: News
-#                items: [networking_cms.news.admin.article]
 
 sonata_doctrine_orm_admin:
     templates:

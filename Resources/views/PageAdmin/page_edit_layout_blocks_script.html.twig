@@ -19,18 +19,17 @@ var field_update_{{ id }} = function (event) {
     var form = jQuery(this).closest('form');
     {% if init_cms_editor == 'ckeditor' %}
     jQuery.each(CKEDITOR.instances, function () {
-       try{
-           var editor = this;
-                  var data = editor.getData();
-                  if(data){
-                      if(editor)
-                      {
-                          editor.setData(data);
-                          jQuery('#' + editor.name).html(data);
-                      }
-                  }
-       }catch(err){
-       }
+        try {
+            var editor = this;
+            var data = editor.getData();
+            if (data) {
+                if (editor) {
+                    editor.setData(data);
+                    jQuery('#' + editor.name).html(data);
+                }
+            }
+        } catch (err) {
+        }
     });
     {% endif %}
     updateLayoutBlocks(form, data);
@@ -82,6 +81,8 @@ var field_add_{{ id }} = function (event) {
                                             'uniqid':    sonata_admin.admin.root.uniqid
                                         } + sonata_admin.field_description.getOption('link_parameters', {})) }}';
             doAjaxSubmit(url, form, data);
+            jQuery('a', '#contentTypeModal').die('click');
+            jQuery('form', '#contentTypeModal').die('submit');
         }
     });
 };
@@ -119,7 +120,15 @@ function doAjaxSubmit(url, form, data) {
 
             jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
                 if (i + 1 == data.sortOrder) {
+                    jQuery(value).on('shown', function () {
+                        var left = ($(this).width()) / 2;
+                        var top = ($(this).height() + 518) / 2;
+
+                        jQuery(value).css('margin-top', '-' + top + 'px');
+                        jQuery(value).css('margin-left', '-' + left + 'px');
+                    });
                     jQuery(value).modal('show');
+
                 }
             });
             saveLayoutBlockSort();
@@ -213,15 +222,13 @@ function uploadError(xhr) {
 }
 
 function onAfterLoad() {
-    {% if init_cms_editor == 'ckeditor' %}
+{% if init_cms_editor == 'ckeditor' %}
     createCkeditor();
-    {% elseif init_cms_editor == 'redactor' %}
+{% elseif init_cms_editor == 'redactor' %}
     createRedactor();
-    {% endif %}
+{% endif %}
 
     apply_position_value_{{ id }}();
-
-
 
 
     jQuery('div#field_container_{{ id }} ul.sortable').sortable({
@@ -305,7 +312,7 @@ function onAfterLoad() {
                     success:function (xhr) {
                         createInitCmsMessageBox(xhr.messageStatus, xhr.message);
                         var editor = liElement.find('.wysiwyg-editor');
-                        if(CKEDITOR.instances[editor.attr('id')]){
+                        if (CKEDITOR.instances[editor.attr('id')]) {
                             CKEDITOR.instances[editor.attr('id')].destroy(true);
                         }
                         apply_position_value_{{ id }}();
@@ -314,7 +321,6 @@ function onAfterLoad() {
                         jQuery(parent).trigger('sortout');
                     }
                 });
-
 
 
             }
@@ -329,7 +335,7 @@ function onAfterLoad() {
 
     });
 
-    {#jQuery("select[id^='{{ id }}']").filter("select[id$='_classType']").bind('change', field_update_{{ id }});#}
+{#jQuery("select[id^='{{ id }}']").filter("select[id$='_classType']").bind('change', field_update_{{ id }});#}
 }
 
 (function ($) {

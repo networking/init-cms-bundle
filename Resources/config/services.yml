@@ -1,7 +1,5 @@
 parameters:
     networking_init_cms.controllers_by_alias: {'Networking\InitCmsBundle\Entity\Page': "NetworkingInitCmsBundle:FrontendPage:index", 'Networking\InitCmsBundle\Entity\PageSnapshot': "NetworkingInitCmsBundle:FrontendPage:live"}
-
-
 services:
 
     session:
@@ -52,6 +50,31 @@ services:
         tags:
           - { name: form.type, alias: networking_type_iconradio}
 
+    activity_listener:
+        class: Networking\InitCmsBundle\EventListener\UserActivity
+        arguments: [@security.context, @doctrine.orm.entity_manager]
+        tags:
+          - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+
+#Sonata blocks
+
+    networking_init_cms.block.service.translatable_text:
+        class: Networking\InitCmsBundle\Block\TranslatableTextBlockService
+        arguments: ["networking_initcms_block_translatable", @templating]
+        tags:
+          - { name: sonata.block}
+
+    networking_init_cms.block.service.online_users:
+        class: Networking\InitCmsBundle\Block\OnlineUsersBlockService
+        arguments: ["networking_initcms_block_online_users", @templating, @doctrine.orm.entity_manager]
+        tags:
+          - { name: sonata.block}
+
+    networking_init_cms.block.service.pages:
+        class: Networking\InitCmsBundle\Block\PagesBlockService
+        arguments: ["networking_initcms_block_pages", @templating, @doctrine.orm.entity_manager]
+        tags:
+          - { name: sonata.block}
 
 ## Admin Controllers
 # Page Admin Contoller

@@ -1,0 +1,42 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends base_template %}
+
+{% block title %}<h2>{{ 'title.dashboard'|trans({'%admin_title%': admin_pool.title}, 'NetworkingInitCmsBundle') }}</h2>{% endblock %}
+{% block breadcrumb %}{% endblock %}
+{% block content %}
+    <div class="row-fluid">
+        <div class="span12">
+            {% for block in blocks %}
+                {% if block.position == 'top' %}
+                    {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span6">
+            {% for block in blocks %}
+                {% if block.position == 'left' %}
+                    {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="span6">
+            {% for block in blocks %}
+                {% if block.position == 'right' %}
+                    {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

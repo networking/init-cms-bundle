@@ -1,0 +1,15 @@
+{% extends sonata_block.templates.block_base %}
+
+{% block block %}
+    <div class="well well-small">
+        <h4>{{ 'title.last_user_activity'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
+        {% for user in online_users %}
+            {{ user.username }}
+        <span class="font-small info-soft">
+             {{ 'label.last_activity'|trans({}, 'NetworkingInitCmsBundle') }}: {{ user.lastActivity|date("H:i m.d.Y") }}
+        </span>
+         <br />
+        {% endfor %}
+    </div>
+
+{% endblock %}

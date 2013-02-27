@@ -50,6 +50,10 @@ class FrontendPageController extends Controller
         /** @var $page Page */
         $page = $request->get('_content');
 
+        if(!$page){
+            throw $this->createNotFoundException('no page object found');
+        }
+
         if ($page->getVisibility() != Page::VISIBILITY_PUBLIC) {
             if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
