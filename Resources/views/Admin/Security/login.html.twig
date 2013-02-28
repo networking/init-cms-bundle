@@ -2,7 +2,7 @@
 {% block sidebar_left %}{% endblock %}
 {% block content %}
     <div class="row">
-        <div class="connection modal span4 offset4" style="position: relative; top: auto; left: auto; right: auto; margin-top: 10%; z-index: 1; max-width: 100%;">
+        <div class="connection modal" style="position: relative; right:50%; left: 50%; top: auto; margin: 10% 0 0 -200px; z-index: 1; width: 400px">
                 <form action="{{ path("sonata_user_admin_security_check") }}" method="post">
                     <div class="modal-body">
                         {% if error %}
