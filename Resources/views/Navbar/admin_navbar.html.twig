@@ -26,7 +26,6 @@
                             <div class="span5">
                                 {% if admin_pool is defined %}
                                     <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                        {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
                                         {{ admin_pool.title }}
                                     </a>
                                     {% include admin_pool.getTemplate('user_block') %}
@@ -35,7 +34,6 @@
                             <div class="span5">
                                 {% if admin_pool is defined %}
                                     {{ mopa_bootstrap_navbar('AdminMenu') }}
-                                    {#{{ mopa_bootstrap_navbar('adminLangNavbar') }}#}
                                 {% endif %}
                             </div>
                         </div>

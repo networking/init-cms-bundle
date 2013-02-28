@@ -49,7 +49,7 @@ file that was distributed with this source code.
 {% if not object.isPublished() and object.getSnapshot() %}
     <hr/>
     <p class="font-mini">
-    {{ 'info.last_published_version'|trans({'%date%':object.getSnapshot().snapshotDate|date("d.m.Y")}, admin.translationDomain)|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}<br/>
+    {{ 'info.last_published_version'|trans({'%date%':object.getSnapshot().snapshotDate|date("d.m.Y")}, admin.translationDomain)|raw }}<br/>
 
         <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}" class="status-dialog-link link-nounderline">
         {{ 'link.revert_to_publish'|trans({}, admin.translationDomain) }}</a> <span class="info-soft">({{ 'info.revert_to_publish'|trans({}, admin.translationDomain) }})</span><br/>
