@@ -57,101 +57,104 @@ file that was distributed with this source code.
 {% endblock body_start %}
 
 {% block body %}
-{# initialize block value #}
+    {# initialize block value #}
 
-{% block init_cms_top_nav %}
-    <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
-        <div class="navbar-inner">
-            <div class="container">
-                <div class="row">
-                    <div class="span2">
-                        <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
-                            <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
-                        </a>
-                    </div>
-                    <div class="span5">
-                        {% if admin_pool is defined %}
-                            <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
-                                {{ admin_pool.title }}
+    {% block init_cms_top_nav %}
+        <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
+            <div class="navbar-inner">
+                <div class="container">
+                    <div class="row">
+                        <div class="span2">
+                            <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
+                                <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
                             </a>
-                            {% include admin_pool.getTemplate('user_block') %}
-                        {% endif %}
-                    </div>
-                    <div class="span5">
-                        {% if admin_pool is defined %}
-                            {{ mopa_bootstrap_navbar('AdminMenu') }}
-                            {#{{ mopa_bootstrap_navbar('adminLangNavbar') }}#}
-                        {% endif %}
-                    </div>
-                </div>
-
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-            </div>
-        </div>
-    </div>
-{% endblock init_cms_top_nav%}
-
-{% block navbar_spacer %}
-<div class="navbar-spacer"></div>
-{% endblock navbar_spacer%}
-
-<div class="{% block container_class %}container{% endblock container_class %}">
-    <div class="row">
-        {% block sidebar_left %}
-            <div class="span2">
-                <div class="nav-main nav-collapse">
-                    {% block top_bar_before_nav %} {% endblock %}
-                    {# Side navigation bar, not actually at the top in this template #}
-                    {% block sonata_top_bar_nav %}{% endblock %}
-                    {% block top_bar_after_nav %} {% endblock %}
-                </div>
-            </div>
-        {% endblock sidebar_left %}
-        <div class="{% if block('sidebar_left') %}span10{% else %}span12{% endif %} content-main">
-            <div class="notice-block affix span10 " data-spy="affix-top" data-offset-top="10"
-                 style="top: 44px; margin-left: 0;">
-                {% block notice %}
-                    {% for notice_level in ['success','error','info', 'warning'] %}
-                        {% set session_var = 'sonata_flash_' ~ notice_level %}
-                        {% for flash in app.session.flashbag.get(session_var) %}
-                            <div class="alert {{ 'alert-' ~ notice_level }}">
-                                <a class="close" data-dismiss="alert" href="#">×</a>
-                                {{ flash|trans([], 'NetworkingInitCmsBundle') }}
+                        </div>
+                        <div class="span5">
+                            {% if admin_pool is defined %}
+                                <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+                                    {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
+                                    {{ admin_pool.title }}
+                                </a>
+                                {% include admin_pool.getTemplate('user_block') %}
+                            {% endif %}
+                        </div>
+                        <div class="span5">
+                            <div class="pull-right">
+                                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </a>
                             </div>
-                        {% endfor %}
-                    {% endfor %}
-                {% endblock notice %}
-            </div>
-            <div class="row content-top">
-                <div class="span4">
-                    <!--<a href="?c=menus"> show all Menus</a>-->
+                            <div class="pull-right nav-admin">
+                                {% if admin_pool is defined %}
+                                    {{ mopa_bootstrap_navbar('AdminMenu') }}
+                                    {#{{ mopa_bootstrap_navbar('adminLangNavbar') }}#}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            {% block page_title %}
-            {% endblock page_title%}
+        </div>
+    {% endblock init_cms_top_nav %}
 
-            {% block sonata_admin_content %}
-            {% endblock sonata_admin_content%}
+    {% block navbar_spacer %}
+        <div class="navbar-spacer"></div>
+    {% endblock navbar_spacer %}
+
+    <div class="{% block container_class %}container{% endblock container_class %}">
+        <div class="row">
+            {% block sidebar_left %}
+                <div class="span2">
+                    <div class="nav-main nav-collapse">
+                        {% block top_bar_before_nav %} {% endblock %}
+                        {# Side navigation bar, not actually at the top in this template #}
+                        {% block sonata_top_bar_nav %}{% endblock %}
+                        {% block top_bar_after_nav %} {% endblock %}
+                    </div>
+                </div>
+            {% endblock sidebar_left %}
+            <div class="{% if block('sidebar_left') %}span10{% else %}span12{% endif %} content-main">
+                <div class="notice-block affix span10 " data-spy="affix-top" data-offset-top="10"
+                     style="top: 44px; margin-left: 0;">
+                    {% block notice %}
+                        {% for notice_level in ['success','error','info', 'warning'] %}
+                            {% set session_var = 'sonata_flash_' ~ notice_level %}
+                            {% for flash in app.session.flashbag.get(session_var) %}
+                                <div class="alert {{ 'alert-' ~ notice_level }}">
+                                    <a class="close" data-dismiss="alert" href="#">×</a>
+                                    {{ flash|trans([], 'NetworkingInitCmsBundle') }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endblock notice %}
+                </div>
+                <div class="row content-top">
+                    <div class="span4">
+                        <!--<a href="?c=menus"> show all Menus</a>-->
+                    </div>
+                </div>
+                {% block page_title %}
+                {% endblock page_title %}
+
+                {% block sonata_admin_content %}
+                {% endblock sonata_admin_content %}
+            </div>
+
+
         </div>
 
-
+        {% block footer %}
+        {% endblock footer %}
     </div>
-
-    {% block footer %}
-    {% endblock footer %}
-</div>
-{% if app.user is defined %}
-    {% if is_granted('ROLE_SONATA_ADMIN') %}
-        <script src="{{ path('networking_init_cms_js') }}"></script>
+    {% if app.user is defined %}
+        {% if is_granted('ROLE_SONATA_ADMIN') %}
+            <script src="{{ path('networking_init_cms_js') }}"></script>
+        {% endif %}
     {% endif %}
-{% endif %}
-{% block before_body_end %}{% endblock before_body_end%}
-{% jsblock 'render' %}
+    {% block before_body_end %}{% endblock before_body_end %}
+    {% jsblock 'render' %}
 {% endblock body %}
 </body>
 </html>

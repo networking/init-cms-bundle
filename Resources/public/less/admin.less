@@ -541,6 +541,10 @@ li.table-row-style .menu-item-link {
       color: @linkColor;
   }
 
+  .navbar-spacer{
+    height:41px;
+  }
+
   .nav-tabs > li > a {
       background-color: #f6f6f6;
       border-bottom:1px solid #dddddd;
@@ -871,5 +875,38 @@ li.table-row-style .menu-item-link {
   a.btn-info:hover,
   a.btn-inverse:hover{
     color: @white;
+  }
+}
+@media (max-width: @navbarCollapseWidth) {
+  .navbar-initcms.navbar-fixed-top {
+    margin-bottom: 0px;
+  }
+  .initcms {
+    .nav-main{
+          background: none;
+          background-color: @grayLighter;
+          border-right: none;
+          width: 100%;
+          padding-top: 0;
+          min-height: 0;
+        }
+    .nav-custom .active-corner-top,
+    .nav-custom .active-corner-bottom,
+    .nav-custom-small .active-corner-top,
+    .nav-custom .active-corner-bottom,
+    .nav-custom-small .active-corner-bottom{
+        background:none;
+    }
+    .navbar-spacer{
+      padding: 0;
+      margin: 0;
+      display: none;
+    }
+
+  }
+}
+@media (max-width: 620px) {
+  .nav-admin{
+    display: none;
   }
 }
