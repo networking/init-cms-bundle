@@ -1,38 +1,45 @@
 {% extends base_template %}
-
+{% block sidebar_left %}{% endblock %}
 {% block content %}
-    <div class="connection">
-        <form action="{{ path("sonata_user_admin_security_check") }}" method="post">
-            {% if error %}
-                <div class="alert alert-error">{{ error|trans({}, 'SonataUserBundle') }}</div>
-            {% endif %}
+    <div class="row">
+        <div class="connection modal span4 offset4" style="position: relative; top: auto; left: auto; right: auto; margin-top: 10%; z-index: 1; max-width: 100%;">
+                <form action="{{ path("sonata_user_admin_security_check") }}" method="post">
+                    <div class="modal-body">
+                        {% if error %}
+                            <div class="alert alert-error">{{ error|trans({}, 'SonataUserBundle') }}</div>
+                        {% endif %}
 
-            <div class="control-group">
-                <label for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
+                        <div class="control-group">
+                            <label for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
 
-                <div class="controls">
-                    <input type="text" id="username" name="_username" value="{{ last_username }}" class="big sonata-medium"/>
-                </div>
+                            <div class="controls">
+                                <input type="text" id="username" name="_username" value="{{ last_username }}"
+                                       class="big sonata-medium"/>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
+
+                            <div class="controls">
+                                <input type="password" id="password" name="_password" class="big sonata-medium"/>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="remember_me">
+                                <input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
+                                {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="">
+                            <input type="submit" class="btn btn-primary" id="_submit" name="_submit"
+                                   value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}"/>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <div class="control-group">
-                <label for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
-
-                <div class="controls">
-                    <input type="password" id="password" name="_password" class="big sonata-medium" />
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label for="remember_me">
-                    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-                    {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
-                </label>
-            </div>
-
-            <div class="well form-actions">
-                <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
-            </div>
-        </form>
     </div>
 {% endblock content %}
