@@ -6,7 +6,7 @@
         {% for user in online_users %}
             {{ user.username }}
         <span class="font-small info-soft">
-             {{ 'label.last_activity'|trans({}, 'NetworkingInitCmsBundle') }}: {{ user.lastActivity|date("H:i m.d.Y") }}
+             {{ 'label.last_activity'|trans({}, 'NetworkingInitCmsBundle') }}: {{ user.lastActivity|date("H:i d M Y") }}
         </span>
          <br />
         {% endfor %}
