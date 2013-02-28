@@ -118,61 +118,13 @@ class PageAdminController extends CRUDController
         );
     }
 
-    /**
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\Symfony\Component\Security\Core\Exception\AccessDeniedException
-     *
-     * @param mixed $id
-     *
-     * @return Response|RedirectResponse
-     */
-    public function deleteAction($id)
-    {
-        $id = $this->get('request')->get($this->admin->getIdParameter());
-        $object = $this->admin->getObject($id);
-
-        if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
-        }
-
-        if (false === $this->admin->isGranted('DELETE', $object)) {
-            throw new AccessDeniedException();
-        }
-
-        if ($this->getRequest()->getMethod() == 'DELETE') {
-            try {
-                $this->admin->delete($object);
-                if ($this->isXmlHttpRequest()) {
-                    return $this->renderJson(
-                        array(
-                            'result' => 'ok',
-                            'objectId' => $this->admin->getNormalizedIdentifier($object),
-                            'url' => $this->admin->generateUrl('list', array('locale' => $object->getLocale()))
-                        )
-                    );
-                } else {
-                    $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
-                }
-                $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
-            } catch (ModelManagerException $e) {
-                $this->get('session')->setFlash('sonata_flash_error', 'flash_delete_error');
-            }
-
-            return new RedirectResponse($this->admin->generateUrl('list', array('locale' => $object->getLocale())));
-        }
-
-        return $this->render(
-            $this->admin->getTemplate('delete'),
-            array(
-                'object' => $object,
-                'action' => 'delete'
-            )
-        );
-    }
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
+     * @param $locale
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function linkAction(Request $request, $id, $locale)
     {

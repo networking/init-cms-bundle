@@ -154,10 +154,10 @@ file that was distributed with this source code.
             {{ 'no_result'|trans({}, 'SonataAdminBundle') }}
         </p>
     {% endif %}
+
     {% if not  app.request.isxmlhttprequest %}
-        <div class="modal hide fade" tabindex="-1" role="dialog" id="list_dialog"></div>
-        </div>
-    {% endif %}
+            </div>
+        {% endif %}
 {% endblock %}
 
 
@@ -250,7 +250,7 @@ file that was distributed with this source code.
 
 
 
-                <input type="submit" class="btn btn-primary btn-mini"
+                <input type="submit" class="btn btn-primary btn-mini batch-dialog-link"
                        value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}"/>
             {% endblock %}
         </div>

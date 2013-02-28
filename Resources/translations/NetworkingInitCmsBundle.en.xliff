@@ -191,6 +191,10 @@
                 <source>flash_batch_publish_success</source>
                 <target>Pages successfully published</target>
             </trans-unit>
+            <trans-unit id="flash_batch_empty">
+                <source>flash_batch_empty</source>
+                <target>Nothing was selected</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

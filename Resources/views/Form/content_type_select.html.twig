@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-<div id="contentTypeModal" class="modal fade" aria-hidden="true"  role="dialog">
+<div id="contentTypeModal" class="modal" aria-hidden="true"  role="dialog" style="display: none">
     <div class="modal-body">
         <p>{{ 'info.create.layout_block'|trans({}, 'PageAdmin') }}</p>
         <select id="selectContentType">
@@ -19,6 +19,6 @@ file that was distributed with this source code.
     </div>
     <div class="modal-footer">
         <a href="javascript:jQuery('#contentTypeModal').data('create', false).modal('hide');" class="btn">Close</a>
-        <a href="javascript:jQuery('#contentTypeModal').data('create', true).modal('hide');" class="btn btn-primary">Create</a>
+        <a href="javascript:jQuery('#contentTypeModal').data('create', true).trigger('initcms.create_block');" class="btn btn-primary">Create</a>
     </div>
 </div>

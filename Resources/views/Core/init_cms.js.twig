@@ -41,6 +41,19 @@ function createRedactor() {
     });
 }
 
+
+
+function trim(str) {
+    str = str.replace(/^\s+/, '');
+    for (var i = str.length - 1; i >= 0; i--) {
+        if (/\S/.test(str.charAt(i))) {
+            str = str.substring(0, i + 1);
+            break;
+        }
+    }
+    return str;
+}
+
 (function ($) {
     $('.modal').live('show', function(){
         var height = $(this).height();
@@ -56,7 +69,7 @@ function createRedactor() {
     });
 
     $('.notice-block').each(function (k, e) {
-        if ($(e).html() != '') {
+        if (trim($(e).html()) != '') {
             $(e).fadeIn().delay('3000').fadeOut(500);
         }
     });

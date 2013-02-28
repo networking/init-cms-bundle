@@ -1,0 +1,123 @@
+{% spaceless %}
+<script type="text/javascript">/*<![CDATA[*/
+    var listDialog;
+
+    function initializeDialog() {
+        if (!listDialog) {
+            listDialog = jQuery('#list_dialog');
+            listDialog.modal({ height:'auto', width:650, show:false});
+            listDialog.on('hide', function () {
+                jQuery('input[type=submit]', this).off();
+            });
+            jQuery(document.body).append(listDialog);
+            jQuery('form', listDialog).live('submit', submitAjaxForm);
+        }
+    }
+
+    function createAjaxDialog(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        initializeDialog();
+        var a = jQuery(this);
+        var url = a.attr('href');
+        if (!url) {
+            url = a.attr('ref');
+        }
+
+        jQuery.ajax({
+            url:url,
+            dataType:'html',
+            success:function (html) {
+                listDialog.html(html);
+                listDialog.modal('show');
+            }
+        });
+    }
+
+    function createBatchDialog(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        initializeDialog();
+
+        var form = jQuery(this).closest('form');
+
+        if (jQuery('[name^="idx[]"]:checked', form).length == 0 && jQuery('[name^="all_elements"]:checked', form).length == 0) {
+            createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
+            return;
+        }
+
+        jQuery(form).ajaxSubmit({
+            type:form.attr('method'),
+            url:form.attr('action'),
+            success:function (html) {
+                // populate the popup container
+                listDialog.html(html);
+                var container = jQuery(".sonata-ba-delete", listDialog);
+                var text = container.clone().children().remove().end().text();
+                var containerHtml = container.html();
+                var re = new RegExp(trim(text));
+                containerHtml = containerHtml.replace(re, '');
+                containerHtml = containerHtml.replace(/\?/, '');
+                jQuery(".sonata-ba-delete").html(containerHtml);
+                var header = jQuery('h1', listDialog);
+                var headerText = header.html();
+                header.replaceWith(jQuery('<h3>' + headerText + '</h3>'));
+                jQuery('h3', listDialog).wrap('<div class="modal-header" />');
+                jQuery('.modal-header').after(jQuery('<div class="modal-body">' + text + '</div>'));
+                jQuery('.form-actions', listDialog).removeClass('well');
+                jQuery('.form-actions', listDialog).addClass('modal-footer');
+                listDialog.modal('show');
+            }
+        });
+    }
+
+    function submitAjaxForm(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var form = jQuery(this);
+
+        jQuery(form).ajaxSubmit({
+            type:form.attr('method'),
+            url:form.attr('action'),
+            success:function (xhr) {
+
+                if (xhr.result == 'ok') {
+                    jQuery('#objectList').load(xhr.url);
+                    listDialog.modal('hide');
+                } else {
+                    jQuery('#objectList').html(xhr);
+                    listDialog.modal('hide');
+                }
+            },
+            error:function (xhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+                listDialog.html(xhr.responseText);
+            }
+        });
+    }
+
+    (function ($) {
+        var ua = navigator.userAgent,
+                event = (ua.match(/iPad/i)) ? "touchstart" : "click";
+
+        $(".actions-toggle").live(event, function () {
+            $('.row-actions').hide();
+            $(this).parent().children('.row-actions').fadeToggle('fast');
+        });
+        $(".actions-toggle-close").live(event, function () {
+            $(this).parent().fadeToggle('fast');
+        });
+        $('#hidden_filters').on('show hide', function () {
+            $('#filter_toggle').toggleClass('filter-close');
+            $('#filter_toggle').toggleClass('filter-open');
+        });
+        $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
+        $('.dialog-link').live('click', createAjaxDialog);
+        $('.batch-dialog-link').live('click', createBatchDialog);
+        initializeDialog();
+
+
+    })(jQuery);
+/*]]>*/</script>
+{% endspaceless %}
