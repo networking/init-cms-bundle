@@ -35,7 +35,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_list">
                 <source>breadcrumb.link_media_list</source>
-                <target>%span%Take care of your%span/% Media</target>
+                <target><![CDATA[<small>Take care of your</small>]]> Media</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_edit">
                 <source>breadcrumb.link_media_edit</source>
@@ -357,7 +357,15 @@
             </trans-unit>
             <trans-unit id="title.select_media">
                 <source>title.select_media</source>
-                <target>%span%Select an item from your%span/% Media</target>
+                <target><![CDATA[<small>Select an item from your</small>]]> Media</target>
+            </trans-unit>
+            <trans-unit id="form.label_tags">
+                <source>form.label_tags</source>
+                <target>Tag your media</target>
+            </trans-unit>
+            <trans-unit id="help.media_tag">
+                <source>help.media_tag</source>
+                <target>This will make it easier to find later on</target>
             </trans-unit>
         </body>
     </file>

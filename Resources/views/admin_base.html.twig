@@ -94,25 +94,24 @@ file that was distributed with this source code.
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock init_cms_top_nav%}
 
-<!-- Subhead
-================================================== -->
 {% block navbar_spacer %}
-<div style="height:41px;"></div>
-{% endblock %}
-<div class="{% block container_class %}container{% endblock %}">
+<div class="navbar-spacer"></div>
+{% endblock navbar_spacer%}
+
+<div class="{% block container_class %}container{% endblock container_class %}">
     <div class="row">
         {% block sidebar_left %}
             <div class="span2">
-                <div class="nav-main">
+                <div class="nav-main nav-collapse">
                     {% block top_bar_before_nav %} {% endblock %}
+                    {# Side navigation bar, not actually at the top in this template #}
                     {% block sonata_top_bar_nav %}{% endblock %}
                     {% block top_bar_after_nav %} {% endblock %}
-
                 </div>
             </div>
-        {% endblock %}
+        {% endblock sidebar_left %}
         <div class="{% if block('sidebar_left') %}span10{% else %}span12{% endif %} content-main">
             <div class="notice-block affix span10 " data-spy="affix-top" data-offset-top="10"
                  style="top: 44px; margin-left: 0;">
@@ -126,7 +125,7 @@ file that was distributed with this source code.
                             </div>
                         {% endfor %}
                     {% endfor %}
-                {% endblock %}
+                {% endblock notice %}
             </div>
             <div class="row content-top">
                 <div class="span4">
@@ -134,24 +133,24 @@ file that was distributed with this source code.
                 </div>
             </div>
             {% block page_title %}
-            {% endblock %}
+            {% endblock page_title%}
 
             {% block sonata_admin_content %}
-            {% endblock %}
+            {% endblock sonata_admin_content%}
         </div>
 
 
     </div>
 
     {% block footer %}
-    {% endblock %}
+    {% endblock footer %}
 </div>
 {% if app.user is defined %}
     {% if is_granted('ROLE_SONATA_ADMIN') %}
         <script src="{{ path('networking_init_cms_js') }}"></script>
     {% endif %}
 {% endif %}
-{% block before_body_end %}{% endblock %}
+{% block before_body_end %}{% endblock before_body_end%}
 {% jsblock 'render' %}
 {% endblock body %}
 </body>

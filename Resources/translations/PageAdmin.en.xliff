@@ -8,7 +8,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_list">
                 <source>breadcrumb.link_page_list</source>
-                <target>%span%Organise your%span/% Pages</target>
+                <target><![CDATA[<small>Organise your</small> ]]> Pages</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_edit">
                 <source>breadcrumb.link_page_edit</source>
@@ -473,7 +473,7 @@
             </trans-unit>
             <trans-unit id="info.last_published_version">
                 <source>info.last_published_version</source>
-                <target>The last published version: %span%%date%%span/%</target>
+                <target>The last published version: <![CDATA[<span class="info-soft">%date%</span>]]></target>
             </trans-unit>
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>

@@ -28,7 +28,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_menu_item_navigation">
                 <source>breadcrumb.link_menu_item_navigation</source>
-                <target>%span%Organise your%span/% Menus</target>
+                <target><![CDATA[<small>Organise your</small>]]> Menus</target>
             </trans-unit>
             <trans-unit id="label.linked_resource">
                 <source>label.linked_resource</source>

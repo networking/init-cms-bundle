@@ -187,6 +187,10 @@
                 <source>title.dashboard</source>
                 <target>Welcome to the %admin_title% CMS</target>
             </trans-unit>
+            <trans-unit id="flash_batch_publish_success">
+                <source>flash_batch_publish_success</source>
+                <target>Pages successfully published</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

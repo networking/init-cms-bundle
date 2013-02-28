@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="breadcrumb.link_tag_list">
                 <source>breadcrumb.link_tag_list</source>
-                <target>%span%Organise your%span/% Media Tags</target>
+                <target><![CDATA[<small>Organise your</small>]]> Media Tags</target>
             </trans-unit>
             <trans-unit id="filter.label_name">
                 <source>filter.label_name</source>
