@@ -215,15 +215,19 @@ class MediaAdminController extends SonataMediaAdminController
                 }
             }
 
-            uksort($array, function ($a,$b) {
-                if($a == 'Default' ){
-                    $a = 0;
+            uksort(
+                $array,
+                function ($a, $b) {
+                    if ($a == 'Default') {
+                        $a = 0;
+                    }
+                    if ($b == 'Default') {
+                        $b = 100000;
+                    }
+
+                    return strtolower($a) > strtolower($b);
                 }
-                if($b == 'Default'){
-                    $b = 100000;
-                }
-                return strtolower($a) > strtolower($b);
-            });
+            );
 
 
             return $this->render(
@@ -259,78 +263,112 @@ class MediaAdminController extends SonataMediaAdminController
 
 
     /**
-        * redirect the user depend on this choice
-        *
-        * @param object $object
-        *
-        * @return Response
-        */
-       public function redirectTo($object)
-       {
-           $url = false;
+     * redirect the user depend on this choice
+     *
+     * @param object $object
+     *
+     * @return Response
+     */
+    public function redirectTo($object)
+    {
+        $url = false;
 
-           if ($this->get('request')->get('btn_update_and_list')) {
-               $url = $this->admin->generateUrl('list', array('active_tab' => $this->get('request')->get('context')));
-           }
-           if ($this->get('request')->get('btn_create_and_list')) {
-               $url = $this->admin->generateUrl('list', array('active_tab' => $this->get('request')->get('context')));
-           }
-
-
-           if ($this->get('request')->get('btn_create_and_create')) {
-               $params = array();
-               if ($this->admin->hasActiveSubClass()) {
-                   $params['subclass'] = $this->get('request')->get('subclass');
-               }
-               $url = $this->admin->generateUrl('create', $params);
-           }
-
-           if (!$url) {
-               $url = $this->admin->generateObjectUrl('edit', $object);
-           }
-
-           return new RedirectResponse($url);
-       }
-
-    /**
-         * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\Symfony\Component\Security\Core\Exception\AccessDeniedException
-         *
-         * @param mixed $id
-         *
-         * @return Response|RedirectResponse
-         */
-        public function deleteAction($id)
-        {
-            $id     = $this->get('request')->get($this->admin->getIdParameter());
-            $object = $this->admin->getObject($id);
-
-            if (!$object) {
-                throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
-            }
-
-            if (false === $this->admin->isGranted('DELETE', $object)) {
-                throw new AccessDeniedException();
-            }
-
-            if ($this->getRequest()->getMethod() == 'DELETE') {
-                try {
-                    $this->admin->delete($object);
-                    $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
-                } catch (ModelManagerException $e) {
-                    $this->get('session')->setFlash('sonata_flash_error', 'flash_delete_error');
-                }
-
-                return new RedirectResponse($this->admin->generateUrl('list', array('active_tab' => $this->get('request')->get('context'))));
-            }
-
-            return $this->render($this->admin->getTemplate('delete'), array(
-                'object' => $object,
-                'action' => 'delete'
-            ));
+        if ($this->get('request')->get('btn_update_and_list')) {
+            $url = $this->admin->generateUrl('list', array('active_tab' => $this->get('request')->get('context')));
+        }
+        if ($this->get('request')->get('btn_create_and_list')) {
+            $url = $this->admin->generateUrl('list', array('active_tab' => $this->get('request')->get('context')));
         }
 
 
+        if ($this->get('request')->get('btn_create_and_create')) {
+            $params = array();
+            if ($this->admin->hasActiveSubClass()) {
+                $params['subclass'] = $this->get('request')->get('subclass');
+            }
+            $url = $this->admin->generateUrl('create', $params);
+        }
 
+        if (!$url) {
+            $url = $this->admin->generateObjectUrl('edit', $object);
+        }
+
+        return new RedirectResponse($url);
+    }
+
+    /**
+     *
+     * @throws AccessDeniedException
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response
+     */
+    public function createAction()
+    {
+        if (false === $this->admin->isGranted('CREATE')) {
+            throw new AccessDeniedException();
+        }
+
+        $parameters = $this->admin->getPersistentParameters();
+
+        if (!$parameters['provider']) {
+            return $this->render(
+                'NetworkingInitCmsBundle:MediaAdmin:select_provider.html.twig',
+                array(
+                    'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
+                        $this->get('request')->get('context', $this->get('sonata.media.pool')->getDefaultContext())
+                    ),
+                    'base_template' => $this->getBaseTemplate(),
+                    'admin' => $this->admin,
+                    'action' => 'create'
+                )
+            );
+        }
+
+        return parent::createAction();
+    }
+
+    /**
+     *
+     * @param mixed $id
+     *
+     * @throws NotFoundHttpException
+     * @throws AccessDeniedException
+     * @return Response|RedirectResponse
+     */
+    public function deleteAction($id)
+    {
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('DELETE', $object)) {
+            throw new AccessDeniedException();
+        }
+
+        if ($this->getRequest()->getMethod() == 'DELETE') {
+            try {
+                $this->admin->delete($object);
+                $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
+            } catch (ModelManagerException $e) {
+                $this->get('session')->setFlash('sonata_flash_error', 'flash_delete_error');
+            }
+
+            return new RedirectResponse($this->admin->generateUrl(
+                'list',
+                array('active_tab' => $this->get('request')->get('context'))
+            ));
+        }
+
+        return $this->render(
+            $this->admin->getTemplate('delete'),
+            array(
+                'object' => $object,
+                'action' => 'delete'
+            )
+        );
+    }
 
 
     /**
@@ -448,8 +486,8 @@ class MediaAdminController extends SonataMediaAdminController
 
         foreach ($pool->getContexts() as $context => $value) {
 
-            if($galleryListMode){
-                if($context != $this->getRequest()->get('context')){
+            if ($galleryListMode) {
+                if ($context != $this->getRequest()->get('context')) {
                     continue;
                 }
             }
@@ -473,8 +511,6 @@ class MediaAdminController extends SonataMediaAdminController
             $formView,
             array('NetworkingInitCmsBundle:Form:form_admin_fields.html.twig')
         );
-
-
 
 
         return $this->render(

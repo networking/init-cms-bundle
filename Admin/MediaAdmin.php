@@ -146,7 +146,7 @@ class MediaAdmin extends SonataMediaAdmin
             $formMapper->add(
                 'tags',
                 'sonata_type_model',
-                array('required' => false, 'expanded' => true, 'multiple' => true)
+                array('required' => false, 'expanded' => true, 'multiple' => true, 'help_label' => 'help.media_tag')
             );
         }
     }
