@@ -32,12 +32,12 @@
 // Base modal
 .modal {
   position: fixed;
-  top: 50%;
+  top: 10%;
   left: 50%;
   z-index: @zindexModal;
   overflow: auto;
   width: ((@gridColumnWidth) * 11) + (@gridGutterWidth * (11 - 1)) - 16;
-  margin: -250px 0 0 -((((@gridColumnWidth) * 11) + (@gridGutterWidth * (11 - 1)) - 16) /2);
+  margin: 0 0 0 -((((@gridColumnWidth) * 11) + (@gridGutterWidth * (11 - 1)) - 16) /2);
   background-color: @white;
   border: 1px solid #999;
   border: 1px solid rgba(0,0,0,.3);
@@ -49,7 +49,7 @@
     .transition(e('opacity .3s linear, top .3s ease-out'));
     top: -25%;
   }
-  &.fade.in { top: 50%; }
+  &.fade.in { top: 10%; }
 }
 
 

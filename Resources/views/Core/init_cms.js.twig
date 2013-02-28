@@ -43,12 +43,13 @@ function createRedactor() {
 
 (function ($) {
     $('.modal').live('show', function(){
-           var left = ($(this).width()) /2;
-           var top = ($(this).height()) /2;
-
-           $(this).css('margin-top', '-' +top+'px');
-           $(this).css('margin-left', '-' +left+'px');
-       });
+        var height = $(this).height();
+        var windowHeight = $(window).height();
+        if(windowHeight - 100 < height){
+            height = windowHeight /2;
+            $('.modal-body', this).css('max-height', height+'px');
+        }
+    });
 
     $('.notice-block').on('DOMNodeInserted', function () {
         $(this).fadeIn().delay('3000').fadeOut(500);

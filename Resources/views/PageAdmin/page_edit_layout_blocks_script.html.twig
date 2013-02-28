@@ -58,7 +58,7 @@ var field_add_{{ id }} = function (event) {
     var addLink = event.target;
     jQuery('#contentTypeModal').modal('show');
 
-    jQuery('#contentTypeModal').on('hidden', function (event) {
+    jQuery('#contentTypeModal').bind('initcms.create_block', function (event) {
         if (jQuery(this).data('create')) {
             var classType = jQuery('#selectContentType').val();
             var liItem = jQuery(addLink).closest('li');
@@ -121,12 +121,13 @@ function doAjaxSubmit(url, form, data) {
             jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
                 if (i + 1 == data.sortOrder) {
                     jQuery(value).on('shown', function () {
-                        var left = ($(this).width()) / 2;
-                        var top = ($(this).height() + 518) / 2;
-
-                        jQuery(value).css('margin-top', '-' + top + 'px');
-                        jQuery(value).css('margin-left', '-' + left + 'px');
+                        var windowHeight = $(window).height();
+                        if (windowHeight - 100 < 800) {
+                            var modalBodyHeight = windowHeight / 2;
+                            $('.modal-body', this).css('max-height', modalBodyHeight + 'px');
+                        }
                     });
+                    jQuery('#contentTypeModal').modal('hide');
                     jQuery(value).modal('show');
 
                 }
