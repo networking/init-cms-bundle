@@ -1,0 +1,13 @@
+{% from 'NetworkingInitCmsBundle:GalleryView:macro.html.twig' import admin_lightbox, admin_carousel %}
+{% if galleryView.hasMedia %}
+    {#{% thumbnail mediaItem.media, 'small' with {'class': 'img-polaroid'} %}#}
+    {% if galleryView.galleryType == 'lightbox' %}
+        {{ admin_lightbox(galleryView.mediaGallery) }}
+    {% endif %}
+    {% if galleryView.galleryType == 'carousel' %}
+        {{ admin_carousel(galleryView.mediaGallery, 'heroCarousel', null, 'admin') }}
+    {% endif %}
+{% else %}
+    New Gallery
+{% endif %}
+<div style="clear: both;">&nbsp;</div>

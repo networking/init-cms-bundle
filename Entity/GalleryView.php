@@ -104,7 +104,7 @@ class GalleryView implements ContentInterface
     }
 
     /**
-     * @param  \Networking\MediaBundle\Entity\Gallery $mediaGallery
+     * @param  \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
      * @return Gallery
      */
     public function setMediaGallery($mediaGallery)
@@ -115,7 +115,7 @@ class GalleryView implements ContentInterface
     }
 
     /**
-     * @return \Networking\MediaBundle\Entity\Gallery
+     * @return \Networking\InitCmsBundle\Entity\Gallery
      */
     public function getMediaGallery()
     {
@@ -218,7 +218,8 @@ class GalleryView implements ContentInterface
     {
         return array(
             'mediaItems' => $this->getMediaGallery()->getGalleryHasMedias(),
-            'gallery' => $this->getMediaGallery()
+            'gallery' => $this->getMediaGallery(),
+            'galleryView' => $this
         );
     }
 
@@ -230,9 +231,29 @@ class GalleryView implements ContentInterface
         $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryHasMedias() : array();
 
         return array(
-            'content' => array('mediaItems' => $mediaItems),
-            'template' => 'NetworkingInitCmsBundle:Gallery:admin_gallery_block.html.twig'
+            'content' => array('galleryView' => $this),
+            'template' => 'NetworkingInitCmsBundle:GalleryAdmin:gallery_view_block.html.twig'
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMedia()
+    {
+        if(count($this->getMediaItems()) > 0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMediaItems()
+    {
+        $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryHasMedias() : array();
+        return $mediaItems;
     }
 
     /**
