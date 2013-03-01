@@ -20,6 +20,7 @@
         "sonata-project/doctrine-orm-admin-bundle":"2.1.*",
         "sonata-project/user-bundle":"dev-master",
         "sonata-project/media-bundle":"2.1.*",
+        "sonata-project/formatter-bundle": "master",
         "stof/doctrine-extensions-bundle":"dev-master",
         "mopa/bootstrap-bundle":"dev-master",
         "twitter/bootstrap":"master",
