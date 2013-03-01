@@ -21,5 +21,8 @@ file that was distributed with this source code.
     {{ parent() }}
     <div class="modal hide fade" tabindex="-1" role="dialog" id="list_dialog">
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
     {% include 'NetworkingInitCmsBundle:CRUD:list_script.html.twig' %}
 {% endblock %}
