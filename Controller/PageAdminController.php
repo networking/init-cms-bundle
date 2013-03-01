@@ -440,6 +440,7 @@ class PageAdminController extends CRUDController
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($layoutBlock);
+                $em->persist($layoutBlock->getPage()->setUpdatedAt(new \DateTime()));
                 $em->flush();
             }
         }

@@ -44,11 +44,13 @@ class PagesBlockService extends BaseBlockService
     {
         $settings = array_merge($this->getDefaultSettings(), $block->getSettings());
 
-        $pages = $this->em->getRepository('NetworkingInitCmsBundle:Page')->findAll();
+        $pages = $this->em->getRepository('NetworkingInitCmsBundle:Page')
+            ->getAllSortBy('updatedAt');
 
         $draftPageCount = 0;
         $reviewPageCount = 0;
         $publishedPageCount = 0;
+        $reviewPages = array();
         $draftPages = array();
 
         foreach ($pages as $page) {
@@ -58,7 +60,11 @@ class PagesBlockService extends BaseBlockService
             }
             if ($page->isReview()) {
                 $reviewPageCount++;
-            } elseif ($page->isDraft()) {
+                $draftPageCount++;
+                $reviewPages[\Locale::getDisplayLanguage($page->getLocale())][] = $page;
+            }
+
+            if ($page->isDraft()) {
                 $draftPageCount++;
                 $draftPages[\Locale::getDisplayLanguage($page->getLocale())][] = $page;
             }
@@ -79,6 +85,7 @@ class PagesBlockService extends BaseBlockService
                 'review_pages' => $reviewPageCount,
                 'published_pages' => $publishedPageCount,
                 'pages' => $pages,
+                'reviewPages' => $reviewPages,
                 'draftPages' => $draftPages
             ),
             $response

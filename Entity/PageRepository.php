@@ -59,8 +59,6 @@ class PageRepository extends MaterializedPathRepository implements ContentReposi
             $qb->andWhere($qb->expr()->neq('p.id', $id));
         }
 
-
-
         $qb->andWhere('p.locale = :locale');
         $qb->orderBy('p.path', 'ASC');
 
@@ -79,6 +77,13 @@ class PageRepository extends MaterializedPathRepository implements ContentReposi
     {
         $qb = $this->getParentPagesQuery($locale, $id);
 
+        return $qb->getQuery()->execute();
+    }
+
+    public function getAllSortBy($sort, $order = 'DESC')
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.'.$sort, $order);
         return $qb->getQuery()->execute();
     }
 

@@ -512,7 +512,11 @@
             </trans-unit>
             <trans-unit id="title.actual_drafts">
                 <source>title.actual_drafts</source>
-                <target>Current Draft pages</target>
+                <target>Current draft pages</target>
+            </trans-unit>
+            <trans-unit id="title.actual_reviews">
+                <source>title.actual_reviews</source>
+                <target>Current pages to review</target>
             </trans-unit>
             <trans-unit id="link.see_all">
                 <source>link.see_all</source>
