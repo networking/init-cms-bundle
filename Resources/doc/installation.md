@@ -220,11 +220,20 @@ If they are not already created, you need to add specific folder to allow upload
 
 **IMPORTANT NOTE** Backup your DB before the next step
 
-There is a command that will set up the DB tables, insert a super admin user and insert some test data to get you going.
-This command will however purge the DB when loading the fixtures. You will be prompted to enter a username, email
-address and password, these will get you into the backend.
+Now that the symfony application is more or less setup, it is time to load the CMS DBs and
+fixtures, as well as create an admin user.
 
-	php app/console networking:cms:install
+There is an install wizard which will get this done for you, just go to the following URL and follow the instructions:
+
+    http://localhost//app_dev.php/cms_install
+
+
+Alternatively you can run the install process on the command line,
+you will be prompted to enter a username, email address and password, these will get you into the backend.
+
+	php app/console networking:initcms:install
+
+Now you should be up and running.
 
 If you decided to let composer install twitters bootstrap, you might want to activate auto symlinking and checking, after composer update/install.
 So add this to your existing scripts section in your composer json:

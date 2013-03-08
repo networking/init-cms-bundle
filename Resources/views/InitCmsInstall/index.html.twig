@@ -1,0 +1,141 @@
+{% extends "NetworkingInitCmsBundle::admin_base.html.twig" %}
+
+{% block title %}Welcome to the initcms{% endblock title %}
+
+{% block page_title %}
+    <div class="hero-unit" style="background-color: #000000">
+
+        <div class="row-fluid">
+            <div class="span3">
+                <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}">
+            </div>
+            <div class="span9">
+                <h1 style="color: white;">{{ title }}</h1>
+            </div>
+        </div>
+    </div>
+{% endblock page_title %}
+{% block init_cms_top_nav %}{% endblock %}
+{% block sidebar_left %}{% endblock %}
+{% block sonata_admin_content %}
+<div class="row row-content-wide">
+<div class="span12">
+    <div class="middle">
+        {% if form is defined %}
+        {% if install_failed %}
+            <h3>The installation failed</h3>
+            <p>Please review the errors mentioned above and try to correct them.</p>
+            <p>You can resubmit the form once you think that you have completed the fixes</p>
+        {% else %}
+            <h3>Lets create an admin user</h3>
+        {% endif %}
+
+        <form action="{{ url('_install_db',{'complete':complete } ) }}" method="POST" id="install_form"
+              class="form-vertical" novalidate autocomplete="off">
+            <div class="row-fluid">
+                <div class="span8">
+
+                    {{ form_errors(form) }}
+
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.password) }}
+
+                    {{ form_rest(form) }}
+
+
+                </div>
+                <div class="span4">
+
+                    <p>Afterwards we will load up the DB.</p>
+
+                    <p>This may take a few moments, so please be patient</p>
+                </div>
+            </div>
+            <div class="form-actions well well-small">
+                <input type="submit" class="btn btn-primary" id="sendUserButton"
+                       value="{% if install_failed %}Try again{% else %}Send{% endif %}"/>
+            </div>
+        </form>
+
+
+        {% elseif has_DB is not defined or not has_DB %}
+            <h2>Can't access DB</h2>
+            <p>The following exception was thrown</p>
+            <pre class="text-error">{{ error_message }}</pre>
+            <p>Please control your parameters.yml file is correct, and that the DB exists.</p>
+
+            <p><a href="{{ url('_welcome') }}" class="btn btn-info">Re-check configuration <i
+                    class="icon icon-refresh icon-white"></i></a></p>
+        {% else %}
+            {% if installed %}
+                <h2>Congratulations, Init CMS installed</h2>
+                <p>You can now <a href="{{ url('sonata_admin_dashboard') }}">login</a> to the dashboard with your new
+                    user, or take a look at you first pages</p>
+                <a href="{{ url('sonata_admin_dashboard') }}"class="btn btn-primary">Admin login</a>
+                <a class="btn" href="{{ action.url }}">{{ action.label }} &rarr;</a>
+
+            {% else %}
+                <h2>Lets get started!</h2>
+                <p>Looks like we can connect to your DB, but before you can use the CMS, we need to setup some tables
+                    and
+                    base data first.</p>
+                <p>
+                    We are going to do the following things:
+                <ol>
+                    <li>Set up the necessary tables for the init cms in your DB.</li>
+                    <li>Initiate and setup the ACL tables and data so that we can control user access</li>
+                    <li>Load some default home pages (in each language), and menu items into the DB (appending to your
+                        existing data)
+                    </li>
+                    <li>Create a superadmin user so that you can login (you can choose your username and password in the
+                        next step)
+                    </li>
+                    <li>Dump the assetic resources (compile and compress the less and css files)</li>
+                </ol>
+                </p>
+                <p>
+                    If you are ready to go, click the "Install Init CMS" button.
+                </p>
+                <a class="btn" href="{{ url('_install_db') }}">Install Init CMS &rarr;</a>
+            {% endif %}
+
+
+        {% endif %}
+    </div>
+</div>
+</div>
+<div id="showProgress" class="modal hide fade">
+    <div class="modal-header">Please wait....</div>
+    <div class="modal-body">
+        <p id="nearlyThere" class="hide">Nearly there, initializing</p>
+
+        <div class="progress progress-striped active">
+            <div class="bar" style="width: 1%;"></div>
+        </div>
+    </div>
+</div>
+{% endblock sonata_admin_content %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            window.prettyPrint && prettyPrint();
+            jQuery('#sendUserButton').live('click', function () {
+                var width = 1;
+                jQuery('#showProgress').modal('show');
+                setInterval(function () {
+                    width = width + 1;
+                    if (width <= 100) {
+                        jQuery('.bar').css('width', width + '%');
+                    } else {
+                        jQuery('#nearlyThere').fadeIn();
+                    }
+                }, 100);
+            });
+        });
+    </script>
+{% endblock javascripts %}
+

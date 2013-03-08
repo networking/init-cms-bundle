@@ -73,5 +73,16 @@
     <route id="initcms_404" pattern="/404">
         <default key="_controller">NetworkingInitCmsBundle:FrontendPage:pageNotFound</default>
     </route>
+    <route id="_configure_cms" pattern="/cms_install">
+        <default key="_controller">NetworkingInitCmsBundle:InitCmsInstall:index</default>
+    </route>
+    <route id="_welcome_cms" pattern="/welcome">
+        <default key="_controller">NetworkingInitCmsBundle:InitCmsInstall:index</default>
+    </route>
+    <route id="_install_db" pattern="/install_db/{complete}">
+        <default key="complete">0</default>
+        <default key="_controller">NetworkingInitCmsBundle:InitCmsInstall:installDb</default>
+        <requirement key="complete">\d+</requirement>
+    </route>
 
 </routes>
