@@ -104,16 +104,16 @@ class LocaleListener implements EventSubscriberInterface
 
         /*
          * handle locale:
-         * 1. priority: defined in session
-         * 2. priority: defined in browser or default
+         * 1. priority: defined in session: set request attribute as symfony will set request->setLocale
+         * 2. priority: defined in browser or default: set request attribute as symfony will set request->setLocale
          */
         if($request->hasPreviousSession()) {
             // there is a session -> use that
-            $request->setLocale($request->getSession()->get($localeType));
+            $request->attributes->set('_locale',$request->getSession()->get($localeType));
         } else {
             // nothing set, get the preferred locale and use it
             $preferredLocale = $this->getPreferredLocale($request);
-            $request->setLocale($preferredLocale);
+            $request->attributes->set('_locale',$preferredLocale);
             $request->getSession()->set($localeType, $preferredLocale);
         }
 
@@ -134,11 +134,22 @@ class LocaleListener implements EventSubscriberInterface
             $locale = $this->defaultLocale;
         }
 
+        $patterns = $this->accessMap->getPatterns($request);
+
+        //Set backend language to exactly user language settings (if it exists or not)
         $request->getSession()->set('admin/_locale', $locale);
 
+        // If user language does not exist in frontend website, get next best
         $frontendLocale = $this->guessFrontendLocale($locale);
 
         $request->getSession()->set('_locale', $frontendLocale);
+
+        if(in_array('ROLE_ADMIN', $patterns[0])){
+            $request->attributes->set('_locale', $locale);
+        }else {
+            $request->attributes->set('_locale', $frontendLocale);
+        }
+
     }
 
     /**
