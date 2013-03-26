@@ -56,27 +56,25 @@ label {
 // -------------------------
 
 // Shared size and type resets
-select,
+select:not(.cke_dialog_ui_input_select),
 textarea,
-input[type="text"],
-input[type="password"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="date"],
-input[type="month"],
-input[type="time"],
-input[type="week"],
-input[type="number"],
-input[type="email"],
-input[type="url"],
-input[type="search"],
-input[type="tel"],
+input[type="text"]:not(.cke_dialog_ui_input_text),
+input[type="password"]:not(.cke_dialog_ui_input_text),
+input[type="datetime"]:not(.cke_dialog_ui_input_text),
+input[type="datetime-local"]:not(.cke_dialog_ui_input_text),
+input[type="date"]:not(.cke_dialog_ui_input_text),
+input[type="month"]:not(.cke_dialog_ui_input_text),
+input[type="time"]:not(.cke_dialog_ui_input_text),
+input[type="week"]:not(.cke_dialog_ui_input_text),
+input[type="number"]:not(.cke_dialog_ui_input_text),
+input[type="email"]:not(.cke_dialog_ui_input_text),
+input[type="url"]:not(.cke_dialog_ui_input_text),
+input[type="search"]:not(.cke_dialog_ui_input_text),
+input[type="tel"]:not(.cke_dialog_ui_input_text),
 input[type="color"],
 .uneditable-input {
   display: inline-block;
-  height: @baseFormLineHeight;
   padding: 2px 4px;
-  margin-bottom: 9px;
   font-size: @baseFormFontSize;
   line-height: @baseFormLineHeight;
   color: @gray;
@@ -575,9 +573,9 @@ input.search-query {
 .form-search,
 .form-inline,
 .form-horizontal {
-  input,
+  input:not(.cke_dialog_ui_input_text),
   textarea,
-  select,
+  select:not(.cke_dialog_ui_input_select),
   .help-inline,
   .uneditable-input,
   .input-prepend,
