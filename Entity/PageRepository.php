@@ -87,4 +87,16 @@ class PageRepository extends MaterializedPathRepository implements ContentReposi
         return $qb->getQuery()->execute();
     }
 
+    /**
+     * Return the content identifier for the provided content object for
+     * debugging purposes.
+     *
+     * @param object $content A content instance
+     *
+     * @return string|null $id id of the content object or null if unable to determine an id
+     */
+    public function getContentId($content)
+    {
+        return $content->getId();
+    }
 }
