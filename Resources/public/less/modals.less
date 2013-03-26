@@ -2,15 +2,6 @@
 // Modals
 // --------------------------------------------------
 
-
-// Recalculate z-index where appropriate
-.modal-open {
-  .dropdown-menu {  z-index: @zindexDropdown + @zindexModal; }
-  .dropdown.open { *z-index: @zindexDropdown + @zindexModal; }
-  .popover       {  z-index: @zindexPopover  + @zindexModal; }
-  .tooltip       {  z-index: @zindexTooltip  + @zindexModal; }
-}
-
 // Background
 .modal-backdrop {
   position: fixed;
@@ -45,14 +36,15 @@
   .border-radius(6px);
   .box-shadow(0 3px 7px rgba(0,0,0,0.3));
   .background-clip(padding-box);
+  // Remove focus outline from opened modal
+  outline: none;
+
   &.fade {
     .transition(e('opacity .3s linear, top .3s ease-out'));
     top: -25%;
   }
   &.fade.in { top: 10%; }
 }
-
-
 .modal-header {
   padding: 9px 15px;
   border-bottom: 1px solid #eee;
@@ -67,8 +59,9 @@
 
 // Body (where all modal content resides)
 .modal-body {
+  position: relative;
   overflow-y: auto;
-  max-height: 600px;
+  max-height: 400px;
   padding: 15px;
 }
 // Remove bottom margin if need be
@@ -96,8 +89,8 @@
   .btn-group .btn + .btn {
     margin-left: -1px;
   }
-  label.checkbox {
-    line-height: 0;
-    min-height: 0;
+  // and override it for block buttons as well
+  .btn-block + .btn-block {
+    margin-left: 0;
   }
 }
