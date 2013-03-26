@@ -21,13 +21,14 @@ var field_update_{{ id }} = function (event) {
     jQuery.each(CKEDITOR.instances, function () {
         try {
             var editor = this;
-            var data = editor.getData();
+            var text = editor.getData();
             if (data) {
                 if (editor) {
                     editor.setData(data);
-                    jQuery('#' + editor.name).html(data);
+                    jQuery('#' + editor.name).val(text);
                 }
             }
+
         } catch (err) {
         }
     });
