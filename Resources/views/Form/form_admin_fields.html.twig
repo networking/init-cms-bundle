@@ -356,12 +356,10 @@ file that was distributed with this source code.
     {{ form_widget(form) }}
     <script>
         $(document).ready(function () {
-            (function ($) {
-                $("#{{ id }}").select2({
-                    placeholder:"{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
-                    allowClear:true
-                });
-            })(jQuery);
+            jQuery("#{{ id }}").select2({
+                placeholder:"{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
+                allowClear:true
+            });
         });
     </script>
 {% endblock %}
