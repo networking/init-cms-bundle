@@ -56,17 +56,30 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
      */
     public function createLayoutBlocks(ObjectManager $manager, $locale)
     {
+        $textClass = false;
+
+        $contentTypes = $this->container->getParameter('networking_init_cms.page.content_types');
+        foreach($contentTypes as $type){
+            if($type['name'] == 'Text'){
+                $textClass = $type['class'];
+                break;
+            }
+        }
+        if(!$textClass){
+            return;
+        }
+
         $layoutBlock = new LayoutBlock();
         $layoutBlock->setIsActive(true);
         $layoutBlock->setSortOrder(1);
-        $layoutBlock->setClassType('Networking\InitCmsBundle\Entity\Text');
+        $layoutBlock->setClassType($textClass);
         $layoutBlock->setZone($this->getFirstZone());
         $layoutBlock->setPage($this->getReference('homepage_'.$locale));
 
         $manager->persist($layoutBlock);
         $manager->flush();
 
-        $text = new Text();
+        $text = new $textClass();
         $text->setLayoutBlock($layoutBlock);
         $text->setText('<h1>Hello World</h1><p>The locale of this page is '.$locale.'</p>');
 
