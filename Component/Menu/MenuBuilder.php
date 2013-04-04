@@ -133,7 +133,19 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     {
         if ($node->getRedirectUrl()) {
             $uri = $node->getRedirectUrl();
-        } else {
+        }
+        elseif($node->getInternalUrl()){
+            $uri = $node->getInternalUrl();
+            try{
+                $routeArray = $route = $this->router->matchRequest(Request::create($uri));
+                if(is_array($routeArray) && array_key_exists('_route', $routeArray)){
+                    $uri = $this->router->generate($routeArray['_route']);
+                }
+            }catch(\Exception $e){
+                //do nothing
+            }
+
+        }else {
             if ($this->viewStatus == Page::STATUS_PUBLISHED) {
                 if ($snapshot = $node->getPage()->getSnapshot()) {
                     $route = $snapshot->getRoute();

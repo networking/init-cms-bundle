@@ -28,7 +28,6 @@ class MenuSubItemFilterIterator extends \FilterIterator
     public function __construct(\Iterator $iterator, $currentUri)
     {
         $this->currentUri = $currentUri;
-
         parent::__construct($iterator);
     }
 
@@ -38,7 +37,9 @@ class MenuSubItemFilterIterator extends \FilterIterator
     public function accept()
     {
 
-        if ($this->currentUri === $this->current()->getPath()) {
+        if ($this->currentUri === $this->current()->getPath()
+            || $this->currentUri === $this->current()->getInternalUrl()
+            || $this->currentUri === $this->current()->getRedirectUrl()) {
             return true;
         }
 

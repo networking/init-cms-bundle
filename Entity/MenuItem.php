@@ -73,6 +73,16 @@ class MenuItem implements \IteratorAggregate
     protected $redirectUrl;
 
     /**
+     * @ORM\Column(name="internal_url", type="string", length=255, nullable=true)
+     */
+    protected $internalUrl;
+
+    /**
+     * @ORM\Column(name="hidden", type="boolean")
+     */
+    protected $hidden;
+
+    /**
      * @ORM\Column(name="link_target", type="string", length=255, nullable=true)
      */
     protected $linkTarget;
@@ -224,6 +234,46 @@ class MenuItem implements \IteratorAggregate
     {
 
         return $this->redirectUrl;
+    }
+
+    /**
+     * @param $hidden
+     */
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isHidden()
+    {
+        return $this->getHidden();
+    }
+
+    /**
+     * @param $route
+     */
+    public function setInternalUrl($route)
+    {
+        $this->internalUrl = $route;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInternalUrl()
+    {
+        return $this->internalUrl;
     }
 
     /**

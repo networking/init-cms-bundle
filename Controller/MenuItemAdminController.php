@@ -323,18 +323,11 @@ class MenuItemAdminController extends CRUDController
             foreach ($nodes as $node) {
                 /** @var $menuItem MenuItem */
                 $menuItem = $repository->find($node['item_id']);
-                if (!$menuItem->getPage()) {
-                    continue;
-                }
 
                 if ($node['parent_id']) {
                     $parent = $repository->find($node['parent_id']);
                     $menuItem->setParent($parent);
-                } else {
-                    $parent = $repository->find($menuItem->getRoot());
-                    $menuItem->setParent($parent);
                 }
-
 
                 $menuItem->setLft($node['left']);
                 $menuItem->setRgt($node['right']);

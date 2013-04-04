@@ -144,6 +144,8 @@ class MenuItemAdmin extends BaseAdmin
                     )
             );
             $formMapper->add('redirect_url', 'url', array('required'=>false));
+            $formMapper->add('internal_url', 'text', array('required'=>false));
+            $formMapper->add('hidden', null, array('required'=>false));
             $formMapper->end();
 
             // start group optionals
@@ -247,7 +249,7 @@ class MenuItemAdmin extends BaseAdmin
             ->end();
 
         if(!$object->getIsRoot()){
-            if (!$object->getRedirectUrl() AND !$object->getPage()) {
+            if (!$object->getRedirectUrl() AND !$object->getPage() AND !$object->getInternalUrl()) {
                 $errorElement
                     ->with('menu_page_or_url_required')
                     ->addViolation($this->translator->trans('menu.page_or_url.required', array(), $this->translationDomain))
