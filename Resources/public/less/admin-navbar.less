@@ -1,171 +1,35 @@
-// include the responsive after all of your stuff! ???
-@import "responsive";
-// Import our variables to overwrite bootstrap settings
-@import 'variables';
-
-@adminNavbarBackground: darken(@adminNavbarBackgroundHighlight, 5%);
-@adminNavbarBackgroundHighlight: #ffffff;
-@adminNavbarBorder: darken(@adminNavbarBackground, 12%);
-@adminNavbarLinkBackgroundActive: darken(@adminNavbarBackground, 5%);
-@adminNavbarText: #777777;
-
-body {
-  padding-top: @navbarHeight * 2;
-
-}
-
 .navbar-initcms {
+
+  @import 'admin';
   line-height: 20px;
   top: 0px !important;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px; // Gradient is applied to its own element because overflow visible is not honored by IE when filter is present
   z-index: 2000; // Dropdowns
   color: @navbarInverseText;
-
-  .navbar-inner {
-    #gradient > .vertical(@navbarInverseBackgroundHighlight, @navbarInverseBackground);
-    border-color: @navbarInverseBorder;
-  }
+  margin-bottom: @navbarHeight;
 
   a.brand,
   .nav > li > a {
     color: @navbarInverseLinkColor;
+    background-color: @navbarInverseBackground;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
     &:hover {
       color: @navbarInverseLinkColorHover;
     }
   }
 
-  .nav > li > a:focus,
-  .nav > li > a:hover {
-    background-color: @navbarInverseLinkBackgroundHover;
-    color: @navbarInverseLinkColorHover;
-  }
-
-  .nav .active > a,
-  .nav .active > a:hover,
-  .nav .active > a:focus {
-    color: @navbarInverseLinkColorActive;
-    background-color: @navbarInverseLinkBackgroundActive;
-  }
-
-// Inline text links
-  .navbar-link {
-    color: @navbarInverseLinkColor;
-    &:hover {
-      color: @navbarInverseLinkColorHover;
-    }
-  }
-
-// Dividers in navbar
-  .divider-vertical {
-    border-left-color: @navbarInverseBackground;
-    border-right-color: @navbarInverseBackgroundHighlight;
-  }
-
-// Dropdowns
-  .nav li.dropdown.open > .dropdown-toggle,
-  .nav li.dropdown.active > .dropdown-toggle,
-  .nav li.dropdown.open.active > .dropdown-toggle {
-    background-color: @navbarInverseLinkBackgroundActive;
-    color: @navbarInverseLinkColorActive;
-  }
-  .nav li.dropdown > .dropdown-toggle .caret {
-    border-top-color: @navbarInverseLinkColor;
-    border-bottom-color: @navbarInverseLinkColor;
-  }
-  .nav li.dropdown.open > .dropdown-toggle .caret,
-  .nav li.dropdown.active > .dropdown-toggle .caret,
-  .nav li.dropdown.open.active > .dropdown-toggle .caret {
-    border-top-color: @navbarInverseLinkColorActive;
-    border-bottom-color: @navbarInverseLinkColorActive;
-  }
-
-// Navbar search
-  .navbar-search {
-    .search-query {
-      color: @white;
-      background-color: @navbarInverseSearchBackground;
-      border-color: @navbarInverseSearchBorder;
-      .box-shadow(~"inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15)");
-      .transition(none);
-      .placeholder(@navbarInverseSearchPlaceholderColor); // Focus states (we use .focused since IE7-8 and down doesn't support :focus)
-      &:focus,
-      &.focused {
-        padding: 5px 15px;
-        color: @grayDark;
-        text-shadow: 0 1px 0 @white;
-        background-color: @navbarInverseSearchBackgroundFocus;
-        border: 0;
-        .box-shadow(0 0 3px rgba(0,0,0,.15));
-        outline: 0;
-      }
-    }
-  }
-
-// Navbar collapse button
-  .btn-navbar {
-    .buttonBackground(darken(@navbarInverseBackgroundHighlight, 5%), darken(@navbarInverseBackground, 5%));
-  }
-  .navbar-inverse .nav > li > a:focus, .navbar-inverse .nav > li > a:hover {
-    background-color: transparent;
-    color: white;
-  }
-  .color-draft {
-    color: #ff8a00 !important;
-  }
-
-  .brand {
-    float: left;
-    display: block;
-    padding: 10px 20px 10px 0;
-    margin-left: 0px;
-    font-size: 16px;
-    font-weight: 200;
-  }
-
-  .info-very-soft {
-    color: #cccccc;
-  }
-
-  .color-second {
-    color: #999999;
-  }
-
-  .navbar-inner, .navbar-static-top .navbar-inner {
-    border-width: 0 0 1px;
-  }
-  .align-center {
-    text-align: center;
-  }
-
   .dropdown-menu { // Links within the dropdown menu
     a {
-      color: @dropdownLinkColor;
+      color: @dropdownLinkColor !important;
+    }
+    a:focus, a:hover {
+      color: @dropdownLinkColorHover !important;
+    }
+    a.color-draft {
+      color: #ff8a00 !important;
     }
   }
-
-// Hover state
-// -----------
-  .dropdown-menu li > a:hover,
-  .dropdown-menu li > a:focus,
-  .dropdown-submenu:hover > a {
-    color: @dropdownLinkColorHover;
-    background-color: @dropdownLinkBackgroundHover;
-    #gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
-  }
-
-// Active state
-// ------------
-  .dropdown-menu .active > a,
-  .dropdown-menu .active > a:hover {
-    color: @dropdownLinkColorHover;
-    background-color: @dropdownLinkBackgroundActive;
-    #gradient > .vertical(@dropdownLinkBackgroundActive, darken(@dropdownLinkBackgroundActive, 5%));
-  }
-}
-
-.navbar-fixed-top {
-  top: @navbarHeight;
+  @import "responsive";
 }
 
