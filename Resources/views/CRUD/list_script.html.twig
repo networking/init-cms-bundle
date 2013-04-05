@@ -1,6 +1,7 @@
 {% spaceless %}
 <script type="text/javascript">/*<![CDATA[*/
     var listDialog;
+    var linkClicked;
 
     function initializeDialog() {
         if (!listDialog) {
@@ -18,12 +19,11 @@
         event.preventDefault();
         event.stopPropagation();
         initializeDialog();
-        var a = jQuery(this);
-        var url = a.attr('href');
+        linkClicked = jQuery(this);
+        var url = linkClicked.attr('href');
         if (!url) {
-            url = a.attr('ref');
+            url = linkClicked.attr('ref');
         }
-
         jQuery.ajax({
             url:url,
             dataType:'html',
@@ -46,6 +46,7 @@
             createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
             return;
         }
+
 
         jQuery(form).ajaxSubmit({
             type:form.attr('method'),
@@ -84,6 +85,11 @@
 
                 if (xhr.result == 'ok') {
                     jQuery('#objectList').load(xhr.url);
+                    if (jQuery('input[name=_method]', form).val() == 'DELETE') {
+                        if(jQuery(linkClicked).parents('tr')){
+                            jQuery(linkClicked).parents('tr').remove();
+                        }
+                    }
                     listDialog.modal('hide');
                 } else {
                     jQuery('#objectList').html(xhr);
