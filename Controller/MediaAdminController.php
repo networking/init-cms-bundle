@@ -63,6 +63,8 @@ class MediaAdminController extends SonataMediaAdminController
 
                 $media->setContext($context);
 
+                $media->setEnabled(true);
+
                 $media->setName($file->getClientOriginalName());
 
 
@@ -134,6 +136,8 @@ class MediaAdminController extends SonataMediaAdminController
                 $media->setProviderName($provider->getName());
 
                 $media->setContext($context);
+
+                $media->setEnabled(true);
 
                 $media->setName($file->getClientOriginalName());
 
