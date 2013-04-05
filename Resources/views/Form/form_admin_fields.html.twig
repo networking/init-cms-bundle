@@ -389,7 +389,7 @@ file that was distributed with this source code.
         {% if expanded %}
             <div {{ block('widget_container_attributes') }}>
                 {% for key, child in form %}
-                    <div class="pull-left" style="{% if key > 0 and key is odd %}margin-left:20px;{% endif %}">
+                    <div class="pull-left" style="margin:0 20px 10px 0;">
                         {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
                         {% if icons[choices[key].value] %}
                             <img src="{{ asset(icons[choices[key].value]) }}" width="175px"/>
