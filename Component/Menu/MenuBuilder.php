@@ -172,6 +172,10 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         );
         $item = $this->factory->createItem($node->getName(), $options);
 
+        if($node->isHidden()){
+            $item->setDisplay(false);
+        }
+
         return $item;
     }
 

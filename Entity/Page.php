@@ -93,18 +93,12 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var string $url
+     * @Gedmo\TreePathSource
+     * @Gedmo\Slug(fields={"url"}, separator="-", updatable=true, unique=false)
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
      * @Assert\NotBlank(groups={"not_home"})
      */
     protected $url;
-
-    /**
-     * @var string $slug
-     * @Gedmo\TreePathSource
-     * @Gedmo\Slug(fields={"url"}, separator="-", updatable=true, unique=false)
-     * @ORM\Column(name="slug", type="string", length=255, nullable=true)
-     */
-    protected $slug;
 
     /**
      * @var string $path
@@ -438,28 +432,6 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $this->metaDescription;
     }
 
-    /**
-     * Get slug
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     * @return $this
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
 
     /**
      * @param  Page $parent

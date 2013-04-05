@@ -116,7 +116,7 @@ class PageListener implements EventSubscriberInterface
                         $entityId = $entity->getId();
 
                         // thing to replace
-                        $entitySlug = $entity->getSlug();
+                        $entitySlug = $entity->getUrl();
 
                         $newPath = PageHelper::replaceSlugInPath($snapshotPath, $entityId, $entitySlug);
 

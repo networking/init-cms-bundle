@@ -12,8 +12,6 @@ Networking\InitCmsBundle\Entity\Page:
             type: string
         url:
             type: string
-        slug:
-            type: string
         path:
             type: string
         level:

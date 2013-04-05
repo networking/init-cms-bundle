@@ -78,7 +78,7 @@ class MenuItem implements \IteratorAggregate
     protected $internalUrl;
 
     /**
-     * @ORM\Column(name="hidden", type="boolean")
+     * @ORM\Column(name="hidden", type="boolean", nullable=true)
      */
     protected $hidden;
 
