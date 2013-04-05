@@ -210,28 +210,6 @@ class MediaAdmin extends SonataMediaAdmin
         if ($context) {
             $datagridMapper->add('context', null, array('hidden' => true));
         }
-
-        $providers = array();
-
-        if (!$context) {
-            $context = $this->pool->getDefaultContext();
-        }
-
-        $providerNames = (array)$this->pool->getProviderList();
-
-//        echo $this->pool->getDefaultContext()."!!";
-
-        foreach ($providerNames as $name) {
-            $providers[$name] = $name;
-        }
-
-        $datagridMapper->add(
-            'providerName',
-            'doctrine_orm_choice',
-            array('hidden' => true),
-            'sonata_type_translatable_choice',
-            array('choices' => $providers, 'catalogue' => 'SonataMediaBundle')
-        );
     }
 
     /**
