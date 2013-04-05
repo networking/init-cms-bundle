@@ -37,10 +37,14 @@ CKEDITOR.editorConfig = function( config ) {
 		'/',
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
-		{ name: 'styles' },
+		{ name: 'styles' , groups: ['test'] },
 		{ name: 'colors' },
 		{ name: 'about' }
 	];
+    {% if ckeditor_style is defined %}
+    config.stylesSet = '{{ ckeditor_style }}';
+
+    {% endif %}
 
 	// Remove some buttons, provided by the standard plugins, which we don't
 	// need to have in the Standard(s) toolbar.
