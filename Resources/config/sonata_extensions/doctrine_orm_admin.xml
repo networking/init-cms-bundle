@@ -36,6 +36,9 @@
             <call method="setTranslationDomain">
                 <argument>%sonata.media.admin.media.translation_domain%</argument>
             </call>
+            <call method="setLanguages">
+                <argument>%networking_init_cms.page.languages%</argument>
+            </call>
             <call method="setTemplates">
                 <argument type="collection">
                     <argument key="layout">NetworkingInitCmsBundle::admin_layout.html.twig</argument>

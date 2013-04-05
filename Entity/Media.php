@@ -49,6 +49,12 @@ class Media extends BaseMedia
     protected $tags;
 
     /**
+     * @var string $locale
+     * @ORM\Column(name="locale", type="string", nullable=true)
+     */
+    protected $locale;
+
+    /**
      * @var ArrayCollection $galleryHasMedias
      *
      * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\GalleryHasMedia", mappedBy="media", orphanRemoval=true)
@@ -75,7 +81,7 @@ class Media extends BaseMedia
      * Add tags
      *
      * @param \Networking\InitCmsBundle\Entity\Tag  $tag
-     * @return Page
+     * @return $this
      */
     public function addTags(Tag $tag)
     {
@@ -86,7 +92,7 @@ class Media extends BaseMedia
 
     /**
      * @param  \Doctrine\Common\Collections\ArrayCollection $tags
-     * @return Page
+     * @return $this
      */
     public function setTags(ArrayCollection $tags)
     {
@@ -103,5 +109,24 @@ class Media extends BaseMedia
     public function getTags()
     {
         return $this->tags;
+    }
+
+    /**
+     * @param string $locale
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }

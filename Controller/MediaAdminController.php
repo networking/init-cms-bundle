@@ -109,7 +109,18 @@ class MediaAdminController extends SonataMediaAdminController
         // Optional: instance name (might be used to load a specific configuration file or anything else).
         $CKEditor = $request->get('CKEditor');
         // Optional: might be used to provide localized messages.
-        $langCode = $request->get('langCode');
+        $locale = $this->getRequest()->getLocale();
+
+        $session = $this->getRequest()->getSession();
+
+        $pageId = $session->get('Page.last_edited');
+
+        $repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+        $page = $repository->find($pageId);
+
+        if($page){
+            $locale = $page->getLocale();
+        }
 
         $url = '';
 
@@ -138,6 +149,8 @@ class MediaAdminController extends SonataMediaAdminController
                 $media->setContext($context);
 
                 $media->setEnabled(true);
+
+                $media->setLocale($locale);
 
                 $media->setName($file->getClientOriginalName());
 

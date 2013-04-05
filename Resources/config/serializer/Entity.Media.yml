@@ -2,3 +2,5 @@ Networking\InitCmsBundle\Entity\Media:
     properties:
         id:
             type: integer
+        locale:
+            type: string
