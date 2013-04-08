@@ -219,7 +219,7 @@ class FrontendPageController extends Controller
         $request->getSession()->set('_viewStatus', $status);
 
         if ($path) {
-            $url = urldecode(urldecode($path));
+            $url = base64_decode($path);
         } else {
             $url = $this->get('router')->generate('networking_init_cms_default');
         }
