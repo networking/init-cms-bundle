@@ -116,13 +116,13 @@ class AdminMenuBuilder extends MenuBuilder
             if ($draftRoute) {
                 $draftPath = $this->router->generate(
                     'networking_init_view_draft',
-                    array('locale' => $language, 'path' => urlencode($draftRoute))
+                    array('locale' => $language, 'path' => urlencode(urlencode($draftRoute)))
                 );
             }
             if ($liveRoute) {
                 $livePath = $this->router->generate(
                     'networking_init_view_live',
-                    array('locale' => $language, 'path' => urlencode($liveRoute))
+                    array('locale' => $language, 'path' => urlencode(urlencode($liveRoute)))
                 );
             }
 
