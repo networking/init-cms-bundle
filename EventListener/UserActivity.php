@@ -17,7 +17,7 @@ namespace Networking\InitCmsBundle\EventListener;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use DateTime;
-use Networking\InitCmsBundle\Entity\User;
+use Sonata\UserBundle\Model\UserInterface;
 
 class UserActivity
 {
@@ -29,6 +29,7 @@ class UserActivity
         $this->context = $context;
         $this->em = $em;
     }
+
     /**
      * On each request we want to update the user's last activity datetime
      *
@@ -37,16 +38,17 @@ class UserActivity
      */
     public function onCoreController(FilterControllerEvent $event)
     {
-        if(!$this->context->getToken()){
+        if (!$this->context->getToken()) {
             return;
         }
         $user = $this->context->getToken()->getUser();
-        if($user instanceof User)
-        {
+        if ($user instanceof UserInterface) {
             //here we can update the user as necessary
-            $user->setLastActivity(new DateTime());
-            $this->em->persist($user);
-            $this->em->flush($user);
+            if (method_exists($object, 'setLastActivity')) {
+                $user->setLastActivity(new DateTime());
+                $this->em->persist($user);
+                $this->em->flush($user);
+            }
         }
     }
 }
