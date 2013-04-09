@@ -44,7 +44,7 @@ class UserActivity
         $user = $this->context->getToken()->getUser();
         if ($user instanceof UserInterface) {
             //here we can update the user as necessary
-            if (method_exists($object, 'setLastActivity')) {
+            if (method_exists($user, 'setLastActivity')) {
                 $user->setLastActivity(new DateTime());
                 $this->em->persist($user);
                 $this->em->flush($user);
