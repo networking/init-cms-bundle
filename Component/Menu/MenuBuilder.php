@@ -16,11 +16,9 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\DependencyInjection\Container,
     Mopa\Bundle\BootstrapBundle\Navbar\AbstractNavbarMenuBuilder,
     Knp\Menu\FactoryInterface,
-    Knp\Menu\Iterator\RecursiveItemIterator,
     Networking\InitCmsBundle\Entity\MenuItem as Menu,
-    Networking\InitCmsBundle\Entity\MenuItemRepository,
-    Networking\InitCmsBundle\Component\Menu\MenuSubItemFilterIterator,
-    Networking\InitCmsBundle\Entity\Page;
+    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Component\Routing\CMSRoute;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -124,60 +122,68 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     }
 
     /**
-     * Create an new node using the ContentRoute object to generate the uri
-     *
-     * @param  \Networking\InitCmsBundle\Entity\MenuItem $node
-     * @return \Knp\Menu\ItemInterface
-     */
-    public function createFromNode(Menu $node)
-    {
-        if ($node->getRedirectUrl()) {
-            $uri = $node->getRedirectUrl();
-        }
-        elseif($node->getInternalUrl()){
-            $uri = $node->getInternalUrl();
-            try{
-                $routeArray = $route = $this->router->matchRequest(Request::create($uri));
-                if(is_array($routeArray) && array_key_exists('_route', $routeArray)){
-                    $uri = $this->router->generate($routeArray['_route']);
-                }
-            }catch(\Exception $e){
-                //do nothing
-            }
+      * Create an new node using the ContentRoute object to generate the uri
+      *
+      * @param  \Networking\InitCmsBundle\Entity\MenuItem $node
+      * @return \Knp\Menu\ItemInterface
+      */
+     public function createFromNode(Menu $node)
+     {
+         if ($node->getRedirectUrl()) {
+             $uri = $node->getRedirectUrl();
+         } elseif ($node->getInternalUrl()) {
+             $uri = $node->getInternalUrl();
+             try {
+                 $routeArray = $route = $this->router->matchRequest(Request::create($uri));
+                 if (is_array($routeArray) && array_key_exists('_route', $routeArray)) {
+                     $route = new CMSRoute(
+                         null,
+                         $routeArray['_route'],
+                         array('locale' => $this->serviceContainer->get('request')->getLocale())
+                     );
+                     $uri = $this->router->generate($route);
+                 }
+             } catch (\Exception $e) {
+                 //do nothing
+             }
+         } else {
+             if ($this->viewStatus == Page::STATUS_PUBLISHED) {
+                 if ($snapshot = $node->getPage()->getSnapshot()) {
+                     $route = new CMSRoute(
+                         null,
+                         $snapshot->getPath(),
+                         array('locale' => $this->serviceContainer->get('request')->getLocale())
+                     );
+                     $uri = $this->router->generate($route);
+                 } else {
+                     return;
+                 }
+             } else {
+                 $route = $node->getPage()->getRoute();
+                 $uri = $this->router->generate($route);
+             }
+         }
 
-        }else {
-            if ($this->viewStatus == Page::STATUS_PUBLISHED) {
-                if ($snapshot = $node->getPage()->getSnapshot()) {
-                    $route = $snapshot->getRoute();
-                    $uri = $this->router->generate($route);
-                } else {
-                    return;
-                }
-            } else {
-                $route = $node->getPage()->getRoute();
-                $uri = $this->router->generate($route);
-            }
-        }
-        $options = array(
-            'uri' => $uri,
-            'label' => $node->getName(),
-            'attributes' => array(),
-            'linkAttributes' => $node->getLinkAttributes(),
-            'childrenAttributes' => array(),
-            'labelAttributes' => array(),
-            'extras' => array(),
-            'display' => true,
-            'displayChildren' => true,
+         $options = array(
+             'uri' => $uri,
+             'label' => $node->getName(),
+             'attributes' => array(),
+             'linkAttributes' => $node->getLinkAttributes(),
+             'childrenAttributes' => array(),
+             'labelAttributes' => array(),
+             'extras' => array(),
+             'display' => true,
+             'displayChildren' => true,
 
-        );
-        $item = $this->factory->createItem($node->getName(), $options);
+         );
+         $item = $this->factory->createItem($node->getName(), $options);
 
-        if($node->isHidden()){
-            $item->setDisplay(false);
-        }
+         if ($node->isHidden()) {
+             $item->setDisplay(false);
+         }
 
-        return $item;
-    }
+         return $item;
+     }
 
     /**
      * @param $id
