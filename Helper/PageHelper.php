@@ -22,6 +22,10 @@ use Networking\InitCmsBundle\Entity\Page,
 class PageHelper
 {
     /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected $container;
+    /**
      * @param $path
      * @return string
      */
@@ -176,6 +180,7 @@ class PageHelper
         }
 
         $pageSnapshot->setContentRoute($snapshotContentRoute);
+        $pageSnapshot->setPath(self::getPageRoutePath($page->getPath()));
 
         $manager->persist($pageSnapshot);
         $manager->flush();

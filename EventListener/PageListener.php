@@ -122,6 +122,10 @@ class PageListener implements EventSubscriberInterface
 
                         $snapshotRoute->setPath(PageHelper::getPageRoutePath($newPath));
 
+                        $childSnapshot->setPath(PageHelper::getPageRoutePath($newPath));
+
+
+                        $em->persist($childSnapshot);
                         $em->persist($snapshotRoute);
                     }
                 }

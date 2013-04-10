@@ -75,6 +75,11 @@ class PageSnapshot implements RouteAwareInterface, ResourceVersionInterface
     protected $snapshotDate;
 
     /**
+     * @ORM\Column(name="path", type="string", nullable=true)
+     */
+    protected $path;
+
+    /**
      * @param \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface $resource
      */
     public function __construct(VersionableInterface $resource)
@@ -274,5 +279,21 @@ class PageSnapshot implements RouteAwareInterface, ResourceVersionInterface
     public function getRoutes()
     {
         return array($this->getRoute());
+    }
+
+    /**
+     * @param $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 }

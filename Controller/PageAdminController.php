@@ -265,10 +265,10 @@ class PageAdminController extends CRUDController
 
     /**
      *
-     * @param \Networking\InitCmsBundle\Controller\Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateFormFieldElementAction(Request $request)
     {
@@ -321,7 +321,7 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param \Networking\InitCmsBundle\Controller\Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -947,42 +947,15 @@ class PageAdminController extends CRUDController
             return;
         }
 
-        $pageSnapshot = new PageSnapshot($page);
+        /** @var $pageHelper \Networking\InitCmsBundle\Helper\PageHelper */
+        $pageHelper = $this->get('networking_init_cms.helper.page_helper');
 
-        $em = $this->getDoctrine()->getManager();
-
-        $serializer = $this->get('serializer');
-
-        foreach ($page->getLayoutBlock() as $layoutBlock) {
-            /** @var $layoutBlock \Networking\InitCmsBundle\Entity\LayoutBlock */
-            $layoutBlockContent = $em->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
-            $layoutBlock->takeSnapshot($serializer->serialize($layoutBlockContent, 'json'));
-        }
-
-        $pageSnapshot->setVersionedData($serializer->serialize($page, 'json'))
-            ->setPage($page);
-
-        if ($oldPageSnapshot = $page->getSnapshot()) {
-            $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
-        } else {
-            $snapshotContentRoute = new ContentRoute();
-        }
-
-        $pageSnapshot->setContentRoute($snapshotContentRoute);
-
-        $em->persist($pageSnapshot);
-        $em->flush();
-
-        $snapshotContentRoute->setPath(PageHelper::getPageRoutePath($page->getPath()));
-        $snapshotContentRoute->setObjectId($pageSnapshot->getId());
-
-        $em->persist($snapshotContentRoute);
-        $em->flush();
+        $pageHelper->makePageSnapshot($page);
     }
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string $path
+     * @internal param string $path
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getPathAction(Request $request)
