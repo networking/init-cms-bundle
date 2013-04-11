@@ -31,7 +31,6 @@ class HelpTextController extends Controller
 {
 
 
-
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $admin
@@ -95,24 +94,37 @@ class HelpTextController extends Controller
             'SonataAdminBundle'
         );
 
+        $nav_key = 0;
         foreach ($dashBoardGroups as $key => $group) {
-            $navArray[$key]['group_name'] = $group['label'];
-            $navArray[$key]['group_items'] = array();
+
+            //$navArray[$key]['group_name'] = $group['label'];
+            //$navArray[$key]['group_items'] = array();
 
             foreach ($group['items'] as $admin) {
 
+
                 $help_text_result = $repository->searchHelpTextByKeyLocale($admin->getCode(), $locale);
                 if (count($help_text_result) > 0) {
+
+
+                    $navArray[$nav_key]['group_name'] = $this->get('translator')->trans(
+                        $admin->getCode(),
+                        array(),
+                        'HelpTextAdmin'
+                    ); //$group['label'];
+                    $navArray[$nav_key]['group_items'] = array();
+
                     foreach ($help_text_result as $row) {
                         //split Translation Key into adminCode and action
                         $strripos = strripos($row->getTranslationKey(), '.');
                         $action = substr($row->getTranslationKey(), $strripos + 1);
-                        $navArray[$key]['group_items'][$row->getId()]['adminCode'] = $admin->getCode();
-                        $navArray[$key]['group_items'][$row->getId()]['action'] = $action;
-                        $navArray[$key]['group_items'][$row->getId()]['title'] = $row->getTitle();
+                        $navArray[$nav_key]['group_items'][$row->getId()]['adminCode'] = $admin->getCode();
+                        $navArray[$nav_key]['group_items'][$row->getId()]['action'] = $action;
+                        $navArray[$nav_key]['group_items'][$row->getId()]['title'] = $row->getTitle();
                     }
 
                 }
+                $nav_key++;
             }
         }
 
