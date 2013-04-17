@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="">
+		<body>
+			<trans-unit id="button.create.menu_item">
+				<source>button.create.menu_item</source>
+				<target>Punkt hinzufügen</target>
+			</trans-unit>
+            <trans-unit id="legend.menu.actions">
+                <source>legend.menu.actions</source>
+                <target>Aktionen im gewählten Menü </target>
+            </trans-unit>
+            <trans-unit id="filter.label_locale">
+                <source>filter.label_locale</source>
+                <target>Sprache</target>
+            </trans-unit>
+            <trans-unit id="button.menu.settings">
+                <source>button.menu.settings</source>
+                <target>Menüeinstellungen</target>
+            </trans-unit>
+            <trans-unit id="button.menu.delete">
+                <source>button.menu.delete</source>
+                <target>Menü löschen</target>
+            </trans-unit>
+            <trans-unit id="title.page">
+                <source>title.page</source>
+                <target>Seite</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_menu_item_navigation">
+                <source>breadcrumb.link_menu_item_navigation</source>
+                <target><![CDATA[<small>Organisieren Sie Ihre</small>]]> Menüs</target>
+            </trans-unit>
+            <trans-unit id="label.linked_resource">
+                <source>label.linked_resource</source>
+                <target>Verknüpfte Ressource</target>
+            </trans-unit>
+            <trans-unit id="label.menu_item_name">
+                <source>label.menu_item_name</source>
+                <target>Ihre Menüpunkte </target>
+            </trans-unit>
+            <trans-unit id="menu.page_or_url.required">
+                <source>menu.page_or_url.required</source>
+                <target>Eine Seite oder eine Umleitungs-URL muss eingestellt werden.</target>
+            </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>Suche</target>
+            </trans-unit>
+            <trans-unit id="label_filters">
+                <source>label_filters</source>
+                <target>Menüs durchsuchen</target>
+            </trans-unit>
+            <trans-unit id="link_reset_filter">
+                <source>link_reset_filter</source>
+                <target>Zurücksetzen</target>
+            </trans-unit>
+            <trans-unit id="form.label_name">
+                <source>form.label_name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="form.label_page">
+                <source>form.label_page</source>
+                <target>Seite</target>
+            </trans-unit>
+            <trans-unit id="form.label_redirect_url">
+                <source>form.label_redirect_url</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="label_redirect_url">
+                <source>label_redirect_url</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="form.label_link_target">
+                <source>form.label_link_target</source>
+                <target>Linkziel </target>
+            </trans-unit>
+            <trans-unit id="form.label_link_class">
+                <source>form.label_link_class</source>
+                <target>Linkklasse</target>
+            </trans-unit>
+            <trans-unit id="form.label_link_rel">
+                <source>form.label_link_rel</source>
+                <target>Linkbezug </target>
+            </trans-unit>
+            <trans-unit id="form.legend_page_or_url">
+                <source>form.legend_page_or_url</source>
+                <target>Ziel (Seite oder URL)</target>
+            </trans-unit>
+            <trans-unit id="form.legend_name">
+                <source>form.legend_name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="form.legend_options">
+                <source>form.legend_options</source>
+                <target>Optionen</target>
+            </trans-unit>
+            <trans-unit id="form.label_visibility">
+                <source>form.label_visibility</source>
+                <target>Sichtbarkeit</target>
+            </trans-unit>
+            <trans-unit id="visibility_public">
+                <source>visibility_public</source>
+                <target>Öffentlich</target>
+            </trans-unit>
+            <trans-unit id="visibility_protected">
+                <source>visibility_protected</source>
+                <target>Geschützt</target>
+            </trans-unit>
+            <trans-unit id="form.label_description">
+                <source>form.label_description</source>
+                <target>Menübeschreibung </target>
+            </trans-unit>
+            <trans-unit id="visibility.helper.text">
+                <source>visibility.helper.text</source>
+                <target>Öffentlicher oder passwortgeschützter Menüpunkt </target>
+            </trans-unit>
+            <trans-unit id="_blank">
+                <source>_blank</source>
+                <target>Zeigt das Link-Ziel in einem neuen Browserfenster oder Tab an.</target>
+            </trans-unit>
+            <trans-unit id="_self">
+                <source>_self</source>
+                <target>Zeigt das Link-Ziel im aktuellen Browserfenster an </target>
+            </trans-unit>
+            <trans-unit id="_parent">
+                <source>_parent</source>
+                <target>Zeit das Link-Ziel im übergeordneten Frame an. </target>
+            </trans-unit>
+            <trans-unit id="_top">
+                <source>_top</source>
+                <target>Beendet alle Frames und zeigt das Link-Ziel im ganzen Browserfenster an </target>
+            </trans-unit>
+            <trans-unit id="info.please_enter_description">
+                <source>info.please_enter_description</source>
+                <target>Sie haben noch keine Beschreibung für Ihr Menü eingegeben. Lassen Sie doch andere wissen, wo dieses Menü auftaucht und wozu es dient. </target>
+            </trans-unit>
+            <trans-unit id="button.cancel">
+                <source>button.cancel</source>
+                <target>Abbrechen</target>
+            </trans-unit>
+            <trans-unit id="info.menu_sorted">
+                <source>info.menu_sorted</source>
+                <target>Menüpunkte erfolgreich umsortiert</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_success">
+                <source>flash_edit_success</source>
+                <target>Menü erfolgreich aktualisiert </target>
+            </trans-unit>
+            <trans-unit id="flash_create_success">
+                <source>flash_create_success</source>
+                <target>Menü erfolgreich erstellt </target>
+            </trans-unit>
+            <trans-unit id="flash_delete_success">
+                <source>flash_delete_success</source>
+                <target>Menüpunkt erfolgreich gelöscht </target>
+            </trans-unit>
+		</body>
+	</file>
+</xliff>

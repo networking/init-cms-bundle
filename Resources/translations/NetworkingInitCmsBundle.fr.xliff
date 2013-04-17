@@ -4,165 +4,165 @@
         <body>
             <trans-unit id="label_filters">
                 <source>label_filters</source>
-                <target>Suche</target>
+                <target>Rechercher</target>
             </trans-unit>
             <trans-unit id="label_export_download">
                 <source>label_export_download</source>
-                <target>Sie können Ihre Ergebnisse in folgenden Formaten herunterladen </target>
+                <target>Téléchargez vos résultats dans les formats suivants</target>
             </trans-unit>
             <trans-unit id="info.filter">
                 <source>info.filter</source>
-                <target>Filter %admin_label%:</target>
+                <target>Filtre %admin_label%:</target>
             </trans-unit>
             <trans-unit id="link.website_">
                 <source>link.website_</source>
-                <target>Website</target>
+                <target>Site Web</target>
             </trans-unit>
             <trans-unit id="link.go_to_list">
                 <source>link.go_to_list</source>
-                <target>Gehe zu %admin_label% Liste</target>
+                <target>Aller à la liste %admin_label% </target>
             </trans-unit>
             <trans-unit id="link.website_status_published">
                 <source>link.website_status_published</source>
-                <target>Website: veröffentlicht </target>
+                <target>Site Web: publié</target>
             </trans-unit>
             <trans-unit id="link.website_status_draft">
                 <source>link.website_status_draft</source>
-                <target>Website: Entwurf</target>
+                <target>Site Web: ébauche</target>
             </trans-unit>
                 <trans-unit id="link.show_more_actions">
                 <source>link.show_more_actions</source>
-                <target>Weitere Aktionen anzeigen</target>
+                <target>Montrer plus d’actions</target>
             </trans-unit>
             <trans-unit id="link.hide_actions">
                 <source>link.hide_actions</source>
-                <target>Aktionen verbergen </target>
+                <target>Cacher les actions</target>
             </trans-unit>
             <trans-unit id="link.show_more_filters">
                 <source>link.show_more_filters</source>
-                <target>Weitere Filter-Optionen </target>
+                <target>Plus d’options de filtrage</target>
             </trans-unit>
             <trans-unit id="link_reset_filter">
                 <source>link_reset_filter</source>
-                <target>Löschen</target>
+                <target>Effacer</target>
             </trans-unit>
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
-                <target>Hinzufügen %admin_label%</target>
+                <target>Ajouter %admin_label%</target>
             </trans-unit>
             <trans-unit id="link_delete">
                 <source>link_delete</source>
-                <target>Löschen</target>
+                <target>Supprimer</target>
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
-                <target>Neues %admin_label% hinzufügen </target>
+                <target>Ajouter nouveau %admin_label%</target>
             </trans-unit>
             <trans-unit id="title_edit">
                 <source>title_edit</source>
-                <target>%admin_label% - Bearbeiten "%name%"</target>
+                <target>%admin_label% - Éditer "%name%"</target>
             </trans-unit>
             <trans-unit id="btn_update">
                 <source>btn_update</source>
-                <target>Aktualisieren</target>
+                <target>Mettre à jour</target>
             </trans-unit>
             <trans-unit id="btn_create">
                 <source>btn_create</source>
-                <target>Erstellen</target>
+                <target>Créer</target>
             </trans-unit>
             <trans-unit id="btn_filter">
                 <source>btn_filter</source>
-                <target>Filter</target>
+                <target>Filtrer</target>
             </trans-unit>
             <trans-unit id="btn_cancel">
                 <source>btn_cancel</source>
-                <target>Abbrechen</target>
+                <target>Annuler</target>
             </trans-unit>
             <trans-unit id="btn_preview">
                 <source>btn_preview</source>
-                <target>Vorschau%admin_label%</target>
+                <target>Prévisualiser %admin_label%</target>
             </trans-unit>
             <trans-unit id="btn_update_and_edit_again">
                 <source>btn_update_and_edit_again</source>
-                <target> %admin_label% Aktualisieren </target>
+                <target>Mettre à jour %admin_label% </target>
             </trans-unit>
             <trans-unit id="btn_update_and_return_to_list">
                 <source>btn_update_and_return_to_list</source>
-                <target> %admin_label% Aktualisieren und zurück zur Liste </target>
+                <target>Mettre à jour %admin_label% et retourner à la liste</target>
             </trans-unit>
             <trans-unit id="delete_or">
                 <source>delete_or</source>
-                <target>oder</target>
+                <target>Ou</target>
             </trans-unit>
             <trans-unit id="btn_create_and_edit_again">
                 <source>btn_create_and_edit_again</source>
-                <target> %admin_label% hinzufügen und bearbeiten.</target>
+                <target>Ajouter %admin_label% et l’éditer</target>
             </trans-unit>
             <trans-unit id="btn_create_and_return_to_list">
                 <source>btn_create_and_return_to_list</source>
-                <target> %admin_label% hinzufügen und zurück zur Liste </target>
+                <target>Ajouter %admin_label% et retourner à la liste</target>
             </trans-unit>
             <trans-unit id="btn_create_and_create_a_new_one">
                 <source>btn_create_and_create_a_new_one</source>
-                <target> %admin_label% hinzufügen und einen weiteren erstellen </target>
+                <target>Ajouter %admin_label% et en créer un autre</target>
             </trans-unit>
             <trans-unit id="flash_delete_success">
                 <source>flash_delete_success</source>
-                <target>Der Eintrag wurde erfolgreich gelöscht.</target>
+                <target>L’élément a été supprimé avec succès.</target>
             </trans-unit>
             <trans-unit id="flash_delete_error">
                 <source>flash_delete_error</source>
-                <target>Es tut uns leid, der Eintrag konnte nicht gelöscht werden.</target>
+                <target>Désolé, l’élément n’a pas pu être supprimé.</target>
             </trans-unit>
             <trans-unit id="flash_edit_success">
                 <source>flash_edit_success</source>
-                <target>Der Eintrag wurde erfolgreich aktualisiert.</target>
+                <target>L’élément a été mis à jour avec succès.</target>
             </trans-unit>
             <trans-unit id="flash_edit_error">
                 <source>flash_edit_error</source>
-                <target>Es ist ein Fehler aufgetreten. Der gewählte Eintrag kann im Augenblick nicht aktualisiert werden</target>
+                <target>Une erreur est survenue, l’élément sélectionné n’a pas pu être mis à jour</target>
             </trans-unit>
             <trans-unit id="flash_create_success">
                 <source>flash_create_success</source>
-                <target>Der Eintrag wurde erfolgreich erstellt.</target>
+                <target>Opération réussie, l’élément a été créé.</target>
             </trans-unit>
             <trans-unit id="flash_create_error">
                 <source>flash_create_error</source>
-                <target>Es ist ein Fehler aufgetreten. Der Eintrag kann im Augenblick nicht erstellt werden</target>
+                <target>Une erreur est survenue, l’élément n’a pas pu être créé actuellement</target>
             </trans-unit>
             <trans-unit id="flash_batch_delete_success">
                 <source>flash_batch_delete_success</source>
-                <target>Die gewählten Einträge wurden erfolgreich gelöscht</target>
+                <target>Les éléments sélectionnés ont été supprimés avec succès</target>
             </trans-unit>
             <trans-unit id="flash_batch_delete_error">
                 <source>flash_batch_delete_error</source>
-                <target>Die gewählten Einträge konnten nicht gelöscht werden.</target>
+                <target> Les éléments sélectionnés n’ont pas pu être supprimés actuellement</target>
             </trans-unit>
             <trans-unit id="no_result">
                 <source>no_result</source>
-                <target>Keine Einträge gefunden </target>
+                <target>Aucun élément n’a été trouvé</target>
             </trans-unit>
             <trans-unit id="title.page_not_found">
                 <source>title.page_not_found</source>
-                <target>Seite nicht gefunden</target>
+                <target>Page introuvable</target>
             </trans-unit>
             <trans-unit id="info.page_not_found">
                 <source>info.page_not_found</source>
                 <target>
                     <![CDATA[
-                      <p>Leider konnten wir die von Ihnen gesuchte Seite nicht finden </p>
+                      <p>Désolé, nous n’avons pas pu trouver la page que vous cherchez</p>
                     ]]>
                 </target>
             </trans-unit>
             <trans-unit id="title.translation_not_found">
                 <source>title.translation_not_found</source>
-                <target>Übersetzung nicht gefunden </target>
+                <target>Traduction introuvable</target>
             </trans-unit>
             <trans-unit id="info.translation_not_found">
                 <source>info.translation_not_found</source>
                 <target>
                     <![CDATA[
-                         <p>Es gibt anscheinend keine Übersetzung für die von Ihnen gesuchte Seite.</p>
+                         <p> Il n’y a apparemment pas de traduction pour la page que vous cherchez.</p>
                     ]]>
                 </target>
             </trans-unit>
@@ -170,29 +170,29 @@
                 <source>info.welcome_text</source>
                 <target>
                     <![CDATA[
-                         <p>Wir haben hier noch einiges zu tun. Wir freuen uns über Vorschläge. Wir würden dieses Dashboard gerne weiter personalisierbar machen.</p>
+                         <p> Nous devons encore apporter quelques améliorations ici et vos suggestions sont les bienvenues. Nous aimerions rendre ce tableau de bord encore plus personnalisable.</p>
                     ]]>
                 </target>
             </trans-unit>
             <trans-unit id="label.last_activity">
                 <source>label.last_activity</source>
-                <target>Letzte Aktivität </target>
+                <target>Dernière activité</target>
             </trans-unit>
             <trans-unit id="title.last_user_activity">
                 <source>title.last_user_activity</source>
-                <target>Benutzer aktuell online</target>
+                <target>Utilisateurs actuellement en ligne</target>
             </trans-unit>
             <trans-unit id="title.dashboard">
                 <source>title.dashboard</source>
-                <target>Willkommen beim %admin_title% CMS</target>
+                <target>Bienvenue au CMS %admin_title%</target>
             </trans-unit>
             <trans-unit id="flash_batch_publish_success">
                 <source>flash_batch_publish_success</source>
-                <target>Die Seiten wurden erfolgreich veröffentlicht </target>
+                <target>Pages publiées avec succès</target>
             </trans-unit>
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>
-                <target>Es wurde nichts ausgewählt</target>
+                <target>Aucun élément sélectionné</target>
             </trans-unit>
         </body>
     </file>

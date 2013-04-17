@@ -1,30 +1,41 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="messages.en.xliff">
+    <file source-language="en" datatype="plaintext" original="">
         <body>
-        	<trans-unit id="default">
-                <source>default</source>
-                <target>default</target>
-            </trans-unit>
             <trans-unit id="error.file_upload_size">
                 <source>error.file_upload_size</source>
-                <target>The file was too bit, the maximum file size is %max_server_size%</target>
+                <target>Die Datei ist zu groß. Die maximale Dateigröße beträgt %max_server_size%</target>
             </trans-unit>
+
+            <trans-unit id="default">
+                <source>default</source>
+                <target>Standard</target>
+            </trans-unit>
+            <trans-unit id="one_column">
+                <source>one_column</source>
+                <target>Eine Spalte</target>
+            </trans-unit>
+
+            <trans-unit id="two_column">
+                <source>two_column</source>
+                <target>Zwei Spalten</target>
+            </trans-unit>
+
             <trans-unit id="sidemenu.link_edit_media">
                 <source>sidemenu.link_edit_media</source>
                 <target>Bearbeiten</target>
             </trans-unit>
             <trans-unit id="sidemenu.link_media_view">
                 <source>sidemenu.link_media_view</source>
-                <target>Anzeigen</target>
+                <target>Ansicht</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_create">
                 <source>breadcrumb.link_media_create</source>
-                <target>Hinzufügen</target>
+                <target>Erstellen</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_list">
                 <source>breadcrumb.link_media_list</source>
-                <target>Medien</target>
+                <target><![CDATA[<small>Achten Sie auf Ihre</small>]]> Medien</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_edit">
                 <source>breadcrumb.link_media_edit</source>
@@ -32,7 +43,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_view">
                 <source>breadcrumb.link_media_view</source>
-                <target>Anzeigen</target>
+                <target>Ansicht</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_delete">
                 <source>breadcrumb.link_media_delete</source>
@@ -40,7 +51,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_gallery_create">
                 <source>breadcrumb.link_gallery_create</source>
-                <target>Hinzufügen</target>
+                <target>Erstellen</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_gallery_list">
                 <source>breadcrumb.link_gallery_list</source>
@@ -64,11 +75,11 @@
             </trans-unit>
             <trans-unit id="title_select_provider">
                 <source>title_select_provider</source>
-                <target>Medienanbieter auswählen</target>
+                <target>Medienprovider wählen </target>
             </trans-unit>
             <trans-unit id="no_provider_available">
                 <source>no_provider_available</source>
-                <target>Kein Medienanbieter verfügbar</target>
+                <target>Kein Provider verfügbar </target>
             </trans-unit>
             <trans-unit id="title.media_preview">
                 <source>title.media_preview</source>
@@ -76,7 +87,7 @@
             </trans-unit>
             <trans-unit id="title.media_thumbnail">
                 <source>title.media_thumbnail</source>
-                <target>Thumbnail</target>
+                <target>Vorschaubild</target>
             </trans-unit>
             <trans-unit id="title.informations">
                 <source>title.informations</source>
@@ -96,7 +107,7 @@
             </trans-unit>
             <trans-unit id="label.content_type">
                 <source>label.content_type</source>
-                <target>Content type</target>
+                <target>Inhaltstyp</target>
             </trans-unit>
             <trans-unit id="label.copyright">
                 <source>label.copyright</source>
@@ -112,11 +123,11 @@
             </trans-unit>
             <trans-unit id="label.to_be_flushed">
                 <source>label.to_be_flushed</source>
-                <target>Flushable</target>
+                <target>Leerbar</target>
             </trans-unit>
             <trans-unit id="label.flushed_at">
                 <source>label.flushed_at</source>
-                <target>Flushed at</target>
+                <target>Geleert um</target>
             </trans-unit>
             <trans-unit id="label.public_url">
                 <source>label.public_url</source>
@@ -140,7 +151,7 @@
             </trans-unit>
             <trans-unit id="label.cdn_is_flushable">
                 <source>label.cdn_is_flushable</source>
-                <target>Flush CDN</target>
+                <target>CDN leeren</target>
             </trans-unit>
             <trans-unit id="label.video_reference">
                 <source>label.video_reference</source>
@@ -156,11 +167,11 @@
             </trans-unit>
             <trans-unit id="label.select_context">
                 <source>label.select_context</source>
-                <target>Kontext : </target>
+                <target>Kontext :</target>
             </trans-unit>
             <trans-unit id="label.select_provider">
                 <source>label.select_provider</source>
-                <target>Typ : </target>
+                <target>Typ :</target>
             </trans-unit>
             <trans-unit id="link.all_providers">
                 <source>link.all_providers</source>
@@ -192,7 +203,7 @@
             </trans-unit>
             <trans-unit id="description.roles_download_strategy">
                 <source>description.roles_download_strategy</source>
-                <target>Das Medium kann von Benutzern mit folgenden Rollen aufgerufen werden: %roles%.</target>
+                <target>Die Medien können von Benutzern mit folgenden Rechten abgerufen werden: %roles%.</target>
             </trans-unit>
             <trans-unit id="label.protected_download_url_notice">
                 <source>label.protected_download_url_notice</source>
@@ -200,19 +211,50 @@
             </trans-unit>
             <trans-unit id="description.public_download_strategy">
                 <source>description.public_download_strategy</source>
-                <target>Das Medium kann durch jeden aufgerufen werden.</target>
+                <target>Die Medien können von allen abgerufen werden.</target>
             </trans-unit>
             <trans-unit id="description.forbidden_download_strategy">
                 <source>description.forbidden_download_strategy</source>
-                <target>Das Medium kann durch niemanden aufgerufen werden.</target>
+                <target>Die Medien können von niemandem abgerufen werden.</target>
             </trans-unit>
             <trans-unit id="link.test_protected_url">
                 <source>link.test_protected_url</source>
-                <target>Link Vorschau</target>
+                <target>Link Vorschau </target>
+            </trans-unit>
+            <trans-unit id="label.edit_with_pixlr">
+                <source>label.edit_with_pixlr</source>
+                <target>Diese Medien mit Pixlr bearbeiten </target>
+            </trans-unit>
+            <trans-unit id="label.pixlr_warning">
+                <source>label.pixlr_warning</source>
+                <target>
+                    <![CDATA[
+                                    <span class="label important">Wichtig</span> Sie machen die Medien einem <strong>externen Dienst</strong> zugänglich. <br />
+                                    Wenn Sie vertrauliches Material bearbeiten, sollten sie diesen Dienst nicht verwenden.
+                                ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="label.pixlr_express_editor">
+                <source>label.pixlr_express_editor</source>
+                <target>
+                    <![CDATA[
+                                    <strong style="color: white">Express Editor</strong> <br />
+                                    Eine einfache Oberfläche für schnelles Bearbeiten
+                                ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="label.pixlr_advanced_editor">
+                <source>label.pixlr_advanced_editor</source>
+                <target>
+                    <![CDATA[
+                                    <strong style="color: white">Advanced Editor</strong> <br />
+                                    Nur für erfahrene Benutzer 
+                                ]]>
+                </target>
             </trans-unit>
             <trans-unit id="form.label_enabled">
                 <source>form.label_enabled</source>
-                <target>Enabled</target>
+                <target>Aktiviert</target>
             </trans-unit>
             <trans-unit id="form.label_media">
                 <source>form.label_media</source>
@@ -244,7 +286,7 @@
             </trans-unit>
             <trans-unit id="form.label_cdn_is_flushable">
                 <source>form.label_cdn_is_flushable</source>
-                <target>Flush CDN</target>
+                <target>CDN leeren</target>
             </trans-unit>
             <trans-unit id="form.label_description">
                 <source>form.label_description</source>
@@ -276,7 +318,7 @@
             </trans-unit>
             <trans-unit id="list.label_custom">
                 <source>list.label_custom</source>
-                <target>Medium</target>
+                <target>Benutzerdefiniert</target>
             </trans-unit>
             <trans-unit id="filter.label_name">
                 <source>filter.label_name</source>
@@ -284,7 +326,7 @@
             </trans-unit>
             <trans-unit id="filter.label_provider_reference">
                 <source>filter.label_provider_reference</source>
-                <target>Medienanbieter Referenz</target>
+                <target>Provider-Referenz</target>
             </trans-unit>
 
             <trans-unit id="filter.label_enabled">
@@ -299,15 +341,32 @@
 
             <trans-unit id="filter.label_provider_name">
                 <source>filter.label_provider_name</source>
-                <target>Medienanbieter Name</target>
+                <target>Providername</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content">
                 <source>form.label_binary_content</source>
                 <target>Datei</target>
             </trans-unit>
+
             <trans-unit id="sonata_media">
                 <source>sonata_media</source>
-                <target>Medienbibliothek</target>
+                <target>Medienbibliothek </target>
+            </trans-unit>
+            <trans-unit id="filter.label_tags">
+                <source>filter.label_tags</source>
+                <target>Medien-Tags</target>
+            </trans-unit>
+            <trans-unit id="title.select_media">
+                <source>title.select_media</source>
+                <target><![CDATA[<small>Wählen Sie einen Posten aus Ihren </small>]]> Medien</target>
+            </trans-unit>
+            <trans-unit id="form.label_tags">
+                <source>form.label_tags</source>
+                <target>Taggen Sie Ihre Medien </target>
+            </trans-unit>
+            <trans-unit id="help.media_tag">
+                <source>help.media_tag</source>
+                <target>So können Sie sie später leichter finden </target>
             </trans-unit>
         </body>
     </file>

@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="fr" datatype="plaintext" original="">
-        <body>
+	<file source-language="en" datatype="plaintext" original="">
+		<body>
             <trans-unit id="form.label_gallery">
                 <source>form.label_gallery</source>
-                <target>Select Gallery</target>
+                <target>Sélectionner une galerie</target>
             </trans-unit>
             <trans-unit id="form.label_gallery_type">
                 <source>form.label_gallery_type</source>
-                <target>Gallery Type</target>
+                <target>Type de galerie</target>
             </trans-unit>
             <trans-unit id="link_breadcrumb_dashboard">
                 <source>breadcrumb.link_dashboard</source>
@@ -16,8 +16,8 @@
             </trans-unit>
             <trans-unit id="change_language">
                 <source>Change Language</source>
-                <target>Langue</target>
+                <target>Changer la langue</target>
             </trans-unit>
-        </body>
-    </file>
+		</body>
+	</file>
 </xliff>

@@ -1,0 +1,526 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="link_breadcrumb_dashboard">
+                <source>breadcrumb.link_dashboard</source>
+                <target>&#8962;</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_page_list">
+                <source>breadcrumb.link_page_list</source>
+                <target><![CDATA[<small>Organisez vos</small> ]]> pages</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_page_edit">
+                <source>breadcrumb.link_page_edit</source>
+                <target>Éditer la page</target>
+            </trans-unit>
+            <trans-unit id="are_you_sure">
+                <source>page_admin.confirm</source>
+                <target>Êtes-vous sûr?</target>
+            </trans-unit>
+            <trans-unit id="form.label_is_home">
+                <source>form.label_is_home</source>
+                <target>Est la page d’accueil</target>
+            </trans-unit>
+            <trans-unit id="form.label_locale">
+                <source>form.label_locale</source>
+                <target>Langue</target>
+            </trans-unit>
+            <trans-unit id="form.label_template">
+                <source>form.label_template</source>
+                <target>Mise en page</target>
+            </trans-unit>
+            <trans-unit id="form.label_page_name">
+                <source>form.label_page_name</source>
+                <target>Nom de la page</target>
+            </trans-unit>
+            <trans-unit id="form.label_meta_title">
+                <source>form.label_meta_title</source>
+                <target>Méta-titre </target>
+            </trans-unit>
+            <trans-unit id="form.label_navigation_title">
+                <source>form.label_navigation_title</source>
+                <target>Étiquette de navigation</target>
+            </trans-unit>
+            <trans-unit id="form.label_url">
+                <source>form.label_url</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="form.label_parent">
+                <source>form.label_parent</source>
+                <target>Page parente</target>
+            </trans-unit>
+            <trans-unit id="form.label_show_in_navigation">
+                <source>form.label_show_in_navigation</source>
+                <target>Afficher dans la navigation</target>
+            </trans-unit>
+            <trans-unit id="form.label_meta_keyword">
+                <source>form.label_meta_keyword</source>
+                <target>Méta-mots-clés </target>
+            </trans-unit>
+            <trans-unit id="form.label_meta_description">
+                <source>form.label_meta_description</source>
+                <target>Méta-description </target>
+            </trans-unit>
+            <trans-unit id="form.label_status ">
+                <source>form.label_status</source>
+                <target>Statut de publication</target>
+            </trans-unit>
+            <trans-unit id="form.label_visibility">
+                <source>form.label_visibility</source>
+                <target>Visibilité</target>
+            </trans-unit>
+            <trans-unit id="form.label_is_active">
+                <source>form.label_is_active</source>
+                <target>Est actif</target>
+            </trans-unit>
+            <trans-unit id="form.label_tags">
+                <source>form.label_tags</source>
+                <target>Étiquettes</target>
+            </trans-unit>
+            <trans-unit id="legend.translate_page">
+                <source>legend.translate_page</source>
+                <target>Traductions de pages</target>
+            </trans-unit>
+            <trans-unit id="legend.page_settings">
+                <source>legend.page_settings</source>
+                <target>Paramètres &amp; SEO</target>
+            </trans-unit>
+            <trans-unit id="legend.page_tags">
+                <source>legend.page_tags</source>
+                <target>Étiquettes de page</target>
+            </trans-unit>
+            <trans-unit id="legend.page_content">
+                <source>legend.page_content</source>
+                <target>Contenu de la page</target>
+            </trans-unit>
+            <trans-unit id="status_draft">
+                <source>status_draft</source>
+                <target>Ebauche</target>
+            </trans-unit>
+            <trans-unit id="status_review">
+                <source>status_review</source>
+                <target>Révision</target>
+            </trans-unit>
+            <trans-unit id="status_published">
+                <source>status_published</source>
+                <target>Publié</target>
+            </trans-unit>
+            <trans-unit id="visibility_public">
+                <source>visibility_public</source>
+                <target>Public</target>
+            </trans-unit>
+            <trans-unit id="visibility_protected">
+                <source>visibility_protected</source>
+                <target>Protégé</target>
+            </trans-unit>
+            <trans-unit id="translation.message_saved">
+                <source>translation.message_saved</source>
+                <target>La page a été traduite avec succès</target>
+            </trans-unit>
+            <trans-unit id="admin.menu.dashboard">
+                <source>admin.menu.dashboard</source>
+                <target>Tableau de bord</target>
+            </trans-unit>
+            <trans-unit id="button.apply">
+                <source>button.apply</source>
+                <target>Appliquer</target>
+            </trans-unit>
+            <trans-unit id="button.cancel_draft">
+                <source>button.cancel_draft</source>
+                <target>Supprimer l’ébauche</target>
+            </trans-unit>
+            <trans-unit id="legend.page_status">
+                <source>legend.page_status</source>
+                <target>Statut de publication</target>
+            </trans-unit>
+            <trans-unit id="legend.translations">
+                <source>legend.translations</source>
+                <target>Traductions</target>
+            </trans-unit>
+            <trans-unit id="legend.filters">
+                <source>legend.filters</source>
+                <target>Rechercher les pages</target>
+            </trans-unit>
+            <trans-unit id="legend.actions">
+                <source>legend.actions</source>
+                <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="label.menu_link">
+                <source>label.menu_link</source>
+                <target>Menu "%menu_name%"</target>
+            </trans-unit>
+            <trans-unit id="link.add">
+                <source>link.add</source>
+                <target>Ajouter</target>
+            </trans-unit>
+            <trans-unit id="link.edit">
+                <source>link.edit</source>
+                <target>Éditer</target>
+            </trans-unit>
+            <trans-unit id="link.translate">
+                <source>link.translate</source>
+                <target>Traduire (copie)</target>
+            </trans-unit>
+            <trans-unit id="link.link">
+                <source>link.link</source>
+                <target>Lien</target>
+            </trans-unit>
+            <trans-unit id="link.unlink">
+                <source>link.unlink</source>
+                <target>Supprimer le lien</target>
+            </trans-unit>
+            <trans-unit id="info.empty">
+                <source>info.empty</source>
+                <target>Vider</target>
+            </trans-unit>
+            <trans-unit id="info.translations">
+                <source>info.translations</source>
+                <target>Pages alternatives dans d’autres langues</target>
+            </trans-unit>
+            <trans-unit id="legend.menu_connections">
+                <source>legend.menu_connections</source>
+                <target>Connexions du menu</target>
+            </trans-unit>
+            <trans-unit id="link_add_page_to_menu">
+                <source>link_add_page_to_menu</source>
+                <target>Ajouter la page au menu</target>
+            </trans-unit>
+            <trans-unit id="message.translation_link">
+                <source>message.translation_link</source>
+                <target> Ici, vous pouvez créer une connexion à une page existante dans la langue sélectionnée %language%.
+                    Seules les pages en %language% qui ne sont pas traduites en %original_language% sont énumérées ci-dessous.
+                    Sélectionnez la page en %language% à laquelle vous voulez associer "%object%", puis cliquez sur le bouton Envoyer.
+                </target>
+            </trans-unit>
+            <trans-unit id="title.translation_link">
+                <source>title.translation_link</source>
+                <target>Associer la page de "%object%" à une page en %language%</target>
+            </trans-unit>
+            <trans-unit id="button.draft">
+                <source>button.draft</source>
+                <target>Ebauche</target>
+            </trans-unit>
+            <trans-unit id="button.review">
+                <source>button.review</source>
+                <target>Révision</target>
+            </trans-unit>
+            <trans-unit id="button.publish">
+                <source>button.publish</source>
+                <target>Publier</target>
+            </trans-unit>
+            <trans-unit id="title.cancel_draft">
+                <source>title.cancel_draft</source>
+                <target>Restaurer le dernier élément publié</target>
+            </trans-unit>
+            <trans-unit id="info.cancel_draft">
+                <source>info.cancel_draft</source>
+                <target> Voulez-vous restaurer cette page "%object%" dans la dernière version publiée ?</target>
+            </trans-unit>
+            <trans-unit id="button.confirm_cancel_draft">
+                <source>button.confirm_cancel_draft</source>
+                <target>Oui, restaurer</target>
+            </trans-unit>
+            <trans-unit id="button.cancel">
+                <source>button.cancel</source>
+                <target>Annuler</target>
+            </trans-unit>
+            <trans-unit id="title.delete_translation_link">
+                <source>title.delete_translation_link</source>
+                <target>Supprimer le lien de traduction</target>
+            </trans-unit>
+            <trans-unit id="info.delete_translation_link">
+                <source>info.delete_translation_link</source>
+                <target> Êtes-vous sûr que vous voulez dissocier cette page de - "%translatedPage%" (%locale%)
+                </target>
+            </trans-unit>
+            <trans-unit id="label.account_settings">
+                <source>label.account_settings</source>
+                <target>Paramètres du compte</target>
+            </trans-unit>
+            <trans-unit id="label.exit">
+                <source>label.exit</source>
+                <target>Quitter</target>
+            </trans-unit>
+            <trans-unit id="error.file_upload_size">
+                <source>error.file_upload_size</source>
+                <target>Le fichier est trop grand. Taille maximale du téléchargement: %max_server_size%</target>
+            </trans-unit>
+            <trans-unit id="button.save">
+                <source>button.save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="list.label_admin_title">
+                <source>list.label_admin_title</source>
+                <target>Nom de la page</target>
+            </trans-unit>
+            <trans-unit id="list.label_full_path">
+                <source>list.label_full_path</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="filter.label_locale">
+                <source>filter.label_locale</source>
+                <target>Langue</target>
+            </trans-unit>
+            <trans-unit id="filter.label_title">
+                <source>filter.label_title</source>
+                <target>Nom de la page</target>
+            </trans-unit>
+            <trans-unit id="filter.label_path">
+                <source>filter.label_path</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>Rechercher</target>
+            </trans-unit>
+            <trans-unit id="label_filters">
+                <source>label_filters</source>
+                <target>Rechercher les pages</target>
+            </trans-unit>
+            <trans-unit id="link_reset_filter">
+                <source>link_reset_filter</source>
+                <target>Réinitialiser</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Ajouter une page</target>
+            </trans-unit>
+            <trans-unit id="link_add">
+                <source>link_add</source>
+                <target>Ajouter une page</target>
+            </trans-unit>
+            <trans-unit id="label_change_status">
+                <source>label_change_status</source>
+                <target>Modifier le statut</target>
+            </trans-unit>
+            <trans-unit id="isHome">
+                <source>isHome</source>
+                <target>Est la page d‘accueil</target>
+            </trans-unit>
+            <trans-unit id="locale">
+                <source>locale</source>
+                <target>Langue</target>
+            </trans-unit>
+            <trans-unit id="pageName">
+                <source>pageName</source>
+                <target>Nom de la page</target>
+            </trans-unit>
+            <trans-unit id="url">
+                <source>url</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="metaKeyword">
+                <source>metaKeyword</source>
+                <target>Méta-mot-clés</target>
+            </trans-unit>
+            <trans-unit id="metaDescription">
+                <source>metaDescription</source>
+                <target>Méta-description </target>
+            </trans-unit>
+            <trans-unit id="metaTitle">
+                <source>metaTitle</source>
+                <target>Méta-titre </target>
+            </trans-unit>
+            <trans-unit id="visiblity">
+                <source>visibility</source>
+                <target>Visibilité</target>
+            </trans-unit>
+            <trans-unit id="template">
+                <source>template</source>
+                <target>Mise en page</target>
+            </trans-unit>
+            <trans-unit id="positive">
+                <source>positive</source>
+                <target>Oui</target>
+            </trans-unit>
+            <trans-unit id="negative">
+                <source>negative</source>
+                <target>Non</target>
+            </trans-unit>
+            <trans-unit id="flash_status_success">
+                <source>flash_status_success</source>
+                <target>Le statut a été modifié avec succès</target>
+            </trans-unit>
+            <trans-unit id="flash_publish_success">
+                <source>flash_publish_success</source>
+                <target>La page est publiée</target>
+            </trans-unit>
+            <trans-unit id="message.layout_blocks_sorted">
+                <source>message.layout_blocks_sorted</source>
+                <target>Les blocs sont triés</target>
+            </trans-unit>
+            <trans-unit id="info.page_settings_updated">
+                <source>info.page_settings_updated</source>
+                <target>Les paramètres de la page ont été mis à jour avec succès</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_deleted">
+                <source>message.layout_block_deleted</source>
+                <target>Le bloc de mise en page a été supprimé avec succès</target>
+            </trans-unit>
+            <trans-unit id="info.create.layout_block">
+                <source>info.create.layout_block</source>
+                <target>Sélectionnez le type de contenu que vous souhaitez créer à partir de la liste ci-dessous</target>
+            </trans-unit>
+            <trans-unit id="url.helper.text">
+                <source>url.helper.text</source>
+                <target>par exemple, "nouvelles" ou "office_zuerich"</target>
+            </trans-unit>
+            <trans-unit id="url.placeholder">
+                <source>url.placeholder</source>
+                <target>/</target>
+            </trans-unit>
+            <trans-unit id="meta_title.helper.text">
+                <source>meta_title.helper.text</source>
+                <target>Titre affiché dans le navigateur</target>
+            </trans-unit>
+            <trans-unit id="info.revert_to_publish">
+                <source>info.revert_to_publish</source>
+                <target>Revenir aux publications</target>
+            </trans-unit>
+            <trans-unit id="link.revert_to_publish">
+                <source>link.revert_to_publish</source>
+                <target>Ignorer l’ébauche</target>
+            </trans-unit>
+            <trans-unit id="label.action_publish">
+                <source>label.action_publish</source>
+                <target>Publier les pages sélectionnées</target>
+            </trans-unit>
+            <trans-unit id="info.layout_block_empty">
+                <source>info.layout_block_empty</source>
+                <target>Cette partie de votre page est vide. Cliquez sur l‘icône + ci-dessus pour entrer votre premier contenu, ou faites glisser dans celui-ci un élément de contenu à partir de l’une des autres zones de contenu.</target>
+            </trans-unit>
+            <trans-unit id="legend.create_menu">
+                <source>legend.create_menu</source>
+                <target> Créer un point dans le menu "%menu_name%" pour cette page</target>
+            </trans-unit>
+            <trans-unit id="legend.edit_menu">
+                <source>legend.edit_menu</source>
+                <target>Éditer le point du menu sélectionné</target>
+            </trans-unit>
+            <trans-unit id="info.create_menu_item">
+                <source>info.create_menu_item</source>
+                <target>Si vous choisissez de continuer, vous serez redirigé vers le gestionnaire de menu où un point sera créé pour que vous puissiez utiliser le titre de la page. Tout ce que vous devez faire, c’est le positionner où vous voulez.</target>
+            </trans-unit>
+            <trans-unit id="info.edit_menu_item">
+                <source>info.edit_menu_item</source>
+                <target>Si vous choisissez de continuer, vous serez redirigé vers le gestionnaire de menu où vous pourrez éditer le point du menu sélectionné.</target>
+            </trans-unit>
+            <trans-unit id="button.continue">
+                <source>button.continue</source>
+                <target>Continuer</target>
+            </trans-unit>
+            <trans-unit id="label.show_no_more">
+                <source>label.show_no_more</source>
+                <target>Ne plus afficher</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Créer une nouvelle page</target>
+            </trans-unit>
+            <trans-unit id="info.page_create">
+                <source>info.page_create</source>
+                <target> Veuillez remplir les champs importants suivants avant d’ajouter de nouveaux contenus. Une fois la page créée, vous serez dirigé vers l’affichage d’édition de la page. Pour modifier ces paramètres dans l’affichage d’édition de la page, il vous suffit de chercher l'icône d'édition dans
+                Paramètres &amp; SEO.</target>
+            </trans-unit>
+            <trans-unit id="locale.helper.text">
+                <source>locale.helper.text</source>
+                <target>Langue du contenu de cette page</target>
+            </trans-unit>
+            <trans-unit id="page_name.helper.text">
+                <source>page_name.helper.text</source>
+                <target>Titre de page interne. Non affiché dans la partie visible</target>
+            </trans-unit>
+            <trans-unit id="parent.helper.text">
+                <source>parent.helper.text</source>
+                <target>Page parente pour cette URL.</target>
+            </trans-unit>
+            <trans-unit id="visibility.helper.text">
+                <source>visibility.helper.text</source>
+                <target>Page publique ou protégée par mot de passe</target>
+            </trans-unit>
+            <trans-unit id="template.helper.text">
+                <source>template.helper.text</source>
+                <target>La mise en page souhaitée pour votre page vers le</target>
+            </trans-unit>
+            <trans-unit id="meta_settings">
+                <source>meta_settings</source>
+                <target>Méta-paramètres de la page</target>
+            </trans-unit>
+            <trans-unit id="filter.label_status">
+                <source>filter.label_status</source>
+                <target>Statut de la page</target>
+            </trans-unit>
+            <trans-unit id="filter.label_page_name">
+                <source>filter.label_page_name</source>
+                <target>Nom de la page</target>
+            </trans-unit>
+            <trans-unit id="link.preview">
+                <source>link.preview</source>
+                <target>Aperçu</target>
+            </trans-unit>
+            <trans-unit id="link.live">
+                <source>link.live</source>
+                <target>Afficher la version publiée</target>
+            </trans-unit>
+            <trans-unit id="or">
+                <source>or</source>
+                <target>ou</target>
+            </trans-unit>
+            <trans-unit id="info.last_published_version">
+                <source>info.last_published_version</source>
+                <target>Dernière version publiée:<![CDATA[<span class="info-soft">%date%</span>]]></target>
+            </trans-unit>
+            <trans-unit id="info.no_pages_for_translation">
+                <source>info.no_pages_for_translation</source>
+                <target>Il n’y a pas de pages en %language% pouvant être associées comme traduction de cette page.
+                    Vous pouvez copier cette page (cliquez sur le lien "Traduire") ou créer une nouvelle page en %language% et ensuite associer les deux pages.</target>
+            </trans-unit>
+            <trans-unit id="message.translation_saved">
+                <source>message.translation_saved</source>
+                <target>Cette copie de la page en %language% a été créée avec succès </target>
+            </trans-unit>
+            <trans-unit id="message.translation_not_saved">
+                <source>message.translation_not_saved</source>
+                <target>Une copie de cette page en %language% n’a pas pu être créée. Vérifiez si une page avec l‘URL "%url%" en %language% existe déjà.</target>
+            </trans-unit>
+            <trans-unit id="title.copy_page">
+                <source>title.copy_page</source>
+                <target>Copier la page "%page_title%" en %language%</target>
+            </trans-unit>
+            <trans-unit id="info.copy_page">
+                <source>info.copy_page</source>
+                <target>Une copie du contenu et des paramètres de cette page sera effectuée en %language%. Une fois la page créée, allez à Traduction et cliquez sur "Éditer" pour modifier le contenu.
+                </target>
+            </trans-unit>
+            <trans-unit id="button.copy_page">
+                <source>button.copy_page</source>
+                <target>Copier la page</target>
+            </trans-unit>
+            <trans-unit id="title.edit_content">
+                <source>title.edit_content</source>
+                <target>Éditer votre contenu</target>
+            </trans-unit>
+            <trans-unit id="title.page_status_count">
+                <source>title.page_status_count</source>
+                <target>Résumé du statut de la page</target>
+            </trans-unit>
+            <trans-unit id="title.actual_drafts">
+                <source>title.actual_drafts</source>
+                <target>Ebauches de pages actuelles </target>
+            </trans-unit>
+            <trans-unit id="title.actual_reviews">
+                <source>title.actual_reviews</source>
+                <target>Pages actuelles à contrôler</target>
+            </trans-unit>
+            <trans-unit id="link.see_all">
+                <source>link.see_all</source>
+                <target>Voir toutes les pages</target>
+            </trans-unit>
+            <trans-unit id="info.last_edited">
+                <source>info.last_edited</source>
+                <target>Dernière modification le </target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
