@@ -17,10 +17,12 @@ file that was distributed with this source code.
 
         </li>
     {% endfor %}
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
     <li>
         <a href="{{ admin.generateUrl('create', {'subclass': 'menu'}) }}" class="menu-dialog-link"><i
                 class="icon icon-plus"></i></a>
     </li>
+    {% endif %}
 </ul>
 
 <div class="tab-content">
@@ -35,23 +37,22 @@ file that was distributed with this source code.
                         {{ 'info.please_enter_description'|trans({}, admin.translationDomain) }}
                     {% endif %}
                     </p>
+                    {% if is_granted("ROLE_SUPER_ADMIN") %}
                     <p>
                         <a href="{{ admin.generateUrl('edit', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
-                                               class="colored-link menu-dialog-link">
-                                                {{ 'button.menu.settings'|trans({}, admin.translationDomain) }}
-                                            </a> |
-                                            <a href="{{ admin.generateUrl('delete', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
-                                               class="colored-link menu-dialog-link">
-                                                {{ 'button.menu.delete'|trans({}, admin.translationDomain) }}
-                                            </a>
+                           class="colored-link menu-dialog-link">
+                            {{ 'button.menu.settings'|trans({}, admin.translationDomain) }}
+                        </a> |
+                        <a href="{{ admin.generateUrl('delete', {'subclass': 'menu', 'id': menu.rootNode.id}) }}"
+                           class="colored-link menu-dialog-link">
+                            {{ 'button.menu.delete'|trans({}, admin.translationDomain) }}
+                        </a>
                     </p>
+                    {% endif %}
                 </div>
-
             </div>
 
-
             <div class="clearfix">&nbsp;</div>
-
 
             <h1><span class="info-soft">{{ menu.rootNode.name }}</span>{% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' with {'root_id': menu.rootNode.id} %} </h1>
 

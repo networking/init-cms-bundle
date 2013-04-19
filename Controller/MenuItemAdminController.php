@@ -194,10 +194,44 @@ class MenuItemAdminController extends CRUDController
         );
     }
 
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
+    public function createAction()
+    {
+
+        if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
+            if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
+                throw new AccessDeniedException();
+            }
+        }
+
+        return parent::createAction();
+    }
+
+    /**
+     * @param null $id
+     * @return Response|void
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
+    public function editAction($id = null)
+    {
+        if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
+            if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
+                throw new AccessDeniedException();
+            }
+        }
+
+        return parent::editAction($id);
+    }
+
 
     /**
      * @param mixed $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|void
+     * @return RedirectResponse|JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function deleteAction($id)
     {
@@ -212,6 +246,12 @@ class MenuItemAdminController extends CRUDController
             throw new AccessDeniedException();
         }
 
+        if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
+            if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
+                throw new AccessDeniedException();
+            }
+        }
+
         if ($this->getRequest()->getMethod() == 'DELETE') {
             try {
                 $this->currentMenuLanguage = $object->getLocale();
@@ -223,7 +263,7 @@ class MenuItemAdminController extends CRUDController
                             'result' => 'ok',
                             'objectId' => $this->admin->getNormalizedIdentifier($object),
                             'status' => 'success',
-                                                        'message' => $this->admin->trans('flash_delete_success')
+                            'message' => $this->admin->trans('flash_delete_success')
                         )
                     );
                 } else {
@@ -366,13 +406,13 @@ class MenuItemAdminController extends CRUDController
                 $data['status'] = 'success';
             } elseif ($message = $this->get('session')->getFlash('sonata_flash_error')) {
                 $data['status'] = 'error';
-            }elseif($data['result'] == 'ok'){
+            } elseif ($data['result'] == 'ok') {
                 $this->getRequest()->request->all();
-                $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_success';
+                $message = 'flash_' . str_replace('Action', '', $this->getCaller()) . '_success';
                 $data['status'] = 'success';
-            }else{
+            } else {
                 $this->getRequest()->request->all();
-                $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_error';
+                $message = 'flash_' . str_replace('Action', '', $this->getCaller()) . '_error';
                 $data['status'] = 'error';
             }
 
@@ -390,9 +430,15 @@ class MenuItemAdminController extends CRUDController
         return $response;
     }
 
-    public function getCaller() {
+    /**
+     * @return string
+     */
+    public function getCaller()
+    {
         $trace = debug_backtrace();
         $name = $trace[2]['function'];
         return empty($name) ? 'global' : $name;
     }
+
+
 }
