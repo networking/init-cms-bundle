@@ -368,6 +368,10 @@
                 <source>help.media_tag</source>
                 <target>So können Sie sie später leichter finden </target>
             </trans-unit>
+            <trans-unit id="form.label_locale">
+                <source>form.label_locale</source>
+                <target>Dokument Sprache</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
