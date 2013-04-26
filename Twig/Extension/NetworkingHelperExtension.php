@@ -900,9 +900,10 @@ class NetworkingHelperExtension extends \Twig_Extension
         $phraseLen = mb_strlen($phrase);
         $textLen = mb_strlen($text);
 
-        $pos = mb_strpos(mb_strtolower($text), mb_strtolower($phrase));
+        $pos = mb_strpos(mb_strtolower($text, $env->getCharset()), mb_strtolower($phrase, $env->getCharset()));
+
         if ($pos === false) {
-            return mb_substr($text, 0, $radius) . $ellipsis;
+            return mb_substr($text, 0, $radius, $env->getCharset()) . $ellipsis;
         }
 
         $startPos = $pos - $radius;
@@ -917,7 +918,7 @@ class NetworkingHelperExtension extends \Twig_Extension
             $append = '';
         }
 
-        $excerpt = mb_substr($text, $startPos, $endPos - $startPos);
+        $excerpt = mb_substr($text, $startPos, $endPos - $startPos, $env->getCharset());
         $excerpt = $prepend . $excerpt . $append;
 
         return $excerpt;
