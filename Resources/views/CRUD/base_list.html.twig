@@ -232,8 +232,8 @@ file that was distributed with this source code.
                 $('#list_batch_checkbox').click(function () {
                     $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
                 });
-                $("td.sonata-ba-list-field-batch input[type='checkbox']").change(function () {
-                    $(this).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
+                $("div.initcms-list-actions input[type='checkbox']").change(function () {
+                    $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
                 });
             });
             {% endblock %}
