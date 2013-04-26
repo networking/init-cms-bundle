@@ -143,9 +143,8 @@ class MenuItemAdmin extends BaseAdmin
                         },
                     )
             );
-            $formMapper->add('redirect_url', 'url', array('required'=>false));
-            $formMapper->add('internal_url', 'text', array('required'=>false));
-            $formMapper->add('hidden', null, array('required'=>false));
+            $formMapper->add('redirect_url', 'url', array('required'=>false, 'help_inline' => 'help.redirect_url'));
+            $formMapper->add('internal_url', 'text', array('required'=>false, 'help_inline' => 'help.internal_url'));
             $formMapper->end();
 
             // start group optionals
@@ -167,6 +166,7 @@ class MenuItemAdmin extends BaseAdmin
                 ->add('link_target', 'choice', array('choices'=>$this->getTranslatedLinkTargets(), 'required'=>false))
                 ->add('link_class', 'text', array('required'=>false))
                 ->add('link_rel', 'text', array('required'=>false))
+                ->add('hidden', null, array('required'=>false))
                 ->end();
 
             $entityManager = $this->getContainer()->get('Doctrine')->getEntityManager();

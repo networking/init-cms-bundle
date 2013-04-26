@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" datatype="plaintext" original="">
-		<body>
-			<trans-unit id="button.create.menu_item">
-				<source>button.create.menu_item</source>
-				<target>Punkt hinzufügen</target>
-			</trans-unit>
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="button.create.menu_item">
+                <source>button.create.menu_item</source>
+                <target>Punkt hinzufügen</target>
+            </trans-unit>
             <trans-unit id="legend.menu.actions">
                 <source>legend.menu.actions</source>
-                <target>Aktionen im gewählten Menü </target>
+                <target>Aktionen im gewählten Menü</target>
             </trans-unit>
             <trans-unit id="filter.label_locale">
                 <source>filter.label_locale</source>
@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="label.menu_item_name">
                 <source>label.menu_item_name</source>
-                <target>Ihre Menüpunkte </target>
+                <target>Ihre Menüpunkte</target>
             </trans-unit>
             <trans-unit id="menu.page_or_url.required">
                 <source>menu.page_or_url.required</source>
@@ -64,7 +64,15 @@
             </trans-unit>
             <trans-unit id="form.label_redirect_url">
                 <source>form.label_redirect_url</source>
-                <target>URL</target>
+                <target>Externe URL</target>
+            </trans-unit>
+            <trans-unit id="help.redirect_url">
+                <source>help.redirect_url</source>
+                <target>URL inklusive http://</target>
+            </trans-unit>
+            <trans-unit id="help.internal_url">
+                <source>help.internal_url</source>
+                <target>Pfad von einer CMS Seite z.B. /kontakt</target>
             </trans-unit>
             <trans-unit id="label_redirect_url">
                 <source>label_redirect_url</source>
@@ -72,7 +80,7 @@
             </trans-unit>
             <trans-unit id="form.label_link_target">
                 <source>form.label_link_target</source>
-                <target>Linkziel </target>
+                <target>Linkziel</target>
             </trans-unit>
             <trans-unit id="form.label_link_class">
                 <source>form.label_link_class</source>
@@ -80,7 +88,15 @@
             </trans-unit>
             <trans-unit id="form.label_link_rel">
                 <source>form.label_link_rel</source>
-                <target>Linkbezug </target>
+                <target>Linkbezug</target>
+            </trans-unit>
+            <trans-unit id="form.label_internal_url">
+                <source>form.label_internal_url</source>
+                <target>Internal Link</target>
+            </trans-unit>
+            <trans-unit id="form.label_hidden">
+                <source>form.label_hidden</source>
+                <target>In Menu verbergen</target>
             </trans-unit>
             <trans-unit id="form.legend_page_or_url">
                 <source>form.legend_page_or_url</source>
@@ -108,11 +124,11 @@
             </trans-unit>
             <trans-unit id="form.label_description">
                 <source>form.label_description</source>
-                <target>Menübeschreibung </target>
+                <target>Menübeschreibung</target>
             </trans-unit>
             <trans-unit id="visibility.helper.text">
                 <source>visibility.helper.text</source>
-                <target>Öffentlicher oder passwortgeschützter Menüpunkt </target>
+                <target>Öffentlicher oder passwortgeschützter Menüpunkt</target>
             </trans-unit>
             <trans-unit id="_blank">
                 <source>_blank</source>
@@ -120,19 +136,21 @@
             </trans-unit>
             <trans-unit id="_self">
                 <source>_self</source>
-                <target>Zeigt das Link-Ziel im aktuellen Browserfenster an </target>
+                <target>Zeigt das Link-Ziel im aktuellen Browserfenster an</target>
             </trans-unit>
             <trans-unit id="_parent">
                 <source>_parent</source>
-                <target>Zeit das Link-Ziel im übergeordneten Frame an. </target>
+                <target>Zeit das Link-Ziel im übergeordneten Frame an.</target>
             </trans-unit>
             <trans-unit id="_top">
                 <source>_top</source>
-                <target>Beendet alle Frames und zeigt das Link-Ziel im ganzen Browserfenster an </target>
+                <target>Beendet alle Frames und zeigt das Link-Ziel im ganzen Browserfenster an</target>
             </trans-unit>
             <trans-unit id="info.please_enter_description">
                 <source>info.please_enter_description</source>
-                <target>Sie haben noch keine Beschreibung für Ihr Menü eingegeben. Lassen Sie doch andere wissen, wo dieses Menü auftaucht und wozu es dient. </target>
+                <target>Sie haben noch keine Beschreibung für Ihr Menü eingegeben. Lassen Sie doch andere wissen, wo
+                    dieses Menü auftaucht und wozu es dient.
+                </target>
             </trans-unit>
             <trans-unit id="button.cancel">
                 <source>button.cancel</source>
@@ -144,16 +162,16 @@
             </trans-unit>
             <trans-unit id="flash_edit_success">
                 <source>flash_edit_success</source>
-                <target>Menü erfolgreich aktualisiert </target>
+                <target>Menü erfolgreich aktualisiert</target>
             </trans-unit>
             <trans-unit id="flash_create_success">
                 <source>flash_create_success</source>
-                <target>Menü erfolgreich erstellt </target>
+                <target>Menü erfolgreich erstellt</target>
             </trans-unit>
             <trans-unit id="flash_delete_success">
                 <source>flash_delete_success</source>
-                <target>Menüpunkt erfolgreich gelöscht </target>
+                <target>Menüpunkt erfolgreich gelöscht</target>
             </trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>
