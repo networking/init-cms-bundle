@@ -60,6 +60,8 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('name')->isRequired()->end()
                                         ->scalarNode('span')->isRequired()->end()
+                                        ->scalarNode('max_content_items')->defaultValue(0)->end()
+                                        ->arrayNode('restricted_types')->prototype('scalar')->end()->end()
                                     ->end()
                                 ->end()
                             ->end()

@@ -272,52 +272,14 @@ class PageAdminController extends CRUDController
      */
     public function updateFormFieldElementAction(Request $request)
     {
-        $twig = $this->get('twig');
-        $helper = $this->get('sonata.admin.helper');
 
         $code = $request->get('code');
         $elementId = $request->get('elementId');
         $objectId = $request->get('objectId');
         $uniqid = $request->get('uniqid');
 
-        /** @var $admin SontataAdmin */
-        $admin = $this->container->get($code);
-        $admin->setRequest($request);
-
-        if ($uniqid) {
-            $admin->setUniqid($uniqid);
-        }
-
-        $subject = $admin->getModelManager()->find($admin->getClass(), $objectId);
-        if ($objectId && !$subject) {
-            throw new NotFoundHttpException;
-        }
-
-        if (!$subject) {
-            $subject = $admin->getNewInstance();
-        }
-
-        $admin->setSubject($subject);
-        $formBuilder = $admin->getFormBuilder();
-
-        $form = $formBuilder->getForm();
-        $form->setData($subject);
-        $form->bind($admin->getRequest());
-
-        // create a fresh form taking into consideration deleted fields and layoutblock position
-        $finalForm = $admin->getFormBuilder()->getForm();
-        $finalForm->setData($subject);
-
-        // bind the data
-        $finalForm->setData($form->getData());
-
-        $view = $helper->getChildFormView($finalForm->createView(), $elementId);
-
-        $extension = $twig->getExtension('form');
-        $extension->initRuntime($twig);
-        $extension->renderer->setTheme($view, $admin->getFormTheme());
-
-        return new Response($extension->renderer->searchAndRenderBlock($view, 'widget'));
+        $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid, $code, $doUpdate = true);
+        return new Response($html);
     }
 
     /**
@@ -418,48 +380,55 @@ class PageAdminController extends CRUDController
      */
     public function updateLayoutBlockSortAction(Request $request)
     {
-        $layoutBlocks = $request->get('layoutBlocks');
-        $zone = $request->get('zone');
 
-        if ($layoutBlocks && is_array($layoutBlocks)) {
-            foreach ($layoutBlocks as $key => $layoutBlockStr) {
-                $sort = ++$key;
-                $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
-                $repo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock');
+        $zones = $request->get('zones');
+        $objectId = $request->get('objectId');
 
-                try {
-                    $layoutBlock = $repo->find($blockId);
-                } catch (\Exception $e) {
-                    $message = $e->getMessage();
+        foreach($zones as $zone){
+            $zoneName = $zone['zone'];
+            if (array_key_exists('layoutBlocks', $zone) && is_array($zone['layoutBlocks'])) {
+                foreach ($zone['layoutBlocks'] as $key => $layoutBlockStr) {
+                    $sort = ++$key;
+                    $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
+                    $repo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock');
 
-                    return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
+                    try {
+                        $layoutBlock = $repo->find($blockId);
+                    } catch (\Exception $e) {
+                        $message = $e->getMessage();
+
+                        return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
+                    }
+
+                    $layoutBlock->setSortOrder($sort);
+                    $layoutBlock->setZone($zoneName);
+
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($layoutBlock);
+                    $em->persist($layoutBlock->getPage()->setUpdatedAt(new \DateTime()));
+                    $em->flush();
                 }
-
-                $layoutBlock->setSortOrder($sort);
-                $layoutBlock->setZone($zone);
-
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($layoutBlock);
-                $em->persist($layoutBlock->getPage()->setUpdatedAt(new \DateTime()));
-                $em->flush();
             }
         }
 
         $data = array(
             'messageStatus' => 'success',
-            'message' => $this->admin->trans('message.layout_blocks_sorted', array('zone' => $zone))
+            'message' => $this->admin->trans('message.layout_blocks_sorted', array('zone' => ''))
         );
 
-        if ($layoutBlocks) {
+        $admin = $this->container->get('networking_init_cms.page.admin.page');
+        $page = $subject = $admin->getModelManager()->find($admin->getClass(), $objectId);
+
+        if ($page) {
             $pageStatus = $this->renderView(
                 'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig',
                 array(
                     'admin' => $this->admin,
-                    'object' => $layoutBlock->getPage()
+                    'object' => $page
                 )
             );
             $data['pageStatusSettings'] = $pageStatus;
-            $data['pageStatus'] = $this->admin->trans($layoutBlock->getPage()->getStatus());
+            $data['pageStatus'] = $this->admin->trans($page->getStatus());
         }
 
         return new JsonResponse($data);
@@ -472,6 +441,9 @@ class PageAdminController extends CRUDController
     public function deleteLayoutBlockAction(Request $request)
     {
         $layoutBlockStr = $request->get('layoutBlock');
+        $objectId = $request->get('objectId');
+        $uniqid = $request->get('uniqid');
+        $elementId = $request->get('elementId');
 
         if ($layoutBlockStr) {
             $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
@@ -492,10 +464,69 @@ class PageAdminController extends CRUDController
             }
         }
 
+        $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid);
+
         return new JsonResponse(array(
             'messageStatus' => 'success',
-            'message' => $this->translate('message.layout_block_deleted')
+            'message' => $this->translate('message.layout_block_deleted'),
+            'html' => $html
         ));
+    }
+
+    /**
+     * @param $objectId
+     * @param $uniqId
+     * @param $elementId
+     * @return mixed
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    protected function getLayoutBlockFormWidget($objectId, $elementId, $uniqId = null, $code = 'networking_init_cms.page.admin.page', $doUpdate = false)
+    {
+        $twig = $this->get('twig');
+        /** @var \Sonata\AdminBundle\Admin\AdminHelper $helper */
+        $helper = $this->get('sonata.admin.helper');
+
+        $admin = $this->container->get($code);
+        $admin->setRequest($this->getRequest());
+        $this->getRequest()->attributes->add(array('objectId' => $objectId));
+
+        if ($uniqId) {
+            $admin->setUniqid($uniqId);
+        }
+
+        $subject = $admin->getModelManager()->find($admin->getClass(), $objectId);
+        if ($objectId && !$subject) {
+            throw new NotFoundHttpException;
+        }
+
+        if (!$subject) {
+            $subject = $admin->getNewInstance();
+        }
+
+        $admin->setSubject($subject);
+        $formBuilder = $admin->getFormBuilder();
+
+        $form = $formBuilder->getForm();
+        $form->setData($subject);
+
+        if($doUpdate){
+            $form->bind($admin->getRequest());
+        }
+
+        // create a fresh form taking into consideration deleted fields and layoutblock position
+        $finalForm = $admin->getFormBuilder()->getForm();
+        $finalForm->setData($subject);
+
+        // bind the data
+        $finalForm->setData($form->getData());
+
+        $view = $helper->getChildFormView($finalForm->createView(), $elementId);
+
+        $extension = $twig->getExtension('form');
+        $extension->initRuntime($twig);
+        $extension->renderer->setTheme($view, $admin->getFormTheme());
+
+        return $extension->renderer->searchAndRenderBlock($view, 'widget');
     }
 
     /**
@@ -563,7 +594,9 @@ class PageAdminController extends CRUDController
         // the key used to lookup the template
         $templateKey = 'edit';
 
-        $id = $this->get('request')->get($this->admin->getIdParameter());
+        if ($id === null) {
+            $id = $this->get('request')->get($this->admin->getIdParameter());
+        }
 
         $object = $this->admin->getObject($id);
 
