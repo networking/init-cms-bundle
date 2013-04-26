@@ -19,23 +19,23 @@ file that was distributed with this source code.
         {% set col = col + zone.span %}
 
         <div class="span{{ zone.span }}">
-            <div class="dropzone well well-small">
-                <h6>{{ zone.name }}</h6>
-               
-
-                <ul id="zone_{{ zone.name }}" class="sortable">
-
+            <div class="dropzone well well-small" >
+                <h6>{{ zone.name|trans() }} </h6>
+                <ul id="zone_{{ zone.name }}" class="sortable" data-content-types="{{ zone.restricted_types }}" data-max-items="{{ zone.max_content_items }}">
 
                     {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow#}
-                    <li class="networking-sort-zone">
+
+
+                    <li class="networking-sort-zone" >
                         <input type="hidden" id="{{ loop.index }}_zone" value="{{ zone.name }}">
                         <input type="hidden" id="{{ loop.index }}_sortOrder" value="0">
 
-                        <div class="plus_button">
+                        <div class="plus_button" {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
                             <a
                                 href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
                                 onclick="return start_field_retrieve_{{ id }}(this);"
                                 class="sonata-ba-action"
+                                data-value="{{ zone.restricted_types }}"
                                 title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}" >
                                 <i class="icon-plus"></i>
                             </a>
@@ -47,10 +47,10 @@ file that was distributed with this source code.
                         </p>
                     </li>
 
+
                     {# loop through layout blocks #}
                     {% for nested_group_field_name, nested_group_field in get_sub_form_by_zone(form.children, zone.name) %}
-                    <li class="networking-sortable-list networking-sort-zone" id="layoutBlock_{{ nested_group_field.vars.value.id }}">
-
+                    <li class="networking-sortable-list networking-sort-zone" id="layoutBlock_{{ nested_group_field.vars.value.id }}" data-content-type="{{ nested_group_field.vars.value.classType }}">
                         {# preview of layout block of content #}
                         <div class="content_preview"  >
                             <div class="layout_controls">
@@ -124,11 +124,12 @@ file that was distributed with this source code.
                             {% endfor %}
                         </div>
                         {# start the block for the plus button #}
-                        <div class="plus_button">
+                        <div class="plus_button"  {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
                             <a
                                 href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
                                 onclick="return start_field_retrieve_{{ id }}(this);"
                                 class="sonata-ba-action"
+                                data-value="{{ zone.restricted_types }}"
                                 title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}" >
                                 <i class="icon-plus"></i>
                             </a>
