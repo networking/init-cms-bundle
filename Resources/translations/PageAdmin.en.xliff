@@ -270,7 +270,7 @@
             </trans-unit>
             <trans-unit id="filter.label_path">
                 <source>filter.label_path</source>
-                <target>URL (?)</target>
+                <target>URL</target>
             </trans-unit>
             <trans-unit id="btn_filter">
                 <source>btn_filter</source>
