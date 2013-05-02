@@ -367,6 +367,9 @@ class MenuItemAdminController extends CRUDController
                 if ($node['parent_id']) {
                     $parent = $repository->find($node['parent_id']);
                     $menuItem->setParent($parent);
+                }else{
+                    ;
+                    $menuItem->setParent($menuItem->getParentByLevel(0));
                 }
 
                 $menuItem->setLft($node['left']);

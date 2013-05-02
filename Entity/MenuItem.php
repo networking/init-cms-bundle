@@ -501,8 +501,8 @@ class MenuItem implements \IteratorAggregate
     {
         $children = new ArrayCollection();
         foreach ($this->getChildren() as $child) {
-            if ($status === Page::STATUS_PUBLISHED AND !$child->getRedirectUrl()) {
-                if (!$child->getPage()->getSnapshot()) {
+            if ($status === Page::STATUS_PUBLISHED) {
+                if ($child->getPage() && !$child->getPage()->getSnapshot()) {
                     continue;
                 }
             }
