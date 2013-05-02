@@ -56,7 +56,8 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         FactoryInterface $factory,
         SecurityContextInterface $securityContext,
         Container $serviceContainer
-    ) {
+    )
+    {
         parent::__construct($factory);
 
         $this->securityContext = $securityContext;
@@ -86,7 +87,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     public function createLoginMenu($classes = 'nav pull-right')
     {
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', $classes );
+        $menu->setChildrenAttribute('class', $classes);
 
         if ($this->isLoggedIn) {
             $menu->addChild($this->get('translator')->trans('logout'), array('route' => 'fos_user_security_logout'));
@@ -112,78 +113,95 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      * @param  int   $level
      * @return mixed
      */
-    public function getMenuParentItem($menu, $childNode, $depth, $level = 0)
+    public function getMenuParentItem($menu, $childNode, $depth)
     {
-        if ($depth === $level) {
-            return $menu->offsetGet($childNode->getName());
+        if ($depth == 0) {
+            return $menu;
         }
 
-        return $this->getMenuParentItem($menu, $childNode->getParent(), $depth, ++$level);
+        if ($menu->getName() ==
+            $childNode->getParent()->getName()
+        ) {
+            return $menu;
+        }
+
+        $parentLevel = $childNode->getLvl() - $depth;
+
+        $tmpMenu = $menu->getChild($childNode->getParentByLevel($parentLevel)->getName());
+        --$depth;
+
+        return $this->getMenuParentItem($tmpMenu, $childNode, $depth);
     }
 
     /**
-      * Create an new node using the ContentRoute object to generate the uri
-      *
-      * @param  \Networking\InitCmsBundle\Entity\MenuItem $node
-      * @return \Knp\Menu\ItemInterface
-      */
-     public function createFromNode(Menu $node)
-     {
-         if ($node->getRedirectUrl()) {
-             $uri = $node->getRedirectUrl();
-         } elseif ($node->getInternalUrl()) {
-             $uri = $node->getInternalUrl();
-             try {
-                 $routeArray = $route = $this->router->matchRequest(Request::create($uri));
-                 if (is_array($routeArray) && array_key_exists('_route', $routeArray)) {
-                     $route = new CMSRoute(
-                         null,
-                         $routeArray['_route'],
-                         array('locale' => $this->serviceContainer->get('request')->getLocale())
-                     );
-                     $uri = $this->router->generate($route);
-                 }
-             } catch (\Exception $e) {
-                 //do nothing
-             }
-         } else {
-             if ($this->viewStatus == Page::STATUS_PUBLISHED) {
-                 if ($snapshot = $node->getPage()->getSnapshot()) {
-                     $route = new CMSRoute(
-                         null,
-                         $snapshot->getPath(),
-                         array('locale' => $this->serviceContainer->get('request')->getLocale())
-                     );
-                     $uri = $this->router->generate($route);
-                 } else {
-                     return;
-                 }
-             } else {
-                 $route = $node->getPage()->getRoute();
-                 $uri = $this->router->generate($route);
-             }
-         }
+     * Create an new node using the ContentRoute object to generate the uri
+     *
+     * @param  \Networking\InitCmsBundle\Entity\MenuItem $node
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function createFromNode(Menu $node)
+    {
+        if ($node->getRedirectUrl()) {
+            $uri = $node->getRedirectUrl();
+        } elseif ($node->getInternalUrl()) {
+            $uri = $node->getInternalUrl();
+            try {
+                $routeArray = $route = $this->router->matchRequest(Request::create($uri));
 
-         $options = array(
-             'uri' => $uri,
-             'label' => $node->getName(),
-             'attributes' => array(),
-             'linkAttributes' => $node->getLinkAttributes(),
-             'childrenAttributes' => array(),
-             'labelAttributes' => array(),
-             'extras' => array(),
-             'display' => true,
-             'displayChildren' => true,
+                if (is_array($routeArray) && array_key_exists('_route', $routeArray)) {
+                    if (array_key_exists('_route_object', $routeArray)) {
+                        $route = $routeArray['_route_object'];
+                    } else {
+                        $route = new CMSRoute(
+                            null,
+                            $routeArray['path'],
+                            array('locale' => $this->serviceContainer->get('request')->getLocale())
+                        );
+                    }
+                    $uri = $this->router->generate($route);
 
-         );
-         $item = $this->factory->createItem($node->getName(), $options);
+                }
+            } catch (\Exception $e) {
+                //do nothing
+            }
+        } else {
+            if ($this->viewStatus == Page::STATUS_PUBLISHED) {
+                if ($snapshot = $node->getPage()->getSnapshot()) {
+                    $route = new CMSRoute(
+                        null,
+                        $snapshot->getPath(),
+                        array('locale' => $this->serviceContainer->get('request')->getLocale())
+                    );
+                    $uri = $this->router->generate($route);
+                } else {
+                    return;
+                }
+            } else {
+                $route = $node->getPage()->getRoute();
+                $uri = $this->router->generate($route);
+            }
+        }
 
-         if ($node->isHidden()) {
-             $item->setDisplay(false);
-         }
+        $options = array(
+            'uri' => $uri,
+            'label' => $node->getName(),
+            'attributes' => array(),
+            'linkAttributes' => $node->getLinkAttributes(),
+            'childrenAttributes' => array(),
+            'labelAttributes' => array(),
+            'extras' => array(),
+            'display' => true,
+            'displayChildren' => true,
 
-         return $item;
-     }
+        );
+        $item = $this->factory->createItem($node->getName(), $options);
+
+        if ($node->isHidden()) {
+            $item->setDisplay(false);
+        }
+
+        return $item;
+    }
 
     /**
      * @param $id
