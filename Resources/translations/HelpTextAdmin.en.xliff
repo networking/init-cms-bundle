@@ -2,6 +2,9 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="">
         <body>
+
+            <!-- cms admin section -->
+
             <trans-unit id="list.label_title">
                 <source>list.label_title</source>
                 <target>Help Text Title</target>
@@ -38,12 +41,10 @@
                 <source>form.label_text</source>
                 <target>Text</target>
             </trans-unit>
-
             <trans-unit id="title.help">
                 <source>title.help</source>
                 <target>Help &amp; User Manual</target>
             </trans-unit>
-
             <trans-unit id="link.close">
                 <source>link.close</source>
                 <target>CLOSE</target>
@@ -73,339 +74,314 @@
                 <target>Create</target>
             </trans-unit>
 
+            <!-- help navigation -->
+
+            <trans-unit id="networking_init_cms.page.admin.page">
+                <source>networking_init_cms.page.admin.page</source>
+                <target>Pages</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.menu.admin.menu_item">
+                <source>networking_init_cms.menu.admin.menu_item</source>
+                <target>Menu</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.media">
+                <source>sonata.media.admin.media</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.user">
+                <source>sonata.user.admin.user</source>
+                <target>User</target>
+            </trans-unit>
+
             <!-- overview -->
+
             <trans-unit id="overview.title">
                 <source>overview.title</source>
-                <target>Overview</target>
+                <target>Help Overview</target>
             </trans-unit>
             <trans-unit id="overview.text">
                 <source>overview.text</source>
                 <target><![CDATA[
-                               <p>
-                                          This Help section covers only the basic core functionality of the cms including Pages, Menus, Media and Users.
-                              </p>
+                    This help page covers most of the functionality of the CMS. Select the help pages from the left navigation or just click on the question mark on the top right while using the cms to get to a corresponding help page.
 
-                              <p><h2>Terms</h2></p>
-                              <p><table id="table24404" class=""><tbody><tr><td>Page</td><td>holds content<br></td></tr><tr><td>URL<br></td><td>a string that reflects a page (e.g. "/company/employees")<br></td></tr><tr><td>Menu item<br></td><td>a single link in a menu with its name and URL<br></td></tr><tr><td>Menu<br></td><td>a set of menu items<br></td></tr><tr><td>Media<br></td><td>media files used in the content (e.g. Images, Videos)<br></td></tr><tr><td>User<br></td><td>a person with a login to your website</td></tr></tbody></table></p>
+                    <h2>Terms</h2>
+                    <dl>
+                        <dt>CMS</dt><dd>Abbreviation for Content Management System</dd>
+                        <dt>Page</dt><dd>A page holds content in a certain layout.</dd>
+                        <dt>URL</dt><dd>A string that reflects a page (e.g. "/company/employees")</dd>
+                        <dt>Menu item</dt><dd>A single link in a menu with its name and URL</dd>
+                        <dt>Menu</dt><dd>A set of menu items used to navigate the website.</dd>
+                        <dt>Media</dt><dd>Media files used in the content (e.g. Images, Videos)</dd>
+                        <dt>User</dt><dd>A person with a login to the CMS or the secured area of the website</dd>
+                    </dl>
 
-                              <p><h2>The Glue</h2></p>
-                              <p>Pages hold a set of contents. A page is always accessible through its unique URL. Pages are independent from Menus.
-                                          <br>
-                                          <br>A menu item has a name and links to a Page or to a custom URL.
-                                      </p>
+                    <h2>Basic Workflow</h2>
+                    If you are new to the CMS, this is the basic workflow to create new a page and make it available in the navigation.
 
-                              <p><h2>Basic Workflow</h2></p>
-                              <p>
-                                          1. Add a new Page
-                                          <br />2. Edit the new Page
-                                          <br />3. Create a Menu item and link to the new Page &nbsp; &nbsp; &nbsp; &nbsp;</p> ]]>
-
+                    <ol>
+                        <li>Go to "Pages" and add a new page.</li>
+                        <li>In the edit mode of the page, click on the "+" icons to add content where you like.</li>
+                        <li>Click the "Publish" button to make it publicly available (or check the "Review" box to notify the publisher).</li>
+                        <li>To make the page accessible in the navigation, create a new menu item, give it a name and select your new page.</li>
+                    </ol>
+                    Congratulations, now you should have a new page which is accessible through the navigation. Please have a look to specific help topics to get a more detailed information.
+                    ]]>
                 </target>
             </trans-unit>
 
             <!-- dashboard -->
+
             <trans-unit id="dashboard.title">
                 <source>dashboard.title</source>
-                <target>Dashboard</target>
+                <target>Dashboard Overview</target>
             </trans-unit>
             <trans-unit id="dashboard.text">
                 <source>dashboard.text</source>
-                <target>Dashboard</target>
+                <target><![CDATA[
+                    The Dashboard is the first page you will see after you logged in succesfully. Depending on your role and rights you have different kinds of information on your Dashboard.
+
+                    <h2>Information blocks</h2>
+                    <dl>
+                        <dt>Page Status Summary</dt><dd>Overview of how many pages are in draft, review or published state</dd>
+                        <dt>Current Draft Pages</dt><dd>A list of the last edited pages which are not published</dd>
+                        <dt>Pages to Review</dt><dd>A list of pages which need to be reviewed and published</dd>
+                        <dt>Users currently Online</dt><dd>Shows all users who are currently logged in.</dd>
+                    </dl>
+                    The Dashboard can be extended as well, if you miss something please contact your webmaster to add it for you.
+                    ]]>
+            </target>
             </trans-unit>
 
             <!-- pages -->
+
             <trans-unit id="networking_init_cms.page.admin.page.list.title">
                 <source>networking_init_cms.page.admin.page.list.title</source>
-                <target>Page</target>
+                <target>Pages overview</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.list.text">
                 <source>networking_init_cms.page.admin.page.list.text</source>
-                <target><![CDATA[  <ul>
-                           	<li><a class="link-underlined " href="#filter">Filter Pages</a></li>
-                           	<li><a class="link-underlined" href="#add">Add new Page</a></li>
-                           	<li><a class="link-underlined" href="#List">List of Pages&nbsp;</a></li>
-                           </ul>
+                <target><![CDATA[
+                    A page is a key building block for the website. On a page you can add or change your content and its position in the layout. Under "Pages" in the CMS you see a list of all your pages. On top of the list you can filter and search pages. There is also a prominent button for adding new Pages. On the bottom of the list you find bulk actions to apply quick changes to multiple pages at once.
 
-                           <h2><a id="filter" name="filter"></a>Filter Pages</h2>
+                    <h2>List of pages</h2>
+                    The list of pages offers different information or actions. Every new row describes a different page. The following list explains the columns from left to right.
+                    <dl>
+                        <dt>Selectboxes</dt><dd>You can select single pages or mutliple pages by checking or unchecking the selectboxes left to every page. The first checkbox on the top left will check or uncheck all of the listed pages. After you selected the pages you want, you can choose an action from the selectmenu at the bottom of the list. By clicking "OK" you will execute the action for all the checked pages.</dd>
+                        <dt>Page Name</dt><dd>A column which shows the page name. If you click on the name you will go directly to the edit mode.</dd>
+                        <dt>Page Status</dt><dd>On the right side of the page name you see the status of page. It can be set to draft, review or published.</dd>
+                        <dt>URL</dt><dd>This column shows the URL of the page. The URL excludes your domain name in favor of a shorter version.</dd>
+                        <dt>Edit Button</dt><dd>The edit button has a pencil icon. Click to edit the content and the configuration of the page.</dd>
+                        <dt>Delete Button</dt><dd>The delete button has a trashcan icon. Click it to delete a page you no longer want to use.</dd>
+                    </dl>
 
-                           <p>The Pages can be filtert by several Parameter.<br />
-                           Language and Name is the default and&nbsp;always shown. If more options are required, the filter can be expanded by clicking on &quot;More filter options&quot;.</p>
+                    <h2>Filter pages</h2>
+                    The list of Pages can be filtered with several parameters. You can change these parameters and click on the "Filter" button to find pages that match your filters. If you click on "Clear" the filters will be reset. By Clicking on "More filter options" all the available options for filtering will be shown.
+                    <dl>
+                        <dt>Language</dt><dd>Change between different languages, you can only view pages for one language at a time</dd>
+                        <dt>Page Name</dt><dd>Find a specific page by name or find multiple pages with a part of the page name</dd>
+                        <dt>URL</dt><dd>Find a page or multiple pages with a specific part of the URL</dd>
+                        <dt>Page Status</dt><dd>Find pages according to their status draft, review or published.</dd>
+                    </dl>
 
-                           <p><img alt="Filter" src="/bundles/networkinginitcms/images/helptext/pages/pages_list_filter.png" style="width: 600px; height: 102px;" /></p>
-
-                           <p>if more then one option is entered, just Pages, fitting ALL the criteria are shown.&nbsp;</p>
-
-                           <h2><a id="add" name="add"></a>Add new Page</h2>
-
-                           <p>To add a new Page, just click the Add Page Button</p>
-
-                           <p><img alt="" src="/bundles/networkinginitcms/images/helptext/pages/pages_list_add.png" style="line-height: 1.6em; width: 93px; height: 39px;" /></p>
-
-                           <p>Please go to the <a class="link-underlined " href="/admin/help/networking_init_cms.page.admin.page/create">Create Page Help Text</a> to find more information</p>
-
-                           <h2><a id="List" name="List"></a>List of Pages</h2>
-
-                           <p><img alt="" src="/bundles/networkinginitcms/images/helptext/pages/pages_list.png" style="width: 600px; height: 202px;" /></p>
-
-                           <p>By clicking on the pen icon, the pages can be <a class="link-underlined" href="/admin/help/networking_init_cms.page.admin.page/edit">edited</a>.&nbsp;<br />
-                           &nbsp;</p> ]]></target>
+                    <h2>Add a new page</h2>
+                    To add a new page, just start by clicking the "+ Add Page" button. There is an additional help section available with more details.
+                    ]]>
+                </target>
             </trans-unit>
-
             <trans-unit id="networking_init_cms.page.admin.page.create.title">
                 <source>networking_init_cms.page.admin.page.create.title</source>
-                <target>Page create</target>
+                <target>Add a new page</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.create.text">
                 <source>networking_init_cms.page.admin.page.create.text</source>
-                <target><![CDATA[    <p>All fields, marked with * are mandatory. But we recommend to fill out all the fields. Every input can be changed later.</p>
+                <target><![CDATA[
+                    In the "Pages" section in the CMS click on "+ Add Page" button. In the form all fields marked with "*" are mandatory, the others are optional. The following list explains all fields.
 
-                           <h2>Overview of the fields</h2>
-
-                           <p><strong>Language</strong>&nbsp;Each Page can only belong to one Language. Language Copy for this Page can be made in the next step of the process</p>
-
-                           <p><strong>Page Name&nbsp;</strong>Just for internal use, not shown in the frontend</p>
-
-                           <p><strong>Parent Page</strong>&nbsp;if another page is related to this one (e.g. About Us =&gt; Contact), the pages can be connected. This will be shown in the list view of the Pages as well in the URL: e.g. http://wwww.site.com/about_us/contact instead of&nbsp;http://wwww.site.com/contact</p>
-
-                           <p><strong>URL&nbsp;</strong>only the last part of the URL has to be entered. If there is one ore more parent Pages, they will be automaticly enterd to the URL. No Special Characters can be used in an URL. Those will be automaticly filterd out. Above the input field, the Preview URL is always shown.</p>
-
-                           <p><strong>Visibility&nbsp;</strong>a page can be either public and be seen by everyone, or it is protected by a passwort.</p>
-
-                           <p><strong>Page Layout&nbsp;</strong>choose the layout, that fits your page the best</p>
-
-                           <p><strong>Meta Title</strong>&nbsp;This Title is shown it the Browser Title</p>
-
-                           <p><strong>Meta Keywords&nbsp;</strong>Keywords are not shown on the page, but only in the source code of the page. Those are needet by google and other search engines to index your page</p>
-
-                           <p><strong>Meta Description&nbsp;</strong>As the keywords above, descrition is only visible in the source code. It&#39;s also used by search engines.</p>
-
-                           <p>As soon the &quot;create&quot; button is clicked, the page is saved to the database and the &quot;<a class="link-underlined" href="/admin/help/networking_init_cms.page.admin.page/edit">edit page</a>&quot; is shown.</p>
-                             ]]></target>
+                    <h2>New page fields</h2>
+                    <dl>
+                        <dt>Language</dt><dd>Each page belongs to one language. A language copy for this page can be made in the next step of the process or an existing page can be associated for another language</dd>
+                        <dt>Page Name</dt><dd>The page name is for your internal use and not shown on the website</dd>
+                        <dt>Parent Page</dt><dd>If another page is related to this one (e.g. About Us and Contact), the pages can be connected. This will be shown in the list view of the Pages as well in the URL: e.g. http://wwww.site.com/about_us/contact instead of http://wwww.site.com/contact</dd>
+                        <dt>URL</dt><dd>Only the last part of the URL has to be entered. If there is one ore more parent pages, they will be automatically added to the URL. No special characters can be used in an URL. Those will be automatically filtered out. Above the input field you can preview the processed URL</dd>
+                        <dt>Visibility</dt><dd>A page can be either public and be seen by everyone or it is protected by a password</dd>
+                        <dt>Page Layout</dt><dd>Choose the layout, that fits your page the best</dd>
+                        <dt>Meta Title</dt><dd>This title is shown in the title of the browser and searched by search engines</dd>
+                        <dt>Meta Keywords</dt><dd>Keywords are not shown on the page, but only in the source code of the page. Those are needed by google and other search engines to index your page</dd>
+                        <dt>Meta Description</dt><dd>As the keywords above, description is only visible in the source code. It's also used by search engines.</dd>
+                    </dl>
+                    As soon as you save the form, the page is saved to the database and you switch to the view for editing a page.
+                ]]>
+                </target>
             </trans-unit>
-
             <trans-unit id="networking_init_cms.page.admin.page.edit.title">
                 <source>networking_init_cms.page.admin.page.edit.title</source>
-                <target>Page edit</target>
+                <target>Edit a page</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.page.admin.page.edit.text">
                 <source>networking_init_cms.page.admin.page.edit.text</source>
-                <target><![CDATA[    <p>The Edit Form has multiple areas</p>
+                <target><![CDATA[
+                    The Edit Form has multiple areas. Below the page title you see the content area with one or more layout containers. On the right side you find additional information and actions for the page.
 
-                           <ul>
-                           	<li><a class="link-underlined" href="#status">Publishing Status</a></li>
-                           	<li><a class="link-underlined" href="#content">Content</a></li>
-                           	<li><a class="link-underlined" href="#translations">Translations</a></li>
-                           	<li><a class="link-underlined" href="#menu">Menu Connections</a></li>
-                           	<li><a class="link-underlined" href="#setting">Settings &amp; SEO</a></li>
-                           </ul>
+                    <h2>Content area</h2>
+                    In the content area below the page title you see the different layout containers (e.g. header, main-content, left column etc.). For each layout container, multiple content blocks can be assigend. those blocks can be either text or galleries (or other predefined content types). New blocks can be created by clicking on the + icon. Existing blocks can be deleted (Trash icon), edited (Pen icon) or moved to another position (arrows).
 
-                           <p><a id="status" name="status"></a><strong>Publishing Status</strong></p>
+                    <h2>Publishing Status</h2>
+                    A page can have 3 different statuses, but always only one at a time???. These are used if you have editors who create content and publishers who review content. You don't have to follow this workflow and you can still use the different statuses to prepare pages without losing the orignal version.
+                    <dl>
+                        <dt>Draft</dt><dd>As soon a page is created or something on the page is edited, the status is set to "Draft". If all the changes are correct, the status should be changed to "Review" or "Published". If necessary, say you want to return to the last "Published" Version, you can click "Discard Draft" on the right side.</dd>
+                        <dt>Review</dt><dd>Someone has made changes to the page. Before the are put online, the changes should be reviewed. Check the "Review" box to add the Page to a review list for a publisher. Overall it is it optional to use this status, it just helps create a proper editor/publisher workflow.</dd>
+                        <dt>Published</dt><dd>If all the changes are correct (by a review), the status can be changed to "Published". All changes will now be publicly visible.</dd>
+                    </dl>
 
-                           <p>A page can have 3 different status.&nbsp;</p>
+                    <h2>Translations</h2>
+                    <p>If this page exists in another language, a link to this page can be created. As an alternative option, the page can be copied to another language for a quickstart. Under translation you can manage all language associatons.</p>
 
-                           <ol>
-                           	<li><strong>Draft</strong><br />
-                           	As soon something on the page is edited, the status is changed to &quot;draft&quot;. The changes are not visible on the frontend. if all the changes are made, the status should be changed to review or publish<br />
-                           	if necessary, all changes can be discard.</li>
-                           	<li><strong>Review</strong><br />
-                           	someone has made changes to the page. Before the are put online, the changes should be reviewed.&nbsp;</li>
-                           	<li><strong>Published</strong>&nbsp;<br />
-                           	if all the changes are correct, the status can be changed to publish. the site is not online.</li>
-                           </ol>
+                    <h2>Menu Connections</h2>
+                    <p>A page can be present in different menus. Maybe you want your contact page in the main menu, but also in the footer menu. Under menu connections you manage all menu entries and you can create new ones.</p>
 
-                           <p><a id="content" name="content"></a><strong>Content</strong></p>
-
-                           <p>In the content, the different areas ot the page are displayed (e.g. left column). for each area, multiple blocks can be assigend. those blocks can be either text or galleries. new blocks can be created by clicking on the + icon. existing blocks can be deleted or edited by clicking on the accoring icon.&nbsp;</p>
-
-                           <p><a id="translations" name="translations"></a><strong>Translations</strong></p>
-
-                           <p>If this page exists in another language, a link to this page can be createt. as alternative option, the page can be copied to another language.</p>
-
-                           <p><a id="menu" name="menu"></a><strong>Menu Connections</strong></p>
-
-                           <p>all menu connections can be handelt here.</p>
-
-                           <p><a id="setting" name="setting"></a><strong>Settings &amp; SEO</strong></p>
-
-                           <p>the settings descript in the &quot;<a href="/admin/help/networking_init_cms.page.admin.page/create" title="link-underlined">create page</a>&quot; can be changed by clicking on the pen icon.&nbsp;</p>
-                             ]]></target>
+                    <h2>Settings &amp; SEO</h2>
+                    <p>Here you find the same fields you use to create the page. You can edit the page name (by clicking on the pen icon), the url, the visibility, the page layout and other page meta settings.</p>
+                ]]>
+                </target>
             </trans-unit>
 
             <!-- menu -->
+
             <trans-unit id="networking_init_cms.menu.admin.menu_item.navigation.title">
                 <source>networking_init_cms.menu.admin.menu_item.navigation.title</source>
-                <target>Menu</target>
+                <target>Menu overview</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.menu.admin.menu_item.navigation.text">
                 <source>networking_init_cms.menu.admin.menu_item.navigation.text</source>
-                <target><![CDATA[ <p>
-                                       A websites can have multiple menus, for example a "Main" Menu and a "secondary" Menu.
-                                       <br>
-                                       <br>A Menu usually has several menu items.
+                <target><![CDATA[
+                    <p>A menu provides a navigation to make your content easy accessable by others. Every menu is represented by a tab, the selected menu is highlighted. Below the highlighted menu you see all the options and the list of menu items. The list holds information as well as functions (move, edit, delete the item). On top of the tabs you can filter the menu's by language.</p>
 
-                                   </p>
-
-
-                           <p><h2>Menu Language</h2></p>
-                           <p>
-                                       A Menu belongs to the selected Language only.
-                                       <br>Thus every Language has it's own menus.
-                                   </p>
-
-                           <p><h2>Menu Item</h2></p>
-                           <p>
-                                       A menu item consists of a name and corresponding link (URL).
-                                       <br>Menu items can be organized hierarchically. In other words, a menu item can have a parent menu item.
-                                   </p>
-
-                           <p><h2>Menu Item Name</h2></p>
-                           <p>
-                                       The Name of a menu item can be any string of your choice.
-                                       <br>If you like you can use the same term as for the Page Name it links to, but you can also name it anything else.
-                           </p>
-
-                           <p><h2>Menu Item Link</h2></p>
-                           <p>A menu item links to a Page or to a custom URL.
-                                       <br>Different menu items can link to the same Page. &nbsp; &nbsp; &nbsp; &nbsp;</p><p></p>  ]]></target>
+                    <h2>Understanding menu's</h2>
+                    <dl>
+                        <dt>Menu</dt><dd>A menu is a list of pages or links for navigating the content on your website. A website can have multiple menus, for example a "main menu" and a "secondary menu". You can add a new menu with the the "+" tab on the right side of the menu navigation (Most users do not have the permissions to add or delete menu's).</dd>
+                        <dt>Menu Item</dt><dd>A menu item consists of a name and a page or a link (URL). Menu items can be organized hierarchically, drag and drop them to create the structure you like. A menu item can also have a parent menu item. You can build multiple levels of menu items and nest them freely. The URL does not change if you move a page to another place in your menu (URL are defined in the page settings).</dd>
+                        <dt>Menu Item Name</dt><dd>The Name of a menu item can be any string of your choice. If you like you can use the same term as for the page name it links to, but you can also name it anything else. Choose a name which describes the content well and also use terms you want to be found with on google or other search engines.</dd>
+                        <dt>Menu Item Link</dt><dd>A menu item links to a page or to a custom URL. Different menu items can link to the same page or the same URL.</dd>
+                        <dt>Menu Language</dt><dd>A menu belongs to the selected Language only. Thus every Language has it's own menus. That's why you can also have different menu items per language. Additionally you can associate pages in different languages whith each other, so that if a user changes the language he sees the same content in another language and does not fall back on the home page.</dd>
+                    </dl>
+                ]]></target>
             </trans-unit>
-
-
             <trans-unit id="networking_init_cms.menu.admin.menu_item.create.title">
                 <source>networking_init_cms.menu.admin.menu_item.create.title</source>
-                <target>Menu create</target>
+                <target>Add a new menu item</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.menu.admin.menu_item.create.text">
                 <source>networking_init_cms.menu.admin.menu_item.create.text</source>
-                <target><![CDATA[   ]]></target>
-            </trans-unit>
+                <target><![CDATA[
+                    <p>On the menu overview you can see a blue button who says "+ Add Item". If you click that button, you can add a new menu item to the selected menu.</p>
 
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.edit.title">
-                <source>networking_init_cms.menu.admin.menu_item.edit.title</source>
-                <target>Menu edit</target>
+                    <h2>Form Fields</h2>
+                    <dl>
+                        <dt>Name</dt><dd>The name is mandatory and will be used for your menu item. Use a name that describes your content best.</dd>
+                        <dt>Page</dt><dd>The page is not mandatory. If you want to add a page, it has to already exist. Select or search and select the page you want to add.</dd>
+                        <dt>External URL</dt><dd>The external URL is not mandatory. Instead of adding a page you can add any URL as long as provide the whole URL e.g. http://www.initcms.com. You need this to create an absolute link to another site.</dd>
+                        <dt>Internal URL</dt><dd>The internal URL is not mandatory. Instead of adding a page or external URL you can add an internal URL. An internal URL contains everything after the top level domain e.g. /news/new-products. You need this to create relative links to your own site, for instance to support a test and a productive system.</dd>
+                        <dt>+ Options</dt><dd>Click Options to get the following additional possibilities.</dd>
+                        <dt>Visibility</dt><dd>Use the visibility setting to make the menu item public available or only in the secured area.</dd>
+                        <dt>Link Target</dt><dd>Define the target if you don't want that the page opens in the same window. There are multiple options to choose from.</dd>
+                        <dt>Link Class</dt><dd>The link class your enter here will be added as a CSS styling option.</dd>
+                        <dt>Link Relation</dt><dd>???</dd>
+                        <dt>Hide Menu Item</dt><dd>If you want to hide the menu item, but still want to work it normally otherwise check this box.</dd>
+                    </dl>
+                  ]]></target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.edit.text">
-                <source>networking_init_cms.menu.admin.menu_item.edit.text</source>
-                <target><![CDATA[   ]]></target>
-            </trans-unit>
-
 
             <!-- media -->
+
             <trans-unit id="sonata.media.admin.media.list.title">
                 <source>sonata.media.admin.media.list.title</source>
-                <target>Media</target>
+                <target>Media overview</target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.media.list.text">
                 <source>sonata.media.admin.media.list.text</source>
-                <target><![CDATA[ <p><h2>Media Formats</h2></p>
+                <target><![CDATA[
+                    The media section helps you to manage media files like images, videos and other files conveniently. On the top of the media site you can filter the media by name or you have the additional option to filter by media tags. The different tabs show the media context, just choose "Default" if you have no other information. The type helps you to see all files, only images, only files or only videos. After the type you have an "+ Add Item" Button which is also covered by this help. Finally you see a list of your media files according to all your above settings and you can perfrom some actions on every item.
 
-                                                   <p>Possible Media formats include:
-                                                             <ul>
-                                                                   <li>Image (.jpg, .png)</li>
-                                                                   <li>PDF documents (.pdf)</li>
-                                                                   <li>Video (h246, mpeg)</li>
-                                                                   <li>Audio (.mp3)</li>
-                                                               </ul>
+                    <h2>Media Formats</h2>
+                    We have a predefined list of possible media formats.
+                    <ul>
+                        <li>Image (.jpg, .png)</li>
+                        <li>PDF documents (.pdf)</li>
+                        <li>Video (h246, mpeg)</li>
+                        <li>Audio (.mp3)</li>
+                    </ul>
+                    This list can be customized or change in the future, due to new formats.
 
-                                                      </p>
-
-                                                   <h2>Upload</h2>
-                                                   <p>Media Files are uploaded through the Mediamanager. &nbsp; &nbsp; &nbsp; &nbsp;</p>]]></target>
+                    <h2>Upload</h2>
+                    Media Files are uploaded through the Mediamanager.
+                    ]]>
+                </target>
             </trans-unit>
-
-            <trans-unit id="sonata.media.admin.media.create.title">
-                <source>sonata.media.admin.media.create.title</source>
-                <target>Media create</target>
-            </trans-unit>
-
-            <trans-unit id="sonata.media.admin.media.create.text">
-                <source>sonata.media.admin.media.create.text</source>
-                <target><![CDATA[   ]]></target>
-            </trans-unit>
-
-            <trans-unit id="sonata.media.admin.media.edit.title">
-                <source>sonata.media.admin.media.edit.title</source>
-                <target>Media edit</target>
-            </trans-unit>
-
-            <trans-unit id="sonata.media.admin.media.edit.text">
-                <source>sonata.media.admin.media.edit.text</source>
-                <target><![CDATA[   ]]></target>
-            </trans-unit>
-
-            <!-- gallery -->
-
             <trans-unit id="sonata.media.admin.gallery.list.title">
                 <source>sonata.media.admin.gallery.list.title</source>
-                <target>Gallery</target>
+                <target>Media Gallery</target>
             </trans-unit>
-
             <trans-unit id="sonata.media.admin.gallery.list.text">
                 <source>sonata.media.admin.gallery.list.text</source>
-                <target><![CDATA[   ]]></target>
-            </trans-unit>
+                <target><![CDATA[
+                    The media gallery helps to present a collection of media item on a page. For that you create a gallery (e.g. with images) first and add it afterwards to a content block of your page. The gallery section works exactly like the media section, the only difference is you manage galleries instead of media.
 
-            <trans-unit id="sonata.media.admin.gallery.create.title">
-                <source>sonata.media.admin.gallery.create.title</source>
-                <target>Gallery create</target>
-            </trans-unit>
+                    <h2>Add a gallery</h2>
+                    When you add a gallery you can also add media in the same step, so you don't have to go forth and back. The gallery consists of the following fields.
+                    <dl>
+                        <dt>Enabled</dt><dd>???</dd>
+                        <dt>Name</dt><dd>Name of the gallery. It will only be used internally, so you know which gallery you select for a page</dd>
+                        <dt>Format</dt><dd>Choose from different predefined formats. "default_small" is ...</dd>
+                        <dt>Media</dt><dd>Click "+ Add new" to add existing media or directly upload new media. You can even delete media if necessary. You can come back any time to add or change media for a gallery.</dd>
+                    </dl>
 
-            <trans-unit id="sonata.media.admin.gallery.create.text">
-                <source>sonata.media.admin.gallery.create.text</source>
-                <target><![CDATA[   ]]></target>
+                ]]></target>
             </trans-unit>
-
-            <trans-unit id="sonata.media.admin.gallery.edit.title">
-                <source>sonata.media.admin.gallery.edit.title</source>
-                <target>Gallery edit</target>
+            <trans-unit id="networking_init_cms.page.admin.tag.list.title">
+                <source>networking_init_cms.page.admin.tag.list.title</source>
+                <target>Media Tag</target>
             </trans-unit>
-
-            <trans-unit id="sonata.media.admin.gallery.edit.text">
-                <source>sonata.media.admin.gallery.edit.text</source>
-                <target><![CDATA[   ]]></target>
+            <trans-unit id="networking_init_cms.page.admin.tag.list.text">
+                <source>networking_init_cms.page.admin.tag.list.text</source>
+                <target><![CDATA[
+                Here you define your tags freely. A tag can consist of one or multiple words. A tag helps you to find certain media faster and easier. After you created your tags, switch to the media section and associate your media with the tags who fit. A media can have multiple tags. That way you can filter media though tags later on, which works great on large sets of media.
+                ]]></target>
             </trans-unit>
 
             <!-- user -->
 
-            <trans-unit id="sonata.media.admin.user.list.title">
-                <source>sonata.media.admin.user.list.title</source>
-                <target>User</target>
+            <trans-unit id="sonata.user.admin.user.list.title">
+                <source>sonata.user.admin.user.list.title</source>
+                <target>User overview</target>
             </trans-unit>
+            <trans-unit id="sonata.user.admin.user.list.text">
+                <source>sonata.user.admin.user.list.text</source>
+                <target><![CDATA[
+                    The user is the enemy.
 
-            <trans-unit id="sonata.media.admin.user.list.text">
-                <source>sonata.media.admin.user.list.text</source>
-                <target><![CDATA[   ]]></target>
+                 ]]></target>
             </trans-unit>
-
-            <trans-unit id="sonata.media.admin.user.create.title">
-                <source>sonata.media.admin.user.create.title</source>
-                <target>user create</target>
+            <trans-unit id="sonata.user.admin.group.list.title">
+                <source>sonata.user.admin.group.list.title</source>
+                <target>Group</target>
             </trans-unit>
+            <trans-unit id="sonata.user.admin.group.list.text">
+                <source>sonata.user.admin.group.list.text</source>
+                <target><![CDATA[
+                    The group is the soup.
 
-            <trans-unit id="sonata.media.admin.user.create.text">
-                <source>sonata.media.admin.user.create.text</source>
-                <target><![CDATA[   ]]></target>
+                 ]]></target>
             </trans-unit>
-
-            <trans-unit id="sonata.media.admin.user.edit.title">
-                <source>sonata.media.admin.user.edit.title</source>
-                <target>user edit</target>
-            </trans-unit>
-
-            <trans-unit id="sonata.media.admin.user.edit.text">
-                <source>sonata.media.admin.gallery.edit.text</source>
-                <target><![CDATA[   ]]></target>
-            </trans-unit>
-
 
             <!-- default -->
 
             <trans-unit id="not_found.title">
                 <source>not_found.title</source>
-                <target>Not found.</target>
+                <target>Sorry, no specific help text available!</target>
             </trans-unit>
             <trans-unit id="not_found.text">
                 <source>not_found.text</source>
-                <target><![CDATA[ <strong>No help text found</strong> ]]></target>
+                <target><![CDATA[ <strong>We did not found a specific help text. Hopefully you will find some helpful information from the left navigation menu. We are trying to improve the help section and we are sorry for the inconvenience.</strong> ]]></target>
             </trans-unit>
         </body>
     </file>

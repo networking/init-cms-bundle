@@ -58,10 +58,14 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
             'is_deletable' => '1'
         ),
         //menu
-
         'networking_init_cms.menu.admin.menu_item.navigation' => array(
             'title' => 'networking_init_cms.menu.admin.menu_item.navigation.title',
             'text' => 'networking_init_cms.menu.admin.menu_item.navigation.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.menu.admin.menu.create' => array(
+            'title' => 'networking_init_cms.menu.admin.menu.create.title',
+            'text' => 'networking_init_cms.menu.admin.menu.create.text',
             'is_deletable' => '1'
         ),
         'networking_init_cms.menu.admin.menu_item.create' => array(
@@ -69,58 +73,31 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
             'text' => 'networking_init_cms.menu.admin.menu_item.create.text',
             'is_deletable' => '1'
         ),
-        'networking_init_cms.menu.admin.menu_item.edit' => array(
-            'title' => 'networking_init_cms.menu.admin.menu_item.edit.title',
-            'text' => 'networking_init_cms.menu.admin.menu_item.edit.text',
-            'is_deletable' => '1'
-        ),
         //media
-
         'sonata.media.admin.media.list' => array(
             'title' => 'sonata.media.admin.media.list.title',
             'text' => 'sonata.media.admin.media.list.text',
             'is_deletable' => '1'
         ),
-        'sonata.media.admin.media.create' => array(
-            'title' => 'sonata.media.admin.media.create.title',
-            'text' => 'sonata.media.admin.media.create.text',
-            'is_deletable' => '1'
-        ),
-        'sonata.media.admin.media.edit' => array(
-            'title' => 'sonata.media.admin.media.edit.title',
-            'text' => 'sonata.media.admin.media.edit.text',
-            'is_deletable' => '1'
-        ),
-        //gallery
         'sonata.media.admin.gallery.list' => array(
             'title' => 'sonata.media.admin.gallery.list.title',
             'text' => 'sonata.media.admin.gallery.list.text',
             'is_deletable' => '1'
         ),
-        'sonata.media.admin.gallery.create' => array(
-            'title' => 'sonata.media.admin.gallery.create.title',
-            'text' => 'sonata.media.admin.gallery.create.text',
-            'is_deletable' => '1'
-        ),
-        'sonata.media.admin.gallery.edit' => array(
-            'title' => 'sonata.media.admin.gallery.edit.title',
-            'text' => 'sonata.media.admin.gallery.edit.text',
+        'networking_init_cms.page.admin.tag.list' => array(
+            'title' => 'networking_init_cms.page.admin.tag.list.title',
+            'text' => 'networking_init_cms.page.admin.tag.list.text',
             'is_deletable' => '1'
         ),
         //user
-        'sonata.media.admin.user.list' => array(
-            'title' => 'sonata.media.admin.user.list.title',
-            'text' => 'sonata.media.admin.user.list.text',
+        'sonata.user.admin.user.list' => array(
+            'title' => 'sonata.user.admin.user.list.title',
+            'text' => 'sonata.user.admin.user.list.text',
             'is_deletable' => '1'
         ),
-        'sonata.media.admin.user.create' => array(
-            'title' => 'sonata.media.admin.user.create.title',
-            'text' => 'sonata.media.admin.user.create.text',
-            'is_deletable' => '1'
-        ),
-        'sonata.media.admin.user.edit' => array(
-            'title' => 'sonata.media.admin.user.edit.title',
-            'text' => 'sonata.media.admin.user.edit.text',
+        'sonata.user.admin.group.list' => array(
+            'title' => 'sonata.user.admin.group.list.title',
+            'text' => 'sonata.user.admin.group.list.text',
             'is_deletable' => '1'
         ),
         //not found
@@ -129,8 +106,6 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
             'text' => 'not_found.text',
             'is_deletable' => '0'
         )
-
-
     );
 
 
