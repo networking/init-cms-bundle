@@ -55,6 +55,7 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.404_template', $config['404_template']);
         $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
         $container->setParameter('networking_init_cms.ckeditor_config', $config['ckeditor_config']);
+        $container->setParameter('networking_init_cms.admin_menu_groups', $config['admin_menu_groups']);
     }
 
     /**

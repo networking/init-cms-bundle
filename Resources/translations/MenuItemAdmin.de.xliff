@@ -172,6 +172,10 @@
                 <source>flash_delete_success</source>
                 <target>Menüpunkt erfolgreich gelöscht</target>
             </trans-unit>
+            <trans-unit id="menu.label">
+                <source>menu.label</source>
+                <target>Menüs</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

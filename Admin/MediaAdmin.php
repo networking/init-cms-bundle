@@ -51,23 +51,6 @@ class MediaAdmin extends SonataMediaAdmin
         $this->languages = $languages;
     }
 
-    /**
-     * @return array
-     */
-    public function getSubNavLinks()
-    {
-        $pool = $this->getConfigurationPool();
-        $galleryAdmin = $pool->getAdminByAdminCode('sonata.media.admin.gallery');
-        $tagAdmin = $pool->getAdminByAdminCode('networking_init_cms.page.admin.tag');
-
-        $links = array(
-            $this->trans($this->getLabel()) => $this,
-            $galleryAdmin->trans($galleryAdmin->getLabel()) => $galleryAdmin,
-            $tagAdmin->trans($tagAdmin->getLabel()) => $tagAdmin
-        );
-
-        return $links;
-    }
 
 
     /**

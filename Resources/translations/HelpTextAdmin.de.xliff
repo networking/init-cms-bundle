@@ -129,6 +129,10 @@
                 <source>networking_init_cms.menu.admin.menu_item.navigation.text</source>
                 <target>Menu navigation text</target>
             </trans-unit>
+            <trans-unit id="help_text.label">
+                <source>help_text.label</source>
+                <target>Hilfe Texte</target>
+            </trans-unit>
 
 
         </body>
