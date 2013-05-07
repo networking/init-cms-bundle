@@ -10,5 +10,8 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
     {
         $definition = $container->getDefinition('sonata.admin.builder.orm_list');
         $definition->setClass('Networking\InitCmsBundle\Builder\ListBuilder');
+
+        $definition = $container->getDefinition('sonata.admin.pool');
+        $definition->setClass('Networking\InitCmsBundle\Admin\Pool');
     }
 }

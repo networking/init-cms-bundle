@@ -37,12 +37,21 @@ sonata_admin:
             - { position: right, type: networking_init_cms.block.service.online_users, settings: {user_entity: 'NetworkingInitCmsBundle:User'}}
 
         groups:
-            Pages:
-                label: Pages
-                items: [networking_init_cms.page.admin.page, networking_init_cms.menu.admin.menu_item, sonata.media.admin.media]
-            Config:
-                label: Config
-                items: [sonata.user.admin.user, networking_init_cms.page.admin.help_text]
+            pages:
+                label: "pages.label"
+                items: [networking_init_cms.page.admin.page]
+            menu:
+                label: "menu.label"
+                items: [ networking_init_cms.menu.admin.menu_item]
+            media:
+                label: "sonata_media"
+                items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.page.admin.tag]
+            users:
+                label: "sonata_user"
+                items: [sonata.user.admin.user, sonata.user.admin.group]
+            help_text:
+                label: "help_text.label"
+                items: [networking_init_cms.page.admin.help_text]
 
 
 sonata_doctrine_orm_admin:

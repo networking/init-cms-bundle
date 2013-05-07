@@ -68,6 +68,15 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('admin_menu_groups')->requiresAtLeastOneElement()
+                    ->useAttributeAsKey('key')
+                    ->prototype('array')
+                        ->children()
+                            ->arrayNode('items')->requiresAtLeastOneElement()
+                                ->prototype('scalar')->end()->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

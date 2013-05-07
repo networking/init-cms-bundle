@@ -117,7 +117,8 @@ class NetworkingHelperExtension extends \Twig_Extension
             'render_initcms_admin_block' => new \Twig_Function_Method($this, 'renderInitcmsAdminBlock', array('is_safe' => array('html'))),
             'render_content_type_name' => new \Twig_Function_Method($this, 'renderContentTypeName', array('is_safe' => array('html'))),
             'render_admin_subnav' => new \Twig_Function_Method($this, 'renderAdminSubNav', array('is_safe' => array('html'))),
-            'is_initcms_admin_active' => new \Twig_Function_Method($this, 'isInitcmsAdminActive', array('is_safe' => array('html')))
+            'is_admin_active' => new \Twig_Function_Method($this, 'isAdminActive', array('is_safe' => array('html'))),
+            'is_admin_group_active' => new \Twig_Function_Method($this, 'isAdminGroupActive', array('is_safe' => array('html')))
         );
     }
 
@@ -249,7 +250,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param string $adminCode
      * @return bool
      */
-    public function isInitcmsAdminActive(AdminInterface $admin, $adminCode = '')
+    public function isAdminActive(AdminInterface $admin, $adminCode = '')
     {
         $active = false;
         if ($adminCode == $admin->getCode()) {
@@ -265,6 +266,27 @@ class NetworkingHelperExtension extends \Twig_Extension
                 }
             }
         }
+
+        return $active;
+    }
+
+    /**
+     * @param array $group
+     * @param string $adminCode
+     * @return bool
+     */
+    public function isAdminGroupActive(array $group, $adminCode = '')
+    {
+
+        $active = false;
+
+        foreach($group['items'] as $admin){
+            if($admin->getCode() == $adminCode){
+                $active = true;
+                break;
+            }
+        }
+
 
         return $active;
     }
