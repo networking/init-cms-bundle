@@ -521,6 +521,10 @@
                 <source>info.last_edited</source>
                 <target>Dernière modification le </target>
             </trans-unit>
+            <trans-unit id="pages.label">
+                <source>pages.label</source>
+                <target>Pages</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
