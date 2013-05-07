@@ -283,7 +283,7 @@ function onAfterLoad() {
             var maxItems = jQuery(this).attr('data-max-items');
             var contentType = jQuery(ui.item).attr('data-content-type');
 
-            if (jQuery.inArray(contentType, allowedTypes) < 0) {
+            if (allowedTypes.length > 0 && jQuery.inArray(contentType, allowedTypes) < 0) {
                 jQuery(ui.placeholder).addClass('ui-state-error');
                 jQuery(ui.sender).sortable('cancel');
 
@@ -323,7 +323,7 @@ function onAfterLoad() {
             var placeholder = $(ui.placeholder);
 
 
-            if (jQuery.inArray(contentType, allowedTypes) < 0) {
+            if (allowedTypes.length > 0 && jQuery.inArray(contentType, allowedTypes) < 0) {
                 placeholder.css('display', 'none');
                 return;
             } else if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length >= maxItems) {
