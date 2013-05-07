@@ -22,7 +22,7 @@
         "sonata-project/media-bundle":"2.1.*",
         "sonata-project/formatter-bundle": "2.1.*",
         "stof/doctrine-extensions-bundle":"dev-master",
-        "mopa/bootstrap-bundle":"dev-master",
+        "mopa/bootstrap-bundle":"2.1.*",
         "twitter/bootstrap":"master",
         "knplabs/knp-paginator-bundle":"dev-master",
         "knplabs/knp-menu-bundle":"1.1.*",
