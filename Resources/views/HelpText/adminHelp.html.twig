@@ -48,13 +48,15 @@ file that was distributed with this source code.
                             <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
                         </a>
                     </div>
-                    <div class="span6" style="font-size: 26px;padding-top: 10px;">{{ 'title.help'|trans({}, 'HelpTextAdmin') }}</div>
+                    <div class="span6"><span class="brand">{{ 'title.help'|trans({}, 'HelpTextAdmin') }}</span></div>
 
                     <div class="span4">
                         <ul class="nav pull-right">
                             <li>
                                 <a href="JavaScript:window.close()"
-                                           class="bold">{{ 'link.close'|trans({}, 'HelpTextAdmin') }}</a>
+                                   class="bold"><i
+                                            class="icon-off inverse"></i> {{ 'link.close'|trans({}, 'HelpTextAdmin') }}
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -79,36 +81,30 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block sonata_top_bar_nav %}
-<ul>
+    <div class="nav-custom">
+        <ul>
+        {% for element in help_nav %}
+            <li class="first-level-small" style="padding-bottom: 5px;">
+                {% if element.group_items|length > 0 %}
+                    <h4>{{ element.group_name }}</h4>
+                    <ul>
+                        {% for row in element.group_items %}
+                            {% set active = false %}
+                            {% if adminCode == row.adminCode and action == row.action %}
+                                {% set active = true %}
+                            {% endif %}
 
-    {% for element in help_nav %}
-        {% if element.group_items|length > 0 %}
-            <h4>{{ element.group_name }}</h4>
-            <ul>
-                {% for row in element.group_items %}
-                    {% if adminCode == row.adminCode and action == row.action %}
-                        {% set strongTag = '<strong>' %}
-                        {% set strongEndTag = '</strong>' %}
-                    {% else %}
-                        {% set strongTag = '' %}
-                        {% set strongEndTag = '' %}
-                    {% endif %}
+                            <li class="second-level-small"><a {% if active %} class="link-underlined" {% endif %} href="{{ url('networking_init_cms_help', {'adminCode':row.adminCode,'action':row.action}) }}">{{ row.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
 
-                    <li>{{ strongTag | raw }}<a
-                            href="{{ url('networking_init_cms_help', {'adminCode':row.adminCode,'action':row.action}) }}">{{ row.title }}</a>{{ strongEndTag | raw }}
-                    </li>
+{% endblock %}
 
-
-
-
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endfor %}
-
-
-    {% endblock %}
-
-    {% block help_text %}
-        {{ help_text.text | raw }}
-    {% endblock %}
+{% block help_text %}
+    {{ help_text.text | raw }}
+{% endblock %}

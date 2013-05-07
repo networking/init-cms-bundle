@@ -59,8 +59,11 @@ class HelpTextController extends Controller
 
         }
 
-        $parameters['admin_pool'] = $this->get('sonata.admin.pool');
-        $dashBoardGroups = $this->container->get('sonata.admin.pool')->getDashboardGroups();
+        /** @var \Sonata\AdminBundle\Admin\Pool $pool */
+        $pool = $this->get('sonata.admin.pool');
+        $parameters['admin_pool'] = $pool;
+        $dashBoardGroups = $pool->getDashboardNavigationGroups();
+
 
         $parameters['help_nav'] = $this->adminGetHelpTextNavigation(
             $dashBoardGroups,
@@ -89,42 +92,40 @@ class HelpTextController extends Controller
         $navArray['dashboard']['group_items']['0']['adminCode'] = 'dashboard';
         $navArray['dashboard']['group_items']['0']['action'] = '';
         $navArray['dashboard']['group_items']['0']['title'] = $this->get('translator')->trans(
-            'title_dashboard',
+            'dashboard.title',
             array(),
-            'SonataAdminBundle'
+            'HelpTextAdmin'
         );
 
-        $nav_key = 0;
         foreach ($dashBoardGroups as $key => $group) {
-
-            //$navArray[$key]['group_name'] = $group['label'];
-            //$navArray[$key]['group_items'] = array();
-
-            foreach ($group['items'] as $admin) {
+            foreach ($group['sub_group'] as $subGroup) {
 
 
-                $help_text_result = $repository->searchHelpTextByKeyLocale($admin->getCode(), $locale);
-                if (count($help_text_result) > 0) {
-
-
-                    $navArray[$nav_key]['group_name'] = $this->get('translator')->trans(
-                        $admin->getCode(),
-                        array(),
-                        'HelpTextAdmin'
-                    ); //$group['label'];
-                    $navArray[$nav_key]['group_items'] = array();
-
-                    foreach ($help_text_result as $row) {
-                        //split Translation Key into adminCode and action
-                        $strripos = strripos($row->getTranslationKey(), '.');
-                        $action = substr($row->getTranslationKey(), $strripos + 1);
-                        $navArray[$nav_key]['group_items'][$row->getId()]['adminCode'] = $admin->getCode();
-                        $navArray[$nav_key]['group_items'][$row->getId()]['action'] = $action;
-                        $navArray[$nav_key]['group_items'][$row->getId()]['title'] = $row->getTitle();
+                $navArray[$subGroup['label']]['group_items'] = array();
+                $i = 0;
+                foreach ($subGroup['items'] as $admin) {
+                    if (0 == $i++) {
+                        $navArray[$subGroup['label']]['group_name'] = $this->get('translator')->trans(
+                            $subGroup['label'],
+                            array(),
+                            $admin->getTranslationDomain()
+                        );
                     }
 
+                    $help_text_result = $repository->searchHelpTextByKeyLocale($admin->getCode(), $locale);
+                    if (count($help_text_result) > 0) {
+
+                        foreach ($help_text_result as $row) {
+                            //split Translation Key into adminCode and action
+                            $strripos = strripos($row->getTranslationKey(), '.');
+                            $action = substr($row->getTranslationKey(), $strripos + 1);
+                            $navArray[$subGroup['label']]['group_items'][$row->getId()]['adminCode'] = $admin->getCode(
+                            );
+                            $navArray[$subGroup['label']]['group_items'][$row->getId()]['action'] = $action;
+                            $navArray[$subGroup['label']]['group_items'][$row->getId()]['title'] = $row->getTitle();
+                        }
+                    }
                 }
-                $nav_key++;
             }
         }
 
