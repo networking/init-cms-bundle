@@ -468,30 +468,63 @@
             <trans-unit id="sonata.user.admin.user.list.text">
                 <source>sonata.user.admin.user.list.text</source>
                 <target><![CDATA[
-                    <p>The user groups provide a way of maintaining user &quot;roles&quot;&nbsp;(permissions). As mentioned in the user overview, a user may belong to one or many user groups.</p>
+                    <p>A user can login into the system with a username/email and a password. Users have different rights to interact with the website, e.g. an admin can create and publish new pages, but an extranet user could be restricted to have only read access for a certain webpage. The user can be given specific roles (permissions) by being assigned to one or more user groups. Read the groups help to get a more detailed understanding of user permissions.</p>
 
-                    <p>A &quot;role&quot; allows a user to carry out a specific action, for example, a user that has the role&nbsp;&quot;ROLE_ADMIN&quot; can log into the back end of the application, a user that has the role &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot;, is allowed to create pages, and delete his/her own pages&quot;.</p>
+                    <h2>List of users</h2>
 
-                    <p>By assigning a user group specific roles, you need only care later about assigning a user the correct user groups, rather than assigning single roles to each and every user. Also if a role should change, one change in the user group will affect all users who belong to that group.</p>
+                    <p>The list of users offers an overview of information or actions. Every new row describes a new user. The following list explains the columns from left to right.</p>
 
-                    <h2>List of Groups</h2>
+                    <p><strong>Username</strong><br />
+                    The name of the user. The name will be used to login into the system.</p>
 
-                    <p><strong>Name</strong><br />
-                    This is the name of the user group, e.g. &quot;Publisher&quot; or &quot;Editor&quot;</p>
+                    <p><strong>Email Address</strong><br />
+                    An email address of the user. This will be used to notify the user if she/he lost her/his password.</p>
 
-                    <p><strong>Roles</strong><br />
-                    This is a list of the roles associated to this user group, often the list is too long to list visually in the list view</p>
+                    <p><strong>Groups</strong><br />
+                    A list of groups that this user belongs to. A group contains one or more roles, so that it is easy to add the right permission to your users.</p>
 
-                    <h2>Filter groups</h2>
+                    <p><strong>Enabled</strong><br />
+                    This signalizes if the user account is enabled (activated) or not. Only enabled users can log into the system.</p>
 
-                    <p><strong>Name</strong><br />
-                    Filter groups by the name of the group.</p>
+                    <p><strong>Impersonate User</strong><br />
+                    This is a feature to login quickly as the chosen user, just by clicking on the icon. This is useful for customer support because you see the same thing as this user does. You must have special rights to impersonate as another user.</p>
 
-                    <h2>Add a new user group</h2>
+                    <p><strong>Edit Button</strong><br />
+                    The edit button has a pencil icon. Click to edit the user details.</p>
 
-                    <p>To add a new user group, start by clicking the &quot;+ Add Group&quot; button. The form shown contains a name field, followed by a list of checkboxes for all the available roles (permissions).</p>
+                    <p><strong>Delete Button</strong><br />
+                    The delete button has a trashcan icon. Click it to delete a user completely.</p>
 
-                    <p>If you are unclear what the roles actually mean, ask your Webmaster for help, or better yet, to set up the groups that you need for your application.</p>
+                    <h2>Filter users</h2>
+
+                    <p>The list of users can be filtered with several parameters. You can change these parameters and click on the &quot;Filter&quot; button to find users that match your filters. If you click on &quot;Clear&quot; the filters will be reset. By Clicking on &quot;More filter options&quot; all the available options for filtering will be shown.</p>
+
+                    <p><strong>Username</strong><br />
+                    The first filter searches for a username that matches your entry.</p>
+
+                    <p><strong>Locked</strong><br />
+                    Sort which users accounts have been locked. A user can be locked, which means locked out of the application. This may be implemented for security reasons.</p>
+
+                    <p><strong>Email Address</strong><br />
+                    Enter an email address or a part of it to find the corresponding users.</p>
+
+                    <p><strong>Groups</strong><br />
+                    Select a group name to include or exclude for the search. The result filters the users additionally by groups.</p>
+
+                    <h2>Add a new user</h2>
+
+                    <p>To add a new user, start by clicking the &quot;+ Add User&quot; button. You will then see a form with a lot of data fields, don&#39;t worry only the following fields are mandatory.</p>
+
+                    <p><strong>Username</strong><br />
+                    The name of the user used for login.</p>
+
+                    <p><strong>Email Address</strong><br />
+                    The email address of the user, used for contact and notifications.</p>
+
+                    <p><strong>Password</strong><br />
+                    The password field is only mandatory when creating a user (this may vary depending on the setup for your specific website).</p>
+
+                    <p>The user has a lot of additional fields like groups, roles, private information, social media profiles and some security related fields. Just use the ones you want and leave the other empty.</p>
                  ]]></target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.group.list.title">
@@ -501,7 +534,30 @@
             <trans-unit id="sonata.user.admin.group.list.text">
                 <source>sonata.user.admin.group.list.text</source>
                 <target><![CDATA[
-                     <strong>We did not found a specific help text. Hopefully you will find some helpful information from the left navigation menu. We are trying to improve the help section and we are sorry for the inconvenience.</strong>
+                     <p>The user groups provide a way of maintaining user &quot;roles&quot;&nbsp;(permissions). As mentioned in the user overview, a user may belong to one or many user groups.</p>
+
+                     <p>A &quot;role&quot; allows a user to carry out a specific action, for example, a user that has the role&nbsp;&quot;ROLE_ADMIN&quot; can log into the back end of the application, a user that has the role &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot;, is allowed to create pages, and delete his/her own pages&quot;.</p>
+
+                     <p>By assigning a user group specific roles, you need only care later about assigning a user the correct user groups, rather than assigning single roles to each and every user. Also if a role should change, one change in the user group will affect all users who belong to that group.</p>
+
+                     <h2>List of Groups</h2>
+
+                     <p><strong>Name</strong><br />
+                     This is the name of the user group, e.g. &quot;Publisher&quot; or &quot;Editor&quot;</p>
+
+                     <p><strong>Roles</strong><br />
+                     This is a list of the roles associated to this user group, often the list is too long to list visually in the list view</p>
+
+                     <h2>Filter groups</h2>
+
+                     <p><strong>Name</strong><br />
+                     Filter groups by the name of the group.</p>
+
+                     <h2>Add a new user group</h2>
+
+                     <p>To add a new user group, start by clicking the &quot;+ Add Group&quot; button. The form shown contains a name field, followed by a list of checkboxes for all the available roles (permissions).</p>
+
+                     <p>If you are unclear what the roles actually mean, ask your Webmaster for help, or better yet, to set up the groups that you need for your application.</p>
 
                  ]]></target>
             </trans-unit>
