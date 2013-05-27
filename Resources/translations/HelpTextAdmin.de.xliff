@@ -561,18 +561,6 @@
                     <p>Wenn Sie sich nicht darüber im Klaren sind, was die Benutzerrollen tatsächlich bedeuten, wenden Sie sich an Ihren Webmaster. Oder bitten Sie ihn doch gleich darum, die Benutzergruppen einzurichten, die Sie für Ihre Anwendung benötigen.</p>
                  ]]></target>
             </trans-unit>
-            <trans-unit id="sonata.user.admin.group.list.title">
-                <source>sonata.user.admin.group.list.title</source>
-                <target>Group Overview</target>
-            </trans-unit>
-            <trans-unit id="sonata.user.admin.group.list.text">
-                <source>sonata.user.admin.group.list.text</source>
-                <target><![CDATA[
-                     <strong>We did not found a specific help text. Hopefully you will find some helpful information from the left navigation menu. We are trying to improve the help section and we are sorry for the inconvenience.</strong>
-
-                 ]]></target>
-            </trans-unit>
-
             <!-- default -->
 
             <trans-unit id="not_found.title">
