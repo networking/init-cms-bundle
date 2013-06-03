@@ -24,7 +24,7 @@ file that was distributed with this source code.
     {% endif %}
     <ul>
         {% for code, provider in providers %}
-            <li><a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}">{{ provider.name|trans({}, 'MediaAdmin') }}</a></li>
+            <li><a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}">{{ provider.name|trans() }}</a></li>
         {% else %}
             <li>{{ 'no_provider_available'|trans({}, 'MediaAdmin') }}</li>
         {% endfor %}
