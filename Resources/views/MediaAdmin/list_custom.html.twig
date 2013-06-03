@@ -16,7 +16,7 @@ file that was distributed with this source code.
         <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}" style="float: left; margin-right: 6px;">{% media object, 'admin' with {'width': 75, 'height': 60} %}</a>
         <strong>{{ object.name }}</strong> <br />
         {% if object.width is defined and object.width %}
-        {{ object.providerName|trans({}, 'MediaAdmin') }}: {{ object.width }}x{{ object.height }} <br />
+        {{ object.providerName|trans({}) }}: {{ object.width }}x{{ object.height }} <br />
         {% endif %}
     </div>
 {% endblock %}
