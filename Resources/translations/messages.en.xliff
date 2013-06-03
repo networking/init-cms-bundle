@@ -18,6 +18,26 @@
                 <source>Change Language</source>
                 <target>Change Language</target>
             </trans-unit>
+            <trans-unit id="sonata.media.provider.dailymotion">
+                <source>sonata.media.provider.dailymotion</source>
+                <target>DailyMotion</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.provider.youtube">
+                <source>sonata.media.provider.youtube</source>
+                <target>YouTube</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.provider.vimeo">
+                <source>sonata.media.provider.vimeo</source>
+                <target>Vimeo</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.provider.image">
+                <source>sonata.media.provider.image</source>
+                <target>Image</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.provider.file">
+                <source>sonata.media.provider.file</source>
+                <target>File</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>
