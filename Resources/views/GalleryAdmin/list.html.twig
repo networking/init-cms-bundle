@@ -29,7 +29,7 @@ file that was distributed with this source code.
                  id="gallery_{{ name }}">
                 <div class="row">
                     <div class="span10">
-                        <h1><span class="info-soft">{{ name|trans({}, 'MediaAdmin') }}</span>
+                        <h1><span class="info-soft">{{ name|trans() }}</span>
                             <a class="btn btn-primary btn-small menu-dialog-link"
                                href="{{ admin.generateUrl('create', urlParams) }}">
                                 <i class="icon-plus icon-white"></i> {{ 'button.create.menu_item'|trans({}, 'MenuItemAdmin') }}
@@ -37,8 +37,8 @@ file that was distributed with this source code.
                         </h1>
                         {% set batchactions = admin.batchactions %}
                         {% if attribute(datagrid, name).results|length > 0 %}
-                            {{ app.request.query.set('context', name) }}
-                            <form action="{{ admin.generateUrl('batch', admin.filterParameters) }}" method="POST">
+                            {% set filterParameters = admin.filterParameters|merge({'context': name}) %}
+                            <form action="{{ admin.generateUrl('batch', filterParameters) }}" method="POST">
 
                                 <table class="table table-hover table-compact">
                                     {% block table_header %}
@@ -332,7 +332,7 @@ file that was distributed with this source code.
     <ul class="menu-tabs nav nav-tabs">
         {% for name, context in media_pool.contexts %}
             <li {% if (active_tab is null and loop.first) or active_tab == name %}class="active"{% endif %}>
-                <a href="#gallery_{{ name }}" data-toggle="tab">{{ name|trans({}, 'MediaAdmin') }}</a>
+                <a href="#gallery_{{ name }}" data-toggle="tab">{{ name|trans() }}</a>
             </li>
         {% endfor %}
     </ul>
