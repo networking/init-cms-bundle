@@ -72,7 +72,7 @@ file that was distributed with this source code.
                             {% endif %}
 
                             {% if not galleryListMode %}
-                                <h1><span class="info-soft">{{ name|trans({}, 'MediaAdmin') }}</span>
+                                <h1><span class="info-soft">{{ name|trans({}) }}</span>
                                     <a class="btn btn-primary btn-small menu-dialog-link"
                                        href="{{ admin.generateUrl('create', urlParams) }}">
                                         <i class="icon-plus icon-white"></i> {{ 'button.create.menu_item'|trans({}, 'MenuItemAdmin') }}
@@ -292,7 +292,7 @@ file that was distributed with this source code.
         <ul class="nav menu-tabs nav-tabs">
             {% for name, context in media_pool.contexts %}
                 <li {% if (active_tab is null and loop.first) or active_tab == name %}class="active"{% endif %}>
-                    <a href="#media_{{ name }}" data-toggle="tab">{{ name|trans({}, 'MediaAdmin') }}</a>
+                    <a href="#media_{{ name }}" data-toggle="tab">{{ name|trans({}) }}</a>
                 </li>
             {% endfor %}
         </ul>
