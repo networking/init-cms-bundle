@@ -53,11 +53,11 @@ file that was distributed with this source code.
                                     {% for provider_name in providers %}
                                         {% if persistent_parameters.provider == provider_name %}
                                             <li class="active"><a
-                                                    href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}) }}">{{ provider_name|trans({}, 'MediaAdmin') }}</a>
+                                                    href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}) }}">{{ provider_name|trans({}) }}</a>
                                             </li>
                                         {% else %}
                                             <li>
-                                                <a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}) }}">{{ provider_name|trans({}, 'MediaAdmin') }}</a>
+                                                <a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}) }}">{{ provider_name|trans({}) }}</a>
                                             </li>
                                         {% endif %}
                                     {% endfor %}
