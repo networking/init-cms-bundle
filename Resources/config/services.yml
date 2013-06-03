@@ -50,6 +50,13 @@ services:
         tags:
           - { name: form.type, alias: networking_type_iconradio}
 
+    networking_init_cms.media.entity.type:
+        class: Networking\InitCmsBundle\Form\Type\MediaEntityType
+        arguments:
+            - '@doctrine'
+        tags:
+            - {name: form.type, alias: 'media_entity_type' }
+
     activity_listener:
         class: Networking\InitCmsBundle\EventListener\UserActivity
         arguments: [@security.context, @doctrine.orm.entity_manager]
