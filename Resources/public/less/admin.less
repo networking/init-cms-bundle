@@ -42,6 +42,8 @@
 @import "hero-unit";
   // Utility classes
 @import "utilities";
+  // Media classes
+@import "media";
 
 // Has to be last to override when necessary
 
@@ -419,13 +421,13 @@ li.table-row-style .menu-item-link {
   content: "";
 }
 
-.dropzone .sortable li {
+.dropzone .sortable > li {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.dropzone .sortable li.empty_layout_block {
+.dropzone .sortable > li.empty_layout_block {
   padding: 10px;
   border: #bbb dashed 1px;
   min-height: 60px;

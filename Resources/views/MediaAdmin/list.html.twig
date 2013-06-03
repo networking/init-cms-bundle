@@ -81,9 +81,9 @@ file that was distributed with this source code.
                             {% endif %}
 
                             {% set batchactions = admin.batchactions %}
-                            {{ app.request.query.set('context', name) }}
+                            {% set filterParameters = admin.filterParameters|merge({'context': name}) %}
                             {% if attribute(datagrid, name).results|length > 0 %}
-                                <form action="{{ admin.generateUrl('batch', admin.filterParameters) }}" method="POST">
+                                <form action="{{ admin.generateUrl('batch', filterParameters) }}" method="POST">
                                     <table class="table table-hover table-compact">
                                         {% block table_header %}
                                             <thead>
