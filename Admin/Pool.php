@@ -29,7 +29,10 @@ class Pool extends AdminPool
         foreach ($menuGroups as $key => $menuGroup) {
 
             foreach($menuGroup['items'] as $k =>  $item){
-                $menuGroups[$key]['sub_group'][$k] = $groups[$item];
+                if(array_key_exists($item, $groups)){
+                    $menuGroups[$key]['sub_group'][$k] = $groups[$item];
+                }
+
             }
 
         }

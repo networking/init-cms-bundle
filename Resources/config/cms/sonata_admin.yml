@@ -6,11 +6,12 @@ sonata_admin:
            GUEST:    [VIEW, LIST]
            STAFF:    [EDIT, LIST, CREATE]
            EDITOR:   [OPERATOR, EXPORT]
-           ADMIN:    [MASTER]
-           PUBLISHER: [PUBLISH]
+           ADMIN:    [MASTER, PUBLISH]
+           PUBLISHER: [PUBLISH, EDIT, LIST, CREATE]
+
         # permissions not related to an object instance and also to be available when objects do not exist
         # the DELETE admin permission means the user is allowed to batch delete objects
-        admin_permissions: [CREATE, LIST, DELETE, UNDELETE, EXPORT, OPERATOR, MASTER]
+        admin_permissions: [CREATE, LIST, DELETE, UNDELETE, EXPORT, OPERATOR, MASTER, PUBLISH]
         # permission related to the objects
         object_permissions: [VIEW, EDIT, DELETE, UNDELETE, OPERATOR, MASTER, OWNER, PUBLISH]
     title:      Networking CMS
