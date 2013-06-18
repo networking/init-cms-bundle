@@ -21,6 +21,7 @@
         "sonata-project/user-bundle":"2.1.*",
         "sonata-project/media-bundle":"2.1.*",
         "sonata-project/formatter-bundle": "2.1.*",
+        "sonata-project/exporter": "1.2.3",
         "stof/doctrine-extensions-bundle":"dev-master",
         "mopa/bootstrap-bundle":"2.1.*",
         "twitter/bootstrap":"master",
