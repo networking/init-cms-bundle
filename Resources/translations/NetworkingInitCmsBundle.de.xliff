@@ -48,7 +48,7 @@
             </trans-unit>
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
-                <target>Hinzufügen %admin_label%</target>
+                <target>%admin_label% Hinzufügen</target>
             </trans-unit>
             <trans-unit id="link_delete">
                 <source>link_delete</source>
