@@ -103,7 +103,6 @@ class PageListener implements EventSubscriberInterface
             foreach ($entity->getAllChildren() as $child) {
                 $contentRoute = $child->getContentRoute();
                 $contentRoute->setPath(PageHelper::getPageRoutePath($child->getPath()));
-                $em->persist($child);
                 $em->persist($contentRoute);
 
                 if ($entity->getStatus() == Page::STATUS_PUBLISHED) {
