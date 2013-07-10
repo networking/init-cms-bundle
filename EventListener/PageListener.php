@@ -103,37 +103,24 @@ class PageListener implements EventSubscriberInterface
             foreach ($entity->getAllChildren() as $child) {
                 $contentRoute = $child->getContentRoute();
                 $contentRoute->setPath(PageHelper::getPageRoutePath($child->getPath()));
+                $em->persist($child);
+                $em->persist($contentRoute);
 
                 if ($entity->getStatus() == Page::STATUS_PUBLISHED) {
                     if ($childSnapshot = $child->getSnapshot()) {
                         $snapshotRoute = $childSnapshot->getContentRoute();
-                        $snapShot = json_decode($childSnapshot->getVersionedData());
 
-                        // we want to find and replace
-                        $snapshotPath = $snapShot->path;
+                        $newPath = PageHelper::getPageRoutePath($child->getPath());
+                        
+                        $snapshotRoute->setPath($newPath);
+                        $childSnapshot->setPath($newPath);
 
-                        //entity id can be used to locate slug in snapshot path
-                        $entityId = $entity->getId();
+                        $em->flush($childSnapshot);
+                        $em->flush($snapshotRoute);
 
-                        // thing to replace
-                        $entitySlug = $entity->getUrl();
-
-                        $newPath = PageHelper::replaceSlugInPath($snapshotPath, $entityId, $entitySlug);
-
-                        $snapshotRoute->setPath(PageHelper::getPageRoutePath($newPath));
-
-                        $childSnapshot->setPath(PageHelper::getPageRoutePath($newPath));
-
-
-                        $em->persist($childSnapshot);
-                        $em->persist($snapshotRoute);
                     }
                 }
-
-                $em->persist($child);
             }
-
-            $em->flush();
         }
     }
 
