@@ -96,7 +96,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 				->getMock();
 		$em->expects($this->once())
 				->method('persist');
-		$em->expects($this->once())
+		$em->expects($this->any())
 				->method('flush');
         $args = $this
 				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
@@ -183,7 +183,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 				->getMock();
 		$em->expects($this->exactly(0))
 				->method('persist');
-		$em->expects($this->once())
+		$em->expects($this->exactly(0))
 				->method('flush');
 
         $args = $this
@@ -231,7 +231,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 				->getMock();
 		$em->expects($this->exactly(10))
 				->method('persist');
-		$em->expects($this->once())
+		$em->expects($this->exactly(0))
 				->method('flush');
 
         $args = $this
