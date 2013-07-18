@@ -18,6 +18,7 @@ use Sonata\AdminBundle\Admin\Admin,
     Sonata\AdminBundle\Datagrid\DatagridMapper,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Symfony\Component\Locale\Locale;
 
 
 /**
@@ -55,13 +56,22 @@ abstract class BaseAdmin extends Admin
      */
     protected function getLocaleChoices()
     {
-        $locale = array();
+        $localeChoices = array();
 
-        foreach ($this->languages as $language) {
-            $locale[$language['locale']] = $language['label'];
+        if (!$this->getRequest()->get('locale')) {
+            $locale = $this->getRequest()->getLocale();
+        } else {
+            $locale = $this->getRequest()->get('locale');
         }
 
-        return $locale;
+        $localeList = Locale::getDisplayLocales($locale);
+
+
+        foreach ($this->languages as $language) {
+            $localeChoices[$language['locale']] = $localeList[$language['locale']];
+        }
+
+        return $localeChoices;
     }
 
     /**
