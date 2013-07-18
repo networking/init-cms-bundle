@@ -152,10 +152,10 @@ function setUpSortTree() {
             });
 
 
-            $.get(
-                    "{{ admin.generateUrl('ajaxController') }}",
+            $.post(
+                    "{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}",
                     {
-                        "operation":"updateNodes",
+
                         "nodes":ret
                     },
                     function(xhr){

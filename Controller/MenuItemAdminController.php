@@ -353,7 +353,7 @@ class MenuItemAdminController extends CRUDController
     public function updateNodes()
     {
         $request = $this->getRequest();
-        $nodes = $request->query->get('nodes') ? $request->query->get('nodes') : array();
+        $nodes = $request->get('nodes') ? $request->get('nodes') : array();
 
         $repository = $this->getDoctrine()
             ->getRepository('NetworkingInitCmsBundle:MenuItem');
