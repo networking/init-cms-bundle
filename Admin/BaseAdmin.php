@@ -64,6 +64,10 @@ abstract class BaseAdmin extends Admin
             $locale = $this->getRequest()->get('locale');
         }
 
+        if(is_array($locale) && array_key_exists('value', $locale)){
+            $locale = $locale['value'];
+        }
+
         $localeList = Locale::getDisplayLocales($locale);
 
 
