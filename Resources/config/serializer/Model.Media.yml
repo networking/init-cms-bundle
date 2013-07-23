@@ -24,6 +24,8 @@ Sonata\MediaBundle\Model\Media:
             type: string
         context:
             type: string
+        copyright:
+            type: string
         cdnIsFlushable:
             type: boolean
         cdnFlushAt:
