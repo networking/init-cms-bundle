@@ -10,3 +10,5 @@ Sonata\MediaBundle\Model\GalleryHasMedia:
             type: DateTime
         enabled:
             type: boolean
+        gallery:
+            type: Networking\InitCmsBundle\Entity\Gallery
