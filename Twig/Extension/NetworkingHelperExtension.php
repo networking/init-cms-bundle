@@ -11,10 +11,12 @@
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Networking\InitCmsBundle\Entity\LayoutBlock;
+use Networking\InitCmsBundle\Entity\Page;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
 use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -118,7 +120,8 @@ class NetworkingHelperExtension extends \Twig_Extension
             'render_content_type_name' => new \Twig_Function_Method($this, 'renderContentTypeName', array('is_safe' => array('html'))),
             'render_admin_subnav' => new \Twig_Function_Method($this, 'renderAdminSubNav', array('is_safe' => array('html'))),
             'is_admin_active' => new \Twig_Function_Method($this, 'isAdminActive', array('is_safe' => array('html'))),
-            'is_admin_group_active' => new \Twig_Function_Method($this, 'isAdminGroupActive', array('is_safe' => array('html')))
+            'is_admin_group_active' => new \Twig_Function_Method($this, 'isAdminGroupActive', array('is_safe' => array('html'))),
+            'get_initcms_page_url' => new \Twig_Function_Method($this, 'getPageUrl', array('is_safe' => array('html'))),
         );
     }
 
@@ -280,8 +283,8 @@ class NetworkingHelperExtension extends \Twig_Extension
 
         $active = false;
 
-        foreach($group['items'] as $admin){
-            if($admin->getCode() == $adminCode){
+        foreach ($group['items'] as $admin) {
+            if ($admin->getCode() == $adminCode) {
                 $active = true;
                 break;
             }
@@ -349,10 +352,10 @@ class NetworkingHelperExtension extends \Twig_Extension
                 )
                 ) {
                     $imagePath = 'bundles' . DIRECTORY_SEPARATOR . str_replace(
-                        'bundle',
-                        '',
-                        strtolower($bundleName)
-                    ) . DIRECTORY_SEPARATOR . $icon;
+                            'bundle',
+                            '',
+                            strtolower($bundleName)
+                        ) . DIRECTORY_SEPARATOR . $icon;
                 }
             }
         }
@@ -987,6 +990,48 @@ class NetworkingHelperExtension extends \Twig_Extension
         }
 
         return preg_replace(sprintf($regex, $phrase), $format, $text);
+    }
+
+    /**
+     * @param Page $page
+     * @return mixed
+     */
+    public function getPageUrl(Page $page)
+    {
+        if (!$page->getContentRoute()) {
+            $per = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:PageSnapshot');
+            $pageSnapshots = $per->createQueryBuilder('ps')
+                ->where('ps.page = :pageId')
+                ->orderBy('ps.version', 'desc')
+                ->setParameter(':pageId', $page->getId())
+                ->getQuery()
+                ->execute();
+
+            if ($pageSnapshots) {
+                $page->setSnapshots($pageSnapshots);
+                $pageSnapshot = $page->getSnapshot();
+                $cer = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:ContentRoute');
+                $contentRoute = $cer->findOneBy(array('objectId' => $pageSnapshot->getId(), 'classType' => 'Networking\InitCmsBundle\Entity\PageSnapshot'));
+                if ($contentRoute) {
+                    $page->setContentRoute($contentRoute);
+                }
+            }
+        }
+
+        return $this->container->get('router')->generate('networking_init_dynamic_route', array('route_params' => array('path' => $page->getFullPath())));
+
+    }
+
+    /**
+     * Shortcut to return the Doctrine Registry service.
+     *
+     * @return Registry
+     *
+     * @throws \LogicException If DoctrineBundle is not available
+     */
+    protected function getDoctrine()
+    {
+        return $this->getService('doctrine');
     }
 }
 
