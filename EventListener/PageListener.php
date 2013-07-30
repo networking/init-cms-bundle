@@ -99,6 +99,7 @@ class PageListener implements EventSubscriberInterface
         if ($entity instanceof Page) {
             $contentRoute = $entity->getContentRoute();
             $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
+            $em->flush($contentRoute);
 
             foreach ($entity->getAllChildren() as $child) {
                 $contentRoute = $child->getContentRoute();
