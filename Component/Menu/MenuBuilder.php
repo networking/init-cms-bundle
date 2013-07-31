@@ -335,10 +335,10 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
 
         foreach ($mainMenuIterator as $menuItem) {
 
-            if ($this->currentPath === $menuItem['path']
-                || $this->currentPath === $menuItem[0]->getInternalUrl()
+            if ($this->currentPath === $menuItem->getPath()
+                || $this->currentPath === $menuItem->getInternalUrl()
             ) {
-                $currentParent = $menuItem[0]->getParentByLevel($level);
+                $currentParent = $menuItem->getParentByLevel($level);
             }
         }
 
