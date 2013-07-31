@@ -192,6 +192,11 @@ class MediaAdmin extends SonataMediaAdmin
 
         if ($context) {
             $datagridMapper->add('context', null, array('hidden' => true));
+            $persistedParams = $this->getPersistentParameters();
+            if(array_key_exists('context', $persistedParams) && $persistedParams['context'] == $context){
+                $datagridMapper->add('providerName', null, array('hidden' => true));
+
+            }
         }
     }
 
