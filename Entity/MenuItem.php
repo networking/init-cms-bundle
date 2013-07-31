@@ -147,6 +147,11 @@ class MenuItem implements \IteratorAggregate
      */
     protected $locale;
 
+    /**
+     * @var string $path
+     */
+    protected $path;
+
 
     /**
      * @var text $description
@@ -515,10 +520,12 @@ class MenuItem implements \IteratorAggregate
 
     /**
      * @param $path
+     * @return $this
      */
     public function setPath($path)
     {
-        return;
+        $this->path = $path;
+        return $this;
     }
 
     /**
@@ -526,6 +533,10 @@ class MenuItem implements \IteratorAggregate
      */
     public function getPath()
     {
+        if($this->path){
+            return $this->path;
+        }
+
         if (!$this->getPage()) {
             return;
         }
