@@ -213,7 +213,7 @@ class FrontendPageController extends Controller
     {
         if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
             $message = 'Please login to carry out this action';
-            throw $this->createNotFoundException($message);
+            throw new AccessDeniedException($message);
         }
 
         $request->getSession()->set('_viewStatus', $status);
