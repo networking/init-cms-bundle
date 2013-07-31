@@ -183,7 +183,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 				->getMock();
 		$em->expects($this->exactly(0))
 				->method('persist');
-		$em->expects($this->exactly(0))
+		$em->expects($this->exactly(1))
 				->method('flush');
 
         $args = $this
@@ -231,7 +231,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 				->getMock();
 		$em->expects($this->exactly(10))
 				->method('persist');
-		$em->expects($this->exactly(0))
+		$em->expects($this->exactly(1))
 				->method('flush');
 
         $args = $this
