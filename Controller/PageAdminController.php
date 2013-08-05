@@ -381,7 +381,7 @@ class PageAdminController extends CRUDController
     public function updateLayoutBlockSortAction(Request $request)
     {
 
-        $zones = $request->get('zones');
+        $zones = $request->get('zones', array());
         $objectId = $request->get('objectId');
 
         foreach($zones as $zone){
@@ -623,9 +623,7 @@ class PageAdminController extends CRUDController
             if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
                 $this->admin->update($object);
 
-                if ($object->getStatus() == Page::STATUS_PUBLISHED) {
-                    $this->makeSnapshot($object);
-                }
+                $object->setStatus(Page::STATUS_DRAFT);
 
                 if ($this->isXmlHttpRequest()) {
 
