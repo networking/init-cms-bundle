@@ -69,15 +69,17 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         Container $serviceContainer
     )
     {
-        parent::__construct($factory);
 
+        parent::__construct($factory);
         $this->securityContext = $securityContext;
-        if ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $this->securityContext->isGranted(
+
+        if ($this->securityContext->getToken() && ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $this->securityContext->isGranted(
                 'IS_AUTHENTICATED_REMEMBERED'
-            )
+            ))
         ) {
             $this->isLoggedIn = true;
         }
+
         $this->serviceContainer = $serviceContainer;
         $this->router = $this->serviceContainer->get('router');
 
