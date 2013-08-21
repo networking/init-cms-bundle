@@ -57,9 +57,9 @@
                 var container = jQuery(".sonata-ba-delete", listDialog);
                 var text = container.clone().children().remove().end().text();
                 var containerHtml = container.html();
-                var re = new RegExp(trim(text));
+                var re = new RegExp(addSlashes(trim(text)));
                 containerHtml = containerHtml.replace(re, '');
-                containerHtml = containerHtml.replace(/\?/, '');
+
                 jQuery(".sonata-ba-delete").html(containerHtml);
                 var header = jQuery('h1', listDialog);
                 var headerText = header.html();
@@ -71,6 +71,20 @@
                 listDialog.modal('show');
             }
         });
+    }
+
+    function addSlashes(string) {
+        return string.replace(/\\/g, '\\\\').
+            replace(/\u0008/g, '\\b').
+            replace(/\t/g, '\\t').
+            replace(/\n/g, '\\n').
+            replace(/\f/g, '\\f').
+            replace(/\r/g, '\\r').
+            replace(/'/g, '\\\'').
+            replace(/\(/g, '\\(').
+            replace(/\)/g, '\\)').
+            replace(/\?/g, '\\?').
+            replace(/"/g, '\\"');
     }
 
     function submitAjaxForm(event) {
