@@ -56,6 +56,7 @@ class MediaEntityType extends EntityType
     {
         $view->vars['dataType'] = $form->getAttribute('dataType');
         $view->vars['objects'] = $options['choice_list']->getChoices();
+        $view->vars['provider_name'] = $options['provider_name'];
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

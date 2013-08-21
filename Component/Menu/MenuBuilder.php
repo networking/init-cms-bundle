@@ -308,12 +308,19 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function getFullMenu($menuName)
     {
+        $menuIterator = array();
+
         $repository = $this->getMenuItemRepository();
 
         /** @var $mainMenu Menu */
         $mainMenu = $repository->findOneBy(
             array('name' => $menuName, 'locale' => $this->serviceContainer->get('request')->getLocale())
         );
+
+        if(!$mainMenu){
+            return $menuIterator;
+        }
+
         $menuIterator = $repository->getChildrenByStatus($mainMenu, false, null, 'ASC', false, $this->viewStatus);
 
         return $menuIterator;
@@ -327,6 +334,8 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function getSubMenu($menuName, $level = 1)
     {
+        $currentParent = false;
+
         $repository = $this->getMenuItemRepository();
 
         $mainMenuIterator = $this->getFullMenu($menuName);
