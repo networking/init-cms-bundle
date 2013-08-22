@@ -103,7 +103,6 @@ class LayoutBlockListener
             $page->setStatus(Page::STATUS_DRAFT);
             $em = $args->getEntityManager();
             $em->persist($page);
-            $em->flush();
         }
     }
 }
