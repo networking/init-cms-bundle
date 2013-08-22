@@ -43,8 +43,8 @@ class LayoutBlockListener
             if ($contentObject = $layoutBlock->getSnapshotContent()) {
                 $contentObject = $this->serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
 
-                if ($contentObject instanceof \Networking\GalleryBundle\Entity\Gallery) {
-                    $er = $args->getEntityManager()->getRepository('Networking\MediaBundle\Entity\Gallery');
+                if ($contentObject instanceof \Networking\InitCmsBundle\Entity\GalleryView) {
+                    $er = $args->getEntityManager()->getRepository('Networking\InitCmsBundle\Entity\GalleryView');
                     $gallery = $er->find($contentObject->getMediaGallery()->getId());
                     $contentObject->setMediaGallery($gallery);
                 }
