@@ -1,0 +1,2 @@
+error:
+    unique_url: A page with the same URL (URL & parent page) "{{ value }}" exists, please select another one

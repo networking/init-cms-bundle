@@ -1,6 +1,7 @@
 mopa_bootstrap:
     navbar: ~
     form:
+        error_type: inline
         collection:
             widget_remove_btn:
                 icon: trash

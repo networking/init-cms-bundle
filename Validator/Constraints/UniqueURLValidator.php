@@ -10,6 +10,7 @@
  */
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
+use Gedmo\Sluggable\Util\Urlizer;
 use Networking\InitCmsBundle\Entity\Page;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Entity\MenuItemRepository;
@@ -49,38 +50,19 @@ class UniqueURLValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        $page = null;
-        $params = array(':path' => $value);
+        $repo = $this->em->getRepository('NetworkingInitCmsBundle:Page');
+        $url = Urlizer::urlize($value->getUrl());
+        $pages = $repo->findBy(array('url' => $url, 'parent' => $value->getParent()));
 
-        /** @var $page Page */
-        $page = $this->context->getRoot()->getViewData();
-
-        /** @var $repository MenuItemRepository */
-        $repository = $this->em
-                ->getRepository('NetworkingInitCmsBundle:MenuItem');
-
-        $qb = $repository->createQueryBuilder('m');
-
-        $qb->where('m.path = :path');
-
-        if ($page->getId()) {
-            $qb->andWhere('m.page != :page');
-            $params[':page'] = $page;
+        if($value->getParent()){
+            $url = $value->getParent()->getFullPath().$url;
         }
-        $qb->setParameters($params);
-
-        try {
-            $menuItem = $qb->getQuery()->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
-            $menuItem = NULL;
-        }
-
-        if (!is_null($menuItem)) {
-            $this->context->addViolation($constraint->message, array('{{ value }}' => $value));
-
+        if (count($pages) > 0) {
+            $this->context->addViolationAtSubPath('url', $constraint->message, array('{{ value }}' => $url));
             return false;
         }
 
         return true;
+
     }
 }

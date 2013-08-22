@@ -270,7 +270,7 @@ services:
         class: Networking\InitCmsBundle\Validator\Constraints\UniqueURLValidator
         arguments: [@doctrine.orm.entity_manager, @service_container]
         tags:
-          - { name: validator.constraint_validator, alias: networking_init_cms_unique_url_validator }
+          - { name: validator.constraint_validator, alias: unique_url_validator }
 
 ## Menus
 

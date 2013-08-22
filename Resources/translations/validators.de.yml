@@ -1,0 +1,2 @@
+error:
+    unique_url: Es existiert bereits eine Seite mit den gleichen URL (übergeordnete Seitenname + Seiten URL) "{{ value }}", bitte einen neuen eingeben

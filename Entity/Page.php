@@ -19,6 +19,7 @@ use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Entity\ContentRoute;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+use Networking\InitCmsBundle\Validator\Constraints as CustomAssert;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -34,6 +35,8 @@ use Symfony\Cmf\Component\Routing\RouteAwareInterface;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="page", uniqueConstraints={@ORM\UniqueConstraint(name="path_idx", columns={"path", "locale"})})
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\PageRepository")
+ *
+ * @CustomAssert\UniqueURL(groups={"not_home"})
  *
  * @author net working AG <info@networking.ch>
  */
