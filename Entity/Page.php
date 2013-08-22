@@ -1162,7 +1162,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
             $this->setContentRoute($contentRoute);
         }
-        $this->contentRoute->setTemplate($template);
+        $this->contentRoute->setTemplateName($template);
 
         return $this;
     }
@@ -1173,7 +1173,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     public function getTemplate()
     {
         if (!$this->contentRoute) return;
-        return $this->contentRoute->getTemplate();
+        return $this->contentRoute->getTemplateName();
     }
 
     /**

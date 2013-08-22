@@ -265,6 +265,16 @@ services:
         tags:
            - { name: doctrine.event_listener, event: preRemove, method: preRemove }
 
+#Listener for setting the correct template on the contentRoute object
+
+    networking_init_cms.content_route_listner:
+       class:  Networking\InitCmsBundle\EventListener\ContentRouteListener
+       calls:
+           - [setContainer, [@service_container]]
+       tags:
+           - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
+           - { name: doctrine.event_listener, event: prePersist, method: prePersist }
+
 # Preload uniquer url validator with the entity manager and the service container
     networking_init_cms.unique_url_validator:
         class: Networking\InitCmsBundle\Validator\Constraints\UniqueURLValidator

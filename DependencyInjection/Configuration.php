@@ -54,6 +54,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('template')->isRequired()->end()
                             ->scalarNode('name')->isRequired()->end()
                             ->scalarNode('icon')->end()
+                            ->scalarNode('controller')->defaultValue('NetworkingInitCmsBundle:FrontendPage:index')->end()
                             ->arrayNode('zones')
                             ->requiresAtLeastOneElement()
                                 ->prototype('array')

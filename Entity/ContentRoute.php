@@ -80,6 +80,13 @@ class ContentRoute extends AbstractRoute
     protected $template;
 
     /**
+     * @var string $templateName
+     *
+     * @ORM\Column(name="template_name", type="string", length=255, nullable=true)
+     */
+    protected $templateName;
+
+    /**
      * @var string $locale
      *
      * @ORM\Column(name="locale", type="string", length=255)
@@ -248,6 +255,22 @@ class ContentRoute extends AbstractRoute
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * @param string $templateName
+     */
+    public function setTemplateName($templateName)
+    {
+        $this->templateName = $templateName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplateName()
+    {
+        return $this->templateName;
     }
 
     /**

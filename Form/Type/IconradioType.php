@@ -54,7 +54,7 @@ class IconradioType extends ChoiceType
     {
         $choices = array();
         foreach ($this->templates as $key => $template) {
-            $choices[$template['template']] = isset($template['icon'])?$template['icon']:'';
+            $choices[$key] = isset($template['icon'])?$template['icon']:'';
         }
         return $choices;
     }
