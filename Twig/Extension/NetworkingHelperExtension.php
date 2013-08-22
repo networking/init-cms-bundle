@@ -534,15 +534,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     {
         $templates = $this->container->getParameter('networking_init_cms.page.templates');
 
-        $results = array_filter(
-            $templates,
-            function ($var) use ($template) {
-                return $var['template'] == $template;
-            }
-        );
-
-        $template = reset($results);
-        $zones = $template['zones'];
+        $zones = $templates[$template]['zones'];
 
         foreach ($zones as $key => $zone) {
             $temp = array_map(array($this, 'jsString'), $zone['restricted_types']);

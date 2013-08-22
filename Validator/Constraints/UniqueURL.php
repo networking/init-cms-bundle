@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraint;
 
 /**
  * @author net working AG <info@networking.ch>
+ *
  * @Annotation
  */
 class UniqueURL extends Constraint
@@ -21,7 +22,7 @@ class UniqueURL extends Constraint
     /**
      * @var string $message
      */
-    public $message = 'The URL "{{ value }}" must be unique, or at least the same as the menu point it is attached to.';
+    public $message = 'error.unique_url';
 
     /**
      * @return string
@@ -29,6 +30,11 @@ class UniqueURL extends Constraint
     public function validatedBy()
     {
         // Validator is configured as a service with unique_url_validator as an alias
-        return 'networking_init_cms_unique_url_validator';
+        return 'unique_url_validator';
+    }
+
+    public function getTargets()
+    {
+        return self::CLASS_CONSTRAINT;
     }
 }
