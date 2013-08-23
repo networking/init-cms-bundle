@@ -256,9 +256,10 @@ class PageAdmin extends BaseAdmin
             )
         )
             ->add(
-            'template',
+            'templateName',
             'networking_type_iconradio',
             array(
+                'label' => 'form.label_template',
                 'expanded' => true,
                 'choices' => $this->getPageTemplates(),
                 'data' => $this->getDefaultTemplate()
@@ -581,7 +582,7 @@ class PageAdmin extends BaseAdmin
     protected function getDefaultTemplate()
     {
         if ($this->getSubject()->getId()) {
-            return $this->getSubject()->getTemplate();
+            return $this->getSubject()->getTemplateName();
         }
         $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
         $firstTemplate = reset($templates);
