@@ -494,13 +494,13 @@ class NetworkingHelperExtension extends \Twig_Extension
         } else {
             $templates = $this->container->getParameter('networking_init_cms.page.templates');
             $firstTemplate = reset($templates);
-            $template = $firstTemplate['template'];
+            $template = key($firstTemplate);
         }
 
         if ($request->getMethod() === 'POST') {
             $uniqid = $request->get('uniqid');
             $postVars = $request->request->get($uniqid);
-            $template = $postVars['template'];
+            $template = $postVars['templateName'];
         }
 
         if (is_null($template)) {

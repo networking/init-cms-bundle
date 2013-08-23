@@ -1162,7 +1162,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
             $this->setContentRoute($contentRoute);
         }
-        $this->contentRoute->setTemplateName($template);
+        $this->contentRoute->setTemplate($template);
 
         return $this;
     }
@@ -1174,6 +1174,25 @@ class Page implements RouteAwareInterface, VersionableInterface
     {
         if (!$this->contentRoute) return;
         return $this->contentRoute->getTemplate();
+    }
+
+
+    /**
+     * @param $templateName
+     * @return $this
+     */
+    public function setTemplateName($templateName)
+    {
+        if (!$this->contentRoute) {
+            $contentRoute = new ContentRoute();
+            $contentRoute->setClassType(get_class($this));
+            $contentRoute->setLocale($this->getLocale());
+
+            $this->setContentRoute($contentRoute);
+        }
+        $this->contentRoute->setTemplateName($templateName);
+
+        return $this;
     }
 
     /**
