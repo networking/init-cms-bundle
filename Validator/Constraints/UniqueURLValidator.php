@@ -54,12 +54,16 @@ class UniqueURLValidator extends ConstraintValidator
         $url = Urlizer::urlize($value->getUrl());
         $pages = $repo->findBy(array('url' => $url, 'parent' => $value->getParent()));
 
-        if($value->getParent()){
-            $url = $value->getParent()->getFullPath().$url;
+        if ($value->getParent()) {
+            $url = $value->getParent()->getFullPath() . $url;
         }
         if (count($pages) > 0) {
-            $this->context->addViolationAtSubPath('url', $constraint->message, array('{{ value }}' => $url));
-            return false;
+            foreach ($pages as $page) {
+                if ($page->getId() != $value->getId()) {
+                    $this->context->addViolationAtSubPath('url', $constraint->message, array('{{ value }}' => $url));
+                    return false;
+                }
+            }
         }
 
         return true;
