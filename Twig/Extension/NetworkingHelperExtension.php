@@ -490,7 +490,7 @@ class NetworkingHelperExtension extends \Twig_Extension
 
         if ($pageId) {
             $page = $repository->find($pageId);
-            $template = $page->getTemplate();
+            $template = $page->getTemplateName();
         } else {
             $templates = $this->container->getParameter('networking_init_cms.page.templates');
             $firstTemplate = reset($templates);

@@ -243,7 +243,7 @@ class PageSnapshot implements RouteAwareInterface, ResourceVersionInterface
     {
         $contentRoute->setClassType(get_class($this));
         $contentRoute->setLocale($this->page->getLocale());
-        $contentRoute->setTemplate($this->page->getTemplate());
+        $contentRoute->setTemplateName($this->page->getTemplateName());
         $this->contentRoute = $contentRoute;
 
         return $this;

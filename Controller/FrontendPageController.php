@@ -50,6 +50,10 @@ class FrontendPageController extends Controller
         /** @var $page Page */
         $page = $request->get('_content');
 
+        if($page instanceof PageSnapshot){
+            return $this->liveAction($request);
+        }
+
         if(!$page){
             throw $this->createNotFoundException('no page object found');
         }
