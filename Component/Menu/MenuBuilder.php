@@ -145,9 +145,27 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
 
         $parentLevel = $childNode->getLvl() - $startDepth;
 
-        $tmpMenu = $menu->getChild($childNode->getParentByLevel($parentLevel)->getName());
+        $parentName = $childNode->getParentByLevel($parentLevel)->getName();
+        $parentMenu = $menu->getChild($parentName);
 
-        return $this->getParentMenu($tmpMenu, $childNode, $startDepth);
+        if(!$parentMenu){
+
+            $findParentDeep = function($menu) use (&$findParentDeep, $parentName){
+
+                foreach($menu->getChildren() as $subMenu){
+                    if($parentMenu = $subMenu->getChild($parentName)){
+                        return $parentMenu;
+                    } else {
+                         $findParentDeep($subMenu);
+                    }
+                }
+                return false;
+            };
+
+            $parentMenu = $findParentDeep($menu);
+        }
+
+        return $this->getParentMenu($parentMenu, $childNode, $startDepth);
     }
 
 
