@@ -13,6 +13,8 @@ use Doctrine\ORM\Event\LifecycleEventArgs,
     JMS\Serializer\Serializer,
     Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Entity\LayoutBlock;
+use Networking\InitCmsBundle\Entity\Gallery;
+use Networking\InitCmsBundle\Entity\GalleryView;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -83,10 +85,22 @@ class LayoutBlockListener
      */
     public function preRemove(LifecycleEventArgs $args)
     {
-        $layoutBlock = $args->getEntity();
-        if ($layoutBlock instanceof LayoutBlock) {
-            if (!$layoutBlock->getSnapshotContent() && !$layoutBlock->getIsSnapshot()) {
+        $entity = $args->getEntity();
+
+        if ($entity instanceof LayoutBlock) {
+            if (!$entity->getSnapshotContent() && !$entity->getIsSnapshot()) {
                 $this->autoPageDraft($args);
+            }
+        }
+
+        if ($entity instanceof Gallery) {
+            $em = $args->getEntityManager();
+            $repo = $em->getRepository('NetworkingInitCmsBundle:GalleryView');
+            $galleryViews = $repo->findBy(array('mediaGallery' => $entity->getId()));
+
+            foreach ($galleryViews as $galleryView) {
+                $layoutBlock = $galleryView->getLayoutBlock();
+                $em->remove($layoutBlock);
             }
         }
     }
