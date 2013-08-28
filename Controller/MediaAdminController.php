@@ -511,6 +511,7 @@ class MediaAdminController extends SonataMediaAdminController
             $tempgrid = $this->admin->getDatagrid($context);
             $tempgrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
             $tempgrid->setValue('context', null, $context);
+
             $mediaForm[$context] = $tempgrid->getForm()->createView();
             $mediaGrid[$context] = $tempgrid;
 

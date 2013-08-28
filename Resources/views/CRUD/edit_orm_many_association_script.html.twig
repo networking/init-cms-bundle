@@ -48,7 +48,7 @@ This code manage the many-to-[one|many] association field popup
                 type: 'GET',
                 url: jQuery(this).attr('href'),
                 success: function(html) {
-                   field_dialog_{{ id }}.html(html);
+                   $('#field_dialog_{{ id }} .modal-body').html(html);
                 }
             });
 
