@@ -376,4 +376,18 @@ class MediaAdmin extends SonataMediaAdmin
 
         return $locale;
     }
+
+
+    public function generateUrl($name, array $parameters = array(), $absolute = false){
+        try{
+            if($this->getRequest()->get('pcode')){
+                        $parameters['pcode'] = $this->getRequest()->get('pcode');
+                    }
+        }catch (\Exception $e){
+            //do nothing
+        }
+
+
+        return parent::generateUrl($name, $parameters, $absolute);
+    }
 }
