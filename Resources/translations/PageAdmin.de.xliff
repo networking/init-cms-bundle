@@ -524,6 +524,10 @@
                 <source>pages.label</source>
                 <target>Seiten</target>
             </trans-unit>
+            <trans-unit id="pages.content_not_found">
+                <source>pages.content_not_found</source>
+                <target>Inhalt Element wurde nicht gefunden</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
