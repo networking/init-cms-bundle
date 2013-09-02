@@ -151,6 +151,9 @@ class NetworkingHelperExtension extends \Twig_Extension
         }
 
         if(!is_object($contentItem)){
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($layoutBlock);
+            $em->flush();
             return '';
         }
 
@@ -184,6 +187,9 @@ class NetworkingHelperExtension extends \Twig_Extension
         }
 
         if(!is_object($contentItem)){
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($layoutBlock);
+            $em->flush();
             return $this->getService('translator')->trans('pages.content_not_found', array(), 'PageAdmin');
         }
 
