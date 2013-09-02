@@ -530,6 +530,10 @@
                 <source>pages.label</source>
                 <target>Pages</target>
             </trans-unit>
+            <trans-unit id="pages.content_not_found">
+                <source>pages.content_not_found</source>
+                <target>Content element could no longer be located</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

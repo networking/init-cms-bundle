@@ -150,6 +150,10 @@ class NetworkingHelperExtension extends \Twig_Extension
             );
         }
 
+        if(!is_object($contentItem)){
+            return '';
+        }
+
         $options = $contentItem->getTemplateOptions($params);
 
         $options = array_merge($options, $params);
@@ -177,6 +181,10 @@ class NetworkingHelperExtension extends \Twig_Extension
             $classType = $layoutBlock->getClassType();
 
             $contentItem = new $classType();
+        }
+
+        if(!is_object($contentItem)){
+            return $this->getService('translator')->trans('pages.content_not_found', array(), 'PageAdmin');
         }
 
         $adminContent = $contentItem->getAdminContent();
