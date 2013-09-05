@@ -49,7 +49,7 @@ class MenuItemRepository extends NestedTreeRepository
         }else{
             $qb->leftJoin('p.contentRoute', 'cr');
         }
-        $qb->groupBy('p.id');
+//        $qb->groupBy('p.id');
 
         $results = $qb->getQuery()->getResult();
         $menuItems = array();
