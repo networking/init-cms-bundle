@@ -329,7 +329,8 @@ class MenuItemAdminController extends CRUDController
         $em->persist($menuItem);
         $em->flush();
 
-
+        $this->admin->createObjectSecurity($menuItem);
+        
         return $this->redirect($this->admin->generateUrl('list', array('page_id' => $page->getId(), 'menu_id' => $menuItem->getId())));
 
     }
