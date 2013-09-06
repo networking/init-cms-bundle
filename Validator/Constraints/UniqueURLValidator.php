@@ -52,7 +52,7 @@ class UniqueURLValidator extends ConstraintValidator
     {
         $repo = $this->em->getRepository('NetworkingInitCmsBundle:Page');
         $url = Urlizer::urlize($value->getUrl());
-        $pages = $repo->findBy(array('url' => $url, 'parent' => $value->getParent()));
+        $pages = $repo->findBy(array('url' => $url, 'parent' => $value->getParent(), 'locale' => $value->getLocale()));
 
         if ($value->getParent()) {
             $url = $value->getParent()->getFullPath() . $url;
