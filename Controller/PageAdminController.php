@@ -60,7 +60,8 @@ class PageAdminController extends CRUDController
 
             try {
 
-                $pageHelper->makeTranslationCopy($page, $locale);
+                $pageCopy = $pageHelper->makeTranslationCopy($page, $locale);
+                $this->admin->createObjectSecurity($pageCopy);
                 $status = 'success';
                 $message = $this->translate(
                     'message.translation_saved',
