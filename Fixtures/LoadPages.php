@@ -66,7 +66,7 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         $homePage->setMetaDescription('This is the homepage');
         $homePage->setStatus(Page::STATUS_PUBLISHED);
         $homePage->setIsHome(true);
-        $homePage->setTemplate($this->getFirstTemplate());
+        $homePage->setTemplateName($this->getFirstTemplate());
         $homePage->setActiveFrom(new \DateTime('now'));
 
         // set original for translations
@@ -89,7 +89,7 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         $templates = $this->container->getParameter('networking_init_cms.page.templates');
 
         foreach ($templates as $key => $template) {
-            return $template['template'];
+            return $key;
         }
     }
 
