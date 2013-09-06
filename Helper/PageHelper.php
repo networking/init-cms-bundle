@@ -214,7 +214,7 @@ class PageHelper
         $pageCopy->setActiveFrom($page->getActiveFrom());
         $pageCopy->setIsHome($page->getIsHome());
         $pageCopy->setLocale($locale);
-        $pageCopy->setTemplate($page->getTemplate());
+        $pageCopy->setTemplateName($page->getTemplateName());
         $pageCopy->setOriginal($page);
 
         $layoutBlocks = $page->getLayoutBlock();
