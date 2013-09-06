@@ -68,12 +68,12 @@ class GalleryAdmin extends SonataGalleryAdmin
         }
 
         $formats = array();
-        foreach((array)$this->pool->getFormatNamesByContext($context) as $name => $options) {
+        foreach ((array)$this->pool->getFormatNamesByContext($context) as $name => $options) {
             $formats[$name] = $name;
         }
 
         $contexts = array();
-        foreach((array)$this->pool->getContexts() as $contextItem => $format) {
+        foreach ((array)$this->pool->getContexts() as $contextItem => $format) {
             $contexts[$contextItem] = $contextItem;
         }
 
@@ -83,18 +83,18 @@ class GalleryAdmin extends SonataGalleryAdmin
             ->add('name')
             ->add('defaultFormat', 'choice', array('choices' => $formats))
             ->add(
-            'galleryHasMedias',
-            'sonata_type_collection',
-            array(
-                'cascade_validation' => true,
-            ),
-            array(
-                'edit' => 'inline',
-                'inline' => 'table',
-                'sortable' => 'position',
-                'link_parameters' => array('context' => $context),
-            )
-        );
+                'galleryHasMedias',
+                'sonata_type_collection',
+                array(
+                    'cascade_validation' => true,
+                ),
+                array(
+                    'edit' => 'inline',
+                    'inline' => 'table',
+                    'sortable' => 'position',
+                    'link_parameters' => array('context' => $context),
+                )
+            );
     }
 
     protected function configureListFields(ListMapper $listMapper)
@@ -189,8 +189,8 @@ class GalleryAdmin extends SonataGalleryAdmin
 
         // ok, try to limit to add parent filter
         if ($this->isChild() && $this->getParentAssociationMapping() && !$mapper->has(
-            $this->getParentAssociationMapping()
-        )
+                $this->getParentAssociationMapping()
+            )
         ) {
             $mapper->add(
                 $this->getParentAssociationMapping(),
@@ -208,5 +208,13 @@ class GalleryAdmin extends SonataGalleryAdmin
         foreach ($this->getExtensions() as $extension) {
             $extension->configureDatagridFilters($mapper, $context);
         }
+    }
+
+    public function generateObjectUrl($name, $object, array $parameters = array(), $absolute = false)
+    {
+        $parameters['id'] = $this->getUrlsafeIdentifier($object);
+        $parameters['context'] = $object->getContext();
+
+        return $this->generateUrl($name, $parameters, $absolute);
     }
 }
