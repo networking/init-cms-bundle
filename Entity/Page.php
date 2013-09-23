@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Gedmo\Sluggable\Util\Urlizer;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Entity\ContentRoute;
@@ -97,7 +98,6 @@ class Page implements RouteAwareInterface, VersionableInterface
     /**
      * @var string $url
      * @Gedmo\TreePathSource
-     * @Gedmo\Slug(fields={"url"}, separator="-", updatable=true, unique=false)
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
      * @Assert\NotBlank(groups={"not_home"})
      */
@@ -1073,6 +1073,7 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     public function setUrl($url)
     {
+        $url = Urlizer::urlize($url);
         $this->url = $url;
     }
 
