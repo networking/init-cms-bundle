@@ -825,7 +825,6 @@ class PageAdminController extends CRUDController
 
             $pageSnapshot = $draftPage->getSnapshot();
             $contentRoute = $draftPage->getContentRoute();
-            $em->clear();
 
             /** @var $serializer Serializer */
             $serializer = $this->get('serializer');
@@ -849,7 +848,10 @@ class PageAdminController extends CRUDController
 
             $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
             $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
+            $contentRoute->setController($pageSnapshot->getContentRoute()->getController());
             $contentRoute->setPath($pageSnapshot->getContentRoute()->getPath());
+
+
             $em->merge($contentRoute);
 
             $publishedPage->setContentRoute($contentRoute);
