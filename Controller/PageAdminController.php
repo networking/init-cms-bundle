@@ -848,6 +848,7 @@ class PageAdminController extends CRUDController
             $publishedPage = $em->merge($publishedPage);
 
             $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
+            $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
             $contentRoute->setPath($pageSnapshot->getContentRoute()->getPath());
             $em->merge($contentRoute);
 
