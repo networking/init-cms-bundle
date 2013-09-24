@@ -35,7 +35,7 @@ file that was distributed with this source code.
 
 
                 {% if form.vars.errors|length > 0 %}
-                    <div class="sonata-ba-form-error">
+                    <div class="sonata-ba-form-error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
                         {{ form_errors(form) }}
                     </div>
                 {% endif %}

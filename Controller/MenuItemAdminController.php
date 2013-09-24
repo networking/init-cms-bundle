@@ -21,6 +21,8 @@ use Networking\InitCmsBundle\Entity\MenuItem,
     Symfony\Component\Security\Core\Exception\AccessDeniedException,
     Networking\InitCmsBundle\Entity\AdminSettings,
     Networking\InitCmsBundle\Controller\CRUDController;
+use Sonata\AdminBundle\Exception\ModelManagerException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -273,10 +275,10 @@ class MenuItemAdminController extends CRUDController
                 if ($this->isXmlHttpRequest()) {
                     return $this->renderJson(
                         array(
-                            'result' => 'error',
+                            'result' => 'ok',
                             'objectId' => $this->admin->getNormalizedIdentifier($object),
-                            'status' => 'success',
-                            'message' => $this->admin->trans('flash_delete_error')
+                            'status' => 'error',
+                            'message' => $this->admin->trans($e->getMessage())
                         )
                     );
                 } else {

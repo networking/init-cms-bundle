@@ -62,7 +62,7 @@ class MenuItem implements \IteratorAggregate
 
     /**
      * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Page", inversedBy="menuItem", cascade={"persist"})
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $page;
 
@@ -718,6 +718,11 @@ class MenuItem implements \IteratorAggregate
         }
 
         return $linkAttributes;
+    }
+
+    public function hasChildren()
+    {
+        return $this->children->count();
     }
 
 }
