@@ -74,8 +74,8 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         $this->securityContext = $securityContext;
 
         if ($this->securityContext->getToken() && ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $this->securityContext->isGranted(
-                'IS_AUTHENTICATED_REMEMBERED'
-            ))
+                    'IS_AUTHENTICATED_REMEMBERED'
+                ))
         ) {
             $this->isLoggedIn = true;
         }
@@ -125,47 +125,33 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     /**
      * Recursively get parents
      *
-     * @param $menu
-     * @param $childNode
-     * @param $startDepth starting depth of the first menu level
+     * @param $menu - menu to look for the parent in
+     * @param $childNode - menu node whose parent we are looking for
+     * @param $startDepth - starting depth of the first menu level
      * @return mixed
      */
-    public function getParentMenu($menu, $childNode, $startDepth)
+    public function getParentMenu(Menu $menu, MenuItem $childNode, $startDepth)
     {
-        $startDepth = $childNode->getLvl() - $startDepth;
-        if ($startDepth == 0) {
+        if (($childNode->getLvl() - $startDepth) == 0) {
             return $menu;
         }
 
         if ($menu->getName() ==
-            $childNode->getParent()->getName()
+            $childNode->getParent()->getId()
         ) {
             return $menu;
         }
 
-        $parentLevel = $childNode->getLvl() - $startDepth;
+        $parentId = $childNode->getParent()->getId();
+        $parentMenu = $menu->getChild($parentId);
 
-        $parentName = $childNode->getParentByLevel($parentLevel)->getName();
-        $parentMenu = $menu->getChild($parentName);
-
-        if(!$parentMenu){
-
-            $findParentDeep = function($menu) use (&$findParentDeep, $parentName){
-
-                foreach($menu->getChildren() as $subMenu){
-                    if($parentMenu = $subMenu->getChild($parentName)){
-                        return $parentMenu;
-                    } else {
-                         $findParentDeep($subMenu);
-                    }
-                }
-                return false;
-            };
-
-            $parentMenu = $findParentDeep($menu);
+        if (!$parentMenu) {
+            foreach ($menu->getChildren() as $subMenu) {
+                $parentMenu = $this->getParentMenu($subMenu, $childNode, $startDepth);
+            }
         }
 
-        return $this->getParentMenu($parentMenu, $childNode, $startDepth);
+        return $parentMenu;
     }
 
 
@@ -192,7 +178,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
 
         $parentLevel = $childNode->getLvl() - $depth;
 
-        $tmpMenu = $menu->getChild($childNode->getParentByLevel($parentLevel)->getName());
+        $tmpMenu = $menu->getChild($childNode->getParentByLevel($parentLevel)->getId());
         --$depth;
 
         return $this->getMenuParentItem($tmpMenu, $childNode, $depth);
@@ -230,7 +216,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             'displayChildren' => true,
 
         );
-        $item = $this->factory->createItem($menuItem->getName(), $options);
+        $item = $this->factory->createItem($menuItem->getId(), $options);
 
         if ($menuItem->isHidden()) {
             $item->setDisplay(false);
@@ -301,7 +287,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             'displayChildren' => true,
 
         );
-        $item = $this->factory->createItem($node->getName(), $options);
+        $item = $this->factory->createItem($node->getId(), $options);
 
         if ($node->isHidden()) {
             $item->setDisplay(false);
@@ -335,7 +321,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             array('name' => $menuName, 'locale' => $this->serviceContainer->get('request')->getLocale())
         );
 
-        if(!$mainMenu){
+        if (!$mainMenu) {
             return $menuIterator;
         }
 
@@ -414,7 +400,6 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function addNodeToMenu(Menu $menu, MenuItem $node, $startDepth)
     {
-
         if ($node->getVisibility() == MenuItem::VISIBILITY_PUBLIC || $this->isLoggedIn) {
             if ($node->getLvl() > $startDepth) {
                 $menu = $this->getParentMenu($menu, $node, $startDepth);
