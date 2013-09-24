@@ -21,6 +21,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
     Sonata\AdminBundle\Route\RouteCollection,
     Doctrine\ORM\EntityRepository,
     Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
+use Sonata\AdminBundle\Exception\ModelManagerException;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -295,4 +296,10 @@ class MenuItemAdmin extends BaseAdmin
         }
         return $translatedLinkTargets;
     }
+
+     public function preRemove($object){
+         if($object->hasChildren()){
+             throw new ModelManagerException('flash_delete_children_error');
+         }
+     }
 }

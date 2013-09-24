@@ -170,6 +170,10 @@
                 <source>flash_delete_success</source>
                 <target>Le point du menu a été supprimé avec succès</target>
             </trans-unit>
+            <trans-unit id="flash_delete_children_error">
+                <source>flash_delete_children_error</source>
+                <target>Le point du menu ne peut pas être supprimé. S'il vous plaît réorganiser les points de sous-menu d'abord.</target>
+            </trans-unit>
             <trans-unit id="menu.label">
                 <source>menu.label</source>
                 <target>Menus</target>

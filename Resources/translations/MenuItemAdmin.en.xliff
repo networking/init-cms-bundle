@@ -170,6 +170,10 @@
                 <source>flash_delete_success</source>
                 <target>Menu item successfully deleted</target>
             </trans-unit>
+            <trans-unit id="flash_delete_children_error">
+                <source>flash_delete_children_error</source>
+                <target>Menu item not deleted. Please reorganise the sub-menu items first.</target>
+            </trans-unit>
             <trans-unit id="menu.label">
                 <source>menu.label</source>
                 <target>Menus</target>

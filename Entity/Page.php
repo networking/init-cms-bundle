@@ -159,7 +159,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     protected $layoutBlock;
 
     /**
-     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\MenuItem", mappedBy="page", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\MenuItem", mappedBy="page")
      */
     protected $menuItem;
 

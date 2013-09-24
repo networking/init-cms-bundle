@@ -36,12 +36,14 @@ file that was distributed with this source code.
                         <i class="icon-caret-down"></i>
                     </button>
             <div class="row-actions">
+                {% if node.getChildren|length < 1 %}
                 <a href="{{ admin.generateUrl('delete', {id: node.id}) }}"
                    class="menu-dialog-link btn btn-small button-in-row"
                    data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
                    data-page_id="{{ node.id }}">
                     <i class="icon-trash"></i>
                 </a>
+                {% endif %}
                 <a href="{{ admin.generateUrl('edit', {id: node.id}) }}"
                    class="menu-dialog-link btn btn-small button-in-row"
                    data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
