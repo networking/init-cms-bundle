@@ -59,6 +59,11 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     protected $currentPath;
 
     /**
+     * @var string
+     */
+    protected $menuItemRepository = 'NetworkingInitCmsBundle:MenuItem';
+
+    /**
      * @param \Knp\Menu\FactoryInterface $factory
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      * @param \Symfony\Component\DependencyInjection\Container $serviceContainer
@@ -67,13 +72,14 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         FactoryInterface $factory,
         SecurityContextInterface $securityContext,
         Container $serviceContainer
-    )
-    {
+    ) {
 
         parent::__construct($factory);
         $this->securityContext = $securityContext;
 
-        if ($this->securityContext->getToken() && ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY') || $this->securityContext->isGranted(
+        if ($this->securityContext->getToken() && ($this->securityContext->isGranted(
+                    'IS_AUTHENTICATED_FULLY'
+                ) || $this->securityContext->isGranted(
                     'IS_AUTHENTICATED_REMEMBERED'
                 ))
         ) {
@@ -90,7 +96,8 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         /** @var Request $request */
         $request = $this->serviceContainer->get('request');
 
-        $this->currentPath = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo() . '/' : $request->getPathInfo();
+        $this->currentPath = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo(
+            ) . '/' : $request->getPathInfo();
         $this->currentUri = $request->getBaseUrl() . $this->currentPath;
     }
 
@@ -132,13 +139,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function getParentMenu(Menu $menu, MenuItem $childNode, $startDepth)
     {
-        if (($childNode->getLvl() - $startDepth) == 0) {
-            return $menu;
-        }
-
-        if ($menu->getName() ==
-            $childNode->getParent()->getId()
-        ) {
+        if ($menu->getName() == $childNode->getParent()->getId()) {
             return $menu;
         }
 
@@ -189,7 +190,6 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      * Create an new node using the ContentRoute object to generate the uri
      *
      * @param  \Networking\InitCmsBundle\Entity\MenuItem $menuItem
-     * @param bool $uri
      * @return \Knp\Menu\ItemInterface
      */
     public function createFromMenuItem(MenuItem $menuItem)
@@ -230,7 +230,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      *
      * @param  \Networking\InitCmsBundle\Entity\MenuItem $node
      * @return \Knp\Menu\ItemInterface
-     * @deprecated please use createMenuItem
+     * @deprecated please use createFromMenuItem
      */
     public function createFromNode(MenuItem $node)
     {
@@ -297,6 +297,8 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     }
 
     /**
+     * Get a service from the container
+     *
      * @param $id
      * @return object
      */
@@ -307,6 +309,8 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
 
 
     /**
+     * Retrieve the full menu tree
+     *
      * @param string $menuName
      * @return array|bool
      */
@@ -332,6 +336,8 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     }
 
     /**
+     * Retrieves the sub menu array based on the current url
+     *
      * @param string $menuName
      * @param int $level
      * @return array|bool
@@ -367,17 +373,34 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     }
 
     /**
+     * Get the repository for the menu items
+     *
      * @return \Networking\InitCmsBundle\Entity\MenuItemRepository
      */
     public function getMenuItemRepository()
     {
         $repository = $this->serviceContainer->get('doctrine')
-            ->getRepository('NetworkingInitCmsBundle:MenuItem');
+            ->getRepository($this->menuItemRepository);
 
         return $repository;
     }
 
     /**
+     * Set the menu item repository
+     *
+     * @param $repositoryName
+     * @return $this
+     */
+    public function setMenuItemRepository($repositoryName)
+    {
+        $this->menuItemRepository = $repositoryName;
+
+        return $this;
+    }
+
+    /**
+     * Creates a full menu based on the starting point given
+     *
      * @param Menu $menu
      * @param array $menuIterator
      * @param int $startDepth
@@ -393,28 +416,73 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     }
 
     /**
+     * Add a menu item node at the correct place in the menu
+     *
      * @param Menu $menu
-     * @param array $node
+     * @param MenuItem $node
      * @param $startDepth
-     * @return \Knp\Menu\ItemInterface|bool
+     * @return bool|\Knp\Menu\ItemInterface
      */
     public function addNodeToMenu(Menu $menu, MenuItem $node, $startDepth)
     {
-        if ($node->getVisibility() == MenuItem::VISIBILITY_PUBLIC || $this->isLoggedIn) {
-            if ($node->getLvl() > $startDepth) {
-                $menu = $this->getParentMenu($menu, $node, $startDepth);
-            }
-            if (is_object($menu)) {
-                $knpMenuNode = $this->createFromMenuItem($node);
-                if (!is_null($knpMenuNode)) {
-                    $menu->addChild($knpMenuNode);
-                    $knpMenuNode->setAttribute('class', $node->getLinkClass());
-                    return $knpMenuNode;
+        if ($node->getLvl() < $startDepth) {
+            return false;
+        }
+
+        if ($node->getLvl() > $startDepth) {
+            $menu = $this->getParentMenu($menu, $node, $startDepth);
+        }
+
+        if (is_object($menu)) {
+            $knpMenuNode = $this->createFromMenuItem($node);
+            if (!is_null($knpMenuNode)) {
+                $menu->addChild($knpMenuNode);
+                $knpMenuNode->setAttribute('class', $node->getLinkClass());
+                if (!$node->getVisibility() == MenuItem::VISIBILITY_PUBLIC && !$this->isLoggedIn) {
+                    $knpMenuNode->setDisplay(false);
                 }
+
+                return $knpMenuNode;
             }
         }
 
         return false;
 
+    }
+
+    /**
+     * Set the children menu item nodes to be shown only if the node
+     * is current or the parent is a current ancestor
+     *
+     * @param \Knp\Menu\MenuItem $menu
+     */
+    public function showOnlyCurrentChildren(\Knp\Menu\MenuItem $menu)
+    {
+        foreach ($menu->getChildren() as $subMenu) {
+            /** @var \Knp\Menu\MenuItem $subMenu */
+            if (!$subMenu->isCurrent() && !$subMenu->isCurrentAncestor()) {
+                $subMenu->setDisplayChildren(false);
+            }
+            if ($subMenu->hasChildren()) {
+                $this->showOnlyCurrentChildren($subMenu);
+            }
+        }
+    }
+
+    /**
+     * Recursively set attributes on all children of a given menu
+     *
+     * @param Menu $menu
+     * @param array $attr
+     */
+    public function setRecursiveChildrenAttribute(\Knp\Menu\MenuItem $menu, array $attr)
+    {
+        foreach ($menu->getChildren() as $subMenu) {
+            /** @var \Knp\Menu\MenuItem $subMenu */
+            $subMenu->setChildrenAttributes($attr);;
+            if ($subMenu->hasChildren()) {
+                $this->setRecursiveChildrenAttribute($subMenu, $attr);
+            }
+        }
     }
 }
