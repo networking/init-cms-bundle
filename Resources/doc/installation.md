@@ -13,27 +13,7 @@ or download and install the [networking init CMS sandbox][2]
 
 ### Use Composer to install dependencies
 
-
-Add the following to the end of you composer.json, before the
-last closing } (curly brace). This will tell composer where to find the twitter bootstrap repository.
-
-    ,
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "version": "master",
-                "name": "twitter/bootstrap",
-                "source": {
-                    "url": "https://github.com/twbs/bootstrap.git",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
-        }
-    ]
-
-Next run the composer require command:
+Run the composer require command:
 
 	php composer.phar require networking/init-cms-bundle
 
