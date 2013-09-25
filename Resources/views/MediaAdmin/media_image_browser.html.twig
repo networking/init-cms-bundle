@@ -25,7 +25,7 @@
     {% for key, images in media %}
         <div class="tab-pane  {% if loop.first %}active{% endif %}" id="tag_{{ key|replace(' ', '_') }}">
         {% for image in images %}
-            <img src="{{ image.thumb }}" class="img-polaroid" ref="{{ image.image }}">
+            {% thumbnail image.media, 'admin' with {'class':'img-polaroid', 'alt': image.title, 'ref':image.reference}  %}
         {% endfor %}
         </div>
     {% endfor %}

@@ -215,8 +215,8 @@ class MediaAdminController extends SonataMediaAdminController
                 if ($tags->count() > 0) {
                     foreach ($tags as $tag) {
                         $array[$tag->getName()][] = array(
-                            'thumb' => $provider->generatePublicUrl($image, 'admin'),
-                            'image' => $provider->generatePublicUrl($image, 'reference'),
+                            'reference' => $provider->generatePublicUrl($image, 'reference'),
+                            'media' => $image,
                             'title' => $image->getName(),
                             'folder' => $tag->getName(),
                         );
@@ -224,8 +224,8 @@ class MediaAdminController extends SonataMediaAdminController
 
                 } else {
                     $array['Default'][] = array(
-                        'thumb' => $provider->generatePublicUrl($image, 'admin'),
-                        'image' => $provider->generatePublicUrl($image, 'reference'),
+                        'reference' => $provider->generatePublicUrl($image, 'reference'),
+                        'media' => $image,
                         'title' => $image->getName(),
                         'folder' => 'default',
                     );
