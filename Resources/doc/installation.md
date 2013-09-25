@@ -18,16 +18,16 @@ Add the following to the end of you composer.json, before the
 last closing } (curly brace). This will tell composer where to find the twitter bootstrap repository.
 
     ,
-    "repositories":[
+    "repositories": [
         {
-            "type":"package",
-            "package":{
-                "version":"master",
-                "name":"twitter/bootstrap",
-                "source":{
-                    "url":"https://github.com/twitter/bootstrap.git",
-                    "type":"git",
-                    "reference":"master"
+            "type": "package",
+            "package": {
+                "version": "master",
+                "name": "twitter/bootstrap",
+                "source": {
+                    "url": "https://github.com/twbs/bootstrap.git",
+                    "type": "git",
+                    "reference": "master"
                 }
             }
         }
