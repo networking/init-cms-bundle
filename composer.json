@@ -24,7 +24,7 @@
         "sonata-project/exporter": "1.2.3",
         "stof/doctrine-extensions-bundle":"dev-master",
         "mopa/bootstrap-bundle":"2.1.*",
-        "twitter/bootstrap":"master",
+        "twitter/bootstrap": "dev-master",
         "knplabs/knp-paginator-bundle":"dev-master",
         "knplabs/knp-menu-bundle":"1.1.*",
         "symfony-cmf/routing-extra-bundle":"dev-master",
@@ -37,19 +37,5 @@
         }
     },
     "target-dir":"Networking/InitCmsBundle",
-    "repositories":[
-        {
-            "type":"package",
-            "package":{
-                "version":"master",
-                "name":"twitter/bootstrap",
-                "source":{
-                    "url":"https://github.com/twbs/bootstrap.git",
-                    "type":"git",
-                    "reference":"master"
-                }
-            }
-        }
-    ],
     "minimum-stability":"dev"
 }
