@@ -33,7 +33,6 @@
         "mopa/bootstrap-bundle": "2.3.*@dev",
         "twbs/bootstrap": "v2.3.2",
         "knplabs/knp-paginator-bundle":"dev-master",
-        "knplabs/knp-menu-bundle": "2.0.*",
         "symfony-cmf/routing-bundle":"dev-master",
         "jms/serializer-bundle":"master",
         "ibrows/sonata-admin-annotation-bundle":"1.1.*",
