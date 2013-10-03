@@ -15,7 +15,7 @@ use Sonata\BlockBundle\Block\BaseBlockService,
     Sonata\AdminBundle\Validator\ErrorElement,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-
+use Sonata\BlockBundle\Block\BlockContextInterface;
 class PagesBlockService extends BaseBlockService
 {
     /**
@@ -40,7 +40,7 @@ class PagesBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function execute(BlockInterface $block, Response $response = null)
+    public function execute(BlockContextInterface $block, Response $response = null)
     {
         $settings = array_merge($this->getDefaultSettings(), $block->getSettings());
 

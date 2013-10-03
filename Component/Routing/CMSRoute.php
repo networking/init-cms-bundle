@@ -19,5 +19,7 @@ use Networking\InitCmsBundle\Component\Routing\AbstractRoute;
  */
 class CMSRoute extends AbstractRoute
 {
+       public function getContent(){
 
+       }
 }

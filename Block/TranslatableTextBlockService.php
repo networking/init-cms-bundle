@@ -14,6 +14,7 @@ use Sonata\BlockBundle\Block\BaseBlockService,
     Sonata\AdminBundle\Form\FormMapper,
     Sonata\AdminBundle\Validator\ErrorElement,
     Symfony\Component\HttpFoundation\Response;
+use Sonata\BlockBundle\Block\BlockContextInterface;
 
 class TranslatableTextBlockService extends BaseBlockService
 {
@@ -21,7 +22,7 @@ class TranslatableTextBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function execute(BlockInterface $block, Response $response = null)
+    public function execute(BlockContextInterface $block, Response $response = null)
     {
         $settings = array_merge($this->getDefaultSettings(), $block->getSettings());
 

@@ -194,15 +194,25 @@ services:
         calls:
           - [ setFinalMatcher, [ @networking_init_cms.final_matcher] ]
 
+    networking_init_cms.matcher.dummy_collection:
+        class: "Symfony\Component\Routing\RouteCollection"
+
+    networking_init_cms.matcher.dummy_context:
+        class: "Symfony\Component\Routing\RequestContext"
+
+#           <service id="cmf_routing.matcher.dummy_collection" class="Symfony\Component\Routing\RouteCollection" public="false"/>
+#
+#                  <service id="cmf_routing.matcher.dummy_context" class="Symfony\Component\Routing\RequestContext" public="false"/>
+
     networking_init_cms.final_matcher:
-        class: Symfony\Cmf\Component\Routing\NestedMatcher\ConfigurableUrlMatcher
-        arguments: [Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher]
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher
+        arguments: [@networking_init_cms.matcher.dummy_collection, @networking_init_cms.matcher.dummy_context]
 
     networking_init_cms.generator:
-        class: Symfony\Cmf\Bundle\RoutingExtraBundle\Routing\ContentAwareGenerator
+        class: Symfony\Cmf\Component\Routing\ContentAwareGenerator
         arguments: [@networking_init_cms.content_route_repository, @logger]
         calls:
-          - [ setContainer, [ @service_container] ]
+#          - [ setContainer, [ @service_container] ]
           - [ setContentRepository, [@networking_init_cms.page_repository] ]
 
 #    networking_init_cms.cms_router:

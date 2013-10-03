@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Component\Routing\AbstractRoute;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Cmf\Component\Routing\RouteAwareInterface;
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 
 /**
  * Networking\InitCmsBundle\Entity\ContentRoute
@@ -108,13 +108,13 @@ class ContentRoute extends AbstractRoute
 
     /**
      * Initializes the object to function as a route
-     * @param \Symfony\Cmf\Component\Routing\RouteAwareInterface $content
+     * @param RouteReferrersReadInterface $content
      * @return ContentRoute
      */
-    public function initializeRoute(RouteAwareInterface $content)
+    public function initializeRoute(RouteReferrersReadInterface $content)
     {
         $this->content = $content;
-        $this->setPattern($this->getPath());
+        $this->setPath($this->getPath());
         $this->setOptions(array('compiler_class' => 'Symfony\\Component\\Routing\\RouteCompiler'));
 
         if (method_exists($content, 'getLocale')) {
@@ -287,5 +287,10 @@ class ContentRoute extends AbstractRoute
             self::TEMPLATE_NAME => $template,
             self::CONTENT_OBJECT => $this->content
         );
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 }

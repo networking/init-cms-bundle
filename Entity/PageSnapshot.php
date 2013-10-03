@@ -10,7 +10,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
-    Symfony\Cmf\Component\Routing\RouteAwareInterface,
+    Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
     Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface,
     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\Table(name="page_snapshot")
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\PageSnapshotRepository")
  */
-class PageSnapshot implements RouteAwareInterface, ResourceVersionInterface
+class PageSnapshot implements RouteReferrersReadInterface, ResourceVersionInterface
 {
 
     /**

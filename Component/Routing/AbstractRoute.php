@@ -36,7 +36,7 @@ abstract class AbstractRoute extends SymfonyRoute implements RouteObjectInterfac
     {
         $this->content = $content;
 
-        $this->setPattern($pattern);
+        $this->setPath($pattern);
         $this->setRequirements($requirements);
         $this->setDefaults($defaults);
         $this->setOptions($options);
@@ -63,6 +63,6 @@ abstract class AbstractRoute extends SymfonyRoute implements RouteObjectInterfac
      */
     public function getRouteKey()
     {
-        return $this->getPattern();
+        return $this->getPath();
     }
 }

@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use Symfony\Cmf\Component\Routing\RouteAwareInterface;
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 
 /**
  * Networking\InitCmsBundle\Entity\Page
@@ -41,7 +41,7 @@ use Symfony\Cmf\Component\Routing\RouteAwareInterface;
  *
  * @author net working AG <info@networking.ch>
  */
-class Page implements RouteAwareInterface, VersionableInterface
+class Page implements RouteReferrersReadInterface, VersionableInterface
 {
 
     /**
