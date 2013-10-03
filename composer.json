@@ -26,7 +26,7 @@
         "twbs/bootstrap": "v3.0.0",
         "knplabs/knp-paginator-bundle":"dev-master",
         "knplabs/knp-menu-bundle":"1.1.*",
-        "symfony-cmf/routing-extra-bundle":"dev-master",
+        "symfony-cmf/routing-bundle":"dev-master",
         "jms/serializer-bundle":"master",
         "ibrows/sonata-admin-annotation-bundle":"1.1.*",
         "ibrows/sonata-translation-bundle" : "dev-master"
