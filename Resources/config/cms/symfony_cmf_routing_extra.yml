@@ -1,4 +1,4 @@
-symfony_cmf_routing_extra:
+cmf_routing:
     chain:
          routers_by_id:
              # enable the symfony default router with a lower priority
