@@ -30,7 +30,7 @@
         "sonata-project/formatter-bundle": "~2.3",
         "sonata-project/news-bundle": "~2.3",
         "stof/doctrine-extensions-bundle":"dev-master",
-        "mopa/bootstrap-bundle": "dev-v2.3.x",
+        "mopa/bootstrap-bundle": "2.3.*@dev",
         "twbs/bootstrap": "v2.3.2",
         "knplabs/knp-paginator-bundle":"dev-master",
         "knplabs/knp-menu-bundle": "2.0.*",
