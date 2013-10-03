@@ -11,4 +11,4 @@ networking_init_cms:
         big:
           items: [pages, menu, media]
         small:
-          items: [users, help_text]
+          items: [users, help_text, translation]

@@ -41,6 +41,9 @@ sonata_admin:
             pages:
                 label: "pages.label"
                 items: [networking_init_cms.page.admin.page]
+            translation:
+                label: "translation.label"
+                items: [ibrows_sonata_translation.admin.orm]
             menu:
                 label: "menu.label"
                 items: [ networking_init_cms.menu.admin.menu_item]
