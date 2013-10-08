@@ -9,12 +9,11 @@
  */
 namespace Networking\InitCmsBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs,
+use Doctrine\ORM\EntityNotFoundException,
+    Doctrine\ORM\Event\LifecycleEventArgs,
     JMS\Serializer\Serializer,
     Networking\InitCmsBundle\Entity\Page,
     Networking\InitCmsBundle\Entity\LayoutBlock;
-use Networking\InitCmsBundle\Entity\Gallery;
-use Networking\InitCmsBundle\Entity\GalleryView;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -44,21 +43,25 @@ class LayoutBlockListener
         if ($layoutBlock instanceof LayoutBlock) {
             if ($contentObject = $layoutBlock->getSnapshotContent()) {
                 $contentObject = $this->serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
+                $em = $args->getEntityManager();
 
-                if ($contentObject instanceof \Networking\InitCmsBundle\Entity\GalleryView) {
-                    $er = $args->getEntityManager()->getRepository('Networking\InitCmsBundle\Entity\GalleryView');
-                    $gallery = $er->find($contentObject->getMediaGallery()->getId());
-                    $contentObject->setMediaGallery($gallery);
+                try {
+                    $em->persist($contentObject);
+                    $contentObject = $em->merge($contentObject);
+                } catch (EntityNotFoundException $e) {
+                    $em->detach($contentObject);
+                    $classType = $layoutBlock->getClassType();
+                    $contentObject = new $classType;
+                    $em->persist($contentObject);
                 }
 
-                $em = $args->getEntityManager();
-                $contentObject->setLayoutBlock($layoutBlock);
-                $em->persist($contentObject);
                 $em->flush();
 
                 $layoutBlock->setObjectId($contentObject->getId());
+
                 $em->persist($layoutBlock);
                 $em->flush();
+
             } else {
                 $this->autoPageDraft($args);
             }
@@ -86,23 +89,31 @@ class LayoutBlockListener
     public function preRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-
+        $em = $args->getEntityManager();
         if ($entity instanceof LayoutBlock) {
-            if (!$entity->getSnapshotContent() && !$entity->getIsSnapshot()) {
+
+            $classType = $entity->getClassType();
+            $repo = $em->getRepository($classType);
+            $object = $repo->find($entity->getObjectId());
+            if ($object) {
+                $em->remove($object);
+            }
+
+            if (!$entity->getSnapshotContent() && !$entity->getSetNoAutoDraft()) {
                 $this->autoPageDraft($args);
             }
         }
 
-        if ($entity instanceof Gallery) {
-            $em = $args->getEntityManager();
-            $repo = $em->getRepository('NetworkingInitCmsBundle:GalleryView');
-            $galleryViews = $repo->findBy(array('mediaGallery' => $entity->getId()));
-
-            foreach ($galleryViews as $galleryView) {
-                $layoutBlock = $galleryView->getLayoutBlock();
-                $em->remove($layoutBlock);
-            }
-        }
+//        if ($entity instanceof Gallery) {
+//
+//            $repo = $em->getRepository('NetworkingInitCmsBundle:GalleryView');
+//            $galleryViews = $repo->findBy(array('mediaGallery' => $entity->getId()));
+//
+//            foreach ($galleryViews as $galleryView) {
+//                $layoutBlock = $galleryView->getLayoutBlock();
+//                $em->remove($layoutBlock);
+//            }
+//        }
     }
 
     /**

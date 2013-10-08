@@ -11,7 +11,6 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
-    Networking\InitCmsBundle\Entity\LayoutBlock,
     Networking\InitCmsBundle\Entity\ContentInterface,
     Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 
@@ -35,14 +34,6 @@ abstract class BaseText implements ContentInterface
      */
     protected $id;
 
-    /**
-     * @var integer $layoutBlock
-     *
-     * @ORM\OneToOne(targetEntity="Networking\InitCmsBundle\Entity\LayoutBlock", cascade={"persist"})
-     * @ORM\JoinColumn(name="layout_block_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $layoutBlock;
-
 
     /**
      * @var string $content
@@ -63,9 +54,11 @@ abstract class BaseText implements ContentInterface
      */
     protected $updatedAt;
 
+    /**
+     *
+     */
     public function __clone(){
         $this->id = null;
-        $this->layoutBlock = null;
     }
 
     /**
@@ -97,29 +90,10 @@ abstract class BaseText implements ContentInterface
     }
 
     /**
-     * @param  LayoutBlock $layoutBlock
-     * @return Text
-     */
-    public function setLayoutBlock(LayoutBlock $layoutBlock)
-    {
-        $this->layoutBlock = $layoutBlock;
-
-        return $this;
-    }
-
-    /**
-     * @return ContentRoute
-     */
-    public function getLayoutBlock()
-    {
-        return $this->layoutBlock;
-    }
-
-    /**
      * Set content
      *
      * @param  text $text
-     * @return Text
+     * @return $this
      */
     public function setText($text)
     {
@@ -141,7 +115,7 @@ abstract class BaseText implements ContentInterface
     /**
      * Set createdAt
      *
-     * @return LayoutBlock
+     * @return $this
      */
     public function setCreatedAt()
     {
@@ -164,7 +138,7 @@ abstract class BaseText implements ContentInterface
      * Set updatedAt
      *
      * @param  \DateTime   $updatedAt
-     * @return LayoutBlock
+     * @return $this
      */
     public function setUpdatedAt($updatedAt)
     {

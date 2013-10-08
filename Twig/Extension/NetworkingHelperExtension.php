@@ -190,7 +190,7 @@ class NetworkingHelperExtension extends \Twig_Extension
             $em = $this->getDoctrine()->getManager();
             $em->remove($layoutBlock);
             $em->flush();
-            return $this->getService('translator')->trans('pages.content_not_found', array(), 'PageAdmin');
+            return false;
         }
 
         $adminContent = $contentItem->getAdminContent();

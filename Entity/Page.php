@@ -263,7 +263,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     {
         $this->createdAt = $this->updatedAt = new \DateTime("now");
 
-        if(!$this->metaTitle){
+        if (!$this->metaTitle) {
             $this->setMetaTitle($this->pageName);
         }
     }
@@ -705,15 +705,15 @@ class Page implements RouteAwareInterface, VersionableInterface
     }
 
     /**
-     * Remove all layout blocks from page object (and DB)
-     * reset the layout blocks with new ones or from a published page
+     * Remove all layout blocks and replace with those in the
+     * serialized page snapshot
      *
-     * @param $publishedBlocks
+     * @param ArrayCollection $publishedBlocks
      */
     public function resetLayoutBlock($publishedBlocks)
     {
         foreach ($this->layoutBlock as $block) {
-            $block->setIsSnapshot(true);
+            $block->setNoAutoDraft(true);
             $this->layoutBlock->removeElement($block);
         }
 
@@ -834,7 +834,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     /**
      * Add tags
      *
-     * @param \Networking\InitCmsBundle\Entity\Tag  $tag
+     * @param \Networking\InitCmsBundle\Entity\Tag $tag
      * @return Page
      */
     public function addTags(Tag $tag)
@@ -1113,7 +1113,7 @@ class Page implements RouteAwareInterface, VersionableInterface
     {
         if (gettype($snapshots) == "array") {
             $snapshots = new ArrayCollection($snapshots);
-        } elseif(! $snapshots instanceof ArrayCollection){
+        } elseif (!$snapshots instanceof ArrayCollection) {
             $snapshots = new ArrayCollection(array($snapshots));
         }
 
@@ -1296,7 +1296,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     public function hasPublishedVersion()
     {
-        if($this->getSnapshots()->count() > 0){
+        if ($this->getSnapshots()->count() > 0) {
             return true;
         }
 
@@ -1431,7 +1431,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     public function getStatusLabel()
     {
-        if($this->isPublished()){
+        if ($this->isPublished()) {
             return self::STATUS_PUBLISHED;
         }
         return self::STATUS_DRAFT;
