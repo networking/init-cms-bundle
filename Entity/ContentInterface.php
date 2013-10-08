@@ -12,10 +12,16 @@ namespace Networking\InitCmsBundle\Entity;
 
 /**
  * @author net working AG <info@networking.ch>
+ *
+ * Class ContentInterface
+ * @package Networking\InitCmsBundle\Entity
  */
 interface ContentInterface
 {
 
+    /**
+     * @return mixed
+     */
     public function __clone();
 
     /**

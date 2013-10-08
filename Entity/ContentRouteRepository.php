@@ -36,7 +36,7 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
     protected $className;
 
     /**
-     * @var Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
     protected $container;
 
