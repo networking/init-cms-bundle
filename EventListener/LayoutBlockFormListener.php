@@ -155,7 +155,6 @@ class LayoutBlockFormListener implements EventSubscriberInterface
             $contentObject = $objectRepository->find($layoutBlock->getObjectId());
         } else {
             $contentObject = new $className();
-            $contentObject->setLayoutBlock($layoutBlock);
         }
 
         if (!$contentObject instanceof ContentInterface) {
