@@ -101,6 +101,9 @@ class ContentRoute extends AbstractRoute
         $this->menuItem = new ArrayCollection();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->path;
@@ -109,7 +112,7 @@ class ContentRoute extends AbstractRoute
     /**
      * Initializes the object to function as a route
      * @param \Symfony\Cmf\Component\Routing\RouteAwareInterface $content
-     * @return ContentRoute
+     * @return $this
      */
     public function initializeRoute(RouteAwareInterface $content)
     {
@@ -126,7 +129,7 @@ class ContentRoute extends AbstractRoute
 
     /**
      * @param  string       $controller
-     * @return ContentRoute
+     * @return $this
      */
     public function setController($controller)
     {
@@ -145,7 +148,7 @@ class ContentRoute extends AbstractRoute
 
     /**
      * @param  int          $id
-     * @return ContentRoute
+     * @return $this
      */
     public function setId($id)
     {
@@ -164,7 +167,7 @@ class ContentRoute extends AbstractRoute
 
     /**
      * @param  string       $locale
-     * @return ContentRoute
+     * @return $this
      */
     public function setLocale($locale)
     {
@@ -183,7 +186,7 @@ class ContentRoute extends AbstractRoute
 
     /**
      * @param  string       $classType
-     * @return ContentRoute
+     * @return $this
      */
     public function setClassType($classType)
     {
@@ -202,7 +205,7 @@ class ContentRoute extends AbstractRoute
 
     /**
      * @param  int          $objectId
-     * @return ContentRoute
+     * @return $this
      */
     public function setObjectId($objectId)
     {
@@ -221,7 +224,7 @@ class ContentRoute extends AbstractRoute
 
     /**
      * @param $path
-     * @return ContentRoute
+     * @return $this
      */
     public function setPath($path)
     {
@@ -240,7 +243,7 @@ class ContentRoute extends AbstractRoute
 
     /**
      * @param  string       $template
-     * @return ContentRoute
+     * @return $this
      */
     public function setTemplate($template)
     {

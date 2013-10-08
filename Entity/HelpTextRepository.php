@@ -20,6 +20,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class HelpTextRepository extends EntityRepository
 {
+    /**
+     * @param $translationKey
+     * @param $locale
+     * @return object
+     */
     public function getHelpTextByKeyLocale($translationKey, $locale )
     {
         $helpText = $this->findOneBy(array('translationKey' => $translationKey, 'locale' => $locale));
@@ -30,6 +35,11 @@ class HelpTextRepository extends EntityRepository
         return $helpText;
     }
 
+    /**
+     * @param $translationKey
+     * @param $locale
+     * @return array
+     */
     public function searchHelpTextByKeyLocale($translationKey, $locale )
     {
         $qb = $this->createQueryBuilder('h');
