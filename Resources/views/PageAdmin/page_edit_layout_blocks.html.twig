@@ -50,6 +50,8 @@ file that was distributed with this source code.
 
                     {# loop through layout blocks #}
                     {% for nested_group_field_name, nested_group_field in get_sub_form_by_zone(form.children, zone.name) %}
+                        {% if render_initcms_admin_block(nested_group_field.vars.value) %}
+                            {% set layoutBlockContent = render_initcms_admin_block(nested_group_field.vars.value) %}
                     <li class="networking-sortable-list networking-sort-zone" id="layoutBlock_{{ nested_group_field.vars.value.id }}" data-content-type="{{ nested_group_field.vars.value.classType }}">
                         {# preview of layout block of content #}
                         <div class="content_preview"  >
@@ -59,7 +61,7 @@ file that was distributed with this source code.
                                 <i class="icon-pencil soft-background" data-target="#expandableForm{{ increment }}" data-toggle="modal" ></i>
                             </div>
                             <div data-target="#expandableForm{{ increment }}" data-toggle="modal">
-                                {{ render_initcms_admin_block(nested_group_field.vars.value) }}
+                                {{ layoutBlockContent|raw }}
                             </div>
                         </div>
 
@@ -135,6 +137,7 @@ file that was distributed with this source code.
                             </a>
                         </div>
                     </li>
+                    {% endif %}
                     {% endfor %}
 
                 </ul>

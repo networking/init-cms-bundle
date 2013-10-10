@@ -27,17 +27,9 @@ class GalleryView implements ContentInterface
     protected $id;
 
     /**
-     * @var integer $layoutBlock
-     *
-     * @ORM\OneToOne(targetEntity="Networking\InitCmsBundle\Entity\LayoutBlock", cascade={"persist"})
-     * @ORM\JoinColumn(name="layout_block_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $layoutBlock;
-
-    /**
      * @var MediaGallery $mediaGallery
      *
-     * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Gallery")
+     * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Gallery", cascade={"merge"})
      * @ORM\JoinColumn( name="media_gallery_id", onDelete="CASCADE" )
      *
      * @Sonata\FormMapper(name="mediaGallery", type="entity", options={"label" = "form.label_gallery","data_class"=null, "property_path" = false, "class"="Networking\InitCmsBundle\Entity\Gallery"})
@@ -72,7 +64,6 @@ class GalleryView implements ContentInterface
     public function __clone()
     {
         $this->id = null;
-        $this->layoutBlock = null;
     }
 
     /**
@@ -105,7 +96,7 @@ class GalleryView implements ContentInterface
 
     /**
      * @param  \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
-     * @return Gallery
+     * @return $this
      */
     public function setMediaGallery($mediaGallery)
     {
@@ -123,29 +114,9 @@ class GalleryView implements ContentInterface
     }
 
     /**
-     * @param  LayoutBlock $layoutBlock
-     * @return Gallery
-     */
-    public function setLayoutBlock(LayoutBlock $layoutBlock)
-    {
-        $this->layoutBlock = $layoutBlock;
-
-        return $this;
-    }
-
-    /**
-     * @return LayoutBlock
-     */
-    public function getLayoutBlock()
-    {
-        return $this->layoutBlock;
-    }
-
-    /**
      * Set createdAt
      *
-     * @param  \DateTime $createdAt
-     * @return Gallery
+     * @return $this
      */
     public function setCreatedAt()
     {
@@ -168,7 +139,7 @@ class GalleryView implements ContentInterface
      * Set updatedAt
      *
      * @param  \DateTime   $updatedAt
-     * @return LayoutBlock
+     * @return $this
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -189,7 +160,7 @@ class GalleryView implements ContentInterface
 
     /**
      * @param $galleryType
-     * @return GalleryView
+     * @return $this
      * @throws \InvalidArgumentException
      */
     public function setGalleryType($galleryType)
@@ -228,8 +199,6 @@ class GalleryView implements ContentInterface
      */
     public function getAdminContent()
     {
-        $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryHasMedias() : array();
-
         return array(
             'content' => array('galleryView' => $this),
             'template' => 'NetworkingInitCmsBundle:GalleryAdmin:gallery_view_block.html.twig'

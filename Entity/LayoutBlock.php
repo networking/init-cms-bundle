@@ -140,7 +140,7 @@ class LayoutBlock implements ContentInterface
      */
     public function __toString()
     {
-        return $this->name;
+        return $this->getContentTypeName();
     }
 
     /**
@@ -173,8 +173,8 @@ class LayoutBlock implements ContentInterface
     /**
      * Set name
      *
-     * @param  string  $name
-     * @return LayoutBlock
+     * @param  string $name
+     * @return $this
      */
     public function setName($name)
     {
@@ -197,7 +197,7 @@ class LayoutBlock implements ContentInterface
      * Set zone
      *
      * @param  string $zone
-     * @return LayoutBlock
+     * @return $this
      */
     public function setZone($zone)
     {
@@ -220,7 +220,7 @@ class LayoutBlock implements ContentInterface
      * Set page
      *
      * @param  Page $page
-     * @return LayoutBlock
+     * @return $this
      */
     public function setPage(Page $page)
     {
@@ -250,8 +250,8 @@ class LayoutBlock implements ContentInterface
     }
 
     /**
-     * @param  string      $classType
-     * @return LayoutBlock
+     * @param  string $classType
+     * @return $this
      */
     public function setClassType($classType)
     {
@@ -280,8 +280,8 @@ class LayoutBlock implements ContentInterface
     }
 
     /**
-     * @param  int         $objectId
-     * @return LayoutBlock
+     * @param  int $objectId
+     * @return $this
      */
     public function setObjectId($objectId)
     {
@@ -301,8 +301,8 @@ class LayoutBlock implements ContentInterface
     /**
      * Set isActive
      *
-     * @param  boolean     $active
-     * @return LayoutBlock
+     * @param  boolean $active
+     * @return $this
      */
     public function setIsActive($active)
     {
@@ -335,7 +335,7 @@ class LayoutBlock implements ContentInterface
     /**
      * Set createdAt
      *
-     * @return LayoutBlock
+     * @return $this
      */
     public function setCreatedAt()
     {
@@ -357,8 +357,8 @@ class LayoutBlock implements ContentInterface
     /**
      * Set updatedAt
      *
-     * @param  \DateTime   $updatedAt
-     * @return LayoutBlock
+     * @param  \DateTime $updatedAt
+     * @return $this
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -379,7 +379,7 @@ class LayoutBlock implements ContentInterface
 
     /**
      * @param  int $sortOrder
-     * @return LayoutBlock
+     * @return $this
      */
     public function setSortOrder($sortOrder)
     {
@@ -406,8 +406,8 @@ class LayoutBlock implements ContentInterface
 
     /**
      * @param $content
-     * @param  null $key
-     * @return LayoutBlock
+     * @param $key
+     * @return $this
      */
     public function setContent($content, $key = null)
     {
@@ -437,9 +437,28 @@ class LayoutBlock implements ContentInterface
     }
 
     /**
+     * @param boolean $isSnapshot
+     * @return \Networking\InitCmsBundle\Entity\LayoutBlock
+     */
+    public function setNoAutoDraft($isSnapshot)
+    {
+        $this->isSnapshot = $isSnapshot;
+
+        return $this;
+    }
+
+    /**
      * @return boolean
      */
     public function getIsSnapshot()
+    {
+        return $this->isSnapshot;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getSetNoAutoDraft()
     {
         return $this->isSnapshot;
     }
@@ -474,7 +493,7 @@ class LayoutBlock implements ContentInterface
     public function takeSnapshot($snapshotContent)
     {
 
-        $this->isSnapshot = true;
+        $this->setNoAutoDraft = true;
         $this->setSnapshotContent($snapshotContent);
     }
 
@@ -509,5 +528,14 @@ class LayoutBlock implements ContentInterface
     public function getContentTypeName()
     {
         return 'Layout Content Block';
+    }
+
+    public function import(LayoutBlock $object)
+    {
+        foreach (get_object_vars($object) as $key => $value) {
+            if($key != 'id'){
+                $this->$key = $value;
+            }
+        }
     }
 }

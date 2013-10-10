@@ -57,16 +57,12 @@ class HelpText
      */
     protected $title;
 
-
-
-
     /**
      * @var string $isDeletable
      *
      * @ORM\Column(name="is_deletable", type="boolean")
      */
     protected $isDeletable = true;
-
 
     /**
      * @return string
@@ -75,7 +71,6 @@ class HelpText
     {
         return $this->title;
     }
-
 
     /**
      * Get id
@@ -91,7 +86,7 @@ class HelpText
      * Set locale
      *
      * @param string $locale
-     * @return HelpText
+     * @return $this
      */
     public function setLocale($locale)
     {
@@ -114,7 +109,7 @@ class HelpText
      * Set translationKey
      *
      * @param string $translationKey
-     * @return HelpText
+     * @return $this
      */
     public function setTranslationKey($translationKey)
     {
@@ -137,7 +132,7 @@ class HelpText
      * Set text
      *
      * @param string $text
-     * @return HelpText
+     * @return $this
      */
     public function setText($text)
     {
@@ -160,7 +155,7 @@ class HelpText
      * Set translationDomain
      *
      * @param string $translationDomain
-     * @return HelpText
+     * @return $this
      */
     public function setTitle($translationDomain)
     {
@@ -184,7 +179,7 @@ class HelpText
      * Set isDeletable
      *
      * @param string $isDeletable
-     * @return HelpText
+     * @return $this
      */
     public function setIsDeletable($isDeletable)
     {

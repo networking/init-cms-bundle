@@ -11,26 +11,46 @@ namespace Networking\InitCmsBundle\Entity;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ *
+ * Class AdminSettings
+ * @package Networking\InitCmsBundle\Entity
  */
 class AdminSettings
 {
+    /**
+     * @var array
+     */
     protected $settings = array();
 
+    /**
+     * @param $settings
+     */
     public function setSettings($settings)
     {
         $this->settings = $settings;
     }
 
+    /**
+     * @return array
+     */
     public function getSettings()
     {
         return $this->settings;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     */
     public function setSetting($key, $value)
     {
         $this->settings[$key] = $value;
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
     public function getSetting($key)
     {
         if (array_key_exists($key, $this->settings)) {
