@@ -9,7 +9,8 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
-use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController,
+use Sonata\AdminBundle\Exception\ModelManagerException,
+    Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\JsonResponse,
@@ -17,7 +18,9 @@ use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminContro
     Sonata\MediaBundle\Admin\ORM\MediaAdmin,
     Sonata\MediaBundle\Provider\MediaProviderInterface,
     Symfony\Component\HttpFoundation\File\UploadedFile,
-    Symfony\Component\HttpFoundation\RedirectResponse;
+    Symfony\Component\HttpFoundation\RedirectResponse,
+    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
+    Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -39,65 +42,15 @@ class MediaAdminController extends SonataMediaAdminController
 
         $file = $request->files->get('file');
 
-        if ($file instanceof UploadedFile && $file->isValid()) {
+        $result = $this->handelMediaUpload($file, $providerName);
+        $status = $result['status'];
+        $params = array(
+            'filelink' => $result['url'],
+            'error' => $result['message']
+        );
 
 
-            try {
-                /** @var $mediaManager \Sonata\MediaBundle\Admin\Manager\DoctrineORMManager */
-                $mediaManager = $this->get('sonata.media.manager.media');
-
-                /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
-                $mediaAdmin = $this->get('sonata.media.admin.media');
-
-                /** @var $provider \Sonata\MediaBundle\Provider\MediaProviderInterface */
-                $provider = $this->get($providerName);
-
-                $context = $mediaAdmin->getPool()->getDefaultContext();
-
-                $mediaClass = $mediaAdmin->getClass();
-
-                /** @var $media \Sonata\MediaBundle\Model\MediaInterface */
-                $media = new $mediaClass();
-
-                $media->setProviderName($provider->getName());
-
-                $media->setContext($context);
-
-                $media->setEnabled(true);
-
-                $media->setName($file->getClientOriginalName());
-
-
-                $media->setBinaryContent($file);
-                $mediaManager->save($media);
-
-
-                $path = $provider->generatePublicUrl($media, 'reference');
-
-
-                $array = array(
-                    'filelink' => $path
-                );
-
-                $status = 200;
-            } catch (\Exception $e) {
-                $array = array('error' => $e->getMessage());
-                $status = 500;
-            }
-        } elseif ($file instanceof UploadedFile && !$file->isValid()) {
-            $array = array('error' => $file->getError());
-            $status = 500;
-        } else {
-            $array = array(
-                'error' => $this->admin->trans(
-                    'error.file_upload_size',
-                    array('%max_server_size%' => ini_get('upload_max_filesize'))
-                )
-            );
-            $status = 500;
-        }
-
-        return new JsonResponse($array, $status);
+        return new JsonResponse($params, $status);
     }
 
     public function ckeditorUploadAction(Request $request, $providerName = 'sonata.media.provider.image')
@@ -106,9 +59,22 @@ class MediaAdminController extends SonataMediaAdminController
 
         // Required: anonymous function reference number as explained above.
         $funcNum = $request->get('CKEditorFuncNum');
-        // Optional: instance name (might be used to load a specific configuration file or anything else).
-        $CKEditor = $request->get('CKEditor');
-        // Optional: might be used to provide localized messages.
+
+        $params = $this->handelMediaUpload($file, $providerName);
+        $status = $params['status'];
+        $url = $params['url'];
+        $message = $params['message'];
+
+        $response = "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction($funcNum, '$url', '$message');</script>";
+
+        return new Response($response, $status);
+
+    }
+
+    public function handelMediaUpload(UploadedFile $file, $providerName)
+    {
+        $url = '';
+        
         $locale = $this->getRequest()->getLocale();
 
         $session = $this->getRequest()->getSession();
@@ -118,18 +84,13 @@ class MediaAdminController extends SonataMediaAdminController
         $repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
         $page = $repository->find($pageId);
 
-        if($page){
+        if ($page) {
             $locale = $page->getLocale();
         }
 
-        $url = '';
-
         if ($file instanceof UploadedFile && $file->isValid()) {
 
-
             try {
-                /** @var $mediaManager \Sonata\MediaBundle\Admin\Manager\DoctrineORMManager */
-                $mediaManager = $this->get('sonata.media.manager.media');
 
                 /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
                 $mediaAdmin = $this->get('sonata.media.admin.media');
@@ -150,34 +111,34 @@ class MediaAdminController extends SonataMediaAdminController
 
                 $media->setEnabled(true);
 
-                $media->setLocale($locale);
+                if (method_exists($media, 'setLocale')) {
+                    $media->setLocale($locale);
+                }
 
                 $media->setName($file->getClientOriginalName());
 
-
                 $media->setBinaryContent($file);
-                $mediaManager->save($media);
 
-
-                $path = $provider->generatePublicUrl($media, 'reference');
-
+                $mediaAdmin->getModelManager()->create($media);
+                $mediaAdmin->createObjectSecurity($media);
 
                 // Check the $_FILES array and save the file. Assign the correct path to a variable ($url).
-                $url = $path;
+                $url = $this->generateUrl('sonata_media_download', array('id' => $media->getId())) . '/' . $media->getMetadataValue('filename');
+
                 // Usually you will only assign something here if the file could not be uploaded.
                 $message = '';
 
 
                 $status = 200;
             } catch (\Exception $e) {
+
                 $message = $e->getMessage();
                 $status = 500;
             }
         } elseif ($file instanceof UploadedFile && !$file->isValid()) {
-
+            $message = $file->getError();
             $status = 500;
         } else {
-
             $message = $this->admin->trans(
                 'error.file_upload_size',
                 array('%max_server_size%' => ini_get('upload_max_filesize'))
@@ -185,11 +146,9 @@ class MediaAdminController extends SonataMediaAdminController
             $status = 500;
         }
 
-        $response = "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction($funcNum, '$url', '$message');</script>";
-
-        return new Response($response, $status);
-
+        return array('url' => $url, 'message' => $message, 'status' => $status);
     }
+
 
     public function uploadedTextBlockImageAction(Request $request)
     {
@@ -424,7 +383,7 @@ class MediaAdminController extends SonataMediaAdminController
                 if ($tags->count() > 0) {
                     foreach ($tags as $tag) {
                         $array[$tag->getName()][] = array(
-                            'path' => $provider->generatePublicUrl($file, 'reference'),
+                            'path' => $this->generateUrl('sonata_media_download', array('id' => $file->getId())) . '/' . $file->getMetadataValue('filename'),
                             'content_type' => $file->getContentType(),
                             'title' => $file->getName(),
                         );
@@ -432,7 +391,7 @@ class MediaAdminController extends SonataMediaAdminController
 
                 } else {
                     $array['Default'][] = array(
-                        'path' => $provider->generatePublicUrl($file, 'reference'),
+                        'path' => $this->generateUrl('sonata_media_download', array('id' => $file->getId())) . '/' . $file->getMetadataValue('filename'),
                         'content_type' => $file->getContentType(),
                         'title' => $file->getName(),
                     );
@@ -441,7 +400,7 @@ class MediaAdminController extends SonataMediaAdminController
 
             return $this->render(
                 'NetworkingInitCmsBundle:MediaAdmin:media_file_browser.html.twig',
-                array('media' => $array, 'funcNum' => $funcNum)
+                array('media' => $array, 'funcNum' => $funcNum, 'langCode' => $langCode)
             );
         }
 
@@ -451,7 +410,7 @@ class MediaAdminController extends SonataMediaAdminController
             if ($tags->count() > 0) {
                 foreach ($tags as $tag) {
                     $array[] = array(
-                        'path' => $provider->generatePublicUrl($file, 'reference'),
+                        'path' => $this->generateUrl('sonata_media_download', array('id' => $file->getId())) . '/' . $file->getMetadataValue('filename'),
                         'content_type' => $file->getContentType(),
                         'title' => $file->getName(),
                         'folder' => $tag->getName(),
@@ -460,7 +419,7 @@ class MediaAdminController extends SonataMediaAdminController
 
             } else {
                 $array[] = array(
-                    'path' => $provider->generatePublicUrl($file, 'reference'),
+                    'path' => $this->generateUrl('sonata_media_download', array('id' => $file->getId())) . '/' . $file->getMetadataValue('filename'),
                     'content_type' => $file->getContentType(),
                     'title' => $file->getName(),
                     'folder' => 'default',
