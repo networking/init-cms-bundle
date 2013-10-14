@@ -60,7 +60,7 @@ class ContentRouteListener extends ContainerAware
 
             $template = $templates[$entity->getTemplateName()];
             $changeset = $uow->getEntityChangeSet($entity);
-            if (isset($changeset['templateName']) && ($changeset['templateName'][0] != $changeset['templateName'][1])) {
+            if (isset($changeset['templateName']) && $args->hasChangedField('templateName')) {
                 $entity->setTemplate($template['template']);
                 $entity->setController($template['controller']);
 
