@@ -94,10 +94,19 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 		$em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
 				->disableOriginalConstructor()
 				->getMock();
+
+        $uow = $this->getMockBuilder('\Doctrine\ORM\UnitOfWork')
+                ->disableOriginalConstructor()
+        	    ->getMock();
+
+        $em->expects($this->oncde())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($uow));
+
+
 		$em->expects($this->once())
 				->method('persist');
-		$em->expects($this->any())
-				->method('flush');
+
         $args = $this
 				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
 				->disableOriginalConstructor()
@@ -132,6 +141,15 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 		$em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
 				->disableOriginalConstructor()
 				->getMock();
+
+        $uow = $this->getMockBuilder('\Doctrine\ORM\UnitOfWork')
+                ->disableOriginalConstructor()
+        	    ->getMock();
+
+        $em->expects($this->oncde())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($uow));
+
 		$em->expects($this->never())
 				->method('persist');
 		$em->expects($this->never())
@@ -181,10 +199,19 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 		$em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
 				->disableOriginalConstructor()
 				->getMock();
+
+        $uow = $this->getMockBuilder('\Doctrine\ORM\UnitOfWork')
+                ->disableOriginalConstructor()
+        	    ->getMock();
+
+        $em->expects($this->oncde())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($uow));
+
 		$em->expects($this->exactly(0))
 				->method('persist');
-		$em->expects($this->exactly(1))
-				->method('flush');
+        $uow->expects($this->exactly(1))
+				->method('computeChangeSet');
 
         $args = $this
 				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
@@ -229,10 +256,19 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 		$em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
 				->disableOriginalConstructor()
 				->getMock();
+
+        $uow = $this->getMockBuilder('\Doctrine\ORM\UnitOfWork')
+                ->disableOriginalConstructor()
+        	    ->getMock();
+
+        $em->expects($this->oncde())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($uow));
+
 		$em->expects($this->exactly(10))
 				->method('persist');
-		$em->expects($this->exactly(1))
-				->method('flush');
+        $uow->expects($this->exactly(1))
+				->method('computeChangeSet');
 
         $args = $this
 				->getMockBuilder('\Doctrine\ORM\Event\LifecycleEventArgs')
