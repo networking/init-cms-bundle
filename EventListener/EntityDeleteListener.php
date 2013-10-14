@@ -7,8 +7,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 class EntityDeleteListener
 {
 
-
-
     /**
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
      */
@@ -22,10 +20,5 @@ class EntityDeleteListener
                //find a solution... like throwing super Exception thingy
             }
         }
-
-
     }
-
-
-
 }
