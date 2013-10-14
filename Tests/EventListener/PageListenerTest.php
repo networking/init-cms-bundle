@@ -99,9 +99,17 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
         	    ->getMock();
 
-        $em->expects($this->oncde())
+        $em->expects($this->once())
             ->method('getUnitOfWork')
             ->will($this->returnValue($uow));
+
+        $classMetaData = $this->getMockBuilder('\Doctrine\ORM\Mapping\ClassMetadata')
+            ->disableOriginalConstructor()
+    	    ->getMock();
+
+        $em->expects($this->once())
+            ->method('getClassMetadata')
+            ->will($this->returnValue($classMetaData));
 
 
 		$em->expects($this->once())
@@ -204,7 +212,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
         	    ->getMock();
 
-        $em->expects($this->oncde())
+        $em->expects($this->once())
             ->method('getUnitOfWork')
             ->will($this->returnValue($uow));
 
@@ -261,7 +269,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
         	    ->getMock();
 
-        $em->expects($this->oncde())
+        $em->expects($this->once())
             ->method('getUnitOfWork')
             ->will($this->returnValue($uow));
 
