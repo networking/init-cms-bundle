@@ -154,7 +154,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
         	    ->getMock();
 
-        $em->expects($this->oncde())
+        $em->expects($this->once())
             ->method('getUnitOfWork')
             ->will($this->returnValue($uow));
 
