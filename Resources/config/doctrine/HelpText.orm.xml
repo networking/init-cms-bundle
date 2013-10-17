@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+    <entity name="Networking\InitCmsBundle\Entity\HelpText" table="help_text">
+
+        <field name="locale" type="string" length="5" column="locale"/>
+
+        <field name="translationKey" type="string" length="255" column="translation_key"/>
+
+        <field name="text" type="text" column="text"/>
+
+        <field name="title" type="string" length="255" column="title" nullable="true"/>
+
+        <field name="isDeletable" type="boolean" column="is_deletable"/>
+
+    </entity>
+</doctrine-mapping>

@@ -17,4 +17,111 @@ namespace Networking\InitCmsBundle\Model;
  */
 interface ContentRouteInterface {
 
+    /**
+     * @return string
+     */
+    public function __toString();
+
+
+    /**
+     * Initializes the object to function as a route
+     * @param RouteReferrersReadInterface $content
+     * @return ContentRoute
+     */
+    public function initializeRoute(RouteReferrersReadInterface $content);
+
+    /**
+     * @param  string       $controller
+     * @return $this
+     */
+    public function setController($controller);
+    /**
+     * @return string
+     */
+    public function getController();
+
+    /**
+     * @param  int          $id
+     * @return $this
+     */
+    public function setId($id);
+
+    /**
+     * @return int
+     */
+    public function getId();
+
+    /**
+     * @param  string       $locale
+     * @return $this
+     */
+    public function setLocale($locale);
+
+
+    /**
+     * @return string
+     */
+    public function getLocale();
+
+    /**
+     * @param  string       $classType
+     * @return $this
+     */
+    public function setClassType($classType);
+
+    /**
+     * @return string
+     */
+    public function getClassType();
+
+    /**
+     * @param  int          $objectId
+     * @return $this
+     */
+    public function setObjectId($objectId);
+
+    /**
+     * @return int
+     */
+    public function getObjectId();
+
+    /**
+     * @param $path
+     * @return $this
+     */
+    public function setPath($path);
+
+    /**
+     * @return string
+     */
+    public function getPath();
+
+
+    /**
+     * @param  string       $template
+     * @return $this
+     */
+    public function setTemplate($template);
+
+    /**
+     * @return string
+     */
+    public function getTemplate();
+
+    /**
+     * @param string $templateName
+     */
+    public function setTemplateName($templateName);
+    /**
+     * @return string
+     */
+    public function getTemplateName();
+
+    /**
+     * @return array
+     */
+    public function getDefaults();
+
+    public function getContent();
+
 }

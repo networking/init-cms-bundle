@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+    <entity name="Networking\InitCmsBundle\Entity\ContentRoute" table="help_text">
+
+        <field name="classType" type="string" length="255" column="class_type"/>
+
+        <field name="objectId" type="integer" column="object_id" nullable="true"/>
+
+        <field name="path" type="string" length="255" column="path" nullable="true"/>
+
+        <field name="controller" type="string" length="255" column="controller" nullable="true"/>
+
+        <field name="template" type="string" length="255" column="template" nullable="true"/>
+
+        <field name="templateName" type="string" length="255" column="template_name" nullable="true"/>
+
+        <field name="locale" type="string" length="6" column="locale"/>
+
+    </entity>
+</doctrine-mapping>

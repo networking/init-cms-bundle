@@ -19,14 +19,25 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('networking_init_cms');
-
+        $supportedDrivers = array('orm', 'mongodb');
         $rootNode
             ->children()
+                ->scalarNode('db_driver')
+                    ->defaultValue('orm')
+                    ->validate()
+                    ->ifNotInArray($supportedDrivers)
+                    ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDrivers))
+                    ->end()
+                    ->cannotBeOverwritten()
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
                 ->arrayNode('class')
                     ->children()
                         ->scalarNode('page')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
+                ->scalarNode('init_cms_editor')->defaultValue('ckeditor')->end()
                 ->scalarNode('init_cms_editor')->defaultValue('ckeditor')->end()
                 ->scalarNode('ckeditor_config')->defaultValue('')->end()
                 ->scalarNode('translation_fallback_route')->defaultValue('initcms_404')->end()

@@ -90,6 +90,10 @@ class NetworkingInitCmsExtension extends Extension
             }
         }
 
+        $folder = $config['db_driver'] == 'orm' ? 'Entity': 'Document';
+
+        $baseNameSpace = sprintf('Networking\InitCmsBundle\%s', $folder);
+
         $collector = DoctrineCollector::getInstance();
 
         $collector->addAssociation(
@@ -154,6 +158,57 @@ class NetworkingInitCmsExtension extends Extension
                         )
                     ),
                 )
+            )
+        );
+
+        //LayoutBlock
+        $collector->addAssociation(
+            $baseNameSpace.'\LayoutBlock',
+            'mapManyToOne',
+            array(
+                'fieldName' => 'page',
+                'targetEntity' => $config['class']['page'],
+                'inversedBy'=>"layoutBlock",
+                'cascade'=> array('persist','remove'),
+                'joinColumns' => array(
+                    'name' => 'page_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete' => 'CASCADE'
+                )
+
+            )
+        );
+
+
+        //MenuItem
+        $collector->addAssociation(
+            $baseNameSpace.'\MediaType',
+            'mapManyToOne',
+            array(
+                'fieldName' => 'page',
+                'targetEntity' => $config['class']['page'],
+                'inversedBy'=>"menuItem",
+                'cascade'=> array('persist'),
+                'joinColumns' => array(
+                    'name' => 'page_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete' => 'SET NULL',
+                    'nullable' => 'true'
+                )
+
+            )
+        );
+
+        //PageSnapshot
+        $collector->addAssociation(
+            $baseNameSpace.'\PageSnapshot',
+            'mapManyToOne',
+            array(
+                'fieldName' => 'page',
+                'targetEntity' => $config['class']['page'],
+                'inversedBy'=>"snapshots",
+                'cascade'=> array('persist')
+
             )
         );
     }
