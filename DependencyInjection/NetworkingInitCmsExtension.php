@@ -10,6 +10,7 @@
  */
 namespace Networking\InitCmsBundle\DependencyInjection;
 
+use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -51,7 +52,10 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
         $container->setParameter('networking_init_cms.init_cms_editor', $config['init_cms_editor']);
-        $container->setParameter('networking_init_cms.translation_fallback_route', $config['translation_fallback_route']);
+        $container->setParameter(
+            'networking_init_cms.translation_fallback_route',
+            $config['translation_fallback_route']
+        );
         $container->setParameter('networking_init_cms.404_template', $config['404_template']);
         $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
         $container->setParameter('networking_init_cms.ckeditor_config', $config['ckeditor_config']);
@@ -64,13 +68,93 @@ class NetworkingInitCmsExtension extends Extension
      * @param array $languages
      * @return array
      */
-    protected function addShortLabels(array $languages){
-        foreach ( $languages as $key => $val){
-            if(!array_key_exists('short_label', $val) || !$val['short_label']){
+    protected function addShortLabels(array $languages)
+    {
+        foreach ($languages as $key => $val) {
+            if (!array_key_exists('short_label', $val) || !$val['short_label']) {
                 $languages[$key]['short_label'] = substr(strtoupper($val['label']), 0, 2);
             }
         }
 
         return $languages;
+    }
+
+    /**
+     * @param array $config
+     */
+    public function registerDoctrineMapping(array $config)
+    {
+        foreach ($config['class'] as $type => $class) {
+            if (!class_exists($class)) {
+                return;
+            }
+        }
+
+        $collector = DoctrineCollector::getInstance();
+
+        $collector->addAssociation(
+            $config['class']['page'],
+            'mapManyToOne',
+            array(
+                'fieldName' => 'parent',
+                'targetEntity' => $config['class']['page'],
+                'cascade' => array('persist'),
+                'inversedBy' => 'children',
+                'joinColumns' => array(
+                    'name' => 'parent_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete' => 'SET NULL'
+                ),
+                'orphanRemoval' => false,
+            )
+        );
+
+        $collector->addAssociation(
+            $config['class']['page'],
+            'mapOneToMany',
+            array(
+                'fieldName' => 'children',
+                'targetEntity' => $config['class']['page'],
+                'mappedBy' => 'parent',
+            )
+        );
+
+        $collector->addAssociation(
+            $config['class']['page'],
+            'mapManyToMany',
+            array(
+                'fieldName' => 'translations',
+                'targetEntity' => $config['class']['page'],
+                'mappedBy' => 'originals',
+            )
+        );
+
+
+
+        $collector->addAssociation(
+            $config['class']['page'],
+            'mapManyToMany',
+            array(
+                'fieldName' => 'originals',
+                'targetEntity' => $config['class']['page'],
+                'inversedBy'=>"translations",
+                'cascade' => array('persist'),
+                'joinTable' => array(
+                    'name' => 'page_translation',
+                    'joinColumns' => array(
+                        array(
+                            'name' => 'translation_id',
+                            'referencedColumnName' => 'id'
+                        ),
+                    ),
+                    'inverseJoinColumns' => array(
+                        array(
+                            'name' => 'original_id',
+                            'referencedColumnName' => 'id'
+                        )
+                    ),
+                )
+            )
+        );
     }
 }

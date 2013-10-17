@@ -14,8 +14,6 @@ file that was distributed with this source code.
 {% block title %}{{ media.name }}{% endblock %}
 
 {% block content %}
-    <h2>{{ media.name }} ({{ format }})</h2>
-
     <h3>{{ 'title.media_preview'|trans({}, 'MediaAdmin') }}</h3>
     <div>
         {% media media, format %}
@@ -85,7 +83,7 @@ file that was distributed with this source code.
     <table>
         <tr>
             <td>
-                <a href="{{ admin.generateUrl('view', { 'id' : media.id, 'format' : 'reference'}) }}">reference</a>
+                <a href="{{ admin.generateUrl('show', { 'id' : media.id, 'format' : 'reference'}) }}">reference</a>
             </td>
             <td>
                 <input type="text" value="{% path media, 'reference' %}"  style="width:500px" />
@@ -95,7 +93,7 @@ file that was distributed with this source code.
         {% for name, format in formats %}
             <tr>
                 <td>
-                    <a href="{{ admin.generateUrl('view', { 'id' : media.id, 'format' : name}) }}">{{ name }}</a>
+                    <a href="{{ admin.generateUrl('show', { 'id' : media.id, 'format' : name}) }}">{{ name }}</a>
                 </td>
                 <td>
                     <input type="text" value="{% path media, name %}"  style="width:500px"/>

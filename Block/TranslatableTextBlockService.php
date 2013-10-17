@@ -15,6 +15,7 @@ use Sonata\BlockBundle\Block\BaseBlockService,
     Sonata\AdminBundle\Validator\ErrorElement,
     Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TranslatableTextBlockService extends BaseBlockService
 {
@@ -22,18 +23,13 @@ class TranslatableTextBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function execute(BlockContextInterface $block, Response $response = null)
+    public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-        $settings = array_merge($this->getDefaultSettings(), $block->getSettings());
 
-        return $this->renderResponse(
-            'NetworkingInitCmsBundle:Block:block_translatable_text.html.twig',
-            array(
-                'block' => $block,
-                'settings' => $settings
-            ),
-            $response
-        );
+        return $this->renderResponse('NetworkingInitCmsBundle:Block:block_translatable_text.html.twig', array(
+                    'block'     => $blockContext->getBlock(),
+                    'settings'  => $blockContext->getSettings()
+                ), $response);
     }
 
     /**
@@ -44,21 +40,19 @@ class TranslatableTextBlockService extends BaseBlockService
         // TODO: Implement validateBlock() method.
     }
 
+
+
     /**
      * {@inheritdoc}
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $formMapper->add(
-            'settings',
-            'sonata_type_immutable_array',
-            array(
-                'keys' => array(
-                    array('translation_key', 'text', array()),
-                    array('translation_domain', 'text', array()),
-                )
+        $formMapper->add('settings', 'sonata_type_immutable_array', array(
+            'keys' => array(
+                array('translation_key', 'text', array()),
+                array('translation_domain', 'text', array()),
             )
-        );
+        ));
     }
 
     /**
@@ -72,11 +66,11 @@ class TranslatableTextBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function getDefaultSettings()
+    public function setDefaultSettings(OptionsResolverInterface $resolver)
     {
-        return array(
+        $resolver->setDefaults(array(
             'translation_key' => 'Insert your translation key',
             'translation_domain' => 'Insert the name of the translation domain',
-        );
+        ));
     }
 }

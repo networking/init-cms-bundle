@@ -8,130 +8,86 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Entity;
+namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Gedmo\Sluggable\Util\Urlizer;
-use Networking\InitCmsBundle\Entity\LayoutBlock;
-use Networking\InitCmsBundle\Entity\Tag;
-use Networking\InitCmsBundle\Entity\ContentRoute;
-use Networking\InitCmsBundle\Entity\MenuItem;
+use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\LayoutBlockInterface;
+use Networking\InitCmsBundle\Model\ContentRouteInterface;
+use Networking\InitCmsBundle\Model\MenuItemInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use Networking\InitCmsBundle\Validator\Constraints as CustomAssert;
-
-use Symfony\Component\Validator\Constraints as Assert;
-
-use Gedmo\Mapping\Annotation as Gedmo;
-
 use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Networking\InitCmsBundle\Entity\Page
+ *
  * @Gedmo\Tree(type="materializedPath")
  * @Gedmo\Loggable
  *
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(name="page", uniqueConstraints={@ORM\UniqueConstraint(name="path_idx", columns={"path", "locale"})})
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\PageRepository")
- *
- * @CustomAssert\UniqueURL(groups={"not_home"})
- *
  * @author net working AG <info@networking.ch>
  */
-class Page implements RouteReferrersReadInterface, VersionableInterface
+abstract class Page implements PageInterface, RouteReferrersReadInterface, VersionableInterface
 {
-
-    /**
-     *
-     */
-    const PATH_SEPARATOR = '/';
-
-    /**
-     *
-     */
-    const VISIBILITY_PUBLIC = 'public';
-
-    /**
-     *
-     */
-    const VISIBILITY_PROTECTED = 'protected';
 
     /**
      * @var integer $id
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var \Datetime $createdAt
-     *
-     * @ORM\Column(name="created_at", type="datetime")
      */
     protected $createdAt;
 
     /**
      * @var \Datetime $updatedAt
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
      */
     protected $updatedAt;
 
     /**
      * @var string $pageName
-     * @ORM\Column(name="page_name", type="string", length=255)
-     * @Assert\NotBlank(groups={"default"})
      */
     protected $pageName;
 
     /**
      * @var string $metaTitle
-     * @ORM\Column(name="meta_title", type="string", length=255, nullable=true)
      */
     protected $metaTitle;
 
     /**
      * @var string $url
      * @Gedmo\TreePathSource
-     * @ORM\Column(name="url", type="string", length=255, nullable=true)
-     * @Assert\NotBlank(groups={"not_home"})
      */
     protected $url;
 
     /**
      * @var string $path
      * @Gedmo\TreePath(separator="/")
-     * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     protected $path;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer", nullable=true)
      */
     protected $level;
 
     /**
      * @var string $metaKeyword
-     * @ORM\Column(name="meta_keyword", type="string", length=255, nullable=true)
      */
     protected $metaKeyword;
 
     /**
      * @var string $metaDescription
-     * @ORM\Column(name="meta_description", type="text", nullable=true)
      */
     protected $metaDescription;
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="children", cascade={"persist"})
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     * @var BasePage|NULL
      */
     protected $parent;
 
@@ -141,7 +97,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     protected $parents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Page", mappedBy="parent")
+     * @var array $children
      */
     protected $children;
 
@@ -152,85 +108,58 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\LayoutBlock", cascade={"persist", "detach"}, mappedBy="page", orphanRemoval=true)
-     * @OrderBy({"sortOrder" = "ASC"})
+     * @var ArrayCollection $layoutBlock
      *
      */
     protected $layoutBlock;
 
     /**
-     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\MenuItem", mappedBy="page")
+     * @var ArrayCollection $menuItem
      */
     protected $menuItem;
 
     /**
      * @var boolean $isHome
-     * @ORM\Column(name="is_home", type="boolean", nullable=true)
      */
     protected $isHome = false;
 
     /**
      * @var string $status
-     * @ORM\Column(name="status", type="string", length=50)
      */
     protected $status = self::STATUS_DRAFT;
 
     /**
      * @var string $visibility
-     *
-     * @ORM\Column(name="visibility", type="string", length=50)
      */
     protected $visibility = self::VISIBILITY_PUBLIC;
 
     /**
      * @var \Datetime $activeFrom
-     *
-     * @ORM\Column(name="active_from", type="date", nullable=true)
      */
     protected $activeFrom;
 
     /**
      * @var string $locale
-     * @ORM\Column(name="locale", type="string", length=5)
      */
     protected $locale;
 
     /**
      * @var ArrayCollection $translations
-     * @ORM\ManyToMany(targetEntity="Page", mappedBy="originals")
      */
     protected $translations;
 
     /**
      * @var ArrayCollection $originals
-     * @ORM\ManyToMany(targetEntity="Page", inversedBy="translations", cascade={"persist"})
-     * @ORM\JoinTable(name="page_translation",
-     *      joinColumns={@ORM\JoinColumn(name="translation_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="original_id", referencedColumnName="id")}
-     *      )
      */
     protected $originals;
 
     /**
-     * @var ArrayCollection $tags
-     * @ORM\ManyToMany(targetEntity="Tag")
-     * @ORM\JoinTable(name="page_tags")
-     * @OrderBy({"name" = "ASC"})
-     */
-    protected $tags;
-
-    /**
-     * @var ContentRoute $contentRoute
-     * @ORM\OneToOne(targetEntity="Networking\InitCmsBundle\Entity\ContentRoute", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="content_route_id")
+     * @var ContentRouteInterface $contentRoute
      */
     protected $contentRoute;
 
     /**
      * @var ArrayCollection $snapshots
-     *
-     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\PageSnapshot", mappedBy="page", cascade={"remove"})
-     * @OrderBy({"version" = "DESC"})
      */
     protected $snapshots;
 
@@ -253,13 +182,11 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
         $this->originals = new ArrayCollection();
         $this->layoutBlock = new ArrayCollection();
         $this->menuItem = new ArrayCollection();
-        $this->tags = new ArrayCollection();
     }
 
     /**
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    public function prePersist()
     {
         $this->createdAt = $this->updatedAt = new \DateTime("now");
 
@@ -268,11 +195,15 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
         }
     }
 
+    public function preUpdate()
+    {
+        $this->setUpdatedAt();
+    }
+
     /**
      * Set updatedAt
      *
-     * @ORM\PreUpdate
-     * @return Page
+     * @return $this
      */
     public function setUpdatedAt()
     {
@@ -295,7 +226,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
      * Set createdAt
      *
      * @param  \Datetime $createdAt
-     * @return Page
+     * @return $this
      */
     public function setCreatedAt($createdAt)
     {
@@ -336,7 +267,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
      * Set pageName
      *
      * @param  string $title
-     * @return Page
+     * @return $this
      */
     public function setPageName($title)
     {
@@ -360,7 +291,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
      * Set metaTitle
      *
      * @param  string $title
-     * @return Page
+     * @return $this
      */
     public function setMetaTitle($title)
     {
@@ -437,10 +368,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
 
     /**
-     * @param  Page $parent
-     * @return Page
+     * @param  PageInterface $parent
+     * @return $this
      */
-    public function setParent(Page $parent = null)
+    public function setParent(PageInterface $parent = null)
     {
         $this->parent = $parent;
 
@@ -468,7 +399,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param  array $parents
-     * @return Page
+     * @return $this
      */
     public function setParents(array $parents)
     {
@@ -499,10 +430,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @param  Page $children
-     * @return Page
+     * @param  PageInterface $children
+     * @return $this
      */
-    public function addChildren(Page $children)
+    public function addChildren(PageInterface $children)
     {
         $this->children[] = $children;
 
@@ -521,7 +452,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param $children
-     * @return Page
+     * @return $this
      */
     public function setChildren($children)
     {
@@ -554,7 +485,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param $children
-     * @return Page
+     * @return $this
      */
     public function setAllChildren($children)
     {
@@ -567,7 +498,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
      * Set active
      *
      * @param string $status
-     * @return Page
+     * @return $this
      */
     public function setStatus($status)
     {
@@ -593,7 +524,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
      * Set page visibility
      *
      * @param string $visibility
-     * @return Page
+     * @return $this
      */
     public function setVisibility($visibility)
     {
@@ -655,8 +586,8 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     /**
      * Set activeFrom
      *
-     * @param  date $activeFrom
-     * @return Page
+     * @param  $activeFrom
+     * @return $this
      */
     public function setActiveFrom($activeFrom)
     {
@@ -668,7 +599,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     /**
      * Get activeFrom
      *
-     * @return date
+     * @return \DateTime
      */
     public function getActiveFrom()
     {
@@ -680,10 +611,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     /**
      * Add layout block
      *
-     * @param  LayoutBlock $layoutBlock
-     * @return Page
+     * @param  LayoutBlockInterface $layoutBlock
+     * @return $this
      */
-    public function addLayoutBlock(LayoutBlock $layoutBlock)
+    public function addLayoutBlock(LayoutBlockInterface $layoutBlock)
     {
         $layoutBlock->setPage($this);
         $this->layoutBlock->add($layoutBlock);
@@ -694,10 +625,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     /**
      * remove content
      *
-     * @param  LayoutBlock $layoutBlock
-     * @return Page
+     * @param  LayoutBlockInterface $layoutBlock
+     * @return $this
      */
-    public function removeLayoutBlock(LayoutBlock $layoutBlock)
+    public function removeLayoutBlock(LayoutBlockInterface $layoutBlock)
     {
         $this->layoutBlock->removeElement($layoutBlock);
 
@@ -723,7 +654,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param $layoutBlocks
-     * @return Page
+     * @return $this
      */
     public function setLayoutBlock($layoutBlocks)
     {
@@ -785,10 +716,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     /**
      * Add menuItem
      *
-     * @param  MenuItem $menuItem
-     * @return Page
+     * @param  MenuItemInterface $menuItem
+     * @return $this
      */
-    public function setMenuItem(MenuItem $menuItem)
+    public function setMenuItem(MenuItemInterface $menuItem)
     {
 
         $menuItem->setPage($this);
@@ -800,10 +731,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     /**
      * remove menuItem
      *
-     * @param  MenuItem $menuItem
-     * @return Page
+     * @param  MenuItemInterface $menuItem
+     * @return $this
      */
-    public function removeMenuItem(MenuItem $menuItem)
+    public function removeMenuItem(MenuItemInterface $menuItem)
     {
         $this->menuItem->removeElement($menuItem);
 
@@ -832,40 +763,6 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * Add tags
-     *
-     * @param \Networking\InitCmsBundle\Entity\Tag $tag
-     * @return Page
-     */
-    public function addTags(Tag $tag)
-    {
-        $this->tags->add($tag);
-
-        return $this;
-    }
-
-    /**
-     * @param  \Doctrine\Common\Collections\ArrayCollection $tags
-     * @return Page
-     */
-    public function setTags(ArrayCollection $tags)
-    {
-        $this->tags = $tags;
-
-        return $this;
-    }
-
-    /**
-     * Get tags
-     *
-     * @return ArrayCollection
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
      * @return string
      */
     public function __toString()
@@ -883,7 +780,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param $isHome
-     * @return Page
+     * @return $this
      */
     public function setIsHome($isHome)
     {
@@ -910,7 +807,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param  string $locale
-     * @return Page
+     * @return $this
      */
     public function setLocale($locale)
     {
@@ -929,7 +826,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param  array $originals
-     * @return Page
+     * @return $this
      */
     public function setOriginals(array $originals)
     {
@@ -943,10 +840,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @param  Page $page
-     * @return Page
+     * @param  PageInterface $page
+     * @return $this
      */
-    public function setOriginal(Page $page)
+    public function setOriginal(PageInterface $page)
     {
         $this->originals->add($page);
 
@@ -962,10 +859,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @param Page $page
+     * @param PageInterface $page
      * @return bool
      */
-    public function isDirectTranslation(Page $page)
+    public function isDirectTranslation(PageInterface $page)
     {
         if ($this->originals->contains($page)) {
             return true;
@@ -977,10 +874,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @param Page $page
+     * @param PageInterface $page
      * @return mixed
      */
-    public function getDirectTranslationFor(Page $page)
+    public function getDirectTranslationFor(PageInterface $page)
     {
         foreach ($this->getAllTranslations() as $translation) {
             if ($translation->isDirectTranslation($page)) {
@@ -990,10 +887,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @param Page $page
-     * @return Page
+     * @param PageInterface $page
+     * @return $this
      */
-    public function addTranslation(Page $page)
+    public function addTranslation(PageInterface $page)
     {
         $this->translations->add($page);
         $page->setOriginal($this);
@@ -1002,10 +899,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @param Page $page
-     * @return Page
+     * @param PageInterface $page
+     * @return $this
      */
-    public function removeTranslation(Page $page)
+    public function removeTranslation(PageInterface $page)
     {
         $this->translations->removeElement($page);
         $page->getOriginals()->removeElement($this);
@@ -1016,7 +913,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param  array $translations
-     * @return page
+     * @return $this
      */
     public function setTranslations(array $translations)
     {
@@ -1086,10 +983,10 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @param  ContentRoute $contentRoute
-     * @return Page
+     * @param  ContentRouteInterface $contentRoute
+     * @return $this
      */
-    public function setContentRoute(ContentRoute $contentRoute)
+    public function setContentRoute(ContentRouteInterface $contentRoute)
     {
         $this->contentRoute = $contentRoute;
 
@@ -1097,7 +994,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @return ContentRoute
+     * @return ContentRouteInterface
      */
     public function getContentRoute()
     {
@@ -1107,7 +1004,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param $snapshots
-     * @return Page
+     * @return $this
      */
     public function setSnapshots($snapshots)
     {
@@ -1152,7 +1049,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param $template
-     * @return Page
+     * @return $this
      */
     public function setTemplate($template)
     {
@@ -1285,7 +1182,7 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
     }
 
     /**
-     * @return PageSnapshot
+     * @return $thisSnapshot
      */
     public function getSnapshot()
     {
@@ -1354,15 +1251,11 @@ class Page implements RouteReferrersReadInterface, VersionableInterface
 
     /**
      * @param $id
-     * @return Page|null
+     * @return $this|null
      */
     public function convertIntegerToPage($id)
     {
         $page = null;
-
-        if ($id) {
-            $page = new Page();
-        }
 
         return $page;
     }

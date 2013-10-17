@@ -22,6 +22,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('class')
+                    ->children()
+                        ->scalarNode('page')->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
                 ->scalarNode('init_cms_editor')->defaultValue('ckeditor')->end()
                 ->scalarNode('ckeditor_config')->defaultValue('')->end()
                 ->scalarNode('translation_fallback_route')->defaultValue('initcms_404')->end()

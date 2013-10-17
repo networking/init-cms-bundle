@@ -8,10 +8,9 @@
  * file that was distributed with this source code.
  */
 namespace Networking\InitCmsBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM,
     Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
-    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\BasePage,
     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface,
     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 
@@ -214,11 +213,11 @@ class PageSnapshot implements RouteReferrersReadInterface, ResourceVersionInterf
     /**
      * Set page
      *
-     * @param  Page $page
+     * @param  BasePage $page
      *
      * @return PageSnapshot
      */
-    public function setPage(Page $page)
+    public function setPage(BasePage $page)
     {
         $this->page = $page;
 

@@ -19,7 +19,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormBuilder,
     Symfony\Component\Form\FormInterface,
-    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Entity\LayoutBlock,
     Networking\InitCmsBundle\Admin\LayoutBlockAdmin,
     Networking\InitCmsBundle\Entity\ContentInterface,
@@ -46,7 +46,7 @@ class LayoutBlockFormListener implements EventSubscriberInterface
     private $contentInterfaceHelper;
 
     /**
-     * @param \Symfony\Component\Form\FormFactoryInterface              $factory
+     * @param \Symfony\Component\Form\FormFactoryInterface $factory
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
     public function __construct(
@@ -97,7 +97,7 @@ class LayoutBlockFormListener implements EventSubscriberInterface
                 } else {
                     if ($key == 'page') {
                         // if field is Page, turn post value back into a Page Object
-                        $em = $this->container->get('doctrine')->getEntityManager();
+                        $em = $this->container->get('doctrine')->getManager();
                         $pageToNumberTransformer = new PageToNumberTransformer($em);
                         $value = $pageToNumberTransformer->reverseTransform($value);
                     }
@@ -240,14 +240,15 @@ class LayoutBlockFormListener implements EventSubscriberInterface
         }
 
         $form->remove('_delete');
-        $form->add(
+
+        $formInterface =
             $this->factory->createNamed(
                 '_delete',
                 'checkbox',
                 null,
-                array('required' => false, 'property_path' => false)
-            )
-        );
+                array('required' => false, 'mapped' => false, 'auto_initialize' => false)
+            );
+        $form->add($formInterface);
     }
 
     /**
@@ -276,7 +277,10 @@ class LayoutBlockFormListener implements EventSubscriberInterface
                 $annotation->getOptions()
 
             );
+
+            $formInterface->getConfig()->setAutoInitialize(false);
             $form->add($formInterface);
+
         }
 
         return $form;

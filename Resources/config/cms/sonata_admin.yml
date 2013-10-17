@@ -42,7 +42,7 @@ sonata_admin:
                 label: "pages.label"
                 items: [networking_init_cms.page.admin.page]
             translation:
-                label: "translation.label"
+                label: "group.translation"
                 items: [ibrows_sonata_translation.admin.orm]
             menu:
                 label: "menu.label"

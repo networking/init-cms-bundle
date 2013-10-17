@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Networking\InitCmsBundle\Entity\Page;
+use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

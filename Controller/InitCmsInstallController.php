@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Input\ArrayInput;
-use Networking\InitCmsBundle\Entity\Page;
+use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Sandbox\InitCmsBundle\Form\UserType;
 
 class InitCmsInstallController extends Controller
@@ -145,7 +145,8 @@ class InitCmsInstallController extends Controller
 
 
                 if ($complete == 3) {
-                    $this->get('session')->setFlash('success', 'Init CMS was successfully installed');
+                    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+                    $this->get('session')->getFlashBag()->add('success', 'Init CMS was successfully installed');
 
                     $message = \Swift_Message::newInstance()
                         ->setSubject('Hello Email')
@@ -161,8 +162,7 @@ class InitCmsInstallController extends Controller
 
                     return new RedirectResponse($this->generateUrl('_configure_cms'));
                 }
-                $this->get('session')->setFlash('error', $this->getConsoleDisplay($output));
-//                $this->get('session')->setFlash('success', 'The Following commands were successful:<br />' .$this->getFullConsoleDisplay());
+                $this->get('session')->getFlashBag()->add('error', $this->getConsoleDisplay($output));
                 $installFailed = true;
             }
         }

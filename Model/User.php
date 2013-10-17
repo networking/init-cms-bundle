@@ -1,29 +1,23 @@
 <?php
 /**
- * This file is part of the <name> project.
+ * This file is part of the init_cms_sandbox package.
  *
- * (c) <yourname> <youremail>
+ * (c) net working AG <info@networking.ch>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+ 
 
-namespace Networking\InitCmsBundle\Entity;
+namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\ORM\Mapping as ORM,
-    Sonata\UserBundle\Entity\BaseUser as BaseUser,
-    Networking\InitCmsBundle\Entity\AdminSettings;
+use Sonata\UserBundle\Model\User as SonataUser;
+
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
- * Networking\InitCmsBundle\Entity\Group
- *
- * @ORM\Table(name="fos_user_user")
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\UserRepository")
  */
-class User extends BaseUser
-{
+class User extends SonataUser implements  UserInterface {
 
     /**
      * @var integer $id

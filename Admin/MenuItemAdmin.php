@@ -170,7 +170,7 @@ class MenuItemAdmin extends BaseAdmin
                 ->add('hidden', null, array('required'=>false))
                 ->end();
 
-            $entityManager = $this->getContainer()->get('Doctrine')->getEntityManager();
+            $entityManager = $this->getContainer()->get('Doctrine')->getManager();
 
             $transformer = new MenuItemToNumberTransformer($entityManager);
 

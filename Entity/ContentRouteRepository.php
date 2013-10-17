@@ -21,7 +21,7 @@ use Doctrine\ORM\EntityRepository,
     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface,
     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface,
     Networking\InitCmsBundle\Entity\ContentRoute,
-    Networking\InitCmsBundle\Entity\Page;
+    Networking\InitCmsBundle\Entity\BasePage as Page;
 
 /**
  * @author net working AG <info@networking.ch>

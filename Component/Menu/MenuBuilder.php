@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request,
     Knp\Menu\FactoryInterface,
     Knp\Menu\MenuItem as Menu,
     Networking\InitCmsBundle\Entity\MenuItem,
-    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Component\Routing\CMSRoute;
 
 /**

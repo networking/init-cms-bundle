@@ -125,7 +125,7 @@ function doAjaxSubmit(url, form, data) {
         data: data,
         success: function (html) {
             jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
-            if (jQuery(form + 'input[type="file"]').length > 0) {
+            if (jQuery('input[type="file"]').length > 0) {
                 jQuery(form).attr('enctype', 'multipart/form-data');
                 jQuery(form).attr('encoding', 'multipart/form-data');
             }

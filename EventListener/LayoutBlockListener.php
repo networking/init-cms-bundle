@@ -12,7 +12,7 @@ namespace Networking\InitCmsBundle\EventListener;
 use Doctrine\ORM\EntityNotFoundException,
     Doctrine\ORM\Event\LifecycleEventArgs,
     JMS\Serializer\Serializer,
-    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Entity\LayoutBlock;
 
 /**

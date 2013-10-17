@@ -24,7 +24,7 @@ file that was distributed with this source code.
 
 {% block sonata_admin_orm_one_to_many_widget %}
     {% if sonata_admin.field_description.name == 'layoutBlock' %}
-    {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks.html.twig' %}
+        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks.html.twig' %}
     {% else %}
         {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_to_many.html.twig' %}
     {% endif %}
@@ -56,19 +56,21 @@ file that was distributed with this source code.
 
 {% block sonata_type_model_list_widget %}
     <div id="field_container_{{ id }}" class="field-container">
-        <span id="field_widget_{{ id }}" >
+        <span id="field_widget_{{ id }}">
 
             {% if sonata_admin.field_description.associationadmin.id(sonata_admin.value) %}
-                {% render 'sonata.admin.controller.admin:getShortObjectDescriptionAction' with {}, {
-                    'query': {
-                        'code':     sonata_admin.field_description.associationadmin.code,
-                        'objectId': sonata_admin.field_description.associationadmin.id(sonata_admin.value),
-                        'uniqid':   sonata_admin.field_description.associationadmin.uniqid
-                    }
-                } %}
+                {% render url('sonata_admin_short_object_information', {
+                'code':     sonata_admin.field_description.associationadmin.code,
+                'objectId': sonata_admin.field_description.associationadmin.id(sonata_admin.value),
+                'uniqid':   sonata_admin.field_description.associationadmin.uniqid
+                }) %}
+            {% elseif sonata_admin.field_description.options.placeholder is defined and sonata_admin.field_description.options.placeholder %}
+                <span class="inner-field-short-description">
+                    {{ sonata_admin.field_description.options.placeholder|trans({}, 'SonataAdminBundle') }}
+                </span>
             {% endif %}
         </span>
-        <span style="display: none" >
+        <span style="display: none">
             {{ form_widget(form) }}
         </span>
 
@@ -76,40 +78,41 @@ file that was distributed with this source code.
 
             {% if sonata_admin.field_description.associationadmin.hasroute('list') and sonata_admin.field_description.associationadmin.isGranted('LIST') %}
 
-                <a  href="{{ sonata_admin.field_description.associationadmin.generateUrl('list') }}"
-                    onclick="return start_field_dialog_form_list_{{ id }}(this);"
-                    class="btn sonata-ba-action"
-                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
-                    >
+                <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('list') }}"
+                   onclick="return start_field_dialog_form_list_{{ id }}(this);"
+                   class="btn sonata-ba-action"
+                   title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
+                        >
                     <i class="icon-list"></i>
                     {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
 
             {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
-                <a  href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
-                    onclick="return start_field_dialog_form_add_{{ id }}(this);"
-                    class="btn sonata-ba-action"
-                    title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
-                    >
+                <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
+                   onclick="return start_field_dialog_form_add_{{ id }}(this);"
+                   class="btn sonata-ba-action"
+                   title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
+                        >
                     <i class="icon-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
 
             {% if sonata_admin.field_description.associationadmin.hasRoute('delete') and sonata_admin.field_description.associationadmin.isGranted('DELETE') %}
-                <a  href=""
-                    onclick="return remove_selected_element_{{ id }}(this);"
-                    class="btn sonata-ba-action"
-                    title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
-                    >
+                <a href=""
+                   onclick="return remove_selected_element_{{ id }}(this);"
+                   class="btn sonata-ba-action"
+                   title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
+                        >
                     <i class="icon-trash"></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
         </span>
 
-        <div class="modal form-horizontal" id="field_dialog_{{ id }}" style="display: none" role="dialog" aria-hidden="true">
+        <div class="modal form-horizontal" id="field_dialog_{{ id }}" style="display: none" role="dialog"
+             aria-hidden="true">
         </div>
 
     </div>
@@ -139,9 +142,11 @@ file that was distributed with this source code.
         INVALID MODE : {{ id }} - type : sonata_type_collection - mapping : {{ sonata_admin.field_description.mappingtype }}
     {% endif %}
 {% endblock %}
+
 {# Labels #}
 {% block form_label %}
-    {% spaceless %}
+{% spaceless %}
+    {% if label is not sameas(false) %}
         {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " control-label" }) %}
 
         {% if not compound %}
@@ -156,46 +161,47 @@ file that was distributed with this source code.
         {% endif %}
 
         {% if in_list_checkbox is defined and in_list_checkbox and widget is defined %}
-            <label{% for attrname,attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-            {{ widget|raw }}
-            <span>
-                {% if not sonata_admin.admin %}
-                    {{- label|trans({}, translation_domain) -}}
-                {% else %}
-                    {{- label|trans({}, sonata_admin.admin.translationDomain) -}}
-                {% endif %}
-            </span>
-            {% if help_label %}
-                <div class="help-label info-soft" id="help_{{ id }}">
+            <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+                {{ widget|raw }}
+                <span>
                     {% if not sonata_admin.admin %}
-                        {{- help_label|trans({}, translation_domain) -}}
+                        {{- label|trans({}, translation_domain) -}}
                     {% else %}
-                        {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
-                    {% endif %}
-                </div>
-            {% endif %}
+                        {{- label|trans({}, sonata_admin.field_description.translationDomain) -}}
+                    {% endif%}
+                </span>
+                {% if help_label %}
+                    <div class="help-label info-soft" id="help_{{ id }}">
+
+                        {% if not sonata_admin.admin %}
+                            {{- help_label|trans({}, translation_domain) -}}
+                        {% else %}
+                            {{- help_label|trans({}, sonata_admin.field_description.translationDomain) -}}
+                        {% endif %}
+                    </div>
+                {% endif %}
             </label>
         {% else %}
             <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-            {% if not sonata_admin.admin %}
-                {{- label|trans({}, translation_domain) -}}
-            {% else %}
-                {{- label|trans({}, sonata_admin.admin.translationDomain) -}}
-            {% endif %}
-            {{ required ? '*' : '' }}
-
-            </label>
-            {% if help_label %}
+                {% if not sonata_admin.admin%}
+                    {{- label|trans({}, translation_domain) -}}
+                {% else %}
+                    {{ sonata_admin.admin.trans(label, {}, sonata_admin.field_description.translationDomain) }}
+                {% endif %}
+                {{ required ? '*' : '' }}
+                {% if help_label %}
                 <div class="help-label info-soft" id="help_{{ id }}">
                     {% if not sonata_admin.admin %}
                         {{- help_label|trans({}, translation_domain) -}}
                     {% else %}
-                        {{- help_label|trans({}, sonata_admin.admin.translationDomain) -}}
+                        {{- help_label|trans({}, sonata_admin.field_description.translationDomain) -}}
                     {% endif %}
                 </div>
-            {% endif %}
+                {% endif %}
+            </label>
         {% endif %}
-    {% endspaceless %}
+    {% endif %}
+{% endspaceless %}
 {% endblock form_label %}
 
 {% block widget_container_attributes_choice_widget %}
@@ -209,7 +215,7 @@ file that was distributed with this source code.
 
 {% block choice_widget %}
     {% spaceless %}
-        {% if expanded %}
+        {% if compound %}
             <ul {{ block('widget_container_attributes_choice_widget') }}>
                 {% for child in form %}
                     <li>
@@ -220,24 +226,29 @@ file that was distributed with this source code.
         {% else %}
             <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
                 {% if empty_value is not none %}
-                    <option value="">{{ empty_value|trans }}</option>
+                    <option value="">
+                        {% if not sonata_admin.admin %}
+                            {{- empty_value|trans({}, translation_domain) -}}
+                        {% else %}
+                            {{- empty_value|trans({}, sonata_admin.field_description.translationDomain) -}}
+                        {% endif%}
+                    </option>
                 {% endif %}
                 {% if preferred_choices|length > 0 %}
                     {% set options = preferred_choices %}
-                    {{ block('widget_choice_options') }}
+                    {{ block('choice_widget_options') }}
                     {% if choices|length > 0 %}
                         <option disabled="disabled">{{ separator }}</option>
                     {% endif %}
                 {% endif %}
                 {% set options = choices %}
-                {{ block('widget_choice_options') }}
+                {{ block('choice_widget_options') }}
             </select>
         {% endif %}
     {% endspaceless %}
 {% endblock choice_widget %}
 
-
-{% block field_row %}
+{% block form_row %}
     {% if sonata_admin is not defined or not sonata_admin_enabled or not sonata_admin.field_description %}
         {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
         {% if not label_render %}{% set widget_controls = false %}{% endif %}
@@ -253,6 +264,7 @@ file that was distributed with this source code.
         {% set inline_block = false %}
         {% if sonata_admin.field_description.options.inline_block is defined and sonata_admin.field_description.options.inline_block %}
             {% set inline_block = true %}
+
         {% endif %}
         <div class="control-group{% if errors|length > 0 %} error{% endif %}{% if inline_block %} form-horizontal{% endif %}"
              id="sonata-ba-field-container-{{ id }}">
@@ -262,11 +274,11 @@ file that was distributed with this source code.
                 {% block label %}
                     {% if sonata_admin.field_description.options.name is defined %}
                         {% if label_render %}
-                        {{ form_label(form, sonata_admin.field_description.options.name, { 'attr' : {'class' : 'control-label'} }) }}
+                            {{ form_label(form, sonata_admin.field_description.options.name, { 'attr' : {'class' : 'control-label'} }) }}
                         {% endif %}
                     {% else %}
                         {% if label_render %}
-                        {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
+                            {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
                         {% endif %}
                     {% endif %}
                 {% endblock %}
@@ -285,7 +297,7 @@ file that was distributed with this source code.
             </div>
         </div>
     {% endif %}
-{% endblock field_row %}
+{% endblock form_row %}
 
 {% block collection_widget_row %}
     {% spaceless %}
@@ -355,19 +367,19 @@ file that was distributed with this source code.
 {% block networking_type_autocomplete_widget %}
     {{ form_widget(form) }}
     <script>
-        $(document).ready(function () {
+        jQuery(document).ready(function () {
             jQuery("#{{ id }}").select2({
-                placeholder:"{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
-                allowClear:true
+                placeholder: "{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
+                allowClear: true
             });
         });
     </script>
 {% endblock %}
 
 {% block form_message %}
-{% spaceless %}
-    {{ block('form_help') }}
-{% endspaceless %}
+    {% spaceless %}
+        {{ block('form_help') }}
+    {% endspaceless %}
 {% endblock form_message %}
 
 {% block form_help %}
@@ -406,40 +418,41 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block checkbox_widget %}
-{% spaceless %}
+    {% spaceless %}
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/> {{ help_inline|trans({}, translation_domain)|raw }}
-{% endspaceless %}
+    {% endspaceless %}
 {% endblock checkbox_widget %}
 
 {% block sonata_security_roles_widget %}
-{% spaceless %}
-    <div class="editable">
-        <h4>{{ 'field.label_roles_editable'|trans({}, "SonataUserBundle") }}</h4>
-        {{ block('choice_widget') }}
-    </div>
-    {% if read_only_choices|length > 0 %}
-    <div class="readonly">
-        <h4>{{ 'field.label_roles_readonly'|trans({}, "SonataUserBundle") }}</h4>
-        <ul>
-        {% for choice in read_only_choices %}
-            <li>{{ choice }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-{% endspaceless %}
+    {% spaceless %}
+        <div class="editable">
+            <h4>{{ 'field.label_roles_editable'|trans({}, "SonataUserBundle") }}</h4>
+            {{ block('choice_widget') }}
+        </div>
+        {% if read_only_choices|length > 0 %}
+            <div class="readonly">
+                <h4>{{ 'field.label_roles_readonly'|trans({}, "SonataUserBundle") }}</h4>
+                <ul>
+                    {% for choice in read_only_choices %}
+                        <li>{{ choice }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endspaceless %}
 {% endblock sonata_security_roles_widget %}
 
 {% block media_entity_type_widget %}
-<ul class="media-list" >
-    {% for child in form %}
-        {% set object=objects[child.vars.value] %}
-        <li class="media">
+    <ul class="media-list">
+        {% for child in form %}
+            {% set object=objects[child.vars.value] %}
+            <li class="media">
                 <p>{% media object, 'admin' with {'class': 'media-object'} %}</p>
+
                 <div class="media-body">
                     {{ form_widget(child) }} <strong class="media-heading">{{ object.name }}</strong>
                 </div>
-        </li>
-    {% endfor %}
-</ul>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

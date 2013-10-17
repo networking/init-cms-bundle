@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\Security\Core\SecurityContextInterface,
     Symfony\Component\DependencyInjection\Container,
     Networking\InitCmsBundle\Component\Menu\MenuBuilder,
-    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface,
     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 

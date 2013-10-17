@@ -33,11 +33,11 @@ file that was distributed with this source code.
     {% else %}
         {% if action is defined %}
             -
-            {% for label, uri in admin.breadcrumbs(action) %}
+            {% for menu in admin.breadcrumbs(action) %}
                 {% if not loop.first %}
                     &gt;
                 {% endif %}
-                {{ label|raw|replace({'&quot;': ''})|striptags }}
+                {{ menu.label|raw|striptags|replace({'&quot;': ''}) }}
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -64,14 +64,17 @@ file that was distributed with this source code.
 
         {% if _title is not empty or action is defined %}
         <h1>
+
             {% if _title is not empty %}
-            {{ _title|raw }}
-            {% elseif action is defined %}
-                {% for label, uri in admin.breadcrumbs(action) %}
-                    {% if loop.last %}
-                        {{ label|raw }}
-                    {% endif %}
-                {% endfor %}
+                {{ _title|raw }}
+            {% else %}
+                {% if action is defined %}
+                    {% for menu in admin.breadcrumbs(action) %}
+                        {% if loop.last  %}
+                        {{ menu.label|raw }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
                 {% if action == 'edit' %}
                     {% set settings = {} %}
                     {% if object.locale is defined %}
@@ -81,7 +84,7 @@ file that was distributed with this source code.
                     <a class="link-underlined font-small font-light"
                        href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
                 {% endif %}
-            {% endif %}
+            {% endif%}
 
         </h1>
         {% endif %}

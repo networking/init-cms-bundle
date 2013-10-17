@@ -16,6 +16,8 @@ use Sonata\BlockBundle\Block\BaseBlockService,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 class OnlineUsersBlockService extends BaseBlockService
 {
     /**
@@ -24,7 +26,7 @@ class OnlineUsersBlockService extends BaseBlockService
     protected $em;
 
     /**
-     * @param string                                                     $name
+     * @param string $name
      *
      * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
      */
@@ -40,16 +42,15 @@ class OnlineUsersBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function execute(BlockContextInterface $block, Response $response = null)
+    public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-        $settings = array_merge($this->getDefaultSettings(), $block->getSettings());
 
-        $users = $this->em->getRepository($settings['user_entity'])->getLatestActivity();
+        $users = $this->em->getRepository($blockContext->getSetting('user_entity'))->getLatestActivity();
 
         return $this->renderResponse(
-            'NetworkingInitCmsBundle:Block:block_online_users.html.twig',
+            $blockContext->getTemplate(),
             array(
-                'block' => $block,
+                'block' => $blockContext->getBlock(),
                 'online_users' => $users
             ),
             $response
@@ -83,8 +84,12 @@ class OnlineUsersBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function getDefaultSettings()
+    public function setDefaultSettings(OptionsResolverInterface $resolver)
     {
-        return array('user_entity' => 'NetworkingInitCmsBundle:User');
+        $resolver->setDefaults(array(
+                'user_entity' => 'NetworkingInitCmsBundle:User',
+                'template' => 'NetworkingInitCmsBundle:Block:block_online_users.html.twig'
+            )
+        );
     }
 }

@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\DependencyInjection\Container,
     Networking\InitCmsBundle\Component\Menu\MenuBuilder,
     Networking\InitCmsBundle\Entity\MenuItem as Menu,
-    Networking\InitCmsBundle\Entity\Page;
+    Networking\InitCmsBundle\Entity\BasePage as Page;
 
 /**
  * @author net working AG <info@networking.ch>

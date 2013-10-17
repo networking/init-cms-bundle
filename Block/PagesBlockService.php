@@ -16,6 +16,8 @@ use Sonata\BlockBundle\Block\BaseBlockService,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 class PagesBlockService extends BaseBlockService
 {
     /**
@@ -24,7 +26,7 @@ class PagesBlockService extends BaseBlockService
     protected $em;
 
     /**
-     * @param string                                                     $name
+     * @param string $name
      *
      * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
      */
@@ -40,9 +42,8 @@ class PagesBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function execute(BlockContextInterface $block, Response $response = null)
+    public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-        $settings = array_merge($this->getDefaultSettings(), $block->getSettings());
 
         $pages = $this->em->getRepository('NetworkingInitCmsBundle:Page')
             ->getAllSortBy('updatedAt');
@@ -70,17 +71,10 @@ class PagesBlockService extends BaseBlockService
             }
         }
 
-
-        switch($settings['type']){
-            default:
-                $template = 'NetworkingInitCmsBundle:Block:block_page_status.html.twig';
-
-        }
-
         return $this->renderResponse(
-            $template,
+            $blockContext->getTemplate(),
             array(
-                'block' => $block,
+                'block' => $blockContext->getBlock(),
                 'draft_pages' => $draftPageCount,
                 'review_pages' => $reviewPageCount,
                 'published_pages' => $publishedPageCount,
@@ -119,8 +113,8 @@ class PagesBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function getDefaultSettings()
+    public function setDefaultSettings(OptionsResolverInterface $resolver)
     {
-        return array('type' => 'page_status');
+        $resolver->setDefaults(array('template' => 'NetworkingInitCmsBundle:Block:block_page_status.html.twig'));
     }
 }

@@ -269,7 +269,7 @@ class MenuItemAdminController extends CRUDController
                         )
                     );
                 } else {
-                    $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
+                    $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_delete_success');
                 }
             } catch (ModelManagerException $e) {
                 if ($this->isXmlHttpRequest()) {
@@ -282,7 +282,7 @@ class MenuItemAdminController extends CRUDController
                         )
                     );
                 } else {
-                    $this->get('session')->setFlash('sonata_flash_error', 'flash_delete_error');
+                    $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_delete_error');
                 }
 
             }

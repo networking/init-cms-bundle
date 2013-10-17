@@ -100,7 +100,7 @@ class PageAdmin extends BaseAdmin
         $this->pageLocale = $request->get('locale') ? $request->get('locale') : $this->getSubject()->getLocale();
 
         if (!$this->pageLocale) {
-            throw new \Symfony\Component\Form\Exception\CreationException('Cannot create a page without a language');
+            throw new \Symfony\Component\Form\Exception\InvalidArgumentException('Cannot create a page without a language');
         }
 
         $this->repository = $this->getContainer()->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
@@ -143,7 +143,8 @@ class PageAdmin extends BaseAdmin
         }
 
         if ($this->getSubject()->getId() || $request->isXmlHttpRequest()) {
-            $formMapper->with('page_content')
+            $formMapper
+                ->with('page_content')
                 ->add(
                 'layoutBlock',
                 'sonata_type_collection',
@@ -174,6 +175,7 @@ class PageAdmin extends BaseAdmin
         }
 
         if (!$this->getSubject()->getId()) {
+
             $formMapper
                 ->add(
                 'locale',

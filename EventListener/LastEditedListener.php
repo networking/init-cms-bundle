@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface,
     Symfony\Component\HttpFoundation\Session\Session,
     Networking\InitCmsBundle\Helper\BundleGuesser,
     Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent,
-    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Entity\MenuItem;
 
 /**

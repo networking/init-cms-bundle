@@ -13,10 +13,11 @@ namespace Networking\InitCmsBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs,
     Symfony\Component\HttpFoundation\Session\Session,
     Symfony\Component\DependencyInjection\ContainerInterface,
-    Networking\InitCmsBundle\Entity\Page,
+    Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Helper\PageHelper,
     JMS\Serializer\EventDispatcher\EventSubscriberInterface,
     JMS\Serializer\EventDispatcher\Event;
+use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -54,7 +55,7 @@ class PageListener implements EventSubscriberInterface
                 'event' => 'serializer.post_deserialize',
                 'method' => 'onPostDeserialize',
                 'format' => 'json',
-                'class' => 'Networking\InitCmsBundle\Entity\Page'),
+                'class' => 'newo_init_cms.class.page'),
         );
     }
 
@@ -70,7 +71,7 @@ class PageListener implements EventSubscriberInterface
 
         $em = $args->getEntityManager();
 
-        if ($entity instanceof Page) {
+        if ($entity instanceof PageInterface) {
 
             if ($contentRoute = $entity->getContentRoute()) {
 

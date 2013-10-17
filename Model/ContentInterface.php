@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Entity;
+namespace Networking\InitCmsBundle\Model;
 
 /**
  * @author net working AG <info@networking.ch>

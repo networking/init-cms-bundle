@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+        http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="Networking\InitCmsBundle\Model\Page">
+        <constraint name="Networking\InitCmsBundle\Validator\Constraints\UniqueURL">
+            <option name="groups">
+                <value>not_home</value>
+            </option>
+        </constraint>
+
+        <property name="pageName">
+            <constraint name="NotBlank">
+                <option name="message">init_cms.pagename.blank</option>
+                <option name="groups">
+                    <value>default</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="url">
+            <constraint name="NotBlank">
+                <option name="message">init_cms.url.blank</option>
+                <option name="groups">
+                    <value>not_home</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+</constraint-mapping>

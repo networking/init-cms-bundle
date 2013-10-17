@@ -9,6 +9,7 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
+use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
@@ -18,6 +19,8 @@ use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminContro
     Sonata\MediaBundle\Provider\MediaProviderInterface,
     Symfony\Component\HttpFoundation\File\UploadedFile,
     Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -367,9 +370,9 @@ class MediaAdminController extends SonataMediaAdminController
         if ($this->getRequest()->getMethod() == 'DELETE') {
             try {
                 $this->admin->delete($object);
-                $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
+                $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_delete_success');
             } catch (ModelManagerException $e) {
-                $this->get('session')->setFlash('sonata_flash_error', 'flash_delete_error');
+                $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_delete_error');
             }
 
             return new RedirectResponse($this->admin->generateUrl(
@@ -544,4 +547,28 @@ class MediaAdminController extends SonataMediaAdminController
             )
         );
     }
+
+    public function showAction($id = null)
+        {
+            if (false === $this->admin->isGranted('SHOW')) {
+                throw new AccessDeniedException();
+            }
+
+            $media = $this->admin->getObject($id);
+
+            if (!$media) {
+                throw new NotFoundHttpException('unable to find the media with the id');
+            }
+
+            return $this->render('NetworkingInitCmsBundle:MediaAdmin:show.html.twig', array(
+                'media'         => $media,
+                'formats'       => $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext()),
+                'format'        => $this->get('request')->get('format', 'reference'),
+                'base_template' => $this->getBaseTemplate(),
+                'admin'         => $this->admin,
+                'security'      => $this->get('sonata.media.pool')->getDownloadSecurity($media),
+                'action'        => 'view',
+                'pixlr'         => $this->container->has('sonata.media.extra.pixlr') ? $this->container->get('sonata.media.extra.pixlr') : false,
+            ));
+        }
 }

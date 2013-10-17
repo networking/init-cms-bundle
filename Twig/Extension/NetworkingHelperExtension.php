@@ -658,9 +658,10 @@ class NetworkingHelperExtension extends \Twig_Extension
                 if (is_object($selected)) {
                     $selected = (string)$selected->getId();
                 }
+
                 foreach ($choices as $choice) {
                     /** @var $choice \Symfony\Component\Form\Extension\Core\View\ChoiceView */
-                    if ($choice->isSelected($selected)) {
+                    if ($choice->value == $selected) {
                         $value = $choice->label;
                     }
                 }

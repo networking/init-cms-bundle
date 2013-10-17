@@ -169,7 +169,7 @@ class MediaAdmin extends SonataMediaAdmin
                 'actions',
                 array(
                     'actions' => array(
-                        'view' => array(),
+                        'show' => array(),
                         'edit' => array(),
                         'delete' => array()
                     )
@@ -331,7 +331,7 @@ class MediaAdmin extends SonataMediaAdmin
 
         $menu->addChild(
             $this->trans('sidemenu.link_media_view'),
-            array('uri' => $admin->generateUrl('view', array('id' => $id)))
+            array('uri' => $admin->generateUrl('show', array('id' => $id)))
         );
     }
 

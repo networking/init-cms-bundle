@@ -40,7 +40,7 @@ class LayoutBlockAdmin extends BaseAdmin
         $listener = new LayoutBlockFormListener($formMapper->getFormBuilder()->getFormFactory(), $this->getContainer());
         $formMapper->getFormBuilder()->addEventSubscriber($listener);
 
-        $entityManager = $this->getContainer()->get('Doctrine')->getEntityManager();
+        $entityManager = $this->getContainer()->get('Doctrine')->getManager();
         $transformer = new PageToNumberTransformer($entityManager);
         $formMapper
 //                ->add('isActive', 'checkbox', array('required' => false, 'label_render' => false))

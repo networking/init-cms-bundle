@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Entity\Page,
+use Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Entity\PageSnapshot,
     Networking\InitCmsBundle\Helper\PageHelper,
     Networking\InitCmsBundle\Entity\LayoutBlock,
@@ -95,7 +95,7 @@ class PageAdminController extends CRUDController
                 );
             }
 
-            $this->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                 'sonata_flash_' . $status,
                 $message
             );
@@ -142,7 +142,7 @@ class PageAdminController extends CRUDController
 
             $linkPageId = $this->getRequest()->get('page');
             if (!$linkPageId) {
-                $this->get('session')->setFlash('sonata_flash_error', 'flash_link_error');
+                $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_link_error');
             } else {
                 /** @var $linkPage Page */
                 $linkPage = $er->find($linkPageId);
@@ -169,7 +169,7 @@ class PageAdminController extends CRUDController
                 }
 
 
-                $this->get('session')->setFlash('sonata_flash_success', 'flash_link_success');
+                $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_link_success');
 
                 return new RedirectResponse($this->admin->generateUrl('edit', array('id' => $page->getId())));
             }
@@ -245,7 +245,7 @@ class PageAdminController extends CRUDController
             }
 
 
-            $this->get('session')->setFlash('sonata_flash_success', 'flash_link_success');
+            $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_link_success');
 
             return new RedirectResponse($this->admin->generateUrl('edit', array('id' => $page->getId())));
         }
@@ -365,12 +365,12 @@ class PageAdminController extends CRUDController
             }
 
         } catch (\Exception $e) {
-            $this->get('session')->setFlash('sonata_flash_error', 'flash_batch_publish_error');
+            $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_publish_error');
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
 
-        $this->get('session')->setFlash('sonata_flash_success', 'flash_batch_publish_success');
+        $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_publish_success');
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -657,7 +657,7 @@ class PageAdminController extends CRUDController
                     );
                 }
 
-                $this->get('session')->setFlash('sonata_flash_success', 'flash_edit_success');
+                $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_edit_success');
 
                 // redirect to edit mode
                 return $this->redirectTo($object);
@@ -665,7 +665,7 @@ class PageAdminController extends CRUDController
 
             // show an error message if the form failed validation
             if (!$isFormValid) {
-                $this->get('session')->setFlash('sonata_flash_error', 'flash_edit_error');
+                $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_edit_error');
             } elseif ($this->isPreviewRequested()) {
                 // enable the preview template if the form was valid and preview was requested
                 $templateKey = 'preview';
@@ -793,7 +793,7 @@ class PageAdminController extends CRUDController
             );
         }
 
-        $this->get('session')->setFlash('sonata_flash_success', $this->admin->trans('flash_status_success'));
+        $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->admin->trans('flash_status_success'));
 
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
     }
@@ -966,7 +966,7 @@ class PageAdminController extends CRUDController
             );
         }
 
-        $this->get('session')->setFlash('sonata_flash_success', $this->admin->trans('flash_publish_success'));
+        $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->admin->trans('flash_publish_success'));
 
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
     }
@@ -974,7 +974,7 @@ class PageAdminController extends CRUDController
     /**
      * Create a snapshot of a published page
      *
-     * @param \Networking\InitCmsBundle\Entity\Page $page
+     * @param \Networking\InitCmsBundle\Entity\BasePage $page
      */
     protected function makeSnapshot(Page $page)
     {
