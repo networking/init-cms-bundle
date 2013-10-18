@@ -17,7 +17,8 @@ use Doctrine\ORM\Event\LifecycleEventArgs,
     Networking\InitCmsBundle\Helper\PageHelper,
     JMS\Serializer\EventDispatcher\EventSubscriberInterface,
     JMS\Serializer\EventDispatcher\Event;
-use Networking\InitCmsBundle\Model\PageInterface;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -77,48 +78,48 @@ class PageListener implements EventSubscriberInterface
 
                 $contentRoute->setObjectId($entity->getId());
                 $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
-
                 $em->persist($contentRoute);
-                $em->flush();
+                $em->getUnitOfWork()->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
             }
         }
     }
 
-    /**
-     * On Page Update
-     *
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
-     */
-    public function postUpdate(LifecycleEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args)
     {
-
-        /** @var $entity Page */
-        $entity = $args->getEntity();
-
         $em = $args->getEntityManager();
+        $unitOfWork = $em->getUnitOfWork();
 
-        if ($entity instanceof Page) {
-            $contentRoute = $entity->getContentRoute();
-            $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
-            $em->flush($contentRoute);
+        foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
+            if ($entity instanceof Page) {
 
-            foreach ($entity->getAllChildren() as $child) {
-                $contentRoute = $child->getContentRoute();
-                $contentRoute->setPath(PageHelper::getPageRoutePath($child->getPath()));
-                $em->persist($contentRoute);
+                if ($contentRoute = $entity->getContentRoute()) {
+                    $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
+                    $em->persist($contentRoute);
+                    $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
 
-                if ($entity->getStatus() == Page::STATUS_PUBLISHED) {
-                    if ($childSnapshot = $child->getSnapshot()) {
-                        $snapshotRoute = $childSnapshot->getContentRoute();
+                    foreach ($entity->getAllChildren() as $child) {
+                        $contentRoute = $child->getContentRoute();
+                        $contentRoute->setPath(PageHelper::getPageRoutePath($child->getPath()));
+                        $em->persist($contentRoute);
+                        $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
 
-                        $newPath = PageHelper::getPageRoutePath($child->getPath());
-                        
-                        $snapshotRoute->setPath($newPath);
-                        $childSnapshot->setPath($newPath);
+                        if ($entity->getStatus() == Page::STATUS_PUBLISHED) {
+                            if ($childSnapshot = $child->getSnapshot()) {
+                                $snapshotRoute = $childSnapshot->getContentRoute();
 
-                        $em->flush($childSnapshot);
-                        $em->flush($snapshotRoute);
+                                $newPath = PageHelper::getPageRoutePath($child->getPath());
 
+                                $snapshotRoute->setPath($newPath);
+                                $childSnapshot->setPath($newPath);
+
+                                $em->persist($childSnapshot);
+                                $em->persist($snapshotRoute);
+
+                                $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($childSnapshot)), $childSnapshot);
+                                $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($snapshotRoute)), $snapshotRoute);
+
+                            }
+                        }
                     }
                 }
             }
@@ -184,6 +185,12 @@ class PageListener implements EventSubscriberInterface
             $originalPageId = $page->getId();
             $originalPage = $er->find($originalPageId);
             $page->setTranslations($originalPage->getAllTranslations()->toArray());
+        }
+
+        if (!$contentRoute = $page->getContentRoute()) {
+            $originalPageId = $page->getId();
+            $originalPage = $er->find($originalPageId);
+            $page->setContentRoute($originalPage->getContentRoute());
         }
     }
 }

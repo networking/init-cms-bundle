@@ -54,13 +54,12 @@ class LayoutBlockListener
                     $contentObject = new $classType;
                     $em->persist($contentObject);
                 }
-
-                $em->flush();
+                $em->flush($contentObject);
 
                 $layoutBlock->setObjectId($contentObject->getId());
 
                 $em->persist($layoutBlock);
-                $em->flush();
+                $em->flush($layoutBlock);
 
             } else {
                 $this->autoPageDraft($args);
@@ -103,17 +102,6 @@ class LayoutBlockListener
                 $this->autoPageDraft($args);
             }
         }
-
-//        if ($entity instanceof Gallery) {
-//
-//            $repo = $em->getRepository('NetworkingInitCmsBundle:GalleryView');
-//            $galleryViews = $repo->findBy(array('mediaGallery' => $entity->getId()));
-//
-//            foreach ($galleryViews as $galleryView) {
-//                $layoutBlock = $galleryView->getLayoutBlock();
-//                $em->remove($layoutBlock);
-//            }
-//        }
     }
 
     /**

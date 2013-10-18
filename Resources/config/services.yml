@@ -219,8 +219,8 @@ services:
        class:  Networking\InitCmsBundle\EventListener\PageListener
        arguments: [@session, @service_container ]
        tags:
-           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
            - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+           - { name: doctrine.event_listener, event: onFlush, method: onFlush }
            - { name: jms_serializer.event_subscriber }
 
     networking_init_cms.last_edited_listener:
