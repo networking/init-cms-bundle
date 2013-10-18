@@ -7,22 +7,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 
 namespace Networking\InitCmsBundle\Model;
+
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface ContentRouteInterface {
-
-    /**
-     * @return string
-     */
-    public function __toString();
-
-
+interface ContentRouteInterface
+{
     /**
      * Initializes the object to function as a route
      * @param RouteReferrersReadInterface $content
@@ -31,17 +27,18 @@ interface ContentRouteInterface {
     public function initializeRoute(RouteReferrersReadInterface $content);
 
     /**
-     * @param  string       $controller
+     * @param  string $controller
      * @return $this
      */
     public function setController($controller);
+
     /**
      * @return string
      */
     public function getController();
 
     /**
-     * @param  int          $id
+     * @param  int $id
      * @return $this
      */
     public function setId($id);
@@ -52,11 +49,10 @@ interface ContentRouteInterface {
     public function getId();
 
     /**
-     * @param  string       $locale
+     * @param  string $locale
      * @return $this
      */
     public function setLocale($locale);
-
 
     /**
      * @return string
@@ -64,7 +60,7 @@ interface ContentRouteInterface {
     public function getLocale();
 
     /**
-     * @param  string       $classType
+     * @param  string $classType
      * @return $this
      */
     public function setClassType($classType);
@@ -75,7 +71,7 @@ interface ContentRouteInterface {
     public function getClassType();
 
     /**
-     * @param  int          $objectId
+     * @param  int $objectId
      * @return $this
      */
     public function setObjectId($objectId);
@@ -96,9 +92,8 @@ interface ContentRouteInterface {
      */
     public function getPath();
 
-
     /**
-     * @param  string       $template
+     * @param  string $template
      * @return $this
      */
     public function setTemplate($template);
@@ -112,6 +107,7 @@ interface ContentRouteInterface {
      * @param string $templateName
      */
     public function setTemplateName($templateName);
+
     /**
      * @return string
      */
@@ -122,6 +118,8 @@ interface ContentRouteInterface {
      */
     public function getDefaults();
 
+    /**
+     * @return mixed
+     */
     public function getContent();
-
 }

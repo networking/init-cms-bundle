@@ -46,6 +46,10 @@ class NetworkingInitCmsExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
+        if ('custom' !== $config['db_driver']) {
+            $loader->load(sprintf('%s.yml', $config['db_driver']));
+        }
+
         $config['languages'] = $this->addShortLabels($config['languages']);
 
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
@@ -90,7 +94,7 @@ class NetworkingInitCmsExtension extends Extension
             }
         }
 
-        $folder = $config['db_driver'] == 'orm' ? 'Entity': 'Document';
+        $folder = $config['db_driver'] == 'orm' ? 'Entity' : 'Document';
 
         $baseNameSpace = sprintf('Networking\InitCmsBundle\%s', $folder);
 
@@ -134,14 +138,13 @@ class NetworkingInitCmsExtension extends Extension
         );
 
 
-
         $collector->addAssociation(
             $config['class']['page'],
             'mapManyToMany',
             array(
                 'fieldName' => 'originals',
                 'targetEntity' => $config['class']['page'],
-                'inversedBy'=>"translations",
+                'inversedBy' => "translations",
                 'cascade' => array('persist'),
                 'joinTable' => array(
                     'name' => 'page_translation',
@@ -163,13 +166,13 @@ class NetworkingInitCmsExtension extends Extension
 
         //LayoutBlock
         $collector->addAssociation(
-            $baseNameSpace.'\LayoutBlock',
+            $baseNameSpace . '\LayoutBlock',
             'mapManyToOne',
             array(
                 'fieldName' => 'page',
                 'targetEntity' => $config['class']['page'],
-                'inversedBy'=>"layoutBlock",
-                'cascade'=> array('persist','remove'),
+                'inversedBy' => "layoutBlock",
+                'cascade' => array('persist', 'remove'),
                 'joinColumns' => array(
                     'name' => 'page_id',
                     'referencedColumnName' => 'id',
@@ -182,13 +185,13 @@ class NetworkingInitCmsExtension extends Extension
 
         //MenuItem
         $collector->addAssociation(
-            $baseNameSpace.'\MediaType',
+            $baseNameSpace . '\MediaType',
             'mapManyToOne',
             array(
                 'fieldName' => 'page',
                 'targetEntity' => $config['class']['page'],
-                'inversedBy'=>"menuItem",
-                'cascade'=> array('persist'),
+                'inversedBy' => "menuItem",
+                'cascade' => array('persist'),
                 'joinColumns' => array(
                     'name' => 'page_id',
                     'referencedColumnName' => 'id',
@@ -201,13 +204,13 @@ class NetworkingInitCmsExtension extends Extension
 
         //PageSnapshot
         $collector->addAssociation(
-            $baseNameSpace.'\PageSnapshot',
+            $baseNameSpace . '\PageSnapshot',
             'mapManyToOne',
             array(
                 'fieldName' => 'page',
                 'targetEntity' => $config['class']['page'],
-                'inversedBy'=>"snapshots",
-                'cascade'=> array('persist')
+                'inversedBy' => "snapshots",
+                'cascade' => array('persist')
 
             )
         );

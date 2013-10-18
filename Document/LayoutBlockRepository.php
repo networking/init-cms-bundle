@@ -8,17 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Entity;
+namespace Networking\InitCmsBundle\Document;
 
+use Doctrine\ORM\EntityRepository;
 
-use Networking\InitCmsBundle\Model\Page as ModelPage;
 /**
- * Networking\InitCmsBundle\Entity\BasePage
- *
+ * ContentRepository
  *
  * @author net working AG <info@networking.ch>
  */
-abstract class BasePage extends ModelPage
+class LayoutBlockRepository extends EntityRepository
 {
-
 }

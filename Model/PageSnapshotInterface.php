@@ -23,7 +23,7 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
     /**
      * @param $resourceId
      *
-     * @return PageSnapshot
+     * @return $this
      */
     public function setResourceId($resourceId);
 
@@ -36,7 +36,7 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
     /**
      * @param $resourceName
      *
-     * @return PageSnapshot
+     * @return $this
      */
     public function setResourceName($resourceName);
 
@@ -50,7 +50,7 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
     /**
      * @param $snapshotDate
      *
-     * @return PageSnapshot
+     * @return $this
      */
     public function setSnapshotDate($snapshotDate);
 
@@ -63,7 +63,7 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
     /**
      * @param $version
      *
-     * @return PageSnapshot
+     * @return $this
      */
     public function setVersion($version);
 
@@ -75,7 +75,7 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
     /**
      * @param $versionedData
      *
-     * @return PageSnapshot
+     * @return $this
      */
     public function setVersionedData($versionedData);
 
@@ -87,7 +87,7 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
     /**
      * @param int $id
      *
-     * @return PageSnapshot
+     * @return $this
      */
     public function setId($id);
 
@@ -100,25 +100,25 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
     /**
      * Set page
      *
-     * @param  BasePage $page
+     * @param  PageInterface $page
      *
-     * @return PageSnapshot
+     * @return $this
      */
-    public function setPage(BasePage $page);
+    public function setPage(PageInterface $page);
 
     /**
      * Get conversation
      *
-     * @return Page
+     * @return PageInterface
      */
     public function getPage();
 
 
     /**
-     * @param  ContentRoute $contentRoute
-     * @return PageSnapshot
+     * @param  ContentRouteInterface $contentRoute
+     * @return $this
      */
-    public function setContentRoute(ContentRoute $contentRoute);
+    public function setContentRoute(ContentRouteInterface $contentRoute);
 
 
     /**

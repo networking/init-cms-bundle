@@ -1,0 +1,10 @@
+services:
+    networking_init_cms.page_class_meta:
+        class: Doctrine\ORM\Mapping\ClassMetadata
+        arguments: [ Application\Networking\InitCmsBundle\Entity\Page ]
+
+    networking_init_cms.page_repository:
+        class: Networking\InitCmsBundle\Entity\PageManager
+        arguments: [ @doctrine.orm.entity_manager, @networking_init_cms.page_class_meta ]
+        calls:
+          - [ setContainer, [ @service_container] ]

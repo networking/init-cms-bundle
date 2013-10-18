@@ -9,10 +9,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\ORM\Mapping as ORM,
-    Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
-    Networking\InitCmsBundle\Entity\BasePage,
-    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -212,11 +209,11 @@ class PageSnapshot implements PageSnapshotInterface{
     /**
      * Set page
      *
-     * @param  BasePage $page
+     * @param  PageInterface $page
      *
      * @return PageSnapshot
      */
-    public function setPage(BasePage $page)
+    public function setPage(PageInterface $page)
     {
         $this->page = $page;
 
@@ -234,10 +231,10 @@ class PageSnapshot implements PageSnapshotInterface{
     }
 
     /**
-     * @param  ContentRoute $contentRoute
+     * @param  ContentRouteInterface $contentRoute
      * @return PageSnapshot
      */
-    public function setContentRoute(ContentRoute $contentRoute)
+    public function setContentRoute(ContentRouteInterface $contentRoute)
     {
         $contentRoute->setClassType(get_class($this));
         $contentRoute->setLocale($this->page->getLocale());

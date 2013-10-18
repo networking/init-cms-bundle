@@ -17,5 +17,36 @@
             <generator strategy="AUTO"/>
         </id>
 
+        <one-to-one target-entity="Networking\InitCmsBundle\Entity\ContentRoute" field="contentRoute">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-column name="content_route_id" referenced-column-name="id"/>
+        </one-to-one>
+        <one-to-many target-entity="Networking\InitCmsBundle\Entity\LayoutBlock" field="layoutBlock" mapped-by="page"
+                     orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <order-by>
+                <order-by-field name="sortOrder" direction="ASC"/>
+            </order-by>
+        </one-to-many>
+
+        <one-to-many target-entity="Networking\InitCmsBundle\Entity\MenuItem" field="menuItem" mapped-by="page"
+                     orphan-removal="true"/>
+
+
+        <one-to-many target-entity="Networking\InitCmsBundle\Entity\PageSnapshot" field="snapshots" mapped-by="page">
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+            <order-by>
+                <order-by-field name="version" direction="DESC"/>
+            </order-by>
+        </one-to-many>
+
     </entity>
 </doctrine-mapping>

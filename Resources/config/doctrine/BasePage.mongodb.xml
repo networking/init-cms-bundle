@@ -1,0 +1,83 @@
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                    http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <mapped-superclass name="Networking\InitCmsBundle\Document\BasePage">
+
+        <field name="createdAt" fieldName="createdAt" type="date"/>
+
+        <field name="updatedAt" fieldName="updatedAt" type="date"/>
+
+        <field name="pageName" fieldName="pageName" type="string"/>
+
+        <field name="metaTitle" fieldName="metaTitle" type="string"/>
+
+        <field name="url" fieldName="url" type="string"/>
+
+        <field name="path" fieldName="path" type="string"/>
+
+        <field name="level" fieldName="lvl" type="string"/>
+
+        <field name="metaKeyword" fieldName="metaKeyword" type="string"/>
+
+        <field name="metaDescription" fieldName="metaDescription" type="text"/>
+
+        <field name="isHome" fieldName="isHome" type="boolean"/>
+
+        <field name="status" fieldName="status" type="string"/>
+
+        <field name="visibility" fieldName="visibility" type="string" />
+
+        <field name="activeFrom" fieldName="activeFrom" type="date"/>
+
+        <field name="locale" fieldName="locale" type="string"/>
+
+        <reference-one field="contentRoute" target-document="Networking\InitCmsBundle\Document\ContentRoute"
+                       mapped-by="page">
+            <cascade>
+                <persist/>
+                <remove/>
+            </cascade>
+        </reference-one>
+
+        <reference-many field="layoutBlock" target-document="Networking\InitCmsBundle\Document\LayoutBlock"
+                        mapped-by="page">
+            <cascade>
+                <persist/>
+                <remove/>
+            </cascade>
+            <sort>
+                <sort field="sortOrder" order="ASC"/>
+            </sort>
+        </reference-many>
+
+        <reference-many field="menuItem" target-document="Networking\InitCmsBundle\Document\MenuItem" mapped-by="page"/>
+
+        <reference-many field="snapshots" target-document="Networking\InitCmsBundle\Document\PageSnapshot"
+                        mapped-by="page">
+            <cascade>
+                <remove/>
+            </cascade>
+            <sort>
+                <sort field="version" order="DESC"/>
+            </sort>
+        </reference-many>
+
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="prePersist"/>
+            <lifecycle-callback type="preUpdate" method="preUpdate"/>
+        </lifecycle-callbacks>
+
+        <indexes>
+            <index>
+                <key name="path" order="asc"/>
+                <key name="local" order="asc"/>
+                <option name="safe" value="true"/>
+                <option name="unique" value="true" />
+            </index>
+        </indexes>
+
+
+    </mapped-superclass>
+</doctrine-mongo-mapping>

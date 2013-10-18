@@ -8,7 +8,7 @@ use Networking\InitCmsBundle\Entity\Gallery as MediaGallery;
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 
 /**
- * Networking\GalleryBundle\Entity\GalleryView
+ * Networking\GalleryBundle\Model\GalleryView
  *
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="gallery_view")

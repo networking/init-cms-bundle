@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @author net working AG <info@networking.ch>
  */
-class PageRepository extends MaterializedPathRepository implements ContentRepositoryInterface, ContainerAwareInterface
+class PageManager extends MaterializedPathRepository implements ContentRepositoryInterface, ContainerAwareInterface
 {
 
     /**

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <document name="Networking\InitCmsBundle\Document\ContentRoute" collection="contentRoutes">
+
+        <field fieldName="id" id="true" strategy="INCREMENT"/>
+
+        <field name="classType" fieldName="classType" type="string"/>
+
+        <field name="objectId" fieldName="objectId" type="int"/>
+
+        <field name="path" fieldName="path" type="string"/>
+
+        <field name="controller" fieldName="controller" type="string"/>
+
+        <field name="template" fieldName="template" type="string"/>
+
+        <field name="templateName" fieldName="templateName" type="string"/>
+
+        <field name="locale" fieldName="locale" type="string"/>
+
+        <indexes>
+            <index>
+                <key name="path" order="asc"/>
+                <key name="local" order="asc"/>
+                <key name="classType" order="asc"/>
+                <option name="safe" value="true"/>
+                <option name="unique" value="true" />
+            </index>
+        </indexes>
+
+    </document>
+
+</doctrine-mongo-mapping>

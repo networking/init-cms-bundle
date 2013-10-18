@@ -13,8 +13,7 @@ namespace Networking\InitCmsBundle\Model;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-
-use Networking\InitCmsBundle\Entity\BasePage as Page;
+use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
  * @Gedmo\Tree(type="nested")

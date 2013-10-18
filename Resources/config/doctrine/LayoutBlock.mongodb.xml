@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <document name="Networking\InitCmsBundle\Document\LayoutBlock" collection="layoutBlocks">
+
+        <field fieldName="id" id="true" strategy="INCREMENT"/>
+
+        <field name="createdAt" fieldName="createdAt" type="date"/>
+
+        <field name="updatedAt" fieldName="updatedAt" type="date"/>
+
+        <field name="name" fieldName="name" type="string"/>
+
+        <field name="classType" fieldName="classType" type="string"/>
+
+        <field name="objectId" fieldName="objectId" type="string"/>
+
+        <field name="isActive" fieldName="isActive" type="boolean"/>
+
+        <field name="sortOrder" fieldName="sortOrder" type="string"/>
+
+        <indexes>
+            <index>
+                <key name="translationKey" order="asc"/>
+                <key name="local" order="asc"/>
+                <option name="safe" value="true"/>
+                <option name="unique" value="true" />
+            </index>
+        </indexes>
+
+    </document>
+
+</doctrine-mongo-mapping>

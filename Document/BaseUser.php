@@ -9,12 +9,13 @@
  */
  
 
-namespace Networking\InitCmsBundle\Entity;
+namespace Networking\InitCmsBundle\Document;
 
-use Networking\InitCmsBundle\Model\ResourceVersion as ModelResourceVersion;
+use Networking\InitCmsBundle\Model\User as ModelUser;
+
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class ResourceVersion extends ModelResourceVersion{
+abstract class BaseUser extends ModelUser {
 
 }

@@ -8,17 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Entity;
 
+namespace Networking\InitCmsBundle\Document;
 
-use Networking\InitCmsBundle\Model\Page as ModelPage;
+use Sonata\NewsBundle\Document\BaseTag;
+
 /**
- * Networking\InitCmsBundle\Entity\BasePage
+ * Networking\InitCmsBundle\Entity\Tag
  *
- *
- * @author net working AG <info@networking.ch>
+ *  @author net working AG <info@networking.ch>
  */
-abstract class BasePage extends ModelPage
+class Tag extends BaseTag
 {
 
 }

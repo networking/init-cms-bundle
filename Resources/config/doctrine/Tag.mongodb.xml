@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <document name="Application\Sonata\NewsBundle\Document\Tag" collection="tags">
+        <field fieldName="id" id="true" strategy="INCREMENT"/>
+
+        <reference-many field="media" target-document="Application\Sonata\NewsBundle\Document\media"
+                        inversed-by="tags"/>
+    </document>
+</doctrine-mongo-mapping>

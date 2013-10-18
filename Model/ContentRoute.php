@@ -112,7 +112,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
     /**
      * Initializes the object to function as a route
      * @param RouteReferrersReadInterface $content
-     * @return ContentRoute
+     * @return $this
      */
     public function initializeRoute(RouteReferrersReadInterface $content)
     {

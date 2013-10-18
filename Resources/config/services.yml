@@ -1,5 +1,5 @@
 parameters:
-    networking_init_cms.controllers_by_alias: {'Networking\InitCmsBundle\Entity\Page': "NetworkingInitCmsBundle:FrontendPage:index", 'Networking\InitCmsBundle\Entity\PageSnapshot': "NetworkingInitCmsBundle:FrontendPage:live"}
+    networking_init_cms.controllers_by_alias: {'Networking\InitCmsBundle\Model\Page': "NetworkingInitCmsBundle:FrontendPage:index", 'Networking\InitCmsBundle\Model\PageSnapshot': "NetworkingInitCmsBundle:FrontendPage:live"}
 services:
 
     session:
@@ -93,7 +93,7 @@ services:
 
     networking_init_cms.page.admin.page:
         class: Networking\InitCmsBundle\Admin\PageAdmin
-        arguments: [null, Networking\InitCmsBundle\Entity\Page, NetworkingInitCmsBundle:PageAdmin]
+        arguments: [null, Application\Networking\InitCmsBundle\Entity\Page, NetworkingInitCmsBundle:PageAdmin]
         calls:
             - [setTranslationDomain, [PageAdmin]]
             - [setLanguages, [%networking_init_cms.page.languages%]]
@@ -156,16 +156,6 @@ services:
         class: Symfony\Cmf\Component\Routing\Enhancer\FieldByClassEnhancer
         arguments: ['_content', '_controller', %networking_init_cms.controllers_by_alias%]
 
-
-    networking_init_cms.page_class_meta:
-        class: Doctrine\ORM\Mapping\ClassMetadata
-        arguments: [ Networking\InitCmsBundle\Entity\Page ]
-
-    networking_init_cms.page_repository:
-        class: Networking\InitCmsBundle\Entity\PageRepository
-        arguments: [ @doctrine.orm.entity_manager, @networking_init_cms.page_class_meta ]
-        calls:
-          - [ setContainer, [ @service_container] ]
 
     networking_init_cms.content_route_class_meta:
         class: Doctrine\ORM\Mapping\ClassMetadata
