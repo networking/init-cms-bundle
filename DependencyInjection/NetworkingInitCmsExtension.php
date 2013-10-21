@@ -48,6 +48,8 @@ class NetworkingInitCmsExtension extends Extension
 
         if ('custom' !== $config['db_driver']) {
             $loader->load(sprintf('%s.yml', $config['db_driver']));
+            $loader->load(sprintf('admin_%s.yml', $config['db_driver']));
+            $loader->load(sprintf('blocks_%s.yml', $config['db_driver']));
         }
 
         $config['languages'] = $this->addShortLabels($config['languages']);
@@ -64,6 +66,24 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
         $container->setParameter('networking_init_cms.ckeditor_config', $config['ckeditor_config']);
         $container->setParameter('networking_init_cms.admin_menu_groups', $config['admin_menu_groups']);
+
+        $this->registerDoctrineMapping($config);
+        $this->configureClass($config, $container);
+    }
+
+    /**
+     * @param $config
+     * @param ContainerBuilder $container
+     */
+    public function configureClass($config, ContainerBuilder $container)
+    {
+        // admin configuration
+        $container->setParameter('networking_init_cms.admin.page.class',       $config['class']['page']);
+        $container->setParameter('networking_init_cms.admin.user.class',       $config['class']['user']);
+
+        // manager configuration
+        $container->setParameter('networking_init_cms.manager.page.class',     $config['class']['page']);
+        $container->setParameter('networking_init_cms.manager.user.class',     $config['class']['user']);
     }
 
     /**
@@ -89,6 +109,7 @@ class NetworkingInitCmsExtension extends Extension
     public function registerDoctrineMapping(array $config)
     {
         foreach ($config['class'] as $type => $class) {
+
             if (!class_exists($class)) {
                 return;
             }
@@ -96,36 +117,9 @@ class NetworkingInitCmsExtension extends Extension
 
         $folder = $config['db_driver'] == 'orm' ? 'Entity' : 'Document';
 
-        $baseNameSpace = sprintf('Networking\InitCmsBundle\%s', $folder);
+        $baseNameSpace = sprintf('Networking\\InitCmsBundle\\%s', $folder);
 
         $collector = DoctrineCollector::getInstance();
-
-        $collector->addAssociation(
-            $config['class']['page'],
-            'mapManyToOne',
-            array(
-                'fieldName' => 'parent',
-                'targetEntity' => $config['class']['page'],
-                'cascade' => array('persist'),
-                'inversedBy' => 'children',
-                'joinColumns' => array(
-                    'name' => 'parent_id',
-                    'referencedColumnName' => 'id',
-                    'onDelete' => 'SET NULL'
-                ),
-                'orphanRemoval' => false,
-            )
-        );
-
-        $collector->addAssociation(
-            $config['class']['page'],
-            'mapOneToMany',
-            array(
-                'fieldName' => 'children',
-                'targetEntity' => $config['class']['page'],
-                'mappedBy' => 'parent',
-            )
-        );
 
         $collector->addAssociation(
             $config['class']['page'],
@@ -164,19 +158,22 @@ class NetworkingInitCmsExtension extends Extension
             )
         );
 
+
         //LayoutBlock
         $collector->addAssociation(
-            $baseNameSpace . '\LayoutBlock',
+            $baseNameSpace . '\\LayoutBlock',
             'mapManyToOne',
             array(
                 'fieldName' => 'page',
                 'targetEntity' => $config['class']['page'],
                 'inversedBy' => "layoutBlock",
-                'cascade' => array('persist', 'remove'),
+                'cascade' => array('persist', 'detach'),
                 'joinColumns' => array(
-                    'name' => 'page_id',
-                    'referencedColumnName' => 'id',
-                    'onDelete' => 'CASCADE'
+                    array(
+                        'name' => 'page_id',
+                        'referencedColumnName' => 'id',
+                        'onDelete' => 'CASCADE'
+                    )
                 )
 
             )
@@ -185,7 +182,7 @@ class NetworkingInitCmsExtension extends Extension
 
         //MenuItem
         $collector->addAssociation(
-            $baseNameSpace . '\MediaType',
+            $baseNameSpace . '\\MenuItem',
             'mapManyToOne',
             array(
                 'fieldName' => 'page',
@@ -193,10 +190,12 @@ class NetworkingInitCmsExtension extends Extension
                 'inversedBy' => "menuItem",
                 'cascade' => array('persist'),
                 'joinColumns' => array(
-                    'name' => 'page_id',
-                    'referencedColumnName' => 'id',
-                    'onDelete' => 'SET NULL',
-                    'nullable' => 'true'
+                    array(
+                        'name' => 'page_id',
+                        'referencedColumnName' => 'id',
+                        'onDelete' => 'SET NULL',
+                        'nullable' => 'true'
+                    )
                 )
 
             )
@@ -204,7 +203,7 @@ class NetworkingInitCmsExtension extends Extension
 
         //PageSnapshot
         $collector->addAssociation(
-            $baseNameSpace . '\PageSnapshot',
+            $baseNameSpace . '\\PageSnapshot',
             'mapManyToOne',
             array(
                 'fieldName' => 'page',

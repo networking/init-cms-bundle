@@ -35,7 +35,7 @@ sonata_admin:
         blocks:
             - { position: top, type: networking_init_cms.block.service.translatable_text, settings: { translation_key: "info.welcome_text", translation_domain: 'NetworkingInitCmsBundle'} }
             - { position: left, type: networking_init_cms.block.service.pages}
-            - { position: right, type: networking_init_cms.block.service.online_users, settings: {user_entity: 'NetworkingInitCmsBundle:User'}}
+            - { position: right, type: networking_init_cms.block.service.online_users}
 
         groups:
             pages:

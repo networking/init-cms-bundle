@@ -11,13 +11,10 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Model\ContentInterface;
-
+use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 
 /**
  * Networking\InitCmsBundle\Entity\Content
- *
- * @ORM\Table(name="text")
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\TextRepository")
  *
  * @author net working AG <info@networking.ch>
  */
@@ -25,30 +22,23 @@ abstract class Text implements ContentInterface
 {
     /**
      * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
 
     /**
      * @var string $content
-     * @ORM\Column(name="text", type="text", nullable=true)
      * @Sonata\FormMapper(name="text", type="textarea", options={"label_render" = false, "required"=false, "mapped" = false, "attr"={"class"="wysiwyg-editor"}}, fieldDescriptionOptions={"inline_block" = true})
      */
     protected $text;
 
     /**
      * @var \DateTime $createdAt
-     * @ORM\Column(name="created_at", type="datetime")
      */
     protected $createdAt;
 
     /**
      * @var \DateTime $updatedAt
-     * @ORM\Column(name="updated_at", type="datetime")
      */
     protected $updatedAt;
 

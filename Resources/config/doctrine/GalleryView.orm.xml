@@ -10,11 +10,15 @@
             <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
 
-        <field name="gallery_type" type="string" length="50" column="galleryType"/>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
 
-        <field name="updatedAt" column="updated_at" type="datetime" />
+        <field name="galleryType" column="gallery_type" type="string" length="50"/>
 
-        <field name="createdAt" column="created_at" type="datetime" />
+        <field name="updatedAt" column="updated_at" type="datetime"/>
+
+        <field name="createdAt" column="created_at" type="datetime"/>
 
         <many-to-one field="mediaGallery" target-entity="Networking\InitCmsBundle\Entity\Gallery">
             <cascade>

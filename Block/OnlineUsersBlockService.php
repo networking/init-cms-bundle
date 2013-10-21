@@ -9,6 +9,8 @@
  */
 namespace Networking\InitCmsBundle\Block;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Networking\InitCmsBundle\Model\UserManagerInterface;
 use Sonata\BlockBundle\Block\BaseBlockService,
     Sonata\BlockBundle\Model\BlockInterface,
     Sonata\AdminBundle\Form\FormMapper,
@@ -20,23 +22,23 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class OnlineUsersBlockService extends BaseBlockService
 {
-    /**
-     * @var \Symfony\Component\Security\Core\SecurityContext $em
-     */
-    protected $em;
 
     /**
-     * @param string $name
-     *
-     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
+     * @var \Networking\InitCmsBundle\Model\UserManagerInterface
      */
-    public function __construct($name, EngineInterface $templating, $em)
+    protected $um;
+    /**
+     * @param string $name
+     * @param EngineInterface $templating
+     * @param UserManagerInterface $um
+     */
+    public function __construct($name, EngineInterface $templating, UserManagerInterface $um)
     {
 
 
         $this->name = $name;
         $this->templating = $templating;
-        $this->em = $em;
+        $this->um = $um;
     }
 
     /**
@@ -45,7 +47,7 @@ class OnlineUsersBlockService extends BaseBlockService
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
 
-        $users = $this->em->getRepository($blockContext->getSetting('user_entity'))->getLatestActivity();
+        $users = $this->um->getLatestActivity();
 
         return $this->renderResponse(
             $blockContext->getTemplate(),
@@ -87,7 +89,6 @@ class OnlineUsersBlockService extends BaseBlockService
     public function setDefaultSettings(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-                'user_entity' => 'NetworkingInitCmsBundle:User',
                 'template' => 'NetworkingInitCmsBundle:Block:block_online_users.html.twig'
             )
         );

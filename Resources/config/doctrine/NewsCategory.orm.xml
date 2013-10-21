@@ -3,11 +3,14 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                    https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
-    <mapped-superclass name="Networking\InitCmsBundle\Entity\BaseUser">
+    <entity
+        name="Networking\InitCmsBundle\Entity\NewsCategory"
+        table="news__category"
+        repository-class="Doctrine\ORM\EntityRepository">
 
-        <field name="adminSettings" column="admin_settings" type="object" nullable="true"/>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
 
-        <field name="lastActivity" column="last_activity" type="datetime"/>
-
-    </mapped-superclass>
+    </entity>
 </doctrine-mapping>

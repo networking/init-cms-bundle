@@ -34,4 +34,14 @@ class UserManager extends DoctrineUserManager
 
         $this->em = $em;
     }
+
+    public function getLatestActivity()
+        {
+            $tenMinutesAgo = new \DateTime('- 10 minutes');
+            $qb = $this->repository->createQueryBuilder('u');
+            $qb->where('u.updatedAt >= :datetime')
+                ->setParameter(':datetime', $tenMinutesAgo);
+
+            return $qb->getQuery()->getResult();
+        }
 }

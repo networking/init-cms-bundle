@@ -100,10 +100,7 @@ class PageAdminController extends CRUDController
                 $message
             );
 
-            /** @var $admin \Networking\InitCmsBundle\Admin\PageAdmin */
-            $admin = $this->container->get('networking_init_cms.page.admin.page');
-
-            return $this->redirect($admin->generateUrl('edit', array('id' => $id)));
+            return $this->redirect($this->admin->generateUrl('edit', array('id' => $id)));
         }
 
         return $this->render(
@@ -823,45 +820,11 @@ class PageAdminController extends CRUDController
 
         if ($this->getRequest()->getMethod() == 'POST') {
 
-            $pageSnapshot = $draftPage->getSnapshot();
-            $contentRoute = $draftPage->getContentRoute();
 
-            /** @var $serializer Serializer */
+            $pageManager = $this->get('networking_init_cms.page_manager');
             $serializer = $this->get('serializer');
 
-            /** @var $publishedPage Page */
-            $publishedPage = $serializer->deserialize(
-                $pageSnapshot->getVersionedData(),
-                'Networking\InitCmsBundle\Entity\Page',
-                'json'
-            );
-
-            // Save the layout blocks in a temp variable so that we can
-            // assure the correct layout blocks will be saved and not
-            // merged with the layout blocks from the draft page
-            $tmpLayoutBlocks = $publishedPage->getLayoutBlock();
-
-
-            // tell the entity manager to handle our published page
-            // as if it came from the DB and not a serialized object
-            $publishedPage = $em->merge($publishedPage);
-
-            $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
-            $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
-            $contentRoute->setController($pageSnapshot->getContentRoute()->getController());
-            $contentRoute->setPath($pageSnapshot->getContentRoute()->getPath());
-
-
-            $em->merge($contentRoute);
-
-            $publishedPage->setContentRoute($contentRoute);
-
-            // Set the layout blocks of the NOW managed entity to
-            // exactly that of the published version
-            $publishedPage->resetLayoutBlock($tmpLayoutBlocks);
-
-            $em->persist($publishedPage);
-            $em->flush();
+            $publishedPage = $pageManager->revertToPublished($draftPage, $serializer);
 
             if ($this->getRequest()->isXmlHttpRequest()) {
                 $form = $this->admin->getForm();

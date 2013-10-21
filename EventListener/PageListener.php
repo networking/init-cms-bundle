@@ -13,12 +13,13 @@ namespace Networking\InitCmsBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs,
     Symfony\Component\HttpFoundation\Session\Session,
     Symfony\Component\DependencyInjection\ContainerInterface,
-    Networking\InitCmsBundle\Entity\BasePage as Page,
+    Networking\InitCmsBundle\Model\PageInterface,
     Networking\InitCmsBundle\Helper\PageHelper,
     JMS\Serializer\EventDispatcher\EventSubscriberInterface,
     JMS\Serializer\EventDispatcher\Event;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -55,8 +56,8 @@ class PageListener implements EventSubscriberInterface
             array(
                 'event' => 'serializer.post_deserialize',
                 'method' => 'onPostDeserialize',
-                'format' => 'json',
-                'class' => 'newo_init_cms.class.page'),
+                'format' => 'json'
+            ),
         );
     }
 
@@ -90,12 +91,13 @@ class PageListener implements EventSubscriberInterface
         $unitOfWork = $em->getUnitOfWork();
 
         foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
-            if ($entity instanceof Page) {
 
+            if ($entity instanceof PageInterface) {
                 if ($contentRoute = $entity->getContentRoute()) {
                     $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
                     $em->persist($contentRoute);
                     $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
+
 
                     foreach ($entity->getAllChildren() as $child) {
                         $contentRoute = $child->getContentRoute();
@@ -115,8 +117,14 @@ class PageListener implements EventSubscriberInterface
                                 $em->persist($childSnapshot);
                                 $em->persist($snapshotRoute);
 
-                                $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($childSnapshot)), $childSnapshot);
-                                $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($snapshotRoute)), $snapshotRoute);
+                                $unitOfWork->computeChangeSet(
+                                    $em->getClassMetadata(get_class($childSnapshot)),
+                                    $childSnapshot
+                                );
+                                $unitOfWork->computeChangeSet(
+                                    $em->getClassMetadata(get_class($snapshotRoute)),
+                                    $snapshotRoute
+                                );
 
                             }
                         }
@@ -124,73 +132,78 @@ class PageListener implements EventSubscriberInterface
                 }
             }
         }
+
+
     }
 
     /**
      * @param \JMS\Serializer\EventDispatcher\Event $event
      */
-    public function onPostDeserialize(Event $event)
+    public function onPostDeserialize(\JMS\Serializer\EventDispatcher\ObjectEvent $event)
     {
-        /** @var $page Page */
+
+
+        /** @var $page PageInterface */
         $page = $event->getObject();
 
-        $doctrine = $this->container->get('doctrine');
 
+        if ($page instanceof PageInterface) {
+            $er = $this->container->get('networking_init_cms.page_manager');
 
-        $er = $doctrine->getRepository('NetworkingInitCmsBundle:Page');
+            if ($parent = $page->getParent()) {
 
-        if ($parent = $page->getParent()) {
-
-            $parent = $er->find($page->getParent());
-            $page->setParent($parent);
-        } else {
-            $page->setParent(null);
-        }
-
-        if ($parents = $page->getParents()) {
-            foreach ($parents as $key => $parent) {
-                $parents[$key] = $er->find($parent);
+                $parent = $er->find($page->getParent());
+                $page->setParent($parent);
+            } else {
+                $page->setParent(null);
             }
 
-            $page->setParents($parents);
-        } else {
-            $page->setParents(array());
-        }
+            if ($parents = $page->getParents()) {
+                foreach ($parents as $key => $parent) {
+                    $parents[$key] = $er->find($parent);
+                }
 
-        if ($children = $page->getChildren()) {
-            foreach ($children as $key => $child) {
-                $children[$key] = $er->find($child);
+                $page->setParents($parents);
+            } else {
+                $page->setParents(array());
             }
 
-            $page->setChildren($children);
-        } else {
-            $page->setChildren(array());
-        }
+            if ($children = $page->getChildren()) {
+                foreach ($children as $key => $child) {
+                    $children[$key] = $er->find($child);
+                }
 
-        if ($originals = $page->getOriginals()) {
-            foreach ($originals as $key => $original) {
-                $originals[$key] = $er->find($original);
+                $page->setChildren($children);
+            } else {
+                $page->setChildren(array());
             }
 
-            $page->setOriginals($originals);
-        } else {
-            $page->setOriginals(array());
-        }
-        if ($translations = $page->getTranslations()) {
-            foreach ($translations as $key => $translation) {
-                $translations[$key] = $er->find($translation);
+            if ($originals = $page->getOriginals()) {
+                foreach ($originals as $key => $original) {
+                    $originals[$key] = $er->find($original);
+                }
+
+                $page->setOriginals($originals);
+            } else {
+                $page->setOriginals(array());
             }
-            $page->setTranslations($translations);
-        } else {
-            $originalPageId = $page->getId();
-            $originalPage = $er->find($originalPageId);
-            $page->setTranslations($originalPage->getAllTranslations()->toArray());
+            if ($translations = $page->getTranslations()) {
+                foreach ($translations as $key => $translation) {
+                    $translations[$key] = $er->find($translation);
+                }
+                $page->setTranslations($translations);
+            } else {
+                $originalPageId = $page->getId();
+                $originalPage = $er->find($originalPageId);
+                $page->setTranslations($originalPage->getAllTranslations()->toArray());
+            }
+
+            if (!$contentRoute = $page->getContentRoute()) {
+                $originalPageId = $page->getId();
+                $originalPage = $er->find($originalPageId);
+                $page->setContentRoute($originalPage->getContentRoute());
+            }
         }
 
-        if (!$contentRoute = $page->getContentRoute()) {
-            $originalPageId = $page->getId();
-            $originalPage = $er->find($originalPageId);
-            $page->setContentRoute($originalPage->getContentRoute());
-        }
     }
 }

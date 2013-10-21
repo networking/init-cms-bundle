@@ -3,9 +3,14 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                    https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
-    <entity name="Networking\InitCmsBundle\Entity\PageSnapshot" table="page_snapshot">
+    <entity name="Networking\InitCmsBundle\Entity\PageSnapshot" table="page_snapshot"
+            repository-class="Networking\InitCmsBundle\Entity\PageSnapshotRepository">
 
-        <field name="resourceName" type="integer" column="resource_name"/>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="resourceName" type="string" column="resource_name"/>
 
         <field name="resourceId" type="integer" column="resource_id"/>
 
@@ -17,12 +22,12 @@
 
         <field name="path" type="string" column="path" nullable="true"/>
 
-        <many-to-one field="contentRoute" target-entity="Networking\InitCmsBundle\Entity\ContentRoute">
+        <many-to-one field="contentRoute" target-entity="Networking\InitCmsBundle\Entity\ContentRoute" >
             <cascade>
                 <cascade-persist/>
                 <cascade-remove/>
             </cascade>
-            <join-column name="content_route_id"/>
+            <join-column name="content_route_id" on-delete="CASCADE"/>
         </many-to-one>
 
     </entity>

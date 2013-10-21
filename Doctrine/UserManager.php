@@ -13,23 +13,13 @@ namespace Networking\InitCmsBundle\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FOS\UserBundle\Doctrine\UserManager as FOSDoctrineUserManager;
+use Networking\InitCmsBundle\Model\UserManagerInterface;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class UserManager extends FOSDoctrineUserManager
+abstract class UserManager extends FOSDoctrineUserManager implements UserManagerInterface
 {
 
-
-
-    public function getLatestActivity()
-    {
-        $tenMinutesAgo = new \DateTime('- 10 minutes');
-        $qb = $this->repository->createQueryBuilder('u');
-        $qb->where('u.updatedAt >= :datetime')
-            ->setParameter(':datetime', $tenMinutesAgo);
-
-        return $qb->getQuery()->getResult();
-    }
 
 }

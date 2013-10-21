@@ -9,13 +9,27 @@
  */
 
 
-namespace Networking\InitCmsBundle\Model;
+namespace Networking\InitCmsBundle\Entity;
 
-
+use Sonata\NewsBundle\Entity\BasePost;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class PageManager
+class NewsPost extends BasePost
 {
+
+    /**
+     * @var integer $id
+     *
+     */
+    protected $id;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

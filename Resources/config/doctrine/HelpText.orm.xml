@@ -5,7 +5,11 @@
                    https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
     <entity name="Networking\InitCmsBundle\Entity\HelpText" table="help_text">
 
-        <field name="locale" type="string" length="5" column="locale"/>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="locale" type="string" length="6" column="locale"/>
 
         <field name="translationKey" type="string" length="255" column="translation_key"/>
 

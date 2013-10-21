@@ -1,10 +1,32 @@
 services:
-    networking_init_cms.page_class_meta:
-        class: Doctrine\ORM\Mapping\ClassMetadata
-        arguments: [ Application\Networking\InitCmsBundle\Entity\Page ]
-
-    networking_init_cms.page_repository:
+    networking_init_cms.page_manager:
         class: Networking\InitCmsBundle\Entity\PageManager
-        arguments: [ @doctrine.orm.entity_manager, @networking_init_cms.page_class_meta ]
+        arguments: [ @doctrine.orm.entity_manager,  %networking_init_cms.admin.page.class% ]
         calls:
           - [ setContainer, [ @service_container] ]
+
+    networking_init_cms.user_manager:
+        class: Networking\InitCmsBundle\Entity\UserManager
+        arguments: [ @security.encoder_factory, @fos_user.util.username_canonicalizer, @fos_user.util.email_canonicalizer, @fos_user.entity_manager, %networking_init_cms.admin.user.class% ]
+
+    activity_listener:
+        class: Networking\InitCmsBundle\EventListener\UserActivity
+        arguments: [@security.context, @doctrine.orm.entity_manager]
+        tags:
+          - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+
+
+    networking_init_cms.layout_block_listner:
+       class:  Networking\InitCmsBundle\Entity\LayoutBlockListener
+       arguments: [@serializer]
+       tags:
+           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
+
+    networking_init_cms.content_route_manager:
+        class: Networking\InitCmsBundle\Entity\ContentRouteManager
+        arguments: [ @doctrine.orm.entity_manager, Networking\InitCmsBundle\Entity\ContentRoute ]
+        calls:
+          - [ setContainer, [ @service_container ]]
+          - [ setClassName, [ %networking_init_cms.admin.page.class%] ]

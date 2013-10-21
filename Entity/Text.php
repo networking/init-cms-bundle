@@ -11,7 +11,6 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */

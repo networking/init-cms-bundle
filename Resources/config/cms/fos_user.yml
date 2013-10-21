@@ -1,7 +1,7 @@
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb'
     firewall_name:  main
-    user_class:     Networking\InitCmsBundle\Entity\User
+    user_class:     Application\Networking\InitCmsBundle\Entity\User
     group:
         group_class: Networking\InitCmsBundle\Entity\Group
     from_email:

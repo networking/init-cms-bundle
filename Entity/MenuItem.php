@@ -20,7 +20,6 @@ class MenuItem extends ModelMenuItem
 {
 
     /**
-     * @ORM\PrePersist
      */
     public function prePersist()
     {

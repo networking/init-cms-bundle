@@ -32,6 +32,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('class')
                     ->children()
                         ->scalarNode('page')->cannotBeEmpty()->end()
+                        ->scalarNode('user')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
                 ->scalarNode('init_cms_editor')->defaultValue('ckeditor')->end()

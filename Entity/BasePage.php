@@ -15,7 +15,6 @@ use Networking\InitCmsBundle\Model\Page as ModelPage;
 /**
  * Networking\InitCmsBundle\Entity\BasePage
  *
- *
  * @author net working AG <info@networking.ch>
  */
 abstract class BasePage extends ModelPage

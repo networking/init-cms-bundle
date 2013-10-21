@@ -10,7 +10,7 @@
  */
 namespace Networking\InitCmsBundle\Helper;
 
-use Networking\InitCmsBundle\Entity\ContentInterface;
+use Networking\InitCmsBundle\Model\ContentInterface;
 use Sonata\AdminBundle\Exception\NoValueException;
 
 /**

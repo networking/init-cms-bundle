@@ -2,12 +2,18 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                          http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
-    <entity name="Networking\InitCmsBundle\Entity\MenuItem" table="cms_menu">
+                          http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    <entity name="Networking\InitCmsBundle\Entity\MenuItem" table="cms_menu"
+            repository-class="Networking\InitCmsBundle\Entity\MenuItemRepository">
 
         <lifecycle-callbacks>
-            <lifecycle-callback type="prePersist" method="onPrePersist" />
+            <lifecycle-callback type="prePersist" method="prePersist"/>
         </lifecycle-callbacks>
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
 
         <field name="name" type="string" length="255" column="name"/>
 
@@ -23,32 +29,44 @@
 
         <field name="linkRel" type="string" length="255" column="link_rel" nullable="true"/>
 
-        <field name="lft" type="integer" column="lft"/>
+        <field name="lft" type="integer" column="lft">
+            <gedmo:tree-left/>
+        </field>
 
-        <field name="lvl" type="integer" column="lvl"/>
+        <field name="lvl" type="integer" column="lvl">
+            <gedmo:tree-level/>
+        </field>
 
-        <field name="rgt" type="integer" column="rgt"/>
+        <field name="rgt" type="integer" column="rgt">
+            <gedmo:tree-right/>
+        </field>
 
-        <field name="root" type="integer" column="oot" nullable="true"/>
+        <field name="root" type="integer" column="root" nullable="true">
+            <gedmo:tree-root/>
+        </field>
 
 
-        <field name="isRoot" type="boolean" column="is_root" />
+        <field name="isRoot" type="boolean" column="is_root"/>
 
-        <field name="locale" type="string" length="5" column="locale"/>
+        <field name="locale" type="string" length="6" column="locale"/>
 
         <field name="description" type="text" column="description" nullable="true"/>
 
         <field name="visibility" type="string" length="50" column="visibility"/>
 
-        <one-to-many field="children" target-entity="MenuItem" mapped-by="parent">
+        <one-to-many field="children" target-entity="Networking\InitCmsBundle\Entity\MenuItem" mapped-by="parent">
             <order-by>
                 <order-by-field name="lft" direction="ASC"/>
             </order-by>
         </one-to-many>
 
-        <many-to-one field="parent" target-entity="MenuItem" inversed-by="children">
-            <join-column name="parent_id" referenced-column-name="id" />
+        <many-to-one field="parent" target-entity="Networking\InitCmsBundle\Entity\MenuItem" inversed-by="children">
+            <gedmo:tree-parent/>
+            <join-column name="parent_id" referenced-column-name="id" on-delete="SET NULL">
+            </join-column>
         </many-to-one>
+
+        <gedmo:tree type="nested"/>
 
     </entity>
 </doctrine-mapping>

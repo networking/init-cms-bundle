@@ -12,15 +12,10 @@ namespace Networking\InitCmsBundle\Model;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity
- * @ORM\Table(name="cms_menu")
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\MenuItemRepository")
- * @ORM\HasLifecycleCallbacks
  *
  * @author net working AG <info@networking.ch>
  */
@@ -34,101 +29,78 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
      */
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Page", inversedBy="menuItem", cascade={"persist"})
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $page;
 
 
     /**
-     * @ORM\Column(name="redirect_url", type="string", length=255, nullable=true)
      */
     protected $redirectUrl;
 
     /**
-     * @ORM\Column(name="internal_url", type="string", length=255, nullable=true)
      */
     protected $internalUrl;
 
     /**
-     * @ORM\Column(name="hidden", type="boolean", nullable=true)
      */
     protected $hidden;
 
     /**
-     * @ORM\Column(name="link_target", type="string", length=255, nullable=true)
      */
     protected $linkTarget;
 
     /**
-     * @ORM\Column(name="link_class", type="string", length=255, nullable=true)
      */
     protected $linkClass;
 
     /**
-     * @ORM\Column(name="link_rel", type="string", length=255, nullable=true)
      */
     protected $linkRel;
 
     /**
      * @Gedmo\TreeLeft
-     * @ORM\Column(name="lft", type="integer")
      */
     protected $lft;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer")
      */
     protected $lvl;
 
     /**
      * @Gedmo\TreeRight
-     * @ORM\Column(name="rgt", type="integer")
      */
     protected $rgt;
 
     /**
      * @Gedmo\TreeRoot
-     * @ORM\Column(name="root", type="integer", nullable=true)
      */
     protected $root;
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="MenuItem", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="MenuItem", mappedBy="parent")
-     * @ORM\OrderBy({"lft" = "ASC"})
      */
     protected $children;
 
     /**
      * @var bool
-     * @ORM\Column(name="is_root", type="boolean")
      */
     protected $isRoot = false;
 
     /**
      * @var string $locale;
-     *
-     * @ORM\Column(name="locale")
      */
     protected $locale;
 
@@ -140,14 +112,12 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @var text $description
-     * @ORM\Column(name="description", type="text", nullable=true)
      */
     protected $description;
 
     /**
      * @var string $visibility
      *
-     * @ORM\Column(name="visibility", type="string", length=50)
      */
     protected $visibility = self::VISIBILITY_PUBLIC;
 
@@ -168,9 +138,8 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    public function prePersist()
     {
         if ($this->getParent()) {
             $this->setLocale();

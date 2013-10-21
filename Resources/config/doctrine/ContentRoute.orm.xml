@@ -3,7 +3,13 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                    https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
-    <entity name="Networking\InitCmsBundle\Entity\ContentRoute" table="help_text">
+    <entity name="Networking\InitCmsBundle\Entity\ContentRoute" table="content_route">
+        <unique-constraints>
+                    <unique-constraint columns="path,locale,class_type" name="content_route_idx"/>
+                </unique-constraints>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
 
         <field name="classType" type="string" length="255" column="class_type"/>
 

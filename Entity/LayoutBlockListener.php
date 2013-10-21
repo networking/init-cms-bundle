@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\EventListener;
+namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityNotFoundException,
     Doctrine\ORM\Event\LifecycleEventArgs,
@@ -54,12 +54,13 @@ class LayoutBlockListener
                     $contentObject = new $classType;
                     $em->persist($contentObject);
                 }
-                $em->flush($contentObject);
+
+                $em->flush();
 
                 $layoutBlock->setObjectId($contentObject->getId());
 
                 $em->persist($layoutBlock);
-                $em->flush($layoutBlock);
+                $em->flush();
 
             } else {
                 $this->autoPageDraft($args);
@@ -102,6 +103,17 @@ class LayoutBlockListener
                 $this->autoPageDraft($args);
             }
         }
+
+//        if ($entity instanceof Gallery) {
+//
+//            $repo = $em->getRepository('NetworkingInitCmsBundle:GalleryView');
+//            $galleryViews = $repo->findBy(array('mediaGallery' => $entity->getId()));
+//
+//            foreach ($galleryViews as $galleryView) {
+//                $layoutBlock = $galleryView->getLayoutBlock();
+//                $em->remove($layoutBlock);
+//            }
+//        }
     }
 
     /**

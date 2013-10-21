@@ -1,6 +1,9 @@
 jms_serializer:
     metadata:
         directories:
+          NetworkingPageBundle:
+            namespace_prefix: "Application\\Networking\\InitCmsBundle"
+            path: "@NetworkingInitCmsBundle/Resources/config/serializer"
           NetworkingSonataMediaBundle:
             namespace_prefix: "Sonata\\MediaBundle"
             path: "@NetworkingInitCmsBundle/Resources/config/serializer"

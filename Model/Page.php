@@ -16,8 +16,6 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 use Networking\InitCmsBundle\Model\MenuItemInterface;
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -29,7 +27,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @author net working AG <info@networking.ch>
  */
-abstract class Page implements PageInterface, RouteReferrersReadInterface, VersionableInterface
+abstract class Page implements PageInterface
 {
 
     /**
@@ -87,7 +85,7 @@ abstract class Page implements PageInterface, RouteReferrersReadInterface, Versi
 
     /**
      * @Gedmo\TreeParent
-     * @var BasePage|NULL
+     * @var PageInterface|NULL
      */
     protected $parent;
 
@@ -647,9 +645,7 @@ abstract class Page implements PageInterface, RouteReferrersReadInterface, Versi
             $block->setNoAutoDraft(true);
             $this->layoutBlock->removeElement($block);
         }
-
         $this->setLayoutBlock($publishedBlocks);
-
     }
 
     /**
@@ -663,8 +659,8 @@ abstract class Page implements PageInterface, RouteReferrersReadInterface, Versi
             $layoutBlocks = new ArrayCollection($layoutBlocks);
         }
 
-        foreach ($layoutBlocks as $content) {
-            $content->setPage($this);
+        foreach ($layoutBlocks as $block) {
+            $block->setPage($this);
         }
 
         $this->layoutBlock = $layoutBlocks;

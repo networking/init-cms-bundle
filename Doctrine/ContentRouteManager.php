@@ -23,7 +23,7 @@ use Networking\InitCmsBundle\Model\ContentRouteInterface;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class ContentRouteManager extends BaseContentRouteManager
+abstract class ContentRouteManager extends BaseContentRouteManager
 {
     protected $objectManager;
     protected $class;
@@ -94,12 +94,11 @@ class ContentRouteManager extends BaseContentRouteManager
             $params['locale'] = $locale;
         }
         try {
-            $contentRoutes = $this->findContentRouteBy($params);
+            $contentRoutes = $this->repository->findBy($params);
         } catch (\Doctrine\DBAL\DBALException $e) {
 
             return $collection;
         }
-
 
         foreach ($contentRoutes as $key => $contentRoute) {
 

@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 
 namespace Networking\InitCmsBundle\Model;
 
@@ -15,7 +15,8 @@ namespace Networking\InitCmsBundle\Model;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageInterface {
+interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface, \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
+{
 
     /**
      *
@@ -72,6 +73,7 @@ interface PageInterface {
      * @return string
      */
     public function getTitle();
+
     /**
      * Set pageName
      *
@@ -225,6 +227,7 @@ interface PageInterface {
      * @return bool
      */
     public function isDraft();
+
     /**
      *
      * @return bool

@@ -10,14 +10,11 @@
  */
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Model\ContentInterface;
 
 /**
  * Networking\InitCmsBundle\Entity\LayoutBlock
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(name="layout_block")
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\LayoutBlockRepository")
  *
  * @author net working AG <info@networking.ch>
  */
@@ -26,73 +23,60 @@ class LayoutBlock implements LayoutBlockInterface, ContentInterface
     /**
      * @var integer $id
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     protected $name;
 
     /**
      * @var string $zone
      *
-     * @ORM\Column(name="zone", type="string")
      */
     protected $zone;
 
     /**
      * @var PageInterface $page
      *
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="layoutBlock",cascade={"persist", "detach"})
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $page;
 
     /**
      * @var string $classType
      *
-     * @ORM\Column(name="class_type", type="string")
      */
     protected $classType;
 
     /**
      * @var int $objectId
      *
-     * @ORM\Column(name="object_id", type="integer", nullable=true)
      */
     protected $objectId;
 
     /**
      * @var boolean $isActive
      *
-     * @ORM\Column(name="is_active", type="boolean")
      */
     protected $isActive = true;
 
     /**
      * @var integer $sortOrder
      *
-     * @ORM\Column(name="sort_order", type="integer", nullable=true)
      */
     protected $sortOrder;
 
     /**
      * @var \DateTime $createdAt
      *
-     * @ORM\Column(name="created_at", type="datetime")
      */
     protected $createdAt;
 
     /**
      * @var \DateTime $updatedAt
      *
-     * @ORM\Column(name="updated_at", type="datetime")
      */
     protected $updatedAt;
 
@@ -142,18 +126,16 @@ class LayoutBlock implements LayoutBlockInterface, ContentInterface
     }
 
     /**
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    public function prePersist()
     {
         $this->createdAt = $this->updatedAt = new \DateTime("now");
     }
 
     /**
      * Hook on pre-update operations
-     * @ORM\PreUpdate
      */
-    public function onPreUpdate()
+    public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now');
     }

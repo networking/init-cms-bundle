@@ -19,10 +19,10 @@ use Doctrine\Bundle\DoctrineBundle\Registry,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormBuilder,
     Symfony\Component\Form\FormInterface,
-    Networking\InitCmsBundle\Entity\BasePage as Page,
-    Networking\InitCmsBundle\Entity\LayoutBlock,
+    Networking\InitCmsBundle\Model\PageInterface,
+    Networking\InitCmsBundle\Model\LayoutBlockInterface,
     Networking\InitCmsBundle\Admin\LayoutBlockAdmin,
-    Networking\InitCmsBundle\Entity\ContentInterface,
+    Networking\InitCmsBundle\Model\ContentInterface,
     Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer,
     Networking\InitCmsBundle\Helper\ContentInterfaceHelper,
     Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;
@@ -46,16 +46,24 @@ class LayoutBlockFormListener implements EventSubscriberInterface
     private $contentInterfaceHelper;
 
     /**
-     * @param \Symfony\Component\Form\FormFactoryInterface $factory
+     * @var string $layoutBlockClass
+     */
+    private $layoutBlockClass;
+
+    /**
+     * @param FormFactoryInterface $factory
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @param $class
      */
     public function __construct(
         FormFactoryInterface $factory,
-        \Symfony\Component\DependencyInjection\ContainerInterface $container
+        \Symfony\Component\DependencyInjection\ContainerInterface $container,
+        $class
     ) {
         $this->factory = $factory;
         $this->container = $container;
         $this->contentInterfaceHelper = new ContentInterfaceHelper;
+        $this->layoutBlockClass = $class;
 
     }
 
@@ -66,8 +74,8 @@ class LayoutBlockFormListener implements EventSubscriberInterface
     {
         return array(
             FormEvents::PRE_SET_DATA => 'preSetData',
-            FormEvents::PRE_BIND => 'preBindData',
-            FormEvents::POST_BIND => 'postBindData'
+            FormEvents::PRE_SUBMIT => 'preBindData',
+            FormEvents::POST_SUBMIT => 'postBindData'
         );
     }
 
@@ -80,9 +88,10 @@ class LayoutBlockFormListener implements EventSubscriberInterface
     {
         $submittedData = $event->getData();
 
-        /** @var $layoutBlock LayoutBlock */
+        /** @var $layoutBlock LayoutBlockInterface */
         if (!$layoutBlock = $event->getForm()->getData()) {
-            $layoutBlock = new LayoutBlock();
+
+            $layoutBlock = new $this->layoutBlockClass;
         }
 
         if (!array_key_exists('_delete', $submittedData) || $submittedData['_delete'] < 1) {
@@ -97,8 +106,9 @@ class LayoutBlockFormListener implements EventSubscriberInterface
                 } else {
                     if ($key == 'page') {
                         // if field is Page, turn post value back into a Page Object
-                        $em = $this->container->get('doctrine')->getManager();
-                        $pageToNumberTransformer = new PageToNumberTransformer($em);
+                        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManager */
+                        $pageManager = $this->container->get('networking_init_cms.page_manager');
+                        $pageToNumberTransformer = new PageToNumberTransformer($pageManager);
                         $value = $pageToNumberTransformer->reverseTransform($value);
                     }
                     $this->contentInterfaceHelper->setFieldValue($layoutBlock, $key, $value);
@@ -119,7 +129,7 @@ class LayoutBlockFormListener implements EventSubscriberInterface
     public function postBindData(FormEvent $event)
     {
 
-        /** @var $layoutBlock LayoutBlock */
+        /** @var $layoutBlock LayoutBlockInterface */
         $layoutBlock = $event->getForm()->getData();
 
         if (!$layoutBlock->getObjectId()) {
@@ -325,7 +335,7 @@ class LayoutBlockFormListener implements EventSubscriberInterface
      * @param  \Networking\InitCmsBundle\Entity\LayoutBlock $layoutBlock
      * @return string
      */
-    public function getContentType(LayoutBlock $layoutBlock)
+    public function getContentType(LayoutBlockInterface $layoutBlock)
     {
         if (!$classType = $layoutBlock->getClassType()) {
             $contentTypes = $this->container->getParameter('networking_init_cms.page.content_types');

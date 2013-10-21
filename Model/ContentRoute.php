@@ -63,7 +63,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
-    protected $path;
+    protected $path = '/';
 
     /**
      * @var string $controller

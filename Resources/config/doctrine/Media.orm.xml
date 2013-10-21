@@ -10,23 +10,25 @@
             <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
 
-        <field name="locale" type="string" length="5" column="locale"/>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
 
-        <one-to-many field="galleryHasMedias" target-entity="Networking\InitCmsBundle\Entity\GalleryHasMedia" mapped-by="media" orphan-removal="true"/>
+        <field name="locale" type="string" length="6" column="locale"/>
+
+        <one-to-many field="galleryHasMedias" target-entity="Networking\InitCmsBundle\Entity\GalleryHasMedia"
+                     mapped-by="media" orphan-removal="true"/>
 
         <many-to-many field="tags" target-entity="Networking\InitCmsBundle\Entity\Tag">
-            <cascade>
-                <cascade-all/>
-            </cascade>
+
             <join-table name="media_tags">
                 <join-columns>
-                    <join-column name="media_id" referenced-column-name="id"/>
+                    <join-column name="media_id" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="tag_id" referenced-column-name="id"/>
+                    <join-column name="tag_id" referenced-column-name="id"  on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
-
     </entity>
 </doctrine-mapping>

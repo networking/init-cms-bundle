@@ -66,9 +66,8 @@ class GalleryView implements GalleryViewInterface, ContentInterface
     }
 
     /**
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    public function prePersist()
     {
 
         $this->createdAt = $this->updatedAt = new \DateTime("now");
@@ -76,9 +75,8 @@ class GalleryView implements GalleryViewInterface, ContentInterface
 
     /**
      * Hook on pre-update operations
-     * @ORM\PreUpdate
      */
-    public function onPreUpdate()
+    public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now');
     }

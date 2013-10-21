@@ -37,11 +37,16 @@ class LayoutBlockAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
 
-        $listener = new LayoutBlockFormListener($formMapper->getFormBuilder()->getFormFactory(), $this->getContainer());
+        $listener = new LayoutBlockFormListener(
+            $formMapper->getFormBuilder()->getFormFactory(),
+            $this->getContainer(),
+            $this->getClass()
+        );
         $formMapper->getFormBuilder()->addEventSubscriber($listener);
 
         $entityManager = $this->getContainer()->get('Doctrine')->getManager();
-        $transformer = new PageToNumberTransformer($entityManager);
+        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
+        $transformer = new PageToNumberTransformer($pageManager);
         $formMapper
 //                ->add('isActive', 'checkbox', array('required' => false, 'label_render' => false))
                 ->add('zone',

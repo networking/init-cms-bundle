@@ -9,6 +9,7 @@
  */
 namespace Networking\InitCmsBundle\Block;
 
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\BlockBundle\Block\BaseBlockService,
     Sonata\BlockBundle\Model\BlockInterface,
     Sonata\AdminBundle\Form\FormMapper,
@@ -21,22 +22,21 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class PagesBlockService extends BaseBlockService
 {
     /**
-     * @var \Symfony\Component\Security\Core\SecurityContext $em
+     * @var PageManagerInterface $em
      */
     protected $em;
 
     /**
      * @param string $name
-     *
-     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
+     * @param EngineInterface $templating
+     * @param PageManagerInterface $em
      */
-    public function __construct($name, EngineInterface $templating, $em)
+    public function __construct($name, EngineInterface $templating, PageManagerInterface $em)
     {
-
-
         $this->name = $name;
         $this->templating = $templating;
         $this->em = $em;
+
     }
 
     /**
@@ -45,8 +45,7 @@ class PagesBlockService extends BaseBlockService
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
 
-        $pages = $this->em->getRepository('NetworkingInitCmsBundle:Page')
-            ->getAllSortBy('updatedAt');
+        $pages = $this->em->getAllSortBy('updatedAt');
 
         $draftPageCount = 0;
         $reviewPageCount = 0;
@@ -55,7 +54,7 @@ class PagesBlockService extends BaseBlockService
         $draftPages = array();
 
         foreach ($pages as $page) {
-
+            /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
             if ($page->hasPublishedVersion()) {
                 $publishedPageCount++;
             }

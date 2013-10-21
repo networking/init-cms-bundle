@@ -11,6 +11,10 @@
             <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
 
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
         <field name="name" type="string" length="255" column="name" nullable="true"/>
 
         <field name="zone" type="string" length="255" column="zone"/>
@@ -19,7 +23,7 @@
 
         <field name="objectId" type="integer" column="object_id" nullable="true"/>
 
-        <field name="isActive" type="boolean" column="is_active" />
+        <field name="isActive" type="boolean" column="is_active"/>
 
         <field name="sortOrder" type="integer" column="sort_order" nullable="true"/>
 

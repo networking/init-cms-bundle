@@ -6,5 +6,10 @@
 
     <document name="Application\Networking\InitCmsBundle\Document\User" collection="fos_user_user">
         <field fieldName="id" id="true" strategy="INCREMENT" />
+
+        <field fieldName="adminSettings" type="object"/>
+
+        <field fieldName="lastActivity" type="date"/>
+
     </document>
 </doctrine-mongo-mapping>

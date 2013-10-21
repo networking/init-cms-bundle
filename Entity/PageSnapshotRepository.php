@@ -10,10 +10,21 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Networking\InitCmsBundle\Model\PageSnapshotRepositoryInterface;
+
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class PageSnapshotRepository extends EntityRepository
+class PageSnapshotRepository extends EntityRepository implements PageSnapshotRepositoryInterface
 {
 
+
+    public function findSnapshotByPageId($pageId)
+    {
+        $qb = $this->createQueryBuilder('ps')
+                        ->where('ps.page = :pageId')
+                        ->orderBy('ps.version', 'desc')
+                        ->setParameter(':pageId', $pageId);
+         return $qb->getQuery()->execute();
+    }
 }

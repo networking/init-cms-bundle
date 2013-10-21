@@ -1,4 +1,4 @@
-Networking\InitCmsBundle\Entity\LayoutBlock:
+Networking\InitCmsBundle\Model\LayoutBlock:
     properties:
         id:
             type: integer

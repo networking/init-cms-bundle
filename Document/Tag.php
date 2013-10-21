@@ -16,9 +16,13 @@ use Sonata\NewsBundle\Document\BaseTag;
 /**
  * Networking\InitCmsBundle\Entity\Tag
  *
- *  @author net working AG <info@networking.ch>
+ * @author net working AG <info@networking.ch>
  */
 class Tag extends BaseTag
 {
-
+    /**
+     * @var integer $id
+     *
+     */
+    protected $id;
 }

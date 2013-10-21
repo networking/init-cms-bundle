@@ -11,7 +11,7 @@ class GalleryView extends ModelGalleryView
 
     /**
      */
-    public function onPrePersist()
+    public function prePersist()
     {
 
         $this->createdAt = $this->updatedAt = new \DateTime("now");
@@ -20,7 +20,7 @@ class GalleryView extends ModelGalleryView
     /**
      * Hook on pre-update operations
      */
-    public function onPreUpdate()
+    public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now');
     }

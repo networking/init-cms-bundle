@@ -9,68 +9,52 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  *
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(name="page_snapshot")
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\PageSnapshotRepository")
  */
 
 class PageSnapshot implements PageSnapshotInterface{
     /**
      * @var integer $id
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var Page $page
-     *
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="snapshots", cascade={"persist"})
      */
     protected $page;
 
     /**
      * @var ContentRoute $contentRoute
-     * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\ContentRoute", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="content_route_id")
      */
     protected $contentRoute;
 
     /**
-     * @ORM\Column(name="resource_name", type="string")
      */
     protected $resourceName;
 
     /**
-     * @ORM\Column(name="resource_id", type="integer")
      */
     protected $resourceId;
 
     /**
-     * @ORM\Column(name="versioned_data", type="array")
      */
     protected $versionedData;
 
     /**
      *
-     * @ORM\Column(type="integer")
      */
     protected $version;
 
     /**
-     * @ORM\Column(name="snapshot_date", type="datetime")
      */
     protected $snapshotDate;
 
     /**
-     * @ORM\Column(name="path", type="string", nullable=true)
      */
     protected $path;
 

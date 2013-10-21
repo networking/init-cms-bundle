@@ -20,8 +20,8 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
     Sonata\AdminBundle\Route\RouteCollection,
     Sonata\AdminBundle\Admin\AdminInterface,
     Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery,
-    Networking\InitCmsBundle\Entity\Page,
-    Networking\InitCmsBundle\Entity\PageRepository,
+    Networking\InitCmsBundle\Model\PageInterface,
+    Networking\InitCmsBundle\Model\PageManagerInterface,
     Knp\Menu\ItemInterface as MenuItemInterface,
     Sonata\AdminBundle\Form\Extension\Field\Type\FormTypeFieldExtension;
 
@@ -103,7 +103,8 @@ class PageAdmin extends BaseAdmin
             throw new \Symfony\Component\Form\Exception\InvalidArgumentException('Cannot create a page without a language');
         }
 
-        $this->repository = $this->getContainer()->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
+        /** @var $pageManager PageManagerInterface */
+        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
 
         if ($this->getSubject()->getId()) {
             $this->pageLocale = $this->getSubject()->getLocale();
@@ -111,7 +112,7 @@ class PageAdmin extends BaseAdmin
 
         $validationGroups = array('default');
 
-        $homePage = $this->repository->findOneBy(array('isHome' => true, 'locale' => $this->pageLocale));
+        $homePage = $pageManager->findOneBy(array('isHome' => true, 'locale' => $this->pageLocale));
 
 
         $this->canCreateHomepage = (!$homePage) ? true : false;
@@ -135,7 +136,8 @@ class PageAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
 //        $this->setFormTheme(array('NetworkingInitCmsBundle:Form:page_form_admin_fields.html.twig'));
-
+        /** @var $pageManager PageManagerInterface */
+        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
         try {
             $request = $this->getRequest();
         } catch (\RuntimeException $e) {
@@ -146,19 +148,19 @@ class PageAdmin extends BaseAdmin
             $formMapper
                 ->with('page_content')
                 ->add(
-                'layoutBlock',
-                'sonata_type_collection',
-                array(
-                    'required' => true,
-                    'by_reference' => false
-                ),
-                array(
-                    'edit' => 'inline',
-                    'inline' => 'table',
-                    'sortable' => 'sortOrder',
-                    'no_label' => true
+                    'layoutBlock',
+                    'sonata_type_collection',
+                    array(
+                        'required' => true,
+                        'by_reference' => false
+                    ),
+                    array(
+                        'edit' => 'inline',
+                        'inline' => 'table',
+                        'sortable' => 'sortOrder',
+                        'no_label' => true
+                    )
                 )
-            )
                 ->end();
         }
 
@@ -178,14 +180,14 @@ class PageAdmin extends BaseAdmin
 
             $formMapper
                 ->add(
-                'locale',
-                'choice',
-                array(
-                    'choices' => $this->getLocaleChoices(),
-                    'preferred_choices' => array($this->pageLocale),
-                    'help_inline' => 'locale.helper.text'
-                )
-            );
+                    'locale',
+                    'choice',
+                    array(
+                        'choices' => $this->getLocaleChoices(),
+                        'preferred_choices' => array($this->pageLocale),
+                        'help_inline' => 'locale.helper.text'
+                    )
+                );
 
         }
 
@@ -200,20 +202,20 @@ class PageAdmin extends BaseAdmin
             if (!$this->getSubject()->getId() || !$this->getSubject()->isHome()) {
                 $formMapper
                     ->add(
-                    'parent',
-                    'networking_type_autocomplete',
-                    array(
-                        'help_inline' => 'parent.helper.text',
-                        'attr' => array('style' => "width:220px"),
-                        'property' => 'AdminTitle',
-                        'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
-                        'required' => false,
-                        'query_builder' => $this->repository->getParentPagesQuery(
-                            $this->pageLocale,
-                            $this->getSubject()->getId()
-                        ),
-                    )
-                );
+                        'parent',
+                        'networking_type_autocomplete',
+                        array(
+                            'help_inline' => 'parent.helper.text',
+                            'attr' => array('style' => "width:220px"),
+                            'property' => 'AdminTitle',
+                            'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
+                            'required' => false,
+                            'query_builder' => $pageManager->getParentPagesQuery(
+                                $this->pageLocale,
+                                $this->getSubject()->getId()
+                            ),
+                        )
+                    );
             }
         }
 
@@ -222,51 +224,51 @@ class PageAdmin extends BaseAdmin
         if ($this->getSubject()->getId()) {
             $formMapper
                 ->add(
-                'url',
-                null,
-                array(
-                    'required' => $requireUrl,
-                    'read_only' => $this->getSubject()->isHome(),
-                    'help_label' => $this->getSubject()->getFullPath(),
-                    'help_inline' => 'url.helper.text'
-                ),
-                array('display_method' => 'getFullPath')
-            );
+                    'url',
+                    null,
+                    array(
+                        'required' => $requireUrl,
+                        'read_only' => $this->getSubject()->isHome(),
+                        'help_label' => $this->getSubject()->getFullPath(),
+                        'help_inline' => 'url.helper.text'
+                    ),
+                    array('display_method' => 'getFullPath')
+                );
         } elseif (!$this->getSubject()->getId()) {
             $formMapper
                 ->add(
-                'url',
-                null,
-                array(
-                    'required' => $requireUrl,
-                    'help_label' => '/',
-                    'help_inline' => 'url.helper.text'
-                ),
-                array('display_method' => 'getFullPath')
-            );
+                    'url',
+                    null,
+                    array(
+                        'required' => $requireUrl,
+                        'help_label' => '/',
+                        'help_inline' => 'url.helper.text'
+                    ),
+                    array('display_method' => 'getFullPath')
+                );
         }
 
-
+        $subject = $this->subject;
         $formMapper
             ->add(
-            'visibility',
-            'sonata_type_translatable_choice',
-            array(
-                'help_inline' => 'visibility.helper.text',
-                'choices' => Page::getVisibilityList(),
-                'catalogue' => $this->translationDomain
+                'visibility',
+                'sonata_type_translatable_choice',
+                array(
+                    'help_inline' => 'visibility.helper.text',
+                    'choices' => $subject::getVisibilityList(),
+                    'catalogue' => $this->translationDomain
+                )
             )
-        )
             ->add(
-            'templateName',
-            'networking_type_iconradio',
-            array(
-                'label' => 'form.label_template',
-                'expanded' => true,
-                'choices' => $this->getPageTemplates(),
-                'data' => $this->getDefaultTemplate()
-            )
-        );
+                'templateName',
+                'networking_type_iconradio',
+                array(
+                    'label' => 'form.label_template',
+                    'expanded' => true,
+                    'choices' => $this->getPageTemplates(),
+                    'data' => $this->getDefaultTemplate()
+                )
+            );
         $formMapper->end();
         // end of group: page_settings
         $formMapper
@@ -279,7 +281,7 @@ class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param  string      $name
+     * @param  string $name
      * @return null|string
      */
     public function getTemplate($name)
@@ -318,41 +320,41 @@ class PageAdmin extends BaseAdmin
     {
         $datagridMapper
             ->add(
-            'locale',
-            'doctrine_orm_callback',
-            array(
-                'callback' => array(
-                    $this,
-                    'getByLocale'
+                'locale',
+                'doctrine_orm_callback',
+                array(
+                    'callback' => array(
+                        $this,
+                        'getByLocale'
+                    )
+                ),
+                'choice',
+                array(
+                    'empty_value' => false,
+                    'choices' => $this->getLocaleChoices(),
+                    'preferred_choices' => array($this->getDefaultLocale())
                 )
-            ),
-            'choice',
-            array(
-                'empty_value' => false,
-                'choices' => $this->getLocaleChoices(),
-                'preferred_choices' => array($this->getDefaultLocale())
             )
-        )
             ->add('pageName', 'networking_init_cms_simple_string')
             ->add(
-            'path',
-            'doctrine_orm_callback',
-            array('callback' => array($this, 'matchPath'), 'hidden' => true)
-        )
-            ->add(
-            'status',
-            'doctrine_orm_choice',
-            array('hidden' => true),
-            'sonata_type_translatable_choice',
-            array(
-                'choices' => array(
-                    Page::STATUS_DRAFT => Page::STATUS_DRAFT,
-                    Page::STATUS_REVIEW => Page::STATUS_REVIEW,
-                    Page::STATUS_PUBLISHED => Page::STATUS_PUBLISHED,
-                ),
-                'catalogue' => $this->translationDomain
+                'path',
+                'doctrine_orm_callback',
+                array('callback' => array($this, 'matchPath'), 'hidden' => true)
             )
-        );
+            ->add(
+                'status',
+                'doctrine_orm_choice',
+                array('hidden' => true),
+                'sonata_type_translatable_choice',
+                array(
+                    'choices' => array(
+                        PageInterface::STATUS_DRAFT => PageInterface::STATUS_DRAFT,
+                        PageInterface::STATUS_REVIEW => PageInterface::STATUS_REVIEW,
+                        PageInterface::STATUS_PUBLISHED => PageInterface::STATUS_PUBLISHED,
+                    ),
+                    'catalogue' => $this->translationDomain
+                )
+            );
 
     }
 
@@ -414,28 +416,28 @@ class PageAdmin extends BaseAdmin
 
         $listMapper
             ->addIdentifier(
-            'adminTitle',
-            'string',
-            array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig')
-        )
+                'adminTitle',
+                'string',
+                array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig')
+            )
 //                ->add('locale', null, array('sortable' => false))
             ->add(
-            'status',
-            null,
-            array(
-                'label' => ' ',
-                'sortable' => false,
-                'template' => 'NetworkingInitCmsBundle:PageAdmin:page_status_list_field.html.twig'
+                'status',
+                null,
+                array(
+                    'label' => ' ',
+                    'sortable' => false,
+                    'template' => 'NetworkingInitCmsBundle:PageAdmin:page_status_list_field.html.twig'
+                )
             )
-        )
             ->add(
-            'fullPath',
-            null,
-            array(
-                'sortable' => false,
-                'template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig'
-            )
-        );
+                'fullPath',
+                null,
+                array(
+                    'sortable' => false,
+                    'template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig'
+                )
+            );
 
         $listMapper->add(
             '_action',
@@ -468,11 +470,11 @@ class PageAdmin extends BaseAdmin
             return;
         }
 
-        /** @var $repository PageRepository */
-        $repository = $this->getContainer()->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
+        /** @var $pageManager PageManagerInterface */
+        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
 
-        /** @var $page Page */
-        $page = $repository->find($id);
+        /** @var $page PageInterface */
+        $page = $pageManager->findById($id);
 
         $translatedLocales = $page->getAllTranslations();
 
@@ -517,11 +519,11 @@ class PageAdmin extends BaseAdmin
             return;
         }
 
-        /** @var $repository PageRepository */
-        $repository = $this->getContainer()->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
+        /** @var $pageManager PageManagerInterface */
+        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
 
-        /** @var $page Page */
-        $page = $repository->find($id);
+        /** @var $page PageInterface */
+        $page = $pageManager->findById($id);
 
         $translatedLocales = $page->getAllTranslations();
 

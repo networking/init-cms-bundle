@@ -10,8 +10,9 @@
  */
 namespace Networking\InitCmsBundle\Twig\Extension;
 
-use Networking\InitCmsBundle\Entity\LayoutBlock;
-use Networking\InitCmsBundle\Entity\Page;
+use Networking\InitCmsBundle\Model\LayoutBlockInterface;
+use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
 use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -133,7 +134,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $id
      * @return mixed
      */
-    public function renderInitcmsBlock($template, LayoutBlock $layoutBlock, $params = array())
+    public function renderInitcmsBlock($template, LayoutBlockInterface $layoutBlock, $params = array())
     {
         if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
@@ -168,11 +169,10 @@ class NetworkingHelperExtension extends \Twig_Extension
     /**
      * Returns an HTML block for output in the admin area
      *
-     * @param $class
-     * @param $id
-     * @return mixed
+     * @param LayoutBlockInterface $layoutBlock
+     * @return bool
      */
-    public function renderInitcmsAdminBlock(LayoutBlock $layoutBlock)
+    public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock)
     {
 
         if ($layoutBlock->getObjectId()) {
@@ -199,10 +199,10 @@ class NetworkingHelperExtension extends \Twig_Extension
     }
 
     /**
-     * @param \Networking\InitCmsBundle\Entity\LayoutBlock $layoutBlock
+     * @param LayoutBlockInterface $layoutBlock
      * @return mixed
      */
-    public function renderContentTypeName(LayoutBlock $layoutBlock)
+    public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
     {
         if ($layoutBlock->getObjectId()) {
             $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find(
@@ -500,10 +500,13 @@ class NetworkingHelperExtension extends \Twig_Extension
 
         $template = null;
 
-        $repository = $this->container->get('Doctrine')->getRepository('NetworkingInitCmsBundle:Page');
+
+        /** @var $pageManager PageManagerInterface */
+        $pageManager = $this->container->get('networking_init_cms.page_manager');
+
 
         if ($pageId) {
-            $page = $repository->find($pageId);
+            $page = $pageManager->findById($pageId);
             $template = $page->getTemplateName();
         } else {
             $templates = $this->container->getParameter('networking_init_cms.page.templates');
@@ -1000,25 +1003,24 @@ class NetworkingHelperExtension extends \Twig_Extension
     }
 
     /**
-     * @param Page $page
+     * @param PageInterface $page
      * @return mixed
      */
-    public function getPageUrl(Page $page)
+    public function getPageUrl(PageInterface $page)
     {
         if (!$page->getContentRoute()) {
+
+            /** @var \Networking\InitCmsBundle\Model\PageSnapshotRepositoryInterface $per */
             $per = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:PageSnapshot');
-            $pageSnapshots = $per->createQueryBuilder('ps')
-                ->where('ps.page = :pageId')
-                ->orderBy('ps.version', 'desc')
-                ->setParameter(':pageId', $page->getId())
-                ->getQuery()
-                ->execute();
+            $pageSnapshots = $per->findSnapshotByPageId($page->getId());
 
             if ($pageSnapshots) {
                 $page->setSnapshots($pageSnapshots);
                 $pageSnapshot = $page->getSnapshot();
-                $cer = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:ContentRoute');
-                $contentRoute = $cer->findOneBy(array('objectId' => $pageSnapshot->getId(), 'classType' => 'Networking\InitCmsBundle\Entity\PageSnapshot'));
+                /** @var \Networking\InitCmsBundle\Model\ContentRouteManagerInterface $cer */
+                $cer = $this->container->get('networking_init_cms.content_route_manager');
+
+                $contentRoute = $cer->findContentRouteBy(array('objectId' => $pageSnapshot->getId(), 'classType' => $per->getClassName()));
                 if ($contentRoute) {
                     $page->setContentRoute($contentRoute);
                 }

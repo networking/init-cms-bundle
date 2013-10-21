@@ -9,12 +9,13 @@
  */
 namespace Networking\InitCmsBundle\Helper;
 
-use Networking\InitCmsBundle\Entity\Page,
+use
     Sonata\AdminBundle\Exception\NoValueException,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Doctrine\ORM\EntityManager,
     Networking\InitCmsBundle\Entity\PageSnapshot,
     Networking\InitCmsBundle\Entity\ContentRoute;
+use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -31,15 +32,15 @@ class PageHelper
      */
     public static function getPageRoutePath($path)
     {
-        $pathArray = explode(Page::PATH_SEPARATOR, $path);
+        $pathArray = explode(PageInterface::PATH_SEPARATOR, $path);
 
         foreach ($pathArray as $key => $path) {
             $pathArray[$key] = preg_replace('/-(\d)+$/', '', $path);
         }
-        $path = implode(Page::PATH_SEPARATOR, $pathArray);
+        $path = implode(PageInterface::PATH_SEPARATOR, $pathArray);
 
-        if (substr($path, 0, 1) != Page::PATH_SEPARATOR) {
-            $path = Page::PATH_SEPARATOR . $path;
+        if (substr($path, 0, 1) != PageInterface::PATH_SEPARATOR) {
+            $path = PageInterface::PATH_SEPARATOR . $path;
         }
 
         return $path;
@@ -48,14 +49,14 @@ class PageHelper
     /**
      * Set the variables to the given content type object
      *
-     * @param Page $object
+     * @param PageInterface $object
      * @param $fieldName
      * @param $value
      * @param  null                                           $method
      * @return mixed
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
-    public static function setFieldValue(Page $object, $fieldName, $value, $method = null)
+    public static function setFieldValue(PageInterface $object, $fieldName, $value, $method = null)
     {
         $setters = array();
 
@@ -85,13 +86,13 @@ class PageHelper
     /**
      * Fetch the variables from the given content type object
      *
-     * @param ContentInterface $object
+     * @param PageInterface $object
      * @param $fieldName
      * @param  null                                           $method
      * @return mixed
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
-    public static function getFieldValue(Page $object, $fieldName, $method = null)
+    public static function getFieldValue(PageInterface $object, $fieldName, $method = null)
     {
 
         $getters = array();
@@ -152,9 +153,9 @@ class PageHelper
     /**
      * Create a snapshot of a given page.
      *
-     * @param Page $page
+     * @param PageInterface $page
      */
-    public function makePageSnapshot(Page $page)
+    public function makePageSnapshot(PageInterface $page)
     {
         $serializer = $this->container->get('serializer');
         $manager = $this->container->get('doctrine')->getManager();
@@ -197,14 +198,19 @@ class PageHelper
      *
      * @param $page
      * @param $locale
-     * @return \Networking\InitCmsBundle\Entity\Page
+     * @return \Networking\InitCmsBundle\Model\Page
      */
-    public function makeTranslationCopy(Page $page, $locale)
+    public function makeTranslationCopy(PageInterface $page, $locale)
     {
         $doctrine = $this->container->get('doctrine');
         $em = $doctrine->getManager();
 
-        $pageCopy = new Page();
+        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
+        $pageManger = $this->container->get('networking_init_cms.page_manager');
+
+        $pageClass = $pageManger->getClassName();
+        /** @var PageInterface $pageCopy */
+        $pageCopy = new $pageClass;
 
         $pageCopy->setPageName($page->getPageName());
         $pageCopy->setMetaTitle($page->getMetaTitle());
@@ -221,7 +227,7 @@ class PageHelper
 
         foreach ($layoutBlocks as $layoutBlock) {
 
-            /** @var $newLayoutBlock LayoutBlock */
+            /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
 
             $content = $doctrine->getRepository($newLayoutBlock->getClassType())->find(

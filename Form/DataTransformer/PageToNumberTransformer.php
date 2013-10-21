@@ -28,7 +28,7 @@ class PageToNumberTransformer implements DataTransformerInterface
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(\Networking\InitCmsBundle\Model\PageManagerInterface $om)
     {
         $this->om = $om;
     }
@@ -61,9 +61,7 @@ class PageToNumberTransformer implements DataTransformerInterface
             return null;
         }
 
-        $page = $this->om
-            ->getRepository('NetworkingInitCmsBundle:Page')
-            ->findOneBy(array('id' => $id))
+        $page = $this->om->findOneBy(array('id' => $id))
         ;
 
         if (null === $page) {
