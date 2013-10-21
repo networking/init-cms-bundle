@@ -20,8 +20,6 @@ use Networking\InitCmsBundle\Entity\Page;
 /**
  * Networking\InitCmsBundle\Entity\Tag
  *
- * @ORM\Table(name="tag")
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\TagRepository")
  *
  *  @author net working AG <info@networking.ch>
  */
