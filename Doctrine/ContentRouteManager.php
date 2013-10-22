@@ -55,6 +55,13 @@ abstract class ContentRouteManager extends BaseContentRouteManager
         return $this->repository->findOneBy($criteria);
     }
 
+    public function findContentByContentRoute(ContentRouteInterface $contentRoute){
+
+        $repository = $this->objectManager->getRepository($contentRoute->getClassType());
+
+        return $repository->find($contentRoute->getObjectId());
+    }
+
     /**
      * @param $criteria
      * @return int

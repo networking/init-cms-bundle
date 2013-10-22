@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Component\Routing\AbstractRoute;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Networking\InitCmsBundle\Entity\ContentRoute
@@ -128,7 +129,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  string       $controller
+     * @param  string $controller
      * @return $this
      */
     public function setController($controller)
@@ -147,7 +148,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  int          $id
+     * @param  int $id
      * @return $this
      */
     public function setId($id)
@@ -166,7 +167,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  string       $locale
+     * @param  string $locale
      * @return $this
      */
     public function setLocale($locale)
@@ -185,7 +186,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  string       $classType
+     * @param  string $classType
      * @return $this
      */
     public function setClassType($classType)
@@ -204,7 +205,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  int          $objectId
+     * @param  int $objectId
      * @return $this
      */
     public function setObjectId($objectId)
@@ -242,7 +243,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  string       $template
+     * @param  string $template
      * @return $this
      */
     public function setTemplate($template)
@@ -284,7 +285,7 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
         $template = new Template(array('template' => $this->getTemplate(), 'vars' => array()));
 
         return array(
-	        'route_params' => '',
+            'route_params' => '',
             '_locale' => $this->getLocale(),
             self::CONTROLLER_NAME => $this->getController(),
             self::TEMPLATE_NAME => $template,
@@ -295,5 +296,15 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Get the routes that point to this content.
+     *
+     * @return Route[] Route instances that point to this content
+     */
+    public function getRoutes()
+    {
+        // TODO: Implement getRoutes() method.
     }
 }

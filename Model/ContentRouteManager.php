@@ -130,6 +130,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
      */
     public function getRouteContent(ContentRouteInterface $contentRoute)
     {
-        return $this->findContentRoute($contentRoute->getObjectId());
+
+        return $this->findContentByContentRoute($contentRoute);
     }
 }

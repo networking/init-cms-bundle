@@ -17,7 +17,7 @@ use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface ContentRouteInterface
+interface ContentRouteInterface extends  RouteReferrersReadInterface
 {
     /**
      * Initializes the object to function as a route

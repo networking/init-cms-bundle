@@ -89,7 +89,7 @@ class FrontendPageController extends Controller
         /** @var $page Page */
         $page = $this->get('serializer')->deserialize(
             $pageSnapshot->getVersionedData(),
-            'Networking\InitCmsBundle\Entity\Page',
+            'Application\Networking\InitCmsBundle\Entity\Page',
             'json'
         );
 

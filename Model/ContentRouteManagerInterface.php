@@ -61,4 +61,10 @@ interface ContentRouteManagerInterface extends RouteProviderInterface, Container
      */
     public function findContentRoute($criteria);
 
+    /**
+     * @param $contentRoute
+     * @return mixed
+     */
+    public function findContentByContentRoute(ContentRouteInterface $contentRoute);
+
 }
