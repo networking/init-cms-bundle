@@ -10,8 +10,8 @@
  */
 namespace Networking\InitCmsBundle\Helper;
 
-use Networking\InitCmsBundle\Entity\Page;
-use Networking\InitCmsBundle\Entity\PageSnapshot;
+use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -69,7 +69,7 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
         $content = $route['_content'];
 
 
-        if ($content instanceof Page) {
+        if ($content instanceof PageInterface) {
 
             $translation = $content->getAllTranslations()->get($locale);
 
@@ -81,8 +81,10 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
             return $translation->getContentRoute()->initializeRoute($translation);
         }
 
-        if ($content instanceof PageSnapshot) {
-            $content = $this->container->get('serializer')->deserialize($content->getVersionedData(), 'Networking\InitCmsBundle\Entity\Page', 'json');
+        if ($content instanceof PageSnapshotInterface) {
+            $pageManager = $this->get('networking_init_cms.page_manager');
+
+            $content = $this->container->get('serializer')->deserialize($content->getVersionedData(), $pageManager->getClassName(), 'json');
 
 
             $translation = $content->getAllTranslations()->get($locale);

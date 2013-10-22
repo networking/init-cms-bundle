@@ -13,7 +13,6 @@ use
     Sonata\AdminBundle\Exception\NoValueException,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Doctrine\ORM\EntityManager,
-    Networking\InitCmsBundle\Entity\PageSnapshot,
     Networking\InitCmsBundle\Entity\ContentRoute;
 use Networking\InitCmsBundle\Model\PageInterface;
 
@@ -167,9 +166,12 @@ class PageHelper
             );
             $layoutBlock->takeSnapshot($serializer->serialize($layoutBlockContent, 'json'));
         }
-        /** @var $pageSnapshot \Networking\InitCmsBundle\Entity\PageSnapshot */
-        $pageSnapshot = new PageSnapshot($page);
+        /**  @var $pageSnapshotManager PageSnapshotManager*/
 
+        $pageSnapshotManager = $this->container->get('networking_init_cms.page_snapshot_manager');
+        $className = $pageSnapshotManager->getClassName();
+
+        $pageSnapshot = new $className($page);
         $pageSnapshot->setVersionedData($serializer->serialize($page, 'json'))
             ->setPage($page);
 
@@ -177,7 +179,10 @@ class PageHelper
             $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
         } else {
             /** @var $snapshotContentRoute \Networking\InitCmsBundle\Entity\ContentRoute */
-            $snapshotContentRoute = new ContentRoute();
+
+            $contentRouteManager = $this->container->get('networking_init_cms.content_route_manager');
+            $className = $contentRouteManager->getClassName();
+            $snapshotContentRoute =$newClassName();
         }
 
         $pageSnapshot->setContentRoute($snapshotContentRoute);

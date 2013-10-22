@@ -23,8 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController,
     Sonata\AdminBundle\Admin\Admin as SontataAdmin,
     Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher,
-    Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent,
-    Networking\InitCmsBundle\EventListener\LastEditedListener;
+    Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -43,7 +42,7 @@ class CRUDController extends SonataCRUDController
         parent::configure();
 
         $this->dispatcher = $this->get('networking_init_cms.event_dispatcher');
-        $lastEditedSubscriber = new LastEditedListener($this->get('session'));
+        $lastEditedSubscriber = $this->get('networking_init_cms.last_edited_listener');
         $this->dispatcher->addSubscriber($lastEditedSubscriber);
     }
 

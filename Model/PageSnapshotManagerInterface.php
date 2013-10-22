@@ -7,29 +7,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+ 
 
+namespace Networking\InitCmsBundle\Model;
 
-namespace Networking\InitCmsBundle\Entity;
+use Gedmo\Tree\RepositoryInterface;
 
-use Sonata\NewsBundle\Entity\BasePost;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class NewsPost extends BasePost
-{
+interface PageSnapshotManagerInterface {
 
-    /**
-     * @var integer $id
-     *
-     */
-    protected $id;
+    public function findSnapshotByPageId($pageId);
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    public function getClassName();
 }

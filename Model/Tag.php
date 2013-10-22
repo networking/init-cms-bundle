@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Networking\InitCmsBundle\Entity\Page;
 
 /**
  * Networking\InitCmsBundle\Entity\Tag

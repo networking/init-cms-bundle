@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Networking\InitCmsBundle\Doctrine\ContentRouteManager as DoctrineContentRouteManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Networking\InitCmsBundle\Entity\ContentRoute;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -25,7 +26,11 @@ class ContentRouteManager extends DoctrineContentRouteManager
 
     public function __construct(EntityManager $em, $class)
     {
+
         parent::__construct($em, $class);
         $this->em = $em;
     }
+
+
+
 }

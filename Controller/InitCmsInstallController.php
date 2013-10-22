@@ -36,7 +36,8 @@ class InitCmsInstallController extends Controller
         $installed = false;
         try {
             /** @var $page Page */
-            $page = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page')->findOneBy(
+            $pageManager = $this->get('networking_init_cms.page_manager');
+            $page = $pageManager->findOneBy(
                 array('isHome' => 1, 'locale' => $this->getRequest()->getLocale())
             );
             if (!$page) {

@@ -9,6 +9,11 @@ services:
         class: Networking\InitCmsBundle\Entity\UserManager
         arguments: [ @security.encoder_factory, @fos_user.util.username_canonicalizer, @fos_user.util.email_canonicalizer, @fos_user.entity_manager, %networking_init_cms.admin.user.class% ]
 
+
+    networking_init_cms.page_snapshot_manager:
+            class: Networking\InitCmsBundle\Entity\PageSnapshotManager
+            arguments: [@doctrine.orm.entity_manager, Networking\InitCmsBundle\Entity\PageSnapshot]
+
     activity_listener:
         class: Networking\InitCmsBundle\EventListener\UserActivity
         arguments: [@security.context, @doctrine.orm.entity_manager]
@@ -30,3 +35,46 @@ services:
         calls:
           - [ setContainer, [ @service_container ]]
           - [ setClassName, [ %networking_init_cms.admin.page.class%] ]
+
+    networking_init_cms.entity_changed_listener:
+            class: Networking\InitCmsBundle\Entity\EntityChangedListener
+            arguments: [@service_container, @networking_init_cms.logger]
+            tags:
+               - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+               - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+               - { name: doctrine.event_listener, event: preRemove, method: preRemove }
+               - { name: monolog.logger, channel: newo}
+
+    #Listener for setting the correct template on the contentRoute object
+    networking_init_cms.content_route_listner:
+       class:  Networking\InitCmsBundle\Entity\ContentRouteListener
+       calls:
+           - [setContainer, [@service_container]]
+       tags:
+           - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
+           - { name: doctrine.event_listener, event: prePersist, method: prePersist }
+
+
+    #Listener which checks for is_deletable field
+    networking_init_cms.entity_delete_listener:
+        class: Networking\InitCmsBundle\Entity\EntityDeleteListener
+        tags:
+           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
+
+
+    networking_init_cms.last_edited_listener:
+           class:  Networking\InitCmsBundle\Entity\LastEditedListener
+           arguments: [@session ]
+           tags:
+               - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+               - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+
+    # Listener for setting up content routes when page created/edited
+    networking_init_cms.page_listner:
+       class:  Networking\InitCmsBundle\Entity\PageListener
+       arguments: [@session, @service_container ]
+       tags:
+           - { name: jms_serializer.event_subscriber }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+           - { name: doctrine.event_listener, event: onFlush, method: onFlush }
+

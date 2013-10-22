@@ -81,8 +81,8 @@ class MediaAdminController extends SonataMediaAdminController
 
         $pageId = $session->get('Page.last_edited');
 
-        $repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
-        $page = $repository->find($pageId);
+        $pageManager = $this->get('networking_init_cms.page_manager');
+        $page = $pageManager->findById($pageId);
 
         if ($page) {
             $locale = $page->getLocale();

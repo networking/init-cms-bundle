@@ -1,6 +1,6 @@
 <?php
 
-namespace Networking\InitCmsBundle\EventListener;
+namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 

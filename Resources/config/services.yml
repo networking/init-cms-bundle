@@ -121,22 +121,6 @@ services:
 #        tags:
 #          - { name: router, priority: 200}
 
-# Listener for setting up content routes when page created/edited
-    networking_init_cms.page_listner:
-       class:  Networking\InitCmsBundle\EventListener\PageListener
-       arguments: [@session, @service_container ]
-       tags:
-           - { name: jms_serializer.event_subscriber }
-           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
-           - { name: doctrine.event_listener, event: onFlush, method: onFlush }
-
-    networking_init_cms.last_edited_listener:
-       class:  Networking\InitCmsBundle\EventListener\LastEditedListener
-       arguments: [@session ]
-       tags:
-           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
-           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
-
     networking_init_cms.version_listner:
        class:  Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionListener
        tags:
@@ -158,21 +142,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 0 }
 
-#Listener which checks for is_deletable field
-    networking_init_cms.entity_delete_listener:
-        class: Networking\InitCmsBundle\EventListener\EntityDeleteListener
-        tags:
-           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
-
-#Listener for setting the correct template on the contentRoute object
-
-    networking_init_cms.content_route_listner:
-       class:  Networking\InitCmsBundle\EventListener\ContentRouteListener
-       calls:
-           - [setContainer, [@service_container]]
-       tags:
-           - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
-           - { name: doctrine.event_listener, event: prePersist, method: prePersist }
 
 # Preload uniquer url validator with the entity manager and the service container
     networking_init_cms.unique_url_validator:
@@ -231,11 +200,4 @@ services:
         # 200 = INFO, see Monolog::Logger for the values of log levels
         arguments: [%kernel.logs_dir%/%kernel.environment%.changed_entities.log, 200]
 
-    networking_init_cms.entity_changed_listener:
-        class: Networking\InitCmsBundle\EventListener\EntityChangedListener
-        arguments: [@service_container, @networking_init_cms.logger]
-        tags:
-           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
-           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
-           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
-           - { name: monolog.logger, channel: newo}
+

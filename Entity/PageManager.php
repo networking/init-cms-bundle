@@ -3,7 +3,6 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityManager;
-use Networking\InitCmsBundle\Entity\Page;
 
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -29,7 +28,6 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
     public function __construct(EntityManager $om, $class)
     {
-
         $classMetaData = $om->getClassMetadata($class);
 
         parent::__construct($om, $classMetaData);
@@ -65,7 +63,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             /** @var $page Page */
             $page = $this->find($id);
             $childrenIds = $page->getChildren()->map(
-                function (Page $p) {
+                function (PageInterface $p) {
                     return $p->getId();
                 }
             );

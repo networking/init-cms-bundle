@@ -9,7 +9,7 @@
  */
 
 
-namespace Networking\InitCmsBundle\EventListener;
+namespace Networking\InitCmsBundle\Entity;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Networking\InitCmsBundle\Entity\ContentRoute;
