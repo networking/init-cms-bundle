@@ -12,7 +12,9 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Query\Expr\Join;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Networking\InitCmsBundle\Model\Page;
 use Symfony\Component\Config\Definition\Builder\ExprBuilder;
+//use Networking\InitCmsBundle\Entity\BasePage ;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -36,13 +38,17 @@ class MenuItemRepository extends NestedTreeRepository
         return $rootNodesQueryBuilder->getQuery()->getResult();
     }
 
-    public function getChildrenByStatus($node = null, $direct = false, $sortByField = null, $direction = 'ASC', $includeNode = false, $viewStatus = Page::STATUS_PUBLISHED)
+    public function getChildrenByStatus($node = null, $direct = false, $sortByField = null, $direction = 'ASC', $includeNode = false, $viewStatus = BasePage::STATUS_PUBLISHED)
     {
+        //var_dump(BasePage::STATUS_PUBLISHED);
+
+
         $qb = $this->childrenQueryBuilder($node, $direct, $sortByField, $direction, $includeNode);
         $aliases = $qb->getRootAliases();
         $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p');
         $qb->addSelect('cr.path AS path');
-        if ($viewStatus == Page::STATUS_PUBLISHED) {
+
+        if ($viewStatus == BasePage::STATUS_PUBLISHED) {
             $qb->leftJoin('p.snapshots', 'ps');
             $qb->leftJoin('ps.contentRoute', 'cr');
             $qb->andWhere($qb->expr()->orX('p.id = ps.page', 'p.id IS NULL'));
