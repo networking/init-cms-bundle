@@ -12,7 +12,7 @@
 namespace Networking\InitCmsBundle\Entity;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Networking\InitCmsBundle\Entity\ContentRoute;
+use Networking\InitCmsBundle\Model\ContentRoute;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 

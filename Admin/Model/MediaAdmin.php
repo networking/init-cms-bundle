@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Admin;
+namespace Networking\InitCmsBundle\Admin\Model;
 
 use Sonata\MediaBundle\Admin\ORM\MediaAdmin as SonataMediaAdmin,
     Sonata\AdminBundle\Route\RouteCollection,
@@ -18,11 +18,11 @@ use Sonata\MediaBundle\Admin\ORM\MediaAdmin as SonataMediaAdmin,
     Sonata\AdminBundle\Datagrid\DatagridMapper,
     Sonata\AdminBundle\Admin\AdminInterface,
     Knp\Menu\ItemInterface as MenuItemInterface;
-
+use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MediaAdmin extends SonataMediaAdmin
+class MediaAdmin extends Admin
 {
     /**
      * @var string
@@ -30,6 +30,7 @@ class MediaAdmin extends SonataMediaAdmin
     protected $baseRoutePattern = 'cms/media';
 
     /**
+     * @var array
      * @var array
      */
     protected $trackedActions = array('list');

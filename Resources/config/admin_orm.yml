@@ -6,11 +6,12 @@ services:
             - @sonata.admin.pool
 
     networking_init_cms.page.admin.page:
-        class: Networking\InitCmsBundle\Admin\PageAdmin
+        class: Networking\InitCmsBundle\Admin\Entity\PageAdmin
         arguments: [null, %networking_init_cms.admin.page.class%, NetworkingInitCmsBundle:PageAdmin]
         calls:
             - [setTranslationDomain, [PageAdmin]]
             - [setLanguages, [%networking_init_cms.page.languages%]]
+            - [setPageManager, [@networking_init_cms.page_manager]]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Pages, label_translator_strategy: sonata.admin.label.strategy.underscore, persist_filters: true }
 

@@ -67,7 +67,7 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.ckeditor_config', $config['ckeditor_config']);
         $container->setParameter('networking_init_cms.admin_menu_groups', $config['admin_menu_groups']);
 
-        $this->registerDoctrineMapping($config);
+        $this->registerDoctrineORMMapping($config);
         $this->configureClass($config, $container);
     }
 
@@ -106,13 +106,17 @@ class NetworkingInitCmsExtension extends Extension
     /**
      * @param array $config
      */
-    public function registerDoctrineMapping(array $config)
+    public function registerDoctrineORMMapping(array $config)
     {
         foreach ($config['class'] as $type => $class) {
 
             if (!class_exists($class)) {
                 return;
             }
+        }
+
+        if($config['db_driver'] != 'orm'){
+            return;
         }
 
         $folder = $config['db_driver'] == 'orm' ? 'Entity' : 'Document';

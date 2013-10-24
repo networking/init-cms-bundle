@@ -10,6 +10,7 @@
  */
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Sluggable\Util\Urlizer;
 use Networking\InitCmsBundle\Entity\Page;
 use Networking\InitCmsBundle\Entity\MenuItem;
@@ -39,7 +40,7 @@ class UniqueURLValidator extends ConstraintValidator
      * @param \Doctrine\ORM\EntityManager $em
      * @param \Symfony\Component\DependencyInjection\Container $container
      */
-    public function __construct(EntityManager $em, Container $container)
+    public function __construct(ObjectManager $em, Container $container)
     {
         $this->em = $em;
         $this->request = $container->get('request');

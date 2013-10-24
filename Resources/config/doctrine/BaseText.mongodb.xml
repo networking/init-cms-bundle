@@ -6,7 +6,7 @@
 
     <mapped-superclass name="Networking\InitCmsBundle\Document\BaseText">
 
-        <field name="text" fieldName="text" type="text"/>
+        <field name="text" fieldName="text" type="string"/>
 
         <field name="createdAt" fieldName="createdAt" type="date"/>
 

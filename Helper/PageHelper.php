@@ -13,7 +13,7 @@ use
     Sonata\AdminBundle\Exception\NoValueException,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Doctrine\ORM\EntityManager,
-    Networking\InitCmsBundle\Entity\ContentRoute;
+    Networking\InitCmsBundle\Model\ContentRoute;
 use Networking\InitCmsBundle\Model\PageInterface;
 
 /**

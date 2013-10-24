@@ -20,7 +20,7 @@ class AdminSettings implements AdminSettingsInterface
     /**
      * @var array
      */
-    protected $settings = array();
+    public $settings = array();
 
     /**
      * @param $settings

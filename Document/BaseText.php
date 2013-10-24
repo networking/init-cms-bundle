@@ -16,8 +16,6 @@ use Networking\InitCmsBundle\Model\Text as ModelText;
 /**
  * Networking\InitCmsBundle\Model
  *
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks()
  *
  * @author net working AG <info@networking.ch>
  */

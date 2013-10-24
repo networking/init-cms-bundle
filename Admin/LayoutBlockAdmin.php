@@ -16,9 +16,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
-
 use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
-use Networking\InitCmsBundle\EventListener\LayoutBlockFormListener;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -36,15 +34,12 @@ class LayoutBlockAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        /** @var \Networking\InitCmsBundle\Model\LayoutBlockFormListener $listener */
+        $listener = $this->getContainer()->get('networking_init_cms.layout_block_form_listener');
+        $listener->setFormFactory($formMapper->getFormBuilder()->getFormFactory());
 
-        $listener = new LayoutBlockFormListener(
-            $formMapper->getFormBuilder()->getFormFactory(),
-            $this->getContainer(),
-            $this->getClass()
-        );
         $formMapper->getFormBuilder()->addEventSubscriber($listener);
 
-        $entityManager = $this->getContainer()->get('Doctrine')->getManager();
         $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
         $transformer = new PageToNumberTransformer($pageManager);
         $formMapper
@@ -53,7 +48,7 @@ class LayoutBlockAdmin extends BaseAdmin
                     'hidden'
                     )
                 ->add($formMapper->getFormBuilder()->create('page', 'hidden')
-                                    ->addModelTransformer($transformer))
+                                    ->addModelTransformer($transformer), 'hidden')
                 ->add('classType', 'hidden')
                 ->add('sortOrder', 'hidden');
     }

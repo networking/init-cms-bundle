@@ -29,12 +29,23 @@ services:
            - { name: doctrine.event_listener, event: postPersist, method: postPersist }
            - { name: doctrine.event_listener, event: preRemove, method: preRemove }
 
+    networking_init_cms.layout_block_form_listener:
+       class:  Networking\InitCmsBundle\Entity\LayoutBlockFormListener
+       arguments: [@service_container, 'Networking\InitCmsBundle\Entity\LayoutBlock']
+
     networking_init_cms.content_route_manager:
         class: Networking\InitCmsBundle\Entity\ContentRouteManager
         arguments: [ @doctrine.orm.entity_manager, Networking\InitCmsBundle\Entity\ContentRoute ]
         calls:
           - [ setContainer, [ @service_container ]]
-          - [ setClassName, [ %networking_init_cms.admin.page.class%] ]
+          - [ setClassName, [ %networking_init_cms.admin.page.class%] ]  
+    
+    networking_init_cms.media.entity.type:
+        class: Networking\InitCmsBundle\Form\Type\MediaEntityType
+        arguments:
+            - '@doctrine'
+        tags:
+            - {name: form.type, alias: 'media_entity_type' }
 
     networking_init_cms.entity_changed_listener:
             class: Networking\InitCmsBundle\Entity\EntityChangedListener

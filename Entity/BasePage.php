@@ -20,4 +20,9 @@ use Networking\InitCmsBundle\Model\Page as ModelPage;
 abstract class BasePage extends ModelPage
 {
 
+    public function getContentRoute(){
+        if(!$this->contentRoute){
+            $this->contentRoute = new ContentRoute();
+        }
+    }
 }

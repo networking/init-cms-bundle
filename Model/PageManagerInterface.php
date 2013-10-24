@@ -49,4 +49,10 @@ interface PageManagerInterface extends ContentRepositoryInterface, ContainerAwar
      */
     public function revertToPublished(PageInterface $draftPage, \JMS\Serializer\SerializerInterface $serializer);
 
+    /**
+     * @param PageInterface $page
+     * @return mixed
+     */
+    public function save(PageInterface $page);
+
 }

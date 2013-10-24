@@ -15,7 +15,7 @@ use Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Entity\PageSnapshot,
     Networking\InitCmsBundle\Helper\PageHelper,
     Networking\InitCmsBundle\Entity\LayoutBlock,
-    Networking\InitCmsBundle\Entity\ContentRoute,
+    Networking\InitCmsBundle\Model\ContentRoute,
     Networking\InitCmsBundle\Controller\CRUDController,
     Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
@@ -128,8 +128,9 @@ class PageAdminController extends CRUDController
     {
         $er = $this->getDoctrine()->getRepository($this->admin->getClass());
 
+
         /** @var $page Page */
-        $page = $er->find($id);
+        $page = $this->admin->getObject( $id);
 
         if (!$page) {
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
@@ -142,13 +143,11 @@ class PageAdminController extends CRUDController
                 $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_link_error');
             } else {
                 /** @var $linkPage Page */
-                $linkPage = $er->find($linkPageId);
+                $linkPage = $this->admin->getObject($linkPageId);
 
                 $page->addTranslation($linkPage);
 
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($page);
-                $em->flush();
+                $this->admin->update($page);
 
                 if ($this->isXmlHttpRequest()) {
 
@@ -172,7 +171,7 @@ class PageAdminController extends CRUDController
             }
         }
 
-        $pages = $er->findBy(array('locale' => $locale));
+        $pages = $this->admin->getModelManager()->findBy($this->admin->getClass(),array('locale' => $locale));
 
         if (count($pages)) {
             $pages = new \Doctrine\Common\Collections\ArrayCollection($pages);
@@ -206,11 +205,10 @@ class PageAdminController extends CRUDController
      */
     public function unlinkAction(Request $request, $id, $translationId)
     {
-        $er = $this->getDoctrine()->getRepository($this->admin->getClass());
 
         /** @var $page Page */
-        $page = $er->find($id);
-        $translatedPage = $er->find($translationId);
+        $page = $this->admin->getObject($id);
+        $translatedPage = $this->admin->getObject($translationId);
 
         if (!$page) {
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
@@ -221,10 +219,9 @@ class PageAdminController extends CRUDController
             $page->removeTranslation($translatedPage);
             $translatedPage->removeTranslation($page);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($page);
-            $em->persist($translatedPage);
-            $em->flush();
+            $this->admin->update($page);
+            $this->admin->update($translatedPage);
+
 
             if ($this->isXmlHttpRequest()) {
 
@@ -277,6 +274,7 @@ class PageAdminController extends CRUDController
         $uniqid = $request->get('uniqid');
 
         $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid, $code, $doUpdate = true);
+
         return new Response($html);
     }
 
@@ -382,29 +380,29 @@ class PageAdminController extends CRUDController
         $zones = $request->get('zones', array());
         $objectId = $request->get('objectId');
 
-        foreach($zones as $zone){
+        foreach ($zones as $zone) {
             $zoneName = $zone['zone'];
             if (array_key_exists('layoutBlocks', $zone) && is_array($zone['layoutBlocks'])) {
                 foreach ($zone['layoutBlocks'] as $key => $layoutBlockStr) {
                     $sort = ++$key;
                     $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
-                    $repo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock');
+                    /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
+                    $layoutBlockAdmin = $this->get('networking_init_cms.page.admin.layout_block');
 
                     try {
-                        $layoutBlock = $repo->find($blockId);
+                        /** @var \Networking\InitCmsBundle\Model\LayoutBlockInterface $layoutBlock */
+                        $layoutBlock = $layoutBlockAdmin->getObject($blockId);
                     } catch (\Exception $e) {
                         $message = $e->getMessage();
 
                         return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
                     }
-
                     $layoutBlock->setSortOrder($sort);
                     $layoutBlock->setZone($zoneName);
+                    $layoutBlock->getPage()->setUpdatedAt(new \DateTime());
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($layoutBlock);
-                    $em->persist($layoutBlock->getPage()->setUpdatedAt(new \DateTime()));
-                    $em->flush();
+                    $layoutBlockAdmin->update($layoutBlock);
+
                 }
             }
         }
@@ -445,15 +443,15 @@ class PageAdminController extends CRUDController
 
         if ($layoutBlockStr) {
             $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
-            $repo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:LayoutBlock');
 
             try {
-                $layoutBlock = $repo->find($blockId);
+                /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
+                $layoutBlockAdmin = $this->get('networking_init_cms.page.admin.layout_block');
+                $layoutBlock = $layoutBlockAdmin->getObject($blockId);
                 if ($layoutBlock) {
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($layoutBlock);
-                    $em->remove($layoutBlock);
-                    $em->flush();
+
+                    $layoutBlockAdmin->update($layoutBlock);
+                    $layoutBlockAdmin->delete($layoutBlock);
                 }
             } catch (\Exception $e) {
                 $message = $e->getMessage();
@@ -478,8 +476,13 @@ class PageAdminController extends CRUDController
      * @return mixed
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    protected function getLayoutBlockFormWidget($objectId, $elementId, $uniqId = null, $code = 'networking_init_cms.page.admin.page', $doUpdate = false)
-    {
+    protected function getLayoutBlockFormWidget(
+        $objectId,
+        $elementId,
+        $uniqId = null,
+        $code = 'networking_init_cms.page.admin.page',
+        $doUpdate = false
+    ) {
         $twig = $this->get('twig');
         /** @var \Sonata\AdminBundle\Admin\AdminHelper $helper */
         $helper = $this->get('sonata.admin.helper');
@@ -507,7 +510,7 @@ class PageAdminController extends CRUDController
         $form = $formBuilder->getForm();
         $form->setData($subject);
 
-        if($doUpdate){
+        if ($doUpdate) {
             $form->bind($admin->getRequest());
         }
 
@@ -613,7 +616,7 @@ class PageAdminController extends CRUDController
         $form->setData($object);
 
         if ($this->get('request')->getMethod() == 'POST') {
-            $form->bind($this->get('request'));
+            $form->submit($this->get('request'));
 
             $isFormValid = $form->isValid();
 
@@ -674,9 +677,11 @@ class PageAdminController extends CRUDController
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
-        $menuEr = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:MenuItem');
 
-        $rootMenus = $menuEr->findBy(array('isRoot' => 1, 'locale' => $object->getLocale()));
+        $rootMenus = $this->admin->getModelManager()->findBy(
+            'NetworkingInitCmsBundle:MenuItem',
+            array('isRoot' => 1, 'locale' => $object->getLocale())
+        );
 
         return $this->render(
             $this->admin->getTemplate($templateKey),
@@ -698,9 +703,9 @@ class PageAdminController extends CRUDController
     {
         $locale = $request->get('locale');
         $pages = array();
-        $er = $this->getDoctrine()->getRepository($this->admin->getClass());
+        $pageManager = $this->get('networking_init_cms.page_manager');
 
-        if ($result = $er->getParentPagesChoices($locale)) {
+        if ($result = $pageManager->getParentPagesChoices($locale)) {
             foreach ($result as $page) {
                 $pages[$page->getId()] = array($page->getAdminTitle());
             }
@@ -804,7 +809,6 @@ class PageAdminController extends CRUDController
      */
     public function cancelDraftAction($id = null)
     {
-        $em = $this->getDoctrine()->getManager();
         $id = $this->get('request')->get($this->admin->getIdParameter());
         /** @var $draftPage Page */
         $draftPage = $this->admin->getObject($id);

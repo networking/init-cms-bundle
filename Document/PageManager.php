@@ -3,11 +3,11 @@
 namespace Networking\InitCmsBundle\Document;
 
 
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Gedmo\Tree\Document\MongoDB\Repository\MaterializedPathRepository;
-use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 
 /**
  * PageRepository
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class PageManager extends MaterializedPathRepository implements ContentRepositoryInterface, ContainerAwareInterface
+class PageManager extends MaterializedPathRepository implements PageManagerInterface
 {
 
 
@@ -25,6 +25,16 @@ class PageManager extends MaterializedPathRepository implements ContentRepositor
      * @var ContainerInterface $container
      */
     private $container;
+
+
+    public function __construct(DocumentManager $om, $class)
+    {
+
+        $classMetaData = $om->getClassMetadata($class);
+        $uow = $om->getUnitOfWork();
+
+        parent::__construct($om, $uow, $classMetaData);
+    }
 
     /**
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
@@ -65,7 +75,7 @@ class PageManager extends MaterializedPathRepository implements ContentRepositor
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->addOr($qb->expr()->field('isHome')->equals(NULL));
+        $qb->addOr($qb->expr()->field('isHome')->equals(null));
         $qb->addOr($qb->expr()->field('isHome')->notEqual(1));
 
         if ($id) {
@@ -80,12 +90,12 @@ class PageManager extends MaterializedPathRepository implements ContentRepositor
             );
 
             if ($childrenIds->count()) {
-                $qb->addAnd($qb->expr()->field('id')->notIn( $childrenIds->toArray()));
+                $qb->addAnd($qb->expr()->field('id')->notIn($childrenIds->toArray()));
             }
-            $qb->addAnd($qb->expr()->field('id')->notEqual( $id));
+            $qb->addAnd($qb->expr()->field('id')->notEqual($id));
         }
 
-        $qb->addAnd($qb->expr()->field('locale')->notEqual( $locale));
+        $qb->addAnd($qb->expr()->field('locale')->notEqual($locale));
         $qb->sort('path', 'ASC');
 
 
@@ -110,5 +120,65 @@ class PageManager extends MaterializedPathRepository implements ContentRepositor
             ->sort($sort, $order);
 
         return $qb->getQuery()->execute();
+    }
+
+    /**
+     * @param $draftPage
+     * @param $serializer
+     * @return mixed
+     */
+    public function revertToPublished(PageInterface $draftPage, \JMS\Serializer\SerializerInterface $serializer)
+    {
+        $pageSnapshot = $draftPage->getSnapshot();
+        $contentRoute = $draftPage->getContentRoute();
+
+
+        /** @var $publishedPage PageInterface */
+        $publishedPage = $serializer->deserialize(
+            $pageSnapshot->getVersionedData(),
+            $this->getClassName(),
+            'json'
+        );
+
+
+        // Save the layout blocks in a temp variable so that we can
+        // assure the correct layout blocks will be saved and not
+        // merged with the layout blocks from the draft page
+        $tmpLayoutBlocks = $publishedPage->getLayoutBlock();
+
+
+        // tell the entity manager to handle our published page
+        // as if it came from the DB and not a serialized object
+        $publishedPage = $this->dm->merge($publishedPage);
+
+
+        $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
+        $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
+        $contentRoute->setController($pageSnapshot->getContentRoute()->getController());
+        $contentRoute->setPath($pageSnapshot->getContentRoute()->getPath());
+
+        $this->dm->merge($contentRoute);
+
+        $publishedPage->setContentRoute($contentRoute);
+
+        // Set the layout blocks of the NOW managed entity to
+        // exactly that of the published version
+        $publishedPage->resetLayoutBlock($tmpLayoutBlocks);
+        $this->dm->flush();
+
+        return $publishedPage;
+    }
+
+
+    /**
+     * @param PageInterface $page
+     * @return mixed
+     */
+    public function save(PageInterface $page)
+    {
+        if(!$page->getId()){
+            $page->setContentRoute(new ContentRoute());
+        }
+        $this->dm->persist($page);
     }
 }

@@ -50,13 +50,6 @@ services:
         tags:
           - { name: form.type, alias: networking_type_iconradio}
 
-    networking_init_cms.media.entity.type:
-        class: Networking\InitCmsBundle\Form\Type\MediaEntityType
-        arguments:
-            - '@doctrine'
-        tags:
-            - {name: form.type, alias: 'media_entity_type' }
-
 ## Admin Controllers
 
 # Twig tinymce live
@@ -79,7 +72,6 @@ services:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments: [@router.request_context, @networking_init_cms.nested_matcher, @networking_init_cms.generator]
         calls:
-#          - [ setContainer, [ @service_container] ]
           - [ addRouteEnhancer, [@networking_init_cms.enhancer_controllers_by_content] ]
           - [ addRouteEnhancer, [@networking_init_cms.enhancer_controllers_by_class] ]
         tags:
@@ -97,9 +89,6 @@ services:
     networking_init_cms.matcher.dummy_context:
         class: "Symfony\Component\Routing\RequestContext"
 
-#           <service id="cmf_routing.matcher.dummy_collection" class="Symfony\Component\Routing\RouteCollection" public="false"/>
-#
-#                  <service id="cmf_routing.matcher.dummy_context" class="Symfony\Component\Routing\RequestContext" public="false"/>
 
     networking_init_cms.final_matcher:
         class: Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher
@@ -109,7 +98,6 @@ services:
         class: Symfony\Cmf\Component\Routing\ContentAwareGenerator
         arguments: [@networking_init_cms.content_route_manager, @logger]
         calls:
-#          - [ setContainer, [ @service_container] ]
           - [ setContentRepository, [@networking_init_cms.page_manager] ]
 
 #    networking_init_cms.cms_router:
@@ -143,12 +131,15 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 0 }
 
 
-# Preload uniquer url validator with the entity manager and the service container
-    networking_init_cms.unique_url_validator:
-        class: Networking\InitCmsBundle\Validator\Constraints\UniqueURLValidator
-        arguments: [@doctrine.orm.entity_manager, @service_container]
-        tags:
-          - { name: validator.constraint_validator, alias: unique_url_validator }
+#Listener for setting the correct template on the contentRoute object
+
+    networking_init_cms.content_route_listner:
+       class:  Networking\InitCmsBundle\EventListener\ContentRouteListener
+       calls:
+           - [setContainer, [@service_container]]
+       tags:
+           - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
+           - { name: doctrine.event_listener, event: prePersist, method: prePersist }
 
 ## Menus
 

@@ -5,39 +5,40 @@
 
     <parameters>
         <!-- MEDIA -->
-        <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\Entity\MediaAdmin</parameter>
+        <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\Document\MediaAdmin</parameter>
         <parameter key="sonata.media.admin.media.controller">NetworkingInitCmsBundle:MediaAdmin</parameter>
         <parameter key="sonata.media.admin.media.translation_domain">MediaAdmin</parameter>
 
         <!-- GALLERY -->
         <parameter key="sonata.media.admin.gallery.class">Networking\InitCmsBundle\Admin\GalleryAdmin</parameter>
         <parameter key="sonata.media.admin.gallery.controller">NetworkingInitCmsBundle:GalleryAdmin</parameter>
-        <parameter key="sonata.media.admin.gallery.translation_domain">%sonata.media.admin.media.translation_domain%</parameter>
+        <parameter key="sonata.media.admin.gallery.translation_domain">%sonata.media.admin.media.translation_domain%
+        </parameter>
 
         <!-- GALLERY HAS MEDIA -->
         <parameter key="sonata.media.admin.gallery_has_media.class">Sonata\MediaBundle\Admin\GalleryHasMediaAdmin</parameter>
         <parameter key="sonata.media.admin.gallery_has_media.controller">SonataAdminBundle:CRUD</parameter>
-        <parameter key="sonata.media.admin.gallery_has_media.translation_domain">%sonata.media.admin.media.translation_domain%</parameter>
+        <parameter key="sonata.media.admin.gallery_has_media.translation_domain">
+            %sonata.media.admin.media.translation_domain%
+        </parameter>
 
-        <!-- User -->
-        <parameter key="sonata.user.admin.groupname">sonata_user</parameter>
     </parameters>
 
     <services>
         <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%">
-            <tag name="sonata.admin" manager_type="orm" group="sonata_media"
-                 label_catalogue="%sonata.media.admin.media.translation_domain%" label="Media"
+            <tag name="sonata.admin" manager_type="doctrine_mongodb" group="sonata_media"
+                 label_catalogue="%sonata.media.admin.media.translation_domain%" label="media"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
             <argument/>
             <argument>%sonata.media.admin.media.entity%</argument>
             <argument>%sonata.media.admin.media.controller%</argument>
             <argument type="service" id="sonata.media.pool"/>
 
+            <call method="setModelManager">
+                <argument type="service" id="sonata.media.admin.media.manager"/>
+            </call>
             <call method="setTranslationDomain">
                 <argument>%sonata.media.admin.media.translation_domain%</argument>
-            </call>
-            <call method="setLanguages">
-                <argument>%networking_init_cms.page.languages%</argument>
             </call>
             <call method="setTemplates">
                 <argument type="collection">
@@ -50,14 +51,14 @@
             </call>
         </service>
 
-        <service id="sonata.media.admin.media.manager" class="Sonata\MediaBundle\Admin\Manager\DoctrineORMManager">
-            <argument type="service" id="doctrine"/>
+        <service id="sonata.media.admin.media.manager" class="Sonata\MediaBundle\Admin\Manager\DoctrineMongoDBManager">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager"/>
             <argument type="service" id="sonata.media.manager.media"/>
         </service>
 
         <service id="sonata.media.admin.gallery" class="%sonata.media.admin.gallery.class%">
-            <tag name="sonata.admin" manager_type="orm" group="sonata_media" label="Gallery"
-                 label_catalogue="%sonata.media.admin.gallery.translation_domain%"
+            <tag name="sonata.admin" manager_type="doctrine_mongodb" group="sonata_media"
+                 label_catalogue="%sonata.media.admin.gallery.translation_domain%" label="gallery"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
             <argument/>
             <argument>%sonata.media.admin.gallery.entity%</argument>
@@ -80,9 +81,9 @@
         </service>
 
         <service id="sonata.media.admin.gallery_has_media" class="%sonata.media.admin.gallery_has_media.class%">
-            <tag name="sonata.admin" manager_type="orm" show_in_dashboard="false" group="sonata_media"
+            <tag name="sonata.admin" manager_type="doctrine_mongodb" group="sonata_media"
                  label_catalogue="%sonata.media.admin.gallery_has_media.translation_domain%" label="gallery_has_media"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+                 show_in_dashboard="false" label_translator_strategy="sonata.admin.label.strategy.underscore"/>
             <argument/>
             <argument>%sonata.media.admin.gallery_has_media.entity%</argument>
             <argument>%sonata.media.admin.gallery_has_media.controller%</argument>
@@ -92,29 +93,27 @@
             </call>
         </service>
 
-        <service id="sonata.user.admin.user" class="%sonata.user.admin.user.class%">
-            <tag name="sonata.admin" manager_type="orm" group="%sonata.user.admin.groupname%" label="users"
-                 label_catalogue="SonataUserBundle" label_translator_strategy="sonata.admin.label.strategy.underscore"/>
-            <argument/>
-            <argument>%sonata.user.admin.user.entity%</argument>
-            <argument>%sonata.user.admin.user.controller%</argument>
-            <call method="setUserManager">
-                <argument type="service" id="fos_user.user_manager"/>
-            </call>
-            <call method="setTranslationDomain">
-                <argument>%sonata.user.admin.user.translation_domain%</argument>
-            </call>
-        </service>
 
-        <service id="sonata.user.admin.group" class="%sonata.user.admin.group.class%">
-            <tag name="sonata.admin" manager_type="orm" group="%sonata.user.admin.groupname%" label="groups"
-                 label_catalogue="SonataUserBundle" label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+        <service id="ibrows_sonata_translation.admin.orm"
+                 class="Networking\InitCmsBundle\Admin\MongoDBTranslationAdmin">
+            <tag name="sonata.admin" manager_type="doctrine_mongodb" group="group.translation"
+                 label_catalogue="IbrowsSonataTranslationBundle" label="translation.title"/>
             <argument/>
-            <argument>%sonata.user.admin.group.entity%</argument>
-            <argument>%sonata.user.admin.group.controller%</argument>
+            <argument>Lexik\Bundle\TranslationBundle\Document\TransUnit</argument>
+            <argument>IbrowsSonataTranslationBundle:TranslationCRUD</argument>
+            <call method="setEditableOptions">
+                <argument>%ibrows_sonata_translation.editable%</argument>
+            </call>
             <call method="setTranslationDomain">
-                <argument>%sonata.user.admin.group.translation_domain%</argument>
+                <argument>IbrowsSonataTranslationBundle</argument>
+            </call>
+            <call method="setTransUnitManager">
+                <argument type="service" id="lexik_translation.trans_unit.manager"/>
+            </call>
+            <call method="setManagedLocales">
+                <argument>%lexik_translation.managed_locales%</argument>
             </call>
         </service>
     </services>
+
 </container>

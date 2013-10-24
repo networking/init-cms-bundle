@@ -17,14 +17,19 @@ namespace Networking\InitCmsBundle\EventListener;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use DateTime;
-use Sonata\UserBundle\Model\UserInterface;
+use Networking\InitCmsBundle\Model\UserInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class UserActivity
 {
     protected $context;
+
+    /**
+     * @var ObjectManager
+     */
     protected $em;
 
-    public function __construct(SecurityContext $context, $em)
+    public function __construct(SecurityContext $context, ObjectManager $em)
     {
         $this->context = $context;
         $this->em = $em;
@@ -43,11 +48,14 @@ class UserActivity
         }
         $user = $this->context->getToken()->getUser();
         if ($user instanceof UserInterface) {
+
             //here we can update the user as necessary
             if (method_exists($user, 'setLastActivity')) {
-                $user->setLastActivity(new DateTime());
+                $user->setLastActivity(new \DateTime('now'));
                 $this->em->persist($user);
                 $this->em->flush($user);
+
+
             }
         }
     }

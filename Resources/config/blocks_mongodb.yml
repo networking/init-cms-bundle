@@ -1,0 +1,18 @@
+services:
+    networking_init_cms.block.service.translatable_text:
+        class: Networking\InitCmsBundle\Block\TranslatableTextBlockService
+        arguments: ["networking_initcms_block_translatable", @templating]
+        tags:
+          - { name: sonata.block}
+
+    networking_init_cms.block.service.online_users:
+        class: Networking\InitCmsBundle\Block\OnlineUsersBlockService
+        arguments: ["networking_initcms_block_online_users", @templating, @networking_init_cms.user_manager]
+        tags:
+          - { name: sonata.block}
+
+    networking_init_cms.block.service.pages:
+        class: Networking\InitCmsBundle\Block\PagesBlockService
+        arguments: ["networking_initcms_block_pages", @templating, @networking_init_cms.page_manager]
+        tags:
+          - { name: sonata.block}

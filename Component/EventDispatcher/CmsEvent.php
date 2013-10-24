@@ -36,4 +36,9 @@ class CmsEvent extends Event
     {
         return $this->entity;
     }
+
+    public function getDocument()
+    {
+        return $this->entity;
+    }
 }

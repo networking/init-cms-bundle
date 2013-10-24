@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Admin;
+namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Admin\BaseAdmin,
     Sonata\AdminBundle\Admin\Admin,
@@ -56,11 +56,26 @@ class PageAdmin extends BaseAdmin
     protected $repository = '';
 
     /**
+     * @var \Networking\InitCmsBundle\Model\PageManagerInterface
+     */
+    protected $pageManger;
+
+    /**
      * @return string
      */
     public function getIcon()
     {
         return 'icon-file-alt';
+    }
+
+
+
+    /**
+     * @param \Networking\InitCmsBundle\Model\PageManagerInterface $pageManager
+     */
+    public function setPageManager(PageManagerInterface$pageManager)
+    {
+        $this->pageManager = $pageManager;
     }
 
 

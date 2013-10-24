@@ -2,6 +2,7 @@ imports:
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/security_config.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/fos_user.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/sonata_admin.yml }
+    - { resource: @NetworkingInitCmsBundle/Resources/config/cms/sonata_doctrine_admin.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/sonata_block.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/stof_doctrine_extensions.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/symfony_cmf_routing_extra.yml }

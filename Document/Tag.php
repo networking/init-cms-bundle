@@ -11,14 +11,14 @@
 
 namespace Networking\InitCmsBundle\Document;
 
-use Sonata\NewsBundle\Document\BaseTag;
+use Networking\InitCmsBundle\Model\Tag as ModelTag;
 
 /**
  * Networking\InitCmsBundle\Entity\Tag
  *
  * @author net working AG <info@networking.ch>
  */
-class Tag extends BaseTag
+class Tag extends ModelTag
 {
     /**
      * @var integer $id

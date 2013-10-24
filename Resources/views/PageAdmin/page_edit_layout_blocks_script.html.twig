@@ -206,7 +206,7 @@ function submitLayoutSort(zones) {
         url: '{{ url('admin_networking_initcms_page_updateLayoutBlockSort') }}',
         data: {
             zones: zones,
-            objectId: {{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}
+            objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
         },
         type: 'get',
         success: function (xhr) {
@@ -361,7 +361,7 @@ function onAfterLoad() {
                     url: '{{ url('admin_networking_initcms_page_deleteLayoutBlock') }}',
                     data: {
                         layoutBlock: liElement.attr('id'),
-                        objectId: {{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }},
+                        objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
                         uniqid: '{{ sonata_admin.admin.root.uniqid }}',
                         elementId: '{{ id }}'
                     },

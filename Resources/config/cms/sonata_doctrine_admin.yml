@@ -1,0 +1,33 @@
+sonata_doctrine_orm_admin:
+    templates:
+        form: [ NetworkingInitCmsBundle:Form:form_admin_fields.html.twig ]
+        types:
+            list:
+                array:      NetworkingInitCmsBundle:CRUD:list_array.html.twig
+                boolean:    NetworkingInitCmsBundle:CRUD:list_boolean.html.twig
+                date:       NetworkingInitCmsBundle:CRUD:list_date.html.twig
+                time:       NetworkingInitCmsBundle:CRUD:list_time.html.twig
+                datetime:   NetworkingInitCmsBundle:CRUD:list_datetime.html.twig
+                text:       NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                trans:      NetworkingInitCmsBundle:CRUD:list_trans.html.twig
+                string:     NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                smallint:   NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                bigint:     NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                integer:    NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                decimal:    NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                identifier: NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+
+            show:
+                array:      NetworkingInitCmsBundle:CRUD:show_array.html.twig
+                boolean:    NetworkingInitCmsBundle:CRUD:show_boolean.html.twig
+                date:       NetworkingInitCmsBundle:CRUD:show_date.html.twig
+                time:       NetworkingInitCmsBundle:CRUD:show_time.html.twig
+                datetime:   NetworkingInitCmsBundle:CRUD:show_datetime.html.twig
+                text:       NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                trans:      NetworkingInitCmsBundle:CRUD:show_trans.html.twig
+                string:     NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                smallint:   NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                bigint:     NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                integer:    NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                decimal:    NetworkingInitCmsBundle:CRUD:base_show_field.html.twig
+                birthday:   NetworkingInitCmsBundle:CRUD:show_date.html.twig

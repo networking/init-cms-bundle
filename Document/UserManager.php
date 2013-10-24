@@ -15,6 +15,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Networking\InitCmsBundle\Doctrine\UserManager as DoctrineUserManager;
 use FOS\UserBundle\Util\CanonicalizerInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -22,6 +23,11 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 class UserManager extends DoctrineUserManager
 {
     protected $dm;
+
+    /**
+     * @var DocumentRepository $repository
+     */
+    protected $repository;
 
     public function __construct(
         EncoderFactoryInterface $encoderFactory,
@@ -33,5 +39,14 @@ class UserManager extends DoctrineUserManager
         parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $dm, $class);
 
         $this->dm = $dm;
+    }
+
+    public function getLatestActivity()
+    {
+        $tenMinutesAgo = new \DateTime('10 hours ago');
+        $qb = $this->repository->createQueryBuilder();
+        $qb->field('updatedAt')->gte($tenMinutesAgo);
+
+        return $qb->getQuery()->execute();
     }
 }

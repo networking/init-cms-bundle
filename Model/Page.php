@@ -23,7 +23,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Networking\InitCmsBundle\Entity\Page
  *
  * @Gedmo\Tree(type="materializedPath")
- * @Gedmo\Loggable
  *
  * @author net working AG <info@networking.ch>
  */
@@ -601,7 +600,9 @@ abstract class Page implements PageInterface
      */
     public function getActiveFrom()
     {
-        if (!$this->activeFrom) return new \DateTime();
+        if (!$this->activeFrom) {
+            return new \DateTime();
+        }
 
         return $this->activeFrom;
     }
@@ -701,9 +702,11 @@ abstract class Page implements PageInterface
     public function getLayoutBlock($zone = null)
     {
         if (!is_null($zone)) {
-            return $this->layoutBlock->filter(function ($layoutBlock) use ($zone) {
-                return ($layoutBlock->getZone() == $zone && $layoutBlock->isActive());
-            });
+            return $this->layoutBlock->filter(
+                function ($layoutBlock) use ($zone) {
+                    return ($layoutBlock->getZone() == $zone && $layoutBlock->isActive());
+                }
+            );
         }
 
         return $this->layoutBlock;
@@ -753,9 +756,11 @@ abstract class Page implements PageInterface
      */
     public function getMenuItemByRoot($rootId)
     {
-        return $this->menuItem->filter(function ($menuItem) use ($rootId) {
-            return ($menuItem->getRoot() == $rootId);
-        });
+        return $this->menuItem->filter(
+            function ($menuItem) use ($rootId) {
+                return ($menuItem->getRoot() == $rootId);
+            }
+        );
     }
 
     /**
@@ -989,13 +994,7 @@ abstract class Page implements PageInterface
         return $this;
     }
 
-    /**
-     * @return ContentRouteInterface
-     */
-    public function getContentRoute()
-    {
-        return $this->contentRoute;
-    }
+
 
 
     /**
@@ -1049,14 +1048,11 @@ abstract class Page implements PageInterface
      */
     public function setTemplate($template)
     {
-        if (!$this->contentRoute) {
-            $contentRoute = new ContentRoute();
-            $contentRoute->setClassType(get_class($this));
-            $contentRoute->setLocale($this->getLocale());
-
-            $this->setContentRoute($contentRoute);
+        if (!$this->id) {
+            $this->getContentRoute()->setClassType(get_class($this));
+            $this->getContentRoute()->setLocale($this->getLocale());
         }
-        $this->contentRoute->setTemplate($template);
+        $this->getContentRoute()->setTemplate($template);
 
         return $this;
     }
@@ -1066,7 +1062,10 @@ abstract class Page implements PageInterface
      */
     public function getTemplate()
     {
-        if (!$this->contentRoute) return;
+        if (!$this->contentRoute) {
+            return;
+        }
+
         return $this->contentRoute->getTemplate();
     }
 
@@ -1077,14 +1076,12 @@ abstract class Page implements PageInterface
      */
     public function setTemplateName($templateName)
     {
-        if (!$this->contentRoute) {
-            $contentRoute = new ContentRoute();
-            $contentRoute->setClassType(get_class($this));
-            $contentRoute->setLocale($this->getLocale());
 
-            $this->setContentRoute($contentRoute);
+        if (!$this->id) {
+            $this->getContentRoute()->setClassType(get_class($this));
+            $this->getContentRoute()->setLocale($this->getLocale());
         }
-        $this->contentRoute->setTemplateName($templateName);
+        $this->getContentRoute()->setTemplateName($templateName);
 
         return $this;
     }
@@ -1094,8 +1091,11 @@ abstract class Page implements PageInterface
      */
     public function getTemplateName()
     {
-        if (!$this->contentRoute) return;
-        return $this->contentRoute->getTemplateName();
+        if (!$this->contentRoute) {
+            return;
+        }
+
+        return $this->getContentRoute()->getTemplateName();
     }
 
     /**
@@ -1103,7 +1103,7 @@ abstract class Page implements PageInterface
      */
     public function getFullPath()
     {
-        return $this->contentRoute->getPath();
+        return $this->getContentRoute()->getPath();
     }
 
     /**
@@ -1144,7 +1144,9 @@ abstract class Page implements PageInterface
         if (!$this->getOriginals()->isEmpty()) {
             foreach ($this->getOriginals() as $translation) {
                 // if we already meet you stop and go on with the next
-                if (array_key_exists($translation->getLocale(), $translationsArray)) return;
+                if (array_key_exists($translation->getLocale(), $translationsArray)) {
+                    return;
+                }
                 $translationsArray[$translation->getLocale()] = $translation;
                 $translation->getRecursiveTranslations($translationsArray);
             }
@@ -1211,6 +1213,7 @@ abstract class Page implements PageInterface
     {
         if ($this->getSnapshot()) {
             $version = $this->getSnapshot()->getVersion();
+
             return ++$version;
         } else {
             return 1;
@@ -1323,6 +1326,7 @@ abstract class Page implements PageInterface
         if ($this->isPublished()) {
             return self::STATUS_PUBLISHED;
         }
+
         return self::STATUS_DRAFT;
     }
 }

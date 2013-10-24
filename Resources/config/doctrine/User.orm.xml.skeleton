@@ -19,6 +19,7 @@
         </id>
 
         <field name="adminSettings" column="admin_settings" type="object" nullable="true"/>
+        <field name="adminSettings" column="admin_settings" type="object" nullable="true"/>
 
     </entity>
 </doctrine-mapping>

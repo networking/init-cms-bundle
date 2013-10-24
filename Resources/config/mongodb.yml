@@ -1,10 +1,87 @@
 services:
-    networking_init_cms.page_class_meta:
-        class: Doctrine\ODM\MongoDB\Mapping\ClassMetadata
-        arguments: [ Application\Networking\InitCmsBundle\Document\Page ]
-
-    networking_init_cms.page_repository:
-        class: Networking\InitCmsBundle\Docment\PageManager
-        arguments: [ @doctrine_mongodb.odm.document_manager, @networking_init_cms.page_class_meta ]
+    networking_init_cms.page_manager:
+        class: Networking\InitCmsBundle\Document\PageManager
+        arguments: [ @doctrine.odm.mongodb.document_manager,  %networking_init_cms.admin.page.class% ]
         calls:
           - [ setContainer, [ @service_container] ]
+
+    networking_init_cms.user_manager:
+        class: Networking\InitCmsBundle\Document\UserManager
+        arguments: [ @security.encoder_factory, @fos_user.util.username_canonicalizer, @fos_user.util.email_canonicalizer, @fos_user.document_manager, %networking_init_cms.admin.user.class% ]
+
+    activity_listener:
+        class: Networking\InitCmsBundle\EventListener\UserActivity
+        arguments: [@security.context, @doctrine.odm.mongodb.document_manager]
+        tags:
+          - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+
+
+    networking_init_cms.layout_block_listner:
+       class:  Networking\InitCmsBundle\Document\LayoutBlockListener
+       arguments: [@serializer]
+       tags:
+           - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
+
+
+    #Listener which checks for is_deletable field
+    networking_init_cms.entity_delete_listener:
+        class: Networking\InitCmsBundle\Document\EntityDeleteListener
+        tags:
+           - { name: doctrine.event_listener, event: preRemove, method: preRemove }
+
+    networking_init_cms.layout_block_form_listener:
+       class:  Networking\InitCmsBundle\Document\LayoutBlockFormListener
+       arguments: [@service_container, 'Networking\InitCmsBundle\Document\LayoutBlock']
+
+
+    networking_init_cms.last_edited_listener:
+           class:  Networking\InitCmsBundle\Document\LastEditedListener
+           arguments: [@session ]
+           tags:
+               - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+               - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+
+    # Listener for setting up content routes when page created/edited
+    networking_init_cms.page_listner:
+       class:  Networking\InitCmsBundle\Document\PageListener
+       arguments: [@session, @service_container ]
+       tags:
+           - { name: jms_serializer.event_subscriber }
+           - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+           - { name: doctrine.event_listener, event: onFlush, method: onFlush }
+
+    networking_init_cms.content_route_manager:
+        class: Networking\InitCmsBundle\Document\ContentRouteManager
+        arguments: [ @doctrine.odm.mongodb.document_manager, Networking\InitCmsBundle\Document\ContentRoute ]
+        calls:
+          - [ setContainer, [ @service_container ]]
+          - [ setClassName, [ %networking_init_cms.admin.page.class%] ]
+
+
+# Preload uniquer url validator with the entity manager and the service container
+    networking_init_cms.unique_url_validator:
+        class: Networking\InitCmsBundle\Validator\Constraints\UniqueURLValidator
+        arguments: [@doctrine.odm.mongodb.document_manager, @service_container]
+        tags:
+          - { name: validator.constraint_validator, alias: unique_url_validator }
+
+    networking_init_cms.media.entity.type:
+        class: Networking\InitCmsBundle\Form\Type\MediaEntityType
+        arguments:
+            - '@doctrine_mongodb'
+        tags:
+            - {name: form.type, alias: 'media_entity_type' }
+
+    jms_serializer.metadata.doctrine_type_driver:
+        class: %jms_serializer.metadata.doctrine_type_driver.class%
+        arguments: ["jms_serializer.metadata.chain_driver", "@doctrine_mongodb"]
+
+    jms_serializer.doctrine_object_constructor:
+        class:        %jms_serializer.doctrine_object_constructor.class%
+        public:       false
+        arguments:    ["@doctrine_mongodb", "@jms_serializer.unserialize_object_constructor"]
+
+    jms_serializer.object_constructor:
+        alias: jms_serializer.doctrine_object_constructor

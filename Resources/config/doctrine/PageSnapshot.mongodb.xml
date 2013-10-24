@@ -12,9 +12,9 @@
 
         <field name="resourceId" fieldName="resourceId" type="string" />
 
-        <field name="versionedData" fieldName="versionedData" type="array" />
+        <field name="versionedData" fieldName="versionedData" type="hash" />
 
-        <field name="version" fieldName="version" type="integer"/>
+        <field name="version" fieldName="version" type="int"/>
 
         <field name="snapshotDate" fieldName="snapshotDate" type="date"/>
 

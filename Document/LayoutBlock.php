@@ -20,7 +20,6 @@ class LayoutBlock extends ModelLayoutBlock
 {
 
     /**
-     * @ORM\PrePersist
      */
     public function prePersist()
     {
@@ -29,7 +28,6 @@ class LayoutBlock extends ModelLayoutBlock
 
     /**
      * Hook on pre-update operations
-     * @ORM\PreUpdate
      */
     public function preUpdate()
     {

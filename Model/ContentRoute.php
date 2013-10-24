@@ -20,11 +20,6 @@ use Symfony\Component\Routing\Route;
 /**
  * Networking\InitCmsBundle\Entity\ContentRoute
  *
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(name="content_route", uniqueConstraints={
- * @ORM\UniqueConstraint(name="content_route_idx", columns={"path", "locale", "class_type"})
- * })
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\ContentRouteRepository")
  *
  * @author net working AG <info@networking.ch>
  */

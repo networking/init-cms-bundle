@@ -11,7 +11,6 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -27,23 +26,17 @@ class Tag
     /**
      * @var integer $id
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=255)
      */
     protected $name;
 
     /**
      * @var string $slug
-     * @Gedmo\Slug(fields={"name"}, separator="-", updatable=true, unique=false)
-     * @ORM\Column(name="slug", type="string", length=255)
      */
     protected $slug;
 
