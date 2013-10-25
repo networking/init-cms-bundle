@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Admin;
+namespace Networking\InitCmsBundle\Admin\Model;
 
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -17,6 +17,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
+use Networking\InitCmsBundle\Admin\BaseAdmin;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -82,7 +83,7 @@ class LayoutBlockAdmin extends BaseAdmin
     {
         $errorElement
                 ->with('name')
-                ->assertMaxLength(array('limit' => 255))
+                ->assertLength(array('max' => 255))
                 ->end();
     }
 

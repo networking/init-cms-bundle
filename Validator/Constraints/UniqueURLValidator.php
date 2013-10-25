@@ -12,7 +12,7 @@ namespace Networking\InitCmsBundle\Validator\Constraints;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Sluggable\Util\Urlizer;
-use Networking\InitCmsBundle\Entity\Page;
+
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Entity\MenuItemRepository;
 
@@ -37,6 +37,11 @@ class UniqueURLValidator extends ConstraintValidator
     protected $request;
 
     /**
+     * @var Coantainer
+     */
+    protected $container;
+
+    /**
      * @param \Doctrine\ORM\EntityManager $em
      * @param \Symfony\Component\DependencyInjection\Container $container
      */
@@ -44,6 +49,7 @@ class UniqueURLValidator extends ConstraintValidator
     {
         $this->em = $em;
         $this->request = $container->get('request');
+        $this->container = $container;
     }
 
     /**
@@ -51,9 +57,11 @@ class UniqueURLValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        $repo = $this->em->getRepository('NetworkingInitCmsBundle:Page');
+
+
+        $pageManager = $this->container->get('networking_init_cms.page_manager');
         $url = Urlizer::urlize($value->getUrl());
-        $pages = $repo->findBy(array('url' => $url, 'parent' => $value->getParent(), 'locale' => $value->getLocale()));
+        $pages = $pageManager->findBy(array('url' => $url, 'parent' => $value->getParent(), 'locale' => $value->getLocale()));
 
         if ($value->getParent()) {
             $url = $value->getParent()->getFullPath() . $url;
@@ -61,11 +69,12 @@ class UniqueURLValidator extends ConstraintValidator
         if (count($pages) > 0) {
             foreach ($pages as $page) {
                 if ($page->getId() != $value->getId()) {
-                    $this->context->addViolationAtSubPath('url', $constraint->message, array('{{ value }}' => $url));
+                    $this->context->addViolationAt('url', $constraint->message, array('{{ value }}' => $url));
                     return false;
                 }
             }
         }
+
 
         return true;
 

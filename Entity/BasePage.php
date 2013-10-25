@@ -24,5 +24,7 @@ abstract class BasePage extends ModelPage
         if(!$this->contentRoute){
             $this->contentRoute = new ContentRoute();
         }
+
+        return $this->contentRoute;
     }
 }

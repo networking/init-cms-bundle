@@ -223,7 +223,7 @@ class PageAdmin extends BaseAdmin
                             'help_inline' => 'parent.helper.text',
                             'attr' => array('style' => "width:220px"),
                             'property' => 'AdminTitle',
-                            //'class' => 'Networking\\InitCmsBundle\\Entity\\Page',
+                            'class' => 'Application\\Networking\\InitCmsBundle\\Entity\\Page',
                             'required' => false,
                             'query_builder' => $pageManager->getParentPagesQuery(
                                 $this->pageLocale,

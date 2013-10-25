@@ -76,7 +76,7 @@ class TagAdmin extends Admin
             ->with('name')
             ->assertNotNull(array())
             ->assertNotBlank()
-            ->assertMaxLength(array('limit' => 255))
+            ->assertLength(array('max' => 255))
             ->end();
 
     }

@@ -71,14 +71,21 @@ class PageListener implements EventSubscriberInterface
     {
         $entity = $args->getEntity();
 
+
+
+
         $em = $args->getEntityManager();
 
         if ($entity instanceof PageInterface) {
+
+
 
             if ($contentRoute = $entity->getContentRoute()) {
 
                 $contentRoute->setObjectId($entity->getId());
                 $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
+
+
                 $em->persist($contentRoute);
                 $em->getUnitOfWork()->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
             }

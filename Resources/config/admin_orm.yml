@@ -26,7 +26,7 @@ services:
 
 # HelpText Admin Controller
     networking_init_cms.page.admin.help_text:
-        class: Networking\InitCmsBundle\Admin\HelpTextAdmin
+        class: Networking\InitCmsBundle\Admin\Entity\HelpTextAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\HelpText, SonataAdminBundle:CRUD]
         calls:
             - [setTranslationDomain, [HelpTextAdmin]]
@@ -37,7 +37,7 @@ services:
 
 # Layout Block Admin Controller
     networking_init_cms.page.admin.layout_block:
-        class: Networking\InitCmsBundle\Admin\LayoutBlockAdmin
+        class: Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\LayoutBlock, SonataAdminBundle:CRUD]
         calls:
             - [setTranslationDomain, [PageAdmin]]
@@ -46,7 +46,7 @@ services:
 
 # Menu Admin Controller
     networking_init_cms.menu.admin.menu_item:
-        class: Networking\InitCmsBundle\Admin\MenuItemAdmin
+        class: Networking\InitCmsBundle\Admin\Entity\MenuItemAdmin
         arguments: [null, Networking\InitCmsBundle\Entity\MenuItem, NetworkingInitCmsBundle:MenuItemAdmin]
         calls:
             - [setTranslationDomain, [MenuItemAdmin]]

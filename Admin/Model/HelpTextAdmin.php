@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Admin;
+namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -154,7 +154,7 @@ class HelpTextAdmin extends BaseAdmin
             ->with('translationKey')
             ->assertNotNull(array())
             ->assertNotBlank()
-            ->assertMaxLength(array('limit' => 255))
+            ->assertLength(array('max' => 255))
             ->end();
         $errorElement
             ->with('title')

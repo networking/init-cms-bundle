@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Entity\Admin;
+namespace Networking\InitCmsBundle\Admin\Entity;
 
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin as ModelPageAdmin;

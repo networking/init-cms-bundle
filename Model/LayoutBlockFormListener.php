@@ -18,7 +18,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry,
     Symfony\Component\Form\FormEvent,
     Symfony\Component\Form\FormBuilder,
     Symfony\Component\Form\FormInterface,
-    Networking\InitCmsBundle\Admin\LayoutBlockAdmin,
+    Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin,
     Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer,
     Networking\InitCmsBundle\Helper\ContentInterfaceHelper,
     Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;

@@ -82,7 +82,7 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
         }
 
         if ($content instanceof PageSnapshotInterface) {
-            $pageManager = $this->get('networking_init_cms.page_manager');
+            $pageManager = $this->container->get('networking_init_cms.page_manager');
 
             $content = $this->container->get('serializer')->deserialize($content->getVersionedData(), $pageManager->getClassName(), 'json');
 

@@ -24,7 +24,7 @@
         </field>
 
         <field name="path" column="path" type="string" length="255" nullable="true">
-            <gedmo:tree-path separator="/" append_id="false"/>
+            <gedmo:tree-path separator="/"/>
         </field>
 
         <field name="level" column="lvl" type="integer" nullable="true">

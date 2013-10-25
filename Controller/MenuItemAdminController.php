@@ -11,7 +11,6 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Entity\MenuItem,
-    Networking\InitCmsBundle\Entity\MenuItemRepository,
     Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
@@ -71,9 +70,9 @@ class MenuItemAdminController extends CRUDController
 
         $menus = array();
 
-        /** @var $repository MenuItemRepository */
-        $repository = $this->getDoctrine()
-            ->getRepository('NetworkingInitCmsBundle:MenuItem');
+        /** @var $menuItemManager MenuItemManager */
+        $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
+
 
         /*
          * if the list was filtered or a new menu entry was posted,
@@ -82,7 +81,7 @@ class MenuItemAdminController extends CRUDController
          */
 
         if ($menuId) {
-            $menu = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Menuitem')->find($menuId);
+            $menu = $menuItemManager->find($menuId);
 
             if ($menu) {
                 $this->currentMenuLanguage = $menu->getLocale();
@@ -114,15 +113,15 @@ class MenuItemAdminController extends CRUDController
         }
 
         //use one of the locale to filter the list of menu entries (see above
-        $rootNodes = $repository->getRootNodesByLocale($this->currentMenuLanguage);
+        $rootNodes = $menuItemManager->getRootNodesByLocale($this->currentMenuLanguage);
 
         $childOpen = function ($node) {
             return sprintf('<li class="table-row-style" id="listItem_%s">', $node['id']);
         };
         $admin = $this->admin;
         $controller = $this;
-        $nodeDecorator = function ($node) use ($admin, $controller, $repository) {
-            $node = $repository->find($node['id']);
+        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager) {
+            $node = $menuItemManager->find($node['id']);
 
             return $controller->renderView(
                 'NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig',
@@ -131,7 +130,7 @@ class MenuItemAdminController extends CRUDController
         };
 
         foreach ($rootNodes as $rootNode) {
-            $navigation = $repository->childrenHierarchy(
+            $navigation = $menuItemManager->childrenHierarchy(
                 $rootNode,
                 null,
                 array(
@@ -154,7 +153,7 @@ class MenuItemAdminController extends CRUDController
         $datagrid = $this->admin->getDatagrid();
 
         if ($menuId) {
-            $menu = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Menuitem')->find($menuId);
+            $menu = $menuItemManager->find($menuId);
 
             if ($menu) {
                 $locale = $menu->getLocale();
@@ -219,12 +218,12 @@ class MenuItemAdminController extends CRUDController
      */
     public function editAction($id = null)
     {
+
         if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
             if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
                 throw new AccessDeniedException();
             }
         }
-
         return parent::editAction($id);
     }
 
@@ -314,7 +313,7 @@ class MenuItemAdminController extends CRUDController
             throw new NotFoundHttpException(sprintf('unable to find the Menu with id : %s', $rootId));
         }
 
-        $page = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page')->find($pageId);
+        $page = $this->get('networking_init_cms.menu_item_manager')->find($pageId);
 
         if (!$page) {
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $pageId));
@@ -358,17 +357,12 @@ class MenuItemAdminController extends CRUDController
         $request = $this->getRequest();
         $nodes = $request->get('nodes') ? $request->get('nodes') : array();
 
-        $repository = $this->getDoctrine()
-            ->getRepository('NetworkingInitCmsBundle:MenuItem');
-
-        $em = $this->get('doctrine.orm.entity_manager');
         try {
             foreach ($nodes as $node) {
                 /** @var $menuItem MenuItem */
-                $menuItem = $repository->find($node['item_id']);
-
+                $menuItem = $this->admin->getObject($node['item_id']);
                 if ($node['parent_id']) {
-                    $parent = $repository->find($node['parent_id']);
+                    $parent = $this->admin->getObject($node['parent_id']);
                     $menuItem->setParent($parent);
                 }else{
                     ;
@@ -378,11 +372,10 @@ class MenuItemAdminController extends CRUDController
                 $menuItem->setLft($node['left']);
                 $menuItem->setRgt($node['right']);
                 $menuItem->setLvl($node['depth']);
-                $em->persist($menuItem);
+                $this->admin->update($menuItem);
             }
 
-            $em->flush();
-
+            //$em->flush();
             $response = array('status' => 'ok', 'message' => $this->admin->trans('info.menu_sorted'));
         } catch (\Exception $e) {
             $response = array('status' => 'error', 'message' => $this->admin->trans('info.menu_sorted_error'));
@@ -407,10 +400,10 @@ class MenuItemAdminController extends CRUDController
         $data['html'] = $this->listAction($this->get('session')->get('admin/last_page_id'));
 
         if (!array_key_exists('message', $data)) {
-
-            if ($message = $this->get('session')->getFlash('sonata_flash_success')) {
+            //getFlashBag()->get('notice'
+            if ($message = $this->get('session')->getFlashBag()->get('sonata_flash_success')) {
                 $data['status'] = 'success';
-            } elseif ($message = $this->get('session')->getFlash('sonata_flash_error')) {
+            } elseif ($message = $this->get('session')->getFlashBag()->get('sonata_flash_error')) {
                 $data['status'] = 'error';
             } elseif ($data['result'] == 'ok') {
                 $this->getRequest()->request->all();

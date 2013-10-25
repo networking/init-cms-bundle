@@ -11,8 +11,16 @@ services:
 
 
     networking_init_cms.page_snapshot_manager:
-            class: Networking\InitCmsBundle\Entity\PageSnapshotManager
-            arguments: [@doctrine.orm.entity_manager, Networking\InitCmsBundle\Entity\PageSnapshot]
+        class: Networking\InitCmsBundle\Entity\PageSnapshotManager
+        arguments: [@doctrine.orm.entity_manager, Networking\InitCmsBundle\Entity\PageSnapshot]
+
+    networking_init_cms.menu_item_manager:
+        class: Networking\InitCmsBundle\Entity\MenuItemManager
+        arguments: [@doctrine.orm.entity_manager, Networking\InitCmsBundle\Entity\MenuItem]
+
+    networking_init_cms.help_text_manager:
+        class: Networking\InitCmsBundle\Entity\HelpTextManager
+        arguments: [@doctrine.orm.entity_manager, Networking\InitCmsBundle\Entity\HelpText]
 
     activity_listener:
         class: Networking\InitCmsBundle\EventListener\UserActivity
@@ -88,4 +96,12 @@ services:
            - { name: jms_serializer.event_subscriber }
            - { name: doctrine.event_listener, event: postPersist, method: postPersist }
            - { name: doctrine.event_listener, event: onFlush, method: onFlush }
+
+
+    # Preload uniquer url validator with the entity manager and the service container
+    networking_init_cms.unique_url_validator:
+        class: Networking\InitCmsBundle\Validator\Constraints\UniqueURLValidator
+        arguments: [@doctrine.orm.entity_manager, @service_container]
+        tags:
+          - { name: validator.constraint_validator, alias: unique_url_validator }
 

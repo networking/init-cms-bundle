@@ -12,6 +12,7 @@ use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+
 /**
  * PageRepository
  *
@@ -160,5 +161,18 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         $this->_em->flush();
 
         return $publishedPage;
+    }
+
+
+    /**
+     * @param PageInterface $page
+     * @return mixed
+     */
+    public function save(PageInterface $page)
+    {
+        if(!$page->getId()){
+            $page->setContentRoute(new ContentRoute());
+        }
+        $this->_em->persist($page);
     }
 }

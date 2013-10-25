@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Admin;
+namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Admin\BaseAdmin,
     Networking\InitCmsBundle\Entity\MenuItem,
@@ -22,6 +22,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
     Doctrine\ORM\EntityRepository,
     Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
 use Sonata\AdminBundle\Exception\ModelManagerException;
+
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -132,7 +133,7 @@ class MenuItemAdmin extends BaseAdmin
                 'networking_type_autocomplete',
                     array(
                         'attr' => array('style' => "width:220px"),
-                        'class' => 'Networking\InitCmsBundle\Entity\Page',
+                        'class' => 'Application\Networking\InitCmsBundle\Entity\Page',
                         'required' => false,
                         'property' => 'AdminTitle',
                         'query_builder' => function (EntityRepository $er) use ($locale) {

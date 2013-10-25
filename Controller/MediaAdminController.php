@@ -154,9 +154,11 @@ class MediaAdminController extends SonataMediaAdminController
     {
         $status = 200;
 
-        $mediaRepository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Media');
+        //$mediaRepository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Media');
 
-        $media = $mediaRepository->findBy(array('providerName' => 'sonata.media.provider.image'));
+        //$media = $mediaRepository->findBy(array('providerName' => 'sonata.media.provider.image'));
+
+        $media = $this->admin->getModelManager()->findBy(array('providerName' => 'sonata.media.provider.image'));
 
         $provider = $this->get('sonata.media.provider.image');
 
@@ -298,7 +300,6 @@ class MediaAdminController extends SonataMediaAdminController
                 )
             );
         }
-
         return parent::createAction();
     }
 
@@ -363,9 +364,11 @@ class MediaAdminController extends SonataMediaAdminController
     {
         $status = 200;
 
-        $mediaRepository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Media');
+        //$mediaRepository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Media');
 
-        $media = $mediaRepository->findBy(array('providerName' => 'sonata.media.provider.file'));
+        //$media = $mediaRepository->findBy(array('providerName' => 'sonata.media.provider.file'));
+
+        $media = $this->admin->getModelManager()->findBy(array('providerName' => 'sonata.media.provider.file'));
 
         $provider = $this->get('sonata.media.provider.file');
 

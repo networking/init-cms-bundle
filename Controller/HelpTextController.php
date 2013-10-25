@@ -21,7 +21,6 @@ use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Networking\InitCmsBundle\Entity\HelpTextRepository;
 
 
 /**
@@ -48,8 +47,13 @@ class HelpTextController extends Controller
         } else {
             $translationKey = $adminCode . '.' . $action;
         }
-        $repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:HelpText');
-        $helpText = $repository->getHelpTextByKeyLocale($translationKey, $request->getLocale());
+
+        $helpTextManager = $this->get('networking_init_cms.help_text_manager');
+        $helpText = $helpTextManager->getHelpTextByKeyLocale($translationKey, $request->getLocale());
+
+        //$repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:HelpText');
+        //$helpText = $repository->getHelpTextByKeyLocale($translationKey, $request->getLocale());
+
         $parameters['help_text'] = $helpText;
         if (!in_array($adminCode, $defaultAdminCode)) {
 
@@ -68,13 +72,13 @@ class HelpTextController extends Controller
         $parameters['help_nav'] = $this->adminGetHelpTextNavigation(
             $dashBoardGroups,
             $request->getLocale(),
-            $repository
+            $helpTextManager
         );
 
         return $parameters;
     }
 
-    protected function adminGetHelpTextNavigation(array $dashBoardGroups, $locale, HelpTextRepository $repository)
+    protected function adminGetHelpTextNavigation(array $dashBoardGroups, $locale, $helpTextManager)
     {
         $navArray = array();
 
@@ -112,7 +116,7 @@ class HelpTextController extends Controller
                         );
                     }
 
-                    $help_text_result = $repository->searchHelpTextByKeyLocale($admin->getCode(), $locale);
+                    $help_text_result = $helpTextManager->searchHelpTextByKeyLocale($admin->getCode(), $locale);
                     if (count($help_text_result) > 0) {
 
                         foreach ($help_text_result as $row) {
