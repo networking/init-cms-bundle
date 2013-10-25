@@ -27,7 +27,7 @@ class AdminHelper extends SonataAdminHelper
     /**
      * @var array $newLayoutBlockParameters
      */
-    private $newLayoutBlockParameters;
+    protected $newLayoutBlockParameters;
 
     /**
      * Note:
@@ -50,7 +50,7 @@ class AdminHelper extends SonataAdminHelper
 
         $form = $formBuilder->getForm();
         $form->setData($subject);
-        $form->bind($admin->getRequest());
+        $form->submit($admin->getRequest());
 
         // get the field element
         $childFormBuilder = $this->getChildFormBuilder($formBuilder, $elementId);
@@ -66,12 +66,12 @@ class AdminHelper extends SonataAdminHelper
 
         // retrieve the posted data
         $data = $admin->getRequest()->get($formBuilder->getName());
+
         if (!isset($data[$childFormBuilder->getName()])) {
             $data[$childFormBuilder->getName()] = array();
         }
 
         $objectCount = count($value);
-
         $postCount = count($data[$childFormBuilder->getName()]);
 
         $fields = array_keys($fieldDescription->getAssociationAdmin()->getFormFieldDescriptions());
@@ -124,10 +124,14 @@ class AdminHelper extends SonataAdminHelper
         $method = sprintf('add%s', $this->camelize($mapping['fieldName']));
 
         if (!method_exists($object, $method)) {
+            $method = rtrim($method, 's');
+
+            if (!method_exists($object, $method)) {
             throw new \RuntimeException(sprintf('Please add a method %s in the %s class!', $method, get_class($object)));
         }
+        }
 
-        return $object->$method($instance);
+        $object->$method($instance);
     }
 
     /**

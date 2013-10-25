@@ -32,6 +32,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('class')
                     ->children()
                         ->scalarNode('page')->cannotBeEmpty()->end()
+                        ->scalarNode('layout_block')->defaultValue('Networking\InitCmsBundle\Entity\LayoutBlock')->end()
                         ->scalarNode('user')->cannotBeEmpty()->end()
                     ->end()
                 ->end()

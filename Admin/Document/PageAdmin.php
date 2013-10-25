@@ -12,6 +12,7 @@
 namespace Networking\InitCmsBundle\Admin\Document;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin as ModelPageAdmin;
+use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -160,7 +161,6 @@ class PageAdmin extends ModelPageAdmin
 
         return $active;
     }
-
 
 
     public function getFormBuilder()

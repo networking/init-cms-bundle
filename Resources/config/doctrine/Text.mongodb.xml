@@ -6,7 +6,7 @@
 
     <document name="Networking\InitCmsBundle\Document\Text" collection="texts">
 
-        <field fieldName="id" id="true" />
+        <field fieldName="id" id="true"  strategy="INCREMENT"/>
 
     </document>
 </doctrine-mongo-mapping>

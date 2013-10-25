@@ -27,12 +27,12 @@ use Doctrine\Bundle\DoctrineBundle\Registry,
     Networking\InitCmsBundle\Helper\ContentInterfaceHelper,
     Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;
 use Networking\InitCmsBundle\Model\LayoutBlockFormListener as ModelLayoutBlockFormListener;
+
 /**
  * @author net working AG <info@networking.ch>
  */
 class LayoutBlockFormListener extends ModelLayoutBlockFormListener
 {
-
 
 
     /**
@@ -55,6 +55,7 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
                 $layoutBlock->setContent($extraData['content']);
             }
         }
+
 
         /** @var $dr Registry */
         $dr = $this->container->get('Doctrine_mongodb');
@@ -92,7 +93,7 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
         foreach ($layoutBlock->getContent() as $key => $field) {
 
             try {
-                $targetClass =  $meta->getAssociationTargetClass($key);
+                $targetClass = $meta->getAssociationTargetClass($key);
 
 
                 $field = $dr->getRepository($targetClass)->find($field);
@@ -107,7 +108,6 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
         $em->flush();
 
         $layoutBlock->setObjectId($contentObject->getId());
-
         $em->persist($layoutBlock);
         $em->flush();
     }
@@ -136,7 +136,10 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
 
         $objectRepository = $dr->getRepository($className);
 
-        if (!$layoutBlock->getObjectId() || !$contentObject = $objectRepository->findOneById($layoutBlock->getObjectId())) {
+        if (!$layoutBlock->getObjectId() || !$contentObject = $objectRepository->findOneById(
+                $layoutBlock->getObjectId()
+            )
+        ) {
             $contentObject = new $className();
         }
 

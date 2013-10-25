@@ -130,7 +130,7 @@ class PageAdminController extends CRUDController
 
 
         /** @var $page Page */
-        $page = $this->admin->getObject( $id);
+        $page = $this->admin->getObject($id);
 
         if (!$page) {
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
@@ -171,7 +171,7 @@ class PageAdminController extends CRUDController
             }
         }
 
-        $pages = $this->admin->getModelManager()->findBy($this->admin->getClass(),array('locale' => $locale));
+        $pages = $this->admin->getModelManager()->findBy($this->admin->getClass(), array('locale' => $locale));
 
         if (count($pages)) {
             $pages = new \Doctrine\Common\Collections\ArrayCollection($pages);
@@ -286,6 +286,7 @@ class PageAdminController extends CRUDController
     public function addLayoutBlockAction(Request $request)
     {
         $twig = $this->get('twig');
+        /** @var \Networking\InitCmsBundle\Admin\AdminHelper $helper */
         $helper = $this->get('networking_init_cms.admin.helper');
         $code = $request->get('code');
         $elementId = $request->get('elementId');
@@ -389,19 +390,26 @@ class PageAdminController extends CRUDController
                     /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
                     $layoutBlockAdmin = $this->get('networking_init_cms.page.admin.layout_block');
 
+
+
+
                     try {
                         /** @var \Networking\InitCmsBundle\Model\LayoutBlockInterface $layoutBlock */
                         $layoutBlock = $layoutBlockAdmin->getObject($blockId);
+                        if ($layoutBlock) {
+                            $layoutBlock->setSortOrder($sort);
+                            $layoutBlock->setZone($zoneName);
+
+                            $page = $this->admin->getObject($request->get('objectId'));
+                            $page->setUpdatedAt(new \DateTime());
+                        }
+
+                        $layoutBlockAdmin->update($layoutBlock);
                     } catch (\Exception $e) {
                         $message = $e->getMessage();
 
                         return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
                     }
-                    $layoutBlock->setSortOrder($sort);
-                    $layoutBlock->setZone($zoneName);
-                    $layoutBlock->getPage()->setUpdatedAt(new \DateTime());
-
-                    $layoutBlockAdmin->update($layoutBlock);
 
                 }
             }
@@ -444,7 +452,6 @@ class PageAdminController extends CRUDController
         if ($layoutBlockStr) {
             $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
 
-            try {
                 /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
                 $layoutBlockAdmin = $this->get('networking_init_cms.page.admin.layout_block');
                 $layoutBlock = $layoutBlockAdmin->getObject($blockId);
@@ -453,11 +460,6 @@ class PageAdminController extends CRUDController
                     $layoutBlockAdmin->update($layoutBlock);
                     $layoutBlockAdmin->delete($layoutBlock);
                 }
-            } catch (\Exception $e) {
-                $message = $e->getMessage();
-
-                return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
-            }
         }
 
         $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid);

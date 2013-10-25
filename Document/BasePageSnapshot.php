@@ -14,7 +14,7 @@ use Networking\InitCmsBundle\Model\PageSnapshot as ModelPageSnapshot;
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  *
  */
-class PageSnapshot extends ModelPageSnapshot
+abstract class BasePageSnapshot extends ModelPageSnapshot
 {
 
 

@@ -4,15 +4,15 @@
                         xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
                         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <document name="Networking\InitCmsBundle\Document\LayoutBlock" collection="layoutBlocks">
-
-        <field fieldName="id" id="true" strategy="INCREMENT"/>
+    <mapped-superclass name="Networking\InitCmsBundle\Document\BaseLayoutBlock" collection="layoutBlocks">
 
         <field name="createdAt" fieldName="createdAt" type="date"/>
 
         <field name="updatedAt" fieldName="updatedAt" type="date"/>
 
         <field name="name" fieldName="name" type="string"/>
+
+        <field name="zone" fieldName="zone" type="string"/>
 
         <field name="classType" fieldName="classType" type="string"/>
 
@@ -22,15 +22,6 @@
 
         <field name="sortOrder" fieldName="sortOrder" type="string"/>
 
-        <indexes>
-            <index>
-                <key name="translationKey" order="asc"/>
-                <key name="local" order="asc"/>
-                <option name="safe" value="true"/>
-                <option name="unique" value="true" />
-            </index>
-        </indexes>
-
-    </document>
+    </mapped-superclass>
 
 </doctrine-mongo-mapping>

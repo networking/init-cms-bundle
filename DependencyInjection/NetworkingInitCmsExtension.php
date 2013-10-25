@@ -66,8 +66,11 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
         $container->setParameter('networking_init_cms.ckeditor_config', $config['ckeditor_config']);
         $container->setParameter('networking_init_cms.admin_menu_groups', $config['admin_menu_groups']);
+        $container->setParameter('networking_init_cms.db_driver', $config['db_driver']);
 
-        $this->registerDoctrineORMMapping($config);
+        if ($config['db_driver'] == 'orm') {
+            $this->registerDoctrineORMMapping($config);
+        }
         $this->configureClass($config, $container);
     }
 
@@ -78,12 +81,14 @@ class NetworkingInitCmsExtension extends Extension
     public function configureClass($config, ContainerBuilder $container)
     {
         // admin configuration
-        $container->setParameter('networking_init_cms.admin.page.class',       $config['class']['page']);
-        $container->setParameter('networking_init_cms.admin.user.class',       $config['class']['user']);
+        $container->setParameter('networking_init_cms.admin.page.class', $config['class']['page']);
+        $container->setParameter('networking_init_cms.admin.layout_block.class', $config['class']['layout_block']);
+        $container->setParameter('networking_init_cms.admin.user.class', $config['class']['user']);
 
         // manager configuration
-        $container->setParameter('networking_init_cms.manager.page.class',     $config['class']['page']);
-        $container->setParameter('networking_init_cms.manager.user.class',     $config['class']['user']);
+        $container->setParameter('networking_init_cms.manager.page.class', $config['class']['page']);
+        $container->setParameter('networking_init_cms.manager.layout_block.class', $config['class']['layout_block']);
+        $container->setParameter('networking_init_cms.manager.user.class', $config['class']['user']);
     }
 
     /**
@@ -115,13 +120,11 @@ class NetworkingInitCmsExtension extends Extension
             }
         }
 
-        if($config['db_driver'] != 'orm'){
+        if ($config['db_driver'] != 'orm') {
             return;
         }
 
-        $folder = $config['db_driver'] == 'orm' ? 'Entity' : 'Document';
-
-        $baseNameSpace = sprintf('Networking\\InitCmsBundle\\%s', $folder);
+        $baseNameSpace = 'Networking\\InitCmsBundle\\Entity';
 
         $collector = DoctrineCollector::getInstance();
 

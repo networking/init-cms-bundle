@@ -106,6 +106,7 @@ class LayoutBlock implements LayoutBlockInterface, ContentInterface
     public function __construct()
     {
         $this->snapshotContent = new ArrayCollection();
+        $this->page = null;
     }
 
     /**

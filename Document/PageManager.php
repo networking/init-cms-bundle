@@ -169,16 +169,30 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         return $publishedPage;
     }
 
-
     /**
      * @param PageInterface $page
      * @return mixed
      */
     public function save(PageInterface $page)
     {
-        if(!$page->getId()){
+        if (!$page->getId()) {
             $page->setContentRoute(new ContentRoute());
         }
         $this->dm->persist($page);
+    }
+
+    /**
+     * @param LayoutBlock $layoutBlock
+     * @return mixed
+     */
+    public function findByLayoutBlock(LayoutBlock $layoutBlock)
+    {
+        $id = $layoutBlock->getId();
+
+        $qb = $this->createQueryBuilder();
+
+        $qb->field('layoutBlock.$id')->equals($id);
+
+        return $qb->getQuery()->execute();
     }
 }

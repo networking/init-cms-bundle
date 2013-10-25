@@ -94,7 +94,10 @@ class NetworkingHelperExtension extends \Twig_Extension
             'truncate' => new \Twig_Filter_Function(array($this, 'truncate'), array('needs_environment' => true)),
             'excerpt' => new \Twig_Filter_Function(array($this, 'excerpt'), array('needs_environment' => true)),
             'highlight' => new \Twig_Filter_Function(array($this, 'highlight'), array('needs_environment' => false)),
-            'base64_encode' => new \Twig_Filter_Function(array($this, 'base64Encode'), array('needs_environment' => false)),
+            'base64_encode' => new \Twig_Filter_Function(array(
+                    $this,
+                    'base64Encode'
+                ), array('needs_environment' => false)),
         );
 
 
@@ -136,9 +139,12 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     public function renderInitcmsBlock($template, LayoutBlockInterface $layoutBlock, $params = array())
     {
+        /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
+        $layoutBlockAdmin = $this->container->get('networking_init_cms.page.admin.layout_block');
         if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
-            $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find(
+            $contentItem = $layoutBlockAdmin->getModelManager()->find(
+                $layoutBlock->getClassType(),
                 $layoutBlock->getObjectId()
             );
 
@@ -151,11 +157,10 @@ class NetworkingHelperExtension extends \Twig_Extension
             );
         }
 
-        if(!is_object($contentItem)){
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($layoutBlock);
-            $em->flush();
-            return '';
+        if (!is_object($contentItem)) {
+            $layoutBlockAdmin->delete($layoutBlock);
+
+            return '---';
         }
 
         $options = $contentItem->getTemplateOptions($params);
@@ -174,22 +179,23 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock)
     {
-
+        /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
+        $layoutBlockAdmin = $this->container->get('networking_init_cms.page.admin.layout_block');
         if ($layoutBlock->getObjectId()) {
-            $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find(
+            // Draft View
+            $contentItem = $layoutBlockAdmin->getModelManager()->find(
+                $layoutBlock->getClassType(),
                 $layoutBlock->getObjectId()
             );
         } else {
 
             $classType = $layoutBlock->getClassType();
-
             $contentItem = new $classType();
         }
 
-        if(!is_object($contentItem)){
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($layoutBlock);
-            $em->flush();
+        if (!is_object($contentItem)) {
+            $layoutBlockAdmin->delete($layoutBlock);
+
             return false;
         }
 
@@ -204,8 +210,11 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
     {
+        /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
+        $layoutBlockAdmin = $this->container->get('networking_init_cms.page.admin.layout_block');
         if ($layoutBlock->getObjectId()) {
-            $contentItem = $this->getService('doctrine')->getRepository($layoutBlock->getClassType())->find(
+            $contentItem = $layoutBlockAdmin->getModelManager()->find(
+                $layoutBlock->getClassType(),
                 $layoutBlock->getObjectId()
             );
         } else {
@@ -334,8 +343,11 @@ class NetworkingHelperExtension extends \Twig_Extension
      *
      * @todo This is a bit of a hack. Need to provide a better way of providing admin icons
      */
-    public function getInitcmsAdminIconPath(\Sonata\AdminBundle\Admin\AdminInterface $admin, $size = 'small', $active = false)
-    {
+    public function getInitcmsAdminIconPath(
+        \Sonata\AdminBundle\Admin\AdminInterface $admin,
+        $size = 'small',
+        $active = false
+    ) {
         $state = $active ? '_active' : '';
         $imagePath = '/bundles/networkinginitcms/img/icons/icon_blank_' . $size . $state . '.png';
 
@@ -626,8 +638,7 @@ class NetworkingHelperExtension extends \Twig_Extension
         $object,
         \Symfony\Component\Form\FormView $formView,
         $translationDomain = null
-    )
-    {
+    ) {
 
         /** @var $fieldDescription \Sonata\DoctrineORMAdminBundle\Admin\FieldDescription */
         $fieldDescription = $formView->vars['sonata_admin']['field_description'];
@@ -741,12 +752,12 @@ class NetworkingHelperExtension extends \Twig_Extension
     }
 
     /**
-     * @throws BadFunctionCallException
+     * @throws \BadFunctionCallException
      */
     public function addToBottom()
     {
         if ($this->captureLock) {
-            throw new BadFunctionCallException('Cannot nest onLoad captures');
+            throw new \BadFunctionCallException('Cannot nest onLoad captures');
         }
 
         $this->captureLock = true;
@@ -809,8 +820,14 @@ class NetworkingHelperExtension extends \Twig_Extension
      *
      * @return string
      */
-    public static function truncate(\Twig_Environment $env, $text, $length = 100, $ellipsis = '...', $exact = true, $html = false)
-    {
+    public static function truncate(
+        \Twig_Environment $env,
+        $text,
+        $length = 100,
+        $ellipsis = '...',
+        $exact = true,
+        $html = false
+    ) {
 
         if ($html && $ellipsis == '...' && $env->getCharset() == 'UTF-8') {
             $ellipsis = "\xe2\x80\xa6";
@@ -842,11 +859,19 @@ class NetworkingHelperExtension extends \Twig_Extension
                 }
                 $truncate .= $tag[1];
 
-                $contentLength = mb_strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $tag[3]));
+                $contentLength = mb_strlen(
+                    preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $tag[3])
+                );
                 if ($contentLength + $totalLength > $length) {
                     $left = $length - $totalLength;
                     $entitiesLength = 0;
-                    if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE)) {
+                    if (preg_match_all(
+                        '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i',
+                        $tag[3],
+                        $entities,
+                        PREG_OFFSET_CAPTURE
+                    )
+                    ) {
                         foreach ($entities[0] as $entity) {
                             if ($entity[1] + 1 - $entitiesLength <= $left) {
                                 $left--;
@@ -971,8 +996,13 @@ class NetworkingHelperExtension extends \Twig_Extension
      *
      * @return mixed
      */
-    public function highlight($text, $phrase, $format = '<span class="highlight">\1</span>', $html = false, $regex = "|%s|iu")
-    {
+    public function highlight(
+        $text,
+        $phrase,
+        $format = '<span class="highlight">\1</span>',
+        $html = false,
+        $regex = "|%s|iu"
+    ) {
         if (empty($phrase)) {
             return $text;
         }
@@ -1010,6 +1040,8 @@ class NetworkingHelperExtension extends \Twig_Extension
     {
         if (!$page->getContentRoute()) {
 
+            /** @var \Sonata\AdminBundle\Admin\AdminInterface $pageAdmin */
+            $pageAdmin = $this->container->get('networking_init_cms.page.admin.page');
             /** @var \Networking\InitCmsBundle\Model\PageSnapshotRepositoryInterface $per */
             $per = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:PageSnapshot');
             $pageSnapshots = $per->findSnapshotByPageId($page->getId());
@@ -1020,14 +1052,19 @@ class NetworkingHelperExtension extends \Twig_Extension
                 /** @var \Networking\InitCmsBundle\Model\ContentRouteManagerInterface $cer */
                 $cer = $this->container->get('networking_init_cms.content_route_manager');
 
-                $contentRoute = $cer->findContentRouteBy(array('objectId' => $pageSnapshot->getId(), 'classType' => $per->getClassName()));
+                $contentRoute = $cer->findContentRouteBy(
+                    array('objectId' => $pageSnapshot->getId(), 'classType' => $per->getClassName())
+                );
                 if ($contentRoute) {
                     $page->setContentRoute($contentRoute);
                 }
             }
         }
 
-        return $this->container->get('router')->generate('networking_init_dynamic_route', array('route_params' => array('path' => $page->getFullPath())));
+        return $this->container->get('router')->generate(
+            'networking_init_dynamic_route',
+            array('route_params' => array('path' => $page->getFullPath()))
+        );
 
     }
 
@@ -1040,7 +1077,21 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     protected function getDoctrine()
     {
-        return $this->getService('doctrine');
+        $db_driver = $this->container->getParameter('networking_init_cms.db_driver');
+
+        switch($db_driver){
+            case 'orm':
+                return $this->getService('doctrine');
+                break;
+            case 'mongodb':
+                return $this->getService('doctrine_mongodb');
+                break;
+            default:
+                throw new \LogicException('cannot find doctrine for db_driver');
+                break;
+        }
+
+
     }
 }
 
