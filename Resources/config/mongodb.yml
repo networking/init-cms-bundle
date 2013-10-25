@@ -33,7 +33,7 @@ services:
 
     networking_init_cms.layout_block_form_listener:
        class:  Networking\InitCmsBundle\Document\LayoutBlockFormListener
-       arguments: [@service_container, 'Networking\InitCmsBundle\Document\LayoutBlock']
+       arguments: [@service_container, %networking_init_cms.admin.layout_block.class%]
 
 
     networking_init_cms.last_edited_listener:

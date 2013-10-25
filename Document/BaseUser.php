@@ -20,7 +20,6 @@ use Networking\InitCmsBundle\Document\AdminSettings;
  */
 abstract class BaseUser extends FosUser implements UserInterface
 {
-
     /**
      * @var integer $id
      *

@@ -2,11 +2,10 @@
 <doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
-                        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+                        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"
+                        xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
-    <document name="Networking\InitCmsBundle\Document\MenuItem" collection="menuItems">
-
-        <field fieldName="id" id="true" strategy="INCREMENT"/>
+    <mapped-superclass name="Networking\InitCmsBundle\Document\BaseMenuItem" collection="menuItems">
 
         <field name="name" fieldName="name" type="string"/>
 
@@ -22,13 +21,13 @@
 
         <field name="linkRel" fieldName="linkRel" type="string"/>
 
-        <field name="lft" fieldName="lft" type="int"/>
+        <field name="lft" fieldName="lft" type="int" />
 
-        <field name="lvl" fieldName="lvl" type="int"/>
+        <field name="lvl" fieldName="lvl" type="int" />
 
-        <field name="rgt" fieldName="rgt" type="int"/>
+        <field name="rgt" fieldName="rgt" type="int" />
 
-        <field name="root" fieldName="root" type="int"/>
+        <field name="root" fieldName="root" type="int" />
 
         <field name="isRoot" fieldName="isRoot" type="boolean"/>
 
@@ -38,15 +37,6 @@
 
         <field name="visibility" fieldName="visibility" type="string"/>
 
-        <reference-one field="parent" target-document="Networking\InitCmsBundle\Document\MenuItem" inversed-by="children">
-
-        </reference-one>
-        <reference-many field="children" target-document="Networking\InitCmsBundle\Document\MenuItem" mapped-by="parent">
-            <sort>
-                <sort field="lft" order="ASC"/>
-            </sort>
-        </reference-many>
-
-    </document>
+    </mapped-superclass>
 
 </doctrine-mongo-mapping>

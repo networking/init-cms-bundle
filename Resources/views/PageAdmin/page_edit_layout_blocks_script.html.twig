@@ -175,9 +175,12 @@ function apply_position_value_{{ id }}() {
     // update the input value position
     jQuery('ul.sortable').each(function (index, value) {
         var index = 0;
+        var zone = jQuery(this).attr('id').replace('zone_', '');
         jQuery(value).find("li.networking-sort-zone").each(function (i, v) {
             if (!jQuery(v).find("input[id$='_delete']").is(':checked')) {
                 jQuery(v).find("[id$='_sortOrder']").val(index);
+
+                jQuery(v).find("[id$='_zone']").val(zone);
                 index++;
             }
         });

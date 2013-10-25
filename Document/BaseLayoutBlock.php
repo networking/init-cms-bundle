@@ -16,7 +16,7 @@ use Networking\InitCmsBundle\Model\LayoutBlock as ModelLayoutBlock;
  * Networking\InitCmsBundle\Entity\LayoutBlock
  * @author net working AG <info@networking.ch>
  */
-class LayoutBlock extends ModelLayoutBlock
+abstract class BaseLayoutBlock extends ModelLayoutBlock
 {
 
     /**

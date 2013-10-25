@@ -4,9 +4,7 @@
                         xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
                         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <document name="Networking\InitCmsBundle\Document\PageSnapshot" collection="pageSnapshots">
-
-        <field fieldName="id" id="true" strategy="INCREMENT"/>
+    <mapped-superclass name="Networking\InitCmsBundle\Document\BasePageSnapshot" collection="pageSnapshots">
 
         <field name="resourceName" fieldName="resourceName" type="string" />
 
@@ -26,6 +24,6 @@
             </cascade>
         </reference-one>
 
-    </document>
+    </mapped-superclass>
 
 </doctrine-mongo-mapping>

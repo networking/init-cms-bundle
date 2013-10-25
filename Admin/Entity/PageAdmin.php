@@ -13,11 +13,16 @@ namespace Networking\InitCmsBundle\Entity\Admin;
 
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin as ModelPageAdmin;
+use Networking\InitCmsBundle\Entity\LayoutBlock;
+
 /**
  *
  */
 class PageAdmin extends ModelPageAdmin
 {
 
+    public function getPageByLayoutBlock(LayoutBlock $layoutBlock){
 
+        return $layoutBlock->getPage();
+    }
 }

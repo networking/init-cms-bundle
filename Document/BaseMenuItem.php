@@ -16,7 +16,7 @@ use Networking\InitCmsBundle\Model\MenuItem as ModelMenuItem;
  *
  * @author net working AG <info@networking.ch>
  */
-class MenuItem extends ModelMenuItem
+abstract class BaseMenuItem extends ModelMenuItem
 {
 
     /**
