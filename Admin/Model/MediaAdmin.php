@@ -112,7 +112,7 @@ class MediaAdmin extends Admin
         }
 
         $formMapper->getFormBuilder()->addModelTransformer(
-            new ProviderDataTransformer($this->pool, array('provider' => $media->getProviderName())),
+            new ProviderDataTransformer($this->pool, $this->getClass()),
             true
         );
         $provider = $this->pool->getProvider($media->getProviderName());
