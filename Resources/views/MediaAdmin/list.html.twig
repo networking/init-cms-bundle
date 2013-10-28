@@ -34,38 +34,40 @@ file that was distributed with this source code.
                         <div class="span10">
 
                             {# provider #}
-                            {% set providers = media_pool.getProviderNamesByContext(name) %}
-                            <ul class="nav nav-pills">
-                                {% if providers|length > 1 %}
-                                    <li><a><strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong></a>
-                                    </li>
-
-                                    {% if not persistent_parameters.provider %}
-                                        <li class="active"><a
-                                                href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : name}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                            {% if persistent_paramerters.provider is defined %}
+                                {% set providers = media_pool.getProviderNamesByContext(name) %}
+                                <ul class="nav nav-pills">
+                                    {% if providers|length > 1 %}
+                                        <li><a><strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong></a>
                                         </li>
-                                    {% else %}
-                                        <li>
-                                            <a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : name}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
-                                        </li>
-                                    {% endif %}
 
-                                    {% for provider_name in providers %}
-                                        {% if persistent_parameters.provider == provider_name %}
+                                        {% if not persistent_parameters.provider %}
                                             <li class="active"><a
-                                                    href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}) }}">{{ provider_name|trans({}) }}</a>
+                                                        href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : name}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
                                             </li>
                                         {% else %}
                                             <li>
-                                                <a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}) }}">{{ provider_name|trans({}) }}</a>
+                                                <a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : name}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
                                             </li>
                                         {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            </ul>
 
-                            {# create button #}
-                            {% if not galleryListMode %}
+                                        {% for provider_name in providers %}
+                                            {% if persistent_parameters.provider == provider_name %}
+                                                <li class="active"><a
+                                                            href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}) }}">{{ provider_name|trans({}) }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}) }}">{{ provider_name|trans({}) }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            {% endif %}
+
+                                {# create button #}
+                            {% if galleryListMode is defined and not galleryListMode %}
                                 <h1><span class="info-soft">{{ name|trans({}) }}</span>
                                     <a class="btn btn-primary btn-small menu-dialog-link"
                                        href="{{ admin.generateUrl('create', {'context' : name, 'provider' : null}) }}">
@@ -191,7 +193,7 @@ file that was distributed with this source code.
 
                                     {% endif %}
 
-                                    {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and not galleryListMode %}
+                                    {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and (galleryListMode is not defined or not galleryListMode) %}
                                         <p>
                                             {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}
                                             :
@@ -228,7 +230,9 @@ file that was distributed with this source code.
             <form class="filters menu-filter" action="{{ admin.generateUrl('list') }}" method="GET">
 
                 <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
+                {% if persistent_parameters.provider is defined %}
                 <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
+                {% endif %}
                 <input type="hidden" name="active_tab" value="{{ name }}"/>
 
                 {% set filter_main = '' %}

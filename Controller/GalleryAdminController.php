@@ -67,7 +67,6 @@ class GalleryAdminController extends SonataGalleryAdminController
                 array('NetworkingInitCmsBundle:Form:form_admin_fields.html.twig')
             );
         }
-
         $dataGrid = $this->admin->getDatagrid();
         $formView = $dataGrid->getForm()->createView();
 
