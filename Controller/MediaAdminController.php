@@ -501,7 +501,8 @@ class MediaAdminController extends SonataMediaAdminController
                 'form' => $formView,
                 'datagrid' => $mediaGrid,
                 'mediaform' => $mediaForm,
-                'galleryListMode' => $galleryListMode
+                'galleryListMode' => $galleryListMode,
+                'csrf_token' => $this->getCsrfToken('sonata.batch')
 
             )
         );

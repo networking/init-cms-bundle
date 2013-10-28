@@ -188,8 +188,8 @@ class MediaAdmin extends Admin
     {
 
         $datagridMapper
-            ->add('name', 'networking_init_cms_simple_string')
-            ->add('tags', null, array('hidden' => true));
+            ->add('name', 'networking_init_cms_simple_string');
+            //->add('tags', null, array('hidden' => true));Hack by Marc
 
         if ($context) {
             $datagridMapper->add('context', null, array('hidden' => true));

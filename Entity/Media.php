@@ -40,11 +40,7 @@ class Media extends BaseMedia
     /**
      * @var ArrayCollection $tags
      *
-     * @ORM\ManyToMany(targetEntity="Tag")
-     * @ORM\JoinTable(name="media_tags",
-     *      joinColumns={@ORM\JoinColumn(name="media_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
+
      */
     protected $tags;
 

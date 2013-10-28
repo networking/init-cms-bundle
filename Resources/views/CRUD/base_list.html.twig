@@ -242,6 +242,9 @@ file that was distributed with this source code.
         <div class="actions initcms-list-actions">
             {% block batch_actions %}
                 <input type="checkbox" name="all_elements"/>
+                {% if csrf_token is defined %}
+                    <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}" />
+                {% endif %}
                 <select name="action">
                     {% for action, options in batchactions %}
                         <option value="{{ action }}">{{ options.label }}</option>

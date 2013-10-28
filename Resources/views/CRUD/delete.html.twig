@@ -45,6 +45,9 @@ file that was distributed with this source code.
         <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
             <form method="POST" action="{{ admin.generateObjectUrl('delete', object) }}">
                 <input type="hidden" value="DELETE" name="_method"/>
+                {% if csrf_token is defined %}
+                <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}" />
+                {% endif %}
                 {% if app.request.isxmlhttprequest %}
                     <button class="btn" data-dismiss="modal"
                             aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</button>
