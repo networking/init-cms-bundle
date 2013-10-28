@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Tests\EventListener;
+namespace Networking\InitCmsBundle\Tests\Entity;
 
-use Networking\InitCmsBundle\EventListener\PageListener;
+use Networking\InitCmsBundle\Entity\PageListener;
 use Networking\InitCmsBundle\Helper\PageHelper;
 
 class PageListenerTest extends \PHPUnit_Framework_TestCase
@@ -70,7 +70,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
     {
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
         $pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
-        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath', 'setObjectId'));
+        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Model\ContentRoute', array('setPath', 'setObjectId'));
         $contentRoute->expects($this->once())
             ->method('setPath')
             ->with($this->equalTo('/some/random-pi/path'));
@@ -79,7 +79,8 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(108));
 
         // entity
-        $entity = $this->getMock('\Networking\InitCmsBundle\Entity\Page');
+        $entity = $this->getMock('\Networking\InitCmsBundle\Model\Page');
+
         $entity->expects($this->once())
             ->method('getId')
             ->will($this->returnValue(108));
@@ -191,17 +192,17 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
         $pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
 
         // contentRoute
-        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath'));
+        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Model\ContentRoute', array('setPath'));
         $contentRoute->expects($this->once())
             ->method('setPath')
             ->with($this->equalTo('/'));
 
         // entity
-        $entity = $this->getMock('\Networking\InitCmsBundle\Entity\Page');
+        $entity = $this->getMock('\Networking\InitCmsBundle\Model\Page');
         $entity->expects($this->once())
             ->method('getContentRoute')
             ->will($this->returnValue($contentRoute));
-        $entity->expects($this->once())
+        $entity->expects($this->exactly(1))
             ->method('getAllChildren')
             ->will($this->returnValue($this->getMockChildren(0)));
 
@@ -261,13 +262,13 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
         $pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
 
         // contentRoute
-        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath'));
+        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Model\ContentRoute', array('setPath'));
         $contentRoute->expects($this->once())
             ->method('setPath')
             ->with($this->equalTo('/'));
 
         // entity
-        $entity = $this->getMock('\Networking\InitCmsBundle\Entity\Page');
+        $entity = $this->getMock('\Networking\InitCmsBundle\Model\Page');
         $entity->expects($this->once())
             ->method('getContentRoute')
             ->will($this->returnValue($contentRoute));
@@ -330,12 +331,12 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
     {
         $array = array();
         for ($i = 0; $i < $count; $i++) {
-            $contentRoute = $this->getMock('\Networking\InitCmsBundle\Entity\ContentRoute', array('setPath'));
+            $contentRoute = $this->getMock('\Networking\InitCmsBundle\Model\ContentRoute', array('setPath'));
             $contentRoute->expects($this->once())
                 ->method('setPath')
                 ->with($this->equalTo('/some/path-p/' . $count));
 
-            $mockPage = $this->getMock('\Networking\InitCmsBundle\Entity\Page');
+            $mockPage = $this->getMock('\Networking\InitCmsBundle\Model\Page');
             $mockPage->expects($this->once())
                 ->method('getContentRoute')
                 ->will($this->returnValue($contentRoute));
@@ -345,7 +346,9 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
 
 
             $array[] = $mockPage;
+
         }
+
         return $array;
     }
 

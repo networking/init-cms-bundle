@@ -17,7 +17,7 @@ use Networking\InitCmsBundle\Model\Page as ModelPage;
  *
  * @author net working AG <info@networking.ch>
  */
-abstract class BasePage extends ModelPage
+class BasePage extends ModelPage
 {
 
     public function getContentRoute(){

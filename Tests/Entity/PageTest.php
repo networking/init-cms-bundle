@@ -9,26 +9,24 @@
  */
 namespace Networking\InitCmsBundle\Tests\Entity;
 
-use \Networking\InitCmsBundle\Entity\Page;
-
 class PageTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testOnPrePersist_ShouldSetDates()
     {
-        $obj = new Page();
+        $obj = $this->getPage();
 		$this->assertEquals(null, $obj->getUpdatedAt());
-		$obj->onPrePersist();
+		$obj->prePersist();
 		$this->assertEquals(new \DateTime('now'), $obj->getUpdatedAt());
 		$this->assertEquals(new \DateTime('now'), $obj->getCreatedAt());
     }
 
 	public function testOnPrePersist_ShouldSetMetaTitle()
 	{
-		$obj = new Page();
+		$obj = $this->getPage();
         $obj->setPageName('page Name');
         $this->assertEquals('', $obj->getMetaTitle());
-		$obj->onPrePersist();
+		$obj->prePersist();
 		$this->assertEquals('page Name', $obj->getMetaTitle());
 	}
 
@@ -37,7 +35,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
 	public function testSetTitle()
 	{
-		$obj = new Page();
+		$obj = $this->getPage();
 		$title = 'hello page';
 		$this->assertNull($obj->getTitle());
 		$obj->setPageName($title);
@@ -49,18 +47,18 @@ class PageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetParents()
 	{
-		$obj = new Page();
+		$obj = $this->getPage();
 		$this->assertEquals(array(), $obj->getParents());
 
-		$parent1 = new Page();
+		$parent1 = $this->getPage();
 		$parent1->setPageName('parent1');
-		$parent2 = new Page();
+		$parent2 = $this->getPage();
 		$parent2->setPageName('parent2');
-		$parent3 = new Page();
+		$parent3 = $this->getPage();
 		$parent3->setPageName('parent3');
 		$parents = array($parent1, $parent2, $parent3);
 		$obj->setParents($parents);
-		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Entity\Page', $obj->getParents());
+		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Model\PageInterface', $obj->getParents());
 		$this->assertEquals('parent1', $obj->getParent(0)->getTitle());
 		$this->assertEquals('parent2', $obj->getParent(1)->getTitle());
 		$this->assertEquals('parent3', $obj->getParent(2)->getTitle());
@@ -69,23 +67,31 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
 	public function testAddChildren()
 	{
-		$obj = new Page();
+		$obj = $this->getPage();
 		$obj->setPageName('original page');
 		$this->assertEquals(null, $obj->getChildren());
 
-		$child1 = new Page();
+		$child1 = $this->getPage();
 		$child1->setPageName('child1');
 		$obj->addChildren($child1);
-		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Entity\Page', $obj->getChildren());
+		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Model\PageInterface', $obj->getChildren());
 		$children = $obj->getChildren();
 		$this->assertEquals('child1', $children[0]->getTitle());
 		$this->assertEquals('original page', $children[0]->getParent()->getTitle());
 
-		$child2 = new Page();
+		$child2 = $this->getPage();
 		$child2->setPageName('child2');
 		$obj->addChildren($child2);
 		$children = $obj->getAllChildren();
 		$this->assertEquals('child2', $children[0]->getTitle()); // new children are first
 		$this->assertEquals('original page', $children[0]->getParent()->getTitle());
 	}
+
+    /**
+     * @return \Networking\InitCmsBundle\Model\Page
+     */
+    public function getPage()
+    {
+        return $this->getMockForAbstractClass('Networking\InitCmsBundle\Model\Page');
+    }
 }

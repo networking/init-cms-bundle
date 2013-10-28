@@ -70,7 +70,6 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
 
 
         if ($content instanceof PageInterface) {
-
             $translation = $content->getAllTranslations()->get($locale);
 
             if (is_null($translation)) {
@@ -78,6 +77,7 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
                 return array('_route' => 'networking_init_cms_home');
             }
             //return a contentRoute object
+
             return $translation->getContentRoute()->initializeRoute($translation);
         }
 

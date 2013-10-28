@@ -69,14 +69,9 @@ class PageListener implements EventSubscriberInterface
     {
         $entity = $args->getEntity();
 
-
-
-
         $em = $args->getEntityManager();
 
         if ($entity instanceof PageInterface) {
-
-
 
             if ($contentRoute = $entity->getContentRoute()) {
 
@@ -102,8 +97,6 @@ class PageListener implements EventSubscriberInterface
                     $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
                     $em->persist($contentRoute);
                     $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
-
-
                     foreach ($entity->getAllChildren() as $child) {
                         $contentRoute = $child->getContentRoute();
                         $contentRoute->setPath(PageHelper::getPageRoutePath($child->getPath()));

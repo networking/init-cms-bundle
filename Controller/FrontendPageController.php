@@ -12,16 +12,12 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Networking\InitCmsBundle\Entity\BasePage as Page;
+use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Networking\InitCmsBundle\Entity\HelpTextRepository;
 
 
 /**
@@ -47,7 +43,7 @@ class FrontendPageController extends Controller
      */
     public function indexAction(Request $request)
     {
-        /** @var $page Page */
+        /** @var $page \Networking\InitCmsBundle\Model\PageInterface */
         $page = $request->get('_content');
 
         if($page instanceof PageSnapshot){
@@ -104,7 +100,7 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @Route("/admin/", name="networking_init_cms_admin")
+     * @return RedirectResponse
      */
     public function adminAction()
     {
@@ -114,8 +110,6 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @Route("/", name="networking_init_cms_home")
-     *
      * @return array
      */
     public function homeAction()
@@ -131,7 +125,6 @@ class FrontendPageController extends Controller
      * @param Request $request
      * @param $locale
      *
-     * @Route("/change_admin_language/{locale}", name="change_admin_language", requirements={"locale" = ".+"})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function changeAdminLanguageAction(Request $request, $locale)
@@ -145,7 +138,6 @@ class FrontendPageController extends Controller
      * @param Request $request
      * @param $locale
      *
-     * @Route("/change_language/{locale}", name="networking_init_change_language", requirements={"locale" = ".+"})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function changeLanguageAction(Request $request, $locale)
