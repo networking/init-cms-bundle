@@ -10,16 +10,14 @@
  */
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\Event\LifecycleEventArgs,
-    Symfony\Component\HttpFoundation\Session\Session,
-    Symfony\Component\DependencyInjection\ContainerInterface,
-    Networking\InitCmsBundle\Model\PageInterface,
-    Networking\InitCmsBundle\Helper\PageHelper,
-    JMS\Serializer\EventDispatcher\EventSubscriberInterface,
-    JMS\Serializer\EventDispatcher\Event;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Networking\InitCmsBundle\Model\Page;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Helper\PageHelper;
+use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
-use Doctrine\ORM\Event\PostFlushEventArgs;
-use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 
 /**
  * @author net working AG <info@networking.ch>

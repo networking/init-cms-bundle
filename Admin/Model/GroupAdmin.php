@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Admin;
+namespace Networking\InitCmsBundle\Admin\Model;
 
 use Sonata\UserBundle\Admin\Entity\GroupAdmin as SonataGroupAdmin,
     Sonata\AdminBundle\Form\FormMapper,
@@ -17,7 +17,7 @@ use Sonata\UserBundle\Admin\Entity\GroupAdmin as SonataGroupAdmin,
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class GroupAdmin extends SonataGroupAdmin
+abstract class GroupAdmin extends SonataGroupAdmin
 {
     /**
      * @var string

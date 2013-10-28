@@ -88,7 +88,7 @@
             </trans-unit>
             <trans-unit id="btn_update_and_return_to_list">
                 <source>btn_update_and_return_to_list</source>
-                <target>Update %admin_label% and return to list</target>
+                <target>Update item and return to list</target>
             </trans-unit>
             <trans-unit id="delete_or">
                 <source>delete_or</source>
@@ -96,15 +96,15 @@
             </trans-unit>
             <trans-unit id="btn_create_and_edit_again">
                 <source>btn_create_and_edit_again</source>
-                <target>Add %admin_label% and edit it</target>
+                <target>Add item and edit it</target>
             </trans-unit>
             <trans-unit id="btn_create_and_return_to_list">
                 <source>btn_create_and_return_to_list</source>
-                <target>Add %admin_label% and return to list</target>
+                <target>Add item and return to list</target>
             </trans-unit>
             <trans-unit id="btn_create_and_create_a_new_one">
                 <source>btn_create_and_create_a_new_one</source>
-                <target>Add %admin_label% and create another</target>
+                <target>Add item and create another</target>
             </trans-unit>
             <trans-unit id="flash_delete_success">
                 <source>flash_delete_success</source>

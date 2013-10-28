@@ -25,9 +25,6 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface {
     /**
      * @var integer $id
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      *
      */
     protected $id;
@@ -35,7 +32,6 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface {
     /**
      * @var $adminSettings \Networking\InitCmsBundle\Model\AdminSettings
      *
-     * @ORM\Column(name="admin_settings", type="object", nullable=true)
      */
     protected $adminSettings;
 

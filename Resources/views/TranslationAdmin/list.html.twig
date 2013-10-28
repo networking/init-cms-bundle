@@ -10,18 +10,25 @@ file that was distributed with this source code.
 #}
 {% extends 'NetworkingInitCmsBundle:CRUD:base_list.html.twig' %}
 
+
+
 {% block actions %}
-    {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
+    <div class="sonata-actions btn-group">
+        {% include 'IbrowsSonataTranslationBundle:Core:clear_cache_button.html.twig' %}
+        {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
+    </div>
 {% endblock %}
 
 {% block list_table %}
     {{ parent() }}
 {% endblock %}
+
 {% block footer %}
     {{ parent() }}
     <div class="modal hide fade" tabindex="-1" role="dialog" id="list_dialog">
     </div>
 {% endblock %}
+
 {% block before_body_end %}
     {{ parent() }}
     {% include 'NetworkingInitCmsBundle:CRUD:list_script.html.twig' %}

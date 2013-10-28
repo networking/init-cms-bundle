@@ -49,6 +49,7 @@ class NetworkingInitCmsExtension extends Extension
         if ('custom' !== $config['db_driver']) {
             $loader->load(sprintf('%s.yml', $config['db_driver']));
             $loader->load(sprintf('admin_%s.yml', $config['db_driver']));
+            $loader->load(sprintf('ext_admin_%s.yml', $config['db_driver']));
             $loader->load(sprintf('blocks_%s.yml', $config['db_driver']));
         }
 

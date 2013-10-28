@@ -55,20 +55,12 @@ class PageListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            FormEvents::PRE_SUBMIT => 'preBindData',
             array(
                 'event' => 'serializer.post_deserialize',
                 'method' => 'onPostDeserialize',
                 'format' => 'json'
             ),
         );
-    }
-
-    public function preBind(FormEvent $event){
-
-        var_dump($event);
-        die;
-
     }
 
 

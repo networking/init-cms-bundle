@@ -120,7 +120,7 @@ class FrontendPageController extends Controller
      */
     public function homeAction()
     {
-        $repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Page');
+        $repository = $this->get('networking_init_cms.page_manager');
 
         $page = $repository->findOneBy(array('isHome' => true, 'locale' => $this->getRequest()->getLocale()));
 

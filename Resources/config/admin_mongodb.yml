@@ -1,7 +1,7 @@
 services:
 # Page Admin Contoller
-    networking_init_cms.admin.helper:
-        class: Networking\InitCmsBundle\Admin\AdminHelper
+    networking_init_cms.page.admin.helper:
+        class: Networking\InitCmsBundle\Admin\PageAdminHelper
         arguments:
             - @sonata.admin.pool
 

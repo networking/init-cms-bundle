@@ -22,7 +22,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin;
 /**
  * @author net working AG <info@networking.ch>
  */
-class LayoutBlockAdmin extends BaseAdmin
+abstract class LayoutBlockAdmin extends BaseAdmin
 {
 
     /**

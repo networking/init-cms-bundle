@@ -1,7 +1,7 @@
 services:
 # Page Admin Contoller
-    networking_init_cms.admin.helper:
-        class: Networking\InitCmsBundle\Admin\AdminHelper
+    networking_init_cms.page.admin.helper:
+        class: Networking\InitCmsBundle\Admin\PageAdminHelper
         arguments:
             - @sonata.admin.pool
 
@@ -54,3 +54,4 @@ services:
             - [setSubClasses, [{"menu": Networking\InitCmsBundle\Entity\MenuItem, "menu item": Networking\InitCmsBundle\Entity\MenuItem}]]
         tags:
             - { name: sonata.admin, manager_type: orm, icon: happy, label: "Menus", label_translator_strategy: sonata.admin.label.strategy.underscore}
+

@@ -219,7 +219,11 @@ file that was distributed with this source code.
             <ul {{ block('widget_container_attributes_choice_widget') }}>
                 {% for child in form %}
                     <li>
-                        {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
+                    {% if not sonata_admin.admin %}
+                        {{ form_label(child, child.vars.label|default(null)|trans({}, translation_domain), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
+                    {% else %}
+                        {{ form_label(child, child.vars.label|default(null)|trans({}, sonata_admin.field_description.translationDomain), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
+                    {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -426,12 +430,26 @@ file that was distributed with this source code.
 {% block sonata_security_roles_widget %}
     {% spaceless %}
         <div class="editable">
-            <h4>{{ 'field.label_roles_editable'|trans({}, "SonataUserBundle") }}</h4>
-            {{ block('choice_widget') }}
+            <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a></p>
+            <div id="securityRoles">
+                {{ block('choice_widget') }}
+            </div>
+            <a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a>
+            <script>
+             $('.toggle-roles').click(function() {
+                $('#securityRoles input[id^="{{ id }}"]').each(function(){
+                    // toggle checkbox
+                    $(this).prop('checked',!$(this).prop('checked'));
+                    // toggle class
+                    $(this).parents('label').toggleClass('active');
+
+                });
+                 return false;
+            });
+            </script>
         </div>
         {% if read_only_choices|length > 0 %}
             <div class="readonly">
-                <h4>{{ 'field.label_roles_readonly'|trans({}, "SonataUserBundle") }}</h4>
                 <ul>
                     {% for choice in read_only_choices %}
                         <li>{{ choice }}</li>
