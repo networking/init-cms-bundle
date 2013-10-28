@@ -22,7 +22,7 @@ use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MediaAdmin extends Admin
+abstract class MediaAdmin extends Admin
 {
     /**
      * @var string

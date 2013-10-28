@@ -20,6 +20,7 @@ file that was distributed with this source code.
 {% endblock stylesheets %}
 
 {% block before_body_end %}
+    {{ parent() }}
 {% if init_cms_editor == 'ckeditor' %}
 <script type="text/javascript" src="{{ asset('/bundles/networkinginitcms/js/ckeditor/ckeditor.js') }}"></script>
 {% elseif init_cms_editor == 'redactor' %}
@@ -27,7 +28,7 @@ file that was distributed with this source code.
     <script src="{{ asset('/bundles/networkinginitcms/js/redactor/redactor_extensions.js') }}"></script>
 {% endif %}
 {% include 'NetworkingInitCmsBundle:CRUD:edit_script.html.twig' %}
-{{ parent() }}
+
 {% endblock %}
 
 

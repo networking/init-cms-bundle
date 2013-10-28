@@ -27,7 +27,7 @@ use Sonata\AdminBundle\Exception\ModelManagerException;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MenuItemAdmin extends BaseAdmin
+abstract class MenuItemAdmin extends BaseAdmin
 {
     /**
      * @var string

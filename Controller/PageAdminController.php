@@ -286,8 +286,8 @@ class PageAdminController extends CRUDController
     public function addLayoutBlockAction(Request $request)
     {
         $twig = $this->get('twig');
-        /** @var \Networking\InitCmsBundle\Admin\AdminHelper $helper */
-        $helper = $this->get('networking_init_cms.admin.helper');
+        /** @var \Networking\InitCmsBundle\Admin\PageAdminHelper $helper */
+        $helper = $this->get('networking_init_cms.page.admin.helper');
         $code = $request->get('code');
         $elementId = $request->get('elementId');
         $objectId = $request->get('objectId');

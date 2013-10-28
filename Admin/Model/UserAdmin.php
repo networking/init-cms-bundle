@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Admin;
+namespace Networking\InitCmsBundle\Admin\Model;
 
 use Sonata\UserBundle\Admin\Entity\UserAdmin as SonataUserAdmin,
     Sonata\AdminBundle\Datagrid\ListMapper,
@@ -17,7 +17,7 @@ use Sonata\UserBundle\Admin\Entity\UserAdmin as SonataUserAdmin,
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class UserAdmin extends SonataUserAdmin
+abstract class UserAdmin extends SonataUserAdmin
 {
 
 
@@ -86,19 +86,19 @@ class UserAdmin extends SonataUserAdmin
             ->add('email')
             ->add('groups')
             ->add(
-            'enabled',
-            null,
-            array('editable' => true)
-        )//            ->add('locked', null, array('editable' => true))
+                'enabled',
+                null,
+                array('editable' => true)
+            )//            ->add('locked', null, array('editable' => true))
 //            ->add('createdAt')
         ;
         if ($this->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
             $listMapper
                 ->add(
-                'impersonating',
-                'string',
-                array('template' => 'NetworkingInitCmsBundle:Admin:Field/impersonating.html.twig')
-            );
+                    'impersonating',
+                    'string',
+                    array('template' => 'NetworkingInitCmsBundle:Admin:Field/impersonating.html.twig')
+                );
         }
 
         $listMapper->add(
@@ -134,51 +134,60 @@ class UserAdmin extends SonataUserAdmin
     {
         $formMapper
             ->with('General')
-            ->add('username')
-            ->add('email')
-            ->add('plainPassword', 'text', array('required' => false))
+                ->add('username')
+                ->add('email')
+                ->add('plainPassword', 'text', array('required' => false))
             ->end()
             ->with('Groups')
-            ->add('groups', 'sonata_type_model', array('required' => false, 'expanded' => true, 'multiple' => true))
+                ->add('groups', 'sonata_type_model', array('required' => false, 'expanded' => true, 'multiple' => true))
             ->end()
             ->with('Profile')
-            ->add('dateOfBirth', 'birthday', array('required' => false))
-            ->add('firstname', null, array('required' => false))
-            ->add('lastname', null, array('required' => false))
-            ->add('website', 'url', array('required' => false))
-            ->add('biography', 'text', array('required' => false))
-            ->add('gender', 'textarea', array('required' => false))
-            ->add('locale', 'locale', array('required' => false))
-            ->add('timezone', 'timezone', array('required' => false))
-            ->add('phone', null, array('required' => false))
+                ->add('dateOfBirth', 'birthday', array('required' => false))
+                ->add('firstname', null, array('required' => false))
+                ->add('lastname', null, array('required' => false))
+                ->add('website', 'url', array('required' => false))
+                ->add('biography', 'text', array('required' => false))
+                ->add(
+                    'gender',
+                    'sonata_user_gender',
+                    array(
+                        'required' => false,
+                        'translation_domain' => $this->getTranslationDomain()
+                    )
+                )
+                ->add('locale', 'locale', array('required' => false))
+                ->add('timezone', 'timezone', array('required' => false))
+                ->add('phone', null, array('required' => false))
             ->end()
             ->with('Social')
-            ->add('facebookUid', null, array('required' => false))
-            ->add('facebookName', null, array('required' => false))
-            ->add('twitterUid', null, array('required' => false))
-            ->add('twitterName', null, array('required' => false))
-            ->add('gplusUid', null, array('required' => false))
-            ->add('gplusName', null, array('required' => false))
+                ->add('facebookUid', null, array('required' => false))
+                ->add('facebookName', null, array('required' => false))
+                ->add('twitterUid', null, array('required' => false))
+                ->add('twitterName', null, array('required' => false))
+                ->add('gplusUid', null, array('required' => false))
+                ->add('gplusName', null, array('required' => false))
             ->end();
 
-        if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
+//        if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
+
             $formMapper
                 ->with('Management')
                 ->add(
-                'roles',
-                'sonata_security_roles',
-                array(
-                    'expanded' => true,
-                    'multiple' => true,
-                    'required' => false
+                    'realRoles',
+                    'sonata_security_roles',
+                    array(
+                        'expanded' => true,
+                        'multiple' => true,
+                        'required' => false,
+                        'label_render' => false,
+                    )
                 )
-            )
                 ->add('locked', null, array('required' => false), array('inline_block' => true))
                 ->add('expired', null, array('required' => false), array('inline_block' => true))
                 ->add('enabled', null, array('required' => false), array('inline_block' => true))
                 ->add('credentialsExpired', null, array('required' => false), array('inline_block' => true))
                 ->end();
-        }
+//        }
 
         $formMapper
             ->with('Security')

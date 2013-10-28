@@ -15,7 +15,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 
-class HelpTextAdmin extends BaseAdmin
+abstract class HelpTextAdmin extends BaseAdmin
 {
     /**
      * @var string
@@ -81,6 +81,7 @@ class HelpTextAdmin extends BaseAdmin
             'text',
             'textarea',
             array(
+                'required' => false,
                 'attr' => array(
                     'class' => 'wysiwyg-editor',
                 )

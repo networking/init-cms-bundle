@@ -28,7 +28,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin,
 /**
  *
  */
-class PageAdmin extends BaseAdmin
+abstract class PageAdmin extends BaseAdmin
 {
     /**
      * @var int
@@ -374,13 +374,13 @@ class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder
+     * @param ProxyQuery $ProxyQuery
      * @param $alias
      * @param $field
      * @param $data
      * @return bool
      */
-    public function matchPath(ProxyQuery $queryBuilder, $alias, $field, $data)
+    public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
         if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
             return;
@@ -392,33 +392,34 @@ class PageAdmin extends BaseAdmin
         }
 
         $fieldName = 'path';
+        $qb = $ProxyQuery->getQueryBuilder();
+        $qb->leftJoin(sprintf('%s.contentRoute', $alias), 'c');
+        $parameterName = sprintf('%s_%s', $fieldName, $ProxyQuery->getUniqueParameterId());
 
-        $queryBuilder->leftJoin(sprintf('%s.contentRoute', $alias), 'c');
-        $parameterName = sprintf('%s_%s', $fieldName, $queryBuilder->getUniqueParameterId());
-
-        $queryBuilder->andWhere(sprintf('%s.%s LIKE :%s', 'c', $fieldName, $parameterName));
-        $queryBuilder->setParameter(sprintf(':%s', $parameterName), '%' . $data['value'] . '%');
+        $qb->andWhere(sprintf('%s.%s LIKE :%s', 'c', $fieldName, $parameterName));
+        $qb->setParameter(sprintf(':%s', $parameterName), '%' . $data['value'] . '%');
 
         return true;
     }
 
     /**
-     * @param \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder
+     * @param ProxyQuery $ProxyQuery
      * @param $alias
      * @param $field
      * @param $data
      * @return bool
      */
-    public function getByLocale($queryBuilder, $alias, $field, $data)
+    public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
         $active = true;
         if (!$locale = $data['value']) {
             $locale = $this->getDefaultLocale();
             $active = false;
         }
-        $queryBuilder->andWhere(sprintf('%s.locale = :locale', $alias));
-        $queryBuilder->orderBy(sprintf('%s.path', $alias), 'asc');
-        $queryBuilder->setParameter(':locale', $locale);
+        $qb = $ProxyQuery->getQueryBuilder();
+        $qb->andWhere(sprintf('%s.locale = :locale', $alias));
+        $qb->orderBy(sprintf('%s.path', $alias), 'asc');
+        $qb->setParameter(':locale', $locale);
 
         return $active;
     }

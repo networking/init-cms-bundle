@@ -22,7 +22,7 @@ use Sonata\AdminBundle\Exception\NoValueException;
  *
  * @author net working AG <info@networking.ch>
  */
-class AdminHelper extends SonataAdminHelper
+class PageAdminHelper extends SonataAdminHelper
 {
     /**
      * @var array $newLayoutBlockParameters
@@ -30,17 +30,9 @@ class AdminHelper extends SonataAdminHelper
     protected $newLayoutBlockParameters;
 
     /**
-     * Note:
-     *   This code is ugly, but there is no better way of doing it.
-     *   For now the append form element action used to add a new row works
-     *   only for direct FieldDescription (not nested one)
-     *
-     * @throws \RuntimeException
-     *
-     * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
-     * @param object                                   $subject
-     * @param string                                   $elementId
-     *
+     * @param AdminInterface $admin
+     * @param object $subject
+     * @param string $elementId
      * @return array
      */
     public function appendFormFieldElement(AdminInterface $admin, $subject, $elementId)
@@ -83,13 +75,11 @@ class AdminHelper extends SonataAdminHelper
         }
 
         // add new elements to the subject
-        while ($objectCount < $postCount) {
+        while ($objectCount <= $postCount) {
             // append a new instance into the object
-            $subject = $this->addNewInstance($form->getData(), $fieldDescription);
+            $this->addNewInstance($form->getData(), $fieldDescription);
             $objectCount++;
         }
-
-        $this->addNewInstance($form->getData(), $fieldDescription);
 
         $subject->orderLayoutBlocks();
 
@@ -103,11 +93,8 @@ class AdminHelper extends SonataAdminHelper
     }
 
     /**
-     * Add a new instance to the related FieldDescriptionInterface value
-     *
-     * @param object                                              $object
-     * @param \Sonata\AdminBundle\Admin\FieldDescriptionInterface $fieldDescription
-     *
+     * @param object $object
+     * @param FieldDescriptionInterface $fieldDescription
      * @throws \RuntimeException
      */
     public function addNewInstance($object, FieldDescriptionInterface $fieldDescription)
