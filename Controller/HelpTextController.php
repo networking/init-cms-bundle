@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -12,18 +11,14 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Networking\InitCmsBundle\Entity\BasePage as Page;
-use Networking\InitCmsBundle\Entity\PageSnapshot;
-use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 
 /**
+ * Class HelpTextController
+ * @package Networking\InitCmsBundle\Controller
+ *
  * @author net working AG <info@networking.ch>
  */
 class HelpTextController extends Controller
@@ -31,11 +26,12 @@ class HelpTextController extends Controller
 
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param $admin
-     * @param $action
-     * @return void
-     * @Template()
+     * Help text page action
+     *
+     * @param Request $request
+     * @param $adminCode
+     * @param string $action
+     * @return array
      */
     public function adminHelpAction(Request $request, $adminCode, $action = '')
     {
@@ -51,9 +47,6 @@ class HelpTextController extends Controller
         $helpTextManager = $this->get('networking_init_cms.help_text_manager');
         $helpText = $helpTextManager->getHelpTextByKeyLocale($translationKey, $request->getLocale());
 
-        //$repository = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:HelpText');
-        //$helpText = $repository->getHelpTextByKeyLocale($translationKey, $request->getLocale());
-
         $parameters['help_text'] = $helpText;
         if (!in_array($adminCode, $defaultAdminCode)) {
 
@@ -63,7 +56,7 @@ class HelpTextController extends Controller
 
         }
 
-        /** @var \Sonata\AdminBundle\Admin\Pool $pool */
+        /** @var \Networking\InitCmsBundle\Admin\Pool $pool */
         $pool = $this->get('sonata.admin.pool');
         $parameters['admin_pool'] = $pool;
         $dashBoardGroups = $pool->getDashboardNavigationGroups();
@@ -78,6 +71,14 @@ class HelpTextController extends Controller
         return $parameters;
     }
 
+    /**
+     * Create the navigation for the help text view
+     *
+     * @param array $dashBoardGroups
+     * @param $locale
+     * @param $helpTextManager
+     * @return array
+     */
     protected function adminGetHelpTextNavigation(array $dashBoardGroups, $locale, $helpTextManager)
     {
         $navArray = array();

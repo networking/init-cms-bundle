@@ -12,7 +12,6 @@
 namespace Networking\InitCmsBundle\Admin;
 
 use Sonata\AdminBundle\Admin\Pool as AdminPool;
-use Sonata\AdminBundle\Admin\Admin;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>

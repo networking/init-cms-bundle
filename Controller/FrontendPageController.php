@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -13,22 +12,31 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 
 
 /**
+ * Class FrontendPageController
+ * @package Networking\InitCmsBundle\Controller
  * @author net working AG <info@networking.ch>
  */
 class FrontendPageController extends Controller
 {
 
+    /**
+     * @return bool|\Sonata\AdminBundle\Admin\Pool
+     */
     protected function getAdminPool()
     {
         if ($this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+
             return $this->get('sonata.admin.pool');
         }
 
@@ -36,10 +44,10 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      * @return array
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws AccessDeniedException
+     * @throws NotFoundHttpException
      */
     public function indexAction(Request $request)
     {
@@ -72,10 +80,11 @@ class FrontendPageController extends Controller
 
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
+     *
      * @return array
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws AccessDeniedException
+     * @throws NotFoundHttpException
      */
     public function liveAction(Request $request)
     {
@@ -85,7 +94,7 @@ class FrontendPageController extends Controller
         /** @var $page Page */
         $page = $this->get('serializer')->deserialize(
             $pageSnapshot->getVersionedData(),
-            'Application\Networking\InitCmsBundle\Entity\Page',
+            $this->container->getParameter('networking_init_cms.admin.page.class'),
             'json'
         );
 
@@ -100,6 +109,8 @@ class FrontendPageController extends Controller
     }
 
     /**
+     * Redirect to the admin dashboard
+     *
      * @return RedirectResponse
      */
     public function adminAction()
@@ -110,22 +121,29 @@ class FrontendPageController extends Controller
     }
 
     /**
+     * Show the home page (start page) for given locale
+     *
+     * @param Request $request
+     *
      * @return array
      */
-    public function homeAction()
+    public function homeAction(Request $request)
     {
-        $repository = $this->get('networking_init_cms.page_manager');
+        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
+        $pageManger = $this->get('networking_init_cms.page_manager');
 
-        $page = $repository->findOneBy(array('isHome' => true, 'locale' => $this->getRequest()->getLocale()));
+        $page = $pageManger->findOneBy(array('isHome' => true, 'locale' => $request->getLocale()));
 
         return array('page' => $page);
     }
 
     /**
+     * Change the language in the admin area (currently not implemented in the template)
+     *
      * @param Request $request
      * @param $locale
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function changeAdminLanguageAction(Request $request, $locale)
     {
@@ -135,10 +153,12 @@ class FrontendPageController extends Controller
     }
 
     /**
+     * Change language in the front end area
+     *
      * @param Request $request
      * @param $locale
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function changeLanguageAction(Request $request, $locale)
     {
@@ -173,39 +193,48 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * View the website in Draft mode
+     *
+     * @param Request $request
      * @param string $locale
      * @param string/null $path
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return RedirectResponse
      */
     public function viewDraftAction(Request $request, $locale, $path = null)
     {
         $request->getSession()->set('_locale', $locale);
 
-        return $this->changePageStatus($request, Page::STATUS_DRAFT, $path);
+        return $this->changeViewMode($request, Page::STATUS_DRAFT, $path);
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * View the website in Live mode
+     *
+     * @param Request $request
      * @param string $locale
      * @param string/null $path
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return RedirectResponse
      */
     public function viewLiveAction(Request $request, $locale, $path = null)
     {
         $request->getSession()->set('_locale', $locale);
 
-        return $this->changePageStatus($request, Page::STATUS_PUBLISHED, $path);
+        return $this->changeViewMode($request, Page::STATUS_PUBLISHED, $path);
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * Change the page viewing mode to live or draft
+     *
+     * @param Request $request
      * @param $status
      * @param $path
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return RedirectResponse
+     * @throws AccessDeniedException
      */
-    private function changePageStatus(Request $request, $status, $path)
+    protected function changeViewMode(Request $request, $status, $path)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
             $message = 'Please login to carry out this action';
@@ -224,25 +253,27 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @param $referer
+     * get the route for the translation of a given page, the referrer page
+     *
+     * @param $referrer
      * @param $locale
-     * @return array|\Symfony\Cmf\Component\Routing\RouteObjectInterface
+     *
+     * @return array|RouteObjectInterface
      */
-    protected function getTranslationRoute($referer, $locale)
+    protected function getTranslationRoute($referrer, $locale)
     {
         /** @var $languageSwitcherHelper LanguageSwitcherHelper */
         $languageSwitcherHelper = $this->get('networking_init_cms.page.helper.language_switcher');
 
-        $oldURL = $languageSwitcherHelper->getPathInfo($referer);
+        $oldURL = $languageSwitcherHelper->getPathInfo($referrer);
 
         return $languageSwitcherHelper->getTranslationRoute($oldURL, $locale);
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function translationNotFoundAction(Request $request)
+    public function translationNotFoundAction()
     {
         $params = array(
             'admin_pool' => $this->getAdminPool(),
@@ -253,10 +284,9 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function pageNotFoundAction(Request $request)
+    public function pageNotFoundAction()
     {
         $params = array('admin_pool' => $this->getAdminPool());
         return $this->render($this->container->getParameter('networking_init_cms.404_template'), $params);

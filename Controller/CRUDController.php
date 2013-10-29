@@ -10,22 +10,17 @@
 namespace Networking\InitCmsBundle\Controller;
 
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
-    Symfony\Component\HttpFoundation\JsonResponse,
-    Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
-    Symfony\Component\Security\Core\Exception\AccessDeniedException,
-    Symfony\Component\HttpFoundation\RedirectResponse,
-    Symfony\Component\EventDispatcher\Event,
-    Sonata\AdminBundle\Datagrid\ProxyQueryInterface,
-    Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController,
-    Sonata\AdminBundle\Admin\Admin as SontataAdmin,
-    Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher,
-    Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
+use Symfony\Component\HttpFoundation\Response;
+use Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController;
+use Networking\InitCmsBundle\Entity\LastEditedListener as ORMLastEditedListener;
+use Networking\InitCmsBundle\Document\LastEditedListener as ODMLastEditedListener;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
 
 /**
+ * Class CRUDController
+ * @package Networking\InitCmsBundle\Controller
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class CRUDController extends SonataCRUDController
@@ -37,20 +32,39 @@ class CRUDController extends SonataCRUDController
      */
     protected $dispatcher;
 
+    /**
+     * Set up the lasted edited dispatcher
+     */
     public function configure()
     {
         parent::configure();
-
         $this->dispatcher = $this->get('networking_init_cms.event_dispatcher');
-        $lastEditedSubscriber = $this->get('networking_init_cms.last_edited_listener');
-        $this->dispatcher->addSubscriber($lastEditedSubscriber);
+
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $this->get('session');
+
+        switch(strtolower($this->container->getParameter('networking_init_cms.db_driver'))){
+            case 'monodb':
+                $lastEditedSubscriber = new ODMLastEditedListener($session);
+                break;
+            case 'orm':
+                $lastEditedSubscriber = new ORMLastEditedListener($session);
+                break;
+            default:
+                $lastEditedSubscriber = false;
+                break;
+        }
+
+        if($lastEditedSubscriber){
+            $this->dispatcher->addSubscriber($lastEditedSubscriber);
+        }
     }
 
     /**
      * @param string $view
      * @param array $parameters
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Response $response
+     * @return Response
      */
     public function render($view, array $parameters = array(), Response $response = null)
     {
@@ -60,8 +74,6 @@ class CRUDController extends SonataCRUDController
 
             $this->dispatcher->dispatch(CRUDController::EDIT_ENTITY, $event);
         }
-
-
         return parent::render($view, $parameters, $response);
     }
 }

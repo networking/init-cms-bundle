@@ -11,11 +11,11 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface, \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
+
 {
 
     /**
