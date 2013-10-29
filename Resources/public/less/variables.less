@@ -5,7 +5,6 @@
 
 // Global values
 // --------------------------------------------------
-@cssImagePath: '../img';
 
 
 // Grays
@@ -14,7 +13,6 @@
 @grayDarker:            #2c2c2c;
 @grayDark:              #333;
 @gray:                  #555;
-@initgray:              #aaaaaa;
 @grayLight:             #bcbcbc;
 @grayLighter:           #eee;
 @white:                 #fff;
@@ -36,17 +34,11 @@
 // -------------------------
 @bodyBackground:        @white;
 @textColor:             @grayDark;
-@textColorSoft: #bbb;
-@textColorVerySoft: #ccc; /*lighten(@textColor, 60%)*/
 
-@textColor2: @initgray;
 
 // Links
 // -------------------------
-
-
 @linkColor:             #5cace1;
-@linkColor2:            #4b8dbb;
 @linkColorHover:        darken(@linkColor2, 15%);
 
 
@@ -70,9 +62,9 @@
 // -------------------------
 // Based on 14px font-size and 20px line-height
 
-@fontSizeLarge:         @baseFontSize * 1.25; // ~18px
-@fontSizeSmall:         @baseFontSize * 0.85; // ~12px
-@fontSizeMini:          @baseFontSize * 0.75; // ~11px
+@fontSizeLarge:         28px;   //BootstrapVar
+@fontSizeSmall:         12px;   //BootstrapVar
+@fontSizeMini:          11px;    //BootstrapVar
 
 @paddingLarge:          11px 19px; // 44px
 @paddingSmall:          2px 10px;  // 26px
@@ -89,7 +81,6 @@
 @tableBackgroundAccent:             #f9f9f9; // for striping
 @tableBackgroundHover:              #f5f5f5; // for hover
 @tableBorder:                       #ddd; // table and cell border
-
 
 // Buttons
 // -------------------------
@@ -123,7 +114,7 @@
 @inputBorderRadius:             @baseBorderRadius;
 @inputDisabledBackground:       @grayLighter;
 @formActionsBackground:         #f5f5f5;
-@inputHeight:                   @baseLineHeight + 10px; // base line-height + 8px vertical padding + 2px top/bottom border
+@inputHeight:                   @baseFormLineHeight + 10px; // base line-height + 8px vertical padding + 2px top/bottom border
 
 
 // Dropdowns
@@ -134,7 +125,6 @@
 @dropdownDividerBottom:         @white;
 
 @dropdownLinkColor:             @grayDark;
-
 @dropdownLinkColorHover:        @white;
 @dropdownLinkBackgroundHover:   @grayLight;
 
@@ -145,6 +135,7 @@
 
 // COMPONENT VARIABLES
 // --------------------------------------------------
+
 
 // Z-index master list
 // -------------------------
@@ -160,8 +151,8 @@
 
 // Sprite icons path
 // -------------------------
-@iconSpritePath:          "@{cssImagePath}/glyphicons-halflings.png";
-@iconWhiteSpritePath:     "@{cssImagePath}/glyphicons-halflings-white.png";
+@iconSpritePath:          "../img/glyphicons-halflings.png";
+@iconWhiteSpritePath:     "../img/glyphicons-halflings-white.png";
 
 
 // Input placeholder text color
@@ -190,8 +181,8 @@
 @navbarCollapseDesktopWidth:      @navbarCollapseWidth + 1;
 
 @navbarHeight:                    40px;
+@navbarBackgroundHighlight:       #758d75;
 @navbarBackground:                darken(@navbarBackgroundHighlight, 5%);
-@navbarBackgroundHighlight: #758d75;
 @navbarBorder:                    darken(@navbarBackground, 12%);
 
 @navbarText:                      @gray;
@@ -308,21 +299,3 @@
 // 768px-979px
 @fluidGridColumnWidth768:      percentage(@gridColumnWidth768/@gridRowWidth768);
 @fluidGridGutterWidth768:      percentage(@gridGutterWidth768/@gridRowWidth768);
-
-@customColor1: orange;
-@customColor2: green;
-
-@colorDraft: #ff8a00;
-@colorReview: @linkColor;
-@colorPublished: green;
-
-@fontSizeMicro: 10px;
-@fontSizeMini: 11px;    //BootstrapVar
-@fontSizeSmall: 12px;   //BootstrapVar
-@fontSizeMedium: 16px;
-@fontSizeLarge: 28px;   //BootstrapVar
-@fontSizeVeryLarge: 48px;
-
-@baseFormFontSize: 12px;
-
-@baseFormLineHeight: 15px;

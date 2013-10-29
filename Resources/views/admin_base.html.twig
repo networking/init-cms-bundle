@@ -18,12 +18,11 @@ file that was distributed with this source code.
     {% block stylesheets %}
         <!-- jQuery code -->
 
-        {% stylesheets filter='less,cssembed,yui_css'
+        {% stylesheets filter='cssembed,?yui_css'
         '@NetworkingInitCmsBundle/Resources/public/themes/flick/jquery-ui-1.8.16.custom.css'
-        '@NetworkingInitCmsBundle/Resources/public/css/select2.css'
-        '@NetworkingInitCmsBundle/Resources/public/less/admin.less'
-        '@NetworkingInitCmsBundle/Resources/public/css/bootstrap-responsive.min.css'
-        output='css/admin.css' %}
+        '@SonataAdminBundle/Resources/public/select2/select2.css'
+        '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
+        output='css/initcms_admin.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
         {% endstylesheets %}
     {% endblock %}
@@ -143,10 +142,10 @@ file that was distributed with this source code.
     {% javascripts filter="?yui_js"
     '@SonatajQueryBundle/Resources/public/jquery-ui-1.8.23.js'
     '@SonatajQueryBundle/Resources/public/jquery-ui-i18n.js'
-    '@NetworkingInitCmsBundle/Resources/public/js/select2.min.js'
+    '@SonataAdminBundle/Resources/public/select2/select2.min.js'
+    '@SonataAdminBundle/Resources/public/jquery/jquery.form.js'
     '@NetworkingInitCmsBundle/Resources/public/js/respond.min.js'
     '@NetworkingInitCmsBundle/Resources/public/js/bootstrap.min.js'
-    '@SonataAdminBundle/Resources/public/jquery/jquery.form.js'
     output='js/footer_admin.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

@@ -93,7 +93,7 @@ file that was distributed with this source code.
           media="all"/>
 {% endblock stylesheets %}
 
-{% block javascripts %}
+{% block before_body_end %}
     {{ parent() }}
     <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
     {% include "NetworkingInitCmsBundle:MenuItemAdmin:menu_list_script.html.twig" %}

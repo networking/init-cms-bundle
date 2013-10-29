@@ -17,7 +17,6 @@ var field_update_{{ id }} = function (event) {
     event.stopPropagation();
     var data = {};
     var form = jQuery(this).closest('form');
-    {% if init_cms_editor == 'ckeditor' %}
     jQuery.each(CKEDITOR.instances, function () {
         try {
             var editor = this;
@@ -32,7 +31,6 @@ var field_update_{{ id }} = function (event) {
         } catch (err) {
         }
     });
-    {% endif %}
     updateLayoutBlocks(form, data);
 
 };
@@ -234,11 +232,7 @@ function uploadError(xhr) {
 }
 
 function onAfterLoad() {
-    {% if init_cms_editor == 'ckeditor' %}
     createCkeditor();
-    {% elseif init_cms_editor == 'redactor' %}
-    createRedactor();
-    {% endif %}
 
     apply_position_value_{{ id }}();
 
@@ -250,9 +244,7 @@ function onAfterLoad() {
         connectWith: ".sortable",
         tolerance: 'pointer',
         start: function () {
-            {% if init_cms_editor == 'ckeditor' %}
             destroyCkeditor();
-            {% endif %}
             jQuery(this).sortable('refreshPositions');
             var listItems = jQuery(this).find('.networking-sortable-list');
             if (listItems.length < 1) {
@@ -262,9 +254,7 @@ function onAfterLoad() {
             }
         },
         stop: function (event, ui) {
-            {% if init_cms_editor == 'ckeditor' %}
             createCkeditor();
-            {% endif %}
             apply_position_value_{{ id }}();
             saveLayoutBlockSort(function (xhr) {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);

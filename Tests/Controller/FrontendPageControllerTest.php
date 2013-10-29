@@ -18,6 +18,7 @@ use \Networking\InitCmsBundle\Controller\FrontendPageController,
     \Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     \Symfony\Component\Security\Core\SecurityContext,
     Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Networking\InitCmsBundle\Model\PageInterface;
 
 /** @author sonja brodersen s.brodersen@networking.ch */
 class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
@@ -39,7 +40,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $mockPage->expects($this->once())
             ->method('getVisibility')
-            ->will($this->returnValue(Page::VISIBILITY_PROTECTED));
+            ->will($this->returnValue(PageInterface::VISIBILITY_PROTECTED));
 
         $mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
@@ -147,7 +148,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockPage = $this->getMock('Networking\InitCmsBundle\Model\Page');
         $mockPage->expects($this->once())
             ->method('getVisibility')
-            ->will($this->returnValue(Page::VISIBILITY_PUBLIC));
+            ->will($this->returnValue(PageInterface::VISIBILITY_PUBLIC));
         $mockSnapshot = $this->getMockBuilder('Networking\InitCmsBundle\Entity\PageSnapshot')
             ->disableOriginalConstructor()
             ->getMock();
@@ -187,6 +188,10 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->with('serializer')
             ->will($this->returnValue($mockSerializer));
         $mockContainer->expects($this->at(1))
+            ->method('getParameter')
+            ->with('networking_init_cms.admin.page.class')
+            ->will($this->returnValue('Application\Networking\InitCmsBundle\Entity\Page'));
+        $mockContainer->expects($this->at(2))
             ->method('get')
             ->with('security.context')
             ->will($this->returnValue($mockSecurityContext));
@@ -253,14 +258,10 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with('networking_init_cms.page_manager')
             ->will($this->returnValue($mockPageManager));
-        $mockContainer->expects($this->at(1))
-            ->method('get')
-            ->with('request')
-            ->will($this->returnValue($mockRequest));
 
         $controller = new FrontendPageController();
         $controller->setContainer($mockContainer);
-        $response = $controller->homeAction();
+        $response = $controller->homeAction($mockRequest);
         $this->assertInternalType('array', $response, 'response is an array');
         $this->assertEquals(array('page' => $page), $response, 'response has got a page');
     }

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Networking\InitCmsBundle\Model\Page;
+use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 
@@ -62,13 +62,13 @@ class FrontendPageController extends Controller
             throw $this->createNotFoundException('no page object found');
         }
 
-        if ($page->getVisibility() != Page::VISIBILITY_PUBLIC) {
+        if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
             if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
             }
         }
 
-        if ($page->getStatus() != Page::STATUS_PUBLISHED) {
+        if ($page->getStatus() != PageInterface::STATUS_PUBLISHED) {
             if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
                 $message = 'The requested page has the status "' . $page->getStatus() . '", please login to view page';
                 throw $this->createNotFoundException($message);
@@ -91,15 +91,16 @@ class FrontendPageController extends Controller
         /** @var $page PageSnapshot */
         $pageSnapshot = $request->get('_content');
 
-        /** @var $page Page */
+        /** @var $page PageInterface */
         $page = $this->get('serializer')->deserialize(
             $pageSnapshot->getVersionedData(),
             $this->container->getParameter('networking_init_cms.admin.page.class'),
             'json'
         );
 
+        if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
 
-        if ($page->getVisibility() != Page::VISIBILITY_PUBLIC) {
+
             if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
             }
