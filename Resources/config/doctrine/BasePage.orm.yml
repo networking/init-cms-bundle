@@ -1,0 +1,70 @@
+Networking\InitCmsBundle\Entity\BasePage:
+  type: mappedSuperclass
+  gedmo:
+    tree:
+      type: materializedPath
+    loggable:
+  fields:
+    createdAt:
+      type: datetime
+      column: created_at
+    updatedAt:
+      type: datetime
+      column: updated_at
+    pageName:
+      type: string
+      length: 255
+      column: page_name
+    metaTitle:
+      type: string
+      length: 255
+      column: meta_title
+      nullable: true
+    url:
+      type: string
+      length: 255
+      nullable: true
+      gedmo:
+        0: treePathSource
+    path:
+      type: string
+      length: 255
+      nullable: true
+      gedmo:
+        treePath:
+          separator: '/'
+    level:
+      type: integer
+      column: lvl
+      nullable: true
+    metaKeyword:
+      type: string
+      length: 255
+      nullable: true
+      column: meta_keyword
+    metaDescription:
+      type: text
+      nullable: true
+      column: meta_description
+    isHome:
+      type: boolean
+      column: is_home
+      nullable: true
+    status:
+      type: string
+      length: 50
+    visibility:
+      type: string
+      length: 50
+    activeFrom:
+      type: date
+      nullable: true
+      column: active_from
+    locale:
+      type: string
+      length: 6
+  lifecycleCallbacks:
+    prePersist: [ prePersist ]
+    preUpdate: [ preUpdate ]
+
+

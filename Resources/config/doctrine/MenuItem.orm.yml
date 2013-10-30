@@ -1,0 +1,91 @@
+Networking\InitCmsBundle\Entity\MenuItem:
+  type: entity
+  table: cms_menu
+  gedmo:
+      tree:
+        type: nested
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+      length: 255
+    redirectUrl:
+      type: string
+      length: 255
+      nullable: true
+      column: redirect_url
+    internalUrl:
+      type: string
+      length: 255
+      nullable: true
+      column: internal_url
+    hidden:
+      type: boolean
+      nullable: true
+    linkTarget:
+      type: string
+      length: 255
+      nullable: true
+      column: link_target
+    linkClass:
+      type: string
+      length: 255
+      nullable: true
+      column: link_class
+    linkRel:
+      type: string
+      length: 255
+      nullable: true
+      column: link_rel
+    lft:
+      type: integer
+      gedmo:
+        0: treeLeft
+    lvl:
+      type: integer
+      gedmo:
+        0: treeLevel
+    rgt:
+      type: integer
+      gedmo:
+        0: treeRight
+    root:
+      type: integer
+      nullable: true
+      gedmo:
+        0: treeRoot
+    isRoot:
+      type: boolean
+      column: is_root
+    locale:
+      type: string
+      length: 6
+    description:
+      type: text
+      nullable: true
+    visibility:
+      type: string
+      length: 50
+  oneToMany:
+    children:
+      targetEntity: Networking\InitCmsBundle\Entity\MenuItem
+      mappedBy: parent
+      orderByField:
+        lft:
+          direction: asc
+  manyToOne:
+    parent:
+      targetEntity: Networking\InitCmsBundle\Entity\MenuItem
+      inversedBy: children
+      gedmo:
+         0: treeParent
+      joinColumn:
+        name: parent_id
+        referenced-column-name: id
+        onDelete: 'SET NULL'
+  lifecycleCallbacks:
+    prePersist: [ prePersist ]

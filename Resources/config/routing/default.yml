@@ -1,0 +1,95 @@
+networking_init_cms_ckeditor_config:
+    path: /admin/ckeditor.js
+    defaults: {_controller: NetworkingInitCmsBundle:CmsHelper:ckeditorConfig}
+
+networking_init_cms_js:
+    path: /admin/init_cms.js
+    defaults: {_controller: NetworkingInitCmsBundle:CmsHelper:initCmsJs}
+
+networking_init_cms_default:
+    path: /
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:index}
+
+networking_init_cms_home:
+    path: /
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:home}
+
+networking_init_cms_admin:
+    path: /admin/
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:admin}
+
+networking_init_change_admin_language:
+    path: /change_admin_language/{locale}
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:changeAdminLanguage}
+    methods: [GET|POST]
+    requirements:
+        locale: .+
+
+networking_init_change_language:
+    path: /change_language/{locale}
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:changeLanguage}
+    methods: [GET|POST]
+    requirements:
+        locale: .+
+
+networking_init_view_draft:
+    path: /view_draft/{locale}/{path}
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:viewDraft}
+    requirements:
+        locale: (.*)?
+        path: (.*)?
+
+networking_init_view_draft_no_param:
+    path: /view_draft
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:viewDraft}
+
+networking_init_view_live:
+    path: /view_live/{locale}/{path}
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:viewLive}
+    requirements:
+        locale: (.*)?
+        path: (.*)?
+
+networking_init_view_live_no_param:
+    path: /view_live
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:viewLive}
+
+networking_init_cms_help:
+    path: /admin/help/{adminCode}/{action}
+    defaults: {_controller: NetworkingInitCmsBundle:HelpText:adminHelp}
+    requirements:
+        adminCode: .+
+        action: (.*)?
+
+networking_init_cms_help_dashboard:
+    path: /admin/help/{adminCode}
+    defaults: {_controller: NetworkingInitCmsBundle:HelpText:adminHelp}
+    requirements:
+        adminCode: .+
+
+initcms_no_translation:
+    path: /no_translation
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:translationNotFound}
+
+initcms_404:
+    path: /404
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:pageNotFound}
+
+_configure_cms:
+    path: /cms_install
+    defaults: {_controller: NetworkingInitCmsBundle:InitCmsInstall:index}
+
+_welcome_cms:
+    path: /welcome
+    defaults: {_controller: NetworkingInitCmsBundle:InitCmsInstall:index}
+
+_install_db:
+    path: /install_db/{complete}
+    defaults: {_controller: NetworkingInitCmsBundle:InitCmsInstall:index, complete: 0}
+    requirements:
+        complete: /d+
+
+
+
+
+

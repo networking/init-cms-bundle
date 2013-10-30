@@ -317,11 +317,11 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     public function getFullMenu($menuName)
     {
         $menuIterator = array();
-
+        $menuItemManager =  $this->serviceContainer->get('networking_init_cms.menu_item_manager');
         $repository = $this->getMenuItemRepository();
 
         /** @var $mainMenu Menu */
-        $mainMenu = $repository->findOneBy(
+        $mainMenu = $menuItemManager->findOneBy(
             array('name' => $menuName, 'locale' => $this->serviceContainer->get('request')->getLocale())
         );
 
@@ -329,7 +329,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             return $menuIterator;
         }
 
-        $menuIterator = $repository->getChildrenByStatus($mainMenu, false, null, 'ASC', false, $this->viewStatus);
+        $menuIterator = $menuItemManager->getChildrenByStatus($mainMenu, false, null, 'ASC', false, $this->viewStatus);
 
         return $menuIterator;
 
@@ -346,7 +346,9 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     {
         $currentParent = false;
 
-        $repository = $this->getMenuItemRepository();
+        //$repository = $this->getMenuItemRepository();
+
+        $menuItemManager =  $this->serviceContainer->get('networking_init_cms.menu_item_manager');
 
         $mainMenuIterator = $this->getFullMenu($menuName);
 
@@ -367,7 +369,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             return false;
         }
 
-        $menuIterator = $repository->getChildrenByStatus($currentParent, false, null, 'ASC', false, $this->viewStatus);
+        $menuIterator = $menuItemManager->getChildrenByStatus($currentParent, false, null, 'ASC', false, $this->viewStatus);
 
         return $menuIterator;
     }

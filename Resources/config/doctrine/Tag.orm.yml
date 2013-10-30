@@ -1,0 +1,23 @@
+Networking\InitCmsBundle\Entity\Tag:
+  type: entity
+  table: tag
+  repositoryClass: Doctrine\ORM\EntityRepository
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+      length: 255
+    slug:
+      type: string
+      length: 255
+      gedmo:
+        slug:
+          separator: '-'
+          fields:
+            0: name
+          unique: false
+          updateable: true

@@ -1,0 +1,37 @@
+Networking\InitCmsBundle\Entity\PageSnapshot:
+  type: entity
+  table: page_snapshot
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    resourceName:
+      type: string
+      lenght: 255
+      column: resource_name
+    resourceId:
+      type: integer
+      column: resource_id
+    versionedData:
+      type: array
+      column: versioned_data
+    version:
+      type: integer
+    snapshotDate:
+      type: datetime
+      column: snapshot_date
+    path:
+      type: string
+      length: 255
+      nullable: true
+  manyToOne:
+    contentRoute:
+      targetEntity: Networking\InitCmsBundle\Entity\ContentRoute
+      cascade: ["persist","remove"]
+      joinColumn:
+        name: content_route_id
+        onDelete: 'CASCADE'
+
+
