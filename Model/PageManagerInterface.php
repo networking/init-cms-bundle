@@ -14,11 +14,12 @@ namespace Networking\InitCmsBundle\Model;
 use Gedmo\Tree\RepositoryInterface;
 use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageManagerInterface extends ContentRepositoryInterface, ContainerAwareInterface, RepositoryInterface
+interface PageManagerInterface extends ContentRepositoryInterface, ContainerAwareInterface, RepositoryInterface, ObjectRepository
 {
 
     /**

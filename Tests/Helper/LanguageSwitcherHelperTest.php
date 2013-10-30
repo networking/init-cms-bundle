@@ -13,7 +13,7 @@ use \Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use \Symfony\Component\DependencyInjection\Container;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Networking\InitCmsBundle\Entity\Page;
+use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Entity\ContentRoute;
 
@@ -198,5 +198,5 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
 		$path = $helper->getPathInfo();
 		$this->assertEquals('/', $path);
-	}
+    }
 }

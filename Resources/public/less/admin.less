@@ -1,50 +1,3 @@
-@import "reset";
-  // Core variables and mixins
-@import "variables";
-  // Modify this for custom colors, font-sizes, etc
-@import "mixins";
-  // Grid system and page structure
-@import "scaffolding";
-@import "grid";
-@import "layouts";
-  // Base CSS
-@import "type";
-@import "code";
-@import "forms";
-@import "tables";
-  // Components: common
-@import "fontawesome/font-awesome";
-@import "dropdowns";
-@import "wells";
-@import "component-animations";
-@import "close";
-  // Components: Buttons & Alerts
-@import "buttons";
-@import "button-groups";
-@import "alerts";
-  // Note: alerts share common CSS with buttons and thus have styles in buttons.less
-  // Components: Nav
-@import "navs";
-@import "navbar";
-@import "breadcrumbs";
-@import "pagination";
-@import "pager";
-  // Components: Popovers
-@import "modals";
-@import "tooltip";
-@import "popovers";
-  // Components: Misc
-@import "thumbnails";
-@import "labels-badges";
-@import "progress-bars";
-@import "accordion";
-@import "carousel";
-@import "hero-unit";
-  // Utility classes
-@import "utilities";
-  // Media classes
-@import "media";
-
 // Has to be last to override when necessary
 
 //////////////////////////////////
@@ -205,7 +158,7 @@
 }
 
 .info_button_medium {
-  background: url('@{cssImagePath}/icons/icon_info_30.png');
+  background: url('../img/icons/icon_info_30.png');
   width: 30px;
   height: 30px;
   float: left;
@@ -213,7 +166,7 @@
 }
 
 .close-button-medium {
-  background: url('@{cssImagePath}/icons/icon_close_30.png');
+  background: url('../img/icons/icon_close_30.png');
   width: 30px;
   height: 30px;
   float: left;
@@ -389,11 +342,11 @@ li.table-row-style .menu-item-link {
   top: 4px !important;
 }
 
-.select2-container .select2-choice div b {
+.select2-container .select2-arrow b {
   background-position: 0 -3px !important;
 }
 
-.select2-dropdown-open .select2-choice div b {
+.select2-dropdown-open .select2-arrow b {
   background-position: -18px -3px !important;
 }
 
@@ -634,7 +587,7 @@ li.table-row-style .menu-item-link {
   }
 
   .nav-main {
-    background: url('@{cssImagePath}/bg_nav_left_800.jpg') no-repeat right;
+    background: url('../img/bg_nav_left_800.jpg') no-repeat right;
     border-right: 1px solid #efefef;
     width: 100%;
     min-height: 600px;
@@ -690,14 +643,14 @@ li.table-row-style .menu-item-link {
     left: -12px;
     width: 13px;
     height: 13px;
-    background: url('@{cssImagePath}/nav_active_corner_top_13.png');
+    background: url('../img/nav_active_corner_top_13.png');
   }
   .active-corner-bottom {
     position: absolute;
     left: -12px;
     width: 13px;
     height: 13px;
-    background: url('@{cssImagePath}/nav_active_corner_bottom_13.png');
+    background: url('../img/nav_active_corner_bottom_13.png');
   }
   .nav-custom .active-corner-top {
     top: -19px;

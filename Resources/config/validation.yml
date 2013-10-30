@@ -1,0 +1,8 @@
+Networking\InitCmsBundle\Model\Page:
+    constraints:
+        - Networking\InitCmsBundle\Validator\Constraints\UniqueURL: {groups: [not_home]}
+    properties:
+        pageName:
+            - NotBlank: {message: init_cms.pagename.blank, groups: [default] }
+        url:
+            - NotBlank: { message: init_cms.url.blank, groups: [not_home] }

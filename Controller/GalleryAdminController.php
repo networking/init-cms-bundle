@@ -9,43 +9,24 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
-use Sonata\MediaBundle\Controller\GalleryAdminController as SonataGalleryAdminController,
-    Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sonata\MediaBundle\Controller\GalleryAdminController as SonataGalleryAdminController;
+
 
 /**
+ * Class GalleryAdminController
+ * @package Networking\InitCmsBundle\Controller
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class GalleryAdminController extends SonataGalleryAdminController
 {
     /**
-     * return the Response object associated to the list action
-     *
+     * Override the standard list view
      * @return Response
+     * @throws AccessDeniedException
      */
-    public function oldListAction()
-    {
-        if (false === $this->admin->isGranted('LIST')) {
-            throw new AccessDeniedException();
-        }
-
-        $datagrid = $this->admin->getDatagrid();
-        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
-
-        $formView = $datagrid->getForm()->createView();
-
-        // set the theme for the current Admin Form
-        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
-
-        return $this->render(
-            $this->admin->getTemplate('list'),
-            array(
-                'action' => 'list',
-                'form' => $formView,
-                'datagrid' => $datagrid
-            )
-        );
-    }
-
     public function listAction()
     {
         if (false === $this->admin->isGranted('LIST')) {
@@ -62,18 +43,12 @@ class GalleryAdminController extends SonataGalleryAdminController
             $galleryForm[$context] = $tempgrid->getForm()->createView();
             $galleryGrid[$context] = $tempgrid;
 
-            $this->get('twig')->getExtension('form')->renderer->setTheme(
-                $galleryForm[$context],
-                array('NetworkingInitCmsBundle:Form:form_admin_fields.html.twig')
-            );
+            $this->get('twig')->getExtension('form')->renderer->setTheme($galleryForm[$context], $this->admin->getFilterTheme());
         }
         $dataGrid = $this->admin->getDatagrid();
         $formView = $dataGrid->getForm()->createView();
 
-        $this->get('twig')->getExtension('form')->renderer->setTheme(
-            $formView,
-            array('NetworkingInitCmsBundle:Form:form_admin_fields.html.twig')
-        );
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
         return $this->render(
             $this->admin->getTemplate('list'),

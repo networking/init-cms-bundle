@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -12,20 +11,19 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-
+use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * Class CmsHelperController
+ * @package Networking\InitCmsBundle\Controller
+ *
  * @author net working AG <info@networking.ch>
  */
 class CmsHelperController extends Controller
 {
 
     /**
-     * @Route("/admin/init_cms.js", name="networking_init_cms_js")
+     * @return Response
      */
     public function initCmsJsAction()
     {
@@ -38,7 +36,7 @@ class CmsHelperController extends Controller
     }
 
     /**
-     * @Route("/admin/ckeditor.js", name="networking_init_cms_ckeditor_config")
+     * @return Response
      */
     public function ckeditorConfigAction()
     {

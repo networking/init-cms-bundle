@@ -89,14 +89,14 @@ function updateMenu(e) {
 }
 
 function setUpSortTree() {
-    $('a[data-toggle="tab"]').on('shown', function (e) {
+    jQuery('a[data-toggle="tab"]').on('shown', function (e) {
         //save the latest tab; use cookies if you like 'em better:
         localStorage.setItem('lastTab', $(e.target).attr('href'));
         lastTab = localStorage.getItem('lastTab');
 
     });
 
-    $('div.navigation').each(function (e, ui) {
+    jQuery('div.navigation').each(function (e, ui) {
         jQuery(ui).find('ul:first').nestedSortable({
             disableNesting:'no-nest',
             forcePlaceholderSize:true,
@@ -118,21 +118,21 @@ function setUpSortTree() {
 
 }
 
-(function ($) {
+jQuery(function() {
 
     var ua = navigator.userAgent,
             event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
 
-    $(".actions-toggle").live('click', function () {
-        $('.row-actions').hide();
-        $(this).parent().children('.row-actions').fadeToggle('fast');
+    jQuery(".actions-toggle").live('click', function () {
+        jQuery('.row-actions').hide();
+        jQuery(this).parent().children('.row-actions').fadeToggle('fast');
     });
-    $(".actions-toggle-close").live('click', function () {
-        $(this).parent().fadeToggle('fast');
+    jQuery(".actions-toggle-close").live('click', function () {
+        jQuery(this).parent().fadeToggle('fast');
     });
 
-    $('.menu-dialog-link').live('click', createAjaxDialog);
+    jQuery('.menu-dialog-link').live('click', createAjaxDialog);
 
     var nestedExtensions = {
         toArray:function (options) {
@@ -152,7 +152,7 @@ function setUpSortTree() {
             });
 
 
-            $.post(
+            jQuery.post(
                     "{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}",
                     {
 
@@ -171,9 +171,9 @@ function setUpSortTree() {
                         id,
                         pid;
 
-                if ($(item).children(o.listType).children(o.items).length > 0) {
+                if (jQuery(item).children(o.listType).children(o.items).length > 0) {
                     depth++;
-                    $(item).children(o.listType).children(o.items).each(function () {
+                    jQuery(item).children(o.listType).children(o.items).each(function () {
                         right = _recursiveArray($(this), depth, right);
                     });
                     depth--;
@@ -202,9 +202,9 @@ function setUpSortTree() {
         }
     };
 
-    lastTab = $('.nav-tabs a:first').attr('href');
+    lastTab = jQuery('.nav-tabs a:first').attr('href');
 
-    $.extend($.mjs.nestedSortable.prototype, nestedExtensions);
+    jQuery.extend(jQuery.mjs.nestedSortable.prototype, nestedExtensions);
 
     initializeDialog();
 
@@ -213,17 +213,17 @@ function setUpSortTree() {
     var lastEdited = '{{ last_edited }}';
 
     if (lastEdited) {
-        var tab = $('#listItem_' + lastEdited).closest('div.tab-pane');
+        var tab = jQuery('#listItem_' + lastEdited).closest('div.tab-pane');
         lastTab = '#' + tab.attr('id');
-        $('a[href="' + lastTab + '"]').tab('show');
+        jQuery('a[href="' + lastTab + '"]').tab('show');
     }
 
 
-    $('#hidden_filters').on('show hide', function () {
-        $('#filter_toggle').toggleClass('icon-plus');
-        $('#filter_toggle').toggleClass('icon-minus');
+    jQuery('#hidden_filters').on('show hide', function () {
+        jQuery('#filter_toggle').toggleClass('icon-plus');
+        jQuery('#filter_toggle').toggleClass('icon-minus');
     });
 
-})(jQuery);
+});
 </script>
 {% endautoescape %}

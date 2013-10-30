@@ -22,13 +22,18 @@ legend {
   display: block;
   width: 100%;
   padding: 0;
-//  color: @grayDark;
+  margin-bottom: @baseFormLineHeight;
+  font-size: @baseFormFontSize;
+  line-height: @baseFormLineHeight * 2;
+  color: @grayLight;
   border: 0;
   border-bottom: 1px solid #e5e5e5;
-  font-size: @fontSizeSmall;
 
-//    font-size: @baseFormLineHeight * .75;
-    color: @grayLight;
+  // Small
+    small {
+      font-size: @baseFormLineHeight * .75;
+      color: @grayLight;
+    }
 }
 
 // Set font for forms
@@ -84,8 +89,9 @@ input[type="color"],
 // Reset appearance properties for textual inputs and textarea
 // Declare width for legacy (can't be on input[type=*] selectors or it's too specific)
 input,
-textarea {
-  width: 210px;
+textarea,
+.uneditable-input {
+  width: 210px; // plus 12px padding and 2px border
 }
 // Reset height since textareas have rows
 textarea {
@@ -146,15 +152,15 @@ input[type="checkbox"] {
 // Set the height of select and file controls to match text inputs
 select,
 input[type="file"] {
-  height: 20px; /* In IE7, the height of the select element cannot be changed by height, only font-size */
+  height: @inputHeight; /* In IE7, the height of the select element cannot be changed by height, only font-size */
   *margin-top: 4px; /* For IE7, add top margin to align select with labels */
-  line-height: 20px;
+  line-height: @inputHeight;
 }
 
 // Make select elements obey height by applying a border
 select {
   width: 220px; // default input width + 10px of padding that doesn't get applied
-  border: 1px solid #bbb;
+  border: 1px solid @inputBorder;
   background-color: @inputBackground; // Chrome on Linux and Mobile Safari need background-color
 }
 
@@ -256,7 +262,7 @@ textarea {
 .input-large      { width: 210px; }
 .input-xlarge     { width: 270px; }
 .input-xxlarge    { width: 530px; }
-
+select.input-medium     { width: 160px; }
 // Grid style input sizes
 input[class*="span"],
 select[class*="span"],
@@ -649,6 +655,7 @@ legend + .control-group {
     width: 140px;
     padding-top: 5px;
     overflow: hidden;
+    text-align: left;
   }
   // Move over all input controls and content
   .controls {

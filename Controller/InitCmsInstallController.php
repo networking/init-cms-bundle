@@ -1,12 +1,17 @@
 <?php
-
+/**
+ * This file is part of the init_cms_sandbox package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,6 +20,12 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Sandbox\InitCmsBundle\Form\UserType;
 
+/**
+ * Class InitCmsInstallController
+ * @package Networking\InitCmsBundle\Controller
+ *
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class InitCmsInstallController extends Controller
 {
     /**
@@ -22,14 +33,17 @@ class InitCmsInstallController extends Controller
      */
     private $application;
 
+    /**
+     * @var array
+     */
     private $consoleOutput = array();
 
     /**
-     * @Route("/cms_install", name="_configure_cms")
-     * @Route("/welcome", name="_welcome_cms")
-     * @Template()
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $errorMessage = '';
         $hasDB = false;
@@ -38,7 +52,7 @@ class InitCmsInstallController extends Controller
             /** @var $page Page */
             $pageManager = $this->get('networking_init_cms.page_manager');
             $page = $pageManager->findOneBy(
-                array('isHome' => 1, 'locale' => $this->getRequest()->getLocale())
+                array('isHome' => 1, 'locale' => $request->getLocale())
             );
             if (!$page) {
                 throw new \Exception('Pages not loaded');
@@ -74,8 +88,9 @@ class InitCmsInstallController extends Controller
     }
 
     /**
-     * @Route("/install_db/{complete}", name="_install_db", requirements={"complete" = "\d+"}, defaults={"complete" = "0"})
-     * @Template()
+     * @param Request $request
+     * @param $complete
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function installDbAction(Request $request, $complete)
     {
@@ -97,11 +112,12 @@ class InitCmsInstallController extends Controller
             }
         }
 
-        /** @var $form UserType */
-        $form = $this->get('form.factory')->create(new UserType());
+        /** @var \Symfony\Component\Form\Form $form */
+        $form =  $this->createForm(new UserType());
 
         if ('POST' == $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
+
             if ($form->isValid()) {
 
                 $kernel = $this->get('kernel');
@@ -149,18 +165,6 @@ class InitCmsInstallController extends Controller
                     /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
                     $this->get('session')->getFlashBag()->add('success', 'Init CMS was successfully installed');
 
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject('Hello Email')
-                        ->setFrom('send@example.com')
-                        ->setTo($email)
-                        ->setBody(
-                        $this->renderView(
-                            'NetworkingInitCmsBundle:InitCmsInstall:email.txt.twig',
-                            array('name' => $username, 'password' => $password)
-                        )
-                    );
-                    $this->get('mailer')->send($message);
-
                     return new RedirectResponse($this->generateUrl('_configure_cms'));
                 }
                 $this->get('session')->getFlashBag()->add('error', $this->getConsoleDisplay($output));
@@ -180,8 +184,8 @@ class InitCmsInstallController extends Controller
     }
 
     /**
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|string
+     * @param OutputInterface $output
+     * @return int
      */
     private function createDB(OutputInterface $output)
     {
@@ -198,10 +202,10 @@ class InitCmsInstallController extends Controller
     }
 
     /**
-     * @param $output
+     * @param OutputInterface $output
      * @return int
      */
-    private function initACL($output)
+    private function initACL(OutputInterface $output)
     {
         $output->write('> Initializing the ACL tables', true);
         $arguments = array(
@@ -214,10 +218,10 @@ class InitCmsInstallController extends Controller
     }
 
     /**
-     * @param $output
+     * @param OutputInterface $output
      * @return int
      */
-    private function sonataSetupACL($output)
+    private function sonataSetupACL(OutputInterface $output)
     {
         $output->write('> Inserting sonata ACL entries', true);
         $arguments = array(
@@ -231,7 +235,7 @@ class InitCmsInstallController extends Controller
 
 
     /**
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
+     * @param OutputInterface $output
      * @param $username
      * @param $email
      * @param $password
@@ -254,7 +258,7 @@ class InitCmsInstallController extends Controller
     }
 
     /**
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
+     * @param  OutputInterface $output
      * @return int|string
      */
     private function loadFixtures(OutputInterface $output)
@@ -280,7 +284,7 @@ class InitCmsInstallController extends Controller
     }
 
     /**
-     * @return \Symfony\Bundle\FrameworkBundle\Console\Application
+     * @return Application
      */
     private function getApplication()
     {
@@ -288,7 +292,7 @@ class InitCmsInstallController extends Controller
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\StreamOutput $output
+     * @param StreamOutput $output
      * @return string
      */
     private function getConsoleDisplay(StreamOutput $output)
@@ -304,6 +308,10 @@ class InitCmsInstallController extends Controller
         return nl2br(implode("\n", $errors));
     }
 
+    /**
+     * @param StreamOutput $output
+     * @return StreamOutput
+     */
     private function getStreamOutput(StreamOutput $output = null)
     {
 
@@ -314,10 +322,5 @@ class InitCmsInstallController extends Controller
         }
 
         return new StreamOutput(fopen('php://memory', 'w+', false), StreamOutput::VERBOSITY_VERBOSE);
-    }
-
-    private function getFullConsoleDisplay()
-    {
-        return nl2br(implode("\n", $this->consoleOutput));
     }
 }

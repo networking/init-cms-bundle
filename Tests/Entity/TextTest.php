@@ -17,7 +17,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	{
 		$text = new Text();
 		$this->assertEquals(null, $text->getUpdatedAt());
-		$text->onPrePersist();
+		$text->prePersist();
 		$this->assertEquals(new \DateTime('now'), $text->getUpdatedAt());
 		$this->assertEquals(new \DateTime('now'), $text->getCreatedAt());
 	}
@@ -26,7 +26,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	{
 		$text = new Text();
 		$this->assertEquals(null, $text->getUpdatedAt());
-		$text->onPreUpdate();
+		$text->preUpdate();
 		$this->assertEquals(new \DateTime('now'), $text->getUpdatedAt());
 		$this->assertEquals(null, $text->getCreatedAt());
 	}

@@ -377,7 +377,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param $level
-     * @return null
+     * @return PageInterface|null
      */
     public function getParent($level = -1)
     {

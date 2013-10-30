@@ -313,7 +313,7 @@ class MenuItemAdminController extends CRUDController
             throw new NotFoundHttpException(sprintf('unable to find the Menu with id : %s', $rootId));
         }
 
-        $page = $this->get('networking_init_cms.menu_item_manager')->find($pageId);
+        $page = $this->get('networking_init_cms.page_manager')->find($pageId);
 
         if (!$page) {
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $pageId));
