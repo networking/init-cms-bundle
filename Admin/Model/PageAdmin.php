@@ -362,6 +362,7 @@ abstract class PageAdmin extends BaseAdmin
                 array('hidden' => true),
                 'sonata_type_translatable_choice',
                 array(
+                    'empty_value' => '-',
                     'choices' => array(
                         PageInterface::STATUS_DRAFT => PageInterface::STATUS_DRAFT,
                         PageInterface::STATUS_REVIEW => PageInterface::STATUS_REVIEW,

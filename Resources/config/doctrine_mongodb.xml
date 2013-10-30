@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Helpers -->
+        <service id="networking_init_cms.page.helper.language_switcher"
+                 class="Networking\InitCmsBundle\Helper\LanguageSwitcherHelper" scope="request">
+            <argument type="service" id="request"/>
+            <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <argument>%networking_init_cms.translation_fallback_route%</argument>
+            <call method="setRouter">
+                <argument type="service" id="router"/>
+            </call>
+            <call method="setPageManager">
+                <argument type="service" id="networking_init_cms.page_manager"/>
+            </call>
+            <call method="setSerializer">
+                <argument type="service" id="serializer"/>
+            </call>
+        </service>
+
+        <!-- Object Mangers -->
+        <service id="networking_init_cms.page_manager" class="Networking\InitCmsBundle\Document\PageManager">
+            <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <argument>%networking_init_cms.admin.page.class%</argument>
+        </service>
+
+        <service id="networking_init_cms.user_manager" class="Networking\InitCmsBundle\Document\UserManager">
+            <argument type="service" id="security.encoder_factory"/>
+            <argument type="service" id="fos_user.util.username_canonicalizer"/>
+            <argument type="service" id="fos_user.util.email_canonicalizer"/>
+            <argument type="service" id="fos_user.document_manager"/>
+            <argument>%networking_init_cms.admin.user.class%</argument>
+        </service>
+
+        <service id="networking_init_cms.page_snapshot_manager"
+                 class="Networking\InitCmsBundle\Document\PageSnapshotManager">
+            <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <argument>Networking\InitCmsBundle\Document\PageSnapshot</argument>
+        </service>
+
+        <service id="networking_init_cms.menu_item_manager"
+                 class="Networking\InitCmsBundle\Document\MenuItemManager">
+            <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <argument>Networking\InitCmsBundle\Document\MenuItem</argument>
+        </service>
+
+        <service id="networking_init_cms.help_text_manager"
+                 class="Networking\InitCmsBundle\Document\HelpTextManager">
+            <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <argument>Networking\InitCmsBundle\Document\HelpText</argument>
+        </service>
+
+        <service id="networking_init_cms.content_route_manager"
+                 class="Networking\InitCmsBundle\Document\ContentRouteManager">
+            <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <argument>Networking\InitCmsBundle\Document\ContentRoute</argument>
+            <argument type="service" id="session"/>
+            <call method="setClassName">
+                <argument>%networking_init_cms.admin.page.class%</argument>
+            </call>
+        </service>
+
+        <!-- Event Listeners -->
+        <service id="networking_init_cms.event_listener.user_activity"
+                 class="Networking\InitCmsBundle\EventListener\UserActivity">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onCoreController"/>
+        </service>
+
+        <service id="networking_init_cms.layout_block_listener"
+                 class="Networking\InitCmsBundle\Document\LayoutBlockListener">
+            <argument type="service" id="serializer"/>
+            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
+            <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+            <tag name="doctrine.event_listener" event="preRemove" method="preRemove"/>
+        </service>
+
+        <service id="networking_init_cms.layout_block_form_listener"
+                 class="Networking\InitCmsBundle\Document\LayoutBlockFormListener"
+                scope="prototype">
+            <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <argument>%networking_init_cms.admin.layout_block.class%</argument>
+            <call method="setSonataAdminAnnotationReader">
+                <argument type="service" id="ibrows_sonataadmin.annotation.reader"/>
+            </call>
+            <call method="setLayoutBlockAdmin">
+                <argument type="service" id="networking_init_cms.page.admin.layout_block"/>
+            </call>
+            <call method="setContentTypes">
+                <argument>%networking_init_cms.page.content_types%</argument>
+            </call>
+        </service>
+
+        <service id="networking_init_cms.entity_changed_listener"
+                 class="Networking\InitCmsBundle\Document\EntityChangedListener">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="networking_init_cms.logger"/>
+            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
+            <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+            <tag name="doctrine.event_listener" event="preRemove" method="preRemove"/>
+            <tag name="monolog.logger" channel="newo"/>
+        </service>
+
+        <service id="networking_init_cms.content_route_listener"
+                 class="Networking\InitCmsBundle\Document\ContentRouteListener">
+            <argument>%networking_init_cms.page.templates%</argument>
+            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
+            <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+        </service>
+
+        <service id="networking_init_cms.last_edited_listener"
+                 class="Networking\InitCmsBundle\Entity\LastEditedListener">
+            <argument type="service" id="session"/>
+            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
+            <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+        </service>
+
+        <service id="networking_init_cms.page_listener" class="Networking\InitCmsBundle\Document\PageListener">
+            <argument type="service" id="session"/>
+            <argument type="service" id="networking_init_cms.page_manager"/>
+            <tag name="jms_serializer.event_subscriber"/>
+            <tag name="doctrine.event_listener" event="onFlush" method="onFlush"/>
+            <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+        </service>
+
+        <!-- Form Types -->
+        <service id="networking_init_cms.media.entity.type" class="Networking\InitCmsBundle\Form\Type\MediaEntityType">
+            <argument type="service" id="doctrine"/>
+            <tag name="form.type" alias="media_entity_type"/>
+        </service>
+
+        <!-- JMS Serializer -->
+        <service id="jms_serializer.metadata.doctrine_type_driver"
+                 class="%jms_serializer.metadata.doctrine_type_driver.class%">
+            <argument>jms_serializer.metadata.chain_driver</argument>
+            <argument type="service" id="doctrine_mongodb"/>
+        </service>
+
+        <service id="jms_serializer.doctrine_object_constructor"
+                 class="%jms_serializer.doctrine_object_constructor.class%" public="false">
+            <argument type="service" id="doctrine_mongodb"/>
+            <argument type="service" id="@jms_serializer.unserialize_object_constructor"/>
+        </service>
+
+        <service id="jms_serializer.object_constructor" alias="jms_serializer.doctrine_object_constructor" />
+    </services>
+
+</container>

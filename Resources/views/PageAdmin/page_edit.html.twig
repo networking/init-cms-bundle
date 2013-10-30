@@ -80,6 +80,12 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block before_body_end %}
-    <script type="text/javascript" src="{{ asset('/bundles/networkinginitcms/js/ckeditor/ckeditor.js') }}"></script>
+    {{ parent() }}
+<script type="text/javascript" src="{{ asset('/bundles/ivoryckeditor/ckeditor.js') }}"></script>
+    <script type="text/javascript">
+        function uploadError(xhr) {
+            alert(xhr.error);
+        }
+    </script>
 {% endblock %}
 

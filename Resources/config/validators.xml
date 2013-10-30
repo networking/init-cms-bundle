@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="networking_init_cms.unique_url_validator"
+                 class="Networking\InitCmsBundle\Validator\Constraints\UniqueURLValidator"
+                 scope="request">
+            <argument type="service" id="request"/>
+            <argument type="service" id="networking_init_cms.page_manager"/>
+            <tag name="validator.constraint_validator" alias="unique_url_validator"/>
+        </service>
+    </services>
+</container>

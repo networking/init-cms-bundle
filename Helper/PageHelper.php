@@ -25,6 +25,7 @@ class PageHelper
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     protected $container;
+
     /**
      * @param $path
      * @return string
@@ -51,7 +52,7 @@ class PageHelper
      * @param PageInterface $object
      * @param $fieldName
      * @param $value
-     * @param  null                                           $method
+     * @param  null $method
      * @return mixed
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
@@ -87,7 +88,7 @@ class PageHelper
      *
      * @param PageInterface $object
      * @param $fieldName
-     * @param  null                                           $method
+     * @param  null $method
      * @return mixed
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
@@ -150,39 +151,54 @@ class PageHelper
     }
 
     /**
+     * @param $id
+     * @return object
+     */
+    public function getService($id)
+    {
+        return $this->container->get($id);
+    }
+
+    /**
      * Create a snapshot of a given page.
      *
      * @param PageInterface $page
      */
     public function makePageSnapshot(PageInterface $page)
     {
-        $serializer = $this->container->get('serializer');
-        $manager = $this->container->get('doctrine')->getManager();
+        /** @var \JMS\Serializer\SerializerInterface $serializer */
+        $serializer = $this->getService('serializer');
+
+        /** @var \Doctrine\Common\Persistence\ObjectManager $manager */
+        $manager = $this->getService('doctrine')->getManager();
 
         foreach ($page->getLayoutBlock() as $layoutBlock) {
-            /** @var $layoutBlock \Networking\InitCmsBundle\Entity\LayoutBlock */
+
+            /** @var \Networking\InitCmsBundle\Model\layoutBlockInterface $layoutBlock */
             $layoutBlockContent = $manager->getRepository($layoutBlock->getClassType())->find(
                 $layoutBlock->getObjectId()
             );
             $layoutBlock->takeSnapshot($serializer->serialize($layoutBlockContent, 'json'));
         }
-        /**  @var $pageSnapshotManager PageSnapshotManager*/
+        /**  @var  \Networking\InitCmsBundle\Model\PageSnapshotManagerInterface $pageSnapshotManager */
+        $pageSnapshotManager = $this->getService('networking_init_cms.page_snapshot_manager');
+        $pageSnapshotClass = $pageSnapshotManager->getClassName();
 
-        $pageSnapshotManager = $this->container->get('networking_init_cms.page_snapshot_manager');
-        $className = $pageSnapshotManager->getClassName();
-
-        $pageSnapshot = new $className($page);
+        /** @var  \Networking\InitCmsBundle\Model\PageSnapshotInterface $pageSnapshot */
+        $pageSnapshot = new $pageSnapshotClass($page);
         $pageSnapshot->setVersionedData($serializer->serialize($page, 'json'))
             ->setPage($page);
 
         if ($oldPageSnapshot = $page->getSnapshot()) {
             $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
         } else {
-            /** @var $snapshotContentRoute \Networking\InitCmsBundle\Entity\ContentRoute */
 
-            $contentRouteManager = $this->container->get('networking_init_cms.content_route_manager');
-            $className = $contentRouteManager->getClass();
-            $snapshotContentRoute =new $className();
+
+            $contentRouteManager = $this->getService('networking_init_cms.content_route_manager');
+            $contentRouteClass = $contentRouteManager->getClassName();
+
+            /** @var  \Networking\InitCmsBundle\Model\ContentRouteInterface $snapshotContentRoute */
+            $snapshotContentRoute = $contentRouteClass();
         }
 
         $pageSnapshot->setContentRoute($snapshotContentRoute);
@@ -207,11 +223,11 @@ class PageHelper
      */
     public function makeTranslationCopy(PageInterface $page, $locale)
     {
-        $doctrine = $this->container->get('doctrine');
+        $doctrine = $this->getService('doctrine');
         $em = $doctrine->getManager();
 
         /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
-        $pageManger = $this->container->get('networking_init_cms.page_manager');
+        $pageManger = $this->getService('networking_init_cms.page_manager');
 
         $pageClass = $pageManger->getClassName();
         /** @var PageInterface $pageCopy */

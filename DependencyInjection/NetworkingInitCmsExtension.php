@@ -33,7 +33,7 @@ class NetworkingInitCmsExtension extends Extension
     {
 
         $configuration = new Configuration();
-        $defaults = Yaml::parse(__DIR__ . '/../Resources/config/config.yml');
+        $defaults = Yaml::parse(__DIR__ . '/../Resources/config/cms/config.yml');
 
         foreach ($configs as $config) {
             foreach ($config as $key => $value) {
@@ -43,22 +43,31 @@ class NetworkingInitCmsExtension extends Extension
         }
 
         $config = $this->processConfiguration($configuration, $defaults);
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
 
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('dynamic_routing.xml');
+        $loader->load('event_listeners.xml');
+        $loader->load('forms.xml');
+        $loader->load('menus.xml');
+        $loader->load('twig.xml');
+        $loader->load('services.xml');
+        $loader->load('validators.xml');
+
+
+        $ymlLoader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         if ('custom' !== $config['db_driver']) {
-            $loader->load(sprintf('%s.yml', $config['db_driver']));
-            $loader->load(sprintf('admin_%s.yml', $config['db_driver']));
-            $loader->load(sprintf('ext_admin_%s.yml', $config['db_driver']));
-            $loader->load(sprintf('blocks_%s.yml', $config['db_driver']));
+            $loader->load(sprintf('doctrine_%s.xml', $config['db_driver']));
+            $ymlLoader->load(sprintf('admin_%s.yml', $config['db_driver']));
+            $ymlLoader->load(sprintf('ext_admin_%s.yml', $config['db_driver']));
+            $ymlLoader->load(sprintf('blocks_%s.yml', $config['db_driver']));
         }
+
 
         $config['languages'] = $this->addShortLabels($config['languages']);
 
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
-        $container->setParameter('networking_init_cms.init_cms_editor', $config['init_cms_editor']);
         $container->setParameter(
             'networking_init_cms.translation_fallback_route',
             $config['translation_fallback_route']
@@ -90,6 +99,22 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.manager.page.class', $config['class']['page']);
         $container->setParameter('networking_init_cms.manager.layout_block.class', $config['class']['layout_block']);
         $container->setParameter('networking_init_cms.manager.user.class', $config['class']['user']);
+
+        if($config['db_driver'] == 'mongodb'){
+
+        }
+
+        switch ($config['db_driver']){
+            case 'orm':
+                $container->setParameter('networking_init_cms.admin.layout_block.class', 'Networking\InitCmsBundle\Entity\LayoutBlock');
+                break;
+            case 'mongodb':
+                $container->setParameter('networking_init_cms.admin.layout_block.class', 'Networking\InitCmsBundle\Docment\LayoutBlock');
+                break;
+            default:
+                throw new \InvalidArgumentException('db driver must be either orm or mongodb');
+                break;
+        }
     }
 
     /**

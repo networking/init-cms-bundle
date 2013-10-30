@@ -12,19 +12,15 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface ContentRouteManagerInterface extends RouteProviderInterface, ContainerAwareInterface
+interface ContentRouteManagerInterface extends RouteProviderInterface
 {
     const ROUTE_GENERATE_DUMMY_NAME = 'networking_init_dynamic_route';
-
-
 
     /**
      * @param string $className

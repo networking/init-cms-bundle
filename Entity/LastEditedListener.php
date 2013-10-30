@@ -10,49 +10,15 @@
  */
 namespace Networking\InitCmsBundle\Entity;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface,
-    Doctrine\ORM\Event\LifecycleEventArgs,
-    Symfony\Component\HttpFoundation\Session\Session,
-    Networking\InitCmsBundle\Helper\BundleGuesser,
-    Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent,
-    Networking\InitCmsBundle\Entity\BasePage as Page,
-    Networking\InitCmsBundle\Entity\MenuItem;
-
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
+use Networking\InitCmsBundle\Entity\BasePage as Page;
+use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener;
 /**
  * @author net working AG <info@networking.ch>
  */
-class LastEditedListener implements EventSubscriberInterface
+class LastEditedListener extends ModelLastEditedListener
 {
-
-    /**
-     * @var Session $session
-     */
-    protected $session;
-
-    /**
-     * @var BundleGuesser $bundleGuesser
-     */
-    protected $bundleGuesser;
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Session\Session $session
-     */
-    public function __construct(Session $session)
-    {
-        $this->session = $session;
-        $this->bundleGuesser = new BundleGuesser();
-
-    }
-
-    /**
-     * @return array|void
-     */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            'crud_controller.edit_entity' => 'registerEdited',
-        );
-    }
 
     /**
      * On Menu Create

@@ -21,11 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PageManager extends MaterializedPathRepository implements PageManagerInterface
 {
 
-    /**
-     * @var ContainerInterface $container
-     */
-    private $container;
-
 
     public function __construct(EntityManager $om, $class)
     {
@@ -33,15 +28,6 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
         parent::__construct($om, $classMetaData);
     }
-
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param  string $id
      * @return object
@@ -61,7 +47,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         $qb = $this->createQueryBuilder('p');
         $qb->where($qb->expr()->isNull('p.isHome') . ' OR p.isHome <> 1');
         if ($id) {
-            /** @var $page Page */
+            /** @var $page PageInterface */
             $page = $this->find($id);
             $childrenIds = $page->getChildren()->map(
                 function (PageInterface $p) {

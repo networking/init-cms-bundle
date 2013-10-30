@@ -10,49 +10,18 @@
  */
 namespace Networking\InitCmsBundle\Document;
 
-use Networking\InitCmsBundle\Model\MenuItemInterface;
-use Networking\InitCmsBundle\Model\PageInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use Doctrine\ODM\MongoDB\Event\LifecycleEventArgs;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Networking\InitCmsBundle\Helper\BundleGuesser;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
+use Networking\InitCmsBundle\Document\BasePage as Page;
+use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener;
 
 /**
  * @author net working AG <info@networking.ch>
  */
-class LastEditedListener implements EventSubscriberInterface
+class LastEditedListener extends ModelLastEditedListener
 {
 
-    /**
-     * @var Session $session
-     */
-    protected $session;
-
-    /**
-     * @var BundleGuesser $bundleGuesser
-     */
-    protected $bundleGuesser;
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Session\Session $session
-     */
-    public function __construct(Session $session)
-    {
-        $this->session = $session;
-        $this->bundleGuesser = new BundleGuesser();
-
-    }
-
-    /**
-     * @return array|void
-     */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            'crud_controller.edit_entity' => 'registerEdited',
-        );
-    }
 
     /**
      * On Menu Create
@@ -87,7 +56,7 @@ class LastEditedListener implements EventSubscriberInterface
      */
     protected function setSessionVariable($entity)
     {
-        if ($entity instanceof MenuItemInterface || $entity instanceof PageInterface) {
+        if ($entity instanceof BaseMenuItem || $entity instanceof Page) {
 
             $this->bundleGuesser->initialize($entity);
 

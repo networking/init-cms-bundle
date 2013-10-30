@@ -158,7 +158,7 @@ class FrontendMenuBuilder extends MenuBuilder
 
         $dropdown = $this->createDropdownMenuItem(
             $menu,
-            $this->serviceContainer->get('translator')->trans('Change Language'),
+            $this->translator->trans('Change Language'),
             true,
             array('icon' => 'caret')
         );

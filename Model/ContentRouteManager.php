@@ -49,15 +49,6 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
     public function getRouteByName($name, $parameters = array())
     {
         $dynamicRouteName = self::ROUTE_GENERATE_DUMMY_NAME;

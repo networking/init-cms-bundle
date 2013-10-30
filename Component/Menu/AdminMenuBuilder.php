@@ -11,13 +11,10 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\Security\Core\SecurityContextInterface,
-    Symfony\Component\DependencyInjection\Container,
-    Networking\InitCmsBundle\Component\Menu\MenuBuilder,
-    Networking\InitCmsBundle\Entity\BasePage as Page,
-    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface,
-    Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
+use Networking\InitCmsBundle\Admin\Pool;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -25,20 +22,12 @@ use Symfony\Component\HttpFoundation\Request,
 class AdminMenuBuilder extends MenuBuilder
 {
     /**
-     * Creates a language navigation for the admin area of the website
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param $languages
-     * @return \Knp\Menu\ItemInterface
+     * @var Pool
      */
-    public function createAdminLangMenu(Request $request, $languages)
-    {
-        $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', 'nav pull-right');
+    protected $adminPool;
 
-        $this->createNavbarsLangMenu($menu, $languages, $request->getLocale(), 'networking_init_change_admin_language');
-
-        return $menu;
+    public function setAdminPool($adminPool){
+        $this->adminPool = $adminPool;
     }
 
     public function createAdminMenu(Request $request)
@@ -58,7 +47,7 @@ class AdminMenuBuilder extends MenuBuilder
 
         $entity = null;
 
-        $defaultHome = $this->serviceContainer->get('router')->generate('networking_init_cms_default');
+        $defaultHome = $this->router->generate('networking_init_cms_default');
 
         if ($this->isLoggedIn) {
 
@@ -71,11 +60,11 @@ class AdminMenuBuilder extends MenuBuilder
 
             if ($sonataAdminParam = $request->get('_sonata_admin')) {
 
-                $posibleAdmins = explode('|', $sonataAdminParam);
+                $possibleAdmins = explode('|', $sonataAdminParam);
 
-                foreach ($posibleAdmins as $adminCode) {
+                foreach ($possibleAdmins as $adminCode) {
                     // we are in the admin area
-                    $sonataAdmin = $this->serviceContainer->get($adminCode);
+                    $sonataAdmin = $this->adminPool->getAdminByAdminCode($adminCode);
                     if ($id = $request->get('id')) {
                         $entity = $sonataAdmin->getObject($id);
                     }
@@ -126,7 +115,7 @@ class AdminMenuBuilder extends MenuBuilder
                 );
             }
 
-            $session = $this->serviceContainer->get('session');
+            $session = $this->request->getSession();
             $lastActionUrl = $dashboardUrl;
             $lastActions = $session->get('_networking_initcms_admin_tracker');
 
@@ -149,7 +138,7 @@ class AdminMenuBuilder extends MenuBuilder
             // Set active url based on which status is in the session
             if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
                 $menu->setCurrentUri($lastActionUrl);
-            } elseif ($this->serviceContainer->get('session')->get(
+            } elseif ($this->request->getSession()->get(
                 '_viewStatus'
             ) === VersionableInterface::STATUS_PUBLISHED
             ) {
@@ -163,9 +152,7 @@ class AdminMenuBuilder extends MenuBuilder
                 $menu->addChild(
                     'Edit',
                     array(
-                        'label' => $this->serviceContainer->get(
-                            'translator'
-                        )->trans('Edit', array(), 'NetworkingInitCmsBundle'),
+                        'label' => $this->translator->trans('Edit', array(), 'NetworkingInitCmsBundle'),
                         'uri' => $editPath
                     )
                 );
@@ -174,8 +161,8 @@ class AdminMenuBuilder extends MenuBuilder
 
             $menu->addChild('Admin', array('uri' => $lastActionUrl));
 
-            $viewStatus = $this->serviceContainer->get('session')->get('_viewStatus');
-            $translator = $this->serviceContainer->get('translator');
+            $viewStatus = $this->request->getSession()->get('_viewStatus');
+            $translator = $this->translator;
             $webLink = $translator->trans('link.website_', array(), 'NetworkingInitCmsBundle');
 
             if ($editPath && !$sonataAdmin) {

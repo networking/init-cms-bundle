@@ -10,24 +10,20 @@
  */
 namespace Networking\InitCmsBundle\Helper;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use JMS\Serializer\Serializer;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @author net working AG <info@networking.ch>
  */
-class LanguageSwitcherHelper implements ContainerAwareInterface
+class LanguageSwitcherHelper
 {
-    /**
-     * @var Container $container
-     */
-    protected $container;
 
     /**
      * @var Request $request
@@ -40,13 +36,55 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
     protected $router;
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @var PageManagerInterface $pageManager
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-        $this->request = $this->container->get('request');
-        $this->router = $this->container->get('router');
+    protected $pageManager;
+
+    /**
+     * @var Serializer $serializer
+     */
+    protected $serializer;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager $om
+     */
+    protected $om;
+
+    /**
+     * @var string $fallbackRoute
+     */
+    protected $fallbackRoute;
+
+    /**
+     * @param Request $request
+     * @param ObjectManager $om
+     * @param $fallbackRoute
+     */
+    public function __construct(Request $request, ObjectManager $om, $fallbackRoute){
+        $this->request = $request;
+        $this->om = $om;
+        $this->fallbackRoute = $fallbackRoute;
+    }
+
+    /**
+     * @param RouterInterface $router
+     */
+    public function setRouter(RouterInterface $router){
+        $this->router = $router;
+    }
+
+    /**
+     * @param PageManagerInterface $pageManager
+     */
+    public function setPageManager(PageManagerInterface $pageManager){
+        $this->pageManager = $pageManager;
+    }
+
+    /**
+     * @param Serializer $serializer
+     */
+    public function setSerializer(Serializer $serializer){
+        $this->serializer = $serializer;
     }
 
     /**
@@ -82,16 +120,15 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
         }
 
         if ($content instanceof PageSnapshotInterface) {
-            $pageManager = $this->container->get('networking_init_cms.page_manager');
 
-            $content = $this->container->get('serializer')->deserialize($content->getVersionedData(), $pageManager->getClassName(), 'json');
+            $content = $this->serializer->deserialize($content->getVersionedData(), $this->pageManager->getClassName(), 'json');
 
 
             $translation = $content->getAllTranslations()->get($locale);
 
             if ($translation && $snapshotId = $translation->getId()) {
-                /** @var $snapshot PageSnapshot */
-                $snapshot = $this->container->get('doctrine')->getRepository($content->getSnapshotClassType())->findOneBy(array('resourceId' => $snapshotId));
+                /** @var $snapshot PageSnapshotInterface */
+                $snapshot = $this->om->getRepository($content->getSnapshotClassType())->findOneBy(array('resourceId' => $snapshotId));
 
                 if ($snapshot) {
                     //return a contentRoute object
@@ -100,8 +137,8 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
             }
         }
 
-        if($fallBackRoute = $this->container->getParameter('networking_init_cms.translation_fallback_route')){
-            return $fallBackRoute;
+        if($this->fallbackRoute){
+            return $this->fallbackRoute;
         }
 
         if($route = $this->router->matchRequest(Request::create('/404'))){
@@ -257,5 +294,4 @@ class LanguageSwitcherHelper implements ContainerAwareInterface
 
         return false;
     }
-
 }

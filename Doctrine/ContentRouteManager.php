@@ -12,11 +12,11 @@
 namespace Networking\InitCmsBundle\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager as BaseContentRouteManager;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouteCollection;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 
@@ -25,17 +25,32 @@ use Networking\InitCmsBundle\Model\ContentRouteInterface;
  */
 abstract class ContentRouteManager extends BaseContentRouteManager
 {
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
     protected $objectManager;
+    /**
+     * @var
+     */
     protected $class;
+
+    /**
+     * @var Session
+     */
+    protected $session;
+    /**
+     * @var ObjectRepository
+     */
     protected $repository;
 
-    public function __construct(ObjectManager $om, $class)
+    public function __construct(ObjectManager $om, $class, Session $session)
     {
         $this->objectManager = $om;
         $this->repository = $om->getRepository($class);
 
         $metadata = $om->getClassMetadata($class);
         $this->class = $metadata->getName();
+        $this->session = $session;
     }
 
     /**
@@ -95,7 +110,7 @@ abstract class ContentRouteManager extends BaseContentRouteManager
 
         $params = array('path' => $searchUrl);
 
-        $locale = $this->container->get('session')->get('_locale');
+        $locale = $this->session->get('_locale');
 
         if ($locale) {
             $params['locale'] = $locale;
@@ -112,8 +127,7 @@ abstract class ContentRouteManager extends BaseContentRouteManager
             /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
             $content = $this->getRouteContent($contentRoute);
 
-            $session = $this->container->get('session');
-            $viewStatus = $session->get('_viewStatus') ? $session->get('_viewStatus') : VersionableInterface::STATUS_PUBLISHED;
+            $viewStatus = $this->session->get('_viewStatus') ? $this->session->get('_viewStatus') : VersionableInterface::STATUS_PUBLISHED;
 
             if ($viewStatus == VersionableInterface::STATUS_DRAFT && ($content instanceof ResourceVersionInterface)) {
                 continue;

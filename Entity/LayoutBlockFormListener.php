@@ -27,20 +27,20 @@ use Doctrine\Bundle\DoctrineBundle\Registry,
     Networking\InitCmsBundle\Helper\ContentInterfaceHelper,
     Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;
 use Networking\InitCmsBundle\Model\LayoutBlockFormListener as ModelLayoutBlockFormListener;
+
 /**
  * @author net working AG <info@networking.ch>
  */
 class LayoutBlockFormListener extends ModelLayoutBlockFormListener
 {
 
-
-
     /**
      * Bind the content type objects variables from the form.
      * If needed create an new content type object, or change to a new type deleting the old one.
      * Set the Content objects contentType and objectId fields accordingly.
      *
-     * @param \Symfony\Component\Form\FormEvent $event
+     * @param FormEvent $event
+     * @throws \RuntimeException
      */
     public function postBindData(FormEvent $event)
     {
@@ -56,18 +56,14 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
             }
         }
 
-        /** @var $dr Registry */
-        $dr = $this->container->get('Doctrine');
 
-        /** @var $em EntityManager */
-        $em = $dr->getManager();
 
         /** if the content type has changed, find and remove the old one */
         if ($layoutBlock->getOrigClassType() && $layoutBlock->getOrigClassType() != $layoutBlock->getClassType()) {
             if ($classType = $layoutBlock->getOrigClassType()) {
-                $oldRepository = $dr->getRepository($classType);
+                $oldRepository = $this->om->getRepository($classType);
                 if ($oldContentTypeObject = $oldRepository->find($layoutBlock->getObjectId())) {
-                    $em->remove($oldContentTypeObject);
+                    $this->om->remove($oldContentTypeObject);
                     $layoutBlock->setObjectId(null);
                     $layoutBlock->setContent(array());
                 }
@@ -75,7 +71,7 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
         }
 
         $className = $this->getContentType($layoutBlock);
-        $objectRepository = $dr->getRepository($className);
+        $objectRepository = $this->om->getRepository($className);
 
         if ($layoutBlock->getObjectId()) {
             $contentObject = $objectRepository->find($layoutBlock->getObjectId());
@@ -87,14 +83,14 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
             throw new \RuntimeException('Content Object must implement the ContentInterface');
         }
 
-        $meta = $em->getClassMetadata(get_class($contentObject));
+        $meta = $this->om->getClassMetadata(get_class($contentObject));
 
         foreach ($layoutBlock->getContent() as $key => $field) {
 
             try {
                 $mapping = $meta->getAssociationMapping($key);
 
-                $field = $dr->getRepository($mapping['targetEntity'])->find($field);
+                $field = $this->om->getRepository($mapping['targetEntity'])->find($field);
 
             } catch (\Doctrine\ORM\Mapping\MappingException $e) {
                 //do nothing
@@ -102,48 +98,12 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
             $contentObject = $this->contentInterfaceHelper->setFieldValue($contentObject, $key, $field);
         }
 
-        $em->persist($contentObject);
-        $em->flush();
+        $this->om->persist($contentObject);
+        $this->om->flush();
 
         $layoutBlock->setObjectId($contentObject->getId());
 
-        $em->persist($layoutBlock);
-        $em->flush();
-    }
-
-    /**
-     * Adds the form fields for the content object to the layoutBlock form
-     *
-     * @param  \Symfony\Component\Form\FormEvent $event
-     * @throws \RuntimeException
-     */
-    public function preSetData(FormEvent $event)
-    {
-
-        $layoutBlock = $event->getData();
-
-        if (!$layoutBlock) {
-            return;
-        }
-
-        $form = $event->getForm();
-
-        /** @var $dr Registry */
-        $dr = $this->container->get('Doctrine');
-
-        $className = $this->getContentType($layoutBlock);
-
-        $objectRepository = $dr->getRepository($className);
-
-        if (!$contentObject = $objectRepository->findOneById($layoutBlock->getObjectId())) {
-            $contentObject = new $className();
-        }
-
-        if (!$contentObject instanceof ContentInterface) {
-            throw new \RuntimeException('Content Object must implement the ContentInterface');
-        }
-
-        $this->addFieldsToForm($form, $className, $contentObject);
-
+        $this->om->persist($layoutBlock);
+        $this->om->flush();
     }
 }

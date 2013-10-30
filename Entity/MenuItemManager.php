@@ -53,7 +53,6 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         }else{
             $qb->leftJoin('p.contentRoute', 'cr');
         }
-//        $qb->groupBy('p.id');
 
         $results = $qb->getQuery()->getResult();
         $menuItems = array();

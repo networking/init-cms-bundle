@@ -11,6 +11,8 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\Security\Core\SecurityContextInterface,
     Symfony\Component\DependencyInjection\Container,
@@ -20,6 +22,8 @@ use Symfony\Component\HttpFoundation\Request,
     Networking\InitCmsBundle\Entity\MenuItem,
     Networking\InitCmsBundle\Entity\BasePage as Page,
     Networking\InitCmsBundle\Component\Routing\CMSRoute;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -34,14 +38,26 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      * @var bool
      */
     protected $isLoggedIn;
+
     /**
-     * @var \Symfony\Component\DependencyInjection\Container
+     * @var MenuItemManagerInterface
      */
-    protected $serviceContainer;
+    protected $menuManager;
+
     /**
-     * @var object
+     * @var Translator
+     */
+    protected $translator;
+
+    /**
+     * @var RouterInterface $router
      */
     protected $router;
+
+    /**
+     * @var Request $request
+     */
+    protected $request;
 
     /**
      * @var string
@@ -58,20 +74,22 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     protected $currentPath;
 
-    /**
-     * @var string
-     */
-    protected $menuItemRepository = 'NetworkingInitCmsBundle:MenuItem';
 
     /**
-     * @param \Knp\Menu\FactoryInterface $factory
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
-     * @param \Symfony\Component\DependencyInjection\Container $serviceContainer
+     * @param FactoryInterface $factory
+     * @param SecurityContextInterface $securityContext
+     * @param Request $request
+     * @param RouterInterface $router
+     * @param MenuItemManagerInterface $menuManager
+     * @param Translator $translator
      */
     public function __construct(
         FactoryInterface $factory,
         SecurityContextInterface $securityContext,
-        Container $serviceContainer
+        Request $request,
+        RouterInterface $router,
+        MenuItemManagerInterface $menuManager,
+        Translator $translator
     ) {
 
         parent::__construct($factory);
@@ -86,15 +104,15 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             $this->isLoggedIn = true;
         }
 
-        $this->serviceContainer = $serviceContainer;
-        $this->router = $this->serviceContainer->get('router');
+        $this->router = $router;
+        $this->request = $request;
+        $this->menuManager = $menuManager;
+        $this->translator = $translator;
 
-        $this->viewStatus = $serviceContainer->get('session')->get('_viewStatus')
-            ? $serviceContainer->get('session')->get('_viewStatus')
+        $this->viewStatus = $request->getSession()->get('_viewStatus')
+            ? $request->getSession()->get('_viewStatus')
             : Page::STATUS_PUBLISHED;
 
-        /** @var Request $request */
-        $request = $this->serviceContainer->get('request');
 
         $this->currentPath = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo(
             ) . '/' : $request->getPathInfo();
@@ -116,11 +134,11 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         $menu->setChildrenAttribute('class', $classes);
 
         if ($this->isLoggedIn) {
-            $menu->addChild($this->get('translator')->trans('logout'), array('route' => 'fos_user_security_logout'));
+            $menu->addChild($this->translator->trans('logout'), array('route' => 'fos_user_security_logout'));
         } else {
-            $menu->addChild($this->get('translator')->trans('login'), array('route' => 'fos_user_security_login'));
+            $menu->addChild($this->translator->trans('login'), array('route' => 'fos_user_security_login'));
             $menu->addChild(
-                $this->get('translator')->trans('register'),
+                $this->translator->trans('register'),
                 array('route' => 'fos_user_registration_register')
             );
         }
@@ -155,37 +173,6 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         return $parentMenu;
     }
 
-
-    /**
-     * Recursively get parents
-     *
-     * @param Menu $menu
-     * @param MenuItem $childNode
-     * @param $depth
-     * @return mixed
-     * @deprecated please use getParentMenu
-     */
-    public function getMenuParentItem(Menu $menu, MenuItem $childNode, $depth)
-    {
-        if ($depth == 0) {
-            return $menu;
-        }
-
-        if ($menu->getName() ==
-            $childNode->getParent()->getName()
-        ) {
-            return $menu;
-        }
-
-        $parentLevel = $childNode->getLvl() - $depth;
-
-        $tmpMenu = $menu->getChild($childNode->getParentByLevel($parentLevel)->getId());
-        --$depth;
-
-        return $this->getMenuParentItem($tmpMenu, $childNode, $depth);
-    }
-
-
     /**
      * Create an new node using the ContentRoute object to generate the uri
      *
@@ -195,11 +182,11 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     public function createFromMenuItem(MenuItem $menuItem)
     {
         if ($menuItem->getPath()) {
-            $uri = $this->serviceContainer->get('request')->getBaseUrl() . $menuItem->getPath();
+            $uri = $this->request->getBaseUrl() . $menuItem->getPath();
         } elseif ($menuItem->getRedirectUrl()) {
             $uri = $menuItem->getRedirectUrl();
         } elseif ($menuItem->getInternalUrl()) {
-            $uri = $this->serviceContainer->get('request')->getBaseUrl() . $menuItem->getInternalUrl();
+            $uri = $this->request->getBaseUrl() . $menuItem->getInternalUrl();
         } else {
             $uri = '#';
         }
@@ -225,88 +212,6 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         return $item;
     }
 
-    /**
-     * Create an new node using the ContentRoute object to generate the uri
-     *
-     * @param  \Networking\InitCmsBundle\Entity\MenuItem $node
-     * @return \Knp\Menu\ItemInterface
-     * @deprecated please use createFromMenuItem
-     */
-    public function createFromNode(MenuItem $node)
-    {
-        if ($node->getRedirectUrl()) {
-            $uri = $node->getRedirectUrl();
-        } elseif ($node->getInternalUrl()) {
-            $uri = $node->getInternalUrl();
-            try {
-                $routeArray = $route = $this->router->matchRequest(Request::create($uri));
-
-                if (is_array($routeArray) && array_key_exists('_route', $routeArray)) {
-                    if (array_key_exists('_route_object', $routeArray)) {
-                        $route = $routeArray['_route_object'];
-                    } else {
-                        $route = new CMSRoute(
-                            null,
-                            $routeArray['path'],
-                            array('locale' => $this->serviceContainer->get('request')->getLocale())
-                        );
-                    }
-                    $uri = $this->router->generate($route);
-
-                }
-            } catch (\Exception $e) {
-                //do nothing
-            }
-        } else {
-            if ($this->viewStatus == Page::STATUS_PUBLISHED) {
-                if ($snapshot = $node->getPage()->getSnapshot()) {
-                    $route = new CMSRoute(
-                        null,
-                        $snapshot->getPath(),
-                        array('locale' => $this->serviceContainer->get('request')->getLocale())
-                    );
-                    $uri = $this->router->generate($route);
-                } else {
-                    return;
-                }
-            } else {
-                $route = $node->getPage()->getRoute();
-                $uri = $this->router->generate($route);
-            }
-        }
-
-        $options = array(
-            'uri' => $uri,
-            'label' => $node->getName(),
-            'attributes' => array(),
-            'linkAttributes' => $node->getLinkAttributes(),
-            'childrenAttributes' => array(),
-            'labelAttributes' => array(),
-            'extras' => array(),
-            'display' => true,
-            'displayChildren' => true,
-
-        );
-        $item = $this->factory->createItem($node->getId(), $options);
-
-        if ($node->isHidden()) {
-            $item->setDisplay(false);
-        }
-
-        return $item;
-    }
-
-    /**
-     * Get a service from the container
-     *
-     * @param $id
-     * @return object
-     */
-    public function get($id)
-    {
-        return $this->serviceContainer->get($id);
-    }
-
 
     /**
      * Retrieve the full menu tree
@@ -317,19 +222,18 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     public function getFullMenu($menuName)
     {
         $menuIterator = array();
-        $menuItemManager =  $this->serviceContainer->get('networking_init_cms.menu_item_manager');
-        $repository = $this->getMenuItemRepository();
+
 
         /** @var $mainMenu Menu */
-        $mainMenu = $menuItemManager->findOneBy(
-            array('name' => $menuName, 'locale' => $this->serviceContainer->get('request')->getLocale())
+        $mainMenu = $this->menuManager->findOneBy(
+            array('name' => $menuName, 'locale' => $this->request->getLocale())
         );
 
         if (!$mainMenu) {
             return $menuIterator;
         }
 
-        $menuIterator = $menuItemManager->getChildrenByStatus($mainMenu, false, null, 'ASC', false, $this->viewStatus);
+        $menuIterator = $this->menuManager->getChildrenByStatus($mainMenu, false, null, 'ASC', false, $this->viewStatus);
 
         return $menuIterator;
 
@@ -345,10 +249,6 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     public function getSubMenu($menuName, $level = 1)
     {
         $currentParent = false;
-
-        //$repository = $this->getMenuItemRepository();
-
-        $menuItemManager =  $this->serviceContainer->get('networking_init_cms.menu_item_manager');
 
         $mainMenuIterator = $this->getFullMenu($menuName);
 
@@ -369,36 +269,11 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             return false;
         }
 
-        $menuIterator = $menuItemManager->getChildrenByStatus($currentParent, false, null, 'ASC', false, $this->viewStatus);
+        $menuIterator = $this->menuManager->getChildrenByStatus($currentParent, false, null, 'ASC', false, $this->viewStatus);
 
         return $menuIterator;
     }
 
-    /**
-     * Get the repository for the menu items
-     *
-     * @return \Networking\InitCmsBundle\Entity\MenuItemRepository
-     */
-    public function getMenuItemRepository()
-    {
-        $repository = $this->serviceContainer->get('doctrine')
-            ->getRepository($this->menuItemRepository);
-
-        return $repository;
-    }
-
-    /**
-     * Set the menu item repository
-     *
-     * @param $repositoryName
-     * @return $this
-     */
-    public function setMenuItemRepository($repositoryName)
-    {
-        $this->menuItemRepository = $repositoryName;
-
-        return $this;
-    }
 
     /**
      * Creates a full menu based on the starting point given

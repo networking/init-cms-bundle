@@ -11,17 +11,18 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\Bundle\DoctrineBundle\Registry,
-    Symfony\Component\Form\FormFactoryInterface,
-    Symfony\Component\EventDispatcher\EventSubscriberInterface,
-    Symfony\Component\Form\FormEvents,
-    Symfony\Component\Form\FormEvent,
-    Symfony\Component\Form\FormBuilder,
-    Symfony\Component\Form\FormInterface,
-    Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin,
-    Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer,
-    Networking\InitCmsBundle\Helper\ContentInterfaceHelper,
-    Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormInterface;
+use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
+use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
+use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
+use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -29,13 +30,14 @@ use Doctrine\Bundle\DoctrineBundle\Registry,
 abstract class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFormListenerInterface
 {
     /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected $om;
+
+    /**
      * @var \Symfony\Component\Form\FormFactoryInterface
      */
     protected $factory;
-    /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    protected $container;
     /**
      * @var ContentInterfaceHelper $contentInterfaceHelper
      */
@@ -47,22 +49,101 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
     protected $layoutBlockClass;
 
     /**
-     * @param FormFactoryInterface $factory
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @var array
+     */
+    protected $contentTypes;
+
+    /**
+     * @var SonataAdminAnnotationReader
+     */
+    protected $ibrowsSonataAdminAnnotationReader;
+
+    /**
+     * @var LayoutBlockAdmin
+     */
+    protected $layoutBlockAdmin;
+
+    /**
+     * @var PageToNumberTransformer
+     */
+    protected $pageToNumberTransformer;
+
+    /**
+     * @param ObjectManager $om
      * @param $class
      */
     public function __construct(
-        \Symfony\Component\DependencyInjection\ContainerInterface $container,
+        ObjectManager $om,
         $class
     ) {
-        $this->container = $container;
+        $this->om = $om;
         $this->contentInterfaceHelper = new ContentInterfaceHelper;
         $this->layoutBlockClass = $class;
 
     }
 
-    public function setFormFactory(FormFactoryInterface $factory){
+    /**
+     * @param FormFactoryInterface $factory
+     */
+    public function setFormFactory(FormFactoryInterface $factory)
+    {
         $this->factory = $factory;
+    }
+
+
+    /**
+     * @return array $contentTypes
+     */
+    public function getContentTypes()
+    {
+        return $this->contentTypes;
+    }
+
+
+    /**
+     * @return SonataAdminAnnotationReader
+     */
+    protected function getSonataAnnotationReader()
+    {
+        return $this->ibrowsSonataAdminAnnotationReader;
+    }
+
+
+    /**
+     * @return LayoutBlockAdmin
+     */
+    protected function getLayoutBlockAdmin()
+    {
+        return $this->layoutBlockAdmin;
+    }
+
+
+    /**
+     * @param array $contentTypes
+     */
+    public function setContentTypes(array $contentTypes)
+    {
+        $this->contentTypes = $contentTypes;
+    }
+
+    /**
+     * @param SonataAdminAnnotationReader $ibrowsSonataAdminAnnotationReader
+     */
+    public function setSonataAdminAnnotationReader(SonataAdminAnnotationReader $ibrowsSonataAdminAnnotationReader)
+    {
+        $this->ibrowsSonataAdminAnnotationReader = $ibrowsSonataAdminAnnotationReader;
+    }
+
+    /**
+     * @param LayoutBlockAdmin $layoutBlockAdmin
+     */
+    public function setLayoutBlockAdmin(LayoutBlockAdmin $layoutBlockAdmin)
+    {
+        $this->layoutBlockAdmin = $layoutBlockAdmin;
+    }
+
+    public function setPageToNumberTransformer(PageToNumberTransformer $pageToNumberTransformer){
+        $this->pageToNumberTransformer = $pageToNumberTransformer;
     }
 
     /**
@@ -104,10 +185,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
                 } else {
                     if ($key == 'page') {
                         // if field is Page, turn post value back into a Page Object
-                        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManager */
-                        $pageManager = $this->container->get('networking_init_cms.page_manager');
-                        $pageToNumberTransformer = new PageToNumberTransformer($pageManager);
-                        $value = $pageToNumberTransformer->reverseTransform($value);
+                        $value = $this->pageToNumberTransformer->reverseTransform($value);
                     }
                     $this->contentInterfaceHelper->setFieldValue($layoutBlock, $key, $value);
                 }
@@ -218,13 +296,13 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
     /**
      * Get the content type of the content object, if the object is new, use the first available type
      *
-     * @param  \Networking\InitCmsBundle\Entity\LayoutBlock $layoutBlock
+     * @param LayoutBlockInterface $layoutBlock
      * @return string
      */
     public function getContentType(LayoutBlockInterface $layoutBlock)
     {
         if (!$classType = $layoutBlock->getClassType()) {
-            $contentTypes = $this->container->getParameter('networking_init_cms.page.content_types');
+            $contentTypes = $this->getContentTypes();
 
             $classType = $contentTypes[0]['class'];
         }
@@ -232,22 +310,41 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
         return $classType;
     }
 
-
     /**
-     * @return SonataAdminAnnotationReader
+     * Adds the form fields for the content object to the layoutBlock form
+     *
+     * @param  \Symfony\Component\Form\FormEvent $event
+     * @throws \RuntimeException
      */
-    protected function getSonataAnnotationReader()
+    public function preSetData(FormEvent $event)
     {
-        return $this->container->get('ibrows_sonataadmin.annotation.reader');
+
+        $layoutBlock = $event->getData();
+
+        if (!$layoutBlock) {
+            return;
+        }
+
+        $form = $event->getForm();
+
+        $className = $this->getContentType($layoutBlock);
+
+        $objectRepository = $this->om->getRepository($className);
+
+        if (!$layoutBlock->getObjectId() || !$contentObject = $objectRepository->findOneById(
+                $layoutBlock->getObjectId()
+            )
+        ) {
+            $contentObject = new $className();
+        }
+
+        if (!$contentObject instanceof ContentInterface) {
+            throw new \RuntimeException('Content Object must implement the ContentInterface');
+        }
+
+        $this->addFieldsToForm($form, $className, $contentObject);
+
     }
 
-
-    /**
-     * @return LayoutBlockAdmin
-     */
-    protected function getLayoutBlockAdmin()
-    {
-        return $this->container->get('networking_init_cms.page.admin.layout_block');
-    }
 
 }

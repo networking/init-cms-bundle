@@ -222,7 +222,7 @@ class FrontendPageController extends Controller
     {
         $request->getSession()->set('_locale', $locale);
 
-        return $this->changeViewMode($request, Page::STATUS_PUBLISHED, $path);
+        return $this->changeViewMode($request, PageInterface::STATUS_PUBLISHED, $path);
     }
 
     /**

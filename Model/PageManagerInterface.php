@@ -19,7 +19,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageManagerInterface extends ContentRepositoryInterface, ContainerAwareInterface, RepositoryInterface, ObjectRepository
+interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInterface, ObjectRepository
 {
 
     /**

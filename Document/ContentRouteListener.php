@@ -9,7 +9,8 @@
  */
 
 
-namespace Networking\InitCmsBundle\Entity;
+namespace Networking\InitCmsBundle\Document;
+
 use Doctrine\Common\EventArgs;
 use Networking\InitCmsBundle\Model\ContentRoute;
 use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteListener;
@@ -19,13 +20,15 @@ use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteList
  */
 class ContentRouteListener extends ModelContentRouteListener
 {
+
+
     /**
      * @param EventArgs $args
      * @return mixed|void
      */
     public function prePersist(EventArgs $args)
     {
-        $entity = $args->getEntity();
+        $entity = $args->getDocument();
 
         if ($entity instanceof ContentRoute) {
 
@@ -43,8 +46,8 @@ class ContentRouteListener extends ModelContentRouteListener
      */
     public function preUpdate(EventArgs $args)
     {
-        $entity = $args->getEntity();
-        $em = $args->getEntityManager();
+        $entity = $args->getDocument();
+        $em = $args->getDocumentManger();
         $uow = $em->getUnitOfWork();
 
         if ($entity instanceof ContentRoute) {

@@ -14,7 +14,7 @@ use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
-use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -22,7 +22,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 /**
  * @author net working AG <info@networking.ch>
  */
-class NetworkingHelperExtension extends \Twig_Extension
+class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwareInterface
 {
     /**
      * Container
@@ -41,15 +41,21 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     protected $collectedHtml = array();
 
+
+
     /**
-     * Initialize networking cms helper
+     * Sets the Container.
      *
-     * @param ContainerInterface $container
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     *
+     * @api
      */
-    public function __construct(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
+
+
 
     /**
      * Gets a service.
@@ -112,8 +118,8 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'render_initcms_block' => new \Twig_Function_Method($this, 'renderInitcmsBlock', array('is_safe' => array('html'))),
-            'get_initcms_template_zones' => new \Twig_Function_Method($this, 'getInitcmsTemplateZones', array('is_safe' => array('html'))),
+            'render_initcms_block' => new \Twig_Function_Method($this, 'renderInitCmsBlock', array('is_safe' => array('html'))),
+            'get_initcms_template_zones' => new \Twig_Function_Method($this, 'getInitCmsTemplateZones', array('is_safe' => array('html'))),
             'render_initcms_field_as_string' => new \Twig_Function_Method($this, 'renderInitcmsFieldAsString', array('is_safe' => array('html'))),
             'get_form_field_zone' => new \Twig_Function_Method($this, 'getFormFieldZone', array('is_safe' => array('html'))),
             'get_sub_form_by_zone' => new \Twig_Function_Method($this, 'getSubFormsByZone', array('is_safe' => array('html'))),
@@ -137,10 +143,10 @@ class NetworkingHelperExtension extends \Twig_Extension
      * @param $id
      * @return mixed
      */
-    public function renderInitcmsBlock($template, LayoutBlockInterface $layoutBlock, $params = array())
+    public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = array())
     {
         /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-        $layoutBlockAdmin = $this->container->get('networking_init_cms.page.admin.layout_block');
+        $layoutBlockAdmin = $this->getService('networking_init_cms.page.admin.layout_block');
         if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
             $contentItem = $layoutBlockAdmin->getModelManager()->find(
@@ -180,7 +186,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock)
     {
         /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-        $layoutBlockAdmin = $this->container->get('networking_init_cms.page.admin.layout_block');
+        $layoutBlockAdmin = $this->getService('networking_init_cms.page.admin.layout_block');
         if ($layoutBlock->getObjectId()) {
             // Draft View
             $contentItem = $layoutBlockAdmin->getModelManager()->find(
@@ -211,7 +217,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
     {
         /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-        $layoutBlockAdmin = $this->container->get('networking_init_cms.page.admin.layout_block');
+        $layoutBlockAdmin = $this->getService('networking_init_cms.page.admin.layout_block');
         if ($layoutBlock->getObjectId()) {
             $contentItem = $layoutBlockAdmin->getModelManager()->find(
                 $layoutBlock->getClassType(),
@@ -245,7 +251,7 @@ class NetworkingHelperExtension extends \Twig_Extension
         if (method_exists($admin, 'getSubNavLinks')) {
 
             $menu = $admin->getMenuFactory()->createItem('root');
-            $request = $this->container->get('request');
+            $request = $this->getService('request');
             $menu->setCurrentUri($request->getRequestUri());
             $menu->setChildrenAttribute('class', 'ul-second-level');
 
@@ -320,7 +326,7 @@ class NetworkingHelperExtension extends \Twig_Extension
     /**
      * @return mixed
      */
-    public function getInitcmsTemplateZones()
+    public function getInitCmsTemplateZones()
     {
         return $this->getZonesByTemplate($this->getCurrentTemplate());
     }
@@ -330,7 +336,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     public function getContentTypeOptions()
     {
-        return $this->container->getParameter('networking_init_cms.page.content_types');
+        return $this->getParameter('networking_init_cms.page.content_types');
     }
 
     /**
@@ -351,11 +357,11 @@ class NetworkingHelperExtension extends \Twig_Extension
         $state = $active ? '_active' : '';
         $imagePath = '/bundles/networkinginitcms/img/icons/icon_blank_' . $size . $state . '.png';
 
-        $bundleGuesser = $this->container->get('networking_init_cms.helper.bundle_guesser');
+        $bundleGuesser = $this->getService('networking_init_cms.helper.bundle_guesser');
         $bundleGuesser->initialize($admin);
         $bundleName = $bundleGuesser->getBundleShortName();
         /** @var $kernel \AppKernel */
-        $kernel = $this->container->get('kernel');
+        $kernel = $this->getService('kernel');
         $bundles = $kernel->getBundle($bundleName, false);
         $bundle = end($bundles);
 
@@ -427,7 +433,7 @@ class NetworkingHelperExtension extends \Twig_Extension
         $locale = '';
 
         if (!$admin->hasRequest()) {
-            $admin->setRequest($this->container->get('request'));
+            $admin->setRequest($this->getService('request'));
         }
 
         if ($subject = $admin->getSubject()) {
@@ -458,7 +464,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     private function getCurrentLocale()
     {
-        return $this->container->get('request')->getLocale();
+        return $this->getService('request')->getLocale();
     }
 
     /**
@@ -507,21 +513,21 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     public function getCurrentTemplate()
     {
-        $request = $this->container->get('request');
+        $request = $this->getService('request');
         $pageId = (!$request->get('objectId')) ? $request->get('id') : $request->get('objectId');
 
         $template = null;
 
 
         /** @var $pageManager PageManagerInterface */
-        $pageManager = $this->container->get('networking_init_cms.page_manager');
+        $pageManager = $this->getService('networking_init_cms.page_manager');
 
 
         if ($pageId) {
             $page = $pageManager->findById($pageId);
             $template = $page->getTemplateName();
         } else {
-            $templates = $this->container->getParameter('networking_init_cms.page.templates');
+            $templates = $this->getParameter('networking_init_cms.page.templates');
             $firstTemplate = reset($templates);
             $template = key($firstTemplate);
         }
@@ -561,7 +567,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     protected function getZonesByTemplate($template)
     {
-        $templates = $this->container->getParameter('networking_init_cms.page.templates');
+        $templates = $this->getParameter('networking_init_cms.page.templates');
 
         $zones = $templates[$template]['zones'];
 
@@ -790,11 +796,6 @@ class NetworkingHelperExtension extends \Twig_Extension
     public function render()
     {
         return implode("\n    ", $this->collectedHtml) . "\n";
-    }
-
-    public function getGlobals()
-    {
-        return array('init_cms_editor' => $this->container->getParameter('networking_init_cms.init_cms_editor'));
     }
 
     /**
@@ -1041,8 +1042,8 @@ class NetworkingHelperExtension extends \Twig_Extension
         if (!$page->getContentRoute()) {
 
             /** @var \Sonata\AdminBundle\Admin\AdminInterface $pageAdmin */
-            $pageAdmin = $this->container->get('networking_init_cms.page.admin.page');
-            /** @var \Networking\InitCmsBundle\Model\PageSnapshotRepositoryInterface $per */
+            $pageAdmin = $this->getService('networking_init_cms.page.admin.page');
+            /** @var \Networking\InitCmsBundle\Model\PageSnapshotManagerInterface $per */
             $per = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:PageSnapshot');
             $pageSnapshots = $per->findSnapshotByPageId($page->getId());
 
@@ -1050,7 +1051,7 @@ class NetworkingHelperExtension extends \Twig_Extension
                 $page->setSnapshots($pageSnapshots);
                 $pageSnapshot = $page->getSnapshot();
                 /** @var \Networking\InitCmsBundle\Model\ContentRouteManagerInterface $cer */
-                $cer = $this->container->get('networking_init_cms.content_route_manager');
+                $cer = $this->getService('networking_init_cms.content_route_manager');
 
                 $contentRoute = $cer->findContentRouteBy(
                     array('objectId' => $pageSnapshot->getId(), 'classType' => $per->getClassName())
@@ -1061,7 +1062,7 @@ class NetworkingHelperExtension extends \Twig_Extension
             }
         }
 
-        return $this->container->get('router')->generate(
+        return $this->getService('router')->generate(
             'networking_init_dynamic_route',
             array('route_params' => array('path' => $page->getFullPath()))
         );
@@ -1077,7 +1078,7 @@ class NetworkingHelperExtension extends \Twig_Extension
      */
     protected function getDoctrine()
     {
-        $db_driver = $this->container->getParameter('networking_init_cms.db_driver');
+        $db_driver = $this->getParameter('networking_init_cms.db_driver');
 
         switch($db_driver){
             case 'orm':

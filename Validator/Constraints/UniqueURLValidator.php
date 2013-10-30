@@ -10,14 +10,9 @@
  */
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Sluggable\Util\Urlizer;
-
-use Networking\InitCmsBundle\Entity\MenuItem;
-use Networking\InitCmsBundle\Entity\MenuItemRepository;
-
+use Sonata\PageBundle\Model\PageManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManager;
@@ -30,26 +25,21 @@ class UniqueURLValidator extends ConstraintValidator
     /**
      * @var EntityManager
      */
-    protected $em;
+    protected $om;
+
     /**
      * @var Request
      */
     protected $request;
 
     /**
-     * @var Coantainer
+     * @param Request $request
+     * @param PageManagerInterface $pageManager
      */
-    protected $container;
-
-    /**
-     * @param \Doctrine\ORM\EntityManager $em
-     * @param \Symfony\Component\DependencyInjection\Container $container
-     */
-    public function __construct(ObjectManager $em, Container $container)
+    public function __construct(Request $request, PageManagerInterface $pageManager)
     {
-        $this->em = $em;
-        $this->request = $container->get('request');
-        $this->container = $container;
+        $this->request = $request;
+        $this->pageManager = $pageManager;
     }
 
     /**
@@ -58,16 +48,15 @@ class UniqueURLValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
 
-
-        $pageManager = $this->container->get('networking_init_cms.page_manager');
         $url = Urlizer::urlize($value->getUrl());
-        $pages = $pageManager->findBy(array('url' => $url, 'parent' => $value->getParent(), 'locale' => $value->getLocale()));
+        $pages = $this->pageManager->findBy(array('url' => $url, 'parent' => $value->getParent(), 'locale' => $value->getLocale()));
 
         if ($value->getParent()) {
             $url = $value->getParent()->getFullPath() . $url;
         }
         if (count($pages) > 0) {
             foreach ($pages as $page) {
+                /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
                 if ($page->getId() != $value->getId()) {
                     $this->context->addViolationAt('url', $constraint->message, array('{{ value }}' => $url));
                     return false;

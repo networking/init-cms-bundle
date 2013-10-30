@@ -14,13 +14,15 @@ namespace Networking\InitCmsBundle\EventListener;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use DateTime;
 use Networking\InitCmsBundle\Model\UserInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class UserActivity
+class UserActivityListener implements ContainerAwareInterface
 {
     protected $context;
 
@@ -29,10 +31,27 @@ class UserActivity
      */
     protected $em;
 
-    public function __construct(SecurityContext $context, ObjectManager $em)
+    public function __construct(ObjectManager $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * Sets the Container.
+     *
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     *
+     * @api
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+       $this->setSecurityContext($container->get('security.context'));
+    }
+
+    public function setSecurityContext(SecurityContext $context)
     {
         $this->context = $context;
-        $this->em = $em;
+
     }
 
     /**

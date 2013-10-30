@@ -36,8 +36,6 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('user')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
-                ->scalarNode('init_cms_editor')->defaultValue('ckeditor')->end()
-                ->scalarNode('init_cms_editor')->defaultValue('ckeditor')->end()
                 ->scalarNode('ckeditor_config')->defaultValue('')->end()
                 ->scalarNode('translation_fallback_route')->defaultValue('initcms_404')->end()
                 ->scalarNode('404_template')->isRequired()->end()

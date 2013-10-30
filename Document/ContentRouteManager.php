@@ -12,21 +12,16 @@ namespace Networking\InitCmsBundle\Document;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Networking\InitCmsBundle\Doctrine\ContentRouteManager as DoctrineContentRouteManager;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * @author net working AG <info@networking.ch>
  */
 class ContentRouteManager extends DoctrineContentRouteManager
 {
 
-    protected $dm;
-
-    public function __construct(DocumentManager $dm, $class)
+    public function __construct(DocumentManager $dm, $class, Session $session)
     {
-        parent::__construct($dm, $class);
-        $this->dm = $dm;
+        parent::__construct($dm, $class, $session);
     }
 
 

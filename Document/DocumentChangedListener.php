@@ -1,22 +1,22 @@
 <?php
 
-namespace Networking\InitCmsBundle\Entity;
+namespace Networking\InitCmsBundle\Document;
 
 use Doctrine\Common\EventArgs;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Model\ModelChangedListener;
 
-class EntityChangedListener extends ModelChangedListener
+class DocumentChangedListener extends ModelChangedListener
 {
 
     /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     * @param EventArgs $args
      */
-    public function preRemove(LifecycleEventArgs $args)
+    public function preRemove(EventArgs $args)
     {
         parent::preRemove($args);
-        if (method_exists($args->getEntity(), 'isDeletable')) {
-            if ($args->getEntity()->isDeletable() == 0) {
+
+        if (method_exists($args->getDocument(), 'isDeletable')) {
+            if ($args->getDocument()->isDeletable() == 0) {
                 //find a solution... like throwing super Exception thingy
             }
         }
@@ -29,7 +29,7 @@ class EntityChangedListener extends ModelChangedListener
      */
     public function getLoggingInfo(EventArgs $args, $method = '')
     {
-        $entity = $args->getEntity();
+        $entity = $args->getDocument();
         if ($this->getSecurityContext()->getToken() && $this->getSecurityContext()->getToken()->getUser() != 'anon.') {
 
             $username = $this->getSecurityContext()->getToken()->getUser()->getUsername();

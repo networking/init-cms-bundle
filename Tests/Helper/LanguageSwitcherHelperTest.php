@@ -10,9 +10,7 @@
 namespace Networking\InitCmsBundle\Tests\Helper;
 
 use \Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
-use \Symfony\Component\DependencyInjection\Container;
 use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Entity\ContentRoute;
@@ -25,95 +23,75 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request();
         $request2 = Request::create('/foo');
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container');
-        $router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
-				->disableOriginalConstructor()
-				->getMock();
-        $container->expects($this->at(0))
-			->method('get')
-            ->with('request')
-			->will($this->returnValue($request));
-        $container->expects($this->at(1))
-			->method('get')
-            ->with('router')
-			->will($this->returnValue($router));
-        $router->expects($this->at(0))
-			->method('matchRequest')
-			->with($this->equalTo($request2))
-			->will($this->returnValue(array('_content' => new Tag())));
 
-        $helper = new LanguageSwitcherHelper();
-        $helper->setContainer($container);
+        $router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $router->expects($this->at(0))
+            ->method('matchRequest')
+            ->with($request2)
+            ->will($this->returnValue(array('_content' => new Tag())));
+
+
+        $helper = $this->getLanguageHelper($request, $router);
         $helper->getTranslationRoute('/foo', 'de');
     }
 
     public function testGetTranslationRoute_WithNoTranslation_ShouldReturnArray()
-	{
+    {
         $page = new Page();
         $page->setMetaTitle('Page without Translations');
 
         $request = new Request();
         $request2 = Request::create('/foo');
-		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
-		$router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
-				->disableOriginalConstructor()
-				->getMock();
-		$container->expects($this->at(0))
-			->method('get')
-            ->with('request')
-			->will($this->returnValue($request));
-		$container->expects($this->at(1))
-			->method('get')
-            ->with('router')
-			->will($this->returnValue($router));
-        $router->expects($this->at(0))
-			->method('matchRequest')
-			->with($this->equalTo($request2))
-			->will($this->returnValue(array('_content' => $page)));
+        $router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $helper = new LanguageSwitcherHelper();
-		$helper->setContainer($container);
+
+        $router->expects($this->once())
+            ->method('matchRequest')
+            ->with($request2)
+            ->will($this->returnValue(array('_content' => $page)));
+
+        $helper = $this->getLanguageHelper($request, $router);
         $result = $helper->getTranslationRoute('/foo', 'de');
 
         $this->assertEquals(array("_route" => "networking_init_cms_home"), $result);
-	}
+    }
 
     public function testGetTranslationRoute_PageWithTranslation_ShouldReturnContentRoute()
     {
         $contentRouteDe = new ContentRoute();
         $contentRouteEn = new ContentRoute();
+
         $dePage = new Page();
         $dePage->setLocale('de');
         $dePage->setMetaTitle('German page with english translation');
         $dePage->setContentRoute($contentRouteDe);
+
         $enPage = new Page();
         $enPage->setLocale('en');
         $enPage->setMetaTitle('English translation');
         $enPage->setContentRoute($contentRouteEn);
         $dePage->setTranslations(array($enPage));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container');
+
         $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
         $request2 = Request::create('/foo');
+
         $router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
-				->disableOriginalConstructor()
-				->getMock();
-        $routeArray = array('_content' => $dePage);
-        $router->expects($this->once())
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $router->expects($this->at(0))
             ->method('matchRequest')
             ->with($request2)
-            ->will($this->returnValue($routeArray));
-        $container->expects($this->at(0))
-            ->method('get')
-            ->with('request')
-            ->will($this->returnValue($request));
-        $container->expects($this->at(1))
-            ->method('get')
-            ->with('router')
-            ->will($this->returnValue($router));
+            ->will($this->returnValue(array('_content' => $dePage)));
 
-        $helper = new LanguageSwitcherHelper();
-        $helper->setContainer($container);
+        $helper = $this->getLanguageHelper($request, $router);
+
         $result = $helper->getTranslationRoute('/foo', 'en');
 
         $this->assertInstanceOf('Networking\InitCmsBundle\Entity\ContentRoute', $result);
@@ -121,82 +99,75 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
     }
 
 
-	public function testGetQueryString()
-	{
-		$request = new Request();
-		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
-		$router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
-				->disableOriginalConstructor()
-				->getMock();
-		$container->expects($this->at(0))
-			->method('get')
-			->will($this->returnValue($request));
-		$container->expects($this->at(1))
-			->method('get')
-			->will($this->returnValue($router));
+    public function testGetQueryString()
+    {
+        $request = new Request();
+        $helper = $this->getLanguageHelper($request);
 
-        $helper = new LanguageSwitcherHelper();
-		$helper->setContainer($container);
-
-		$qs = $helper->getQueryString();
-		$this->assertNull($qs);
-//		$this->assertNull('string', $qs);
-	}
+        $qs = $helper->getQueryString();
+        $this->assertNull($qs);
+    }
 
 
-	public function testPrepareBaseUrl()
-	{
-		$serverParams = array(
-			'SCRIPT_FILENAME' => 'xy.php',
-			'SCRIPT_NAME' => 'xy..php',
-			'PHP_SELF' => 'xy',
-			'ORIG_SCRIPT_NAME' => 'xy.php',
-			'ORIG_SCRIPT_NAME' => 'xy.php',
-		);
-		$request = new Request(array(), array(), array(), array(), array(), $serverParams);
-		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
-		$router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
-				->disableOriginalConstructor()
-				->getMock();
-		$container->expects($this->at(0))
-			->method('get')
-			->will($this->returnValue($request));
-		$container->expects($this->at(1))
-			->method('get')
-			->will($this->returnValue($router));
+    public function testPrepareBaseUrl()
+    {
+        $serverParams = array(
+            'SCRIPT_FILENAME' => 'xy.php',
+            'SCRIPT_NAME' => 'xy..php',
+            'PHP_SELF' => 'xy',
+            'ORIG_SCRIPT_NAME' => 'xy.php',
+            'ORIG_SCRIPT_NAME' => 'xy.php',
+        );
+        $request = new Request(array(), array(), array(), array(), array(), $serverParams);
 
-        $helper = new LanguageSwitcherHelper();
-		$helper->setContainer($container);
+        $helper = $this->getLanguageHelper($request);
 
-		$baseUrl = $helper->prepareBaseUrl('/xy/');
-		$this->assertEquals('', $baseUrl);
-	}
+        $baseUrl = $helper->prepareBaseUrl('/xy/');
+        $this->assertEquals('', $baseUrl);
+    }
 
-	public function testGetPathInfo()
-	{
-		$serverParams = array(
-			'SCRIPT_FILENAME' => 'xy.php',
-			'SCRIPT_NAME' => 'xy..php',
-			'PHP_SELF' => 'xy',
-			'ORIG_SCRIPT_NAME' => 'xy.php',
-			'ORIG_SCRIPT_NAME' => 'xy.php',
-		);
-		$request = new Request(array(), array(), array(), array(), array(), $serverParams);
-		$container = $this->getMock('Symfony\Component\DependencyInjection\Container');
-		$router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
-				->disableOriginalConstructor()
-				->getMock();
-		$container->expects($this->at(0))
-			->method('get')
-			->will($this->returnValue($request));
-		$container->expects($this->at(1))
-			->method('get')
-			->will($this->returnValue($router));
+    public function testGetPathInfo()
+    {
+        $serverParams = array(
+            'SCRIPT_FILENAME' => 'xy.php',
+            'SCRIPT_NAME' => 'xy..php',
+            'PHP_SELF' => 'xy',
+            'ORIG_SCRIPT_NAME' => 'xy.php',
+            'ORIG_SCRIPT_NAME' => 'xy.php',
+        );
 
-        $helper = new LanguageSwitcherHelper();
-		$helper->setContainer($container);
+        $request = new Request(array(), array(), array(), array(), array(), $serverParams);
 
-		$path = $helper->getPathInfo();
-		$this->assertEquals('/', $path);
+        $helper = $this->getLanguageHelper($request);
+
+        $path = $helper->getPathInfo();
+        $this->assertEquals('/', $path);
+    }
+
+    public function getLanguageHelper(Request $request, $router = null)
+    {
+
+        $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $pageManager = $this->getMockBuilder('Networking\InitCmsBundle\Entity\PageManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        if ($router === null) {
+
+            $router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
+                ->disableOriginalConstructor()
+                ->getMock();
+        }
+        $helper = new LanguageSwitcherHelper($request, $em, '');
+        $helper->setRouter($router);
+        $helper->setPageManager($pageManager);
+        $helper->setSerializer($serializer);
+
+        return $helper;
     }
 }
