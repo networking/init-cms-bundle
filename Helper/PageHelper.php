@@ -181,8 +181,8 @@ class PageHelper
             /** @var $snapshotContentRoute \Networking\InitCmsBundle\Entity\ContentRoute */
 
             $contentRouteManager = $this->container->get('networking_init_cms.content_route_manager');
-            $className = $contentRouteManager->getClassName();
-            $snapshotContentRoute =$newClassName();
+            $className = $contentRouteManager->getClass();
+            $snapshotContentRoute =new $className();
         }
 
         $pageSnapshot->setContentRoute($snapshotContentRoute);

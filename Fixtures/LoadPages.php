@@ -17,7 +17,7 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use Networking\InitCmsBundle\Entity\Page;
+use Application\Networking\InitCmsBundle\Entity\Page;
 
 /**
  * @author net working AG <info@networking.ch>

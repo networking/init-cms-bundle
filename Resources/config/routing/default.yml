@@ -85,7 +85,7 @@ _welcome_cms:
 
 _install_db:
     path: /install_db/{complete}
-    defaults: {_controller: NetworkingInitCmsBundle:InitCmsInstall:index, complete: 0}
+    defaults: {_controller: NetworkingInitCmsBundle:InitCmsInstall:installDb, complete: 0}
     requirements:
         complete: /d+
 

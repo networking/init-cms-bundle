@@ -80,7 +80,6 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
         $manager->flush();
 
         $text = new $textClass();
-        $text->setLayoutBlock($layoutBlock);
         $text->setText('<h1>Hello World</h1><p>The locale of this page is '.$locale.'</p>');
 
         $manager->persist($text);
