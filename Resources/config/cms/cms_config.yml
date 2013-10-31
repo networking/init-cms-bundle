@@ -8,3 +8,5 @@ imports:
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/mopa_bootstrap.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/sonata_media.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/jms_serializer.yml }
+    - { resource: @NetworkingInitCmsBundle/Resources/config/cms/lexik_translation.yml }
+    - { resource: @NetworkingInitCmsBundle/Resources/config/cms/ibrows_sonata_translation.yml }

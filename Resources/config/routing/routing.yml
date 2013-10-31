@@ -1,6 +1,12 @@
 NetworkingInitCmsBundle:
-    resource: "@NetworkingInitCmsBundle/Resources/config/routing/default.yml"
+    resource: "@NetworkingInitCmsBundle/Resources/config/routing/cms.yml"
     prefix:   /
+
+# Lexik Translation bundle
+
+lexik_translation_edition:
+    resource: "@LexikTranslationBundle/Resources/config/routing.yml"
+    prefix:   /translation
 
 # FOS Bundles
 fos_user_security:
@@ -44,8 +50,4 @@ media:
     resource: '@SonataMediaBundle/Resources/config/routing/media.xml'
     prefix: /media
 
-# Internal routing configuration to handle ESI
-#_internal:
-#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
-#    prefix:   /_internal
 
