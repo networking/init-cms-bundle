@@ -10,9 +10,9 @@ class EntityChangedListener extends ModelChangedListener
 {
 
     /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     * @param EventArgs $args
      */
-    public function preRemove(LifecycleEventArgs $args)
+    public function preRemove(EventArgs $args)
     {
         parent::preRemove($args);
         if (method_exists($args->getEntity(), 'isDeletable')) {
