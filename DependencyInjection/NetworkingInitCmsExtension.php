@@ -54,6 +54,7 @@ class NetworkingInitCmsExtension extends Extension
         $loader->load('services.xml');
         $loader->load('validators.xml');
 
+        //mongodb is not yet fully supported but will come (eventually)
         if ('custom' !== $config['db_driver']) {
             $loader->load(sprintf('doctrine_%s.xml', $config['db_driver']));
             $loader->load(sprintf('ext_admin_%s.xml', $config['db_driver']));
@@ -85,6 +86,7 @@ class NetworkingInitCmsExtension extends Extension
     /**
      * @param $config
      * @param ContainerBuilder $container
+     * @throws \InvalidArgumentException
      */
     public function configureClass($config, ContainerBuilder $container)
     {
