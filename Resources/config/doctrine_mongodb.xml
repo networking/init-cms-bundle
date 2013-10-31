@@ -67,8 +67,10 @@
         <!-- Event Listeners -->
         <service id="networking_init_cms.event_listener.user_activity"
                  class="Networking\InitCmsBundle\EventListener\UserActivity">
-            <argument type="service" id="security.context"/>
             <argument type="service" id="doctrine.odm.mongodb.document_manager"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
             <tag name="kernel.event_listener" event="kernel.controller" method="onCoreController"/>
         </service>
 
@@ -94,14 +96,19 @@
             <call method="setContentTypes">
                 <argument>%networking_init_cms.page.content_types%</argument>
             </call>
+            <call method="setPageToNumberTransformer">
+                <argument type="service" id="networking_init_cms.form.data_transformer.page_to_number_transformer"/>
+            </call>
         </service>
 
         <service id="networking_init_cms.entity_changed_listener"
                  class="Networking\InitCmsBundle\Document\EntityChangedListener">
-            <argument type="service" id="security.context"/>
             <argument type="service" id="networking_init_cms.logger"/>
-            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
             <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
             <tag name="doctrine.event_listener" event="preRemove" method="preRemove"/>
             <tag name="monolog.logger" channel="newo"/>
         </service>
@@ -116,16 +123,17 @@
         <service id="networking_init_cms.last_edited_listener"
                  class="Networking\InitCmsBundle\Entity\LastEditedListener">
             <argument type="service" id="session"/>
-            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
             <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
         </service>
 
         <service id="networking_init_cms.page_listener" class="Networking\InitCmsBundle\Document\PageListener">
-            <argument type="service" id="session"/>
-            <argument type="service" id="networking_init_cms.page_manager"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
             <tag name="jms_serializer.event_subscriber"/>
-            <tag name="doctrine.event_listener" event="onFlush" method="onFlush"/>
             <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+            <tag name="doctrine.event_listener" event="onFlush" method="onFlush"/>
         </service>
 
         <!-- Form Types -->
@@ -144,7 +152,7 @@
         <service id="jms_serializer.doctrine_object_constructor"
                  class="%jms_serializer.doctrine_object_constructor.class%" public="false">
             <argument type="service" id="doctrine_mongodb"/>
-            <argument type="service" id="@jms_serializer.unserialize_object_constructor"/>
+            <argument type="service" id="jms_serializer.unserialize_object_constructor"/>
         </service>
 
         <service id="jms_serializer.object_constructor" alias="jms_serializer.doctrine_object_constructor" />

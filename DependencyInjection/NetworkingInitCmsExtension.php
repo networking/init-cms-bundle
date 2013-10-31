@@ -57,8 +57,8 @@ class NetworkingInitCmsExtension extends Extension
         $ymlLoader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         if ('custom' !== $config['db_driver']) {
             $loader->load(sprintf('doctrine_%s.xml', $config['db_driver']));
+            $loader->load(sprintf('ext_admin_%s.xml', $config['db_driver']));
             $ymlLoader->load(sprintf('admin_%s.yml', $config['db_driver']));
-            $ymlLoader->load(sprintf('ext_admin_%s.yml', $config['db_driver']));
             $ymlLoader->load(sprintf('blocks_%s.yml', $config['db_driver']));
         }
 
