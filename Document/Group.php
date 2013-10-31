@@ -10,27 +10,18 @@
 
 namespace Networking\InitCmsBundle\Document;
 
-use Doctrine\ORM\Mapping as ORM,
-    Sonata\UserBundle\Entity\BaseGroup as BaseGroup;
+use  Sonata\UserBundle\Entity\BaseGroup as BaseGroup;
 
 /**
+ * Class Group
+ * @package Networking\InitCmsBundle\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
- * Networking\InitCmsBundle\Entity\Group
- *
- * @ORM\Table(name="fos_user_group")
- * @ORM\Entity()
  */
 class Group extends BaseGroup
 {
 
     /**
      * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
      */
     protected $id;
 

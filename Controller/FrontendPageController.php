@@ -21,7 +21,6 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 
-
 /**
  * Class FrontendPageController
  * @package Networking\InitCmsBundle\Controller

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -14,8 +13,9 @@ namespace Networking\InitCmsBundle\Document;
 use Sonata\MediaBundle\Document\BaseGallery;
 
 /**
- * @author Yorkie Chawdick <y.chadwick@networking.ch>
- *
+ * Class Gallery
+ * @package Networking\InitCmsBundle\Document
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Gallery extends BaseGallery
 {

@@ -12,6 +12,8 @@ namespace Networking\InitCmsBundle\Admin\Document;
 use Networking\InitCmsBundle\Admin\Model\UserAdmin as ModelUserAdmin;
 
 /**
+ * Class UserAdmin
+ * @package Networking\InitCmsBundle\Admin\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UserAdmin extends ModelUserAdmin

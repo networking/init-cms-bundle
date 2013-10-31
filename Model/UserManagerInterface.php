@@ -8,12 +8,13 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
+ * Class UserManagerInterface
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface UserManagerInterface extends \FOS\UserBundle\Model\UserManagerInterface, UserProviderInterface

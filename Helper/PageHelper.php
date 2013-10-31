@@ -7,16 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Helper;
 
-use
-    Sonata\AdminBundle\Exception\NoValueException,
-    Symfony\Component\DependencyInjection\ContainerInterface,
-    Doctrine\ORM\EntityManager,
-    Networking\InitCmsBundle\Model\ContentRoute;
+use Sonata\AdminBundle\Exception\NoValueException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
+ * Class PageHelper
+ * @package Networking\InitCmsBundle\Helper
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageHelper
@@ -160,6 +160,15 @@ class PageHelper
     }
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    public function getParameter($id)
+    {
+        return $this->container->getParameter($id);
+    }
+
+    /**
      * Create a snapshot of a given page.
      *
      * @param PageInterface $page
@@ -169,13 +178,18 @@ class PageHelper
         /** @var \JMS\Serializer\SerializerInterface $serializer */
         $serializer = $this->getService('serializer');
 
-        /** @var \Doctrine\Common\Persistence\ObjectManager $manager */
-        $manager = $this->getService('doctrine')->getManager();
+        if ($this->getParameter('networking_init_cms.db_driver') == 'orm') {
+            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
+            $em = $this->getService('doctrine')->getManager();
+        } else {
+            /** @var \Doctrine\Common\Persistence\ObjectManager $manager */
+            $em = $this->getService('doctrine_mongodb')->getManager();
+        }
 
         foreach ($page->getLayoutBlock() as $layoutBlock) {
 
             /** @var \Networking\InitCmsBundle\Model\layoutBlockInterface $layoutBlock */
-            $layoutBlockContent = $manager->getRepository($layoutBlock->getClassType())->find(
+            $layoutBlockContent = $em->getRepository($layoutBlock->getClassType())->find(
                 $layoutBlock->getObjectId()
             );
             $layoutBlock->takeSnapshot($serializer->serialize($layoutBlockContent, 'json'));
@@ -195,23 +209,23 @@ class PageHelper
 
 
             $contentRouteManager = $this->getService('networking_init_cms.content_route_manager');
-            $contentRouteClass = $contentRouteManager->getClassName();
+            $contentRouteClass = $contentRouteManager->getClass();
 
             /** @var  \Networking\InitCmsBundle\Model\ContentRouteInterface $snapshotContentRoute */
-            $snapshotContentRoute = $contentRouteClass();
+            $snapshotContentRoute = new $contentRouteClass();
         }
 
         $pageSnapshot->setContentRoute($snapshotContentRoute);
         $pageSnapshot->setPath(self::getPageRoutePath($page->getPath()));
 
-        $manager->persist($pageSnapshot);
-        $manager->flush();
+        $em->persist($pageSnapshot);
+        $em->flush();
 
         $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
         $snapshotContentRoute->setObjectId($pageSnapshot->getId());
 
-        $manager->persist($snapshotContentRoute);
-        $manager->flush();
+        $em->persist($snapshotContentRoute);
+        $em->flush();
     }
 
     /**
@@ -223,11 +237,17 @@ class PageHelper
      */
     public function makeTranslationCopy(PageInterface $page, $locale)
     {
-        $doctrine = $this->getService('doctrine');
-        $em = $doctrine->getManager();
+        if ($this->getParameter('networking_init_cms.db_driver') == 'orm') {
+            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
+            $em = $this->getService('doctrine')->getManager();
+        } else {
+            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
+            $em = $this->getService('doctrine_mongodb')->getManager();
+        }
 
         /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
         $pageManger = $this->getService('networking_init_cms.page_manager');
+
 
         $pageClass = $pageManger->getClassName();
         /** @var PageInterface $pageCopy */
@@ -251,7 +271,7 @@ class PageHelper
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
 
-            $content = $doctrine->getRepository($newLayoutBlock->getClassType())->find(
+            $content = $em->getRepository($newLayoutBlock->getClassType())->find(
                 $newLayoutBlock->getObjectId()
             );
             $newContent = clone $content;

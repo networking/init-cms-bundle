@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -16,12 +15,13 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Networking\InitCmsBundle\Entity\LayoutBlock;
-use Networking\InitCmsBundle\Entity\Text;
+use Networking\InitCmsBundle\Model\TextInterface;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class LoadLayoutBlocks
+ * @package Networking\InitCmsBundle\Fixtures
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
@@ -79,6 +79,7 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
         $manager->persist($layoutBlock);
         $manager->flush();
 
+        /** @var TextInterface  $text */
         $text = new $textClass();
         $text->setText('<h1>Hello World</h1><p>The locale of this page is '.$locale.'</p>');
 

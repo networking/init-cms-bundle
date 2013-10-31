@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sonata\MediaBundle\Controller\GalleryAdminController as SonataGalleryAdminController;
 
-
 /**
  * Class GalleryAdminController
  * @package Networking\InitCmsBundle\Controller

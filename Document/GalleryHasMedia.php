@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -14,16 +13,15 @@ namespace Networking\InitCmsBundle\Document;
 use Sonata\MediaBundle\Entity\BaseGalleryHasMedia;
 
 /**
+ * Class GalleryHasMedia
+ * @package Networking\InitCmsBundle\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
  */
 class GalleryHasMedia extends BaseGalleryHasMedia
 {
 
     /**
      * @var integer $id
-     *
-     *
      */
     protected $id;
 

@@ -45,6 +45,7 @@ class NetworkingInitCmsExtension extends Extension
         $config = $this->processConfiguration($configuration, $defaults);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('blocks.xml');
         $loader->load('dynamic_routing.xml');
         $loader->load('event_listeners.xml');
         $loader->load('forms.xml');
@@ -53,13 +54,10 @@ class NetworkingInitCmsExtension extends Extension
         $loader->load('services.xml');
         $loader->load('validators.xml');
 
-
-        $ymlLoader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         if ('custom' !== $config['db_driver']) {
             $loader->load(sprintf('doctrine_%s.xml', $config['db_driver']));
             $loader->load(sprintf('ext_admin_%s.xml', $config['db_driver']));
-            $ymlLoader->load(sprintf('admin_%s.yml', $config['db_driver']));
-            $ymlLoader->load(sprintf('blocks_%s.yml', $config['db_driver']));
+            $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
         }
 
 

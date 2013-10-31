@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,15 +10,13 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\Security\Core\SecurityContextInterface,
-    Symfony\Component\DependencyInjection\Container,
-    Networking\InitCmsBundle\Component\Menu\MenuBuilder,
-    Networking\InitCmsBundle\Entity\MenuItem as Menu,
-    Networking\InitCmsBundle\Entity\BasePage as Page;
+use Symfony\Component\HttpFoundation\Request;
+use Networking\InitCmsBundle\Entity\MenuItem as Menu;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class FrontendMenuBuilder
+ * @package Networking\InitCmsBundle\Component\Menu
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class FrontendMenuBuilder extends MenuBuilder
 {
@@ -76,15 +73,6 @@ class FrontendMenuBuilder extends MenuBuilder
         $this->setRecursiveChildrenAttribute($menu, array('class' => 'nav nav-list'));
         return $menu;
     }
-
-
-    /**
-     * Creates the login and change language navigation for the right side of the top frontend navigation
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param $languages
-     * @param string $classes
-     * @return \Knp\Menu\ItemInterface
-     */
 
     /**
      * Creates the login and change language navigation for the right side of the top frontend navigation
@@ -175,6 +163,12 @@ class FrontendMenuBuilder extends MenuBuilder
         }
     }
 
+    /**
+     * @param $menu
+     * @param array $languages
+     * @param $currentLanguage
+     * @param string $route
+     */
     public function createInlineLangMenu(
         &$menu,
         array $languages,

@@ -8,28 +8,22 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
 
-
 /**
+ * Class MenuItemInterface
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface MenuItemInterface
 {
-    /**
-     * @var string
-     */
+
     const PATH_SEPARATOR = '/';
 
-    /**
-     *
-     */
+
     const VISIBILITY_PUBLIC = 'public';
 
-    /**
-     *
-     */
+
     const VISIBILITY_PROTECTED = 'protected';
 
     /**
@@ -56,7 +50,7 @@ interface MenuItemInterface
     public function setRedirectUrl($redirectUrl);
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getRedirectUrl();
 
@@ -65,12 +59,12 @@ interface MenuItemInterface
      */
     public function setHidden($hidden);
     /**
-     * @return mixed
+     * @return boolean
      */
     public function getHidden();
 
     /**
-     * @return mixed
+     * @return boolean
      */
     public function isHidden();
 
@@ -80,7 +74,7 @@ interface MenuItemInterface
     public function setInternalUrl($route);
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getInternalUrl();
 
@@ -104,7 +98,7 @@ interface MenuItemInterface
     public function setParent(MenuItemInterface $parent = null);
 
     /**
-     * @return mixed
+     * @return MenuItemInterface
      */
     public function getParent();
 
@@ -125,7 +119,7 @@ interface MenuItemInterface
     public function setLvl($lvl);
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getLvl();
 
@@ -136,7 +130,7 @@ interface MenuItemInterface
     public function setRgt($rgt);
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getRgt();
 
@@ -147,7 +141,7 @@ interface MenuItemInterface
     public function setRoot($root);
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getRoot();
 

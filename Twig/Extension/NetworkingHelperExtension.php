@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
@@ -20,7 +20,9 @@ use Sonata\AdminBundle\Admin\AdminInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class NetworkingHelperExtension
+ * @package Networking\InitCmsBundle\Twig\Extension
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwareInterface
 {
@@ -42,7 +44,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     protected $collectedHtml = array();
 
 
-
     /**
      * Sets the Container.
      *
@@ -55,6 +56,15 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $this->container = $container;
     }
 
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getName()
+    {
+        return 'networking_init_cms_helper';
+    }
 
 
     /**
@@ -139,14 +149,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      * Returns an HTML block for output in the frontend
      *
      * @param $template
-     * @param $class
-     * @param $id
-     * @return mixed
+     * @param LayoutBlockInterface $layoutBlock
+     * @param array $params
+     * @return string
      */
     public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = array())
     {
         /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-        $layoutBlockAdmin = $this->getService('networking_init_cms.page.admin.layout_block');
+        $layoutBlockAdmin = $this->getService('networking_init_cms.admin.layout_block');
         if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
             // Draft View
             $contentItem = $layoutBlockAdmin->getModelManager()->find(
@@ -186,7 +196,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock)
     {
         /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-        $layoutBlockAdmin = $this->getService('networking_init_cms.page.admin.layout_block');
+        $layoutBlockAdmin = $this->getService('networking_init_cms.admin.layout_block');
         if ($layoutBlock->getObjectId()) {
             // Draft View
             $contentItem = $layoutBlockAdmin->getModelManager()->find(
@@ -217,7 +227,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
     {
         /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-        $layoutBlockAdmin = $this->getService('networking_init_cms.page.admin.layout_block');
+        $layoutBlockAdmin = $this->getService('networking_init_cms.admin.layout_block');
         if ($layoutBlock->getObjectId()) {
             $contentItem = $layoutBlockAdmin->getModelManager()->find(
                 $layoutBlock->getClassType(),
@@ -319,7 +329,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             }
         }
 
-
         return $active;
     }
 
@@ -397,6 +406,9 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
     /**
      * Modifies a string to remove all non ASCII characters and spaces.
+     *
+     * @param $text
+     * @return mixed|string
      */
     static public function slugify($text)
     {
@@ -425,6 +437,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
+     * returns the locale of the current admin user
+     *
      * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
      * @return mixed|string
      */
@@ -500,8 +514,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
-     *
-     * @return string
+     * @param $class
+     * @return mixed
      */
     public function getBundleShortName($class)
     {
@@ -778,7 +792,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $data = \ob_get_clean();
         $this->captureLock = false;
         $this->addToCollectedHtml($data);
-//        return true;
     }
 
     /**
@@ -787,7 +800,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     protected function addToCollectedHtml($data)
     {
         $this->collectedHtml[] = $data;
-//		return $this;
     }
 
     /**
@@ -796,16 +808,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     public function render()
     {
         return implode("\n    ", $this->collectedHtml) . "\n";
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'networking_init_cms_helper';
     }
 
     /**
@@ -1042,7 +1044,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         if (!$page->getContentRoute()) {
 
             /** @var \Sonata\AdminBundle\Admin\AdminInterface $pageAdmin */
-            $pageAdmin = $this->getService('networking_init_cms.page.admin.page');
+            $pageAdmin = $this->getService('networking_init_cms.admin.page');
             /** @var \Networking\InitCmsBundle\Model\PageSnapshotManagerInterface $per */
             $per = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:PageSnapshot');
             $pageSnapshots = $per->findSnapshotByPageId($page->getId());
@@ -1080,7 +1082,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     {
         $db_driver = $this->getParameter('networking_init_cms.db_driver');
 
-        switch($db_driver){
+        switch ($db_driver) {
             case 'orm':
                 return $this->getService('doctrine');
                 break;

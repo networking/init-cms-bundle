@@ -11,7 +11,7 @@
         <parameter key="sonata.media.admin.media.translation_domain">MediaAdmin</parameter>
 
         <!-- Gallery-->
-        <parameter key="sonata.media.admin.gallery.class">Networking\InitCmsBundle\Admin\GalleryAdmin</parameter>
+        <parameter key="sonata.media.admin.gallery.class">Networking\InitCmsBundle\Admin\Entity\GalleryAdmin</parameter>
         <parameter key="sonata.media.admin.gallery.controller">NetworkingInitCmsBundle:GalleryAdmin</parameter>
 
         <!-- User -->

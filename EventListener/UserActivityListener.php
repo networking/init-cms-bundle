@@ -10,20 +10,23 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
-
-/**
- * @author Yorkie Chadwick <y.chadwick@networking.ch>
- */
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use DateTime;
 use Networking\InitCmsBundle\Model\UserInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class UserActivityListener
+ * @package Networking\InitCmsBundle\EventListener
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class UserActivityListener implements ContainerAwareInterface
 {
+    /**
+     * @var SecurityContext
+     */
     protected $context;
 
     /**
@@ -73,7 +76,6 @@ class UserActivityListener implements ContainerAwareInterface
                 $user->setLastActivity(new \DateTime('now'));
                 $this->em->persist($user);
                 $this->em->flush($user);
-
 
             }
         }

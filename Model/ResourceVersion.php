@@ -12,39 +12,43 @@ namespace Networking\InitCmsBundle\Model;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 
-use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Class ResourceVersion
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
- * @ORM\Entity
  */
-class ResourceVersion implements ResourceVersionInterface
+abstract class ResourceVersion implements ResourceVersionInterface
 {
     /**
      * @var integer $id
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
-    /** @ORM\Column(type="string") */
+    /**
+     * @var string
+     */
     protected $resourceName;
 
-    /** @ORM\Column(type="integer") */
+    /**
+     * @var int
+     */
     protected $resourceId;
 
-    /** @ORM\Column(type="array") */
+    /**
+     * @var
+     */
     protected $versionedData;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var int
      */
     protected $version;
 
-    /** @ORM\Column(type="datetime") */
+    /**
+     * @var \DateTime
+     */
     protected $snapshotDate;
 
     /**

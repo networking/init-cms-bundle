@@ -10,7 +10,10 @@
 namespace Networking\InitCmsBundle\Component\EventDispatcher;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
+
 /**
+ * Class CmsEventDispatcher
+ * @package Networking\InitCmsBundle\Component\EventDispatcher
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class CmsEventDispatcher extends EventDispatcher

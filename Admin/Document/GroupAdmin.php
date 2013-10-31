@@ -12,7 +12,10 @@
 namespace Networking\InitCmsBundle\Admin\Document;
 
 use Networking\InitCmsBundle\Admin\Model\GroupAdmin as ModelGroupAdmin;
+
 /**
+ * Class GroupAdmin
+ * @package Networking\InitCmsBundle\Admin\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class GroupAdmin extends ModelGroupAdmin {

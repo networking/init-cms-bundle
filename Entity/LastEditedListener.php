@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,14 +7,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener;
+
 /**
- * @author net working AG <info@networking.ch>
+ * Class LastEditedListener
+ * @package Networking\InitCmsBundle\Entity
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LastEditedListener extends ModelLastEditedListener
 {

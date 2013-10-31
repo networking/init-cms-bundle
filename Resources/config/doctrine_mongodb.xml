@@ -91,7 +91,7 @@
                 <argument type="service" id="ibrows_sonataadmin.annotation.reader"/>
             </call>
             <call method="setLayoutBlockAdmin">
-                <argument type="service" id="networking_init_cms.page.admin.layout_block"/>
+                <argument type="service" id="networking_init_cms.admin.layout_block"/>
             </call>
             <call method="setContentTypes">
                 <argument>%networking_init_cms.page.content_types%</argument>

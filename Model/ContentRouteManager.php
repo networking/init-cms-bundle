@@ -45,6 +45,9 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
         $this->className = $className;
     }
 
+    public function getClass(){
+        return $this->class;
+    }
 
     /**
      * {@inheritDoc}

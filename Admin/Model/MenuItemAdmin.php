@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,20 +10,21 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Networking\InitCmsBundle\Admin\BaseAdmin,
-    Networking\InitCmsBundle\Entity\MenuItem,
-    Sonata\AdminBundle\Admin\Admin,
-    Sonata\AdminBundle\Datagrid\ListMapper,
-    Sonata\AdminBundle\Datagrid\DatagridMapper,
-    Sonata\AdminBundle\Validator\ErrorElement,
-    Sonata\AdminBundle\Form\FormMapper,
-    Sonata\AdminBundle\Route\RouteCollection,
-    Doctrine\ORM\EntityRepository,
-    Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
+use Networking\InitCmsBundle\Admin\BaseAdmin;
+use Networking\InitCmsBundle\Entity\MenuItem;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Validator\ErrorElement;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Doctrine\ORM\EntityRepository;
+use Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 
 
 /**
+ * Class MenuItemAdmin
+ * @package Networking\InitCmsBundle\Admin\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class MenuItemAdmin extends BaseAdmin
@@ -59,16 +59,21 @@ abstract class MenuItemAdmin extends BaseAdmin
 
 
     /**
-     * @param \Sonata\AdminBundle\Route\RouteCollection $collection
+     * {@inheritdoc}
      */
     protected function configureRoutes(RouteCollection $collection)
     {
-        $collection->add('createFromPage', 'create_from_page/root_id/{rootId}/page_id/{pageId}', array(), array('_method' => 'GET|POST', 'rootId', 'pageId'));
+        $collection->add(
+            'createFromPage',
+            'create_from_page/root_id/{rootId}/page_id/{pageId}',
+            array(),
+            array('_method' => 'GET|POST', 'rootId', 'pageId')
+        );
         $collection->add('ajaxController', 'ajax_navigation', array(), array('_method' => 'GET|POST'));
     }
 
     /**
-     * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -78,10 +83,10 @@ abstract class MenuItemAdmin extends BaseAdmin
 
         $uniqId = $this->getUniqid();
 
-        if($postArray = $this->getRequest()->get($uniqId)){
-           if(array_key_exists('locale', $postArray)){
-               $locale = $postArray['locale'];
-           }
+        if ($postArray = $this->getRequest()->get($uniqId)) {
+            if (array_key_exists('locale', $postArray)) {
+                $locale = $postArray['locale'];
+            }
         }
 
 
@@ -95,10 +100,9 @@ abstract class MenuItemAdmin extends BaseAdmin
 
         if ($rootId = $this->getRequest()->get('root_id')) {
             $root = $er->find($rootId);
-        }
-        elseif($id){
+        } elseif ($id) {
             $root = $er->find($this->getSubject()->getRoot());
-        }else {
+        } else {
             $root = $er->findOneBy(array('isRoot' => 1, 'locale' => $locale));
         }
 
@@ -113,103 +117,127 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->add('name');
 
 
-
         if ($this->isRoot) {
             $formMapper
                 ->add('description')
                 ->add('isRoot', 'hidden', array('data' => true));
         } else {
-//            $formMapper->add('menu', 'hidden', array('data' => $root->getId()));
             // start group page_or_url
             $formMapper
-                ->with('Target (page or url)',
+                ->with(
+                    'Target (page or url)',
                     array(
                         'collapsed' => false,
-                        'description' => $this->translator->trans('form.legend_page_or_url', array(), $this->translationDomain)
+                        'description' => $this->translator->trans(
+                                'form.legend_page_or_url',
+                                array(),
+                                $this->translationDomain
+                            )
                     )
                 );
             $formMapper
-                ->add('page',
-                'networking_type_autocomplete',
+                ->add(
+                    'page',
+                    'networking_type_autocomplete',
                     array(
                         'attr' => array('style' => "width:220px"),
                         'class' => 'Application\Networking\InitCmsBundle\Entity\Page',
                         'required' => false,
                         'property' => 'AdminTitle',
                         'query_builder' => function (EntityRepository $er) use ($locale) {
-                            $qb = $er->createQueryBuilder('p');
+                                $qb = $er->createQueryBuilder('p');
 
-                            return $qb->where('p.locale = :locale')
-                                ->orderBy('p.path', 'asc')
-                                ->setParameter(':locale', $locale);
-                        },
+                                return $qb->where('p.locale = :locale')
+                                    ->orderBy('p.path', 'asc')
+                                    ->setParameter(':locale', $locale);
+                            },
                     )
-            );
-            $formMapper->add('redirect_url', 'url', array('required'=>false, 'help_inline' => 'help.redirect_url'));
-            $formMapper->add('internal_url', 'text', array('required'=>false, 'help_inline' => 'help.internal_url'));
+                );
+            $formMapper->add('redirect_url', 'url', array('required' => false, 'help_inline' => 'help.redirect_url'));
+            $formMapper->add('internal_url', 'text', array('required' => false, 'help_inline' => 'help.internal_url'));
             $formMapper->end();
 
             // start group optionals
             $formMapper
-                ->with('Options',
+                ->with(
+                    'Options',
                     array(
                         'collapsed' => true,
-                        'description' => $this->translator->trans('form.legend_options', array(), $this->translationDomain)
-                    ))
-                   ->add(
-                        'visibility',
-                        'sonata_type_translatable_choice',
-                        array(
-                            'help_inline' => 'visibility.helper.text',
-                            'choices' => MenuItem::getVisibilityList(),
-                            'catalogue' => $this->translationDomain
-                        )
+                        'description' => $this->translator->trans(
+                                'form.legend_options',
+                                array(),
+                                $this->translationDomain
+                            )
                     )
-                ->add('link_target', 'choice', array('choices'=>$this->getTranslatedLinkTargets(), 'required'=>false))
-                ->add('link_class', 'text', array('required'=>false))
-                ->add('link_rel', 'text', array('required'=>false))
-                ->add('hidden', null, array('required'=>false))
+                )
+                ->add(
+                    'visibility',
+                    'sonata_type_translatable_choice',
+                    array(
+                        'help_inline' => 'visibility.helper.text',
+                        'choices' => MenuItem::getVisibilityList(),
+                        'catalogue' => $this->translationDomain
+                    )
+                )
+                ->add(
+                    'link_target',
+                    'choice',
+                    array('choices' => $this->getTranslatedLinkTargets(), 'required' => false)
+                )
+                ->add('link_class', 'text', array('required' => false))
+                ->add('link_rel', 'text', array('required' => false))
+                ->add('hidden', null, array('required' => false))
                 ->end();
 
             $entityManager = $this->getContainer()->get('Doctrine')->getManager();
 
             $transformer = new MenuItemToNumberTransformer($entityManager);
 
-            $menuField = $formMapper->getFormBuilder()->create('menu', 'hidden',  array('data' => $root, 'data_class' => null));
+            $menuField = $formMapper->getFormBuilder()->create(
+                'menu',
+                'hidden',
+                array('data' => $root, 'data_class' => null)
+            );
             $menuField->addModelTransformer($transformer);
             $formMapper
-                    ->add($menuField, 'hidden');
+                ->add($menuField, 'hidden');
 
         }
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
 
         $datagridMapper
-            ->add('locale',
-            'doctrine_orm_callback',
-            array('callback' => array($this, 'getByLocale')),
-            'choice',
-            array(
-                'empty_value' => false,
-                'choices' => $this->getLocaleChoices(),
-                'preferred_choices' => array($this->getDefaultLocale())
-            ));
+            ->add(
+                'locale',
+                'doctrine_orm_callback',
+                array('callback' => array($this, 'getByLocale')),
+                'choice',
+                array(
+                    'empty_value' => false,
+                    'choices' => $this->getLocaleChoices(),
+                    'preferred_choices' => array($this->getDefaultLocale())
+                )
+            );
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
             ->addIdentifier('name')
             ->add('path')
-            ->add('page', 'many_to_one', array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_field.html.twig'))
+            ->add(
+                'page',
+                'many_to_one',
+                array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_field.html.twig')
+            )
             ->add('redirect_url')
             ->add('link_target')
             ->add('link_class')
@@ -225,8 +253,12 @@ abstract class MenuItemAdmin extends BaseAdmin
      * @param $value
      * @return bool
      */
-    public function getByLocale(\Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder, $alias, $field, $value)
-    {
+    public function getByLocale(
+        \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder,
+        $alias,
+        $field,
+        $value
+    ) {
         if (!$locale = $value['value']) {
             $locale = $this->getDefaultLocale();
         }
@@ -240,8 +272,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Validator\ErrorElement $errorElement
-     * @param mixed                                      $object
+     * {@inheritdoc}
      */
     public function validate(ErrorElement $errorElement, $object)
     {
@@ -250,11 +281,13 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->assertNotBlank()
             ->end();
 
-        if(!$object->getIsRoot()){
+        if (!$object->getIsRoot()) {
             if (!$object->getRedirectUrl() AND !$object->getPage() AND !$object->getInternalUrl()) {
                 $errorElement
                     ->with('menu_page_or_url_required')
-                    ->addViolation($this->translator->trans('menu.page_or_url.required', array(), $this->translationDomain))
+                    ->addViolation(
+                        $this->translator->trans('menu.page_or_url.required', array(), $this->translationDomain)
+                    )
                     ->end();
             }
 
@@ -262,7 +295,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     }
 
     /**
-     * @param $isRoot
+     * @param boolean $isRoot
      */
     public function setIsRoot($isRoot)
     {
@@ -270,8 +303,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     }
 
     /**
-     * @param string $name
-     * @return null|string
+     * {@inheritdoc}
      */
     public function getTemplate($name)
     {
@@ -291,16 +323,20 @@ abstract class MenuItemAdmin extends BaseAdmin
     public function getTranslatedLinkTargets()
     {
         $translatedLinkTargets = array();
-        foreach($this->linkTargets as $key => $value)
-        {
+        foreach ($this->linkTargets as $key => $value) {
             $translatedLinkTargets[$key] = $this->translator->trans($value, array(), $this->translationDomain);
         }
+
         return $translatedLinkTargets;
     }
 
-     public function preRemove($object){
-         if($object->hasChildren()){
-             throw new ModelManagerException('flash_delete_children_error');
-         }
-     }
+    /**
+     * {@inheritdoc}
+     */
+    public function preRemove($object)
+    {
+        if ($object->hasChildren()) {
+            throw new ModelManagerException('flash_delete_children_error');
+        }
+    }
 }

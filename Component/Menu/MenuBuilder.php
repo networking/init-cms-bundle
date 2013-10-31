@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,22 +10,21 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\Security\Core\SecurityContextInterface,
-    Symfony\Component\DependencyInjection\Container,
-    Mopa\Bundle\BootstrapBundle\Navbar\AbstractNavbarMenuBuilder,
-    Knp\Menu\FactoryInterface,
-    Knp\Menu\MenuItem as Menu,
-    Networking\InitCmsBundle\Entity\MenuItem,
-    Networking\InitCmsBundle\Entity\BasePage as Page,
-    Networking\InitCmsBundle\Component\Routing\CMSRoute;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Mopa\Bundle\BootstrapBundle\Navbar\AbstractNavbarMenuBuilder;
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\MenuItem as Menu;
+use Networking\InitCmsBundle\Entity\MenuItem;
+use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\Translator;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class MenuBuilder
+ * @package Networking\InitCmsBundle\Component\Menu
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuBuilder extends AbstractNavbarMenuBuilder
 {

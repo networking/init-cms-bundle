@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the Networking package.
  *
  * (c) net working AG <info@networking.ch>
@@ -7,19 +7,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Block;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Networking\InitCmsBundle\Model\UserManagerInterface;
-use Sonata\BlockBundle\Block\BaseBlockService,
-    Sonata\BlockBundle\Model\BlockInterface,
-    Sonata\AdminBundle\Form\FormMapper,
-    Sonata\AdminBundle\Validator\ErrorElement,
-    Symfony\Component\HttpFoundation\Response,
-    Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Sonata\BlockBundle\Block\BaseBlockService;
+use Sonata\BlockBundle\Model\BlockInterface;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Validator\ErrorElement;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class OnlineUsersBlockService
+ * @package Networking\InitCmsBundle\Block
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class OnlineUsersBlockService extends BaseBlockService
 {
 
@@ -27,6 +32,7 @@ class OnlineUsersBlockService extends BaseBlockService
      * @var \Networking\InitCmsBundle\Model\UserManagerInterface
      */
     protected $um;
+
     /**
      * @param string $name
      * @param EngineInterface $templating
@@ -34,8 +40,6 @@ class OnlineUsersBlockService extends BaseBlockService
      */
     public function __construct($name, EngineInterface $templating, UserManagerInterface $um)
     {
-
-
         $this->name = $name;
         $this->templating = $templating;
         $this->um = $um;
@@ -46,7 +50,6 @@ class OnlineUsersBlockService extends BaseBlockService
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-
         $users = $this->um->getLatestActivity();
 
         return $this->renderResponse(
@@ -72,7 +75,7 @@ class OnlineUsersBlockService extends BaseBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-
+        // TODO: Implement buildEditForm() method.
     }
 
     /**
@@ -88,7 +91,8 @@ class OnlineUsersBlockService extends BaseBlockService
      */
     public function setDefaultSettings(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults(
+            array(
                 'template' => 'NetworkingInitCmsBundle:Block:block_online_users.html.twig'
             )
         );

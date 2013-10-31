@@ -11,20 +11,21 @@
 
 namespace Networking\InitCmsBundle\Admin\Document;
 
-use Networking\InitCmsBundle\Admin\BaseAdmin,
-    Networking\InitCmsBundle\Entity\MenuItem,
-    Sonata\AdminBundle\Admin\Admin,
-    Sonata\AdminBundle\Datagrid\ListMapper,
-    Sonata\AdminBundle\Datagrid\DatagridMapper,
-    Sonata\AdminBundle\Validator\ErrorElement,
-    Sonata\AdminBundle\Form\FormMapper,
-    Sonata\AdminBundle\Route\RouteCollection,
-    Doctrine\ORM\EntityRepository,
-    Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
+use Networking\InitCmsBundle\Admin\BaseAdmin;
+use Networking\InitCmsBundle\Entity\MenuItem;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Validator\ErrorElement;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Doctrine\ORM\EntityRepository;
+use Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\DoctrineMongoDBAdminBundle\Datagrid\ProxyQuery;
 
 /**
+ * Class MenuItemAdmin
+ * @package Networking\InitCmsBundle\Admin\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuItemAdmin extends BaseAdmin

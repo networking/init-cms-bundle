@@ -11,25 +11,15 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Bundle\DoctrineBundle\Registry,
-    Doctrine\ORM\EntityManager,
-    Symfony\Component\Form\FormFactoryInterface,
-    Symfony\Component\EventDispatcher\EventSubscriberInterface,
-    Symfony\Component\Form\FormEvents,
-    Symfony\Component\Form\FormEvent,
-    Symfony\Component\Form\FormBuilder,
-    Symfony\Component\Form\FormInterface,
-    Networking\InitCmsBundle\Model\PageInterface,
-    Networking\InitCmsBundle\Model\LayoutBlockInterface,
-    Networking\InitCmsBundle\Admin\LayoutBlockAdmin,
-    Networking\InitCmsBundle\Model\ContentInterface,
-    Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer,
-    Networking\InitCmsBundle\Helper\ContentInterfaceHelper,
-    Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;
+use Symfony\Component\Form\FormEvent;
+use Networking\InitCmsBundle\Model\LayoutBlockInterface;
+use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Model\LayoutBlockFormListener as ModelLayoutBlockFormListener;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class LayoutBlockFormListener
+ * @package Networking\InitCmsBundle\Entity
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LayoutBlockFormListener extends ModelLayoutBlockFormListener
 {

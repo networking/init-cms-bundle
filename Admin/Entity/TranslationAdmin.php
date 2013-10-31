@@ -17,11 +17,15 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 
 /**
+ * Class TranslationAdmin
+ * @package Networking\InitCmsBundle\Admin\Entity
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class TranslationAdmin extends ORMTranslationAdmin
 {
-
+    /**
+     * {@inheritdoc}
+     */
     protected function configureDatagridFilters(DatagridMapper $filter)
     {
         $filter
@@ -60,8 +64,8 @@ class TranslationAdmin extends ORMTranslationAdmin
     }
 
     /**
-     * @param unknown $name
-     * @return multitype:|NULL
+     * @param string $name
+     * @return multitype|NULL
      */
     public function getTemplate($name)
     {
@@ -76,6 +80,9 @@ class TranslationAdmin extends ORMTranslationAdmin
         return parent::getTemplate($name);
     }
 
+    /**
+     * @return array
+     */
     public function getDomains()
     {
         /** @var ProxyQuery $proxyQuery */

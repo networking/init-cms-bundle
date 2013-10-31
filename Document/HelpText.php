@@ -13,7 +13,9 @@ namespace Networking\InitCmsBundle\Document;
 use Networking\InitCmsBundle\Model\HelpText as ModelHelpText;
 
 /**
- * HelpText
+ * Class HelpText
+ * @package Networking\InitCmsBundle\Document
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class HelpText extends ModelHelpText
 {

@@ -10,54 +10,41 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-
-use Doctrine\ORM\Mapping as ORM,
-    Sonata\MediaBundle\Entity\BaseMedia as BaseMedia,
-    Networking\InitCmsBundle\Entity\Tag,
-    Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
+ * Class Media
+ * @package Networking\InitCmsBundle\Entity
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
- * Networking\InitCmsBundle\Entity\Media
- *
- * @ORM\Table(name="media__media")
- * @ORM\Entity()
  */
 class Media extends BaseMedia
 {
 
     /**
      * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
      */
     protected $id;
 
     /**
      * @var ArrayCollection $tags
-     *
-
      */
     protected $tags;
 
     /**
      * @var string $locale
-     * @ORM\Column(name="locale", type="string", nullable=true)
      */
     protected $locale;
 
     /**
      * @var ArrayCollection $galleryHasMedias
-     *
-     * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\GalleryHasMedia", mappedBy="media", orphanRemoval=true)
      */
     protected $galleryHasMedias;
 
-
+    /**
+     *
+     */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -76,7 +63,7 @@ class Media extends BaseMedia
     /**
      * Add tags
      *
-     * @param \Networking\InitCmsBundle\Entity\Tag  $tag
+     * @param \Networking\InitCmsBundle\Entity\Tag $tag
      * @return $this
      */
     public function addTags(Tag $tag)

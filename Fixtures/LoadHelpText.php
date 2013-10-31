@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -18,7 +17,11 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Entity\HelpText;
 
-
+/**
+ * Class LoadHelpText
+ * @package Networking\InitCmsBundle\Fixtures
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
@@ -42,35 +45,40 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
             'is_deletable' => '1'
         ),
         //pages
-        'networking_init_cms.page.admin.page.list' => array(
-            'title' => 'networking_init_cms.page.admin.page.list.title',
-            'text' => 'networking_init_cms.page.admin.page.list.text',
+        'networking_init_cms.admin.page.list' => array(
+            'title' => 'networking_init_cms.admin.page.list.title',
+            'text' => 'networking_init_cms.admin.page.list.text',
             'is_deletable' => '1'
         ),
-        'networking_init_cms.page.admin.page.create' => array(
-            'title' => 'networking_init_cms.page.admin.page.create.title',
-            'text' => 'networking_init_cms.page.admin.page.create.text',
+        'networking_init_cms.admin.page.create' => array(
+            'title' => 'networking_init_cms.admin.page.create.title',
+            'text' => 'networking_init_cms.admin.page.create.text',
             'is_deletable' => '1'
         ),
-        'networking_init_cms.page.admin.page.edit' => array(
-            'title' => 'networking_init_cms.page.admin.page.edit.title',
-            'text' => 'networking_init_cms.page.admin.page.edit.text',
+        'networking_init_cms.admin.page.edit' => array(
+            'title' => 'networking_init_cms.admin.page.edit.title',
+            'text' => 'networking_init_cms.admin.page.edit.text',
             'is_deletable' => '1'
         ),
         //menu
-        'networking_init_cms.menu.admin.menu_item.navigation' => array(
-            'title' => 'networking_init_cms.menu.admin.menu_item.navigation.title',
-            'text' => 'networking_init_cms.menu.admin.menu_item.navigation.text',
+        'networking_init_cms.admin.menu_item.navigation' => array(
+            'title' => 'networking_init_cms.admin.menu_item.navigation.title',
+            'text' => 'networking_init_cms.admin.menu_item.navigation.text',
             'is_deletable' => '1'
         ),
-        'networking_init_cms.menu.admin.menu.create' => array(
-            'title' => 'networking_init_cms.menu.admin.menu.create.title',
-            'text' => 'networking_init_cms.menu.admin.menu.create.text',
+        'networking_init_cms.admin.menu.create' => array(
+            'title' => 'networking_init_cms.admin.menu.create.title',
+            'text' => 'networking_init_cms.admin.menu.create.text',
             'is_deletable' => '1'
         ),
-        'networking_init_cms.menu.admin.menu_item.create' => array(
-            'title' => 'networking_init_cms.menu.admin.menu_item.create.title',
-            'text' => 'networking_init_cms.menu.admin.menu_item.create.text',
+        'networking_init_cms.admin.menu_item.create' => array(
+            'title' => 'networking_init_cms.admin.menu_item.create.title',
+            'text' => 'networking_init_cms.admin.menu_item.create.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.admin.menu_item.edit' => array(
+            'title' => 'networking_init_cms.admin.menu_item.edit.title',
+            'text' => 'networking_init_cms.admin.menu_item.edit.text',
             'is_deletable' => '1'
         ),
         //media
@@ -79,25 +87,46 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
             'text' => 'sonata.media.admin.media.list.text',
             'is_deletable' => '1'
         ),
+        'sonata.media.admin.media.create' => array(
+            'title' => 'sonata.media.admin.media.create.title',
+            'text' => 'sonata.media.admin.media.create.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.media.edit' => array(
+            'title' => 'sonata.media.admin.media.edit.title',
+            'text' => 'sonata.media.admin.media.edit.text',
+            'is_deletable' => '1'
+        ),
+        //gallery
         'sonata.media.admin.gallery.list' => array(
             'title' => 'sonata.media.admin.gallery.list.title',
             'text' => 'sonata.media.admin.gallery.list.text',
             'is_deletable' => '1'
         ),
-        'networking_init_cms.page.admin.tag.list' => array(
-            'title' => 'networking_init_cms.page.admin.tag.list.title',
-            'text' => 'networking_init_cms.page.admin.tag.list.text',
+        'sonata.media.admin.gallery.create' => array(
+            'title' => 'sonata.media.admin.gallery.create.title',
+            'text' => 'sonata.media.admin.gallery.create.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.gallery.edit' => array(
+            'title' => 'sonata.media.admin.gallery.edit.title',
+            'text' => 'sonata.media.admin.gallery.edit.text',
             'is_deletable' => '1'
         ),
         //user
-        'sonata.user.admin.user.list' => array(
-            'title' => 'sonata.user.admin.user.list.title',
-            'text' => 'sonata.user.admin.user.list.text',
+        'sonata.media.admin.user.list' => array(
+            'title' => 'sonata.media.admin.user.list.title',
+            'text' => 'sonata.media.admin.user.list.text',
             'is_deletable' => '1'
         ),
-        'sonata.user.admin.group.list' => array(
-            'title' => 'sonata.user.admin.group.list.title',
-            'text' => 'sonata.user.admin.group.list.text',
+        'sonata.media.admin.user.create' => array(
+            'title' => 'sonata.media.admin.user.create.title',
+            'text' => 'sonata.media.admin.user.create.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.media.admin.user.edit' => array(
+            'title' => 'sonata.media.admin.user.edit.title',
+            'text' => 'sonata.media.admin.user.edit.text',
             'is_deletable' => '1'
         ),
         //not found
@@ -137,17 +166,16 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
                 );
             }
         }
-
-
     }
 
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param ObjectManager $manager
      * @param $locale
      * @param $translationKey
      * @param $title
      * @param $text
+     * @param $isDeletable
      */
     public function createHelpText(ObjectManager $manager, $locale, $translationKey, $title, $text, $isDeletable)
     {

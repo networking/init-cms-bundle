@@ -15,8 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
- * @Gedmo\Tree(type="nested")
- *
  * @author net working AG <info@networking.ch>
  */
 class MenuItem implements MenuItemInterface, \IteratorAggregate
@@ -29,68 +27,88 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
 
     /**
+     * @var int
      */
     protected $id;
 
     /**
+     * @var string
      */
     protected $name;
 
     /**
+     * @var PageInterface
      */
     protected $page;
 
-
     /**
+     * @var string
      */
     protected $redirectUrl;
 
+
     /**
+     * @var string
      */
     protected $internalUrl;
 
+
     /**
+     * @var boolean
      */
     protected $hidden;
 
+
     /**
+     * @var string
      */
     protected $linkTarget;
 
+
     /**
+     * @var string
      */
     protected $linkClass;
 
+
     /**
+     * @var string
      */
     protected $linkRel;
 
+
     /**
-     * @Gedmo\TreeLeft
+     * @var int
      */
     protected $lft;
 
+
     /**
-     * @Gedmo\TreeLevel
+     * @var int
      */
     protected $lvl;
 
+
     /**
-     * @Gedmo\TreeRight
+     * @var int
      */
     protected $rgt;
 
+
     /**
-     * @Gedmo\TreeRoot
+     * @var int
      */
     protected $root;
 
+
     /**
-     * @Gedmo\TreeParent
+     * @var MenuItemInterface
      */
     protected $parent;
 
+
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $children;
 
@@ -100,7 +118,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     protected $isRoot = false;
 
     /**
-     * @var string $locale;
+     * @var string $locale ;
      */
     protected $locale;
 
@@ -137,7 +155,9 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
         return (string)$this->name;
     }
 
+
     /**
+     *
      */
     public function prePersist()
     {
@@ -240,7 +260,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $name
-     * @return MenuItem
+     * @return $this
      */
     public function setName($name)
     {
@@ -266,11 +286,12 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     public function setParent(MenuItemInterface $parent = null)
     {
         $this->parent = $parent;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return MenuItemInterface
      */
     public function getParent()
     {
@@ -289,7 +310,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getLft()
     {
@@ -308,7 +329,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getLvl()
     {
@@ -327,7 +348,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getRgt()
     {
@@ -346,7 +367,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getRoot()
     {
@@ -354,7 +375,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return MenuItem
+     * @return MenuItemInterface
      */
     public function getMenu()
     {
@@ -398,7 +419,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @param  int           $level
+     * @param  int $level
      * @return bool|MenuItemInterface
      */
     public function getParentByLevel($level = 1)
@@ -482,6 +503,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     public function setPath($path)
     {
         $this->path = $path;
+
         return $this;
     }
 
@@ -490,7 +512,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
      */
     public function getPath()
     {
-        if($this->path){
+        if ($this->path) {
             return $this->path;
         }
 
@@ -514,7 +536,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @param  null     $locale
+     * @param  null $locale
      * @return $this
      */
     public function setLocale($locale = null)

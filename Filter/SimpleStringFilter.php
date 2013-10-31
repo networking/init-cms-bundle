@@ -7,11 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Filter;
 
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface,
-    Sonata\DoctrineORMAdminBundle\Filter\Filter;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\DoctrineORMAdminBundle\Filter\Filter;
+
 /**
+ * Class SimpleStringFilter
+ * @package Networking\InitCmsBundle\Filter
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class SimpleStringFilter extends Filter
@@ -46,7 +50,7 @@ class SimpleStringFilter extends Filter
     public function getDefaultOptions()
     {
         return array(
-            'format'   => '%%%s%%'
+            'format' => '%%%s%%'
         );
     }
 
@@ -55,10 +59,13 @@ class SimpleStringFilter extends Filter
      */
     public function getRenderSettings()
     {
-        return array('sonata_type_filter_default', array(
-            'field_type'    => $this->getFieldType(),
-            'field_options' => $this->getFieldOptions(),
-            'label'         => $this->getLabel()
-        ));
+        return array(
+            'sonata_type_filter_default',
+            array(
+                'field_type' => $this->getFieldType(),
+                'field_options' => $this->getFieldOptions(),
+                'label' => $this->getLabel()
+            )
+        );
     }
 }

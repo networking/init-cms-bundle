@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Document;
 
 use Doctrine\Common\EventArgs;
@@ -16,6 +15,8 @@ use Networking\InitCmsBundle\Model\ContentRoute;
 use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteListener;
 
 /**
+ * Class ContentRouteListener
+ * @package Networking\InitCmsBundle\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class ContentRouteListener extends ModelContentRouteListener

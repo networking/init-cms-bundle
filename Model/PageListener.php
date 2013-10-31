@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 
-
 /**
+ * Class PageListener
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class PageListener implements EventSubscriberInterface, PageListenerInterface, ContainerAwareInterface
@@ -36,7 +36,6 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
      *
      * @param ContainerInterface|null $container A ContainerInterface instance or null
      *
-     * @api
      */
     public function setContainer(ContainerInterface $container = null)
     {

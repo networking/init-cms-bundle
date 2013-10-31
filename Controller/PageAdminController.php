@@ -381,7 +381,7 @@ class PageAdminController extends CRUDController
                     $sort = ++$key;
                     $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
                     /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-                    $layoutBlockAdmin = $this->get('networking_init_cms.page.admin.layout_block');
+                    $layoutBlockAdmin = $this->get('networking_init_cms.admin.layout_block');
 
 
 
@@ -413,7 +413,7 @@ class PageAdminController extends CRUDController
             'message' => $this->admin->trans('message.layout_blocks_sorted', array('zone' => ''))
         );
 
-        $admin = $this->container->get('networking_init_cms.page.admin.page');
+        $admin = $this->container->get('networking_init_cms.admin.page');
         $page = $subject = $admin->getModelManager()->find($admin->getClass(), $objectId);
 
         if ($page) {
@@ -446,7 +446,7 @@ class PageAdminController extends CRUDController
             $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
 
                 /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-                $layoutBlockAdmin = $this->get('networking_init_cms.page.admin.layout_block');
+                $layoutBlockAdmin = $this->get('networking_init_cms.admin.layout_block');
                 $layoutBlock = $layoutBlockAdmin->getObject($blockId);
                 if ($layoutBlock) {
 
@@ -477,7 +477,7 @@ class PageAdminController extends CRUDController
         $objectId,
         $elementId,
         $uniqId = null,
-        $code = 'networking_init_cms.page.admin.page',
+        $code = 'networking_init_cms.admin.page',
         $doUpdate = false
     ) {
         $twig = $this->get('twig');

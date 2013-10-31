@@ -53,8 +53,8 @@
                 <source>help_title</source>
                 <target>Help for: %admin_title% %action%</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.edit">
-                <source>networking_init_cms.page.admin.page.edit</source>
+            <trans-unit id="networking_init_cms.admin.page.edit">
+                <source>networking_init_cms.admin.page.edit</source>
                 <target>Page edit</target>
             </trans-unit>
             <trans-unit id="action.list">
@@ -76,12 +76,12 @@
 
             <!-- help navigation -->
 
-            <trans-unit id="networking_init_cms.page.admin.page">
-                <source>networking_init_cms.page.admin.page</source>
+            <trans-unit id="networking_init_cms.admin.page">
+                <source>networking_init_cms.admin.page</source>
                 <target>Pages</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item">
-                <source>networking_init_cms.menu.admin.menu_item</source>
+            <trans-unit id="networking_init_cms.admin.menu_item">
+                <source>networking_init_cms.admin.menu_item</source>
                 <target>Menu</target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.media">
@@ -178,12 +178,12 @@
 
             <!-- pages -->
 
-            <trans-unit id="networking_init_cms.page.admin.page.list.title">
-                <source>networking_init_cms.page.admin.page.list.title</source>
+            <trans-unit id="networking_init_cms.admin.page.list.title">
+                <source>networking_init_cms.admin.page.list.title</source>
                 <target>Seiten-Übersicht</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.list.text">
-                <source>networking_init_cms.page.admin.page.list.text</source>
+            <trans-unit id="networking_init_cms.admin.page.list.text">
+                <source>networking_init_cms.admin.page.list.text</source>
                 <target><![CDATA[
                     <p>Eine Seite ist ein Schlüsselbaustein für die Website. Auf einer Seite können Sie Ihren Content und seine Position im Layout hinzufügen oder ändern. Unter „Seiten" im CMS finden Sie eine Liste all Ihrer Seiten. Am Listenanfang können Sie Seiten filtern und suchen. Es gibt auch eine hervorstehende Schaltfläche zum Hinzufügen von neuen Seiten. Am Listenende finden Sie Massenfunktionalitäten, um schnelle Änderungen auf mehrere Seiten auf einmal anzuwenden.</p>
 
@@ -231,12 +231,12 @@
                     ]]>
                 </target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.create.title">
-                <source>networking_init_cms.page.admin.page.create.title</source>
+            <trans-unit id="networking_init_cms.admin.page.create.title">
+                <source>networking_init_cms.admin.page.create.title</source>
                 <target>Neue Seite hinzufügen</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.create.text">
-                <source>networking_init_cms.page.admin.page.create.text</source>
+            <trans-unit id="networking_init_cms.admin.page.create.text">
+                <source>networking_init_cms.admin.page.create.text</source>
                 <target><![CDATA[
                  <p>Klicken Sie zuerst im Abschnitt &quot;Seiten&quot; des CMS auf die Schaltfläche &quot;+ Seite hinzufügen&quot;. Alle mit &quot;*&quot; gekennzeichneten Felder sind Pflichtfelder, die anderen sind optional. In der folgenden Liste werden alle Felder erläutert.</p>
 
@@ -273,12 +273,12 @@
                 ]]>
                 </target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.edit.title">
-                <source>networking_init_cms.page.admin.page.edit.title</source>
+            <trans-unit id="networking_init_cms.admin.page.edit.title">
+                <source>networking_init_cms.admin.page.edit.title</source>
                 <target>Seite bearbeiten</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.edit.text">
-                <source>networking_init_cms.page.admin.page.edit.text</source>
+            <trans-unit id="networking_init_cms.admin.page.edit.text">
+                <source>networking_init_cms.admin.page.edit.text</source>
                 <target><![CDATA[
           <p>Das Editierformular umfasst mehrere Bereiche. Unter dem Seitentitel sehen Sie den Content-Bereich mit einem oder mehreren Layout-Containern. Auf der rechten Seite finden Sie zusätzliche Informationen und Aktionen für die Seite.</p>
 
@@ -316,12 +316,12 @@
 
             <!-- menu -->
 
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.navigation.title">
-                <source>networking_init_cms.menu.admin.menu_item.navigation.title</source>
+            <trans-unit id="networking_init_cms.admin.menu_item.navigation.title">
+                <source>networking_init_cms.admin.menu_item.navigation.title</source>
                 <target>Menü-Übersicht</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.navigation.text">
-                <source>networking_init_cms.menu.admin.menu_item.navigation.text</source>
+            <trans-unit id="networking_init_cms.admin.menu_item.navigation.text">
+                <source>networking_init_cms.admin.menu_item.navigation.text</source>
                 <target><![CDATA[
                     <p>Ein Menü bietet eine Navigation, damit andere leicht auf Ihren Content zugreifen können. Jedes Menü wird durch eine Registerkarte dargestellt, das ausgewählte Menü wird hell hervorgehoben. Unter dem hell hervorgehobenen Menü sehen Sie alle Optionen und die Liste der Menüelemente. Die Menüelement-Liste zeigt Informationen über jeden Menüpunkt an und bietet die Funktionen zum Verschieben (Umsortieren), Bearbeiten und Löschen jedes Punkts an. Über den Registerkarten können Sie die Menüs nach Sprache filtern.</p>
 
@@ -343,12 +343,12 @@
                     Ein Menü gehört nur zur ausgewählten Sprache. Somit hat jede Sprache ihre eigenen Menüs. Dadurch steht Ihnen in jeder Sprache ein separater Menü-Baum zur Verfügung.</p>
                 ]]></target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.create.title">
-                <source>networking_init_cms.menu.admin.menu_item.create.title</source>
+            <trans-unit id="networking_init_cms.admin.menu_item.create.title">
+                <source>networking_init_cms.admin.menu_item.create.title</source>
                 <target>Neues Menüelement hinzufügen</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.create.text">
-                <source>networking_init_cms.menu.admin.menu_item.create.text</source>
+            <trans-unit id="networking_init_cms.admin.menu_item.create.text">
+                <source>networking_init_cms.admin.menu_item.create.text</source>
                 <target><![CDATA[
                     <p>In der Menü-Übersicht finden Sie die blaue Schaltfläche &quot;+ Element hinzufügen&quot;. Wenn Sie sie anklicken, wird ein neues Menüelement in dem aktuell ausgewählten Menü angelegt. </p>
 
@@ -446,12 +446,12 @@
                     ​</strong>Klicken Sie &quot;+ Neue hinzufügen&quot; an, um vorhandene Medien hinzuzufügen, oder laden Sie neue Medien direkt hoch. Sie können bei Bedarf auch Medien aus der Galerie löschen. Sie können jederzeit darauf zurückkommen und Medien für eine Galerie hinzufügen oder ändern.</p>
                 ]]></target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.tag.list.title">
-                <source>networking_init_cms.page.admin.tag.list.title</source>
+            <trans-unit id="networking_init_cms.admin.tag.list.title">
+                <source>networking_init_cms.admin.tag.list.title</source>
                 <target>Medien-Tag (Markierung)</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.tag.list.text">
-                <source>networking_init_cms.page.admin.tag.list.text</source>
+            <trans-unit id="networking_init_cms.admin.tag.list.text">
+                <source>networking_init_cms.admin.tag.list.text</source>
                 <target><![CDATA[
                         <p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
 

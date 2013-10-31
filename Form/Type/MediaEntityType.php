@@ -14,8 +14,6 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityChoiceList;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\ORMQueryBuilderLoader;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Exception\FormException;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -24,11 +22,10 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Class MediaType
- * @package Sandbox\InitCmsBundle\Form\Type
- * @author Sonja Brodersen <s.brodersen@networking.ch>
+ * Class MediaEntityType
+ * @package Networking\InitCmsBundle\Form\Type
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-
 class MediaEntityType extends EntityType
 {
     /**
@@ -36,8 +33,14 @@ class MediaEntityType extends EntityType
      */
     private $choiceListCache = array();
 
+    /**
+     * @var null
+     */
     public $context = null;
 
+    /**
+     * @var null
+     */
     public $providerName = null;
 
     /**
@@ -45,7 +48,6 @@ class MediaEntityType extends EntityType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder->setAttribute('dataType', $options['dataType']);
     }
 
@@ -59,6 +61,9 @@ class MediaEntityType extends EntityType
         $view->vars['provider_name'] = $options['provider_name'];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
 
@@ -70,6 +75,7 @@ class MediaEntityType extends EntityType
             if (null !== $options['context'] || null !== $options['provider_name']) {
                 $type->context = $options['context'];
                 $type->providerName = $options['provider_name'];
+
                 return $type->getLoader($options['em'], $options['query_builder'], $options['class']);
             }
 
@@ -89,17 +95,23 @@ class MediaEntityType extends EntityType
                 // A second parameter ($key) is passed, so we cannot use
                 // spl_object_hash() directly (which strictly requires
                 // one parameter)
-                array_walk_recursive($choiceHashes, function (&$value) {
-                    $value = spl_object_hash($value);
-                });
+                array_walk_recursive(
+                    $choiceHashes,
+                    function (&$value) {
+                        $value = spl_object_hash($value);
+                    }
+                );
             }
 
             $preferredChoiceHashes = $options['preferred_choices'];
 
             if (is_array($preferredChoiceHashes)) {
-                array_walk_recursive($preferredChoiceHashes, function (&$value) {
-                    $value = spl_object_hash($value);
-                });
+                array_walk_recursive(
+                    $preferredChoiceHashes,
+                    function (&$value) {
+                        $value = spl_object_hash($value);
+                    }
+                );
             }
 
             // Support for custom loaders (with query builders)
@@ -112,15 +124,19 @@ class MediaEntityType extends EntityType
                 ? spl_object_hash($options['group_by'])
                 : $options['group_by'];
 
-            $hash = md5(json_encode(array(
-                spl_object_hash($options['em']),
-                $options['class'],
-                $propertyHash,
-                $loaderHash,
-                $choiceHashes,
-                $preferredChoiceHashes,
-                $groupByHash
-            )));
+            $hash = md5(
+                json_encode(
+                    array(
+                        spl_object_hash($options['em']),
+                        $options['class'],
+                        $propertyHash,
+                        $loaderHash,
+                        $choiceHashes,
+                        $preferredChoiceHashes,
+                        $groupByHash
+                    )
+                )
+            );
 
             if (!isset($choiceListCache[$hash])) {
                 $choiceListCache[$hash] = new EntityChoiceList(
@@ -156,34 +172,41 @@ class MediaEntityType extends EntityType
             return $em;
         };
 
-        $resolver->setDefaults(array(
-            'em' => null,
-            'property' => null,
-            'query_builder' => null,
-            'loader' => $loader,
-            'choices' => null,
-            'choice_list' => $choiceList,
-            'group_by' => null,
-            'required' => false,
-            'dataType' => 'entity',
-            'expanded' => true,
-            'provider_name' => false,
-            'context' => false,
-            'query_builder' => function (EntityRepository $er) {
-                $qb = $er->createQueryBuilder('m');
-                return $qb;
-            }
-        ));
+        $resolver->setDefaults(
+            array(
+                'em' => null,
+                'property' => null,
+                'query_builder' => null,
+                'loader' => $loader,
+                'choices' => null,
+                'choice_list' => $choiceList,
+                'group_by' => null,
+                'required' => false,
+                'dataType' => 'entity',
+                'expanded' => true,
+                'provider_name' => false,
+                'context' => false,
+                'query_builder' => function (EntityRepository $er) {
+                        $qb = $er->createQueryBuilder('m');
+
+                        return $qb;
+                    }
+            )
+        );
 
         $resolver->setRequired(array('class'));
 
-        $resolver->setNormalizers(array(
-            'em' => $emNormalizer,
-        ));
+        $resolver->setNormalizers(
+            array(
+                'em' => $emNormalizer,
+            )
+        );
 
-        $resolver->setAllowedTypes(array(
-            'loader' => array('null', 'Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface'),
-        ));
+        $resolver->setAllowedTypes(
+            array(
+                'loader' => array('null', 'Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface'),
+            )
+        );
 
 
         $resolver->addAllowedValues(array('required' => array(false)));
@@ -200,7 +223,7 @@ class MediaEntityType extends EntityType
     public function getLoader(ObjectManager $manager, $queryBuilder, $class)
     {
         $type = $this;
-        $queryBuilder = function(EntityRepository $er) use ($type){
+        $queryBuilder = function (EntityRepository $er) use ($type) {
             $queryBuilder = $er->createQueryBuilder('m');
             if ($type->context) {
                 $queryBuilder->andWhere('m.context = :context');

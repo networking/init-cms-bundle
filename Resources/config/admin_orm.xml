@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- Page Admin-->
+        <service id="networking_init_cms.admin.page" class="Networking\InitCmsBundle\Admin\Entity\PageAdmin">
+            <argument></argument>
+            <argument>%networking_init_cms.admin.page.class%</argument>
+            <argument>NetworkingInitCmsBundle:PageAdmin</argument>
+            <call method="setTranslationDomain">
+                <argument>PageAdmin</argument>
+            </call>
+            <call method="setlanguages">
+                <argument>%networking_init_cms.page.languages%</argument>
+            </call>
+            <call method="setPageManager">
+                <argument type="service" id="networking_init_cms.page_manager"/>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="Pages"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persis_filters="true"/>
+        </service>
+
+        <!-- Layout Block Admin-->
+        <service id="networking_init_cms.admin.layout_block" class="Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin">
+            <argument></argument>
+            <argument>Networking\InitCmsBundle\Entity\LayoutBlock</argument>
+            <argument>NetworkingInitCmsBundle:CRUD</argument>
+            <call method="setTranslationDomain">
+                <argument>PageAdmin</argument>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="Content"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persis_filters="true"/>
+        </service>
+
+        <!-- Menu Item Admin -->
+        <service id="networking_init_cms.admin.menu_item" class="Networking\InitCmsBundle\Admin\Entity\MenuItemAdmin">
+            <argument></argument>
+            <argument>Networking\InitCmsBundle\Entity\MenuItem</argument>
+            <argument>NetworkingInitCmsBundle:MenuItemAdmin</argument>
+            <call method="setTranslationDomain">
+                <argument>MenuItemAdmin</argument>
+            </call>
+            <call method="setlanguages">
+                <argument>%networking_init_cms.page.languages%</argument>
+            </call>
+            <call method="setSubClasses">
+                <argument type="collection">
+                    <argument key="menu">Networking\InitCmsBundle\Entity\MenuItem</argument>
+                    <argument key="menu item">Networking\InitCmsBundle\Entity\MenuItem</argument>
+                </argument>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="Menus"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persis_filters="true"/>
+        </service>
+
+        <!-- Help Text Admin-->
+        <service id="networking_init_cms.admin.help_text" class="Networking\InitCmsBundle\Admin\Entity\HelpTextAdmin">
+            <argument></argument>
+            <argument>Networking\InitCmsBundle\Entity\HelpText</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setTranslationDomain">
+                <argument>HelpTextAdmin</argument>
+            </call>
+            <call method="setlanguages">
+                <argument>%networking_init_cms.page.languages%</argument>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="Help Text"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persis_filters="true"/>
+        </service>
+
+        <!-- Layout Block Admin-->
+        <service id="networking_init_cms.admin.tag" class="Networking\InitCmsBundle\Admin\Entity\TagAdmin">
+            <argument></argument>
+            <argument>Networking\InitCmsBundle\Entity\Tag</argument>
+            <argument>NetworkingInitCmsBundle:CRUD</argument>
+            <call method="setTranslationDomain">
+                <argument>TagAdmin</argument>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="Tags"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persis_filters="true"/>
+        </service>
+
+    </services>
+
+</container>

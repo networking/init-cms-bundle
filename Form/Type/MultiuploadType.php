@@ -7,12 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 /**
- * @author Marc Bissegger <y.chadwick@networking.ch>
+ * Class MultiuploadType
+ * @package Networking\InitCmsBundle\Form\Type
+ * @author Marc Bissegger <m.bissegger@networking.ch>
  */
 class MultiuploadType extends AbstractType
 {
@@ -32,6 +36,9 @@ class MultiuploadType extends AbstractType
         return 'networking_type_multiupload';
     }
 
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver){
         $resolver->setDefaults(array(
             'error_mapping' => array(
@@ -40,6 +47,4 @@ class MultiuploadType extends AbstractType
         ));
 
     }
-    // redirect to edit mode
-
 }

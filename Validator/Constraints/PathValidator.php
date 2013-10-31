@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -16,9 +15,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * @author net working AG <info@networking.ch>
- * @author Bernhard Schussek <bschussek@gmail.com>
- *
+ * Class PathValidator
+ * @package Networking\InitCmsBundle\Validator\Constraints
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PathValidator extends ConstraintValidator
 {

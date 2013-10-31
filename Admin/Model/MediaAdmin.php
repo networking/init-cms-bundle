@@ -10,16 +10,18 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Sonata\MediaBundle\Admin\ORM\MediaAdmin as SonataMediaAdmin,
-    Sonata\AdminBundle\Route\RouteCollection,
-    Sonata\AdminBundle\Form\FormMapper,
-    Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer,
-    Sonata\AdminBundle\Datagrid\ListMapper,
-    Sonata\AdminBundle\Datagrid\DatagridMapper,
-    Sonata\AdminBundle\Admin\AdminInterface,
-    Knp\Menu\ItemInterface as MenuItemInterface;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Admin\AdminInterface;
+use Knp\Menu\ItemInterface as MenuItemInterface;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
+
 /**
+ * Class MediaAdmin
+ * @package Networking\InitCmsBundle\Admin\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class MediaAdmin extends Admin
@@ -53,10 +55,9 @@ abstract class MediaAdmin extends Admin
     }
 
 
-
     /**
      * @param $trackedActions
-     * @return BaseAdmin
+     * @return $this
      */
     public function setTrackedActions($trackedActions)
     {
@@ -74,7 +75,15 @@ abstract class MediaAdmin extends Admin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Route\RouteCollection $collection
+     * @return string
+     */
+    public function getIcon()
+    {
+        return 'icon-picture';
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function configureRoutes(RouteCollection $collection)
     {
@@ -83,14 +92,6 @@ abstract class MediaAdmin extends Admin
         $collection->add('uploadedTextBlockImage', 'uploaded_text_block_image', array(), array('method' => 'GET'));
         $collection->add('uploadTextBlockFile', 'upload_text_block_file', array(), array('method' => 'POST'));
         $collection->add('uploadedTextBlockFile', 'uploaded_text_block_file', array(), array('method' => 'GET'));
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'icon-picture';
     }
 
     /**
@@ -122,13 +123,13 @@ abstract class MediaAdmin extends Admin
         } else {
             $provider->buildCreateForm($formMapper);
         }
-            $formMapper->add(
-                'locale',
-                'choice',
-                array(
-                    'choices' => $this->getLocaleChoices(),
-                )
-            );
+        $formMapper->add(
+            'locale',
+            'choice',
+            array(
+                'choices' => $this->getLocaleChoices(),
+            )
+        );
 
         if ($formMapper->has('enabled')) {
             $formMapper->add(
@@ -159,6 +160,9 @@ abstract class MediaAdmin extends Admin
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
@@ -181,20 +185,19 @@ abstract class MediaAdmin extends Admin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\DatagridMapper $datagridMapper
-     * @return void
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '')
     {
 
         $datagridMapper
             ->add('name', 'networking_init_cms_simple_string');
-            //->add('tags', null, array('hidden' => true));Hack by Marc
+        //->add('tags', null, array('hidden' => true));Hack by Marc
 
         if ($context) {
             $datagridMapper->add('context', null, array('hidden' => true));
             $persistedParams = $this->getPersistentParameters();
-            if(array_key_exists('context', $persistedParams) && $persistedParams['context'] == $context){
+            if (array_key_exists('context', $persistedParams) && $persistedParams['context'] == $context) {
                 $datagridMapper->add('providerName', null, array('hidden' => true));
 
             }
@@ -258,8 +261,8 @@ abstract class MediaAdmin extends Admin
 
         // ok, try to limit to add parent filter
         if ($this->isChild() && $this->getParentAssociationMapping() && !$mapper->has(
-            $this->getParentAssociationMapping()
-        )
+                $this->getParentAssociationMapping()
+            )
         ) {
             $mapper->add(
                 $this->getParentAssociationMapping(),
@@ -337,7 +340,7 @@ abstract class MediaAdmin extends Admin
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getBatchActions()
     {
@@ -349,7 +352,7 @@ abstract class MediaAdmin extends Admin
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getExportFormats()
     {
@@ -378,13 +381,16 @@ abstract class MediaAdmin extends Admin
         return $locale;
     }
 
-
-    public function generateUrl($name, array $parameters = array(), $absolute = false){
-        try{
-            if($this->getRequest()->get('pcode')){
-                        $parameters['pcode'] = $this->getRequest()->get('pcode');
-                    }
-        }catch (\Exception $e){
+    /**
+     * {@inheritdoc}
+     */
+    public function generateUrl($name, array $parameters = array(), $absolute = false)
+    {
+        try {
+            if ($this->getRequest()->get('pcode')) {
+                $parameters['pcode'] = $this->getRequest()->get('pcode');
+            }
+        } catch (\Exception $e) {
             //do nothing
         }
 

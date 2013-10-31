@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,22 +10,21 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Networking\InitCmsBundle\Admin\BaseAdmin,
-    Sonata\AdminBundle\Admin\Admin,
-    Sonata\AdminBundle\Datagrid\ListMapper,
-    Sonata\AdminBundle\Datagrid\DatagridMapper,
-    Sonata\AdminBundle\Validator\ErrorElement,
-    Sonata\AdminBundle\Form\FormMapper,
-    Sonata\AdminBundle\Route\RouteCollection,
-    Sonata\AdminBundle\Admin\AdminInterface,
-    Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery,
-    Networking\InitCmsBundle\Model\PageInterface,
-    Networking\InitCmsBundle\Model\PageManagerInterface,
-    Knp\Menu\ItemInterface as MenuItemInterface,
-    Sonata\AdminBundle\Form\Extension\Field\Type\FormTypeFieldExtension;
+use Networking\InitCmsBundle\Admin\BaseAdmin;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Knp\Menu\ItemInterface as MenuItemInterface;
 
 /**
- *
+ * Class PageAdmin
+ * @package Networking\InitCmsBundle\Admin\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class PageAdmin extends BaseAdmin
 {
@@ -68,19 +66,16 @@ abstract class PageAdmin extends BaseAdmin
         return 'icon-file-alt';
     }
 
-
-
     /**
      * @param \Networking\InitCmsBundle\Model\PageManagerInterface $pageManager
      */
-    public function setPageManager(PageManagerInterface$pageManager)
+    public function setPageManager(PageManagerInterface $pageManager)
     {
         $this->pageManager = $pageManager;
     }
 
-
     /**
-     * @param \Sonata\AdminBundle\Route\RouteCollection $collection
+     * {@inheritdoc}
      */
     protected function configureRoutes(RouteCollection $collection)
     {
@@ -104,6 +99,9 @@ abstract class PageAdmin extends BaseAdmin
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFormBuilder()
     {
         try {
@@ -146,11 +144,10 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-//        $this->setFormTheme(array('NetworkingInitCmsBundle:Form:page_form_admin_fields.html.twig'));
         /** @var $pageManager PageManagerInterface */
         $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
         try {
@@ -226,9 +223,9 @@ abstract class PageAdmin extends BaseAdmin
                             'class' => 'Application\\Networking\\InitCmsBundle\\Entity\\Page',
                             'required' => false,
                             'query_builder' => $pageManager->getParentPagesQuery(
-                                $this->pageLocale,
-                                $this->getSubject()->getId()
-                            ),
+                                    $this->pageLocale,
+                                    $this->getSubject()->getId()
+                                ),
                         )
                     );
             }
@@ -296,8 +293,7 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param  string $name
-     * @return null|string
+     * {@inheritdoc}
      */
     public function getTemplate($name)
     {
@@ -329,7 +325,7 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -426,7 +422,7 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
@@ -437,7 +433,6 @@ abstract class PageAdmin extends BaseAdmin
                 'string',
                 array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig')
             )
-//                ->add('locale', null, array('sortable' => false))
             ->add(
                 'status',
                 null,
@@ -470,9 +465,7 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param \Knp\Menu\ItemInterface $menu
-     * @param $action
-     * @param AdminInterface $childAdmin
+     * {@inheritdoc}
      */
     protected function configureSideMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
     {
@@ -515,9 +508,9 @@ abstract class PageAdmin extends BaseAdmin
                     $this->trans('Translate %language%', array('%language%' => $language['label'])),
                     array(
                         'uri' => $admin->generateUrl(
-                            'translatePage',
-                            array('id' => $id, 'locale' => $language['locale'])
-                        )
+                                'translatePage',
+                                array('id' => $id, 'locale' => $language['locale'])
+                            )
                     )
                 );
             }
@@ -631,7 +624,7 @@ abstract class PageAdmin extends BaseAdmin
 
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getBatchActions()
     {
@@ -657,6 +650,9 @@ abstract class PageAdmin extends BaseAdmin
         return $actions;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getExportFormats()
     {
         return array();

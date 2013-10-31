@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,19 +10,19 @@
 
 namespace Networking\InitCmsBundle\Fixtures;
 
-use Networking\InitCmsBundle\Entity\Page,
-    Networking\InitCmsBundle\Entity\ContentRoute,
-    Networking\InitCmsBundle\Helper\PageHelper,
-    Doctrine\Common\DataFixtures\AbstractFixture,
-    Doctrine\Common\DataFixtures\OrderedFixtureInterface,
-    Symfony\Component\DependencyInjection\ContainerAwareInterface,
-    Symfony\Component\DependencyInjection\ContainerInterface,
-    Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
 /**
+ * Class LoadPageSnapshots
+ * @package Networking\InitCmsBundle\Fixtures
+ *
  * @author sonja brodersen <s.brodersen@networking.ch>
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-
 class LoadPageSnapshots extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
@@ -16,7 +16,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Networking\InitCmsBundle\Entity\MenuItem;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class MenuItemToNumberTransformer
+ * @package Networking\InitCmsBundle\Form\DataTransformer
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuItemToNumberTransformer implements DataTransformerInterface
 {
@@ -36,16 +38,14 @@ class MenuItemToNumberTransformer implements DataTransformerInterface
     /**
      * Transforms an object (menu item) to a string (number).
      *
-     * @param  MenuItem|null $id
-     * @return string
+     * @param mixed $menuItem
+     * @return mixed|string
      */
     public function transform($menuItem)
     {
-
         if (null === $menuItem || false === $menuItem) {
             return "";
         }
-
 
         return $menuItem->getId();
     }
@@ -53,7 +53,7 @@ class MenuItemToNumberTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object (issue).
      *
-     * @param  string                        $id
+     * @param  string $id
      * @return MenuItem|null
      * @throws TransformationFailedException if object (issue) is not found.
      */
@@ -65,8 +65,7 @@ class MenuItemToNumberTransformer implements DataTransformerInterface
 
         $menuItem = $this->om
             ->getRepository('NetworkingInitCmsBundle:MenuItem')
-            ->findOneBy(array('id' => $id))
-        ;
+            ->findOneBy(array('id' => $id));
 
         if (null === $menuItem) {
             throw new TransformationFailedException(sprintf(

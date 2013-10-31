@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,21 +7,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
 use Networking\InitCmsBundle\Model\Text as ModelText;
 
-
 /**
- * Networking\InitCmsBundle\Model
- *
- * @author net working AG <info@networking.ch>
+ * Class BaseText
+ * @package Networking\InitCmsBundle\Entity
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class BaseText extends ModelText
 {
 
     /**
-     * PrePersist method
+     * Hook on pre-persist operations
      */
     public function prePersist()
     {
@@ -31,7 +30,7 @@ abstract class BaseText extends ModelText
     }
 
     /**
-     * PostPersist method
+     * Hook on pre-update operations
      */
     public function preUpdate()
     {

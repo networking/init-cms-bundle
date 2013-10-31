@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Document;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -18,10 +17,15 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 
 /**
+ * Class UserManager
+ * @package Networking\InitCmsBundle\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UserManager extends DoctrineUserManager
 {
+    /**
+     * @var \Doctrine\ODM\MongoDB\DocumentManager
+     */
     protected $dm;
 
     /**
@@ -29,6 +33,13 @@ class UserManager extends DoctrineUserManager
      */
     protected $repository;
 
+    /**
+     * @param EncoderFactoryInterface $encoderFactory
+     * @param CanonicalizerInterface $usernameCanonicalizer
+     * @param CanonicalizerInterface $emailCanonicalizer
+     * @param DocumentManager $dm
+     * @param string $class
+     */
     public function __construct(
         EncoderFactoryInterface $encoderFactory,
         CanonicalizerInterface $usernameCanonicalizer,
@@ -41,6 +52,9 @@ class UserManager extends DoctrineUserManager
         $this->dm = $dm;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLatestActivity()
     {
         $tenMinutesAgo = new \DateTime('10 hours ago');

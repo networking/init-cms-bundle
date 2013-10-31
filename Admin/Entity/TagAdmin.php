@@ -7,13 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Document;
 
-use Doctrine\ORM\EntityRepository;
+namespace Networking\InitCmsBundle\Admin\Entity;
+
+use Networking\InitCmsBundle\Admin\Model\TagAdmin as ModelTagAdmin;
+
 /**
+ * Class TagAdmin
+ * @package Networking\InitCmsBundle\Admin\Entity
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class PageSnapshotRepository extends EntityRepository
+class TagAdmin extends ModelTagAdmin
 {
 
 }

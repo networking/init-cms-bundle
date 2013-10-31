@@ -41,21 +41,21 @@ sonata_admin:
         groups:
             pages:
                 label: "pages.label"
-                items: [networking_init_cms.page.admin.page]
+                items: [networking_init_cms.admin.page]
             translation:
                 label: "group.translation"
                 items: [ibrows_sonata_translation.admin.orm]
             menu:
                 label: "menu.label"
-                items: [ networking_init_cms.menu.admin.menu_item]
+                items: [ networking_init_cms.admin.menu_item]
             media:
                 label: "sonata_media"
-                items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.page.admin.tag]
+                items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
             users:
                 label: "sonata_user"
                 items: [sonata.user.admin.user, sonata.user.admin.group]
             help_text:
                 label: "help_text.label"
-                items: [networking_init_cms.page.admin.help_text]
+                items: [networking_init_cms.admin.help_text]
 
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,7 +10,6 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
@@ -20,7 +18,9 @@ use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class LayoutBlockAdmin
+ * @package Networking\InitCmsBundle\Admin\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class LayoutBlockAdmin extends BaseAdmin
 {
@@ -31,7 +31,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     const CUSTOM_FIELD_PREFIX = 'networking_init_cms_content_';
 
     /**
-     * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -44,47 +44,49 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
         $transformer = new PageToNumberTransformer($pageManager);
         $formMapper
-//                ->add('isActive', 'checkbox', array('required' => false, 'label_render' => false))
-                ->add('zone',
-                    'hidden'
-                    )
-                ->add($formMapper->getFormBuilder()->create('page', 'hidden')
-                                    ->addModelTransformer($transformer), 'hidden')
-                ->add('classType', 'hidden')
-                ->add('sortOrder', 'hidden');
+            ->add(
+                'zone',
+                'hidden'
+            )
+            ->add(
+                $formMapper->getFormBuilder()->create('page', 'hidden')
+                    ->addModelTransformer($transformer),
+                'hidden'
+            )
+            ->add('classType', 'hidden')
+            ->add('sortOrder', 'hidden');
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-                ->add('name')
-                ->add('page');
+            ->add('name')
+            ->add('page');
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-                ->addIdentifier('name')
-                ->add('page')
-                ->add('isActive');
+            ->addIdentifier('name')
+            ->add('page')
+            ->add('isActive');
     }
 
     /**
-     * @param \Sonata\AdminBundle\Validator\ErrorElement $errorElement
-     * @param mixed                                      $object
+     * {@inheritdoc}
      */
     public function validate(ErrorElement $errorElement, $object)
     {
         $errorElement
-                ->with('name')
-                ->assertLength(array('max' => 255))
-                ->end();
+            ->with('name')
+            ->assertLength(array('max' => 255))
+            ->end();
     }
 
     /**

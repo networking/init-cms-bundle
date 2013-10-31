@@ -10,10 +10,11 @@
 namespace Networking\InitCmsBundle\Document;
 
 use Networking\InitCmsBundle\Model\ResourceVersion as ModelResourceVersion;
+
 /**
+ * Class ResourceVersion
+ * @package Networking\InitCmsBundle\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
- * @ORM\Entity
  */
 class ResourceVersion extends ModelResourceVersion
 {

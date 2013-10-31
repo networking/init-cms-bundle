@@ -12,7 +12,10 @@
 namespace Networking\InitCmsBundle\Admin\Entity;
 
 use Networking\InitCmsBundle\Admin\Model\MediaAdmin as ModelMediaAdmin;
+
 /**
+ * Class MediaAdmin
+ * @package Networking\InitCmsBundle\Admin\Entity
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MediaAdmin extends ModelMediaAdmin {

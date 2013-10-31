@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -15,9 +14,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class DataSetupCommand
+ * @package Networking\InitCmsBundle\Command
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class DataSetupCommand extends Command
 {
     /**
@@ -26,22 +29,18 @@ class DataSetupCommand extends Command
     protected function configure()
     {
         $this->setName('networking:initcms:data-setup')
-                ->setDescription('create and update db schema and append fixtures')
-                ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
-                ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
-        ;
+            ->setDescription('create and update db schema and append fixtures')
+            ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
+            ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures');
 
     }
 
     /**
-     * @param  \Symfony\Component\Console\Input\InputInterface   $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|null|void
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if($input->getOption('drop'))
-        {
+        if ($input->getOption('drop')) {
             $this->dropSchema($output);
         }
 
@@ -49,11 +48,15 @@ class DataSetupCommand extends Command
         $this->initACL($output);
         $this->sonataSetupACL($output);
 
-        if(! $input->getOption('no-fixtures')){
+        if (!$input->getOption('no-fixtures')) {
             $this->loadFixtures($output);
         }
     }
 
+    /**
+     * @param OutputInterface $output
+     * @return int
+     */
     public function dropSchema(OutputInterface $output)
     {
         $command = $this->getApplication()->find('doctrine:schema:drop');

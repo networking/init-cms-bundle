@@ -8,13 +8,12 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
-
-use Gedmo\Tree\RepositoryInterface;
 
 
 /**
+ * Class PageSnapshotManagerInterface
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface PageSnapshotManagerInterface

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,10 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Security\Acl\Permission;
 
 use Symfony\Component\Security\Acl\Permission\PermissionMapInterface;
-use Networking\InitCmsBundle\Security\Acl\Permission\MaskBuilder;
 
 /**
  * This is basic permission map complements the masks which have been defined

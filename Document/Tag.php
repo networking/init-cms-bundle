@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -14,9 +13,9 @@ namespace Networking\InitCmsBundle\Document;
 use Networking\InitCmsBundle\Model\Tag as ModelTag;
 
 /**
- * Networking\InitCmsBundle\Entity\Tag
- *
- * @author net working AG <info@networking.ch>
+ * Class Tag
+ * @package Networking\InitCmsBundle\Document
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Tag extends ModelTag
 {

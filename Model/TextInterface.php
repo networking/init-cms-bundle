@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,18 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
 
-
 /**
- * Networking\InitCmsBundle\Model\TextInterface
- *
- *
- * @author net working AG <info@networking.ch>
+ * Class TextInterface
+ * @package Networking\InitCmsBundle\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface TextInterface
 {
-
 
     /**
      * Get id

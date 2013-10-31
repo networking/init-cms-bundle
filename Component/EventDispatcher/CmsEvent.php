@@ -12,6 +12,8 @@ namespace Networking\InitCmsBundle\Component\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
+ * Class CmsEvent
+ * @package Networking\InitCmsBundle\Component\EventDispatcher
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class CmsEvent extends Event
@@ -30,13 +32,16 @@ class CmsEvent extends Event
     }
 
     /**
-     * @return
+     * @return mixed
      */
     public function getEntity()
     {
         return $this->entity;
     }
 
+    /**
+     * @return mixed
+     */
     public function getDocument()
     {
         return $this->entity;

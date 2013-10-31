@@ -8,17 +8,23 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Admin;
 
 use Sonata\AdminBundle\Admin\Pool as AdminPool;
 
 /**
+ * Class Pool
+ * @package Networking\InitCmsBundle\Admin
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Pool extends AdminPool
 {
-
+    /**
+     * Get the groups of admins that will be used to display the
+     * admin menu on the side
+     *
+     * @return array
+     */
     public function getDashboardNavigationGroups(){
 
         $groups = $this->getDashboardGroups();
@@ -33,7 +39,6 @@ class Pool extends AdminPool
                 }
 
             }
-
         }
 
         return $menuGroups;

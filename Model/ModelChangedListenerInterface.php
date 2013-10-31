@@ -7,13 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
 
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\EventArgs;
 
 /**
+ * Class ModelChangedListenerInterface
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface ModelChangedListenerInterface {

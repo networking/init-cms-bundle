@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Document;
 
 use Networking\InitCmsBundle\Document\BasePage as Page;
@@ -16,8 +16,11 @@ use Doctrine\ODM\MongoDB\Event\OnFlushEventArgs;
 use Doctrine\ODM\MongoDB\Event\PostFlushEventArgs;
 use Networking\InitCmsBundle\Model\PageListener as ModelPageListener;
 use Doctrine\Common\EventArgs;
+
 /**
- * @author net working AG <info@networking.ch>
+ * Class PageListener
+ * @package Networking\InitCmsBundle\Document
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageListener extends ModelPageListener
 {

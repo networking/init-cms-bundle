@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,17 +10,12 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\ORM\Mapping\OrderBy;
-use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation as Gedmo;
-
 /**
- * Networking\InitCmsBundle\Entity\Tag
- *
- *
- *  @author net working AG <info@networking.ch>
+ * Class Tag
+ * @package Networking\InitCmsBundle\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class Tag
+abstract class Tag
 {
     /**
      * @var integer $id

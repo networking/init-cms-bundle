@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,13 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Builder;
 
 use Sonata\DoctrineMongoDBAdminBundle\Builder\ListBuilder as SonataDoctrineMongoDBListBuilder;
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
-use Sonata\AdminBundle\Guesser\TypeGuesserInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class MongoDBListBuilder
+ * @package Networking\InitCmsBundle\Builder
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class MongoDBListBuilder extends SonataDoctrineMongoDBListBuilder
 {
 

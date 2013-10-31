@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -17,7 +16,9 @@ use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInte
 use Networking\InitCmsBundle\Admin\Pool;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class AdminMenuBuilder
+ * @package Networking\InitCmsBundle\Component\Menu
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class AdminMenuBuilder extends MenuBuilder
 {
@@ -26,10 +27,17 @@ class AdminMenuBuilder extends MenuBuilder
      */
     protected $adminPool;
 
+    /**
+     * @param $adminPool
+     */
     public function setAdminPool($adminPool){
         $this->adminPool = $adminPool;
     }
 
+    /**
+     * @param Request $request
+     * @return bool|\Knp\Menu\ItemInterface
+     */
     public function createAdminMenu(Request $request)
     {
         // Default to homepage

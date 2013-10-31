@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -10,17 +9,19 @@
  */
 namespace Networking\InitCmsBundle\Builder;
 
-use Sonata\DoctrineORMAdminBundle\Builder\ListBuilder as SonataDoctrineOrmListBuilder,
-    Sonata\AdminBundle\Admin\FieldDescriptionInterface,
-    Sonata\AdminBundle\Guesser\TypeGuesserInterface,
-    Symfony\Component\DependencyInjection\ContainerInterface;
+use Sonata\DoctrineORMAdminBundle\Builder\ListBuilder as SonataDoctrineOrmListBuilder;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
+use Sonata\AdminBundle\Guesser\TypeGuesserInterface;
 
+/**
+ * Class ListBuilder
+ * @package Networking\InitCmsBundle\Builder
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class ListBuilder extends SonataDoctrineOrmListBuilder
 {
-
     /**
-     * @param \Sonata\AdminBundle\Guesser\TypeGuesserInterface $guesser
-     * @param array                                            $templates
+     * {@inheritdoc}
      */
     public function __construct(TypeGuesserInterface $guesser, $templates = array())
     {
@@ -29,9 +30,7 @@ class ListBuilder extends SonataDoctrineOrmListBuilder
     }
 
     /**
-     * @param \Sonata\AdminBundle\Admin\FieldDescriptionInterface $fieldDescription
-     *
-     * @return \Sonata\AdminBundle\Admin\FieldDescriptionInterface
+     * {@inheritdoc}
      */
     public function buildActionFieldDescription(FieldDescriptionInterface $fieldDescription)
     {

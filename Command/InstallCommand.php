@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -15,9 +14,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class InstallCommand
+ * @package Networking\InitCmsBundle\Command
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class InstallCommand extends Command
 {
     /**
@@ -26,18 +29,17 @@ class InstallCommand extends Command
     protected function configure()
     {
         $this->setName('networking:initcms:install')
-                ->setDescription("Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources")
-                ->addOption('username', '', InputOption::VALUE_REQUIRED, 'username of the to be created super user')
-                ->addOption('email', '', InputOption::VALUE_REQUIRED, 'the email address of the to be created super user')
-                ->addOption('password', '', InputOption::VALUE_REQUIRED, 'password of the to be created super user')
-        ;
+            ->setDescription(
+                "Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources"
+            )
+            ->addOption('username', '', InputOption::VALUE_REQUIRED, 'username of the to be created super user')
+            ->addOption('email', '', InputOption::VALUE_REQUIRED, 'the email address of the to be created super user')
+            ->addOption('password', '', InputOption::VALUE_REQUIRED, 'password of the to be created super user');
 
     }
 
     /**
-     * @param  \Symfony\Component\Console\Input\InputInterface   $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|null|void
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -46,9 +48,13 @@ class InstallCommand extends Command
         $this->dumpAssetic($output);
     }
 
+    /**
+     * @param $output
+     * @return int
+     */
     private function setupData($output)
     {
-         $command = $this->getApplication()->find('networking:initcms:data-setup');
+        $command = $this->getApplication()->find('networking:initcms:data-setup');
 
         $arguments = array(
             'command' => 'networking:initcms:data-setup',
@@ -92,13 +98,13 @@ class InstallCommand extends Command
 
         $arguments['command'] = 'fos:user:create';
 
-        if($input->getOption('username')){
+        if ($input->getOption('username')) {
             $arguments['username'] = $input->getOption('username');
         }
-        if($input->getOption('email')){
+        if ($input->getOption('email')) {
             $arguments['email'] = $input->getOption('email');
         }
-        if($input->getOption('password')){
+        if ($input->getOption('password')) {
             $arguments['password'] = $input->getOption('password');
         }
         $command = $this->getApplication()->find('fos:user:create');

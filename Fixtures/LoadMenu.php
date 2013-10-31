@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Fixtures;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -19,7 +19,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Entity\MenuItem;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class LoadMenu
+ * @package Networking\InitCmsBundle\Fixtures
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {

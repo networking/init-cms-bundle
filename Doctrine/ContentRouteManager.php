@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -21,6 +20,8 @@ use Symfony\Component\Routing\RouteCollection;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 
 /**
+ * Class ContentRouteManager
+ * @package Networking\InitCmsBundle\Doctrine
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class ContentRouteManager extends BaseContentRouteManager

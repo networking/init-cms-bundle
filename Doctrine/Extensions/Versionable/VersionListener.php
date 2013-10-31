@@ -9,11 +9,12 @@
  */
 namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 
-use Networking\InitCmsBundle\Entity\ResourceVersion,
-    Doctrine\ORM\Event\LifecycleEventArgs,
-    Doctrine\ORM\EntityManager;
+use Networking\InitCmsBundle\Entity\ResourceVersion;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
+ * Class VersionListener
+ * @package Networking\InitCmsBundle\Doctrine\Extensions\Versionable
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class VersionListener

@@ -20,11 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Networking\InitCmsBundle\Entity\Page
- *
- * @Gedmo\Tree(type="materializedPath")
- *
- * @author net working AG <info@networking.ch>
+ * Class Page
+ * @package Networking\InitCmsBundle\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class Page implements PageInterface
 {
@@ -57,13 +55,11 @@ abstract class Page implements PageInterface
 
     /**
      * @var string $url
-     * @Gedmo\TreePathSource
      */
     protected $url;
 
     /**
      * @var string $path
-     * @Gedmo\TreePath(separator="/")
      */
     protected $path;
 
@@ -83,7 +79,6 @@ abstract class Page implements PageInterface
     protected $metaDescription;
 
     /**
-     * @Gedmo\TreeParent
      * @var PageInterface|NULL
      */
     protected $parent;
@@ -103,10 +98,8 @@ abstract class Page implements PageInterface
      */
     protected $allChildren = array();
 
-
     /**
      * @var ArrayCollection $layoutBlock
-     *
      */
     protected $layoutBlock;
 
@@ -182,6 +175,7 @@ abstract class Page implements PageInterface
     }
 
     /**
+     * Hook on to pre-persist action
      */
     public function prePersist()
     {
@@ -192,6 +186,9 @@ abstract class Page implements PageInterface
         }
     }
 
+    /**
+     * Hook on to pre-update action
+     */
     public function preUpdate()
     {
         $this->setUpdatedAt();
@@ -496,6 +493,7 @@ abstract class Page implements PageInterface
      *
      * @param string $status
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setStatus($status)
     {
@@ -522,6 +520,7 @@ abstract class Page implements PageInterface
      *
      * @param string $visibility
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setVisibility($visibility)
     {
@@ -995,8 +994,6 @@ abstract class Page implements PageInterface
     }
 
 
-
-
     /**
      * @param $snapshots
      * @return $this
@@ -1180,7 +1177,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @return $thisSnapshot
+     * @return mixed|PageSnapshotInterface
      */
     public function getSnapshot()
     {
@@ -1321,6 +1318,9 @@ abstract class Page implements PageInterface
         return $originals;
     }
 
+    /**
+     * @return string
+     */
     public function getStatusLabel()
     {
         if ($this->isPublished()) {

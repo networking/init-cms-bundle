@@ -1,27 +1,33 @@
 <?php
+/**
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityManager;
-
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Networking\InitCmsBundle\Model\PageSnapshotInterface;
-use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 /**
- * PageRepository
- *
- * @author net working AG <info@networking.ch>
+ * Class PageManager
+ * @package Networking\InitCmsBundle\Entity
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageManager extends MaterializedPathRepository implements PageManagerInterface
 {
 
-
+    /**
+     * @param EntityManager $om
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $class
+     */
     public function __construct(EntityManager $om, $class)
     {
         $classMetaData = $om->getClassMetadata($class);

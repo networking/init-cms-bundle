@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -12,12 +11,14 @@
 namespace Networking\InitCmsBundle\Component\Menu;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class MenuSubItemFilterIterator
+ * @package Networking\InitCmsBundle\Component\Menu
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuSubItemFilterIterator extends \FilterIterator
 {
     /**
-     * @var
+     * @var string
      */
     private $currentUri;
 

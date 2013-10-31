@@ -8,18 +8,38 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-
-interface MenuItemManagerInterface {
+/**
+ * Class MenuItemManagerInterface
+ * @package Networking\InitCmsBundle\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
+interface MenuItemManagerInterface
+{
 
     /**
-    * @param $locale
-    * @param  null $sortByField
-    * @param  string $direction
-    * @return array
-    */
+     * @param $locale
+     * @param  null $sortByField
+     * @param  string $direction
+     * @return array
+     */
     public function getRootNodesByLocale($locale, $sortByField = null, $direction = 'asc');
 
-
-    public function getChildrenByStatus($node = null, $direct = false, $sortByField = null, $direction = 'ASC', $includeNode = false, $viewStatus = BasePage::STATUS_PUBLISHED);
+    /**
+     * @param null $node
+     * @param bool $direct
+     * @param null $sortByField
+     * @param string $direction
+     * @param bool $includeNode
+     * @param $viewStatus
+     * @return mixed
+     */
+    public function getChildrenByStatus(
+        $node = null,
+        $direct = false,
+        $sortByField = null,
+        $direction = 'ASC',
+        $includeNode = false,
+        $viewStatus = BasePage::STATUS_PUBLISHED
+    );
 
 } 

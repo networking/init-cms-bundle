@@ -10,10 +10,10 @@
  */
 namespace Networking\InitCmsBundle\Doctrine\Types;
 
-use Networking\InitCmsBundle\Doctrine\Types\EnumType;
-
 /**
- * @author net working AG <info@networking.ch>
+ * Class EnumPageVisibilityType
+ * @package Networking\InitCmsBundle\Doctrine\Types
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class EnumPageVisibilityType extends EnumType
 {

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,15 +7,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Twig\Node;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class JSNode
+ * @package Networking\InitCmsBundle\Twig\Node
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class JSNode extends \Twig_Node
 {
     /**
-     * @param \Twig_NodeInterface $method
+     * @param \Twig_Node $method
      * @param array $lineno
      * @param null $tag
      */

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -15,7 +14,9 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class AbstractRoute
+ * @package Networking\InitCmsBundle\Component\Routing
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class AbstractRoute extends SymfonyRoute implements RouteObjectInterface
 {
@@ -43,7 +44,7 @@ abstract class AbstractRoute extends SymfonyRoute implements RouteObjectInterfac
     }
 
     /**
-     * @return Page|object
+     * @return object
      */
     public function getRouteContent()
     {

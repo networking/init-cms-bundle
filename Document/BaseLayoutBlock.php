@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -13,13 +12,15 @@ namespace Networking\InitCmsBundle\Document;
 use Networking\InitCmsBundle\Model\LayoutBlock as ModelLayoutBlock;
 
 /**
- * Networking\InitCmsBundle\Entity\LayoutBlock
- * @author net working AG <info@networking.ch>
+ * Class BaseLayoutBlock
+ * @package Networking\InitCmsBundle\Document
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class BaseLayoutBlock extends ModelLayoutBlock
 {
 
     /**
+     * Hook on pre-persist operations
      */
     public function prePersist()
     {

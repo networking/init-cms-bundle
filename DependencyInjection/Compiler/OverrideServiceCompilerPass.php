@@ -1,11 +1,27 @@
 <?php
+/**
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * Class OverrideServiceCompilerPass
+ * @package Networking\InitCmsBundle\DependencyInjection\Compiler
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class OverrideServiceCompilerPass implements CompilerPassInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     */
     public function process(ContainerBuilder $container)
     {
         if ($container->hasDefinition('sonata.admin.builder.orm_list')) {

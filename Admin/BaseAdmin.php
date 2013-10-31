@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,19 +10,19 @@
 
 namespace Networking\InitCmsBundle\Admin;
 
-use Sonata\AdminBundle\Admin\Admin,
-    Sonata\AdminBundle\Datagrid\ListMapper,
-    Sonata\AdminBundle\Form\FormMapper,
-    Sonata\AdminBundle\Show\ShowMapper,
-    Sonata\AdminBundle\Datagrid\DatagridMapper,
-    Symfony\Component\DependencyInjection\ContainerInterface,
-    Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
 use Symfony\Component\Intl\Intl;
-use Symfony\Component\Locale\Locale;
-
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class BaseAdmin
+ * @package Networking\InitCmsBundle\Admin
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class BaseAdmin extends Admin
 {
@@ -65,7 +64,7 @@ abstract class BaseAdmin extends Admin
             $locale = $this->getRequest()->get('locale');
         }
 
-        if(is_array($locale) && array_key_exists('value', $locale)){
+        if (is_array($locale) && array_key_exists('value', $locale)) {
             $locale = $locale['value'];
         }
 
@@ -141,7 +140,7 @@ abstract class BaseAdmin extends Admin
     }
 
     /**
-     * @param ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
@@ -149,7 +148,7 @@ abstract class BaseAdmin extends Admin
     }
 
     /**
-     * @param FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -157,7 +156,7 @@ abstract class BaseAdmin extends Admin
     }
 
     /**
-     * @param ShowMapper $showMapper
+     * {@inheritdoc}
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {
@@ -165,13 +164,12 @@ abstract class BaseAdmin extends Admin
     }
 
     /**
-     * @param DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $this->getSonataAnnotationReader()->configureDatagridFilters($this->getClass(), $datagridMapper);
     }
-
 
     /**
      * @return ContainerInterface

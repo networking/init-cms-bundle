@@ -7,10 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 
 use Doctrine\ORM\EntityManager;
+
 /**
+ * Class VersionManager
+ * @package Networking\InitCmsBundle\Doctrine\Extensions\Versionable
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class VersionManager

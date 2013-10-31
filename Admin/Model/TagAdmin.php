@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -9,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Admin;
+namespace Networking\InitCmsBundle\Admin\Model;
 
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -17,6 +16,11 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 
+/**
+ * Class TagAdmin
+ * @package Networking\InitCmsBundle\Admin\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class TagAdmin extends Admin
 {
     /**
@@ -28,17 +32,16 @@ class TagAdmin extends Admin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
             ->add('name');
-//            ->add('active', null, array('required' => false));
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -47,28 +50,27 @@ class TagAdmin extends Admin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
             ->addIdentifier('name')
             ->add(
-            '_action',
-            'actions',
-            array(
-                'label' => ' ',
-                'actions' => array(
-                    'edit' => array(),
-                    'delete' => array()
+                '_action',
+                'actions',
+                array(
+                    'label' => ' ',
+                    'actions' => array(
+                        'edit' => array(),
+                        'delete' => array()
+                    )
                 )
-            )
-        );
+            );
     }
 
     /**
-     * @param \Sonata\AdminBundle\Validator\ErrorElement $errorElement
-     * @param mixed                                      $object
+     * {@inheritdoc}
      */
     public function validate(ErrorElement $errorElement, $object)
     {

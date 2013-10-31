@@ -9,12 +9,12 @@
  */
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Sonata\UserBundle\Admin\Entity\GroupAdmin as SonataGroupAdmin,
-    Sonata\AdminBundle\Form\FormMapper,
-    Sonata\AdminBundle\Datagrid\ListMapper,
-    Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\UserBundle\Admin\Entity\GroupAdmin as SonataGroupAdmin;
+use Sonata\AdminBundle\Form\FormMapper;
 
 /**
+ * Class GroupAdmin
+ * @package Networking\InitCmsBundle\Admin\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class GroupAdmin extends SonataGroupAdmin
@@ -32,7 +32,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
 
     /**
      * @param $trackedActions
-     * @return BaseAdmin
+     * @return $this
      */
     public function setTrackedActions($trackedActions)
     {

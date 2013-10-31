@@ -11,10 +11,9 @@
 namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 
 /**
- * @author net working AG <info@networking.ch>
- */
-/**
- *
+ * Class VersionableInterface
+ * @package Networking\InitCmsBundle\Doctrine\Extensions\Versionable
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface VersionableInterface
 {

@@ -15,6 +15,11 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 
+/**
+ * Class HelpTextAdmin
+ * @package Networking\InitCmsBundle\Admin\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 abstract class HelpTextAdmin extends BaseAdmin
 {
     /**
@@ -31,7 +36,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
@@ -41,20 +46,20 @@ abstract class HelpTextAdmin extends BaseAdmin
             ->addIdentifier('translationKey')
             ->add('locale')
             ->add(
-            '_action',
-            'actions',
-            array(
-                'label' => ' ',
-                'actions' => array(
-                    'edit' => array(),
-                    'delete' => array()
+                '_action',
+                'actions',
+                array(
+                    'label' => ' ',
+                    'actions' => array(
+                        'edit' => array(),
+                        'delete' => array()
+                    )
                 )
-            )
-        );
+            );
     }
 
     /**
-     * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -68,54 +73,52 @@ abstract class HelpTextAdmin extends BaseAdmin
 
         $formMapper
             ->add(
-            'locale',
-            'choice',
-            array(
-                'choices' => $this->getLocaleChoices(),
-                'preferred_choices' => array($locale)
+                'locale',
+                'choice',
+                array(
+                    'choices' => $this->getLocaleChoices(),
+                    'preferred_choices' => array($locale)
+                )
             )
-        )
             ->add('translationKey')
             ->add('title', null, array('required' => true))
             ->add(
-            'text',
-            'textarea',
-            array(
-                'required' => false,
-                'attr' => array(
-                    'class' => 'wysiwyg-editor',
+                'text',
+                'textarea',
+                array(
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'wysiwyg-editor',
+                    )
                 )
-            )
-        );
+            );
 
     }
 
     /**
-     * @param \Sonata\AdminBundle\Datagrid\DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
             ->add(
-            'locale',
-            'doctrine_orm_callback',
-            array(
-                'callback' => array(
-                    $this,
-                    'getByLocale'
+                'locale',
+                'doctrine_orm_callback',
+                array(
+                    'callback' => array(
+                        $this,
+                        'getByLocale'
+                    ),
+                    'hidden' => false
                 ),
-                'hidden' => false
-            ),
-            'choice',
-            array(
-                'empty_value' => false,
-                'choices' => $this->getLocaleChoices(),
-                'preferred_choices' => array($this->getDefaultLocale())
-            )
+                'choice',
+                array(
+                    'empty_value' => false,
+                    'choices' => $this->getLocaleChoices(),
+                    'preferred_choices' => array($this->getDefaultLocale())
+                )
 
-        );
-        // ->add('title', null, array('hidden' => true), null, array())
-        //->add('text', null, array(), null, array());
+            );
 
     }
 
@@ -141,8 +144,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     }
 
     /**
-     * @param \Sonata\AdminBundle\Validator\ErrorElement $errorElement
-     * @param mixed                                      $object
+     * {@inheritdoc}
      */
     public function validate(ErrorElement $errorElement, $object)
     {

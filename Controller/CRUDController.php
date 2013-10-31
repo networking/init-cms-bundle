@@ -9,7 +9,6 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
-
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController;
 use Networking\InitCmsBundle\Entity\LastEditedListener as ORMLastEditedListener;

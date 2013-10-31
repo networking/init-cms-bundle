@@ -16,11 +16,15 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 
 /**
+ * Class MongoDBTranslationAdmin
+ * @package Networking\InitCmsBundle\Admin\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MongoDBTranslationAdmin extends BaseTranslationAdmin
 {
-
+    /**
+     * {@inheritdoc}
+     */
     protected function configureDatagridFilters(DatagridMapper $filter)
     {
         $filter

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Networking\InitCmsBundle\Document;
 
@@ -10,11 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 
 /**
- * PageRepository
- *
- * @author net working AG <info@networking.ch>
- */
-/**
+ * Class PageManager
+ * @package Networking\InitCmsBundle\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageManager extends MaterializedPathRepository implements PageManagerInterface
@@ -26,7 +31,10 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      */
     private $container;
 
-
+    /**
+     * @param DocumentManager $om
+     * @param \Doctrine\ODM\MongoDB\UnitOfWork $class
+     */
     public function __construct(DocumentManager $om, $class)
     {
 
@@ -182,10 +190,10 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     }
 
     /**
-     * @param LayoutBlock $layoutBlock
+     * @param BaseLayoutBlock $layoutBlock
      * @return mixed
      */
-    public function findByLayoutBlock(LayoutBlock $layoutBlock)
+    public function findByLayoutBlock(BaseLayoutBlock $layoutBlock)
     {
         $id = $layoutBlock->getId();
 

@@ -22,6 +22,10 @@
             </call>
         </service>
 
+        <service id="networking_init_cms.page.admin.helper" class="Networking\InitCmsBundle\Admin\PageAdminHelper">
+            <argument type="service" id="sonata.admin.pool"/>
+        </service>
+
         <service id="networking_init_cms.filter.type.simple_string"
                  class="Networking\InitCmsBundle\Filter\SimpleStringFilter">
             <tag name="sonata.admin.filter.type" alias="networking_init_cms_simple_string"/>

@@ -7,18 +7,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
 
 namespace Networking\InitCmsBundle\Model;
 
-use  Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
-     Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
+use  Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
+use  Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 
 
 /**
+ * Class PageSnapshotInterface
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVersionInterface{
+interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVersionInterface
+{
 
     /**
      * @param $resourceId
@@ -130,7 +132,6 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
      * @return Page
      */
     public function getOriginal();
-
 
 
     /**

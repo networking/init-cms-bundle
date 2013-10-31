@@ -7,15 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\EntityNotFoundException,
-    Doctrine\ORM\Event\LifecycleEventArgs,
-    JMS\Serializer\Serializer,
-    Networking\InitCmsBundle\Entity\BasePage as Page,
-    Networking\InitCmsBundle\Entity\LayoutBlock;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use JMS\Serializer\Serializer;
+use Networking\InitCmsBundle\Entity\BasePage as Page;
 
 /**
+ * Class LayoutBlockListener
+ * @package Networking\InitCmsBundle\Entity
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LayoutBlockListener
@@ -103,17 +105,6 @@ class LayoutBlockListener
                 $this->autoPageDraft($args);
             }
         }
-
-//        if ($entity instanceof Gallery) {
-//
-//            $repo = $em->getRepository('NetworkingInitCmsBundle:GalleryView');
-//            $galleryViews = $repo->findBy(array('mediaGallery' => $entity->getId()));
-//
-//            foreach ($galleryViews as $galleryView) {
-//                $layoutBlock = $galleryView->getLayoutBlock();
-//                $em->remove($layoutBlock);
-//            }
-//        }
     }
 
     /**

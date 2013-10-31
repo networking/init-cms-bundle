@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -11,15 +10,28 @@
 
 namespace Networking\InitCmsBundle\Component\Routing;
 
-use Networking\InitCmsBundle\Component\Routing\AbstractRoute;
-
 /**
  * Dummy Route Class for creating routes on the run. Used when building navigation items
- *  @author net working AG <info@networking.ch>
+ *
+ * Class CMSRoute
+ * @package Networking\InitCmsBundle\Component\Routing
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class CMSRoute extends AbstractRoute
 {
-       public function getContent(){
 
-       }
+    /**
+     * Get the content document this route entry stands for. If non-null,
+     * the ControllerClassMapper uses it to identify a controller and
+     * the content is passed to the controller.
+     *
+     * If there is no specific content for this url (i.e. its an "application"
+     * page), may return null.
+     *
+     * @return object the document or entity this route entry points to
+     */
+    public function getContent()
+    {
+        // TODO: Implement getContent() method.
+    }
 }

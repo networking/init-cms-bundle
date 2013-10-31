@@ -8,10 +8,11 @@
  * file that was distributed with this source code.
  */
  
-
 namespace Networking\InitCmsBundle\Entity;
 
 /**
+ * Class Text
+ * @package Networking\InitCmsBundle\Entity
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Text extends BaseText{

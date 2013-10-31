@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -20,7 +20,9 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class LocaleListener
+ * @package Networking\InitCmsBundle\EventListener
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LocaleListener implements EventSubscriberInterface
 {

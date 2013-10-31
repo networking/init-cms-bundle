@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\EventArgs;
@@ -18,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
+ * Class ModelChangedListener
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class ModelChangedListener implements ModelChangedListenerInterface, ContainerAwareInterface

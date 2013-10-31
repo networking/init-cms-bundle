@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityManager;
@@ -17,12 +16,24 @@ use FOS\UserBundle\Util\CanonicalizerInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
+ * Class UserManager
+ * @package Networking\InitCmsBundle\Entity
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UserManager extends DoctrineUserManager
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
     protected $em;
 
+    /**
+     * @param EncoderFactoryInterface $encoderFactory
+     * @param CanonicalizerInterface $usernameCanonicalizer
+     * @param CanonicalizerInterface $emailCanonicalizer
+     * @param EntityManager $em
+     * @param string $class
+     */
     public function __construct(
         EncoderFactoryInterface $encoderFactory,
         CanonicalizerInterface $usernameCanonicalizer,
@@ -35,6 +46,9 @@ class UserManager extends DoctrineUserManager
         $this->em = $em;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLatestActivity()
         {
             $tenMinutesAgo = new \DateTime('- 10 minutes');

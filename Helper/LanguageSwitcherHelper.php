@@ -20,7 +20,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class LanguageSwitcherHelper
+ * @package Networking\InitCmsBundle\Helper
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LanguageSwitcherHelper
 {

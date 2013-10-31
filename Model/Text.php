@@ -14,9 +14,9 @@ use Networking\InitCmsBundle\Model\ContentInterface;
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 
 /**
- * Networking\InitCmsBundle\Entity\Content
- *
- * @author net working AG <info@networking.ch>
+ * Class Text
+ * @package Networking\InitCmsBundle\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class Text implements ContentInterface
 {
@@ -43,7 +43,7 @@ abstract class Text implements ContentInterface
     protected $updatedAt;
 
     /**
-     *
+     * clone action, set id null
      */
     public function __clone()
     {

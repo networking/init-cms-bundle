@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
 
 use Gedmo\Tree\RepositoryInterface;
 use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
+ * Class PageManagerInterface
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInterface, ObjectRepository
@@ -24,8 +24,8 @@ interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInt
 
     /**
      * @param $locale
-     * @param  null                       $id
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param  null $id
+     * @return mixed
      */
     public function getParentPagesQuery($locale, $id = null);
 

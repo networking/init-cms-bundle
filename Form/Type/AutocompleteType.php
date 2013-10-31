@@ -10,8 +10,10 @@
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 /**
+ * Class AutocompleteType
+ * @package Networking\InitCmsBundle\Form\Type
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class AutocompleteType extends AbstractType

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  * This file is part of the Networking package.
@@ -20,7 +19,9 @@ use Sonata\AdminBundle\Exception\NoValueException;
 /**
  * Overrides the SonataAdminHelper to be used in networking_init_cms admin controllers
  *
- * @author net working AG <info@networking.ch>
+ * Class PageAdminHelper
+ * @package Networking\InitCmsBundle\Admin
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageAdminHelper extends SonataAdminHelper
 {
@@ -93,9 +94,7 @@ class PageAdminHelper extends SonataAdminHelper
     }
 
     /**
-     * @param object $object
-     * @param FieldDescriptionInterface $fieldDescription
-     * @throws \RuntimeException
+     * {@inheritdoc}
      */
     public function addNewInstance($object, FieldDescriptionInterface $fieldDescription)
     {
@@ -114,8 +113,12 @@ class PageAdminHelper extends SonataAdminHelper
             $method = rtrim($method, 's');
 
             if (!method_exists($object, $method)) {
-            throw new \RuntimeException(sprintf('Please add a method %s in the %s class!', $method, get_class($object)));
-        }
+                throw new \RuntimeException(sprintf(
+                    'Please add a method %s in the %s class!',
+                    $method,
+                    get_class($object)
+                ));
+            }
         }
 
         $object->$method($instance);

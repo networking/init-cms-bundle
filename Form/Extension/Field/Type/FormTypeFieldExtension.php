@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * This file is part of the Networking package.
  *
@@ -15,7 +13,9 @@ namespace Networking\InitCmsBundle\Form\Extension\Field\Type;
 use Sonata\AdminBundle\Form\Extension\Field\Type\FormTypeFieldExtension as SonataFormTypeFieldExtension;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class FormTypeFieldExtension
+ * @package Networking\InitCmsBundle\Form\Extension\Field\Type
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class FormTypeFieldExtension extends SonataFormTypeFieldExtension
 {
@@ -35,7 +35,8 @@ class FormTypeFieldExtension extends SonataFormTypeFieldExtension
     /**
      * @return array
      */
-    public function getDefaultClasses(){
+    public function getDefaultClasses()
+    {
         return $this->defaultClasses;
     }
 
@@ -46,6 +47,7 @@ class FormTypeFieldExtension extends SonataFormTypeFieldExtension
     public function setDefaultClasses(array $defaultClasses)
     {
         $this->defaultClasses = $defaultClasses;
+
         return $this;
     }
 }

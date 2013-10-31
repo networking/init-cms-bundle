@@ -53,8 +53,8 @@
                 <source>help_title</source>
                 <target>Help for: %admin_title% %action%</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.edit">
-                <source>networking_init_cms.page.admin.page.edit</source>
+            <trans-unit id="networking_init_cms.admin.page.edit">
+                <source>networking_init_cms.admin.page.edit</source>
                 <target>Page edit</target>
             </trans-unit>
             <trans-unit id="action.list">
@@ -76,12 +76,12 @@
 
             <!-- help navigation -->
 
-            <trans-unit id="networking_init_cms.page.admin.page">
-                <source>networking_init_cms.page.admin.page</source>
+            <trans-unit id="networking_init_cms.admin.page">
+                <source>networking_init_cms.admin.page</source>
                 <target>Pages</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item">
-                <source>networking_init_cms.menu.admin.menu_item</source>
+            <trans-unit id="networking_init_cms.admin.menu_item">
+                <source>networking_init_cms.admin.menu_item</source>
                 <target>Menu</target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.media">
@@ -178,12 +178,12 @@
 
             <!-- pages -->
 
-            <trans-unit id="networking_init_cms.page.admin.page.list.title">
-                <source>networking_init_cms.page.admin.page.list.title</source>
+            <trans-unit id="networking_init_cms.admin.page.list.title">
+                <source>networking_init_cms.admin.page.list.title</source>
                 <target>Pages overview</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.list.text">
-                <source>networking_init_cms.page.admin.page.list.text</source>
+            <trans-unit id="networking_init_cms.admin.page.list.text">
+                <source>networking_init_cms.admin.page.list.text</source>
                 <target><![CDATA[
                     <p>A page is a key building block for the website. On a page you can add or change your content and its position in the layout. Under &quot;Pages&quot; in the CMS you see a list of all your pages. On top of the list you can filter and search pages. There is also a prominent button for adding new Pages. On the bottom of the list you find bulk actions to apply quick changes to multiple pages at once.</p>
 
@@ -231,12 +231,12 @@
                     ]]>
                 </target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.create.title">
-                <source>networking_init_cms.page.admin.page.create.title</source>
+            <trans-unit id="networking_init_cms.admin.page.create.title">
+                <source>networking_init_cms.admin.page.create.title</source>
                 <target>Add a new page</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.create.text">
-                <source>networking_init_cms.page.admin.page.create.text</source>
+            <trans-unit id="networking_init_cms.admin.page.create.text">
+                <source>networking_init_cms.admin.page.create.text</source>
                 <target><![CDATA[
                  <p>Begin by clicking the &quot;+ Add Page&quot;&nbsp;button in the &quot;Pages&quot;&nbsp;section of the CMS. All fields marked with &quot;*&quot; are mandatory, the others are optional. The following list explains all fields.</p>
 
@@ -273,12 +273,12 @@
                 ]]>
                 </target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.edit.title">
-                <source>networking_init_cms.page.admin.page.edit.title</source>
+            <trans-unit id="networking_init_cms.admin.page.edit.title">
+                <source>networking_init_cms.admin.page.edit.title</source>
                 <target>Edit a page</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.page.edit.text">
-                <source>networking_init_cms.page.admin.page.edit.text</source>
+            <trans-unit id="networking_init_cms.admin.page.edit.text">
+                <source>networking_init_cms.admin.page.edit.text</source>
                 <target><![CDATA[
           <p>The Edit Form has multiple areas. Below the page title you see the content area with one or more layout containers. On the right side you find additional information and actions for the page.</p>
 
@@ -316,12 +316,12 @@
 
             <!-- menu -->
 
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.navigation.title">
-                <source>networking_init_cms.menu.admin.menu_item.navigation.title</source>
+            <trans-unit id="networking_init_cms.admin.menu_item.navigation.title">
+                <source>networking_init_cms.admin.menu_item.navigation.title</source>
                 <target>Menu overview</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.navigation.text">
-                <source>networking_init_cms.menu.admin.menu_item.navigation.text</source>
+            <trans-unit id="networking_init_cms.admin.menu_item.navigation.text">
+                <source>networking_init_cms.admin.menu_item.navigation.text</source>
                 <target><![CDATA[
                     <p>A menu provides a navigation to make your content easily accessible by others. Each menu is represented by a tab, the selected menu is highlighted. Below the highlighted menu you will see all the options and the list of menu items. The menu item list displays information about each menu point and offers the functions to move (reorder), edit and delete each point. On top of the tabs you can filter the menus by language.</p>
 
@@ -343,12 +343,12 @@
                     A menu belongs to the selected language only. Thus every language has it's own menus. This allows you to have a separate menu tree in each language.</p>
                 ]]></target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.create.title">
-                <source>networking_init_cms.menu.admin.menu_item.create.title</source>
+            <trans-unit id="networking_init_cms.admin.menu_item.create.title">
+                <source>networking_init_cms.admin.menu_item.create.title</source>
                 <target>Add a new menu item</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.menu.admin.menu_item.create.text">
-                <source>networking_init_cms.menu.admin.menu_item.create.text</source>
+            <trans-unit id="networking_init_cms.admin.menu_item.create.text">
+                <source>networking_init_cms.admin.menu_item.create.text</source>
                 <target><![CDATA[
                     <p>In the menu overview you will find the blue button &quot;+ Add Item&quot;, clicking it will create a new menu item in the current selected menu.</p>
 
@@ -446,12 +446,12 @@
                     ​</strong>Click &quot;+ Add new&quot; to add existing media or directly upload new media. You can even delete media from the gallery if necessary. You can come back any time to add or change media for a gallery.</p>
                 ]]></target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.tag.list.title">
-                <source>networking_init_cms.page.admin.tag.list.title</source>
+            <trans-unit id="networking_init_cms.admin.tag.list.title">
+                <source>networking_init_cms.admin.tag.list.title</source>
                 <target>Media Tag</target>
             </trans-unit>
-            <trans-unit id="networking_init_cms.page.admin.tag.list.text">
-                <source>networking_init_cms.page.admin.tag.list.text</source>
+            <trans-unit id="networking_init_cms.admin.tag.list.text">
+                <source>networking_init_cms.admin.tag.list.text</source>
                 <target><![CDATA[
                         <p>A media tag is a word or phrase, which you can freely create and associate to your media items. Media tags can then be used to filter all the media that is managed in the media library, you can then use the media tags to filter and find your way through large amounts of media quickly and easily</p>
 

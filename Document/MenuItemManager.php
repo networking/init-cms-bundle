@@ -8,20 +8,26 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Document;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 
-
 /**
+ * Class MenuItemManager
+ * @package Networking\InitCmsBundle\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuItemManager
 {
-
+    /**
+     * @var \Doctrine\ODM\MongoDB\DocumentManager
+     */
     protected $dm;
 
+    /**
+     * @param DocumentManager $dm
+     * @param $class
+     */
     public function __construct(DocumentManager $dm, $class)
     {
         parent::__construct($dm, $class);

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -9,14 +8,15 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Doctrine\Types;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class EnumType
+ * @package Networking\InitCmsBundle\Doctrine\Types
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class EnumType extends Type
 {

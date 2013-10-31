@@ -37,6 +37,8 @@ Networking\InitCmsBundle\Entity\BasePage:
       type: integer
       column: lvl
       nullable: true
+      gedmo:
+        0: treeLevel
     metaKeyword:
       type: string
       length: 255

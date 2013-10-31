@@ -7,10 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
 use Networking\InitCmsBundle\Model\PageSnapshot as ModelPageSnapshot;
 
+/**
+ * Class PageSnapshot
+ * @package Networking\InitCmsBundle\Entity
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class PageSnapshot extends ModelPageSnapshot
 {
 

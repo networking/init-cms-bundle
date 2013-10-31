@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -16,11 +15,11 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use Application\Networking\InitCmsBundle\Entity\Page;
-
+use Networking\InitCmsBundle\Model\PageInterface;
 /**
- * @author net working AG <info@networking.ch>
+ * Class LoadPages
+ * @package Networking\InitCmsBundle\Fixtures
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LoadPages extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
@@ -57,14 +56,16 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
      */
     public function createHomePages(ObjectManager $manager, $locale, $key, $languages)
     {
-        $homePage = new Page();
+        $pageClass = $this->container->getParameter('networking_init_cms.admin.page.class');
+        /** @var PageInterface $homePage */
+        $homePage = new $pageClass;
 
         $homePage->setLocale($locale);
         $homePage->setPageName('Homepage ' . $locale);
         $homePage->setMetaTitle('Homepage ' . $locale);
         $homePage->setMetaKeyword('homepage');
         $homePage->setMetaDescription('This is the homepage');
-        $homePage->setStatus(Page::STATUS_PUBLISHED);
+        $homePage->setStatus(PageInterface::STATUS_PUBLISHED);
         $homePage->setIsHome(true);
         $homePage->setTemplateName($this->getFirstTemplate());
         $homePage->setActiveFrom(new \DateTime('now'));

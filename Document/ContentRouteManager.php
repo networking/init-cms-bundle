@@ -13,8 +13,11 @@ namespace Networking\InitCmsBundle\Document;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Networking\InitCmsBundle\Doctrine\ContentRouteManager as DoctrineContentRouteManager;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 /**
- * @author net working AG <info@networking.ch>
+ * Class ContentRouteManager
+ * @package Networking\InitCmsBundle\Document
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class ContentRouteManager extends DoctrineContentRouteManager
 {
@@ -23,6 +26,4 @@ class ContentRouteManager extends DoctrineContentRouteManager
     {
         parent::__construct($dm, $class, $session);
     }
-
-
 }

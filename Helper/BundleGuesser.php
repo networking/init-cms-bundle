@@ -7,9 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Helper;
 
 /**
+ * Class BundleGuesser
+ * @package Networking\InitCmsBundle\Helper
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class BundleGuesser
@@ -26,10 +29,9 @@ class BundleGuesser
      */
     public function initialize($class)
     {
-
         $this->reflector = new \ReflectionClass(get_class($class));
-        return $this;
 
+        return $this;
     }
 
     /**

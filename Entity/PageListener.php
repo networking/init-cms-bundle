@@ -15,8 +15,11 @@ use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageListener as ModelPageListener;
+
 /**
- * @author net working AG <info@networking.ch>
+ * Class PageListener
+ * @package Networking\InitCmsBundle\Entity
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageListener extends ModelPageListener
 {

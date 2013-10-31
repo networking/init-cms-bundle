@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
 use Gedmo\Sluggable\Util\Urlizer;
@@ -18,7 +18,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManager;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class UniqueURLValidator
+ * @package Networking\InitCmsBundle\Validator\Constraints
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UniqueURLValidator extends ConstraintValidator
 {

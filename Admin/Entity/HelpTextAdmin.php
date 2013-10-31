@@ -10,6 +10,11 @@ namespace Networking\InitCmsBundle\Admin\Entity;
 
 use Networking\InitCmsBundle\Admin\Model\HelpTextAdmin as ModelHelpTextAdmin;
 
+/**
+ * Class HelpTextAdmin
+ * @package Networking\InitCmsBundle\Admin\Entity
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ */
 class HelpTextAdmin extends ModelHelpTextAdmin{
 
 } 

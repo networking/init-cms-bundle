@@ -23,7 +23,6 @@ use Sandbox\InitCmsBundle\Form\UserType;
 /**
  * Class InitCmsInstallController
  * @package Networking\InitCmsBundle\Controller
- *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class InitCmsInstallController extends Controller
@@ -96,9 +95,10 @@ class InitCmsInstallController extends Controller
     {
         $installFailed = false;
         try {
-            /** @var $page Page */
-            $user = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:User')->findAll();
-            if (count($user) < 1) {
+            /** @var \FOS\UserBundle\Doctrine\UserManager $userManager */
+            $userManager = $this->get('fos_user.user_manager');
+            $users = $userManager->findUsers();
+            if (count($users) < 1) {
                 throw new \Exception('Users not loaded');
             }
 

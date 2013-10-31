@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -10,33 +9,30 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Entity\MenuItem,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request,
-    Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
-    Symfony\Component\HttpFoundation\JsonResponse,
-    Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
-    Symfony\Component\Security\Core\Exception\AccessDeniedException,
-    Networking\InitCmsBundle\Entity\AdminSettings,
-    Networking\InitCmsBundle\Controller\CRUDController;
+use Networking\InitCmsBundle\Entity\MenuItem;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class MenuItemAdminController
+ * @package Networking\InitCmsBundle\Controller
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuItemAdminController extends CRUDController
 {
-
+    /**
+     * @var string
+     */
     protected $currentMenuLanguage = '';
 
     /**
-     * return the Response object associated to the list action
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     *
-     * @return Response
+     * {@inheritdoc}
      */
     public function listAction($pageId = false, $menuId = false)
     {
@@ -70,7 +66,7 @@ class MenuItemAdminController extends CRUDController
 
         $menus = array();
 
-        /** @var $menuItemManager MenuItemManager */
+        /** @var MenuItemManagerInterface $menuItemManager */
         $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
 
 
@@ -196,8 +192,7 @@ class MenuItemAdminController extends CRUDController
     }
 
     /**
-     * @return Response
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * {@inheritdoc}
      */
     public function createAction()
     {
@@ -212,9 +207,7 @@ class MenuItemAdminController extends CRUDController
     }
 
     /**
-     * @param null $id
-     * @return Response|void
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * {@inheritdoc}
      */
     public function editAction($id = null)
     {
@@ -224,15 +217,12 @@ class MenuItemAdminController extends CRUDController
                 throw new AccessDeniedException();
             }
         }
+
         return parent::editAction($id);
     }
 
-
     /**
-     * @param mixed $id
-     * @return RedirectResponse|JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * {@inheritdoc}
      */
     public function deleteAction($id)
     {
@@ -331,8 +321,10 @@ class MenuItemAdminController extends CRUDController
         $em->flush();
 
         $this->admin->createObjectSecurity($menuItem);
-        
-        return $this->redirect($this->admin->generateUrl('list', array('page_id' => $page->getId(), 'menu_id' => $menuItem->getId())));
+
+        return $this->redirect(
+            $this->admin->generateUrl('list', array('page_id' => $page->getId(), 'menu_id' => $menuItem->getId()))
+        );
 
     }
 
@@ -364,7 +356,7 @@ class MenuItemAdminController extends CRUDController
                 if ($node['parent_id']) {
                     $parent = $this->admin->getObject($node['parent_id']);
                     $menuItem->setParent($parent);
-                }else{
+                } else {
                     ;
                     $menuItem->setParent($menuItem->getParentByLevel(0));
                 }
@@ -375,7 +367,6 @@ class MenuItemAdminController extends CRUDController
                 $this->admin->update($menuItem);
             }
 
-            //$em->flush();
             $response = array('status' => 'ok', 'message' => $this->admin->trans('info.menu_sorted'));
         } catch (\Exception $e) {
             $response = array('status' => 'error', 'message' => $this->admin->trans('info.menu_sorted_error'));
@@ -385,10 +376,7 @@ class MenuItemAdminController extends CRUDController
     }
 
     /**
-     * @param mixed $data
-     * @param int $status
-     * @param array $headers
-     * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * {@inheritdoc}
      */
     public function renderJson($data, $status = 200, $headers = array())
     {
@@ -436,6 +424,7 @@ class MenuItemAdminController extends CRUDController
     {
         $trace = debug_backtrace();
         $name = $trace[2]['function'];
+
         return empty($name) ? 'global' : $name;
     }
 

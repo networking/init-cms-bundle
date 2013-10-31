@@ -10,9 +10,9 @@
 namespace Networking\InitCmsBundle\Model;
 
 /**
- * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
+ * Class AdminSettingsInterface
  * @package Networking\InitCmsBundle\Model
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface AdminSettingsInterface
 {

@@ -12,13 +12,14 @@
 namespace Networking\InitCmsBundle\Admin\Document;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin as ModelPageAdmin;
-use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Sonata\DoctrineMongoDBAdminBundle\Datagrid\ProxyQuery;
 
 /**
+ * Class PageAdmin
+ * @package Networking\InitCmsBundle\Admin\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageAdmin extends ModelPageAdmin

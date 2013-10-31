@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,15 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Twig\TokenParser;
 
+namespace Networking\InitCmsBundle\Twig\TokenParser;
 
 use Twig_TokenParser;
 use Twig_Token;
 use Networking\InitCmsBundle\Twig\Node\JSNode;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class JSTokenParser
+ * @package Networking\InitCmsBundle\Twig\TokenParser
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class JSTokenParser extends Twig_TokenParser
 {

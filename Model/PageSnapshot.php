@@ -1,10 +1,11 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: marcbissegger
- * Date: 10/17/13
- * Time: 3:47 PM
- * To change this template use File | Settings | File Templates.
+ * This file is part of the init_cms_sandbox package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Networking\InitCmsBundle\Model;
@@ -12,11 +13,11 @@ namespace Networking\InitCmsBundle\Model;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 
 /**
+ * Class PageSnapshot
+ * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
  */
-
-class PageSnapshot implements PageSnapshotInterface{
+abstract class PageSnapshot implements PageSnapshotInterface{
     /**
      * @var integer $id
      *
@@ -34,27 +35,32 @@ class PageSnapshot implements PageSnapshotInterface{
     protected $contentRoute;
 
     /**
+     * @var string
      */
     protected $resourceName;
 
     /**
+     * @var int
      */
     protected $resourceId;
 
     /**
+     * @var mixed
      */
     protected $versionedData;
 
     /**
-     *
+     * @var int
      */
     protected $version;
 
     /**
+     * @var \DateTime
      */
     protected $snapshotDate;
 
     /**
+     * @var
      */
     protected $path;
 

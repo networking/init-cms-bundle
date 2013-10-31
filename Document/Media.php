@@ -10,16 +10,13 @@
 
 namespace Networking\InitCmsBundle\Document;
 
-
 use Sonata\MediaBundle\Document\BaseMedia;
-use Networking\InitCmsBundle\Document\Tag;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
+ * Class Media
+ * @package Networking\InitCmsBundle\Document
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
- *
- * Networking\InitCmsBundle\Document\Media
- *
  */
 class Media extends BaseMedia
 {
@@ -44,7 +41,9 @@ class Media extends BaseMedia
      */
     protected $galleryHasMedias;
 
-
+    /**
+     *
+     */
     public function __construct()
     {
         $this->tags = new ArrayCollection();

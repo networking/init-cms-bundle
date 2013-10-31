@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,13 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Helper;
 
 use Networking\InitCmsBundle\Model\ContentInterface;
 use Sonata\AdminBundle\Exception\NoValueException;
 
 /**
- * @author net working AG <info@networking.ch>
+ * Class ContentInterfaceHelper
+ * @package Networking\InitCmsBundle\Helper
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class ContentInterfaceHelper
 {
