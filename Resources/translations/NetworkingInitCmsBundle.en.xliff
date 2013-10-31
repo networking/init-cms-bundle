@@ -30,7 +30,7 @@
                 <source>link.website_status_draft</source>
                 <target>Website: Draft</target>
             </trans-unit>
-                <trans-unit id="link.show_more_actions">
+            <trans-unit id="link.show_more_actions">
                 <source>link.show_more_actions</source>
                 <target>Show more actions</target>
             </trans-unit>
@@ -106,34 +106,6 @@
                 <source>btn_create_and_create_a_new_one</source>
                 <target>Add item and create another</target>
             </trans-unit>
-            <trans-unit id="flash_delete_success">
-                <source>flash_delete_success</source>
-                <target>The item was successfully deleted.</target>
-            </trans-unit>
-            <trans-unit id="flash_delete_error">
-                <source>flash_delete_error</source>
-                <target>Sorry, the item could not be deleted.</target>
-            </trans-unit>
-            <trans-unit id="flash_edit_success">
-                <source>flash_edit_success</source>
-                <target>The item was successfully updated.</target>
-            </trans-unit>
-            <trans-unit id="flash_edit_error">
-                <source>flash_edit_error</source>
-                <target>An error has occurred, the selected item could not be updated at present</target>
-            </trans-unit>
-            <trans-unit id="flash_create_success">
-                <source>flash_create_success</source>
-                <target>Success, the item was created.</target>
-            </trans-unit>
-            <trans-unit id="flash_create_error">
-                <source>flash_create_error</source>
-                <target>An error has occurred, the item could not be created at present</target>
-            </trans-unit>
-            <trans-unit id="flash_batch_delete_success">
-                <source>flash_batch_delete_success</source>
-                <target>The selected items were successfully deleted</target>
-            </trans-unit>
             <trans-unit id="flash_batch_delete_error">
                 <source>flash_batch_delete_error</source>
                 <target>The selected items could not be deleted at present</target>
@@ -187,9 +159,41 @@
                 <source>title.dashboard</source>
                 <target>Welcome to the %admin_title% CMS</target>
             </trans-unit>
+            <trans-unit id="flash_delete_success">
+                <source>flash_delete_success</source>
+                <target>The item was successfully deleted.</target>
+            </trans-unit>
+            <trans-unit id="flash_delete_error">
+                <source>flash_delete_error</source>
+                <target>Sorry, the item could not be deleted.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_success">
+                <source>flash_edit_success</source>
+                <target>The item was successfully updated.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_error">
+                <source>flash_edit_error</source>
+                <target>An error has occurred, the selected item could not be updated at present</target>
+            </trans-unit>
+            <trans-unit id="flash_create_success">
+                <source>flash_create_success</source>
+                <target>Success, the item was created.</target>
+            </trans-unit>
+            <trans-unit id="flash_create_error">
+                <source>flash_create_error</source>
+                <target>An error has occurred, the item could not be created at present</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_success">
+                <source>flash_batch_delete_success</source>
+                <target>The selected items were successfully deleted</target>
+            </trans-unit>
             <trans-unit id="flash_batch_publish_success">
                 <source>flash_batch_publish_success</source>
                 <target>Pages successfully published</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_publish_error">
+                <source>flash_batch_publish_error</source>
+                <target>Pages could not be published at present</target>
             </trans-unit>
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>

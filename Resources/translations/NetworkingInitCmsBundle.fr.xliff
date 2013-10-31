@@ -20,7 +20,7 @@
             </trans-unit>
             <trans-unit id="link.go_to_list">
                 <source>link.go_to_list</source>
-                <target>Aller à la liste %admin_label% </target>
+                <target>Aller à la liste %admin_label%</target>
             </trans-unit>
             <trans-unit id="link.website_status_published">
                 <source>link.website_status_published</source>
@@ -30,7 +30,7 @@
                 <source>link.website_status_draft</source>
                 <target>Site Web: ébauche</target>
             </trans-unit>
-                <trans-unit id="link.show_more_actions">
+            <trans-unit id="link.show_more_actions">
                 <source>link.show_more_actions</source>
                 <target>Montrer plus d’actions</target>
             </trans-unit>
@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="btn_update_and_edit_again">
                 <source>btn_update_and_edit_again</source>
-                <target>Mettre à jour %admin_label% </target>
+                <target>Mettre à jour %admin_label%</target>
             </trans-unit>
             <trans-unit id="btn_update_and_return_to_list">
                 <source>btn_update_and_return_to_list</source>
@@ -105,38 +105,6 @@
             <trans-unit id="btn_create_and_create_a_new_one">
                 <source>btn_create_and_create_a_new_one</source>
                 <target>Ajouter %admin_label% et en créer un autre</target>
-            </trans-unit>
-            <trans-unit id="flash_delete_success">
-                <source>flash_delete_success</source>
-                <target>L’élément a été supprimé avec succès.</target>
-            </trans-unit>
-            <trans-unit id="flash_delete_error">
-                <source>flash_delete_error</source>
-                <target>Désolé, l’élément n’a pas pu être supprimé.</target>
-            </trans-unit>
-            <trans-unit id="flash_edit_success">
-                <source>flash_edit_success</source>
-                <target>L’élément a été mis à jour avec succès.</target>
-            </trans-unit>
-            <trans-unit id="flash_edit_error">
-                <source>flash_edit_error</source>
-                <target>Une erreur est survenue, l’élément sélectionné n’a pas pu être mis à jour</target>
-            </trans-unit>
-            <trans-unit id="flash_create_success">
-                <source>flash_create_success</source>
-                <target>Opération réussie, l’élément a été créé.</target>
-            </trans-unit>
-            <trans-unit id="flash_create_error">
-                <source>flash_create_error</source>
-                <target>Une erreur est survenue, l’élément n’a pas pu être créé actuellement</target>
-            </trans-unit>
-            <trans-unit id="flash_batch_delete_success">
-                <source>flash_batch_delete_success</source>
-                <target>Les éléments sélectionnés ont été supprimés avec succès</target>
-            </trans-unit>
-            <trans-unit id="flash_batch_delete_error">
-                <source>flash_batch_delete_error</source>
-                <target> Les éléments sélectionnés n’ont pas pu être supprimés actuellement</target>
             </trans-unit>
             <trans-unit id="no_result">
                 <source>no_result</source>
@@ -186,9 +154,45 @@
                 <source>title.dashboard</source>
                 <target>Bienvenue au CMS %admin_title%</target>
             </trans-unit>
+            <trans-unit id="flash_delete_success">
+                <source>flash_delete_success</source>
+                <target>L’élément a été supprimé avec succès.</target>
+            </trans-unit>
+            <trans-unit id="flash_delete_error">
+                <source>flash_delete_error</source>
+                <target>Désolé, l’élément n’a pas pu être supprimé.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_success">
+                <source>flash_edit_success</source>
+                <target>L’élément a été mis à jour avec succès.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_error">
+                <source>flash_edit_error</source>
+                <target>Une erreur est survenue, l’élément sélectionné n’a pas pu être mis à jour</target>
+            </trans-unit>
+            <trans-unit id="flash_create_success">
+                <source>flash_create_success</source>
+                <target>Opération réussie, l’élément a été créé.</target>
+            </trans-unit>
+            <trans-unit id="flash_create_error">
+                <source>flash_create_error</source>
+                <target>Une erreur est survenue, l’élément n’a pas pu être créé actuellement</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_success">
+                <source>flash_batch_delete_success</source>
+                <target>Les éléments sélectionnés ont été supprimés avec succès</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_error">
+                <source>flash_batch_delete_error</source>
+                <target>Les éléments sélectionnés n’ont pas pu être supprimés actuellement</target>
+            </trans-unit>
             <trans-unit id="flash_batch_publish_success">
                 <source>flash_batch_publish_success</source>
                 <target>Pages publiées avec succès</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_publish_error">
+                <source>flash_batch_publish_success</source>
+                <target>Une erreur est survenue, l’élément sélectionné n’a pas pu être publiées</target>
             </trans-unit>
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>

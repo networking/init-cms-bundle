@@ -106,38 +106,6 @@
                 <source>btn_create_and_create_a_new_one</source>
                 <target> %admin_label% hinzufügen und einen weiteren erstellen </target>
             </trans-unit>
-            <trans-unit id="flash_delete_success">
-                <source>flash_delete_success</source>
-                <target>Der Eintrag wurde erfolgreich gelöscht.</target>
-            </trans-unit>
-            <trans-unit id="flash_delete_error">
-                <source>flash_delete_error</source>
-                <target>Es tut uns leid, der Eintrag konnte nicht gelöscht werden.</target>
-            </trans-unit>
-            <trans-unit id="flash_edit_success">
-                <source>flash_edit_success</source>
-                <target>Der Eintrag wurde erfolgreich aktualisiert.</target>
-            </trans-unit>
-            <trans-unit id="flash_edit_error">
-                <source>flash_edit_error</source>
-                <target>Es ist ein Fehler aufgetreten. Der gewählte Eintrag kann im Augenblick nicht aktualisiert werden</target>
-            </trans-unit>
-            <trans-unit id="flash_create_success">
-                <source>flash_create_success</source>
-                <target>Der Eintrag wurde erfolgreich erstellt.</target>
-            </trans-unit>
-            <trans-unit id="flash_create_error">
-                <source>flash_create_error</source>
-                <target>Es ist ein Fehler aufgetreten. Der Eintrag kann im Augenblick nicht erstellt werden</target>
-            </trans-unit>
-            <trans-unit id="flash_batch_delete_success">
-                <source>flash_batch_delete_success</source>
-                <target>Die gewählten Einträge wurden erfolgreich gelöscht</target>
-            </trans-unit>
-            <trans-unit id="flash_batch_delete_error">
-                <source>flash_batch_delete_error</source>
-                <target>Die gewählten Einträge konnten nicht gelöscht werden.</target>
-            </trans-unit>
             <trans-unit id="no_result">
                 <source>no_result</source>
                 <target>Keine Einträge gefunden </target>
@@ -186,13 +154,49 @@
                 <source>title.dashboard</source>
                 <target>Willkommen beim %admin_title% CMS</target>
             </trans-unit>
+            <trans-unit id="flash_delete_success">
+                <source>flash_delete_success</source>
+                <target>Der Eintrag wurde erfolgreich gelöscht.</target>
+            </trans-unit>
+            <trans-unit id="flash_delete_error">
+                <source>flash_delete_error</source>
+                <target>Es tut uns leid, der Eintrag konnte nicht gelöscht werden.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_success">
+                <source>flash_edit_success</source>
+                <target>Der Eintrag wurde erfolgreich aktualisiert.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_error">
+                <source>flash_edit_error</source>
+                <target>Es ist ein Fehler aufgetreten. Der gewählte Eintrag kann im Augenblick nicht aktualisiert werden</target>
+            </trans-unit>
+            <trans-unit id="flash_create_success">
+                <source>flash_create_success</source>
+                <target>Der Eintrag wurde erfolgreich erstellt.</target>
+            </trans-unit>
+            <trans-unit id="flash_create_error">
+                <source>flash_create_error</source>
+                <target>Es ist ein Fehler aufgetreten. Der Eintrag kann im Augenblick nicht erstellt werden</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_success">
+                <source>flash_batch_delete_success</source>
+                <target>Die gewählten Einträge wurden erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_error">
+                <source>flash_batch_delete_error</source>
+                <target>Die gewählten Einträge konnten nicht gelöscht werden.</target>
+            </trans-unit>
             <trans-unit id="flash_batch_publish_success">
                 <source>flash_batch_publish_success</source>
                 <target>Die Seiten wurden erfolgreich veröffentlicht </target>
             </trans-unit>
+            <trans-unit id="flash_batch_publish_error">
+                <source>flash_batch_publish_error</source>
+                <target>Die Seiten konntent zurzeit nicht veröffentlicht werden </target>
+            </trans-unit>
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>
-                <target>Es wurde nichts ausgewählt</target>
+                <target>Aktion abgebrochen. Es waren keine Elemente ausgewählt.</target>
             </trans-unit>
         </body>
     </file>

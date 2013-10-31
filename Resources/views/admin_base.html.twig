@@ -111,7 +111,7 @@ file that was distributed with this source code.
                             {% for flash in app.session.flashbag.get(session_var) %}
                                 <div class="alert {{ 'alert-' ~ notice_level }}">
                                     <a class="close" data-dismiss="alert" href="#">×</a>
-                                    {{ flash|trans([], 'SonataAdminBundle') }}
+                                    {{ flash|trans([], 'NetworkingInitCmsBundle') }}
                                 </div>
                             {% endfor %}
                         {% endfor %}

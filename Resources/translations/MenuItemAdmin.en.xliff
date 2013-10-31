@@ -26,8 +26,8 @@
                 <source>title.page</source>
                 <target>Page</target>
             </trans-unit>
-            <trans-unit id="breadcrumb.link_menu_item_list">
-                <source>breadcrumb.link_menu_item_list</source>
+            <trans-unit id="breadcrumb.link_menu_item_navigation">
+                <source>breadcrumb.link_menu_item_navigation</source>
                 <target><![CDATA[<small>Organise your</small>]]> Menus</target>
             </trans-unit>
             <trans-unit id="label.linked_resource">
