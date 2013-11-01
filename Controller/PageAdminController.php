@@ -580,8 +580,9 @@ class PageAdminController extends CRUDController
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function editAction(Request $request, $id = null)
+    public function editAction($id = null)
     {
+        $request = $this->getRequest();
         // the key used to lookup the template
         $templateKey = 'edit';
 
