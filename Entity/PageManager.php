@@ -30,10 +30,14 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      */
     public function __construct(EntityManager $om, $class)
     {
-        $classMetaData = $om->getClassMetadata($class);
+        if (class_exists($class)) {
+            $classMetaData = $om->getClassMetadata($class);
 
-        parent::__construct($om, $classMetaData);
+            parent::__construct($om, $classMetaData);
+        }
+
     }
+
     /**
      * @param  string $id
      * @return object
@@ -162,7 +166,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      */
     public function save(PageInterface $page)
     {
-        if(!$page->getId()){
+        if (!$page->getId()) {
             $page->setContentRoute(new ContentRoute());
         }
         $this->_em->persist($page);
