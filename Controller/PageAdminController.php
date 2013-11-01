@@ -283,7 +283,7 @@ class PageAdminController extends CRUDController
         $elementId = $request->get('elementId');
         $objectId = $request->get('objectId');
         $uniqid = $request->get('uniqid');
-
+        /** @var \Sonata\AdminBundle\Admin\AdminInterface $admin */
         $admin = $this->container->get($code);
         $admin->setRequest($request);
 
@@ -541,14 +541,15 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      * @param null $id
      * @return Response
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction(Request $request, $id = null)
+    public function showAction($id = null)
     {
+        $request = $this->getRequest();
+        
         $id = $request->get($this->admin->getIdParameter());
 
         $object = $this->admin->getObject($id);
@@ -574,7 +575,6 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      * @param null $id
      * @return Response
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
