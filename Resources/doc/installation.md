@@ -21,7 +21,6 @@ You will be prompted to specify a version constraint,
 
 	Please provide a version constraint for the networking/init-cms-bundle requirement:
 
-Please enter "dev-master" for the time being.
 
 This will install the init cms bundle and all its dependencies in your
 vendor folder, and add the bundle to the list of requirements in your composer.json
@@ -31,37 +30,60 @@ vendor folder, and add the bundle to the list of requirements in your composer.j
 Add the following lines to your application kernel
 
 	<?php
-	// app/appkernel.php
+	// app/AppKernel.php
 	public function registerbundles()
 	{
 	    return array(
 	        // ...
 	        new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-	        new JMS\SerializerBundle\JMSSerializerBundle($this),
+            new JMS\AopBundle\JMSAopBundle(),
+            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle($this),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
-            new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
-            new FOS\RestBundle\FOSRestBundle(),
-            new Liip\ThemeBundle\LiipThemeBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Sonata\AdminBundle\SonataAdminBundle(),
+            new Sonata\UserBundle\SonataUserBundle('FOSUserBundle'),
             new Sonata\jQueryBundle\SonatajQueryBundle(),
             new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
-            new Sonata\CacheBundle\SonataCacheBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
-            new Sonata\UserBundle\SonataUserBundle('FOSUserBundle'),
             new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
-            new Sonata\FormatterBundle\SonataFormatterBundle(),
             new Sonata\MediaBundle\SonataMediaBundle(),
+            new Sonata\MarkItUpBundle\SonataMarkItUpBundle(),
+            new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
+            new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
+            new \Sonata\FormatterBundle\SonataFormatterBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Symfony\Cmf\Bundle\RoutingExtraBundle\SymfonyCmfRoutingExtraBundle(),
+            new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
+            new Ibrows\Bundle\SonataAdminAnnotationBundle\IbrowsSonataAdminAnnotationBundle(),
+            new Lexik\Bundle\TranslationBundle\LexikTranslationBundle(),
+            new Ibrows\SonataTranslationBundle\IbrowsSonataTranslationBundle(),
             new Networking\InitCmsBundle\NetworkingInitCmsBundle(),
-            new Networking\GalleryBundle\NetworkingGalleryBundle(),
 	        // ...
 	    );
 	}
+### Extend the bundle
+Now you need to extend the bundle. This will create a bundle in your src folder which inherits the NetworkingInitCmsBundle.
+The bundle extending process is based on the sonata easy extend bundle
+
+
+    php app/console networking:init_cms:generate
+
+
+Then you can add your new bundle to the AppKernel.php
+
+        <?php
+        // app/AppKernel.php
+        public function registerbundles()
+        {
+            return array(
+                //..
+                new Application\Networking\InitCmsBundle\ApplicationNetworkingInitCmsBundle(),
+                //..
+             );
+         }
 
 2) Configure the init CMS
 -------------------------
@@ -112,7 +134,6 @@ assetic:
         cssrewrite: ~
         cssembed:
             jar: %kernel.root_dir%/Resources/java/cssembed-0.3.6.jar
-            apply_to: "\.css$|\.less$"
         yui_css:
             jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
             apply_to: "\.css$"
