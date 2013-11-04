@@ -15,7 +15,7 @@
     {% if app.user is defined %}
         {% if is_granted('ROLE_SONATA_ADMIN') %}
             {% javascripts
-            '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-dropdown.js' %}
+            '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-dropdown.js' %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
         {% endif %}

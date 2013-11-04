@@ -41,9 +41,11 @@ class UserManager extends DoctrineUserManager
         EntityManager $em,
         $class
     ) {
-        parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $em, $class);
+        if(class_exists($class)){
+            parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $em, $class);
 
-        $this->em = $em;
+                    $this->em = $em;
+        }
     }
 
     /**
