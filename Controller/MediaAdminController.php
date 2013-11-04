@@ -106,11 +106,17 @@ class MediaAdminController extends SonataMediaAdminController
                 $mediaAdmin->createObjectSecurity($media);
 
                 // Check the $_FILES array and save the file. Assign the correct path to a variable ($url).
-                $url = $this->generateUrl(
-                        'sonata_media_download',
-                        array('id' => $media->getId())
-                    ) . '/' . $media->getMetadataValue('filename');
 
+                if($providerName == 'sonata.media.provider.image'){
+                    $url = $provider->generatePublicUrl($media, 'reference');
+
+                } else {
+                    $url = $this->generateUrl(
+                                            'sonata_media_download',
+                                            array('id' => $media->getId())
+                                        ) . '/' . $media->getMetadataValue('filename');
+
+                }
                 // Usually you will only assign something here if the file could not be uploaded.
                 $message = '';
 
@@ -141,7 +147,8 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function uploadedTextBlockImageAction(Request $request)
     {
-        $media = $this->admin->getModelManager()->findBy(array('providerName' => 'sonata.media.provider.image'));
+
+        $media = $this->admin->getModelManager()->findBy($this->admin->getClass(), array('providerName' => 'sonata.media.provider.image'));
 
         $provider = $this->get('sonata.media.provider.image');
 
@@ -324,7 +331,7 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function uploadedTextBlockFileAction(Request $request)
     {
-        $media = $this->admin->getModelManager()->findBy(array('providerName' => 'sonata.media.provider.file'));
+        $media = $this->admin->getModelManager()->findBy($this->admin->getClass(), array('providerName' => 'sonata.media.provider.file'));
 
         $provider = $this->get('sonata.media.provider.file');
 
