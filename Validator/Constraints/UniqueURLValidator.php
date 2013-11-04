@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
 use Gedmo\Sluggable\Util\Urlizer;
-use Sonata\PageBundle\Model\PageManagerInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
