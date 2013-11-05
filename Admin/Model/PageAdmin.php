@@ -220,7 +220,7 @@ abstract class PageAdmin extends BaseAdmin
                             'help_inline' => 'parent.helper.text',
                             'attr' => array('style' => "width:220px"),
                             'property' => 'AdminTitle',
-                            'class' => 'Application\\Networking\\InitCmsBundle\\Entity\\Page',
+                            'class' => $this->getClass(),
                             'required' => false,
                             'query_builder' => $pageManager->getParentPagesQuery(
                                     $this->pageLocale,
@@ -311,9 +311,6 @@ abstract class PageAdmin extends BaseAdmin
                 } else {
                     return 'NetworkingInitCmsBundle:PageAdmin:page_create.html.twig';
                 }
-                break;
-            case 'preview':
-                return 'NetworkingInitCmsBundle:PageAdmin:page_preview.html.twig';
                 break;
             case 'list':
                 return 'NetworkingInitCmsBundle:PageAdmin:page_list.html.twig';
