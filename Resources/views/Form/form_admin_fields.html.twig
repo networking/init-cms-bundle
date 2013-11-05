@@ -463,14 +463,15 @@ file that was distributed with this source code.
 {% block media_entity_type_widget %}
     <ul class="media-list">
         {% for child in form %}
-            {% set object=objects[child.vars.value] %}
-            <li class="media">
-                <p>{% media object, 'admin' with {'class': 'media-object'} %}</p>
-
-                <div class="media-body">
-                    {{ form_widget(child) }} <strong class="media-heading">{{ object.name }}</strong>
-                </div>
-            </li>
+            {% if child.vars.value %}
+                {% set object=objects[child.vars.value] %}
+                <li class="media">
+                    <p>{% media object, 'admin' with {'class': 'media-object'} %}</p>
+                    <div class="media-body">
+                        {{ form_widget(child) }} <strong class="media-heading">{{ object.name }}</strong>
+                    </div>
+                </li>
+            {% endif %}
         {% endfor %}
     </ul>
 {% endblock %}
