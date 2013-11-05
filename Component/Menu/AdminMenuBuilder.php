@@ -88,20 +88,17 @@ class AdminMenuBuilder extends MenuBuilder
                     $liveRoute = $this->router->generate($snapShot->getRoute());
                 }
                 $draftRoute = $this->router->generate($entity->getRoute());
+                $pageAdmin = $this->adminPool->getAdminByAdminCode('networking_init_cms.admin.page');
+                $editPath = $pageAdmin->generateObjectUrl('edit', $entity);
 
-                $editPath = $this->router->generate(
-                    'admin_networking_initcms_page_edit',
-                    array('id' => urlencode($entity->getId()))
-                );
                 $language = $entity->getRoute()->getLocale();
             } elseif ($entity instanceof ResourceVersionInterface) {
                 $liveRoute = $this->router->generate($entity->getRoute());
                 $draftRoute = $this->router->generate($entity->getPage()->getRoute());
 
-                $editPath = $this->router->generate(
-                    'admin_networking_initcms_page_edit',
-                    array('id' => urlencode($entity->getPage()->getId()))
-                );
+                $pageAdmin = $this->adminPool->getAdminByAdminCode('networking_init_cms.admin.page');
+                $editPath = $pageAdmin->generateObjectUrl('edit', $entity->getPage());
+
                 $language = $entity->getRoute()->getLocale();
             }
 
