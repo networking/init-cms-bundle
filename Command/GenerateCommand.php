@@ -39,7 +39,7 @@ class GenerateCommand extends SonataGenerateCommand
     {
 
         $this
-            ->setName('networking:init_cms:generate')
+            ->setName('networking:initcms:generate')
             ->setHelp(
                 <<<EOT
                 The <info>easy-extends:generate:entities</info> command generating an extension of the NetworkingInitCmsBundle.
