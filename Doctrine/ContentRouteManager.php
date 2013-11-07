@@ -71,7 +71,8 @@ abstract class ContentRouteManager extends BaseContentRouteManager
         return $this->repository->findOneBy($criteria);
     }
 
-    public function findContentByContentRoute(ContentRouteInterface $contentRoute){
+    public function findContentByContentRoute(ContentRouteInterface $contentRoute)
+    {
 
         $repository = $this->objectManager->getRepository($contentRoute->getClassType());
 
@@ -111,11 +112,7 @@ abstract class ContentRouteManager extends BaseContentRouteManager
 
         $params = array('path' => $searchUrl);
 
-        $locale = $this->session->get('_locale');
 
-        if ($locale) {
-            $params['locale'] = $locale;
-        }
         try {
             $contentRoutes = $this->repository->findBy($params);
         } catch (\Doctrine\DBAL\DBALException $e) {
@@ -123,18 +120,33 @@ abstract class ContentRouteManager extends BaseContentRouteManager
             return $collection;
         }
 
-        foreach ($contentRoutes as $key => $contentRoute) {
+        if(empty($contentRoutes)){
+            return $collection;
+        }
+
+        $tempContentRoutes = array_filter($contentRoutes, array($this, 'filterByLocale'));
+
+        if(empty($tempContentRoutes)){
+            $tempContentRoutes = $contentRoutes;
+        }
+
+        foreach ($tempContentRoutes as $key => $contentRoute) {
+
 
             /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
             $content = $this->getRouteContent($contentRoute);
 
-            $viewStatus = $this->session->get('_viewStatus') ? $this->session->get('_viewStatus') : VersionableInterface::STATUS_PUBLISHED;
+            $viewStatus = $this->session->get('_viewStatus') ? $this->session->get(
+                '_viewStatus'
+            ) : VersionableInterface::STATUS_PUBLISHED;
 
             if ($viewStatus == VersionableInterface::STATUS_DRAFT && ($content instanceof ResourceVersionInterface)) {
                 continue;
             } elseif ($viewStatus == VersionableInterface::STATUS_PUBLISHED && ($content instanceof VersionableInterface)) {
                 continue;
             }
+
+            $this->session->set('_locale', $contentRoute->getLocale());
 
             $contentRoute->initializeRoute($content);
 
@@ -147,5 +159,10 @@ abstract class ContentRouteManager extends BaseContentRouteManager
         }
 
         return $collection;
+    }
+
+    protected function filterByLocale($var)
+    {
+        return $var->getLocale() == $this->session->get('_locale');
     }
 }
