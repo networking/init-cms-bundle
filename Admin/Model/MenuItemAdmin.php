@@ -135,21 +135,25 @@ abstract class MenuItemAdmin extends BaseAdmin
                             )
                     )
                 );
+            $pageAdmin = $this->configurationPool->getAdminByAdminCode('networking_init_cms.admin.page');
+            $pageClass = $pageAdmin->getClass();
+
             $formMapper
                 ->add(
                     'page',
                     'networking_type_autocomplete',
                     array(
                         'attr' => array('style' => "width:220px"),
-                        'class' => 'Application\Networking\InitCmsBundle\Entity\Page',
+                        'class' => $pageClass,
                         'required' => false,
                         'property' => 'AdminTitle',
                         'query_builder' => function (EntityRepository $er) use ($locale) {
                                 $qb = $er->createQueryBuilder('p');
 
-                                return $qb->where('p.locale = :locale')
+                                 $qb->where('p.locale = :locale')
                                     ->orderBy('p.path', 'asc')
                                     ->setParameter(':locale', $locale);
+                                return $qb;
                             },
                     )
                 );

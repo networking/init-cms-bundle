@@ -56,7 +56,6 @@ class MediaEntityType extends EntityType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['dataType'] = $form->getAttribute('dataType');
         $view->vars['objects'] = $options['choice_list']->getChoices();
         $view->vars['provider_name'] = $options['provider_name'];
     }
