@@ -66,6 +66,10 @@ class HelpTextController extends Controller
             $helpTextManager
         );
 
+        return $this->render(
+            'NetworkingInitCmsBundle:HelpText:adminHelp.html.twig',
+            $parameters
+        );
         return $parameters;
     }
 
