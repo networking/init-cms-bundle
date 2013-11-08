@@ -150,6 +150,12 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     protected $allChildren = array();
 
+    /**
+     * @var Page
+     * @ORM\OneToOne(targetEntity="Page")
+     * @ORM\JoinColumn(name="alias_id", referencedColumnName="id")
+     */
+    protected $alias;
 
     /**
      * @ORM\OneToMany(targetEntity="Networking\InitCmsBundle\Entity\LayoutBlock", cascade={"persist", "detach"}, mappedBy="page", orphanRemoval=true)
@@ -465,6 +471,23 @@ class Page implements RouteAwareInterface, VersionableInterface
 
         return isset($parents[$level]) ? $parents[$level] : null;
     }
+
+    /**
+     * @param \Networking\InitCmsBundle\Entity\Page $alias
+     */
+    public function setAlias(Page $alias = null)
+    {
+        $this->alias = $alias;
+    }
+
+    /**
+     * @return \Networking\InitCmsBundle\Entity\Page
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
 
     /**
      * @param  array $parents
@@ -1213,6 +1236,14 @@ class Page implements RouteAwareInterface, VersionableInterface
         return $this->contentRoute->getPath();
     }
 
+    public function getAliasFullPath()
+    {
+        if(!$this->getAlias()){
+            return '';
+        }
+        return $this->alias->getFullPath();
+    }
+
     /**
      * @return ArrayCollection
      */
@@ -1350,6 +1381,18 @@ class Page implements RouteAwareInterface, VersionableInterface
         }
 
         return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function convertAliasToInteger()
+    {
+        if ($this->alias) {
+            return $this->alias->getId();
+        }
+
+        return null;
     }
 
     /**

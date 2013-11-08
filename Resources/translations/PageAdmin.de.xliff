@@ -78,6 +78,10 @@
                 <source>form.label_tags</source>
                 <target>Tags</target>
             </trans-unit>
+            <trans-unit id="form.label_alias">
+                <source>form.label_alias</source>
+                <target>Verweist auf diese Seite</target>
+            </trans-unit>
             <trans-unit id="legend.translate_page">
                 <source>legend.translate_page</source>
                 <target>Seitenübersetzungen </target>
@@ -306,6 +310,10 @@
                 <source>pageName</source>
                 <target>Seiten-Name</target>
             </trans-unit>
+            <trans-unit id="alias">
+                <source>alias</source>
+                <target>Verweist auf die Seite</target>
+            </trans-unit>
             <trans-unit id="url">
                 <source>url</source>
                 <target>URL</target>
@@ -433,6 +441,10 @@
             <trans-unit id="parent.helper.text">
                 <source>parent.helper.text</source>
                 <target>Übergeordnete URL für diese Seite.</target>
+            </trans-unit>
+            <trans-unit id="alias.helper.text">
+                <source>alias.helper.text</source>
+                <target>Verweist auf eine Seite, und hat selber keinen Inhalt.</target>
             </trans-unit>
             <trans-unit id="visibility.helper.text">
                 <source>visibility.helper.text</source>

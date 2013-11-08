@@ -147,6 +147,13 @@ class PageListener implements EventSubscriberInterface
             $page->setParent(null);
         }
 
+        if ($alias = $page->getAlias()) {
+            $alias = $er->find($page->getAlias());
+            $page->setAlias($alias);
+        } else {
+            $page->setAlias(null);
+        }
+
         if ($parents = $page->getParents()) {
             foreach ($parents as $key => $parent) {
                 $parents[$key] = $er->find($parent);
