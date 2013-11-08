@@ -276,9 +276,9 @@ class FrontendPageController extends Controller
     public function translationNotFoundAction()
     {
         $params = array(
-            'admin_pool' => $this->getAdminPool(),
             'language' => \Locale::getDisplayLanguage($this->getRequest()->getLocale())
         );
+
 
         return $this->render($this->container->getParameter('networking_init_cms.no_translation_template'), $params);
     }
