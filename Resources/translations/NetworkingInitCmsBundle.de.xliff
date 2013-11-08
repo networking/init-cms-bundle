@@ -198,6 +198,10 @@
                 <source>flash_batch_empty</source>
                 <target>Aktion abgebrochen. Es waren keine Elemente ausgewählt.</target>
             </trans-unit>
+            <trans-unit id="link.alias.page">
+                <source>link.alias.page</source>
+                <target>Dies ist ein Verweis auf folgende Seite: "%alias_page%"</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

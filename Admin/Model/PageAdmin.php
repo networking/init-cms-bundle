@@ -229,6 +229,27 @@ abstract class PageAdmin extends BaseAdmin
                         )
                     );
             }
+
+            if (!$this->getSubject()->getId() || !$this->getSubject()->isHome()) {
+                $formMapper
+                    ->add(
+                        'alias',
+                        'networking_type_autocomplete',
+                        array(
+                            'help_inline' => 'alias.helper.text',
+                            'attr' => array('style' => "width:220px"),
+                            'property' => 'AdminTitle',
+                            'class' => $this->getClass(),
+                            'required' => false,
+                            'query_builder' => $pageManager->getParentPagesQuery(
+                                    $this->pageLocale,
+                                    $this->getSubject()->getId()
+                                ),
+                        ),
+                        array('display_method' => 'getAliasFullPath')
+                    );
+            }
+
         }
 
         $requireUrl = $this->canCreateHomepage ? false : true;

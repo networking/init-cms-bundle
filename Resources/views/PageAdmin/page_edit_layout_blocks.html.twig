@@ -11,6 +11,7 @@ file that was distributed with this source code.
 <div id="field_container_{{ id }}">
     {% set col = 0 %}
     {% set increment = 0 %}
+    {% if not sonata_admin.admin.subject.alias %}
     {% for key, zone in get_initcms_template_zones() %}
         {% if (col == 0 or loop.first) %}
             <div class="row-fluid">
@@ -149,6 +150,13 @@ file that was distributed with this source code.
             </div>
         {% endif %}
     {% endfor %}
+    {% else %}
+        <div class="alert alert-info"><a
+                    href="{{ sonata_admin.admin.generateUrl('edit', {id: sonata_admin.admin.subject.alias.id}) }}"
+                    class="link-underlined  font-light">
+                {{ 'link.alias.page'|trans({'%alias_page%': sonata_admin.admin.subject.alias}, 'NetworkingInitCmsBundle') }}</a>
+        </div>
+    {% endif %}
     {# add dependent javascript based on if the request is ajax or not #}
     {% if app.request.isXmlHttpRequest %}
         {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_orm_one_ajax.html.twig' %}

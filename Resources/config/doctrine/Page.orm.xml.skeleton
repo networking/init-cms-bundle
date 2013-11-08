@@ -31,6 +31,11 @@
             </cascade>
             <join-column name="content_route_id" referenced-column-name="id"/>
         </one-to-one>
+
+        <one-to-one target-entity="Application\Networking\InitCmsBundle\Entity\Page" field="alias">
+            <join-column name="alias_id" referenced-column-name="id" on-delete="SET NULL"/>
+        </one-to-one>
+
         <one-to-many target-entity="Networking\InitCmsBundle\Entity\LayoutBlock" field="layoutBlock" mapped-by="page"
                      orphan-removal="true">
             <cascade>

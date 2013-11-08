@@ -99,6 +99,11 @@ abstract class Page implements PageInterface
     protected $allChildren = array();
 
     /**
+     * @var PageInterface $alias
+     */
+    protected $alias;
+
+    /**
      * @var ArrayCollection $layoutBlock
      */
     protected $layoutBlock;
@@ -389,6 +394,22 @@ abstract class Page implements PageInterface
         }
 
         return isset($parents[$level]) ? $parents[$level] : null;
+    }
+
+    /**
+     * @param PageInterface $alias
+     */
+    public function setAlias(PageInterface $alias = null)
+    {
+        $this->alias = $alias;
+    }
+
+    /**
+     * @return PageInterface
+     */
+    public function getAlias()
+    {
+        return $this->alias;
     }
 
     /**
@@ -1104,6 +1125,18 @@ abstract class Page implements PageInterface
     }
 
     /**
+     * @return string
+     */
+    public function getAliasFullPath()
+    {
+        if (!$this->getAlias()) {
+            return '';
+        }
+
+        return $this->alias->getFullPath();
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getAllTranslations()
@@ -1243,6 +1276,18 @@ abstract class Page implements PageInterface
         }
 
         return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function convertAliasToInteger()
+    {
+        if ($this->alias) {
+            return $this->alias->getId();
+        }
+
+        return null;
     }
 
     /**
