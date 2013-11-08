@@ -103,27 +103,32 @@ languages:
 The template configuration consists of an array where the array key is the name and location of the template
 as you would write it in a twig template include.
 
-The paremeters fo the template include:
-    1. "name": used for display in the backend
-    2. "icon": a picture that should be no bigger than 175px wide. This will be shown in the backend to help
+The parameters fo the template include:
+    1. "template": which template to render the page with
+    2. "name": used for display in the backend
+    3. "icon": a picture that should be no bigger than 175px wide. This will be shown in the backend to help
         the cms user visualise what the page could look like
-    3. "zones": These are the areas in the template where content will be assigned to. Each zone has a "name" property
+    4. "controller": used to direct the request to the correct controller. default is NetworkingInitCmsBundle:FrontendPage:index
+        if not set
+    5. "zones": These are the areas in the template where content will be assigned to. Each zone has a "name" property
         (something sensible so the user can imagine what sort of content my go there), and "span" property which enables
         the CMS to roughly approximate the dimensions of the template. The span property is based in the twitter
         bootstrap grid system, where a span of 12 represents a css class of span12 ie the whole width of the page.
 
 ```
 templates:
-    'SandboxInitCmsBundle:Default:one_column.html.twig':
+    'sandbox_one_column':
+        template: "ApplicationNetworkingInitCmsBundle:Default:one_column.html.twig"
         name: "Single Column"
-        icon: "bundles/sandboxinitcms/img/template_header_one_column.png"
-        controller: MyBundle::index
+        icon: "bundles/applicationnetworkinginitcms/img/template_header_one_column.png"
+        controller: MyBundle::index # default NetworkingInitCmsBundle:FrontendPage:index
         zones:
             - { name: header, span:12, max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery }
             - { name: main_content, span:12}
-    'SandboxInitCmsBundle:Default:two_column.html.twig':
+    'sandbox_two_column':
+        template: "ApplicationNetworkingInitCmsBundle:Default:two_column.html.twig"
         name: "Two Column"
-        icon: "bundles/sandboxinitcms/img/template_header_two_column.png"
+        icon: "bundles/applicationnetworkinginitcms/img/template_header_two_column.png"
         zones:
             - { name: header , span:12}
             - { name: left , span:6}
