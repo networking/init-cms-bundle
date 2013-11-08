@@ -30,7 +30,7 @@
                 <source>link.website_status_draft</source>
                 <target>Website: Draft</target>
             </trans-unit>
-            <trans-unit id="link.show_more_actions">
+                <trans-unit id="link.show_more_actions">
                 <source>link.show_more_actions</source>
                 <target>Show more actions</target>
             </trans-unit>
@@ -198,6 +198,10 @@
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>
                 <target>Nothing was selected</target>
+            </trans-unit>
+            <trans-unit id="link.alias.page">
+                <source>link.alias.page</source>
+                <target>This is a redirect to the following page: "%alias_page%"</target>
             </trans-unit>
         </body>
     </file>

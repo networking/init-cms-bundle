@@ -155,6 +155,16 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getParent($level = -1);
 
     /**
+     * @param PageInterface $alias
+     */
+    public function setAlias(PageInterface $alias = null);
+
+    /**
+     * @return PageInterface
+     */
+    public function getAlias();
+
+    /**
      * @param  array $parents
      * @return $this
      */
@@ -496,6 +506,11 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getFullPath();
 
     /**
+     * @return string
+     */
+    public function getAliasFullPath();
+
+    /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getAllTranslations();
@@ -553,6 +568,11 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      * @return int
      */
     public function convertParentToInteger();
+
+    /**
+     * @return int
+     */
+    public function convertAliasToInteger();
 
     /**
      * @param $id

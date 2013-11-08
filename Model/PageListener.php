@@ -47,7 +47,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
      */
     public function getPageManager()
     {
-        if(!$this->pageManager){
+        if (!$this->pageManager) {
             $this->pageManager = $this->container->get('networking_init_cms.page_manager');
         }
 
@@ -85,6 +85,13 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
                 $page->setParent($parent);
             } else {
                 $page->setParent(null);
+            }
+            
+            if ($alias = $page->getAlias()) {
+                $alias = $er->find($page->getAlias());
+                $page->setAlias($alias);
+            } else {
+                $page->setAlias(null);
             }
 
             if ($parents = $page->getParents()) {

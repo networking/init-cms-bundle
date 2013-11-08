@@ -53,11 +53,20 @@ class FrontendPageController extends Controller
         /** @var $page \Networking\InitCmsBundle\Model\PageInterface */
         $page = $request->get('_content');
 
-        if($page instanceof PageSnapshot){
+        if ($page instanceof PageSnapshot) {
             return $this->liveAction($request);
         }
 
-        if(!$page){
+        if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
+            if ($alias = $page->getAlias()) {
+                $alias->getFullPath();
+                $baseUrl = $this->getRequest()->getBaseUrl();
+
+                return new RedirectResponse($baseUrl . $alias->getFullPath());
+            }
+        }
+
+        if (!$page) {
             throw $this->createNotFoundException('no page object found');
         }
 
@@ -96,6 +105,15 @@ class FrontendPageController extends Controller
             $this->container->getParameter('networking_init_cms.admin.page.class'),
             'json'
         );
+
+        if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
+            if ($alias = $page->getAlias()) {
+                $alias->getFullPath();
+                $baseUrl = $this->getRequest()->getBaseUrl();
+
+                return new RedirectResponse($baseUrl . $alias->getFullPath());
+            }
+        }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
 
@@ -197,7 +215,7 @@ class FrontendPageController extends Controller
      *
      * @param Request $request
      * @param string $locale
-     * @param string/null $path
+     * @param string /null $path
      *
      * @return RedirectResponse
      */
@@ -213,7 +231,7 @@ class FrontendPageController extends Controller
      *
      * @param Request $request
      * @param string $locale
-     * @param string/null $path
+     * @param string /null $path
      *
      * @return RedirectResponse
      */
@@ -289,6 +307,7 @@ class FrontendPageController extends Controller
     public function pageNotFoundAction()
     {
         $params = array('admin_pool' => $this->getAdminPool());
+
         return $this->render($this->container->getParameter('networking_init_cms.404_template'), $params);
     }
 

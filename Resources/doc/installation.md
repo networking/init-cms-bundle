@@ -29,6 +29,7 @@ vendor folder, and add the bundle to the list of requirements in your composer.j
 
 Add the following lines to your application kernel
 
+```
 	<?php
 	// app/AppKernel.php
 	public function registerbundles()
@@ -64,6 +65,56 @@ Add the following lines to your application kernel
 	        // ...
 	    );
 	}
+```
+
+### Configure the dependent user bundles
+You will need to provide configuration for the SonataAdminBundle, LexikTranslationBundle, FOSUserBundle and the SonataUserBundle
+in your app/config/config.yml file.
+
+A simple configuration should look something like the following, with special attention paid to the sonata_user configuration
+as this will create the admin interface for administering users in the cms.
+
+
+```
+sonata_admin:
+    title:      Demo Sailing Club
+    options:
+        use_select2: false
+
+lexik_translation:
+    fallback_locale: en      # (required) default locale to use
+    managed_locales: [en, de]    # (required) locales that the bundle have to manage
+
+fos_user:
+    db_driver: orm
+    firewall_name:  main
+    user_class:     Application\Networking\InitCmsBundle\Entity\User
+    group:
+        group_class: Networking\InitCmsBundle\Entity\Group
+    from_email:
+            address:        webmaster@example.com
+            sender_name:    net working Team
+
+sonata_user:
+    security_acl: true
+    impersonating:
+        route:                networking_init_cms_admin
+        parameters:           { path: /}
+    class:
+        user: Application\Networking\InitCmsBundle\Entity\User
+        group: Networking\InitCmsBundle\Entity\Group
+    admin:                  # Admin Classes
+        user:
+            class:          Networking\InitCmsBundle\Admin\Entity\UserAdmin
+            controller:     NetworkingInitCmsBundle:CRUD
+            translation:    SonataUserBundle
+
+        group:
+            class:          Networking\InitCmsBundle\Admin\Entity\GroupAdmin
+            controller:     NetworkingInitCmsBundle:CRUD
+            translation:    SonataUserBundle
+```
+
 ### Extend the bundle
 Now you need to extend the bundle. This will create a bundle in your src folder which inherits the NetworkingInitCmsBundle.
 The bundle extending process is based on the sonata easy extend bundle

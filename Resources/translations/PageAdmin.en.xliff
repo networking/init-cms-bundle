@@ -78,6 +78,10 @@
                 <source>form.label_tags</source>
                 <target>Tags</target>
             </trans-unit>
+            <trans-unit id="form.label_alias">
+                <source>form.label_alias</source>
+                <target>Redirect to this page</target>
+            </trans-unit>
             <trans-unit id="legend.translate_page">
                 <source>legend.translate_page</source>
                 <target>Page Translations</target>
@@ -308,6 +312,10 @@
                 <source>pageName</source>
                 <target>Page Name</target>
             </trans-unit>
+            <trans-unit id="alias">
+                <source>alias</source>
+                <target>Redirect to this page</target>
+            </trans-unit>
             <trans-unit id="url">
                 <source>url</source>
                 <target>URL</target>
@@ -438,6 +446,10 @@
             <trans-unit id="parent.helper.text">
                 <source>parent.helper.text</source>
                 <target>Parent URL for this page.</target>
+            </trans-unit>
+            <trans-unit id="alias.helper.text">
+                <source>alias.helper.text</source>
+                <target>Redirect to another page, has itself no content.</target>
             </trans-unit>
             <trans-unit id="visibility.helper.text">
                 <source>visibility.helper.text</source>
