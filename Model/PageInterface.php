@@ -473,11 +473,6 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getRoute();
 
     /**
-     * {@inheritDoc}
-     */
-    public function getRoutes();
-
-    /**
      * @param $template
      * @return $this
      */
@@ -535,34 +530,9 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public static function getVisibilityList();
 
     /**
-     * @return PageSnapshotInterface
-     */
-    public function getSnapshot();
-
-    /**
      * @return boolean
      */
     public function hasPublishedVersion();
-
-    /**
-     * @return mixed|string
-     */
-    public function getSnapshotClassType();
-
-    /**
-     * @return int
-     */
-    public function getCurrentVersion();
-
-    /**
-     * @return int
-     */
-    public function getResourceId();
-
-    /**
-     * @return string
-     */
-    public function hasListener();
 
     /**
      * @return int
