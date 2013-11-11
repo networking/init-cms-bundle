@@ -14,7 +14,7 @@ use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
  * @ORM\Table(name="gallery_view")
  * @ORM\Entity()
  */
-class GalleryView implements GalleryViewInterface, ContentInterface
+class GalleryView implements GalleryViewInterface
 {
     /**
      * @var integer $id
