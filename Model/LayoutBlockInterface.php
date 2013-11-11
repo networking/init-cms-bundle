@@ -15,7 +15,7 @@ namespace Networking\InitCmsBundle\Model;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface LayoutBlockInterface {
+interface LayoutBlockInterface extends ContentInterface {
     /**
          * @return string
          */
@@ -211,12 +211,6 @@ interface LayoutBlockInterface {
          * @internal param $content
          */
         public function takeSnapshot($snapshotContent);
-
-        /**
-         * @param array $params
-         * @return array|bool
-         */
-        public function getTemplateOptions($params = array());
 
         /**
          * @return array|bool

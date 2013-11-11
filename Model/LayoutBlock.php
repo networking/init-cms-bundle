@@ -18,7 +18,7 @@ use Networking\InitCmsBundle\Model\ContentInterface;
  *
  * @author net working AG <info@networking.ch>
  */
-class LayoutBlock implements LayoutBlockInterface, ContentInterface
+class LayoutBlock implements LayoutBlockInterface
 {
     /**
      * @var integer $id
