@@ -2,7 +2,7 @@
     {% if app.user is defined %}
         {% if is_granted('ROLE_SONATA_ADMIN') %}
             {# Override this block to add your own files! #}
-            {% stylesheets filter='less,?yui_css'
+            {% stylesheets filter='?yui_css'
             '@NetworkingInitCmsBundle/Resources/public/less/admin-navbar.less'
             output='css/initcms_admin_navbar.css'%}
             <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
