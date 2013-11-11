@@ -25,8 +25,4 @@ interface PageSnapshotManagerInterface
      */
     public function findSnapshotByPageId($pageId);
 
-    /**
-     * @return string
-     */
-    public function getClassName();
 }
