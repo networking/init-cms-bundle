@@ -7,7 +7,7 @@ namespace Networking\InitCmsBundle\Model;
  * Networking\GalleryBundle\Model\GalleryViewInterface
  *
  */
-interface GalleryViewInterface
+interface GalleryViewInterface extends ContentInterface
 {
     /**
      * @param  \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
@@ -61,18 +61,6 @@ interface GalleryViewInterface
      */
     public function getGalleryType();
 
-
-    /**
-     * @param array $params
-     * @return array
-     */
-    public function getTemplateOptions($params = array());
-
-    /**
-     * @return array
-     */
-    public function getAdminContent();
-
     /**
      * @return bool
      */
@@ -82,9 +70,4 @@ interface GalleryViewInterface
      * @return array
      */
     public function getMediaItems();
-
-    /**
-     * @return string
-     */
-    public function getContentTypeName();
 }
