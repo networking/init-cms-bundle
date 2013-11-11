@@ -14,8 +14,8 @@ file that was distributed with this source code.
 {% block title %}<small>{{ 'title.dashboard'|trans({'%admin_title%': admin_pool.title}, 'NetworkingInitCmsBundle') }}</small>{% endblock %}
 {% block breadcrumb %}{% endblock %}
 {% block content %}
-    <div class="row-fluid">
-        <div class="span12">
+    <div class="row">
+        <div class="span10">
             {% for block in blocks %}
                 {% if block.position == 'top' %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
@@ -23,15 +23,15 @@ file that was distributed with this source code.
             {% endfor %}
         </div>
     </div>
-    <div class="row-fluid">
-        <div class="span6">
+    <div class="row">
+        <div class="span5">
             {% for block in blocks %}
                 {% if block.position == 'left' %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="span6">
+        <div class="span5">
             {% for block in blocks %}
                 {% if block.position == 'right' %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
