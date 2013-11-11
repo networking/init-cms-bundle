@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 
 namespace Networking\InitCmsBundle\Model;
 
@@ -15,217 +15,214 @@ namespace Networking\InitCmsBundle\Model;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface LayoutBlockInterface extends ContentInterface {
+interface LayoutBlockInterface extends ContentInterface
+{
     /**
-         * @return string
-         */
-        public function __toString();
+     * @return string
+     */
+    public function __toString();
 
-        /**
-         * Set name
-         *
-         * @param  string $name
-         * @return $this
-         */
-        public function setName($name);
+    /**
+     * Set name
+     *
+     * @param  string $name
+     * @return $this
+     */
+    public function setName($name);
 
-        /**
-         * Get name
-         *
-         * @return string
-         */
-        public function getName();
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName();
 
-        /**
-         * Set zone
-         *
-         * @param  string $zone
-         * @return $this
-         */
-        public function setZone($zone);
+    /**
+     * Set zone
+     *
+     * @param  string $zone
+     * @return $this
+     */
+    public function setZone($zone);
 
-        /**
-         * Get zone
-         *
-         * @return string
-         */
-        public function getZone();
+    /**
+     * Get zone
+     *
+     * @return string
+     */
+    public function getZone();
 
-        /**
-         * Set page
-         *
-         * @param  PageInterface $page
-         * @return $this
-         */
-        public function setPage(PageInterface $page);
+    /**
+     * Set page
+     *
+     * @param  PageInterface $page
+     * @return $this
+     */
+    public function setPage(PageInterface $page);
 
-        /**
-         * Get conversation
-         *
-         * @return Page
-         */
-        public function getPage();
+    /**
+     * Get conversation
+     *
+     * @return Page
+     */
+    public function getPage();
 
-        /**
-         * Get conversation
-         *
-         * @return Page
-         */
-        public function getPageId();
+    /**
+     * Get conversation
+     *
+     * @return Page
+     */
+    public function getPageId();
 
-        /**
-         * @param  string $classType
-         * @return $this
-         */
-        public function setClassType($classType);
+    /**
+     * @param  string $classType
+     * @return $this
+     */
+    public function setClassType($classType);
 
-        /**
-         * @return string
-         */
-        public function getClassType();
+    /**
+     * @return string
+     */
+    public function getClassType();
 
-        /**
-         * @return string
-         */
-        public function getOrigClassType();
+    /**
+     * @return string
+     */
+    public function getOrigClassType();
 
-        /**
-         * @param  int $objectId
-         * @return $this
-         */
-        public function setObjectId($objectId);
+    /**
+     * @param  int $objectId
+     * @return $this
+     */
+    public function setObjectId($objectId);
 
-        /**
-         * @return int
-         */
-        public function getObjectId();
+    /**
+     * @return int
+     */
+    public function getObjectId();
 
-        /**
-         * Set isActive
-         *
-         * @param  boolean $active
-         * @return $this
-         */
-        public function setIsActive($active);
+    /**
+     * Set isActive
+     *
+     * @param  boolean $active
+     * @return $this
+     */
+    public function setIsActive($active);
 
-        /**
-         * Get isActive
-         *
-         * @return boolean
-         */
-        public function getIsActive();
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive();
 
-        /**
-         * Alias for getIsActive
-         *
-         * @return bool
-         */
-        public function isActive();
+    /**
+     * Alias for getIsActive
+     *
+     * @return bool
+     */
+    public function isActive();
 
-        /**
-         * Set createdAt
-         *
-         * @return $this
-         */
-        public function setCreatedAt();
+    /**
+     * Set createdAt
+     *
+     * @return $this
+     */
+    public function setCreatedAt();
 
-        /**
-         * Get createdAt
-         *
-         * @return \DateTime
-         */
-        public function getCreatedAt();
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt();
 
-        /**
-         * Set updatedAt
-         *
-         * @param  \DateTime $updatedAt
-         * @return $this
-         */
-        public function setUpdatedAt($updatedAt);
+    /**
+     * Set updatedAt
+     *
+     * @param  \DateTime $updatedAt
+     * @return $this
+     */
+    public function setUpdatedAt($updatedAt);
 
-        /**
-         * Get updatedAt
-         *
-         * @return \DateTime
-         */
-        public function getUpdatedAt();
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 
-        /**
-         * @param  int $sortOrder
-         * @return $this
-         */
-        public function setSortOrder($sortOrder);
+    /**
+     * @param  int $sortOrder
+     * @return $this
+     */
+    public function setSortOrder($sortOrder);
 
-        /**
-         * @return int
-         */
-        public function getSortOrder();
-        /**
-         * @return array
-         */
-        public function getContent();
-        /**
-         * @param $content
-         * @param $key
-         * @return $this
-         */
-        public function setContent($content, $key = null);
+    /**
+     * @return int
+     */
+    public function getSortOrder();
 
-        /**
-         * @param boolean $isSnapshot
-         * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
-         */
-        public function setIsSnapshot($isSnapshot);
+    /**
+     * @return array
+     */
+    public function getContent();
 
-        /**
-         * @param boolean $isSnapshot
-         * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
-         */
-        public function setNoAutoDraft($isSnapshot);
+    /**
+     * @param $content
+     * @param $key
+     * @return $this
+     */
+    public function setContent($content, $key = null);
 
-        /**
-         * @return boolean
-         */
-        public function getIsSnapshot();
+    /**
+     * @param boolean $isSnapshot
+     * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
+     */
+    public function setIsSnapshot($isSnapshot);
 
-        /**
-         * @return boolean
-         */
-        public function getSetNoAutoDraft();
+    /**
+     * @param boolean $isSnapshot
+     * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
+     */
+    public function setNoAutoDraft($isSnapshot);
 
-        /**
-         * @param array $snapshotContent
-         * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
-         */
-        public function setSnapshotContent($snapshotContent);
+    /**
+     * @return boolean
+     */
+    public function getIsSnapshot();
 
-        /**
-         * @return array
-         */
-        public function getSnapshotContent();
+    /**
+     * @return boolean
+     */
+    public function getSetNoAutoDraft();
 
-        /**
-         * @param $snapshotContent
-         * @return void
-         * @internal param $content
-         */
-        public function takeSnapshot($snapshotContent);
+    /**
+     * @param array $snapshotContent
+     * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
+     */
+    public function setSnapshotContent($snapshotContent);
 
-        /**
-         * @return array|bool
-         */
-        public static function getFieldDefinition();
+    /**
+     * @return array
+     */
+    public function getSnapshotContent();
 
-        /**
-         * @return array|bool
-         */
-        public function getAdminContent();
+    /**
+     * @param $snapshotContent
+     * @return void
+     * @internal param $content
+     */
+    public function takeSnapshot($snapshotContent);
 
-        /**
-         * @return string
-         */
-        public function getContentTypeName();
+    /**
+     * @return array|bool
+     */
+    public static function getFieldDefinition();
 
-        public function import(LayoutBlockInterface $object);
+    /**
+     * @param LayoutBlockInterface $object
+     * @return mixed
+     */
+    public function import(LayoutBlockInterface $object);
 }

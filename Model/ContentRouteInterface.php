@@ -118,8 +118,4 @@ interface ContentRouteInterface extends  RouteReferrersReadInterface
      */
     public function getDefaults();
 
-    /**
-     * @return mixed
-     */
-    public function getContent();
 }
