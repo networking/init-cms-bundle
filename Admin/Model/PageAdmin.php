@@ -676,4 +676,21 @@ abstract class PageAdmin extends BaseAdmin
         return array();
     }
 
+    /**
+     * @param PageInterface $object
+     * @return mixed|void
+     */
+    public function postRemove($object)
+    {
+        $contentRoute = $object->getContentRoute();
+
+        try{
+            $this->getModelManager()->delete($contentRoute);
+        }catch (\Exception $e){
+            var_dump($e);
+            die;
+        }
+
+    }
+
 }
