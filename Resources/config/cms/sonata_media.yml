@@ -6,7 +6,10 @@ sonata_media:
     default_context: default
     db_driver: doctrine_orm # or doctrine_mongodb
     contexts:
-        default:  # the default context is mandatory
+        default:
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
             providers:
                 - sonata.media.provider.image
                 - sonata.media.provider.file
@@ -16,30 +19,6 @@ sonata_media:
                 small: { width: 100 , quality: 70}
                 medium: { width: 400, height: 300 , quality: 70}
                 big:   { width: 800, quality: 70}
-                admin: { width: 100, quality: 70}
-
-
-        one_column:
-            providers:
-                - sonata.media.provider.image
-                - sonata.media.provider.file
-
-            formats:
-                small: { width: 200 , quality: 70}
-                medium: { width: 400 , quality: 70}
-                big:   { width: 800, quality: 70}
-                admin: { width: 200, quality: 70}
-
-        two_column:
-            providers:
-                - sonata.media.provider.image
-                - sonata.media.provider.file
-                - sonata.media.provider.dailymotion
-
-            formats:
-                small: { width: 100 , quality: 70}
-                medium: { width: 400 , quality: 70}
-                big:   { width: 390, quality: 70}
                 admin: { width: 100, quality: 70}
     cdn:
         server:
