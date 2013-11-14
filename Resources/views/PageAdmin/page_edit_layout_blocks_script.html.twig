@@ -232,7 +232,6 @@ function uploadError(xhr) {
 }
 
 function onAfterLoad() {
-    createCkeditor();
 
     apply_position_value_{{ id }}();
 
@@ -254,7 +253,6 @@ function onAfterLoad() {
             }
         },
         stop: function (event, ui) {
-            createCkeditor();
             apply_position_value_{{ id }}();
             saveLayoutBlockSort(function (xhr) {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);

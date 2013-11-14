@@ -1,0 +1,33 @@
+ivory_ck_editor:
+    default_config: init_cms
+    configs:
+        init_cms:
+            filebrowserUploadRoute: admin_networking_initcms_media_uploadTextBlockFile
+            filebrowserBrowseRoute: admin_networking_initcms_media_uploadedTextBlockFile
+            filebrowserImageUploadRoute: admin_networking_initcms_media_uploadTextBlockImage
+            filebrowserImageBrowseRoute: admin_networking_initcms_media_uploadedTextBlockImage
+            removeButtons: 'NewPage,Underline,Subscript,Superscript,Styles,PageBreak,Iframe,Flash,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Print,Preview'
+            toolbar: "init_cms"
+            bodyClass: row
+            emailProtection: encode
+            templates_replaceContent: false
+#            contentsCss: '/bundles/networkinginitcms/css/wysiwyg.css?v1'
+#            templates_files: ['/bundles/networkinginitcms/js/ckeditor_templates.js']
+#            stylesSet: 'billag:/bundles/networkinginitcms/js/styles.js'
+    toolbars:
+        configs:
+            init_cms: [ "@clipboard", "@editing", "@document", "/", "@paragraph", "@basicstyles", "@links", "@insert", "@styles", "@colors","/", "@document", "@tools" ]
+        items:
+            document: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ]
+            clipboard: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ]
+            editing: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ]
+            forms: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ]
+            basicstyles: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]
+            paragraph: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl' ]
+            links: [ 'Link', 'Unlink', 'Anchor' ]
+            insert: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ]
+            styles: [ 'Styles', 'Format', 'Font', 'FontSize' ]
+            colors: [ 'TextColor', 'BGColor' ]
+            tools: [ 'Maximize', 'ShowBlocks' ]
+            others: [ '-' ]
+            about: [ 'About' ]
