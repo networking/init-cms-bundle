@@ -44,7 +44,6 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('user')->defaultValue('Application\\Networking\\InitCmsBundle\\Entity\\User')->end()
                     ->end()
                 ->end()
-                ->scalarNode('ckeditor_config')->defaultValue('')->end()
                 ->scalarNode('translation_fallback_route')->defaultValue('initcms_404')->end()
                 ->scalarNode('404_template')->isRequired()->end()
                 ->scalarNode('no_translation_template')->isRequired()->end()

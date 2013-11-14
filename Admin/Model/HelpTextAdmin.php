@@ -84,13 +84,8 @@ abstract class HelpTextAdmin extends BaseAdmin
             ->add('title', null, array('required' => true))
             ->add(
                 'text',
-                'textarea',
-                array(
-                    'required' => false,
-                    'attr' => array(
-                        'class' => 'wysiwyg-editor',
-                    )
-                )
+                'ckeditor',
+                array('config' => array('toolbar' => 'standard', 'contentsCss' => null))
             );
 
     }

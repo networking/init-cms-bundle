@@ -35,19 +35,4 @@ class CmsHelperController extends Controller
         return $response;
     }
 
-    /**
-     * @return Response
-     */
-    public function ckeditorConfigAction()
-    {
-
-        $ckeditorConfig = $this->container->getParameter('networking_init_cms.ckeditor_config');
-
-        $response = $this->render('NetworkingInitCmsBundle:Core:ckeditor_config.js.twig', array('ckeditor_style' => $ckeditorConfig));
-
-        $response->headers->add(array('content-type' => 'text/javascript'));
-
-        return $response;
-    }
-
 }
