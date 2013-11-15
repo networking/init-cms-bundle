@@ -112,7 +112,7 @@ class MediaAdminController extends SonataMediaAdminController
 
                 } else {
                     $url = $this->generateUrl(
-                                            'sonata_media_download',
+                                            'networking_init_cms_file_download',
                                             array('id' => $media->getId())
                                         ) . '/' . $media->getMetadataValue('filename');
 
@@ -349,7 +349,7 @@ class MediaAdminController extends SonataMediaAdminController
                 foreach ($tags as $tag) {
                     $array[$tag->getName()][] = array(
                         'path' => $this->generateUrl(
-                                'sonata_media_download',
+                                'networking_init_cms_file_download',
                                 array('id' => $file->getId())
                             ) . '/' . $file->getMetadataValue('filename'),
                         'content_type' => $file->getContentType(),
@@ -360,7 +360,7 @@ class MediaAdminController extends SonataMediaAdminController
             } else {
                 $array['Default'][] = array(
                     'path' => $this->generateUrl(
-                            'sonata_media_download',
+                            'networking_init_cms_file_download',
                             array('id' => $file->getId())
                         ) . '/' . $file->getMetadataValue('filename'),
                     'content_type' => $file->getContentType(),

@@ -85,6 +85,13 @@ _install_db:
     requirements:
         complete: /d+
 
+networking_init_cms_file_download:
+    path: /file/download/{id}/{name}
+    defaults: { _controller: SonataMediaBundle:Media:download, format:'reference' }
+    requirements:
+        name: (.*)?
+        format: (.*)?
+
 
 
 
