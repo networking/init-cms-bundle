@@ -113,8 +113,8 @@ class MediaAdminController extends SonataMediaAdminController
                 } else {
                     $url = $this->generateUrl(
                                             'networking_init_cms_file_download',
-                                            array('id' => $media->getId())
-                                        ) . '/' . $media->getMetadataValue('filename');
+                                            array('id' => $media->getId(), $media->getMetadataValue('filename'))
+                                        ) ;
 
                 }
                 // Usually you will only assign something here if the file could not be uploaded.
@@ -350,8 +350,8 @@ class MediaAdminController extends SonataMediaAdminController
                     $array[$tag->getName()][] = array(
                         'path' => $this->generateUrl(
                                 'networking_init_cms_file_download',
-                                array('id' => $file->getId())
-                            ) . '/' . $file->getMetadataValue('filename'),
+                                array('id' => $file->getId(), 'name' => $file->getMetadataValue('filename'))
+                            ),
                         'content_type' => $file->getContentType(),
                         'title' => $file->getName(),
                     );
@@ -361,8 +361,8 @@ class MediaAdminController extends SonataMediaAdminController
                 $array['Default'][] = array(
                     'path' => $this->generateUrl(
                             'networking_init_cms_file_download',
-                            array('id' => $file->getId())
-                        ) . '/' . $file->getMetadataValue('filename'),
+                            array('id' => $file->getId(), 'name' => $file->getMetadataValue('filename'))
+                        ),
                     'content_type' => $file->getContentType(),
                     'title' => $file->getName(),
                 );
