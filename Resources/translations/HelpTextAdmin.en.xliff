@@ -25,6 +25,10 @@
                 <source>breadcrumb.link_help_text_list</source>
                 <target><![CDATA[<small>Administer your</small>]]> Help Texts</target>
             </trans-unit>
+            <trans-unit id="filter.label_locale">
+                <source>filter.label_locale</source>
+                <target>Language</target>
+            </trans-unit>
             <trans-unit id="form.label_locale">
                 <source>form.label_locale</source>
                 <target>Help Text language</target>

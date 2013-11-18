@@ -310,6 +310,10 @@
                 <source>pageName</source>
                 <target>Seiten-Name</target>
             </trans-unit>
+            <trans-unit id="parent">
+                <source>parent</source>
+                <target>Übergeordnete Seite</target>
+            </trans-unit>
             <trans-unit id="alias">
                 <source>alias</source>
                 <target>Verweist auf die Seite</target>

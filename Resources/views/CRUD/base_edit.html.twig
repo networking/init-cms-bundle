@@ -13,7 +13,8 @@ file that was distributed with this source code.
 
 {% block title %}
     {% if admin.id(object) %}
-        {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin.getLabel() }, 'NetworkingInitCmsBundle') }}
+        {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+        {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'NetworkingInitCmsBundle') }}
     {% else %}
         {{ "title_create"|trans({'%admin_label%': admin.getLabel()}, 'NetworkingInitCmsBundle') }}
     {% endif %}
