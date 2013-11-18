@@ -306,6 +306,10 @@
                 <source>pageName</source>
                 <target>Nom de la page</target>
             </trans-unit>
+            <trans-unit id="parent">
+                <source>parent</source>
+                <target>Page parente</target>
+            </trans-unit>
             <trans-unit id="url">
                 <source>url</source>
                 <target>URL</target>

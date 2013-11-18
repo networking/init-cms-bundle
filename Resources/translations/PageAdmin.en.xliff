@@ -312,6 +312,10 @@
                 <source>pageName</source>
                 <target>Page Name</target>
             </trans-unit>
+            <trans-unit id="parent">
+                <source>parent</source>
+                <target>Parent page</target>
+            </trans-unit>
             <trans-unit id="alias">
                 <source>alias</source>
                 <target>Redirect to this page</target>
