@@ -41,6 +41,11 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * @var string
      */
+    protected $baseRouteName = 'admin_networking_initcms_page';
+
+    /**
+     * @var string
+     */
     protected $pageLocale;
 
     /**
