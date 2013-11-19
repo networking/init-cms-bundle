@@ -24,7 +24,7 @@
                  class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
             <argument></argument>
             <argument>Lexik\Bundle\TranslationBundle\Entity\TransUnit</argument>
-            <argument>IbrowsSonataTranslationBundle:TranslationCRUD</argument>
+            <argument>NetworkingInitCmsBundle:TranslationCRUD</argument>
             <call method="setEditableOptions">
                 <argument>%ibrows_sonata_translation.editable%</argument>
             </call>
