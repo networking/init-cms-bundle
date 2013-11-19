@@ -32,6 +32,7 @@
                     </a>
                 </li>
             {% endif %}
+            {% if mainGroup.sub_group is defined %}
             {% for group in mainGroup.sub_group %}
                 {% if group.items | length == 1 %}
                     {% for admin in group.items %}
@@ -122,6 +123,7 @@
 
                 {% endif %}
             {% endfor %}
+            {% endif %}
 
         </ul>
         </div>

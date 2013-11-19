@@ -24,3 +24,6 @@ Networking\InitCmsBundle\Entity\GalleryView:
       joinColumn:
         name: media_gallery_id
         onDelete: 'CASCADE'
+  lifecycleCallbacks:
+    prePersist: [ prePersist ]
+    preUpdate: [ preUpdate ]

@@ -29,6 +29,11 @@ abstract class UserAdmin extends SonataUserAdmin
     protected $baseRoutePattern = 'cms/users';
 
     /**
+     * @var string
+     */
+    protected $baseRouteName = 'admin_networking_initcms_user';
+
+    /**
      * @var array
      */
     protected $trackedActions = array('list');
