@@ -1041,33 +1041,10 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      */
     public function getPageUrl(PageInterface $page)
     {
-        if (!$page->getContentRoute()) {
 
-            /** @var \Sonata\AdminBundle\Admin\AdminInterface $pageAdmin */
-            $pageAdmin = $this->getService('networking_init_cms.admin.page');
-            /** @var \Networking\InitCmsBundle\Model\PageSnapshotManagerInterface $per */
-            $per = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:PageSnapshot');
-            $pageSnapshots = $per->findSnapshotByPageId($page->getId());
+        $request = $this->getService('request');
 
-            if ($pageSnapshots) {
-                $page->setSnapshots($pageSnapshots);
-                $pageSnapshot = $page->getSnapshot();
-                /** @var \Networking\InitCmsBundle\Model\ContentRouteManagerInterface $cer */
-                $cer = $this->getService('networking_init_cms.content_route_manager');
-
-                $contentRoute = $cer->findContentRouteBy(
-                    array('objectId' => $pageSnapshot->getId(), 'classType' => $per->getClassName())
-                );
-                if ($contentRoute) {
-                    $page->setContentRoute($contentRoute);
-                }
-            }
-        }
-
-        return $this->getService('router')->generate(
-            'networking_init_dynamic_route',
-            array('route_params' => array('path' => $page->getFullPath()))
-        );
+        return $request->getBaseUrl().$page->getFullPath();
 
     }
 

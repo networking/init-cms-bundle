@@ -13,6 +13,7 @@ namespace Networking\InitCmsBundle\Model;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
+use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
 
 /**
  * Class PageListener
@@ -52,6 +53,15 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
         }
 
         return $this->pageManager;
+    }
+
+    /**
+     * @return PageSnapshotManagerInterface
+     */
+    public function getPageSnapshotManager()
+    {
+        return $this->container->get('networking_init_cms.page_snapshot_manager');
+
     }
 
     /**
@@ -134,10 +144,14 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
                 $page->setTranslations($originalPage->getAllTranslations()->toArray());
             }
 
-            if (!$contentRoute = $page->getContentRoute()) {
-                $originalPageId = $page->getId();
-                $originalPage = $er->find($originalPageId);
-                $page->setContentRoute($originalPage->getContentRoute());
+            if (!$contentRoute = $page->getContentRoute()->getId()) {
+
+                $pageSnapshotManager = $this->getPageSnapshotManager();
+                $pageSnapshots = $pageSnapshotManager->findSnapshotByPageId($page->getId());
+                $lastPageSnapshot = reset($pageSnapshots);
+
+                $page->setContentRoute($lastPageSnapshot->getContentRoute());
+
             }
         }
     }
