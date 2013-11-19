@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Networking\InitCmsBundle\Model\HelpTextManagerInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -37,9 +38,24 @@ class HelpTextManager extends EntityRepository implements HelpTextManagerInterfa
      */
     public function getHelpTextByKeyLocale($translationKey, $locale)
     {
-        $helpText = $this->findOneBy(array('translationKey' => $translationKey, 'locale' => $locale));
-        if ($helpText === null) {
-            $helpText = $this->findOneBy(array('translationKey' => 'not_found', 'locale' => $locale));
+
+        $qb = $this->createQueryBuilder('h');
+        $qb->where('h.locale LIKE :locale')
+            ->andWhere('h.translationKey LIKE :translationKey')
+            ->orderBy('h.id', 'asc')
+            ->setParameter(':locale', substr($locale, 0, 2) . '%')
+            ->setParameter(':translationKey', $translationKey . "%");
+
+        try {
+            $helpText = $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            $qb = $this->createQueryBuilder('h');
+            $qb->where('h.locale LIKE :locale')
+                ->andWhere('h.translationKey = :translationKey')
+                ->orderBy('h.id', 'asc')
+                ->setParameter(':locale', substr($locale, 0, 2) . '%')
+                ->setParameter(':translationKey', "not_found");
+            $helpText = $qb->getQuery()->getSingleResult();
         }
 
         return $helpText;
@@ -53,10 +69,10 @@ class HelpTextManager extends EntityRepository implements HelpTextManagerInterfa
     public function searchHelpTextByKeyLocale($translationKey, $locale)
     {
         $qb = $this->createQueryBuilder('h');
-        $qb->where('h.locale = :locale')
+        $qb->where('h.locale LIKE :locale')
             ->andWhere('h.translationKey LIKE :translationKey')
             ->orderBy('h.id', 'asc')
-            ->setParameter(':locale', $locale)
+            ->setParameter(':locale', substr($locale, 0, 2) . '%')
             ->setParameter(':translationKey', $translationKey . "%");
 
         return $qb->getQuery()->getResult();
