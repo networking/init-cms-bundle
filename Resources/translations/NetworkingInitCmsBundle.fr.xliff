@@ -198,6 +198,10 @@
                 <source>flash_batch_empty</source>
                 <target>Aucun élément sélectionné</target>
             </trans-unit>
+            <trans-unit id="toggle.roles">
+                <source>toggle.roles</source>
+                <target>Sélectionnez/désélectionnez rôle</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

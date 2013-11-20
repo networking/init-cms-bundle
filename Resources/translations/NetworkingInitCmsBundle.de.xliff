@@ -202,6 +202,10 @@
                 <source>link.alias.page</source>
                 <target>Dies ist ein Verweis auf folgende Seite: "%alias_page%"</target>
             </trans-unit>
+            <trans-unit id="toggle.roles">
+                <source>toggle.roles</source>
+                <target>Alle/Keinen Rollen Auswählen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

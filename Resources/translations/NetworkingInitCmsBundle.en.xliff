@@ -203,6 +203,10 @@
                 <source>link.alias.page</source>
                 <target>This is a redirect to the following page: "%alias_page%"</target>
             </trans-unit>
+            <trans-unit id="toggle.roles">
+                <source>toggle.roles</source>
+                <target>Select/Deselect roles</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
