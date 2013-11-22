@@ -841,6 +841,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         }
 
         if ($html) {
+            $text = html_entity_decode($text, null,  $env->getCharset() );
             if (mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
             }
@@ -849,12 +850,15 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             $truncate = '';
 
             preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
+
             foreach ($tags as $tag) {
                 if (!preg_match('/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/s', $tag[2])) {
                     if (preg_match('/<[\w]+[^>]*>/s', $tag[0])) {
                         array_unshift($openTags, $tag[2]);
+
                     } elseif (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag)) {
                         $pos = array_search($closeTag[1], $openTags);
+
                         if ($pos !== false) {
                             array_splice($openTags, $pos, 1);
                         }
@@ -934,6 +938,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
         if ($html) {
             foreach ($openTags as $tag) {
+
                 $truncate .= '</' . $tag . '>';
             }
         }
@@ -957,6 +962,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         if (empty($text) || empty($phrase)) {
             return $this->truncate($env, $text, $radius * 2, $ellipsis);
         }
+
+        $text = html_entity_decode($text, null,  $env->getCharset() );
 
         $append = $prepend = $ellipsis;
 
