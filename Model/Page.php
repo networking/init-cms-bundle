@@ -1163,9 +1163,11 @@ abstract class Page implements PageInterface
         // find all possible translations
         if (!$this->getTranslations()->isEmpty()) {
             foreach ($this->getTranslations() as $translation) {
-                // if we already meet you stop and go on with the next
-                $translationsArray[$translation->getLocale()] = $translation;
-                $translation->getRecursiveTranslations($translationsArray);
+               if($translation){
+                    // if we already meet you stop and go on with the next
+                    $translationsArray[$translation->getLocale()] = $translation;
+                    $translation->getRecursiveTranslations($translationsArray);
+               }
             }
 
         }
