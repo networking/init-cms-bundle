@@ -6,7 +6,7 @@ It is not advisable to use this for a production web site.
 
 If you would like to git up and running with a CMS in you Symfony
 application you can either install this bundle in an  existing project
-or download and install the [networking init CMS sandbox][2]
+or download and install the [networking init CMS sandbox][2]. If you are new to the init cms we recommend you install the [networking init CMS sandbox][2] first.
 
 1) Installing the networking init CMS bundle
 --------------------------------------------
