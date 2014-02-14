@@ -785,7 +785,7 @@ class Page implements RouteAwareInterface, VersionableInterface
      */
     private function compareSortOrder($a, $b)
     {
-        return strcmp($a->getSortOrder(), $b->getSortOrder());
+        return $a->getSortOrder() - $b->getSortOrder();
     }
 
     /**
