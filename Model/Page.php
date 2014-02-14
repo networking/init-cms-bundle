@@ -710,7 +710,7 @@ abstract class Page implements PageInterface
      */
     private function compareSortOrder($a, $b)
     {
-        return strcmp($a->getSortOrder(), $b->getSortOrder());
+        return $a->getSortOrder() - $b->getSortOrder();
     }
 
     /**
