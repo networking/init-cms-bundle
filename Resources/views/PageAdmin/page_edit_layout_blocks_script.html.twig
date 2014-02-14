@@ -209,7 +209,7 @@ function submitLayoutSort(zones) {
             zones: zones,
             objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
         },
-        type: 'get',
+        type: 'post',
         success: function (xhr) {
             if (xhr.status != 'error') {
                 if (xhr.pageStatusSettings != undefined) jQuery('#pageStatusSettings').html(xhr.pageStatusSettings);

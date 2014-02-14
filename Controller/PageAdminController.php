@@ -12,7 +12,6 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Model\PageInterface;
-use Sonata\PageBundle\Model\Page;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -43,7 +42,7 @@ class PageAdminController extends CRUDController
      */
     public function translatePageAction(Request $request, $id, $locale)
     {
-       /** @var PageInterface $page */
+        /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
 
         if (!$page) {
@@ -383,25 +382,24 @@ class PageAdminController extends CRUDController
                     /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
                     $layoutBlockAdmin = $this->get('networking_init_cms.admin.layout_block');
 
+                    if ($blockId) {
+                        try {
+                            /** @var \Networking\InitCmsBundle\Model\LayoutBlockInterface $layoutBlock */
+                            $layoutBlock = $layoutBlockAdmin->getObject($blockId);
+                            if ($layoutBlock) {
+                                $layoutBlock->setSortOrder($sort);
+                                $layoutBlock->setZone($zoneName);
 
+                                $page = $this->admin->getObject($request->get('objectId'));
+                                $page->setUpdatedAt(new \DateTime());
+                            }
 
+                            $layoutBlockAdmin->update($layoutBlock);
+                        } catch (\Exception $e) {
+                            $message = $e->getMessage();
 
-                    try {
-                        /** @var \Networking\InitCmsBundle\Model\LayoutBlockInterface $layoutBlock */
-                        $layoutBlock = $layoutBlockAdmin->getObject($blockId);
-                        if ($layoutBlock) {
-                            $layoutBlock->setSortOrder($sort);
-                            $layoutBlock->setZone($zoneName);
-
-                            $page = $this->admin->getObject($request->get('objectId'));
-                            $page->setUpdatedAt(new \DateTime());
+                            return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
                         }
-
-                        $layoutBlockAdmin->update($layoutBlock);
-                    } catch (\Exception $e) {
-                        $message = $e->getMessage();
-
-                        return new JsonResponse(array('messageStatus' => 'error', 'message' => $message));
                     }
 
                 }
@@ -445,14 +443,14 @@ class PageAdminController extends CRUDController
         if ($layoutBlockStr) {
             $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
 
-                /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
-                $layoutBlockAdmin = $this->get('networking_init_cms.admin.layout_block');
-                $layoutBlock = $layoutBlockAdmin->getObject($blockId);
-                if ($layoutBlock) {
+            /** @var \Sonata\AdminBundle\Admin\AdminInterface $layoutBlockAdmin */
+            $layoutBlockAdmin = $this->get('networking_init_cms.admin.layout_block');
+            $layoutBlock = $layoutBlockAdmin->getObject($blockId);
+            if ($layoutBlock) {
 
-                    $layoutBlockAdmin->update($layoutBlock);
-                    $layoutBlockAdmin->delete($layoutBlock);
-                }
+                $layoutBlockAdmin->update($layoutBlock);
+                $layoutBlockAdmin->delete($layoutBlock);
+            }
         }
 
         $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid);
@@ -549,7 +547,7 @@ class PageAdminController extends CRUDController
     public function showAction($id = null)
     {
         $request = $this->getRequest();
-        
+
         $id = $request->get($this->admin->getIdParameter());
 
         $object = $this->admin->getObject($id);
@@ -924,7 +922,10 @@ class PageAdminController extends CRUDController
             );
         }
 
-        $request->getSession()->getFlashBag()->add('sonata_flash_success', $this->admin->trans('flash_publish_success'));
+        $request->getSession()->getFlashBag()->add(
+            'sonata_flash_success',
+            $this->admin->trans('flash_publish_success')
+        );
 
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
     }
