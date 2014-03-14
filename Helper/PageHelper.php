@@ -123,11 +123,7 @@ class PageHelper
      */
     public static function camelize($property)
     {
-        return preg_replace(
-            array('/(^|_| )+(.)/e', '/\.(.)/e'),
-            array("strtoupper('\\2')", "'_'.strtoupper('\\1')"),
-            $property
-        );
+        return ContentInterfaceHelper::camelize($property);
     }
 
     /**

@@ -97,7 +97,12 @@ class ContentInterfaceHelper
      */
     public static function camelize($property)
     {
-        return preg_replace(array('/(^|_| )+(.)/e', '/\.(.)/e'), array("strtoupper('\\2')", "'_'.strtoupper('\\1')"), $property);
+        $callback = function ($matches) {
+            if ($matches[1] === '.') {
+                return '_'.strtoupper($matches[2]);
+            }
+            return strtoupper($matches[2]);
+        };
+        return ucfirst(preg_replace_callback('/([_\ .])(.)/', $callback, $property));
     }
-
 }
