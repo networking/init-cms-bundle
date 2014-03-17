@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="">
+		<body>
+			<trans-unit id="button.create.menu_item">
+				<source>button.create.menu_item</source>
+				<target>Item toevoegen</target>
+			</trans-unit>
+            <trans-unit id="legend.menu.actions">
+                <source>legend.menu.actions</source>
+                <target>Met geselecteerd menu</target>
+            </trans-unit>
+            <trans-unit id="filter.label_locale">
+                <source>filter.label_locale</source>
+                <target>Taal</target>
+            </trans-unit>
+            <trans-unit id="button.menu.settings">
+                <source>button.menu.settings</source>
+                <target>Menu-instellingen</target>
+            </trans-unit>
+            <trans-unit id="button.menu.delete">
+                <source>button.menu.delete</source>
+                <target>Menu verwijderen</target>
+            </trans-unit>
+            <trans-unit id="title.page">
+                <source>title.page</source>
+                <target>Pagina</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_menu_item_navigation">
+                <source>breadcrumb.link_menu_item_navigation</source>
+                <target><![CDATA[<small>Beheer uw</small>]]> menu's</target>
+            </trans-unit>
+            <trans-unit id="label.linked_resource">
+                <source>label.linked_resource</source>
+                <target>Gekoppeld aan</target>
+            </trans-unit>
+            <trans-unit id="label.menu_item_name">
+                <source>label.menu_item_name</source>
+                <target>Uw menu-items</target>
+            </trans-unit>
+            <trans-unit id="menu.page_or_url.required">
+                <source>menu.page_or_url.required</source>
+                <target>Ofwel een pagina ofwel een URL moet worden opgegeven.</target>
+            </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>Zoeken</target>
+            </trans-unit>
+            <trans-unit id="label_filters">
+                <source>label_filters</source>
+                <target>Zoek in menu's</target>
+            </trans-unit>
+            <trans-unit id="link_reset_filter">
+                <source>link_reset_filter</source>
+                <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="form.label_name">
+                <source>form.label_name</source>
+                <target>Naam</target>
+            </trans-unit>
+            <trans-unit id="form.label_page">
+                <source>form.label_page</source>
+                <target>Pagina</target>
+            </trans-unit>
+            <trans-unit id="form.label_redirect_url">
+                <source>form.label_redirect_url</source>
+                <target>Externe URL</target>
+            </trans-unit>
+            <trans-unit id="help.redirect_url">
+                <source>help.redirect_url</source>
+                <target>URL beginnend met http://</target>
+            </trans-unit>
+            <trans-unit id="help.internal_url">
+                <source>help.internal_url</source>
+                <target>Pad naar een CMS pagina, bijv. /over-ons</target>
+            </trans-unit>
+            <trans-unit id="label_redirect_url">
+                <source>label_redirect_url</source>
+                <target>Url</target>
+            </trans-unit>
+            <trans-unit id="form.label_link_target">
+                <source>form.label_link_target</source>
+                <target>Doelvenster</target>
+            </trans-unit>
+            <trans-unit id="form.label_link_class">
+                <source>form.label_link_class</source>
+                <target>CSS-klasse</target>
+            </trans-unit>
+            <trans-unit id="form.label_internal_url">
+                <source>form.label_internal_url</source>
+                <target>Interne relatieve link</target>
+            </trans-unit>
+            <trans-unit id="form.label_hidden">
+                <source>form.label_hidden</source>
+                <target>Menu-item verbergen</target>
+            </trans-unit>
+            <trans-unit id="form.label_link_rel">
+                <source>form.label_link_rel</source>
+                <target>Link relatie</target>
+            </trans-unit>
+            <trans-unit id="form.legend_page_or_url">
+                <source>form.legend_page_or_url</source>
+                <target>Verwijzing (pagina of url)</target>
+            </trans-unit>
+            <trans-unit id="form.legend_name">
+                <source>form.legend_name</source>
+                <target>Naam</target>
+            </trans-unit>
+            <trans-unit id="form.legend_options">
+                <source>form.legend_options</source>
+                <target>Opties</target>
+            </trans-unit>
+            <trans-unit id="form.label_visibility">
+                <source>form.label_visibility</source>
+                <target>Zichtbaarheid</target>
+            </trans-unit>
+            <trans-unit id="visibility_public">
+                <source>visibility_public</source>
+                <target>Publiekelijk zichtbaar</target>
+            </trans-unit>
+            <trans-unit id="visibility_protected">
+                <source>visibility_protected</source>
+                <target>Afgeschermd</target>
+            </trans-unit>
+            <trans-unit id="form.label_description">
+                <source>form.label_description</source>
+                <target>Omschrijving</target>
+            </trans-unit>
+            <trans-unit id="visibility.helper.text">
+                <source>visibility.helper.text</source>
+                <target>Publiekelijk zichtbaar of alleen indien ingelogd</target>
+            </trans-unit>
+            <trans-unit id="_blank">
+                <source>_blank</source>
+                <target>Nieuw venster of tabblad</target>
+            </trans-unit>
+            <trans-unit id="_self">
+                <source>_self</source>
+                <target>Huidig frame of venster</target>
+            </trans-unit>
+            <trans-unit id="_parent">
+                <source>_parent</source>
+                <target>Bovenliggend frame of venster</target>
+            </trans-unit>
+            <trans-unit id="_top">
+                <source>_top</source>
+                <target>Hoofdvenster, ongeacht frames</target>
+            </trans-unit>
+            <trans-unit id="info.please_enter_description">
+                <source>info.please_enter_description</source>
+                <target>Dit menu bevat nog geen omschrijving. Laat anderen weten waar dit menu voor dient.</target>
+            </trans-unit>
+            <trans-unit id="button.cancel">
+                <source>button.cancel</source>
+                <target>Annuleren</target>
+            </trans-unit>
+            <trans-unit id="info.menu_sorted">
+                <source>info.menu_sorted</source>
+                <target>De volgorde is succesvol aangepast.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_success">
+                <source>flash_edit_success</source>
+                <target>Uw wijzigingen zijn opgeslagen.</target>
+            </trans-unit>
+            <trans-unit id="flash_create_success">
+                <source>flash_create_success</source>
+                <target>Menu is succesvol aangemaakt.</target>
+            </trans-unit>
+            <trans-unit id="flash_delete_success">
+                <source>flash_delete_success</source>
+                <target>Menu-item is succesvol verwijderd.</target>
+            </trans-unit>
+            <trans-unit id="flash_delete_children_error">
+                <source>flash_delete_children_error</source>
+                <target>Menu-item is niet verwijderd. Haal eerst de items uit het submenu weg.</target>
+            </trans-unit>
+            <trans-unit id="menu.label">
+                <source>menu.label</source>
+                <target>Menu's</target>
+            </trans-unit>
+		</body>
+	</file>
+</xliff>

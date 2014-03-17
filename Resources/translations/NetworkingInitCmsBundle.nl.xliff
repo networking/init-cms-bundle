@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="label_filters">
+                <source>label_filters</source>
+                <target>Zoeken</target>
+            </trans-unit>
+            <trans-unit id="label_export_download">
+                <source>label_export_download</source>
+                <target>Download uw resultaten in het volgende formaat</target>
+            </trans-unit>
+            <trans-unit id="info.filter">
+                <source>info.filter</source>
+                <target>Filter:</target>
+            </trans-unit>
+            <trans-unit id="link.website_">
+                <source>link.website_</source>
+                <target>Website</target>
+            </trans-unit>
+            <trans-unit id="link.go_to_list">
+                <source>link.go_to_list</source>
+                <target>Ga naar de lijst met %admin_label%</target>
+            </trans-unit>
+            <trans-unit id="link.website_status_published">
+                <source>link.website_status_published</source>
+                <target>Website: Gepubliceerd</target>
+            </trans-unit>
+            <trans-unit id="link.website_status_draft">
+                <source>link.website_status_draft</source>
+                <target>Website: Concept</target>
+            </trans-unit>
+                <trans-unit id="link.show_more_actions">
+                <source>link.show_more_actions</source>
+                <target>Meer acties weergeven</target>
+            </trans-unit>
+            <trans-unit id="link.hide_actions">
+                <source>link.hide_actions</source>
+                <target>Acties verbergen</target>
+            </trans-unit>
+            <trans-unit id="link.show_more_filters">
+                <source>link.show_more_filters</source>
+                <target>Meer filteropties weergeven</target>
+            </trans-unit>
+            <trans-unit id="link_reset_filter">
+                <source>link_reset_filter</source>
+                <target>Filters leegmaken</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>%admin_label% toevoegen</target>
+            </trans-unit>
+            <trans-unit id="link_delete">
+                <source>link_delete</source>
+                <target>Verwijderen</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Nieuwe %admin_label% toevoegen</target>
+            </trans-unit>
+            <trans-unit id="title_edit">
+                <source>title_edit</source>
+                <target>%admin_label% - "%name%" wijzigen</target>
+            </trans-unit>
+            <trans-unit id="btn_update">
+                <source>btn_update</source>
+                <target>Opslaan</target>
+            </trans-unit>
+            <trans-unit id="btn_create">
+                <source>btn_create</source>
+                <target>Aanmaken</target>
+            </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>Filter</target>
+            </trans-unit>
+            <trans-unit id="btn_cancel">
+                <source>btn_cancel</source>
+                <target>Annuleren</target>
+            </trans-unit>
+            <trans-unit id="btn_preview">
+                <source>btn_preview</source>
+                <target>Bekijk %admin_label%</target>
+            </trans-unit>
+            <trans-unit id="btn_update_and_edit_again">
+                <source>btn_update_and_edit_again</source>
+                <target>%admin_label% opslaan</target>
+            </trans-unit>
+            <trans-unit id="btn_update_and_return_to_list">
+                <source>btn_update_and_return_to_list</source>
+                <target>Item opslaan en terug naar overzicht</target>
+            </trans-unit>
+            <trans-unit id="delete_or">
+                <source>delete_or</source>
+                <target>of</target>
+            </trans-unit>
+            <trans-unit id="btn_create_and_edit_again">
+                <source>btn_create_and_edit_again</source>
+                <target>Item toevoegen</target>
+            </trans-unit>
+            <trans-unit id="btn_create_and_return_to_list">
+                <source>btn_create_and_return_to_list</source>
+                <target>Item toevoegen en terug naar overzicht</target>
+            </trans-unit>
+            <trans-unit id="btn_create_and_create_a_new_one">
+                <source>btn_create_and_create_a_new_one</source>
+                <target>Item toevoegen en nog één aanmaken</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_error">
+                <source>flash_batch_delete_error</source>
+                <target>De geselecteerde items konden niet verwijderd worden.</target>
+            </trans-unit>
+            <trans-unit id="no_result">
+                <source>no_result</source>
+                <target>Er zijn geen items gevonden.</target>
+            </trans-unit>
+            <trans-unit id="title.page_not_found">
+                <source>title.page_not_found</source>
+                <target>Pagina niet gevonden</target>
+            </trans-unit>
+            <trans-unit id="info.page_not_found">
+                <source>info.page_not_found</source>
+                <target>
+                    <![CDATA[
+                      <p>Sorry, deze pagina kon niet worden gevonden.</p>
+                    ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="title.translation_not_found">
+                <source>title.translation_not_found</source>
+                <target>Vertaling niet gevonden</target>
+            </trans-unit>
+            <trans-unit id="info.translation_not_found">
+                <source>info.translation_not_found</source>
+                <target>
+                    <![CDATA[
+                         <p>Het lijkt erop dat er geen vertaling is van de pagina die u zoekt.</p>
+                    ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="info.welcome_text">
+                <source>info.welcome_text</source>
+                <target>
+                    <![CDATA[
+                         <p>We moeten nog een aantal zaken toevoegen aan het dashboard en staan open voor suggesties. Graag willen we dit dashboard wat persoonlijker inrichten.</p>
+                    ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="label.last_activity">
+                <source>label.last_activity</source>
+                <target>Recente activiteiten</target>
+            </trans-unit>
+            <trans-unit id="title.last_user_activity">
+                <source>title.last_user_activity</source>
+                <target>Op dit moment online</target>
+            </trans-unit>
+            <trans-unit id="title.dashboard">
+                <source>title.dashboard</source>
+                <target>Welkom bij het %admin_title% CMS</target>
+            </trans-unit>
+            <trans-unit id="flash_delete_success">
+                <source>flash_delete_success</source>
+                <target>Het item is succesvol verwijderd.</target>
+            </trans-unit>
+            <trans-unit id="flash_delete_error">
+                <source>flash_delete_error</source>
+                <target>Sorry, het item kon niet worden verwijderd.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_success">
+                <source>flash_edit_success</source>
+                <target>Het item is succesvol bijgewerkt.</target>
+            </trans-unit>
+            <trans-unit id="flash_edit_error">
+                <source>flash_edit_error</source>
+                <target>Er is een fout opgetreden: het geselecteerde item kon niet worden opgeslagen.</target>
+            </trans-unit>
+            <trans-unit id="flash_create_success">
+                <source>flash_create_success</source>
+                <target>Het item is succesvol toegevoegd.</target>
+            </trans-unit>
+            <trans-unit id="flash_create_error">
+                <source>flash_create_error</source>
+                <target>Er is een fout opgetreden: het item nog niet worden aangemaakt.</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_delete_success">
+                <source>flash_batch_delete_success</source>
+                <target>De geselecteerde items zijn succesvol verwijderd.</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_publish_success">
+                <source>flash_batch_publish_success</source>
+                <target>De pagina's zijn succesvol gepubliceerd.</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_publish_error">
+                <source>flash_batch_publish_error</source>
+                <target>De pagina's konden niet worden gepubliceerd.</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_empty">
+                <source>flash_batch_empty</source>
+                <target>U heeft niets geselecteerd.</target>
+            </trans-unit>
+            <trans-unit id="link.alias.page">
+                <source>link.alias.page</source>
+                <target>Dit is een doorverwijzing naar de volgende pagina: "%alias_page%"</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,562 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="link_breadcrumb_dashboard">
+                <source>breadcrumb.link_dashboard</source>
+                <target>&#8962;</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_page_list">
+                <source>breadcrumb.link_page_list</source>
+                <target><![CDATA[<small>Beheer uw</small> ]]> pagina's</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_page_edit">
+                <source>breadcrumb.link_page_edit</source>
+                <target>Pagina wijzigen</target>
+            </trans-unit>
+            <trans-unit id="are_you_sure">
+                <source>page_admin.confirm</source>
+                <target>Weet u het zeker?</target>
+            </trans-unit>
+            <trans-unit id="form.label_is_home">
+                <source>form.label_is_home</source>
+                <target>Is homepage</target>
+            </trans-unit>
+            <trans-unit id="form.label_locale">
+                <source>form.label_locale</source>
+                <target>Taal</target>
+            </trans-unit>
+            <trans-unit id="form.label_template">
+                <source>form.label_template</source>
+                <target>Layout</target>
+            </trans-unit>
+            <trans-unit id="form.label_page_name">
+                <source>form.label_page_name</source>
+                <target>Paginanaam</target>
+            </trans-unit>
+            <trans-unit id="form.label_meta_title">
+                <source>form.label_meta_title</source>
+                <target>Meta-titel</target>
+            </trans-unit>
+            <trans-unit id="form.label_navigation_title">
+                <source>form.label_navigation_title</source>
+                <target>Menulabel</target>
+            </trans-unit>
+            <trans-unit id="form.label_url">
+                <source>form.label_url</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="form.label_parent">
+                <source>form.label_parent</source>
+                <target>Bovenliggende pagina</target>
+            </trans-unit>
+            <trans-unit id="form.label_show_in_navigation">
+                <source>form.label_show_in_navigation</source>
+                <target>Weergeven in het menu</target>
+            </trans-unit>
+            <trans-unit id="form.label_meta_keyword">
+                <source>form.label_meta_keyword</source>
+                <target>Meta-keywords</target>
+            </trans-unit>
+            <trans-unit id="form.label_meta_description">
+                <source>form.label_meta_description</source>
+                <target>Meta-omschrijving</target>
+            </trans-unit>
+            <trans-unit id="form.label_status ">
+                <source>form.label_status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="form.label_visibility">
+                <source>form.label_visibility</source>
+                <target>Zichtbaarheid</target>
+            </trans-unit>
+            <trans-unit id="form.label_is_active">
+                <source>form.label_is_active</source>
+                <target>Actief</target>
+            </trans-unit>
+            <trans-unit id="form.label_tags">
+                <source>form.label_tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="form.label_alias">
+                <source>form.label_alias</source>
+                <target>Doorverwijzing naar andere pagina</target>
+            </trans-unit>
+            <trans-unit id="legend.translate_page">
+                <source>legend.translate_page</source>
+                <target>Vertalingen</target>
+            </trans-unit>
+            <trans-unit id="legend.page_settings">
+                <source>legend.page_settings</source>
+                <target>Instellingen &amp; SEO</target>
+            </trans-unit>
+            <trans-unit id="legend.page_tags">
+                <source>legend.page_tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="legend.page_content">
+                <source>legend.page_content</source>
+                <target>Pagina-inhoud</target>
+            </trans-unit>
+            <trans-unit id="status_draft">
+                <source>status_draft</source>
+                <target>Concept</target>
+            </trans-unit>
+            <trans-unit id="status_review">
+                <source>status_review</source>
+                <target>Te controleren</target>
+            </trans-unit>
+            <trans-unit id="status_published">
+                <source>status_published</source>
+                <target>Gepubliceerd</target>
+            </trans-unit>
+            <trans-unit id="visibility_public">
+                <source>visibility_public</source>
+                <target>Publiekelijk zichtbaar</target>
+            </trans-unit>
+            <trans-unit id="visibility_protected">
+                <source>visibility_protected</source>
+                <target>Afgeschermd</target>
+            </trans-unit>
+            <trans-unit id="translation.message_saved">
+                <source>translation.message_saved</source>
+                <target>De pagina is succesvol vertaald</target>
+            </trans-unit>
+            <trans-unit id="admin.menu.dashboard">
+                <source>admin.menu.dashboard</source>
+                <target>Dashboard</target>
+            </trans-unit>
+            <trans-unit id="button.apply">
+                <source>button.apply</source>
+                <target>Toepassen</target>
+            </trans-unit>
+            <trans-unit id="button.cancel_draft">
+                <source>button.cancel_draft</source>
+                <target>Concept verwijderen</target>
+            </trans-unit>
+            <trans-unit id="legend.page_status">
+                <source>legend.page_status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="legend.translations">
+                <source>legend.translations</source>
+                <target>Vertalingen</target>
+            </trans-unit>
+            <trans-unit id="legend.filters">
+                <source>legend.filters</source>
+                <target>Zoek pagina's</target>
+            </trans-unit>
+            <trans-unit id="legend.actions">
+                <source>legend.actions</source>
+                <target>Acties</target>
+            </trans-unit>
+            <trans-unit id="label.menu_link">
+                <source>label.menu_link</source>
+                <target>Menu "%menu_name%"</target>
+            </trans-unit>
+            <trans-unit id="link.add">
+                <source>link.add</source>
+                <target>Toevoegen</target>
+            </trans-unit>
+            <trans-unit id="link.edit">
+                <source>link.edit</source>
+                <target>Wijzigen</target>
+            </trans-unit>
+            <trans-unit id="link.translate">
+                <source>link.translate</source>
+                <target>Vertalen (kopie)</target>
+            </trans-unit>
+            <trans-unit id="link.link">
+                <source>link.link</source>
+                <target>Koppelen</target>
+            </trans-unit>
+            <trans-unit id="link.unlink">
+                <source>link.unlink</source>
+                <target>Link verwijderen</target>
+            </trans-unit>
+            <trans-unit id="info.empty">
+                <source>info.empty</source>
+                <target>Leeg</target>
+            </trans-unit>
+            <trans-unit id="info.translations">
+                <source>info.translations</source>
+                <target>Deze pagina in andere talen</target>
+            </trans-unit>
+            <trans-unit id="legend.menu_connections">
+                <source>legend.menu_connections</source>
+                <target>Menu-verbindingen</target>
+            </trans-unit>
+            <trans-unit id="link_add_page_to_menu">
+                <source>link_add_page_to_menu</source>
+                <target>Pagina toevoegen aan menu</target>
+            </trans-unit>
+            <trans-unit id="message.translation_link">
+                <source>message.translation_link</source>
+                <target>Hier kunt u een koppeling maken met een bestaande pagina in het %language%.
+                    Alleen de pagina's in het %language% die nog geen koppeling hebben met een pagina in het %original_language%
+                    worden hieronder weergegeven.
+                    Kies de pagina die u wilt koppelen en klik op de knop Linken.
+                </target>
+            </trans-unit>
+            <trans-unit id="title.translation_link">
+                <source>title.translation_link</source>
+                <target>Koppel de pagina "%object%" aan een pagina in het %language%</target>
+            </trans-unit>
+            <trans-unit id="button.draft">
+                <source>button.draft</source>
+                <target>Concept</target>
+            </trans-unit>
+            <trans-unit id="button.review">
+                <source>button.review</source>
+                <target>Laten controleren</target>
+            </trans-unit>
+            <trans-unit id="button.publish">
+                <source>button.publish</source>
+                <target>Publiceren</target>
+            </trans-unit>
+            <trans-unit id="title.cancel_draft">
+                <source>title.cancel_draft</source>
+                <target>Terugzetten naar laatst gepubliceerd</target>
+            </trans-unit>
+            <trans-unit id="info.cancel_draft">
+                <source>info.cancel_draft</source>
+                <target>Wilt u de pagina "%object%" terugzetten naar de laatst gepubliceerde versie?</target>
+            </trans-unit>
+            <trans-unit id="button.confirm_cancel_draft">
+                <source>button.confirm_cancel_draft</source>
+                <target>Ja, terugzetten</target>
+            </trans-unit>
+            <trans-unit id="button.cancel">
+                <source>button.cancel</source>
+                <target>Annuleren</target>
+            </trans-unit>
+            <trans-unit id="title.delete_translation_link">
+                <source>title.delete_translation_link</source>
+                <target>Koppeling verwijderen</target>
+            </trans-unit>
+            <trans-unit id="info.delete_translation_link">
+                <source>info.delete_translation_link</source>
+                <target>Wilt u de koppeling met pagina "%translatedPage%" (%locale%) verwijderen?
+                </target>
+            </trans-unit>
+            <trans-unit id="label.account_settings">
+                <source>label.account_settings</source>
+                <target>Accountinstellingen</target>
+            </trans-unit>
+            <trans-unit id="label.exit">
+                <source>label.exit</source>
+                <target>Sluiten</target>
+            </trans-unit>
+            <trans-unit id="error.file_upload_size">
+                <source>error.file_upload_size</source>
+                <target>Bestand is te groot. Maximale grootte voor uploaden: %max_server_size%</target>
+            </trans-unit>
+            <trans-unit id="button.save">
+                <source>button.save</source>
+                <target>Opslaan</target>
+            </trans-unit>
+            <trans-unit id="list.label_admin_title">
+                <source>list.label_admin_title</source>
+                <target>Naam</target>
+            </trans-unit>
+            <trans-unit id="list.label_full_path">
+                <source>list.label_full_path</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="filter.label_locale">
+                <source>filter.label_locale</source>
+                <target>Taal</target>
+            </trans-unit>
+            <trans-unit id="filter.label_title">
+                <source>filter.label_title</source>
+                <target>Paginanaam</target>
+            </trans-unit>
+            <trans-unit id="filter.label_path">
+                <source>filter.label_path</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="btn_filter">
+                <source>btn_filter</source>
+                <target>Zoeken</target>
+            </trans-unit>
+            <trans-unit id="label_filters">
+                <source>label_filters</source>
+                <target>Pagina's zoeken</target>
+            </trans-unit>
+            <trans-unit id="link_reset_filter">
+                <source>link_reset_filter</source>
+                <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Pagina toevoegen</target>
+            </trans-unit>
+            <trans-unit id="link_add">
+                <source>link_add</source>
+                <target>Pagina toevoegen</target>
+            </trans-unit>
+            <trans-unit id="label_change_status">
+                <source>label_change_status</source>
+                <target>Status wijzigen</target>
+            </trans-unit>
+            <trans-unit id="isHome">
+                <source>isHome</source>
+                <target>Homepage</target>
+            </trans-unit>
+            <trans-unit id="locale">
+                <source>locale</source>
+                <target>Taal</target>
+            </trans-unit>
+            <trans-unit id="pageName">
+                <source>pageName</source>
+                <target>Naam</target>
+            </trans-unit>
+            <trans-unit id="parent">
+                <source>parent</source>
+                <target>Bovenliggende pagina</target>
+            </trans-unit>
+            <trans-unit id="alias">
+                <source>alias</source>
+                <target>Doorverwijzen naar</target>
+            </trans-unit>
+            <trans-unit id="url">
+                <source>url</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="metaKeyword">
+                <source>metaKeyword</source>
+                <target>Meta-keyword</target>
+            </trans-unit>
+            <trans-unit id="metaDescription">
+                <source>metaDescription</source>
+                <target>Meta-omschrijving</target>
+            </trans-unit>
+            <trans-unit id="metaTitle">
+                <source>metaTitle</source>
+                <target>Meta-titel</target>
+            </trans-unit>
+            <trans-unit id="visiblity">
+                <source>visibility</source>
+                <target>Zichtbaarheid</target>
+            </trans-unit>
+            <trans-unit id="template">
+                <source>template</source>
+                <target>Layout</target>
+            </trans-unit>
+            <trans-unit id="positive">
+                <source>positive</source>
+                <target>Ja</target>
+            </trans-unit>
+            <trans-unit id="negative">
+                <source>negative</source>
+                <target>Nee</target>
+            </trans-unit>
+            <trans-unit id="flash_status_success">
+                <source>flash_status_success</source>
+                <target>Status is succesvol gewijzigd.</target>
+            </trans-unit>
+            <trans-unit id="flash_publish_success">
+                <source>flash_publish_success</source>
+                <target>De pagina is nu gepubliceerd.</target>
+            </trans-unit>
+            <trans-unit id="message.layout_blocks_sorted">
+                <source>message.layout_blocks_sorted</source>
+                <target>De volgorde van de blokken is opgeslagen.</target>
+            </trans-unit>
+            <trans-unit id="info.page_settings_updated">
+                <source>info.page_settings_updated</source>
+                <target>Instellingen succesvol opgeslagen.</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_deleted">
+                <source>message.layout_block_deleted</source>
+                <target>Widget is succesvol verwijderd.</target>
+            </trans-unit>
+            <trans-unit id="info.create.layout_block">
+                <source>info.create.layout_block</source>
+                <target>Selecteer het blok dat u wilt toevoegen uit de onderstaande lijst.</target>
+            </trans-unit>
+            <trans-unit id="url.helper.text">
+                <source>url.helper.text</source>
+                <target>bijv. "nieuws" of "over-ons"</target>
+            </trans-unit>
+            <trans-unit id="url.placeholder">
+                <source>url.placeholder</source>
+                <target>/</target>
+            </trans-unit>
+            <trans-unit id="meta_title.helper.text">
+                <source>meta_title.helper.text</source>
+                <target>Titel die wordt getoond in de browser</target>
+            </trans-unit>
+            <trans-unit id="info.revert_to_publish">
+                <source>info.revert_to_publish</source>
+                <target>terug naar huidige versie</target>
+            </trans-unit>
+            <trans-unit id="link.revert_to_publish">
+                <source>link.revert_to_publish</source>
+                <target>Concept verwijderen</target>
+            </trans-unit>
+            <trans-unit id="label.action_publish">
+                <source>label.action_publish</source>
+                <target>Publiceren</target>
+            </trans-unit>
+            <trans-unit id="info.layout_block_empty">
+                <source>info.layout_block_empty</source>
+                <target>Dit gedeelte van de pagina is nog leeg. Klik op het + icoon om een blok toe te voegen
+                of sleep een blok uit een ander gedeelte hier naar toe. </target>
+            </trans-unit>
+            <trans-unit id="legend.create_menu">
+                <source>legend.create_menu</source>
+                <target>Maak een item aan in het menu "%menu_name%" voor deze pagina</target>
+            </trans-unit>
+            <trans-unit id="legend.edit_menu">
+                <source>legend.edit_menu</source>
+                <target>Geselecteerd menu-item wijzigen</target>
+            </trans-unit>
+            <trans-unit id="info.create_menu_item">
+                <source>info.create_menu_item</source>
+                <target>Als u doorgaat, wordt u doorgestuurd naar het menubeheer waar automatisch een menu-item wordt aangemaakt op basis van de paginanaam.
+                Het enige wat u nog hoeft te doen, is het menu-item op de gewenste positie zetten.</target>
+            </trans-unit>
+            <trans-unit id="info.edit_menu_item">
+                <source>info.edit_menu_item</source>
+                <target>Als u doorgaat, wordt u doorgestuurd naar het menubeheer waar u het geselecteerde menu-item kunt aanpassen.</target>
+            </trans-unit>
+            <trans-unit id="button.continue">
+                <source>button.continue</source>
+                <target>Doorgaan</target>
+            </trans-unit>
+            <trans-unit id="label.show_no_more">
+                <source>label.show_no_more</source>
+                <target>Laat dit niet meer zien</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Nieuwe pagina aanmaken</target>
+            </trans-unit>
+            <trans-unit id="info.page_create">
+                <source>info.page_create</source>
+                <target>Vul eerste onderstaande velden in voordat we verder gaan met het toevoegen van content.
+                U kunt deze instellingen altijd nog aanpassen via Instellingen &amp; SEO.</target>
+            </trans-unit>
+            <trans-unit id="locale.helper.text">
+                <source>locale.helper.text</source>
+                <target>De taal van deze pagina.</target>
+            </trans-unit>
+            <trans-unit id="page_name.helper.text">
+                <source>page_name.helper.text</source>
+                <target>Interne paginanaam. Wordt niet getoond aan de voorkant.</target>
+            </trans-unit>
+            <trans-unit id="parent.helper.text">
+                <source>parent.helper.text</source>
+                <target>Als basis voor de URL van deze pagina.</target>
+            </trans-unit>
+            <trans-unit id="alias.helper.text">
+                <source>alias.helper.text</source>
+                <target>Doorverwijzen naar aan andere pagina. Deze pagina zelf zal geen content bevatten.</target>
+            </trans-unit>
+            <trans-unit id="visibility.helper.text">
+                <source>visibility.helper.text</source>
+                <target>Maak deze pagina publiekelijk zichtbaar of beveiligd het met een wachtwoord.</target>
+            </trans-unit>
+            <trans-unit id="template.helper.text">
+                <source>template.helper.text</source>
+                <target>De layout van deze pagina.</target>
+            </trans-unit>
+            <trans-unit id="meta_settings">
+                <source>meta_settings</source>
+                <target>Meta-instellingen</target>
+            </trans-unit>
+            <trans-unit id="filter.label_status">
+                <source>filter.label_status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="filter.label_page_name">
+                <source>filter.label_page_name</source>
+                <target>Naam</target>
+            </trans-unit>
+            <trans-unit id="link.preview">
+                <source>link.preview</source>
+                <target>Voorvertoning</target>
+            </trans-unit>
+            <trans-unit id="link.live">
+                <source>link.live</source>
+                <target>Gepubliceerde versie bekijken</target>
+            </trans-unit>
+            <trans-unit id="or">
+                <source>or</source>
+                <target>of</target>
+            </trans-unit>
+            <trans-unit id="info.last_published_version">
+                <source>info.last_published_version</source>
+                <target>Laatst gepubliceerde versie: <![CDATA[<span class="info-soft">%date%</span>]]></target>
+            </trans-unit>
+            <trans-unit id="info.no_pages_for_translation">
+                <source>info.no_pages_for_translation</source>
+                <target>Er zijn geen pagina's beschikbaar in het %language% om als vertaling te koppelen aan deze pagina.
+                    U kunt deze pagina kopiëren (kies "Vertalen") of een nieuwe pagina aanmaken in het %language% en deze twee vervolgens koppelen.</target>
+            </trans-unit>
+            <trans-unit id="message.translation_saved">
+                <source>message.translation_saved</source>
+                <target>Deze pagina is succesvol gekopieerd in het %language%.</target>
+            </trans-unit>
+            <trans-unit id="message.translation_not_saved">
+                <source>message.translation_not_saved</source>
+                <target>Een kopie van deze pagina in het %language% kon niet gemaakt worden. Controleer of er al een pagina met de URL "%url%" in het %language% bestaat.</target>
+            </trans-unit>
+            <trans-unit id="title.copy_page">
+                <source>title.copy_page</source>
+                <target>Maak een kopie van deze pagina aan in het %language%</target>
+            </trans-unit>
+            <trans-unit id="info.copy_page">
+                <source>info.copy_page</source>
+                <target>Een kopie van deze pagina en de inhoud zal gemaakt worden in het %language%. Nadat de kopie is aangemaakt, gaat u naar Vertalingen
+                    en klikt op op "Wijzigen" om de content te wijzigen.
+                </target>
+            </trans-unit>
+            <trans-unit id="button.copy_page">
+                <source>button.copy_page</source>
+                <target>Kopie aanmaken</target>
+            </trans-unit>
+            <trans-unit id="title.edit_content">
+                <source>title.edit_content</source>
+                <target>Uw content wijzigen</target>
+            </trans-unit>
+            <trans-unit id="title.page_status_count">
+                <source>title.page_status_count</source>
+                <target>Overzicht pagina's</target>
+            </trans-unit>
+            <trans-unit id="title.actual_drafts">
+                <source>title.actual_drafts</source>
+                <target>Concepten</target>
+            </trans-unit>
+            <trans-unit id="title.actual_reviews">
+                <source>title.actual_reviews</source>
+                <target>Te controleren</target>
+            </trans-unit>
+            <trans-unit id="link.see_all">
+                <source>link.see_all</source>
+                <target>Alle pagina's bekijken</target>
+            </trans-unit>
+            <trans-unit id="info.last_edited">
+                <source>info.last_edited</source>
+                <target>Laatst aangepast op </target>
+            </trans-unit>
+            <trans-unit id="pages.label">
+                <source>pages.label</source>
+                <target>Pagina's</target>
+            </trans-unit>
+            <trans-unit id="pages.content_not_found">
+                <source>pages.content_not_found</source>
+                <target>Widgets konden niet gevonden worden</target>
+            </trans-unit>
+            <trans-unit id="templateName">
+                <source>templateName</source>
+                <target>Layout</target>
+            </trans-unit>
+            <trans-unit id="page.title">
+                <source>page.title</source>
+                <target>Naam</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
