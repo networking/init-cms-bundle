@@ -203,6 +203,8 @@ assetic:
 ```
 
 Do not forget to add the jars to your app.
+css embed jar: https://github.com/nzakas/cssembed/downloads
+yui compressor jar: https://github.com/yui/yuicompressor/releases
 
 If you encounter the following Error:
 
