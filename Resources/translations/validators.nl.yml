@@ -1,0 +1,2 @@
+error:
+    unique_url: Een pagina met de URL "{{ value }}" en deze bovenliggende pagina bestaat reeds, kies s.v.p. een andere.

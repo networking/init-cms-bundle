@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="breadcrumb.link_tag_list">
+                <source>breadcrumb.link_tag_list</source>
+                <target><![CDATA[<small>Beheer uw</small>]]> mediatags</target>
+            </trans-unit>
+            <trans-unit id="filter.label_name">
+                <source>filter.label_name</source>
+                <target>Naam</target>
+            </trans-unit>
+            <trans-unit id="form.label_name">
+                <source>form.label_name</source>
+                <target>Naam</target>
+            </trans-unit>
+            <trans-unit id="list.label_name">
+                <source>list.label_name</source>
+                <target>Naam</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_tag_delete">
+                <source>breadcrumb.link_tag_delete</source>
+                <target>Deze tag verwijderen</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
