@@ -36,20 +36,17 @@ Add the following lines to your application kernel
 	{
 	    return array(
 	        // ...
-	        new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new JMS\AopBundle\JMSAopBundle(),
-            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
-            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle($this),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Sonata\AdminBundle\SonataAdminBundle(),
+            new Sonata\CoreBundle\SonataCoreBundle(),
             new Sonata\UserBundle\SonataUserBundle('FOSUserBundle'),
             new Sonata\jQueryBundle\SonatajQueryBundle(),
             new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
-            new Sonata\BlockBundle\SonataBlockBundle(),
             new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
             new Sonata\MediaBundle\SonataMediaBundle(),
             new Sonata\MarkItUpBundle\SonataMarkItUpBundle(),
@@ -95,24 +92,36 @@ fos_user:
             address:        webmaster@example.com
             sender_name:    net working Team
 
-sonata_user:
-    security_acl: true
-    impersonating:
-        route:                networking_init_cms_admin
-        parameters:           { path: /}
+sonata_media:
     class:
-        user: Application\Networking\InitCmsBundle\Entity\User
-        group: Networking\InitCmsBundle\Entity\Group
-    admin:                  # Admin Classes
-        user:
-            class:          Networking\InitCmsBundle\Admin\Entity\UserAdmin
-            controller:     NetworkingInitCmsBundle:CRUD
-            translation:    SonataUserBundle
+        media:              Networking\InitCmsBundle\Entity\Media
+        gallery:            Networking\InitCmsBundle\Entity\Gallery
+        gallery_has_media:  Networking\InitCmsBundle\Entity\GalleryHasMedia
+    default_context: default
+    db_driver: doctrine_orm # or doctrine_mongodb
+    contexts:
+        default:
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.youtube
 
-        group:
-            class:          Networking\InitCmsBundle\Admin\Entity\GroupAdmin
-            controller:     NetworkingInitCmsBundle:CRUD
-            translation:    SonataUserBundle
+            formats:
+                small: { width: 100 , quality: 70}
+                medium: { width: 400, height: 300 , quality: 70}
+                big:   { width: 800, quality: 70}
+                admin: { width: 100, quality: 70}
+    cdn:
+        server:
+            path: /uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  %kernel.root_dir%/../web/uploads/media
+            create:     false
 ```
 
 ### Extend the bundle
@@ -120,7 +129,7 @@ Now you need to extend the bundle. This will create a bundle in your src folder 
 The bundle extending process is based on the sonata easy extend bundle
 
 
-    php app/console networking:init_cms:generate
+    php app/console networking:initcms:generate
 
 
 Then you can add your new bundle to the AppKernel.php
@@ -131,6 +140,7 @@ Then you can add your new bundle to the AppKernel.php
         {
             return array(
                 //..
+                new Sonata\BlockBundle\SonataBlockBundle(),
                 new Application\Networking\InitCmsBundle\ApplicationNetworkingInitCmsBundle(),
                 //..
              );
