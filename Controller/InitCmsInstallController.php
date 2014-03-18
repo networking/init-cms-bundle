@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
-use Sandbox\InitCmsBundle\Form\UserType;
+use Networking\InitCmsBundle\Form\Type\InstallUserType as UserType;
 
 /**
  * Class InitCmsInstallController
