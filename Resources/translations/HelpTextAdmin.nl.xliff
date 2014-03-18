@@ -1,0 +1,584 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+
+            <!-- cms admin section -->
+
+            <trans-unit id="list.label_title">
+                <source>list.label_title</source>
+                <target>Titel van artikel</target>
+            </trans-unit>
+            <trans-unit id="list.label_translation_key">
+                <source>list.label_translation_key</source>
+                <target>Vertalingskenmerk</target>
+            </trans-unit>
+            <trans-unit id="list.label_locale">
+                <source>list.label_locale</source>
+                <target>Taalcode</target>
+            </trans-unit>
+            <trans-unit id="list.pre_title_text">
+                <source>list.pre_title_text</source>
+                <target>Beheer uw</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_help_text_list">
+                <source>breadcrumb.link_help_text_list</source>
+                <target><![CDATA[<small>Beheer uw</small>]]> helpartikelen</target>
+            </trans-unit>
+            <trans-unit id="filter.label_locale">
+                <source>filter.label_locale</source>
+                <target>Taal</target>
+            </trans-unit>
+            <trans-unit id="form.label_locale">
+                <source>form.label_locale</source>
+                <target>Taal</target>
+            </trans-unit>
+            <trans-unit id="form.label_translation_key">
+                <source>form.label_translation_key</source>
+                <target>Vertalingskenmerk</target>
+            </trans-unit>
+            <trans-unit id="form.label_title">
+                <source>form.label_title</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="form.label_text">
+                <source>form.label_text</source>
+                <target>Tekst</target>
+            </trans-unit>
+            <trans-unit id="title.help">
+                <source>title.help</source>
+                <target>Gebruikershandleiding</target>
+            </trans-unit>
+            <trans-unit id="link.close">
+                <source>link.close</source>
+                <target>SLUITEN</target>
+            </trans-unit>
+            <trans-unit id="help_title">
+                <source>help_title</source>
+                <target>Hulp voor: %admin_title% %action%</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.page.edit">
+                <source>networking_init_cms.admin.page.edit</source>
+                <target>Pagina wijzigen</target>
+            </trans-unit>
+            <trans-unit id="action.list">
+                <source>action.list</source>
+                <target>Lijst</target>
+            </trans-unit>
+            <trans-unit id="action.edit">
+                <source>action.edit</source>
+                <target>Wijzigen</target>
+            </trans-unit>
+            <trans-unit id="action.delete">
+                <source>action.delete</source>
+                <target>Verwijderen</target>
+            </trans-unit>
+            <trans-unit id="action.create">
+                <source>action.create</source>
+                <target>Aanmaken</target>
+            </trans-unit>
+
+            <!-- help navigation -->
+
+            <trans-unit id="networking_init_cms.admin.page">
+                <source>networking_init_cms.admin.page</source>
+                <target>Pagina's</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.menu_item">
+                <source>networking_init_cms.admin.menu_item</source>
+                <target>Menu</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.media">
+                <source>sonata.media.admin.media</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.user">
+                <source>sonata.user.admin.user</source>
+                <target>Gebruiker</target>
+            </trans-unit>
+
+            <!-- overview -->
+
+            <trans-unit id="overview.title">
+                <source>overview.title</source>
+                <target>Overzicht</target>
+            </trans-unit>
+            <trans-unit id="overview.text">
+                <source>overview.text</source>
+                <target><![CDATA[
+                   <p>Deze handleiding beschrijft de meeste functies binnen het CMS. Kies een pagina aan de linkerkant of klik op het vraagtegen rechtsboven tijdens het gebruiken van het CMS om de betreffende hulppagina te raadplegen.</p>
+
+                   <h2>Begrippen</h2>
+
+                   <p><strong>CMS</strong><br />
+                   <span style="line-height:1.6em">Afkorting voor Content Management System</span></p>
+
+                   <p><strong>Pagina</strong><br />
+                   <span style="line-height:1.6em">Een pagina toont bepaalde inhoud (content) in een bepaalde layout.</span></p>
+
+                   <p><strong>Interne URL</strong><br />
+                   <span style="line-height:1.6em">Een pad naar een pagina die is aangemaakt binnen het CMS (bijv. &quot;/over-ons/geschiedenis&quot;)</span></p>
+
+                   <p><strong>Externe URL</strong><br />
+                   <span style="line-height:1.6em">Een volledige URL naar een webpagina die niet is aangemaakt binnen het CMS (bijv. &ldquo;http://www.google.nl)</span></p>
+
+                   <p><strong>Menu-item&nbsp;</strong><br />
+                   <span style="line-height:1.6em">Een link binnen een menu met een eigen naam en URL</span></p>
+
+                   <p><strong>Menu&nbsp;</strong><br />
+                   <span style="line-height:1.6em">Een verzameling menu-items waarmee bezoekers kunnen navigeren door de website.</span></p>
+
+                   <p><strong>Media</strong><br />
+                   <span style="line-height:1.6em">Mediabestanden die gebruikt worden in de content (bijv. afbeeldingen, videos)</span></p>
+
+                   <p><strong>Gebruiker</strong><br />
+                   <span style="line-height:1.6em">Iemand met een gebruikersnaam en wachtwoord en toegang heeft tot het CMS of het beveiligde gedeelte binnen de website</span></p>
+
+                   <h2>Stappenplan: nieuwe pagina publiceren</h2>
+
+                   <p>Als u nog niet bekend bent met het CMS, dan volgt hieronder een simpel stappenplan waarmee u een pagina kunt aanmaken en deze in een menu zichtbaar kunt maken.</p>
+
+                   <ol>
+                   	<li>Ga naar &quot;Pagina's&quot; en voeg een nieuwe pagina toe.</li>
+                   	<li>Tijdens het toevoegen van de pagina klikt u op de &quot;+&quot; pictogrammen om content toe te voegen waar u wilt.</li>
+                   	<li>Klik op de knop &quot;Publiceren&quot; om de pagina direct te publiceren (of vink &quot;Laten controleren&quot; aan om uw collega te informeren).</li>
+                   	<li>Om de pagina zichtbaar te maken in het menu van de website, kunt u de pagina direct vanuit het wijzigscherm van de pagina toevoegen aan een menu. U kunt ook een nieuw menu-item aanmaken, het een naam geven en vervolgens koppelen aan uw nieuwe pagina.</li>
+                   </ol>
+
+                   <p>Gefeliciteerd! U heeft nu een nieuwe pagina gemaakt die bereikbaar is via de navigatie van uw website. Bekijk andere artikelen voor meer informatie.</p>
+                    ]]>
+                </target>
+            </trans-unit>
+
+            <!-- dashboard -->
+
+            <trans-unit id="dashboard.title">
+                <source>dashboard.title</source>
+                <target>Dashboard</target>
+            </trans-unit>
+            <trans-unit id="dashboard.text">
+                <source>dashboard.text</source>
+                <target><![CDATA[
+                    <p>Het dashboard is de eerste pagina die u te zien krijgt wanneer u ingelogd bent in het CMS. Afhankelijk van uw rol en rechten kunt u verschillende dingen zien op uw dashboard.</p>
+
+                    <h2>Informatieblokken</h2>
+
+                    <p><strong>Overzicht pagina's</strong><br />
+                    Overzicht van het aantal concepten, te controleren of reeds gepubliceerde pagina's</p>
+
+                    <p><strong>Concepten</strong><br />
+                    Een lijst met de laatst gewijzigde pagina's, welke nog niet gepubliceerd zijn</p>
+
+                    <p><strong>Te controleren</strong><br />
+                    Een lijst met pagina's die gecontroleerd moeten worden om vervolgens te publiceren</p>
+
+                    <p><strong>Momenteel online</strong><br />
+                    Toont alle gebruikers die op dit moment zijn ingelogd.</p>
+
+                    <p>Het dashboard kan uitgebreid worden met andere voor u relevante informatie. Wanneer u iets mist, neem dan contact op met uw webmaster om een functionaliteit toe te laten voegen.</p>
+                    ]]>
+                </target>
+            </trans-unit>
+
+            <!-- pages -->
+
+            <trans-unit id="networking_init_cms.admin.page.list.title">
+                <source>networking_init_cms.admin.page.list.title</source>
+                <target>Pagina-overzicht</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.page.list.text">
+                <source>networking_init_cms.admin.page.list.text</source>
+                <target><![CDATA[
+                    <p>Pagina's vormen de bouwstenen voor uw website. Op een pagina kunt u uw content toevoegen of wijzigen en de positie ervan binnen de layout aanpassen. Onder &quot;Pagina's&quot; binnen het CMS vind u een lijst van al uw pagina's. Boven de lijst kunt u uw selectie filteren en doorzoeken. Ook is er een duidelijke knop om een nieuwe pagina toe te voegen. Onderaan de lijst vind u een lijst om snel wijzigingen uit te voeren op meerdere pagina's.</p>
+
+                    <h2>Lijst met pagina's</h2>
+
+                    <p>De lijst met pagina's laat diverse informatie zien. Elke regel beschrijft een andere pagina. Hieronder worden de kolommen van links naar rechts toegelicht.</p>
+
+                    <p><strong>Selectievakjes</strong><br />
+                    U kunt één of meer <s>pagina's</s> selecteren door de selectievakjes aan te vinken. Met het eerste selectievakje bovenaan kunt u alle getoonde pagina's aanvinken. Nadat u de gewenste pagina's hebt geselecteerd kunt u een actie kiezen uit de lijst onderaan. Wanneer u op &quot;OK&quot; klikt wordt de actie uitgevoerd op de geselecteerde pagina's.</p>
+
+                    <p><strong>Naam</strong><br />
+                    Deze kolom toont de paginanaam. Als u op een naam klikt gaat u direct naar het wijzigscherm.</p>
+
+                    <p><strong>Status</strong><br />
+                    Rechts van de paginanaam ziet u de status van de pagina (Concept, Te controleren of Gepubliceerd).</p>
+
+                    <p><strong>URL</strong><br />
+                    Deze kolom toont de URL van de pagina. Deze URL bevat niet uw domeinnaam.</p>
+
+                    <p><strong>Knop Wijzigen</strong><br />
+                    De knop Wijzigen bevat een potlood-icoontje. Klik hierop om de content en de instellingen van de pagina te wijzigen.</p>
+
+                    <p><strong>Knop Verwijderen</strong><br />
+                    De knop Verwijderen heeft een prullenbak-icoontje. Klik hierop om een pagina te verwijderen die u niet langer wilt gebruiken.</p>
+
+                    <h2>Filter pagina's</h2>
+
+                    <p>U kunt de lijst met pagina's filteren met behulp van de gegeven velden. Nadat u de gewenste criteria hebt ingevuld klikt u op de knop &quot;Filteren&quot; om pagina's te vinden die voldoen aan uw criteria. Als u klikt op &quot;Filters leegmaken&quot; worden de filters gereset. Wanneer u klikt op &quot;Meer filteropties weergeven&quot; worden alle beschikbare filteropties getoond.</p>
+
+                    <p><strong>Taal</strong><br />
+                    Schakel tussen verschillende talen. U kunt pagina's in slechts één taal tegelijk bekijken.</p>
+
+                    <p><strong>Naam</strong><br />
+                    Zoek een specifieke pagina aan de hand van een bepaalde naam, of vind meerdere pagina's waarvan de zoekterm in de naam voorkomt.</p>
+
+                    <p><strong>URL</strong><br />
+                    Zoek een pagina aan de hand van (een gedeelte van) de URL.</p>
+
+                    <p><strong>Status<br />
+                    ​</strong>Zoek pagina's aan de hand van de status (Concept, Te controleren of Gepubliceerd).</p>
+
+                    <h2>Nieuwe pagina toevoegen</h2>
+
+                    <p>Om een nieuwe pagina toe te voegen klikt u op de knop &quot;+ Pagina toevoegen&quot;. Zie het betreffende helpartikel voor meer informatie.</p>
+                    ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.page.create.title">
+                <source>networking_init_cms.admin.page.create.title</source>
+                <target>Een pagina toevoegen</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.page.create.text">
+                <source>networking_init_cms.admin.page.create.text</source>
+                <target><![CDATA[
+                 <p>Begin door te klikken op op de knop &quot;+ Pagina toevoegen&quot; in de sectie &quot;Pagina's&quot; binnen het CMS. Alle velden gemarkeerd met een &quot;*&quot; zijn verplicht, de andere velden zijn optioneel. De volgende lijst beschrijft alle velden.</p>
+
+                 <h2>Paginavelden</h2>
+
+                 <p><strong>Taal</strong><br />
+                 Elke pagina behoort tot één taal. Op een later tijdstip kunt u deze pagina kopiëren naar een andere taal of koppelen aan een reeds bestaande pagina in een andere taal.</p>
+
+                 <p><strong>Naam</strong><br />
+                 De naam van de pagina is voor intern gebruik en is niet zichtbaar op de website.</p>
+
+                 <p><strong>Bovenliggende pagina</strong><br />
+                 Indien een andere pagina gerelateerd is aan deze pagina (bijv. Over ons en Geschiedenis), kan de ene pagina onder de andere geplaatst worden. Dit zal dan ook zichtbaar worden in de URL: bijv. http://wwww.site.nl/over-ons/geschiedenis in plaats van http://wwww.site.com/geschiedenis.</p>
+
+                 <p><strong>URL</strong><br />
+                 Alleen het laatste gedeelte van de URL hoeft ingevoerd te worden. Als er een bovenliggende pagina is, wordt deze automatisch toegevoegd aan de URL. U kunt geen speciale tekens gebruiken in de URL; deze worden automatisch eruit gefilterd. Boven het veld kunt u zien hoe de URL eruit komt te zien.</p>
+
+                 <p><strong>Zichtbaarheid</strong><br />
+                 Een pagina kan publiekelijk zichtbaar zijn zodat iedereen het kan zien, of deze kan worden afgeschermd zodat de bezoeker ingelogd moet zijn om de pagina te zien.</p>
+
+                 <p><strong>Layout</strong><br />
+                 Kies de layout die het beste bij uw pagina past. Een selectie van een aantal vooraf gedefinieerde layouts worden getoond met een miniatuurweergave. De layout bepaalt waar content op de pagina geplaatst kan worden.</p>
+
+                 <p><strong>Meta-titel</strong><br />
+                 Deze titel wordt getoond in de browser en wordt gebruikt door zoekmachines.</p>
+
+                 <p><strong>Meta-keywords</strong><br />
+                 Keywords zijn niet zichtbaar op de pagina, maar komen in de broncode van de pagina. Deze worden door sommige zoekmachines verwerkt bij het indexeren van de pagina.</p>
+
+                 <p><strong>Meta-omschrijving</strong><br />
+                 Net als de keywords is de meta-description alleen zichtbaar in de broncode. Zoekmachines verwerken deze omschrijving bij het indexeren van de pagina.</p>
+
+                 <p>Zodra u het formulier opslaat, wordt de pagina opgeslagen en wordt u doorgestuurd naar het wijzigscherm.</p>
+                ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.page.edit.title">
+                <source>networking_init_cms.admin.page.edit.title</source>
+                <target>Een pagina vullen</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.page.edit.text">
+                <source>networking_init_cms.admin.page.edit.text</source>
+                <target><![CDATA[
+          <p>Het scherm bevat meerdere secties. Onder de paginatitel ziet u de contentsectie met één of meer layout-gebieden. Aan de rechterzijde vind u overige informatie en handelingen voor deze pagina.</p>
+
+          <h2>Contentsectie</h2>
+
+          <p>In de contentsectie onder de paginatitel ziet u een aantal layout-gebieden (bijv. header, main-content, column-left etc.). In elk gebied kunt u blokken met content plaatsen. Deze blokken kunnen bestaat uit teksten, fotoalbums of andere vooraf gedefinieerde blokken. Nieuwe blokken kunnen worden toegevoegd door op het + pictogram te klikken. Bestaande blokken kunt u verwijderen (prullenbak), wijzigen (potlood) of verplaatsen naar andere posities (pijlen).</p>
+
+          <h2>Status</h2>
+
+          <p>Een pagina kan nog in conceptvorm zijn of reeds gepubliceerd. De laatst gepubliceerde versie is wat de bezoekers van de website te zien krijgen, de conceptversie is alleen zichtbaar voor gebruikers binnen het CMS. Pagina's in conceptvorm kunnen ook gemarkeerd worden om te laten controleren, zodat uw collega's weten dat deze pagina klaar is om gepubliceerd te worden. LET OP, alleen gepubliceerde pagina's zijn zichtbaar voor de bezoekers van de website.</p>
+
+          <p><strong>Concept</strong><br />
+          Zodra een nieuwe pagina is aangemaakt of iets op de pagina wordt gewijzigd, verandert de status naar &quot;Concept&quot;. Als alle aanpassingen zijn doorgevoerd, kunt u de status wijzigen naar &quot;Te controleren&quot; of &quot;Gepubliceerd&quot;. Indien nodig, stel dat u bijvoorbeeld terug wilt naar de laatst &quot;gepubliceerde&quot; versie, kunt u klikken op &quot;Concept verwijderen&quot; aan de rechterzijde.</p>
+
+          <p><strong>Te controleren</strong><br />
+          Iemand heeft wijzigingen aangebracht aan de pagina en de pagina is klaar om gepubliceerd te worden (dit is echter nog niet gebeurd). Voordat de pagina wordt gepubliceerd moeten de wijzigingen worden gecontroleerd. Vink &quot;Laten controleren&quot; aan om dit aan iemand anders te laten weten. Uiteraard is dit niet verplicht, het helpt u echter uw werkstroom overzichtelijk te houden.</p>
+
+          <p><strong>Gepubliceerd</strong><br />
+          Als alle wijzigingen gecontroleerd zijn en correct blijken, kan de status veranderd worden in &quot;Gepubliceerd&quot;. Alle wijzigingen zijn nu zichtbaar voor de bezoekers.</p>
+
+          <h2>Vertalingen</h2>
+
+          <p>Indien deze pagina ook in een andere taal bestaat, kunt u een koppeling aanbrengen. Als alternatief kunt u de pagina kopiëren naar een andere taal voor een snelle start. Onder vertalingen kunt u alle koppelingen beheren.</p>
+
+          <h2>Menu-verbindingen</h2>
+
+          <p>Een pagina kan aanwezig zijn in verschillende menu's. U wilt bijvoorbeeld uw pagina &ldquo;Contact&rdquo; in zowel uw hoofdmenu als uw footer. Onder menu-verbindingen kunt u alle menu-items beheren en nieuwe aanmaken.</p>
+
+          <h2>Instellingen &amp; SEO</h2>
+
+          <p>Hier vind u dezelfde velden als bij het aanmaken van een nieuwe pagina. Door op het potlood-icoon te klikken, kunt u de paginanaam, URL, zichtbaarheid, layout en de meta-instellingen wijzigen.</p>
+                ]]>
+                </target>
+            </trans-unit>
+
+            <!-- menu -->
+
+            <trans-unit id="networking_init_cms.admin.menu_item.navigation.title">
+                <source>networking_init_cms.admin.menu_item.navigation.title</source>
+                <target>Menu-overzicht</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.menu_item.navigation.text">
+                <source>networking_init_cms.admin.menu_item.navigation.text</source>
+                <target><![CDATA[
+                    <p>Een menu biedt uw bezoekers de mogelijk om te navigeren door uw website. Elk menu kunt u beheren onder een apart tabblad. Onder het geselecteerde menu vind u alle opties en een lijst met menu-items. Deze lijst toont allerlei informatie over elk menu-item em biedt de mogelijkheid om elk menu-item te verplaatsen (andere volgorde), te wijzigen of te verwijderen. Boven de tabbladen kunt u de menu's filteren op taal.</p>
+
+                    <h2>Met menu's leren werken</h2>
+
+                    <p><strong>Menu's</strong><br />
+                    Een menu is een lijst met links naar pagina's. Een website kan meerdere menu's bevatten, bijvoorbeeld een &quot;hoofdmenu&quot; en een &quot;secundair menu&quot;. U kunt een nieuw menu toevoegen door op het &quot;+&quot; icoon te klikken rechts van de tabbladen (de meeste gebruikers hebben echter geen rechten om menu's toe te kunnen voegen of te verwijderen).</span></p>
+
+                    <p><strong>Menu-items</strong><br />
+                    Een menu-item bestaat uit een naam en een pagina of link (URL). Menu-items kunnen hierarchisch geordend worden, versleep de items om de gewenste structuur te creëren. Hierbij kunt u gerust meerdere niveau's hanteren. De URL van de betreffende pagina verandert niet wanneer u een menu-item verplaatst naar een ander niveau in uw menustructuur.</p>
+
+                    <p><strong>Naam van een menu-item</strong><br />
+                    De naam van het menu-item kunt u helemaal zelf bepalen. Indien u wilt kunt u dezelfde naam gebruiken als de naam van de pagina waarnaar wordt verwezen, maar dit is niet verplicht. Kies een naam die past bij de inhoud, en gebruik termen die goed zijn voor zoekmachines.</p>
+
+                    <p><strong>Link van menu-item</strong><br />
+                    Een menu-item linkt naar een pagina of naar een eigen gedefinieerde externe/interne URL. Verschillende menu-items kunnen verwijzen naar dezelfde pagina of dezelfde URL.</p>
+
+                    <p><strong>Taal van een menu</strong><br />
+                    Een menu behoort alleen tot de geselecteerde taal; elke taal heeft dus zijn eigen menu. Hierdoor kunt u desgewenst een afwijkende menuindeling gebruiken in elke taalsectie.</p>
+                ]]></target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.menu_item.create.title">
+                <source>networking_init_cms.admin.menu_item.create.title</source>
+                <target>Een menu-item toevoegen</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.menu_item.create.text">
+                <source>networking_init_cms.admin.menu_item.create.text</source>
+                <target><![CDATA[
+                    <p>In het menu-overzicht vindt u de knop &quot;+ Item toevoegen&quot;. Wanneer u hierop klikt, kunt u een menu-item aanmaken binnen het geselecteerde menu.</p>
+
+                    <h2>Velden</h2>
+
+                    <p><strong>Naam</strong><br />
+                    De naam is verplicht en wordt getoond binnen uw menustructuur. Gebruik een naam die uw content het beste omschrijft.</p>
+
+                    <p><strong>Pagina</strong><br />
+                    De pagina is niet verplicht. U kunt een bestaande pagina kiezen, of handmatig een externe of interne URL invullen.</p>
+
+                    <p><strong>Externe URL</strong><br />
+                    De externe URL is niet verplicht. In plaats van een pagina te kiezen kunt u een volledige URL invullen, bijv. http://www.google.nl. U gebruikt dit om te verwijzen naar een andere website.</p>
+
+                    <p><strong>Interne URL</strong><br />
+                    De interne URL is niet verplicht. In plaats van een pagina te kiezen of een externe URL in te vullen, kunt u een interne URL invullen. Een interne URL bevat alles na het domein van uw website, bijv. /over-ons/geschiedenis. U dient relatieve links te gebruiken binnen uw eigen website.</p>
+
+                    <p><strong>+ Opties</strong><br />
+                    Klik op Opties voor de volgende mogelijkheden.</p>
+
+                    <p><strong>Zichtbaarheid</strong><br />
+                    Use the visibility setting to make the menu item public available or only in the secured area.</p>
+
+                    <p><strong>Doelvenster</strong><br />
+                    Define the target if you don&#39;t want that the page opens in the same window. There are multiple options to choose from.</p>
+
+                    <p><strong>CSS-klasse</strong><br />
+                    The link class your enter here will be added as a CSS styling option.</p>
+
+                    <p><strong>Link relatie</strong><br />
+                    This setting adds the &ldquo;rel&rdquo; attribute to your link. This can be useful when creating links which open a lightbox image gallery for example, or to trigger other javascript functionality.</p>
+
+                    <p><strong>Menu-item verbergen</strong><br />
+                    Indien u het menu-item wilt verbergen, maar toch wilt renderen. Dit wordt gebruikt in sommige situaties wanneer het bovenliggende menu-item als actief zichtbaar moet zijn.</p>
+                  ]]></target>
+            </trans-unit>
+
+            <!-- media -->
+
+            <trans-unit id="sonata.media.admin.media.list.title">
+                <source>sonata.media.admin.media.list.title</source>
+                <target>Media-overzicht</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.media.list.text">
+                <source>sonata.media.admin.media.list.text</source>
+                <target><![CDATA[
+                    <p>De mediasectie helpt u met het beheren van mediabestanden zoals afbeeldingen, video's, etc. Bovenaan de pagina kunt u de media filteren op basis van naam of tags. De verschillende tabbladen tonen de media context (zie hieronder), kies &quot;Standaard&quot; indien u niet weet wat u hier moet kiezen. Tenslotte volgt er een lijst met uw mediabestanden op basis van uw filters.</p>
+
+                    <h2>Mediacontext</h2>
+
+                    <p>Een context is een manier om verschillende type media te groeperen. Contexten zijn gedefinieerd in de configuratie van uw website; zo kan er ingesteld zijn welke type media zijn toegestaan in elke context en, in het geval van afbeeldingen, hoe de afbeeldingen uitgesneden moeten worden. Dit zorgt ervoor dat de juiste bestanden worden geupload en in het juiste formaat.</p>
+
+                    <h2>Mediatypen</h2>
+
+                    <p>Dit refereert naar de bestandsindeling of het type mediabestand, zoals:</p>
+
+                    <ul>
+                    	<li>Afbeelding (.jpg, .png)</li>
+                    	<li>PDF documenten (.pdf)</li>
+                    	<li>Video (h246, mpeg)</li>
+                    	<li>Audio (.mp3)</li>
+                    </ul>
+
+                    <p>Uw webmaster stelt deze voor u in.</p>
+                    ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.gallery.list.title">
+                <source>sonata.media.admin.gallery.list.title</source>
+                <target>Albums</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.gallery.list.text">
+                <source>sonata.media.admin.gallery.list.text</source>
+                <target><![CDATA[
+                    <p>De albums helpen u om een verzameling mediabestanden (meestal afbeeldingen) te presenteren op een pagina. U kunt eerst uw media uploaden en deze later selecteren tijdens het aanmaken van een album, of u upload uw bestanden tijdens het aanmaken van uw album.</p>
+
+                    <p>U kunt albums op een pagina plaatsen door deze als contentblok &ldquo;Fotoalbum&rdquo; toe te voegen.</p>
+
+                    <h2>Een album toevoegen</h2>
+
+                    <p>When you add a gallery you can also add media in the same step, so you don&#39;t have to go forth and back. The gallery consists of the following fields.</p>
+
+                    <p><strong>Enabled</strong><br />
+                    This flag can be used in your websites templates in order for the template to know if it should display the gallery or not. It is up to the template programmers as to how the field is used.</p>
+
+                    <p><strong>Name</strong><br />
+                    The name of the gallery. It will only be used internally, so you know which gallery you select for a page</p>
+
+                    <p><strong>Format</strong><br />
+                    Choose from different predefined formats. The formats define the size of the images and are predefined in your websites configuration. Your Webmaster is responsible for setting these up correctly at the beginning.</p>
+
+                    <p><strong>Media<br />
+                    ​</strong>Click &quot;+ Add new&quot; to add existing media or directly upload new media. You can even delete media from the gallery if necessary. You can come back any time to add or change media for a gallery.</p>
+                ]]></target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.tag.list.title">
+                <source>networking_init_cms.admin.tag.list.title</source>
+                <target>Media Tag</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.tag.list.text">
+                <source>networking_init_cms.admin.tag.list.text</source>
+                <target><![CDATA[
+                        <p>A media tag is a word or phrase, which you can freely create and associate to your media items. Media tags can then be used to filter all the media that is managed in the media library, you can then use the media tags to filter and find your way through large amounts of media quickly and easily</p>
+
+                        <p>Example tags might be &ldquo;holiday&rdquo; or &ldquo;portrait images&rdquo;. A media item can be associated with as many tags as you like.</p>
+                ]]></target>
+            </trans-unit>
+
+            <!-- user -->
+
+            <trans-unit id="sonata.user.admin.user.list.title">
+                <source>sonata.user.admin.user.list.title</source>
+                <target>Gebruikersoverzicht</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.user.list.text">
+                <source>sonata.user.admin.user.list.text</source>
+                <target><![CDATA[
+                    <p>Een gebruiker kan in het systeem inloggen met een gebruikersnaam/e-mailadres en een wachtwoord. Gebruikers hebben binnen de website verschillende rechten, een beheerder mag bijvoorbeeld pagina's toevoegen en publiceren, maar andere gebruikers hebben alleen rechten om bepaalde pagina's te mogen bekijken. U kunt een gebruiker specifieke rollen (rechten) geven door deze toe te kennen aan één of meer gebruikersgroepen. Lees het helpartikel over gebruikersgroepen om meer te lezen over rechten.</p>
+
+                    <h2>Lijst met gebruikers</h2>
+
+                    <p>De lijst met gebruikers biedt een overzicht met informatie over alle gebruikers. Elke regel beschrijft een andere gebruiker. Onderstaande lijst beschrijft alle kolommen van links naar rechts.</p>
+
+                    <p><strong>Gebruikersnaam</strong><br />
+                    De gebruikersnaam van een gebruiker wordt gebruikt om in te loggen.</p>
+
+                    <p><strong>E-mailadres</strong><br />
+                    Het email-adres van de gebruiker wordt gebruikt wanneer diegene zijn of haar wachtwoord is vergeten.</p>
+
+                    <p><strong>Groepen</strong><br />
+                    Een lijst met groepen waartoe deze gebruiker behoort. Een groep bevat één of meer rollen, zodat het gemakkelijk is om de juiste rechten toe te kennen aan uw gebruikers.</p>
+
+                    <p><strong>Ingeschakeld</strong><br />
+                    Dit geeft aan of het account is ingeschakeld (geactiveerd) of niet. Alleen ingeschakelde accounts kunnen gebruikt worden om in te loggen.</p>
+
+                    <p><strong>Als gebruiker voordoen</strong><br />
+                    Met deze functie kunt u snel inloggen als de geselecteerde gebruiker, door slechts op het icoon te klikken. Dit is handig bij customer support omdat u vanaf dat moment precies hetzelfde ziet als de betreffende gebruiker. Om deze functie te mogen gebruiken heeft u wel bepaalde rechten nodig.</p>
+
+                    <p><strong>Knop Wijzigen</strong><br />
+                    De knop Wijzigen bevat een potlood-icoon. Klik hierop om de gebruiker aan te passen.</p>
+
+                    <p><strong>Knop Verwijderen</strong><br />
+                    De knop Verwijderen bevat een prullenbak-icoon. Klik hierop om een gebruiker volledig te verwijderen.</p>
+
+                    <h2>Filter gebruikers</h2>
+
+                    <p>U kunt de lijst met gebruikers filteren aan de hand van enkele criteria. Wanneer u deze criteria invult en op de knop &quot;Filteren&quot; klikt kunt u snel de gebruiker(s) vinden die u zoekt. Wanneer u klikt op &quot;Filters leegmaken&quot; worden de filters gereset. Wanneer u klikt op &quot;Meer filteropties&quot; worden alle mogelijke criteria getoond.</p>
+
+                    <p><strong>Gebruikersnaam</strong><br />
+                    De eerste filter zoekt op gebruikersnaam.</p>
+
+                    <p><strong>Geblokkeerd</strong><br />
+                    Hiermee kunt u geblokkeerde accounts vinden. Een gebruikersaccount kan geblokkeerd zijn, wat betekent dat ze het systeem niet kunnen gebruiken. Dit kan geïmplementeerd zijn om veiligheidsredenen.</p>
+
+                    <p><strong>E-mailadres</strong><br />
+                    Vul een e-mailadres of een gedeelte daarvan in om aan de hand daarvan de betreffende gebruikers te vinden.</p>
+
+                    <p><strong>Groepen</strong><br />
+                    Kies een groep om op te zoeken (of uit te sluiten).</p>
+
+                    <h2>Een nieuwe gebruiker toevoegen</h2>
+
+                    <p>Om een nieuwe gebruiker toe te voegen, klikt u op de knop &quot;+ Gebruiker toevoegen&quot;. U krijgt een formulier te zien met een aantal velden, waarvan alleen de volgende velden verplicht zijn.</p>
+
+                    <p><strong>Gebruikersnaam</strong><br />
+                    De gebruikersnaam waarmee de gebruiker kan inloggen.</p>
+
+                    <p><strong>E-mailadres</strong><br />
+                    Het e-mailadres van de gebruiker, deze wordt gebruikt voor contact en notificaties.</p>
+
+                    <p><strong>Wachtwoord</strong><br />
+                    Het wachtwoordveld is alleen verplicht bij het toevoegen van een nieuwe gebruiker (dit kan sterk afhangen van de configuratie van uw website).</p>
+
+                    <p>De gebruiker heeft een groot aantal optionele velden zoals groepen, rollen, persoonlijke gegevens, social media profielen en een aantal beveiligingsgerelateerde velden. Vul de gewenste velden in en laat de overige velden leeg.</p>
+                 ]]></target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.group.list.title">
+                <source>sonata.user.admin.group.list.title</source>
+                <target>Groepenoverzicht</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.group.list.text">
+                <source>sonata.user.admin.group.list.text</source>
+                <target><![CDATA[
+                     <p>De gebruikersgroepen bieden de mogelijkheid om &quot;rollen&quot; (rechten) te beheren. Zoals genoemd in het gebruikersoverzicht kan een gebruiker tot één of meer groepen beheren.</p>
+
+                     <p>Een &quot;rol&quot; staat een gebruiker toe om bepaalde handelingen te mogen verrichten. Een gebruiker die bijvoorbeeld de rol &quot;ROLE_ADMIN&quot; heeft, mag inloggen in het CMS van uw website en een gebruiker met de rol &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot; mag pagina's aanmaken en zijn/haar eigen pagina's wijzigen en verwijderen.</p>
+
+                     <p>Door een gebruikersgroep specifieke rollen toe te kennen behoeft u later alleen de juiste gebruikers in de juiste groepen te plaatsen, in plaats van alle afzonderlijke rollen toe te kennen aan elke gebruiker. Ook is het zo dat als u een rol wilt wijzigen, zal één wijziging in de gebruikersgroep invloed hebben op alle gebruikers binnen die groep.</p>
+
+                     <h2>Lijst met groepen</h2>
+
+                     <p><strong>Naam</strong><br />
+                     De naam van de gebruikersgroep, bijv. &quot;Redacteur&quot; of &quot;Tekstschrijver&quot;</p>
+
+                     <p><strong>Rollen</strong><br />
+                     Een lijst met de rollen die zijn toegekend aan deze gebruikersgroep. Vaak is deze lijst te lang om te worden weergegeven in het overzicht.</p>
+
+                     <h2>Filter groepen</h2>
+
+                     <p><strong>Naam</strong><br />
+                     Filter groepen op naam.</p>
+
+                     <h2>Een nieuwe gebruikersgroep toevoegen</h2>
+
+                     <p>Om een nieuwe gebruikersgroep toe te voegen, klikt u op de knop &quot;+ Groep toevoegen&quot;. Het formulier toont een tekstveld voor de naam, gevolgd door een lijst met selectievakjes voor alle beschikbare rollen (rechten).</p>
+
+                     <p>Indien u niet duidelijk is wat de rollen betekenen, kunt u uw webmaster raadplegen voor assistentie of het inrichten van de door u gewenste groep(en).</p>
+
+                 ]]></target>
+            </trans-unit>
+
+            <!-- default -->
+
+            <trans-unit id="not_found.title">
+                <source>not_found.title</source>
+                <target>Sorry, voor deze pagina is geen hulpartikel beschikbaar.</target>
+            </trans-unit>
+            <trans-unit id="not_found.text">
+                <source>not_found.text</source>
+                <target>
+                    <![CDATA[ <strong>We hebben geen specifiek hulpartikel kunnen vinden. Hopelijk kunt u nuttige informatie vinden via het menu aan de linkerzijde. We proberen de helpsectie aan te vullen en verontschuldigen ons voor het ongemak.</strong> ]]></target>
+            </trans-unit>
+            <trans-unit id="help_text.label">
+                <source>help_text.label</source>
+                <target>Help Texts</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
