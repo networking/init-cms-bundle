@@ -166,7 +166,7 @@ abstract class MediaAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('custom', 'string', array('template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig'));
+            ->add('custom', 'string', array('template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig','label'=>'list.label_media'));
 
         if ($this->request->get('pcode') == '') {
             $listMapper->add(
@@ -191,8 +191,8 @@ abstract class MediaAdmin extends Admin
     {
 
         $datagridMapper
-            ->add('name', 'networking_init_cms_simple_string');
-        //->add('tags', null, array('hidden' => true));Hack by Marc
+            ->add('name', 'networking_init_cms_simple_string')
+            ->add('tags', null, array('hidden' => true));
 
         if ($context) {
             $datagridMapper->add('context', null, array('hidden' => true));

@@ -320,6 +320,10 @@
                 <source>list.label_custom</source>
                 <target>Custom</target>
             </trans-unit>
+            <trans-unit id="list.label_media">
+                <source>list.label_media</source>
+                <target>Media</target>
+            </trans-unit>
             <trans-unit id="filter.label_name">
                 <source>filter.label_name</source>
                 <target>Name</target>
@@ -346,6 +350,10 @@
             <trans-unit id="form.label_binary_content">
                 <source>form.label_binary_content</source>
                 <target>File</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube">
+                <source>form.label_binary_content_youtube</source>
+                <target>Youtube Link</target>
             </trans-unit>
             <trans-unit id="sonata_media">
                 <source>sonata_media</source>
