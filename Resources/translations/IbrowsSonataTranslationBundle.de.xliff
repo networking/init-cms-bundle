@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="breadcrumb.link_trans_unit_list">
+                <source>breadcrumb.link_trans_unit_list</source>
+                <target><![CDATA[<small>Organisieren Sie Ihre </small> ]]> Übersetzungen</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Neue Übersetzung hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="filter.label_key">
+                <source>filter.label_key</source>
+                <target>Kennzeichnung</target>
+            </trans-unit>
+            <trans-unit id="filter.label_translations_content">
+                <source>filter.label_translations_content</source>
+                <target>Übersetzte Inhalt</target>
+            </trans-unit>
+            <trans-unit id="filter.label_domain">
+                <source>filter.label_domain</source>
+                <target>Übersetzungsgebiet</target>
+            </trans-unit>
+            <trans-unit id="form.label_key">
+                <source>form.label_key</source>
+                <target>Kennzeichnung</target>
+            </trans-unit>
+            <trans-unit id="form.label_translations_content">
+                <source>form.label_translations_content</source>
+                <target>Übersetzte Inhalt</target>
+            </trans-unit>
+            <trans-unit id="form.label_domain">
+                <source>form.label_domain</source>
+                <target>Übersetzungsgebiet</target>
+            </trans-unit>
+            <trans-unit id="translation.domain.all_choices">
+                <source>translation.domain.all_choices</source>
+                <target>Alle Gebiete</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

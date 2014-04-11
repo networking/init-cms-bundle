@@ -23,6 +23,14 @@ use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
  */
 class TranslationAdmin extends ORMTranslationAdmin
 {
+
+    /**
+     * Whether or not to persist the filters in the session
+     *
+     * @var boolean
+     */
+    protected $persistFilters = true;
+
     /**
      * {@inheritdoc}
      */
@@ -30,6 +38,7 @@ class TranslationAdmin extends ORMTranslationAdmin
     {
         $filter
             ->add('key', 'doctrine_orm_string')
+            ->add('translations.content', 'doctrine_orm_string')
             ->add(
                 'domain',
                 'doctrine_orm_choice',
@@ -38,7 +47,7 @@ class TranslationAdmin extends ORMTranslationAdmin
                 array(
                     'choices' => $this->getDomains(),
                     'empty_data' => true,
-                    'empty_value' => '-'
+                    'empty_value' => $this->trans('translation.domain.all_choices', array(), $this->getTranslationDomain())
                 )
             );
     }
@@ -49,7 +58,11 @@ class TranslationAdmin extends ORMTranslationAdmin
     protected function configureListFields(ListMapper $list)
     {
         $list
-            ->add('key', 'string')
+            ->addIdentifier(
+                'key',
+                'string',
+                array('template' => 'SandboxInitCmsBundle:CRUD:translation_key_field.html.twig')
+            )
             ->add('domain', 'string');
 
         foreach ($this->managedLocales as $locale) {
@@ -61,6 +74,50 @@ class TranslationAdmin extends ORMTranslationAdmin
             $fieldDescription->setOption('editable', $this->editableOptions);
             $list->add($fieldDescription);
         }
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getFilterParameters()
+    {
+        $parameters = array();
+
+        // build the values array
+        if ($this->hasRequest()) {
+            $filters = $this->request->query->get('filter', array());
+
+            // if persisting filters, save filters to session, or pull them out of session if no new filters set
+            if ($this->persistFilters) {
+                if ($filters == array() && $this->request->query->get('filters') != 'reset') {
+                    $filters = $this->request->getSession()->get($this->getCode() . '.filter.parameters', array());
+                } else {
+                    $this->request->getSession()->set($this->getCode() . '.filter.parameters', $filters);
+                }
+            }
+
+            $parameters = array_merge(
+                $this->getModelManager()->getDefaultSortValues($this->getClass()),
+                $this->datagridValues,
+                $filters
+            );
+
+            if (!$this->determinedPerPageValue($parameters['_per_page'])) {
+                $parameters['_per_page'] = $this->maxPerPage;
+            }
+
+            // always force the parent value
+            if ($this->isChild() && $this->getParentAssociationMapping()) {
+                $parameters[$this->getParentAssociationMapping()] = array(
+                    'value' => $this->request->get(
+                            $this->getParent()->getIdParameter()
+                        )
+                );
+            }
+        }
+
+        return $parameters;
     }
 
     /**
