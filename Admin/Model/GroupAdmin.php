@@ -9,6 +9,7 @@
  */
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\UserBundle\Admin\Entity\GroupAdmin as SonataGroupAdmin;
 use Sonata\AdminBundle\Form\FormMapper;
 
@@ -50,6 +51,27 @@ abstract class GroupAdmin extends SonataGroupAdmin
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function configureListFields(ListMapper $listMapper)
+    {
+        $listMapper
+            ->addIdentifier('name');
+
+        $listMapper->add(
+                   '_action',
+                   'actions',
+                   array(
+                       'label' => ' ',
+                       'actions' => array(
+                           'edit' => array(),
+                           'delete' => array()
+                       )
+                   )
+               );
+    }
+
+    /**
      * @return string
      */
     public function getIcon()
@@ -65,13 +87,13 @@ abstract class GroupAdmin extends SonataGroupAdmin
         $formMapper
             ->add('name')
             ->add(
-            'roles',
-            'sonata_security_roles',
-            array(
-                'expanded' => true,
-                'multiple' => true,
-                'required' => false
-            )
-        );
+                'roles',
+                'sonata_security_roles',
+                array(
+                    'expanded' => true,
+                    'multiple' => true,
+                    'required' => false
+                )
+            );
     }
 }
