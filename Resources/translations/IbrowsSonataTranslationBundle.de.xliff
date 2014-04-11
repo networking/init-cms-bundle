@@ -34,6 +34,18 @@
                 <source>form.label_domain</source>
                 <target>Übersetzungsgebiet</target>
             </trans-unit>
+            <trans-unit id="list.label_key">
+                <source>list.label_key</source>
+                <target>Kennzeichnung</target>
+            </trans-unit>
+            <trans-unit id="list.label_translations_content">
+                <source>list.label_translations_content</source>
+                <target>Übersetzte Inhalt</target>
+            </trans-unit>
+            <trans-unit id="list.label_domain">
+                <source>list.label_domain</source>
+                <target>Übersetzungsgebiet</target>
+            </trans-unit>
             <trans-unit id="translation.domain.all_choices">
                 <source>translation.domain.all_choices</source>
                 <target>Alle Gebiete</target>

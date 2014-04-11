@@ -310,7 +310,7 @@ abstract class PageAdmin extends BaseAdmin
         $formMapper->end();
         // end of group: page_settings
         $formMapper
-            ->with('meta_settings', array('collapsed' => true))
+            ->with('meta_settings')
             ->add('metaTitle', null, array('help_inline' => 'meta_title.helper.text'))
             ->add('metaKeyword')
             ->add('metaDescription')
@@ -451,7 +451,7 @@ abstract class PageAdmin extends BaseAdmin
     {
 
         $listMapper
-            ->addIdentifier(
+            ->add(
                 'adminTitle',
                 'string',
                 array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig')
@@ -470,7 +470,6 @@ abstract class PageAdmin extends BaseAdmin
                 null,
                 array(
                     'sortable' => false,
-                    'template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig'
                 )
             );
 

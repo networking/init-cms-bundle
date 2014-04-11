@@ -15,6 +15,6 @@ file that was distributed with this source code.
     {%- if value is empty -%}
         &nbsp;
     {%- else -%}
-        {{ value|date }}
+        <span class="show-tooltip" data-original-title="{{value|date}}">{{ value|date }}</span>
     {%- endif -%}
 {% endblock %}

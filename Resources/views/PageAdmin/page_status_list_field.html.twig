@@ -11,5 +11,5 @@ file that was distributed with this source code.
 {% extends 'NetworkingInitCmsBundle:CRUD:base_list_field.html.twig' %}
 
 {% block field %}
-    <span class="{% if object.status == 'status_draft' %}color-draft{% elseif object.status == 'status_review' %}color-review{% else %}info-soft{% endif %}">{{ value|trans({}, admin.translationDomain) }}</span>
+    <span class="{% if object.status == 'status_draft' %}color-draft{% elseif object.status == 'status_review' %}color-review{% else %}info-soft{% endif %} show-tooltip" data-original-title="{{ value|trans({}, admin.translationDomain) }}">{{ value|trans({}, admin.translationDomain) }}</span>
 {% endblock %}

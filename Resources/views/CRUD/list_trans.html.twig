@@ -12,8 +12,8 @@ file that was distributed with this source code.
 
 {% block field%}
     {% if field_description.options.catalogue is not defined %}
-        {{value|trans}}
+        <span class="show-tooltip" data-original-title="{{value|trans}}">{{value|trans}}</span>
     {% else %}
-        {{value|trans({}, field_description.options.catalogue)}}
+        <span class="show-tooltip" data-original-title="{{value|trans({}, field_description.options.catalogue)}}">{{value|trans({}, field_description.options.catalogue)}}</span>
     {% endif %}
 {% endblock %}

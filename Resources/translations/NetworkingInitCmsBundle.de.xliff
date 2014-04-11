@@ -20,7 +20,7 @@
             </trans-unit>
             <trans-unit id="link.go_to_list">
                 <source>link.go_to_list</source>
-                <target>Gehe zu %admin_label% Liste</target>
+                <target>Zurück zur Liste</target>
             </trans-unit>
             <trans-unit id="link.website_status_published">
                 <source>link.website_status_published</source>
@@ -70,9 +70,13 @@
                 <source>btn_create</source>
                 <target>Erstellen</target>
             </trans-unit>
+            <trans-unit id="btn_loading">
+                <source>btn_loading</source>
+                <target>In Verabeitung...</target>
+            </trans-unit>
             <trans-unit id="btn_filter">
                 <source>btn_filter</source>
-                <target>Filter</target>
+                <target>Suchen</target>
             </trans-unit>
             <trans-unit id="btn_cancel">
                 <source>btn_cancel</source>

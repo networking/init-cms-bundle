@@ -15,6 +15,7 @@ use Ibrows\SonataTranslationBundle\Admin\ORMTranslationAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+use Symfony\Component\Intl\Intl;
 
 /**
  * Class TranslationAdmin
@@ -58,20 +59,23 @@ class TranslationAdmin extends ORMTranslationAdmin
     protected function configureListFields(ListMapper $list)
     {
         $list
-            ->addIdentifier(
+            ->add(
                 'key',
-                'string',
-                array('template' => 'SandboxInitCmsBundle:CRUD:translation_key_field.html.twig')
+                'string'
             )
             ->add('domain', 'string');
 
         foreach ($this->managedLocales as $locale) {
+
+            $localeList = Intl::getLocaleBundle()->getLocaleNames(substr($this->request->getLocale(), 0, 2));
+
             $fieldDescription = $this->modelManager->getNewFieldDescriptionInstance($this->getClass(), $locale);
             $fieldDescription->setTemplate(
                 'IbrowsSonataTranslationBundle:CRUD:base_inline_translation_field.html.twig'
             );
             $fieldDescription->setOption('locale', $locale);
             $fieldDescription->setOption('editable', $this->editableOptions);
+            $fieldDescription->setOption('label', $localeList[$locale]);
             $list->add($fieldDescription);
         }
     }

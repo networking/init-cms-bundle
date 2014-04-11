@@ -27,12 +27,15 @@ file that was distributed with this source code.
         event.stopPropagation();
         var form = jQuery(this).closest('form');
         var url = form.action
+        var btn = jQuery(this);
+        btn.button('loading');
         jQuery(form).ajaxSubmit({
             url:form.action,
             type:"POST",
             dataType:'json',
             data:{ _xml_http_request:true },
             success:function (xhr) {
+                btn.button('reset');
                 if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
                     jQuery('.page_status').addClass('color-draft');
                 } else {

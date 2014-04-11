@@ -10,7 +10,6 @@ file that was distributed with this source code.
 #}
 {% extends 'NetworkingInitCmsBundle:CRUD:base_list_field.html.twig' %}
 
-{% block field %}
-    <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}" class="link-page-edit show-tooltip"
-       data-page_id="{{ admin.id(object) }}" data-original-title="{{ value }}">{{ value }}</a>
+{% block field%}
+        <span class="show-tooltip" data-original-title="{{value}}" >{{value}}</span>
 {% endblock %}
