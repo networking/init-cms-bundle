@@ -24,11 +24,11 @@
             </trans-unit>
             <trans-unit id="link.website_status_published">
                 <source>link.website_status_published</source>
-                <target>Website: veröffentlicht </target>
+                <target>Website: Live Modus </target>
             </trans-unit>
             <trans-unit id="link.website_status_draft">
                 <source>link.website_status_draft</source>
-                <target>Website: Entwurf</target>
+                <target>Website: Preview Modus</target>
             </trans-unit>
                 <trans-unit id="link.show_more_actions">
                 <source>link.show_more_actions</source>
@@ -44,7 +44,7 @@
             </trans-unit>
             <trans-unit id="link_reset_filter">
                 <source>link_reset_filter</source>
-                <target>Löschen</target>
+                <target>Suche Filter Löschen</target>
             </trans-unit>
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
@@ -217,6 +217,18 @@
             <trans-unit id="translation.title">
                 <source>translation.title</source>
                 <target>Übersetzung</target>
+            </trans-unit>
+            <trans-unit id="view_website.status_draft">
+                <source>view_website.status_draft</source>
+                <target>Website Preview Modus</target>
+            </trans-unit>
+            <trans-unit id="view_website.status_published">
+                <source>view_website.status_published</source>
+                <target>Website Live Modus</target>
+            </trans-unit>
+            <trans-unit id="view_website">
+                <source>view_website</source>
+                <target>Website Preview Modus</target>
             </trans-unit>
         </body>
     </file>

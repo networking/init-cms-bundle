@@ -21,13 +21,13 @@ file that was distributed with this source code.
     {% if admin.datagrid.filters and not app.request.isxmlhttprequest %}
         {% set pageAdmin = admin.getConfigurationPool.getAdminByAdminCode('networking_init_cms.admin.page') %}
         {% if page_id is defined and page_id %}
-                <div class="pull-right">
-                    <a class="btn btn-custom btn-small"
-                       href="{{ path( pageAdmin.getBaseRouteName() ~'_edit', {'id': page_id}) }}">&larr; Back to page</a>
-                </div>
+            <div class="pull-right">
+                <a class="btn btn-custom btn-small"
+                   href="{{ path( pageAdmin.getBaseRouteName() ~'_edit', {'id': page_id}) }}">&larr; Back to page</a>
+            </div>
             <p class="clearfix">&nbsp;</p>
-            {% endif %}
-        <form action="{{ admin.generateUrl('list') }}" method="GET" class="form-inline filters menu-filter">
+        {% endif %}
+        <form action="{{ admin.generateUrl('list') }}" method="GET" class="form-horizontal filters menu-filter">
 
             {% set filter_main = '' %}
             {% set filter_hidden = '' %}
@@ -36,40 +36,42 @@ file that was distributed with this source code.
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
                     {{ filter_main }}
-                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium'}}) }}
+                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium' }}) }}
                     {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
                     {% endset %}
                 {% else %}
                     {% set filter_hidden %}
                     {{ filter_hidden }}
                     <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium'}}) }}
-                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium'}}) }}
+                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium' }}) }}
+                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}) }}
                     {% endset %}
                 {% endif %}
             {% endfor %}
             {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
 
             <div>
-                <div class="pull-left form-inline ">
-                    <strong>{{ 'info.filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</strong>
-                    {{ filter_main }}
-                    <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
-                    {% set foo = form.children['_page'].setRendered() %}
-                    {{ form_rest(form) }}
+                <div class="pull-left">
+                    <fieldset class="filter_legend">
+                        <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</p>
+                        {{ filter_main }}
+                        <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                        {% set foo = form.children['_page'].setRendered() %}
+                        {{ form_rest(form) }}
 
-                    <input type="submit" class="btn btn-small"
-                                          value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                        <input type="submit" class="btn btn-small"
+                               value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
 
-                    <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}" class="link-underlined">
-                        {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}
-                    </a>
-                    {% if filter_hidden %}
-                        <a data-toggle="collapse" data-target="#hidden_filters">
-                            <i class="icon-caret-right" id="filter_toggle"></i>
-                            {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
+                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}" class="link-underlined">
+                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}
                         </a>
-                    {% endif %}
+                        {% if filter_hidden %}
+                            <a data-toggle="collapse" data-target="#hidden_filters">
+                                <i class="icon-caret-right" id="filter_toggle"></i>
+                                {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
+                            </a>
+                        {% endif %}
+                    </fieldset>
                 </div>
                 <div class="clearfix">&nbsp;</div>
             </div>
@@ -96,6 +98,7 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-    <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}"
+            type="text/javascript"></script>
     {% include "NetworkingInitCmsBundle:MenuItemAdmin:menu_list_script.html.twig" %}
 {% endblock %}

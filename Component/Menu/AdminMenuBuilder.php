@@ -112,13 +112,26 @@ class AdminMenuBuilder extends MenuBuilder
                     'networking_init_view_draft',
                     array('locale' => $language, 'path' => base64_encode($draftRoute))
                 );
+            }else{
+
+                $draftPath = $this->router->generate(
+                    'networking_init_view_draft',
+                    array('locale' => $language, 'path' => base64_encode($this->request->getBaseUrl()))
+                );
             }
             if ($liveRoute) {
                 $livePath = $this->router->generate(
                     'networking_init_view_live',
                     array('locale' => $language, 'path' => base64_encode($liveRoute))
                 );
+            }else{
+                $livePath = $this->router->generate(
+                    'networking_init_view_live',
+                    array('locale' => $language, 'path' => base64_encode($this->request->getBaseUrl()))
+                );
+
             }
+
 
             $session = $this->request->getSession();
             $lastActionUrl = $dashboardUrl;
@@ -168,7 +181,7 @@ class AdminMenuBuilder extends MenuBuilder
 
             $viewStatus = $this->request->getSession()->get('_viewStatus');
             $translator = $this->translator;
-            $webLink = $translator->trans('link.website_', array(), 'NetworkingInitCmsBundle');
+            $webLink = $translator->trans('link.website_' . $viewStatus, array(), 'NetworkingInitCmsBundle');
 
             if ($editPath && !$sonataAdmin) {
                 $webLink = $translator->trans('link.website_' . $viewStatus, array(), 'NetworkingInitCmsBundle');
@@ -183,16 +196,17 @@ class AdminMenuBuilder extends MenuBuilder
 
             if ($draftPath) {
                 $dropdown->addChild(
-                    'Draft view',
+                    $translator->trans('view_website.status_draft', array(), 'NetworkingInitCmsBundle'),
                     array('uri' => $draftPath, 'linkAttributes' => array('class' => 'color-draft'))
                 );
             }
             if ($livePath) {
-                $dropdown->addChild('Live view', array('uri' => $livePath));
+                $dropdown->addChild($translator->trans('view_website.status_published', array(), 'NetworkingInitCmsBundle'), array('uri' => $livePath));
             }
 
             if (!$draftPath && !$livePath) {
-                $dropdown->addChild('Home Page', array('uri' => $defaultHome));
+                $dropdown->addChild($translator->trans('view_website.status_draft', array(), 'NetworkingInitCmsBundle'), array('uri' => $defaultHome, 'linkAttributes' => array('class' => 'color-draft')));
+                $dropdown->addChild($translator->trans('view_website.status_published', array(), 'NetworkingInitCmsBundle'), array('uri' => $defaultHome));
             }
 
         }
