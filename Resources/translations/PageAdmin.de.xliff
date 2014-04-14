@@ -211,7 +211,7 @@
             </trans-unit>
             <trans-unit id="button.publish">
                 <source>button.publish</source>
-                <target>Veröffentlichung</target>
+                <target>Veröffentlichen</target>
             </trans-unit>
             <trans-unit id="title.cancel_draft">
                 <source>title.cancel_draft</source>
