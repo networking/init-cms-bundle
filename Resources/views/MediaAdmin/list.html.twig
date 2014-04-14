@@ -69,10 +69,7 @@ file that was distributed with this source code.
                                 {# create button #}
                             {% if galleryListMode is defined and not galleryListMode %}
                                 <h1><span class="info-soft">{{ name|trans({}) }}</span>
-                                    <a class="btn btn-primary btn-small menu-dialog-link"
-                                       href="{{ admin.generateUrl('create', {'context' : name, 'provider' : null}) }}">
-                                        <i class="icon-plus icon-white"></i> {{ 'button.create.menu_item'|trans({}, 'MenuItemAdmin') }}
-                                    </a>
+                                        {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
                                 </h1>
                             {% endif %}
 
