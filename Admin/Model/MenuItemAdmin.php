@@ -166,7 +166,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                 ->with(
                     'Options',
                     array(
-                        'collapsed' => true,
+                        'collapsed' => false,
                         'description' => $this->translator->trans(
                                 'form.legend_options',
                                 array(),
