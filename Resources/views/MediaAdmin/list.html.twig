@@ -201,7 +201,7 @@ file that was distributed with this source code.
 
                                             {% for format in admin.getExportFormats() %}
                                                     <a
-                                                    href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(attribute(datagrid, name), 0) + {'format' : format}) }}">{{ format }}</a>{% if not loop.last %},{% endif %}
+                                                    href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(attribute(datagrid, name), 0) + {'format' : format}) }}" class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
                                             {% endfor %}
                                         </p>
                                     {% endif %}
