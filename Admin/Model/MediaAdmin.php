@@ -126,15 +126,25 @@ abstract class MediaAdmin extends Admin
             $provider->buildCreateForm($formMapper);
         }
 
-        if ($media->getId() && $media->getProviderName() == 'sonata.media.provider.image') {
+        if ($media->getId() && ($media->getProviderName() == 'sonata.media.provider.image' || $media->getProviderName() == 'sonata.media.provider.youtube')) {
 
             $formMapper->remove('binaryContent','file');
 
-            $formMapper->add(
-                'image','networking_type_mediaprint', array('required' => false)
-            );
+            if($media->getProviderName() == 'sonata.media.provider.youtube'){
 
-            $formMapper->add('binaryContent', 'file', array('required' => false,'label' => 'form.label_binary_content_new'));
+                $formMapper->add(
+                'image','networking_type_mediaprint', array('required' => false,'label' =>'form.label_current_video')
+                );
+
+                $formMapper->add('binaryContent', 'text', array('required' => false,'label' => 'form.label_binary_content_youtube_new'));
+            }
+            else{
+                $formMapper->add(
+                    'image','networking_type_mediaprint', array('required' => false)
+                );
+
+                $formMapper->add('binaryContent', 'file', array('required' => false,'label' => 'form.label_binary_content_new'));
+            }
 
             //
         }

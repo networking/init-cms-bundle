@@ -382,6 +382,14 @@
                  <source>form.label_binary_content_new</source>
                  <target>New File</target>
             </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube_new">
+                <source>form.label_binary_content_youtube:new</source>
+                <target>New Youtube Link</target>
+            </trans-unit>
+            <trans-unit id="form.label_current_video">
+                <source>form.label_current_video</source>
+                <target>Current Video</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
