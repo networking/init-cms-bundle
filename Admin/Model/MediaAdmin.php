@@ -118,11 +118,27 @@ abstract class MediaAdmin extends Admin
         );
         $provider = $this->pool->getProvider($media->getProviderName());
 
+
+
         if ($media->getId()) {
             $provider->buildEditForm($formMapper);
         } else {
             $provider->buildCreateForm($formMapper);
         }
+
+        if ($media->getId() && $media->getProviderName() == 'sonata.media.provider.image') {
+
+            $formMapper->remove('binaryContent','file');
+
+            $formMapper->add(
+                'image','networking_type_mediaprint', array('required' => false)
+            );
+
+            $formMapper->add('binaryContent', 'file', array('required' => false,'label' => 'form.label_binary_content_new'));
+
+            //
+        }
+
         $formMapper->add(
             'locale',
             'choice',
@@ -130,6 +146,10 @@ abstract class MediaAdmin extends Admin
                 'choices' => $this->getLocaleChoices(),
             )
         );
+
+
+
+
 
         if ($formMapper->has('enabled')) {
             $formMapper->add(

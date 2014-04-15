@@ -112,4 +112,24 @@ class Media extends BaseMedia
     {
         return $this->locale;
     }
+
+
+    /**
+     * Getter Used in Form(field:networking_type_mediaprint)
+     *
+     * @return integer $id
+     */
+    public function getImage()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * fake setter
+     * @return $this
+     */
+    public function setImage()
+    {
+        return $this;
+    }
 }

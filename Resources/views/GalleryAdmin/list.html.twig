@@ -273,7 +273,7 @@ file that was distributed with this source code.
     {% if not app.request.isxmlhttprequest %}
         {% set name = 'default' %}
         {% if attribute(mediaform, name) %}
-            <form action="{{ admin.generateUrl('list') }}" method="GET" class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters media-filter">
+            <form action="{{ admin.generateUrl('list') }}" method="GET" class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
 
                 <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
                 {% if persistent_parameters.provider is defined %}

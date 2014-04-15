@@ -388,6 +388,11 @@ file that was distributed with this source code.
     </script>
 {% endblock %}
 
+{% block networking_type_mediaprint_widget %}
+    {% thumbnail get_media_by_id(value), 'small' %}
+{% endblock %}
+
+
 {% block form_message %}
     {% spaceless %}
         {{ block('form_help') }}

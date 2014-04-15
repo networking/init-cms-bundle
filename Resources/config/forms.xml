@@ -13,6 +13,10 @@
             <tag name="form.type" alias="networking_type_autocomplete"/>
         </service>
 
+        <service id="networking_init_cms.form.type.printmedia" class="Networking\InitCmsBundle\Form\Type\MediaPrintType">
+            <tag name="form.type" alias="networking_type_mediaprint"/>
+        </service>
+
         <service id="networking_init_cms.form.type.iconradio" class="Networking\InitCmsBundle\Form\Type\IconradioType">
             <argument>%networking_init_cms.page.templates%</argument>
             <tag name="form.type" alias="networking_type_iconradio"/>

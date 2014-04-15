@@ -379,6 +379,14 @@
                 <source>form.label_locale</source>
                 <target>Document language</target>
             </trans-unit>
+            <trans-unit id="form.label_image">
+                <source>form.label_image</source>
+                <target>Current Image</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_new">
+                <source>form.label_binary_content_new</source>
+                <target>New File</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

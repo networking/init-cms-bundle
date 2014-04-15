@@ -142,6 +142,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             'is_admin_active' => new \Twig_Function_Method($this, 'isAdminActive', array('is_safe' => array('html'))),
             'is_admin_group_active' => new \Twig_Function_Method($this, 'isAdminGroupActive', array('is_safe' => array('html'))),
             'get_initcms_page_url' => new \Twig_Function_Method($this, 'getPageUrl', array('is_safe' => array('html'))),
+            'get_media_by_id' => new \Twig_Function_Method($this, 'getMediaById', array('is_safe' => array('html'))),
         );
     }
 
@@ -1079,6 +1080,13 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         }
 
 
+    }
+
+    public function getMediaById($id)
+    {
+        $repo = $this->getService('doctrine')->getRepository('NetworkingInitCmsBundle:Media');
+
+        return $repo->find($id);
     }
 }
 
