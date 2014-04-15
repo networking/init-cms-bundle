@@ -28,7 +28,6 @@ file that was distributed with this source code.
             <p class="clearfix">&nbsp;</p>
         {% endif %}
         <form action="{{ admin.generateUrl('list') }}" method="GET" class="form-horizontal filters menu-filter">
-
             {% set filter_main = '' %}
             {% set filter_hidden = '' %}
             {% for filter in admin.datagrid.filters %}

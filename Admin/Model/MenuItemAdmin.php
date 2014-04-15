@@ -70,6 +70,18 @@ abstract class MenuItemAdmin extends BaseAdmin
             array('_method' => 'GET|POST', 'rootId', 'pageId')
         );
         $collection->add('ajaxController', 'ajax_navigation', array(), array('_method' => 'GET|POST'));
+        $collection->add(
+            'newPlacement',
+            'new_placement/{newMenuItemId}/{menuItemId}',
+            array(),
+            array('_method' => 'GET|POST', 'newMenuItemId', 'menuItemId')
+        );
+        $collection->add(
+            'placement',
+            'placement',
+            array(),
+            array('_method' => 'GET|POST')
+        );
     }
 
     /**
@@ -150,9 +162,10 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'query_builder' => function (EntityRepository $er) use ($locale) {
                                 $qb = $er->createQueryBuilder('p');
 
-                                 $qb->where('p.locale = :locale')
+                                $qb->where('p.locale = :locale')
                                     ->orderBy('p.path', 'asc')
                                     ->setParameter(':locale', $locale);
+
                                 return $qb;
                             },
                     )
@@ -314,6 +327,9 @@ abstract class MenuItemAdmin extends BaseAdmin
         switch ($name) {
             case 'list':
                 return 'NetworkingInitCmsBundle:MenuItemAdmin:menu_list.html.twig';
+                break;
+            case 'placement':
+                return 'NetworkingInitCmsBundle:MenuItemAdmin:placement.html.twig';
                 break;
             default:
                 return parent::getTemplate($name);
