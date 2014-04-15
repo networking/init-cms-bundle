@@ -399,6 +399,14 @@
                 <source>form.label_binary_content_youtube</source>
                 <target>Youtube Link</target>
             </trans-unit>
+            <trans-unit id="button.create.media_item">
+                <source>button.create.media_item</source>
+                <target>Add Object</target>
+            </trans-unit>
+            <trans-unit id=" button.create.gallery_item">
+                <source>button.create.gallery_item</source>
+                <target>Add Gallery</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
