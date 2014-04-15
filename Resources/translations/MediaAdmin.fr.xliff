@@ -378,6 +378,10 @@
                  <source>form.label_image</source>
                  <target>Current Image</target>
             </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube">
+                <source>form.label_binary_content_youtube</source>
+                <target>Youtube Link</target>
+            </trans-unit>
             <trans-unit id="form.label_binary_content_new">
                  <source>form.label_binary_content_new</source>
                  <target>New File</target>
@@ -389,6 +393,10 @@
             <trans-unit id="form.label_current_video">
                 <source>form.label_current_video</source>
                 <target>Current Video</target>
+            </trans-unit>
+            <trans-unit id="filter.label_author_name">
+                <source>filter.label_author_name</source>
+                <target>Author</target>
             </trans-unit>
         </body>
     </file>

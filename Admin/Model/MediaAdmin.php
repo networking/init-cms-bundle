@@ -222,7 +222,8 @@ abstract class MediaAdmin extends Admin
 
         $datagridMapper
             ->add('name', 'networking_init_cms_simple_string')
-            ->add('tags', null, array('hidden' => true));
+            ->add('tags', null, array('hidden' => true))
+            ->add('authorName', null, array('hidden' => true));
 
         if ($context) {
             $datagridMapper->add('context', null, array('hidden' => true));

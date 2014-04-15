@@ -351,10 +351,6 @@
                 <source>form.label_binary_content</source>
                 <target>Datei</target>
             </trans-unit>
-            <trans-unit id="form.label_binary_content_youtube">
-                <source>form.label_binary_content_youtube</source>
-                <target>Youtube Link</target>
-            </trans-unit>
             <trans-unit id="sonata_media">
                 <source>sonata_media</source>
                 <target>Medien</target>
@@ -394,6 +390,14 @@
             <trans-unit id="form.label_current_video">
                 <source>form.label_current_video</source>
                 <target>Aktuelles Video</target>
+            </trans-unit>
+            <trans-unit id="filter.label_author_name">
+                <source>filter.label_author_name</source>
+                <target>Author</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube">
+                <source>form.label_binary_content_youtube</source>
+                <target>Youtube Link</target>
             </trans-unit>
         </body>
     </file>

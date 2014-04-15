@@ -11,7 +11,7 @@ file that was distributed with this source code.
 {% set last_edited = app.session.get('MenuItem.last_edited') %}
 {% set pageAdmin = admin.getConfigurationPool.getAdminByAdminCode('networking_init_cms.admin.page') %}
 <div class="menu_item {% if last_edited == node.id %}info{% endif %}">
-    <div class="pull-left text" style="margin-right: 10px;"><i class="icon-move"></i> <a class=" menu-dialog-link"
+    <div class="pull-left text" style="margin-right: 10px;"><i class="icon-move cursor-pointer"></i> <a class=" menu-dialog-link"
                                                                                          href="{{ admin.generateUrl('edit', {id: node.id}) }}">{{ node.name }}</a>
     </div>
     <div class="pull-right text menu-item-link"><span style="color:#999;">
