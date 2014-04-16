@@ -75,7 +75,7 @@ file that was distributed with this source code.
                             <td>
                                 <input type="checkbox" id="list_batch_checkbox" name="all_elements"/>
                             </td>
-                            <td colspan="{{ admin.list.elements|length }}">
+                            <td colspan="{{ admin.list.elements|length -1 }}">
                                 <label for="list_batch_checkbox"><strong>{{ 'all_elements'|trans({}, 'SonataAdminBundle') }}</strong></label>
                             </td>
                         </tr>
