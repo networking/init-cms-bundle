@@ -70,6 +70,16 @@ file that was distributed with this source code.
                             {% endfor %}
                         </tr>
                     {% endfor %}
+                    {% if batchactions|length > 0 %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" id="list_batch_checkbox" name="all_elements"/>
+                            </td>
+                            <td colspan="{{ admin.list.elements|length }}">
+                                <label for="list_batch_checkbox"><strong>{{ 'all_elements'|trans({}, 'SonataAdminBundle') }}</strong></label>
+                            </td>
+                        </tr>
+                    {% endif %}
                     </tbody>
                 {% endblock %}
 
@@ -262,16 +272,12 @@ file that was distributed with this source code.
                 $('#list_batch_checkbox').click(function () {
                     $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
                 });
-                $("div.initcms-list-actions input[type='checkbox']").change(function () {
-                    $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
-                });
             });
             {% endblock %}
         </script>
 
         <div class="actions initcms-list-actions">
             {% block batch_actions %}
-                <input type="checkbox" name="all_elements"/>
                 {% if csrf_token is defined %}
                     <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}" />
                 {% endif %}
