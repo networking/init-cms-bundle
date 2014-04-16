@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="info.filter">
                 <source>info.filter</source>
-                <target>Filter %admin_label%:</target>
+                <target>Suchen:</target>
             </trans-unit>
             <trans-unit id="link.website_">
                 <source>link.website_</source>
@@ -40,11 +40,11 @@
             </trans-unit>
             <trans-unit id="link.show_more_filters">
                 <source>link.show_more_filters</source>
-                <target>Weitere Filter-Optionen </target>
+                <target>Weitere Such-Optionen </target>
             </trans-unit>
             <trans-unit id="link_reset_filter">
                 <source>link_reset_filter</source>
-                <target>Suche Filter Löschen</target>
+                <target>Suche zurücksetzen</target>
             </trans-unit>
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
