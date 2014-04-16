@@ -19,8 +19,7 @@
                 <argument type="service" id="networking_init_cms.page_manager"/>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="Pages"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"
-                 persis_filters="true"/>
+                 label_translator_strategy="sonata.admin.label.strategy.underscore" />
         </service>
 
         <!-- Layout Block Admin-->

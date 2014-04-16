@@ -18,12 +18,23 @@ function initializeDialog() {
     if (!menuDialog) {
         menuDialog = jQuery('#menu_dialog');
         menuDialog.modal({
-            height:'auto',
-            width:650,
-            show:false,
-            title:'{{ 'menu.title'|trans({}, admin.translationDomain) }}'
+            height: 'auto',
+            width: 650,
+            show: false,
+            title: '{{ 'menu.title'|trans({}, admin.translationDomain) }}'
         });
         menuDialog.on('hide', function () {
+            jQuery.ajax({
+               url: '{{ admin.generateUrl('list', {'render': true}) }}',
+               dataType: 'html',
+               success: function(html){
+                   jQuery('#menuTabs').html(html);
+                   setUpSortTree();
+                   if (lastTab) {
+                       jQuery('a[href="' + lastTab + '"]').tab('show');
+                   }
+               }
+            });
             jQuery('input[type=submit]', this).off();
         });
         jQuery(document.body).append(menuDialog);
@@ -44,10 +55,10 @@ function createAjaxDialog(event) {
     }
 
     jQuery.ajax({
-        url:url,
-        dataType:'html',
-        data:{'locale':jQuery('#filter_locale_value').val()},
-        success:function (html) {
+        url: url,
+        dataType: 'html',
+        data: {'locale': jQuery('#filter_locale_value').val()},
+        success: function (html) {
             // populate the popup container
             menuDialog.html(html);
             menuDialog.modal('show');
@@ -62,29 +73,27 @@ function submitAjaxForm(event) {
     var form = jQuery(this);
 
     jQuery(form).ajaxSubmit({
-        type:form.attr('method'),
-        url:form.attr('action'),
-        dataType:'json',
-        success:function (xhr) {
+        type: form.attr('method'),
+        url: form.attr('action'),
+        dataType: 'json',
+        success: function (xhr) {
             if (xhr.result == 'ok') {
-                jQuery('#menuTabs').html(xhr.html);
-                createInitCmsMessageBox(xhr.status, xhr.message);
-                setUpSortTree();
-                menuDialog.modal('hide');
-
-                if (lastTab) {
-                    jQuery('a[href="' + lastTab + '"]').tab('show');
+                if (xhr.is_new_menu_item && xhr.html) {
+                    menuDialog.html(xhr.html);
+                } else {
+                    menuDialog.modal('hide');
+                    createInitCmsMessageBox(xhr.status, xhr.message);
                 }
             }
         },
-        error:function(xhr, textStatus, errorThrown) {
+        error: function (xhr, textStatus, errorThrown) {
             menuDialog.html(xhr.responseText);
         }
     });
 }
 
 function updateMenu(e) {
-    var nodeArray = jQuery(e).nestedSortable('toArray', {startDepthCount:0});
+    var nodeArray = jQuery(e).nestedSortable('toArray', {startDepthCount: 0});
 
 }
 
@@ -98,19 +107,19 @@ function setUpSortTree() {
 
     jQuery('div.navigation').each(function (e, ui) {
         jQuery(ui).find('ul:first').nestedSortable({
-            disableNesting:'no-nest',
-            forcePlaceholderSize:true,
-            handle:'i.icon-move',
-            tolerance:'pointer',
+            disableNesting: 'no-nest',
+            forcePlaceholderSize: true,
+            handle: 'i.icon-move',
+            tolerance: 'pointer',
             toleranceElement: '> div',
-            helper:'clone',
-            items:'li',
-            listType:'ul',
-            opacity:.6,
-            placeholder:'placeholder',
-            revert:250,
-            tabSize:20,
-            update:function (e, ui) {
+            helper: 'clone',
+            items: 'li',
+            listType: 'ul',
+            opacity: .6,
+            placeholder: 'placeholder',
+            revert: 250,
+            tabSize: 20,
+            update: function (e, ui) {
                 updateMenu(this)
             }
         });
@@ -118,7 +127,28 @@ function setUpSortTree() {
 
 }
 
-jQuery(function() {
+function saveSibling(url) {
+    jQuery.ajax({
+        url: url,
+        dataType: 'json',
+        success: function (xhr) {
+            if (xhr.result == 'ok') {
+                menuDialog.modal('hide');
+                createInitCmsMessageBox(xhr.status, xhr.message);
+                if (lastTab) {
+                    jQuery('a[href="' + lastTab + '"]').tab('show');
+                }
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            createInitCmsMessageBox('error', xhr.responseText);
+            setUpSortTree();
+            menuDialog.modal('hide');
+        }
+    });
+}
+
+jQuery(function () {
 
     var ua = navigator.userAgent,
             event = (ua.match(/iPad/i)) ? "touchstart" : "click";
@@ -135,7 +165,7 @@ jQuery(function() {
     jQuery('.menu-dialog-link').live('click', createAjaxDialog);
 
     var nestedExtensions = {
-        toArray:function (options) {
+        toArray: function (options) {
 
             var o = $.extend({}, this.options, options),
                     sDepth = o.startDepthCount || 0,
@@ -156,9 +186,9 @@ jQuery(function() {
                     "{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}",
                     {
 
-                        "nodes":ret
+                        "nodes": ret
                     },
-                    function(xhr){
+                    function (xhr) {
                         createInitCmsMessageBox('success', xhr.message);
                     }
             );
@@ -192,7 +222,7 @@ jQuery(function() {
                 }
 
                 if (id) {
-                    ret.push({"item_id":id[2], "parent_id":pid, "depth":depth, "left":left, "right":right});
+                    ret.push({"item_id": id[2], "parent_id": pid, "depth": depth, "left": left, "right": right});
                 }
 
                 left = right + 1;

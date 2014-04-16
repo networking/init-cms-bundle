@@ -1,0 +1,10 @@
+<div class="stop" style="line-height: 1px; width: 500px">
+    <ul style="display: none; ">
+        <li class="table-row-style list_item placeholder" style="padding: 10px;">
+                <a class="colored-link  menu_place_holder"  href="javascript:;"
+                   onclick="saveSibling('{{ admin.generateUrl('newPlacement', {'newMenuItemId': last_edited, 'menuItemId': node.id, 'sibling':true }) }}')">
+                    + {{ 'menu_item.add_here'|trans({}, admin.translationDomain) }}</a>
+        </li>
+    </ul>
+</div>
+</li>
