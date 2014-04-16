@@ -33,6 +33,10 @@
                 <source>breadcrumb.link_media_create</source>
                 <target>Erstellen</target>
             </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Neue Medien hinzufügen</target>
+            </trans-unit>
             <trans-unit id="breadcrumb.link_media_list">
                 <source>breadcrumb.link_media_list</source>
                 <target><![CDATA[<small>Achten Sie auf Ihre</small>]]> Medien</target>
