@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="button.create.menu_item">
                 <source>button.create.menu_item</source>
-                <target>Menu Punkt hinzufügen</target>
+                <target>Menüpunkt hinzufügen</target>
             </trans-unit>
             <trans-unit id="legend.menu.actions">
                 <source>legend.menu.actions</source>
@@ -179,6 +179,26 @@
             <trans-unit id="menu.label">
                 <source>menu.label</source>
                 <target>Menüs</target>
+            </trans-unit>
+            <trans-unit id="placement_title">
+                <source>placement_title</source>
+                <target>Menüpunkt einordnern</target>
+            </trans-unit>
+            <trans-unit id="menu_item.add_here">
+                <source>menu_item.add_here</source>
+                <target>Menüpunkt hier platzieren</target>
+            </trans-unit>
+            <trans-unit id="action_edit">
+                <source>action_edit</source>
+                <target>Menüpunkt bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="action_delete">
+                <source>action_delete</source>
+                <target>Menüpunkt löschen</target>
+            </trans-unit>
+            <trans-unit id="action_page_edit">
+                <source>action_page_edit</source>
+                <target>Seite bearbeiten</target>
             </trans-unit>
         </body>
     </file>

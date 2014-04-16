@@ -25,15 +25,15 @@ function initializeDialog() {
         });
         menuDialog.on('hide', function () {
             jQuery.ajax({
-               url: '{{ admin.generateUrl('list', {'render': true}) }}',
-               dataType: 'html',
-               success: function(html){
-                   jQuery('#menuTabs').html(html);
-                   setUpSortTree();
-                   if (lastTab) {
-                       jQuery('a[href="' + lastTab + '"]').tab('show');
-                   }
-               }
+                url: '{{ admin.generateUrl('list', {'render': true}) }}',
+                dataType: 'html',
+                success: function (html) {
+                    jQuery('#menuTabs').html(html);
+                    setUpSortTree();
+                    if (lastTab) {
+                        jQuery('a[href="' + lastTab + '"]').tab('show');
+                    }
+                }
             });
             jQuery('input[type=submit]', this).off();
         });
@@ -247,7 +247,7 @@ jQuery(function () {
         lastTab = '#' + tab.attr('id');
         jQuery('a[href="' + lastTab + '"]').tab('show');
     }
-
+    $('.show-tooltip').tooltip({placement: 'bottom', delay: { show: 800, hide: 100 }});
 
     jQuery('#hidden_filters').on('show hide', function () {
         jQuery('#filter_toggle').toggleClass('icon-plus');
