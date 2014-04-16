@@ -48,7 +48,7 @@ file that was distributed with this source code.
                                 {% endif %}
 
                                 {% spaceless %}
-                                    <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
+                                    <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if loop.index in [1,2] %}nowrap {% endif %} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
                                         {% if sortable %}<a
                                                 href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
                                             {{ admin.trans(field_description.label) }}
