@@ -8,5 +8,8 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-<label>{{- field|trans({}, translation_domain) -}}</label>
-<div class="value-display break-word">{{ value }}</div>
+{% extends 'NetworkingInitCmsBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field%}
+        <span class="show-tooltip" data-original-title="{{value}}" >{{value}}</span>
+{% endblock %}

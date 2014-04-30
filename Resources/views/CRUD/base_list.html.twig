@@ -35,7 +35,7 @@ file that was distributed with this source code.
                         {% for field_description in admin.list.elements %}
                             {% if field_description.getOption('code') == '_batch' and batchactions|length > 0 %}
                                 <th class="sonata-ba-list-field-header sonata-ba-list-field-header-batch">
-                                    <input type="checkbox" id="list_batch_checkbox"/>
+                                    {#<input type="checkbox" id="list_batch_checkbox"/>#}
                                 </th>
                             {% else %}
                                 {% set sortable = false %}
@@ -48,7 +48,7 @@ file that was distributed with this source code.
                                 {% endif %}
 
                                 {% spaceless %}
-                                    <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
+                                    <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if loop.index in [1,2] %}nowrap {% endif %} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
                                         {% if sortable %}<a
                                                 href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
                                             {{ admin.trans(field_description.label) }}
@@ -70,6 +70,16 @@ file that was distributed with this source code.
                             {% endfor %}
                         </tr>
                     {% endfor %}
+                    {% if batchactions|length > 0 %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" id="list_batch_checkbox" name="all_elements"/>
+                            </td>
+                            <td colspan="{{ admin.list.elements|length -1 }}">
+                                <label for="list_batch_checkbox"><strong>{{ 'all_elements'|trans({}, 'SonataAdminBundle') }}</strong></label>
+                            </td>
+                        </tr>
+                    {% endif %}
                     </tbody>
                 {% endblock %}
 
@@ -147,7 +157,7 @@ file that was distributed with this source code.
                 <p> {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}:
                     {% for format in admin.getExportFormats() %}
                         <a
-                        href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">{{ format }}</a>{% if not loop.last %},{% endif %}
+                        href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}" class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
                     {% endfor %}
                 </p>
             {% endif %}
@@ -236,7 +246,7 @@ file that was distributed with this source code.
                                     {{ form_rest(form) }}
                                     {% if filter_hidden %}
                                         <a data-toggle="collapse" data-target="#hidden_filters" id="filter_toggle"
-                                           class="filter-close">
+                                           class="filter-close cursor-pointer">
                                             {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
                                         </a>
                                     {% endif %}
@@ -262,16 +272,12 @@ file that was distributed with this source code.
                 $('#list_batch_checkbox').click(function () {
                     $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
                 });
-                $("div.initcms-list-actions input[type='checkbox']").change(function () {
-                    $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
-                });
             });
             {% endblock %}
         </script>
 
         <div class="actions initcms-list-actions">
             {% block batch_actions %}
-                <input type="checkbox" name="all_elements"/>
                 {% if csrf_token is defined %}
                     <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}" />
                 {% endif %}

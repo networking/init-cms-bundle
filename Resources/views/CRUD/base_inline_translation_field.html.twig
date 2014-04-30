@@ -1,0 +1,55 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+<td class="sonata-ba-list-field sonata-ba-list-field-{{ field_description.type }} word-break" objectId="{{ admin.id(object) }}">
+{% set locale = field_description.options.locale %}
+{% set translation = null %}
+{% for trans in object.translations %}
+    {% if trans.locale == locale %}
+        {% set translation = trans %}
+    {% endif %}
+{% endfor %}
+{% set id = 'transunit'~'-'~object.id~'-'~locale %}
+{% set pk = translation.id|default('') %}
+{% set content = translation.content|default('') %}
+<a href="#" id="{{ id }}" data-pk="{{ pk }}" style="overflow: hidden;">
+    {%- block field %}{{ content }}{% endblock -%}
+</a>
+
+{% if admin.isGranted('EDIT', object) %}
+{% set options = field_description.options.editable %}
+<script>
+    jQuery('#{{ id }}').editable({
+        mode: "{{ options.mode }}",
+        type: "{{ options.type }}",
+        emptytext: "{{ options.emptytext }}",
+        placement: "{{ options.placement }}",
+        url: {{ admin.generateObjectUrl(field_description.options.route.name, object, field_description.options.route.parameters)|json_encode|raw }},
+        name: {{ object.key|json_encode|raw }},
+        params: function(params) {
+            // make sure pk is always loaded from element
+            params.pk = jQuery(this).attr('data-pk');
+            params.locale = {{ locale|json_encode|raw }};
+            return params;
+        },
+        error: function(response) {
+            response = JSON.parse(response.responseText);
+            return response ? response.message : response;
+        },
+        success: function(response, newValue) {
+            jQuery(this).attr('data-pk', response.pk);
+            return response;
+        },
+        value: {{ content|json_encode|raw }}
+    });
+</script>
+{% endif %}
+</td>

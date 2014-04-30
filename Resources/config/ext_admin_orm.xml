@@ -38,7 +38,8 @@
                 <argument>%lexik_translation.managed_locales%</argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" group="group.translation" label="translation.title"
-                 label_catalogue="IbrowsSonataTranslationBundle"/>
+                 label_catalogue="IbrowsSonataTranslationBundle"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
         </service>
 
         <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%">
@@ -64,7 +65,7 @@
                     <argument key="ajax">NetworkingInitCmsBundle::ajax_layout.html.twig</argument>
                 </argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" group="sonata_media" label="Media"
+            <tag name="sonata.admin" manager_type="orm" group="sonata_media" label="media"
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
         </service>
@@ -86,7 +87,7 @@
                     <argument key="ajax">NetworkingInitCmsBundle::ajax_layout.html.twig</argument>
                 </argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" group="sonata_media" label="Gallery"
+            <tag name="sonata.admin" manager_type="orm" group="sonata_media" label="gallery"
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
         </service>

@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="info.filter">
                 <source>info.filter</source>
-                <target>Filter %admin_label%:</target>
+                <target>Suchen:</target>
             </trans-unit>
             <trans-unit id="link.website_">
                 <source>link.website_</source>
@@ -20,15 +20,15 @@
             </trans-unit>
             <trans-unit id="link.go_to_list">
                 <source>link.go_to_list</source>
-                <target>Gehe zu %admin_label% Liste</target>
+                <target>Zurück zur Liste</target>
             </trans-unit>
             <trans-unit id="link.website_status_published">
                 <source>link.website_status_published</source>
-                <target>Website: veröffentlicht </target>
+                <target>Website: Live Modus </target>
             </trans-unit>
             <trans-unit id="link.website_status_draft">
                 <source>link.website_status_draft</source>
-                <target>Website: Entwurf</target>
+                <target>Website: Preview Modus</target>
             </trans-unit>
                 <trans-unit id="link.show_more_actions">
                 <source>link.show_more_actions</source>
@@ -40,15 +40,15 @@
             </trans-unit>
             <trans-unit id="link.show_more_filters">
                 <source>link.show_more_filters</source>
-                <target>Weitere Filter-Optionen </target>
+                <target>Weitere Such-Optionen </target>
             </trans-unit>
             <trans-unit id="link_reset_filter">
                 <source>link_reset_filter</source>
-                <target>Löschen</target>
+                <target>Suche zurücksetzen</target>
             </trans-unit>
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
-                <target>%admin_label% Hinzufügen</target>
+                <target>Hinzufügen</target>
             </trans-unit>
             <trans-unit id="link_delete">
                 <source>link_delete</source>
@@ -70,9 +70,13 @@
                 <source>btn_create</source>
                 <target>Erstellen</target>
             </trans-unit>
+            <trans-unit id="btn_loading">
+                <source>btn_loading</source>
+                <target>In Verabeitung...</target>
+            </trans-unit>
             <trans-unit id="btn_filter">
                 <source>btn_filter</source>
-                <target>Filter</target>
+                <target>Suchen</target>
             </trans-unit>
             <trans-unit id="btn_cancel">
                 <source>btn_cancel</source>
@@ -80,15 +84,15 @@
             </trans-unit>
             <trans-unit id="btn_preview">
                 <source>btn_preview</source>
-                <target>Vorschau%admin_label%</target>
+                <target>Vorschau</target>
             </trans-unit>
             <trans-unit id="btn_update_and_edit_again">
                 <source>btn_update_and_edit_again</source>
-                <target> %admin_label% Aktualisieren </target>
+                <target> Aktualisieren </target>
             </trans-unit>
             <trans-unit id="btn_update_and_return_to_list">
                 <source>btn_update_and_return_to_list</source>
-                <target> %admin_label% Aktualisieren und zurück zur Liste </target>
+                <target> Aktualisieren und zurück zur Liste </target>
             </trans-unit>
             <trans-unit id="delete_or">
                 <source>delete_or</source>
@@ -96,15 +100,15 @@
             </trans-unit>
             <trans-unit id="btn_create_and_edit_again">
                 <source>btn_create_and_edit_again</source>
-                <target> %admin_label% hinzufügen und bearbeiten.</target>
+                <target> Hinzufügen und bearbeiten.</target>
             </trans-unit>
             <trans-unit id="btn_create_and_return_to_list">
                 <source>btn_create_and_return_to_list</source>
-                <target> %admin_label% hinzufügen und zurück zur Liste </target>
+                <target> Hinzufügen und zurück zur Liste </target>
             </trans-unit>
             <trans-unit id="btn_create_and_create_a_new_one">
                 <source>btn_create_and_create_a_new_one</source>
-                <target> %admin_label% hinzufügen und einen weiteren erstellen </target>
+                <target> Hinzufügen und einen weiteren erstellen </target>
             </trans-unit>
             <trans-unit id="no_result">
                 <source>no_result</source>
@@ -205,6 +209,26 @@
             <trans-unit id="toggle.roles">
                 <source>toggle.roles</source>
                 <target>Alle/Keinen Rollen Auswählen</target>
+            </trans-unit>
+            <trans-unit id="translations.cache_removed">
+                <source>translations.cache_removed</source>
+                <target>Übersetzung Cache wurde erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="translation.title">
+                <source>translation.title</source>
+                <target>Übersetzung</target>
+            </trans-unit>
+            <trans-unit id="view_website.status_draft">
+                <source>view_website.status_draft</source>
+                <target>Website Preview Modus</target>
+            </trans-unit>
+            <trans-unit id="view_website.status_published">
+                <source>view_website.status_published</source>
+                <target>Website Live Modus</target>
+            </trans-unit>
+            <trans-unit id="view_website">
+                <source>view_website</source>
+                <target>Website Preview Modus</target>
             </trans-unit>
         </body>
     </file>

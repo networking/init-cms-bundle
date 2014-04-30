@@ -550,6 +550,10 @@
                 <source>pages.content_not_found</source>
                 <target>Content element could no longer be located</target>
             </trans-unit>
+            <trans-unit id="templateName">
+                <source>templateName</source>
+                <target>Template Name</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -73,6 +73,8 @@ var field_add_{{ id }} = function (event) {
 
     jQuery('#contentTypeModal').bind('initcms.create_block', function (event) {
         if (jQuery(this).data('create')) {
+            jQuery('#contentLoading').show();
+            jQuery('#createContentButton').button('loading');
             var classType = jQuery('#selectContentType').val();
             var liItem = jQuery(addLink).closest('li');
             var zone = liItem.find("[id$='_zone']").val();
@@ -113,7 +115,6 @@ function start_save_content{{ id }}(link) {
 }
 
 function doAjaxSubmit(url, form, data) {
-
     data['_xml_http_request'] = true;
     // the ajax post
     jQuery(form).ajaxSubmit({
@@ -141,10 +142,12 @@ function doAjaxSubmit(url, form, data) {
                         }
                     });
                     jQuery('#contentTypeModal').modal('hide');
+                    jQuery('#createContentButton').button('reset');
                     jQuery(value).modal('show');
 
                 }
             });
+            jQuery('#contentLoading').hide();
             saveLayoutBlockSort();
         }
     });

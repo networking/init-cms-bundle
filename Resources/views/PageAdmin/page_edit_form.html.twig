@@ -80,7 +80,7 @@ file that was distributed with this source code.
         <div class="span7">
                     <div class="row">
                         <div class="span6">
-                            <h1>
+                            <h1 class="break-word">
                                 {% if block('title') is not empty %}
                                     {{ block('title')|raw }}
                                 {% elseif action is defined %}
@@ -146,7 +146,7 @@ file that was distributed with this source code.
                         <div id="collapseOne" class="accordion-body collapse">
                             <div class="accordion-inner">
                                 <div id="translationSettings">
-                                    {% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig' %}
+                                    <p class="info-soft">{% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig' %}</p>
                                 </div>
                             </div>
                         </div>
@@ -191,8 +191,7 @@ file that was distributed with this source code.
         {% block sonata_post_fieldsets %}{% endblock %}
 
         <!-- start modal page form -->
-        <div class="modal form-horizontal" id="pageSettingFields"
-             style="display: none"
+        <div class="modal hide form-horizontal" id="pageSettingFields"
              role="dialog" aria-labelledby="{{ "legend.page_settings"|trans({}, admin.translationDomain) }}"
              aria-hidden="true">
             <div class="modal-header">
@@ -225,7 +224,7 @@ file that was distributed with this source code.
                             {% endif %}
                         </legend>
 
-                        <div class="collapse" id="nav-collapse-meta">
+                        <div {% if form_group.collapsed %}class="collapse in" id="nav-collapse-meta"{% endif %}>
 
                             {% for field_name in form_group.fields %}
                                 {% if admin.formfielddescriptions[field_name] is defined %}
@@ -242,11 +241,11 @@ file that was distributed with this source code.
                     {% if admin.id(object) %}
                         <button class="btn" data-dismiss="modal"
                                 aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
-                        <input type="submit" class="btn btn-primary" name="btn_update"
-                               value="{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}"/>
+                        <button type="submit" class="btn btn-primary" name="btn_update"
+                               data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}">{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}</button>
                     {% else %}
-                        <input type="submit" class="btn" name="btn_create"
-                               value="{{ 'btn_create'|trans({}, 'SonataAdminBundle') }}"/>
+                        <button type="submit" class="btn" name="btn_create"
+                               data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}">{{ 'btn_create'|trans({}, 'SonataAdminBundle') }}}</button>
                     {% endif %}
                 {% else %}
                     {% if admin.supportsPreviewMode %}
@@ -258,11 +257,13 @@ file that was distributed with this source code.
                                 aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                         <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
                                onclick="return start_save_page_settings(this);"
+                               data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}"
                                value="{{ 'btn_update_and_edit_again'|trans({}, 'SonataAdminBundle') }}"/>
                     {% else %}
                         <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
                                value="{{ 'btn_create_and_edit_again'|trans({}, 'SonataAdminBundle') }}"/>
                         <input class="btn" type="submit" name="btn_create_and_create"
+                               data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}"
                                value="{{ 'btn_create_and_create_a_new_one'|trans({}, 'SonataAdminBundle') }}"/>
                     {% endif %}
                 {% endif %}

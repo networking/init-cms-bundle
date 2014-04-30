@@ -14,6 +14,6 @@ file that was distributed with this source code.
     {%- if value is empty -%}
         &nbsp;
     {%- else -%}
-        {{ value|date('F j, Y') }}
+        <span class="show-tooltip" data-original-title="{{ value|date('F j, Y') }}">{{ value|date('F j, Y') }}</span>
     {%- endif -%}
 {% endblock %}

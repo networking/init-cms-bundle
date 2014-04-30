@@ -50,7 +50,7 @@
                                     {% endif %}
                                 </div>
                                 <a href="{{ admin.generateUrl('list') }}">
-                                    <div class="pull-left first-level-text">{{ group.label|trans({}, admin.translationDomain) }}</div>
+                                    <div class="pull-left first-level-text">{{ group.label|lower|trans({}, admin.translationDomain) }}</div>
                                 </a>
                                 {% if isActive %}
                                     <div class="pull-right" style="position:relative;">
@@ -87,7 +87,7 @@
                                     {% endif %}
                                 </div>
                                 <a href="{{ admin.generateUrl('list') }}" class="pull-left first-level-text">
-                                    {{ group.label|trans({}, admin.translationDomain) }}
+                                    {{ group.label|lower|trans({}, admin.translationDomain) }}
                                 </a>
                                 <!-- open subnav -->
 
@@ -104,7 +104,7 @@
 
                             {% if groupActive %}
                                 <li class=" {% if currentAdmin.code == admin.code %}active{% endif %} second-level ">
-                                    <a href="{{ admin.generateUrl('list') }}">{{ admin.label|trans({}, admin.translationDomain) }}</a>
+                                    <a href="{{ admin.generateUrl('list') }}">{{ admin.label|lower|trans({}, admin.translationDomain) }}</a>
                                 </li>
                             {% endif %}
 

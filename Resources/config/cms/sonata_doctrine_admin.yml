@@ -8,9 +8,9 @@ sonata_doctrine_orm_admin:
                 date:       NetworkingInitCmsBundle:CRUD:list_date.html.twig
                 time:       NetworkingInitCmsBundle:CRUD:list_time.html.twig
                 datetime:   NetworkingInitCmsBundle:CRUD:list_datetime.html.twig
-                text:       NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                text:       NetworkingInitCmsBundle:CRUD:list_string.html.twig
                 trans:      NetworkingInitCmsBundle:CRUD:list_trans.html.twig
-                string:     NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                string:     NetworkingInitCmsBundle:CRUD:list_string.html.twig
                 smallint:   NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
                 bigint:     NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
                 integer:    NetworkingInitCmsBundle:CRUD:base_list_field.html.twig

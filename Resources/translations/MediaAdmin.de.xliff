@@ -33,6 +33,10 @@
                 <source>breadcrumb.link_media_create</source>
                 <target>Erstellen</target>
             </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Neue Medien hinzufügen</target>
+            </trans-unit>
             <trans-unit id="breadcrumb.link_media_list">
                 <source>breadcrumb.link_media_list</source>
                 <target><![CDATA[<small>Achten Sie auf Ihre</small>]]> Medien</target>
@@ -320,6 +324,10 @@
                 <source>list.label_custom</source>
                 <target>Benutzerdefiniert</target>
             </trans-unit>
+            <trans-unit id="list.label_media">
+                <source>list.label_media</source>
+                <target>Medien</target>
+            </trans-unit>
             <trans-unit id="filter.label_name">
                 <source>filter.label_name</source>
                 <target>Name</target>
@@ -347,10 +355,9 @@
                 <source>form.label_binary_content</source>
                 <target>Datei</target>
             </trans-unit>
-
             <trans-unit id="sonata_media">
                 <source>sonata_media</source>
-                <target>Medienbibliothek </target>
+                <target>Medien</target>
             </trans-unit>
             <trans-unit id="filter.label_tags">
                 <source>filter.label_tags</source>
@@ -371,6 +378,38 @@
             <trans-unit id="form.label_locale">
                 <source>form.label_locale</source>
                 <target>Dokument Sprache</target>
+            </trans-unit>
+            <trans-unit id="form.label_image">
+                <source>form.label_image</source>
+                <target>Current Image</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_new">
+                <source>form.label_binary_content_new</source>
+                <target>New File</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube_new">
+                <source>form.label_binary_content_youtube:new</source>
+                <target>Neuer Youtube Link</target>
+            </trans-unit>
+            <trans-unit id="form.label_current_video">
+                <source>form.label_current_video</source>
+                <target>Aktuelles Video</target>
+            </trans-unit>
+            <trans-unit id="filter.label_author_name">
+                <source>filter.label_author_name</source>
+                <target>Author</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube">
+                <source>form.label_binary_content_youtube</source>
+                <target>Youtube Link</target>
+            </trans-unit>
+            <trans-unit id="button.create.media_item">
+                <source>button.create.media_item</source>
+                <target>Add Object</target>
+            </trans-unit>
+            <trans-unit id=" button.create.gallery_item">
+                <source>button.create.gallery_item</source>
+                <target>Add Gallery</target>
             </trans-unit>
         </body>
     </file>

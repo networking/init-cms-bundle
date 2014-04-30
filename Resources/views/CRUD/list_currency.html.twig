@@ -13,6 +13,6 @@ file that was distributed with this source code.
 
 {% block field %}
     {% if value is not null %}
-        {{ field_description.options.currency }} {{ value }}
+        <span class="show-tooltip" data-original-title="{{value}}">{{ field_description.options.currency }} {{ value }}</span>
     {% endif %}
 {% endblock %}

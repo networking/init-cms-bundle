@@ -26,6 +26,8 @@ use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
  */
 class MenuItemAdminController extends CRUDController
 {
+    protected $isNewMenuItem = false;
+
     /**
      * @var string
      */
@@ -34,7 +36,7 @@ class MenuItemAdminController extends CRUDController
     /**
      * {@inheritdoc}
      */
-    public function listAction($pageId = false, $menuId = false)
+    public function listAction($pageId = false, $menuId = false, $ajaxTemplate = 'menu_tabs', $rootMenuId = null)
     {
 
         if (false === $this->admin->isGranted('LIST')) {
@@ -51,6 +53,7 @@ class MenuItemAdminController extends CRUDController
                 $this->get('session')->set('MenuItem.last_edited', $menuId);
             }
         }
+
 
         $this->get('session')->set('admin/last_page_id', $pageId);
 
@@ -126,22 +129,41 @@ class MenuItemAdminController extends CRUDController
         };
 
         foreach ($rootNodes as $rootNode) {
-            $navigation = $menuItemManager->childrenHierarchy(
-                $rootNode,
-                null,
-                array(
-                    'rootOpen' => '<ul class="table-row-style">',
-                    'decorate' => true,
-                    'childOpen' => $childOpen,
-                    'childClose' => '</li>',
-                    'nodeDecorator' => $nodeDecorator
-                ),
-                false
-            );
-            $menus[] = array(
-                'rootNode' => $rootNode,
-                'navigation' => $navigation
-            );
+
+
+            if ($rootMenuId) {
+                if ($rootMenuId == $rootNode->getId()) {
+
+                    $menus = array(
+                        'rootNode' => $rootNode,
+                        'navigation' => $this->createNotLastEditedNavigation(
+                                $rootNode,
+                                $admin,
+                                $controller,
+                                $menuItemManager
+                            ),
+                    );
+                    break;
+                }
+            } else {
+                $navigation = $menuItemManager->childrenHierarchy(
+                    $rootNode,
+                    null,
+                    array(
+                        'rootOpen' => '<ul class="table-row-style">',
+                        'decorate' => true,
+                        'childOpen' => $childOpen,
+                        'childClose' => '</li>',
+                        'nodeDecorator' => $nodeDecorator
+                    ),
+                    false
+                );
+                $menus[] = array(
+                    'rootNode' => $rootNode,
+                    'navigation' => $navigation
+                );
+            }
+
 
         }
 
@@ -165,14 +187,25 @@ class MenuItemAdminController extends CRUDController
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
         if ($this->isXmlHttpRequest()) {
-            return $this->renderView(
-                'NetworkingInitCmsBundle:MenuItemAdmin:menu_tabs.html.twig',
-                array(
-                    'menus' => $menus,
-                    'admin' => $this->admin,
-                    'page_id' => $pageId
-                )
-            );
+            if ($this->getRequest()->get('render')) {
+                return $this->render(
+                    'NetworkingInitCmsBundle:MenuItemAdmin:' . $ajaxTemplate . '.html.twig',
+                    array(
+                        'menus' => $menus,
+                        'admin' => $this->admin,
+                        'page_id' => $pageId
+                    )
+                );
+            } else {
+                return $this->renderView(
+                    'NetworkingInitCmsBundle:MenuItemAdmin:' . $ajaxTemplate . '.html.twig',
+                    array(
+                        'menus' => $menus,
+                        'admin' => $this->admin,
+                        'page_id' => $pageId
+                    )
+                );
+            }
         }
 
 
@@ -200,6 +233,13 @@ class MenuItemAdminController extends CRUDController
         if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
             if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
                 throw new AccessDeniedException();
+            }
+        }
+
+        if ($this->getRequest()->get('subclass') == 'menu item') {
+            $this->isNewMenuItem = true;
+            if ($this->getRequest()->get('root_id')) {
+                $this->get('session')->set('root_menu_id', $this->getRequest()->get('root_id'));
             }
         }
 
@@ -385,17 +425,22 @@ class MenuItemAdminController extends CRUDController
 
         $data = json_decode($response->getContent(), true);
 
-        $data['html'] = $this->listAction($this->get('session')->get('admin/last_page_id'));
 
         if (!array_key_exists('message', $data)) {
             //getFlashBag()->get('notice'
             if ($message = $this->get('session')->getFlashBag()->get('sonata_flash_success')) {
+                $data['is_new_menu_item'] = $this->isNewMenuItem;
                 $data['status'] = 'success';
             } elseif ($message = $this->get('session')->getFlashBag()->get('sonata_flash_error')) {
                 $data['status'] = 'error';
             } elseif ($data['result'] == 'ok') {
                 $this->getRequest()->request->all();
                 $message = 'flash_' . str_replace('Action', '', $this->getCaller()) . '_success';
+                $data['is_new_menu_item'] = $this->isNewMenuItem;
+
+                if ($this->isNewMenuItem) {
+                    $data['html'] = $this->placementAction();
+                }
                 $data['status'] = 'success';
             } else {
                 $this->getRequest()->request->all();
@@ -408,6 +453,10 @@ class MenuItemAdminController extends CRUDController
             }
         }
 
+        if (!array_key_exists('html', $data)) {
+            $data['html'] = $this->listAction($this->get('session')->get('admin/last_page_id'));
+        }
+
         if ($response instanceof JsonResponse) {
             $response->setData($data);
         } else {
@@ -415,6 +464,19 @@ class MenuItemAdminController extends CRUDController
         }
 
         return $response;
+    }
+
+    public function placementAction()
+    {
+        /** @var \Networking\InitCmsBundle\Entity\MenuItem $rootNode */
+        $rootNode = $this->admin->getObject($this->get('session')->get('root_menu_id'));
+
+        if($rootNode->getChildren()->count() > 1){
+            return $this->listAction(null, null, 'placement', $this->get('session')->get('root_menu_id'));
+        }else{
+            return false;
+        }
+
     }
 
     /**
@@ -426,6 +488,90 @@ class MenuItemAdminController extends CRUDController
         $name = $trace[2]['function'];
 
         return empty($name) ? 'global' : $name;
+    }
+
+
+    public function createNotLastEditedNavigation($rootNode, $admin, $controller, $menuItemManager)
+    {
+        $lastEdited = $this->get('session')->get('MenuItem.last_edited');
+
+        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited) {
+
+            if ($lastEdited == $node['id']) {
+                return;
+            }
+            $node = $menuItemManager->find($node['id']);
+
+            return $controller->renderView(
+                'NetworkingInitCmsBundle:MenuItemAdmin:placement_item.html.twig',
+                array('admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node)
+            );
+        };
+
+        $childOpen = function ($node) use ($lastEdited) {
+            if ($lastEdited == $node['id']) {
+                return;
+            }
+
+            return sprintf(
+                '<li class="table-row-style list_item" id="listItem_%s" style="padding: 5px; margin: 0;">',
+                $node['id']
+            );
+        };
+
+        $childClose = function ($node) use ($lastEdited, $admin, $controller) {
+            if ($lastEdited == $node['id']) {
+                return;
+            }
+
+            return $controller->renderView(
+                'NetworkingInitCmsBundle:MenuItemAdmin:placement_item_end.html.twig',
+                array('admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node)
+            );
+        };
+
+        $navigation = $menuItemManager->childrenHierarchy(
+            $rootNode,
+            null,
+            array(
+                'rootOpen' => '<ul class="table-row-style">',
+                'decorate' => true,
+                'childOpen' => $childOpen,
+                'childClose' => $childClose,
+                'nodeDecorator' => $nodeDecorator
+            ),
+            false
+        );
+
+        return $navigation;
+    }
+
+    public function newPlacementAction(Request $request, $newMenuItemId, $menuItemId)
+    {
+        $sibling = $this->getRequest()->get('sibling');
+
+        /** @var MenuItemManagerInterface $menuItemManager */
+        $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
+        $newMenuItem = $menuItemManager->find($newMenuItemId);
+        $menuItem = $menuItemManager->find($menuItemId);
+        $data = array();
+        try {
+            if ($sibling) {
+                $menuItemManager->persistAsNextSiblingOf($newMenuItem, $menuItem);
+            } else {
+                $menuItemManager->persistAsFirstChildOf($newMenuItem, $menuItem);
+            }
+            $this->getDoctrine()->getManager()->flush();
+            $data = array(
+                'result' => 'ok',
+                'objectId' => $this->admin->getNormalizedIdentifier($newMenuItem)
+            );
+
+            return $this->renderJson($data);
+        } catch (\Exception $e) {
+            return $this->renderJson($data);
+        }
+
     }
 
 

@@ -214,7 +214,6 @@
 
 .table-compact {
   width: 100%;
-  table-layout: fixed;
 }
 
 // Semi overriding bootstrap
@@ -223,7 +222,14 @@
   font-size: @fontSizeSmall;
   line-height: 14px;
   overflow: hidden;
+}
+
+.nowrap{
   white-space: nowrap;
+}
+
+.word-break{
+  word-break: break-word;
 }
 
 .table-compact td.icons {
@@ -231,6 +237,7 @@
   padding-bottom: 2px;
   text-align: right;
   overflow: visible;
+  white-space: nowrap;
 }
 
 .table-compact tfoot tr th {
@@ -499,6 +506,7 @@ li.table-row-style .menu-item-link {
 
   a {
     color: @grayDark;
+    cursor: pointer;
   }
 
   a.colored-link {
@@ -608,10 +616,15 @@ li.table-row-style .menu-item-link {
 
   .nav-custom li.first-level {
     margin-top: 0px;
-    padding-left: 0px;
     padding: 6px 0px 6px 5px;
     font-size: 16px;
     display: block;
+  }
+
+  .nav-custom li.first-level div.pull-left,
+  li.first-level-small div.pull-left{
+    width: 22px;
+    text-align: center;
   }
 
   .nav-custom li.first-level.active, {
@@ -863,6 +876,24 @@ li.table-row-style .menu-item-link {
   div.sonata-ba-field-error select{
       border: 1px solid #f79992;
   }
+
+  span#contentLoading{
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+.cursor-pointer{
+  cursor:pointer;
+}
+.break-word{
+  word-wrap: break-word;
+}
+
+
+
+.media-filter{
+   margin-bottom:0;
 }
 
 @media (max-width: @navbarCollapseWidth) {

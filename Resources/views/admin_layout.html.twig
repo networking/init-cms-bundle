@@ -61,10 +61,8 @@ file that was distributed with this source code.
 {% block page_title %}
 <div class="row content-head">
     <div class="span7 page_title">
-
         {% if _title is not empty or action is defined %}
         <h1>
-
             {% if _title is not empty %}
                 {{ _title|raw }}
             {% else %}

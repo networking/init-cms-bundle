@@ -145,6 +145,14 @@ file that was distributed with this source code.
 
 {# Labels #}
 {% block form_label %}
+    {%  if app.request.get('provider') and label == 'form.label_binary_content' %}
+        {% set provider = app.request.get('provider')|split('.')[3] %}
+        {% set mylabel = label~'_'~provider %}
+        {% set test = sonata_admin.admin.trans(mylabel, {}, sonata_admin.field_description.translationDomain)  %}
+        {% if test != mylabel %}
+            {% set label = mylabel %}
+        {% endif %}
+    {%  endif %}
 {% spaceless %}
     {% if label is not sameas(false) %}
         {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " control-label" }) %}
@@ -379,6 +387,11 @@ file that was distributed with this source code.
         });
     </script>
 {% endblock %}
+
+{% block networking_type_mediaprint_widget %}
+    {% media get_media_by_id(value), 'small' %}
+{% endblock %}
+
 
 {% block form_message %}
     {% spaceless %}

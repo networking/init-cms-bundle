@@ -118,11 +118,37 @@ abstract class MediaAdmin extends Admin
         );
         $provider = $this->pool->getProvider($media->getProviderName());
 
+
+
         if ($media->getId()) {
             $provider->buildEditForm($formMapper);
         } else {
             $provider->buildCreateForm($formMapper);
         }
+
+        if ($media->getId() && ($media->getProviderName() == 'sonata.media.provider.image' || $media->getProviderName() == 'sonata.media.provider.youtube')) {
+
+            $formMapper->remove('binaryContent','file');
+
+            if($media->getProviderName() == 'sonata.media.provider.youtube'){
+
+                $formMapper->add(
+                'image','networking_type_mediaprint', array('required' => false,'label' =>'form.label_current_video')
+                );
+
+                $formMapper->add('binaryContent', 'text', array('required' => false,'label' => 'form.label_binary_content_youtube_new'));
+            }
+            else{
+                $formMapper->add(
+                    'image','networking_type_mediaprint', array('required' => false)
+                );
+
+                $formMapper->add('binaryContent', 'file', array('required' => false,'label' => 'form.label_binary_content_new'));
+            }
+
+            //
+        }
+
         $formMapper->add(
             'locale',
             'choice',
@@ -130,6 +156,10 @@ abstract class MediaAdmin extends Admin
                 'choices' => $this->getLocaleChoices(),
             )
         );
+
+
+
+
 
         if ($formMapper->has('enabled')) {
             $formMapper->add(
@@ -166,7 +196,7 @@ abstract class MediaAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('custom', 'string', array('template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig'));
+            ->add('custom', 'string', array('template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig','label'=>'list.label_media'));
 
         if ($this->request->get('pcode') == '') {
             $listMapper->add(
@@ -191,8 +221,9 @@ abstract class MediaAdmin extends Admin
     {
 
         $datagridMapper
-            ->add('name', 'networking_init_cms_simple_string');
-        //->add('tags', null, array('hidden' => true));Hack by Marc
+            ->add('name', 'networking_init_cms_simple_string')
+            ->add('tags', null, array('hidden' => true))
+            ->add('authorName', null, array('hidden' => true));
 
         if ($context) {
             $datagridMapper->add('context', null, array('hidden' => true));
