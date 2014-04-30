@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('class')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('page')->defaultValue('Application\\Networking\\InitCmsBundle\\Entity\\Page')->end()
                         ->scalarNode('layout_block')->defaultValue('Networking\\InitCmsBundle\\Entity\\LayoutBlock')->end()
