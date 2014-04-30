@@ -137,7 +137,7 @@ abstract class MenuItemAdmin extends BaseAdmin
             // start group page_or_url
             $formMapper
                 ->with(
-                    'Target (page or url)',
+                    'form.legend_page_or_url',
                     array(
                         'collapsed' => false,
                         'description' => $this->translator->trans(
