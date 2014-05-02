@@ -62,17 +62,17 @@ networking_init_cms:
         - {label: Deutsch, locale: de_CH}
     templates:
         'sandbox_one_column':
-            template; "SandboxInitCmsBundle:Default:one_column.html.twig"
+            template; "ApplicationNetworkingInitCmsBundle:Default:one_column.html.twig"
             name: "Single Column"
-            icon: "bundles/sandboxinitcms/img/template_header_one_column.png"
+            icon: "bundles/applicationnetworkinginitcms/img/template_header_one_column.png"
             controller: MyBundle::index
             zones:
                 - { name: header, span:12 }
                 - { name: main_content, span:12}
         'sandbox_two_column':
-            template: "SandboxInitCmsBundle:Default:two_column.html.twig"
+            template: "ApplicationNetworkingInitCmsBundle:Default:two_column.html.twig"
             name: "Two Column"
-            icon: "bundles/sandboxinitcms/img/template_header_two_column.png"
+            icon: "bundles/applicationnetworkinginitcms/img/template_header_two_column.png"
             zones:
                 - { name: header , span:12, max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery}
                 - { name: left , span:6}
