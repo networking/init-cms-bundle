@@ -18,7 +18,7 @@ file that was distributed with this source code.
     {% if app.request.isXmlHttpRequest %}
         <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>{{ "title_create"|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}</h3>
+                <h3>{{ "title_create"|trans({}, admin.translationDomain) }}</h3>
             </div>
             <div class="modal-body">
     {% endif %}

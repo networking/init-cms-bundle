@@ -22,6 +22,10 @@
                 <source>breadcrumb.link_tag_delete</source>
                 <target>Diesen Tag löschen </target>
             </trans-unit>
+            <trans-unit id="tags.title">
+                <source>tags.title</source>
+                <target>Medien-Tag</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

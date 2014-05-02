@@ -174,8 +174,8 @@
                 <source>flash_delete_children_error</source>
                 <target>Menu-item is niet verwijderd. Haal eerst de items uit het submenu weg.</target>
             </trans-unit>
-            <trans-unit id="menu.label">
-                <source>menu.label</source>
+            <trans-unit id="menu.admin_menu_label">
+                <source>menu.admin_menu_label</source>
                 <target>Menu's</target>
             </trans-unit>
 		</body>

@@ -536,13 +536,21 @@
                 <source>info.last_edited</source>
                 <target>Zuletzt bearbeitet bei </target>
             </trans-unit>
-            <trans-unit id="pages.label">
-                <source>pages.label</source>
+            <trans-unit id="pages.admin_menu_label">
+                <source>pages.admin_menu_label</source>
+                <target>Seiten</target>
+            </trans-unit>
+            <trans-unit id="pages.title">
+                <source>pages.title</source>
                 <target>Seiten</target>
             </trans-unit>
             <trans-unit id="pages.content_not_found">
                 <source>pages.content_not_found</source>
                 <target>Inhalt Element wurde nicht gefunden</target>
+            </trans-unit>
+            <trans-unit id="templateName">
+                <source>templateName</source>
+                <target>Template Name</target>
             </trans-unit>
         </body>
     </file>

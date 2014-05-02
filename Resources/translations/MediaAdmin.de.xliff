@@ -6,21 +6,10 @@
                 <source>error.file_upload_size</source>
                 <target>Die Datei ist zu groß. Die maximale Dateigröße beträgt %max_server_size%</target>
             </trans-unit>
-
             <trans-unit id="default">
                 <source>default</source>
                 <target>Standard</target>
             </trans-unit>
-            <trans-unit id="one_column">
-                <source>one_column</source>
-                <target>Eine Spalte</target>
-            </trans-unit>
-
-            <trans-unit id="two_column">
-                <source>two_column</source>
-                <target>Zwei Spalten</target>
-            </trans-unit>
-
             <trans-unit id="sidemenu.link_edit_media">
                 <source>sidemenu.link_edit_media</source>
                 <target>Bearbeiten</target>
@@ -69,17 +58,21 @@
                 <source>breadcrumb.link_gallery_delete</source>
                 <target>Löschen</target>
             </trans-unit>
-            <trans-unit id="media">
-                <source>media</source>
+            <trans-unit id="admin_label_media">
+                <source>admin_label_media</source>
                 <target>Medien</target>
             </trans-unit>
-            <trans-unit id="gallery">
-                <source>gallery</source>
+            <trans-unit id="admin_label_gallery">
+                <source>admin_label_gallery</source>
                 <target>Galerie</target>
             </trans-unit>
             <trans-unit id="title_select_provider">
                 <source>title_select_provider</source>
-                <target>Medienprovider wählen </target>
+                <target>Medientyp wählen </target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Media hochladen</target>
             </trans-unit>
             <trans-unit id="no_provider_available">
                 <source>no_provider_available</source>
@@ -328,6 +321,10 @@
                 <source>list.label_media</source>
                 <target>Medien</target>
             </trans-unit>
+            <trans-unit id="list.label_select">
+                <source>list.label_select</source>
+                <target>Selektieren</target>
+            </trans-unit>
             <trans-unit id="filter.label_name">
                 <source>filter.label_name</source>
                 <target>Name</target>
@@ -336,17 +333,14 @@
                 <source>filter.label_provider_reference</source>
                 <target>Provider-Referenz</target>
             </trans-unit>
-
             <trans-unit id="filter.label_enabled">
                 <source>filter.label_enabled</source>
                 <target>Aktiviert</target>
             </trans-unit>
-
             <trans-unit id="filter.label_context">
                 <source>filter.label_context</source>
                 <target>Kontext</target>
             </trans-unit>
-
             <trans-unit id="filter.label_provider_name">
                 <source>filter.label_provider_name</source>
                 <target>Providername</target>
@@ -388,7 +382,7 @@
                 <target>New File</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube_new">
-                <source>form.label_binary_content_youtube:new</source>
+                <source>form.label_binary_content_youtube_new</source>
                 <target>Neuer Youtube Link</target>
             </trans-unit>
             <trans-unit id="form.label_current_video">
@@ -407,7 +401,7 @@
                 <source>button.create.media_item</source>
                 <target>Add Object</target>
             </trans-unit>
-            <trans-unit id=" button.create.gallery_item">
+            <trans-unit id="button.create.gallery_item">
                 <source>button.create.gallery_item</source>
                 <target>Add Gallery</target>
             </trans-unit>

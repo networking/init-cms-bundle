@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="info.filter">
                 <source>info.filter</source>
-                <target>Filter %admin_label%:</target>
+                <target>Search:</target>
             </trans-unit>
             <trans-unit id="link.website_">
                 <source>link.website_</source>
@@ -20,15 +20,15 @@
             </trans-unit>
             <trans-unit id="link.go_to_list">
                 <source>link.go_to_list</source>
-                <target>Go to %admin_label% list</target>
+                <target>Back to list</target>
             </trans-unit>
             <trans-unit id="link.website_status_published">
                 <source>link.website_status_published</source>
-                <target>Website: Published</target>
+                <target>Website: Live Modus </target>
             </trans-unit>
             <trans-unit id="link.website_status_draft">
                 <source>link.website_status_draft</source>
-                <target>Website: Draft</target>
+                <target>Website: Preview Modus</target>
             </trans-unit>
                 <trans-unit id="link.show_more_actions">
                 <source>link.show_more_actions</source>
@@ -70,9 +70,13 @@
                 <source>btn_create</source>
                 <target>Create</target>
             </trans-unit>
+            <trans-unit id="btn_loading">
+                <source>btn_loading</source>
+                <target>Processing ...</target>
+            </trans-unit>
             <trans-unit id="btn_filter">
                 <source>btn_filter</source>
-                <target>Filter</target>
+                <target>Search</target>
             </trans-unit>
             <trans-unit id="btn_cancel">
                 <source>btn_cancel</source>
@@ -80,11 +84,11 @@
             </trans-unit>
             <trans-unit id="btn_preview">
                 <source>btn_preview</source>
-                <target>Preview %admin_label%</target>
+                <target>Preview</target>
             </trans-unit>
             <trans-unit id="btn_update_and_edit_again">
                 <source>btn_update_and_edit_again</source>
-                <target>Update %admin_label%</target>
+                <target>Update</target>
             </trans-unit>
             <trans-unit id="btn_update_and_return_to_list">
                 <source>btn_update_and_return_to_list</source>
@@ -105,10 +109,6 @@
             <trans-unit id="btn_create_and_create_a_new_one">
                 <source>btn_create_and_create_a_new_one</source>
                 <target>Add item and create another</target>
-            </trans-unit>
-            <trans-unit id="flash_batch_delete_error">
-                <source>flash_batch_delete_error</source>
-                <target>The selected items could not be deleted at present</target>
             </trans-unit>
             <trans-unit id="no_result">
                 <source>no_result</source>
@@ -187,6 +187,10 @@
                 <source>flash_batch_delete_success</source>
                 <target>The selected items were successfully deleted</target>
             </trans-unit>
+            <trans-unit id="flash_batch_delete_error">
+                <source>flash_batch_delete_error</source>
+                <target>The selected items could not be deleted at present</target>
+            </trans-unit>
             <trans-unit id="flash_batch_publish_success">
                 <source>flash_batch_publish_success</source>
                 <target>Pages successfully published</target>
@@ -206,6 +210,22 @@
             <trans-unit id="toggle.roles">
                 <source>toggle.roles</source>
                 <target>Select/Deselect roles</target>
+            </trans-unit>
+            <trans-unit id="translations.cache_removed">
+                <source>translations.cache_removed</source>
+                <target>Translation cache was successfully cleaned</target>
+            </trans-unit>
+            <trans-unit id="view_website.status_draft">
+                <source>view_website.status_draft</source>
+                <target>Website Preview Modus</target>
+            </trans-unit>
+            <trans-unit id="view_website.status_published">
+                <source>view_website.status_published</source>
+                <target>Website Live Modus</target>
+            </trans-unit>
+            <trans-unit id="view_website">
+                <source>view_website</source>
+                <target>Website Preview Modus</target>
             </trans-unit>
         </body>
     </file>

@@ -311,4 +311,32 @@ class FrontendPageController extends Controller
         return $this->render($this->container->getParameter('networking_init_cms.404_template'), $params);
     }
 
+    /**
+     * Deliver the admin navigation bar via ajax
+     *
+     * @param null $page_id
+     * @return Response
+     */
+    public function adminNavbarAction($page_id = null)
+    {
+
+        if ($page_id) {
+
+            /** @var \Networking\InitCmsBundle\Entity\PageManager $pageManager */
+            $pageManager = $this->container->get('networking_init_cms.page_manager');
+            $page = $pageManager->find($page_id);
+            $this->getRequest()->attributes->set('_content', $page);
+        }
+        $response = $this->render(
+            'NetworkingInitCmsBundle:Admin:esi_admin_navbar.html.twig',
+            array('admin_pool' => $this->getAdminPool())
+        );
+
+
+        // set the shared max age - which also marks the response as public
+        $response->setSharedMaxAge(10);
+
+        return $response;
+    }
+
 }

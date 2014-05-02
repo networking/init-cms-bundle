@@ -22,6 +22,10 @@
                 <source>breadcrumb.link_tag_delete</source>
                 <target>Supprimer cette étiquette</target>
             </trans-unit>
+            <trans-unit id="tags.title">
+                <source>tags.title</source>
+                <target>Étiquettes multimédias</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

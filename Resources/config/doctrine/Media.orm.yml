@@ -10,6 +10,7 @@ Networking\InitCmsBundle\Entity\Media:
     locale:
       type: string
       length: 6
+      nullable: true
   oneToMany:
     galleryHasMedias:
       targetEntity: Networking\InitCmsBundle\Entity\GalleryHasMedia

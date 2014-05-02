@@ -20,6 +20,7 @@ file that was distributed with this source code.
 {% set _title        = block('title') %}
 {% set _breadcrumb   = block('breadcrumb') %}
 {% set _help_text    = block('help_text') %}
+{% set _actions      = block('actions') %}
 {% set isActive      = false %}
 {% if admin is defined %}
     {% set currentAdmin = admin %}
@@ -28,8 +29,8 @@ file that was distributed with this source code.
 {% block meta_title %}
     {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
 
-    {% if _title is not empty %}
-        {{ _title|raw|replace({'&quot;': ''})|striptags }}
+    {% if admin is defined %}
+        &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
     {% else %}
         {% if action is defined %}
             -
@@ -59,96 +60,100 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block page_title %}
-<div class="row content-head">
-    <div class="span7 page_title">
-        {% if _title is not empty or action is defined %}
-        <h1>
-            {% if _title is not empty %}
-                {{ _title|raw }}
-            {% else %}
-                {% if action is defined %}
-                    {% for menu in admin.breadcrumbs(action) %}
-                        {% if loop.last  %}
-                        {{ menu.label|raw }}
+    <div class="row content-head">
+        <div class="span7 page_title">
+            {% if _title is not empty or action is defined %}
+                <h1>
+                    {% if _title is not empty %}
+                        {{ _title|raw }}
+                    {% else %}
+                        {% if action is defined %}
+                            {% for menu in admin.breadcrumbs(action) %}
+                                {% if loop.last %}
+                                    {{ menu.label|raw }}
+                                {% endif %}
+                            {% endfor %}
                         {% endif %}
-                    {% endfor %}
-                {% endif %}
-                {% if action == 'edit' %}
-                    {% set settings = {} %}
-                    {% if object.locale is defined %}
-                        {% set settings = {'locale': object.locale} %}
+                        {% if action == 'edit' %}
+                            {% set settings = {} %}
+                            {% if object.locale is defined %}
+                                {% set settings = {'locale': object.locale} %}
+                            {% endif %}
+
+                            <a class="link-underlined font-small font-light"
+                               href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                        {% endif %}
                     {% endif %}
 
-                    <a class="link-underlined font-small font-light"
-                       href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                {% endif %}
-            {% endif%}
-
-        </h1>
-        {% endif %}
-    </div>
-
-    <div class="span3 context-head">
-        {% block top_actions %}{% endblock %}
-        {% if app.security.token and is_granted('ROLE_SONATA_ADMIN') %}
-            {% if _help_text is empty %}
-                {% if admin is not defined %}
-                    {% set adminCode = 'dashboard' %}
-                    {% set actionHelp = '' %}
-                {% else %}
-                    {% set adminCode = admin.code %}
-                    {% set actionHelp = action %}
-                {% endif %}
-                <div class="level-headline-icon pull-right"><a
-                        href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
-                        target="_blank">
-                    <div class="info_button_medium"></div>
-                </a></div>
+                </h1>
             {% endif %}
-        {% endif %}
+        </div>
+
+        <div class="span3 context-head">
+            {% block top_actions %}{% endblock %}
+            {% if app.security.token and is_granted('ROLE_SONATA_ADMIN') %}
+                {% if _help_text is empty %}
+                    {% if admin is not defined %}
+                        {% set adminCode = 'dashboard' %}
+                        {% set actionHelp = '' %}
+                    {% else %}
+                        {% set adminCode = admin.code %}
+                        {% set actionHelp = action %}
+                    {% endif %}
+                    <div class="level-headline-icon pull-right"><a
+                                href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
+                                target="_blank">
+                            <div class="info_button_medium"></div>
+                        </a></div>
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
-</div>
 {% endblock %}
 
 
 {% block sonata_admin_content %}
-<div class="row row-content-wide">
-    {% if _preview is not empty %}
-        <div class="sonata-ba-preview span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _preview|raw }}</div>
-    {% endif %}
+    <div class="row row-content-wide">
+        {% if _preview is not empty %}
+            <div class="sonata-ba-preview span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _preview|raw }}</div>
+        {% endif %}
 
-    {% if _content is not empty %}
-    <div class="sonata-ba-content span{% if block('sidebar_left') is empty %}12{% elseif _side_menu is empty %}10{% else %}8{% endif %}">{{ _content|raw }}</div>
-    {% endif %}
+        {% if _content is not empty %}
+            <div class="sonata-ba-content span{% if block('sidebar_left') is empty %}12{% elseif _side_menu is empty %}10{% else %}8{% endif %}">{{ _content|raw }}</div>
+        {% endif %}
 
-    {% if _help_text is not empty %}
-        <div class="sonata-ba-content span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _help_text|raw }}</div>
-    {% endif %}
+        {% if _help_text is not empty %}
+            <div class="sonata-ba-content span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _help_text|raw }}</div>
+        {% endif %}
 
-    {% if _show is not empty %}
-        <div class="sonata-ba-show span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _show|raw }}</div>
-    {% endif %}
+        {% if _show is not empty %}
+            <div class="sonata-ba-show span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _show|raw }}</div>
+        {% endif %}
 
-    {% if _form is not empty %}
-        <div>{{ _form|raw }}</div>
-    {% endif %}
+        {% if _form is not empty %}
+            <div>{{ _form|raw }}</div>
+        {% endif %}
 
-    {% if _list_table is not empty or _list_filters is not empty %}
+        {% if _list_table is not empty or _list_filters is not empty %}
 
-        <div class="span{% if _side_menu is not empty %}8{% else %}10{% endif %}">
-            {{ _list_filters|raw }}
-            {% block actions %}{% endblock %}
-            {{ _list_table|raw }}
-        </div>
+            <div class="span{% if _side_menu is not empty %}8{% else %}10{% endif %}">
+                {{ _list_filters|raw }}
+                {% if _actions is not empty %}
+                    {{ _actions|raw }}
+                {% endif %}
+                {{ _list_table|raw }}
+            </div>
 
-    {% endif %}
+        {% endif %}
 
-    {% if _side_menu is not empty %}
-        <div class="sidebar span2">
-            <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
-        </div>
-    {% endif %}
-</div>
+
+
+        {% if _side_menu is not empty %}
+            <div class="sidebar span2">
+                <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block footer %}{% endblock %}

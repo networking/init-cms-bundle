@@ -577,8 +577,12 @@
                 <target>
                     <![CDATA[ <strong>We did not found a specific help text. Hopefully you will find some helpful information from the left navigation menu. We are trying to improve the help section and we are sorry for the inconvenience.</strong> ]]></target>
             </trans-unit>
-            <trans-unit id="help_text.label">
-                <source>help_text.label</source>
+            <trans-unit id="help_text.admin_menu_label">
+                <source>help_text.admin_menu_label</source>
+                <target>Help Texts</target>
+            </trans-unit>
+            <trans-unit id="help_text.title">
+                <source>help_text.title</source>
                 <target>Help Texts</target>
             </trans-unit>
         </body>

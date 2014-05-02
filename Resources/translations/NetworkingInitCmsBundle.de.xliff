@@ -56,7 +56,7 @@
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
-                <target>Neues %admin_label% hinzufügen </target>
+                <target>%admin_label% hinzufügen </target>
             </trans-unit>
             <trans-unit id="title_edit">
                 <source>title_edit</source>
@@ -213,10 +213,6 @@
             <trans-unit id="translations.cache_removed">
                 <source>translations.cache_removed</source>
                 <target>Übersetzung Cache wurde erfolgreich gelöscht</target>
-            </trans-unit>
-            <trans-unit id="translation.title">
-                <source>translation.title</source>
-                <target>Übersetzung</target>
             </trans-unit>
             <trans-unit id="view_website.status_draft">
                 <source>view_website.status_draft</source>

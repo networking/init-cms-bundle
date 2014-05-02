@@ -18,27 +18,30 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block list_table %}
-    {% if not  app.request.isxmlhttprequest %}
+
+    {% if not app.request.isXmlHttpRequest %}
         <div id="objectList">
     {% endif %}
+
     {# start of tabs navigation#}
     {# filters #}
 
     {# end of tabs navigation#}
-    <div class="tab-content">
+    <div class="{% if not app.request.isxmlhttprequest %}tab-content{% endif %}">
         {% for name, context in media_pool.contexts %}
             {% if attribute(datagrid, name) is defined %}
                 <div class="tab-pane {% if (active_tab is null and loop.first) or active_tab == name %}active{% endif %}"
                      id="media_{{ name }}">
-                    <div class="row">
-                        <div class="span10">
+                    <div class="{% if not app.request.isxmlhttprequest %}row{% endif %}">
+                        <div class="{% if not app.request.isxmlhttprequest %}span10{% endif %}">
 
                             {# provider #}
                             {% if persistent_paramerters.provider is defined %}
                                 {% set providers = media_pool.getProviderNamesByContext(name) %}
                                 <ul class="nav nav-pills">
                                     {% if providers|length > 1 %}
-                                        <li><a><strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong></a>
+                                        <li>
+                                            <a><strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong></a>
                                         </li>
 
                                         {% if not persistent_parameters.provider %}
@@ -66,10 +69,10 @@ file that was distributed with this source code.
                                 </ul>
                             {% endif %}
 
-                                {# create button #}
+                            {# create button #}
                             {% if galleryListMode is defined and not galleryListMode %}
-                                <h1><span class="info-soft">{{ name|trans({}) }}</span>
-                                        {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
+                                <h1><span class="info-soft">{{ ('media_context.' ~ name)|trans({}) }}</span>
+                                    {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
                                 </h1>
                             {% endif %}
 
@@ -99,10 +102,10 @@ file that was distributed with this source code.
                                                         {% spaceless %}
                                                             <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
                                                                 {% if sortable %}<a
-                                                                    href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
+                                                                        href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
 
-                                                                {{ admin.trans(field_description.label) }}
-                                                                {% if sortable %}</a>{% endif %}
+                                                                    {{ admin.trans(field_description.label) }}
+                                                                    {% if sortable %}</a>{% endif %}
                                                             </th>
                                                         {% endspaceless %}
                                                     {% endif %}
@@ -163,7 +166,7 @@ file that was distributed with this source code.
                                                 {% for page in attribute(datagrid, name).pager.getLinks() %}
                                                     {% if page == attribute(datagrid, name).pager.page %}
                                                         <li class="active"><a
-                                                                href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(attribute(datagrid, name), page)) }}">{{ page }}</a>
+                                                                    href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(attribute(datagrid, name), page)) }}">{{ page }}</a>
                                                         </li>
                                                     {% else %}
                                                         <li>
@@ -197,8 +200,9 @@ file that was distributed with this source code.
                                             :
 
                                             {% for format in admin.getExportFormats() %}
-                                                    <a
-                                                    href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(attribute(datagrid, name), 0) + {'format' : format}) }}" class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
+                                                <a
+                                                href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(attribute(datagrid, name), 0) + {'format' : format}) }}"
+                                                class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
                                             {% endfor %}
                                         </p>
                                     {% endif %}
@@ -216,7 +220,7 @@ file that was distributed with this source code.
 
 
     </div>
-    {% if not  app.request.isxmlhttprequest %}
+    {% if not app.request.isXmlHttpRequest %}
         </div>
     {% endif %}
 {% endblock %}
@@ -225,11 +229,12 @@ file that was distributed with this source code.
     {% if not app.request.isxmlhttprequest %}
         {% set name = 'default' %}
         {% if attribute(mediaform, name) %}
-            <form action="{{ admin.generateUrl('list') }}" method="GET" class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
+            <form action="{{ admin.generateUrl('list') }}" method="GET"
+                  class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
 
                 <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
                 {% if persistent_parameters.provider is defined %}
-                <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
+                    <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
                 {% endif %}
                 <input type="hidden" name="active_tab" value="{{ name }}"/>
 
@@ -238,6 +243,7 @@ file that was distributed with this source code.
                 {% for filter in admin.datagrid.filters %}
                     {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                         {% set filter_main %}
+                        {{ filter_main }}
                         <div class="control-group">
                             <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
                                    class="control-label filter">{{ admin.trans(filter.label) }}</label>
@@ -255,11 +261,13 @@ file that was distributed with this source code.
                         <div class="control-group">
                             <label class="control-label filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
 
-                                 <div>
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}) }}
+                            <div>
+                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
+                                ) }}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
+                                ) }}
                             </div>
-                         </div>
+                        </div>
                         {% endset %}
                     {% endif %}
                 {% endfor %}
@@ -269,7 +277,7 @@ file that was distributed with this source code.
                 <div>
                     <div class="pull-left ">
                         <fieldset class="filter_legend">
-                            <p class="info-soft" >{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
+                            <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
 
                             <div class="filter_container row">
                                 <div class="span10">
@@ -289,7 +297,8 @@ file that was distributed with this source code.
                                     <div>
                                         <input type="submit" class="btn btn-small"
                                                value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}" class="link-underlined">
+                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                                           class="link-underlined">
                                             {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
                                         {{ form_rest(form) }}
                                         {% if filter_hidden %}
@@ -310,7 +319,7 @@ file that was distributed with this source code.
         <ul class="nav menu-tabs nav-tabs">
             {% for name, context in media_pool.contexts %}
                 <li {% if (active_tab is null and loop.first) or active_tab == name %}class="active"{% endif %}>
-                    <a href="#media_{{ name }}" data-toggle="tab">{{ name|trans({}) }}</a>
+                    <a href="#media_{{ name }}" data-toggle="tab">{{ ('media_context.' ~ name)|trans({}) }}</a>
                 </li>
             {% endfor %}
         </ul>

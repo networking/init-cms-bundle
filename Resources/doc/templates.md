@@ -16,7 +16,7 @@ So lets have a look at getting out some of our saved content:
 ```
    <div class="hero-unit">
         {% for layoutBlock in page.layoutBlock('header') %}
-		{{ render_initcms_block('SandboxInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('ApplicationNetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
     </div>
 ```
@@ -114,23 +114,14 @@ navigation should appear.
 
 ### Admin navigation bar
 
-There is one other special navbar which can be included in your template, the admin navbar which floats above your template.
-
-To include it into your template first add the twig use statement at the top of your base template
-```
-{% use "NetworkingInitCmsBundle:Navbar:admin_navbar.html.twig" %}
-```
-
-Next add the admin css block some where in the head of your templates (where ever you want css link tags to appear), don't worry, the styles will only included if the user is logged in with admin rights.
+There is an admin toolbar which is included via ajax when an Admin user is logged in,
+it can be turned on and off in the configuration of your project
 
 ```
-{{ block('admin_style') }}
-```
-
-Finally and the admin navbar block straight after the opening body tag, and that's it.
-
-```
-{{ block('admin_navbar') }}
+    networking_init_cms:
+        .....
+        admin_toolbar:
+            toolbar: true #default is true, will be included
 ```
 
 

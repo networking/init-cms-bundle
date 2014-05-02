@@ -6,21 +6,10 @@
                 <source>error.file_upload_size</source>
                 <target>Le fichier est trop grand, la taille maximale du fichier est %max_server_size%</target>
             </trans-unit>
-
             <trans-unit id="default">
                 <source>default</source>
                 <target>Par défaut</target>
             </trans-unit>
-            <trans-unit id="one_column">
-                <source>one_column</source>
-                <target>Une colonne</target>
-            </trans-unit>
-
-            <trans-unit id="two_column">
-                <source>two_column</source>
-                <target>Deux colonnes</target>
-            </trans-unit>
-
             <trans-unit id="sidemenu.link_edit_media">
                 <source>sidemenu.link_edit_media</source>
                 <target>Éditer</target>
@@ -33,9 +22,13 @@
                 <source>breadcrumb.link_media_create</source>
                 <target>Créer</target>
             </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Créer</target>
+            </trans-unit>
             <trans-unit id="breadcrumb.link_media_list">
                 <source>breadcrumb.link_media_list</source>
-                <target><![CDATA[<small>Prenez soin de votre</small>]]> Médias</target>
+                <target><![CDATA[<small>Organisez vos</small>]]> Médias</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_edit">
                 <source>breadcrumb.link_media_edit</source>
@@ -76,6 +69,10 @@
             <trans-unit id="title_select_provider">
                 <source>title_select_provider</source>
                 <target>Sélectionner le fournisseur de médias</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Upload media</target>
             </trans-unit>
             <trans-unit id="no_provider_available">
                 <source>no_provider_available</source>
@@ -378,16 +375,12 @@
                  <source>form.label_image</source>
                  <target>Current Image</target>
             </trans-unit>
-            <trans-unit id="form.label_binary_content_youtube">
-                <source>form.label_binary_content_youtube</source>
-                <target>Youtube Link</target>
-            </trans-unit>
             <trans-unit id="form.label_binary_content_new">
                  <source>form.label_binary_content_new</source>
                  <target>New File</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube_new">
-                <source>form.label_binary_content_youtube:new</source>
+                <source>form.label_binary_content_youtube_new</source>
                 <target>New Youtube Link</target>
             </trans-unit>
             <trans-unit id="form.label_current_video">
@@ -397,6 +390,10 @@
             <trans-unit id="filter.label_author_name">
                 <source>filter.label_author_name</source>
                 <target>Author</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube">
+                <source>form.label_binary_content_youtube</source>
+                <target>Youtube Link</target>
             </trans-unit>
             <trans-unit id="button.create.media_item">
                 <source>button.create.media_item</source>

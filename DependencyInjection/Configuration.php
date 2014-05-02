@@ -28,6 +28,22 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('networking_init_cms');
         //mongodb is not yet fully supported but will come (eventually)
         $supportedDrivers = array('orm', 'mongodb');
+
+        $rootNode
+            ->children()
+                ->arrayNode('admin_toolbar')
+                    ->children()
+                        ->booleanNode('toolbar')->defaultTrue()->end()
+                        ->scalarNode('position')
+                            ->defaultValue('top')
+                            ->validate()
+                                ->ifNotInArray(array('bottom', 'top'))
+                                ->thenInvalid('The CSS position %s is not supported')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end();
+
         $rootNode
             ->children()
                 ->scalarNode('db_driver')
@@ -99,8 +115,9 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
+
+
 
         return $treeBuilder;
     }

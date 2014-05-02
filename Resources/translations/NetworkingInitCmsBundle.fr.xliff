@@ -70,6 +70,10 @@
                 <source>btn_create</source>
                 <target>Créer</target>
             </trans-unit>
+            <trans-unit id="btn_loading">
+                <source>btn_loading</source>
+                <target>Processing ...</target>
+            </trans-unit>
             <trans-unit id="btn_filter">
                 <source>btn_filter</source>
                 <target>Filtrer</target>
@@ -198,9 +202,29 @@
                 <source>flash_batch_empty</source>
                 <target>Aucun élément sélectionné</target>
             </trans-unit>
+            <trans-unit id="link.alias.page">
+                <source>link.alias.page</source>
+                <target>This is a redirect to the following page: "%alias_page%"</target>
+            </trans-unit>
             <trans-unit id="toggle.roles">
                 <source>toggle.roles</source>
                 <target>Sélectionnez/désélectionnez rôle</target>
+            </trans-unit>
+            <trans-unit id="translations.cache_removed">
+                <source>translations.cache_removed</source>
+                <target>Translation cache was successfully cleaned</target>
+            </trans-unit>
+            <trans-unit id="view_website.status_draft">
+                <source>view_website.status_draft</source>
+                <target>Website Preview Modus</target>
+            </trans-unit>
+            <trans-unit id="view_website.status_published">
+                <source>view_website.status_published</source>
+                <target>Website Live Modus</target>
+            </trans-unit>
+            <trans-unit id="view_website">
+                <source>view_website</source>
+                <target>Website Preview Modus</target>
             </trans-unit>
         </body>
     </file>

@@ -23,10 +23,21 @@ file that was distributed with this source code.
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3>
-                        {% if admin.id(object) %}
-                            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin.getClassnameLabel() }, 'NetworkingInitCmsBundle') }}
+                        {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                        {% if admin.id(object) is not null %}
+                            {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
+                            {% if  title ==  "title_edit" %}
+                                {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+                            {% else %}
+                                {{ title }}
+                            {% endif %}
                         {% else %}
-                            {{ "title_create"|trans({'%admin_label%': admin.getClassnameLabel()}, 'NetworkingInitCmsBundle') }}
+                            {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
+                            {% if title == 'title_create' %}
+                                {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+                            {% else %}
+                                {{ title }}
+                            {% endif %}
                         {% endif %}
                     </h3>
                 </div>
@@ -47,7 +58,8 @@ file that was distributed with this source code.
                         {% if admin.formgroups|length > 1 and name != admin.label %}
                             <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
                                 {% if form_group.collapsed %}
-                                    <a class="sonata-ba-collapsed" data-toggle="collapse" data-target="#{{ admin.uniqid }}_{{ loop.index }}"
+                                    <a class="sonata-ba-collapsed" data-toggle="collapse"
+                                       data-target="#{{ admin.uniqid }}_{{ loop.index }}"
                                        title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationDomain) }}</a>
                                 {% else %}
                                     {{ name|trans({}, admin.translationDomain) }}
@@ -55,7 +67,8 @@ file that was distributed with this source code.
                             </legend>
                         {% endif %}
 
-                        <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}" id="{{ admin.uniqid }}_{{ loop.index }}">
+                        <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}"
+                             id="{{ admin.uniqid }}_{{ loop.index }}">
 
                             {% for field_name in form_group.fields %}
                                 {% if admin.formfielddescriptions[field_name] is defined %}

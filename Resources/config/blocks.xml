@@ -4,6 +4,7 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+
         <service id="networking_init_cms.block.service.translatable_text" class="Networking\InitCmsBundle\Block\TranslatableTextBlockService">
             <argument>networking_init_cms.block_translatable</argument>
             <argument type="service" id="templating"/>

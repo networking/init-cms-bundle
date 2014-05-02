@@ -86,6 +86,10 @@
                 <source>form.label_link_class</source>
                 <target>Link Class</target>
             </trans-unit>
+            <trans-unit id="form.label_link_rel">
+                <source>form.label_link_rel</source>
+                <target>Link Relation</target>
+            </trans-unit>
             <trans-unit id="form.label_internal_url">
                 <source>form.label_internal_url</source>
                 <target>Internal relative link</target>
@@ -93,10 +97,6 @@
             <trans-unit id="form.label_hidden">
                 <source>form.label_hidden</source>
                 <target>Hide in menu</target>
-            </trans-unit>
-            <trans-unit id="form.label_link_rel">
-                <source>form.label_link_rel</source>
-                <target>Link Relation</target>
             </trans-unit>
             <trans-unit id="form.legend_page_or_url">
                 <source>form.legend_page_or_url</source>
@@ -174,9 +174,33 @@
                 <source>flash_delete_children_error</source>
                 <target>Menu item not deleted. Please reorganise the sub-menu items first.</target>
             </trans-unit>
-            <trans-unit id="menu.label">
-                <source>menu.label</source>
+            <trans-unit id="menu.admin_menu_label">
+                <source>menu.admin_menu_label</source>
                 <target>Menus</target>
+            </trans-unit>
+            <trans-unit id="menus.title">
+                <source>menus.title</source>
+                <target>Menus</target>
+            </trans-unit>
+            <trans-unit id="placement_title">
+                <source>placement_title</source>
+                <target>Position your menu item</target>
+            </trans-unit>
+            <trans-unit id="menu_item.add_here">
+                <source>menu_item.add_here</source>
+                <target>Insert menu item here</target>
+            </trans-unit>
+            <trans-unit id="action_edit">
+                <source>action_edit</source>
+                <target>Edit menu item</target>
+            </trans-unit>
+            <trans-unit id="action_delete">
+                <source>action_delete</source>
+                <target>Delete menu item</target>
+            </trans-unit>
+            <trans-unit id="action_page_edit">
+                <source>action_page_edit</source>
+                <target>Edit page</target>
             </trans-unit>
 		</body>
 	</file>

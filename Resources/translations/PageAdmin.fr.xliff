@@ -78,6 +78,10 @@
                 <source>form.label_tags</source>
                 <target>Étiquettes</target>
             </trans-unit>
+            <trans-unit id="form.label_alias">
+                <source>form.label_alias</source>
+                <target>Redirect to this page</target>
+            </trans-unit>
             <trans-unit id="legend.translate_page">
                 <source>legend.translate_page</source>
                 <target>Traductions de pages</target>
@@ -310,6 +314,10 @@
                 <source>parent</source>
                 <target>Page parente</target>
             </trans-unit>
+            <trans-unit id="alias">
+                <source>alias</source>
+                <target>Redirect to this page</target>
+            </trans-unit>
             <trans-unit id="url">
                 <source>url</source>
                 <target>URL</target>
@@ -439,6 +447,10 @@
                 <source>parent.helper.text</source>
                 <target>Page parente pour cette URL.</target>
             </trans-unit>
+            <trans-unit id="alias.helper.text">
+                <source>alias.helper.text</source>
+                <target>Redirect to another page, has itself no content.</target>
+            </trans-unit>
             <trans-unit id="visibility.helper.text">
                 <source>visibility.helper.text</source>
                 <target>Page publique ou protégée par mot de passe</target>
@@ -529,9 +541,17 @@
                 <source>pages.label</source>
                 <target>Pages</target>
             </trans-unit>
+            <trans-unit id="pages.title">
+                <source>pages.title</source>
+                <target>Pages</target>
+            </trans-unit>
             <trans-unit id="pages.content_not_found">
                 <source>pages.content_not_found</source>
                 <target>Élément de contenu ne peut plus être situé</target>
+            </trans-unit>
+            <trans-unit id="templateName">
+                <source>templateName</source>
+                <target>Nom de mise en page</target>
             </trans-unit>
         </body>
     </file>
