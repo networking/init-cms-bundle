@@ -14,8 +14,6 @@
         <parameter key="sonata.media.admin.gallery.class">Networking\InitCmsBundle\Admin\Entity\GalleryAdmin</parameter>
         <parameter key="sonata.media.admin.gallery.controller">NetworkingInitCmsBundle:GalleryAdmin</parameter>
 
-        <!-- User -->
-        <parameter key="sonata.user.admin.groupname">sonata_user</parameter>
     </parameters>
 
 
@@ -37,7 +35,7 @@
             <call method="setManagedLocales">
                 <argument>%lexik_translation.managed_locales%</argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" group="group.translation" label="translation.title"
+            <tag name="sonata.admin" manager_type="orm"  label="translation.title"
                  label_catalogue="IbrowsSonataTranslationBundle"
                  label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
         </service>
@@ -65,7 +63,7 @@
                     <argument key="ajax">NetworkingInitCmsBundle::ajax_layout.html.twig</argument>
                 </argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" group="sonata_media" label="media"
+            <tag name="sonata.admin" manager_type="orm"  label="admin_label_media"
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
         </service>
@@ -87,7 +85,7 @@
                     <argument key="ajax">NetworkingInitCmsBundle::ajax_layout.html.twig</argument>
                 </argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" group="sonata_media" label="gallery"
+            <tag name="sonata.admin" manager_type="orm" label="admin_label_gallery"
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
         </service>
@@ -102,7 +100,7 @@
             <call method="setTranslationDomain">
                 <argument>%sonata.user.admin.user.translation_domain%</argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" group="sonata.user.admin.groupname%" label="users"
+            <tag name="sonata.admin" manager_type="orm" label="users"
                  label_catalogue="SonataUserBundle"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
         </service>
@@ -114,7 +112,7 @@
             <call method="setTranslationDomain">
                 <argument>%sonata.user.admin.group.translation_domain%</argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" group="sonata.user.admin.groupname%" label="groups"
+            <tag name="sonata.admin" manager_type="orm" label="groups"
                  label_catalogue="SonataUserBundle"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
         </service>

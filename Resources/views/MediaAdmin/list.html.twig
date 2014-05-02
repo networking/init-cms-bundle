@@ -68,7 +68,7 @@ file that was distributed with this source code.
 
                                 {# create button #}
                             {% if galleryListMode is defined and not galleryListMode %}
-                                <h1><span class="info-soft">{{ name|trans({}) }}</span>
+                                <h1><span class="info-soft">{{ ('media_context.' ~ name)|trans({}) }}</span>
                                         {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
                                 </h1>
                             {% endif %}
@@ -238,6 +238,7 @@ file that was distributed with this source code.
                 {% for filter in admin.datagrid.filters %}
                     {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                         {% set filter_main %}
+                        {{ filter_main }}
                         <div class="control-group">
                             <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
                                    class="control-label filter">{{ admin.trans(filter.label) }}</label>
@@ -310,7 +311,7 @@ file that was distributed with this source code.
         <ul class="nav menu-tabs nav-tabs">
             {% for name, context in media_pool.contexts %}
                 <li {% if (active_tab is null and loop.first) or active_tab == name %}class="active"{% endif %}>
-                    <a href="#media_{{ name }}" data-toggle="tab">{{ name|trans({}) }}</a>
+                    <a href="#media_{{ name }}" data-toggle="tab">{{ ('media_context.' ~ name)|trans({}) }}</a>
                 </li>
             {% endfor %}
         </ul>

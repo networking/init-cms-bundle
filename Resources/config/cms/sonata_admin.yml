@@ -40,22 +40,22 @@ sonata_admin:
 
         groups:
             pages:
-                label: "pages.label"
+                label: "pages.admin_menu_label"
                 items: [networking_init_cms.admin.page]
-            translation:
-                label: "group.translation"
-                items: [ibrows_sonata_translation.admin.orm]
             menu:
-                label: "menu.label"
+                label: "menu.admin_menu_label"
                 items: [ networking_init_cms.admin.menu_item]
             media:
-                label: "sonata_media"
+                label: "sonata_media.admin_menu_label"
                 items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
             users:
                 label: "sonata_user"
                 items: [sonata.user.admin.user, sonata.user.admin.group]
             help_text:
-                label: "help_text.label"
+                label: "help_text.admin_menu_label"
                 items: [networking_init_cms.admin.help_text]
+            translation:
+                label: "translation.admin_menu_label"
+                items: [ibrows_sonata_translation.admin.orm]
 
 

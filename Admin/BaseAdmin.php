@@ -58,6 +58,10 @@ abstract class BaseAdmin extends Admin
     {
         $localeChoices = array();
 
+        if (!$this->request) {
+            return array();
+        }
+
         if (!$this->getRequest()->get('locale')) {
             $locale = $this->getRequest()->getLocale();
         } else {
@@ -82,6 +86,10 @@ abstract class BaseAdmin extends Admin
      */
     public function getDefaultLocale()
     {
+        if (!$this->request) {
+            return '';
+        }
+
         if (!$this->getRequest()->get('locale')) {
             $locale = $this->getRequest()->getLocale();
         } else {

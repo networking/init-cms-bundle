@@ -4,23 +4,12 @@
         <body>
             <trans-unit id="error.file_upload_size">
                 <source>error.file_upload_size</source>
-                <target>The file was too bit, the maximum file size is %max_server_size%</target>
+                <target>The file was too large, the maximum file size is %max_server_size%</target>
             </trans-unit>
-
             <trans-unit id="default">
                 <source>default</source>
                 <target>Default</target>
             </trans-unit>
-            <trans-unit id="one_column">
-                <source>one_column</source>
-                <target>One Column</target>
-            </trans-unit>
-
-            <trans-unit id="two_column">
-                <source>two_column</source>
-                <target>Two Column</target>
-            </trans-unit>
-
             <trans-unit id="sidemenu.link_edit_media">
                 <source>sidemenu.link_edit_media</source>
                 <target>Edit</target>
@@ -32,6 +21,10 @@
             <trans-unit id="breadcrumb.link_media_create">
                 <source>breadcrumb.link_media_create</source>
                 <target>Create</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Add new media</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_list">
                 <source>breadcrumb.link_media_list</source>
@@ -65,17 +58,21 @@
                 <source>breadcrumb.link_gallery_delete</source>
                 <target>Delete</target>
             </trans-unit>
-            <trans-unit id="media">
-                <source>media</source>
+            <trans-unit id="admin_label_media">
+                <source>admin_label_media</source>
                 <target>Media</target>
             </trans-unit>
-            <trans-unit id="gallery">
-                <source>gallery</source>
+            <trans-unit id="admin_label_gallery">
+                <source>admin_label_gallery</source>
                 <target>Gallery</target>
             </trans-unit>
             <trans-unit id="title_select_provider">
                 <source>title_select_provider</source>
-                <target>Select media provider</target>
+                <target>Select the type of media to upload</target>
+            </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Upload media</target>
             </trans-unit>
             <trans-unit id="no_provider_available">
                 <source>no_provider_available</source>
@@ -351,8 +348,8 @@
                 <source>form.label_binary_content</source>
                 <target>File</target>
             </trans-unit>
-            <trans-unit id="sonata_media">
-                <source>sonata_media</source>
+            <trans-unit id="sonata_media.admin_menu_label">
+                <source>sonata_media.admin_menu_label</source>
                 <target>Media Library</target>
             </trans-unit>
             <trans-unit id="filter.label_tags">
@@ -391,19 +388,19 @@
                 <source>form.label_current_video</source>
                 <target>Current Video</target>
             </trans-unit>
-            <trans-unit id="form.label_binary_content_youtube">
-                <source>form.label_binary_content_youtube</source>
-                <target>Youtube Link</target>
-            </trans-unit>
             <trans-unit id="filter.label_author_name">
                 <source>filter.label_author_name</source>
                 <target>Author</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube">
+                <source>form.label_binary_content_youtube</source>
+                <target>Youtube Link</target>
             </trans-unit>
             <trans-unit id="button.create.media_item">
                 <source>button.create.media_item</source>
                 <target>Add Object</target>
             </trans-unit>
-            <trans-unit id=" button.create.gallery_item">
+            <trans-unit id="button.create.gallery_item">
                 <source>button.create.gallery_item</source>
                 <target>Add Gallery</target>
             </trans-unit>

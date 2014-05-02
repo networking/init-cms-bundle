@@ -147,31 +147,31 @@ abstract class UserAdmin extends SonataUserAdmin
             ->add('groups', 'sonata_type_model', array('required' => false, 'expanded' => true, 'multiple' => true))
             ->end()
             ->with('Profile')
-            ->add('dateOfBirth', 'birthday', array('required' => false))
+//            ->add('dateOfBirth', 'birthday', array('required' => false))
             ->add('firstname', null, array('required' => false))
             ->add('lastname', null, array('required' => false))
-            ->add('website', 'url', array('required' => false))
-            ->add('biography', 'text', array('required' => false))
-            ->add(
-                'gender',
-                'sonata_user_gender',
-                array(
-                    'required' => false,
-                    'translation_domain' => $this->getTranslationDomain()
-                )
-            )
+//            ->add('website', 'url', array('required' => false))
+//            ->add('biography', 'text', array('required' => false))
+//            ->add(
+//                'gender',
+//                'sonata_user_gender',
+//                array(
+//                    'required' => false,
+//                    'translation_domain' => $this->getTranslationDomain()
+//                )
+//            )
             ->add('locale', 'locale', array('required' => false))
-            ->add('timezone', 'timezone', array('required' => false))
-            ->add('phone', null, array('required' => false))
-            ->end()
-            ->with('Social')
-            ->add('facebookUid', null, array('required' => false))
-            ->add('facebookName', null, array('required' => false))
-            ->add('twitterUid', null, array('required' => false))
-            ->add('twitterName', null, array('required' => false))
-            ->add('gplusUid', null, array('required' => false))
-            ->add('gplusName', null, array('required' => false))
+//            ->add('timezone', 'timezone', array('required' => false))
+//            ->add('phone', null, array('required' => false))
             ->end();
+//            ->with('Social')
+//            ->add('facebookUid', null, array('required' => false))
+//            ->add('facebookName', null, array('required' => false))
+//            ->add('twitterUid', null, array('required' => false))
+//            ->add('twitterName', null, array('required' => false))
+//            ->add('gplusUid', null, array('required' => false))
+//            ->add('gplusName', null, array('required' => false))
+//            ->end();
 
         if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
 
@@ -194,10 +194,10 @@ abstract class UserAdmin extends SonataUserAdmin
             ->end();
         }
 
-        $formMapper
-            ->with('Security')
-            ->add('token', null, array('required' => false))
-            ->add('twoStepVerificationCode', null, array('required' => false))
-            ->end();
+//        $formMapper
+//            ->with('Security')
+//            ->add('token', null, array('required' => false))
+//            ->add('twoStepVerificationCode', null, array('required' => false))
+//            ->end();
     }
 }

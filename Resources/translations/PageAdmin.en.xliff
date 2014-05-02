@@ -194,8 +194,7 @@
                 <source>message.translation_link</source>
                 <target>Here you can create a connection to an existing page in the selected language of %language%.
                     Only pages in %language% which do not already have a translation in the %original_language% are
-                    listed below.
-                    Select the page in %language% that you would like to link with "%object%", then click the submit
+                    listed below. Select the page in %language% that you would like to link with "%object%", then click the submit
                     button.
                 </target>
             </trans-unit>
@@ -542,8 +541,12 @@
                 <source>info.last_edited</source>
                 <target>Last edited at </target>
             </trans-unit>
-            <trans-unit id="pages.label">
-                <source>pages.label</source>
+            <trans-unit id="pages.admin_menu_label">
+                <source>pages.admin_menu_label</source>
+                <target>Pages</target>
+            </trans-unit>
+            <trans-unit id="pages.title">
+                <source>pages.title</source>
                 <target>Pages</target>
             </trans-unit>
             <trans-unit id="pages.content_not_found">

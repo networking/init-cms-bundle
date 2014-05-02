@@ -176,8 +176,12 @@
                 <source>flash_delete_children_error</source>
                 <target>Menüpunkt konnte nicht gelöscht werden. Bitte sortieren Sie die Sub-Menüpunkte zuerst.</target>
             </trans-unit>
-            <trans-unit id="menu.label">
-                <source>menu.label</source>
+            <trans-unit id="menu.admin_menu_label">
+                <source>menu.admin_menu_label</source>
+                <target>Menüs</target>
+            </trans-unit>
+            <trans-unit id="menus.title">
+                <source>menus.title</source>
                 <target>Menüs</target>
             </trans-unit>
             <trans-unit id="placement_title">

@@ -18,7 +18,7 @@
             <call method="setPageManager">
                 <argument type="service" id="networking_init_cms.page_manager"/>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="pages"
+            <tag name="sonata.admin" manager_type="orm" label="pages.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore" />
         </service>
 
@@ -30,7 +30,7 @@
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="content"
+            <tag name="sonata.admin" manager_type="orm" label="content.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>
@@ -52,7 +52,7 @@
                     <argument key="menu item">Networking\InitCmsBundle\Entity\MenuItem</argument>
                 </argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="menus"
+            <tag name="sonata.admin" manager_type="orm" label="menus.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>
@@ -68,7 +68,7 @@
             <call method="setlanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="help_text"
+            <tag name="sonata.admin" manager_type="orm" label="help_text.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persis_filters="true"/>
         </service>
@@ -81,7 +81,7 @@
             <call method="setTranslationDomain">
                 <argument>TagAdmin</argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="tags"
+            <tag name="sonata.admin" manager_type="orm" label="tags.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persis_filters="true"/>
         </service>

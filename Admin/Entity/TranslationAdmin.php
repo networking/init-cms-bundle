@@ -67,7 +67,12 @@ class TranslationAdmin extends ORMTranslationAdmin
 
         foreach ($this->managedLocales as $locale) {
 
-            $localeList = Intl::getLocaleBundle()->getLocaleNames(substr($this->request->getLocale(), 0, 2));
+            if($this->request){
+                $localeString = $this->request->getLocale();
+            }else {
+                $localeString = $locale;
+            }
+            $localeList = Intl::getLocaleBundle()->getLocaleNames(substr($localeString, 0, 2));
 
             $fieldDescription = $this->modelManager->getNewFieldDescriptionInstance($this->getClass(), $locale);
             $fieldDescription->setTemplate(
@@ -136,6 +141,10 @@ class TranslationAdmin extends ORMTranslationAdmin
 
         if ($name === 'list') {
             return 'NetworkingInitCmsBundle:TranslationAdmin:list.html.twig';
+        }
+
+        if ($name === 'edit') {
+            return 'NetworkingInitCmsBundle:TranslationAdmin:edit.html.twig';
         }
 
         return parent::getTemplate($name);

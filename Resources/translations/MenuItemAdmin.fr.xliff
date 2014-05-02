@@ -174,9 +174,33 @@
                 <source>flash_delete_children_error</source>
                 <target>Le point du menu ne peut pas être supprimé. S'il vous plaît réorganiser les points de sous-menu d'abord.</target>
             </trans-unit>
-            <trans-unit id="menu.label">
-                <source>menu.label</source>
+            <trans-unit id="menu.admin_menu_label">
+                <source>menu.admin_menu_label</source>
                 <target>Menus</target>
+            </trans-unit>
+            <trans-unit id="menus.title">
+                <source>menus.title</source>
+                <target>Menus</target>
+            </trans-unit>
+            <trans-unit id="placement_title">
+                <source>placement_title</source>
+                <target>Position your menu item</target>
+            </trans-unit>
+            <trans-unit id="menu_item.add_here">
+                <source>menu_item.add_here</source>
+                <target>Insert menu item here</target>
+            </trans-unit>
+            <trans-unit id="action_edit">
+                <source>action_edit</source>
+                <target>Edit menu item</target>
+            </trans-unit>
+            <trans-unit id="action_delete">
+                <source>action_delete</source>
+                <target>Delete menu item</target>
+            </trans-unit>
+            <trans-unit id="action_page_edit">
+                <source>action_page_edit</source>
+                <target>Edit page</target>
             </trans-unit>
 		</body>
 	</file>

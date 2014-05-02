@@ -38,6 +38,10 @@
                 <source>sonata.media.provider.file</source>
                 <target>Fichier</target>
             </trans-unit>
+            <trans-unit id="media_context.default">
+                <source>media_context.default</source>
+                <target>Standard Media</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

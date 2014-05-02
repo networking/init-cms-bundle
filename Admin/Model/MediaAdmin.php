@@ -42,6 +42,11 @@ abstract class MediaAdmin extends Admin
      */
     protected $languages;
 
+    /**
+     * @var array
+     */
+    protected $localisedMediaProviders = array('sonata.media.provider.file');
+
 
     /**
      * Set the language paramenter to contain a list of languages most likely
@@ -149,13 +154,16 @@ abstract class MediaAdmin extends Admin
             //
         }
 
-        $formMapper->add(
-            'locale',
-            'choice',
-            array(
-                'choices' => $this->getLocaleChoices(),
-            )
-        );
+        if(in_array($media->getProviderName(), $this->localisedMediaProviders ))
+        {
+            $formMapper->add(
+                'locale',
+                'choice',
+                array(
+                    'choices' => $this->getLocaleChoices(),
+                )
+            );
+        }
 
 
 
@@ -198,7 +206,7 @@ abstract class MediaAdmin extends Admin
         $listMapper
             ->add('custom', 'string', array('template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig','label'=>'list.label_media'));
 
-        if ($this->request->get('pcode') == '') {
+        if ($this->request && $this->request->get('pcode') == '') {
             $listMapper->add(
                 '_action',
                 'actions',
@@ -222,7 +230,7 @@ abstract class MediaAdmin extends Admin
 
         $datagridMapper
             ->add('name', 'networking_init_cms_simple_string')
-            ->add('tags', null, array('hidden' => true))
+            ->add('tags')
             ->add('authorName', null, array('hidden' => true));
 
         if ($context) {
@@ -375,7 +383,7 @@ abstract class MediaAdmin extends Admin
      */
     public function getBatchActions()
     {
-        if ($this->request->get('pcode') == '') {
+        if ($this->request && $this->request->get('pcode') == '') {
             return parent::getBatchActions();
         }
 
@@ -427,5 +435,9 @@ abstract class MediaAdmin extends Admin
 
 
         return parent::generateUrl($name, $parameters, $absolute);
+    }
+
+    public function setLocalisedMediaProviders(array $providers){
+        $this->localisedMediaProviders = $providers;
     }
 }

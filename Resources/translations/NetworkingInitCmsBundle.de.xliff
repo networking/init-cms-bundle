@@ -214,10 +214,6 @@
                 <source>translations.cache_removed</source>
                 <target>Übersetzung Cache wurde erfolgreich gelöscht</target>
             </trans-unit>
-            <trans-unit id="translation.title">
-                <source>translation.title</source>
-                <target>Übersetzung</target>
-            </trans-unit>
             <trans-unit id="view_website.status_draft">
                 <source>view_website.status_draft</source>
                 <target>Website Preview Modus</target>
