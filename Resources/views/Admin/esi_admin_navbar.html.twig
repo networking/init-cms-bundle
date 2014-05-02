@@ -1,0 +1,34 @@
+{% if app.user is defined %}
+    {% if is_granted('ROLE_SONATA_ADMIN') %}
+        {% include 'NetworkingInitCmsBundle:Admin:toolbar.css.twig' %}
+        <div class="navbar-initcms">
+            <div class="initnavbar initnavbar-fixed-top navbar-initcms initnavbar-inverse">
+                <div class="initnavbar-inner">
+                    <div class="container">
+                        <div class="row">
+                            <div class="span2">
+                                <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
+                                    <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
+                                         width="77">
+                                </a>
+                            </div>
+                            <div class="span5">
+                                {% if admin_pool is defined %}
+                                    <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+                                        {{ admin_pool.title }}
+                                    </a>
+                                    {% include admin_pool.getTemplate('user_block') %}
+                                {% endif %}
+                            </div>
+                            <div class="span5">
+                                {% if admin_pool is defined %}
+                                    {{ mopa_bootstrap_navbar('AdminMenu') }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

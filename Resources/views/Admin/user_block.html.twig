@@ -1,20 +1,21 @@
 {% block user_block %}
     {% if app.user %}
-        <ul class="nav">
+        {% set locale = app.request.session.get('admin/_locale') %}
+        <ul class="{% if app.request.isXmlHttpRequest %}init{% endif %}nav">
             <li class="dropdown">
                 <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><span
-                        class="font-smaller"><img src="http://www.gravatar.com/avatar/{{ app.user.hash }}" width="20" style="max-width: 20px ; height: 20px;" /> {{ app.user }}</span> <b class="caret"></b></a>
+                        class="font-smaller"><img src="https://www.gravatar.com/avatar/{{ app.user.hash }}" width="20" style="max-width: 20px ; height: 20px;" /> {{ app.user }}</span> <b class="caret"></b></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                     <li><a tabindex="-1"
-                           href="{{ url('admin_networking_initcms_user_edit', {id: app.user.id}) }}">{{ 'label.account_settings'|trans({}, 'PageAdmin') }}</a>
+                           href="{{ url('admin_networking_initcms_user_edit', {id: app.user.id}) }}">{{ 'label.account_settings'|trans({}, 'PageAdmin', locale) }}</a>
                     </li>
                     {% if is_granted('ROLE_PREVIOUS_ADMIN') and sonata_user.impersonating %}
                         <li>
-                            <a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters| merge({'_switch_user': '_exit'})) }}">({{ 'label.exit'|trans({}, 'PageAdmin') }}
+                            <a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters| merge({'_switch_user': '_exit'})) }}">({{ 'label.exit'|trans({}, 'PageAdmin', locale) }}
                                 )</a></li>
                     {% endif %}
                     <li>
-                        <a href="{{ url('sonata_user_admin_security_logout') }}">{{ 'user_block_logout'|trans({}, 'SonataUserBundle') }}</a>
+                        <a href="{{ url('sonata_user_admin_security_logout') }}">{{ 'user_block_logout'|trans({}, 'SonataUserBundle', locale) }}</a>
                     </li>
                 </ul>
             </li>

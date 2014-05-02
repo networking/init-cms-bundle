@@ -10,6 +10,7 @@
  */
 namespace Networking\InitCmsBundle\DependencyInjection;
 
+use Networking\InitCmsBundle\EventListener\AdminToolbarListener;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -35,12 +36,16 @@ class NetworkingInitCmsExtension extends Extension
         $configuration = new Configuration();
         $defaults = Yaml::parse(__DIR__ . '/../Resources/config/cms/config.yml');
 
-        foreach ($configs as $config) {
-            foreach ($config as $key => $value) {
-                $defaults['networking_init_cms'][$key] = $value;
 
-            }
-        }
+
+
+
+        foreach ($configs as $config) {
+                    foreach ($config as $key => $value) {
+                        $defaults['networking_init_cms'][$key] = $value;
+
+                    }
+                }
 
         $config = $this->processConfiguration($configuration, $defaults);
 
@@ -71,6 +76,16 @@ class NetworkingInitCmsExtension extends Extension
             'networking_init_cms.translation_fallback_route',
             $config['translation_fallback_route']
         );
+
+
+        if (!$config['admin_toolbar']['toolbar']) {
+            $mode = AdminToolbarListener::DISABLED;
+        } else {
+            $mode = AdminToolbarListener::ENABLED;
+        }
+        $container->setParameter('networking_init_cms.admin_toolbar.mode', $mode);
+        $container->setParameter('networking_init_cms.admin_toolbar.position', $config['admin_toolbar']['position']);
+
         $container->setParameter('networking_init_cms.404_template', $config['404_template']);
         $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
         $container->setParameter('networking_init_cms.admin_menu_groups', $config['admin_menu_groups']);

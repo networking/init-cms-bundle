@@ -43,6 +43,14 @@
             <argument>200</argument>
         </service>
 
+        <service id="networking_init_cms.admin_toolbar" class="Networking\InitCmsBundle\EventListener\AdminToolbarListener">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="security.context"/>
+            <argument>%networking_init_cms.admin_toolbar.mode%</argument>
+            <argument>%networking_init_cms.admin_toolbar.position%</argument>
+            <tag name="kernel.event_subscriber" />
+        </service>
+
     </services>
 
 </container>

@@ -30,7 +30,7 @@
             <argument type="collection">
                 <argument key="status_menu" on-invalid="null" strict="false" type="service" id="networking_init_cms.menu.admin_menu"/>
             </argument>
-            <argument type="collection"></argument>
+            <argument type="collection" />
             <argument type="collection">
                 <argument key="fixedTop">false</argument>
                 <argument key="isFluid">false</argument>

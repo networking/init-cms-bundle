@@ -56,7 +56,7 @@
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
-                <target>Neues %admin_label% hinzufügen </target>
+                <target>%admin_label% hinzufügen </target>
             </trans-unit>
             <trans-unit id="title_edit">
                 <source>title_edit</source>
