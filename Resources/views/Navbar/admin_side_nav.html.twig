@@ -19,7 +19,7 @@
                                 <div class="active-corner-top"></div>
                             </div>
                         {% endif %}
-                        <div class="pull-left"><i class="icon icon-dashboard icon-large"></i>
+                        <div class="pull-left menu_icon"><i class="icon icon-dashboard icon-large"></i>
                         </div>
                         <div class="pull-left first-level-text">{{ 'admin.menu.dashboard'|trans({}, 'PageAdmin') }}</div>
                         <div class="clearfix"></div>
@@ -42,7 +42,7 @@
                         {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
                             <li class="{% if isActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
 
-                                <div class="pull-left ">
+                                <div class="pull-left menu_icon">
                                     {% if admin.getIcon() is defined %}
                                         <i class="icon {{ admin.getIcon() }} icon-{% if small %}medium{% else %}large{% endif %}"></i>
                                     {% else %}
@@ -79,7 +79,7 @@
 
                                 <li class="{% if groupActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
 
-                                <div class="pull-left ">
+                                <div class="pull-left menu_icon">
                                     {% if admin.getIcon() is defined %}
                                         <i class="icon {{ admin.getIcon() }} icon-{% if small %}medium{% else %}large{% endif %}"></i>
                                     {% else %}
