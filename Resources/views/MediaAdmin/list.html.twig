@@ -72,7 +72,14 @@ file that was distributed with this source code.
                             {# create button #}
                             {% if galleryListMode is defined and not galleryListMode %}
                                 <h1><span class="info-soft">{{ ('media_context.' ~ name)|trans({}) }}</span>
-                                    {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
+                                    {% set create_text =  'link_action_create'|trans({}, admin.translationDomain) %}
+                                    {% if create_text == 'link_action_create' %}
+                                        {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
+                                    {% endif %}
+                                    <a class="btn btn-primary btn-small menu-dialog-link"
+                                       href="{{ admin.generateUrl('create', {'context' : name, 'provider' : null}) }}">
+                                        <i class="icon-plus icon-white"></i> {{ create_text }}
+                                    </a>
                                 </h1>
                             {% endif %}
 
