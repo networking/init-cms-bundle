@@ -18,9 +18,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class ContentRouteManager extends DoctrineContentRouteManager
 {
-    public function __construct(EntityManager $em, $class, Session $session)
+    public function __construct(EntityManager $em, $class)
     {
-        parent::__construct($em, $class, $session);
+        parent::__construct($em, $class);
     }
 
 

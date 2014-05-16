@@ -96,27 +96,28 @@ class LocaleListener implements EventSubscriberInterface
             return;
         }
 
-        if (!$request->getSession()) {
-            return;
-        }
 
         $patterns = $this->accessMap->getPatterns($request);
         //@todo find a better solution to know if we are in the admin area or not
         $localeType = (in_array('ROLE_ADMIN', $patterns[0])) ? 'admin/_locale' : '_locale';
+        if($localeType == 'admin/_locale'){
+            $locale = $request->getSession()->get($localeType);
+        }else{
+            $locale = $request->cookies->get($localeType);;
+        }
 
         /*
          * handle locale:
-         * 1. priority: defined in session: set request attribute as symfony will set request->setLocale
+         * 1. priority: defined in cookie: set request attribute as symfony will set request->setLocale
          * 2. priority: defined in browser or default: set request attribute as symfony will set request->setLocale
          */
-        if($request->hasPreviousSession()) {
+        if($locale) {
             // there is a session -> use that
-            $request->attributes->set('_locale',$request->getSession()->get($localeType));
+            $request->setLocale($locale);
         } else {
             // nothing set, get the preferred locale and use it
             $preferredLocale = $this->getPreferredLocale($request);
-            $request->attributes->set('_locale',$preferredLocale);
-            $request->getSession()->set($localeType, $preferredLocale);
+            $request->setLocale($preferredLocale);
         }
 
         if (null !== $this->router) {
@@ -144,12 +145,10 @@ class LocaleListener implements EventSubscriberInterface
         // If user language does not exist in frontend website, get next best
         $frontendLocale = $this->guessFrontendLocale($locale);
 
-        $request->getSession()->set('_locale', $frontendLocale);
-
         if(in_array('ROLE_ADMIN', $patterns[0])){
-            $request->attributes->set('_locale', $locale);
+            $request->setLocale($locale);
         }else {
-            $request->attributes->set('_locale', $frontendLocale);
+            $request->setLocale($frontendLocale);
         }
 
     }

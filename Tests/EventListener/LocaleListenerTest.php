@@ -24,39 +24,35 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\SessionInterface')
             ->disableOriginalConstructor()
             ->getMock();
-        $session->expects($this->once())
-            ->method('get')
-            ->with('_locale')
-            ->will($this->returnValue('xy'));
+
         $session->expects($this->never())
             ->method('set');
 
+        $server = $this->getMock('\Symfony\Component\HttpFoundation\ServerBag');
+                $server->expects($this->exactly(2))
+                    ->method('get')
+                    ->with('HTTP_ACCEPT_LANGUAGE')
+                    ->will($this->returnValue('de-DE,de;q=0.8,jp'));
+
         $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
-            ->disableOriginalConstructor()
             ->getMock();
         $parameterBag = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')
             ->disableOriginalConstructor()
             ->getMock();
 
         $request->attributes = $parameterBag;
-        $request
-            ->expects($this->once())
-            ->method('hasPreviousSession')
-            ->will($this->returnValue(true));
+        $request->cookies = $parameterBag;
+        $request->server = $server;
+
+
         $request
             ->expects($this->never())
             ->method('setDefaultLocale');
-        $parameterBag
-            ->expects($this->once())
-            ->method('set')
-            ->with('_locale', 'xy');
+
         $request
             ->expects($this->once())
             ->method('getLocale');
-        $request
-            ->expects($this->exactly(2))
-            ->method('getSession')
-            ->will($this->returnValue($session));
+
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
@@ -123,10 +119,18 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
-        $request
-            ->expects($this->once())
-            ->method('getSession')
-            ->will($this->returnValue(null));
+
+        $parameterBag = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $server = $this->getMock('\Symfony\Component\HttpFoundation\ServerBag');
+                        $server->expects($this->exactly(2))
+                            ->method('get')
+                            ->with('HTTP_ACCEPT_LANGUAGE')
+                            ->will($this->returnValue('de-DE,de;q=0.8,jp'));
+        $request->cookies = $parameterBag;
+        $request->server = $server;
+
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
@@ -138,7 +142,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
         $accessMapStub = $this->getMock('\Symfony\Component\Security\Http\AccessMap');
         $accessMapStub
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('getPatterns')
             ->will($this->returnValue(array(array('hallo'))));
         /** @var SecurityContext $securityContextStub */
@@ -159,9 +163,6 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 //			->method('get')
 //            ->with('_locale')
 //			->will($this->returnValue('xy'));
-        $session->expects($this->once())
-            ->method('set')
-            ->with('_locale', 'de');
 
         $server = $this->getMock('\Symfony\Component\HttpFoundation\ServerBag');
         $server->expects($this->exactly(2))
@@ -170,7 +171,6 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('de-DE,de;q=0.8,jp'));
 
         $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
-            ->disableOriginalConstructor()
             ->getMock();
 
         $parameterBag = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')
@@ -179,25 +179,17 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
         $request->attributes = $parameterBag;
         $request->server = $server;
-        $request
-            ->expects($this->once())
-            ->method('hasPreviousSession')
-            ->will($this->returnValue(false));
+        $request->cookies = $parameterBag;
+
         $request
             ->expects($this->never())
             ->method('setDefaultLocale');
 
-        $parameterBag
-            ->expects($this->once())
-            ->method('set')
-            ->with('_locale', 'de');
+
         $request
             ->expects($this->once())
             ->method('getLocale');
-        $request
-            ->expects($this->exactly(2))
-            ->method('getSession')
-            ->will($this->returnValue($session));
+
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()

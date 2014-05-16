@@ -15,6 +15,8 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager as BaseContentRouteManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouteCollection;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
@@ -36,22 +38,25 @@ abstract class ContentRouteManager extends BaseContentRouteManager
     protected $class;
 
     /**
-     * @var Session
+     * @var Request
      */
-    protected $session;
+    protected $request;
     /**
      * @var ObjectRepository
      */
     protected $repository;
 
-    public function __construct(ObjectManager $om, $class, Session $session)
+    public function __construct(ObjectManager $om, $class)
     {
         $this->objectManager = $om;
         $this->repository = $om->getRepository($class);
 
         $metadata = $om->getClassMetadata($class);
         $this->class = $metadata->getName();
-        $this->session = $session;
+    }
+
+    public function setRequest(Request $request = null){
+        $this->request = $request;
     }
 
     /**
@@ -136,17 +141,13 @@ abstract class ContentRouteManager extends BaseContentRouteManager
             /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
             $content = $this->getRouteContent($contentRoute);
 
-            $viewStatus = $this->session->get('_viewStatus') ? $this->session->get(
-                '_viewStatus'
-            ) : VersionableInterface::STATUS_PUBLISHED;
+            $viewStatus = $this->request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED);
 
             if ($viewStatus == VersionableInterface::STATUS_DRAFT && ($content instanceof ResourceVersionInterface)) {
                 continue;
             } elseif ($viewStatus == VersionableInterface::STATUS_PUBLISHED && ($content instanceof VersionableInterface)) {
                 continue;
             }
-
-            $this->session->set('_locale', $contentRoute->getLocale());
 
             $contentRoute->initializeRoute($content);
 
@@ -163,6 +164,6 @@ abstract class ContentRouteManager extends BaseContentRouteManager
 
     protected function filterByLocale($var)
     {
-        return $var->getLocale() == $this->session->get('_locale');
+        return $var->getLocale() == $this->request->getLocale();
     }
 }

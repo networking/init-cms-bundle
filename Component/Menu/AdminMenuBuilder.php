@@ -176,7 +176,7 @@ class AdminMenuBuilder extends MenuBuilder
                 $menu->addChild(
                     'Edit',
                     array(
-                        'label' => $this->translator->trans('Edit', array(), 'NetworkingInitCmsBundle', $adminLocale),
+                        'label' => $this->translator->trans('link_action_edit', array(), 'SonataAdminBundle', $adminLocale),
                         'uri' => $editPath
                     )
                 );
