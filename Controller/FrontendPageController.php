@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,7 +35,7 @@ class FrontendPageController extends Controller
      */
     protected function getAdminPool()
     {
-        if ($this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+        if ($this->get('security.context')->getToken() && $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
 
             return $this->get('sonata.admin.pool');
         }
@@ -77,13 +78,14 @@ class FrontendPageController extends Controller
         }
 
         if ($page->getStatus() != PageInterface::STATUS_PUBLISHED) {
-            if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+            if (!$this->get('security.context')->getToken() || false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
                 $message = 'The requested page has the status "' . $page->getStatus() . '", please login to view page';
                 throw $this->createNotFoundException($message);
             }
         }
 
-        return array('page' => $page, 'admin_pool' => $this->getAdminPool());
+        $response = $this->render($request->get('_template'), array('page' => $page, 'admin_pool' => $this->getAdminPool()));
+        return $response;
     }
 
 
@@ -123,7 +125,13 @@ class FrontendPageController extends Controller
             }
         }
 
-        return array('page' => $page, 'admin_pool' => $this->getAdminPool());
+        $response = $this->render($request->get('_template'), array('page' => $page, 'admin_pool' => $this->getAdminPool()));
+
+        if(!$request->cookies || $request->cookies->get('_locale')){
+            $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
+        }
+
+        return $response;
     }
 
     /**
@@ -184,7 +192,7 @@ class FrontendPageController extends Controller
 
         $translationRoute = $this->getTranslationRoute($request->headers->get('referer'), $locale);
 
-        $request->getSession()->set('_locale', $locale);
+        $request->setLocale($locale);
 
         if (!is_array($translationRoute)) {
             $routeName = $translationRoute;
@@ -206,8 +214,10 @@ class FrontendPageController extends Controller
 
         $newURL = $this->get('router')->generate($routeName, $params);
 
-        return new RedirectResponse($newURL);
+        $response =  new RedirectResponse($newURL);
+        $response->headers->setCookie(new Cookie('_locale', $locale));
 
+        return $response;
     }
 
     /**
@@ -221,7 +231,7 @@ class FrontendPageController extends Controller
      */
     public function viewDraftAction(Request $request, $locale, $path = null)
     {
-        $request->getSession()->set('_locale', $locale);
+        $request->setLocale($locale);
 
         return $this->changeViewMode($request, PageInterface::STATUS_DRAFT, $path);
     }
@@ -237,7 +247,7 @@ class FrontendPageController extends Controller
      */
     public function viewLiveAction(Request $request, $locale, $path = null)
     {
-        $request->getSession()->set('_locale', $locale);
+        $request->setLocale($locale);
 
         return $this->changeViewMode($request, PageInterface::STATUS_PUBLISHED, $path);
     }
