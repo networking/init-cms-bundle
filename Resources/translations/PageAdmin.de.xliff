@@ -8,7 +8,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_list">
                 <source>breadcrumb.link_page_list</source>
-                <target><![CDATA[<small>Organisieren Sie Ihre </small> ]]> Seiten</target>
+                <target><![CDATA[<small>Organisieren Sie Ihre </small>  Seiten]]></target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_edit">
                 <source>breadcrumb.link_page_edit</source>
@@ -192,10 +192,10 @@
             </trans-unit>
             <trans-unit id="message.translation_link">
                 <source>message.translation_link</source>
-                <target>Hier können Sie eine Verbindung mit einer bestehenden Seite in der gewählten Sprache %language% herstellen.
+                <target><![CDATA[Hier können Sie eine Verbindung mit einer bestehenden Seite in der gewählten Sprache %language% herstellen.
                     Nur Seiten in %language%, die nicht in die Sprache %original_language% übersetzt wurden, sind nachfolgend aufgeführt.
                     Wählen Sie die Seite in %language%, die Sie mit "%object%", verknüpfen wollen. Dann klicken Sie auf die Taste „Abschicken“.
-                </target>
+                ]]></target>
             </trans-unit>
             <trans-unit id="title.translation_link">
                 <source>title.translation_link</source>
@@ -235,8 +235,8 @@
             </trans-unit>
             <trans-unit id="info.delete_translation_link">
                 <source>info.delete_translation_link</source>
-                <target>Sind Sie sicher, dass Sie die Verknüpfung dieser Seite mit "%translatedPage%" (%locale%) entfernen wollen?
-                </target>
+                <target><![CDATA[Sind Sie sicher, dass Sie die Verknüpfung dieser Seite mit "%translatedPage%" (%locale%) entfernen wollen?
+                ]]></target>
             </trans-unit>
             <trans-unit id="label.account_settings">
                 <source>label.account_settings</source>
@@ -432,7 +432,9 @@
             </trans-unit>
             <trans-unit id="info.page_create">
                 <source>info.page_create</source>
-                <target>Bitte füllen Sie die folgenden wichtigen Seitenfelder aus, bevor Sie weiter Inhalte hinzufügen. Wenn die Seite erstellt wurde, werden Sie direkt zur Ansicht „Seite bearbeiten“ weitergeleitet. Sie können diese Einstellungen jederzeit in der Ansicht „Seite bearbeiten“ ändern. Suchen Sie einfach das „Bearbeiten“-Symbol in den Einstellungen &amp; SEO.</target>
+                <target>Bitte füllen Sie die folgenden wichtigen Seitenfelder aus, bevor Sie weiter Inhalte hinzufügen.
+                    Wenn die Seite erstellt wurde, werden Sie direkt zur Ansicht „Seite bearbeiten“ weitergeleitet.
+                    Sie können diese Einstellungen jederzeit in der Ansicht „Seite bearbeiten“ ändern. Suchen Sie einfach das „Bearbeiten“-Symbol in den Einstellungen &amp; SEO.</target>
             </trans-unit>
             <trans-unit id="locale.helper.text">
                 <source>locale.helper.text</source>
@@ -488,8 +490,8 @@
             </trans-unit>
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>
-                <target>Es gibt keine Seiten in %language%, die als Übersetzung dieser Seite verknüpft werden können.
-                    Sie können diese Seite kopieren (klicken Sie die Verknüpfung „Übersetzen“) oder eine ganz neue Seite in %language% erstellen und die beiden Seiten dann verknüpfen.</target>
+                <target><![CDATA[Es gibt keine Seiten in %language%, die als Übersetzung dieser Seite verknüpft werden können.
+                    Sie können diese Seite kopieren (klicken Sie die Verknüpfung „Übersetzen“) oder eine ganz neue Seite in %language% erstellen und die beiden Seiten dann verknüpfen.]]></target>
             </trans-unit>
             <trans-unit id="message.translation_saved">
                 <source>message.translation_saved</source>
@@ -505,8 +507,8 @@
             </trans-unit>
             <trans-unit id="info.copy_page">
                 <source>info.copy_page</source>
-                <target>Eine Kopie der Inhalte dieser Seite wird in %language% erstellt. Wenn die Seite erstellt wurde, gehen Sie zur Übersetzung und klicken Sie auf„Bearbeiten“, um den Inhalt zu ändern.
-                </target>
+                <target><![CDATA[Eine Kopie der Inhalte dieser Seite wird in %language% erstellt. Wenn die Seite erstellt wurde, gehen Sie zur Übersetzung und klicken Sie auf „Bearbeiten“, um den Inhalt zu ändern.
+                ]]></target>
             </trans-unit>
             <trans-unit id="button.copy_page">
                 <source>button.copy_page</source>

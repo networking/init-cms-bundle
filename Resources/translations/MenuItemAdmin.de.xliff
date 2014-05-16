@@ -6,6 +6,10 @@
                 <source>button.create.menu_item</source>
                 <target>Menüpunkt hinzufügen</target>
             </trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Menüpunkt hinzufügen</target>
+            </trans-unit>
             <trans-unit id="legend.menu.actions">
                 <source>legend.menu.actions</source>
                 <target>Aktionen im gewählten Menü</target>
@@ -28,7 +32,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_menu_item_navigation">
                 <source>breadcrumb.link_menu_item_navigation</source>
-                <target><![CDATA[<small>Organisieren Sie Ihre</small>]]> Menüs</target>
+        <target><![CDATA[<small>Organisieren Sie Ihre</small> Menüs]]></target>
             </trans-unit>
             <trans-unit id="label.linked_resource">
                 <source>label.linked_resource</source>
@@ -92,7 +96,7 @@
             </trans-unit>
             <trans-unit id="form.label_internal_url">
                 <source>form.label_internal_url</source>
-                <target>Internal Link</target>
+        <target>Interner Link</target>
             </trans-unit>
             <trans-unit id="form.label_hidden">
                 <source>form.label_hidden</source>
@@ -148,9 +152,9 @@
             </trans-unit>
             <trans-unit id="info.please_enter_description">
                 <source>info.please_enter_description</source>
-                <target>Sie haben noch keine Beschreibung für Ihr Menü eingegeben. Lassen Sie doch andere wissen, wo
+                <target><![CDATA[Sie haben noch keine Beschreibung für Ihr Menü eingegeben. Lassen Sie doch andere wissen, wo
                     dieses Menü auftaucht und wozu es dient.
-                </target>
+                ]]></target>
             </trans-unit>
             <trans-unit id="button.cancel">
                 <source>button.cancel</source>

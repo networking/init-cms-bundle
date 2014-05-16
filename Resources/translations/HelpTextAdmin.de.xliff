@@ -7,11 +7,11 @@
 
             <trans-unit id="list.label_title">
                 <source>list.label_title</source>
-                <target>Help Text Title</target>
+        <target><![CDATA[Hilfetext-Titel]]></target>
             </trans-unit>
             <trans-unit id="list.label_translation_key">
                 <source>list.label_translation_key</source>
-                <target>Translation Key</target>
+        <target><![CDATA[Übersetzungs-Key]]></target>
             </trans-unit>
             <trans-unit id="list.label_locale">
                 <source>list.label_locale</source>
@@ -19,11 +19,11 @@
             </trans-unit>
             <trans-unit id="list.pre_title_text">
                 <source>list.pre_title_text</source>
-                <target>Administer your</target>
+                <target><![CDATA[Bearbeite Deine]]></target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_help_text_list">
                 <source>breadcrumb.link_help_text_list</source>
-                <target><![CDATA[<small>Administer your</small>]]> Help Texts</target>
+        <target><![CDATA[<small>Bearbeite Deine</small> Hilfetexte]]></target>
             </trans-unit>
             <trans-unit id="filter.label_locale">
                 <source>filter.label_locale</source>
@@ -31,15 +31,15 @@
             </trans-unit>
             <trans-unit id="form.label_locale">
                 <source>form.label_locale</source>
-                <target>Help Text language</target>
+        <target><![CDATA[Hilfetext-Sprache]]></target>
             </trans-unit>
             <trans-unit id="form.label_translation_key">
                 <source>form.label_translation_key</source>
-                <target>Translation key</target>
+        <target><![CDATA[Übersetzungs-Key]]></target>
             </trans-unit>
             <trans-unit id="form.label_title">
                 <source>form.label_title</source>
-                <target>Help Text Title</target>
+        <target><![CDATA[Hilfetext-Titel]]></target>
             </trans-unit>
             <trans-unit id="form.label_text">
                 <source>form.label_text</source>
@@ -47,7 +47,7 @@
             </trans-unit>
             <trans-unit id="title.help">
                 <source>title.help</source>
-                <target>Help &amp; User Manual</target>
+        <target><![CDATA[Hilfe & Bedienungsanleitung]]></target>
             </trans-unit>
             <trans-unit id="link.close">
                 <source>link.close</source>
@@ -55,46 +55,46 @@
             </trans-unit>
             <trans-unit id="help_title">
                 <source>help_title</source>
-                <target>Help for: %admin_title% %action%</target>
+        <target><![CDATA[Hilfe für: %admin_title% %action%]]></target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.page.edit">
                 <source>networking_init_cms.admin.page.edit</source>
-                <target>Page edit</target>
+        <target><![CDATA[Seite bearbeiten]]></target>
             </trans-unit>
             <trans-unit id="action.list">
                 <source>action.list</source>
-                <target>List</target>
+        <target><![CDATA[Liste anzeigen]]></target>
             </trans-unit>
             <trans-unit id="action.edit">
                 <source>action.edit</source>
-                <target>Edit</target>
+        <target><![CDATA[Bearbeiten]]></target>
             </trans-unit>
             <trans-unit id="action.delete">
                 <source>action.delete</source>
-                <target>Delete</target>
+        <target><![CDATA[Löschen]]></target>
             </trans-unit>
             <trans-unit id="action.create">
                 <source>action.create</source>
-                <target>Create</target>
+        <target><![CDATA[Erstellen]]></target>
             </trans-unit>
 
             <!-- help navigation -->
 
             <trans-unit id="networking_init_cms.admin.page">
                 <source>networking_init_cms.admin.page</source>
-                <target>Pages</target>
+        <target><![CDATA[Seiten]]></target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.menu_item">
                 <source>networking_init_cms.admin.menu_item</source>
-                <target>Menu</target>
+        <target><![CDATA[Menü]]></target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.media">
                 <source>sonata.media.admin.media</source>
-                <target>Media</target>
+        <target><![CDATA[Medien]]></target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.user">
                 <source>sonata.user.admin.user</source>
-                <target>User</target>
+        <target><![CDATA[Benutzer]]></target>
             </trans-unit>
 
             <!-- overview -->
@@ -578,11 +578,15 @@
             </trans-unit>
             <trans-unit id="help_text.admin_menu_label">
                 <source>help_text.admin_menu_label</source>
-                <target>Help Texts</target>
+                <target>Hilfetexte</target>
             </trans-unit>
             <trans-unit id="help_text.title">
                 <source>help_text.title</source>
-                <target>Help Texts</target>
+                <target>Hilfetexte</target>
+            </trans-unit>
+            <trans-unit id="help_text.label">
+                <source>help_text.label</source>
+                <target>Hilfetexte</target>
             </trans-unit>
         </body>
     </file>

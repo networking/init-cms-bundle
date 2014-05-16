@@ -74,6 +74,10 @@
                 <source>title_create</source>
                 <target>Upload media</target>
             </trans-unit>
+            <trans-unit id="title_create_gallery">
+                <source>title_create</source>
+                <target>Create gallery</target>
+            </trans-unit>
             <trans-unit id="no_provider_available">
                 <source>no_provider_available</source>
                 <target>Aucun fournisseur n’est disponible</target>

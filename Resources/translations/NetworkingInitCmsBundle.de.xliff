@@ -56,11 +56,11 @@
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
-                <target>%admin_label% hinzufügen </target>
+                <target>Hinzufügen</target>
             </trans-unit>
             <trans-unit id="title_edit">
                 <source>title_edit</source>
-                <target>%admin_label% - Bearbeiten "%name%"</target>
+                <target>Bearbeiten "%name%"</target>
             </trans-unit>
             <trans-unit id="btn_update">
                 <source>btn_update</source>
@@ -142,9 +142,9 @@
                 <source>info.welcome_text</source>
                 <target>
                     <![CDATA[
-                         <p>Wir haben hier noch einiges zu tun. Wir freuen uns über Vorschläge. Wir würden dieses Dashboard gerne weiter personalisierbar machen.</p>
-                    ]]>
-                </target>
+                         <p>Benutzen Sie die Hilfefunktion (Fragezeichen auf der rechten Seite)</p>
+
+                ]]></target>
             </trans-unit>
             <trans-unit id="label.last_activity">
                 <source>label.last_activity</source>
@@ -164,7 +164,7 @@
             </trans-unit>
             <trans-unit id="flash_delete_error">
                 <source>flash_delete_error</source>
-                <target>Es tut uns leid, der Eintrag konnte nicht gelöscht werden.</target>
+                <target>Sorry, der Eintrag konnte nicht gelöscht werden.</target>
             </trans-unit>
             <trans-unit id="flash_edit_success">
                 <source>flash_edit_success</source>
@@ -208,11 +208,11 @@
             </trans-unit>
             <trans-unit id="toggle.roles">
                 <source>toggle.roles</source>
-                <target>Alle/Keinen Rollen Auswählen</target>
+                <target>Alle/Keine Rollen Auswählen</target>
             </trans-unit>
             <trans-unit id="translations.cache_removed">
                 <source>translations.cache_removed</source>
-                <target>Übersetzung Cache wurde erfolgreich gelöscht</target>
+                <target>Übersetzungs-Cache wurde erfolgreich gelöscht</target>
             </trans-unit>
             <trans-unit id="view_website.status_draft">
                 <source>view_website.status_draft</source>

@@ -6,6 +6,10 @@
 				<source>button.create.menu_item</source>
 				<target>Ajouter un élément</target>
 			</trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Ajouter un élément</target>
+            </trans-unit>
             <trans-unit id="legend.menu.actions">
                 <source>legend.menu.actions</source>
                 <target>Actions sur le menu sélectionné</target>

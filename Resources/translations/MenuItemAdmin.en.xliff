@@ -4,8 +4,12 @@
 		<body>
 			<trans-unit id="button.create.menu_item">
 				<source>button.create.menu_item</source>
-				<target>Add Item</target>
+				<target>Add menu item</target>
 			</trans-unit>
+            <trans-unit id="title_create">
+                <source>title_create</source>
+                <target>Add menu item</target>
+            </trans-unit>
             <trans-unit id="legend.menu.actions">
                 <source>legend.menu.actions</source>
                 <target>Actions on selected Menu</target>
