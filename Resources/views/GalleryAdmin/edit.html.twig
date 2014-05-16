@@ -1,0 +1,15 @@
+{% extends 'NetworkingInitCmsBundle:CRUD:edit.html.twig' %}
+
+{% block title %}
+    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+    {% if admin.id(object) is not null%}
+        {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
+        {% if  title ==  "title_edit" %}
+            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+        {% else %}
+            {{ title }}
+        {% endif %}
+    {% else %}
+            {{ "title_create_gallery"|trans({}, 'MediaAdmin') }}
+    {% endif %}
+{% endblock %}

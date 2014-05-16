@@ -23,15 +23,13 @@ file that was distributed with this source code.
     {% endif %}
     <div class="tab-content">
         {% for name, context in media_pool.contexts %}
-
-            {% set urlParams = {'context' : name } %}
             <div class="tab-pane {% if (active_tab is null and loop.first) or active_tab == name %}active{% endif %}"
                  id="gallery_{{ name }}">
                 <div class="row">
                     <div class="span10">
-                        <h1><span class="info-soft">{{ name|trans() }}</span>
+                        <h1><span class="info-soft">{{ ('media_context.' ~ name)|trans({}) }}</span>
                             <a class="btn btn-primary btn-small menu-dialog-link"
-                               href="{{ admin.generateUrl('create', urlParams) }}">
+                               href="{{ admin.generateUrl('create', {'context' : name}) }}">
                                 <i class="icon-plus icon-white"></i> {{ 'button.create.gallery_item'|trans({}, 'MediaAdmin') }}
                             </a>
                         </h1>
@@ -358,7 +356,7 @@ file that was distributed with this source code.
         <ul class="nav menu-tabs nav-tabs">
             {% for name, context in media_pool.contexts %}
                 <li {% if (active_tab is null and loop.first) or active_tab == name %}class="active"{% endif %}>
-                    <a href="#media_{{ name }}" data-toggle="tab">{{ name|trans({}) }}</a>
+                    <a href="#gallery_{{ name }}" data-toggle="tab">{{ ('media_context.' ~ name)|trans({}) }}</a>
                 </li>
             {% endfor %}
         </ul>

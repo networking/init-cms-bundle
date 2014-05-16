@@ -28,7 +28,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_list">
                 <source>breadcrumb.link_media_list</source>
-                <target><![CDATA[<small>Achten Sie auf Ihre</small>]]> Medien</target>
+        <target><![CDATA[<small>Verwalten Sie Ihre</small> Medien]]></target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_edit">
                 <source>breadcrumb.link_media_edit</source>
@@ -64,19 +64,23 @@
             </trans-unit>
             <trans-unit id="admin_label_gallery">
                 <source>admin_label_gallery</source>
-                <target>Galerie</target>
+                <target>Galerien</target>
             </trans-unit>
             <trans-unit id="title_select_provider">
                 <source>title_select_provider</source>
-                <target>Medientyp wählen </target>
+                <target>Medien-Typ wählen</target>
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
                 <target>Media hochladen</target>
             </trans-unit>
+            <trans-unit id="title_create_gallery">
+                <source>title_create_gallery</source>
+                <target>Neue Galerie</target>
+            </trans-unit>
             <trans-unit id="no_provider_available">
                 <source>no_provider_available</source>
-                <target>Kein Provider verfügbar </target>
+                <target>Kein Medien-Typ verfügbar</target>
             </trans-unit>
             <trans-unit id="title.media_preview">
                 <source>title.media_preview</source>
@@ -331,7 +335,7 @@
             </trans-unit>
             <trans-unit id="filter.label_provider_reference">
                 <source>filter.label_provider_reference</source>
-                <target>Provider-Referenz</target>
+                <target>Medien-Typ-Referenz</target>
             </trans-unit>
             <trans-unit id="filter.label_enabled">
                 <source>filter.label_enabled</source>
@@ -343,14 +347,14 @@
             </trans-unit>
             <trans-unit id="filter.label_provider_name">
                 <source>filter.label_provider_name</source>
-                <target>Providername</target>
+                <target>Medien-Typ-Name</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content">
                 <source>form.label_binary_content</source>
                 <target>Datei</target>
             </trans-unit>
-            <trans-unit id="sonata_media">
-                <source>sonata_media</source>
+            <trans-unit id="sonata_media.admin_menu_label">
+                <source>sonata_media.admin_menu_label</source>
                 <target>Medien</target>
             </trans-unit>
             <trans-unit id="filter.label_tags">
@@ -359,7 +363,7 @@
             </trans-unit>
             <trans-unit id="title.select_media">
                 <source>title.select_media</source>
-                <target><![CDATA[<small>Wählen Sie einen Posten aus Ihren </small>]]> Medien</target>
+                <target><![CDATA[<small>Wählen Sie ein Object von Ihren </small> Medien]]></target>
             </trans-unit>
             <trans-unit id="form.label_tags">
                 <source>form.label_tags</source>
@@ -375,11 +379,11 @@
             </trans-unit>
             <trans-unit id="form.label_image">
                 <source>form.label_image</source>
-                <target>Current Image</target>
+        <target>Aktuelles Bild</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_new">
                 <source>form.label_binary_content_new</source>
-                <target>New File</target>
+        <target>Datei ersetzen</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube_new">
                 <source>form.label_binary_content_youtube_new</source>
@@ -391,19 +395,23 @@
             </trans-unit>
             <trans-unit id="filter.label_author_name">
                 <source>filter.label_author_name</source>
-                <target>Author</target>
+        <target>Autor</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube">
                 <source>form.label_binary_content_youtube</source>
-                <target>Youtube Link</target>
+        <target>Youtube-Link</target>
             </trans-unit>
             <trans-unit id="button.create.media_item">
                 <source>button.create.media_item</source>
-                <target>Add Object</target>
+                <target>Objekt hinzufügen</target>
             </trans-unit>
             <trans-unit id="button.create.gallery_item">
                 <source>button.create.gallery_item</source>
-                <target>Add Gallery</target>
+                <target>Galerie hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_youtube:new">
+              <source>form.label_binary_content_youtube:new</source>
+              <target>Neuer Youtube-Link</target>
             </trans-unit>
         </body>
     </file>

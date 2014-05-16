@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="breadcrumb.link_tag_list">
                 <source>breadcrumb.link_tag_list</source>
-                <target><![CDATA[<small>Organisieren Sie Ihre </small>]]> Media-Tags</target>
+                <target><![CDATA[<small>Organisieren Sie Ihre </small>]]> Medien-Tags</target>
             </trans-unit>
             <trans-unit id="filter.label_name">
                 <source>filter.label_name</source>
@@ -20,11 +20,11 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_tag_delete">
                 <source>breadcrumb.link_tag_delete</source>
-                <target>Diesen Tag löschen </target>
+                <target>Diesen Tag löschen</target>
             </trans-unit>
             <trans-unit id="tags.title">
                 <source>tags.title</source>
-                <target>Medien-Tag</target>
+                <target>Medien-Tags</target>
             </trans-unit>
         </body>
     </file>
