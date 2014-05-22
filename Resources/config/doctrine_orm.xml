@@ -88,18 +88,13 @@
                  class="Networking\InitCmsBundle\Entity\LayoutBlockFormListener"
                  scope="prototype">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument>%networking_init_cms.admin.layout_block.class%</argument>
-            <call method="setSonataAdminAnnotationReader">
-                <argument type="service" id="ibrows_sonataadmin.annotation.reader"/>
-            </call>
-            <call method="setLayoutBlockAdmin">
-                <argument type="service" id="networking_init_cms.admin.layout_block"/>
-            </call>
+
             <call method="setContentTypes">
                 <argument>%networking_init_cms.page.content_types%</argument>
             </call>
-            <call method="setPageToNumberTransformer">
-                <argument type="service" id="networking_init_cms.form.data_transformer.page_to_number_transformer"/>
+
+            <call method="setValidator">
+                <argument type="service" id="validator"/>
             </call>
         </service>
 

@@ -26,7 +26,7 @@
         <service id="networking_init_cms.admin.layout_block" class="Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\LayoutBlock</argument>
-            <argument>NetworkingInitCmsBundle:CRUD</argument>
+            <argument>NetworkingInitCmsBundle:LayoutBlock</argument>
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
             </call>

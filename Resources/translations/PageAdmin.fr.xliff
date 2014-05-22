@@ -370,6 +370,18 @@
                 <source>message.layout_block_deleted</source>
                 <target>Le bloc de mise en page a été supprimé avec succès</target>
             </trans-unit>
+            <trans-unit id="message.layout_block_created">
+                <source>message.layout_block_created</source>
+                <target>Le bloc de mise en page a été creé avec succès</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_not_created">
+                <source>message.layout_block_not_created</source>
+                <target>The layout block could not be created, please control the form fields</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_not_edited">
+                <source>message.layout_block_not_edited</source>
+                <target>The layout block could not be updated, please control the form fields</target>
+            </trans-unit>
             <trans-unit id="info.create.layout_block">
                 <source>info.create.layout_block</source>
                 <target>Sélectionnez le type de contenu que vous souhaitez créer à partir de la liste ci-dessous</target>

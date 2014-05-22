@@ -370,6 +370,18 @@
                 <source>message.layout_block_deleted</source>
                 <target>Der Layout-Block wurde erfolgreich entfernt</target>
             </trans-unit>
+            <trans-unit id="message.layout_block_created">
+                <source>message.layout_block_created</source>
+                <target>Der Layout-Block wurde erfolgreich erstellt</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_not_created">
+                <source>message.layout_block_not_created</source>
+                <target>Der Layout-Block konnte nicht erstellt werden, bitte Angaben überprüfen</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_not_edited">
+                <source>message.layout_block_not_edited</source>
+                <target>Der Layout-Block konnte nicht aktualisiert werden, bitte Angaben überprüfen</target>
+            </trans-unit>
             <trans-unit id="info.create.layout_block">
                 <source>info.create.layout_block</source>
                 <target>Wählen Sie die zu erstellende Inhaltsart aus der folgenden Liste aus.</target>

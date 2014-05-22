@@ -32,7 +32,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_menu_item_navigation">
                 <source>breadcrumb.link_menu_item_navigation</source>
-        <target><![CDATA[<small>Organisieren Sie Ihre</small> Menüs]]></target>
+                <target><![CDATA[<small>Organisieren Sie Ihre</small> Menüs]]></target>
             </trans-unit>
             <trans-unit id="label.linked_resource">
                 <source>label.linked_resource</source>

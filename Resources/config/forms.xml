@@ -26,6 +26,19 @@
             <argument type="service" id="networking_init_cms.page_manager"/>
         </service>
 
+        <service id="networking_init_cms.form.type.content_block" class="Networking\InitCmsBundle\Form\Type\ContentType" >
+            <argument type="service" id="ibrows_sonataadmin.annotation.reader"/>
+            <tag name="form.type" alias="networking_type_content_block"/>
+        </service>
+
+        <service id="networking_init_cms.form.type.page_autocomplete" class="Networking\InitCmsBundle\Form\Type\PageAutocompleteType" >
+            <argument type="service" id="doctrine"/>
+            <call method="setContainer"><argument type="service" id="service_container"/> </call>
+            <tag name="form.type" alias="networking_type_page_autocomplete"/>
+        </service>
+
+
+
     </services>
 
 </container>

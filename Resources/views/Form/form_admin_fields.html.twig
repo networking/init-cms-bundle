@@ -270,7 +270,11 @@ file that was distributed with this source code.
             {{ block('form_widget_remove_btn') }}
         {% endif -%}
         {{ block('form_message') }}
-        {{ block('field_errors') }}
+        {% if errors|length > 0 %}
+            <div class="help-block sonata-ba-field-error-messages">
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
         {{ block('widget_control_group_end') }}
     {% else %}
         {% set inline_block = false %}
@@ -278,7 +282,7 @@ file that was distributed with this source code.
             {% set inline_block = true %}
 
         {% endif %}
-        <div class="control-group{% if errors|length > 0 %} error{% endif %}{% if inline_block %} form-horizontal{% endif %}"
+        <div class="{% if widget_control_group %}control-group{% endif %}{% if errors|length > 0 %} error{% endif %}{% if inline_block %} form-horizontal{% endif %}"
              id="sonata-ba-field-container-{{ id }}">
             {% if sonata_admin.field_description.options.no_label is defined and sonata_admin.field_description.options.no_label %}
                 {# do nothing #}
@@ -378,10 +382,13 @@ file that was distributed with this source code.
 {% endblock %}
 {% block networking_type_autocomplete_widget %}
     {{ form_widget(form) }}
+    {% if sonata_admin is defined and sonata_admin.admin %}
+    {% set translation_domain = sonata_admin.admin.translationDomain %}
+    {% endif %}
     <script>
         jQuery(document).ready(function () {
             jQuery("#{{ id }}").select2({
-                placeholder: "{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
+                placeholder: "{{ 'Select'|trans({}, translation_domain) }}",
                 allowClear: true
             });
         });
