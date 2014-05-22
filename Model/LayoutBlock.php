@@ -387,23 +387,12 @@ class LayoutBlock implements LayoutBlockInterface
 
     /**
      * @param $content
-     * @param $key
      * @return $this
      */
     public function setContent($content, $key = null)
     {
-        if (!is_array($content) || !is_null($key)) {
-            $this->content[$key] = $content;
-
-            return $this;
-        }
-
-        foreach ($content as $key => $data) {
-            $this->content[$key] = $data;
-        }
-
+        $this->content = $content;
         return $this;
-
     }
 
     /**

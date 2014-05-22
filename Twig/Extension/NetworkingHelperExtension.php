@@ -550,7 +550,10 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         if ($request->getMethod() === 'POST') {
             $uniqid = $request->get('uniqid');
             $postVars = $request->request->get($uniqid);
-            $template = $postVars['templateName'];
+            if(array_key_exists('templateName', $postVars))
+            {
+                $template = $postVars['templateName'];
+            }
         }
 
         if (is_null($template)) {

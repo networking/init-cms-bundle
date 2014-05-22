@@ -75,4 +75,17 @@ class CRUDController extends SonataCRUDController
         }
         return parent::render($view, $parameters, $response);
     }
+
+    /**
+     * @param $string
+     * @param array $params
+     * @param null $domain
+     * @return mixed
+     */
+    public function translate($string, $params = array(), $domain = null)
+    {
+        $translationDomain = $domain ? $domain : $this->admin->getTranslationDomain();
+
+        return $this->get('translator')->trans($string, $params, $translationDomain);
+    }
 }

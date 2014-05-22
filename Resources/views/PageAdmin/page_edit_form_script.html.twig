@@ -49,7 +49,8 @@ file that was distributed with this source code.
                 jQuery('#pageSettings').html(pageSettings);
                 jQuery('#pageStatusSettings').html(pageStatus);
                 $('#pageSettingFields').modal('hide');
-                updateLayoutBlocks(form, {});
+
+                submitLayoutUpdate(form, {});
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             },
             error:function (xhr, textStatus, errorThrown) {

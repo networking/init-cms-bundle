@@ -71,6 +71,10 @@ abstract class PageAdmin extends BaseAdmin
         return 'icon-file-alt';
     }
 
+    protected $formOptions = array(
+            'cascade_validation' => true
+         );
+
     /**
      * @param \Networking\InitCmsBundle\Model\PageManagerInterface $pageManager
      */
@@ -86,10 +90,6 @@ abstract class PageAdmin extends BaseAdmin
     {
         $collection->add('translatePage', 'translate_page/{id}/locale/{locale}', array(), array('method' => 'POST'));
         $collection->add('parentPageList', 'parent_page/', array(), array('method' => 'GET'));
-        $collection->add('updateFormFieldElement', 'update_form_fields', array(), array('method' => 'POST'));
-        $collection->add('addLayoutBlock', 'add_layout_block', array(), array('method' => 'POST'));
-        $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', array(), array('method' => 'GET'));
-        $collection->add('deleteLayoutBlock', 'delete_layout_block', array(), array('method' => 'GET'));
         $collection->add('link', 'link/{id}/locale/{locale}', array(), array('method' => 'GET'));
         $collection->add('draft', 'draft/{id}', array(), array('method' => 'GET'));
         $collection->add('review', 'review/{id}', array(), array('method' => 'GET'));
@@ -155,6 +155,9 @@ abstract class PageAdmin extends BaseAdmin
     {
         /** @var $pageManager PageManagerInterface */
         $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
+
+        $this->getRequest()->attributes->add(array('page_locale' => $this->pageLocale));
+
         try {
             $request = $this->getRequest();
         } catch (\RuntimeException $e) {
@@ -169,13 +172,8 @@ abstract class PageAdmin extends BaseAdmin
                     'sonata_type_collection',
                     array(
                         'required' => true,
-                        'by_reference' => false
-                    ),
-                    array(
-                        'edit' => 'inline',
-                        'inline' => 'table',
-                        'sortable' => 'sortOrder',
-                        'no_label' => true
+                        'label_render' => false,
+                        'by_reference' => false,
                     )
                 )
                 ->end();

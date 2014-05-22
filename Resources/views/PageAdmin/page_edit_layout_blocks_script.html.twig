@@ -11,53 +11,11 @@ file that was distributed with this source code.
 {% autoescape false %}
 <!-- edit one association -->
 <script type="text/javascript">
+
+var tmpListItem = '<li class="temp_item networking-sortable-list networking-sort-zone" id="layoutBlock_0"></li>';
+
 // handle the update bind
-var field_update_{{ id }} = function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    var data = {};
-    var form = jQuery(this).closest('form');
-    jQuery.each(CKEDITOR.instances, function () {
-        try {
-            var editor = this;
-            var text = editor.getData();
-            if (data) {
-                if (editor) {
-                    editor.setData(data);
-                    jQuery('#' + editor.name).val(text);
-                }
-            }
-
-        } catch (err) {
-        }
-    });
-    updateLayoutBlocks(form, data);
-
-};
-
-function updateLayoutBlocks(form, data) {
-
-
-    var url = '{{ url(admin.getBaseRouteName() ~'_updateFormFieldElement', {
-                            'code':      sonata_admin.admin.root.code,
-                            'elementId': id,
-                            'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
-                            'uniqid':    sonata_admin.admin.root.uniqid
-                        } + sonata_admin.field_description.getOption('link_parameters', {})) }}';
-
-    doAjaxSubmit(url, form, data);
-
-}
-
-// handle the add link
-var field_add_{{ id }} = function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (event.currentTarget == undefined) {
-        var addLink = event.target;
-    } else {
-        var addLink = event.currentTarget;
-    }
+function addLayoutBlock(addLink) {
     var restrictedTypes = eval(jQuery(addLink).attr('data-value'));
 
     jQuery('#selectContentType').find('option').each(function (i) {
@@ -72,6 +30,8 @@ var field_add_{{ id }} = function (event) {
     jQuery('#contentTypeModal').modal('show');
 
     jQuery('#contentTypeModal').bind('initcms.create_block', function (event) {
+        jQuery('button', '#contentTypeModal').die('click');
+        jQuery('#contentTypeModal').unbind('initcms.create_block');
         if (jQuery(this).data('create')) {
             jQuery('#contentLoading').show();
             jQuery('#createContentButton').button('loading');
@@ -88,91 +48,148 @@ var field_add_{{ id }} = function (event) {
             });
 
             var data = {zone: zone, sortOrder: sortOrder, classType: classType };
-            var form = jQuery(addLink).closest('form');
-            var url = '{{ url(admin.getBaseRouteName() ~'_addLayoutBlock', {
-                                            'code':      sonata_admin.admin.root.code,
-                                            'elementId': id,
-                                            'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
-                                            'uniqid':    sonata_admin.admin.root.uniqid
-                                        } + sonata_admin.field_description.getOption('link_parameters', {})) }}';
-            doAjaxSubmit(url, form, data);
-            jQuery('a', '#contentTypeModal').die('click');
-            jQuery('form', '#contentTypeModal').die('submit');
+
+            var url = '{{ url('admin_networking_initcms_layoutblock_create', {
+                              'code':      sonata_admin.admin.root.code,
+                              'elementId': id,
+                              'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
+                              'uniqid':    sonata_admin.admin.root.uniqid
+                          }) }}';
+            createLayoutBlockForm(url, data);
+
         }
     });
-};
-
-function start_save_content{{ id }}(link) {
-    link.onclick = null;
-
-    // add the jQuery event to the a element
-    jQuery(link)
-            .click(field_update_{{ id }})
-            .trigger('click')
-    ;
-
     return false;
 }
 
-function doAjaxSubmit(url, form, data) {
-    data['_xml_http_request'] = true;
-    // the ajax post
-    jQuery(form).ajaxSubmit({
+// handle the add link
+function createLayoutBlockForm(url, data) {
+    jQuery.ajax({
         url: url,
-        type: "POST",
-        dataType: 'html',
         data: data,
-        success: function (html) {
-            jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
-            if (jQuery('input[type="file"]').length > 0) {
-                jQuery(form).attr('enctype', 'multipart/form-data');
-                jQuery(form).attr('encoding', 'multipart/form-data');
-            }
-
-            jQuery('#sonata-ba-field-container-{{ id }}').trigger('sonata.add_element');
-            jQuery('#field_container_{{ id }}').trigger('sonata.add_element');
-
-            jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
-                if (i + 1 == data.sortOrder) {
-                    jQuery(value).on('shown', function () {
-                        var windowHeight = $(window).height();
-                        if (windowHeight - 100 < 800) {
-                            var modalBodyHeight = windowHeight / 2;
-                            $('.modal-body', this).css('max-height', modalBodyHeight + 'px');
-                        }
-                    });
-                    jQuery('#contentTypeModal').modal('hide');
-                    jQuery('#createContentButton').button('reset');
-                    jQuery(value).modal('show');
-
-                }
+        success: function (xhr) {
+            jQuery('#layoutBlockModal').html(xhr);
+            jQuery('#layoutBlockModal').modal('show');
+            jQuery('#layoutBlockModal').on('hide', function () {
+                jQuery('#contentTypeModal').unbind('initcms.create_block');
+                jQuery('li.temp_item').remove();
+                jQuery('form', '#layoutBlockModal').unbind('submit');
             });
+            jQuery('#contentTypeModal').modal('hide');
+            jQuery('#createContentButton').button('reset');
             jQuery('#contentLoading').hide();
+            jQuery('form', '#layoutBlockModal').bind('submit', submitLayoutCreate);
+
+            jQuery('ul#zone_' + data.zone + ' > li:eq(' + data.sortOrder + ')').after(tmpListItem);
             saveLayoutBlockSort();
         }
     });
 }
 
-var field_widget_{{ id }} = false;
+function submitLayoutCreate(event) {
+    jQuery.each(CKEDITOR.instances, function () {
+            try {
+                var editor = this;
+                var text = editor.getData();
+                    if (editor) {
+                        jQuery('#' + editor.name).val(text);
+                    }
 
-// this function initialize the popup
-// this can be only done this way has popup can be cascaded
-function start_field_retrieve_{{ id }}(link) {
-    link.onclick = null;
+            } catch (err) {
+            }
+        });
+    var form = jQuery(this);
 
-    // initialize component
-    field_widget_{{ id }} = jQuery("#field_widget_{{ id }}");
-
-    // add the jQuery event to the a element
-    jQuery(link)
-            .click(field_add_{{ id }})
-            .trigger('click')
-    ;
+    jQuery(form).ajaxSubmit({
+        type: form.attr('method'),
+        url: form.attr('action'),
+        dataType: 'json',
+        success: function (xhr) {
+            if (xhr.result == 'ok') {
+                createInitCmsMessageBox(xhr.status, xhr.message);
+                jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
+                jQuery('input[type=submit]', this).off();
+                jQuery('form', '#layoutBlockModal').unbind('submit');
+                jQuery('#layoutBlockModal').modal('hide');
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            jQuery('#layoutBlockModal').html(xhr.responseText);
+            jQuery('form', '#layoutBlockModal').bind('submit', submitLayoutCreate);
+        }
+    });
 
     return false;
 }
 
-function apply_position_value_{{ id }}() {
+function updateLayoutBlock(addLink) {
+    var liItem = jQuery(addLink).closest('li');
+    var zone = liItem.find("[id$='_zone']").val();
+    var sortOrder = liItem.find("[id$='_sortOrder']").val();
+    var data = {zone: zone, sortOrder: sortOrder, classType: jQuery(addLink).attr('data-content-type') };
+    var form = jQuery(addLink).closest('form');
+    jQuery.each(CKEDITOR.instances, function () {
+        try {
+            var editor = this;
+            var text = editor.getData();
+                if (editor) {
+                    jQuery('#' + editor.name).val(text);
+                }
+
+        } catch (err) {
+        }
+    });
+    submitLayoutUpdate(form, data);
+    return false;
+}
+
+function submitLayoutUpdate(form, data) {
+    var url = '{{ url('admin_networking_initcms_layoutblock_updateFormFieldElement', {
+                    'code':      sonata_admin.admin.root.code,
+                    'elementId': id,
+                    'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
+                    'uniqid':    sonata_admin.admin.root.uniqid
+                }) }}';
+    // the ajax post
+
+    jQuery(form).ajaxSubmit({
+        url: url,
+        type: "POST",
+        dataType: 'html',
+        data: {_xml_http_request: true},
+        error: function (xhr) {
+            jQuery('#field_container_{{ id }}').replaceWith(xhr.responseText);
+            jQuery('.modal-backdrop').remove();
+            if (data.zone != undefined) {
+                jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
+                    if (i + 1 == data.sortOrder) {
+                        jQuery(value).on('shown', function () {
+                            var windowHeight = $(window).height();
+                            if (windowHeight - 100 < 800) {
+                                var modalBodyHeight = windowHeight / 2;
+                                $('.modal-body', this).css('max-height', modalBodyHeight + 'px');
+                            }
+                        });
+                        jQuery(value).modal('show');
+                    }
+                });
+            }
+        },
+        success: function (html) {
+            jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
+            jQuery('.modal-backdrop').remove();
+            if (data.zone != undefined) {
+                jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
+                    jQuery(value).modal('hide');
+                });
+            }
+            jQuery('#contentLoading').hide();
+        }
+    });
+}
+
+
+function setLayoutBlockPosition() {
     // update the input value position
     jQuery('ul.sortable').each(function (index, value) {
         var index = 0;
@@ -189,6 +206,7 @@ function apply_position_value_{{ id }}() {
 }
 
 function saveLayoutBlockSort(callback) {
+    setLayoutBlockPosition();
     var zones = [];
 
     jQuery('ul.sortable').each(function (index, value) {
@@ -207,7 +225,7 @@ function saveLayoutBlockSort(callback) {
 function submitLayoutSort(zones) {
     var dfd = jQuery.Deferred();
     return jQuery.ajax({
-        url: '{{ url(admin.getBaseRouteName() ~'_updateLayoutBlockSort') }}',
+        url: '{{ url('admin_networking_initcms_layoutblock_updateLayoutBlockSort') }}',
         data: {
             zones: zones,
             objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
@@ -236,7 +254,7 @@ function uploadError(xhr) {
 
 function onAfterLoad() {
 
-    apply_position_value_{{ id }}();
+    setLayoutBlockPosition();
 
     jQuery('div#field_container_{{ id }} ul.sortable').sortable({
         handle: 'i.icon-move',
@@ -256,11 +274,8 @@ function onAfterLoad() {
             }
         },
         stop: function (event, ui) {
-            apply_position_value_{{ id }}();
             saveLayoutBlockSort(function (xhr) {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
-                {#jQuery('#field_container_{{ id }}').replaceWith(xhr.html);#}
-
             });
         },
         update: function (event, ui) {
@@ -297,7 +312,7 @@ function onAfterLoad() {
                 var zone = jQuery(this).attr('id').substr(5);
                 var liItem = jQuery(ui.item);
                 liItem.find("[idjQuery='_zone']").val(zone);
-                apply_position_value_{{ id }}();
+                setLayoutBlockPosition();
                 jQuery(this).find(".empty_layout_block").hide();
             }
         },
@@ -352,18 +367,18 @@ function onAfterLoad() {
                 var parent = jQuery(liElement).parent();
 
                 jQuery.ajax({
-                    url: '{{ url(admin.getBaseRouteName() ~'_deleteLayoutBlock') }}',
+                    url: '{{ url('admin_networking_initcms_layoutblock_deleteAjax') }}',
+                    method: 'POST',
                     data: {
                         layoutBlock: liElement.attr('id'),
                         objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
                         uniqid: '{{ sonata_admin.admin.root.uniqid }}',
-                        elementId: '{{ id }}'
+                        elementId: '{{ id }}',
+                        __method: 'DELETE'
                     },
                     success: function (xhr) {
                         createInitCmsMessageBox(xhr.messageStatus, xhr.message);
                         jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
-                        jQuery('#sonata-ba-field-container-{{ id }}').trigger('sonata.add_element');
-                        jQuery('#field_container_{{ id }}').trigger('sonata.add_element');
                         saveLayoutBlockSort();
                     }
                 });
@@ -382,9 +397,6 @@ function onAfterLoad() {
 
 (function ($) {
     // refresh the sortable option when a new element is added
-    jQuery('#sonata-ba-field-container-{{ id }}').bind('sonata.add_element', function () {
-        apply_position_value_{{ id }}();
-    });
     onAfterLoad();
 })(jQuery);
 </script>

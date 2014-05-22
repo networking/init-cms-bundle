@@ -68,7 +68,8 @@ file that was distributed with this source code.
     {% else %}
         <form class="form-vertical page-form"
               action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
-              method="POST">
+              method="POST"
+              id="networking_init_cms.page">
         {% if form.vars.errors|length > 0 %}
             <div class="sonata-ba-form-error">
                 {{ form_errors(form) }}
@@ -273,7 +274,7 @@ file that was distributed with this source code.
         <!-- end modal page form -->
         </form>
         {% jsblock 'addToBottom' %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_form_script.html.twig' with {'admin': admin} %}
+        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_form_script.html.twig' with {'admin': admin, 'id': admin.id(object)} %}
         {% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_script.html.twig' with {'admin': admin} %}
         {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_script.html.twig' with {'admin': admin} %}
         {% jsblock 'addToBottomEnd' %}
