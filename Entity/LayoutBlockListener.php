@@ -68,4 +68,19 @@ class LayoutBlockListener
             }
         }
     }
+
+    public function postLoad(LifecycleEventArgs $args)
+    {
+        $layoutBlock = $args->getEntity();
+        if ($layoutBlock instanceof LayoutBlock) {
+            if ($layoutBlock->getClassType() || $layoutBlock->getObjectId()) {
+                $em = $args->getEntityManager();
+                $content = $em->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
+
+                if ($content) {
+                    $layoutBlock->setContent($content);
+                }
+            }
+        }
+    }
 }

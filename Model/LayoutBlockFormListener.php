@@ -127,6 +127,29 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
         $form->remove('_delete');
     }
 
+    /**
+     * Bind the content type objects variables from the form.
+     * If needed create an new content type object, or change to a new type deleting the old one.
+     * Set the Content objects contentType and objectId fields accordingly.
+     *
+     * @param FormEvent $event
+     * @throws \RuntimeException
+     */
+    public function postBindData(FormEvent $event)
+    {
+
+        /** @var $layoutBlock LayoutBlockInterface */
+        $layoutBlock = $event->getForm()->getData();
+
+        $contentObject = $layoutBlock->getContent();
+
+        if (!$contentObject instanceof ContentInterface) {
+            throw new \RuntimeException('Content Object must implement the ContentInterface');
+        }
+
+        $this->validate($event, $contentObject);
+    }
+
     public function validate(FormEvent &$event, $contentObject)
     {
         /** @var $layoutBlock LayoutBlockInterface */
@@ -179,7 +202,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
     {
         if (is_null($layoutBlock) || !$classType = $layoutBlock->getClassType()) {
 
-            if($this->contentType){
+            if ($this->contentType) {
                 return $this->contentType;
             }
 

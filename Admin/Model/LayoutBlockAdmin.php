@@ -132,11 +132,10 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     public function postPersist($object)
     {
         if ($contentObject = $object->getContent()) {
-            $om = $this->getObjectManager();
-            $om->persist($contentObject);
-            $om->flush($contentObject);
+
+            $this->getModelManager()->create($contentObject);
             $object->setObjectId($contentObject->getId());
-            $om->flush($object);
+            $this->getModelManager()->update($object);
         }
 
         $this->autoPageDraft($object->getPage());
@@ -150,8 +149,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     public function postUpdate($object)
     {
         if ($contentObject = $object->getContent()) {
-            $om = $this->getObjectManager();
-            $om->flush($contentObject);
+            $this->getModelManager()->update($contentObject);
         }
         $this->autoPageDraft($object->getPage());
     }
@@ -163,11 +161,10 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     public function postRemove($object)
     {
         if ($classType = $object->getClassType()) {
-            $om = $this->getObjectManager();
 
-            $contentObject = $om->getRepository($classType)->find($object->getObjectId());
+            $contentObject = $this->getModelManager()->find($classType, $object->getObjectId());
             if($contentObject){
-                $om->remove($contentObject);
+                $this->getModelManager()->delete($contentObject);
             }
         }
 
@@ -181,15 +178,6 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     {
         return $this->getContainer()->get('serializer');
     }
-
-    /**
-     * @return ObjectManager
-     */
-    protected function getObjectManager()
-    {
-        return $this->getContainer()->get('Doctrine')->getManager();
-    }
-
 
     /**
      * @param PageInterface $page

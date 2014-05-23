@@ -80,6 +80,7 @@
                  class="Networking\InitCmsBundle\Entity\LayoutBlockListener">
             <argument type="service" id="serializer"/>
             <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
+            <tag name="doctrine.event_listener" event="postLoad" method="postLoad"/>
         </service>
 
         <service id="networking_init_cms.layout_block_form_listener"
