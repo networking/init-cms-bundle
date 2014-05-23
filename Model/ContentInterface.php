@@ -25,6 +25,11 @@ interface ContentInterface
     public function __clone();
 
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param array $params
      * @return array
      */

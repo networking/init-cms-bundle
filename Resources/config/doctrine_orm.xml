@@ -79,9 +79,7 @@
         <service id="networking_init_cms.layout_block_listener"
                  class="Networking\InitCmsBundle\Entity\LayoutBlockListener">
             <argument type="service" id="serializer"/>
-            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
             <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
-            <tag name="doctrine.event_listener" event="preRemove" method="preRemove"/>
         </service>
 
         <service id="networking_init_cms.layout_block_form_listener"
@@ -136,6 +134,9 @@
         <!-- Form Types -->
         <service id="networking_init_cms.media.entity.type" class="Networking\InitCmsBundle\Form\Type\MediaEntityType">
             <argument type="service" id="doctrine"/>
+            <call method="setPool">
+                <argument type="service" id="sonata.admin.pool" />
+            </call>
             <tag name="form.type" alias="media_entity_type"/>
         </service>
 

@@ -200,10 +200,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $layoutBlockAdmin = $this->getService('networking_init_cms.admin.layout_block');
         if ($layoutBlock->getObjectId()) {
             // Draft View
-            $contentItem = $layoutBlockAdmin->getModelManager()->find(
-                $layoutBlock->getClassType(),
-                $layoutBlock->getObjectId()
-            );
+            $contentItem = $layoutBlock->getContent();
+
         } else {
 
             $classType = $layoutBlock->getClassType();

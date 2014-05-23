@@ -56,6 +56,11 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
     protected $admin;
 
     /**
+     * @var string
+     */
+    protected $contentType;
+
+    /**
      * @param ObjectManager $om
      */
     public function __construct(
@@ -101,6 +106,27 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
         );
     }
 
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    public function preSetData(FormEvent $event)
+    {
+        $layoutBlock = $event->getData();
+
+        $form = $event->getForm();
+        $form->add(
+            'content',
+            'networking_type_content_block',
+            array(
+                'label_render' => false,
+                'class' => $this->getContentType($layoutBlock)
+            )
+        );
+        $form->remove('_delete');
+    }
+
     public function validate(FormEvent &$event, $contentObject)
     {
         /** @var $layoutBlock LayoutBlockInterface */
@@ -121,19 +147,26 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
                 );
 
             }
-            if($contentObject->getId()){
-                $message = $this->admin->getTranslator()->trans('message.layout_block_not_edited', array(), $this->admin->getTranslationDomain());
-                $form->get('content')->addError(new FormError($message));
-            }else{
-                $message = $this->admin->getTranslator()->trans('message.layout_block_not_created', array(), $this->admin->getTranslationDomain());
-                $form->addError(new FormError($message));
+            if ($contentObject->getId()) {
+                $message = $this->admin->getTranslator()->trans(
+                    'message.layout_block_not_edited',
+                    array(),
+                    $this->admin->getTranslationDomain()
+                );
+
+            } else {
+                $message = $this->admin->getTranslator()->trans(
+                    'message.layout_block_not_created',
+                    array(),
+                    $this->admin->getTranslationDomain()
+                );
             }
+            $form->addError(new FormError($message));
 
         }
 
         return $event;
     }
-
 
 
     /**
@@ -142,9 +175,14 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
      * @param LayoutBlockInterface $layoutBlock
      * @return string
      */
-    public function getContentType(LayoutBlockInterface $layoutBlock)
+    public function getContentType(LayoutBlockInterface $layoutBlock = null)
     {
-        if (!$classType = $layoutBlock->getClassType()) {
+        if (is_null($layoutBlock) || !$classType = $layoutBlock->getClassType()) {
+
+            if($this->contentType){
+                return $this->contentType;
+            }
+
             $contentTypes = $this->getContentTypes();
 
             $classType = $contentTypes[0]['class'];

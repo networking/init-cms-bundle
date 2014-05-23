@@ -57,9 +57,9 @@ file that was distributed with this source code.
 
                         {# loop through layout blocks #}
                         {% for layout_block_field_name, layout_block_field in get_sub_form_by_zone(form.children, zone.name) %}
+                            {% set layoutBlockContent = render_initcms_admin_block(layout_block_field.vars.value) %}
+                            {% if layoutBlockContent %}
 
-                            {% if render_initcms_admin_block(layout_block_field.vars.value) %}
-                                {% set layoutBlockContent = render_initcms_admin_block(layout_block_field.vars.value) %}
                                 <li class="networking-sortable-list networking-sort-zone"
                                     id="layoutBlock_{{ layout_block_field.vars.value.id }}"
                                     data-content-type="{{ layout_block_field.vars.value.classType }}">
@@ -67,7 +67,7 @@ file that was distributed with this source code.
                                     <div class="content_preview">
                                         <div class="layout_controls">
                                             <i class="icon-move soft-background"></i>
-                                            <i class="icon-trash soft-background"></i>
+                                            <i class="icon-trash soft-background delete_block" data-value="{{layout_block_field.vars.value.id}}"></i>
                                             <i class="icon-pencil soft-background"
                                                data-target="#expandableForm{{ increment }}" data-toggle="modal"></i>
                                         </div>
@@ -77,7 +77,8 @@ file that was distributed with this source code.
                                     </div>
 
                                     {# modal window hidden content #}
-                                    <div class="modal form-horizontal" id="expandableForm{{ increment }}"
+                                    <div class="modal form-horizontal layout_block_modal"
+                                         id="expandableForm{{ increment }}"
                                          style="display: none" aria-hidden="true" role="dialog">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal"
@@ -85,35 +86,29 @@ file that was distributed with this source code.
                                             <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}
                                                 - {{ render_content_type_name(layout_block_field.vars.value) }}</h4>
                                         </div>
-                                        {# loop through form fields #}
-                                        {% for field_name, field in layout_block_field.children %}
-                                        {% if loop.last %}
-                                    </div>
-                                    <div class="modal-footer">
-                                        {{ form_widget(field) }}
-                                        <button class="btn" data-dismiss="modal"
-                                                aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
-                                        <a onclick="return updateLayoutBlock(this);"
-                                           data-content-type="{{ layout_block_field.vars.value.classType }}"
-                                           class="btn btn-primary">
-                                            {{ 'button.save'|trans({}, 'PageAdmin') }}</a>
-                                    </div>
-                                {% else %}
-                                    {% if loop.first %}
-                                    <div class="modal-body">
-                                        {% endif %}
+                                        <div class="modal-body">
 
-                                            {% if field.vars.errors|length > 0 %}
+                                            {% if layout_block_field.vars.errors|length > 0 %}
                                                 <div class="sonata-ba-form-error control-group error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
-                                                    {{ form_errors(field) }}
+                                                    {{ form_errors(layout_block_field) }}
                                                 </div>
                                             {% endif %}
 
-                                        {{ form_widget(field) }}
-                                        {% endif %}
-                                        {% set increment = increment + 1 %}
-                                        {% endfor %}
+                                            {{ form_widget(layout_block_field['content']) }}
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            {{ form_rest(layout_block_field) }}
+                                            <button class="btn" data-dismiss="modal"
+                                                    aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
+                                            <a onclick="return updateLayoutBlock(this);"
+                                               data-content-type="{{ layout_block_field.vars.value.classType }}"
+                                               class="btn btn-primary">
+                                                {{ 'button.save'|trans({}, 'PageAdmin') }}</a>
+                                        </div>
                                     </div>
+
+
                                     {# start the block for the plus button #}
                                     <div class="plus_button"
                                          {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
@@ -127,6 +122,7 @@ file that was distributed with this source code.
                                         </a>
                                     </div>
                                 </li>
+                                {% set increment = increment + 1 %}
                             {% endif %}
                         {% endfor %}
 

@@ -81,9 +81,9 @@ class LayoutBlock implements LayoutBlockInterface
     protected $updatedAt;
 
     /**
-     * @var array $content
+     * @var ContentInterface $content
      */
-    protected $content = array();
+    protected $content;
 
     /**
      * @var string $oldClassType
@@ -378,7 +378,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @return array
+     * @return ContentInterface
      */
     public function getContent()
     {
@@ -386,10 +386,10 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @param $content
+     * @param ContentInterface $content
      * @return $this
      */
-    public function setContent($content, $key = null)
+    public function setContent($content)
     {
         $this->content = $content;
         return $this;
