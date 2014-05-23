@@ -243,7 +243,7 @@ file that was distributed with this source code.
                             {{- empty_value|trans({}, translation_domain) -}}
                         {% else %}
                             {{- empty_value|trans({}, sonata_admin.field_description.translationDomain) -}}
-                        {% endif%}
+                        {% endif %}
                     </option>
                 {% endif %}
                 {% if preferred_choices|length > 0 %}
@@ -383,7 +383,7 @@ file that was distributed with this source code.
 {% block networking_type_autocomplete_widget %}
     {{ form_widget(form) }}
     {% if sonata_admin is defined and sonata_admin.admin %}
-    {% set translation_domain = sonata_admin.admin.translationDomain %}
+        {% set translation_domain = sonata_admin.admin.translationDomain %}
     {% endif %}
     <script>
         jQuery(document).ready(function () {
@@ -451,21 +451,22 @@ file that was distributed with this source code.
     {% spaceless %}
         <div class="editable">
             <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a></p>
+
             <div id="securityRoles">
                 {{ block('choice_widget') }}
             </div>
             <a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a>
             <script>
-             $('.toggle-roles').click(function() {
-                $('#securityRoles input[id^="{{ id }}"]').each(function(){
-                    // toggle checkbox
-                    $(this).prop('checked',!$(this).prop('checked'));
-                    // toggle class
-                    $(this).parents('label').toggleClass('active');
+                $('.toggle-roles').click(function () {
+                    $('#securityRoles input[id^="{{ id }}"]').each(function () {
+                        // toggle checkbox
+                        $(this).prop('checked', !$(this).prop('checked'));
+                        // toggle class
+                        $(this).parents('label').toggleClass('active');
 
+                    });
+                    return false;
                 });
-                 return false;
-            });
             </script>
         </div>
         {% if read_only_choices|length > 0 %}
@@ -481,19 +482,84 @@ file that was distributed with this source code.
 {% endblock sonata_security_roles_widget %}
 
 {% block media_entity_type_widget %}
-    <ul class="media-list">
-        {% for child in form %}
-            {% if child.vars.value %}
-                {% set object=objects[child.vars.value] %}
-                <li class="media">
-                    <p>{% media object, 'admin' with {'class': 'media-object'} %}</p>
-                    <div class="media-body">
-                        {{ form_widget(child) }} <strong class="media-heading">{{ object.name }}</strong>
-                    </div>
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+
+    {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
+    {% if not label_render %}{% set widget_controls = false %}{% endif %}
+    {{ block('widget_control_group_start') }}
+    <div id="field_container_{{ id }}" class="field-container">
+            <span id="field_widget_{{ id }}">
+
+                {% if form.vars.data %}
+                    {% render url('sonata_admin_short_object_information', {
+                    'code':     admin.code,
+                    'objectId': admin.id(form.vars.data),
+                    'uniqid':   admin.uniqid
+                    }) %}
+                {% else %}
+                    <span class="inner-field-short-description">
+                        {{ 'select image'|trans({}, 'SonataAdminBundle') }}
+                    </span>
+                {% endif %}
+            </span>
+        &nbsp;
+            <span style="display: none">
+                {{ form_widget(form) }}
+            </span>
+
+            <span id="field_actions_{{ id }}" class="field-actions">
+                <a href="{{ admin.generateUrl('list', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
+                   onclick="return open_media_list_{{ id }}(this);"
+                   class="btn sonata-ba-action"
+                   title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
+                        >
+                    <i class="icon-list"></i>
+                    {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
+                </a>
+
+                {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
+                    &nbsp;
+                    <a href="{{ admin.generateUrl('create', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
+                       onclick="return start_field_dialog_form_add_{{ id }}(this);"
+                       class="btn sonata-ba-action"
+                       title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
+                            >
+                        <i class="icon-plus"></i>
+                        {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
+                    </a>
+                {% endif %}
+
+                {% if admin.hasRoute('delete') and admin.isGranted('DELETE') %}
+                    &nbsp;
+                    <a href=""
+                       onclick="return remove_selected_element_{{ id }}(this);"
+                       class="btn sonata-ba-action"
+                       title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
+                            >
+                        <i class="icon-trash"></i>
+                        {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
+                    </a>
+                {% endif %}
+            </span>
+
+        <div class="modal form-horizontal" id="field_dialog_{{ id }}" style="display: none" role="dialog"
+             aria-hidden="true">
+        </div>
+
+    </div>
+    {% if widget_remove_btn is defined %}
+        {{ block('form_widget_remove_btn') }}
+    {% endif -%}
+    {{ block('form_message') }}
+    {% if errors|length > 0 %}
+        <div class="help-block sonata-ba-field-error-messages">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+    {{ block('widget_control_group_end') }}
+
+
+
+    {% include 'NetworkingInitCmsBundle:CRUD:edit_media_entity_script.html.twig' %}
 {% endblock %}
 
 {% block ckeditor_widget %}
@@ -511,7 +577,7 @@ file that was distributed with this source code.
                 delete CKEDITOR.instances['{{ id }}'];
             }
             {% for plugin_name, plugin in plugins %}
-                CKEDITOR.plugins.addExternal('{{ plugin_name }}', '{{ plugin.path }}', '{{ plugin.filename }}');
+            CKEDITOR.plugins.addExternal('{{ plugin_name }}', '{{ plugin.path }}', '{{ plugin.filename }}');
             {% endfor %}
             var config = JSON.parse('{{ config | raw }}');
             config.language = '{{ app.request.locale }}';

@@ -88,16 +88,16 @@ function createLayoutBlockForm(url, data) {
 
 function submitLayoutCreate(event) {
     jQuery.each(CKEDITOR.instances, function () {
-            try {
-                var editor = this;
-                var text = editor.getData();
-                    if (editor) {
-                        jQuery('#' + editor.name).val(text);
-                    }
-
-            } catch (err) {
+        try {
+            var editor = this;
+            var text = editor.getData();
+            if (editor) {
+                jQuery('#' + editor.name).val(text);
             }
-        });
+
+        } catch (err) {
+        }
+    });
     var form = jQuery(this);
 
     jQuery(form).ajaxSubmit({
@@ -111,6 +111,7 @@ function submitLayoutCreate(event) {
                 jQuery('input[type=submit]', this).off();
                 jQuery('form', '#layoutBlockModal').unbind('submit');
                 jQuery('#layoutBlockModal').modal('hide');
+                saveLayoutBlockSort();
             }
         },
         error: function (xhr, textStatus, errorThrown) {
@@ -132,9 +133,9 @@ function updateLayoutBlock(addLink) {
         try {
             var editor = this;
             var text = editor.getData();
-                if (editor) {
-                    jQuery('#' + editor.name).val(text);
-                }
+            if (editor) {
+                jQuery('#' + editor.name).val(text);
+            }
 
         } catch (err) {
         }
@@ -161,7 +162,7 @@ function submitLayoutUpdate(form, data) {
             jQuery('#field_container_{{ id }}').replaceWith(xhr.responseText);
             jQuery('.modal-backdrop').remove();
             if (data.zone != undefined) {
-                jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
+                jQuery(form).find('#zone_' + data.zone + ' .layout_block_modal').each(function (i, value) {
                     if (i + 1 == data.sortOrder) {
                         jQuery(value).on('shown', function () {
                             var windowHeight = $(window).height();
@@ -179,11 +180,12 @@ function submitLayoutUpdate(form, data) {
             jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
             jQuery('.modal-backdrop').remove();
             if (data.zone != undefined) {
-                jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
+                jQuery(form).find('#zone_' + data.zone + ' .layout_block_modal').each(function (i, value) {
                     jQuery(value).modal('hide');
                 });
             }
             jQuery('#contentLoading').hide();
+            saveLayoutBlockSort();
         }
     });
 }
@@ -354,44 +356,26 @@ function onAfterLoad() {
 
     });
 
-
-    jQuery("input[id$='_delete']", "li.networking-sortable-list").each(function () {
-        var inputId = jQuery(this).attr('id');
-        jQuery(this).hide();
-
-        var button = '<a href="javascript:void(null);" style="display: none;" id="delete_button_' + inputId + '" type="button">{% trans from 'SonataAdminBundle' %}action_delete{% endtrans %}</a>';
-        jQuery(this).parent().append(button);
-        jQuery('#delete_button_' + inputId).bind('click', function () {
-            if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
-                var liElement = jQuery(this).closest('li.networking-sortable-list');
-                var parent = jQuery(liElement).parent();
-
-                jQuery.ajax({
-                    url: '{{ url('admin_networking_initcms_layoutblock_deleteAjax') }}',
-                    method: 'POST',
-                    data: {
-                        layoutBlock: liElement.attr('id'),
-                        objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
-                        uniqid: '{{ sonata_admin.admin.root.uniqid }}',
-                        elementId: '{{ id }}',
-                        __method: 'DELETE'
-                    },
-                    success: function (xhr) {
-                        createInitCmsMessageBox(xhr.messageStatus, xhr.message);
-                        jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
-                        saveLayoutBlockSort();
-                    }
-                });
-            }
-        });
-    });
-
-    jQuery('.content_preview i.icon-trash').each(function () {
-        var icon = jQuery(this);
-        icon.bind('click', function () {
-            jQuery(this).closest('li').find('[id^="delete_button"]').trigger('click');
-        })
-
+    jQuery('i.delete_block').bind('click', function () {
+        if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
+            var blockId = jQuery(this).attr('data-value');
+            jQuery.ajax({
+                url: '{{ url('admin_networking_initcms_layoutblock_deleteAjax') }}',
+                method: 'POST',
+                data: {
+                    layoutBlockId: blockId,
+                    objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
+                    uniqid: '{{ sonata_admin.admin.root.uniqid }}',
+                    elementId: '{{ id }}',
+                    __method: 'DELETE'
+                },
+                success: function (xhr) {
+                    createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                    jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
+                    saveLayoutBlockSort();
+                }
+            });
+        }
     });
 }
 

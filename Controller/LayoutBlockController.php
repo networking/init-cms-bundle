@@ -10,17 +10,14 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Networking\InitCmsBundle\Admin\Model\PageAdmin;
 use Networking\InitCmsBundle\Model\PageInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
-use Gedmo\Sluggable\Util\Urlizer;
 
 /**
  * Class PageAdminController
@@ -96,18 +93,6 @@ class LayoutBlockController extends CRUDController
             // persist if the form was valid and if in preview mode the preview was approved
             if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
                 $this->admin->create($layoutBlock);
-
-                $contentObject = $layoutBlock->getContent();
-
-                $om = $this->getDoctrine()->getManager();
-
-                $om->persist($contentObject);
-                $om->flush($contentObject);
-
-                $layoutBlock->setObjectId($contentObject->getId());
-
-                $om->persist($layoutBlock);
-                $om->flush($layoutBlock);
 
                 if ($this->isXmlHttpRequest()) {
                     return $this->renderJson(
@@ -215,18 +200,11 @@ class LayoutBlockController extends CRUDController
         $form->setData($page);
 
         if ($update) {
-
             $form->submit($this->getRequest());
             if ($form->isValid()) {
-
                 /** @var \Networking\InitCmsBundle\Model\LayoutBlock $layoutBlock */
                 foreach ($page->getLayoutBlock() as $layoutBlock) {
-                    $contentObject = $layoutBlock->getContent();
-
-                    $om = $this->getDoctrine()->getManager();
-
-                    $om->persist($contentObject);
-                    $om->flush($contentObject);
+                    $this->admin->update($layoutBlock);
                 }
             } else {
                 $this->error = true;
@@ -269,9 +247,6 @@ class LayoutBlockController extends CRUDController
                             if ($layoutBlock) {
                                 $layoutBlock->setSortOrder($sort);
                                 $layoutBlock->setZone($zoneName);
-
-                                $page = $pageAdmin->getObject($request->get('objectId'));
-                                $page->setUpdatedAt(new \DateTime());
                             }
 
                             $this->admin->update($layoutBlock);
@@ -315,15 +290,14 @@ class LayoutBlockController extends CRUDController
     public function deleteAjaxAction()
     {
         $request = $this->getRequest();
-        $layoutBlockStr = $request->get('layoutBlock');
+        $layoutBlockId = $request->get('layoutBlockId');
         $objectId = $request->get('objectId');
         $uniqid = $request->get('uniqid');
         $elementId = $request->get('elementId');
 
-        if ($layoutBlockStr) {
-            $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
+        if ($layoutBlockId) {
 
-            $layoutBlock = $this->admin->getObject($blockId);
+            $layoutBlock = $this->admin->getObject($layoutBlockId);
             if ($layoutBlock) {
                 $this->admin->delete($layoutBlock);
             }

@@ -143,21 +143,14 @@ var field_dialog_form_list_{{ id }} = function (event) {
                 });
             });
 
-            // open the dialog in modal mode
-            field_dialog_{{ id }}.modal({
-                height: 'auto',
-                width: 980,
-                modal: true,
-                resizable: true,
-                title: '{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}',
-                hide: function () {
-                    Admin.log('[{{ id }}|field_dialog_form_list] close callback, removing js event');
+            field_dialog_{{ id }}.modal('show');
 
-                    // make sure we have a clean state
-                    jQuery('a', field_dialog_{{ id }}).off('click');
-                    jQuery('form', field_dialog_{{ id }}).off('submit');
-                },
-                zIndex: 9998
+            field_dialog_{{ id }}.on('hide', function () {
+                Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
+
+                // make sure we have a clean state
+                jQuery('a', field_dialog_{{ id }}).die('click');
+                jQuery('form', field_dialog_{{ id }}).die('submit');
             });
         }
     });
@@ -192,20 +185,14 @@ var field_dialog_form_add_{{ id }} = function (event) {
             jQuery('form', field_dialog_{{ id }}).live('submit', field_dialog_form_action_{{ id }});
 
             // open the dialog in modal mode
-            field_dialog_{{ id }}.modal({
-                height: 'auto',
-                width: 650,
-                modal: true,
-                autoOpen: true,
-                resizable: true,
-                title: '{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}',
-                hide: function (event, ui) {
-                    Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
-                    // make sure we have a clean state
-                    jQuery('a', field_dialog_{{ id }}).die('click');
-                    jQuery('form', field_dialog_{{ id }}).die('submit');
-                },
-                zIndex: 9998
+            field_dialog_{{ id }}.modal('show');
+
+            field_dialog_{{ id }}.on('hide', function () {
+                Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
+
+                // make sure we have a clean state
+                jQuery('a', field_dialog_{{ id }}).die('click');
+                jQuery('form', field_dialog_{{ id }}).die('submit');
             });
         }
     });

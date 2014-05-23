@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use JMS\Serializer\Serializer;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
+use Networking\InitCmsBundle\Model\ContentInterface;
 
 /**
  * Class LayoutBlockListener
@@ -57,68 +58,14 @@ class LayoutBlockListener
                     $em->persist($contentObject);
                 }
 
-                $em->flush();
+                $em->flush($contentObject);
 
                 $layoutBlock->setObjectId($contentObject->getId());
 
                 $em->persist($layoutBlock);
-                $em->flush();
+                $em->flush($layoutBlock);
 
-            } else {
-                $this->autoPageDraft($args);
             }
-        }
-    }
-
-    /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
-     */
-    public function postUpdate(LifecycleEventArgs $args)
-    {
-        $layoutBlock = $args->getEntity();
-        if ($layoutBlock instanceof LayoutBlock) {
-
-
-            if (!$layoutBlock->getSnapshotContent()) {
-                $this->autoPageDraft($args);
-            }
-        }
-    }
-
-    /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
-     */
-    public function preRemove(LifecycleEventArgs $args)
-    {
-        $entity = $args->getEntity();
-        $em = $args->getEntityManager();
-        if ($entity instanceof LayoutBlock) {
-
-            $classType = $entity->getClassType();
-            $repo = $em->getRepository($classType);
-            $object = $repo->find($entity->getObjectId());
-            if ($object) {
-                $em->remove($object);
-            }
-
-            if (!$entity->getSnapshotContent() && !$entity->getSetNoAutoDraft()) {
-                $this->autoPageDraft($args);
-            }
-        }
-    }
-
-    /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
-     */
-    public function autoPageDraft(LifecycleEventArgs $args)
-    {
-        $layoutBlock = $args->getEntity();
-        if ($layoutBlock instanceof LayoutBlock) {
-
-            $page = $layoutBlock->getPage();
-            $page->setStatus(Page::STATUS_DRAFT);
-            $em = $args->getEntityManager();
-            $em->persist($page);
         }
     }
 }

@@ -10,6 +10,12 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityNotFoundException;
+use JMS\Serializer\Serializer;
+use Networking\InitCmsBundle\Form\DataTransformer\ContentTypeTransformer;
+use Networking\InitCmsBundle\Model\LayoutBlock;
+use Networking\InitCmsBundle\Model\PageInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\DataTransformer\ArrayToModelTransformer;
@@ -53,29 +59,22 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        if ($this->getSubject()) {
+            $classType = $this->getSubject()->getClassType();
+        } else {
+            $classType = $this->getRequest()->get('classType');
+        }
         /** @var \Networking\InitCmsBundle\Model\LayoutBlockFormListener $listener */
         $listener = $this->getContainer()->get('networking_init_cms.layout_block_form_listener');
         $listener->setAdmin($this);
+        $listener->setContentType($classType);
         $formMapper->getFormBuilder()->addEventSubscriber($listener);
 
         $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
         $transformer = new PageToNumberTransformer($pageManager);
 
 
-        if ($this->getSubject()) {
-            $classType = $this->getSubject()->getClassType();
-        } else {
-            $classType = $this->getRequest()->get('classType');
-        }
-
         $formMapper
-            ->add(
-                'content',
-                'networking_type_content_block',
-                array(
-                    'error_bubbling' => false,
-                    'data_class' => $classType)
-            )
             ->add(
                 'zone',
                 'hidden'
@@ -125,4 +124,82 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         return $choices;
     }
 
+
+    /**
+     * @param LayoutBlock $object
+     * @return mixed|void
+     */
+    public function postPersist($object)
+    {
+        if ($contentObject = $object->getContent()) {
+            $om = $this->getObjectManager();
+            $om->persist($contentObject);
+            $om->flush($contentObject);
+            $object->setObjectId($contentObject->getId());
+            $om->flush($object);
+        }
+
+        $this->autoPageDraft($object->getPage());
+    }
+
+
+    /**
+     * @param LayoutBlock $object
+     * @return mixed|void
+     */
+    public function postUpdate($object)
+    {
+        if ($contentObject = $object->getContent()) {
+            $om = $this->getObjectManager();
+            $om->flush($contentObject);
+        }
+        $this->autoPageDraft($object->getPage());
+    }
+
+    /**
+     * @param LayoutBlock $object
+     * @return mixed|void
+     */
+    public function postRemove($object)
+    {
+        if ($classType = $object->getClassType()) {
+            $om = $this->getObjectManager();
+
+            $contentObject = $om->getRepository($classType)->find($object->getObjectId());
+            if($contentObject){
+                $om->remove($contentObject);
+            }
+        }
+
+        $this->autoPageDraft($object->getPage());
+    }
+
+    /**
+     * @return Serializer
+     */
+    protected function getSerializer()
+    {
+        return $this->getContainer()->get('serializer');
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    protected function getObjectManager()
+    {
+        return $this->getContainer()->get('Doctrine')->getManager();
+    }
+
+
+    /**
+     * @param PageInterface $page
+     */
+    public function autoPageDraft(PageInterface $page)
+    {
+        $page->setStatus(PageInterface::STATUS_DRAFT);
+        $page->setUpdatedAt(new \DateTime());
+        /** @var PageAdmin $pageAdmin */
+        $pageAdmin = $this->getContainer()->get('networking_init_cms.admin.page');
+        $pageAdmin->update($page);
+    }
 }

@@ -44,9 +44,8 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
             throw new \RuntimeException('Content Object must implement the ContentInterface');
         }
 
-       $this->validate($event, $contentObject);
+        $this->validate($event, $contentObject);
     }
-
 
 
     /**
@@ -57,9 +56,8 @@ class LayoutBlockFormListener extends ModelLayoutBlockFormListener
      */
     public function preSetData(FormEvent $event)
     {
-
+        parent::preSetData($event);
         $layoutBlock = $event->getData();
-
 
         if (!$layoutBlock) {
             return;

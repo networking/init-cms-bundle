@@ -173,7 +173,8 @@ abstract class PageAdmin extends BaseAdmin
                     array(
                         'required' => true,
                         'label_render' => false,
-                        'by_reference' => false,
+                        'error_bubbling' => false,
+                        'type_options' => array('error_bubbling' => false)
                     )
                 )
                 ->end();

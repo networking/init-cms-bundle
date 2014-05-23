@@ -20,6 +20,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 
@@ -48,7 +49,7 @@ class ContentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $annotations = $this->annotationReader->getFormMapperAnnotations($options['data_class']);
+        $annotations = $this->annotationReader->getFormMapperAnnotations($options['class']);
 
         $defaultValue = null;
 
@@ -60,9 +61,8 @@ class ContentType extends AbstractType
                 $annotation->getType(),
                 $annotation->getOptions()
             );
-
         }
-
+        $options['data_class'] = $options['class'];
     }
 
 
@@ -86,8 +86,15 @@ class ContentType extends AbstractType
     {
         parent::setDefaultOptions($resolver);
 
+        $dataClass = function (Options $options)  {
+//            return null;
+            return $options['class'];
+        };
+
         $resolver->setDefaults(
             array(
+                'class' => null,
+                'data_class' => $dataClass,
                 'translation_domain' => 'messages',
             )
         );

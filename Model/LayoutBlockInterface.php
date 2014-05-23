@@ -164,16 +164,15 @@ interface LayoutBlockInterface extends ContentInterface
     public function getSortOrder();
 
     /**
-     * @return array
+     * @return ContentInterface
      */
     public function getContent();
 
     /**
-     * @param $content
-     * @param $key
-     * @return $this
+     * @param ContentInterface $content
+     * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
      */
-    public function setContent($content, $key = null);
+    public function setContent($content);
 
     /**
      * @param boolean $isSnapshot
