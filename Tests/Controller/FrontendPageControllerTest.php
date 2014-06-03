@@ -136,28 +136,25 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testLiveAction()
     {
-//        $this->setExpectedException(
-//            'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException'
-//        );
 
         // MOCKS
         $mockPage = $this->getMock('Networking\InitCmsBundle\Model\Page');
         $mockPage->expects($this->once())
             ->method('getVisibility')
             ->will($this->returnValue(PageInterface::VISIBILITY_PUBLIC));
+        $mockPage->expects($this->once())
+            ->method('isActive')
+            ->will($this->returnValue(true));
+
         $mockSnapshot = $this->getMockBuilder('Networking\InitCmsBundle\Entity\PageSnapshot')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSnapshot->expects($this->once())
-            ->method('getVersionedData')
-            ->will($this->returnValue($mockPage));
-
-        $mockSerializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
+        $mockHelper = $this->getMockBuilder('Networking\InitCmsBundle\Helper\PageHelper')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockSerializer->expects($this->once())
-            ->method('deserialize')
+        $mockHelper->expects($this->once())
+            ->method('unserializePageSnapshotData')
             ->will($this->returnValue($mockPage));
 
         //security context
@@ -168,11 +165,11 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(true));
+
         //templating
         $mockTemplating = $this->getMockBuilder('\Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine')
             ->disableOriginalConstructor()
             ->getMock();
-
 
         $mockResponse = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Response')
             ->getMock();
@@ -193,27 +190,28 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockRequest->expects($this->at(1))
             ->method('get')
             ->with('_template');
+
         //Container
         $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
             ->disableOriginalConstructor()
             ->getMock();
         $mockContainer->expects($this->at(0))
             ->method('get')
-            ->with('serializer')
-            ->will($this->returnValue($mockSerializer));
+            ->with('networking_init_cms.helper.page_helper')
+            ->will($this->returnValue($mockHelper));
+
         $mockContainer->expects($this->at(1))
-            ->method('getParameter')
-            ->with('networking_init_cms.admin.page.class')
-            ->will($this->returnValue('Application\Networking\InitCmsBundle\Entity\Page'));
-        $mockContainer->expects($this->at(2))
             ->method('get')
             ->with('security.context')
             ->will($this->returnValue($mockSecurityContext));
 
-        $mockContainer->expects($this->at(3))
+
+        $mockContainer->expects($this->at(2))
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTemplating));
+
+
 
         // controller
         $controller = new FrontendPageController();
