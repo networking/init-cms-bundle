@@ -88,6 +88,9 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
 
         if ($page instanceof PageInterface) {
             $er = $this->getPageManager();
+            if(!$page->getId()){
+                return;
+            }
 
             if ($parent = $page->getParent()) {
 
