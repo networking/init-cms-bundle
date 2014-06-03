@@ -133,7 +133,7 @@ function doAjaxSubmit(url, form, data) {
             jQuery('#sonata-ba-field-container-{{ id }}').trigger('sonata.add_element');
             jQuery('#field_container_{{ id }}').trigger('sonata.add_element');
 
-            jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
+            jQuery(form).find('#zone_' + data.zone + '  li > .modal').each(function (i, value) {
                 if (i + 1 == data.sortOrder) {
                     jQuery(value).on('shown', function () {
                         var windowHeight = $(window).height();

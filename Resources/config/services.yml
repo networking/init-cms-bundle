@@ -54,6 +54,8 @@ services:
         class: Networking\InitCmsBundle\Form\Type\MediaEntityType
         arguments:
             - '@doctrine'
+        calls:
+            - [setPool, ['@sonata.admin.pool']]
         tags:
             - {name: form.type, alias: 'media_entity_type' }
 
