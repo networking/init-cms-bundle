@@ -699,6 +699,16 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
                 $date = $fieldDescription->getValue($object);
                 $value = $date->format('d.m.Y');
                 break;
+            case 'datetime':
+                /** @var $date  \DateTime */
+                $date = $fieldDescription->getValue($object);
+                if($date){
+                    $value = $date->format('d.m.Y H:i');
+                }else{
+                    $value = '';
+                }
+
+                break;
             default:
                 var_dump($fieldDescription->getType());
                 break;

@@ -453,7 +453,7 @@ select:focus:invalid {
   .add-on {
     display: inline-block;
     width: auto;
-    height: @baseLineHeight;
+    height: @iconHeight;
     min-width: 16px;
     padding: 4px 5px;
     font-size: @baseFontSize;
@@ -484,7 +484,7 @@ select:focus:invalid {
   .add-on:first-child,
   .btn:first-child {
     // FYI, `.btn:first-child` accounts for a button group that's prepended
-    .border-radius(@inputBorderRadius 0 0 @inputBorderRadius);
+    .border-radius(@inputBorderRadius 0 0 @inputBorderRadius) !important;
   }
 }
 
@@ -492,9 +492,9 @@ select:focus:invalid {
   input,
   select,
   .uneditable-input {
-    .border-radius(@inputBorderRadius 0 0 @inputBorderRadius);
+    .border-radius(@inputBorderRadius 0 0 @inputBorderRadius) !important;
     + .btn-group .btn:last-child {
-      .border-radius(0 @inputBorderRadius @inputBorderRadius 0);
+      .border-radius(0 @inputBorderRadius @inputBorderRadius 0) !important;
     }
   }
   .add-on,
@@ -505,7 +505,7 @@ select:focus:invalid {
   .add-on:last-child,
   .btn:last-child,
   .btn-group:last-child > .dropdown-toggle {
-    .border-radius(0 @inputBorderRadius @inputBorderRadius 0);
+    .border-radius(0 @inputBorderRadius @inputBorderRadius 0) !important;
   }
 }
 
@@ -516,18 +516,18 @@ select:focus:invalid {
   .uneditable-input {
     .border-radius(0);
     + .btn-group .btn {
-      .border-radius(0 @inputBorderRadius @inputBorderRadius 0);
+      .border-radius(0 @inputBorderRadius @inputBorderRadius 0) !important;
     }
   }
   .add-on:first-child,
   .btn:first-child {
     margin-right: -1px;
-    .border-radius(@inputBorderRadius 0 0 @inputBorderRadius);
+    .border-radius(@inputBorderRadius 0 0 @inputBorderRadius) !important;
   }
   .add-on:last-child,
   .btn:last-child {
     margin-left: -1px;
-    .border-radius(0 @inputBorderRadius @inputBorderRadius 0);
+    .border-radius(0 @inputBorderRadius @inputBorderRadius 0) !important;
   }
   .btn-group:first-child {
     margin-left: 0;

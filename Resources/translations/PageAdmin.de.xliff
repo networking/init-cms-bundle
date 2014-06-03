@@ -82,6 +82,14 @@
                 <source>form.label_alias</source>
                 <target>Verweist auf diese Seite</target>
             </trans-unit>
+            <trans-unit id="form.label_active_from">
+                <source>form.label_active_from</source>
+                <target>Seite aktiv von (optional)</target>
+            </trans-unit>
+            <trans-unit id="form.label_active_to">
+                <source>form.label_active_to</source>
+                <target>Seite aktiv bis (optional</target>
+            </trans-unit>
             <trans-unit id="legend.translate_page">
                 <source>legend.translate_page</source>
                 <target>Seitenübersetzungen </target>
@@ -341,6 +349,14 @@
             <trans-unit id="template">
                 <source>template</source>
                 <target>Seitenlayout</target>
+            </trans-unit>
+            <trans-unit id="activeFrom">
+                <source>activeFrom</source>
+                <target>Online ab</target>
+            </trans-unit>
+            <trans-unit id="activeTo">
+                <source>activeTo</source>
+                <target>Online bis</target>
             </trans-unit>
             <trans-unit id="positive">
                 <source>positive</source>

@@ -32,7 +32,7 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-        $menu->setCurrentUri($request->getRequestUri());
+        $menu->setCurrentUri($this->currentUri);
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
 
@@ -58,7 +58,7 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-        $menu->setCurrentUri($request->getRequestUri());
+        $menu->setCurrentUri($this->currentUri);
 
         /** @var $mainMenu Menu */
         $menuIterator = $this->getSubMenu($menuName, 1);
@@ -114,7 +114,7 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-        $menu->setCurrentUri($request->getRequestUri());
+        $menu->setCurrentUri($this->currentUri);
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
 

@@ -9,6 +9,10 @@
             <tag name="form.type_extension" alias="form"/>
         </service>
 
+        <service id="networking_init_cms.form.extension.field" class="Networking\InitCmsBundle\Form\Extension\Field\Type\DateTimeTypeExtension">
+            <tag name="form.type_extension" alias="datetime"/>
+        </service>
+
         <service id="networking_init_cms.form.type.autocomplete" class="Networking\InitCmsBundle\Form\Type\AutocompleteType">
             <tag name="form.type" alias="networking_type_autocomplete"/>
         </service>

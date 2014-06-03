@@ -102,11 +102,11 @@ class FrontendPageController extends Controller
         $pageSnapshot = $request->get('_content');
 
         /** @var $page PageInterface */
-        $page = $this->get('serializer')->deserialize(
-            $pageSnapshot->getVersionedData(),
-            $this->container->getParameter('networking_init_cms.admin.page.class'),
-            'json'
-        );
+        $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot);
+
+        if(!$page->isActive()){
+            throw new NotFoundHttpException();
+        }
 
         if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
             if ($alias = $page->getAlias()) {
@@ -118,7 +118,6 @@ class FrontendPageController extends Controller
         }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
-
 
             if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
@@ -347,6 +346,15 @@ class FrontendPageController extends Controller
         $response->setSharedMaxAge(10);
 
         return $response;
+    }
+
+    /**
+     * @return \Networking\InitCmsBundle\Helper\PageHelper
+     */
+    public function getPageHelper()
+    {
+
+        return $this->container->get('networking_init_cms.helper.page_helper');
     }
 
 }

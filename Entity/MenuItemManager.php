@@ -11,8 +11,11 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use JMS\Serializer\Serializer;
+use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Doctrine\ORM\EntityManager;
+use Networking\InitCmsBundle\Model\Page;
 
 /**
  * Class MenuItemManager
@@ -21,6 +24,12 @@ use Doctrine\ORM\EntityManager;
  */
 class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInterface
 {
+
+
+    /**
+     * @var PageHelper
+     */
+    protected $pageHelper;
     /**
      * @param EntityManager $em
      * @param \Doctrine\ORM\Mapping\ClassMetadata $class
@@ -30,6 +39,10 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $classMetaData = $em->getClassMetadata($class);
 
         parent::__construct($em, $classMetaData);
+    }
+
+    public function setPageHelper(PageHelper $pageHelper){
+        $this->pageHelper = $pageHelper;
     }
 
     /**
@@ -63,7 +76,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $sortByField = null,
         $direction = 'ASC',
         $includeNode = false,
-        $viewStatus = BasePage::STATUS_PUBLISHED
+        $viewStatus = Page::STATUS_PUBLISHED
     ) {
 
         $qb = $this->childrenQueryBuilder($node, $direct, $sortByField, $direction, $includeNode);
@@ -71,18 +84,34 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p');
         $qb->addSelect('cr.path AS path');
 
-        if ($viewStatus == BasePage::STATUS_PUBLISHED) {
+        if ($viewStatus == Page::STATUS_PUBLISHED) {
             $qb->leftJoin('p.snapshots', 'ps');
             $qb->leftJoin('ps.contentRoute', 'cr');
             $qb->andWhere($qb->expr()->orX('p.id = ps.page', 'p.id IS NULL'));
+
         } else {
             $qb->leftJoin('p.contentRoute', 'cr');
         }
 
         $results = $qb->getQuery()->getResult();
+
         $menuItems = array();
         foreach ($results as $item) {
             $menuItem = $item[0];
+            if ($viewStatus == Page::STATUS_PUBLISHED) {
+                if($page = $menuItem->getPage()){
+                    if(!$page->getSnapshot()){
+                        continue;
+                    }
+                    $snapshot = $page->getSnapshot();
+                    $page = $this->pageHelper->unserializePageSnapshotData($snapshot);
+                    if(!$page->isActive()){
+                        continue;
+                    }
+
+                }
+            }
+
             $menuItem->setPath($item['path']);
             $menuItems[] = $menuItem;
         }

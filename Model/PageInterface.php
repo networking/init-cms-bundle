@@ -253,6 +253,29 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function isPublished();
 
     /**
+     *
+     * @return bool
+     */
+    public function isActive();
+
+
+    /**
+     * Set activeTo
+     *
+     * @param  $activeTo
+     * @return $this
+     */
+    public function setActiveTo($activeTo);
+
+    /**
+     * Get activeTo
+     *
+     * @return string
+     */
+    public function getActiveTo();
+    
+
+    /**
      * Set activeFrom
      *
      * @param  $activeFrom

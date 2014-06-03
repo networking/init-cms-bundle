@@ -46,6 +46,9 @@
                  class="Networking\InitCmsBundle\Entity\MenuItemManager">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument>Networking\InitCmsBundle\Entity\MenuItem</argument>
+            <call method="setPageHelper">
+                <argument type="service" id="networking_init_cms.helper.page_helper"/>
+            </call>
         </service>
 
         <service id="networking_init_cms.help_text_manager"

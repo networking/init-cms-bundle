@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Helper;
 
+use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Sonata\AdminBundle\Exception\NoValueException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -222,6 +223,19 @@ class PageHelper
 
         $em->persist($snapshotContentRoute);
         $em->flush();
+    }
+
+    /**
+     * Unserialize the PageSnapshot data into a page object
+     *
+     * @param PageSnapshotInterface $pageSnapshot
+     * @return PageInterface
+     */
+    public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot)
+    {
+        /** @var \JMS\Serializer\SerializerInterface $serializer */
+        $serializer = $this->getService('serializer');
+        return $serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json');
     }
 
     /**
