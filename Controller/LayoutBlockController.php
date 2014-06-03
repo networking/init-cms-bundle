@@ -116,7 +116,7 @@ class LayoutBlockController extends CRUDController
         $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:Layout_block_edit.html.twig',
+            'NetworkingInitCmsBundle:PageAdmin:layout_block_edit.html.twig',
             array(
                 'action' => 'create',
                 'form' => $view,

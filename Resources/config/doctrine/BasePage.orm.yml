@@ -59,9 +59,13 @@ Networking\InitCmsBundle\Entity\BasePage:
       type: string
       length: 50
     activeFrom:
-      type: date
+      type: datetime
       nullable: true
       column: active_from
+    activeTo:
+      type: datetime
+      nullable: true
+      column: active_to
     locale:
       type: string
       length: 6

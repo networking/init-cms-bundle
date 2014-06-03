@@ -39,7 +39,7 @@ interface MenuItemManagerInterface
         $sortByField = null,
         $direction = 'ASC',
         $includeNode = false,
-        $viewStatus = BasePage::STATUS_PUBLISHED
+        $viewStatus = Page::STATUS_PUBLISHED
     );
 
 } 

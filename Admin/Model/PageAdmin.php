@@ -296,6 +296,8 @@ abstract class PageAdmin extends BaseAdmin
                     'catalogue' => $this->translationDomain
                 )
             )
+            ->add('activeFrom', null, array('required' => false, 'date_widget' => 'single_text', 'date_format' => 'dd.MM.yyyy', 'datepicker' => true))
+            ->add('activeTo', null, array('required' => false, 'date_widget' => 'single_text', 'date_format' => 'dd.MM.yyyy', 'datepicker' => true))
             ->add(
                 'templateName',
                 'networking_type_iconradio',

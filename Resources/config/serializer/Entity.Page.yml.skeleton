@@ -52,7 +52,9 @@ Application\Networking\InitCmsBundle\Entity\Page:
         visibility:
             type: string
         activeFrom:
-            exclude: true
+            type: DateTime
+        activeTo:
+            type: DateTime
         locale:
             type: string
         translations:

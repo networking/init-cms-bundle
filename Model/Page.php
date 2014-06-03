@@ -133,6 +133,12 @@ abstract class Page implements PageInterface
      */
     protected $activeFrom;
 
+
+    /**
+     * @var \Datetime $activeTo
+     */
+    protected $activeTo;
+
     /**
      * @var string $locale
      */
@@ -593,11 +599,18 @@ abstract class Page implements PageInterface
     /**
      *
      * @return bool
-     * @deprecated please use isPublished
      */
     public function isActive()
     {
-        return ($this->status == self::STATUS_PUBLISHED);
+        $now = new \DateTime();
+
+        if ($now->getTimestamp() >= $this->getActiveStart()->getTimestamp() &&
+            $now->getTimestamp() <= $this->getActiveEnd()->getTimestamp()
+        ) {
+            return ($this->status == self::STATUS_PUBLISHED);
+        }
+
+        return false;
     }
 
     /**
@@ -620,11 +633,51 @@ abstract class Page implements PageInterface
      */
     public function getActiveFrom()
     {
+        return $this->activeFrom;
+    }
+
+    /**
+     * Get activeFrom
+     *
+     * @return \DateTime
+     */
+    public function getActiveStart()
+    {
         if (!$this->activeFrom) {
+
             return new \DateTime();
         }
 
         return $this->activeFrom;
+    }
+
+    /**
+     * @param \Datetime $activeTo
+     */
+    public function setActiveTo($activeTo)
+    {
+        $this->activeTo = $activeTo;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getActiveTo()
+    {
+
+        return $this->activeTo;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getActiveEnd()
+    {
+        if (!$this->activeTo) {
+            return new \DateTime();
+        }
+
+        return $this->activeTo;
     }
 
     /**
@@ -722,12 +775,14 @@ abstract class Page implements PageInterface
     public function getLayoutBlock($zone = null)
     {
         if (!is_null($zone)) {
-            return $this->layoutBlock->filter(
+            $layoutBlocks =  $this->layoutBlock->filter(
                 function ($layoutBlock) use ($zone) {
                     return ($layoutBlock->getZone() == $zone && $layoutBlock->isActive());
                 }
             );
+            return array_merge($layoutBlocks->toArray());
         }
+
 
         return $this->layoutBlock;
     }
@@ -1163,11 +1218,11 @@ abstract class Page implements PageInterface
         // find all possible translations
         if (!$this->getTranslations()->isEmpty()) {
             foreach ($this->getTranslations() as $translation) {
-               if($translation){
+                if ($translation) {
                     // if we already meet you stop and go on with the next
                     $translationsArray[$translation->getLocale()] = $translation;
                     $translation->getRecursiveTranslations($translationsArray);
-               }
+                }
             }
 
         }

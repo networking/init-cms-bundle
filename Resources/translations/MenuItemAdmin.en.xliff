@@ -178,6 +178,10 @@
                 <source>flash_delete_children_error</source>
                 <target>Menu item not deleted. Please reorganise the sub-menu items first.</target>
             </trans-unit>
+            <trans-unit id="flash_newPlacement_success">
+                <source>flash_newPlacement_success</source>
+                <target>Menu items successfully re-ordered</target>
+            </trans-unit>
             <trans-unit id="menu.admin_menu_label">
                 <source>menu.admin_menu_label</source>
                 <target>Menus</target>
