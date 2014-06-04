@@ -10,15 +10,6 @@ file that was distributed with this source code.
 #}
 {% autoescape false %}
 <script type="text/javascript">
-    (function ($) {
-        {% if init_cms_editor == 'ckeditor' %}
-            createCkeditor();
-        {% elseif init_cms_editor == 'redactor' %}
-            createRedactor();
-        {% endif %}
-
-    })(jQuery);
-
     function uploadError(xhr) {
         alert(xhr.error);
     }

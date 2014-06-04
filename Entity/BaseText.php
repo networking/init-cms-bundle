@@ -38,7 +38,7 @@ abstract class BaseText implements ContentInterface
     /**
      * @var string $content
      * @ORM\Column(name="text", type="text", nullable=true)
-     * @Sonata\FormMapper(name="text", type="textarea", options={"label_render" = false, "required"=false, "property_path" = false, "attr"={"class"="wysiwyg-editor"}}, fieldDescriptionOptions={"inline_block" = true})
+     * @Sonata\FormMapper(name="text", type="ckeditor", options={"label_render" = false, "required"=false, "property_path" = false, "attr"={"class"="wysiwyg-editor"}}, fieldDescriptionOptions={"inline_block" = true})
      */
     protected $text;
 

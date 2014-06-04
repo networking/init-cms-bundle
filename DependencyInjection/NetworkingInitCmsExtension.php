@@ -50,11 +50,9 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
-        $container->setParameter('networking_init_cms.init_cms_editor', $config['init_cms_editor']);
         $container->setParameter('networking_init_cms.translation_fallback_route', $config['translation_fallback_route']);
         $container->setParameter('networking_init_cms.404_template', $config['404_template']);
         $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
-        $container->setParameter('networking_init_cms.ckeditor_config', $config['ckeditor_config']);
         $container->setParameter('networking_init_cms.admin_menu_groups', $config['admin_menu_groups']);
     }
 

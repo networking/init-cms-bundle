@@ -313,6 +313,9 @@ class PageAdminController extends CRUDController
             $subject = $admin->getNewInstance();
         }
 
+
+        $this->getRequest()->attributes->add(array('objectId' => $objectId));
+        $this->getRequest()->attributes->add(array('page_locale' => $subject->getLocale()));
         $admin->setSubject($subject);
 
         $data = array(
@@ -489,7 +492,6 @@ class PageAdminController extends CRUDController
 
         $admin = $this->container->get($code);
         $admin->setRequest($this->getRequest());
-        $this->getRequest()->attributes->add(array('objectId' => $objectId));
 
         if ($uniqId) {
             $admin->setUniqid($uniqId);
@@ -503,6 +505,9 @@ class PageAdminController extends CRUDController
         if (!$subject) {
             $subject = $admin->getNewInstance();
         }
+
+        $this->getRequest()->attributes->add(array('objectId' => $objectId));
+        $this->getRequest()->attributes->add(array('page_locale', $subject->getLocale()));
 
         $admin->setSubject($subject);
         $formBuilder = $admin->getFormBuilder();
@@ -600,6 +605,10 @@ class PageAdminController extends CRUDController
         }
 
         $object = $this->admin->getObject($id);
+
+        $this->getRequest()->attributes->add(array('objectId' => $object->getId()));
+        $this->getRequest()->attributes->add(array('page_locale' => $object->getLocale()));
+
 
         if (!$object) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));

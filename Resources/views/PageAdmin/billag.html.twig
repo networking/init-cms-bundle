@@ -38,7 +38,7 @@ var field_update_{{ id }} = function (event) {
 function updateLayoutBlocks(form, data) {
 
 
-    var url = '{{ url('admin_networking_initcms_page_updateFormFieldElement', {
+    var url = '{{ url(admin.getBaseRouteName() ~'_updateFormFieldElement', {
                             'code':      sonata_admin.admin.root.code,
                             'elementId': id,
                             'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
@@ -87,7 +87,7 @@ var field_add_{{ id }} = function (event) {
 
             var data = {zone: zone, sortOrder: sortOrder, classType: classType };
             var form = jQuery(addLink).closest('form');
-            var url = '{{ url('admin_networking_initcms_page_addLayoutBlock', {
+            var url = '{{ url(admin.getBaseRouteName() ~'_addLayoutBlock', {
                                             'code':      sonata_admin.admin.root.code,
                                             'elementId': id,
                                             'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
@@ -131,7 +131,7 @@ function doAjaxSubmit(url, form, data) {
             jQuery('#sonata-ba-field-container-{{ id }}').trigger('sonata.add_element');
             jQuery('#field_container_{{ id }}').trigger('sonata.add_element');
 
-            jQuery(form).find('#zone_' + data.zone + '  li > .modal').each(function (i, value) {
+            jQuery(form).find('#zone_' + data.zone + ' .modal').each(function (i, value) {
                 if (i + 1 == data.sortOrder) {
                     jQuery(value).on('shown', function () {
                         var windowHeight = $(window).height();
@@ -173,9 +173,12 @@ function apply_position_value_{{ id }}() {
     // update the input value position
     jQuery('ul.sortable').each(function (index, value) {
         var index = 0;
+        var zone = jQuery(this).attr('id').replace('zone_', '');
         jQuery(value).find("li.networking-sort-zone").each(function (i, v) {
             if (!jQuery(v).find("input[id$='_delete']").is(':checked')) {
                 jQuery(v).find("[id$='_sortOrder']").val(index);
+
+                jQuery(v).find("[id$='_zone']").val(zone);
                 index++;
             }
         });
@@ -201,12 +204,12 @@ function saveLayoutBlockSort(callback) {
 function submitLayoutSort(zones) {
     var dfd = jQuery.Deferred();
     return jQuery.ajax({
-        url: '{{ url('admin_networking_initcms_page_updateLayoutBlockSort') }}',
+        url: '{{ url(admin.getBaseRouteName() ~'_updateLayoutBlockSort') }}',
         data: {
             zones: zones,
-            objectId: {{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}
+            objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
         },
-        type: 'get',
+        type: 'post',
         success: function (xhr) {
             if (xhr.status != 'error') {
                 if (xhr.pageStatusSettings != undefined) jQuery('#pageStatusSettings').html(xhr.pageStatusSettings);
@@ -253,6 +256,8 @@ function onAfterLoad() {
             apply_position_value_{{ id }}();
             saveLayoutBlockSort(function (xhr) {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                {#jQuery('#field_container_{{ id }}').replaceWith(xhr.html);#}
+
             });
         },
         update: function (event, ui) {
@@ -344,10 +349,10 @@ function onAfterLoad() {
                 var parent = jQuery(liElement).parent();
 
                 jQuery.ajax({
-                    url: '{{ url('admin_networking_initcms_page_deleteLayoutBlock') }}',
+                    url: '{{ url(admin.getBaseRouteName() ~'_deleteLayoutBlock') }}',
                     data: {
                         layoutBlock: liElement.attr('id'),
-                        objectId: {{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }},
+                        objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
                         uniqid: '{{ sonata_admin.admin.root.uniqid }}',
                         elementId: '{{ id }}'
                     },

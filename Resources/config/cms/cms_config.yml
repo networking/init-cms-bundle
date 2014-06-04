@@ -10,3 +10,4 @@ imports:
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/sonata_media.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/jms_serializer.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/sonata_extensions/doctrine_orm_admin.xml }
+    - { resource: @NetworkingInitCmsBundle/Resources/config/cms/ivory_ck_editor.yml }

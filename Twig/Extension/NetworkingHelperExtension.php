@@ -779,7 +779,7 @@ class NetworkingHelperExtension extends \Twig_Extension
 
     public function getGlobals()
     {
-        return array('init_cms_editor' => $this->container->getParameter('networking_init_cms.init_cms_editor'));
+        return array();
     }
 
     /**
