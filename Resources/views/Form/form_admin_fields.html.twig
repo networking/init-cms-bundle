@@ -357,7 +357,7 @@ file that was distributed with this source code.
     <script>
         $(document).ready(function () {
             jQuery("#{{ id }}").select2({
-                placeholder:"{{ 'Select'|trans({}, sonata_admin.admin.translationDomain) }}",
+                placeholder:"{{ 'Select'|trans({}) }}",
                 allowClear:true
             });
         });
