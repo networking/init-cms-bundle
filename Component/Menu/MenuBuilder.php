@@ -313,7 +313,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             if (!is_null($knpMenuNode)) {
                 $menu->addChild($knpMenuNode);
                 $knpMenuNode->setAttribute('class', $node->getLinkClass());
-                if (!$node->getVisibility() == MenuItem::VISIBILITY_PUBLIC && !$this->isLoggedIn) {
+                if ($node->getVisibility() != MenuItem::VISIBILITY_PUBLIC && !$this->isLoggedIn) {
                     $knpMenuNode->setDisplay(false);
                 }
 
