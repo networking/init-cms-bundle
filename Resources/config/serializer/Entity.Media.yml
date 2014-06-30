@@ -4,3 +4,6 @@ Networking\InitCmsBundle\Entity\Media:
             type: integer
         locale:
             type: string
+        tags:
+            exclude: true
+
