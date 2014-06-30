@@ -248,20 +248,21 @@ var field_dialog_form_action_{{ id }} = function (event) {
 
             Admin.log('[{{ id }}|field_dialog_form_action] ajax success');
 
+            var ct = xhr.getResponseHeader("content-type") || "";
+            if (ct != 'application/json') {
+                var IS_JSON = true;
+                try {
+                    data = jQuery.parseJSON(data);
+                }
+                catch (err) {
+                    IS_JSON = false;
+                }
 
-            var IS_JSON = true;
-            try {
-                var data = jQuery.parseJSON(data);
+                if (IS_JSON === false && typeof data == 'string') {
+                    field_dialog_{{ id }}.html(data);
+                    return;
+                }
             }
-            catch (err) {
-                IS_JSON = false;
-            }
-
-            if (IS_JSON === false && typeof data == 'string') {
-                field_dialog_{{ id }}.html(data);
-                return;
-            }
-
 
             // if the crud action return ok, then the element has been added
             // so the widget container must be refresh with the last option available
