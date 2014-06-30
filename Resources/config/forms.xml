@@ -9,7 +9,7 @@
             <tag name="form.type_extension" alias="form"/>
         </service>
 
-        <service id="networking_init_cms.form.extension.field" class="Networking\InitCmsBundle\Form\Extension\Field\Type\DateTimeTypeExtension">
+        <service id="networking_init_cms.form.extension.datetime" class="Networking\InitCmsBundle\Form\Extension\Field\Type\DateTimeTypeExtension">
             <tag name="form.type_extension" alias="datetime"/>
         </service>
 

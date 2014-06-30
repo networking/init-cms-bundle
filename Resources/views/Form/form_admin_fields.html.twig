@@ -455,7 +455,7 @@ file that was distributed with this source code.
             <div id="securityRoles">
                 {{ block('choice_widget') }}
             </div>
-            <a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a>
+            <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a><p>
             <script>
                 $('.toggle-roles').click(function () {
                     $('#securityRoles input[id^="{{ id }}"]').each(function () {
