@@ -31,7 +31,7 @@ class GalleryView implements GalleryViewInterface
      * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Gallery", cascade={"merge"})
      * @ORM\JoinColumn( name="media_gallery_id", onDelete="CASCADE" )
      *
-     * @Sonata\FormMapper(name="mediaGallery", type="entity", options={"label" = "form.label_gallery","data_class"=null, "mapped" = false, "class"="Networking\InitCmsBundle\Entity\Gallery"})
+     * @Sonata\FormMapper(name="mediaGallery", type="entity", options={"label" = "form.label_gallery","data_class"=null,"class"="Networking\InitCmsBundle\Entity\Gallery"})
      */
     protected $mediaGallery;
 
@@ -39,7 +39,7 @@ class GalleryView implements GalleryViewInterface
      * @var string $galleryType
      *
      * @ORM\Column(name="gallery_type", type="string", length=50)
-     * @Sonata\FormMapper(name="galleryType", type="choice", options={"label" = "form.label_gallery_type", "mapped" = false, "choices" = {"list" = "list", "lightbox" = "lightbox", "carousel" = "carousel"}})
+     * @Sonata\FormMapper(name="galleryType", type="choice", options={"label" = "form.label_gallery_type", "choices" = {"list" = "list", "lightbox" = "lightbox", "carousel" = "carousel"}})
      */
     protected $galleryType = 'lightbox';
 
