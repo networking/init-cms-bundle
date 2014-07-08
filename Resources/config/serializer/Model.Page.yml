@@ -24,6 +24,10 @@ Networking\InitCmsBundle\Model\Page:
             accessor:
                 getter: convertParentToInteger
             type: integer
+        alias:
+            accessor:
+                getter: convertAliasToInteger
+            type: integer
         parents:
             accessor:
                 getter: convertParentsToArray
