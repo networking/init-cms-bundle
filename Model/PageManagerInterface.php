@@ -24,10 +24,12 @@ interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInt
 
     /**
      * @param $locale
-     * @param  null $id
+     * @param null $id
+     * @param bool $showHome
+     * @param bool $showChildren
      * @return mixed
      */
-    public function getParentPagesQuery($locale, $id = null);
+    public function getParentPagesQuery($locale, $id = null, $showHome = false, $showChildren = false);
 
     /**
      * @param $locale

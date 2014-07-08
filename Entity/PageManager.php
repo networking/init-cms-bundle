@@ -47,26 +47,33 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         return $this->find($id);
     }
 
+
     /**
      * @param $locale
-     * @param  null $id
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param null $id
+     * @param bool $showHome
+     * @param bool $showChildren
+     * @return \Doctrine\ORM\QueryBuilder|mixed
      */
-    public function getParentPagesQuery($locale, $id = null)
+    public function getParentPagesQuery($locale, $id = null, $showHome = false, $showChildren = false)
     {
         $qb = $this->createQueryBuilder('p');
-        $qb->where($qb->expr()->isNull('p.isHome') . ' OR p.isHome <> 1');
+        if(!$showHome){
+            $qb->where($qb->expr()->isNull('p.isHome') . ' OR p.isHome <> 1');
+        }
         if ($id) {
-            /** @var $page PageInterface */
-            $page = $this->find($id);
-            $childrenIds = $page->getChildren()->map(
-                function (PageInterface $p) {
-                    return $p->getId();
-                }
-            );
+            if (!$showChildren) {
+                /** @var $page PageInterface */
+                $page = $this->find($id);
+                $childrenIds = $page->getChildren()->map(
+                    function (PageInterface $p) {
+                        return $p->getId();
+                    }
+                );
 
-            if ($childrenIds->count()) {
-                $qb->where($qb->expr()->notIn('p.id', $childrenIds->toArray()));
+                if ($childrenIds->count()) {
+                    $qb->andWhere($qb->expr()->notIn('p.id', $childrenIds->toArray()));
+                }
             }
             $qb->andWhere($qb->expr()->neq('p.id', $id));
         }
@@ -75,7 +82,6 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         $qb->orderBy('p.path', 'ASC');
 
         $qb->setParameter(':locale', $locale);
-
 
         return $qb;
     }

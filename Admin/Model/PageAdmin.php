@@ -228,7 +228,9 @@ abstract class PageAdmin extends BaseAdmin
                             'required' => false,
                             'query_builder' => $pageManager->getParentPagesQuery(
                                     $this->pageLocale,
-                                    $this->getSubject()->getId()
+                                    $this->getSubject()->getId(),
+                                    false,
+                                    false
                                 ),
                         )
                     );
@@ -247,7 +249,9 @@ abstract class PageAdmin extends BaseAdmin
                             'required' => false,
                             'query_builder' => $pageManager->getParentPagesQuery(
                                     $this->pageLocale,
-                                    $this->getSubject()->getId()
+                                    $this->getSubject()->getId(),
+                                    true,
+                                    true
                                 ),
                         ),
                         array('display_method' => 'getAliasFullPath')
