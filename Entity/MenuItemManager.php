@@ -57,8 +57,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $alias = $rootNodesQueryBuilder->getRootAliases();
         $rootNodesQueryBuilder->andWhere(sprintf('%s.locale = :locale', $alias[0]))
             ->setParameter(':locale', $locale);
-
-        return $rootNodesQueryBuilder->getQuery()->getResult();
+        return $rootNodesQueryBuilder->getQuery()->useResultCache(true)->getResult();
     }
 
     /**
@@ -92,8 +91,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         } else {
             $qb->leftJoin('p.contentRoute', 'cr');
         }
-
-        $results = $qb->getQuery()->getResult();
+        $results = $qb->getQuery()->useResultCache(true)->getResult();
 
         $menuItems = array();
         foreach ($results as $item) {
