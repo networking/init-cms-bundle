@@ -4,7 +4,7 @@ Templating with initcms
 Pretty much all the control is left up to the developer when creating a template. If you know how to use twig, you will
 be up and running in no time flat.
 
-There are only two variable that are passed to your twig template from the FrontendPageController:
+There are only two variables that are passed to your twig template from the FrontendPageController:
 
 1. "page": The page entity (as you might of guessed)
 2. "admin_pool": The sonata admin bundle Pool object which is used to help display the admin navigation bar when
@@ -28,7 +28,7 @@ We then pass the layoutBlock to our twig extension along with a template of your
 possible to pass an array of parameters. The parameters will passed on to both the template as well as to the content
 object.
 
-So what does the twig actually do extension do?
+So what does the twig extension actually do?
 -----------------------------------------------
 
 The twig extension extracts the content entity out of the layout block in one of two ways.
@@ -41,14 +41,14 @@ The twig extension extracts the content entity out of the layout block in one of
     then deserialized from its json format using the JMS Serializer bundle .
 
 The method "getTemplateOptions($params)" is then called on the content object. The content object delivers back an array
-of whatever it likes, and the array plus paramters are passed on the the templating service to be rendered with the
+of whatever it is like, and the array plus paramters are passed on the the templating service to be rendered with the
 supplied template.
 
-Every thing is upped to you.
+Everything is up to you.
 
 To learn more about content types see [Creating custom content types](content_types.md)
 
-How to I create a navigation?
+How do I create a navigation?
 -----------------------------
 
 ###Frontend navigation
