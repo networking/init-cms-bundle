@@ -13,6 +13,7 @@
             <argument type="service" id="router"/>
             <argument type="service" id="networking_init_cms.menu_item_manager"/>
             <argument type="service" id="translator"/>
+            <argument type="service" id="knp_menu.matcher"/>
             <call method="setAdminPool">
                 <argument type="service" id="sonata.admin.pool"/>
             </call>

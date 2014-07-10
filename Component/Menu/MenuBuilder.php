@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
+use Knp\Menu\Matcher\Voter\UriVoter;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -20,7 +21,7 @@ use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\Translator;
-
+use Knp\Menu\Matcher\Matcher;
 /**
  * Class MenuBuilder
  * @package Networking\InitCmsBundle\Component\Menu
@@ -72,6 +73,11 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     protected $currentPath;
 
+    /**
+     * @var Matcher
+     */
+    protected $matcher;
+
 
     /**
      * @param FactoryInterface $factory
@@ -87,7 +93,8 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         Request $request,
         RouterInterface $router,
         MenuItemManagerInterface $menuManager,
-        Translator $translator
+        Translator $translator,
+        Matcher $matcher
     ) {
 
         parent::__construct($factory);
@@ -106,6 +113,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         $this->request = $request;
         $this->menuManager = $menuManager;
         $this->translator = $translator;
+        $this->matcher = $matcher;
 
         $this->viewStatus = $request->getSession()->get('_viewStatus')
             ? $request->getSession()->get('_viewStatus')
@@ -115,6 +123,10 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         $this->currentPath = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo(
             ) . '/' : $request->getPathInfo();
         $this->currentUri = $request->getBaseUrl() . $this->currentPath;
+
+
+        $voter = new UriVoter($this->currentUri);
+        $matcher->addVoter($voter);
     }
 
 

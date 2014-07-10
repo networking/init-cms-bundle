@@ -10,6 +10,9 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
+use Knp\Menu\Matcher\Matcher;
+use Knp\Menu\Matcher\Voter\UriVoter;
+use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Networking\InitCmsBundle\Entity\MenuItem as Menu;
 
@@ -32,7 +35,7 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-        $menu->setCurrentUri($this->currentUri);
+//        $menu->setCurrentUri($this->currentUri);
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
 
@@ -42,6 +45,7 @@ class FrontendMenuBuilder extends MenuBuilder
 
         $startDepth = 1;
         $menu = $this->createMenu($menu, $menuIterator, $startDepth);
+
         return $menu;
     }
 
@@ -58,7 +62,7 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-        $menu->setCurrentUri($this->currentUri);
+//        $menu->setCurrentUri($this->currentUri);
 
         /** @var $mainMenu Menu */
         $menuIterator = $this->getSubMenu($menuName, 1);
@@ -114,7 +118,7 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-        $menu->setCurrentUri($this->currentUri);
+//        $menu->setCurrentUri($this->currentUri);
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
 
