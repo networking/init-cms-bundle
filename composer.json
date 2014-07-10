@@ -28,7 +28,6 @@
         "stof/doctrine-extensions-bundle":"v1.1.0",
         "mopa/bootstrap-bundle": "2.3.*@dev",
         "twbs/bootstrap": "v2.3.2",
-        "knplabs/knp-paginator-bundle": "2.3.3",
         "symfony-cmf/routing-bundle": "1.1.0",
         "jms/serializer-bundle": "0.13.*@dev",
         "ibrows/sonata-admin-annotation-bundle":"1.1.*",
