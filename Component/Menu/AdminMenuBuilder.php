@@ -160,16 +160,16 @@ class AdminMenuBuilder extends MenuBuilder
 
 
             // Set active url based on which status is in the session
-            if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
-                $menu->setCurrentUri($lastActionUrl);
-            } elseif ($this->request->getSession()->get(
-                '_viewStatus'
-            ) === VersionableInterface::STATUS_PUBLISHED
-            ) {
-                $menu->setCurrentUri($livePath);
-            } else {
-                $menu->setCurrentUri($draftPath);
-            }
+//            if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
+//                $menu->setCurrentUri($lastActionUrl);
+//            } elseif ($this->request->getSession()->get(
+//                '_viewStatus'
+//            ) === VersionableInterface::STATUS_PUBLISHED
+//            ) {
+//                $menu->set($livePath);
+//            } else {
+//                $menu->setCurrentUri($draftPath);
+//            }
 
             if ($editPath && !$sonataAdmin) {
 
