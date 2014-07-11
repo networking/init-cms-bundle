@@ -1,18 +1,18 @@
 {
-    "name":"networking/init-cms-bundle",
-    "description":"This Bundle is a basic cms based on symfony",
-    "keywords":["symfony", "cms"],
-    "type":"symfony-bundle",
-    "license":"MIT",
-    "authors":[
+    "name": "networking/init-cms-bundle",
+    "description": "This Bundle is a basic cms based on symfony",
+    "keywords": ["symfony", "cms"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
         {
-            "name":"Yorkie Chadwick",
-            "homepage":"http://web.networking.ch",
-            "email":"y.chadwick@networking.ch"
+            "name": "Yorkie Chadwick",
+            "homepage": "http://web.networking.ch",
+            "email": "y.chadwick@networking.ch"
         }
     ],
-    "require":{
-        "php":">=5.3.3",
+    "require": {
+        "php": ">=5.3.3",
         "symfony/symfony": ">=2.3,<2.4-dev",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "doctrine/doctrine-bundle": "1.2.*",
@@ -24,19 +24,20 @@
         "sonata-project/media-bundle": ">=2.2.5,<2.3-dev",
         "sonata-project/user-bundle": ">=2.2.0,<2.3-dev",
         "sonata-project/formatter-bundle": ">=2.3.0",
-        "stof/doctrine-extensions-bundle":"v1.1.0",
+        "stof/doctrine-extensions-bundle": "v1.1.0",
         "mopa/bootstrap-bundle": "2.3.*@dev",
         "twbs/bootstrap": "v2.3.2",
         "symfony-cmf/routing-bundle": "1.1.0",
         "jms/serializer-bundle": "0.13.*@dev",
-        "ibrows/sonata-admin-annotation-bundle":"1.1.*",
-        "ibrows/sonata-translation-bundle" : "1.0.3"
+        "ibrows/sonata-admin-annotation-bundle": "1.1.*",
+        "ibrows/sonata-translation-bundle": "1.0.3",
+        "knplabs/knp-paginator-bundle": "dev-master"
     },
-    "autoload":{
-        "psr-0":{
-            "Networking\\InitCmsBundle":""
+    "autoload": {
+        "psr-0": {
+            "Networking\\InitCmsBundle": ""
         }
     },
-    "target-dir":"Networking/InitCmsBundle",
-    "minimum-stability":"dev"
+    "target-dir": "Networking/InitCmsBundle",
+    "minimum-stability": "dev"
 }

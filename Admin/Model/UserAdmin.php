@@ -185,6 +185,7 @@ abstract class UserAdmin extends SonataUserAdmin
                     'multiple' => true,
                     'required' => false,
                     'label_render' => false,
+                    'label' => false,
                 )
             )
             ->add('locked', null, array('required' => false), array('inline_block' => true))

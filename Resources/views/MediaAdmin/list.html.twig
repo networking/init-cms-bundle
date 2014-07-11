@@ -36,7 +36,7 @@ file that was distributed with this source code.
                         <div class="{% if not app.request.isxmlhttprequest %}span10{% endif %}">
 
                             {# provider #}
-                            {% if persistent_paramerters.provider is defined %}
+                            {% if persistent_paramerters.provider is not defined %}
                                 {% set providers = media_pool.getProviderNamesByContext(name) %}
                                 <ul class="nav nav-pills">
                                     {% if providers|length > 1 %}
@@ -229,11 +229,16 @@ file that was distributed with this source code.
     </div>
     {% if not app.request.isXmlHttpRequest %}
         </div>
+    {% else %}
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                Admin.add_filters();
+            });
+        </script>
     {% endif %}
 {% endblock %}
 
 {% block list_filters %}
-    {% if not app.request.isxmlhttprequest %}
         {% set name = 'default' %}
         {% if attribute(mediaform, name) %}
             <form action="{{ admin.generateUrl('list') }}" method="GET"
@@ -304,15 +309,17 @@ file that was distributed with this source code.
                                     <div>
                                         <input type="submit" class="btn btn-small"
                                                value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                                        {% if not app.request.isXmlHttpRequest %}
                                         <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
-                                           class="link-underlined">
-                                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                                                                 class="link-underlined">
+                                                                                  {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                        {% endif %}
                                         {{ form_rest(form) }}
                                         {% if filter_hidden %}
-                                            <a data-toggle="collapse" data-target="#hidden_filters" id="filter_toggle"
+                                            <span data-toggle="collapse" data-target="#hidden_filters" id="filter_toggle"
                                                class="filter-close cursor-pointer">
                                                 {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
-                                            </a>
+                                            </span>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -330,5 +337,4 @@ file that was distributed with this source code.
                 </li>
             {% endfor %}
         </ul>
-    {% endif %}
 {% endblock %}

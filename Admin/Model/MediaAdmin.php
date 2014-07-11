@@ -93,10 +93,13 @@ abstract class MediaAdmin extends Admin
     public function configureRoutes(RouteCollection $collection)
     {
         parent::configureRoutes($collection);
-        $collection->add('uploadTextBlockImage', 'upload_text_block_image', array(), array('method' => 'POST'));
-        $collection->add('uploadedTextBlockImage', 'uploaded_text_block_image', array(), array('method' => 'GET'));
-        $collection->add('uploadTextBlockFile', 'upload_text_block_file', array(), array('method' => 'POST'));
-        $collection->add('uploadedTextBlockFile', 'uploaded_text_block_file', array(), array('method' => 'GET'));
+        $collection->add('init_ckeditor_browser', 'init_ckeditor_browser', array(
+            '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browser'
+        ));
+
+        $collection->add('init_ckeditor_upload', 'init_ckeditor_upload', array(
+            '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload'
+        ));
     }
 
     /**
@@ -265,6 +268,7 @@ abstract class MediaAdmin extends Admin
 
         $filterParameters = $this->getFilterParameters();
 
+
         if ($context && array_key_exists('context', $filterParameters)) {
             if ($filterParameters['context']['value'] != $context) {
                 $filterParameters['_page'] = 1;
@@ -348,33 +352,6 @@ abstract class MediaAdmin extends Admin
         return array(
             'provider' => $provider,
             'context' => $context,
-        );
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureSideMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
-    {
-        if (!in_array($action, array('edit', 'view'))) {
-            return;
-        }
-
-        $admin = $this->isChild() ? $this->getParent() : $this;
-
-        $id = $this->getRequest()->get('id');
-
-        $menu->setCurrentUri($this->request->getRequestUri());
-
-        $menu->addChild(
-            $this->trans('sidemenu.link_edit_media'),
-            array('uri' => $admin->generateUrl('edit', array('id' => $id)))
-        );
-
-        $menu->addChild(
-            $this->trans('sidemenu.link_media_view'),
-            array('uri' => $admin->generateUrl('show', array('id' => $id)))
         );
     }
 

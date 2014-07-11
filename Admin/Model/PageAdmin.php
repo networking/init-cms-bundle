@@ -172,6 +172,7 @@ abstract class PageAdmin extends BaseAdmin
                     'sonata_type_collection',
                     array(
                         'required' => true,
+                        'label' => false,
                         'label_render' => false,
                         'error_bubbling' => false,
                         'type_options' => array('error_bubbling' => false)
