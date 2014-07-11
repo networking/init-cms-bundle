@@ -121,6 +121,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
             'networking_type_content_block',
             array(
                 'label_render' => false,
+                'label' => false,
                 'class' => $this->getContentType($layoutBlock)
             )
         );

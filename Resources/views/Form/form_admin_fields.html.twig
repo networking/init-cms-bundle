@@ -260,7 +260,9 @@ file that was distributed with this source code.
     {% endspaceless %}
 {% endblock choice_widget %}
 
+
 {% block form_row %}
+
     {% if sonata_admin is not defined or not sonata_admin_enabled or not sonata_admin.field_description %}
         {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
         {% if not label_render %}{% set widget_controls = false %}{% endif %}
@@ -288,10 +290,11 @@ file that was distributed with this source code.
                 {# do nothing #}
             {% else %}
                 {% block label %}
+
                     {% if sonata_admin.field_description.options.name is defined %}
-                        {% if label_render %}
                             {{ form_label(form, sonata_admin.field_description.options.name, { 'attr' : {'class' : 'control-label'} }) }}
-                        {% endif %}
+                    {% elseif sonata_admin is defined %}
+                        {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
                     {% else %}
                         {% if label_render %}
                             {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
