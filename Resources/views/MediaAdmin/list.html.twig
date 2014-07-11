@@ -36,7 +36,7 @@ file that was distributed with this source code.
                         <div class="{% if not app.request.isxmlhttprequest %}span10{% endif %}">
 
                             {# provider #}
-                            {% if persistent_paramerters.provider is defined %}
+                            {% if persistent_paramerters.provider is not defined %}
                                 {% set providers = media_pool.getProviderNamesByContext(name) %}
                                 <ul class="nav nav-pills">
                                     {% if providers|length > 1 %}

@@ -1,0 +1,1 @@
+<script>window.parent.CKEDITOR.tools.callFunction({{ app.request.get('CKEditorFuncNum')|escape('js') }}, "{{ path('networking_init_cms_file_download', {'id': object.id, 'name': object.getMetadataValue('filename')})|escape('js') }}");</script>
