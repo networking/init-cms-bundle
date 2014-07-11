@@ -145,38 +145,38 @@ file that was distributed with this source code.
 
 {# Labels #}
 {% block form_label %}
-    {%  if app.request.get('provider') and label == 'form.label_binary_content' %}
+    {% if app.request.get('provider') and label == 'form.label_binary_content' %}
         {% set provider = app.request.get('provider')|split('.')[3] %}
         {% set mylabel = label~'_'~provider %}
-        {% set test = sonata_admin.admin.trans(mylabel, {}, sonata_admin.field_description.translationDomain)  %}
+        {% set test = sonata_admin.admin.trans(mylabel, {}, sonata_admin.field_description.translationDomain) %}
         {% if test != mylabel %}
             {% set label = mylabel %}
         {% endif %}
-    {%  endif %}
-{% spaceless %}
-    {% if label is not sameas(false) %}
-        {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " control-label" }) %}
+    {% endif %}
+    {% spaceless %}
+        {% if label is not sameas(false) %}
+            {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " control-label" }) %}
 
-        {% if not compound %}
-            {% set label_attr = label_attr|merge({'for': id}) %}
-        {% endif %}
-        {% if required %}
-            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
-        {% endif %}
+            {% if not compound %}
+                {% set label_attr = label_attr|merge({'for': id}) %}
+            {% endif %}
+            {% if required %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+            {% endif %}
 
-        {% if label is empty %}
-            {% set label = name|humanize %}
-        {% endif %}
+            {% if label is empty %}
+                {% set label = name|humanize %}
+            {% endif %}
 
-        {% if in_list_checkbox is defined and in_list_checkbox and widget is defined %}
-            <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+            {% if in_list_checkbox is defined and in_list_checkbox and widget is defined %}
+                <label{% for attrname,attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
                 {{ widget|raw }}
                 <span>
                     {% if not sonata_admin.admin %}
                         {{- label|trans({}, translation_domain) -}}
                     {% else %}
                         {{- label|trans({}, sonata_admin.field_description.translationDomain) -}}
-                    {% endif%}
+                    {% endif %}
                 </span>
                 {% if help_label %}
                     <div class="help-label info-soft" id="help_{{ id }}">
@@ -188,28 +188,28 @@ file that was distributed with this source code.
                         {% endif %}
                     </div>
                 {% endif %}
-            </label>
-        {% else %}
-            <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-                {% if not sonata_admin.admin%}
+                </label>
+            {% else %}
+                <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+                {% if not sonata_admin.admin %}
                     {{- label|trans({}, translation_domain) -}}
                 {% else %}
                     {{ sonata_admin.admin.trans(label, {}, sonata_admin.field_description.translationDomain) }}
                 {% endif %}
                 {{ required ? '*' : '' }}
                 {% if help_label %}
-                <div class="help-label info-soft" id="help_{{ id }}">
-                    {% if not sonata_admin.admin %}
-                        {{- help_label|trans({}, translation_domain) -}}
-                    {% else %}
-                        {{- help_label|trans({}, sonata_admin.field_description.translationDomain) -}}
-                    {% endif %}
-                </div>
+                    <div class="help-label info-soft" id="help_{{ id }}">
+                        {% if not sonata_admin.admin %}
+                            {{- help_label|trans({}, translation_domain) -}}
+                        {% else %}
+                            {{- help_label|trans({}, sonata_admin.field_description.translationDomain) -}}
+                        {% endif %}
+                    </div>
                 {% endif %}
-            </label>
+                </label>
+            {% endif %}
         {% endif %}
-    {% endif %}
-{% endspaceless %}
+    {% endspaceless %}
 {% endblock form_label %}
 
 {% block widget_container_attributes_choice_widget %}
@@ -227,11 +227,11 @@ file that was distributed with this source code.
             <ul {{ block('widget_container_attributes_choice_widget') }}>
                 {% for child in form %}
                     <li>
-                    {% if not sonata_admin.admin %}
-                        {{ form_label(child, child.vars.label|default(null)|trans({}, translation_domain), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
-                    {% else %}
-                        {{ form_label(child, child.vars.label|default(null)|trans({}, sonata_admin.field_description.translationDomain), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
-                    {% endif %}
+                        {% if not sonata_admin.admin %}
+                            {{ form_label(child, child.vars.label|default(null)|trans({}, translation_domain), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
+                        {% else %}
+                            {{ form_label(child, child.vars.label|default(null)|trans({}, sonata_admin.field_description.translationDomain), { 'in_list_checkbox' : true, 'widget' : form_widget(child) } ) }}
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -455,19 +455,21 @@ file that was distributed with this source code.
             <div id="securityRoles">
                 {{ block('choice_widget') }}
             </div>
-            <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a><p>
-            <script>
-                $('.toggle-roles').click(function () {
-                    $('#securityRoles input[id^="{{ id }}"]').each(function () {
-                        // toggle checkbox
-                        $(this).prop('checked', !$(this).prop('checked'));
-                        // toggle class
-                        $(this).parents('label').toggleClass('active');
+            <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a>
 
+            <p>
+                <script>
+                    $('.toggle-roles').click(function () {
+                        $('#securityRoles input[id^="{{ id }}"]').each(function () {
+                            // toggle checkbox
+                            $(this).prop('checked', !$(this).prop('checked'));
+                            // toggle class
+                            $(this).parents('label').toggleClass('active');
+
+                        });
+                        return false;
                     });
-                    return false;
-                });
-            </script>
+                </script>
         </div>
         {% if read_only_choices|length > 0 %}
             <div class="readonly">
@@ -562,103 +564,115 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block ckeditor_widget %}
-    <textarea {{ block('widget_attributes') }}>{{ value | raw }}</textarea>
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 
     {% if enable %}
+        {% if not ckeditor_is_loaded() %}
         <script type="text/javascript">
-            var CKEDITOR_BASEPATH = '{{ base_path }}';
+            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
         </script>
 
-        <script type="text/javascript" src="{{ js_path }}"></script>
+        <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
+        {% endif %}
 
-        <script type="text/javascript">
-            if (CKEDITOR.instances['{{ id }}']) {
-                delete CKEDITOR.instances['{{ id }}'];
-            }
-            {% for plugin_name, plugin in plugins %}
-            CKEDITOR.plugins.addExternal('{{ plugin_name }}', '{{ plugin.path }}', '{{ plugin.filename }}');
-            {% endfor %}
-            var config = JSON.parse('{{ config | raw }}');
-            config.language = '{{ app.request.locale }}';
-            CKEDITOR.replace('{{ id }}', config);
-        </script>
+    <script type="text/javascript">
+        {{ ckeditor_destroy(id) }}
+
+        {% for plugin_name, plugin in plugins %}
+        {{ ckeditor_plugin(plugin_name, plugin) }}
+        {% endfor %}
+
+        {% for style_name, style in styles %}
+        {{ ckeditor_styles_set(style_name, style) }}
+        {% endfor %}
+
+        {% for template_name, template in templates %}
+        {{ ckeditor_template(template_name, template) }}
+        {% endfor %}
+
+        {% set config = config|merge({'language': app.request.locale}) %}
+
+        {{ ckeditor_replace(id, config) }}
+    </script>
     {% endif %}
 {% endblock %}
 
 {% block date_widget %}
-{% spaceless %}
-{% if widget == 'single_text' %}
-    {% if datepicker is defined %}
-        <div class="input-{{ widget_addon.type }} date" {{ block('widget_container_attributes') }} data-date="{{ value }}" data-date-format="{{ format|lower }}" data-form="datepicker">
-            {% if widget_addon.type == 'prepend' %}
-                {{ block('widget_addon') }}
-            {% endif %}
-            {% set attr = attr|merge({'class': attr.class|default('') ~ 'input-medium not-removable grd-white'}) %}
-            <input type="text" {{ block('widget_attributes') }} value="{{ value }}"  data-form="datepicker" data-date-format="{{ format|lower }}"/>
-            {% if widget_addon.type == 'append' %}
-                {{ block('widget_addon') }}
-            {% endif %}
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {% if datepicker is defined %}
+                <div class="input-{{ widget_addon.type }} date" {{ block('widget_container_attributes') }}
+                     data-date="{{ value }}" data-date-format="{{ format|lower }}" data-form="datepicker">
+                    {% if widget_addon.type == 'prepend' %}
+                        {{ block('widget_addon') }}
+                    {% endif %}
+                    {% set attr = attr|merge({'class': attr.class|default('') ~ 'input-medium not-removable grd-white'}) %}
+                    <input type="text" {{ block('widget_attributes') }} value="{{ value }}" data-form="datepicker"
+                           data-date-format="{{ format|lower }}"/>
+                    {% if widget_addon.type == 'append' %}
+                        {{ block('widget_addon') }}
+                    {% endif %}
 
-        </div>
+                </div>
 
-        {% jsblock 'addToBottom' %}
-        <script type="text/javascript">
-            jQuery(document).ready(function () {
-                jQuery({{ id }}).datepicker();
-                jQuery({{ id }}).datepicker().on(
-                        "changeDate",
-                        function(event){
-                            jQuery({{ id }}).datepicker('hide');
-                        }
-                )
-            });
-        </script>
-        {% jsblock 'addToBottomEnd' %}
-    {% else %}
-        {{ block('form_widget_simple') }}
-    {% endif %}
-{% else %}
-        {% set attrYear = attr|merge({'class': attr.class|default('inline') ~ ' input-small'}) %}
-        {% set attrMonth = attr|merge({'class': attr.class|default('inline') ~ ' input-mini'}) %}
-        {% set attrDay = attr|merge({'class': attr.class|default('inline') ~ ' input-mini'}) %}
+                {% jsblock 'addToBottom' %}
+                <script type="text/javascript">
+                    jQuery(document).ready(function () {
+                        jQuery({{ id }}).datepicker();
+                        jQuery({{ id }}).datepicker().on(
+                                "changeDate",
+                                function (event) {
+                                    jQuery({{ id }}).datepicker('hide');
+                                }
+                        )
+                    });
+                </script>
+                {% jsblock 'addToBottomEnd' %}
+            {% else %}
+                {{ block('form_widget_simple') }}
+            {% endif %}
+        {% else %}
+            {% set attrYear = attr|merge({'class': attr.class|default('inline') ~ ' input-small'}) %}
+            {% set attrMonth = attr|merge({'class': attr.class|default('inline') ~ ' input-mini'}) %}
+            {% set attrDay = attr|merge({'class': attr.class|default('inline') ~ ' input-mini'}) %}
 
             {{ date_pattern|replace({
-                '{{ year }}':  form_widget(form.year, {'attr': attrYear}),
-                '{{ month }}': form_widget(form.month, {'attr': attrMonth}),
-                '{{ day }}':   form_widget(form.day, {'attr': attrDay}),
+            '{{ year }}':  form_widget(form.year, {'attr': attrYear}),
+            '{{ month }}': form_widget(form.month, {'attr': attrMonth}),
+            '{{ day }}':   form_widget(form.day, {'attr': attrDay}),
             })|raw }}
-        {{ block('help') }}
-{% endif %}
-{% endspaceless %}
+            {{ block('help') }}
+        {% endif %}
+    {% endspaceless %}
 {% endblock date_widget %}
 
 {% block time_widget %}
-{% spaceless %}
-    {% if widget == 'single_text' %}
-        {{ block('form_widget_simple') }}
-    {% else %}
-        {% set attr = attr|merge({'class': attr.class|default('help-inline')}) %}
-        <div {{ block('widget_container_attributes')  }}>
-            {{ form_widget(form.hour, { 'attr': { 'class': 'input-mini' } }) }}{% if with_minutes %}:{{ form_widget(form.minute, { 'attr': {  'class': 'input-mini' } }) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second, { 'attr': { 'size': '1', 'class': 'input-mini' } }) }}{% endif %}
-        </div>
-        {{ block('help') }}
-    {% endif %}
-{% endspaceless %}
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {{ block('form_widget_simple') }}
+        {% else %}
+            {% set attr = attr|merge({'class': attr.class|default('help-inline')}) %}
+            <div {{ block('widget_container_attributes') }}>
+                {{ form_widget(form.hour, { 'attr': { 'class': 'input-mini' } }) }}{% if with_minutes %}:{{ form_widget(form.minute, { 'attr': {  'class': 'input-mini' } }) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second, { 'attr': { 'size': '1', 'class': 'input-mini' } }) }}{% endif %}
+            </div>
+            {{ block('help') }}
+        {% endif %}
+    {% endspaceless %}
 {% endblock time_widget %}
 
 {% block datetime_widget %}
-{% spaceless %}
-    {% if widget == 'single_text' %}
-        {{ block('form_widget_simple') }}
-    {% else %}
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {{ block('form_widget_simple') }}
+        {% else %}
             {% set attr = attr|merge({'class': attr.class|default('')}) %}
             <div {{ block('widget_container_attributes') }}>
                 {{ form_errors(form.date) }}
                 {{ form_errors(form.time) }}
-                {{ form_widget(form.date, {'attr': {'class': attr.widget_class|default('')}}) }}
+                {{ form_widget(form.date, {'attr': {'class': attr.widget_class|default('') }}) }}
                 &nbsp;
-                {{ form_widget(form.time, {'attr': {'class': attr.widget_class|default('')}}) }}
+                {{ form_widget(form.time, {'attr': {'class': attr.widget_class|default('') }}) }}
             </div>
-    {% endif %}
-{% endspaceless %}
+        {% endif %}
+    {% endspaceless %}
 {% endblock datetime_widget %}
