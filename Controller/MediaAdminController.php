@@ -107,14 +107,14 @@ class MediaAdminController extends SonataMediaAdminController
 
                 // Check the $_FILES array and save the file. Assign the correct path to a variable ($url).
 
-                if($providerName == 'sonata.media.provider.image'){
+                if ($providerName == 'sonata.media.provider.image') {
                     $url = $provider->generatePublicUrl($media, 'reference');
 
                 } else {
                     $url = $this->generateUrl(
-                                            'networking_init_cms_file_download',
-                                            array('id' => $media->getId(), $media->getMetadataValue('filename'))
-                                        ) ;
+                        'networking_init_cms_file_download',
+                        array('id' => $media->getId(), $media->getMetadataValue('filename'))
+                    );
 
                 }
                 // Usually you will only assign something here if the file could not be uploaded.
@@ -148,7 +148,10 @@ class MediaAdminController extends SonataMediaAdminController
     public function uploadedTextBlockImageAction(Request $request)
     {
 
-        $media = $this->admin->getModelManager()->findBy($this->admin->getClass(), array('providerName' => 'sonata.media.provider.image'));
+        $media = $this->admin->getModelManager()->findBy(
+            $this->admin->getClass(),
+            array('providerName' => 'sonata.media.provider.image')
+        );
 
         $provider = $this->get('sonata.media.provider.image');
 
@@ -331,7 +334,10 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function uploadedTextBlockFileAction(Request $request)
     {
-        $media = $this->admin->getModelManager()->findBy($this->admin->getClass(), array('providerName' => 'sonata.media.provider.file'));
+        $media = $this->admin->getModelManager()->findBy(
+            $this->admin->getClass(),
+            array('providerName' => 'sonata.media.provider.file')
+        );
 
         $provider = $this->get('sonata.media.provider.file');
 
@@ -401,51 +407,25 @@ class MediaAdminController extends SonataMediaAdminController
             throw new AccessDeniedException();
         }
 
-        $pool = $this->container->get('sonata.media.pool');
         $galleryListMode = $this->getRequest()->get('pcode') ? true : false;
-        $mediaForm = array();
-        $mediaGrid = array();
 
-        foreach ($pool->getContexts() as $context => $value) {
 
-            if ($galleryListMode) {
-                if ($context != $this->getRequest()->get('context')) {
-                    continue;
-                }
-            }
-            $tempgrid = $this->admin->getDatagrid($context);
-            $tempgrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-            $tempgrid->setValue('context', null, $context);
+        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'));
+        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
+        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
 
-            $mediaForm[$context] = $tempgrid->getForm()->createView();
-            $mediaGrid[$context] = $tempgrid;
+        $formView = $datagrid->getForm()->createView();
 
-            $this->get('twig')->getExtension('form')->renderer->setTheme(
-                $mediaForm[$context],
-                array('NetworkingInitCmsBundle:Form:form_admin_fields.html.twig')
-            );
-        }
-
-        $dataGrid = $this->admin->getDatagrid();
-        $dataGrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-        $formView = $dataGrid->getForm()->createView();
-
-        $this->get('twig')->getExtension('form')->renderer->setTheme(
-            $formView,
-            array('NetworkingInitCmsBundle:Form:form_admin_fields.html.twig')
-        );
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
 
         return $this->render(
             $this->admin->getTemplate('list'),
             array(
                 'action' => 'list',
-                'mainDataGrid' => $dataGrid,
                 'form' => $formView,
-                'datagrid' => $mediaGrid,
-                'mediaform' => $mediaForm,
-                'galleryListMode' => $galleryListMode,
-                'csrf_token' => $this->getCsrfToken('sonata.batch')
+                'datagrid' => $datagrid,
+                'galleryListMode' => $galleryListMode
 
             )
         );

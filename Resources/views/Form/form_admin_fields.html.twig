@@ -267,6 +267,9 @@ file that was distributed with this source code.
         {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
         {% if not label_render %}{% set widget_controls = false %}{% endif %}
         {{ block('widget_control_group_start') }}
+        {% if widget_add_btn %}
+            {{ block('form_widget_add_btn') }}
+        {% endif %}
         {{ widget_prefix|raw }} {{ form_widget(form, _context) }} {{ widget_suffix|raw }}
         {% if widget_remove_btn is defined %}
             {{ block('form_widget_remove_btn') }}
@@ -320,7 +323,7 @@ file that was distributed with this source code.
 
 {% block collection_widget_row %}
     {% spaceless %}
-        <div class="sonata-collection-row">
+        <div class="sonata-collection-row collection-item">
             {% if allow_delete %}
                 <a href="#" class="sonata-collection-delete"></a>
             {% endif %}
@@ -335,16 +338,11 @@ file that was distributed with this source code.
             {% set child = prototype %}
             {% set attr = attr|merge({'data-prototype': block('collection_widget_row') }) %}
         {% endif %}
-        <div {{ block('widget_container_attributes') }}>
             {{ form_errors(form) }}
             {% for child in form %}
                 {{ block('collection_widget_row') }}
             {% endfor %}
             {{ form_rest(form) }}
-            {% if allow_add %}
-                <div><a href="#" class="sonata-collection-add"></a></div>
-            {% endif %}
-        </div>
     {% endspaceless %}
 {% endblock collection_widget %}
 
@@ -500,12 +498,12 @@ file that was distributed with this source code.
                     'objectId': admin.id(form.vars.data),
                     'uniqid':   admin.uniqid
                     }) %}
+                    &nbsp;
                 {% else %}
                     <span class="inner-field-short-description">
                     </span>
                 {% endif %}
             </span>
-        &nbsp;
             <span style="display: none">
                 {{ form_widget(form) }}
             </span>
@@ -550,15 +548,15 @@ file that was distributed with this source code.
         </div>
 
     </div>
-    {% if widget_remove_btn is defined %}
-        {{ block('form_widget_remove_btn') }}
-    {% endif -%}
     {{ block('form_message') }}
     {% if errors|length > 0 %}
         <div class="help-block sonata-ba-field-error-messages">
             {{ form_errors(form) }}
         </div>
     {% endif %}
+    {% if widget_remove_btn is defined %}
+                    {{ block('form_widget_remove_btn') }}
+                {% endif -%}
     {{ block('widget_control_group_end') }}
 
 

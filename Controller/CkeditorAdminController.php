@@ -33,38 +33,18 @@ class CkeditorAdminController extends BaseMediaAdminController
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
-        $pool = $this->container->get('sonata.media.pool');
+
+        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'));
+        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
+        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
 
         $formats = array();
 
-
-        $mediaForm = array();
-        $mediaGrid = array();
-
-        foreach ($pool->getContexts() as $context => $value) {
-
-            if ($context != $this->getRequest()->get('context')) {
-                continue;
-            }
-            $tempgrid = $this->admin->getDatagrid($context);
-            $tempgrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-            $tempgrid->setValue('context', null, $context);
-
-            $tempgrid->getForm()->createView();
-            $mediaGrid[$context] = $tempgrid;
-
-            foreach ($tempgrid->getResults() as $media) {
-                $formats[$context][$media->getId()] = $this->get('sonata.media.pool')->getFormatNamesByContext(
-                    $media->getContext()
-                );
-            }
+        foreach ($datagrid->getResults() as $media) {
+            $formats[$media->getId()] = $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
         }
 
-        $dataGrid = $this->admin->getDatagrid();
-        $dataGrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-
-        $formView = $dataGrid->getForm()->createView();
-
+        $formView = $datagrid->getForm()->createView();
 
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
@@ -73,10 +53,8 @@ class CkeditorAdminController extends BaseMediaAdminController
             array(
                 'action' => 'browser',
                 'form' => $formView,
-                'formats' => $formats,
-                'mainDataGrid' => $dataGrid,
-                'datagrid' => $mediaGrid,
-                'csrf_token' => $this->getCsrfToken('sonata.batch')
+                'datagrid' => $datagrid,
+                'formats' => $formats
             )
         );
     }
