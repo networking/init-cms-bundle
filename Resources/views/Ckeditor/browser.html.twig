@@ -33,50 +33,43 @@ file that was distributed with this source code.
     <h1>{{ 'title.select_media'|trans({}, 'MediaAdmin')|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}</h1>{% endblock %}
 {% block container_class %}mini-container container{% endblock %}
 {% block list_table %}
-<div class="tab-content">
-{% for name, context in media_pool.contexts %}
-    {% if attribute(datagrid, name) is defined %}
-        <div class="tab-pane {% if (active_tab is null and loop.first) or active_tab == name %}active{% endif %}"
-             id="media_{{ name }}">
-            <div class="{% if not app.request.isxmlhttprequest %}row{% endif %}">
-                <div class="{% if not app.request.isxmlhttprequest %}span10{% endif %}">
-
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="row">
+                <div class="span12">
                     {# provider #}
-                    {% if persistent_paramerters.provider is not defined %}
-                        {% set providers = media_pool.getProviderNamesByContext(name) %}
-                        <ul class="nav nav-pills">
-                            {% if providers|length > 1 %}
-                                <li>
-                                    <a><strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong></a>
-                                </li>
+                    {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
+                    <ul class="nav nav-pills">
+                        {% if providers|length > 1 %}
+                            <li>
+                                <a><strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong></a>
+                            </li>
 
-                                {% if not persistent_parameters.provider %}
+                            {% if not persistent_parameters.provider %}
+                                <li class="active"><a
+                                            href="{{ admin.generateUrl('init_ckeditor_browser', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}|merge(ckParameters)) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{{ admin.generateUrl('init_ckeditor_browser', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}|merge(ckParameters)) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                                </li>
+                            {% endif %}
+
+                            {% for provider_name in providers %}
+                                {% if persistent_parameters.provider == provider_name %}
                                     <li class="active"><a
-                                                href="{{ admin.generateUrl('init_ckeditor_browser', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : name}|merge(ckParameters)) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                                                href="{{ admin.generateUrl('init_ckeditor_browser', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}|merge(ckParameters)) }}">{{ provider_name|trans({}) }}</a>
                                     </li>
                                 {% else %}
                                     <li>
-                                        <a href="{{ admin.generateUrl('init_ckeditor_browser', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : name}|merge(ckParameters)) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                                        <a href="{{ admin.generateUrl('init_ckeditor_browser', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}|merge(ckParameters)) }}">{{ provider_name|trans({}) }}</a>
                                     </li>
                                 {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
 
-                                {% for provider_name in providers %}
-                                    {% if persistent_parameters.provider == provider_name %}
-                                        <li class="active"><a
-                                                    href="{{ admin.generateUrl('init_ckeditor_browser', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}|merge(ckParameters)) }}">{{ provider_name|trans({}) }}</a>
-                                        </li>
-                                    {% else %}
-                                        <li>
-                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : name}|merge(ckParameters)) }}">{{ provider_name|trans({}) }}</a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        </ul>
-                    {% endif %}
-                    
-                    {% set filterParameters = admin.filterParameters|merge({'context': name}) %}
-                    {% if attribute(datagrid, name).results|length > 0 %}
+                    {% if datagrid.results|length > 0 %}
                         <table class="table table-hover table-compact">
                             {% block table_header %}
                                 <thead>
@@ -88,10 +81,10 @@ file that was distributed with this source code.
                                             {% set sortable = false %}
                                             {% if field_description.options.sortable is defined and field_description.options.sortable %}
                                                 {% set sortable             = true %}
-                                                {% set current              =  attribute(datagrid, name).values._sort_by == field_description %}
-                                                {% set sort_parameters      = admin.modelmanager.sortparameters(field_description,  attribute(datagrid, name))|merge(ckParameters) %}
+                                                {% set current              =  datagrid.values._sort_by == field_description %}
+                                                {% set sort_parameters      = admin.modelmanager.sortparameters(field_description,  datagrid)|merge(ckParameters) %}
                                                 {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
-                                                {% set sort_by              = current ?  attribute(datagrid, name).values._sort_order : field_description.options._sort_order %}
+                                                {% set sort_by              = current ?  datagrid.values._sort_order : field_description.options._sort_order %}
                                             {% endif %}
 
                                             {% spaceless %}
@@ -110,7 +103,7 @@ file that was distributed with this source code.
 
                             {% block table_body %}
                                 <tbody>
-                                {% for object in  attribute(datagrid, name).results %}
+                                {% for object in datagrid.results %}
                                     <tr>
                                         <td colspan="{{ (admin.list.elements|length) - 1 }}">
                                             <div>
@@ -123,10 +116,10 @@ file that was distributed with this source code.
                                                            class="select">{{ object.name }}</a></strong> <br/>
                                                 {{ object.providerName|trans({}, 'SonataMediaBundle') }}{% if object.width %}: {{ object.width }}{% if object.height %}x{{ object.height }}{% endif %}px{% endif %}
                                                 <br/>
-                                                {% if formats[name][object.id]|length > 0 %}
+                                                {% if formats[object.id]|length > 0 %}
                                                     {% if object.width %}
                                                         - {{ 'title.formats'|trans({}, 'SonataMediaBundle') }}:
-                                                        {% for name, format in formats[name][object.id] %}
+                                                        {% for name, format in formats[object.id] %}
                                                             <a href="{% path object, name %}"
                                                                class="select">{{ name }}</a> {% if format.width %}({{ format.width }}{% if format.height %}x{{ format.height }}{% endif %}px){% endif %}
                                                         {% endfor %}
@@ -146,7 +139,7 @@ file that was distributed with this source code.
                                     <th>
                                         <div class="form-inline">
                                             <div class="pull-right">
-                                                {% transchoice  attribute(datagrid, name).pager.nbresults with {'%count%':  attribute(datagrid, name).pager.nbresults} from 'SonataAdminBundle' %}
+                                                {% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
                                                 list_results_count{% endtranschoice %}
                                                 {% block max_per_page %}
                                                     <label class="control-label"
@@ -155,8 +148,8 @@ file that was distributed with this source code.
                                                     <select class="per-page small" id="{{ admin.uniqid }}_per_page"
                                                             style="width: auto; height: auto">
                                                         {% for per_page in admin.getperpageoptions %}
-                                                            <option {% if per_page == attribute(datagrid, name).pager.maxperpage %}selected="selected"{% endif %}
-                                                                    value="{{ admin.generateUrl('init_ckeditor_browser', {'filter': attribute(datagrid, name).values|merge({'_per_page': per_page})}|merge(ckParameters)) }}">
+                                                            <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                                                                    value="{{ admin.generateUrl('init_ckeditor_browser', {'filter':datagrid.values|merge({'_per_page': per_page})}|merge(ckParameters)) }}">
                                                                 {{ per_page }}
                                                             </option>
                                                         {% endfor %}
@@ -168,48 +161,48 @@ file that was distributed with this source code.
                                 </tr>
                             {% endblock %}
                         </table>
-                        {% if  attribute(datagrid, name).pager.haveToPaginate() %}
+                        {% if datagrid.pager.haveToPaginate() %}
 
                             <div class="pagination pagination-centered">
                                 <ul>
 
-                                    {% if  attribute(datagrid, name).pager.page != 1 %}
+                                    {% if datagrid.pager.page != 1 %}
                                         <li>
-                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( attribute(datagrid, name), 1)|merge(ckParameters)) }}"
+                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( datagrid, 1)|merge(ckParameters)) }}"
                                                title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
                                         </li>
                                     {% endif %}
 
-                                    {% if  attribute(datagrid, name).pager.page !=  attribute(datagrid, name).pager.previouspage %}
+                                    {% if datagrid.pager.page != datagrid.pager.previouspage %}
                                         <li>
-                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( attribute(datagrid, name),  attribute(datagrid, name).pager.previouspage)|merge(ckParameters)) }}"
+                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.previouspage)|merge(ckParameters)) }}"
                                                title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
                                         </li>
                                     {% endif %}
 
                                     {# Set the number of pages to display in the pager #}
-                                    {% for page in  attribute(datagrid, name).pager.getLinks() %}
-                                        {% if page ==  attribute(datagrid, name).pager.page %}
+                                    {% for page in datagrid.pager.getLinks() %}
+                                        {% if page == datagrid.pager.page %}
                                             <li class="active"><a
-                                                        href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( attribute(datagrid, name), page)|merge(ckParameters)) }}">{{ page }}</a>
+                                                        href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, page)|merge(ckParameters)) }}">{{ page }}</a>
                                             </li>
                                         {% else %}
                                             <li>
-                                                <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( attribute(datagrid, name), page)|merge(ckParameters)) }}">{{ page }}</a>
+                                                <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, page)|merge(ckParameters)) }}">{{ page }}</a>
                                             </li>
                                         {% endif %}
                                     {% endfor %}
 
-                                    {% if  attribute(datagrid, name).pager.page !=  attribute(datagrid, name).pager.nextpage %}
+                                    {% if datagrid.pager.page != datagrid.pager.nextpage %}
                                         <li>
-                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( attribute(datagrid, name),  attribute(datagrid, name).pager.nextpage)|merge(ckParameters)) }}"
+                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.nextpage)|merge(ckParameters)) }}"
                                                title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
                                         </li>
                                     {% endif %}
 
-                                    {% if  attribute(datagrid, name).pager.page !=  attribute(datagrid, name).pager.lastpage %}
+                                    {% if datagrid.pager.page != datagrid.pager.lastpage %}
                                         <li>
-                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( attribute(datagrid, name),  attribute(datagrid, name).pager.lastpage)|merge(ckParameters)) }}"
+                                            <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.lastpage)|merge(ckParameters)) }}"
                                                title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
                                         </li>
                                     {% endif %}
@@ -226,15 +219,14 @@ file that was distributed with this source code.
                 </div>
             </div>
         </div>
-    {% endif %}
-{% endfor %}
+    </div>
 {% endblock %}
 
 {% block list_filters %}
-    {% set name = 'default' %}
-    {% if admin.datagrid.filters %}
+    {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
+    {% if datagrid.filters %}
         <form action="{{ admin.generateUrl('init_ckeditor_browser') }}" method="GET"
-              class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
+              class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
 
             <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
             {% if persistent_parameters.provider is defined %}
@@ -244,7 +236,7 @@ file that was distributed with this source code.
 
             {% set filter_main = '' %}
             {% set filter_hidden = '' %}
-            {% for filter in admin.datagrid.filters %}
+            {% for filter in datagrid.filters %}
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
                     {{ filter_main }}
@@ -284,7 +276,7 @@ file that was distributed with this source code.
                         <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
 
                         <div class="filter_container row">
-                            <div class="span10">
+                            <div class="span12">
                                 {{ filter_main }}
                                 <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
                                 {% set foo = form.children['_page'].setRendered() %}
@@ -325,9 +317,22 @@ file that was distributed with this source code.
     {% endif %}
     <ul class="nav menu-tabs nav-tabs">
         {% for name, context in media_pool.contexts %}
-            <li {% if (active_tab is null and loop.first) or active_tab == name %}class="active"{% endif %}>
-                <a href="#media_{{ name }}" data-toggle="tab">{{ ('media_context.' ~ name)|trans({}) }}</a>
-            </li>
+
+            {% if context.providers|length == 0 %}
+                {% set urlParams = {'context' : name}|merge(ckParameters) %}
+            {% else %}
+                {% set urlParams = {'context' : name, 'provider' : context.providers[0]}|merge(ckParameters) %}
+            {% endif %}
+
+            {% if name == persistent_parameters.context %}
+                <li class="active"><a
+                            href="{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                </li>
+            {% endif %}
         {% endfor %}
     </ul>
 {% endblock %}
