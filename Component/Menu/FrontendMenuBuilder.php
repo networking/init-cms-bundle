@@ -35,7 +35,6 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-//        $menu->setCurrentUri($this->currentUri);
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
 
@@ -62,7 +61,6 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-//        $menu->setCurrentUri($this->currentUri);
 
         /** @var $mainMenu Menu */
         $menuIterator = $this->getSubMenu($menuName, 1);
@@ -72,9 +70,10 @@ class FrontendMenuBuilder extends MenuBuilder
         }
 
         $startDepth = 2;
+
         $menu = $this->createMenu($menu, $menuIterator, $startDepth);
         $this->showOnlyCurrentChildren($menu);
-        $this->setRecursiveChildrenAttribute($menu, array('class' => 'nav nav-list'));
+        $this->setRecursiveAttribute($menu, array('class' => 'nav nav-list'));
         return $menu;
     }
 
@@ -118,7 +117,7 @@ class FrontendMenuBuilder extends MenuBuilder
     {
         $menu = $this->createNavbarMenuItem();
         $menu->setChildrenAttribute('class', $classes);
-//        $menu->setCurrentUri($this->currentUri);
+
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
 
