@@ -229,8 +229,8 @@ file that was distributed with this source code.
     </div>
     {% else %}
         <script type="text/javascript">
-            jQuery(document).ready(function () {
-                Admin.add_filters();
+            $(function () {
+                    Admin.add_filters();
             });
         </script>
     {% endif %}
@@ -270,7 +270,6 @@ file that was distributed with this source code.
                             {{ filter_hidden }}
                             <div class="control-group">
                                 <label class="control-label filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-
                                 <div>
                                     {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
                                     ) }}
@@ -294,7 +293,7 @@ file that was distributed with this source code.
                                         {{ filter_main }}
                                         <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
                                         {% set foo = form.children['_page'].setRendered() %}
-                                        <div id="hidden_filters" class="collapse">
+                                        <div id="hidden_filters" class="collapse hidden_filters">
                                             {% for paramKey, paramValue in admin.persistentParameters %}
                                                 <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
                                             {% endfor %}
@@ -314,11 +313,11 @@ file that was distributed with this source code.
                                             {% endif %}
                                             {{ form_rest(form) }}
                                             {% if filter_hidden %}
-                                                <span data-toggle="collapse" data-target="#hidden_filters"
+                                                <a data-toggle="collapse" data-target=".hidden_filters"
                                                       id="filter_toggle"
                                                       class="filter-close cursor-pointer">
                                                 {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
-                                            </span>
+                                            </a>
                                             {% endif %}
                                         </div>
                                     </div>

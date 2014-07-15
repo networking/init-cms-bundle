@@ -201,7 +201,7 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
 
     // capture the submit event to make an ajax call, ie : POST data to the
     // related create admin
-    jQuery('a', field_dialog_{{ id }}).live('click', field_dialog_form_list_link_{{ id }});
+    jQuery('table.table a', field_dialog_{{ id }}).live('click', field_dialog_form_list_link_{{ id }});
     jQuery('form', field_dialog_{{ id }}).live('submit', function (event) {
         event.preventDefault();
 
@@ -254,7 +254,7 @@ var field_dialog_form_list_{{ id }} = function (event) {
 
             // capture the submit event to make an ajax call, ie : POST data to the
             // related create admin
-            jQuery('a', field_dialog_{{ id }}).live('click', field_dialog_form_list_link_{{ id }});
+            jQuery('table.table a', field_dialog_{{ id }}).live('click', field_dialog_form_list_link_{{ id }});
             jQuery('form', field_dialog_{{ id }}).live('submit', function (event) {
                 event.preventDefault();
 
@@ -274,12 +274,14 @@ var field_dialog_form_list_{{ id }} = function (event) {
             // open the dialog in modal mode
             field_dialog_{{ id }}.modal('show');
 
-            field_dialog_{{ id }}.on('hide', function () {
-                Admin.log('[{{ id }}|field_dialog_form_list] close callback, removing js event');
+            field_dialog_{{ id }}.on('hide', function (e) {
 
-                // make sure we have a clean state
-                jQuery('a', field_dialog_{{ id }}).die('click');
-                jQuery('form', field_dialog_{{ id }}).die('submit');
+                if (!jQuery(e.target).hasClass('collapse')) {
+                    Admin.log('[{{ id }}|field_dialog_form_list] close callback, removing js event');
+                    // make sure we have a clean state
+                    jQuery('a', field_dialog_{{ id }}).die('click');
+                    jQuery('form', field_dialog_{{ id }}).die('submit');
+                }
             });
         }
     });
