@@ -13,8 +13,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": ">=2.3,<2.4-dev",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "symfony/symfony": ">=2.3,<2.6-dev",
+        "doctrine/orm": ">=2.2.3,<2.6-dev",
         "doctrine/doctrine-bundle": "1.2.*",
         "doctrine/doctrine-fixtures-bundle": "v2.2.0",
         "sonata-project/doctrine-orm-admin-bundle": ">=2.2.4,<2.3-dev",
