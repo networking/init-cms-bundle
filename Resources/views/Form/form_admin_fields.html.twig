@@ -602,24 +602,20 @@ file that was distributed with this source code.
     {% spaceless %}
         {% if widget == 'single_text' %}
             {% if datepicker is defined %}
-                <div class="input-{{ widget_addon.type }} date" {{ block('widget_container_attributes') }}
-                     data-date="{{ value }}" data-date-format="{{ format|lower }}" data-form="datepicker">
+                <div class="input-append date" {{ block('widget_container_attributes') }}>
                     {% if widget_addon.type == 'prepend' %}
                         {{ block('widget_addon') }}
                     {% endif %}
                     {% set attr = attr|merge({'class': attr.class|default('') ~ 'input-medium not-removable grd-white'}) %}
-                    <input type="text" {{ block('widget_attributes') }} value="{{ value }}" data-form="datepicker"
-                           data-date-format="{{ format|lower }}"/>
+                    <input type="text" {{ block('widget_attributes') }} value="{{ value }}"/>
                     {% if widget_addon.type == 'append' %}
                         {{ block('widget_addon') }}
                     {% endif %}
-
                 </div>
-
                 {% jsblock 'addToBottom' %}
                 <script type="text/javascript">
                     jQuery(document).ready(function () {
-                        jQuery({{ id }}).datepicker({
+                        jQuery('.input-append.date').datepicker({
                             language: '{{ app.request.getLocale()|slice(0, 2) }}',
                             autoclose: true,
                             todayHighlight: true,
