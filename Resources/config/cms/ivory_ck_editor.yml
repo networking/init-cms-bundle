@@ -11,11 +11,11 @@ ivory_ck_editor:
             filebrowserImageBrowseRouteParameters:
                 provider: sonata.media.provider.image
                 context: default
-            filebrowserUploadRoute: admin_networking_initcms_media_init_ckeditor_upload
+            filebrowserUploadRoute: admin_networking_initcms_media_init_ckeditor_upload_file
             filebrowserUploadRouteParameters:
                 provider: sonata.media.provider.file
             # Upload file as image when sending a file from the image dialog
-            filebrowserImageUploadRoute: admin_networking_initcms_media_init_ckeditor_upload
+            filebrowserImageUploadRoute: admin_networking_initcms_media_init_ckeditor_upload_image
             filebrowserImageUploadRouteParameters:
                 provider: sonata.media.provider.image
                 context: default # Optional, to upload in a custom context

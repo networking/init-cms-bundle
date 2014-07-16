@@ -11,10 +11,11 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
+use Symfony\Component\HttpFoundation\Request;
 use Sonata\MediaBundle\Controller\MediaAdminController as BaseMediaAdminController;
 
 class CkeditorAdminController extends BaseMediaAdminController
@@ -59,14 +60,14 @@ class CkeditorAdminController extends BaseMediaAdminController
         );
     }
 
+
     /**
-     * Returns the response object associated with the upload action
-     *
-     * @return Response
-     *
-     * @throws NotFoundHttpException
+     * @param string $type
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function uploadAction()
+    public function uploadAction($type = 'image')
     {
         $this->checkIfMediaBundleIsLoaded();
 
@@ -74,8 +75,10 @@ class CkeditorAdminController extends BaseMediaAdminController
             throw new AccessDeniedException();
         }
 
+        $filePath = '';
         $mediaManager = $this->get('sonata.media.manager.media');
 
+        /** @var Request $request */
         $request = $this->getRequest();
         $provider = $request->get('provider');
         $file = $request->files->get('upload');
@@ -83,22 +86,61 @@ class CkeditorAdminController extends BaseMediaAdminController
         if (!$request->isMethod('POST') || !$provider || null === $file) {
             throw $this->createNotFoundException();
         }
+        if ($file instanceof UploadedFile && $file->isValid()) {
 
-        $context = $request->get('context', $this->get('sonata.media.pool')->getDefaultContext());
+            try {
+                $context = $request->get('context', $this->get('sonata.media.pool')->getDefaultContext());
 
-        $media = $mediaManager->create();
-        $media->setBinaryContent($file);
+                $media = $mediaManager->create();
+                $media->setBinaryContent($file);
 
-        $mediaManager->save($media, $context, $provider);
-        $this->admin->createObjectSecurity($media);
+                $mediaManager->save($media, $context, $provider);
+                $this->admin->createObjectSecurity($media);
+
+                switch ($type) {
+                    case 'file':
+                        $filePath = $this->generateUrl(
+                            'networking_init_cms_file_download',
+                            array('id' => $media->getId(), 'name' => $media->getMetadataValue('filename'))
+                        );
+                        break;
+                    default:
+                        $provider = $this->get($provider);
+                        $filePath = $provider->generatePublicUrl($media, 'reference');
+                        break;
+                }
+
+
+
+                $message = '';
+                $status = 200;
+            } catch (\Exception $e) {
+
+                $message = $e->getMessage();
+                $status = 500;
+            }
+
+        } elseif ($file instanceof UploadedFile && !$file->isValid()) {
+            $message = $file->getError();
+            $status = 500;
+        } else {
+            $message = $this->admin->trans(
+                'error.file_upload_size',
+                array('%max_server_size%' => ini_get('upload_max_filesize'))
+            );
+            $status = 500;
+        }
 
         return $this->render(
-            $this->getTemplate('upload'),
-            array(
-                'action' => 'list',
-                'object' => $media
-            )
-        );
+                            $this->getTemplate('upload'),
+                            array(
+                                'action' => 'list',
+                                'filePath' => $filePath,
+                                'message' => $message,
+                                'status' => $status
+                            )
+                        );
+
     }
 
     /**
