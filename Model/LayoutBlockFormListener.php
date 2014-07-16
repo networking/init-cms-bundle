@@ -14,21 +14,12 @@ namespace Networking\InitCmsBundle\Model;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Form\DataTransformer\ArrayToModelTransformer;
-use Sonata\DoctrineORMAdminBundle\Model\ModelManager;
-use Sonata\MediaBundle\Admin\Manager\DoctrineORMManager;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormInterface;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
-use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
-use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\RecursiveValidator;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -46,7 +37,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
     protected $contentTypes;
 
     /**
-     * @var Validator
+     * @var RecursiveValidator
      */
     protected $validator;
 
@@ -70,7 +61,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 
     }
 
-    public function setValidator(Validator $validator)
+    public function setValidator(RecursiveValidator $validator)
     {
         $this->validator = $validator;
     }
