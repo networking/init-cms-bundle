@@ -236,7 +236,7 @@ file that was distributed with this source code.
 
             {% set filter_main = '' %}
             {% set filter_hidden = '' %}
-            {% for filter in datagrid.filters %}
+            {% for filter in datagrid.filters if (filter.options.field_type != 'hidden' ) %}
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
                     {{ filter_main }}

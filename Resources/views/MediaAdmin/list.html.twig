@@ -35,8 +35,6 @@ file that was distributed with this source code.
 
                     {# provider #}
 
-                    {% if galleryListMode and persistent_parameters.context %}
-                    {% else %}
                         <ul class="nav nav-pills">
                             {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
 
@@ -68,7 +66,6 @@ file that was distributed with this source code.
                                 {% endfor %}
                             {% endif %}
                         </ul>
-                    {% endif %}
 
                     {# create button #}
                     {% if galleryListMode is defined and not galleryListMode %}
@@ -336,8 +333,8 @@ file that was distributed with this source code.
             {% endif %}
             <ul class="nav menu-tabs nav-tabs">
                 {% if galleryListMode and persistent_parameters.context %}
-                    <li class="active"><a
-                                >{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
+                    <li class="active">
+                        <a href="{{ admin.generateUrl('list', {'context' : persistent_parameters.context}) }}">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
                     </li>
 
                 {% else %}
