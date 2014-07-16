@@ -295,7 +295,7 @@ file that was distributed with this source code.
                 {% block label %}
 
                     {% if sonata_admin.field_description.options.name is defined %}
-                            {{ form_label(form, sonata_admin.field_description.options.name, { 'attr' : {'class' : 'control-label'} }) }}
+                        {{ form_label(form, sonata_admin.field_description.options.name, { 'attr' : {'class' : 'control-label'} }) }}
                     {% elseif sonata_admin is defined %}
                         {{ form_label(form, label|default(null), { 'attr' : {'class' : 'control-label'} }) }}
                     {% else %}
@@ -338,11 +338,11 @@ file that was distributed with this source code.
             {% set child = prototype %}
             {% set attr = attr|merge({'data-prototype': block('collection_widget_row') }) %}
         {% endif %}
-            {{ form_errors(form) }}
-            {% for child in form %}
-                {{ block('collection_widget_row') }}
-            {% endfor %}
-            {{ form_rest(form) }}
+        {{ form_errors(form) }}
+        {% for child in form %}
+            {{ block('collection_widget_row') }}
+        {% endfor %}
+        {{ form_rest(form) }}
     {% endspaceless %}
 {% endblock collection_widget %}
 
@@ -555,8 +555,8 @@ file that was distributed with this source code.
         </div>
     {% endif %}
     {% if widget_remove_btn is defined %}
-                    {{ block('form_widget_remove_btn') }}
-                {% endif -%}
+        {{ block('form_widget_remove_btn') }}
+    {% endif -%}
     {{ block('widget_control_group_end') }}
 
 
@@ -569,32 +569,32 @@ file that was distributed with this source code.
 
     {% if enable %}
         {% if not ckeditor_is_loaded() %}
-        <script type="text/javascript">
-            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
-        </script>
+            <script type="text/javascript">
+                var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
+            </script>
 
-        <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
+            <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
         {% endif %}
 
-    <script type="text/javascript">
-        {{ ckeditor_destroy(id) }}
+        <script type="text/javascript">
+            {{ ckeditor_destroy(id) }}
 
-        {% for plugin_name, plugin in plugins %}
-        {{ ckeditor_plugin(plugin_name, plugin) }}
-        {% endfor %}
+            {% for plugin_name, plugin in plugins %}
+            {{ ckeditor_plugin(plugin_name, plugin) }}
+            {% endfor %}
 
-        {% for style_name, style in styles %}
-        {{ ckeditor_styles_set(style_name, style) }}
-        {% endfor %}
+            {% for style_name, style in styles %}
+            {{ ckeditor_styles_set(style_name, style) }}
+            {% endfor %}
 
-        {% for template_name, template in templates %}
-        {{ ckeditor_template(template_name, template) }}
-        {% endfor %}
+            {% for template_name, template in templates %}
+            {{ ckeditor_template(template_name, template) }}
+            {% endfor %}
 
-        {% set config = config|merge({'language': app.request.locale}) %}
+            {% set config = config|merge({'language': app.request.locale}) %}
 
-        {{ ckeditor_replace(id, config) }}
-    </script>
+            {{ ckeditor_replace(id, config) }}
+        </script>
     {% endif %}
 {% endblock %}
 
@@ -619,13 +619,12 @@ file that was distributed with this source code.
                 {% jsblock 'addToBottom' %}
                 <script type="text/javascript">
                     jQuery(document).ready(function () {
-                        jQuery({{ id }}).datepicker();
-                        jQuery({{ id }}).datepicker().on(
-                                "changeDate",
-                                function (event) {
-                                    jQuery({{ id }}).datepicker('hide');
-                                }
-                        )
+                        jQuery({{ id }}).datepicker({
+                            language: '{{ app.request.getLocale()|slice(0, 2) }}',
+                            autoclose: true,
+                            todayHighlight: true,
+                            todayBtn: true
+                        });
                     });
                 </script>
                 {% jsblock 'addToBottomEnd' %}
