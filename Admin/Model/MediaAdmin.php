@@ -97,8 +97,14 @@ abstract class MediaAdmin extends Admin
             '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browser'
         ));
 
-        $collection->add('init_ckeditor_upload', 'init_ckeditor_upload', array(
-            '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload'
+        $collection->add('init_ckeditor_upload_file', 'init_ckeditor_upload_file', array(
+            '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
+            'type' => 'file'
+        ));
+
+        $collection->add('init_ckeditor_upload_image', 'init_ckeditor_upload_image', array(
+            '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
+            'type' => 'image'
         ));
     }
 

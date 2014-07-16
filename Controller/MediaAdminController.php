@@ -13,12 +13,11 @@ use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
+use Networking\InitCmsBundle\Model\PageInterface;
 /**
  * Class MediaAdminController
  * @package Networking\InitCmsBundle\Controller
@@ -26,185 +25,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class MediaAdminController extends SonataMediaAdminController
 {
-    /**
-     * @param Request $request
-     * @param string $providerName
-     * @return Response
-     */
-    public function doFileUpload(Request $request, $providerName = 'sonata.media.provider.image')
-    {
-        $file = $request->files->get('upload');
-
-        // Required: anonymous function reference number as explained above.
-        $funcNum = $request->get('CKEditorFuncNum');
-
-        $params = $this->handelMediaUpload($file, $providerName);
-        $status = $params['status'];
-        $url = $params['url'];
-        $message = $params['message'];
-
-        $response = "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction($funcNum, '$url', '$message');</script>";
-
-        return new Response($response, $status);
-
-    }
-
-    /**
-     * @param UploadedFile $file
-     * @param $providerName
-     * @return array
-     */
-    public function handelMediaUpload(UploadedFile $file, $providerName)
-    {
-        $url = '';
-
-        $locale = $this->getRequest()->getLocale();
-
-        $session = $this->getRequest()->getSession();
-
-        $pageId = $session->get('Page.last_edited');
-
-        $pageManager = $this->get('networking_init_cms.page_manager');
-        $page = $pageManager->findById($pageId);
-
-        if ($page) {
-            $locale = $page->getLocale();
-        }
-
-        if ($file instanceof UploadedFile && $file->isValid()) {
-
-            try {
-
-                /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
-                $mediaAdmin = $this->get('sonata.media.admin.media');
-
-                /** @var $provider \Sonata\MediaBundle\Provider\MediaProviderInterface */
-                $provider = $this->get($providerName);
-
-                $context = $mediaAdmin->getPool()->getDefaultContext();
-
-                $mediaClass = $mediaAdmin->getClass();
-
-                /** @var $media \Sonata\MediaBundle\Model\MediaInterface */
-                $media = new $mediaClass();
-
-                $media->setProviderName($provider->getName());
-
-                $media->setContext($context);
-
-                $media->setEnabled(true);
-
-                if (method_exists($media, 'setLocale')) {
-                    $media->setLocale($locale);
-                }
-
-                $media->setName($file->getClientOriginalName());
-
-                $media->setBinaryContent($file);
-
-                $mediaAdmin->getModelManager()->create($media);
-                $mediaAdmin->createObjectSecurity($media);
-
-                // Check the $_FILES array and save the file. Assign the correct path to a variable ($url).
-
-                if ($providerName == 'sonata.media.provider.image') {
-                    $url = $provider->generatePublicUrl($media, 'reference');
-
-                } else {
-                    $url = $this->generateUrl(
-                        'networking_init_cms_file_download',
-                        array('id' => $media->getId(), $media->getMetadataValue('filename'))
-                    );
-
-                }
-                // Usually you will only assign something here if the file could not be uploaded.
-                $message = '';
-
-
-                $status = 200;
-            } catch (\Exception $e) {
-
-                $message = $e->getMessage();
-                $status = 500;
-            }
-        } elseif ($file instanceof UploadedFile && !$file->isValid()) {
-            $message = $file->getError();
-            $status = 500;
-        } else {
-            $message = $this->admin->trans(
-                'error.file_upload_size',
-                array('%max_server_size%' => ini_get('upload_max_filesize'))
-            );
-            $status = 500;
-        }
-
-        return array('url' => $url, 'message' => $message, 'status' => $status);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
-     */
-    public function uploadedTextBlockImageAction(Request $request)
-    {
-
-        $media = $this->admin->getModelManager()->findBy(
-            $this->admin->getClass(),
-            array('providerName' => 'sonata.media.provider.image')
-        );
-
-        $provider = $this->get('sonata.media.provider.image');
-
-        $array = array();
-
-        $funcNum = $request->get('CKEditorFuncNum');
-        // Optional: instance name (might be used to load a specific configuration file or anything else).
-        $CKEditor = $request->get('CKEditor');
-        // Optional: might be used to provide localized messages.
-        $langCode = $request->get('langCode');
-
-        foreach ($media as $image) {
-            $tags = $image->getTags();
-            if ($tags->count() > 0) {
-                foreach ($tags as $tag) {
-                    $array[$tag->getName()][] = array(
-                        'reference' => $provider->generatePublicUrl($image, 'reference'),
-                        'media' => $image,
-                        'title' => $image->getName(),
-                        'folder' => $tag->getName(),
-                    );
-                }
-
-            } else {
-                $array['Default'][] = array(
-                    'reference' => $provider->generatePublicUrl($image, 'reference'),
-                    'media' => $image,
-                    'title' => $image->getName(),
-                    'folder' => 'default',
-                );
-            }
-        }
-
-        uksort(
-            $array,
-            function ($a, $b) {
-                if ($a == 'Default') {
-                    $a = 0;
-                }
-                if ($b == 'Default') {
-                    $b = 100000;
-                }
-
-                return strtolower($a) > strtolower($b);
-            }
-        );
-
-
-        return $this->render(
-            'NetworkingInitCmsBundle:MediaAdmin:media_image_browser.html.twig',
-            array('media' => $array, 'funcNum' => $funcNum)
-        );
-    }
 
 
     /**
@@ -291,8 +111,9 @@ class MediaAdminController extends SonataMediaAdminController
         if (false === $this->admin->isGranted('DELETE', $object)) {
             throw new AccessDeniedException();
         }
-
-        if ($this->getRequest()->getMethod() == 'DELETE') {
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->getMethod() == 'DELETE') {
             try {
                 $this->admin->delete($object);
                 $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_delete_success');
@@ -406,11 +227,12 @@ class MediaAdminController extends SonataMediaAdminController
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $galleryListMode = $request->get('pcode') ? true : false;
 
-        $galleryListMode = $this->getRequest()->get('pcode') ? true : false;
 
-
-        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'));
+        $datagrid = $this->admin->getDatagrid($request->get('context'));
         $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
         $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
 
