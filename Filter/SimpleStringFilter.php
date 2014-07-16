@@ -50,8 +50,27 @@ class SimpleStringFilter extends Filter
     public function getDefaultOptions()
     {
         return array(
-            'format' => '%%%s%%'
+            'format' => '%%%s%%',
+            'field_type' => 'text',
+            'label_render' => true,
+            'widget_control_group' => true
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLabelRender()
+    {
+        return $this->getOption('label_render');
+    }
+
+    public function getWidgetControlGroup()
+    {
+        if($this->getFieldType() == 'hidden'){
+            return false;
+        }
+        return $this->getOption('widget_control_group');
     }
 
     /**
@@ -64,7 +83,9 @@ class SimpleStringFilter extends Filter
             array(
                 'field_type' => $this->getFieldType(),
                 'field_options' => $this->getFieldOptions(),
-                'label' => $this->getLabel()
+                'label' => $this->getLabel(),
+                'label_render' => $this->getLabelRender(),
+                'widget_control_group' => $this->getWidgetControlGroup()
             )
         );
     }

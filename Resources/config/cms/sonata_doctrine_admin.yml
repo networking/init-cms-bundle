@@ -1,6 +1,8 @@
 sonata_doctrine_orm_admin:
     templates:
         form: [ NetworkingInitCmsBundle:Form:form_admin_fields.html.twig ]
+        filter:
+            - NetworkingInitCmsBundle:Form:form_admin_fields.html.twig
         types:
             list:
                 array:      NetworkingInitCmsBundle:CRUD:list_array.html.twig
