@@ -183,7 +183,7 @@ file that was distributed with this source code.
             {% set filter_main = '' %}
             {% set filter_hidden = '' %}
             {% set showHiddenFilters = 0 %}
-            {% for filter in admin.datagrid.filters %}
+            {% for filter in admin.datagrid.filters if (filter.options.field_type != 'hidden' )%}
 
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
@@ -245,12 +245,12 @@ file that was distributed with this source code.
                                                                            value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
                                                                     <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}" class="link-underlined">
                                                                         {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                                    {{ form_rest(form) }}
                                     {% if filter_hidden %}
                                         <a data-toggle="collapse" data-target="#hidden_filters" id="filter_toggle"
                                            class="filter-close cursor-pointer">
                                             {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
                                         </a>
+                                    {{ form_rest(form) }}
                                     {% endif %}
                                 </div>
                             </div>

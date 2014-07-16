@@ -10,6 +10,7 @@ file that was distributed with this source code.
 #}
 
 {% extends 'NetworkingInitCmsBundle:CRUD:list.html.twig' %}
+{% form_theme form 'NetworkingInitCmsBundle:Form:form_admin_fields.html.twig' %}
 {% set active_tab = app.request.get('context') %}
 {% block preview %}
 {% endblock %}
@@ -251,7 +252,7 @@ file that was distributed with this source code.
                     {% set filter_main = '' %}
                     {% set filter_hidden = '' %}
                     {% set showHiddenFilters = 0 %}
-                    {% for filter in datagrid.filters %}
+                    {% for filter in datagrid.filters if (filter.options.field_type != 'hidden' )%}
                         {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                             {% set filter_main %}
                             {{ filter_main }}
@@ -316,7 +317,6 @@ file that was distributed with this source code.
                                                    class="link-underlined">
                                                     {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
                                             {% endif %}
-                                            {{ form_rest(form) }}
                                             {% if filter_hidden %}
                                                 <a data-toggle="collapse" data-target=".hidden_filters"
                                                    id="filter_toggle"
@@ -324,6 +324,7 @@ file that was distributed with this source code.
                                                     {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
                                                 </a>
                                             {% endif %}
+                                            {{ form_rest(form) }}
                                         </div>
                                     </div>
                                 </div>
