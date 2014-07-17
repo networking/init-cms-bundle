@@ -347,47 +347,103 @@
                     Ein Menü gehört nur zur ausgewählten Sprache. Somit hat jede Sprache ihre eigenen Menüs. Dadurch steht Ihnen in jeder Sprache ein separater Menü-Baum zur Verfügung.</p>
                 ]]></target>
             </trans-unit>
+            <trans-unit id="networking_init_cms.admin.menu.create.title">
+                <source>networking_init_cms.admin.menu.create.title</source>
+                <target>Menu erstellen</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.menu.create.text">
+                <source>networking_init_cms.admin.menu.create.text</source>
+                <target><![CDATA[
+                    <p>Mit dieser Funktion k&ouml;nnen Sie ein neues Menu erstellen. Dazu muss das Menu im Template entsprechend programmiert sein - fragen Sie Ihren Webmaster.</p>
+
+                    <p>Diese Funkion steht nicht allen CMS Benutzern zur Verf&uuml;gung.</p>
+                ]]>
+                </target>
+            </trans-unit>
             <trans-unit id="networking_init_cms.admin.menu_item.create.title">
                 <source>networking_init_cms.admin.menu_item.create.title</source>
-                <target>Neues Menüelement hinzufügen</target>
+                <target>Menüelement hinzufügen</target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.menu_item.create.text">
                 <source>networking_init_cms.admin.menu_item.create.text</source>
-                <target><![CDATA[
-                    <p>In der Menü-Übersicht finden Sie die blaue Schaltfläche &quot;+ Element hinzufügen&quot;. Wenn Sie sie anklicken, wird ein neues Menüelement in dem aktuell ausgewählten Menü angelegt. </p>
+                <target><![CDATA[<p>In der Men&uuml;-&Uuml;bersicht finden Sie die blaue Schaltfl&auml;che &quot;+ Element hinzuf&uuml;gen&quot;. Wenn Sie sie anklicken, wird ein neues Men&uuml;element in dem aktuell ausgew&auml;hlten Men&uuml; angelegt.</p>
 
                     <h2>Formular-Felder</h2>
 
                     <p><strong>Name</strong><br />
-                    Der Name ist ein Pflichtfeld und wird für Ihr Menüelement verwendet. Nehmen Sie einen Namen, der Ihren Content am besten beschreibt.</p>
+                Der Name ist ein Pflichtfeld und wird f&uuml;r Ihr Men&uuml;element verwendet. Nehmen Sie einen Namen, der Ihren Content am besten beschreibt.</p>
 
                     <p><strong>Seite</strong><br />
-                    Die Seite ist nicht obligatorisch. Sie können eine beliebige vorhandene Seite als URL für das Menüelement auswählen. Wenn Sie keine Seite auswählen, müssen Sie entweder eine externe oder interne URL eingeben.</p>
+                Die Seite ist nicht obligatorisch. Sie k&ouml;nnen eine beliebige vorhandene Seite als URL f&uuml;r das Men&uuml;element ausw&auml;hlen. Wenn Sie keine Seite ausw&auml;hlen, m&uuml;ssen Sie entweder eine externe oder interne URL eingeben.</p>
 
                     <p><strong>Externe URL</strong><br />
-                    Die externe URL ist nicht zwingend. Anstatt eine Seite auszuwählen, können Sie eine beliebige URL hinzufügen, allerdings in ihrer gesamten Länge (z.B. http://www.initcms.com). Dies ist erforderlich, um einen absoluten Link zu einer anderen Webseite zu erstellen.</p>
+                Die externe URL ist nicht zwingend. Anstatt eine Seite auszuw&auml;hlen, k&ouml;nnen Sie eine beliebige URL hinzuf&uuml;gen, allerdings in ihrer gesamten L&auml;nge (z.B. http://www.initcms.com). Dies ist erforderlich, um einen absoluten Link zu einer anderen Webseite zu erstellen.</p>
 
                     <p><strong>Interne URL</strong><br />
-                    Die interne URL ist nicht obligatorisch. Anstatt eine Seite oder eine externe URL auszuwählen, können Sie eine interne URL hinzufügen. Eine interne URL enthält alles hinter der obersten Domäne (z.B. /news/new-products). Dies ist erforderlich, um relative Links zu Ihrer eigenen Website zu erstellen.</p>
+                Die interne URL ist nicht obligatorisch. Anstatt eine Seite oder eine externe URL auszuw&auml;hlen, k&ouml;nnen Sie eine interne URL hinzuf&uuml;gen. Eine interne URL enth&auml;lt alles hinter der obersten Dom&auml;ne (z.B. /news/new-products). Dies ist erforderlich, um relative Links zu Ihrer eigenen Website zu erstellen.</p>
 
                     <p><strong>+ Options</strong><br />
-                    Klicken Sie &quot;Optionen&quot; an, um folgende zusätzliche Möglichkeiten zur Verfügung zu haben.</p>
+                Klicken Sie &quot;Optionen&quot; an, um folgende zus&auml;tzliche M&ouml;glichkeiten zur Verf&uuml;gung zu haben.</p>
 
                     <p><strong>Sichtbarkeit</strong><br />
-                    Verwenden Sie die Sichtbarkeitseinstellung, um das Menüelement öffentlich oder nur im gesicherten Bereich zur Verfügung zu stellen.</p>
+                Verwenden Sie die Sichtbarkeitseinstellung, um das Men&uuml;element &ouml;ffentlich oder nur im gesicherten Bereich zur Verf&uuml;gung zu stellen.</p>
 
                     <p><strong>Link-Ziel</strong><br />
-                    Legen Sie das Ziel fest, wenn Sie nicht möchten, dass sich die Seite in demselben Fenster öffnet. Es gibt mehrere Optionen, die zur Auswahl stehen.</p>
+                Legen Sie das Ziel fest, wenn Sie nicht m&ouml;chten, dass sich die Seite in demselben Fenster &ouml;ffnet. Es gibt mehrere Optionen, die zur Auswahl stehen.</p>
 
                     <p><strong>Link-Klasse</strong><br />
-                    Die Link-Klasse, die Sie hier eingeben, wird als CSS-Formatierungsoption (Styling Option) hinzugefügt.</p>
+                Die Link-Klasse, die Sie hier eingeben, wird als CSS-Formatierungsoption (Styling Option) hinzugef&uuml;gt.</p>
 
                     <p><strong>Link-Relation</strong><br />
-                    Über diese Einstellung wird das &quot;rel&quot;-Attribut zu Ihrem Link hinzugefügt. Dies kann nützlich sein, wenn Sie Links erstellen, die z.B. eine Lightbox-Bildergalerie öffnen, oder um eine andere Javascript-Funktionalität auszulösen.</p>
+                &Uuml;ber diese Einstellung wird das &quot;rel&quot;-Attribut zu Ihrem Link hinzugef&uuml;gt. Dies kann n&uuml;tzlich sein, wenn Sie Links erstellen, die z.B. eine Lightbox-Bildergalerie &ouml;ffnen, oder um eine andere Javascript-Funktionalit&auml;t auszul&ouml;sen.</p>
 
-                    <p><strong>Menüelement verbergen</strong><br />
-                    Wenn Sie ein Menüelement verbergen möchten, es aber trotzdem weiterhin normal funktionieren soll, aktivieren Sie dieses Kästchen. Wenn Sie z.B. einen bestimmten Navigationspunkt als aktive übergeordnete Seite der Suchergebnis-Seite hell hervorheben möchten, aber nicht wünschen, dass ein Link in dem Menü zur Suchergebnis-Seite sichtbar ist, dann wäre dies die richtige Wahl für Sie.</p>
+                <p><strong>Men&uuml;element verbergen</strong><br />
+                Wenn Sie ein Men&uuml;element verbergen m&ouml;chten, es aber trotzdem weiterhin normal funktionieren soll, aktivieren Sie dieses K&auml;stchen. Wenn Sie z.B. einen bestimmten Navigationspunkt als aktive &uuml;bergeordnete Seite der Suchergebnis-Seite hell hervorheben m&ouml;chten, aber nicht w&uuml;nschen, dass ein Link in dem Men&uuml; zur Suchergebnis-Seite sichtbar ist, dann w&auml;re dies die richtige Wahl f&uuml;r Sie.</p>
                   ]]></target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.menu_item.edit.title">
+                <source>networking_init_cms.admin.menu_item.edit.title</source>
+                <target>Menuelement bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.menu_item.edit.text">
+                <source>networking_init_cms.admin.menu_item.edit.text</source>
+                <target><![CDATA[<p>In der Men&uuml;-&Uuml;bersicht finden Sie neben jedem Menupunkt den bekannten &#39;Editieren&#39;-Button (ja das ist die graue Schaltfl&auml;che mit dem Stift), Mit Klick auf diesen Button wechseln Sie in den Editieren-Modus indem eine Light-Box ge&ouml;ffnet wird.</p>
+
+                <p>In der obersten Zeile wird der Name des Menupunkts gezeigt sowie - ganz rechts - der Schliessen Button um das Formular ohne &Auml;nderungen zu verlassen (falls Sie einfach in die graue Fl&auml;che neben dem Formular klicken hat es denselben Effekt - das Formular wird ohne &Auml;nderungen geschlossen.</p>
+
+                <p>In der untersten Zeile (immer sichtbar, leicht ausgegraut) befindet sich der blaue &#39;Aktualisieren&#39;-Button mit dem Sie alle &Auml;nderungen in diesem Formular speichern sowie der graue &#39;Abbrechen&#39;-Button mit dem Sie das Formular ohne &Auml;nderungen verlassen.</p>
+
+                <h2>Formular-Felder</h2>
+
+                <p><strong>Name</strong><br />
+                Der Name ist ein Pflichtfeld und wird f&uuml;r Ihr Men&uuml;element verwendet. Falls Sie den Namen des Menupunkts &auml;ndern, achten Sie bitte darauf dass die neue Bezeichnung ihrem Design gerecht wird - also nicht zu lang ist, insbesondere wenn Ihre Webseite mehrere Sprachen verwendet.</p>
+
+                <p><strong>Seite</strong><br />
+                Damit verkn&uuml;pfen Sie den Menupunkt mit einer internen Webseite. Falls Sie hier eine Anpassung vornehmen, f&uuml;hrt der Menupunkt einfach auf die neu ausgew&auml;hlte Seite. Wenn Sie keine Seite ausw&auml;hlen, m&uuml;ssen Sie entweder eine externe oder interne URL eingeben.</p>
+
+                <p><strong>Externe URL</strong><br />
+                Die externe URL ist nicht zwingend. Anstatt eine Seite auszuw&auml;hlen, k&ouml;nnen Sie eine beliebige URL hinzuf&uuml;gen, allerdings in ihrer gesamten L&auml;nge (z.B. http://www.initcms.com). Dies ist erforderlich, um einen absoluten Link zu einer anderen Webseite zu erstellen.</p>
+
+                <p><strong>Interne URL</strong><br />
+                Die interne URL ist nicht obligatorisch. Anstatt eine Seite oder eine externe URL auszuw&auml;hlen, k&ouml;nnen Sie eine interne URL hinzuf&uuml;gen. Eine interne URL enth&auml;lt alles hinter der obersten Dom&auml;ne (z.B. /news/new-products). Dies ist erforderlich, um relative Links zu Ihrer eigenen Website zu erstellen.</p>
+
+                <p><strong>+ Options</strong> (bereits ge&ouml;ffnet)<br />
+                Klicken Sie &quot;Optionen&quot; an, um folgende zus&auml;tzliche M&ouml;glichkeiten zur Verf&uuml;gung zu haben.</p>
+
+                <p><strong>Sichtbarkeit</strong><br />
+                Verwenden Sie die Sichtbarkeitseinstellung, um das Men&uuml;element &ouml;ffentlich oder nur im gesicherten Bereich zur Verf&uuml;gung zu stellen.</p>
+
+                <p><strong>Link-Ziel</strong><br />
+                Legen Sie das Ziel fest, wenn Sie nicht m&ouml;chten, dass sich die Seite in demselben Fenster &ouml;ffnet. Es gibt mehrere Optionen, die zur Auswahl stehen. In der Regel wird f&uuml;r interne Links &#39;aktueller Browser&#39; und f&uuml;r externe Links (zB. www.tagi.ch) &#39;neues Browser Fenster oder Tab&#39; verwendet.</p>
+
+                <p><strong>Link-Klasse</strong><br />
+                Die Link-Klasse, die Sie hier eingeben, wird als CSS-Formatierungsoption (Styling Option) hinzugef&uuml;gt. Sie k&ouml;nnen selbstredend nur Link-Klassen verwenden, die auch f&uuml;r Ihr Projekt programmiert sind.</p>
+
+                <p><strong>Link-Bezug</strong><br />
+                &Uuml;ber diese Einstellung wird das &quot;rel&quot;-Attribut zu Ihrem Link hinzugef&uuml;gt. Dies kann n&uuml;tzlich sein, wenn Sie Links erstellen, die z.B. eine Lightbox-Bildergalerie &ouml;ffnen, oder um eine andere Javascript-Funktionalit&auml;t auszul&ouml;sen. Falls Sie hier anstehen, fragen Sie am besten schnell Ihre Entwickler.</p>
+
+                <p><strong>Men&uuml;element verbergen</strong><br />
+                Wenn Sie ein Men&uuml;element verbergen m&ouml;chten, es aber trotzdem weiterhin normal funktionieren soll, aktivieren Sie dieses K&auml;stchen. Wenn Sie z.B. einen bestimmten Navigationspunkt als aktive &uuml;bergeordnete Seite der Suchergebnis-Seite hell hervorheben m&ouml;chten, aber nicht w&uuml;nschen, dass ein Link in dem Men&uuml; zur Suchergebnis-Seite sichtbar ist, dann w&auml;re dies die richtige Wahl f&uuml;r Sie.</p>]]></target>
             </trans-unit>
 
             <!-- media -->
@@ -398,18 +454,37 @@
             </trans-unit>
             <trans-unit id="sonata.media.admin.media.list.text">
                 <source>sonata.media.admin.media.list.text</source>
-                <target><![CDATA[
-                    <p>Der Medienbereich hilft Ihnen, Mediendateien wie z.B. Bilder, Videos und andere Dateien bequem zu verwalten. Am oberen Rand der Medien-Seite können Sie die Medien nach Namen filtern, oder Sie haben die zusätzliche Option, nach Medien-Tags zu filtern. Die verschiedenen Registerkarten zeigen den Medien-Kontext (siehe unten). Wählen Sie einfach &quot;Standard&quot;, wenn Sie keine anderen Informationen haben. Mit dem Medientyp können Sie alle Dateien, nur Bilder, nur Dateien oder nur Videos sehen. Ausser dem Medientyp haben Sie noch die Schaltfläche &quot;+ Element hinzufügen&quot; zur Verfügung – Infos dazu finden Sie ebenfalls in der Systemhilfe. Schliesslich sehen Sie eine Liste Ihrer Medien-Dateien entsprechend Ihrer oben erwähnten Einstellungen, und Sie können einige Aktionen für jedes Element ausführen.</p>
+                <target><![CDATA[<p>Der Medienbereich hilft Ihnen, Mediendateien wie z.B. Bilder, Videos und andere Dateien bequem zu verwalten. Am oberen Rand der Medien-Seite k&ouml;nnen Sie die Medien nach Namen filtern, oder Sie haben die zus&auml;tzliche Option, nach Medien-Tags zu filtern. Die verschiedenen Registerkarten zeigen den Medien-Kontext (siehe unten). W&auml;hlen Sie einfach &quot;Standard&quot;, wenn Sie keine anderen Informationen haben. Mit dem Medientyp k&ouml;nnen Sie alle Dateien, nur Bilder, nur Dateien oder nur Videos sehen. Ausser dem Medientyp haben Sie noch die Schaltfl&auml;che &quot;+ Neue Medien hinzuf&uuml;gen&quot; zur Verf&uuml;gung &ndash; Infos dazu finden Sie ebenfalls in der Systemhilfe. Schliesslich sehen Sie eine Liste Ihrer Medien-Dateien entsprechend Ihrer oben erw&auml;hnten Einstellungen, und Sie k&ouml;nnen einige Aktionen f&uuml;r jedes Element ausf&uuml;hren.</p>
+
+                <h2>Suchen</h2>
+
+                <p>Sie k&ouml;nnen die Medienelemente im angezeigten Medien-Kontext suchen in dem Sie im Feld &#39;Name&#39; nach dem Dateinamen des Objekts suchen. Zudem k&ouml;nnen Sie die Suche einschr&auml;nken wenn Sie f&uuml;r Ihre Medien Tags gesetzt haben. Die definierten Tags sind &uuml;ber ein pull-down Menu aufrufbar.</p>
+
+                <p>Zus&auml;tzlich k&ouml;nnen Sie nach weiteren Optionen suchen (z.B. Autor). Weitere Suchoptionen k&ouml;nnen von Ihrem Webmaster konfiguriert werden.</p>
+
+                <p>Falls die Suchfelder nicht ausgef&uuml;llt werden, werden alle Objekte im entsprechenden Kontext angezeigt.</p>
 
                     <h2>Medien-Kontext</h2>
 
-                    <p>Ein Medien-Kontext ist eine Möglichkeit, spezifische Medientypen zu gruppieren. Medien-Kontexte sind in der Website-Konfiguration festgelegt. Sie können einschränken, welche Medientypen in jedem einzelnen Kontext zugelassen sind, und im Falle von Bildern festlegen, auf welche Grössen die Bilder zugeschnitten werden sollen. Dadurch haben Sie eine bessere Kontrolle über Ihre Medien; zudem wird verhindert, dass Benutzer den falschen Medientyp hochladen und sichergestellt, dass Bilder das korrekte Format behalten.</p>
+                <p>Ein Medien-Kontext ist eine M&ouml;glichkeit, spezifische Medientypen zu gruppieren. Medien-Kontexte sind in der Website-Konfiguration festgelegt. Sie k&ouml;nnen einschr&auml;nken, welche Medientypen in jedem einzelnen Kontext zugelassen sind, und im Falle von Bildern festlegen, auf welche Gr&ouml;ssen die Bilder zugeschnitten werden sollen. Dadurch haben Sie eine bessere Kontrolle &uuml;ber Ihre Medien; zudem wird verhindert, dass Benutzer den falschen Medientyp hochladen und sichergestellt, dass Bilder das korrekte Format behalten. Per default ist der Kontext &#39;Standard Medien&#39; vorinstalliert.</p>
 
-                    <p>Beispiel: Sie müssen Produktbilder sowie Bilder für neue Artikel bearbeiten. Ihr Webmaster muss zwei Medien-Kontexte konfigurieren, wobei bei jedem die verschiedenen Bildergrössen definiert (Miniatur, klein, mittel, usw.) und auch festzulegen ist, welche Dateien zugelassen sind.</p>
+                <p>Beispiel: Sie m&uuml;ssen Produktbilder sowie Bilder f&uuml;r neue Artikel bearbeiten. Ihr Webmaster muss zwei Medien-Kontexte konfigurieren, wobei bei jedem die verschiedenen Bildergr&ouml;ssen definiert (Miniatur, klein, mittel, usw.) und auch festzulegen ist, welche Dateien zugelassen sind.</p>
+
+                <h2>Aktionen</h2>
+
+                <p>F&uuml;r jedes Medienobjekt k&ouml;nnen folgende Aktionen durchgef&uuml;hrt werden:</p>
+
+                <ul>
+                	<li>Anzeigen (zeigt das Objekt im Bearbeitungsmodus Ansicht an; siehe auch Hilfetext Medienelement bearbeiten)</li>
+                	<li>Bearbeiten (zeigt das Objekt im Bearbeitungsmodus Bearbeiten an; siehe auch Hilfetext Medienelement bearbeiten)</li>
+                	<li>L&ouml;schen (l&ouml;scht das Objekt, l&ouml;schen muss best&auml;tigt werden)</li>
+                </ul>
+
+                <p>Zudem k&ouml;nnen mit dem Markieren der Checkboxen bei den jeweiligen Medienelementen Aktionen f&uuml;r alle oder mehrere Medienobjekte ausgef&uuml;hrt werden, indem die entsprechenden Checkboxen markiert und die gew&uuml;nschten Aktionen (z.B. l&ouml;schen) ausgef&uuml;hrt werden.</p>
 
                     <h2>Medien Formate</h2>
 
-                    <p>In diesem Zusammenhang geht es um Formate bzw. Medientypen wie z.B.:</p>
+                <p>In diesem Zusammenhang geht es um Datei-Formate bzw. Medientypen wie z.B.:</p>
 
                     <ul>
                     	<li>Bild (.jpg, .png)</li>
@@ -418,37 +493,316 @@
                     	<li>Audio (.mp3)</li>
                     </ul>
 
-                    <p>Ihr Webmaster richtet diese für Sie ein.</p>
-                    ]]>
+                <p>Spezifische Formate m&uuml;ssen explizit zugelassen werden. Ihr Webmaster richtet diese f&uuml;r Sie ein.</p>]]>
                 </target>
             </trans-unit>
+            <trans-unit id="sonata.media.admin.media.create.title">
+                <source>sonata.media.admin.media.create.title</source>
+                <target><![CDATA[Medienelement erstellen]]></target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.media.create.text">
+                <source>sonata.media.admin.media.create.text</source>
+                <target><![CDATA[<p>Erstellen Sie ein neues Medienelement in dem Sie zuerst den Medien-Kontext ausw&auml;hlen (z.B. Standard Medien, Hintergrundbilder, Publikationen, etc.).</p>
+
+                <p>Klicken Sie im gew&auml;hlten Kontext den Button &#39;+ Neue Medien hinzuf&uuml;gen an&#39;.</p>
+
+                <p>W&auml;hlen Sie nun den Medien-Typ. Je nach Medien-Kontext und je nach Ihrem System sind unterschiedliche Medientypen erlaubt.</p>
+
+                <p><strong>Medientyp Bild</strong><br />
+                Klicken Sie auf &#39;Durchsuchen&#39;. Ein neues Fenster wird ge&ouml;ffnet. W&auml;hlen Sie die gew&uuml;nschte Datei auf Ihrem Computer oder Netzwerk aus. Klicken Sie dann - z.B. mit einem Windows PC - auf &#39;&ouml;ffnen&#39;.<br />
+                Der Dateiname des Bildes wird angezeigt. Klicken Sie nun einen der Buttons:</p>
+
+                <ul>
+                	<li>Hinzuf&uuml;gen und bearbeiten</li>
+                	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
+                	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
+                </ul>
+
+                <p>Mit &#39;Abbrechen&#39; wird die Funktion Medien hochladen r&uuml;ckg&auml;ngig gemacht und das hochgeladene Bild NICHT gespeichert.</p>
+
+                <p>Falls das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+
+                <p><strong>Medientyp Datei</strong><br />
+                Klicken Sie auf &#39;Durchsuchen&#39;. Ein neues Fenster wird ge&ouml;ffnet. W&auml;hlen Sie die gew&uuml;nschte Datei auf Ihrem Computer oder Netzwerk aus. Klicken Sie dann - z.B. mit einem Windows PC - auf &#39;&ouml;ffnen&#39;.<br />
+                Der Dateiname des Bildes wird angezeigt.</p>
+
+                <p>W&auml;hlen Sie nun die Sprache aus, in welcher die Datei zur Verf&uuml;gung gestellt werden soll. Die Datei wird dann in der Mediensammlung nur unter dieser Sprache ausw&auml;hlbar.</p>
+
+                <p>Klicken Sie nun einen der Buttons:<br />
+                &nbsp;</p>
+
+                <ul>
+                	<li>Hinzuf&uuml;gen und bearbeiten</li>
+                	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
+                	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
+                </ul>
+
+                <p>Mit &#39;Abbrechen&#39; wird die Funktion Medien hochladen r&uuml;ckg&auml;ngig gemacht und die hochgeladene Datei NICHT gespeichert.</p>
+
+                <p>Falls das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+
+                <p><strong>Medientyp Video</strong><br />
+                *Exemplarisch f&uuml;r das Beispiel Youtube. Falls Sie andere Provider (Vimeo, etc.) oder Filmsysteme (Flash-Filmformat) verwenden, fragen Sie Ihren Webmaster.<br />
+                F&uuml;gen Sie den mit ihrem Youtube-Account erstellen Link in das vorgesehene Feld ein.</p>
+
+                <p>Klicken Sie nun einen der Buttons:<br />
+                &nbsp;</p>
+
+                <ul>
+                	<li>Hinzuf&uuml;gen und bearbeiten</li>
+                	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
+                	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
+                </ul>
+
+                <p>Mit &#39;Abbrechen&#39; wird die Funktion Medien hochladen r&uuml;ckg&auml;ngig gemacht und die hochgeladene Datei NICHT gespeichert.</p>
+
+                <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+
+                <p>Weitere n&uuml;tzliche Informationen finden Sie unter Medien bearbeiten.</p>]]></target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.media.edit.title">
+                <source>sonata.media.admin.media.create.title</source>
+                <target><![CDATA[Medienelement bearbeiten]]></target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.media.edit.text">
+                <source>sonata.media.admin.media.create.text</source>
+                <target><![CDATA[<p>Bearbeiten Sie ein bestehendes Medienelement in dem Sie zuerst den Medien-Kontext ausw&auml;hlen (z.B. Standard Medien, Hintergrundbilder, Publikationen, etc.) &uuml;ber die vorhandenen Reiter ausw&auml;hlen.</p>
+
+                <p>W&auml;hlen Sie im gew&auml;hlten Kontext den grauen Button &#39;Bearbeiten&#39; (Zeichenstift) oder klicken Sie einfach auf das Bild / den Link. Oder Sie haben das Medienelement neu erstellt indem Sie&nbsp; &#39;Aktualisieren und Bearbeiten&#39; gew&auml;hlt haben.</p>
+
+                <p>Sie k&ouml;nnen nun zwischen den Modi &#39;Bearbeiten&#39; und &#39;Ansicht&#39; &uuml;ber die Navigationsbox rechts wechseln.</p>
+
+                <p><strong>Bearbeiten</strong><br />
+                Name: Standardm&auml;ssig wird der bestehende Dateiname des Objekts angezeigt / gespeichert. Sie k&ouml;nnen den Namen &auml;ndern, falls z.B. das Bild anders verwendet werden soll, macht es Sinn das Dateiformat (.jpg) beizubehalten.</p>
+
+                <p>Aktiviert: Medienelement aktiv oder inaktiv. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
+
+                <p>CDN leeren: Falls Sie mit Content Delivery Networks wie Amazon Servern arbeiten, k&ouml;nnen Sie mit dieser Checkbox das Sever Cache aktualisieren. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
+
+                <p>Autor: Geben Sie den Autor als beschreibenden HTML Tag an.</p>
+
+                <p>Beschreibung: Geben Sie eine Beschreibung des Objeks ein. Dies wird als HTML Tag angezeigt und zum Beispiel von Readern f&uuml;r Blinde / Sehbeinderte verwendet.</p>
+
+                <p>Copyright: Geben Sie das Copyright als beschreibenden HTML Tag an.</p>
+
+                <p>Datei ersetzen: Sie k&ouml;nnen das bestehende Medienelement ersetzen, inde, Sie eine neue Datei hochladen und damit die bestehende &uuml;berschreiben.</p>
+
+                <p>Taggen Sie ihre Medien: Sie k&ouml;nnen ihre Medien mit beliebig vielen Tags versehen um sie leichter zu finden / gruppieren. Diese Funktion hilft Ihnen die Medien sinnvoll zu organisieren. &Uuml;ber den &#39;+ Neu&#39; Button k&ouml;nnen Sie ganz einfach neue Tags erstellen ohne die Seite / den Kontext zu wechseln.</p>
+
+                <p>Sie k&ouml;nnen nun:</p>
+
+                <ul>
+                	<li>Aktualisieren</li>
+                	<li>Aktualisieren und zur&uuml;ck zur Liste</li>
+                	<li>L&ouml;schen</li>
+                </ul>
+
+                <p>Mit &#39;Abbrechen&#39; wird die Funktion Medienelement bearbeiten r&uuml;ckg&auml;ngig gemacht und die &Auml;nderungen NICHT gespeichert.</p>
+
+                <p><strong>Ansicht</strong><br />
+                In der Ansicht sehen Sie eine Vorschau des Medienobjekts (nur Bild).</p>
+
+                <p>Danach folgen die generellen Informationen:</p>
+
+                <ul>
+                	<li>Gr&ouml;sse (Anzahl Bytes)</li>
+                	<li>Breite (falls Bild)</li>
+                	<li>H&ouml;he (falls Bild)</li>
+                	<li>Inhaltstyp (falls bekannt)</li>
+                	<li>Copyright (falls ausgef&uuml;llt)</li>
+                	<li>Autor (falls ausgef&uuml;llt)</li>
+                	<li>CDN (letzte Aktualisierung)</li>
+                </ul>
+
+                <p>Gesch&uuml;tzte URL: Sie k&ouml;nnen dem Medienobjekt eine spezifische URL zur einfachen Kennung mitgeben</p>
+
+                <p>&Ouml;ffentliche URL: Eindeutige, vom CMS generierte URL</p>
+
+                <p>Die allf&auml;llige Warnung zeigt an, ob das Medienobjekt nicht spezifisch gesch&uuml;tzt ist (also von allen aufgerufen werden kann).</p>
+
+                <p>Danach folgen die Formate:</p>
+
+                <p>reference: zeigt den Ort des Medienelements auf dem Webserver als URL an</p>
+
+                <p>default_xxx: zeigt den Ort der unterschiedlich gerenderten (Bild-)Formate als URL an. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>]]></target>
+            </trans-unit>
+
+
             <trans-unit id="sonata.media.admin.gallery.list.title">
                 <source>sonata.media.admin.gallery.list.title</source>
-                <target>Medien-Galerie</target>
+                <target>Galerie Übersicht</target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.gallery.list.text">
                 <source>sonata.media.admin.gallery.list.text</source>
-                <target><![CDATA[
-                    <p>Die Medien-Galerie hilft Ihnen, eine Sammlung von Medien-Elementen (normalerweise Bilder) auf einer Seite zu präsentieren. Sie können zuerst Medien über den Medien-Manager hinzufügen und sie dann auswählen, wenn Sie eine Galerie anlegen, oder Sie können Medien während des Galerie-Erstellungsvorgangs hochladen.</p>
+                <target><![CDATA[<p>Eine Galerie ist eine Sammlung von Medienelementen, in der Regel Bilder welche in einer Diashow oder einem Slider dargestellt werden.</p>
 
-                    <p>Galerien können später durch Einfügen eines Content-Blocks des Typs &quot;Galerie&quot; in eine Seite einbezogen werden.</p>
+                <p>Die Medien-Galerie hilft Ihnen, eine Sammlung von Medien-Elementen (normalerweise Bilder) auf einer Seite zu pr&auml;sentieren. Sie k&ouml;nnen zuerst Medien &uuml;ber den Medien-Manager hinzuf&uuml;gen und sie dann ausw&auml;hlen, wenn Sie eine Galerie anlegen oder Sie k&ouml;nnen Medien w&auml;hrend des Galerie-Erstellungsvorgangs hochladen.</p>
 
-                    <h2>Galerie hinzufügen</h2>
+                <p>Galerien k&ouml;nnen sp&auml;ter durch Einf&uuml;gen eines Content-Blocks des Typs &quot;Galerie&quot; in eine Seite einbezogen werden.</p>
 
-                    <p>Wenn Sie eine Galerie hinzufügen, können Sie im gleichen Schritt auch Medien hinzufügen, so dass Sie nicht mehrmals hin- und herwechseln müssen. Die Galerie besteht aus den folgenden Feldern:</p>
+                <h2>Galerien</h2>
+
+                <p>Eine Galerie besteht aus den folgenden Feldern:</p>
 
                     <p><strong>Aktiviert</strong><br />
                     Diese Markierung kann in Ihren Website-Templates (Vorlagen) benutzt werden, damit das Template weiss, ob es die Galerie anzeigen soll oder nicht. Es liegt an den Template-Programmierern, wie das Feld zu verwenden ist.</p>
 
                     <p><strong>Name</strong><br />
-                    Der Name der Galerie. Er wird nur intern benutzt, damit Sie wissen, welche Galerie Sie für eine Seite auswählen.</p>
+                Der Name der Galerie. Er wird nur intern benutzt, damit Sie wissen, welche Galerie Sie f&uuml;r eine Seite ausw&auml;hlen.</p>
 
                     <p><strong>Format</strong><br />
-                    Wählen Sie aus unterschiedlichen vordefinierten Formaten. Die Formate legen die Grösse der Bilder fest und sind in Ihrer Website-Konfiguration vordefiniert. Ihr Webmaster ist dafür verantwortlich, diese zu Beginn korrekt einzurichten.</p>
+                W&auml;hlen Sie aus unterschiedlichen vordefinierten Formaten. Die Formate legen die Gr&ouml;sse der Bilder fest und sind in Ihrer Website-Konfiguration vordefiniert. Ihr Webmaster ist daf&uuml;r verantwortlich, diese zu Beginn korrekt einzurichten.</p>
 
                     <p><strong>Medien<br />
-                    ​</strong>Klicken Sie &quot;+ Neue hinzufügen&quot; an, um vorhandene Medien hinzuzufügen, oder laden Sie neue Medien direkt hoch. Sie können bei Bedarf auch Medien aus der Galerie löschen. Sie können jederzeit darauf zurückkommen und Medien für eine Galerie hinzufügen oder ändern.</p>
-                ]]></target>
+                ​</strong>Klicken Sie &quot;+ Neue hinzuf&uuml;gen&quot; an, um vorhandene Medien hinzuzuf&uuml;gen, oder laden Sie neue Medien direkt hoch. Sie k&ouml;nnen bei Bedarf auch Medien aus der Galerie l&ouml;schen. Sie k&ouml;nnen jederzeit darauf zur&uuml;ckkommen und Medien f&uuml;r eine Galerie hinzuf&uuml;gen oder &auml;ndern.</p>
+
+                <h2>Suchen</h2>
+
+                <p>Sie k&ouml;nnen die Galerien im angezeigten Kontext suchen in dem Sie im Feld &#39;Name&#39; nach dem Dateinamen der Galerie suchen.</p>
+
+                <p>Zus&auml;tzlich k&ouml;nnen Sie nach weiteren Optionen suchen (z.B. Aktiviert). Weitere Suchoptionen k&ouml;nnen von Ihrem Webmaster konfiguriert werden.</p>
+
+                <p>Falls die Suchfelder nicht ausgef&uuml;llt werden, werden alle Objekte im entsprechenden Kontext angezeigt.</p>
+
+                <h2>Galerie-Kontext</h2>
+
+                <p>Ein Galerie-Kontext ist eine M&ouml;glichkeit, spezifische Galerien zu unterscheiden, erstellen und bearbeiten. Galerie-Kontexte sind in der Website-Konfiguration festgelegt. Sie k&ouml;nnen einschr&auml;nken, welche Medientypen (Formate) in jedem einzelnen Kontext zugelassen sind, und im Falle von Bildern festlegen, auf welche Gr&ouml;ssen die Bilder zugeschnitten werden sollen. Dadurch haben Sie eine bessere Kontrolle &uuml;ber Ihre Medien; zudem wird verhindert, dass Benutzer den falschen Medientyp hochladen und sichergestellt, dass Bilder das korrekte Format behalten. Per default ist der Kontext &#39;default&#39; vorinstalliert.</p>
+
+                <p>Beispiel: Sie wollen Produktbilder f&uuml;r einen Slider sowie Bilder f&uuml;r die Diashow des Betriebsfests verwenden. Ihr Webmaster muss zwei Galerie-Kontexte konfigurieren, wobei bei jedem die verschiedenen Bildergr&ouml;ssen definiert (Miniatur, klein, mittel, usw.) und auch festzulegen ist, welche Dateien zugelassen sind.</p>
+
+                <h2>Aktionen</h2>
+
+                <p>F&uuml;r jedes Galerieobjekt k&ouml;nnen folgende Aktionen durchgef&uuml;hrt werden:</p>
+
+                <ul>
+                	<li>Bearbeiten (zeigt das Objekt im Bearbeitungsmodus Bearbeiten an; siehe auch Hilfetext Galerie bearbeiten)</li>
+                	<li>L&ouml;schen (l&ouml;scht das Objekt, l&ouml;schen muss best&auml;tigt werden)</li>
+                </ul>
+
+                <p>Zudem k&ouml;nnen mit dem Markieren der Checkboxen bei den jeweiligen Galerieelementen Aktionen f&uuml;r alle oder mehrere Objekte ausgef&uuml;hrt werden, indem die entsprechenden Checkboxen markiert und die gew&uuml;nschten Aktionen (z.B. l&ouml;schen) ausgef&uuml;hrt werden.</p>
+
+                <h2>Medien Formate</h2>
+
+                <p>In diesem Zusammenhang geht es um Datei-Formate bzw. Medientypen wie z.B.:</p>
+
+                <ul>
+                	<li>Bild (.jpg, .png)</li>
+                	<li>PDF Dokumente (.pdf)</li>
+                	<li>Video (h246, mpeg)</li>
+                	<li>Audio (.mp3)</li>
+                </ul>
+
+                <p>Spezifische Formate m&uuml;ssen explizit zugelassen werden. Ihr Webmaster richtet diese f&uuml;r Sie ein.</p>]]></target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.gallery.create.title">
+                <source>sonata.media.admin.gallery.create.title</source>
+                <target>Galerie erstellen</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.gallery.create.text">
+                <source>sonata.media.admin.gallery.create.text</source>
+                <target><![CDATA[<p>Wenn Sie eine Galerie erstellen, k&ouml;nnen Sie im gleichen Schritt auch Medien hinzuf&uuml;gen, so dass Sie nicht mehrmals hin- und herwechseln m&uuml;ssen.</p>
+
+                <h2>Media hochladen</h2>
+
+                <p>Geben Sie zuerst die Informationen f&uuml;r die neue Galerie ein:</p>
+
+                <ul>
+                	<li>Aktiviert: Galerie ist aktiv (oder noch inaktiv)</li>
+                	<li>Name: Interner Name der Galerie</li>
+                	<li>Format: Format unter welchem die zu dieser Galerie hochgeladenen Bilder gespeichert werden. Fragen Sie dazu Ihren Webmaster.</li>
+                </ul>
+
+                <h2>Medien</h2>
+
+                <p>Sie sehen alle Galerie Objekte in einer &uuml;bersichtlichen Tabelle</p>
+
+                <p><strong>Medien</strong><br />
+                Vorhandene Bilder werden als Thumbnail angezeigt.</p>
+
+                <p>Liste: Sie k&ouml;nnen aus Ihren Medien bereits hochgeladene Bilder ausw&auml;hlen, die dann in diese Galerie eingef&uuml;gt werden</p>
+
+                <p>+Neu: Sie k&ouml;nnen von Ihrem PC / Netzwerk gespeicherte Bilder hochladen.</p>
+
+                <p>L&ouml;schen: Sie k&ouml;nnen das vorhandene Objekt l&ouml;schen.</p>
+
+                <p><strong>Aktiviert</strong><br />
+                Sie k&ouml;nnen einzelne Objekte der Galerie aktivieren resp. deaktivieren.</p>
+
+                <p><strong>Position</strong><br />
+                Sie k&ouml;nnen per Drag &amp; Drop einzelne Objekte in der Galerie verschieben und so die Reihenfolge (z.B. der Diashow) &auml;ndern.</p>
+
+                <p>Mit dem <strong>&#39;+ Neu&#39; Button</strong> laden Sie neue Bilder zu dieser Galerie auf den Webserver. Jedes Galerie-Element wird in einer Zeile angezeigt.</p>
+
+                <p>&nbsp;</p>
+
+                <p>Klicken Sie nun einen der Buttons:</p>
+
+                <ul>
+                	<li>Hinzuf&uuml;gen und bearbeiten</li>
+                	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
+                	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
+                </ul>
+
+                <p>Mit &#39;Abbrechen&#39; wird die Funktion Galerie erstellen r&uuml;ckg&auml;ngig gemacht und die hochgeladenen Daten NICHT gespeichert.</p>
+
+                <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+
+                <p>Weitere n&uuml;tzliche Informationen finden Sie unter Galerie oder Medien bearbeiten.</p>]]></target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.gallery.edit.title">
+                <source>sonata.media.admin.gallery.edit.title</source>
+                <target>Galerie bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="sonata.media.admin.gallery.edit.text">
+                <source>sonata.media.admin.gallery.edit.text</source>
+                <target><![CDATA[<p>Wenn Sie eine Galerie bearbeiten, k&ouml;nnen Sie im gleichen Schritt auch neue Medie hinzuf&uuml;gen, so dass Sie nicht mehrmals hin- und herwechseln m&uuml;ssen.</p>
+
+                <h2>&#39;Galerie-Name&#39; bearbeiten</h2>
+
+                <p>Bearbeiten Sie zuerst die Informationen f&uuml;r die ausgew&auml;hlte Galerie:</p>
+
+                <ul>
+                	<li>Aktiviert: Galerie ist aktiv (oder noch inaktiv)</li>
+                	<li>Name: Interner Name der Galerie</li>
+                	<li>Format: Format unter welchem die zu dieser Galerie hochgeladenen Bilder gespeichert werden. Fragen Sie dazu Ihren Webmaster.</li>
+                </ul>
+
+                <h2>Medien</h2>
+
+                <p>Sie sehen alle Galerie Objekte in einer &uuml;bersichtlichen Tabelle</p>
+
+                <p><strong>Medium</strong><br />
+                In der &Uuml;bersicht werden alle vorhandene Bilder werden als Thumbnail angezeigt.</p>
+
+                <p>Liste: Sie k&ouml;nnen aus Ihren Medien bereits hochgeladene Bilder ausw&auml;hlen und das Objekt ersetzen.</p>
+
+                <p>+Neu: Sie k&ouml;nnen von Ihrem PC / Netzwerk gespeicherte Bilder hochladen und das Objekt ersetzen.</p>
+
+                <p>L&ouml;schen: Sie k&ouml;nnen das vorhandene Objekt l&ouml;schen.</p>
+
+                <p><strong>Aktiviert</strong><br />
+                Sie k&ouml;nnen einzelne Objekte der Galerie aktivieren resp. deaktivieren.</p>
+
+                <p><strong>Position</strong><br />
+                Sie k&ouml;nnen per Drag &amp; Drop einzelne Objekte in der Galerie verschieben und so die Reihenfolge (z.B. der Diashow) &auml;ndern.</p>
+
+                <p>Mit dem <strong>&#39;+ Neu&#39; Button</strong> laden Sie neue Bilder zu dieser Galerie auf den Webserver. Jedes Galerie-Element wird in einer Zeile angezeigt.</p>
+
+                <p>&nbsp;</p>
+
+                <p>Klicken Sie nun einen der Buttons:</p>
+
+                <ul>
+                	<li>Aktualisieren</li>
+                	<li>Aktualisieren und zur&uuml;ck zur Liste</li>
+                	<li>L&ouml;schen (l&ouml;scht die komplette Galerie)</li>
+                </ul>
+
+                <p>Mit &#39;Abbrechen&#39; wird die Funktion Galerie bearbeiten r&uuml;ckg&auml;ngig gemacht und die &auml; NICHT gespeichert.</p>
+
+                <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+
+                <p>Weitere n&uuml;tzliche Informationen finden Sie unter Galerie erstellen oder Medien bearbeiten.</p>]]></target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.tag.list.title">
                 <source>networking_init_cms.admin.tag.list.title</source>
@@ -456,6 +810,30 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.tag.list.text">
                 <source>networking_init_cms.admin.tag.list.text</source>
+                <target><![CDATA[<p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
+
+                    <p>Beispiele für Tags: &quot;Urlaub&quot; oder &quot;Porträt-Bilder&quot;. Ein Medienelement kann mit beliebig vielen Tags verknüpft werden.</p>
+                ]]>
+                </target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.tag.create.title">
+                <source>networking_init_cms.admin.tag.create.title</source>
+                <target>Medien-Tag erstellen</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.tag.create.text">
+                <source>networking_init_cms.admin.tag.create.text</source>
+                <target><![CDATA[
+                        <p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
+
+                        <p>Beispiele für Tags: &quot;Urlaub&quot; oder &quot;Porträt-Bilder&quot;. Ein Medienelement kann mit beliebig vielen Tags verknüpft werden.</p>
+                ]]></target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.tag.edit.title">
+                <source>networking_init_cms.admin.tag.edit.title</source>
+                <target>Medien-Tag bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="networking_init_cms.admin.tag.edit.text">
+                <source>networking_init_cms.admin.tag.edit.text</source>
                 <target><![CDATA[
                         <p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
 
@@ -532,6 +910,93 @@
                     <p>Dem Benutzer steht eine Menge zusätzlicher Felder zur Verfügung, wie z.B. Gruppen, Benutzerrollen, Privatinformationen, soziale Medienprofile und einige sicherheitsbezogene Felder. Entscheiden Sie sich einfach für die Felder Ihrer Wahl und lassen Sie die anderen leer.</p>
                  ]]></target>
             </trans-unit>
+            <trans-unit id="sonata.user.admin.user.create.title">
+                <source>sonata.user.admin.user.create.title</source>
+                <target>Create user</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.user.create.text">
+                <source>sonata.user.admin.user.create.text</source>
+                <target><![CDATA[<p>A user is someone saved in the DB with specific permissions to view certain content or carry out specific operations.</p>
+
+                <p>The fields available are:</p>
+
+                <p><strong>General</strong><br />
+                Username: this is the name that will be used to log into the admin interface<br />
+                E-Mail-Address: used for communications with the user<br />
+                Plain password: the field where you can enter the password, once saved the password is encrypted and not shown in the form</p>
+
+                <p><strong>Groups</strong><br />
+                Groups: here you can assign a user to one or more user groups or create a new user group</p>
+
+                <p><strong>Profile</strong><br />
+                Firstname: text field for the users first name (optional)<br />
+                Lastname: text field for the users family name (optional)<br />
+                Locale:  the users language preference, used in the admin interface to display a language if possible, german and english are currently supported completely (optional)</p>
+
+                <p>Management</p>
+
+                <p>Here you can add roles to user, these roles, in combination with those from the user group will set up what permissions the user has in the CMS</p>
+
+                <p>Locked: a locked user can not login into the CMS until the lock is removed<br />
+                Expired: similar to a locked user, a user with expired set can also not login to the CMS<br />
+                Enabled: if set the user can login to the CMS<br />
+                Credentials expired: if set the user will be logged out of the system</p>
+
+                <p>After you have finished configuring your user you can:</p>
+
+                <ul>
+                	<li>Add item and edit it</li>
+                	<li>Add item and return to list</li>
+                	<li>Add item and create another</li>
+                </ul>
+
+                <p>With &#39;Cancel&#39; your changes will not be saved and you will be returned to the user list view.</p>
+
+                ]]></target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.user.edit.title">
+                <source>sonata.user.admin.user.edit.title</source>
+                <target>Edit user</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.user.edit.text">
+                <source>sonata.user.admin.user.edit.text</source>
+                <target><![CDATA[<p>By clicking on the edit button next to a user you can edit the user, including changing their password</p>
+
+                <p>The fields available are:</p>
+
+                <p><strong>General</strong><br />
+                Username: this is the name that will be used to log into the admin interface<br />
+                E-Mail-Address: used for communications with the user<br />
+                Plain password: the field where you can enter the password, once saved the password is encrypted and not shown in the form</p>
+
+                <p><strong>Groups</strong><br />
+                Groups: here you can assign a user to one or more user groups or create a new user group</p>
+
+                <p><strong>Profile</strong><br />
+                Firstname: text field for the users first name (optional)<br />
+                Lastname: text field for the users family name (optional)<br />
+                Locale:  the users language preference, used in the admin interface to display a language if possible, german and english are currently supported completely (optional)</p>
+
+                <p>Management</p>
+
+                <p>Here you can add roles to user, these roles, in combination with those from the user group will set up what permissions the user has in the CMS</p>
+
+                <p>Locked: a locked user can not login into the CMS until the lock is removed<br />
+                Expired: similar to a locked user, a user with expired set can also not login to the CMS<br />
+                Enabled: if set the user can login to the CMS<br />
+                Credentials expired: if set the user will be logged out of the system</p>
+
+                <p>After you have finished configuring your user you can:</p>
+
+                <ul>
+                	<li>Add item and edit it</li>
+                	<li>Add item and return to list</li>
+                	<li>Add item and create another</li>
+                </ul>
+
+                <p>With &#39;Cancel&#39; your changes will not be saved and you will be returned to the user list view.</p>
+                ]]></target>
+            </trans-unit>
             <trans-unit id="sonata.user.admin.group.list.title">
                 <source>sonata.user.admin.group.list.title</source>
                 <target>Gruppen-Übersicht</target>
@@ -565,6 +1030,99 @@
                     <p>Wenn Sie sich nicht darüber im Klaren sind, was die Benutzerrollen tatsächlich bedeuten, wenden Sie sich an Ihren Webmaster. Oder bitten Sie ihn doch gleich darum, die Benutzergruppen einzurichten, die Sie für Ihre Anwendung benötigen.</p>
                  ]]></target>
             </trans-unit>
+            <trans-unit id="sonata.user.admin.group.create.title">
+                <source>sonata.user.admin.group.create.title</source>
+                <target>Create user group</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.group.create.text">
+                <source>sonata.user.admin.group.create.text</source>
+                <target><![CDATA[<p>A user group allows you to assign a group of users the same permissions without having to assign the same permissions to each individual user. In most cases your webmaster will setup the roles a group can use.</p>
+
+                <p><strong>Fields</strong></p>
+
+                <p>Name: The internal reference to a group</p>
+
+                <p>Roles: Per module/object you have the ability to assign a permission they are</p>
+
+                <ul>
+                	<li>ROLE_XYZ_GUEST: a guest that is allowed to VIEW an object and a LIST of objects</li>
+                	<li>ROLE_XYZ_STAFF: probably the biggest part of the users, a staff user has the same permissions as guests and is additionally allowed to EDIT and CREATE new objects;</li>
+                	<li>ROLE_XYZ_EDITOR: an editor is granted all access and, compared to the staff users, is allowed to DELETE; </li>
+                	<li>ROLE_XYZ_ADMIN: an administrative user is granted all access and on top of that, the user is allowed to grant other users access.</li>
+                	<li>ROLE_XYZ_PUBLISHER: as the the same rights as Admin but in the case of the the Pages, can publish pages to be viewed in the frontend</li>
+                </ul>
+
+                <p>Owner:</p>
+
+                <ul>
+                	<li>when an object is created, the currently logged in user is set as owner for that object and is granted all access for that object;</li>
+                	<li>this means the user owning the object is always allowed to DELETE the object, even when it only has the staff role.</li>
+                </ul>
+
+                <p>In order for a user to be able to use the backend you will need to assign the role &#39;ROLE_ADMIN&#39;</p>
+
+                <p>The role &#39;ROLE_ALLOWED_TO_SWITCH&#39; allows the user, if they have access to the user admin area, to impersonate another user to see what they would see.</p>
+
+                <p>Only super admin users can select the role ROLE_SUPER_ADMIN.</p>
+
+                <p>After you have finished configuring your group you can:</p>
+
+                <ul>
+                	<li>Add item and edit it</li>
+                	<li>Add item and return to list</li>
+                	<li>Add item and create another</li>
+                </ul>
+
+                <p>With &#39;Cancel&#39; your changes will not be saved and you will be returned to the group list view.</p>
+                ]]></target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.group.edit.title">
+                <source>sonata.user.admin.group.edit.title</source>
+                <target>Edit user group</target>
+            </trans-unit>
+            <trans-unit id="sonata.user.admin.group.edit.text">
+                <source>sonata.user.admin.group.edit.text</source>
+                <target><![CDATA[<p>By clicking on the &#39;Edit&#39; button in the group list you can edit an existing user group.</p>
+
+                <p>A user group allows you to assign a group of users the same permissions without having to assign the same permissions to each individual user. In most cases your webmaster will setup the roles a group can use.</p>
+
+                <p><strong>Fields</strong></p>
+
+                <p>Name: The internal reference to a group</p>
+
+                <p>Roles: Per module/object you have the ability to assign a permission they are</p>
+
+                <ul>
+                	<li>ROLE_XYZ_GUEST: a guest that is allowed to VIEW an object and a LIST of objects</li>
+                	<li>ROLE_XYZ_STAFF: probably the biggest part of the users, a staff user has the same permissions as guests and is additionally allowed to EDIT and CREATE new objects;</li>
+                	<li>ROLE_XYZ_EDITOR: an editor is granted all access and, compared to the staff users, is allowed to DELETE; </li>
+                	<li>ROLE_XYZ_ADMIN: an administrative user is granted all access and on top of that, the user is allowed to grant other users access.</li>
+                	<li>ROLE_XYZ_PUBLISHER: as the the same rights as Admin but in the case of the the Pages, can publish pages to be viewed in the frontend</li>
+                </ul>
+
+                <p>Owner:</p>
+
+                <ul>
+                	<li>when an object is created, the currently logged in user is set as owner for that object and is granted all access for that object;</li>
+                	<li>this means the user owning the object is always allowed to DELETE the object, even when it only has the staff role.</li>
+                </ul>
+
+                <p>In order for a user to be able to use the backend you will need to assign the role &#39;ROLE_ADMIN&#39;</p>
+
+                <p>The role &#39;ROLE_ALLOWED_TO_SWITCH&#39; allows the user, if they have access to the user admin area, to impersonate another user to see what they would see.</p>
+
+                <p>Only super admin users can select the role ROLE_SUPER_ADMIN.</p>
+
+                <p>After you have finished configuring your group you can:</p>
+
+                <ul>
+                	<li>Add item and edit it</li>
+                	<li>Add item and return to list</li>
+                	<li>Add item and create another</li>
+                </ul>
+
+                <p>With &#39;Cancel&#39; your changes will not be saved and you will be returned to the group list view.</p>]]></target>
+            </trans-unit>
             <!-- default -->
 
             <trans-unit id="not_found.title">
@@ -574,7 +1132,7 @@
             <trans-unit id="not_found.text">
                 <source>not_found.text</source>
                 <target>
-                    <![CDATA[ <strong>We did not found a specific help text. Hopefully you will find some helpful information from the left navigation menu. We are trying to improve the help section and we are sorry for the inconvenience.</strong> ]]></target>
+                    <![CDATA[ <p>Leider ist f&uuml;r diese Funktion kein spezifischer Hilfetext vorhanden. Versuchen Sie im Hilfe Menu (links) einen entsprechenden Hilfetext zu finden. Wir verbessern die Hilfe-Funktion kontinuierlich und entschuldigen uns f&uuml;r die fehlenden Angaben.</p> ]]></target>
             </trans-unit>
             <trans-unit id="help_text.admin_menu_label">
                 <source>help_text.admin_menu_label</source>

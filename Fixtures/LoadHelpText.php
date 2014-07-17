@@ -114,19 +114,51 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
             'is_deletable' => '1'
         ),
         //user
-        'sonata.media.admin.user.list' => array(
-            'title' => 'sonata.media.admin.user.list.title',
-            'text' => 'sonata.media.admin.user.list.text',
+        'sonata.user.admin.user.list' => array(
+            'title' => 'sonata.user.admin.user.list.title',
+            'text' => 'sonata.user.admin.user.list.text',
             'is_deletable' => '1'
         ),
-        'sonata.media.admin.user.create' => array(
-            'title' => 'sonata.media.admin.user.create.title',
-            'text' => 'sonata.media.admin.user.create.text',
+        'sonata.user.admin.user.create' => array(
+            'title' => 'sonata.user.admin.user.create.title',
+            'text' => 'sonata.user.admin.user.create.text',
             'is_deletable' => '1'
         ),
-        'sonata.media.admin.user.edit' => array(
-            'title' => 'sonata.media.admin.user.edit.title',
-            'text' => 'sonata.media.admin.user.edit.text',
+        'sonata.user.admin.user.edit' => array(
+            'title' => 'sonata.user.admin.user.edit.title',
+            'text' => 'sonata.user.admin.user.edit.text',
+            'is_deletable' => '1'
+        ),
+        //groups
+        'sonata.user.admin.group.list' => array(
+            'title' => 'sonata.user.admin.group.list.title',
+            'text' => 'sonata.user.admin.group.list.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.user.admin.group.create' => array(
+            'title' => 'sonata.user.admin.group.create.title',
+            'text' => 'sonata.user.admin.group.create.text',
+            'is_deletable' => '1'
+        ),
+        'sonata.user.admin.group.edit' => array(
+            'title' => 'sonata.user.admin.group.edit.title',
+            'text' => 'sonata.user.admin.group.edit.text',
+            'is_deletable' => '1'
+        ),
+        //media tags
+        'networking_init_cms.admin.tag.list' => array(
+            'title' => 'networking_init_cms.admin.tag.list.title',
+            'text' => 'networking_init_cms.admin.tag.list.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.admin.tag.create' => array(
+            'title' => 'networking_init_cms.admin.tag.create.title',
+            'text' => 'networking_init_cms.admin.tag.create.text',
+            'is_deletable' => '1'
+        ),
+        'networking_init_cms.admin.tag.edit' => array(
+            'title' => 'networking_init_cms.admin.tag.edit.title',
+            'text' => 'networking_init_cms.admin.tag.edit.text',
             'is_deletable' => '1'
         ),
         //not found
