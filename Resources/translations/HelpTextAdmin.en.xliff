@@ -1060,6 +1060,14 @@
                 <source>help_text.label</source>
                 <target>Help Texts</target>
             </trans-unit>
+            <trans-unit id="action._publish">
+                <source>action._publish</source>
+                <target>Publish</target>
+            </trans-unit>
+            <trans-unit id="action._delete">
+                <source>action._delete</source>
+                <target>Delete</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
