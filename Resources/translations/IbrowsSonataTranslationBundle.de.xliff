@@ -58,6 +58,14 @@
                 <source>translation.admin_menu_label</source>
                 <target>Übersetzungen</target>
             </trans-unit>
+            <trans-unit id="action._publish">
+                <source>action._publish</source>
+                <target>Veröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="action._delete">
+                <source>action._delete</source>
+                <target>Löschen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

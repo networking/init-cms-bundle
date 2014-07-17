@@ -409,6 +409,14 @@
                 <source>button.create.gallery_item</source>
                 <target>Add Gallery</target>
             </trans-unit>
+            <trans-unit id="action._publish">
+                <source>action._publish</source>
+                <target>Publish</target>
+            </trans-unit>
+            <trans-unit id="action._delete">
+                <source>action._delete</source>
+                <target>Delete</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

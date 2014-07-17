@@ -194,7 +194,8 @@
                 <source>message.translation_link</source>
                 <target>Here you can create a connection to an existing page in the selected language of %language%.
                     Only pages in %language% which do not already have a translation in the %original_language% are
-                    listed below. Select the page in %language% that you would like to link with "%object%", then click the submit
+                    listed below. Select the page in %language% that you would like to link with "%object%", then click
+                    the submit
                     button.
                 </target>
             </trans-unit>
@@ -414,7 +415,8 @@
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
                 <target>This part of your page is empty. Click on the + icon above to enter your first piece of
-                    content, or drag a content item from one of the other content areas into this one. </target>
+                    content, or drag a content item from one of the other content areas into this one.
+                </target>
             </trans-unit>
             <trans-unit id="legend.create_menu">
                 <source>legend.create_menu</source>
@@ -426,11 +428,15 @@
             </trans-unit>
             <trans-unit id="info.create_menu_item">
                 <source>info.create_menu_item</source>
-                <target>If you choose to continue, you will be directed to the menu manager where an item will be created for you using the page title. All you need to do is position it where you would like.</target>
+                <target>If you choose to continue, you will be directed to the menu manager where an item will be
+                    created for you using the page title. All you need to do is position it where you would like.
+                </target>
             </trans-unit>
             <trans-unit id="info.edit_menu_item">
                 <source>info.edit_menu_item</source>
-                <target>If you choose to continue, you will be directed to the menu manager where you can edit the selected menu item.</target>
+                <target>If you choose to continue, you will be directed to the menu manager where you can edit the
+                    selected menu item.
+                </target>
             </trans-unit>
             <trans-unit id="button.continue">
                 <source>button.continue</source>
@@ -446,9 +452,12 @@
             </trans-unit>
             <trans-unit id="info.page_create">
                 <source>info.page_create</source>
-                <target>Please fill out the important page fields below before we move on to adding content. After the page is created you will
-                be directed to the page edit view. You can always edit these settings in the page edit view, simply look for the edit icon under
-                Settings &amp; SEO.</target>
+                <target>Please fill out the important page fields below before we move on to adding content. After the
+                    page is created you will
+                    be directed to the page edit view. You can always edit these settings in the page edit view, simply
+                    look for the edit icon under
+                    Settings &amp; SEO.
+                </target>
             </trans-unit>
             <trans-unit id="locale.helper.text">
                 <source>locale.helper.text</source>
@@ -505,7 +514,9 @@
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>
                 <target>The are no pages in %language% available to be linked as a translation of this page.
-                    You may either copy this page (click the link "Translate") or create a brand new page in %language% and then link the two pages.</target>
+                    You may either copy this page (click the link "Translate") or create a brand new page in %language%
+                    and then link the two pages.
+                </target>
             </trans-unit>
             <trans-unit id="message.translation_saved">
                 <source>message.translation_saved</source>
@@ -513,15 +524,18 @@
             </trans-unit>
             <trans-unit id="message.translation_not_saved">
                 <source>message.translation_not_saved</source>
-                <target>A copy of the page in %language% could not be created. Check if a page with the URL "%url%" in %language% already exits.</target>
+                <target>A copy of the page in %language% could not be created. Check if a page with the URL "%url%" in
+                    %language% already exits.
+                </target>
             </trans-unit>
             <trans-unit id="title.copy_page">
                 <source>title.copy_page</source>
-                <target>Copy  page "%page_title%" into %language%</target>
+                <target>Copy page "%page_title%" into %language%</target>
             </trans-unit>
             <trans-unit id="info.copy_page">
                 <source>info.copy_page</source>
-                <target>A copy of this pages content and settings will be made in %language%.After the page is created, go to translation and
+                <target>A copy of this pages content and settings will be made in %language%.After the page is created,
+                    go to translation and
                     click on "Edit" in order to edit the content.
                 </target>
             </trans-unit>
@@ -551,7 +565,7 @@
             </trans-unit>
             <trans-unit id="info.last_edited">
                 <source>info.last_edited</source>
-                <target>Last edited at </target>
+                <target>Last edited at</target>
             </trans-unit>
             <trans-unit id="pages.admin_menu_label">
                 <source>pages.admin_menu_label</source>
@@ -568,6 +582,14 @@
             <trans-unit id="templateName">
                 <source>templateName</source>
                 <target>Template Name</target>
+            </trans-unit>
+            <trans-unit id="action._publish">
+                <source>action._publish</source>
+                <target>Publish</target>
+            </trans-unit>
+            <trans-unit id="action._delete">
+                <source>action._delete</source>
+                <target>Delete</target>
             </trans-unit>
         </body>
     </file>

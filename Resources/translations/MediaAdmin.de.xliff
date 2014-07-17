@@ -413,6 +413,14 @@
               <source>form.label_binary_content_youtube:new</source>
               <target>Neuer Youtube-Link</target>
             </trans-unit>
+            <trans-unit id="action._publish">
+                <source>action._publish</source>
+                <target>Veröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="action._delete">
+                <source>action._delete</source>
+                <target>Löschen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
