@@ -68,7 +68,7 @@ abstract class PageAdmin extends BaseAdmin
      */
     public function getIcon()
     {
-        return 'icon-file-alt';
+        return 'glyphicon-file';
     }
 
     protected $formOptions = array(

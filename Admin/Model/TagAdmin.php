@@ -28,7 +28,7 @@ class TagAdmin extends Admin
      */
     public function getIcon()
     {
-        return 'icon-tags';
+        return 'glyphicon-tags';
     }
 
     /**

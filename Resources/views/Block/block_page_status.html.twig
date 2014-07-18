@@ -5,7 +5,7 @@
         <h4>{{ 'title.page_status_count'|trans({}, 'PageAdmin') }}</h4>
 
         <div class="row-fluid">
-            <div class="span6">
+            <div class="col-md-6">
                 <span class="color-draft">{{ 'status_draft'|trans({}, 'PageAdmin') }} </span><span
                     class="badge badge-warning pull-right">{{ draft_pages }}</span>
 
@@ -23,7 +23,7 @@
         <div class="clearfix">&nbsp;</div>
         {% if reviewPages|length > 0 %}
             <div class="row-fluid">
-                <div class="span12">
+                <div class="col-md-12">
                     <h4>{{ 'title.actual_reviews'|trans({}, 'PageAdmin') }}</h4>
                     {% for lang, drafts in reviewPages %}
                         <h5>{{ lang }}</h5>
@@ -41,7 +41,7 @@
         {% endif %}
         {% if draftPages|length > 0 %}
             <div class="row-fluid">
-                <div class="span12">
+                <div class="col-md-12">
                     <h4>{{ 'title.actual_drafts'|trans({}, 'PageAdmin') }}</h4>
                     {% for lang, drafts in draftPages %}
                         <h5>{{ lang }}</h5>

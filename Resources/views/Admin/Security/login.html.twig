@@ -2,44 +2,70 @@
 {% block sidebar_left %}{% endblock %}
 {% block content %}
     <div class="row">
-        <div class="connection modal" style="position: relative; right:50%; left: 50%; top: auto; margin: 10% 0 0 -200px; z-index: 1; width: 400px">
-                <form action="{{ path("sonata_user_admin_security_check") }}" method="post">
-                    <div class="modal-body">
-                        {% if error %}
-                            <div class="alert alert-error">{{ error|trans({}, 'SonataUserBundle') }}</div>
-                        {% endif %}
+        <div id="login" class="connection modal" style="position: relative;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        z-index: 1;
+        display: block;
+        ">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ path("sonata_user_admin_security_check") }}" method="post" role="form"
+                          class="form-horizontal">
+                        <div class="modal-body">
 
-                        <div class="control-group">
-                            <label for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
+                            {% if error %}
+                                <div class="alert alert-error">{{ error|trans({}, 'SonataUserBundle') }}</div>
+                            {% endif %}
 
-                            <div class="controls">
-                                <input type="text" id="username" name="_username" value="{{ last_username }}"
-                                       class="big sonata-medium" autofocus/>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"
+                                       for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" id="username" name="_username" value="{{ last_username }}"
+                                           class="form-control" autofocus/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"
+                                       for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
+
+                                <div class="col-sm-9">
+                                    <input type="password" id="password" name="_password" class="form-control"
+                                           placeholder="Password"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
+                                            {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="control-group">
-                            <label for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
-
-                            <div class="controls">
-                                <input type="password" id="password" name="_password" class="big sonata-medium"/>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <input type="submit" class="btn btn-primary" id="_submit" name="_submit"
+                                           value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}"/>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="control-group">
-                            <label for="remember_me">
-                                <input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
-                                {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="">
-                            <input type="submit" class="btn btn-primary" id="_submit" name="_submit"
-                                   value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}"/>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
             </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
     </div>
+    <script type="application/javascript">
+        $(function () {
+//            $('#login').modal('show')
+        });
+    </script>
 {% endblock content %}

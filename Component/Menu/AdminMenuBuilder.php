@@ -58,7 +58,7 @@ class AdminMenuBuilder extends MenuBuilder
         $defaultHome = $this->router->generate('networking_init_cms_default');
 
         $adminLocale = $request->getSession()->get('admin/_locale');
-        $class = 'nav';
+        $class = 'nav navbar-nav';
         if($request->isXmlHttpRequest()){
             $class = 'initnav';
         }

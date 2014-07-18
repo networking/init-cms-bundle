@@ -32,7 +32,7 @@ abstract class HelpTextAdmin extends BaseAdmin
      */
     public function getIcon()
     {
-        return 'icon-question-sign';
+        return 'glyphicon-question-sign';
     }
 
     /**

@@ -46,7 +46,7 @@ file that was distributed with this source code.
 
 
 {% block sidebar_left %}
-    <div class="span2">
+    <div class="col-md-2">
         <div class="nav-collapse nav-main ">
             {% block top_bar_before_nav %} {% endblock %}
 
@@ -61,7 +61,7 @@ file that was distributed with this source code.
 
 {% block page_title %}
     <div class="row content-head">
-        <div class="span7 page_title">
+        <div class="col-md-7 page_title">
             {% if _title is not empty or action is defined %}
                 <h1>
                     {% if _title is not empty %}
@@ -89,7 +89,7 @@ file that was distributed with this source code.
             {% endif %}
         </div>
 
-        <div class="span3 context-head">
+        <div class="col-md-5 context-head">
             {% block top_actions %}{% endblock %}
             {% if app.security.token and is_granted('ROLE_SONATA_ADMIN') %}
                 {% if _help_text is empty %}
@@ -115,19 +115,19 @@ file that was distributed with this source code.
 {% block sonata_admin_content %}
     <div class="row row-content-wide">
         {% if _preview is not empty %}
-            <div class="sonata-ba-preview span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _preview|raw }}</div>
+            <div class="sonata-ba-preview col-md-{% if _side_menu is empty %}12{% else %}8{% endif %}">{{ _preview|raw }}</div>
         {% endif %}
 
         {% if _content is not empty %}
-            <div class="sonata-ba-content span{% if block('sidebar_left') is empty %}12{% elseif _side_menu is empty %}10{% else %}8{% endif %}">{{ _content|raw }}</div>
+            <div class="sonata-ba-content col-md-{% if block('sidebar_left') is empty %}12{% elseif _side_menu is empty %}12{% else %}8{% endif %}">{{ _content|raw }}</div>
         {% endif %}
 
         {% if _help_text is not empty %}
-            <div class="sonata-ba-content span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _help_text|raw }}</div>
+            <div class="sonata-ba-content col-md-{% if _side_menu is empty %}12{% else %}8{% endif %}">{{ _help_text|raw }}</div>
         {% endif %}
 
         {% if _show is not empty %}
-            <div class="sonata-ba-show span{% if _side_menu is empty %}10{% else %}8{% endif %}">{{ _show|raw }}</div>
+            <div class="sonata-ba-show col-md-{% if _side_menu is empty %}12{% else %}8{% endif %}">{{ _show|raw }}</div>
         {% endif %}
 
         {% if _form is not empty %}
@@ -136,7 +136,7 @@ file that was distributed with this source code.
 
         {% if _list_table is not empty or _list_filters is not empty %}
 
-            <div class="span{% if _side_menu is not empty %}8{% else %}10{% endif %}">
+            <div class="col-md-{% if _side_menu is not empty %}8{% else %}10{% endif %}">
                 {{ _list_filters|raw }}
                 {% if _actions is not empty %}
                     {{ _actions|raw }}
@@ -149,7 +149,7 @@ file that was distributed with this source code.
 
 
         {% if _side_menu is not empty %}
-            <div class="sidebar span2">
+            <div class="sidebar col-md-2">
                 <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
             </div>
         {% endif %}

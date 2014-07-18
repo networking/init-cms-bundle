@@ -76,7 +76,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
      */
     public function getIcon()
     {
-        return 'icon-group';
+        return 'glyphicon-group';
     }
 
     /**

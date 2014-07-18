@@ -54,7 +54,7 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     public function getIcon()
     {
-        return 'icon-align-left';
+        return 'glyphicon-align-left';
     }
 
 

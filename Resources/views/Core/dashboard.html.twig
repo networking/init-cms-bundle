@@ -16,7 +16,7 @@ file that was distributed with this source code.
 {% block breadcrumb %}{% endblock %}
 {% block content %}
     <div class="row">
-        <div class="span10">
+        <div class="col-md-12">
             {% for block in blocks %}
                 {% if block.position == 'top' %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
@@ -25,14 +25,14 @@ file that was distributed with this source code.
         </div>
     </div>
     <div class="row">
-        <div class="span5">
+        <div class="col-md-6">
             {% for block in blocks %}
                 {% if block.position == 'left' %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="span5">
+        <div class="col-md-6">
             {% for block in blocks %}
                 {% if block.position == 'right' %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}

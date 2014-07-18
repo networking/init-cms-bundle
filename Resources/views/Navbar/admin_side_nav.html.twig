@@ -19,7 +19,7 @@
                                 <div class="active-corner-top"></div>
                             </div>
                         {% endif %}
-                        <div class="pull-left menu_icon"><i class="icon icon-dashboard icon-large"></i>
+                        <div class="pull-left menu_icon"><i class="glyphicon glyphicon-dashboard icon-large"></i>
                         </div>
                         <div class="pull-left first-level-text">{{ 'admin.menu.dashboard'|trans({}, 'PageAdmin') }}</div>
                         <div class="clearfix"></div>
@@ -44,9 +44,9 @@
 
                                 <div class="pull-left menu_icon">
                                     {% if admin.getIcon() is defined %}
-                                        <i class="icon {{ admin.getIcon() }} icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        <i class="glyphicon  {{ admin.getIcon() }} glyphicon-{% if small %}medium{% else %}large{% endif %}"></i>
                                     {% else %}
-                                        <i class="icon icon-circle-blank icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        <i class="glyphicon glyphicon-unchecked icon-{% if small %}medium{% else %}large{% endif %}"></i>
                                     {% endif %}
                                 </div>
                                 <a href="{{ admin.generateUrl('list') }}">
@@ -81,9 +81,9 @@
 
                                 <div class="pull-left menu_icon">
                                     {% if admin.getIcon() is defined %}
-                                        <i class="icon {{ admin.getIcon() }} icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        <i class="glyphicon {{ admin.getIcon() }} icon-{% if small %}medium{% else %}large{% endif %}"></i>
                                     {% else %}
-                                        <i class="icon icon-circle-blank icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        <i class="glyphicon glyphicon-unchecked icon-{% if small %}medium{% else %}large{% endif %}"></i>
                                     {% endif %}
                                 </div>
                                 <a href="{{ admin.generateUrl('list') }}" class="pull-left first-level-text">
