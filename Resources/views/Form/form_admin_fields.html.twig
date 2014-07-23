@@ -504,9 +504,7 @@ file that was distributed with this source code.
                     </span>
                 {% endif %}
             </span>
-            <span style="display: none">
                 {{ form_widget(form) }}
-            </span>
 
             <span id="field_actions_{{ id }}" class="field-actions">
                 <a href="{{ admin.generateUrl('list', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"

@@ -12,7 +12,7 @@ namespace Networking\InitCmsBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Admin\Pool;
-use Sonata\AdminBundle\Form\DataTransformer\ModelToIdTransformer;
+use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
 use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityChoiceList;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\ORMQueryBuilderLoader;
@@ -73,7 +73,9 @@ class MediaEntityType extends ModelHiddenType
             $options['model_manager'] = $admin->getModelManager();
         }
 
-        parent::buildForm($builder, $options);
+        $builder
+                    ->addViewTransformer(new ModelToIdTransformer($options['model_manager'], $options['class']), true)
+                ;
     }
 
     /**
@@ -111,7 +113,7 @@ class MediaEntityType extends ModelHiddenType
                 'provider_name' => false,
                 'context' => false,
                 'admin_code' => 'sonata.media.admin.media',
-                'error_bubbling' => false,
+                'error_bubbling' => false
 
             )
         );
@@ -120,6 +122,14 @@ class MediaEntityType extends ModelHiddenType
 
 
         $resolver->addAllowedValues(array('required' => array(false)));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getParent()
+    {
+        return 'hidden';
     }
 
 
