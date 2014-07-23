@@ -23,7 +23,7 @@ file that was distributed with this source code.
 <hr/>
 {% if object.isPublished %}
     <a href="{{ admin.generateUrl('draft', {id: object.id}) }}"
-       class="btn btn-sm {% if object.isDraft() %}disabled{% endif %}"
+       class="btn btn-warning btn-sm {% if object.isDraft() %}disabled{% endif %}"
        {% if object.isDraft() %}onclick="return false"{% endif %}>
         {{ 'button.draft'|trans({}, admin.translationDomain) }}
     </a>

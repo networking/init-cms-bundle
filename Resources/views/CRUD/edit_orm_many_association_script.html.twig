@@ -78,8 +78,8 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
 
     // capture the submit event to make an ajax call, ie : POST data to the
     // related create admin
-    jQuery('a', field_dialog_{{ id }}).live('click', field_dialog_form_list_link_{{ id }});
-    jQuery('form', field_dialog_{{ id }}).live('submit', function (event) {
+    jQuery('a', field_dialog_{{ id }}).on('click', field_dialog_form_list_link_{{ id }});
+    jQuery('form', field_dialog_{{ id }}).on('submit', function (event) {
         event.preventDefault();
 
         var form = jQuery(this);
@@ -131,8 +131,8 @@ var field_dialog_form_list_{{ id }} = function (event) {
 
             // capture the submit event to make an ajax call, ie : POST data to the
             // related create admin
-            jQuery('a', field_dialog_{{ id }}).live('click', field_dialog_form_list_link_{{ id }});
-            jQuery('form', field_dialog_{{ id }}).live('submit', function (event) {
+            jQuery('a', field_dialog_{{ id }}).on('click', field_dialog_form_list_link_{{ id }});
+            jQuery('form', field_dialog_{{ id }}).on('submit', function (event) {
                 event.preventDefault();
 
                 var form = jQuery(this);
@@ -155,8 +155,8 @@ var field_dialog_form_list_{{ id }} = function (event) {
                 Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
 
                 // make sure we have a clean state
-                jQuery('a', field_dialog_{{ id }}).die('click');
-                jQuery('form', field_dialog_{{ id }}).die('submit');
+                jQuery('a', field_dialog_{{ id }}).off('click');
+                jQuery('form', field_dialog_{{ id }}).off('submit');
                 }
             });
         }
@@ -188,8 +188,8 @@ var field_dialog_form_add_{{ id }} = function (event) {
 
             // capture the submit event to make an ajax call, ie : POST data to the
             // related create admin
-            jQuery('a', field_dialog_{{ id }}).live('click', field_dialog_form_action_{{ id }});
-            jQuery('form', field_dialog_{{ id }}).live('submit', field_dialog_form_action_{{ id }});
+            jQuery('a', field_dialog_{{ id }}).on('click', field_dialog_form_action_{{ id }});
+            jQuery('form', field_dialog_{{ id }}).on('submit', field_dialog_form_action_{{ id }});
 
             // open the dialog in modal mode
             field_dialog_{{ id }}.modal('show');
@@ -199,8 +199,8 @@ var field_dialog_form_add_{{ id }} = function (event) {
                 if (!jQuery(e.target).hasClass('collapse')) {
                     Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
                     // make sure we have a clean state
-                    jQuery('a', field_dialog_{{ id }}).die('click');
-                    jQuery('form', field_dialog_{{ id }}).die('submit');
+                    jQuery('a', field_dialog_{{ id }}).off('click');
+                    jQuery('form', field_dialog_{{ id }}).off('submit');
                 }
             });
         }
@@ -416,7 +416,7 @@ function field_remove_element_{{ id }}(event) {
 #}
 
 // update the label
-jQuery('#{{ id }}').live('change', function (event) {
+jQuery('#{{ id }}').on('change', function (event) {
 
     Admin.log('[{{ id }}] update the label');
 

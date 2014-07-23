@@ -375,9 +375,8 @@ class PageAdminController extends CRUDController
                     // set the theme for the current Admin Form
                     $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
 
-
                     $pageSettingsTemplate = $this->render(
-                        $this->admin->getTemplate($templateKey),
+                        'NetworkingInitCmsBundle:PageAdmin:ajax_page_settings.html.twig',
                         array(
                             'action' => 'edit',
                             'form' => $view,

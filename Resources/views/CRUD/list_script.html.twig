@@ -11,7 +11,7 @@
                 jQuery('input[type=submit]', this).off();
             });
             jQuery(document.body).append(listDialog);
-            //jQuery('form', listDialog).live('submit', submitAjaxForm);
+            //jQuery('form', listDialog).on('submit', submitAjaxForm);
         }
     }
 
@@ -121,11 +121,11 @@
         var ua = navigator.userAgent,
                 event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
-        $(".actions-toggle").live(event, function () {
+        $(".actions-toggle").on(event, function () {
             $('.row-actions').hide();
             $(this).parent().children('.row-actions').fadeToggle('fast');
         });
-        $(".actions-toggle-close").live(event, function () {
+        $(".actions-toggle-close").on(event, function () {
             $(this).parent().fadeToggle('fast');
         });
         $('#hidden_filters').on('show hide', function () {
@@ -133,8 +133,8 @@
             $('#filter_toggle').toggleClass('filter-open');
         });
         $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
-        $('.dialog-link').live('click', createAjaxDialog);
-        $('.batch-dialog-link').live('click', createBatchDialog);
+        $('.dialog-link').on('click', createAjaxDialog);
+        $('.batch-dialog-link').on('click', createBatchDialog);
         initializeDialog();
 
 

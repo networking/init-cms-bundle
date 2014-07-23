@@ -38,7 +38,7 @@ function initializeDialog() {
             jQuery('input[type=submit]', this).off();
         });
         jQuery(document.body).append(menuDialog);
-        jQuery('form', menuDialog).live('submit', submitAjaxForm);
+        jQuery('form', menuDialog).on('submit', submitAjaxForm);
     }
 }
 
@@ -152,7 +152,7 @@ jQuery(function () {
     var ua = navigator.userAgent,
             event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
-    jQuery('.menu-dialog-link').live('click', createAjaxDialog);
+    jQuery('.menu-dialog-link').on('click', createAjaxDialog);
 
     var nestedExtensions = {
         toArray: function (options) {

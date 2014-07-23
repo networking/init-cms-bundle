@@ -304,23 +304,19 @@ abstract class PageAdmin extends BaseAdmin
             ->add('activeFrom',
                 'datetime',
                 array(
-                    'attr' => array('class' => 'form-inline'),
+                    'widget_form_group_attr' => array('class' => 'form-group form-inline'),
                     'required' => false,
-                    'date_widget' => 'single_text',
-                    'datepicker' => true,
-                    'time_widget' => 'single_text',
-                    'timepicker' => true,
+                    'widget' => 'single_text',
+                    'datetimepicker' => true,
                 )
             )
             ->add('activeTo',
                 'datetime',
                 array(
-                    'attr' => array('class' => 'form-inline'),
+                    'widget_form_group_attr' => array('class' => 'form-group form-inline'),
                     'required' => false,
-                    'date_widget' => 'single_text',
-                    'datepicker' => true,
-                    'time_widget' => 'single_text',
-                    'timepicker' => true,
+                    'widget' => 'single_text',
+                    'datetimepicker' => true,
                 ))
             ->add(
                 'templateName',

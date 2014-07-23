@@ -37,25 +37,27 @@ file that was distributed with this source code.
             data:{ _xml_http_request:true },
             success:function (xhr) {
                 btn.button('reset');
+                var pageStatus = jQuery('.page_status');
                 if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
-                    jQuery('.page_status').addClass('color-draft');
+                    pageStatus.addClass('color-draft');
                 } else {
-                    jQuery('.page_status').removeClass('color-draft');
+                    pageStatus.removeClass('color-draft');
                 }
-                var pageSettings = jQuery(xhr.pageSettings).filter('#pageSettings').html();
-                var pageStatus = jQuery(xhr.pageSettings).filter('#pageStatusSettings').html();
+                var elements = $($.parseHTML(xhr.pageSettings));
+                var pageSettings = $(elements).filter('#pageSettings').html();
+                var pageStatusHtml = $(elements).filter('#pageStatusSettings').html();
 
-                jQuery('.page_status').html(xhr.pageStatus);
-                jQuery('.page_title h1').html(xhr.title);
-                jQuery('#pageSettings').html(pageSettings);
-                jQuery('#pageStatusSettings').html(pageStatus);
+                pageStatus.html(xhr.pageStatus);
+                $('.page_title h1').html(xhr.title);
+                $('#pageSettings').html(pageSettings);
+                $('#pageStatusSettings').html(pageStatusHtml);
                 $('#pageSettingFields').modal('hide');
 
                 submitLayoutUpdate(form, {});
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             },
             error:function (xhr, textStatus, errorThrown) {
-                var formHtml = jQuery(xhr.responseText).filter('#pageSettingsFieldsModal').html();
+                var formHtml = $($.parseHTML(xhr.responseText)).filter('#pageSettingsFieldsModal').html();
                 $('#pageSettingsFieldsModal').html(formHtml);
             }
         });
@@ -65,8 +67,9 @@ file that was distributed with this source code.
         event.preventDefault();
         event.stopPropagation();
 
-        $('#confirmMenuCreation').modal('show');
-        var confirm = $('#confirmMenuCreation').find('#btn_create_menu');
+        var confirmCreation = $('#confirmMenuCreation');
+        confirmCreation.modal('show');
+        var confirm = confirmCreation.find('#btn_create_menu');
         var url = ui.href;
         $('#show_now_confirm_dialog').attr('checked', false);
 
@@ -83,7 +86,7 @@ file that was distributed with this source code.
 
     (function ($) {
 
-        $("#{{ admin.uniqid }}_locale").live('change', function () {
+        $("#{{ admin.uniqid }}_locale").on('change', function () {
             var locale = $(this).val();
             $.getJSON(
                     '{{ admin.generateUrl('parentPageList') }}',
@@ -101,7 +104,7 @@ file that was distributed with this source code.
             )
         });
 
-        $("#{{ admin.uniqid }}_parent").live("change", function (e) {
+        $("#{{ admin.uniqid }}_parent").on("change", function (e) {
             var path = $('#{{ admin.uniqid }}_url').val();
             var pageId = e.val
             if (pageId == '') {
@@ -114,7 +117,7 @@ file that was distributed with this source code.
                         '{{ admin.generateUrl('getPath') }}',
                         {'page_id':pageId, 'path':path},
                         function (xhr) {
-                            $('#help_{{ admin.uniqid }}_url').html(xhr.path);
+                            $('#sonata-ba-field-container-{{ admin.uniqid }}_url label > .help-block').html(xhr.path);
                         }
                 );
             }
@@ -122,7 +125,7 @@ file that was distributed with this source code.
         });
 
 
-        $('#{{ admin.uniqid }}_url').live('change', function () {
+        $('#{{ admin.uniqid }}_url').on('change', function () {
                  $("#{{ admin.uniqid }}_parent").trigger('change');
              });
 
@@ -130,13 +133,13 @@ file that was distributed with this source code.
 
         {% if not app.user.getAdminSetting('menuAdmin.show_now_confirm_dialog') %}
 
-        $('.menu_add_link').live('click', function (event) {
+        $('.menu_add_link').on('click', function (event) {
             $('#menu_info_text').html('{{ 'info.create_menu_item'|trans({}, admin.translationDomain)|replace("\n", ' ') }}');
             $('#confirmMenuCreation .modal-header h4').html(this.title);
             openMenuDialog(event, this);
         });
 
-        $('.menu_edit_link').live('click', function (event) {
+        $('.menu_edit_link').on('click', function (event) {
             $('#menu_info_text').html('{{ 'info.edit_menu_item'|trans({}, admin.translationDomain)|replace("\n", ' ') }}');
             $('#confirmMenuCreation .modal-header h4').html('{{ 'legend.edit_menu'|trans({}, admin.translationDomain)|replace("\n", ' ') }}');
             openMenuDialog(event, this);
@@ -144,7 +147,7 @@ file that was distributed with this source code.
         });
         {% endif %}
 
-        $('#review_status').live('click', function () {
+        $('#review_status').on('click', function () {
             if ($(this).attr('checked')) {
                 window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
             } else {

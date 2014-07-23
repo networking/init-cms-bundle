@@ -24,7 +24,7 @@ file that was distributed with this source code.
                 jQuery('input[type=submit]', this).off();
             });
             jQuery(document.body).append(translationDialog);
-            jQuery('form', translationDialog).live('submit', submitTranslationAjaxForm);
+            jQuery('form', translationDialog).on('submit', submitTranslationAjaxForm);
         }
     }
 
@@ -77,7 +77,7 @@ file that was distributed with this source code.
     }
 
     (function ($) {
-        $('.translation-dialog-link').live('click', createTranslationAjaxDialog);
+        $('.translation-dialog-link').on('click', createTranslationAjaxDialog);
 
     })(jQuery);
 </script>

@@ -35,7 +35,7 @@ file that was distributed with this source code.
                         <input type="hidden" name="locale" value="{{ locale }}"/>
                         <input type=hidden name="page_id" value="{{ id }}"/>
                         {% if app.request.isxmlhttprequest %}
-                            <button class="btn" data-dismiss="modal"
+                            <button class="btn btn-default " data-dismiss="modal"
                                     aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
 
                             <input type="submit" class="btn btn-primary"

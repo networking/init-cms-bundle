@@ -41,38 +41,6 @@ function trim(str) {
         $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
     });
 
-    $('[data-provider="datepicker"]').datetimepicker({
-        autoclose: true,
-        format: 'dd.mm.yyyy',
-        language: '{{ app.request.getLocale()|slice(0, 2) }}',
-        minView: 'month',
-        todayBtn: true,
-        startView: 'month'
-    }).on('show', function () {
-        setTimeout(function () {
-            $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
-        }, 0.1)
-    });
-
-    $('[data-provider="datetimepicker"]').datetimepicker({
-        autoclose: true,
-        format: 'dd.mm.yyyy hh:ii',
-        language: '{{ app.request.getLocale()|slice(0, 2) }}',
-        todayBtn: true
-    });
-
-    $('[data-provider="timepicker"]').datetimepicker({
-        autoclose: true,
-        format: 'hh:ii',
-        formatViewType: 'time',
-        maxView: 'day',
-        minView: 'hour',
-        startView: 'day'
-    }).on('show', function () {
-        setTimeout(function () {
-            $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
-        }, 0.1)
-    });
 
     // Restore value from hidden input
     $('input[type=hidden]', '.date').each(function () {

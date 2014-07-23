@@ -48,7 +48,7 @@ file that was distributed with this source code.
                           action="{{ admin.generateUrl('unlink', {id: page.id, translationId: translationId}) }}">
                         <input type="hidden" value="DELETE" name="_method"/>
                         {% if app.request.isxmlhttprequest %}
-                            <button class="btn" data-dismiss="modal"
+                            <button class="btn btn-default " data-dismiss="modal"
                                     aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                             <input type="submit" class="btn btn-danger"
                                    value="{{ 'link.unlink'|trans({}, admin.translationDomain) }}"/>

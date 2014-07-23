@@ -45,11 +45,5 @@ file that was distributed with this source code.
 {% use 'NetworkingInitCmsBundle:CRUD:base_edit_form.html.twig' with form as parentForm %}
 
 {% block form %}
-    {% if app.request.isxmlhttprequest %}
-        {{ block('parentForm') }}
-    {% else %}
-        <div class="col-md-{% if _side_menu is empty %}10{% else %}8{% endif %}">
-            {{ block('parentForm') }}
-        </div>
-    {% endif %}
+    {{ block('parentForm') }}
 {% endblock %}

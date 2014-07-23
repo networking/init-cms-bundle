@@ -30,7 +30,7 @@ function addLayoutBlock(addLink) {
     jQuery('#contentTypeModal').modal('show');
 
     jQuery('#contentTypeModal').bind('initcms.create_block', function (event) {
-        jQuery('button', '#contentTypeModal').die('click');
+        jQuery('button', '#contentTypeModal').off('click');
         jQuery('#contentTypeModal').unbind('initcms.create_block');
         if (jQuery(this).data('create')) {
             jQuery('#contentLoading').show();

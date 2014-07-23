@@ -76,7 +76,7 @@ file that was distributed with this source code.
 
                             {% for field_name in form_group.fields %}
                                 {% if admin.formfielddescriptions[field_name] is defined %}
-                                    {{ form_row(form[field_name]) }}
+                                    {{ form_row(form[field_name], {'horizontal': (app.request.isXmlHttpRequest ? 'true': form[field_name].vars.horizontal)}) }}
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -84,7 +84,7 @@ file that was distributed with this source code.
                 {% endfor %}
 
                 {% block sonata_post_fieldsets %}{% endblock %}
-                {{ form_rest(form) }}
+                {{ form_rest(form, {'horizontal': (app.request.isXmlHttpRequest ? 'true': form.vars.horizontal)}) }}
 
             </div>
 

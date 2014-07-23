@@ -123,7 +123,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             window.prettyPrint && prettyPrint();
-            jQuery('#sendUserButton').live('click', function () {
+            jQuery('#sendUserButton').on('click', function () {
                 var width = 1;
                 jQuery('#showProgress').modal('show');
                 setInterval(function () {

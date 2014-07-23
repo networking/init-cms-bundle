@@ -14,11 +14,11 @@
                        value="{{ 'btn_create'|trans({}, 'NetworkingInitCmsBundle') }}"/>
             {% endif %}
         {% else %}
-            <a class="btn"
+            <a class="btn btn-default "
                href="{{ admin.generateObjectUrl('list', object) }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                <input class="btn btn-primary" type="submit" name="btn_create_and_list"
+                <input class="btn btn-default btn-primary" type="submit" name="btn_create_and_list"
                        value="{{ 'btn_create_and_return_to_list'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                <input class="btn" type="submit" name="btn_create_and_create"
+                <input class="btn btn-default " type="submit" name="btn_create_and_create"
                        value="{{ 'btn_create_and_create_a_new_one'|trans({}, 'NetworkingInitCmsBundle') }}"/>
         {% endif %}
     </div>

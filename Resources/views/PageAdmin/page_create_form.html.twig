@@ -4,7 +4,7 @@
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        <div class="col-md-10">
+        <div class="col-md-12">
             <p>{{ 'info.page_create'|trans({}, 'PageAdmin') }}</p>
             <form class="form-vertical"
                   action="{{ admin.generateUrl('create', {'id': admin.id(object), 'uniqid': admin.uniqid, 'locale': app.request.get('locale'), 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
@@ -38,7 +38,7 @@
                             {% endif %}
                         </legend>
 
-                    <div class="sonata-ba-collapsed-fields collapse" id="nav-collapse-meta">
+                    <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}" id="nav-collapse-meta">
 
                         {% for field_name in form_group.fields %}
                             {% if admin.formfielddescriptions[field_name] is defined %}
