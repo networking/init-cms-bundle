@@ -14,37 +14,45 @@ file that was distributed with this source code.
 
 {% block content %}
     <div class="sonata-ba-delete">
+
         {% if app.request.isxmlhttprequest %}
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>{{ 'title.copy_page'|trans({'%page_title%':page, '%language%':language}, admin.translationDomain) }}</h3>
-            </div>
-        {% else %}
-            <h1>{{ 'title.copy_page'|trans({}, admin.translationDomain) }}</h1>
-        {% endif %}
-
-        <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
-            {{ 'info.copy_page'|trans({ '%language%': language }, admin.translationDomain) }}
-        </div>
-        <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
-            <form method="POST" action="{{ admin.generateUrl('translatePage', {id: page.id, locale: locale}) }}">
-                <input type="hidden" name="locale" value="{{ locale }}" />
-                <input type=hidden name="page_id" value="{{ id }}" />
-                {% if app.request.isxmlhttprequest %}
-                    <button class="btn" data-dismiss="modal"
-                            aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
-
-                    <input type="submit" class="btn btn-primary"
-                           value="{{ 'button.copy_page'|trans({}, admin.translationDomain) }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>{{ 'title.copy_page'|trans({'%page_title%':page, '%language%':language}, admin.translationDomain) }}</h4>
+                </div>
                 {% else %}
-                    <input type="submit" class="btn btn-primary"
-                           value="{{ 'button.copy_page'|trans({}, admin.translationDomain) }}"/>
-
-                    <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">
-                                            {{ 'button.cancel'|trans({}, admin.translationDomain) }}
-                                        </a>
+                    <h1>{{ 'title.copy_page'|trans({}, admin.translationDomain) }}</h1>
                 {% endif %}
-            </form>
+
+                <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
+                    {{ 'info.copy_page'|trans({ '%language%': language }, admin.translationDomain) }}
+                </div>
+                <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
+                    <form method="POST"
+                          action="{{ admin.generateUrl('translatePage', {id: page.id, locale: locale}) }}">
+                        <input type="hidden" name="locale" value="{{ locale }}"/>
+                        <input type=hidden name="page_id" value="{{ id }}"/>
+                        {% if app.request.isxmlhttprequest %}
+                            <button class="btn" data-dismiss="modal"
+                                    aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+
+                            <input type="submit" class="btn btn-primary"
+                                   value="{{ 'button.copy_page'|trans({}, admin.translationDomain) }}"/>
+                        {% else %}
+                            <input type="submit" class="btn btn-primary"
+                                   value="{{ 'button.copy_page'|trans({}, admin.translationDomain) }}"/>
+
+                            <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">
+                                {{ 'button.cancel'|trans({}, admin.translationDomain) }}
+                            </a>
+                        {% endif %}
+                    </form>
+                </div>
+        {% if app.request.isxmlhttprequest %}
+            </div>
         </div>
+        {% endif %}
     </div>
 {% endblock %}

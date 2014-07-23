@@ -202,7 +202,7 @@ abstract class PageAdmin extends BaseAdmin
                     array(
                         'choices' => $this->getLocaleChoices(),
                         'preferred_choices' => array($this->pageLocale),
-                        'help_inline' => 'locale.helper.text'
+                        'help_block' => 'locale.helper.text'
                     )
                 );
 
@@ -211,7 +211,7 @@ abstract class PageAdmin extends BaseAdmin
         $formMapper->add(
             'pageName',
             null,
-            array('help_inline' => 'page_name.helper.text')
+            array('help_block' => 'page_name.helper.text')
         );
 
         if (!$this->canCreateHomepage) {
@@ -222,7 +222,7 @@ abstract class PageAdmin extends BaseAdmin
                         'parent',
                         'networking_type_autocomplete',
                         array(
-                            'help_inline' => 'parent.helper.text',
+                            'help_block' => 'parent.helper.text',
                             'attr' => array('style' => "width:220px"),
                             'property' => 'AdminTitle',
                             'class' => $this->getClass(),
@@ -243,7 +243,7 @@ abstract class PageAdmin extends BaseAdmin
                         'alias',
                         'networking_type_autocomplete',
                         array(
-                            'help_inline' => 'alias.helper.text',
+                            'help_block' => 'alias.helper.text',
                             'attr' => array('style' => "width:220px"),
                             'property' => 'AdminTitle',
                             'class' => $this->getClass(),
@@ -272,7 +272,7 @@ abstract class PageAdmin extends BaseAdmin
                         'required' => $requireUrl,
                         'read_only' => $this->getSubject()->isHome(),
                         'help_label' => $this->getSubject()->getFullPath(),
-                        'help_inline' => 'url.helper.text'
+                        'help_block' => 'url.helper.text'
                     ),
                     array('display_method' => 'getFullPath')
                 );
@@ -284,7 +284,7 @@ abstract class PageAdmin extends BaseAdmin
                     array(
                         'required' => $requireUrl,
                         'help_label' => '/',
-                        'help_inline' => 'url.helper.text'
+                        'help_block' => 'url.helper.text'
                     ),
                     array('display_method' => 'getFullPath')
                 );
@@ -296,18 +296,38 @@ abstract class PageAdmin extends BaseAdmin
                 'visibility',
                 'sonata_type_translatable_choice',
                 array(
-                    'help_inline' => 'visibility.helper.text',
+                    'help_block' => 'visibility.helper.text',
                     'choices' => $subject::getVisibilityList(),
                     'catalogue' => $this->translationDomain
                 )
             )
-            ->add('activeFrom', null, array('required' => false, 'date_widget' => 'single_text', 'date_format' => 'dd.MM.yyyy', 'datepicker' => true))
-            ->add('activeTo', null, array('required' => false, 'date_widget' => 'single_text', 'date_format' => 'dd.MM.yyyy', 'datepicker' => true))
+            ->add('activeFrom',
+                'datetime',
+                array(
+                    'attr' => array('class' => 'form-inline'),
+                    'required' => false,
+                    'date_widget' => 'single_text',
+                    'datepicker' => true,
+                    'time_widget' => 'single_text',
+                    'timepicker' => true,
+                )
+            )
+            ->add('activeTo',
+                'datetime',
+                array(
+                    'attr' => array('class' => 'form-inline'),
+                    'required' => false,
+                    'date_widget' => 'single_text',
+                    'datepicker' => true,
+                    'time_widget' => 'single_text',
+                    'timepicker' => true,
+                ))
             ->add(
                 'templateName',
                 'networking_type_iconradio',
                 array(
                     'label' => 'form.label_template',
+                    'horizontal_input_wrapper_class' => 'col-md-12',
                     'expanded' => true,
                     'choices' => $this->getPageTemplates(),
                     'data' => $this->getDefaultTemplate()
@@ -317,7 +337,7 @@ abstract class PageAdmin extends BaseAdmin
         // end of group: page_settings
         $formMapper
             ->with('meta_settings')
-            ->add('metaTitle', null, array('help_inline' => 'meta_title.helper.text'))
+            ->add('metaTitle', null, array('help_block' => 'meta_title.helper.text'))
             ->add('metaKeyword')
             ->add('metaDescription')
             ->end();

@@ -17,15 +17,6 @@ function trim(str) {
 
 (function ($) {
 
-    $('.modal').live('show', function(){
-        var height = $(this).height();
-        var windowHeight = $(window).height();
-        if(windowHeight - 100 < height){
-            height = windowHeight /2;
-            $('.modal-body', this).css('max-height', height+'px');
-        }
-    });
-
     var noticeBlock = $('.notice-block');
 
     noticeBlock.on('DOMNodeInserted', function () {
@@ -37,15 +28,68 @@ function trim(str) {
             $(e).fadeIn().delay('3000').fadeOut(500);
         }
     });
+
+    // Restore value from hidden input
+    $('input[type=hidden]', '.date').each(function () {
+        if ($(this).val()) {
+            $(this).parent().datetimepicker('setValue');
+        }
+    });
+
+    $('.modal').on('show.bs.modal', function () {
+        $('.modal .modal-body').css('overflow-y', 'auto');
+        $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
+    });
+
+    $('[data-provider="datepicker"]').datetimepicker({
+        autoclose: true,
+        format: 'dd.mm.yyyy',
+        language: '{{ app.request.getLocale()|slice(0, 2) }}',
+        minView: 'month',
+        todayBtn: true,
+        startView: 'month'
+    }).on('show', function () {
+        setTimeout(function () {
+            $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
+        }, 0.1)
+    });
+
+    $('[data-provider="datetimepicker"]').datetimepicker({
+        autoclose: true,
+        format: 'dd.mm.yyyy hh:ii',
+        language: '{{ app.request.getLocale()|slice(0, 2) }}',
+        todayBtn: true
+    });
+
+    $('[data-provider="timepicker"]').datetimepicker({
+        autoclose: true,
+        format: 'hh:ii',
+        formatViewType: 'time',
+        maxView: 'day',
+        minView: 'hour',
+        startView: 'day'
+    }).on('show', function () {
+        setTimeout(function () {
+            $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
+        }, 0.1)
+    });
+
+    // Restore value from hidden input
+    $('input[type=hidden]', '.date').each(function () {
+        if ($(this).val()) {
+            $(this).parent().datetimepicker('setValue');
+        }
+    });
+
 })(jQuery);
 
-$.fn.modal.Constructor.prototype.enforceFocus = function() {
-  modal_this = this
-  $(document).on('focusin.modal', function (e) {
-    if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length
-    // add whatever conditions you need here:
-    && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
-      modal_this.$element.focus()
-    }
-  })
+$.fn.modal.Constructor.prototype.enforceFocus = function () {
+    modal_this = this
+    $(document).on('focusin.modal', function (e) {
+        if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length
+            // add whatever conditions you need here:
+            && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
+            modal_this.$element.focus()
+        }
+    })
 };

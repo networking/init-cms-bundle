@@ -188,11 +188,11 @@ file that was distributed with this source code.
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
                     {{ filter_main }}
-                    <div class="control-group">
+                    <div class="form-group">
                         <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                               class="control-label filter">{{ admin.trans(filter.label) }}</label>
+                               class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
 
-                        <div>
+                        <div class="form-inline col-md-9">
                             {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
                             ) }}
                             {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
@@ -205,10 +205,10 @@ file that was distributed with this source code.
                     {% endif %}
                     {% set filter_hidden %}
                     {{ filter_hidden }}
-                    <div class="control-group">
-                        <label class="control-label filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
 
-                        <div>
+                        <div class="form-inline col-md-9">
                             {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
                             ) }}
                             {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
@@ -221,12 +221,12 @@ file that was distributed with this source code.
             {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
             {% set label = admin.label|trans({}, admin.translationDomain) %}
             <div>
-                <div class="pull-left ">
+                <div >
                     <fieldset class="filter_legend">
                         <p class="info-soft" >{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
 
                         <div class="filter_container row">
-                            <div class="span10">
+                            <div class="col-md-12">
                                 {{ filter_main }}
                                 <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
                                 {% set foo = form.children['_page'].setRendered() %}
@@ -241,7 +241,7 @@ file that was distributed with this source code.
                                     {% set foo = form.children['_page'].setRendered() %}
                                 </div>
                                 <div>
-                                    <input type="submit" class="btn btn-small"
+                                    <input type="submit" class="btn  btn-default btn-sm"
                                                                            value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
                                                                     <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}" class="link-underlined">
                                                                         {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
@@ -283,16 +283,16 @@ file that was distributed with this source code.
                 {% if csrf_token is defined %}
                     <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}" />
                 {% endif %}
-                <select name="action">
-                    {% for action, options in batchactions %}
-                        <option value="{{ action }}">{{ options.label }}</option>
-                    {% endfor %}
-                </select>
+            <div class="form-group form-inline ">
+                    <select name="action" class="input-medium form-control">
+                        {% for action, options in batchactions %}
+                            <option value="{{ action }}">{{ options.label }}</option>
+                        {% endfor %}
+                    </select>
 
-
-
-                <input type="submit" class="btn btn-primary btn-small batch-dialog-link"
+                <input type="submit" class="btn btn-primary btn-sm batch-dialog-link"
                        value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}"/>
+                </div>
             {% endblock %}
         </div>
     {% endif %}

@@ -25,9 +25,11 @@ file that was distributed with this source code.
 
 {% block content %}
     {% if app.request.isxmlhttprequest %}
+        <div class="modal-dialog">
+        <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>{{ 'title.translation_link'|trans({'%object%': page, '%language%': language}, admin.translationDomain) }}</h3>
+            <h4>{{ 'title.translation_link'|trans({'%object%': page, '%language%': language}, admin.translationDomain) }}</h4>
         </div>
     {% else %}
         <h1>{{ 'title.translation_link'|trans({'%object%': page, '%language%': language}, admin.translationDomain) }}</h1>
@@ -62,7 +64,7 @@ file that was distributed with this source code.
                             </td>
                             <td style="vertical-align: middle;">{{ page.title }}</td>
                             <td style="vertical-align: middle;"><span
-                                    class="{% if page.status == 'status_draft' %}color-draft{% else %}info-soft{% endif %}">{{ page.status|trans({}, admin.translationDomain) }}</span>
+                                        class="{% if page.status == 'status_draft' %}color-draft{% else %}info-soft{% endif %}">{{ page.status|trans({}, admin.translationDomain) }}</span>
                             </td>
                             <td style="vertical-align: middle;">{{ page.fullPath }}</td>
 
@@ -97,5 +99,9 @@ file that was distributed with this source code.
 
             </div>
         </form>
+        {% if app.request.isxmlhttprequest %}
+            </div>
+        </div>
+        {% endif %}
     {% endif %}
 {% endblock %}

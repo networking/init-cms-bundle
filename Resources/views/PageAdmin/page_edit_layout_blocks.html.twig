@@ -13,17 +13,18 @@ file that was distributed with this source code.
     {% set admin = sonata_admin.admin %}
 {% endif %}
 <div id="field_container_{{ id }}">
+    <p></p>
     {% set col = 0 %}
     {% set increment = 0 %}
     {% if not admin.subject.alias %}
         {% for key, zone in get_initcms_template_zones() %}
             {% if (col == 0 or loop.first) %}
-                <div class="row-fluid">
+                <div class="row">
             {% endif %}
 
             {% set col = col + zone.span %}
 
-            <div class="span{{ zone.span }}">
+            <div class="col-md-{{ zone.span }}">
                 <div class="dropzone well well-small">
                     <h6>{{ zone.name|trans() }} </h6>
                     <ul id="zone_{{ zone.name }}" class="sortable" data-content-types="{{ zone.restricted_types }}"
@@ -44,7 +45,7 @@ file that was distributed with this source code.
                                         class="sonata-ba-action"
                                         data-value="{{ zone.restricted_types }}"
                                         title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                    <i class="icon-plus"></i>
+                                    <i class="glyphicon glyphicon-plus"></i>
                                 </a>
                             </div>
                         </li>
@@ -66,9 +67,10 @@ file that was distributed with this source code.
                                     {# preview of layout block of content #}
                                     <div class="content_preview">
                                         <div class="layout_controls">
-                                            <i class="icon-move soft-background"></i>
-                                            <i class="icon-trash soft-background delete_block" data-value="{{layout_block_field.vars.value.id}}"></i>
-                                            <i class="icon-pencil soft-background"
+                                            <i class="glyphicon glyphicon-move soft-background"></i>
+                                            <i class="glyphicon glyphicon-trash soft-background delete_block"
+                                               data-value="{{ layout_block_field.vars.value.id }}"></i>
+                                            <i class="glyphicon glyphicon-pencil soft-background"
                                                data-target="#expandableForm{{ increment }}" data-toggle="modal"></i>
                                         </div>
                                         <div data-target="#expandableForm{{ increment }}" data-toggle="modal">
@@ -80,31 +82,35 @@ file that was distributed with this source code.
                                     <div class="modal form-horizontal layout_block_modal"
                                          id="expandableForm{{ increment }}"
                                          style="display: none" aria-hidden="true" role="dialog">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                    aria-hidden="true">&times;</button>
-                                            <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}
-                                                - {{ render_content_type_name(layout_block_field.vars.value) }}</h4>
-                                        </div>
-                                        <div class="modal-body">
-
-                                            {% if layout_block_field.vars.errors|length > 0 %}
-                                                <div class="sonata-ba-form-error control-group error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
-                                                    {{ form_errors(layout_block_field) }}
+                                        <div class="modal-dialog  modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-hidden="true">&times;</button>
+                                                    <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}
+                                                        - {{ render_content_type_name(layout_block_field.vars.value) }}</h4>
                                                 </div>
-                                            {% endif %}
+                                                <div class="modal-body">
 
-                                            {{ form_widget(layout_block_field['content']) }}
+                                                    {% if layout_block_field.vars.errors|length > 0 %}
+                                                        <div class="sonata-ba-form-error control-group error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
+                                                            {{ form_errors(layout_block_field) }}
+                                                        </div>
+                                                    {% endif %}
 
-                                        </div>
-                                        <div class="modal-footer">
-                                            {{ form_rest(layout_block_field) }}
-                                            <button class="btn" data-dismiss="modal"
-                                                    aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
-                                            <a onclick="return updateLayoutBlock(this);"
-                                               data-content-type="{{ layout_block_field.vars.value.classType }}"
-                                               class="btn btn-primary">
-                                                {{ 'button.save'|trans({}, 'PageAdmin') }}</a>
+                                                    {{ form_widget(layout_block_field['content']) }}
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    {{ form_rest(layout_block_field) }}
+                                                    <button class="btn" data-dismiss="modal"
+                                                            aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
+                                                    <a onclick="return updateLayoutBlock(this);"
+                                                       data-content-type="{{ layout_block_field.vars.value.classType }}"
+                                                       class="btn btn-primary">
+                                                        {{ 'button.save'|trans({}, 'PageAdmin') }}</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -118,7 +124,7 @@ file that was distributed with this source code.
                                                 class="sonata-ba-action"
                                                 data-value="{{ zone.restricted_types }}"
                                                 title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                            <i class="icon-plus"></i>
+                                            <i class="glyphicon glyphicon-plus"></i>
                                         </a>
                                     </div>
                                 </li>

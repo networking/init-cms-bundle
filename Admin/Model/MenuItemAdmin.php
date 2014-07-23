@@ -89,6 +89,7 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+
         if (!$locale = $this->getRequest()->get('locale')) {
             $locale = $this->getRequest()->getLocale();
         }
@@ -126,12 +127,12 @@ abstract class MenuItemAdmin extends BaseAdmin
 
         $formMapper
             ->add('locale', 'hidden', array('data' => $locale))
-            ->add('name');
+            ->add('name', null, array('horizontal' => true));
 
 
         if ($this->isRoot) {
             $formMapper
-                ->add('description')
+                ->add('description', null, array('horizontal' => true))
                 ->add('isRoot', 'hidden', array('data' => true));
         } else {
             // start group page_or_url
@@ -144,7 +145,8 @@ abstract class MenuItemAdmin extends BaseAdmin
                                 'form.legend_page_or_url',
                                 array(),
                                 $this->translationDomain
-                            )
+                            ),
+                        'horizontal' => true
                     )
                 );
             $pageAdmin = $this->configurationPool->getAdminByAdminCode('networking_init_cms.admin.page');
@@ -158,6 +160,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'attr' => array('style' => "width:220px"),
                         'class' => $pageClass,
                         'required' => false,
+                        'horizontal' => true,
                         'property' => 'AdminTitle',
                         'query_builder' => function (EntityRepository $er) use ($locale) {
                                 $qb = $er->createQueryBuilder('p');
@@ -170,8 +173,8 @@ abstract class MenuItemAdmin extends BaseAdmin
                             },
                     )
                 );
-            $formMapper->add('redirect_url', 'url', array('required' => false, 'help_inline' => 'help.redirect_url'));
-            $formMapper->add('internal_url', 'text', array('required' => false, 'help_inline' => 'help.internal_url'));
+            $formMapper->add('redirect_url', 'url', array('required' => false, 'help_block' => 'help.redirect_url', 'horizontal' => true));
+            $formMapper->add('internal_url', 'text', array('required' => false, 'help_block' => 'help.internal_url', 'horizontal' => true));
             $formMapper->end();
 
             // start group optionals
@@ -184,14 +187,16 @@ abstract class MenuItemAdmin extends BaseAdmin
                                 'form.legend_options',
                                 array(),
                                 $this->translationDomain
-                            )
+                            ),
+                        'horizontal' => true
                     )
                 )
                 ->add(
                     'visibility',
                     'sonata_type_translatable_choice',
                     array(
-                        'help_inline' => 'visibility.helper.text',
+                        'horizontal' => true,
+                        'help_block' => 'visibility.helper.text',
                         'choices' => MenuItem::getVisibilityList(),
                         'catalogue' => $this->translationDomain
                     )
@@ -199,11 +204,15 @@ abstract class MenuItemAdmin extends BaseAdmin
                 ->add(
                     'link_target',
                     'choice',
-                    array('choices' => $this->getTranslatedLinkTargets(), 'required' => false)
+                    array(
+                        'horizontal' => true,
+                        'choices' => $this->getTranslatedLinkTargets(),
+                        'required' => false
+                    )
                 )
-                ->add('link_class', 'text', array('required' => false))
-                ->add('link_rel', 'text', array('required' => false))
-                ->add('hidden', null, array('required' => false))
+                ->add('link_class', 'text', array('horizontal' => true,'required' => false))
+                ->add('link_rel', 'text', array('horizontal' => true, 'required' => false))
+                ->add('hidden', null, array('horizontal' => true, 'required' => false))
                 ->end();
 
             $entityManager = $this->getContainer()->get('Doctrine')->getManager();
@@ -218,7 +227,6 @@ abstract class MenuItemAdmin extends BaseAdmin
             $menuField->addModelTransformer($transformer);
             $formMapper
                 ->add($menuField, 'hidden');
-
         }
     }
 

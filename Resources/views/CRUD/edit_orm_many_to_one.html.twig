@@ -45,10 +45,10 @@ file that was distributed with this source code.
             {% if sonata_admin.edit == 'list' and sonata_admin.field_description.associationadmin.hasRoute('list') and sonata_admin.field_description.associationadmin.isGranted('LIST') %}
                 <a  href="{{ sonata_admin.field_description.associationadmin.generateUrl('list') }}"
                     onclick="return start_field_dialog_form_list_{{ id }}(this);"
-                    class="btn sonata-ba-action"
+                    class="btn btn-default sonata-ba-action"
                     title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
                     >
-                    <i class="icon-list"></i>
+                    <i class="glyphicon glyphicon-list"></i>
                     {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -56,10 +56,10 @@ file that was distributed with this source code.
             {% if sonata_admin.edit != 'admin' and sonata_admin.field_description.associationadmin.hasRoute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
                 <a  href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
                     onclick="return start_field_dialog_form_add_{{ id }}(this);"
-                    class="btn sonata-ba-action"
+                    class="btn btn-default sonata-ba-action"
                     title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                     >
-                    <i class="icon-plus"></i>
+                    <i class="glyphicon glyphicon-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -67,10 +67,10 @@ file that was distributed with this source code.
             {% if sonata_admin.edit == 'list' and sonata_admin.field_description.associationadmin.hasRoute('list') and sonata_admin.field_description.associationadmin.isGranted('LIST') %}
                 <a  href=""
                     onclick="return remove_selected_element_{{ id }}(this);"
-                    class="btn sonata-ba-action"
+                    class="btn btn-default sonata-ba-action"
                     title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
                     >
-                    <i class="icon-trash"></i>
+                    <i class="glyphicon glyphicon-trash "></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}

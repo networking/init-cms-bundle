@@ -1,7 +1,10 @@
 mopa_bootstrap:
-    navbar: ~
+    menu: ~
     form:
+        horizontal: false
         error_type: inline
+        render_optional_text:  false
+        render_required_asterisk:  true
         collection:
             widget_remove_btn:
                 icon: trash

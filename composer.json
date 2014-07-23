@@ -26,7 +26,7 @@
         "sonata-project/formatter-bundle": ">=2.3.0",
         "stof/doctrine-extensions-bundle": "v1.1.0",
         "mopa/bootstrap-bundle": "dev-master",
-        "twbs/bootstrap": "v2.3.2",
+        "twbs/bootstrap": "v3.2.0",
         "symfony-cmf/routing-bundle": "1.1.0",
         "jms/serializer-bundle": "0.13.*@dev",
         "ibrows/sonata-admin-annotation-bundle": "1.1.*",

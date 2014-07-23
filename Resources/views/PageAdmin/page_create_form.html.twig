@@ -4,7 +4,7 @@
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        <div class="span10">
+        <div class="col-md-10">
             <p>{{ 'info.page_create'|trans({}, 'PageAdmin') }}</p>
             <form class="form-vertical"
                   action="{{ admin.generateUrl('create', {'id': admin.id(object), 'uniqid': admin.uniqid, 'locale': app.request.get('locale'), 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
@@ -57,8 +57,9 @@
 
                 <!-- end modal page form -->
                 {% block formactions %}
+                    <div class="clearfix">&nbsp;</div>
                     <div class="well form-actions">
-                        <a class="btn" href="{{ admin.generateObjectUrl('list', object) }}">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</a>
+                        <a class="btn btn-default" href="{{ admin.generateObjectUrl('list', object) }}">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</a>
                                 <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
                                        value="{{ 'btn_create_and_edit_again'|trans({}, 'SonataAdminBundle') }}"/>
 

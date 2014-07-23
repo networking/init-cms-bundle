@@ -2,18 +2,11 @@
 {% block sidebar_left %}{% endblock %}
 {% block content %}
     <div class="row">
-        <div id="login" class="connection modal" style="position: relative;
-        top: auto;
-        right: auto;
-        bottom: auto;
-        left: auto;
-        z-index: 1;
-        display: block;
-        ">
-            <div class="modal-dialog">
+        <div id="login" class="connection modal" >
+            <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <form action="{{ path("sonata_user_admin_security_check") }}" method="post" role="form"
-                          class="form-horizontal">
+                          class="form-vertical">
                         <div class="modal-body">
 
                             {% if error %}
@@ -21,30 +14,28 @@
                             {% endif %}
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label"
+                                <label class=" control-label"
                                        for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
 
-                                <div class="col-sm-9">
+                                <div class="">
                                     <input type="text" id="username" name="_username" value="{{ last_username }}"
                                            class="form-control" autofocus/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label"
+                                <label class=" control-label"
                                        for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
 
-                                <div class="col-sm-9">
+                                <div class="">
                                     <input type="password" id="password" name="_password" class="form-control"
                                            placeholder="Password"/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-offset-3 col-sm-9">
                                     <div class="checkbox">
-                                        <label><input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
+                                        <label class="checkbox-inline"><input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
                                             {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
                                     </div>
-                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">

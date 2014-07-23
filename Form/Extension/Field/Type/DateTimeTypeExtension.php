@@ -22,6 +22,7 @@ class DateTimeTypeExtension extends AbstractTypeExtension
         if ('single_text' === $options['date_widget'] && isset($options['datepicker'])) {
             $view->children['date']->vars['datepicker'] = $options['datepicker'];
             $view->children['date']->vars['format'] = $options['date_format'];
+            $view->children['time']->vars['timepicker'] = $options['timepicker'];
             $view->children['date']->vars['widget_addon'] = array('type' => 'append', 'icon' => 'calendar');
         }
 
@@ -29,9 +30,12 @@ class DateTimeTypeExtension extends AbstractTypeExtension
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setOptional(array(
-            'datepicker'
-        ));
+        $resolver->setOptional(
+            array(
+                'datepicker',
+                'timepicker'
+            )
+        );
     }
 
     public function getExtendedType()

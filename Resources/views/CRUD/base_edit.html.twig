@@ -48,7 +48,7 @@ file that was distributed with this source code.
     {% if app.request.isxmlhttprequest %}
         {{ block('parentForm') }}
     {% else %}
-        <div class="span{% if _side_menu is empty %}10{% else %}8{% endif %}">
+        <div class="col-md-{% if _side_menu is empty %}10{% else %}8{% endif %}">
             {{ block('parentForm') }}
         </div>
     {% endif %}

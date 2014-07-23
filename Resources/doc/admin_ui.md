@@ -22,9 +22,8 @@ The Mopa Bootstrap bundle introduced extra help text areas, unfortunately they a
 You have 4 choices, which you can be used similtaneously:
 
 1. help_label - this will appear right below the label
-2. help_inline - this will appear inline with the form field
-3. help_block - this appears below the form widget
-4. help - this is the standard help config from sonata and is displayed the same as the help_block, below the form label, and field
+2. help_block - this appears below the form widget
+3. help - this is the standard help config from sonata and is displayed the same as the help_block, below the form label, and field
 
 ```
 $formMapper
@@ -34,7 +33,6 @@ $formMapper
     array(
         'required' => true,
         'help_label' => 'Enter the URL slug for this page only,
-        'help_inline' => 'e.g. about_us'
     ),
 );
 ```

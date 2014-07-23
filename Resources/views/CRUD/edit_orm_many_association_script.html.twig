@@ -55,7 +55,7 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
             success: function (html) {
                 Admin.log('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
 
-                $('#field_dialog_{{ id }}').html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div>');
+                $('#field_dialog_{{ id }}').html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
                 field_dialog_form_list_handle_action_{{ id }}();
             }
         });
@@ -95,7 +95,7 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
 
                 Admin.log('[{{ id }}|field_dialog_form_list_handle_action] form submit success, restoring event');
 
-                field_dialog_{{ id }}.html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div>');
+                field_dialog_{{ id }}.html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
                 field_dialog_form_list_handle_action_{{ id }}();
             }
         });
@@ -125,7 +125,7 @@ var field_dialog_form_list_{{ id }} = function (event) {
             Admin.log('[{{ id }}|field_dialog_form_list] retrieving the list content');
 
             // populate the popup container
-            field_dialog_{{ id }}.html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div>');
+            field_dialog_{{ id }}.html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
 
             Admin.add_filters(field_dialog_{{ id }});
 
@@ -143,14 +143,14 @@ var field_dialog_form_list_{{ id }} = function (event) {
                     dataType: 'html',
                     data: {_xml_http_request: true},
                     success: function (html) {
-                        field_dialog_{{ id }}.html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div> ');
+                        field_dialog_{{ id }}.html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div> </div></div>');
                     }
                 });
             });
 
             field_dialog_{{ id }}.modal('show');
 
-            field_dialog_{{ id }}.on('hide', function (e) {
+            field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
                 if (!jQuery(e.target).hasClass('collapse')) {
                 Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
 
@@ -194,7 +194,7 @@ var field_dialog_form_add_{{ id }} = function (event) {
             // open the dialog in modal mode
             field_dialog_{{ id }}.modal('show');
 
-            field_dialog_{{ id }}.on('hide', function (e) {
+            field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
 
                 if (!jQuery(e.target).hasClass('collapse')) {
                     Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
@@ -256,8 +256,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
         success: function (data, status, xhr) {
 
             Admin.log('[{{ id }}|field_dialog_form_action] ajax success');
-
-            var ct = xhr.getResponseHeader("content-type") || "";
+            var ct = xhr.getResponseHeader("content-type") || "application/json";
             if (ct != 'application/json') {
                 var IS_JSON = true;
                 try {
@@ -272,7 +271,6 @@ var field_dialog_form_action_{{ id }} = function (event) {
                     return;
                 }
             }
-
             // if the crud action return ok, then the element has been added
             // so the widget container must be refresh with the last option available
             if (data.result == 'ok') {

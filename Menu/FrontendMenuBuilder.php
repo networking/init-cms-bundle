@@ -8,8 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Component\Menu;
+namespace Networking\InitCmsBundle\Menu;
 
+use Knp\Menu\FactoryInterface;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Matcher\Voter\UriVoter;
 use Knp\Menu\Renderer\ListRenderer;
@@ -26,15 +27,15 @@ class FrontendMenuBuilder extends MenuBuilder
     /**
      * Creates the main page navigation for the left side of the top frontend navigation
      *
-     * @param Request $request
      * @param $menuName
      * @param string $classes
      * @return \Knp\Menu\ItemInterface|\Knp\Menu\MenuItem
      */
-    public function createMainMenu(Request $request, $menuName, $classes = '')
+    public function createMainMenu($menuName, $class)
     {
-        $menu = $this->createNavbarMenuItem();
-        $menu->setChildrenAttribute('class', $classes);
+        $class = $class ? $class : 'nav nav-tabs nav-stacked';
+        $menu = $this->factory->createItem('root');
+        $menu->setChildrenAttribute('class', $class);
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
 
@@ -57,10 +58,11 @@ class FrontendMenuBuilder extends MenuBuilder
      * @param string $classes
      * @return bool|\Knp\Menu\ItemInterface
      */
-    public function createSubnavMenu(Request $request, $menuName, $classes = 'nav nav-tabs nav-stacked')
+    public function createSubnavMenu($menuName, $class)
     {
-        $menu = $this->createNavbarMenuItem();
-        $menu->setChildrenAttribute('class', $classes);
+        $class = $class ? $class : 'nav nav-tabs nav-stacked';
+        $menu = $this->factory->createItem('root');
+        $menu->setChildrenAttribute('class', $class);
 
         /** @var $mainMenu Menu */
         $menuIterator = $this->getSubMenu($menuName, 1);
@@ -74,6 +76,7 @@ class FrontendMenuBuilder extends MenuBuilder
         $menu = $this->createMenu($menu, $menuIterator, $startDepth);
         $this->showOnlyCurrentChildren($menu);
         $this->setRecursiveAttribute($menu, array('class' => 'nav nav-list'));
+
         return $menu;
     }
 
@@ -89,12 +92,11 @@ class FrontendMenuBuilder extends MenuBuilder
     public function createFrontendLangMenu(
         Request $request,
         $languages,
-        $classes = 'nav pull-right',
+        $class = 'nav pull-right',
         $dropDownMenu = false
-    )
-    {
+    ) {
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', $classes);
+        $menu->setChildrenAttribute('class', $class);
 
         if ($dropDownMenu) {
             $this->createDropdownLangMenu($menu, $languages, $request->getLocale());
@@ -115,7 +117,7 @@ class FrontendMenuBuilder extends MenuBuilder
      */
     public function createFooterMenu(Request $request, $menuName, $classes = '')
     {
-        $menu = $this->createNavbarMenuItem();
+        $menu = $this->factory->createItem($menuName);
         $menu->setChildrenAttribute('class', $classes);
 
         /** @var $mainMenu Menu */
@@ -127,31 +129,28 @@ class FrontendMenuBuilder extends MenuBuilder
 
         $startDepth = 1;
         $menu = $this->createMenu($menu, $menuIterator, $startDepth);
+
         return $menu;
     }
 
     /**
      * Used to create nodes for the language navigation in the front- and backend
      *
-     * @param $menu
+     * @param \Knp\Menu\ItemInterface $menu
      * @param array $languages
      * @param $currentLanguage
      * @param string $route
      */
     public function createDropdownLangMenu(
-        &$menu,
+        \Knp\Menu\ItemInterface &$menu,
         array $languages,
         $currentLanguage,
         $route = 'networking_init_change_language'
-    )
-    {
-        $this->addDivider($menu, true);
+    ) {
 
-        $dropdown = $this->createDropdownMenuItem(
-            $menu,
+        $dropdown = $menu->addChild(
             $this->translator->trans('Change Language'),
-            true,
-            array('icon' => 'caret')
+            array('dropdown' => true, 'icon' => 'caret')
         );
 
         foreach ($languages as $language) {
@@ -167,18 +166,17 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     /**
-     * @param $menu
+     * @param \Knp\Menu\ItemInterface  $menu
      * @param array $languages
      * @param $currentLanguage
      * @param string $route
      */
     public function createInlineLangMenu(
-        &$menu,
+        \Knp\Menu\ItemInterface &$menu,
         array $languages,
         $currentLanguage,
         $route = 'networking_init_change_language'
-    )
-    {
+    ) {
         foreach ($languages as $language) {
             $node = $menu->addChild(
                 $language['label'],

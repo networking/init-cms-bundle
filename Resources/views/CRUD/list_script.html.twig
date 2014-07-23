@@ -7,7 +7,7 @@
         if (!listDialog) {
             listDialog = jQuery('#list_dialog');
             listDialog.modal({ height:'auto', width:650, show:false});
-            listDialog.on('hide', function () {
+            listDialog.on('hide.bs.modal', function () {
                 jQuery('input[type=submit]', this).off();
             });
             jQuery(document.body).append(listDialog);

@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Component\Menu;
+namespace Networking\InitCmsBundle\Menu;
 
 use Knp\Menu\Iterator\RecursiveItemIterator;
 use Knp\Menu\Matcher\Voter\UriVoter;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Mopa\Bundle\BootstrapBundle\Navbar\AbstractNavbarMenuBuilder;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\MenuItem as Menu;
 use Networking\InitCmsBundle\Entity\MenuItem;
@@ -28,7 +28,7 @@ use Knp\Menu\Matcher\Matcher;
  * @package Networking\InitCmsBundle\Component\Menu
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MenuBuilder extends AbstractNavbarMenuBuilder
+class MenuBuilder extends ContainerAware
 {
     /**
      * @var \Symfony\Component\Security\Core\SecurityContextInterface
@@ -99,7 +99,6 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         Matcher $matcher
     ) {
 
-        parent::__construct($factory);
         $this->securityContext = $securityContext;
 
         if ($this->securityContext->getToken() && ($this->securityContext->isGranted(
@@ -110,7 +109,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         ) {
             $this->isLoggedIn = true;
         }
-
+        $this->factory = $factory;
         $this->router = $router;
         $this->request = $request;
         $this->menuManager = $menuManager;

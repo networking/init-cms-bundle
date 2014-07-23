@@ -13,19 +13,19 @@ file that was distributed with this source code.
 
         {% if field_description.options.actions|length > 2 %}
         {% include "NetworkingInitCmsBundle:CRUD:list__action_edit.html.twig" %}
-                <a class="btn btn-small actions-toggle"
+                <a class="btn btn-default btn-sm actions-toggle"
                         data-original-title="{{ 'link.show_more_actions'|trans({}, 'NetworkingInitCmsBundle') }}"
                         data-toggle="row-actions">
-                    <i class="icon-caret-down"></i>
+                    <i class="glyphicon glyphicon-chevron-down"></i>
                 </a>
         <div class="row-actions">
             {% for key, actions in field_description.options.actions %}
                 {% include actions.template %}
             {% endfor %}
-            <a class="btn btn-small actions-toggle-close "
+            <a class="btn btn-default btn-sm actions-toggle-close "
                     data-original-title="{{ 'link.hide_actions'|trans({}, 'NetworkingInitCmsBundle') }}"
                     data-toggle="row-actions">
-                <i class="icon-caret-left caret-button-padding"></i>
+                <i class="glyphicon glyphicon-chevron-left caret-button-padding"></i>
             </a>
         </div>
         {% else %}

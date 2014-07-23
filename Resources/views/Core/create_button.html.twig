@@ -10,15 +10,16 @@ file that was distributed with this source code.
 #}
 
 {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
+    <div class="clearfix">&nbsp;</div>
         {% set create_text =  'link_action_create'|trans({}, admin.translationDomain) %}
         {% if create_text == 'link_action_create' %}
             {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
         {% endif %}
         {% if admin.subClasses is empty %}
-                <a class="btn btn-primary btn-small" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin) }) }}">
-                    <i class="icon-white icon-plus"></i> {{ create_text }}</a>
+                <a class="btn btn-primary btn-sm" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin) }) }}">
+                    <i class="glyphicon glyphicon-white glyphicon-plus"></i> {{ create_text }}</a>
             {% else %}
-                <span class="btn-group  btn-small sonata-action-element">
+                <span class="btn-group  btn-sm sonata-action-element">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                         {{ create_text }}
                         <span class="caret"></span>

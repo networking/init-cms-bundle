@@ -98,14 +98,14 @@ Step 3. (optional) Configure a [mopa bootstrap navbar](https://github.com/phiamo
 
 ```
     sandbox_init_cms.menu.frontend_top_menu_template:
-        class: %mopa_bootstrap.navbar.generic%
+        class: %mopa_bootstrap.menu.generic%
         scope: request
         arguments:
             - { pageMenu: @sandbox_init_cms.menu.frontend_main_menu_left=, langMenu: @sandbox_init_cms.menu.frontend_main_menu_language=}
             - {}
             - { logo: "bundles/sandboxinitcms/img/sailing_icon_grey.png", title: "Demo Sailing Club", titleRoute: "networking_init_cms_home", fixedTop: false, isFluid: false, template: SandboxInitCmsBundle:Navbar:navbar.html.twig }
         tags:
-            - { name: mopa_bootstrap.navbar, alias: cmsNavbar }
+            - { name: mopa_bootstrap.menu, alias: cmsNavbar }
 
 ```
 Then all you need to do is call ```{{ mopa_bootstrap_navbar('cmsNavbar' ) }}``` in your twig template and Bobs your uncle the

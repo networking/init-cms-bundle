@@ -70,7 +70,7 @@ function createLayoutBlockForm(url, data) {
         success: function (xhr) {
             jQuery('#layoutBlockModal').html(xhr);
             jQuery('#layoutBlockModal').modal('show');
-            jQuery('#layoutBlockModal').on('hide', function () {
+            jQuery('#layoutBlockModal').on('hide.bs.modal', function () {
                 jQuery('#contentTypeModal').unbind('initcms.create_block');
                 jQuery('li.temp_item').remove();
                 jQuery('form', '#layoutBlockModal').unbind('submit');
@@ -259,7 +259,7 @@ function onAfterLoad() {
     setLayoutBlockPosition();
 
     jQuery('div#field_container_{{ id }} ul.sortable').sortable({
-        handle: 'i.icon-move',
+        handle: 'i.glyphicon-move',
         opacity: 0.6,
         placeholder: "ui-state-highlight",
         items: 'li.networking-sortable-list',

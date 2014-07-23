@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Component\Menu;
+namespace Networking\InitCmsBundle\Menu;
 
 use Symfony\Component\HttpFoundation\Request;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
@@ -49,7 +49,7 @@ class AdminMenuBuilder extends MenuBuilder
 
         $draftPath = null;
 
-        $menu = false;
+        $menu = $this->factory->createItem('root');
 
         $sonataAdmin = null;
 
@@ -64,8 +64,6 @@ class AdminMenuBuilder extends MenuBuilder
         }
 
         if ($this->isLoggedIn) {
-
-            $menu = $this->factory->createItem('root');
 
             $editPath = false;
             $menu->setChildrenAttribute('class', $class.' pull-right');
@@ -177,10 +175,10 @@ class AdminMenuBuilder extends MenuBuilder
                     'Edit',
                     array(
                         'label' => $this->translator->trans('link_action_edit', array(), 'SonataAdminBundle', $adminLocale),
-                        'uri' => $editPath
+                        'uri' => $editPath,
+                        'icon' => 'pencil icon-white'
                     )
                 );
-                $this->addIcon($menu['Edit'], array('icon' => 'pencil icon-white', 'append' => false));
             }
 
             $menu->addChild('Admin', array('uri' => $lastActionUrl));
@@ -193,12 +191,12 @@ class AdminMenuBuilder extends MenuBuilder
                 $webLink = $translator->trans('link.website_' . $viewStatus, array(), 'NetworkingInitCmsBundle', $adminLocale);
 
             }
-            $dropdown = $this->createDropdownMenuItem(
-                $menu,
-                $webLink,
-                true,
-                array('caret' => true)
-            );
+
+
+            $dropdown = $menu->addChild($webLink, array(
+                        'dropdown' => true,
+                        'caret' => true,
+                    ));
 
             if ($draftPath) {
                 $dropdown->addChild(

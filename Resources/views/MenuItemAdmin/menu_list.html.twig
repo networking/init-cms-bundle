@@ -22,7 +22,7 @@ file that was distributed with this source code.
         {% set pageAdmin = admin.getConfigurationPool.getAdminByAdminCode('networking_init_cms.admin.page') %}
         {% if page_id is defined and page_id %}
             <div class="pull-right">
-                <a class="btn btn-custom btn-small"
+                <a class="btn btn-custom btn-sm"
                    href="{{ path( pageAdmin.getBaseRouteName() ~'_edit', {'id': page_id}) }}">&larr; Back to page</a>
             </div>
             <p class="clearfix">&nbsp;</p>
@@ -34,23 +34,37 @@ file that was distributed with this source code.
 
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
-                    {{ filter_main }}
-                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium' }}) }}
-                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                    <div class="form-group">
+                        <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                               class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
+
+                        <div class="form-inline col-md-9">
+                            {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
+                            ) }}
+                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                        </div>
+                    </div>
                     {% endset %}
                 {% else %}
                     {% set filter_hidden %}
                     {{ filter_hidden }}
-                    <label class="filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium' }}) }}
-                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}) }}
+                    <div class="form-group">
+                        <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                               class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
+
+                        <div class="form-inline col-md-9">
+                            {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
+                            ) }}
+                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                        </div>
+                    </div>
                     {% endset %}
                 {% endif %}
             {% endfor %}
             {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
 
             <div>
-                <div class="pull-left">
+                <div>
                     <fieldset class="filter_legend">
                         <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</p>
                         {{ filter_main }}
@@ -58,7 +72,7 @@ file that was distributed with this source code.
                         {% set foo = form.children['_page'].setRendered() %}
                         {{ form_rest(form) }}
 
-                        <input type="submit" class="btn btn-small"
+                        <input type="submit" class="btn btn-default btn-sm"
                                value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
 
                         <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}" class="link-underlined">

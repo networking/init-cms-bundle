@@ -29,35 +29,42 @@ file that was distributed with this source code.
 {% block content %}
     <div class="sonata-ba-delete">
         {% if app.request.isxmlhttprequest %}
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>{{ 'title.delete_translation_link'|trans({}, admin.translationDomain) }}</h3>
-            </div>
-        {% else %}
-            <h1>{{ 'title.delete_translation_link'|trans({}, admin.translationDomain) }}</h1>
-        {% endif %}
-
-        <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
-            {% set locale = translatedPage.locale|slice(0,2)|upper %}
-            {{ 'info.delete_translation_link'|trans({'%translatedPage%': translatedPage, '%locale%': locale }, admin.translationDomain) }}
-        </div>
-        <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
-            <form method="POST" action="{{ admin.generateUrl('unlink', {id: page.id, translationId: translationId}) }}">
-                <input type="hidden" value="DELETE" name="_method"/>
-                {% if app.request.isxmlhttprequest %}
-                    <button class="btn" data-dismiss="modal"
-                            aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
-                    <input type="submit" class="btn btn-danger"
-                           value="{{ 'link.unlink'|trans({}, admin.translationDomain) }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>{{ 'title.delete_translation_link'|trans({}, admin.translationDomain) }}</h4>
+                </div>
                 {% else %}
-                    <input type="submit" class="btn btn-danger"
-                           value="{{ 'link.unlink'|trans({}, admin.translationDomain) }}"/>
-
-                    <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">
-                                            {{ 'button.cancel'|trans({}, admin.translationDomain) }}
-                                        </a>
+                    <h1>{{ 'title.delete_translation_link'|trans({}, admin.translationDomain) }}</h1>
                 {% endif %}
-            </form>
+
+                <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
+                    {% set locale = translatedPage.locale|slice(0,2)|upper %}
+                    {{ 'info.delete_translation_link'|trans({'%translatedPage%': translatedPage, '%locale%': locale }, admin.translationDomain) }}
+                </div>
+                <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
+                    <form method="POST"
+                          action="{{ admin.generateUrl('unlink', {id: page.id, translationId: translationId}) }}">
+                        <input type="hidden" value="DELETE" name="_method"/>
+                        {% if app.request.isxmlhttprequest %}
+                            <button class="btn" data-dismiss="modal"
+                                    aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+                            <input type="submit" class="btn btn-danger"
+                                   value="{{ 'link.unlink'|trans({}, admin.translationDomain) }}"/>
+                        {% else %}
+                            <input type="submit" class="btn btn-danger"
+                                   value="{{ 'link.unlink'|trans({}, admin.translationDomain) }}"/>
+
+                            <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">
+                                {{ 'button.cancel'|trans({}, admin.translationDomain) }}
+                            </a>
+                        {% endif %}
+                    </form>
+                </div>
+                {% if app.request.isxmlhttprequest %}
+            </div>
         </div>
+        {% endif %}
     </div>
 {% endblock %}

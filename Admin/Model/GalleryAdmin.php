@@ -79,7 +79,7 @@ class GalleryAdmin extends SonataGalleryAdmin
         }
 
         $formMapper
-            ->add('enabled', null, array('required' => false), array('inline_block' => true))
+            ->add('enabled', null, array('required' => false, 'horizontal' => true))
             ->add('context', 'hidden')
             ->add('name')
             ->add('defaultFormat', 'choice', array('choices' => $formats))

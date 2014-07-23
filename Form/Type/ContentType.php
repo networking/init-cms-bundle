@@ -59,7 +59,7 @@ class ContentType extends AbstractType
             $builder->add(
                 $fieldName,
                 $annotation->getType(),
-                $annotation->getOptions()
+                array_merge($annotation->getOptions(), array())
             );
         }
         $options['data_class'] = $options['class'];
@@ -96,6 +96,9 @@ class ContentType extends AbstractType
                 'class' => null,
                 'data_class' => $dataClass,
                 'translation_domain' => 'messages',
+                'horizontal' => true,
+                'horizontal_input_wrapper_class' => 'col-md-12',
+                'horizontal_label_offset_class' => '',
             )
         );
 

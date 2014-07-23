@@ -28,7 +28,17 @@ abstract class Text implements ContentInterface
 
     /**
      * @var string $content
-     * @Sonata\FormMapper(name="text", type="ckeditor", options={"label_render" = false, "label" = false, "required"=false})
+     * @Sonata\FormMapper(
+     *      name="text",
+     *      type="ckeditor",
+     *      options={
+     *          "label_render" = false,
+     *          "horizontal_input_wrapper_class" = "col-md-12",
+     *          "horizontal_label_offset_class" = "",
+     *          "label" = false,
+     *          "required"=false
+     *      }
+     * )
      */
     protected $text;
 

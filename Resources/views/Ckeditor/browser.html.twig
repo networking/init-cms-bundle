@@ -36,7 +36,7 @@ file that was distributed with this source code.
     <div class="tab-content">
         <div class="tab-pane active">
             <div class="row">
-                <div class="span12">
+                <div class="col-md-12">
                     {# provider #}
                     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
                     <ul class="nav nav-pills">
@@ -276,7 +276,7 @@ file that was distributed with this source code.
                         <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
 
                         <div class="filter_container row">
-                            <div class="span12">
+                            <div class="col-md-12">
                                 {{ filter_main }}
                                 <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
                                 {% set foo = form.children['_page'].setRendered() %}
@@ -291,7 +291,7 @@ file that was distributed with this source code.
                                     {% set foo = form.children['_page'].setRendered() %}
                                 </div>
                                 <div>
-                                    <input type="submit" class="btn btn-small"
+                                    <input type="submit" class="btn btn-sm"
                                            value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
                                     <a href="{{ admin.generateUrl('init_ckeditor_browser', {filters: 'reset'}|merge(ckParameters)) }}"
                                        class="link-underlined">

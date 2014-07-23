@@ -13,7 +13,7 @@ file that was distributed with this source code.
 {% block title %}{{ page.metaTitle }}{% endblock %}
 
 {% block content %}
-    <div class="span{% if block('subnavbar') %}10{% else %}12{% endif %}">
+    <div class="col-md-{% if block('subnavbar') %}10{% else %}12{% endif %}">
         {% if page.layoutBlock('left-top') is not empty %}
             <div class="hero-unit">
                 <div class="row-fluid">
@@ -25,7 +25,7 @@ file that was distributed with this source code.
         {% endif %}
         <div class="row-fluid">
             {% if page.layoutBlock('right-top')|length > 0 or page.layoutBlock('right-middle')|length > 0 %}
-                <div class="span7">
+                <div class="col-md-7">
                     <div class="middle">
                         {% for layoutBlock in page.layoutBlock('left-middle') %}
                             {{ render_initcms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock) }}
@@ -33,7 +33,7 @@ file that was distributed with this source code.
                     </div>
                 </div>
 
-                <div class="span5">
+                <div class="col-md-5">
                     {% block content_sidebar %}
                         <div class="top well">
                             {% for layoutBlock in page.layoutBlock('right-top') %}
@@ -49,7 +49,7 @@ file that was distributed with this source code.
                     {% endblock content_sidebar %}
                 </div>
             {% else %}
-                <div class="span12">
+                <div class="col-md-12">
                     <div class="middle">
                         {% for layoutBlock in page.layoutBlock('left-middle') %}
                             {{ render_initcms_block('NetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock) }}

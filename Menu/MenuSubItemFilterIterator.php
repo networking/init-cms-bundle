@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Component\Menu;
+namespace Networking\InitCmsBundle\Menu;
 
 /**
  * Class MenuSubItemFilterIterator

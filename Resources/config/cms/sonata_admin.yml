@@ -26,6 +26,7 @@ sonata_admin:
         preview:    NetworkingInitCmsBundle:CRUD:preview.html.twig
         delete:     NetworkingInitCmsBundle:CRUD:delete.html.twig
         action:     NetworkingInitCmsBundle:CRUD:action.html.twig
+        select:     NetworkingInitCmsBundle:CRUD:list__select.html.twig
         dashboard:  NetworkingInitCmsBundle:Core:dashboard.html.twig
         batch_confirmation: NetworkingInitCmsBundle:CRUD:batch_confirmation.html.twig
         # default values of helper templates

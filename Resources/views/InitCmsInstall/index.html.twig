@@ -6,10 +6,10 @@
     <div class="hero-unit" style="background-color: #000000">
 
         <div class="row-fluid">
-            <div class="span3">
+            <div class="col-md-3">
                 <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}">
             </div>
-            <div class="span9">
+            <div class="col-md-9">
                 <h1 style="color: white;">{{ title }}</h1>
             </div>
         </div>
@@ -19,7 +19,7 @@
 {% block sidebar_left %}{% endblock %}
 {% block sonata_admin_content %}
 <div class="row row-content-wide">
-<div class="span12">
+<div class="col-md-12">
     <div class="middle">
         {% if form is defined %}
         {% if install_failed %}
@@ -33,7 +33,7 @@
         <form action="{{ url('_install_db',{'complete':complete } ) }}" method="POST" id="install_form"
               class="form-vertical" novalidate autocomplete="off">
             <div class="row-fluid">
-                <div class="span8">
+                <div class="col-md-8">
 
                     {{ form_errors(form) }}
 
@@ -45,7 +45,7 @@
 
 
                 </div>
-                <div class="span4">
+                <div class="col-md-4">
 
                     <p>Afterwards we will load up the DB.</p>
 
@@ -105,7 +105,7 @@
     </div>
 </div>
 </div>
-<div id="showProgress" class="modal hide fade">
+<div id="showProgress" class="modal fade">
     <div class="modal-header">Please wait....</div>
     <div class="modal-body">
         <p id="nearlyThere" class="hide">Nearly there, initializing</p>

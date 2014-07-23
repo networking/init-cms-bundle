@@ -31,14 +31,14 @@ services:
             - { name: knp_menu.menu, alias: langMenu }
 
     sandbox_init_cms.menu.frontend_top_menu_template:
-        class: %mopa_bootstrap.navbar.generic%
+        class: %mopa_bootstrap.menu.generic%
         scope: request
         arguments:
             - { pageMenu: @sandbox_init_cms.menu.frontend_main_menu_left=, langMenu: @sandbox_init_cms.menu.frontend_main_menu_language=}
             - {}
             - { logo: "bundles/sandboxinitcms/img/sailing_icon_grey.png", title: "Demo Sailing Club", titleRoute: "networking_init_cms_home", fixedTop: false, isFluid: false, template: ApplicationNetworkingInitCmsBundle:Navbar:navbar.html.twig }
         tags:
-            - { name: mopa_bootstrap.navbar, alias: cmsNavbar }
+            - { name: mopa_bootstrap.menu, alias: cmsNavbar }
 
     # Create the side menu for the frontend
     sandbox_init_cms.menu.frontend_sub_menu:
@@ -52,7 +52,7 @@ services:
 
 
     sandbox_init_cms.menu.frontend_sub_menu_template:
-        class: %mopa_bootstrap.navbar.generic%
+        class: %mopa_bootstrap.menu.generic%
         arguments:
             # first argument: a named array of menues:
             - { menu: @sandbox_init_cms.menu.frontend_sub_menu= }
@@ -61,7 +61,7 @@ services:
             - { template: ApplicationNetworkingInitCmsBundle:Navbar:subnavbar.html.twig }
         tags:
             # The alias is used to retrieve the navbar in templates
-            - { name: mopa_bootstrap.navbar, alias: subNavbar }
+            - { name: mopa_bootstrap.menu, alias: subNavbar }
 
     sandbox_init_cms.menu.frontend_footer_menu:
         class: Knp\Menu\MenuItem
@@ -73,7 +73,7 @@ services:
             - { name: knp_menu.menu, alias: footerMenu }
 
     sandbox_init_cms.menu.frontend_footer_menu_template:
-        class: %mopa_bootstrap.navbar.generic%
+        class: %mopa_bootstrap.menu.generic%
         arguments:
             # first argument: a named array of menues:
             - { menu: @sandbox_init_cms.menu.frontend_footer_menu= }
@@ -82,4 +82,4 @@ services:
             - { template: ApplicationNetworkingInitCmsBundle:Navbar:footernavbar.html.twig }
         tags:
             # The alias is used to retrieve the navbar in templates
-            - { name: mopa_bootstrap.navbar, alias: footerNavbar }
+            - { name: mopa_bootstrap.menu, alias: footerNavbar }

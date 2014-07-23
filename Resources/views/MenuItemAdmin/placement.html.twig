@@ -1,45 +1,49 @@
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>
-        {{ "placement_title"|trans({}, admin.translationDomain) }}
-    </h3>
-</div>
-<div class="modal-body">
-    <div id="existingMenu">
-        {{ menus.navigation|raw }}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>
+                {{ "placement_title"|trans({}, admin.translationDomain) }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <div id="existingMenu">
+                {{ menus.navigation|raw }}
+            </div>
+            <script>
+                (function ($) {
+
+                    $('#existingMenu').mousemove(function (event) {
+                        var newEvent = event;
+
+                        $('.stop').each(function (i, el) {
+                            var li = $(el);
+                            if (isNear($(el), 10, newEvent)) {
+                                li.find('ul').show();
+                            } else {
+                                li.find('ul').hide();
+                            }
+                        });
+                    });
+
+                    function isNear(element, distance, event) {
+
+                        var left = element.offset().left - distance,
+                                top = element.offset().top - distance,
+                                right = left + element.width() + 2 * distance,
+                                bottom = top + element.height() + 2 * distance,
+                                x = event.pageX,
+                                y = event.pageY;
+                        return ( x > left && x < right && y > top && y < bottom );
+
+                    };
+
+                })(jQuery);
+            </script>
+        </div>
+        <div class="modal-footer">
+            {#<input type="submit" class="btn btn-primary" name="btn_update"#}
+            {#value="{{ 'save_placement'|trans({}, admin.translationDomain) }}"/>#}
+        </div>
     </div>
-    <script>
-        (function ($) {
-
-            $('#existingMenu').mousemove(function (event) {
-                var newEvent = event;
-
-                $('.stop').each(function (i, el) {
-                    var li = $(el);
-                    if (isNear($(el), 15, newEvent)) {
-                        li.find('ul').show();
-                    } else {
-                        li.find('ul').hide();
-                    }
-                });
-            });
-
-            function isNear(element, distance, event) {
-
-                var left = element.offset().left - distance,
-                        top = element.offset().top - distance,
-                        right = left + element.width() + 2 * distance,
-                        bottom = top + element.height() + 2 * distance,
-                        x = event.pageX,
-                        y = event.pageY;
-                return ( x > left && x < right && y > top && y < bottom );
-
-            };
-
-        })(jQuery);
-    </script>
-</div>
-<div class="modal-footer">
-    {#<input type="submit" class="btn btn-primary" name="btn_update"#}
-           {#value="{{ 'save_placement'|trans({}, admin.translationDomain) }}"/>#}
 </div>

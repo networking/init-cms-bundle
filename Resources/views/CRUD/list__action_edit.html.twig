@@ -10,8 +10,8 @@ file that was distributed with this source code.
 #}
 {% if admin.isGranted('EDIT', object) and admin.hasRoute('edit') %}
 <a  href="{{ admin.generateObjectUrl('edit', object) }}"
-    class="btn btn-small button-in-row show-tooltip"
+    class="btn btn-default btn-sm button-in-row show-tooltip"
         data-original-title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}" data-page_id="{{ admin.id(object) }}">
-  <i class="icon-pencil"></i>
+  <i class="glyphicon glyphicon-pencil"></i>
 </a>
 {% endif %}

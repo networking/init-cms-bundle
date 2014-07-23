@@ -53,7 +53,7 @@ class SimpleStringFilter extends Filter
             'format' => '%%%s%%',
             'field_type' => 'text',
             'label_render' => true,
-            'widget_control_group' => true
+            'widget_form_group' => true
         );
     }
 
@@ -70,7 +70,7 @@ class SimpleStringFilter extends Filter
         if($this->getFieldType() == 'hidden'){
             return false;
         }
-        return $this->getOption('widget_control_group');
+        return $this->getOption('widget_form_group');
     }
 
     /**
@@ -85,7 +85,7 @@ class SimpleStringFilter extends Filter
                 'field_options' => $this->getFieldOptions(),
                 'label' => $this->getLabel(),
                 'label_render' => $this->getLabelRender(),
-                'widget_control_group' => $this->getWidgetControlGroup()
+                'widget_form_group' => $this->getWidgetControlGroup()
             )
         );
     }

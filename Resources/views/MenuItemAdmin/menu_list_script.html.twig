@@ -23,7 +23,7 @@ function initializeDialog() {
             show: false,
             title: '{{ 'menu.title'|trans({}, admin.translationDomain) }}'
         });
-        menuDialog.on('hide', function () {
+        menuDialog.on('hide.bs.modal', function () {
             jQuery.ajax({
                 url: '{{ admin.generateUrl('list', {'render': true}) }}',
                 dataType: 'html',
@@ -109,9 +109,8 @@ function setUpSortTree() {
         jQuery(ui).find('ul:first').nestedSortable({
             disableNesting: 'no-nest',
             forcePlaceholderSize: true,
-            handle: 'i.icon-move',
+            handle: 'i.glyphicon-move',
             tolerance: 'pointer',
-            toleranceElement: '> div',
             helper: 'clone',
             items: 'li',
             listType: 'ul',
@@ -152,15 +151,6 @@ jQuery(function () {
 
     var ua = navigator.userAgent,
             event = (ua.match(/iPad/i)) ? "touchstart" : "click";
-
-
-    jQuery(".actions-toggle").live('click', function () {
-        jQuery('.row-actions').hide();
-        jQuery(this).parent().children('.row-actions').fadeToggle('fast');
-    });
-    jQuery(".actions-toggle-close").live('click', function () {
-        jQuery(this).parent().fadeToggle('fast');
-    });
 
     jQuery('.menu-dialog-link').live('click', createAjaxDialog);
 

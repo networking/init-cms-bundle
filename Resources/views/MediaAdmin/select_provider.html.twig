@@ -16,20 +16,26 @@ file that was distributed with this source code.
 {% block content %}
 
     {% if app.request.isXmlHttpRequest %}
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
         <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>{{ "title_create"|trans({}, admin.translationDomain) }}</h3>
-            </div>
-            <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>{{ "title_create"|trans({}, admin.translationDomain) }}</h3>
+        </div>
+        <div class="modal-body">
     {% endif %}
     <ul>
         {% for code, provider in providers %}
-            <li><a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}">{{ provider.name|trans() }}</a></li>
+            <li><a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}">{{ provider.name|trans() }}</a>
+            </li>
         {% else %}
             <li>{{ 'no_provider_available'|trans({}, 'MediaAdmin') }}</li>
         {% endfor %}
     </ul>
     {% if app.request.isXmlHttpRequest %}
-    </div>
+        </div>
+
+        </div>
+        </div>
     {% endif %}
 {% endblock %}

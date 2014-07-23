@@ -20,7 +20,7 @@ file that was distributed with this source code.
     {% if is_granted("ROLE_SUPER_ADMIN") %}
     <li>
         <a href="{{ admin.generateUrl('create', {'subclass': 'menu'}) }}" class="menu-dialog-link"><i
-                class="icon icon-plus"></i></a>
+                class="glyphicon glyphicon-plus"></i></a>
     </li>
     {% endif %}
 </ul>
@@ -29,7 +29,7 @@ file that was distributed with this source code.
     {% for key, menu in menus %}
         <div class="tab-pane navigation sortable {% if loop.first %}active{% endif %}" id="menu_{{ menu.rootNode.id }}">
             <div class="row">
-                <div class="span10">
+                <div class="col-md-12">
                     <p class="info-soft" style="font-style: italic;">
                     {% if menu.rootNode.description %}
                         {{ menu.rootNode.description }}
@@ -62,7 +62,7 @@ file that was distributed with this source code.
                     {{ 'label.menu_item_name'|trans({}, admin.translationDomain) }}
                 </div>
 
-                <div class="pull-right menu-item-link-label">
+                <div class="pull-right text-right menu-item-link-label">
                     {{ 'label.linked_resource'|trans({}, admin.translationDomain) }}
                 </div>
                 <div class="clearfix">&nbsp;</div>
@@ -77,5 +77,5 @@ file that was distributed with this source code.
     {% endfor %}
 </div>
 
-<div class="modal hide" tabindex="-1" role="dialog" id="menu_dialog">
+<div class="modal fade" tabindex="-1" role="dialog" id="menu_dialog">
 </div>

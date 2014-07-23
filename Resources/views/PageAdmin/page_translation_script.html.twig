@@ -20,7 +20,7 @@ file that was distributed with this source code.
                 width:650,
                 show:false
             });
-            translationDialog.on('hide', function () {
+            translationDialog.on('hide.bs.modal', function () {
                 jQuery('input[type=submit]', this).off();
             });
             jQuery(document.body).append(translationDialog);

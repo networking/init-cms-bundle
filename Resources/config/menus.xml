@@ -6,7 +6,7 @@
 
     <services>
         <service id="networking_init_cms.menu.admin_menu_builder"
-                 class="Networking\InitCmsBundle\Component\Menu\AdminMenuBuilder" scope="request">
+                 class="Networking\InitCmsBundle\Menu\AdminMenuBuilder" scope="request">
             <argument type="service" id="knp_menu.factory"/>
             <argument type="service" id="security.context"/>
             <argument type="service" id="request"/>
@@ -26,20 +26,6 @@
             <argument type="service" id="request"/>
             <tag name="knp_menu.menu" alias="AdminMenu"/>
         </service>
-
-        <service id="networking_init_cms.menu.admin_menu_template" class="%mopa_bootstrap.navbar.generic%">
-            <argument type="collection">
-                <argument key="status_menu" on-invalid="null" strict="false" type="service" id="networking_init_cms.menu.admin_menu"/>
-            </argument>
-            <argument type="collection" />
-            <argument type="collection">
-                <argument key="fixedTop">false</argument>
-                <argument key="isFluid">false</argument>
-                <argument key="template">NetworkingInitCmsBundle:Navbar:admin_nav_items.html.twig</argument>
-            </argument>
-            <tag name="mopa_bootstrap.navbar" alias="AdminMenu" />
-        </service>
-
     </services>
 
 </container>

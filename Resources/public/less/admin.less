@@ -8,55 +8,55 @@
 }
 
 .info-soft {
-  color: @textColorSoft;
+  color: @text-color-soft;
 }
 
 .info-very-soft {
-  color: @textColorVerySoft;
+  color: @text-color-very-soft;
 }
 
 .dark {
-  color: @textColor;
+  color: @text-color;
 }
 
 .color-second {
-  color: @textColor2;
+  color: @text-color2;
 }
 
 .color-draft {
-  color: @colorDraft !important;
+  color: @color-draft !important;
 }
 
 .color-review {
-  color: @colorReview !important;
+  color: @color-review !important;
 }
 
 .color-published {
-  color: @colorPublished !important;
+  color: @color-published !important;
 }
 
 .font-micro {
-  font-size: @fontSizeMicro;
+  font-size: @font-size-micro;
 }
 
 .font-mini {
-  font-size: @fontSizeMini;
+  font-size: @font-size-mini;
 }
 
 .font-small {
-  font-size: @fontSizeSmall;
+  font-size: @font-size-small;
 }
 
 .font-medium {
-  font-size: @fontSizeMedium;
+  font-size: @font-size-medium;
 }
 
 .font-large {
-  font-size: @fontSizeLarge;
+  font-size: @font-size-large;
 }
 
 .font-very-large {
-  font-size: @fontSizeVeryLarge;
+  font-size: @font-size-very-large;
 }
 
 .font-light {
@@ -174,7 +174,7 @@
 
 .accordion-caret {
   float: right;
-  padding-top: 6px;
+  //  padding-top: 6px;
   height: 10px;
 }
 
@@ -219,16 +219,16 @@
 // Semi overriding bootstrap
 .table-compact td {
   padding: 8px;
-  font-size: @fontSizeSmall;
+  font-size: @font-size-small;
   line-height: 14px;
   overflow: hidden;
 }
 
-.nowrap{
+.nowrap {
   white-space: nowrap;
 }
 
-.word-break{
+.word-break {
   word-break: break-word;
 }
 
@@ -295,7 +295,7 @@ li.table-row-style .menu-item-link {
   right: -8px;
   background-color: rgba(100, 100, 100, 1);
   padding: 3px 3px 3px 20px;
-  height: 24px;
+  height: 34px;
   white-space: nowrap;
   -webkit-border-radius: 16px 0px 0px 16px;
   border-radius: 16px 0px 0px 16px;
@@ -339,25 +339,27 @@ li.table-row-style .menu-item-link {
 .sortable li.ui-state-active, .sortable li.ui-state-highlight {
   margin-bottom: 20px !important;
 }
-.select2-container{
+
+.select2-container {
   margin: 0;
 }
-.select2-container .select2-choice {
-  line-height: 20px !important;
-  height: 20px !important;
-}
 
-.select2-container .select2-choice abbr {
-  top: 4px !important;
-}
-
-.select2-container .select2-arrow b {
-  background-position: 0 -3px !important;
-}
-
-.select2-dropdown-open .select2-arrow b {
-  background-position: -18px -3px !important;
-}
+//.select2-container .select2-choice {
+//  line-height: 20px !important;
+//  height: 20px !important;
+//}
+//
+//.select2-container .select2-choice abbr {
+//  top: 4px !important;
+//}
+//
+//.select2-container .select2-arrow b {
+//  background-position: 0 -3px !important;
+//}
+//
+//.select2-dropdown-open .select2-arrow b {
+//  background-position: -18px -3px !important;
+//}
 
 .filters {
   background-color: #ebebeb;
@@ -407,6 +409,7 @@ li.table-row-style .menu-item-link {
 
 .dropzone > ul, .dropzone > ol {
   margin: 0;
+  padding: 0;
 }
 
 .dropzone h6 {
@@ -432,8 +435,8 @@ li.table-row-style .menu-item-link {
   text-align: center;
 }
 
-[class^="icon-"].soft-background,
-[class*=" icon-"].soft-background {
+[class^="glyphicon-"].soft-background,
+[class*=" glyphicon-"].soft-background {
   background-color: #ebebeb;
   padding: 5px;
 }
@@ -450,6 +453,16 @@ li.table-row-style .menu-item-link {
   outline: none;
 }
 
+#login.modal {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  z-index: 1;
+  display: block;
+}
+
 // Sontat CSS overwrites
 .initcms {
   .brand {
@@ -462,72 +475,72 @@ li.table-row-style .menu-item-link {
   }
 
   h1 {
-    font-size: @fontSizeLarge;
+    font-size: @font-size-large;
     font-weight: 500;
-    color: @grayDarker;
+    color: @gray-darker;
   }
 
   h2 {
-    font-size: @fontSizeLarge;
+    font-size: @font-size-large;
     font-weight: 300;
-    color: @grayLight;
+    color: @gray-light;
   }
   h3 {
-    font-size: @fontSizeMedium;
+    font-size: @font-size-medium;
     font-weight: 500;
-    color: @grayDarker;
+    color: @gray-darker;
   }
 
   h4 {
-    font-size: @fontSizeMedium;
+    font-size: @font-size-medium;
     font-weight: 300;
-    color: @grayDarker;
+    color: @gray-darker;
   }
   h5 {
-    font-size: @baseFontSize;
+    font-size: @font-size-base;
     font-weight: 500;
-    color: @grayDarker;
+    color: @gray-darker;
   }
 
   h1 small {
-    font-size: @fontSizeLarge;
+    font-size: @font-size-large;
     font-weight: 100;
   }
   h2 small {
-    font-size: @fontSizeLarge;
+    font-size: @font-size-large;
     font-weight: 100;
   }
   h3 small {
-    font-size: @baseFontSize;
+    font-size: @font-size-base;
     font-weight: 100;
   }
   h4 small {
-    font-size: @baseFontSize;
+    font-size: @font-size-base;
     font-weight: 100;
   }
 
   a {
-    color: @grayDark;
+    color: @gray-dark;
     cursor: pointer;
   }
 
   a.colored-link {
-    color: @linkColor;
+    color: @link-color;
   }
 
   a:hover {
     text-decoration: none;
-    color: @linkColor;
+    color: @link-color;
   }
 
   .table a {
     text-decoration: none;
-    color: @textColor;
+    color: @text-color;
   }
 
   .table a:hover {
     text-decoration: none;
-    color: @linkColor;
+    color: @link-color;
   }
 
   .navbar-spacer {
@@ -548,34 +561,34 @@ li.table-row-style .menu-item-link {
     background-color: #fff;
   }
 
-  .accordion-heading a {
+  .panel-heading a {
     text-decoration: none;
   }
 
-  .accordion-heading .accordion-toggle {
+  .panel-heading .accordion-toggle {
     display: block;
     padding-top: 4px;
     padding-bottom: 4px;
   }
 
-  .accordion-inner {
+  .panel-body {
     padding-top: 15px;
   }
 
-  .accordion-inner label {
-    color: @textColorSoft;
-    font-size: @fontSizeSmall;
+  .panel-body label {
+    color: @text-color-soft;
+    font-size: @font-size-small;
     margin-bottom: -2px;
   }
 
-  .accordion-inner input[type=text] {
+  .panel-body input[type=text] {
     height: 15px;
   }
-  .accordion-inner select {
+  .panel-body select {
     height: 26px;
   }
 
-  .accordion-inner .value-display {
+  .panel-body .value-display {
     font-size: 13px;
     margin-bottom: 7px;
   }
@@ -588,8 +601,7 @@ li.table-row-style .menu-item-link {
     position: fixed;
     bottom: 0;
     width: 100%;
-    border-top:thin solid #dddddd
-  ;
+    border-top: thin solid #dddddd;
     color: #999;
     font-size: 11px;
     padding: 10px 0px;
@@ -607,6 +619,7 @@ li.table-row-style .menu-item-link {
   .nav-custom ul {
     list-style: none;
     margin-left: 0px;
+    padding-left: 0;
   }
 
   .nav-custom a {
@@ -640,11 +653,11 @@ li.table-row-style .menu-item-link {
   }
 
   .nav-custom li.first-level.active > a, .nav-custom li.first-level.active > div > i {
-    color: @linkColor;
+    color: @link-color;
   }
 
   .nav-custom li.first-level-small.active > a, .nav-custom li.first-level-small.active > div > i {
-    color: @linkColor;
+    color: @link-color;
   }
 
   .nav-custom li.second-level.active > a {
@@ -723,7 +736,7 @@ li.table-row-style .menu-item-link {
   }
 
   .nav-custom li a:hover, .nav-custom li:hover {
-    color: @linkColor;
+    color: @link-color;
   }
 
   .nav-custom-more {
@@ -739,9 +752,9 @@ li.table-row-style .menu-item-link {
     margin-bottom: 10px;
   }
   .right-bar {
-    border-left: 1px @grayLighter solid;
-    margin-left: 10px;
-    padding-left: 9px;
+    border-left: 1px @gray-lighter solid;
+    //    margin-left: 10px;
+    //    padding-left: 9px;
     height: 100%;
   }
   .icon-caret-left.caret-button-padding {
@@ -765,14 +778,14 @@ li.table-row-style .menu-item-link {
   }
 
   .filters a {
-    font-size: @fontSizeSmall;
+    font-size: @font-size-small;
   }
   a.link-underlined {
-    color: @linkColor;
+    color: @link-color;
     text-decoration: underline;
   }
   a.link-nounderline {
-    color: @linkColor;
+    color: @link-color;
     text-decoration: none;
   }
   .filters.menu-filter {
@@ -839,7 +852,7 @@ li.table-row-style .menu-item-link {
   }
 
   a.btn:hover {
-    color: @grayDark;
+    color: @gray-dark;
   }
 
   a.btn-primary,
@@ -854,76 +867,49 @@ li.table-row-style .menu-item-link {
   a.btn-success:hover,
   a.btn-info:hover,
   a.btn-inverse:hover {
-    color: @white;
+    color: white;
   }
 
   div.sonata-ba-form-error {
-      color: #9C2F2F;
+    color: #9C2F2F;
   }
 
   div.sonata-ba-form-error ul {
-      margin: 0;
+    margin: 0;
   }
 
-  div.sonata-ba-field-error input{
-      border: 1px solid #f79992;
+  div.sonata-ba-field-error input {
+    border: 1px solid #f79992;
   }
 
-  div.sonata-ba-field-error textarea{
-      border: 1px solid #f79992;
+  div.sonata-ba-field-error textarea {
+    border: 1px solid #f79992;
   }
 
-  div.sonata-ba-field-error select{
-      border: 1px solid #f79992;
+  div.sonata-ba-field-error select {
+    border: 1px solid #f79992;
   }
 
-  span#contentLoading{
+  span#contentLoading {
     display: inline-block;
     vertical-align: top;
   }
+
+  .modal-dialog {
+    margin: 60px auto;
+  }
 }
 
-.cursor-pointer{
-  cursor:pointer;
+.cursor-pointer {
+  cursor: pointer;
 }
-.break-word{
+
+.break-word {
   word-wrap: break-word;
 }
 
-
-
-.media-filter{
-   margin-bottom:0;
-}
-
-@media (max-width: @navbarCollapseWidth) {
-  .navbar-initcms.navbar-fixed-top {
-    margin-bottom: 0px;
-  }
-
-  .initcms {
-    .nav-main {
-      background: none;
-      background-color: @grayLighter;
-      border-right: none;
-      width: 100%;
-      padding-top: 0;
-      min-height: 0;
-    }
-    .nav-custom .active-corner-top,
-    .nav-custom .active-corner-bottom,
-    .nav-custom-small .active-corner-top,
-    .nav-custom .active-corner-bottom,
-    .nav-custom-small .active-corner-bottom {
-      background: none;
-    }
-    .navbar-spacer {
-      padding: 0;
-      margin: 0;
-      display: none;
-    }
-
-  }
+.media-filter {
+  margin-bottom: 0;
 }
 
 @media (max-width: 620px) {
