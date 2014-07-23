@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
         http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
     <class name="Networking\InitCmsBundle\Model\Page">
@@ -23,6 +23,104 @@
                 <option name="message">init_cms.url.blank</option>
                 <option name="groups">
                     <value>not_home</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+
+    <class name="FOS\UserBundle\Model\User">
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">usernameCanonical</option>
+            <option name="errorPath">username</option>
+            <option name="message">fos_user.username.already_used</option>
+            <option name="groups">
+                <value>Registration</value>
+                <value>Profile</value>
+            </option>
+        </constraint>
+
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">emailCanonical</option>
+            <option name="errorPath">email</option>
+            <option name="message">fos_user.email.already_used</option>
+            <option name="groups">
+                <value>Registration</value>
+                <value>Profile</value>
+            </option>
+        </constraint>
+        <property name="enabled">
+            <constraint name="Length">
+                <option name="min">0</option>
+                <option name="max">4096</option>
+                <option name="minMessage">not used</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+    <class name="Sonata\MediaBundle\Model\Media">
+        <constraint name="Callback">
+            <option name="methods">
+                <value>isStatusErroneous</value>
+            </option>
+        </constraint>
+        <constraint name="Sonata\AdminBundle\Validator\Constraints\InlineConstraint">
+            <option name="service">sonata.media.pool</option>
+            <option name="method">validate</option>
+        </constraint>
+        <property name="name">
+            <constraint name="NotNull"/>
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="providerReference">
+            <constraint name="NotNull"/>
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="providerStatus">
+            <constraint name="NotNull"/>
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="enabled">
+            <constraint name="Length">
+                <option name="min">0</option>
+                <option name="max">4096</option>
+                <option name="minMessage">not used</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="Sonata\MediaBundle\Model\Gallery">
+        <constraint name="Sonata\MediaBundle\Validator\Constraints\ValidMediaFormat"/>
+        <property name="galleryHasMedias">
+            <constraint name="Valid"/>
+        </property>
+        <property name="context">
+            <constraint name="NotNull"/>
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="name">
+            <constraint name="NotNull"/>
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="defaultFormat">
+            <constraint name="NotNull"/>
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="enabled">
+            <constraint name="Length">
+                <option name="min">0</option>
+                <option name="max">4096</option>
+                <option name="minMessage">not used</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
                 </option>
             </constraint>
         </property>
