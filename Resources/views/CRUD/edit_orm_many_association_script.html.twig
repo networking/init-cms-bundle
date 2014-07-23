@@ -256,6 +256,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
         success: function (data, status, xhr) {
 
             Admin.log('[{{ id }}|field_dialog_form_action] ajax success');
+
             var ct = xhr.getResponseHeader("content-type") || "application/json";
             if (ct != 'application/json') {
                 var IS_JSON = true;
