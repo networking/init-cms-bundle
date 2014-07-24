@@ -1,5 +1,5 @@
 function createInitCmsMessageBox(status, message) {
-    var messageHtml = '<div class="alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
+    var messageHtml = '<div class="col-md-offset-2 col-md-10 alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
 
     jQuery('.notice-block').html(messageHtml);
 }
@@ -36,7 +36,7 @@ function trim(str) {
         }
     });
 
-    $('.modal').on('show.bs.modal', function () {
+    $(document).on('show.bs.modal', '.modal', function () {
         $('.modal .modal-body').css('overflow-y', 'auto');
         $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
     });

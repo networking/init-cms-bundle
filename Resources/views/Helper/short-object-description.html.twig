@@ -1,9 +1,11 @@
 {% if object.providerName is defined and object.providerName == 'sonata.media.provider.image' %}
 {% set description %}{% thumbnail object, 'admin' with {'width': 75, 'height': 60} %} {% endset %}
+{% else %}
+    {% set description = description|truncate(30)  %}
 {% endif %}
 <span class="inner-field-short-description">
     {% if admin.hasRoute('edit') and admin.isGranted('EDIT') %}
-        <a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ description }}</a>
+        <a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ description}}</a>
     {% else %}
         {{ description }}
     {% endif %}

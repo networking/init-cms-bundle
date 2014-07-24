@@ -295,7 +295,7 @@ li.table-row-style .menu-item-link {
   right: -8px;
   background-color: rgba(100, 100, 100, 1);
   padding: 3px 3px 3px 20px;
-  height: 34px;
+  height: 35px;
   white-space: nowrap;
   -webkit-border-radius: 16px 0px 0px 16px;
   border-radius: 16px 0px 0px 16px;
@@ -340,9 +340,9 @@ li.table-row-style .menu-item-link {
   margin-bottom: 20px !important;
 }
 
-.select2-container {
-  margin: 0;
-}
+//.select2-container {
+//  margin: 0;
+//}
 
 //.select2-container .select2-choice {
 //  line-height: 20px !important;
@@ -465,6 +465,15 @@ li.table-row-style .menu-item-link {
 
 // Sontat CSS overwrites
 .initcms {
+  .badge-draft {
+    background-color: @color-draft;
+  }
+  .badge-review {
+    background-color: @color-review;
+  }
+  .badge-published {
+    background-color: @color-published;
+  }
   .brand {
     float: left;
     display: block;
@@ -472,6 +481,7 @@ li.table-row-style .menu-item-link {
     margin-left: 0px;
     font-size: 16px;
     font-weight: 200;
+    line-height: 30px;
   }
 
   h1 {
@@ -544,7 +554,7 @@ li.table-row-style .menu-item-link {
   }
 
   .navbar-spacer {
-    height: 41px;
+    height: 55px;
   }
 
   .nav-tabs > li > a {
@@ -692,7 +702,6 @@ li.table-row-style .menu-item-link {
   }
 
   .nav-custom .first-level-text {
-    padding-top: 2px;
     padding-left: 4px;
   }
 
@@ -759,18 +768,6 @@ li.table-row-style .menu-item-link {
   }
   .icon-caret-left.caret-button-padding {
     padding-left: 2px;
-  }
-
-  //  [class^="icon-"],
-  //  [class*=" icon-"]{
-  //    display: inline-block;
-  //    text-align: center;
-  //    font-size: 1.3em;
-  //  }
-
-  [class^="glyphicon-"],
-  [class*=" glyphicon-"] {
-    font-size: 12px;
   }
 
   h1 .info-soft {
@@ -910,6 +907,38 @@ li.table-row-style .menu-item-link {
 
 .media-filter {
   margin-bottom: 0;
+}
+.highlight {
+  padding: 9px 14px;
+  margin-bottom: 14px;
+  background-color: #F7F7F9;
+  border: 1px solid #E1E1E8;
+  border-radius: 4px;
+}
+.content_preview i.glyphicon {
+  margin-right: 5px;
+}
+.notice-block {
+  top: 55px;
+  z-index: 100000;
+  padding-left: 5px;
+  padding-right: 30px;
+
+  @media (min-width: @screen-sm-min) {
+    width: @container-sm;
+  }
+  @media (min-width: @screen-md-min) {
+    width: @container-md;
+  }
+  @media (min-width: @screen-lg-min) {
+    width: @container-lg;
+  }
+  .alert {
+      padding: 6px 15px;
+  }
+}
+.margin-top{
+  margin-top: 10px;
 }
 
 @media (max-width: 620px) {

@@ -1,36 +1,35 @@
 .navbar-initcms {
-  @import "../../../../../../../mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/public/less/mopabootstrapbundle-fa.less";
-  @import "../../../../../../../twbs/bootstrap/less/responsive.less";
-  @import "initcms_variables";
-  @import "variables.less";
-  @import "admin.less";
   line-height: 20px;
   top: 0px !important;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px; // Gradient is applied to its own element because overflow visible is not honored by IE when filter is present
   z-index: 2000; // Dropdowns
-  color: @navbarInverseText;
-  margin-bottom: @navbarHeight;
+  color: @navbar-inverse-color;
+  margin-bottom: @navbar-height;
 
   a.brand,
   .nav > li > a {
-    color: @navbarInverseLinkColor;
-    background-color: @navbarInverseBackground;
+    color: @navbar-inverse-link-color;
+    background-color: @navbar-inverse-bg;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
     &:hover {
-      color: @navbarInverseLinkColorHover;
+      color: @navbar-inverse-link-hover-color;
     }
   }
 
-  .dropdown-menu { // Links within the dropdown menu
+  .dropdown-menu {
+    // Links within the dropdown menu
     a {
-      color: @dropdownLinkColor !important;
+      color: @dropdown-link-color !important;
     }
     a:focus, a:hover {
-      color: @dropdownLinkColorHover !important;
+      color: @dropdown-link-hover-color !important;
     }
     a.color-draft {
-      color: #ff8a00 !important;
+      color: @color-draft !important;
+    }
+    a.color-published {
+      color: @color-published !important;
     }
   }
 }

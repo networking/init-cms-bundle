@@ -23,16 +23,16 @@ file that was distributed with this source code.
         '@SonataAdminBundle/Resources/public/select2/select2.css'
         '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/build/build_standalone.less'
         '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
+        '@NetworkingInitCmsBundle/Resources/public/css/bootstrap-editable.css'
         output='css/initcms_admin.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
         {% endstylesheets %}
-        <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
     {% endblock %}
 
     {% block javascripts %}
         {% javascripts
-        'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'
-        'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/jquery-1.9.1.min.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/jquery-ui-1.9.1.min.js'
         '@SonatajQueryBundle/Resources/public/jquery-ui-i18n.js'
         output='js/jquery-1.9.1.min.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -40,12 +40,10 @@ file that was distributed with this source code.
         {% javascripts
         '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
         '@MopaBootstrapBundle/Resources/public/bootstrap/js/*.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-editable.min.js'
         output='js/bootstrap.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
-
-
-        <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     {% endblock javascripts %}
 
     <title>
@@ -107,6 +105,21 @@ file that was distributed with this source code.
 {% endblock navbar_spacer %}
 
     <div class="{% block container_class %}container{% endblock container_class %}">
+        <div class="notice-block affix">
+            {% block notice %}
+                {% for notice_level in ['success','error','info', 'warning'] %}
+                    {% set session_var = 'sonata_flash_' ~ notice_level %}
+                    {% for flash in app.session.flashbag.get(session_var) %}
+
+                        <div class="col-md-offset-2 col-md-10 alert {{ (notice_level=='error')?'alert-danger':'alert-' ~ notice_level }}"
+                             role="allert">
+                            <a class="close" data-dismiss="alert" href="#">×</a>
+                            {{ flash|trans([], 'NetworkingInitCmsBundle') }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endblock notice %}
+        </div>
         <div class="row">
             {% block sidebar_left %}
                 <div class="col-md-2">
@@ -119,21 +132,7 @@ file that was distributed with this source code.
                 </div>
             {% endblock sidebar_left %}
             <div class="{% if block('sidebar_left') %}col-md-10{% else %}col-md-12{% endif %} content-main">
-                <div class="notice-block col-md-8 affix affix-top" style="top: 30px; z-index: 100000;">
-                    {% block notice %}
-                        {% for notice_level in ['success','error','info', 'warning'] %}
-                            {% set session_var = 'sonata_flash_' ~ notice_level %}
-                            {% for flash in app.session.flashbag.get(session_var) %}
 
-                                <div class="alert {{ (notice_level=='error')?'alert-danger':'alert-' ~ notice_level }}"
-                                     role="allert">
-                                    <a class="close" data-dismiss="alert" href="#">×</a>
-                                    {{ flash|trans([], 'NetworkingInitCmsBundle') }}
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-                    {% endblock notice %}
-                </div>
                 <div class="row content-top">
                     <div class="col-md-4">
                         <!--<a href="?c=menus"> show all Menus</a>-->

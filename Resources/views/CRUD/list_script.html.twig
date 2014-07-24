@@ -53,7 +53,7 @@
             url:form.attr('action'),
             success:function (html) {
                 // populate the popup container
-                listDialog.html(html);
+                jQuery('.modal-content', listDialog).html(html);
                 var container = jQuery(".sonata-ba-delete", listDialog);
                 var text = container.clone().children().remove().end().text();
                 var containerHtml = container.html();

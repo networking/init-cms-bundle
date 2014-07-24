@@ -6,13 +6,13 @@
                 <div class="initnavbar-inner">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="span2">
                                 <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
                                     <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
                                          width="77">
                                 </a>
                             </div>
-                            <div class="col-md-5">
+                            <div class="span5">
                                 {% if admin_pool is defined %}
                                     <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
                                         {{ admin_pool.title }}
@@ -20,7 +20,7 @@
                                     {% include admin_pool.getTemplate('user_block') %}
                                 {% endif %}
                             </div>
-                            <div class="col-md-5">
+                            <div class="span5 pull-right">
                                 {% if admin_pool is defined %}
                                     {{ mopa_bootstrap_menu('AdminMenu') }}
                                 {% endif %}

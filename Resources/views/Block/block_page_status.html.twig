@@ -4,25 +4,26 @@
     <div class="well well-small">
         <h4>{{ 'title.page_status_count'|trans({}, 'PageAdmin') }}</h4>
 
-        <div class="row-fluid">
-            <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
                 <span class="color-draft">{{ 'status_draft'|trans({}, 'PageAdmin') }} </span><span
-                    class="badge badge-warning pull-right">{{ draft_pages }}</span>
+                        class="badge badge-draft pull-right">{{ draft_pages }}</span>
 
-                <div class="clearfix"></div>
+            </div>
+            <div class="col-md-12">
                 <span class="color-review">{{ 'status_review'|trans({}, 'PageAdmin') }} </span><span
-                    class="badge badge-info pull-right">{{ review_pages }}</span>
+                        class="badge badge-review pull-right">{{ review_pages }}</span>
 
-                <div class="clearfix"></div>
+            </div>
+            <div class="col-md-12">
                 <span class="color-published">{{ 'status_published'|trans({}, 'PageAdmin') }} </span><span
-                    class="badge badge-success pull-right">{{ published_pages }}</span>
+                        class="badge badge-published pull-right">{{ published_pages }}</span>
 
-                <div class="clearfix"></div>
             </div>
         </div>
         <div class="clearfix">&nbsp;</div>
         {% if reviewPages|length > 0 %}
-            <div class="row-fluid">
+            <div class="row">
                 <div class="col-md-12">
                     <h4>{{ 'title.actual_reviews'|trans({}, 'PageAdmin') }}</h4>
                     {% for lang, drafts in reviewPages %}
@@ -40,7 +41,7 @@
             </div>
         {% endif %}
         {% if draftPages|length > 0 %}
-            <div class="row-fluid">
+            <div class="row">
                 <div class="col-md-12">
                     <h4>{{ 'title.actual_drafts'|trans({}, 'PageAdmin') }}</h4>
                     {% for lang, drafts in draftPages %}
