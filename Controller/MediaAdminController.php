@@ -193,8 +193,6 @@ class MediaAdminController extends SonataMediaAdminController
 
             $this->addFlash('sonata_flash_success', 'flash_batch_delete_success');
         } catch (ModelManagerException $e) {
-            var_dump($e);
-            die;
             $this->addFlash('sonata_flash_error', 'flash_batch_delete_error');
         }
 
@@ -249,8 +247,15 @@ class MediaAdminController extends SonataMediaAdminController
         $request = $this->getRequest();
         $galleryListMode = $request->get('pcode') ? true : false;
 
+        /** @var \Sonata\MediaBundle\Provider\Pool $mediaPool */
+        $mediaPool = $this->container->get('sonata.media.pool');
 
-        $datagrid = $this->admin->getDatagrid($request->get('context', 'default'));
+        $contexts = $mediaPool->getContexts();
+
+        reset($contexts);
+        $contextName = key($contexts);
+
+        $datagrid = $this->admin->getDatagrid($request->get('context', $contextName));
         $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
         $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
 
