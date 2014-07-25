@@ -67,16 +67,16 @@ networking_init_cms:
             icon: "bundles/applicationnetworkinginitcms/img/template_header_one_column.png"
             controller: MyBundle::index
             zones:
-                - { name: header, span:12 }
-                - { name: main_content, span:12}
+                - { name: header, class: 'col-md-12' }
+                - { name: main_content, class: 'col-md-12'}
         'sandbox_two_column':
             template: "ApplicationNetworkingInitCmsBundle:Default:two_column.html.twig"
             name: "Two Column"
             icon: "bundles/applicationnetworkinginitcms/img/template_header_two_column.png"
             zones:
-                - { name: header , span:12, max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery}
-                - { name: left , span:6}
-                - { name: right , span:6}
+                - { name: header , class: 'col-md-12', max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery}
+                - { name: left , class: 'col-md-3'}
+                - { name: right , class: 'col-md-9'}
     content_types:
         - { name: 'Text' , class: 'Networking\InitCmsBundle\Entity\Text'}
         - { name: 'Gallery' , class: 'Networking\GalleryBundle\Entity\Gallery'}
@@ -111,9 +111,9 @@ The parameters fo the template include:
     4. "controller": used to direct the request to the correct controller. default is NetworkingInitCmsBundle:FrontendPage:index
         if not set
     5. "zones": These are the areas in the template where content will be assigned to. Each zone has a "name" property
-        (something sensible so the user can imagine what sort of content my go there), and "span" property which enables
-        the CMS to roughly approximate the dimensions of the template. The span property is based in the twitter
-        bootstrap grid system, where a span of 12 represents a css class of span12 ie the whole width of the page.
+        (something sensible so the user can imagine what sort of content my go there), and "class" property which enables
+        the CMS to roughly approximate the dimensions of the template. The class property allows you to set a class for
+        display the width and offset of a column, to use this feature you should be familiar with Bootstrap 3.
 
 ```
 templates:
@@ -123,16 +123,16 @@ templates:
         icon: "bundles/applicationnetworkinginitcms/img/template_header_one_column.png"
         controller: MyBundle::index # default NetworkingInitCmsBundle:FrontendPage:index
         zones:
-            - { name: header, span:12, max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery }
-            - { name: main_content, span:12}
+            - { name: header, class: 'col-md-12', max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery }
+            - { name: main_content, class: 'col-md-12'}
     'sandbox_two_column':
         template: "ApplicationNetworkingInitCmsBundle:Default:two_column.html.twig"
         name: "Two Column"
         icon: "bundles/applicationnetworkinginitcms/img/template_header_two_column.png"
         zones:
-            - { name: header , span:12}
-            - { name: left , span:6}
-            - { name: right , span:6}
+            - { name: header , class: 'col-md-12'}
+            - { name: left , class: 'col-md-3'}
+            - { name: right , class: 'col-md-9'}
 ```
 
 Special attention should be made to the parameter "controller", this allows you to override the default action that a route
@@ -161,7 +161,7 @@ afterwards e.g.
 
 Also it is possible to restrict certain content zones to a specific content type using the "restricted_types" param
 as well as limit the number of items allowed in a certain zone with the "max_content_items" parameter, the default is 0 which
-means unlimited.
+means unlimited. If you don't want any content in a zone, use -1, for example if you need to display an area, which the user can not put content in;
 
 To learn more about templates see:
 [Creating Templates](templates.md)

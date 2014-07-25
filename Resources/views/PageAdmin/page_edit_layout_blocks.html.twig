@@ -14,19 +14,18 @@ file that was distributed with this source code.
 {% endif %}
 <div id="field_container_{{ id }}">
     <p></p>
-    {% set col = 0 %}
     {% set increment = 0 %}
     {% if not admin.subject.alias %}
         {% for key, zone in get_initcms_template_zones() %}
-            {% if (col == 0 or loop.first) %}
+            {% if (loop.first) %}
                 <div class="row">
             {% endif %}
 
-            {% set col = col + zone.span %}
 
-            <div class="col-md-{{ zone.span }}">
+            <div class="{{ zone.class }}">
                 <div class="dropzone well well-small">
                     <h6>{{ zone.name|trans() }} </h6>
+                    {% if zone.max_content_items is not same as(-1) %}
                     <ul id="zone_{{ zone.name }}" class="sortable" data-content-types="{{ zone.restricted_types }}"
                         data-max-items="{{ zone.max_content_items }}">
 
@@ -133,11 +132,11 @@ file that was distributed with this source code.
                         {% endfor %}
 
                     </ul>
+                    {% endif %}
                 </div>
             </div>
 
-            {% if (col == 12 or loop.last) %}
-                {% set col = 0 %}
+            {% if (loop.last) %}
                 </div>
             {% endif %}
         {% endfor %}
