@@ -134,7 +134,9 @@ file that was distributed with this source code.
             {% endif %}
 
             {# include association code #}
+            {% jsblock 'addToBottom' %}
             {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_association_script.html.twig' %}
+            {% jsblock 'addToBottomEnd' %}
         {% else %}
             <span id="field_actions_{{ id }}">
                 {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
@@ -155,8 +157,9 @@ file that was distributed with this source code.
                  aria-hidden="true">
 
             </div>
-
+            {% jsblock 'addToBottom' %}
             {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+            {% jsblock 'addToBottomEnd' %}
         {% endif %}
     </div>
 {% endif %}
