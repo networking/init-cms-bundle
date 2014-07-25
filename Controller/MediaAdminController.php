@@ -250,7 +250,7 @@ class MediaAdminController extends SonataMediaAdminController
         $galleryListMode = $request->get('pcode') ? true : false;
 
 
-        $datagrid = $this->admin->getDatagrid($request->get('context'));
+        $datagrid = $this->admin->getDatagrid($request->get('context', 'default'));
         $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
         $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
 
