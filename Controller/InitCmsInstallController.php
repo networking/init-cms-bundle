@@ -133,8 +133,8 @@ class InitCmsInstallController extends Controller
 
                 $output = $this->getStreamOutput();
 
-                if ($complete == 0) {
 
+                if ($complete == 0) {
                     $this->initACL($output);
                     $this->createDB($output);
                     $returnCode = $this->sonataSetupACL($output);
@@ -158,7 +158,6 @@ class InitCmsInstallController extends Controller
                         $complete++;
                     }
                 }
-
 
 
                 if ($complete == 3) {
