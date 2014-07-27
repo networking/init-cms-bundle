@@ -379,8 +379,13 @@ abstract class MediaAdmin extends Admin
         if ($this->getSubject()) {
             $this->getRequest()->query->set('context', $this->getSubject()->getContext());
         }
+        
+        $contexts = $this->pool->getContexts();
+        reset($contexts);
+        $contextName = key($contexts);
 
-        $context = $this->getRequest()->get('context', $this->pool->getDefaultContext());
+
+        $context = $this->getRequest()->get('context', $contextName);
         $providers = $this->pool->getProvidersByContext($context);
         $provider = $this->getRequest()->get('provider');
 

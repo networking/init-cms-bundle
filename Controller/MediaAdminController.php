@@ -244,11 +244,17 @@ class MediaAdminController extends SonataMediaAdminController
             throw new AccessDeniedException();
         }
         /** @var Request $request */
-        $request = $this->getRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
         $galleryListMode = $request->get('pcode') ? true : false;
 
+        /** @var \Sonata\MediaBundle\Provider\Pool $mediaPool */
+        $mediaPool = $this->container->get('sonata.media.pool');
+        $contexts = $mediaPool->getContexts();
 
-        $datagrid = $this->admin->getDatagrid($request->get('context', 'default'));
+        reset($contexts);
+        $contextName = key($contexts);
+
+        $datagrid = $this->admin->getDatagrid($request->get('context', $contextName));
         $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
         $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
 
