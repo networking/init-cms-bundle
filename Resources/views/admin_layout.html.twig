@@ -46,9 +46,10 @@ file that was distributed with this source code.
 
 
 {% block sidebar_left %}
-    <div class="col-md-2">
+    <div class="col-xs-12 col-md-3 col-lg-2  sidebar-offcanvas">
         <div class="nav-collapse nav-main ">
-            {% block top_bar_before_nav %} {% endblock %}
+            {% block top_bar_before_nav %}
+            {% endblock %}
 
             {% block sonata_top_bar_nav %}
                 {% include 'NetworkingInitCmsBundle:Navbar:admin_side_nav.html.twig' %}
@@ -61,7 +62,7 @@ file that was distributed with this source code.
 
 {% block page_title %}
     <div class="row content-head">
-        <div class="col-md-7 page_title">
+        <div class="col-xs-7 page_title">
             {% if _title is not empty or action is defined %}
                 <h1>
                     {% if _title is not empty %}
@@ -89,7 +90,7 @@ file that was distributed with this source code.
             {% endif %}
         </div>
 
-        <div class="col-md-5 context-head">
+        <div class="col-xs-5 context-head">
             {% block top_actions %}{% endblock %}
             {% if app.security.token and is_granted('ROLE_SONATA_ADMIN') %}
                 {% if _help_text is empty %}
@@ -114,7 +115,7 @@ file that was distributed with this source code.
 
 {% block sonata_admin_content %}
     <div class="row row-content-wide">
-        <div class="sonata-ba-content col-md-{% if block('sidebar_left') is empty %}12{% elseif _side_menu is empty %}12{% else %}10{% endif %}">
+        <div class="sonata-ba-content col-md-{% if _side_menu is empty %}12{% else %}10{% endif %}">
 
             {% if _preview is not empty %}
                 {{ _preview|raw }}

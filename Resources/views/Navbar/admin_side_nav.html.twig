@@ -33,101 +33,107 @@
                 </li>
             {% endif %}
             {% if mainGroup.sub_group is defined %}
-            {% for group in mainGroup.sub_group %}
-                {% if group.items | length == 1 %}
-                    {% for admin in group.items %}
+                {% for group in mainGroup.sub_group %}
+                    {% if group.items | length == 1 %}
+                        {% for admin in group.items %}
+                            {% if currentAdmin is defined %}
+                                {% set isActive = is_admin_active(admin, currentAdmin.code) %}
+                            {% endif %}
+                            {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
+                                <li class="{% if isActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
+
+                                    <div class="pull-left menu_icon">
+                                        {% if admin.getIcon() is defined %}
+                                            <i class="glyphicon  {{ admin.getIcon() }} glyphicon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        {% else %}
+                                            <i class="glyphicon glyphicon-unchecked icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{{ admin.generateUrl('list') }}">
+                                        <div class="pull-left first-level-text">{{ group.label|lower|trans({}, admin.translationDomain) }}</div>
+                                    </a>
+                                    {% if isActive %}
+                                        <div class="pull-right" style="position:relative;">
+                                            <div class="active-corner-top">&nbsp;</div>
+                                        </div>
+                                    {% endif %}
+                                    <div class="clearfix">&nbsp;</div>
+                                    {% if isActive %}
+                                        <div class="pull-right" style="position:relative;">
+                                            <div class="active-corner-bottom"></div>
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                    {% else %}
+                        {% set groupActive = false %}
                         {% if currentAdmin is defined %}
-                            {% set isActive = is_admin_active(admin, currentAdmin.code) %}
+                            {% set groupActive = is_admin_group_active(group, currentAdmin.code) %}
                         {% endif %}
-                        {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
-                            <li class="{% if isActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
+                        {% for admin in group.items %}
+                            {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
+                                {% if loop.first %}
 
-                                <div class="pull-left menu_icon">
-                                    {% if admin.getIcon() is defined %}
-                                        <i class="glyphicon  {{ admin.getIcon() }} glyphicon-{% if small %}medium{% else %}large{% endif %}"></i>
+
+                                    <li class="{% if groupActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
+
+                                    <div class="pull-left menu_icon">
+                                        {% if admin.getIcon() is defined %}
+                                            <i class="glyphicon {{ admin.getIcon() }} icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        {% else %}
+                                            <i class="glyphicon glyphicon-unchecked icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{{ admin.generateUrl('list') }}" class="pull-left first-level-text">
+                                        {{ group.label|lower|trans({}, admin.translationDomain) }}
+                                    </a>
+                                    <!-- open subnav -->
+
+                                    {% if groupActive %}
+                                        <div class="pull-right" style="position:relative;">
+                                            <div class="active-corner-top">&nbsp;</div>
+                                        </div>
+                                        <div class="clearfix">&nbsp;</div>
+                                        <ul>
                                     {% else %}
-                                        <i class="glyphicon glyphicon-unchecked icon-{% if small %}medium{% else %}large{% endif %}"></i>
+                                        <div class="clearfix">&nbsp;</div>
                                     {% endif %}
-                                </div>
-                                <a href="{{ admin.generateUrl('list') }}">
-                                    <div class="pull-left first-level-text">{{ group.label|lower|trans({}, admin.translationDomain) }}</div>
-                                </a>
-                                {% if isActive %}
-                                    <div class="pull-right" style="position:relative;">
-                                        <div class="active-corner-top">&nbsp;</div>
-                                    </div>
                                 {% endif %}
-                                <div class="clearfix">&nbsp;</div>
-                                {% if isActive %}
-                                    <div class="pull-right" style="position:relative;">
-                                        <div class="active-corner-bottom"></div>
-                                    </div>
-                                {% endif %}
-                            </li>
-                        {% endif %}
-                    {% endfor %}
 
-                {% else %}
-                    {% set groupActive = false %}
-                    {% if currentAdmin is defined %}
-                        {% set groupActive = is_admin_group_active(group, currentAdmin.code) %}
+                                {% if groupActive %}
+                                    <li class=" {% if currentAdmin.code == admin.code %}active{% endif %} second-level ">
+                                        <a href="{{ admin.generateUrl('list') }}">{{ admin.label|lower|trans({}, admin.translationDomain) }}</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if loop.last %}
+                                    {% if groupActive %}
+                                        </ul>
+                                        <div class="pull-right" style="position:relative;">
+                                            <div class="active-corner-bottom"></div>
+                                        </div>
+                                    {% endif %}
+                                    <!-- close subnav -->
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
                     {% endif %}
-                    {% for admin in group.items %}
-                        {% if admin.hasroute('create') and admin.isGranted('CREATE') or admin.hasroute('list') and admin.isGranted('LIST') %}
-                            {% if loop.first %}
-
-
-                                <li class="{% if groupActive %}active{% endif %} first-level{% if small %}-small{% endif %} ">
-
-                                <div class="pull-left menu_icon">
-                                    {% if admin.getIcon() is defined %}
-                                        <i class="glyphicon {{ admin.getIcon() }} icon-{% if small %}medium{% else %}large{% endif %}"></i>
-                                    {% else %}
-                                        <i class="glyphicon glyphicon-unchecked icon-{% if small %}medium{% else %}large{% endif %}"></i>
-                                    {% endif %}
-                                </div>
-                                <a href="{{ admin.generateUrl('list') }}" class="pull-left first-level-text">
-                                    {{ group.label|lower|trans({}, admin.translationDomain) }}
-                                </a>
-                                <!-- open subnav -->
-
-                                {% if groupActive %}
-                                    <div class="pull-right" style="position:relative;">
-                                        <div class="active-corner-top">&nbsp;</div>
-                                    </div>
-                                    <div class="clearfix">&nbsp;</div>
-                                    <ul>
-                                {% else %}
-                                    <div class="clearfix">&nbsp;</div>
-                                {% endif %}
-                            {% endif %}
-
-                            {% if groupActive %}
-                                <li class=" {% if currentAdmin.code == admin.code %}active{% endif %} second-level ">
-                                    <a href="{{ admin.generateUrl('list') }}">{{ admin.label|lower|trans({}, admin.translationDomain) }}</a>
-                                </li>
-                            {% endif %}
-
-                            {% if loop.last %}
-                                {% if groupActive %}
-                                    </ul>
-                                    <div class="pull-right" style="position:relative;">
-                                        <div class="active-corner-bottom"></div>
-                                    </div>
-                                {% endif %}
-                                <!-- close subnav -->
-                                </li>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
             {% endif %}
 
         </ul>
         </div>
     {% endfor %}
+    <div class="hidden-md visible-xs">
+        {% if admin_pool is defined %}
+            {{ mopa_bootstrap_menu('PreviewMenu') }}
+        {% endif %}
+    </div>
+
 
     {# End admin menu #}
 {% endif %}

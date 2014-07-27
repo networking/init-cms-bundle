@@ -17,20 +17,23 @@
     }
   }
 
-  .dropdown-menu {
-    // Links within the dropdown menu
-    a {
-      color: @dropdown-link-color !important;
-    }
-    a:focus, a:hover {
-      color: @dropdown-link-hover-color !important;
-    }
-    a.color-draft {
-      color: @color-draft !important;
-    }
-    a.color-published {
-      color: @color-published !important;
-    }
+  @media screen and (min-width: @screen-desktop)  {
+    .dropdown-menu {
+        // Links within the dropdown menu
+        a {
+          color: @dropdown-link-color !important;
+        }
+        a:focus, a:hover {
+          color: @dropdown-link-hover-color !important;
+        }
+        a.color-draft {
+          color: @color-draft !important;
+        }
+        a.color-published {
+          color: @color-published !important;
+        }
+      }
   }
+
 }
 

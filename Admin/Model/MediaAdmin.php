@@ -379,7 +379,7 @@ abstract class MediaAdmin extends Admin
         if ($this->getSubject()) {
             $this->getRequest()->query->set('context', $this->getSubject()->getContext());
         }
-        
+
         $contexts = $this->pool->getContexts();
         reset($contexts);
         $contextName = key($contexts);

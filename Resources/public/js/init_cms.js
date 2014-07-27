@@ -37,8 +37,9 @@ function trim(str) {
     });
 
     $(document).on('show.bs.modal', '.modal', function () {
-        $('.modal .modal-body').css('overflow-y', 'auto');
-        $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
+        var modalBody = $('.modal .modal-body');
+        modalBody.css('overflow-y', 'auto');
+        modalBody.css('max-height', $(window).height() * 0.7);
     });
 
 
@@ -47,6 +48,13 @@ function trim(str) {
         if ($(this).val()) {
             $(this).parent().datetimepicker('setValue');
         }
+    });
+
+
+    // handle the #toggle click event
+    $("#toggleNav").on("click", function () {
+        // apply/remove the active class to the row-offcanvas element
+        $(".row-offcanvas").toggleClass("active");
     });
 
 })(jQuery);

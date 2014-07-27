@@ -26,6 +26,14 @@
             <argument type="service" id="request"/>
             <tag name="knp_menu.menu" alias="AdminMenu"/>
         </service>
+
+        <service id="networking_init_cms.menu.preview_menu" class="Knp\Menu\MenuItem"
+                 factory-service="networking_init_cms.menu.admin_menu_builder"
+                 factory-method="createPreviewMenu"
+                 scope="request">
+            <argument type="service" id="request"/>
+            <tag name="knp_menu.menu" alias="PreviewMenu"/>
+        </service>
     </services>
 
 </container>
