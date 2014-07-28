@@ -61,6 +61,20 @@ function uploadError(xhr) {
         $(".row-offcanvas").toggleClass("active");
     });
 
+    $('[data-provider="datepicker"]').datetimepicker();
+
+    $('[data-provider="datetimepicker"]').datetimepicker();
+
+    $('[data-provider="timepicker"]').datetimepicker();
+
+    // Restore value from hidden input
+    $('input[type=hidden]', '.date').each(function () {
+        if ($(this).val()) {
+
+            $(this).parent().datetimepicker('setValue');
+        }
+    });
+
 })(jQuery);
 
 $.fn.modal.Constructor.prototype.enforceFocus = function () {
