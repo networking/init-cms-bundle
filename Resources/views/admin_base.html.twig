@@ -116,7 +116,7 @@ file that was distributed with this source code.
                     {% set session_var = 'sonata_flash_' ~ notice_level %}
                     {% for flash in app.session.flashbag.get(session_var) %}
 
-                        <div class=" col-sm-12 col-md-offset-2 col-md-10 alert {{ (notice_level=='error')?'alert-danger':'alert-' ~ notice_level }}"
+                        <div class="col-sm-12 col-xs-12 col-md-offset-2 col-md-10 alert {{ (notice_level=='error')?'alert-danger':'alert-' ~ notice_level }}"
                              role="alert">
                             <a class="close" data-dismiss="alert" href="#">×</a>
                             {{ flash|trans([], 'NetworkingInitCmsBundle') }}
@@ -127,7 +127,7 @@ file that was distributed with this source code.
         </div>
         <div class="row">
             {% block sidebar_left %}
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-2  sidebar-offcanvas">
+                <div class="col-xs-12 col-sm-12 col-md-2  sidebar-offcanvas">
                     <div class="nav-main nav-collapse">
                         {% block top_bar_before_nav %} {% endblock %}
                         {# Side navigation bar, not actually at the top in this template #}
@@ -136,7 +136,7 @@ file that was distributed with this source code.
                     </div>
                 </div>
             {% endblock sidebar_left %}
-            <div class="col-xs-12 {% if block('sidebar_left') %}col-md-9 col-lg-10{% else %}col-md-12{% endif %} content-main">
+            <div class="col-xs-12 {% if block('sidebar_left') %}col-md-10{% else %}col-md-12{% endif %} content-main">
 
                 <div class="row content-top">
                     <div class="col-md-4">

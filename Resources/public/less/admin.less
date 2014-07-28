@@ -641,6 +641,7 @@ li.table-row-style .menu-item-link {
     color: #666;
     white-space: nowrap;
     overflow: hidden;
+    font-size: .9em;
   }
 
   .nav-custom li.first-level {
@@ -931,8 +932,14 @@ li.table-row-style .menu-item-link {
   padding-left: 5px;
   padding-right: 30px;
 
-  @media (min-width: @screen-tablet) {
-    width: @container-sm;
+  @media (max-width: @screen-phone) {
+    width: 100%;
+  }
+  @media (max-width: @screen-desktop) {
+    width: 100%;
+  }
+  @media (max-width: @screen-desktop) {
+    width: @container-md;
   }
   @media (min-width: @screen-desktop) {
     width: @container-md;
@@ -958,7 +965,7 @@ li.table-row-style .menu-item-link {
 
 @media screen and (max-width: @screen-desktop) {
 
-  .container{
+  .container {
     width: 100%;
   }
 
@@ -973,8 +980,8 @@ li.table-row-style .menu-item-link {
 
   /* sidebar */
   .sidebar-offcanvas {
-    left: -25%;
-    width: -25%;
+    left: -30%;
+    width: -30%;
     position: absolute;
     top: 0;
     background-color: #F7F7F7;
@@ -984,17 +991,18 @@ li.table-row-style .menu-item-link {
 
   /* content */
   .row-offcanvas.active {
-    left: 25%;
+    left: 30%;
   }
 
   .navbar-toggle {
     display: block;
   }
 }
-@media screen and (max-width: @screen-tablet){
-    .brand {
-      padding-right: 0;
-    }
+
+@media screen and (max-width: @screen-tablet) {
+  .brand {
+    padding-right: 0;
+  }
 }
 
 @media (max-width: 768px) {
