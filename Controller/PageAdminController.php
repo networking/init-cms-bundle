@@ -330,7 +330,8 @@ class PageAdminController extends CRUDController
      */
     public function editAction($id = null)
     {
-        $request = $this->getRequest();
+        /** @var Request $request */
+        $request = $this->container->get('request_stack')->getCurrentRequest();
         // the key used to lookup the template
         $templateKey = 'edit';
 
@@ -354,8 +355,8 @@ class PageAdminController extends CRUDController
         $form = $this->admin->getForm();
         $form->setData($object);
 
-        $this->getRequest()->attributes->add(array('objectId' => $id));
-        $this->getRequest()->attributes->add(array('page_locale' => $object->getLocale()));
+        $request->attributes->add(array('objectId' => $id));
+        $request->attributes->add(array('page_locale' => $object->getLocale()));
 
         if ($request->getMethod() == 'POST') {
             $form->submit($this->get('request'));

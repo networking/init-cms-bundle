@@ -1000,8 +1000,23 @@ li.table-row-style .menu-item-link {
 }
 
 @media screen and (max-width: @screen-tablet) {
-  .brand {
+  .initcms .brand {
     padding-right: 0;
+  }
+}
+@media screen and (max-width: @screen-phone) {
+  .initcms .brand {
+    padding-right: 0;
+  }
+   /* sidebar */
+  .sidebar-offcanvas {
+    left: -80%;
+    width: -80%;
+  }
+
+  /* content */
+  .row-offcanvas.active {
+    left: 80%;
   }
 }
 

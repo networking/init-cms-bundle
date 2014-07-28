@@ -15,7 +15,7 @@ sonata_admin:
         # permission related to the objects
         object_permissions: [VIEW, EDIT, DELETE, UNDELETE, OPERATOR, MASTER, OWNER, PUBLISH]
     title:      Networking CMS
-    title_logo: /bundles/sonataadmin/logo_title.png
+    title_logo: /bundles/networkinginitcms/img/logo_initcms.png
     templates:
         user_block: NetworkingInitCmsBundle:Admin:user_block.html.twig
         layout:     NetworkingInitCmsBundle::admin_layout.html.twig

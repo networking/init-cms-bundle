@@ -4,7 +4,7 @@
         <ul class="{% if app.request.isXmlHttpRequest %}init{% endif %}nav navbar-nav">
             <li class="dropdown">
                 <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><span
-                        class="font-smaller"><img src="https://www.gravatar.com/avatar/{{ app.user.hash }}" width="17" style="max-width: 20px ; height: 100%;" /> {{ app.user }}</span> <b class="caret"></b></a>
+                        class="font-smaller"><img src="https://www.gravatar.com/avatar/{{ app.user.hash }}" width="17" style="max-width: 20px ; height: 100%;" class="hidden-xs"/> {{ app.user }}</span> <b class="caret"></b></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                     <li><a tabindex="-1"
                            href="{{ url('admin_networking_initcms_user_edit', {id: app.user.id}) }}">{{ 'label.account_settings'|trans({}, 'PageAdmin', locale) }}</a>

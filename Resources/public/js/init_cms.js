@@ -15,6 +15,10 @@ function trim(str) {
     return str;
 }
 
+function uploadError(xhr) {
+    alert(xhr.error);
+}
+
 (function ($) {
 
     var noticeBlock = $('.notice-block');
