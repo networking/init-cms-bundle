@@ -136,7 +136,7 @@ class TranslationAdmin extends ORMTranslationAdmin
     public function getTemplate($name)
     {
         if ($name === 'layout') {
-            return 'IbrowsSonataTranslationBundle::translation_layout.html.twig';
+            return 'NetworkingInitCmsBundle:TranslationAdmin:translation_layout.html.twig';
         }
 
         if ($name === 'list') {
