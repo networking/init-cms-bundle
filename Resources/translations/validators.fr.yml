@@ -1,2 +1,7 @@
 error:
     unique_url: A page with the same URL (URL & parent page) "{{ value }}" exists, please select another one
+init_cms:
+    pagename:
+        blank: The page title should not be empty
+    url:
+        blank: The URL should not be empty
