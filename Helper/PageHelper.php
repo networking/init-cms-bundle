@@ -235,6 +235,7 @@ class PageHelper
     {
         /** @var \JMS\Serializer\SerializerInterface $serializer */
         $serializer = $this->getService('serializer');
+
         return $serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json');
     }
 
@@ -299,5 +300,23 @@ class PageHelper
 
         return $pageCopy;
 
+    }
+
+    public function jsonPageIsActive($jsonString)
+    {
+        $page = json_decode($jsonString, true);
+
+        $now = new \DateTime();
+
+        $activeStart =  array_key_exists('active_from', $page)?new \DateTime($page['active_from']): new \DateTime;
+        $activeEnd =  array_key_exists('active_to', $page)?new \DateTime($page['active_to']): new \DateTime;
+
+        if ($now->getTimestamp() >= $activeStart->getTimestamp() &&
+            $now->getTimestamp() <= $activeEnd->getTimestamp()
+        ) {
+            return ($page['status']== PageInterface::STATUS_PUBLISHED);
+        }
+
+        return false;
     }
 }
