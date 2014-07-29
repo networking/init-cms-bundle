@@ -365,9 +365,9 @@ class PageAdminController extends CRUDController
 
             // persist if the form was valid and if in preview mode the preview was approved
             if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
+                $object->setStatus(PageInterface::STATUS_DRAFT);
                 $this->admin->update($object);
 
-                $object->setStatus(PageInterface::STATUS_DRAFT);
 
                 if ($this->isXmlHttpRequest()) {
 
