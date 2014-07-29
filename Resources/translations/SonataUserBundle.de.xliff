@@ -10,6 +10,10 @@
                 <source>filter.label_name</source>
                 <target>Name</target>
             </trans-unit>
+            <trans-unit id="action._delete">
+                <source>action._delete</source>
+                <target>Löschen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
