@@ -40,6 +40,11 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
      */
     protected $container;
 
+    /**
+     * @var Request
+     */
+    protected $request;
+
 
     /**
      * @param string $className
@@ -127,21 +132,24 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
 
         $params = array('path' => $searchUrl);
 
-        $locale = $this->container->get('session')->get('_locale');
 
-        if ($locale) {
-            $params['locale'] = $locale;
-        }
         try {
             $contentRoutes = $this->findBy($params);
-        }catch (\Doctrine\DBAL\DBALException $e)     {
+        } catch (\Doctrine\DBAL\DBALException $e) {
 
             return $collection;
         }
 
+        $this->request = $this->container->get('request');
+
+        $tempContentRoutes = array_filter($contentRoutes, array($this, 'filterByLocale'));
+
+        if (empty($tempContentRoutes)) {
+            $tempContentRoutes = $contentRoutes;
+        }
 
 
-        foreach ($contentRoutes as $key => $contentRoute) {
+        foreach ($tempContentRoutes as $key => $contentRoute) {
 
             $content = $this->getRouteContent($contentRoute);
 
@@ -165,6 +173,11 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
         }
 
         return $collection;
+    }
+
+    protected function filterByLocale($var)
+    {
+        return $var->getLocale() == $this->request->getLocale();
     }
 
 
