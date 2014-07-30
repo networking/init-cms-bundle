@@ -41,9 +41,9 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
     protected $container;
 
     /**
-     * @var Request
+     * @var string
      */
-    protected $request;
+    protected $locale;
 
 
     /**
@@ -140,7 +140,7 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
             return $collection;
         }
 
-        $this->request = $this->container->get('request');
+        $this->locale = $this->container->get('session')->get('_locale');
 
         $tempContentRoutes = array_filter($contentRoutes, array($this, 'filterByLocale'));
 
@@ -177,7 +177,7 @@ class ContentRouteRepository extends EntityRepository implements RouteProviderIn
 
     protected function filterByLocale($var)
     {
-        return $var->getLocale() == $this->request->getLocale();
+        return $var->getLocale() == $this->locale;
     }
 
 
