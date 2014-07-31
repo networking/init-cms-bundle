@@ -111,8 +111,6 @@ class FrontendPageController extends Controller
      */
     public function liveAction(Request $request)
     {
-        var_dump($request);
-        die;
         /** @var $page PageSnapshot */
         $pageSnapshot = $request->get('_content');
 
