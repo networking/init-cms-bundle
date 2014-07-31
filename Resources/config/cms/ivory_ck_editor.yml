@@ -19,7 +19,7 @@ ivory_ck_editor:
             filebrowserImageUploadRouteParameters:
                 provider: sonata.media.provider.image
                 context: default # Optional, to upload in a custom context
-            removeButtons: 'NewPage,Underline,Subscript,Superscript,Styles,PageBreak,Iframe,Flash,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Print,Preview'
+            removeButtons: 'NewPage,Underline,Subscript,Superscript,Styles,PageBreak,Flash,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Print,Preview'
             toolbar: "init_cms"
             bodyClass: row
             emailProtection: encode
@@ -29,7 +29,7 @@ ivory_ck_editor:
 #            stylesSet: 'billag:/bundles/networkinginitcms/js/styles.js'
     toolbars:
         configs:
-            init_cms: [ "@clipboard", "@editing", "@document", "/", "@paragraph", "@basicstyles", "@links", "@insert", "@styles", "@colors","/", "@document", "@tools" ]
+            init_cms: [ "@clipboard", "@editing", "@document", "/", "@paragraph", "@basicstyles", "@links", "@insert", "@styles", "@colors", "@tools" ]
         items:
             document: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ]
             clipboard: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ]
