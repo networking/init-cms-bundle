@@ -706,5 +706,13 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
         return $this->children->count();
     }
 
+    /**
+     * @return bool
+     */
+    public function hasPage()
+    {
+        return !is_null($this->page);
+    }
+
 }
 

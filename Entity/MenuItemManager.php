@@ -10,12 +10,14 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
+use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use JMS\Serializer\Serializer;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Doctrine\ORM\EntityManager;
 use Networking\InitCmsBundle\Model\Page;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * Class MenuItemManager
@@ -30,6 +32,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
      * @var PageHelper
      */
     protected $pageHelper;
+
     /**
      * @param EntityManager $em
      * @param \Doctrine\ORM\Mapping\ClassMetadata $class
@@ -41,7 +44,8 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         parent::__construct($em, $classMetaData);
     }
 
-    public function setPageHelper(PageHelper $pageHelper){
+    public function setPageHelper(PageHelper $pageHelper)
+    {
         $this->pageHelper = $pageHelper;
     }
 
@@ -57,7 +61,8 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $alias = $rootNodesQueryBuilder->getRootAliases();
         $rootNodesQueryBuilder->andWhere(sprintf('%s.locale = :locale', $alias[0]))
             ->setParameter(':locale', $locale);
-        return $rootNodesQueryBuilder->getQuery()->useResultCache(true)->getResult();
+
+        return $rootNodesQueryBuilder->getQuery()->getResult();
     }
 
     /**
@@ -80,40 +85,41 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
 
         $qb = $this->childrenQueryBuilder($node, $direct, $sortByField, $direction, $includeNode);
         $aliases = $qb->getRootAliases();
-        $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p');
-        $qb->addSelect('cr.path AS path');
-
         if ($viewStatus == Page::STATUS_PUBLISHED) {
-            $qb->leftJoin('p.snapshots', 'ps');
+            $qb->addSelect('ps.id AS ps_id');
+            $qb->addSelect('ps.versionedData AS ps_versionedData');
+            $qb->leftJoin(
+                '\Networking\InitCmsBundle\Entity\PageSnapshot',
+                'ps',
+                Expr\Join::WITH,
+                sprintf('%s.page = ps.page ', $aliases[0])
+            );
             $qb->leftJoin('ps.contentRoute', 'cr');
-            $qb->andWhere($qb->expr()->orX('p.id = ps.page', 'p.id IS NULL'));
 
         } else {
+            $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p');
             $qb->leftJoin('p.contentRoute', 'cr');
         }
-        $results = $qb->getQuery()->useResultCache(true)->getResult();
+        $qb->addSelect('cr.path AS path');
+        $results = $qb->getQuery()->getResult();
 
         $menuItems = array();
         foreach ($results as $item) {
             $menuItem = $item[0];
-            if ($viewStatus == Page::STATUS_PUBLISHED) {
-                if($page = $menuItem->getPage()){
-                    if(!$page->getSnapshot()){
+            if (!$menuItem->getRedirectUrl() && !$menuItem->getInternalUrl()) {
+                if ($viewStatus == Page::STATUS_PUBLISHED) {
+                    if (!$item['path'] || !$item['ps_id']) {
                         continue;
+                    } else {
+                        if (!$this->pageHelper->jsonPageIsActive($item['ps_versionedData'])) {
+                            continue;
+                        }
+                        $menuItem->setPath($item['path']);
                     }
-                    $snapshot = $page->getSnapshot();
-                    $page = $this->pageHelper->unserializePageSnapshotData($snapshot);
-                    if(!$page->isActive()){
-                        continue;
-                    }
-
                 }
             }
-
-            $menuItem->setPath($item['path']);
             $menuItems[] = $menuItem;
         }
-
 
         return $menuItems;
     }

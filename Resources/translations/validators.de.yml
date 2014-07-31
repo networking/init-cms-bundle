@@ -1,2 +1,7 @@
 error:
     unique_url: 'Es existiert bereits eine Seite mit den gleichen URL (übergeordnete Seitenname + Seiten URL) "{{ value }}", bitte einen neuen eingeben'
+init_cms:
+    pagename:
+        blank: Seitentitel darf nicht leer sein
+    url:
+        blank: URL darf nicht leer sein
