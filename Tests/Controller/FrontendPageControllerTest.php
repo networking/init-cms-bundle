@@ -9,6 +9,7 @@
  */
 namespace Networking\InitCmsBundle\Tests\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use \Networking\InitCmsBundle\Controller\FrontendPageController,
     \Networking\InitCmsBundle\Helper\LanguageSwitcherHelper,
     \Symfony\Component\HttpFoundation\Request,
@@ -19,6 +20,7 @@ use \Networking\InitCmsBundle\Controller\FrontendPageController,
     \Symfony\Component\Security\Core\SecurityContext,
     Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /** @author sonja brodersen s.brodersen@networking.ch */
 class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
@@ -212,12 +214,12 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockTemplating));
 
 
-
         // controller
         $controller = new FrontendPageController();
         $controller->setContainer($mockContainer);
         $response = $controller->liveAction($mockRequest);
-//        $this->assertEqual(array('page' => $mockPage), $response);
+
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response, 'response object returned');
 
     }
 
@@ -237,35 +239,76 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHomeAction()
     {
-        $page = $this->getMockForAbstractClass('\Networking\InitCmsBundle\Model\Page');
+        $mockPage = $this->getMock('\Networking\InitCmsBundle\Model\Page');
+        $mockSnapshot = $this->getMockForAbstractClass(
+            '\Networking\InitCmsBundle\Model\PageSnapshot',
+            array($mockPage)
+        );
+
+        $mockPage->expects($this->once())
+            ->method('getVisibility')
+            ->will($this->returnValue(PageInterface::VISIBILITY_PUBLIC));
+
+        $mockPage->expects($this->once())
+            ->method('isActive')
+            ->will($this->returnValue(true));
 
 
-        // Doctrine ObjectManger
-        $mockEntityManager = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+        $mockHelper = $this->getMockBuilder('Networking\InitCmsBundle\Helper\PageHelper')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockHelper->expects($this->once())
+            ->method('unserializePageSnapshotData')
+            ->will($this->returnValue($mockPage));
+
+        //security context
+        $mockSecurityContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockSecurityContext->expects($this->any())
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->will($this->returnValue(true));
+
+        $_SERVER = array(
+            'PATH_INFO' => '/',
+            'SCRIPT_NAME' => 'app.php'
+        );
+        $templateParams = array(
+            'template' => 'DemoInitCmsBundle:Default:one_column.html.twig',
+            'engine' => 'twig',
+            'vars' => array(),
+            'isStreamable' => false
+        );
+        $template = new Template($templateParams);
+        $routeArray = array(
+            '_content' => $mockSnapshot,
+            '_template' => $template
+        );
+        //templating
+        $mockTemplating = $this->getMockBuilder('\Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine')
             ->disableOriginalConstructor()
             ->getMock();
 
-
-        // PageManager
-        $mockPageManager = $this->getMockBuilder('\Networking\InitCmsBundle\Entity\PageManager')
-            ->setMethods(array('__construct', 'findOneBy'))
-            ->setConstructorArgs(array($mockEntityManager, '\Networking\InitCmsBundle\Entity\BasePage'))
-            ->disableOriginalConstructor()
+        $mockResponse = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Response')
             ->getMock();
 
-
-        $mockPageManager->expects($this->once())
-            ->method('findOneBy')
-            ->with($this->equalTo(array('isHome' => true, 'locale' => 'en')))
-            ->will($this->returnValue($page));
-
+        $mockTemplating->expects($this->once())
+            ->method('renderResponse')
+            ->will($this->returnValue($mockResponse));
         //request
-        $mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+        $request = new Request(array(), array(), array(), array(), array(), $_SERVER);
+        $request->attributes->set('_route', 'networking_init_cms_default');
+        $request->attributes->set('_locale', 'en');
+
+        //dynamic router
+        $mockDynamicRouter = $this->getMockBuilder('\Symfony\Cmf\Component\Routing\DynamicRouter')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockRequest->expects($this->once())
-            ->method('getLocale')
-            ->will($this->returnValue('en'));
+        $mockDynamicRouter->expects($this->once())
+            ->method('matchRequest')
+            ->with($request)
+            ->willReturn($routeArray);
 
         //container
         $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
@@ -273,14 +316,30 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $mockContainer->expects($this->at(0))
             ->method('get')
-            ->with('networking_init_cms.page_manager')
-            ->will($this->returnValue($mockPageManager));
+            ->with('networking_init_cms.cms_router')
+            ->will($this->returnValue($mockDynamicRouter));
+
+        $mockContainer->expects($this->at(1))
+            ->method('get')
+            ->with('networking_init_cms.helper.page_helper')
+            ->will($this->returnValue($mockHelper));
+
+        $mockContainer->expects($this->at(2))
+            ->method('get')
+            ->with('security.context')
+            ->will($this->returnValue($mockSecurityContext));
+
+
+        $mockContainer->expects($this->at(3))
+            ->method('get')
+            ->with('templating')
+            ->will($this->returnValue($mockTemplating));
 
         $controller = new FrontendPageController();
         $controller->setContainer($mockContainer);
-        $response = $controller->homeAction($mockRequest);
-        $this->assertInternalType('array', $response, 'response is an array');
-        $this->assertEquals(array('page' => $page), $response, 'response has got a page');
+        $response = $controller->homeAction($request);
+
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response, 'response object returned');
     }
 
 
@@ -313,7 +372,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         // controller test
         $controller = new FrontendPageController();
         $response = $controller->changeAdminLanguageAction($request, 'xy');
-        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response, 'Redirect returned');
     }
 
 //	public function testChangeLanguageActionWithCurrentLocal()
