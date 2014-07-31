@@ -51,7 +51,7 @@
             </trans-unit>
             <trans-unit id="link.close">
                 <source>link.close</source>
-                <target>CLOSE</target>
+                <target>SCHLIESSEN</target>
             </trans-unit>
             <trans-unit id="help_title">
                 <source>help_title</source>
@@ -98,55 +98,52 @@
             </trans-unit>
 
             <!-- overview -->
-
             <trans-unit id="overview.title">
                 <source>overview.title</source>
                 <target>Hilfe-Übersicht</target>
             </trans-unit>
             <trans-unit id="overview.text">
                 <source>overview.text</source>
-                <target><![CDATA[
-                   <p>Diese Systemhilfe enthält nützliche Informationen zu den meisten Funktionalitäten des CMS. Wählen Sie die Hilfeseiten im linken Navigationsabschnitt aus oder klicken Sie beim Arbeiten im CMS einfach das Fragezeichen rechts oben an, um auf die entsprechende Hilfeseite zu gelangen.</p>
+                <target><![CDATA[<p>Diese Systemhilfe enthält nützliche Informationen zu den meisten Funktionalitäten des CMS. Wählen Sie die Hilfeseiten im linken Navigationsabschnitt aus oder klicken Sie beim Arbeiten im CMS einfach das Fragezeichen rechts oben an, um auf die entsprechende Hilfeseite zu gelangen.</p>
 
-                   <h2>Glossar</h2>
+                       <h2>Glossar</h2>
 
-                   <p><strong>CMS</strong><br />
-                   <span style="line-height:1.6em">Abkürzung für Content Management System.</span></p>
+                       <p><strong>CMS</strong><br />
+                       <span style="line-height:1.6em">Abkürzung für Content Management System.</span></p>
 
-                   <p><strong>Seite</strong><br />
-                   <span style="line-height:1.6em">Eine Seite weist Inhalte (Content) in einem bestimmten Layout auf.</span></p>
+                       <p><strong>Seite</strong><br />
+                       <span style="line-height:1.6em">Eine Seite weist Inhalte (Content) in einem bestimmten Layout auf.</span></p>
 
-                   <p><strong>Interne URL</strong><br />
-                   <span style="line-height:1.6em">Eine Zeichenkette, die auf eine vom CMS angelegte Seite verweist (z.B. &quot;/company/employees&quot;).</span></p>
+                       <p><strong>Interne URL</strong><br />
+                       <span style="line-height:1.6em">Eine Zeichenkette, die auf eine vom CMS angelegte Seite verweist (z.B. &quot;/company/employees&quot;).</span></p>
 
-                   <p><strong>Externe URL</strong><br />
-                   <span style="line-height:1.6em">Eine Zeichenkette, die auf eine nicht vom CMS erstellte Seite verweist (z.B. &ldquo;http://www.google.com&quot;&quot;)</span></p>
+                       <p><strong>Externe URL</strong><br />
+                       <span style="line-height:1.6em">Eine Zeichenkette, die auf eine nicht vom CMS erstellte Seite verweist (z.B. &ldquo;http://www.google.com&quot;&quot;)</span></p>
 
-                   <p><strong>Menüelement</strong><br />
-                   <span style="line-height:1.6em">Ein einzelner Link in einem Menü mit dessen Namen und URL.</span></p>
+                       <p><strong>Menüelement</strong><br />
+                       <span style="line-height:1.6em">Ein einzelner Link in einem Menü mit dessen Namen und URL.</span></p>
 
-                   <p><strong>Menu&nbsp;</strong><br />
-                   <span style="line-height:1.6em">Eine Reihe von Menüelementen, die zur Navigation der Website verwendet werden.</span></p>
+                       <p><strong>Menu&nbsp;</strong><br />
+                       <span style="line-height:1.6em">Eine Reihe von Menüelementen, die zur Navigation der Website verwendet werden.</span></p>
 
-                   <p><strong>Medien</strong><br />
-                   <span style="line-height:1.6em">Mediendateien, die im Content benutzt werden (z.B. Bilder, Videos).</span></p>
+                       <p><strong>Medien</strong><br />
+                       <span style="line-height:1.6em">Mediendateien, die im Content benutzt werden (z.B. Bilder, Videos).</span></p>
 
-                   <p><strong>Benutzer</strong><br />
-                   <span style="line-height:1.6em">Eine Person, die für das CMS oder den gesicherten Bereich der Website angemeldet ist.</span></p>
+                       <p><strong>Benutzer</strong><br />
+                       <span style="line-height:1.6em">Eine Person, die für das CMS oder den gesicherten Bereich der Website angemeldet ist.</span></p>
 
-                   <h2>Grundlegendes Workflow-Beispiel</h2>
+                       <h2>Grundlegendes Workflow-Beispiel</h2>
 
-                   <p>Wenn Sie sich mit dem CMS noch nicht auskennen, finden Sie hier ein grundlegendes Workflow-Beispiel, das Ihnen zeigt, wie eine neue Seite angelegt und für die Navigation zur Verfügung gestellt wird.</p>
+                       <p>Wenn Sie sich mit dem CMS noch nicht auskennen, finden Sie hier ein grundlegendes Workflow-Beispiel, das Ihnen zeigt, wie eine neue Seite angelegt und für die Navigation zur Verfügung gestellt wird.</p>
 
-                   <ol>
-                   	<li>Gehen Sie auf &quot;Seiten&quot; und fügen Sie eine neue Seite hinzu.</li>
-                   	<li>Im Bearbeitungsmodus der Seite klicken Sie auf das Symbol &quot;+&quot;, um Content an einer Stelle Ihrer Wahl hinzuzufügen.</li>
-                   	<li>Klicken Sie auf die Schaltfläche &quot;Veröffentlichen&quot;, um sie öffentlich zur Verfügung zu stellen (oder setzen Sie einen Haken im Kästchen &quot;Prüfen&quot;, um den Herausgeber zu benachrichtigen).</li>
-                   	<li>4.	Um die Seite für die Navigation zugänglich zu machen, erstellen Sie ein neues Menüelement, vergeben einen Namen und wählen Ihre neue Seite aus.</li>
-                   </ol>
+                       <ol>
+                        <li>Gehen Sie auf &quot;Seiten&quot; und fügen Sie eine neue Seite hinzu.</li>
+                        <li>Im Bearbeitungsmodus der Seite klicken Sie auf das Symbol &quot;+&quot;, um Content an einer Stelle Ihrer Wahl hinzuzufügen.</li>
+                        <li>Klicken Sie auf die Schaltfläche &quot;Veröffentlichen&quot;, um sie öffentlich zur Verfügung zu stellen (oder setzen Sie einen Haken im Kästchen &quot;Prüfen&quot;, um den Herausgeber zu benachrichtigen).</li>
+                        <li>4.	Um die Seite für die Navigation zugänglich zu machen, erstellen Sie ein neues Menüelement, vergeben einen Namen und wählen Ihre neue Seite aus.</li>
+                       </ol>
 
-                   <p>Herzlichen Glückwunsch, jetzt sollten Sie eine neue Seite haben, auf die über die Navigation zugegriffen werden kann. Bitte schauen Sie sich die spezifischen Hilfethemen an, um detailliertere Informationen zu erhalten.</p>
-                    ]]>
+                       <p>Herzlichen Glückwunsch, jetzt sollten Sie eine neue Seite haben, auf die über die Navigation zugegriffen werden kann. Bitte schauen Sie sich die spezifischen Hilfethemen an, um detailliertere Informationen zu erhalten.</p>]]>
                 </target>
             </trans-unit>
 
@@ -158,25 +155,23 @@
             </trans-unit>
             <trans-unit id="dashboard.text">
                 <source>dashboard.text</source>
-                <target><![CDATA[
-                    <p>Das Dashboard ist die erste Seite, die Sie sehen, nachdem Sie sich erfolgreich angemeldet haben. Je nach Ihrer Benutzerrolle und Ihren Rechten können unterschiedliche Arten von Informationen auf Ihrem Dashboard angezeigt werden.</p>
+                <target><![CDATA[<p>Das Dashboard ist die erste Seite, die Sie sehen, nachdem Sie sich erfolgreich angemeldet haben. Je nach Benutzerrolle und Ihren individuellen Rechten k&ouml;nnen unterschiedliche Arten von Informationen auf Ihrem Dashboard angezeigt werden.</p>
 
-                    <h2>Informationsblöcke</h2>
+                        <h2>Informationsbl&ouml;cke</h2>
 
-                    <p><strong>Seitenstatus-Zusammenfassung</strong><br />
-                    Übersicht über die Anzahl Seiten mit dem Status &quot;Entwurf&quot;, &quot;Prüfen&quot; oder &quot;Veröffentlicht&quot;.</p>
+                        <p><strong>Seitenstatus-Zusammenfassung</strong><br />
+                        &Uuml;bersicht &uuml;ber die Anzahl Seiten mit dem Status &quot;Entwurf&quot;, &quot;Pr&uuml;fen&quot; oder &quot;Ver&ouml;ffentlicht&quot;.</p>
 
-                    <p><strong>Aktuelle Entwurfsseiten</strong><br />
-                    Eine Liste der zuletzt bearbeiteten Seiten, die nicht veröffentlicht sind.</p>
+                        <p><strong>Aktuelle Entwurfsseiten</strong><br />
+                        Eine Liste der zuletzt bearbeiteten Seiten, die nicht ver&ouml;ffentlicht sind.</p>
 
-                    <p><strong>Zu prüfende Seiten</strong><br />
-                    Eine Liste der Seiten, die geprüft und veröffentlicht werden müssen.</p>
+                        <p><strong>Zu pr&uuml;fende Seiten</strong><br />
+                        Eine Liste der Seiten, die gepr&uuml;ft und ver&ouml;ffentlicht werden m&uuml;ssten.</p>
 
-                    <p><strong>Benutzer online</strong><br />
-                    Zeigt alle Benutzer, die zurzeit angemeldet sind.</p>
+                        <p><strong>Benutzer online</strong><br />
+                        Zeigt alle Benutzer, die zurzeit am CMS angemeldet sind.</p>
 
-                    <p>Das Dashboard kann auch erweitert werden. Wenn Sie etwas vermissen, kontaktieren Sie Ihren Webmaster, um die erforderliche Funktionalität hinzuzufügen.</p>
-                    ]]>
+                        <p>Das Dashboard kann auch erweitert werden. Wenn Sie etwas vermissen, kontaktieren Sie Ihren Webmaster, um die erforderliche Funktionalit&auml;t hinzuzuf&uuml;gen.</p>]]>
                 </target>
             </trans-unit>
 
@@ -188,51 +183,49 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.page.list.text">
                 <source>networking_init_cms.admin.page.list.text</source>
-                <target><![CDATA[
-                    <p>Eine Seite ist ein Schlüsselbaustein für die Website. Auf einer Seite können Sie Ihren Content und seine Position im Layout hinzufügen oder ändern. Unter „Seiten" im CMS finden Sie eine Liste all Ihrer Seiten. Am Listenanfang können Sie Seiten filtern und suchen. Es gibt auch eine hervorstehende Schaltfläche zum Hinzufügen von neuen Seiten. Am Listenende finden Sie Massenfunktionalitäten, um schnelle Änderungen auf mehrere Seiten auf einmal anzuwenden.</p>
+                <target><![CDATA[<p>Eine Seite ist ein Schlüsselbaustein für die Website. Auf einer Seite können Sie Ihren Content und seine Position im Layout hinzufügen oder ändern. Unter „Seiten" im CMS finden Sie eine Liste all Ihrer Seiten. Am Listenanfang können Sie Seiten filtern und suchen. Es gibt auch eine hervorstehende Schaltfläche zum Hinzufügen von neuen Seiten. Am Listenende finden Sie Massenfunktionalitäten, um schnelle Änderungen auf mehrere Seiten auf einmal anzuwenden.</p>
 
-                    <h2>Seitenliste</h2>
+                        <h2>Seitenliste</h2>
 
-                    <p>Die Seitenliste bietet unterschiedliche Informationen oder Aktionen. Jede neue Zeile beschreibt eine andere Seite. Die folgende Liste erläutert die Spalten von links nach rechts.</p>
+                        <p>Die Seitenliste bietet unterschiedliche Informationen oder Aktionen. Jede neue Zeile beschreibt eine andere Seite. Die folgende Liste erläutert die Spalten von links nach rechts.</p>
 
-                    <p><strong>Kontrollfelder (Check Boxes)</strong><br />
-                    Sie können einzelne oder mehrere Seiten durch Aktivieren oder Deaktivieren der Kontrollfelder im linken Abschnitt jeder Seite auswählen. Mit dem ersten Kontrollfeld links oben werden alle gelisteten Seiten aktiviert oder deaktiviert. Nachdem Sie die Seiten Ihrer Wahl selektiert haben, können Sie eine Aktion im Aufklappmenü am Listenende wählen. Durch Anklicken von &quot;OK&quot; führen Sie die Aktion für alle aktivierten Seiten aus.</p>
+                        <p><strong>Kontrollfelder (Check Boxes)</strong><br />
+                        Sie können einzelne oder mehrere Seiten durch Aktivieren oder Deaktivieren der Kontrollfelder im linken Abschnitt jeder Seite auswählen. Mit dem ersten Kontrollfeld links oben werden alle gelisteten Seiten aktiviert oder deaktiviert. Nachdem Sie die Seiten Ihrer Wahl selektiert haben, können Sie eine Aktion im Aufklappmenü am Listenende wählen. Durch Anklicken von &quot;OK&quot; führen Sie die Aktion für alle aktivierten Seiten aus.</p>
 
-                    <p><strong>Seitenname</strong><br />
-                    Eine Spalte, in der der Name der Seite erscheint. Wenn Sie den Namen anklicken, gelangen Sie direkt zum Bearbeitungsmodus.</p>
+                        <p><strong>Seitenname</strong><br />
+                        Eine Spalte, in der der Name der Seite erscheint. Wenn Sie den Namen anklicken, gelangen Sie direkt zum Bearbeitungsmodus.</p>
 
-                    <p><strong>Seitenstatus</strong><br />
-                    Rechts hinter dem Seitennamen finden Sie den Seitenstatus. Er kann auf &quot;Entwurf&quot;, &quot;Prüfen&quot; oder &quot;Veröffentlicht&quot; gesetzt sein.</p>
+                        <p><strong>Seitenstatus</strong><br />
+                        Rechts hinter dem Seitennamen finden Sie den Seitenstatus. Er kann auf &quot;Entwurf&quot;, &quot;Prüfen&quot; oder &quot;Veröffentlicht&quot; gesetzt sein.</p>
 
-                    <p><strong>URL</strong><br />
-                    Diese Spalte zeigt die URL der Seite. Die URL klammert Ihren Domänen-Namen zu Gunsten einer kürzeren Version aus.</p>
+                        <p><strong>URL</strong><br />
+                        Diese Spalte zeigt die URL der Seite. Die URL klammert Ihren Domänen-Namen zu Gunsten einer kürzeren Version aus.</p>
 
-                    <p><strong>Schaltfläche Bearbeiten</strong><br />
-                    Die Schaltfläche „Bearbeiten“ enthält ein Bleistift-Symbol. Klicken Sie darauf, um den Content und die Konfiguration der Seite zu editieren.</p>
+                        <p><strong>Schaltfläche Bearbeiten</strong><br />
+                        Die Schaltfläche „Bearbeiten“ enthält ein Bleistift-Symbol. Klicken Sie darauf, um den Content und die Konfiguration der Seite zu editieren.</p>
 
-                    <p><strong>Schaltfläche Löschen</strong><br />
-                    Die Schaltfläche &quot;Löschen&quot; enthält ein Papierkorb-Symbol. Klicken Sie es an, um eine Seite zu löschen, die Sie nicht mehr nutzen möchten.</p>
+                        <p><strong>Schaltfläche Löschen</strong><br />
+                        Die Schaltfläche &quot;Löschen&quot; enthält ein Papierkorb-Symbol. Klicken Sie es an, um eine Seite zu löschen, die Sie nicht mehr nutzen möchten.</p>
 
-                    <h2>Filter-Seiten</h2>
+                        <h2>Filter-Seiten</h2>
 
-                    <p>Die Seitenliste kann durch Auswahl eines oder mehrerer angebotener Parameter gefiltert werden. Sie können diese Parameter ändern sowie auf die Schaltfläche &quot;Filtern&quot; klicken, um Seiten zu suchen, die zu Ihren Filterkriterien passen. Wenn Sie &quot;Zurücksetzen&quot; anklicken, werden die Filter zurückgesetzt. Durch Anklicken von &quot;Weitere Filteroptionen&quot; werden alle verfügbaren Filteroptionen angezeigt.</p>
+                        <p>Die Seitenliste kann durch Auswahl eines oder mehrerer angebotener Parameter gefiltert werden. Sie können diese Parameter ändern sowie auf die Schaltfläche &quot;Filtern&quot; klicken, um Seiten zu suchen, die zu Ihren Filterkriterien passen. Wenn Sie &quot;Zurücksetzen&quot; anklicken, werden die Filter zurückgesetzt. Durch Anklicken von &quot;Weitere Filteroptionen&quot; werden alle verfügbaren Filteroptionen angezeigt.</p>
 
-                    <p><strong>Sprache</strong><br />
-                    Wechseln Sie zwischen verschiedenen Sprachen. Beachten Sie aber, dass Sie Seiten nur in einer Sprache auf einmal ansehen können.</p>
+                        <p><strong>Sprache</strong><br />
+                        Wechseln Sie zwischen verschiedenen Sprachen. Beachten Sie aber, dass Sie Seiten nur in einer Sprache auf einmal ansehen können.</p>
 
-                    <p><strong>Seitenname</strong><br />
-                    Finden Sie eine spezifische Seite über den Namen, oder finden Sie mehrere Seiten über einen Bestandteil des Seitennamens.</p>
+                        <p><strong>Seitenname</strong><br />
+                        Finden Sie eine spezifische Seite über den Namen, oder finden Sie mehrere Seiten über einen Bestandteil des Seitennamens.</p>
 
-                    <p><strong>URL</strong><br />
-                    Finden Sie eine Seite oder mehrere Seiten mit einem spezifischen Bestandteil der URL.</p>
+                        <p><strong>URL</strong><br />
+                        Finden Sie eine Seite oder mehrere Seiten mit einem spezifischen Bestandteil der URL.</p>
 
-                    <p><strong>Seitenstatus<br />
-                    ​</strong>Finden Sie Seiten anhand ihres Status &quot;Entwurf&quot;, &quot;Prüfen&quot; oder &quot;Veröffentlicht&quot;.</p>
+                        <p><strong>Seitenstatus<br />
+                        ​</strong>Finden Sie Seiten anhand ihres Status &quot;Entwurf&quot;, &quot;Prüfen&quot; oder &quot;Veröffentlicht&quot;.</p>
 
-                    <h2>Neue Seite hinzufügen</h2>
+                        <h2>Neue Seite hinzufügen</h2>
 
-                    <p>Um eine neue Seite hinzuzufügen, klicken Sie zunächst einmal auf die Schaltfläche &quot;+ Seite hinzufügen&quot;. Es steht ein zusätzlicher Hilfeabschnitt mit weiteren Einzelheiten zu Ihrer Verfügung.</p>
-                    ]]>
+                        <p>Um eine neue Seite hinzuzufügen, klicken Sie zunächst einmal auf die Schaltfläche &quot;+ Seite hinzufügen&quot;. Es steht ein zusätzlicher Hilfeabschnitt mit weiteren Einzelheiten zu Ihrer Verfügung.</p>]]>
                 </target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.page.create.title">
@@ -241,40 +234,38 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.page.create.text">
                 <source>networking_init_cms.admin.page.create.text</source>
-                <target><![CDATA[
-                 <p>Klicken Sie zuerst im Abschnitt &quot;Seiten&quot; des CMS auf die Schaltfläche &quot;+ Seite hinzufügen&quot;. Alle mit &quot;*&quot; gekennzeichneten Felder sind Pflichtfelder, die anderen sind optional. In der folgenden Liste werden alle Felder erläutert.</p>
+                <target><![CDATA[<p>Klicken Sie zuerst im Abschnitt &quot;Seiten&quot; des CMS auf die Schaltfl&auml;che &quot;+ Seite hinzuf&uuml;gen&quot;. Alle mit &quot;*&quot; gekennzeichneten Felder sind Pflichtfelder, die anderen sind optional. In der folgenden Liste werden alle Felder erl&auml;utert.</p>
 
-                 <h2>Neue Seite-Felder</h2>
+                        <h2>Neue Seite-Felder</h2>
 
-                 <p><strong>Sprache</strong><br />
-                 Jede Seite gehört zu einer Sprache. Sie können diese Seite zu einem späteren Zeitpunkt in eine andere Sprache kopieren oder sie mit einer vorhandenen Seite in einer anderen Sprache verknüpfen, um einen Hyperlink zu erstellen, der einzelne Seiten in verschiedenen Sprachen miteinander verknüpft.</p>
+                        <p><strong>Sprache</strong><br />
+                        Jede Seite geh&ouml;rt zu einer Sprache. Sie k&ouml;nnen diese Seite zu einem sp&auml;teren Zeitpunkt in eine andere Sprache kopieren oder sie mit einer vorhandenen Seite in einer anderen Sprache verkn&uuml;pfen, um einen Hyperlink zu erstellen, der einzelne Seiten in verschiedenen Sprachen miteinander verkn&uuml;pft.</p>
 
-                 <p><strong>Seitenname</strong><br />
-                 Der Seitenname ist für Ihren internen Gebrauch bestimmt und erscheint nicht auf der Website.</p>
+                        <p><strong>Seitenname</strong><br />
+                        Der Seitenname ist f&uuml;r Ihren internen Gebrauch bestimmt und erscheint nicht auf der Website.</p>
 
-                 <p><strong>Übergeordnete Seite</strong><br />
-                 Wenn eine andere Seite sich auf diese bezieht (z.B. &quot;Über uns&quot; und &quot;Kontakt&quot;), können die Seiten miteinander verknüpft werden. Dies ist in der Listenansicht der Seiten sowie in der URL: z.B. http://wwww.site.com/about_us/contact anstelle von http://wwww.site.com/contact</p>
+                        <p><strong>&Uuml;bergeordnete Seite</strong><br />
+                        Wenn eine andere Seite sich auf diese bezieht (z.B. &quot;&Uuml;ber uns&quot; und &quot;Kontakt&quot;), k&ouml;nnen die Seiten miteinander verkn&uuml;pft werden. Dies ist in der Listenansicht der Seiten sowie in der URL: z.B. http://wwww.site.com/ueber_uns/kontakt anstelle von http://wwww.site.com/kontakt.</p>
 
-                 <p><strong>URL</strong><br />
-                 Nur der letzte Bestandteil der URL muss eingegeben werden. Wenn eine oder mehrere übergeordnete Seiten vorhanden sind, werden sie automatisch als Präfix zur URL hinzugefügt. Es können keine Sonderzeichen in einer URL verwendet werden. Diese werden automatisch ausgefiltert. Über dem Eingabefeld können Sie die verarbeitete URL in einer Vorschau sehen.</p>
+                        <p><strong>URL</strong><br />
+                        Nur der letzte Bestandteil der URL muss eingegeben werden. Wenn eine oder mehrere &uuml;bergeordnete Seiten vorhanden sind, werden sie automatisch als Pr&auml;fix zur URL hinzugef&uuml;gt. Es k&ouml;nnen keine Sonderzeichen in einer URL verwendet werden, sie werden automatisch ausgefiltert. &Uuml;ber dem Eingabefeld k&ouml;nnen Sie die verarbeitete URL in einer Vorschau sehen.</p>
 
-                 <p><strong>Sichtbarkeit</strong><br />
-                 Eine Seite kann entweder öffentlich sein und von jedem eingesehen werden, oder sie ist geschützt, was bedeutet, dass der Benutzer angemeldet sein muss, um sie anzusehen. </p>
+                        <p><strong>Sichtbarkeit</strong><br />
+                        Eine Seite kann entweder &ouml;ffentlich sein und von jedem eingesehen werden, oder sie ist gesch&uuml;tzt, was bedeutet, dass der Benutzer (im Extranet) angemeldet sein muss, um sie anzusehen.</p>
 
-                 <p><strong>Seitenlayout</strong><br />
-                 Wählen Sie das Layout, das am besten zu Ihrer Seite passt. Eine Auswahl der vordefinierten Layouts wird in Form eines Miniaturbilds angezeigt. Das Layout schreibt vor, welcher Content wo auf der Seite platziert werden kann.</p>
+                        <p><strong>Seitenlayout</strong><br />
+                        W&auml;hlen Sie das Layout, das am besten zu Ihrer Seite passt. Eine Auswahl der vordefinierten Layouts wird in Form eines Miniaturbilds angezeigt. Das Layout schreibt vor, welcher Content wo auf der Seite platziert werden kann.</p>
 
-                 <p><strong>Meta-Titel</strong><br />
-                 Dieser Titel erscheint in der Titelleiste des Browsers und wird von Suchmaschinen als sehr wichtig eingeschätzt.</p>
+                        <p><strong>Meta-Titel</strong><br />
+                        Dieser Titel erscheint in der Titelleiste des Browsers und wird von Suchmaschinen als sehr wichtig eingesch&auml;tzt.</p>
 
-                 <p><strong>Meta-Schlüsselwörter</strong><br />
-                 Schlüsselwörter erscheinen nicht auf der Seite, sondern nur im Quellcode der Seite. Diese werden von Google und anderen Suchmaschinen zur Indizierung Ihrer Seite benötigt.</p>
+                        <p><strong>Meta-Schl&uuml;sselw&ouml;rter</strong><br />
+                        Schl&uuml;sselw&ouml;rter erscheinen nicht auf der Seite, sondern nur im Quellcode der Seite. Diese werden von Google und anderen Suchmaschinen zur Indizierung Ihrer Seite ben&ouml;tigt.</p>
 
-                 <p><strong>Meta-Beschreibung</strong><br />
-                 Wie bei den Schlüsselwörtern, ist die Meta-Beschreibung nur im Quellcode sichtbar. Sie wird auch von Suchmaschinen verwendet.</p>
+                        <p><strong>Meta-Beschreibung</strong><br />
+                        Wie bei den Schl&uuml;sselw&ouml;rtern, ist die Meta-Beschreibung nur im Quellcode sichtbar. Sie wird auch von Suchmaschinen verwendet.</p>
 
-                 <p>Sobald Sie das Formular gespeichert haben, wird die Seite in der Datenbank gespeichert, und Sie wechseln in die Bearbeitungsansicht.</p>
-                ]]>
+                        <p>Sobald Sie das Formular gespeichert haben, wird die Seite in der Datenbank gespeichert, und Sie wechseln in die Bearbeitungsansicht.</p>]]>
                 </target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.page.edit.title">
@@ -283,38 +274,36 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.page.edit.text">
                 <source>networking_init_cms.admin.page.edit.text</source>
-                <target><![CDATA[
-          <p>Das Editierformular umfasst mehrere Bereiche. Unter dem Seitentitel sehen Sie den Content-Bereich mit einem oder mehreren Layout-Containern. Auf der rechten Seite finden Sie zusätzliche Informationen und Aktionen für die Seite.</p>
+                <target><![CDATA[<p>Das Editierformular umfasst mehrere Bereiche. Unter dem Seitentitel sehen Sie den Content-Bereich mit einem oder mehreren Layout-Containern. Auf der rechten Seite finden Sie zus&auml;tzliche Informationen und Aktionen f&uuml;r die Seite.</p>
 
-          <h2>Content-Bereich</h2>
+                        <h2>Content-Bereich</h2>
 
-          <p>Im Content-Bereich unter dem Seitentitel sehen Sie die unterschiedlichen Layout-Container (z.B. Kopfzeile, Haupt-Content, linke Spalte, usw.). Für jeden Layout-Container können mehrere Content-Blöcke zugewiesen werden. Diese Blöcke können entweder Text oder Galerien (oder andere vordefinierte Content-Typen) sein. Neue Blöcke können durch Anklicken des +-Symbols erstellt, vorhandene Blöcke gelöscht (Papierkorb-Symbol), bearbeitet (Bleistift-Symbol) oder an eine andere Position (Pfeile) verschoben werden.</p>
+                        <p>Im Content-Bereich unter dem Seitentitel sehen Sie die unterschiedlichen Layout-Container (z.B. Kopfzeile, Haupt-Content, linke Spalte, usw.). F&uuml;r jeden Layout-Container k&ouml;nnen mehrere Content-Bl&ouml;cke zugewiesen werden. Diese Bl&ouml;cke k&ouml;nnen entweder Text oder Galerien (oder andere vordefinierte Content-Typen) sein. Neue Bl&ouml;cke k&ouml;nnen durch Anklicken des +-Symbols erstellt, vorhandene Bl&ouml;cke gel&ouml;scht (Papierkorb-Symbol), bearbeitet (Bleistift-Symbol) oder an eine andere Position (Pfeile) verschoben werden.</p>
 
-          <h2>Veröffentlichungs-Status</h2>
+                        <h2>Ver&ouml;ffentlichungs-Status</h2>
 
-          <p>Eine Seite kann im Entwurfs- oder im Veröffentlichungs-Status sein. Der letzte Veröffentlichungs-Status ist der, den der normale Benutzer sieht, der Entwurfsstatus ist nur für Admin-Benutzer des CMS sichtbar. Seiten im Entwurfsstatus können auch zur Überprüfung gekennzeichnet werden; es handelt sich dann weniger um einen Status als vielmehr um eine Markierung, anhand derer jedermann erkennt, dass die Seite im Anschluss an eine Überprüfung bereit zur Veröffentlichung ist. WICHTIG: Nur veröffentliche Seiten können von der allgemeinen Öffentlichkeit angesehen werden.</p>
+                        <p>Eine Seite kann im Entwurfs- oder im Ver&ouml;ffentlichungs-Status sein. Der letzte Ver&ouml;ffentlichungs-Status ist der, den der normale Benutzer sieht, der Entwurfsstatus ist nur f&uuml;r Admin-Benutzer des CMS sichtbar. Seiten im Entwurfsstatus k&ouml;nnen auch zur &Uuml;berpr&uuml;fung gekennzeichnet werden; es handelt sich dann weniger um einen Status als vielmehr um eine Markierung, anhand derer jedermann erkennt, dass die Seite im Anschluss an eine &Uuml;berpr&uuml;fung bereit zur Ver&ouml;ffentlichung ist. WICHTIG: Nur ver&ouml;ffentliche Seiten k&ouml;nnen von der allgemeinen &Ouml;ffentlichkeit angesehen werden.</p>
 
-          <p><strong>Entwurf</strong><br />
-          Sobald eine Seite angelegt oder etwas auf der Seite editiert wird, wird der Status auf &quot;Entwurf&quot; gesetzt. Wenn alle Änderungen korrekt sind, sollte der Status in &quot;Prüfen&quot; oder &quot;Veröffentlicht&quot; geändert werden. Wenn Sie bei Bedarf zurück zur letzten &quot;veröffentlichten&quot; Version möchten, klicken Sie auf der rechten Seite auf &quot;Entwurf streichen&quot;.</p>
+                        <p><strong>Entwurf</strong><br />
+                        Sobald eine Seite angelegt oder etwas auf der Seite editiert wird, wird der Status auf &quot;Entwurf&quot; gesetzt. Wenn alle &Auml;nderungen korrekt sind, sollte der Status in &quot;Pr&uuml;fen&quot; oder &quot;Ver&ouml;ffentlicht&quot; ge&auml;ndert werden. Wenn Sie bei Bedarf zur&uuml;ck zur letzten &quot;ver&ouml;ffentlichten&quot; Version m&ouml;chten, klicken Sie auf der rechten Seite auf &quot;Entwurf streichen&quot;.</p>
 
-          <p><strong>Prüfen</strong><br />
-          Jemand hat Änderungen auf der Seite vorgenommen und diese ist zur Veröffentlichung bereit (aber noch nicht veröffentlicht). Bevor die Seite veröffentlicht wird, sollten die Änderungen geprüft werden. Aktivieren Sie das Kästchen &quot;Prüfen&quot;, um die Seite zu einer Prüfliste für einen Herausgeber hinzuzufügen. Die Verwendung dieses Status ist im Allgemeinen optional; er bietet nur eine Unterstützung bei der Erstellung eines geeigneten Editor/Herausgeber-Workflows.</p>
+                        <p><strong>Pr&uuml;fen</strong><br />
+                        Jemand hat &Auml;nderungen auf der Seite vorgenommen und aber noch nicht ver&ouml;ffentlicht. Bevor die Seite ver&ouml;ffentlicht wird, sollten die &Auml;nderungen gepr&uuml;ft werden. Aktivieren Sie das K&auml;stchen &quot;Pr&uuml;fen&quot;, um die Seite zu einer Pr&uuml;fliste f&uuml;r einen Herausgeber hinzuzuf&uuml;gen. Die Verwendung dieses Status ist im Allgemeinen optional; er bietet nur eine Unterst&uuml;tzung bei der Erstellung eines geeigneten Editor/Herausgeber-Workflows.</p>
 
-          <p><strong>Veröffentlicht</strong><br />
-          Wenn alle Änderungen (nach einer Prüfung) korrekt sind, kann der Status in &quot;Veröffentlicht&quot; geändert werden. Alle Änderungen sind jetzt öffentlich sichtbar.</p>
+                        <p><strong>Ver&ouml;ffentlicht</strong><br />
+                        Wenn alle &Auml;nderungen (nach einer Pr&uuml;fung) korrekt sind, kann der Status in &quot;Ver&ouml;ffentlicht&quot; ge&auml;ndert werden. Alle &Auml;nderungen sind jetzt &ouml;ffentlich sichtbar.</p>
 
-          <h2>Übersetzungen</h2>
+                        <h2>&Uuml;bersetzungen</h2>
 
-          <p>Wenn eine Seite in einer anderen Sprache vorhanden ist, kann ein Link dazu erstellt werden. Als schneller und einfacher zu handhabende Alternative kann die Seite in eine andere Sprache kopiert werden. Mit der Option &quot;Übersetzungen&quot; können Sie alle Sprachen verwalten.</p>
+                        <p>Wenn eine Seite in einer anderen Sprache vorhanden ist, kann ein Link dazu erstellt werden. Als schneller und einfacher zu handhabende Alternative kann die Seite in eine andere Sprache kopiert werden. Mit der Option &quot;&Uuml;bersetzungen&quot; k&ouml;nnen Sie alle Sprachen verwalten.</p>
 
-          <h2>Menüverknüpfungen</h2>
+                        <h2>Men&uuml;verkn&uuml;pfungen</h2>
 
-          <p>Eine Seite kann in verschiedenen Menüs vorhanden sein. Vielleicht möchten Sie Ihre &quot;Kontaktseite&quot; sowohl im Hauptmenü als auch im Fusszeilen-Menü haben. Unter Menüverknüpfungen können Sie alle Menüeinträge verwalten sowie neue erstellen.</p>
+                        <p>Eine Seite kann in verschiedenen Men&uuml;s vorhanden sein. Vielleicht m&ouml;chten Sie Ihre &quot;Kontaktseite&quot; sowohl im Hauptmen&uuml; als auch im Fusszeilen-Men&uuml; haben. Unter Men&uuml;verkn&uuml;pfungen k&ouml;nnen Sie alle Men&uuml;eintr&auml;ge verwalten sowie neue erstellen.</p>
 
-          <h2>Einstellungen &amp; SEO</h2>
+                        <h2>Einstellungen &amp; SEO</h2>
 
-          <p>Hier finden Sie dieselben Felder, die Sie beim Erstellen einer Seite benutzt haben. Sie können den Seitennamen (durch Anklicken des Bleistift-Symbols), die URL, die Seitensichtbarkeit, das Seiten-layout und andere Meta-Einstellungen der Seite editieren.</p>
-                ]]>
+                        <p>Hier finden Sie dieselben Felder, die Sie beim Erstellen einer Seite benutzt haben. Sie k&ouml;nnen den Seitennamen (durch Anklicken des Bleistift-Symbols), die URL, die Seitensichtbarkeit, das Seiten-layout und andere Meta-Einstellungen der Seite editieren.</p>]]>
                 </target>
             </trans-unit>
 
@@ -326,26 +315,28 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.menu_item.navigation.text">
                 <source>networking_init_cms.admin.menu_item.navigation.text</source>
-                <target><![CDATA[
-                    <p>Ein Menü bietet eine Navigation, damit andere leicht auf Ihren Content zugreifen können. Jedes Menü wird durch eine Registerkarte dargestellt, das ausgewählte Menü wird hell hervorgehoben. Unter dem hell hervorgehobenen Menü sehen Sie alle Optionen und die Liste der Menüelemente. Die Menüelement-Liste zeigt Informationen über jeden Menüpunkt an und bietet die Funktionen zum Verschieben (Umsortieren), Bearbeiten und Löschen jedes Punkts an. Über den Registerkarten können Sie die Menüs nach Sprache filtern.</p>
+                <target><![CDATA[<p>Ein Men&uuml; bietet eine Navigation, damit andere leicht auf Ihren Content zugreifen k&ouml;nnen. Jedes Men&uuml; wird durch eine Registerkarte dargestellt, das ausgew&auml;hlte Men&uuml; wird hell hervorgehoben. Unter dem hell hervorgehobenen Men&uuml; sehen Sie alle Optionen und die Liste der Men&uuml;elemente. Die Men&uuml;element-Liste zeigt Informationen &uuml;ber jeden Men&uuml;punkt an und bietet die Funktionen zum Verschieben (Umsortieren), Bearbeiten und L&ouml;schen jedes Punkts an. &Uuml;ber den Registerkarten k&ouml;nnen Sie die Men&uuml;s nach Sprache filtern.</p>
 
-                    <h2>Was ist ein Menü?</h2>
+                        <h2>Was ist ein Men&uuml;?</h2>
 
-                    <p><strong>Menü</strong><br />
-                    Ein Menü ist eine Liste von Seiten oder Links zur Navigation Ihres Contents auf Ihrer Website. Eine Website kann mehrere Menüs haben, zum Beispiel ein &quot;Hauptmenü&quot; und ein &quot;Nebenmenü&quot;. Sie können ein neues Menü mit der Registerkarte &quot;+&quot; auf der rechten Seite der Menüregisterkarten-Navigation hinzufügen (die meisten Benutzer haben nicht die Rechte, um Menüs hinzuzufügen oder zu löschen).</span></p>
+                        <p><strong>Men&uuml;</strong><br />
+                        Ein Men&uuml; ist eine Liste von Seiten oder Links zur Navigation Ihres Contents auf Ihrer Website. Eine Website kann mehrere Men&uuml;s haben, zum Beispiel ein &quot;Hauptmen&uuml;&quot; und ein &quot;Nebenmen&uuml;&quot;. Sie k&ouml;nnen ein neues Men&uuml; mit der Registerkarte &quot;+&quot; auf der rechten Seite der Men&uuml;registerkarten-Navigation hinzuf&uuml;gen (die meisten Benutzer haben nicht die Rechte, um Men&uuml;s hinzuzuf&uuml;gen oder zu l&ouml;schen).</p>
 
-                    <p><strong>Menüelement</strong><br />
-                    Ein Menüelement besteht aus einem Namen und einer Seite oder einem Link (URL). Menüelemente können hierarchisch organisiert werden: Ziehen Sie einfach Ihre Menüelemente an eine bestimmte Stelle und legen Sie sie ab (Drag and Drop), um die Struktur Ihrer Wahl zu erstellen. Sie können mehrere Ebenen von Menüelementen aufbauen und sie frei miteinander verschachteln. Die URL ändert sich nicht, wenn Sie ein Seiten-Menüelement an eine andere Stelle in Ihrem Menü-Baum verschieben (die URL wird durch die URL der Seite oder durch die in der externen/internen URL-Einstellung des Menüelements eingegebene URL festgelegt).</p>
+                        <p><strong>Men&uuml; Einstellungen</strong><br />
+                        Hier k&ouml;nnen Sie eine Beschreibung des Men&uuml;s eingeben. &Auml;ndern Sie den Name des Men&uuml;s nicht - oder nur in Absprache mit dem Webmaster. &Uuml;ber den Namen wird das Men&uuml; mit Ihrem Template (HTML Vorlage) verbunden.</p>
 
-                    <p><strong>Menüelement-Name</strong><br />
-                    Der Name eines Menüelements kann eine beliebige Zeichenkette Ihrer Wahl sein. Wenn Sie möchten, können Sie denselben Begriff wie für den Seitennamen benutzen, mit dem es verknüpft ist, aber Sie können sich auch für einen anderen Namen entscheiden. Wählen Sie einen Namen, der den Content gut beschreibt, und verwenden Sie auch Begriffe, die Google und anderen Suchmaschinen dabei helfen, Ihre Seiten zu finden.</p>
+                        <p><strong>Men&uuml;element</strong><br />
+                        Ein Men&uuml;element besteht aus einem Namen und einer Seite oder einem Link (URL). Men&uuml;elemente k&ouml;nnen hierarchisch organisiert werden: Ziehen Sie einfach Ihre Men&uuml;elemente an eine bestimmte Stelle und legen Sie sie ab (Drag and Drop), um die Struktur Ihrer Wahl zu erstellen. Sie k&ouml;nnen mehrere Ebenen von Men&uuml;elementen aufbauen und sie frei miteinander verschachteln. Die URL &auml;ndert sich nicht, wenn Sie ein Seiten-Men&uuml;element an eine andere Stelle in Ihrem Men&uuml;-Baum verschieben (die URL wird durch die URL der Seite oder durch die in der externen/internen URL-Einstellung des Men&uuml;elements eingegebene URL festgelegt).</p>
 
-                    <p><strong>Menüelement-Link</strong><br />
-                    Ein Menüelement wird mit einer Seite oder einer standardmässigen externen/internen URL verknüpft. Verschiedene Menüelemente können mit derselben Seite oder derselben URL verknüpft sein.</p>
+                        <p><strong>Men&uuml;element-Name</strong><br />
+                        Der Name eines Men&uuml;elements kann eine beliebige Zeichenkette Ihrer Wahl sein. Wenn Sie m&ouml;chten, k&ouml;nnen Sie denselben Begriff wie f&uuml;r den Seitennamen benutzen, mit dem es verkn&uuml;pft ist, aber Sie k&ouml;nnen sich auch f&uuml;r einen anderen Namen entscheiden. W&auml;hlen Sie einen Namen, der den Content gut beschreibt, und verwenden Sie auch Begriffe, die Google und anderen Suchmaschinen dabei helfen, Ihre Seiten zu finden.</p>
 
-                    <p><strong>Menüsprache</strong><br />
-                    Ein Menü gehört nur zur ausgewählten Sprache. Somit hat jede Sprache ihre eigenen Menüs. Dadurch steht Ihnen in jeder Sprache ein separater Menü-Baum zur Verfügung.</p>
-                ]]></target>
+                        <p><strong>Men&uuml;element-Link</strong><br />
+                        Ein Men&uuml;element wird mit einer Seite oder einer standardm&auml;ssigen externen/internen URL verkn&uuml;pft. Verschiedene Men&uuml;elemente k&ouml;nnen mit derselben Seite oder derselben URL verkn&uuml;pft sein.</p>
+
+                        <p><strong>Men&uuml;sprache</strong><br />
+                        Ein Men&uuml; geh&ouml;rt nur zur ausgew&auml;hlten Sprache. Somit hat jede Sprache ihre eigenen Men&uuml;s. Dadurch steht Ihnen in jeder Sprache ein separater Men&uuml;-Baum zur Verf&uuml;gung.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.menu.create.title">
                 <source>networking_init_cms.admin.menu.create.title</source>
@@ -353,11 +344,9 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.menu.create.text">
                 <source>networking_init_cms.admin.menu.create.text</source>
-                <target><![CDATA[
-                    <p>Mit dieser Funktion k&ouml;nnen Sie ein neues Menu erstellen. Dazu muss das Menu im Template entsprechend programmiert sein - fragen Sie Ihren Webmaster.</p>
+                <target><![CDATA[<p>Mit dieser Funktion k&ouml;nnen Sie ein neues Menu erstellen. Dazu muss das Menu im Template entsprechend programmiert und benennt sein - fragen Sie Ihren Webmaster.</p>
 
-                    <p>Diese Funkion steht nicht allen CMS Benutzern zur Verf&uuml;gung.</p>
-                ]]>
+                <p>Diese Funkion steht nicht allen CMS Benutzern zur Verf&uuml;gung.</p>]]>
                 </target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.menu_item.create.title">
@@ -368,38 +357,37 @@
                 <source>networking_init_cms.admin.menu_item.create.text</source>
                 <target><![CDATA[<p>In der Men&uuml;-&Uuml;bersicht finden Sie die blaue Schaltfl&auml;che &quot;+ Element hinzuf&uuml;gen&quot;. Wenn Sie sie anklicken, wird ein neues Men&uuml;element in dem aktuell ausgew&auml;hlten Men&uuml; angelegt.</p>
 
-                    <h2>Formular-Felder</h2>
+                        <h2>Formular-Felder</h2>
 
-                    <p><strong>Name</strong><br />
-                Der Name ist ein Pflichtfeld und wird f&uuml;r Ihr Men&uuml;element verwendet. Nehmen Sie einen Namen, der Ihren Content am besten beschreibt.</p>
+                        <p><strong>Name</strong><br />
+                        Der Name ist ein Pflichtfeld und wird f&uuml;r Ihr Men&uuml;element verwendet. Nehmen Sie einen Namen, der Ihren Content am besten beschreibt.</p>
 
-                    <p><strong>Seite</strong><br />
-                Die Seite ist nicht obligatorisch. Sie k&ouml;nnen eine beliebige vorhandene Seite als URL f&uuml;r das Men&uuml;element ausw&auml;hlen. Wenn Sie keine Seite ausw&auml;hlen, m&uuml;ssen Sie entweder eine externe oder interne URL eingeben.</p>
+                        <p><strong>Seite</strong><br />
+                        Die Seite ist nicht obligatorisch. Sie k&ouml;nnen eine beliebige vorhandene Seite als URL f&uuml;r das Men&uuml;element ausw&auml;hlen. Wenn Sie keine Seite ausw&auml;hlen, m&uuml;ssen Sie entweder eine externe oder interne URL eingeben.</p>
 
-                    <p><strong>Externe URL</strong><br />
-                Die externe URL ist nicht zwingend. Anstatt eine Seite auszuw&auml;hlen, k&ouml;nnen Sie eine beliebige URL hinzuf&uuml;gen, allerdings in ihrer gesamten L&auml;nge (z.B. http://www.initcms.com). Dies ist erforderlich, um einen absoluten Link zu einer anderen Webseite zu erstellen.</p>
+                        <p><strong>Externe URL</strong><br />
+                        Die externe URL ist nicht zwingend. Anstatt eine Seite auszuw&auml;hlen, k&ouml;nnen Sie eine beliebige URL hinzuf&uuml;gen, allerdings in ihrer gesamten L&auml;nge (z.B. http://www.initcms.com). Dies ist erforderlich, um einen absoluten Link zu einer anderen Webseite zu erstellen.</p>
 
-                    <p><strong>Interne URL</strong><br />
-                Die interne URL ist nicht obligatorisch. Anstatt eine Seite oder eine externe URL auszuw&auml;hlen, k&ouml;nnen Sie eine interne URL hinzuf&uuml;gen. Eine interne URL enth&auml;lt alles hinter der obersten Dom&auml;ne (z.B. /news/new-products). Dies ist erforderlich, um relative Links zu Ihrer eigenen Website zu erstellen.</p>
+                        <p><strong>Interne URL</strong><br />
+                        Die interne URL ist nicht obligatorisch. Anstatt eine Seite oder eine externe URL auszuw&auml;hlen, k&ouml;nnen Sie eine interne URL hinzuf&uuml;gen. Eine interne URL enth&auml;lt alles hinter der obersten Dom&auml;ne (z.B. /news/new-products). Dies ist erforderlich, um relative Links zu Ihrer eigenen Website zu erstellen.</p>
 
-                    <p><strong>+ Options</strong><br />
-                Klicken Sie &quot;Optionen&quot; an, um folgende zus&auml;tzliche M&ouml;glichkeiten zur Verf&uuml;gung zu haben.</p>
+                        <p><strong>+ Options</strong><br />
+                        Klicken Sie &quot;Optionen&quot; an, um folgende zus&auml;tzliche M&ouml;glichkeiten zur Verf&uuml;gung zu haben.</p>
 
-                    <p><strong>Sichtbarkeit</strong><br />
-                Verwenden Sie die Sichtbarkeitseinstellung, um das Men&uuml;element &ouml;ffentlich oder nur im gesicherten Bereich zur Verf&uuml;gung zu stellen.</p>
+                        <p><strong>Sichtbarkeit</strong><br />
+                        Verwenden Sie die Sichtbarkeitseinstellung, um das Men&uuml;element &ouml;ffentlich oder nur im gesicherten Bereich zur Verf&uuml;gung zu stellen.</p>
 
-                    <p><strong>Link-Ziel</strong><br />
-                Legen Sie das Ziel fest, wenn Sie nicht m&ouml;chten, dass sich die Seite in demselben Fenster &ouml;ffnet. Es gibt mehrere Optionen, die zur Auswahl stehen.</p>
+                        <p><strong>Link-Ziel</strong><br />
+                        Legen Sie das Ziel fest, wenn Sie nicht m&ouml;chten, dass sich die Seite in demselben Fenster &ouml;ffnet. Es gibt mehrere Optionen, die zur Auswahl stehen.</p>
 
-                    <p><strong>Link-Klasse</strong><br />
-                Die Link-Klasse, die Sie hier eingeben, wird als CSS-Formatierungsoption (Styling Option) hinzugef&uuml;gt.</p>
+                        <p><strong>Link-Klasse</strong><br />
+                        Die Link-Klasse, die Sie hier eingeben, wird als CSS-Formatierungsoption (Styling Option) hinzugef&uuml;gt.</p>
 
-                    <p><strong>Link-Relation</strong><br />
-                &Uuml;ber diese Einstellung wird das &quot;rel&quot;-Attribut zu Ihrem Link hinzugef&uuml;gt. Dies kann n&uuml;tzlich sein, wenn Sie Links erstellen, die z.B. eine Lightbox-Bildergalerie &ouml;ffnen, oder um eine andere Javascript-Funktionalit&auml;t auszul&ouml;sen.</p>
+                        <p><strong>Link-Relation</strong><br />
+                        &Uuml;ber diese Einstellung wird das &quot;rel&quot;-Attribut zu Ihrem Link hinzugef&uuml;gt. Dies kann n&uuml;tzlich sein, wenn Sie Links erstellen, die z.B. eine Lightbox-Bildergalerie &ouml;ffnen, oder um eine andere Javascript-Funktionalit&auml;t auszul&ouml;sen.</p>
 
-                <p><strong>Men&uuml;element verbergen</strong><br />
-                Wenn Sie ein Men&uuml;element verbergen m&ouml;chten, es aber trotzdem weiterhin normal funktionieren soll, aktivieren Sie dieses K&auml;stchen. Wenn Sie z.B. einen bestimmten Navigationspunkt als aktive &uuml;bergeordnete Seite der Suchergebnis-Seite hell hervorheben m&ouml;chten, aber nicht w&uuml;nschen, dass ein Link in dem Men&uuml; zur Suchergebnis-Seite sichtbar ist, dann w&auml;re dies die richtige Wahl f&uuml;r Sie.</p>
-                  ]]></target>
+                        <p><strong>Men&uuml;element verbergen</strong><br />
+                        Aktivieren Sie dieses K&auml;stchen wenn Sie ein Men&uuml;element verbergen m&ouml;chten, die Seite aber trotzdem normal funktionieren soll. Wenn Sie z.B. einen bestimmten Navigationspunkt als aktive &uuml;bergeordnete Seite der Suchergebnis-Seite hell hervorheben m&ouml;chten, aber nicht w&uuml;nschen, dass ein Link in dem Men&uuml; zur Suchergebnis-Seite sichtbar ist, dann w&auml;re diese Funktion passend.</p>]]></target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.menu_item.edit.title">
                 <source>networking_init_cms.admin.menu_item.edit.title</source>
@@ -409,41 +397,41 @@
                 <source>networking_init_cms.admin.menu_item.edit.text</source>
                 <target><![CDATA[<p>In der Men&uuml;-&Uuml;bersicht finden Sie neben jedem Menupunkt den bekannten &#39;Editieren&#39;-Button (ja das ist die graue Schaltfl&auml;che mit dem Stift), Mit Klick auf diesen Button wechseln Sie in den Editieren-Modus indem eine Light-Box ge&ouml;ffnet wird.</p>
 
-                <p>In der obersten Zeile wird der Name des Menupunkts gezeigt sowie - ganz rechts - der Schliessen Button um das Formular ohne &Auml;nderungen zu verlassen (falls Sie einfach in die graue Fl&auml;che neben dem Formular klicken hat es denselben Effekt - das Formular wird ohne &Auml;nderungen geschlossen.</p>
+                        <p>In der obersten Zeile wird der Name des Menupunkts gezeigt sowie - ganz rechts - der Schliessen Button um das Formular ohne &Auml;nderungen zu verlassen (falls Sie einfach in die graue Fl&auml;che neben dem Formular klicken hat es denselben Effekt - das Formular wird ohne &Auml;nderungen geschlossen.</p>
 
-                <p>In der untersten Zeile (immer sichtbar, leicht ausgegraut) befindet sich der blaue &#39;Aktualisieren&#39;-Button mit dem Sie alle &Auml;nderungen in diesem Formular speichern sowie der graue &#39;Abbrechen&#39;-Button mit dem Sie das Formular ohne &Auml;nderungen verlassen.</p>
+                        <p>In der untersten Zeile (immer sichtbar, leicht ausgegraut) befindet sich der blaue &#39;Aktualisieren&#39;-Button mit dem Sie alle &Auml;nderungen in diesem Formular speichern sowie der graue &#39;Abbrechen&#39;-Button mit dem Sie das Formular ohne &Auml;nderungen verlassen.</p>
 
-                <h2>Formular-Felder</h2>
+                        <h2>Formular-Felder</h2>
 
-                <p><strong>Name</strong><br />
-                Der Name ist ein Pflichtfeld und wird f&uuml;r Ihr Men&uuml;element verwendet. Falls Sie den Namen des Menupunkts &auml;ndern, achten Sie bitte darauf dass die neue Bezeichnung ihrem Design gerecht wird - also nicht zu lang ist, insbesondere wenn Ihre Webseite mehrere Sprachen verwendet.</p>
+                        <p><strong>Name</strong><br />
+                        Der Name ist ein Pflichtfeld und wird f&uuml;r Ihr Men&uuml;element verwendet. Falls Sie den Namen des Menupunkts &auml;ndern, achten Sie bitte darauf dass die neue Bezeichnung ihrem Design gerecht wird - also nicht zu lang ist, insbesondere wenn Ihre Webseite mehrere Sprachen verwendet.</p>
 
-                <p><strong>Seite</strong><br />
-                Damit verkn&uuml;pfen Sie den Menupunkt mit einer internen Webseite. Falls Sie hier eine Anpassung vornehmen, f&uuml;hrt der Menupunkt einfach auf die neu ausgew&auml;hlte Seite. Wenn Sie keine Seite ausw&auml;hlen, m&uuml;ssen Sie entweder eine externe oder interne URL eingeben.</p>
+                        <p><strong>Seite</strong><br />
+                        Damit verkn&uuml;pfen Sie den Menupunkt mit einer internen Webseite. Falls Sie hier eine Anpassung vornehmen, f&uuml;hrt der Menupunkt einfach auf die neu ausgew&auml;hlte Seite. Wenn Sie keine Seite ausw&auml;hlen, m&uuml;ssen Sie entweder eine externe oder interne URL eingeben.</p>
 
-                <p><strong>Externe URL</strong><br />
-                Die externe URL ist nicht zwingend. Anstatt eine Seite auszuw&auml;hlen, k&ouml;nnen Sie eine beliebige URL hinzuf&uuml;gen, allerdings in ihrer gesamten L&auml;nge (z.B. http://www.initcms.com). Dies ist erforderlich, um einen absoluten Link zu einer anderen Webseite zu erstellen.</p>
+                        <p><strong>Externe URL</strong><br />
+                        Die externe URL ist nicht zwingend. Anstatt eine Seite auszuw&auml;hlen, k&ouml;nnen Sie eine beliebige URL hinzuf&uuml;gen, allerdings in ihrer gesamten L&auml;nge (z.B. http://www.initcms.com). Dies ist erforderlich, um einen absoluten Link zu einer anderen Webseite zu erstellen.</p>
 
-                <p><strong>Interne URL</strong><br />
-                Die interne URL ist nicht obligatorisch. Anstatt eine Seite oder eine externe URL auszuw&auml;hlen, k&ouml;nnen Sie eine interne URL hinzuf&uuml;gen. Eine interne URL enth&auml;lt alles hinter der obersten Dom&auml;ne (z.B. /news/new-products). Dies ist erforderlich, um relative Links zu Ihrer eigenen Website zu erstellen.</p>
+                        <p><strong>Interne URL</strong><br />
+                        Die interne URL ist nicht obligatorisch. Anstatt eine Seite oder eine externe URL auszuw&auml;hlen, k&ouml;nnen Sie eine interne URL hinzuf&uuml;gen. Eine interne URL enth&auml;lt alles hinter der obersten Dom&auml;ne (z.B. /news/new-products). Dies ist erforderlich, um relative Links zu Ihrer eigenen Website zu erstellen.</p>
 
-                <p><strong>+ Options</strong> (bereits ge&ouml;ffnet)<br />
-                Klicken Sie &quot;Optionen&quot; an, um folgende zus&auml;tzliche M&ouml;glichkeiten zur Verf&uuml;gung zu haben.</p>
+                        <p><strong>+ Options</strong> (bereits ge&ouml;ffnet)<br />
+                        Klicken Sie &quot;Optionen&quot; an, um folgende zus&auml;tzliche M&ouml;glichkeiten zur Verf&uuml;gung zu haben.</p>
 
-                <p><strong>Sichtbarkeit</strong><br />
-                Verwenden Sie die Sichtbarkeitseinstellung, um das Men&uuml;element &ouml;ffentlich oder nur im gesicherten Bereich zur Verf&uuml;gung zu stellen.</p>
+                        <p><strong>Sichtbarkeit</strong><br />
+                        Verwenden Sie die Sichtbarkeitseinstellung, um das Men&uuml;element &ouml;ffentlich oder nur im gesicherten Bereich zur Verf&uuml;gung zu stellen.</p>
 
-                <p><strong>Link-Ziel</strong><br />
-                Legen Sie das Ziel fest, wenn Sie nicht m&ouml;chten, dass sich die Seite in demselben Fenster &ouml;ffnet. Es gibt mehrere Optionen, die zur Auswahl stehen. In der Regel wird f&uuml;r interne Links &#39;aktueller Browser&#39; und f&uuml;r externe Links (zB. www.tagi.ch) &#39;neues Browser Fenster oder Tab&#39; verwendet.</p>
+                        <p><strong>Link-Ziel</strong><br />
+                        Legen Sie das Ziel fest, wenn Sie nicht m&ouml;chten, dass sich die Seite in demselben Fenster &ouml;ffnet. Es gibt mehrere Optionen, die zur Auswahl stehen. In der Regel wird f&uuml;r interne Links &#39;aktueller Browser&#39; und f&uuml;r externe Links (zB. www.tagi.ch) &#39;neues Browser Fenster oder Tab&#39; verwendet.</p>
 
-                <p><strong>Link-Klasse</strong><br />
-                Die Link-Klasse, die Sie hier eingeben, wird als CSS-Formatierungsoption (Styling Option) hinzugef&uuml;gt. Sie k&ouml;nnen selbstredend nur Link-Klassen verwenden, die auch f&uuml;r Ihr Projekt programmiert sind.</p>
+                        <p><strong>Link-Klasse</strong><br />
+                        Die Link-Klasse, die Sie hier eingeben, wird als CSS-Formatierungsoption (Styling Option) hinzugef&uuml;gt. Sie k&ouml;nnen selbstredend nur Link-Klassen verwenden, die auch f&uuml;r Ihr Projekt programmiert sind.</p>
 
-                <p><strong>Link-Bezug</strong><br />
-                &Uuml;ber diese Einstellung wird das &quot;rel&quot;-Attribut zu Ihrem Link hinzugef&uuml;gt. Dies kann n&uuml;tzlich sein, wenn Sie Links erstellen, die z.B. eine Lightbox-Bildergalerie &ouml;ffnen, oder um eine andere Javascript-Funktionalit&auml;t auszul&ouml;sen. Falls Sie hier anstehen, fragen Sie am besten schnell Ihre Entwickler.</p>
+                        <p><strong>Link-Bezug</strong><br />
+                        &Uuml;ber diese Einstellung wird das &quot;rel&quot;-Attribut zu Ihrem Link hinzugef&uuml;gt. Dies kann n&uuml;tzlich sein, wenn Sie Links erstellen, die z.B. eine Lightbox-Bildergalerie &ouml;ffnen, oder um eine andere Javascript-Funktionalit&auml;t auszul&ouml;sen. Falls Sie hier anstehen, fragen Sie am besten schnell Ihre Entwickler.</p>
 
-                <p><strong>Men&uuml;element verbergen</strong><br />
-                Wenn Sie ein Men&uuml;element verbergen m&ouml;chten, es aber trotzdem weiterhin normal funktionieren soll, aktivieren Sie dieses K&auml;stchen. Wenn Sie z.B. einen bestimmten Navigationspunkt als aktive &uuml;bergeordnete Seite der Suchergebnis-Seite hell hervorheben m&ouml;chten, aber nicht w&uuml;nschen, dass ein Link in dem Men&uuml; zur Suchergebnis-Seite sichtbar ist, dann w&auml;re dies die richtige Wahl f&uuml;r Sie.</p>]]></target>
+                        <p><strong>Men&uuml;element verbergen</strong><br />
+                        Wenn Sie ein Men&uuml;element verbergen m&ouml;chten, es aber trotzdem weiterhin normal funktionieren soll, aktivieren Sie dieses K&auml;stchen. Wenn Sie z.B. einen bestimmten Navigationspunkt als aktive &uuml;bergeordnete Seite der Suchergebnis-Seite hell hervorheben m&ouml;chten, aber nicht w&uuml;nschen, dass ein Link in dem Men&uuml; zur Suchergebnis-Seite sichtbar ist, dann w&auml;re dies die richtige Wahl f&uuml;r Sie.</p>]]></target>
             </trans-unit>
 
             <!-- media -->
@@ -456,44 +444,44 @@
                 <source>sonata.media.admin.media.list.text</source>
                 <target><![CDATA[<p>Der Medienbereich hilft Ihnen, Mediendateien wie z.B. Bilder, Videos und andere Dateien bequem zu verwalten. Am oberen Rand der Medien-Seite k&ouml;nnen Sie die Medien nach Namen filtern, oder Sie haben die zus&auml;tzliche Option, nach Medien-Tags zu filtern. Die verschiedenen Registerkarten zeigen den Medien-Kontext (siehe unten). W&auml;hlen Sie einfach &quot;Standard&quot;, wenn Sie keine anderen Informationen haben. Mit dem Medientyp k&ouml;nnen Sie alle Dateien, nur Bilder, nur Dateien oder nur Videos sehen. Ausser dem Medientyp haben Sie noch die Schaltfl&auml;che &quot;+ Neue Medien hinzuf&uuml;gen&quot; zur Verf&uuml;gung &ndash; Infos dazu finden Sie ebenfalls in der Systemhilfe. Schliesslich sehen Sie eine Liste Ihrer Medien-Dateien entsprechend Ihrer oben erw&auml;hnten Einstellungen, und Sie k&ouml;nnen einige Aktionen f&uuml;r jedes Element ausf&uuml;hren.</p>
 
-                <h2>Suchen</h2>
+                        <h2>Suchen</h2>
 
-                <p>Sie k&ouml;nnen die Medienelemente im angezeigten Medien-Kontext suchen in dem Sie im Feld &#39;Name&#39; nach dem Dateinamen des Objekts suchen. Zudem k&ouml;nnen Sie die Suche einschr&auml;nken wenn Sie f&uuml;r Ihre Medien Tags gesetzt haben. Die definierten Tags sind &uuml;ber ein pull-down Menu aufrufbar.</p>
+                        <p>Sie k&ouml;nnen die Medienelemente im angezeigten Medien-Kontext suchen in dem Sie im Feld &#39;Name&#39; nach dem Dateinamen des Objekts suchen. Zudem k&ouml;nnen Sie die Suche einschr&auml;nken wenn Sie f&uuml;r Ihre Medien Tags gesetzt haben. Die definierten Tags sind &uuml;ber ein pull-down Menu aufrufbar.</p>
 
-                <p>Zus&auml;tzlich k&ouml;nnen Sie nach weiteren Optionen suchen (z.B. Autor). Weitere Suchoptionen k&ouml;nnen von Ihrem Webmaster konfiguriert werden.</p>
+                        <p>Zus&auml;tzlich k&ouml;nnen Sie nach weiteren Optionen suchen (z.B. Autor). Weitere Suchoptionen k&ouml;nnen von Ihrem Webmaster konfiguriert werden.</p>
 
-                <p>Falls die Suchfelder nicht ausgef&uuml;llt werden, werden alle Objekte im entsprechenden Kontext angezeigt.</p>
+                        <p>Falls die Suchfelder nicht ausgef&uuml;llt werden, werden alle Objekte im entsprechenden Kontext angezeigt.</p>
 
-                    <h2>Medien-Kontext</h2>
+                        <h2>Medien-Kontext</h2>
 
-                <p>Ein Medien-Kontext ist eine M&ouml;glichkeit, spezifische Medientypen zu gruppieren. Medien-Kontexte sind in der Website-Konfiguration festgelegt. Sie k&ouml;nnen einschr&auml;nken, welche Medientypen in jedem einzelnen Kontext zugelassen sind, und im Falle von Bildern festlegen, auf welche Gr&ouml;ssen die Bilder zugeschnitten werden sollen. Dadurch haben Sie eine bessere Kontrolle &uuml;ber Ihre Medien; zudem wird verhindert, dass Benutzer den falschen Medientyp hochladen und sichergestellt, dass Bilder das korrekte Format behalten. Per default ist der Kontext &#39;Standard Medien&#39; vorinstalliert.</p>
+                        <p>Ein Medien-Kontext ist eine M&ouml;glichkeit, spezifische Medientypen zu gruppieren. Medien-Kontexte sind in der Website-Konfiguration festgelegt. Sie k&ouml;nnen einschr&auml;nken, welche Medientypen in jedem einzelnen Kontext zugelassen sind, und im Falle von Bildern festlegen, auf welche Gr&ouml;ssen die Bilder zugeschnitten werden sollen. Dadurch haben Sie eine bessere Kontrolle &uuml;ber Ihre Medien; zudem wird verhindert, dass Benutzer den falschen Medientyp hochladen und sichergestellt, dass Bilder das korrekte Format behalten. Per default ist der Kontext &#39;Standard Medien&#39; vorinstalliert.</p>
 
-                <p>Beispiel: Sie m&uuml;ssen Produktbilder sowie Bilder f&uuml;r neue Artikel bearbeiten. Ihr Webmaster muss zwei Medien-Kontexte konfigurieren, wobei bei jedem die verschiedenen Bildergr&ouml;ssen definiert (Miniatur, klein, mittel, usw.) und auch festzulegen ist, welche Dateien zugelassen sind.</p>
+                        <p>Beispiel: Sie m&uuml;ssen Produktbilder sowie Bilder f&uuml;r neue Artikel bearbeiten. Ihr Webmaster muss zwei Medien-Kontexte konfigurieren, wobei bei jedem die verschiedenen Bildergr&ouml;ssen definiert (Miniatur, klein, mittel, usw.) und auch festzulegen ist, welche Dateien zugelassen sind.</p>
 
-                <h2>Aktionen</h2>
+                        <h2>Aktionen</h2>
 
-                <p>F&uuml;r jedes Medienobjekt k&ouml;nnen folgende Aktionen durchgef&uuml;hrt werden:</p>
+                        <p>F&uuml;r jedes Medienobjekt k&ouml;nnen folgende Aktionen durchgef&uuml;hrt werden:</p>
 
-                <ul>
-                	<li>Anzeigen (zeigt das Objekt im Bearbeitungsmodus Ansicht an; siehe auch Hilfetext Medienelement bearbeiten)</li>
-                	<li>Bearbeiten (zeigt das Objekt im Bearbeitungsmodus Bearbeiten an; siehe auch Hilfetext Medienelement bearbeiten)</li>
-                	<li>L&ouml;schen (l&ouml;scht das Objekt, l&ouml;schen muss best&auml;tigt werden)</li>
-                </ul>
+                        <ul>
+                            <li>Anzeigen (zeigt das Objekt im Bearbeitungsmodus Ansicht an; siehe auch Hilfetext Medienelement bearbeiten)</li>
+                            <li>Bearbeiten (zeigt das Objekt im Bearbeitungsmodus Bearbeiten an; siehe auch Hilfetext Medienelement bearbeiten)</li>
+                            <li>L&ouml;schen (l&ouml;scht das Objekt, l&ouml;schen muss best&auml;tigt werden)</li>
+                        </ul>
 
-                <p>Zudem k&ouml;nnen mit dem Markieren der Checkboxen bei den jeweiligen Medienelementen Aktionen f&uuml;r alle oder mehrere Medienobjekte ausgef&uuml;hrt werden, indem die entsprechenden Checkboxen markiert und die gew&uuml;nschten Aktionen (z.B. l&ouml;schen) ausgef&uuml;hrt werden.</p>
+                        <p>Zudem k&ouml;nnen mit dem Markieren der Checkboxen bei den jeweiligen Medienelementen Aktionen f&uuml;r alle oder mehrere Medienobjekte ausgef&uuml;hrt werden, indem die entsprechenden Checkboxen markiert und die gew&uuml;nschten Aktionen (z.B. l&ouml;schen) ausgef&uuml;hrt werden.</p>
 
-                    <h2>Medien Formate</h2>
+                        <h2>Medien Formate</h2>
 
-                <p>In diesem Zusammenhang geht es um Datei-Formate bzw. Medientypen wie z.B.:</p>
+                        <p>In diesem Zusammenhang geht es um Datei-Formate bzw. Medientypen wie z.B.:</p>
 
-                    <ul>
-                    	<li>Bild (.jpg, .png)</li>
-                    	<li>PDF Dokumente (.pdf)</li>
-                    	<li>Video (h246, mpeg)</li>
-                    	<li>Audio (.mp3)</li>
-                    </ul>
+                        <ul>
+                            <li>Bild (.jpg, .png)</li>
+                            <li>PDF Dokumente (.pdf)</li>
+                            <li>Video (h246, mpeg)</li>
+                            <li>Audio (.mp3)</li>
+                        </ul>
 
-                <p>Spezifische Formate m&uuml;ssen explizit zugelassen werden. Ihr Webmaster richtet diese f&uuml;r Sie ein.</p>]]>
+                        <p>Aus Sicherheitsgr&uuml;nden m&uuml;ssen spezifische Formate explizit zugelassen werden. Ihr Webmaster richtet diese f&uuml;r Sie ein.</p>]]>
                 </target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.media.create.title">
@@ -504,61 +492,62 @@
                 <source>sonata.media.admin.media.create.text</source>
                 <target><![CDATA[<p>Erstellen Sie ein neues Medienelement in dem Sie zuerst den Medien-Kontext ausw&auml;hlen (z.B. Standard Medien, Hintergrundbilder, Publikationen, etc.).</p>
 
-                <p>Klicken Sie im gew&auml;hlten Kontext den Button &#39;+ Neue Medien hinzuf&uuml;gen an&#39;.</p>
+                        <p>Erstellen Sie ein neues Medienelement in dem Sie zuerst den Medien-Kontext ausw&auml;hlen (z.B. Standard Medien, Hintergrundbilder, Publikationen, etc.).</p>
 
-                <p>W&auml;hlen Sie nun den Medien-Typ. Je nach Medien-Kontext und je nach Ihrem System sind unterschiedliche Medientypen erlaubt.</p>
+                        <p>Klicken Sie im gew&auml;hlten Kontext den Button &#39;+ Neue Medien hinzuf&uuml;gen an&#39;.</p>
 
-                <p><strong>Medientyp Bild</strong><br />
-                Klicken Sie auf &#39;Durchsuchen&#39;. Ein neues Fenster wird ge&ouml;ffnet. W&auml;hlen Sie die gew&uuml;nschte Datei auf Ihrem Computer oder Netzwerk aus. Klicken Sie dann - z.B. mit einem Windows PC - auf &#39;&ouml;ffnen&#39;.<br />
-                Der Dateiname des Bildes wird angezeigt. Klicken Sie nun einen der Buttons:</p>
+                        <p>W&auml;hlen Sie nun den Medien-Typ. Je nach Medien-Kontext und je nach Ihrem System sind unterschiedliche Medientypen erlaubt.</p>
 
-                <ul>
-                	<li>Hinzuf&uuml;gen und bearbeiten</li>
-                	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
-                	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
-                </ul>
+                        <p><strong>Medientyp Bild</strong><br />
+                        Klicken Sie auf &#39;Durchsuchen&#39;. Ein neues Fenster wird ge&ouml;ffnet. W&auml;hlen Sie die gew&uuml;nschte Datei auf Ihrem Computer oder Netzwerk aus. Klicken Sie dann - z.B. mit einem Windows PC - auf &#39;&ouml;ffnen&#39;.<br />
+                        Der Dateiname des Bildes wird angezeigt. Klicken Sie nun einen der Buttons:</p>
 
-                <p>Mit &#39;Abbrechen&#39; wird die Funktion Medien hochladen r&uuml;ckg&auml;ngig gemacht und das hochgeladene Bild NICHT gespeichert.</p>
+                        <ul>
+                        	<li>Hinzuf&uuml;gen und bearbeiten</li>
+                        	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
+                        	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
+                        </ul>
 
-                <p>Falls das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+                        <p>Mit &#39;Abbrechen&#39; wird die Funktion Medien hochladen r&uuml;ckg&auml;ngig gemacht und das hochgeladene Bild NICHT gespeichert.</p>
 
-                <p><strong>Medientyp Datei</strong><br />
-                Klicken Sie auf &#39;Durchsuchen&#39;. Ein neues Fenster wird ge&ouml;ffnet. W&auml;hlen Sie die gew&uuml;nschte Datei auf Ihrem Computer oder Netzwerk aus. Klicken Sie dann - z.B. mit einem Windows PC - auf &#39;&ouml;ffnen&#39;.<br />
-                Der Dateiname des Bildes wird angezeigt.</p>
+                        <p>Falls das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
 
-                <p>W&auml;hlen Sie nun die Sprache aus, in welcher die Datei zur Verf&uuml;gung gestellt werden soll. Die Datei wird dann in der Mediensammlung nur unter dieser Sprache ausw&auml;hlbar.</p>
+                        <p><strong>Medientyp Datei</strong><br />
+                        Klicken Sie auf &#39;Durchsuchen&#39;. Ein neues Fenster wird ge&ouml;ffnet. W&auml;hlen Sie die gew&uuml;nschte Datei auf Ihrem Computer oder Netzwerk aus. Klicken Sie dann - z.B. mit einem Windows PC - auf &#39;&ouml;ffnen&#39;.<br />
+                        Der Dateiname des Bildes wird angezeigt.</p>
 
-                <p>Klicken Sie nun einen der Buttons:<br />
-                &nbsp;</p>
+                        <p>W&auml;hlen Sie nun die Sprache aus, in welcher die Datei zur Verf&uuml;gung gestellt werden soll. Die Datei wird dann in der Mediensammlung nur unter dieser Sprache ausw&auml;hlbar.</p>
 
-                <ul>
-                	<li>Hinzuf&uuml;gen und bearbeiten</li>
-                	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
-                	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
-                </ul>
+                        <p>Klicken Sie nun einen der Buttons:</p>
 
-                <p>Mit &#39;Abbrechen&#39; wird die Funktion Medien hochladen r&uuml;ckg&auml;ngig gemacht und die hochgeladene Datei NICHT gespeichert.</p>
+                        <ul>
+                        	<li>Hinzuf&uuml;gen und bearbeiten</li>
+                        	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
+                        	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
+                        </ul>
 
-                <p>Falls das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+                        <p>Mit &#39;Abbrechen&#39; wird die Funktion &#39;Medien hochladen&#39; r&uuml;ckg&auml;ngig gemacht und die hochgeladene Datei NICHT gespeichert.</p>
 
-                <p><strong>Medientyp Video</strong><br />
-                *Exemplarisch f&uuml;r das Beispiel Youtube. Falls Sie andere Provider (Vimeo, etc.) oder Filmsysteme (Flash-Filmformat) verwenden, fragen Sie Ihren Webmaster.<br />
-                F&uuml;gen Sie den mit ihrem Youtube-Account erstellen Link in das vorgesehene Feld ein.</p>
+                        <p>Falls das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
 
-                <p>Klicken Sie nun einen der Buttons:<br />
-                &nbsp;</p>
+                        <p><strong>Medientyp Video</strong><br />
+                        *Exemplarisch f&uuml;r das Beispiel Youtube. Falls Sie andere Provider (Vimeo, etc.) oder Filmsysteme (Flash-Filmformat) verwenden, fragen Sie Ihren Webmaster.<br />
+                        F&uuml;gen Sie den mit ihrem Youtube-Account erstellen Link in das vorgesehene Feld ein.</p>
 
-                <ul>
-                	<li>Hinzuf&uuml;gen und bearbeiten</li>
-                	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
-                	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
-                </ul>
+                        <p>Klicken Sie nun einen der Buttons:</p>
 
-                <p>Mit &#39;Abbrechen&#39; wird die Funktion Medien hochladen r&uuml;ckg&auml;ngig gemacht und die hochgeladene Datei NICHT gespeichert.</p>
+                        <ul>
+                        	<li>Hinzuf&uuml;gen und bearbeiten</li>
+                        	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
+                        	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
+                        </ul>
 
-                <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+                        <p>Mit &#39;Abbrechen&#39; wird die Funktion Medien hochladen r&uuml;ckg&auml;ngig gemacht und die hochgeladene Datei NICHT gespeichert.</p>
 
-                <p>Weitere n&uuml;tzliche Informationen finden Sie unter Medien bearbeiten.</p>]]></target>
+                        <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
+
+                        <p>Weitere n&uuml;tzliche Informationen finden Sie unter Medien bearbeiten.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.media.edit.title">
                 <source>sonata.media.admin.media.edit.title</source>
@@ -568,65 +557,65 @@
                 <source>sonata.media.admin.media.edit.text</source>
                 <target><![CDATA[<p>Bearbeiten Sie ein bestehendes Medienelement in dem Sie zuerst den Medien-Kontext ausw&auml;hlen (z.B. Standard Medien, Hintergrundbilder, Publikationen, etc.) &uuml;ber die vorhandenen Reiter ausw&auml;hlen.</p>
 
-                <p>W&auml;hlen Sie im gew&auml;hlten Kontext den grauen Button &#39;Bearbeiten&#39; (Zeichenstift) oder klicken Sie einfach auf das Bild / den Link. Oder Sie haben das Medienelement neu erstellt indem Sie&nbsp; &#39;Aktualisieren und Bearbeiten&#39; gew&auml;hlt haben.</p>
+                        <p>W&auml;hlen Sie im gew&auml;hlten Kontext den grauen Button &#39;Bearbeiten&#39; (Zeichenstift) oder klicken Sie einfach auf das Bild / den Link. Oder Sie haben das Medienelement neu erstellt indem Sie&nbsp; &#39;Aktualisieren und Bearbeiten&#39; gew&auml;hlt haben.</p>
 
-                <p>Sie k&ouml;nnen nun zwischen den Modi &#39;Bearbeiten&#39; und &#39;Ansicht&#39; &uuml;ber die Navigationsbox rechts wechseln.</p>
+                        <p>Sie k&ouml;nnen nun zwischen den Modi &#39;Bearbeiten&#39; und &#39;Ansicht&#39; &uuml;ber die Navigationsbox rechts wechseln.</p>
 
-                <p><strong>Bearbeiten</strong><br />
-                Name: Standardm&auml;ssig wird der bestehende Dateiname des Objekts angezeigt / gespeichert. Sie k&ouml;nnen den Namen &auml;ndern, falls z.B. das Bild anders verwendet werden soll, macht es Sinn das Dateiformat (.jpg) beizubehalten.</p>
+                        <p><strong>Bearbeiten</strong><br />
+                        Name: Standardm&auml;ssig wird der bestehende Dateiname des Objekts angezeigt / gespeichert. Sie k&ouml;nnen den Namen &auml;ndern, falls z.B. das Bild anders verwendet werden soll, macht es Sinn das Dateiformat (.jpg) beizubehalten.</p>
 
-                <p>Aktiviert: Medienelement aktiv oder inaktiv. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
+                        <p>Aktiviert: Medienelement aktiv oder inaktiv. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
 
-                <p>CDN leeren: Falls Sie mit Content Delivery Networks wie Amazon Servern arbeiten, k&ouml;nnen Sie mit dieser Checkbox das Sever Cache aktualisieren. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
+                        <p>CDN leeren: Falls Sie mit Content Delivery Networks wie Amazon Servern arbeiten, k&ouml;nnen Sie mit dieser Checkbox das Sever Cache aktualisieren. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
 
-                <p>Autor: Geben Sie den Autor als beschreibenden HTML Tag an.</p>
+                        <p>Autor: Geben Sie den Autor als beschreibenden HTML Tag an.</p>
 
-                <p>Beschreibung: Geben Sie eine Beschreibung des Objeks ein. Dies wird als HTML Tag angezeigt und zum Beispiel von Readern f&uuml;r Blinde / Sehbeinderte verwendet.</p>
+                        <p>Beschreibung: Geben Sie eine Beschreibung des Objeks ein. Dies wird als HTML Tag angezeigt und zum Beispiel von Readern f&uuml;r Blinde / Sehbeinderte verwendet.</p>
 
-                <p>Copyright: Geben Sie das Copyright als beschreibenden HTML Tag an.</p>
+                        <p>Copyright: Geben Sie das Copyright als beschreibenden HTML Tag an.</p>
 
-                <p>Datei ersetzen: Sie k&ouml;nnen das bestehende Medienelement ersetzen, inde, Sie eine neue Datei hochladen und damit die bestehende &uuml;berschreiben.</p>
+                        <p>Datei ersetzen: Sie k&ouml;nnen das bestehende Medienelement ersetzen, inde, Sie eine neue Datei hochladen und damit die bestehende &uuml;berschreiben.</p>
 
-                <p>Taggen Sie ihre Medien: Sie k&ouml;nnen ihre Medien mit beliebig vielen Tags versehen um sie leichter zu finden / gruppieren. Diese Funktion hilft Ihnen die Medien sinnvoll zu organisieren. &Uuml;ber den &#39;+ Neu&#39; Button k&ouml;nnen Sie ganz einfach neue Tags erstellen ohne die Seite / den Kontext zu wechseln.</p>
+                        <p>Taggen Sie ihre Medien: Sie k&ouml;nnen ihre Medien mit beliebig vielen Tags versehen um sie leichter zu finden / gruppieren. Diese Funktion hilft Ihnen die Medien sinnvoll zu organisieren. &Uuml;ber den &#39;+ Neu&#39; Button k&ouml;nnen Sie ganz einfach neue Tags erstellen ohne die Seite / den Kontext zu wechseln.</p>
 
-                <p>Sie k&ouml;nnen nun:</p>
+                        <p>Sie k&ouml;nnen nun:</p>
 
-                <ul>
-                	<li>Aktualisieren</li>
-                	<li>Aktualisieren und zur&uuml;ck zur Liste</li>
-                	<li>L&ouml;schen</li>
-                </ul>
+                        <ul>
+                            <li>Aktualisieren</li>
+                            <li>Aktualisieren und zur&uuml;ck zur Liste</li>
+                            <li>L&ouml;schen</li>
+                        </ul>
 
-                <p>Mit &#39;Abbrechen&#39; wird die Funktion Medienelement bearbeiten r&uuml;ckg&auml;ngig gemacht und die &Auml;nderungen NICHT gespeichert.</p>
+                        <p>Mit &#39;Abbrechen&#39; wird die Funktion Medienelement bearbeiten r&uuml;ckg&auml;ngig gemacht und die &Auml;nderungen NICHT gespeichert.</p>
 
-                <p><strong>Ansicht</strong><br />
-                In der Ansicht sehen Sie eine Vorschau des Medienobjekts (nur Bild).</p>
+                        <p><strong>Ansicht</strong><br />
+                        In der Ansicht sehen Sie eine Vorschau des Medienobjekts (nur Bild).</p>
 
-                <p>Danach folgen die generellen Informationen:</p>
+                        <p>Danach folgen die generellen Informationen:</p>
 
-                <ul>
-                	<li>Gr&ouml;sse (Anzahl Bytes)</li>
-                	<li>Breite (falls Bild)</li>
-                	<li>H&ouml;he (falls Bild)</li>
-                	<li>Inhaltstyp (falls bekannt)</li>
-                	<li>Copyright (falls ausgef&uuml;llt)</li>
-                	<li>Autor (falls ausgef&uuml;llt)</li>
-                	<li>CDN (letzte Aktualisierung)</li>
-                </ul>
+                        <ul>
+                            <li>Gr&ouml;sse (Anzahl Bytes)</li>
+                            <li>Breite (falls Bild)</li>
+                            <li>H&ouml;he (falls Bild)</li>
+                            <li>Inhaltstyp (falls bekannt)</li>
+                            <li>Copyright (falls ausgef&uuml;llt)</li>
+                            <li>Autor (falls ausgef&uuml;llt)</li>
+                            <li>CDN (letzte Aktualisierung)</li>
+                        </ul>
 
-                <p>Gesch&uuml;tzte URL: Sie k&ouml;nnen dem Medienobjekt eine spezifische URL zur einfachen Kennung mitgeben</p>
+                        <p>Gesch&uuml;tzte URL: Sie k&ouml;nnen dem Medienobjekt eine spezifische URL zur einfachen Kennung mitgeben</p>
 
-                <p>&Ouml;ffentliche URL: Eindeutige, vom CMS generierte URL</p>
+                        <p>&Ouml;ffentliche URL: Eindeutige, vom CMS generierte URL</p>
 
-                <p>Die allf&auml;llige Warnung zeigt an, ob das Medienobjekt nicht spezifisch gesch&uuml;tzt ist (also von allen aufgerufen werden kann).</p>
+                        <p>Die allf&auml;llige Warnung zeigt an, ob das Medienobjekt nicht spezifisch gesch&uuml;tzt ist (also von allen aufgerufen werden kann).</p>
 
-                <p>Danach folgen die Formate:</p>
+                        <p>Danach folgen die Formate:</p>
 
-                <p>reference: zeigt den Ort des Medienelements auf dem Webserver als URL an</p>
+                        <p>reference: zeigt den Ort des Medienelements auf dem Webserver als URL an</p>
 
-                <p>default_xxx: zeigt den Ort der unterschiedlich gerenderten (Bild-)Formate als URL an. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>]]></target>
+                        <p>default_xxx: zeigt den Ort der unterschiedlich gerenderten (Bild-)Formate als URL an. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>]]>
+                </target>
             </trans-unit>
-
 
             <trans-unit id="sonata.media.admin.gallery.list.title">
                 <source>sonata.media.admin.gallery.list.title</source>
@@ -635,64 +624,64 @@
             <trans-unit id="sonata.media.admin.gallery.list.text">
                 <source>sonata.media.admin.gallery.list.text</source>
                 <target><![CDATA[<p>Eine Galerie ist eine Sammlung von Medienelementen, in der Regel Bilder welche in einer Diashow oder einem Slider dargestellt werden.</p>
+                        <p>Die Medien-Galerie hilft Ihnen, eine Sammlung von Medien-Elementen (normalerweise Bilder) auf einer Seite zu pr&auml;sentieren. Sie k&ouml;nnen zuerst Medien &uuml;ber den Medien-Manager hinzuf&uuml;gen und sie dann ausw&auml;hlen, wenn Sie eine Galerie anlegen oder Sie k&ouml;nnen Medien w&auml;hrend des Galerie-Erstellungsvorgangs hochladen.</p>
 
-                <p>Die Medien-Galerie hilft Ihnen, eine Sammlung von Medien-Elementen (normalerweise Bilder) auf einer Seite zu pr&auml;sentieren. Sie k&ouml;nnen zuerst Medien &uuml;ber den Medien-Manager hinzuf&uuml;gen und sie dann ausw&auml;hlen, wenn Sie eine Galerie anlegen oder Sie k&ouml;nnen Medien w&auml;hrend des Galerie-Erstellungsvorgangs hochladen.</p>
+                        <p>Galerien k&ouml;nnen sp&auml;ter durch Einf&uuml;gen eines Content-Blocks des Typs &quot;Galerie&quot; in eine Seite einbezogen werden.</p>
 
-                <p>Galerien k&ouml;nnen sp&auml;ter durch Einf&uuml;gen eines Content-Blocks des Typs &quot;Galerie&quot; in eine Seite einbezogen werden.</p>
+                        <h2>Galerien</h2>
 
-                <h2>Galerien</h2>
+                        <p>Eine Galerie besteht aus den folgenden Feldern:</p>
 
-                <p>Eine Galerie besteht aus den folgenden Feldern:</p>
+                        <p><strong>Aktiviert</strong><br />
+                        Diese Markierung kann in Ihren Website-Templates (Vorlagen) benutzt werden, damit das Template weiss, ob es die Galerie anzeigen soll oder nicht. Es liegt an den (HTML)Template-Programmierern, wie das Feld zu verwenden ist.</p>
 
-                    <p><strong>Aktiviert</strong><br />
-                    Diese Markierung kann in Ihren Website-Templates (Vorlagen) benutzt werden, damit das Template weiss, ob es die Galerie anzeigen soll oder nicht. Es liegt an den Template-Programmierern, wie das Feld zu verwenden ist.</p>
+                        <p><strong>Name</strong><br />
+                        Der Name der Galerie. Er wird nur intern benutzt, damit Sie wissen, welche Galerie Sie f&uuml;r eine Seite ausw&auml;hlen.</p>
 
-                    <p><strong>Name</strong><br />
-                Der Name der Galerie. Er wird nur intern benutzt, damit Sie wissen, welche Galerie Sie f&uuml;r eine Seite ausw&auml;hlen.</p>
+                        <p><strong>Format</strong><br />
+                        W&auml;hlen Sie aus unterschiedlichen vordefinierten Formaten. Die Formate legen die Gr&ouml;sse der Bilder fest und sind in Ihrer Website-Konfiguration vordefiniert. Ihr Webmaster ist daf&uuml;r verantwortlich, diese zu Beginn korrekt einzurichten.</p>
 
-                    <p><strong>Format</strong><br />
-                W&auml;hlen Sie aus unterschiedlichen vordefinierten Formaten. Die Formate legen die Gr&ouml;sse der Bilder fest und sind in Ihrer Website-Konfiguration vordefiniert. Ihr Webmaster ist daf&uuml;r verantwortlich, diese zu Beginn korrekt einzurichten.</p>
+                        <p><strong>Medien<br />
+                        ​</strong>Klicken Sie &quot;+ Neue hinzuf&uuml;gen&quot; an, um vorhandene Medien hinzuzuf&uuml;gen, oder laden Sie neue Medien direkt hoch. Sie k&ouml;nnen bei Bedarf auch Medien aus der Galerie l&ouml;schen. Sie k&ouml;nnen jederzeit darauf zur&uuml;ckkommen und Medien f&uuml;r eine Galerie hinzuf&uuml;gen oder &auml;ndern.</p>
 
-                    <p><strong>Medien<br />
-                ​</strong>Klicken Sie &quot;+ Neue hinzuf&uuml;gen&quot; an, um vorhandene Medien hinzuzuf&uuml;gen, oder laden Sie neue Medien direkt hoch. Sie k&ouml;nnen bei Bedarf auch Medien aus der Galerie l&ouml;schen. Sie k&ouml;nnen jederzeit darauf zur&uuml;ckkommen und Medien f&uuml;r eine Galerie hinzuf&uuml;gen oder &auml;ndern.</p>
+                        <h2>Suchen</h2>
 
-                <h2>Suchen</h2>
+                        <p>Sie k&ouml;nnen die Galerien im angezeigten Kontext suchen in dem Sie im Feld &#39;Name&#39; nach dem Dateinamen der Galerie suchen.</p>
 
-                <p>Sie k&ouml;nnen die Galerien im angezeigten Kontext suchen in dem Sie im Feld &#39;Name&#39; nach dem Dateinamen der Galerie suchen.</p>
+                        <p>Zus&auml;tzlich k&ouml;nnen Sie nach weiteren Optionen suchen (z.B. Aktiviert). Weitere Suchoptionen k&ouml;nnen von Ihrem Webmaster konfiguriert werden.</p>
 
-                <p>Zus&auml;tzlich k&ouml;nnen Sie nach weiteren Optionen suchen (z.B. Aktiviert). Weitere Suchoptionen k&ouml;nnen von Ihrem Webmaster konfiguriert werden.</p>
+                        <p>Falls die Suchfelder nicht ausgef&uuml;llt werden, werden alle Objekte im entsprechenden Kontext angezeigt.</p>
 
-                <p>Falls die Suchfelder nicht ausgef&uuml;llt werden, werden alle Objekte im entsprechenden Kontext angezeigt.</p>
+                        <h2>Galerie-Kontext</h2>
 
-                <h2>Galerie-Kontext</h2>
+                        <p>Ein Galerie-Kontext ist eine M&ouml;glichkeit, spezifische Galerien zu unterscheiden, erstellen und bearbeiten. Galerie-Kontexte sind in der Website-Konfiguration festgelegt. Sie k&ouml;nnen einschr&auml;nken, welche Medientypen (Formate) in jedem einzelnen Kontext zugelassen sind, und im Falle von Bildern festlegen, auf welche Gr&ouml;ssen die Bilder zugeschnitten werden sollen. Dadurch haben Sie eine bessere Kontrolle &uuml;ber Ihre Medien; zudem wird verhindert, dass Benutzer den falschen Medientyp hochladen und sichergestellt, dass Bilder das korrekte Format behalten. Per default ist der Kontext &#39;default&#39; vorinstalliert.</p>
 
-                <p>Ein Galerie-Kontext ist eine M&ouml;glichkeit, spezifische Galerien zu unterscheiden, erstellen und bearbeiten. Galerie-Kontexte sind in der Website-Konfiguration festgelegt. Sie k&ouml;nnen einschr&auml;nken, welche Medientypen (Formate) in jedem einzelnen Kontext zugelassen sind, und im Falle von Bildern festlegen, auf welche Gr&ouml;ssen die Bilder zugeschnitten werden sollen. Dadurch haben Sie eine bessere Kontrolle &uuml;ber Ihre Medien; zudem wird verhindert, dass Benutzer den falschen Medientyp hochladen und sichergestellt, dass Bilder das korrekte Format behalten. Per default ist der Kontext &#39;default&#39; vorinstalliert.</p>
+                        <p>Beispiel: Sie wollen Produktbilder f&uuml;r einen Slider sowie Bilder f&uuml;r die Diashow des Betriebsfests verwenden. Ihr Webmaster muss zwei Galerie-Kontexte konfigurieren, wobei bei jedem die verschiedenen Bildergr&ouml;ssen definiert (Miniatur, klein, mittel, usw.) und auch festzulegen ist, welche Dateien zugelassen sind.</p>
 
-                <p>Beispiel: Sie wollen Produktbilder f&uuml;r einen Slider sowie Bilder f&uuml;r die Diashow des Betriebsfests verwenden. Ihr Webmaster muss zwei Galerie-Kontexte konfigurieren, wobei bei jedem die verschiedenen Bildergr&ouml;ssen definiert (Miniatur, klein, mittel, usw.) und auch festzulegen ist, welche Dateien zugelassen sind.</p>
+                        <h2>Aktionen</h2>
 
-                <h2>Aktionen</h2>
+                        <p>F&uuml;r jedes Galerieobjekt k&ouml;nnen folgende Aktionen durchgef&uuml;hrt werden:</p>
 
-                <p>F&uuml;r jedes Galerieobjekt k&ouml;nnen folgende Aktionen durchgef&uuml;hrt werden:</p>
+                        <ul>
+                            <li>Bearbeiten (zeigt das Objekt im Bearbeitungsmodus Bearbeiten an; siehe auch Hilfetext Galerie bearbeiten)</li>
+                            <li>L&ouml;schen (l&ouml;scht das Objekt, l&ouml;schen muss best&auml;tigt werden)</li>
+                        </ul>
 
-                <ul>
-                	<li>Bearbeiten (zeigt das Objekt im Bearbeitungsmodus Bearbeiten an; siehe auch Hilfetext Galerie bearbeiten)</li>
-                	<li>L&ouml;schen (l&ouml;scht das Objekt, l&ouml;schen muss best&auml;tigt werden)</li>
-                </ul>
+                        <p>Zudem k&ouml;nnen mit dem Markieren der Checkboxen bei den jeweiligen Galerieelementen Aktionen f&uuml;r alle oder mehrere Objekte ausgef&uuml;hrt werden, indem die entsprechenden Checkboxen markiert und die gew&uuml;nschten Aktionen (z.B. l&ouml;schen) ausgef&uuml;hrt werden.</p>
 
-                <p>Zudem k&ouml;nnen mit dem Markieren der Checkboxen bei den jeweiligen Galerieelementen Aktionen f&uuml;r alle oder mehrere Objekte ausgef&uuml;hrt werden, indem die entsprechenden Checkboxen markiert und die gew&uuml;nschten Aktionen (z.B. l&ouml;schen) ausgef&uuml;hrt werden.</p>
+                        <h2>Medien Formate</h2>
 
-                <h2>Medien Formate</h2>
+                        <p>In diesem Zusammenhang geht es um Datei-Formate bzw. Medientypen wie z.B.:</p>
 
-                <p>In diesem Zusammenhang geht es um Datei-Formate bzw. Medientypen wie z.B.:</p>
+                        <ul>
+                            <li>Bild (.jpg, .png)</li>
+                            <li>PDF Dokumente (.pdf)</li>
+                            <li>Video (h246, mpeg)</li>
+                            <li>Audio (.mp3)</li>
+                        </ul>
 
-                <ul>
-                	<li>Bild (.jpg, .png)</li>
-                	<li>PDF Dokumente (.pdf)</li>
-                	<li>Video (h246, mpeg)</li>
-                	<li>Audio (.mp3)</li>
-                </ul>
-
-                <p>Spezifische Formate m&uuml;ssen explizit zugelassen werden. Ihr Webmaster richtet diese f&uuml;r Sie ein.</p>]]></target>
+                        <p>Spezifische Formate m&uuml;ssen explizit zugelassen werden. Ihr Webmaster richtet diese f&uuml;r Sie ein.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.gallery.create.title">
                 <source>sonata.media.admin.gallery.create.title</source>
@@ -701,53 +690,53 @@
             <trans-unit id="sonata.media.admin.gallery.create.text">
                 <source>sonata.media.admin.gallery.create.text</source>
                 <target><![CDATA[<p>Wenn Sie eine Galerie erstellen, k&ouml;nnen Sie im gleichen Schritt auch Medien hinzuf&uuml;gen, so dass Sie nicht mehrmals hin- und herwechseln m&uuml;ssen.</p>
+                        <h2>Media hochladen</h2>
 
-                <h2>Media hochladen</h2>
+                        <p>Geben Sie zuerst die Informationen f&uuml;r die neue Galerie ein:</p>
 
-                <p>Geben Sie zuerst die Informationen f&uuml;r die neue Galerie ein:</p>
+                        <ul>
+                            <li>Aktiviert: Galerie ist aktiv (oder noch inaktiv)</li>
+                            <li>Name: Interner Name der Galerie</li>
+                            <li>Format: Format unter welchem die zu dieser Galerie hochgeladenen Bilder gespeichert werden. Fragen Sie dazu Ihren Webmaster.</li>
+                        </ul>
 
-                <ul>
-                	<li>Aktiviert: Galerie ist aktiv (oder noch inaktiv)</li>
-                	<li>Name: Interner Name der Galerie</li>
-                	<li>Format: Format unter welchem die zu dieser Galerie hochgeladenen Bilder gespeichert werden. Fragen Sie dazu Ihren Webmaster.</li>
-                </ul>
+                        <h2>Medien</h2>
 
-                <h2>Medien</h2>
+                        <p>Sie sehen alle Galerie Objekte in einer &uuml;bersichtlichen Tabelle</p>
 
-                <p>Sie sehen alle Galerie Objekte in einer &uuml;bersichtlichen Tabelle</p>
+                        <p><strong>Medien</strong><br />
+                        Vorhandene Bilder werden als Thumbnail angezeigt.</p>
 
-                <p><strong>Medien</strong><br />
-                Vorhandene Bilder werden als Thumbnail angezeigt.</p>
+                        <p>Liste: Sie k&ouml;nnen aus Ihren Medien bereits hochgeladene Bilder ausw&auml;hlen, die dann in diese Galerie eingef&uuml;gt werden</p>
 
-                <p>Liste: Sie k&ouml;nnen aus Ihren Medien bereits hochgeladene Bilder ausw&auml;hlen, die dann in diese Galerie eingef&uuml;gt werden</p>
+                        <p>+Neu: Sie k&ouml;nnen von Ihrem PC / Netzwerk gespeicherte Bilder hochladen.</p>
 
-                <p>+Neu: Sie k&ouml;nnen von Ihrem PC / Netzwerk gespeicherte Bilder hochladen.</p>
+                        <p>L&ouml;schen: Sie k&ouml;nnen das vorhandene Objekt l&ouml;schen.</p>
 
-                <p>L&ouml;schen: Sie k&ouml;nnen das vorhandene Objekt l&ouml;schen.</p>
+                        <p><strong>Aktiviert</strong><br />
+                        Sie k&ouml;nnen einzelne Objekte der Galerie aktivieren resp. deaktivieren.</p>
 
-                <p><strong>Aktiviert</strong><br />
-                Sie k&ouml;nnen einzelne Objekte der Galerie aktivieren resp. deaktivieren.</p>
+                        <p><strong>Position</strong><br />
+                        Sie k&ouml;nnen per Drag &amp; Drop einzelne Objekte in der Galerie verschieben und so die Reihenfolge (z.B. der Diashow) &auml;ndern.</p>
 
-                <p><strong>Position</strong><br />
-                Sie k&ouml;nnen per Drag &amp; Drop einzelne Objekte in der Galerie verschieben und so die Reihenfolge (z.B. der Diashow) &auml;ndern.</p>
+                        <p>Mit dem <strong>&#39;+ Neu&#39; Button</strong> laden Sie neue Bilder zu dieser Galerie auf den Webserver. Jedes Galerie-Element wird in einer Zeile angezeigt.</p>
 
-                <p>Mit dem <strong>&#39;+ Neu&#39; Button</strong> laden Sie neue Bilder zu dieser Galerie auf den Webserver. Jedes Galerie-Element wird in einer Zeile angezeigt.</p>
+                        <p>&nbsp;</p>
 
-                <p>&nbsp;</p>
+                        <p>Klicken Sie nun einen der Buttons:</p>
 
-                <p>Klicken Sie nun einen der Buttons:</p>
+                        <ul>
+                            <li>Hinzuf&uuml;gen und bearbeiten</li>
+                            <li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
+                            <li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
+                        </ul>
 
-                <ul>
-                	<li>Hinzuf&uuml;gen und bearbeiten</li>
-                	<li>Hinzuf&uuml;gen und zur&uuml;ck zur Liste</li>
-                	<li>Hinzuf&uuml;gen und einen weiteren erstellen</li>
-                </ul>
+                        <p>Mit &#39;Abbrechen&#39; wird die Funktion Galerie erstellen r&uuml;ckg&auml;ngig gemacht und die hochgeladenen Daten NICHT gespeichert.</p>
 
-                <p>Mit &#39;Abbrechen&#39; wird die Funktion Galerie erstellen r&uuml;ckg&auml;ngig gemacht und die hochgeladenen Daten NICHT gespeichert.</p>
+                        <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
 
-                <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
-
-                <p>Weitere n&uuml;tzliche Informationen finden Sie unter Galerie oder Medien bearbeiten.</p>]]></target>
+                        <p>Weitere n&uuml;tzliche Informationen finden Sie unter Galerie oder Medien bearbeiten.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="sonata.media.admin.gallery.edit.title">
                 <source>sonata.media.admin.gallery.edit.title</source>
@@ -755,54 +744,54 @@
             </trans-unit>
             <trans-unit id="sonata.media.admin.gallery.edit.text">
                 <source>sonata.media.admin.gallery.edit.text</source>
-                <target><![CDATA[<p>Wenn Sie eine Galerie bearbeiten, k&ouml;nnen Sie im gleichen Schritt auch neue Medie hinzuf&uuml;gen, so dass Sie nicht mehrmals hin- und herwechseln m&uuml;ssen.</p>
+                <target><![CDATA[<p>Wenn Sie eine Galerie bearbeiten, k&ouml;nnen Sie im gleichen Schritt auch neue Medien hinzuf&uuml;gen, so dass Sie nicht mehrmals hin- und herwechseln m&uuml;ssen.</p>
+                        <h2>&#39;Galerie-Name&#39; bearbeiten</h2>
 
-                <h2>&#39;Galerie-Name&#39; bearbeiten</h2>
+                        <p>Bearbeiten Sie zuerst die Informationen f&uuml;r die ausgew&auml;hlte Galerie:</p>
 
-                <p>Bearbeiten Sie zuerst die Informationen f&uuml;r die ausgew&auml;hlte Galerie:</p>
+                        <ul>
+                            <li>Aktiviert: Galerie ist aktiv (oder noch inaktiv)</li>
+                            <li>Name: Interner Name der Galerie</li>
+                            <li>Format: Format unter welchem die zu dieser Galerie hochgeladenen Bilder gespeichert werden. Fragen Sie dazu Ihren Webmaster.</li>
+                        </ul>
 
-                <ul>
-                	<li>Aktiviert: Galerie ist aktiv (oder noch inaktiv)</li>
-                	<li>Name: Interner Name der Galerie</li>
-                	<li>Format: Format unter welchem die zu dieser Galerie hochgeladenen Bilder gespeichert werden. Fragen Sie dazu Ihren Webmaster.</li>
-                </ul>
+                        <h2>Medien</h2>
 
-                <h2>Medien</h2>
+                        <p>Sie sehen alle Galerie Objekte in einer &uuml;bersichtlichen Tabelle</p>
 
-                <p>Sie sehen alle Galerie Objekte in einer &uuml;bersichtlichen Tabelle</p>
+                        <p><strong>Medium</strong><br />
+                        In der &Uuml;bersicht werden alle vorhandene Bilder werden als Thumbnail angezeigt.</p>
 
-                <p><strong>Medium</strong><br />
-                In der &Uuml;bersicht werden alle vorhandene Bilder werden als Thumbnail angezeigt.</p>
+                        <p>Liste: Sie k&ouml;nnen aus Ihren Medien bereits hochgeladene Bilder ausw&auml;hlen und das Objekt ersetzen.</p>
 
-                <p>Liste: Sie k&ouml;nnen aus Ihren Medien bereits hochgeladene Bilder ausw&auml;hlen und das Objekt ersetzen.</p>
+                        <p>+Neu: Sie k&ouml;nnen von Ihrem PC / Netzwerk gespeicherte Bilder hochladen und das Objekt ersetzen.</p>
 
-                <p>+Neu: Sie k&ouml;nnen von Ihrem PC / Netzwerk gespeicherte Bilder hochladen und das Objekt ersetzen.</p>
+                        <p>L&ouml;schen: Sie k&ouml;nnen das vorhandene Objekt l&ouml;schen.</p>
 
-                <p>L&ouml;schen: Sie k&ouml;nnen das vorhandene Objekt l&ouml;schen.</p>
+                        <p><strong>Aktiviert</strong><br />
+                        Sie k&ouml;nnen einzelne Objekte der Galerie aktivieren resp. deaktivieren.</p>
 
-                <p><strong>Aktiviert</strong><br />
-                Sie k&ouml;nnen einzelne Objekte der Galerie aktivieren resp. deaktivieren.</p>
+                        <p><strong>Position</strong><br />
+                        Sie k&ouml;nnen per Drag &amp; Drop einzelne Objekte in der Galerie verschieben und so die Reihenfolge (z.B. der Diashow) &auml;ndern.</p>
 
-                <p><strong>Position</strong><br />
-                Sie k&ouml;nnen per Drag &amp; Drop einzelne Objekte in der Galerie verschieben und so die Reihenfolge (z.B. der Diashow) &auml;ndern.</p>
+                        <p>Mit dem <strong>&#39;+ Neu&#39; Button</strong> laden Sie neue Bilder zu dieser Galerie auf den Webserver. Jedes Galerie-Element wird in einer Zeile angezeigt.</p>
 
-                <p>Mit dem <strong>&#39;+ Neu&#39; Button</strong> laden Sie neue Bilder zu dieser Galerie auf den Webserver. Jedes Galerie-Element wird in einer Zeile angezeigt.</p>
+                        <p>&nbsp;</p>
 
-                <p>&nbsp;</p>
+                        <p>Klicken Sie nun einen der Buttons:</p>
 
-                <p>Klicken Sie nun einen der Buttons:</p>
+                        <ul>
+                            <li>Aktualisieren</li>
+                            <li>Aktualisieren und zur&uuml;ck zur Liste</li>
+                            <li>L&ouml;schen (l&ouml;scht die komplette Galerie)</li>
+                        </ul>
 
-                <ul>
-                	<li>Aktualisieren</li>
-                	<li>Aktualisieren und zur&uuml;ck zur Liste</li>
-                	<li>L&ouml;schen (l&ouml;scht die komplette Galerie)</li>
-                </ul>
+                        <p>Mit &#39;Abbrechen&#39; wird die Funktion Galerie bearbeiten r&uuml;ckg&auml;ngig gemacht und die &Auml;nderungen NICHT gespeichert.</p>
 
-                <p>Mit &#39;Abbrechen&#39; wird die Funktion Galerie bearbeiten r&uuml;ckg&auml;ngig gemacht und die &auml; NICHT gespeichert.</p>
+                        <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
 
-                <p>Falls der Link resp. das Dateiformat nicht erlaubt ist (Fehlermeldung) dann setzen Sie sich bitte mit Ihrem Webmaster in Verbindung.</p>
-
-                <p>Weitere n&uuml;tzliche Informationen finden Sie unter Galerie erstellen oder Medien bearbeiten.</p>]]></target>
+                        <p>Weitere n&uuml;tzliche Informationen finden Sie unter Galerie erstellen oder Medien bearbeiten.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.tag.list.title">
                 <source>networking_init_cms.admin.tag.list.title</source>
@@ -810,10 +799,8 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.tag.list.text">
                 <source>networking_init_cms.admin.tag.list.text</source>
-                <target><![CDATA[<p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
-
-                    <p>Beispiele für Tags: &quot;Urlaub&quot; oder &quot;Porträt-Bilder&quot;. Ein Medienelement kann mit beliebig vielen Tags verknüpft werden.</p>
-                ]]>
+                <target><![CDATA[<p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden k&ouml;nnen. Medien-Tags k&ouml;nnen dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So k&ouml;nnen Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
+                        <p>Beispiele f&uuml;r Tags: &quot;Urlaub&quot; oder &quot;Portr&auml;t-Bilder&quot;. Ein Medienelement kann mit beliebig vielen Tags verkn&uuml;pft werden und ein Tag kann bei beliebig vielen Medien (auch unterschiedliche Formate) verwendet werden.</p>]]>
                 </target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.tag.create.title">
@@ -822,11 +809,9 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.tag.create.text">
                 <source>networking_init_cms.admin.tag.create.text</source>
-                <target><![CDATA[
-                        <p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
-
-                        <p>Beispiele für Tags: &quot;Urlaub&quot; oder &quot;Porträt-Bilder&quot;. Ein Medienelement kann mit beliebig vielen Tags verknüpft werden.</p>
-                ]]></target>
+                <target><![CDATA[<p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
+                        <p>Beispiele für Tags: &quot;Urlaub&quot; oder &quot;Porträt-Bilder&quot;. Ein Medienelement kann mit beliebig vielen Tags verknüpft werden.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.tag.edit.title">
                 <source>networking_init_cms.admin.tag.edit.title</source>
@@ -834,15 +819,12 @@
             </trans-unit>
             <trans-unit id="networking_init_cms.admin.tag.edit.text">
                 <source>networking_init_cms.admin.tag.edit.text</source>
-                <target><![CDATA[
-                        <p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
-
-                        <p>Beispiele für Tags: &quot;Urlaub&quot; oder &quot;Porträt-Bilder&quot;. Ein Medienelement kann mit beliebig vielen Tags verknüpft werden.</p>
-                ]]></target>
+                <target><![CDATA[<p>Ein Medien-Tag ist ein Wort, Begriff oder Ausdruck, denn Sie frei erstellen und mit Ihren Medienelementen verbinden können. Medien-Tags können dazu verwendet werden, alle in der Medien-Bibliothek verwalteten Medien zu filtern. So können Sie schnell und leicht durch eine Vielzahl von Medien navigieren.</p>
+                        <p>Beispiele für Tags: &quot;Urlaub&quot; oder &quot;Porträt-Bilder&quot;. Ein Medienelement kann mit beliebig vielen Tags verknüpft werden.</p>]]>
+                </target>
             </trans-unit>
 
             <!-- user -->
-
             <trans-unit id="sonata.user.admin.user.list.title">
                 <source>sonata.user.admin.user.list.title</source>
                 <target>Benutzer-Übersicht</target>
@@ -850,152 +832,151 @@
             </trans-unit>
             <trans-unit id="sonata.user.admin.user.list.text">
                 <source>sonata.user.admin.user.list.text</source>
-                <target><![CDATA[
-                    <p>Ein Benutzer kann sich für das System mit einem/r Benutzernamen/Email-Adresse und einem Passwort anmelden. Benutzer haben verschiedene Rechte, um mit der Website zu interagieren; z.B. kann ein Admin neue Seiten erstellen und veröffentlichen, aber ein Extranet-Benutzer könnte darauf beschränkt sein, nur Lesezugriff für eine bestimmte Website zu haben. Dem Benutzer können spezifische Benutzerrollen (Rechte) zugeordnet werden, indem er einer oder mehreren Benutzergruppen zugewiesen wird. Lesen Sie die Hilfe zu den Benutzergruppen, um das Konzept der Benutzerrechte besser zu verstehen.</p>
+                <target><![CDATA[<p>Ein Benutzer kann sich f&uuml;r das System mit einem/r Benutzernamen/Email-Adresse und einem Passwort anmelden. Benutzer haben verschiedene Rechte, um mit der Website zu interagieren; z.B. kann ein Admin neue Seiten erstellen und ver&ouml;ffentlichen, aber ein Extranet-Benutzer k&ouml;nnte darauf beschr&auml;nkt sein, nur Lesezugriff f&uuml;r eine bestimmte Website zu haben. Dem Benutzer k&ouml;nnen spezifische Benutzerrollen (Rechte) zugeordnet werden, indem er einer oder mehreren Benutzergruppen zugewiesen wird. Lesen Sie die Hilfe zu den Benutzergruppen, um das Konzept der Benutzerrechte besser zu verstehen.</p>
 
-                    <h2>Benutzerliste</h2>
+                <h2>Benutzerliste</h2>
 
-                    <p>Die Benutzerliste bietet eine Übersicht über Informationen oder Aktionen. Jede neue Zeile beschreibt einen neuen Benutzer. Die folgende Liste erläutert die Spalten von links nach rechts.</p>
+                <p>Die Benutzerliste bietet eine &Uuml;bersicht &uuml;ber Informationen oder Aktionen. Jede neue Zeile beschreibt einen neuen Benutzer. Die folgende Liste erl&auml;utert die Spalten von links nach rechts.</p>
 
-                    <p><strong>Benutzername</strong><br />
-                    Der Name des Benutzers. Der Name wird verwendet, um sich für das System anzumelden.</p>
+                <p><strong>Benutzername</strong><br />
+                Der Name des Benutzers. Der Name wird verwendet, um sich f&uuml;r das System anzumelden.</p>
 
-                    <p><strong>Email-Adresse</strong><br />
-                    Email-Adresse des Benutzers. Diese wird benutzt, um den Benutzer zu verständigen, wenn sie/er ihr/sein Passwort vergessen hat.</p>
+                <p><strong>Email-Adresse</strong><br />
+                Email-Adresse des Benutzers. Diese wird benutzt, um den Benutzer zu verst&auml;ndigen, wenn sie/er ihr/sein Passwort vergessen hat.</p>
 
-                    <p><strong>Gruppen</strong><br />
-                    Eine Liste der Gruppen, zu denen dieser Benutzer gehört. Eine Gruppe enthält eine oder mehrere Benutzerrollen, so dass es einfach ist, für ihre Benutzer die richtige Berechtigung hinzuzufügen.</p>
+                <p><strong>Gruppen</strong><br />
+                Eine Liste der Gruppen, zu denen dieser Benutzer geh&ouml;rt. Eine Gruppe enth&auml;lt eine oder mehrere Benutzerrollen, so dass es einfach ist, f&uuml;r ihre Benutzer die richtige Berechtigung hinzuzuf&uuml;gen.</p>
 
-                    <p><strong>Aktiviert</strong><br />
-                    Dadurch wird signalisiert, ob das Benutzerkonto freigegeben (aktiviert) ist oder nicht. Nur freigegebene Benutzer können sich für das System anmelden.</p>
+                <p><strong>Aktiviert</strong><br />
+                Dadurch wird signalisiert, ob das Benutzerkonto freigegeben (aktiviert) ist oder nicht. Nur freigegebene Benutzer k&ouml;nnen sich f&uuml;r das System anmelden.</p>
 
-                    <p><strong>Impersonate User (Sich als der Benutzer ausgeben)</strong><br />
-                    Dank dieser Funktion kann man sich durch Anklicken des entsprechenden Symbols schnell als der gewählte Benutzer anmelden. Dies ist z.B. für Kundenbetreuer von Nutzen, weil Sie in einem solchen Fall dasselbe auf dem Bildschirm sehen wie dieser Benutzer. Sie müssen spezielle Rechte haben, um sich für einen anderen Benutzer auszugeben.</p>
+                <p><strong>Impersonate User (Sich als der Benutzer ausgeben)</strong><br />
+                Dank dieser Funktion kann man sich durch Anklicken des entsprechenden Symbols schnell als der gew&auml;hlte Benutzer anmelden. Dies ist z.B. f&uuml;r Kundenbetreuer von Nutzen, weil Sie in einem solchen Fall dasselbe auf dem Bildschirm sehen wie dieser Benutzer. Sie m&uuml;ssen spezielle Rechte haben, um sich f&uuml;r einen anderen Benutzer auszugeben.</p>
 
-                    <p><strong>Schaltfläche Bearbeiten</strong><br />
-                    Die Schaltfläche &quot;Bearbeiten&quot; enthält ein Bleistift-Symbol. Klicken Sie darauf, um Informationen über den Benutzer zu editieren.</p>
+                <p><strong>Schaltfl&auml;che Bearbeiten</strong><br />
+                Die Schaltfl&auml;che &quot;Bearbeiten&quot; enth&auml;lt ein Bleistift-Symbol. Klicken Sie darauf, um Informationen und Einstellungen des Benutzer zu editieren.</p>
 
-                    <p><strong>Schaltfläche Löschen</strong><br />
-                    Die Schaltfläche &quot;Löschen&quot; enthält ein Papierkorb-Symbol. Klicken Sie darauf, um einen Benutzer vollständig zu löschen.</p>
+                <p><strong>Schaltfl&auml;che L&ouml;schen</strong><br />
+                Die Schaltfl&auml;che &quot;L&ouml;schen&quot; enth&auml;lt ein Papierkorb-Symbol. Klicken Sie darauf, um einen Benutzer vollst&auml;ndig zu l&ouml;schen.</p>
 
-                    <h2>Benutzer filtern</h2>
+                <h2>Benutzer filtern</h2>
 
-                    <p>Die Benutzerliste kann mit mehreren Parametern gefiltert werden. Sie können diese Parameter ändern sowie auf die Schaltfläche &quot;Filtern&quot; klicken, um Benutzer zu suchen, die zu Ihren Filterkriterien passen. Wenn Sie &quot;Zurücksetzen&quot; anklicken, werden die Filter zurückgesetzt. Durch Anklicken von &quot;Weitere Filteroptionen&quot; werden alle verfügbaren Filteroptionen angezeigt.</p>
+                <p>Die Benutzerliste kann mit mehreren Parametern gefiltert werden. Sie k&ouml;nnen diese Parameter &auml;ndern sowie auf die Schaltfl&auml;che &quot;Filtern&quot; klicken, um Benutzer zu suchen, die zu Ihren Filterkriterien passen. Wenn Sie &quot;Zur&uuml;cksetzen&quot; anklicken, werden die Filter zur&uuml;ckgesetzt. Durch Anklicken von &quot;Weitere Filteroptionen&quot; werden alle verf&uuml;gbaren Filteroptionen angezeigt.</p>
 
-                    <p><strong>Benutzername</strong><br />
-                    Dieser Filter sucht nach einem Benutzernamen, der zu Ihrer Eingabe passt.</p>
+                <p><strong>Benutzername</strong><br />
+                Dieser Filter sucht nach einem Benutzernamen, der zu Ihrer Eingabe passt.</p>
 
-                    <p><strong>Gesperrt</strong><br />
-                    Filtert die Benutzerkonten heraus, die gesperrt worden sind. Ein Benutzer kann gesperrt werden, d.h. aus der Anwendung ausgeschlossen werden. Diese Funktionalität kann aus Sicherheitsgründen implementiert werden.</p>
+                <p><strong>Gesperrt</strong><br />
+                Filtert die Benutzerkonten heraus, die gesperrt worden sind. Ein Benutzer kann gesperrt werden, d.h. aus der Anwendung ausgeschlossen werden. Diese Funktionalit&auml;t kann aus Sicherheitsgr&uuml;nden implementiert werden.</p>
 
-                    <p><strong>Email-Adresse</strong><br />
-                    Geben Sie eine Email-Adresse oder einen Bestandteil davon ein, um die betreffenden Benutzer zu finden.</p>
+                <p><strong>Email-Adresse</strong><br />
+                Geben Sie eine Email-Adresse oder einen Bestandteil davon ein, um die betreffenden Benutzer zu finden.</p>
 
-                    <p><strong>Gruppen</strong><br />
-                    Wählen Sie einen Gruppennamen aus, der für die Suche berücksichtigt oder ausgeschlossen werden soll. Im Rahmen des Suchergebnisses werden die Benutzer zusätzlich nach Gruppen gefiltert.</p>
+                <p><strong>Gruppen</strong><br />
+                W&auml;hlen Sie einen Gruppennamen aus, der f&uuml;r die Suche ber&uuml;cksichtigt oder ausgeschlossen werden soll. Im Rahmen des Suchergebnisses werden die Benutzer zus&auml;tzlich nach Gruppen gefiltert.</p>
 
-                    <h2>Neuen Benutzer hinzufügen</h2>
+                <h2>Neuen Benutzer hinzuf&uuml;gen</h2>
 
-                    <p>Um einen neuen Benutzer hinzuzufügen, klicken Sie auf die Schaltfläche &quot;+ Benutzer hinzufügen&quot;, worauf Sie ein Formular mit vielen Datenfeldern sehen. Was auf den ersten Blick verwirrend sein könnte, ist es aber nicht – nur die folgenden Felder sind Pflichtfelder.</p>
+                <p>Um einen neuen Benutzer hinzuzuf&uuml;gen, klicken Sie auf die Schaltfl&auml;che &quot;+ Benutzer hinzuf&uuml;gen&quot;, worauf Sie ein Formular mit vielen Datenfeldern sehen. Was auf den ersten Blick verwirrend sein k&ouml;nnte, ist es aber nicht &ndash; nur die folgenden Felder sind Pflichtfelder.</p>
 
-                    <p><strong>Benutzername</strong><br />
-                    Der zum Anmelden verwendete Name des Benutzers.</p>
+                <p><strong>Benutzername</strong><br />
+                Der zum Anmelden verwendete Name des Benutzers.</p>
 
-                    <p><strong>Email-Adresse</strong><br />
-                    Die zum Kontaktieren und Benachrichtigen verwendete Email-Adresse des Benutzers.</p>
+                <p><strong>Email-Adresse</strong><br />
+                Die zum Kontaktieren und Benachrichtigen verwendete Email-Adresse des Benutzers.</p>
 
-                    <p><strong>Passwort</strong><br />
-                    Das Passwort-Feld ist nur zwingend, wenn Sie einen Benutzer anlegen (dies ist von Fall zu Fall verschieden je nach der Einrichtung Ihrer spezifischen Website).</p>
+                <p><strong>Passwort</strong><br />
+                Das Passwort-Feld ist nur zwingend, wenn Sie einen Benutzer anlegen (dies ist von Fall zu Fall verschieden je nach der Einrichtung Ihrer spezifischen Webseite).</p>
 
-                    <p>Dem Benutzer steht eine Menge zusätzlicher Felder zur Verfügung, wie z.B. Gruppen, Benutzerrollen, Privatinformationen, soziale Medienprofile und einige sicherheitsbezogene Felder. Entscheiden Sie sich einfach für die Felder Ihrer Wahl und lassen Sie die anderen leer.</p>
-                 ]]></target>
+                <p>Dem Benutzer steht eine Menge zus&auml;tzlicher Felder zur Verf&uuml;gung, wie z.B. Gruppen, Benutzerrollen, Privatinformationen, soziale Medienprofile und einige sicherheitsbezogene Felder. Entscheiden Sie sich einfach f&uuml;r die Felder Ihrer Wahl und lassen Sie die anderen leer. Fragen Sie bei Unklarheiten Ihren Webmaster.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.user.create.title">
                 <source>sonata.user.admin.user.create.title</source>
-                <target>Create user</target>
+                <target>Benutzer erstellen</target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.user.create.text">
                 <source>sonata.user.admin.user.create.text</source>
-                <target><![CDATA[<p>A user is someone saved in the DB with specific permissions to view certain content or carry out specific operations.</p>
+                <target><![CDATA[<p>Ein Benutzer ist mit seinen spezifischen Rechten in der Datenbank gespeichert und kann damit spezifischen Inhalt anschauen und spezifische Funktionen ausf&uuml;hren.</p>
 
-                <p>The fields available are:</p>
+                <p>Folgende Felder stehen zur Verf&uuml;gung:</p>
 
-                <p><strong>General</strong><br />
-                Username: this is the name that will be used to log into the admin interface<br />
-                E-Mail-Address: used for communications with the user<br />
-                Plain password: the field where you can enter the password, once saved the password is encrypted and not shown in the form</p>
+                <p><strong>Allgemein</strong><br />
+                Benutzername: Diese Bezeichnung wird ben&ouml;tigt um sich beim CMS / Backend anzumelden.<br />
+                E-Mail-Addresse: Diese E-Mailadresse wird ben&ouml;tigt damit das System mit diesem Benutzer kommunizieren kann.<br />
+                Klartextpasswort: Hier soll das Passwort f&uuml;r diesen Benutzer eingegeben werden. Einmal gespeichert wird das Passwort verschl&uuml;sselt und nicht mehr angezeigt.</p>
 
-                <p><strong>Groups</strong><br />
-                Groups: here you can assign a user to one or more user groups or create a new user group</p>
+                <p><strong>Gruppen</strong><br />
+                Gruppen: Der Benutzer kann einer oder mehreren Gruppen zugeteilt werden und &uuml;bernimmt die entsprechenden Rechte (der Gruppe).</p>
 
-                <p><strong>Profile</strong><br />
-                Firstname: text field for the users first name (optional)<br />
-                Lastname: text field for the users family name (optional)<br />
-                Locale:  the users language preference, used in the admin interface to display a language if possible, german and english are currently supported completely (optional)</p>
+                <p><strong>Profil</strong><br />
+                Vorname: Textfeld f&uuml;r den Vornamen der Benutzer (optional)<br />
+                Nachname: Textfeld f&uuml;r den Nachnamen der Benutzer (optional)<br />
+                Sprache: Die bevorzugte Sprache des Benutzers. Diese Sprache wird automatisch geladen wenn sich dieser Benutzer beim CMS anmeldet, zur Zeit werden deutsch und englisch komplett unterst&uuml;tzt.</p>
 
                 <p>Management</p>
 
-                <p>Here you can add roles to user, these roles, in combination with those from the user group will set up what permissions the user has in the CMS</p>
+                <p>Hier k&ouml;nnen die spezifischen Rollen pro Modul f&uuml;r diesen Benutzer vergeben werden. Zusammen mit evt. ausgew&auml;hlten Rollen/Rechte der ausgew&auml;hlten Gruppen ergibt dies alle Rechte welche dieser User im Content Management System hat.</p>
 
-                <p>Locked: a locked user can not login into the CMS until the lock is removed<br />
-                Expired: similar to a locked user, a user with expired set can also not login to the CMS<br />
-                Enabled: if set the user can login to the CMS<br />
-                Credentials expired: if set the user will be logged out of the system</p>
+                <p>Gesperrt: ein gesperrter Benutzer kann sich nicht mehr im CMS anmelden ausser die Sperre wird hier aufgehoben.<br />
+                Abgelaufen: ein Benutzer mit Status &#39;Abgelaufen&#39; kann sich nicht mehr im CMS anmelden ausser die Sperre wird hier aufgehoben.<br />
+                Aktiviert: nur aktivierte Benutzer k&ouml;nnen sich im CMS anmelden<br />
+                Rechte abgelaufen: ein Benutzer mit Status &#39;Rechte abgelaufen&#39; kann sich nicht mehr im CMS anmelden ausser die Sperre wird hier aufgehoben.</p>
 
-                <p>After you have finished configuring your user you can:</p>
+                <p>Wenn Sie die Konfiguration des Benutzers abgeschlossen haben, k&ouml;nnen Sie:</p>
 
                 <ul>
-                	<li>Add item and edit it</li>
-                	<li>Add item and return to list</li>
-                	<li>Add item and create another</li>
+                	<li>Den Benutzer hinzuf&uuml;gen und bearbeiten</li>
+                	<li>Den Benutzer hinzuf&uuml;gen und bearbeiten und zur Benutzer&uuml;bersicht zur&uuml;ckkehren</li>
+                	<li>Den Benutzer hinzuf&uuml;gen und bearbeiten und gleich einen neuen Benutzer erstellen</li>
                 </ul>
 
-                <p>With &#39;Cancel&#39; your changes will not be saved and you will be returned to the user list view.</p>
+                <p>Mit &#39;Abbrechen&#39; werden die Anpassungen nicht gespeichert und Sie kehren zur Ansicht &#39;Benutzer&uuml;bersicht&#39; zur&uuml;ck.</p>
 
+                <p>&nbsp;</p>
                 ]]></target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.user.edit.title">
                 <source>sonata.user.admin.user.edit.title</source>
-                <target>Edit user</target>
+                <target>Benutzer bearbeiten</target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.user.edit.text">
                 <source>sonata.user.admin.user.edit.text</source>
-                <target><![CDATA[<p>By clicking on the edit button next to a user you can edit the user, including changing their password</p>
+                <target><![CDATA[<p>Mit Klick auf die &#39;Bearbeiten&#39; Schaltfl&auml;che k&ouml;nnen Sie die Einstellungen eines Benutzers bearbeiten, insbesondere das Passwort &auml;ndern.</p>
 
-                <p>The fields available are:</p>
+                <p>Folgende Felder stehen zur Verf&uuml;gung:</p>
 
-                <p><strong>General</strong><br />
-                Username: this is the name that will be used to log into the admin interface<br />
-                E-Mail-Address: used for communications with the user<br />
-                Plain password: the field where you can enter the password, once saved the password is encrypted and not shown in the form</p>
+                <p><strong>Allgemein</strong><br />
+                Benutzername: Diese Bezeichnung wird ben&ouml;tigt um sich beim CMS / Backend anzumelden.<br />
+                E-Mail-Addresse: Diese E-Mailadresse wird ben&ouml;tigt damit das System mit diesem Benutzer kommunizieren kann.<br />
+                Klartextpasswort: Das Passwort mit dem sich ein Benutzer im CMS anmeldet. Einmal gespeichert wird das Passwort verschl&uuml;sselt und nicht mehr angezeigt.</p>
 
-                <p><strong>Groups</strong><br />
-                Groups: here you can assign a user to one or more user groups or create a new user group</p>
+                <p><strong>Gruppen</strong><br />
+                Gruppen: Der Benutzer kann einer oder mehreren Gruppen zugeteilt werden und &uuml;bernimmt die entsprechenden Rechte (der Gruppe).</p>
 
-                <p><strong>Profile</strong><br />
-                Firstname: text field for the users first name (optional)<br />
-                Lastname: text field for the users family name (optional)<br />
-                Locale:  the users language preference, used in the admin interface to display a language if possible, german and english are currently supported completely (optional)</p>
+                <p><strong>Profil</strong><br />
+                Vorname: Textfeld f&uuml;r den Vornamen der Benutzer (optional)<br />
+                Nachname: Textfeld f&uuml;r den Nachnamen der Benutzer (optional)<br />
+                Sprache: Die bevorzugte Sprache des Benutzers. Diese Sprache wird automatisch geladen wenn sich dieser Benutzer beim CMS anmeldet, zur Zeit werden deutsch und englisch komplett unterst&uuml;tzt.</p>
 
-                <p>Management</p>
+                <p><strong>Management</strong><br />
+                Hier k&ouml;nnen die spezifischen Rollen pro Modul f&uuml;r diesen Benutzer vergeben werden. Zusammen mit evt. ausgew&auml;hlten Rollen/Rechte der ausgew&auml;hlten Gruppen ergibt dies alle Rechte welche dieser User im Content Management System hat.</p>
 
-                <p>Here you can add roles to user, these roles, in combination with those from the user group will set up what permissions the user has in the CMS</p>
+                <p>Gesperrt: ein gesperrter Benutzer kann sich nicht mehr im CMS anmelden ausser die Sperre wird hier aufgehoben.<br />
+                Abgelaufen: ein Benutzer mit Status &#39;Abgelaufen&#39; kann sich nicht mehr im CMS anmelden ausser die Sperre wird hier aufgehoben.<br />
+                Aktiviert: nur aktivierte Benutzer k&ouml;nnen sich im CMS anmelden<br />
+                Rechte abgelaufen: ein Benutzer mit Status &#39;Rechte abgelaufen&#39; kann sich nicht mehr im CMS anmelden ausser die Sperre wird hier aufgehoben.</p>
 
-                <p>Locked: a locked user can not login into the CMS until the lock is removed<br />
-                Expired: similar to a locked user, a user with expired set can also not login to the CMS<br />
-                Enabled: if set the user can login to the CMS<br />
-                Credentials expired: if set the user will be logged out of the system</p>
-
-                <p>After you have finished configuring your user you can:</p>
+                <p>Wenn Sie die Einstellungen des Benutzers ge&auml;ndert haben, k&ouml;nnen Sie:</p>
 
                 <ul>
-                	<li>Add item and edit it</li>
-                	<li>Add item and return to list</li>
-                	<li>Add item and create another</li>
+                	<li>Den Benutzer hinzuf&uuml;gen und bearbeiten</li>
+                	<li>Den Benutzer hinzuf&uuml;gen und bearbeiten und zur Benutzer&uuml;bersicht zur&uuml;ckkehren</li>
+                	<li>Den Benutzer hinzuf&uuml;gen und bearbeiten und gleich einen neuen Benutzer erstellen</li>
                 </ul>
 
-                <p>With &#39;Cancel&#39; your changes will not be saved and you will be returned to the user list view.</p>
-                ]]></target>
+                <p>Mit &#39;Abbrechen&#39; werden die Anpassungen nicht gespeichert und Sie kehren zur Ansicht &#39;Benutzer&uuml;bersicht&#39; zur&uuml;ck.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.group.list.title">
                 <source>sonata.user.admin.group.list.title</source>
@@ -1003,136 +984,137 @@
             </trans-unit>
             <trans-unit id="sonata.user.admin.group.list.text">
                 <source>sonata.user.admin.group.list.text</source>
-                <target><![CDATA[
-                     <p>Die Benutzergruppen stellen eine Möglichkeit dar, Benutzerrollen (Rechte) zu verwalten. Wie in der Benutzer-Übersicht erwähnt, kann ein Benutzer zu einer oder vielen Benutzergruppen gehören.</p>
+                <target><![CDATA[<p>Die Benutzergruppen stellen eine M&ouml;glichkeit dar, Benutzerrollen (Rechte) zu verwalten. Wie in der Benutzer-&Uuml;bersicht erw&auml;hnt, kann ein Benutzer zu einer oder vielen Benutzergruppen geh&ouml;ren.</p>
 
-                     <p>Eine &quot;Benutzerrolle&quot; ermöglicht es einem Benutzer, eine spezifische Aktion auszuführen. So kann sich zum Beispiel ein Benutzer, der die Benutzerrolle &quot;ROLE_ADMIN&quot; (Admin-Benutzerrolle) hat, für das Backend der Anwendung anmelden, während es einem Benutzer mit der Benutzerrolle &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot; gestattet ist, Seiten zu erstellen und seine/ihre eigenen Seiten zu löschen.</p>
+                <p>Zu jedem Modul k&ouml;nnen spezifische Rechte vergeben werden. Die Art und Anzahl Module basiert auf der Funktionalit&auml;t Ihrer individuellen Webseite. Dabei werden sowohl Standard-Module wie Seiten oder Menu wie auch (evt.) individuell f&uuml;r Ihre Applikation programmierte Module aufgelistet.</p>
 
-                     <p>Die Möglichkeit, benutzergruppenspezifische Rollen zuzuweisen, vereinfacht die Zuweisung eines Benutzers zu den richtigen Benutzergruppen; mit anderen Worten, es muss nicht jede einzelne Rolle jedem einzelnen Benutzer zugewiesen werden. Entsprechend gilt auch: Wenn sich eine Benutzerrolle ändern sollte, betrifft diese Änderung alle Benutzer, die zur gleichen Benutzergruppe gehören.</p>
+                <p>Eine &quot;Benutzerrolle&quot; erm&ouml;glicht es einem Benutzer, eine spezifische Aktion auszuf&uuml;hren. So kann sich zum Beispiel ein Benutzer, der die Benutzerrolle &quot;ROLE_ADMIN&quot; (Admin-Benutzerrolle) hat, f&uuml;r das Backend der Anwendung anmelden, w&auml;hrend es einem Benutzer mit der Benutzerrolle &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot; gestattet ist, Seiten zu erstellen und seine/ihre eigenen Seiten zu l&ouml;schen.</p>
 
-                    <h2>Gruppenliste</h2>
+                <p>Die M&ouml;glichkeit, benutzergruppenspezifische Rollen zuzuweisen, vereinfacht die Zuweisung eines Benutzers zu den richtigen Benutzergruppen; mit anderen Worten, es muss nicht jede einzelne Rolle jedem einzelnen Benutzer zugewiesen werden. Entsprechend gilt auch: Wenn sich eine Benutzerrolle &auml;ndern sollte, betrifft diese &Auml;nderung alle Benutzer, die zur gleichen Benutzergruppe geh&ouml;ren.</p>
 
-                    <p><strong>Name</strong><br />
-                    Der Name der Benutzergruppe, z.B. &quot;Herausgeber&quot; oder &quot;Editor&quot;.</p>
+                <h2>Gruppenliste</h2>
 
-                    <p><strong>Benutzerrollen</strong><br />
-                    Dies ist eine Liste der Benutzerrollen, die zu dieser Benutzergruppe gehören. Häufig ist die Liste zu lang, um alle Rollen in der Listenansicht anzuzeigen.</p>
+                <p><strong>Name</strong><br />
+                Der Name der Benutzergruppe, z.B. &quot;Herausgeber&quot; oder &quot;Editor&quot;.</p>
 
-                    <h2>Gruppen filtern</h2>
+                <p><strong>Benutzerrollen</strong><br />
+                Dies ist eine Liste der Benutzerrollen, die zu dieser Benutzergruppe geh&ouml;ren. H&auml;ufig ist die Liste zu lang, um alle Rollen in der Listenansicht anzuzeigen.</p>
 
-                    <p><strong>Name</strong><br />
-                    Gruppen nach dem Namen der Gruppe filtern.</p>
+                <h2>Gruppen filtern</h2>
 
-                    <h2>Neue Benutzergruppe hinzufügen</h2>
+                <p><strong>Name</strong><br />
+                Gruppen nach dem Namen der Gruppe filtern.</p>
 
-                    <p>Um eine neue Benutzergruppe hinzuzufügen, klicken Sie zuerst auf die Schaltfläche &quot;+ Benutzergruppe hinzufügen&quot;. Das dann erscheinende Formular enthält ein Namensfeld, gefolgt von einer Liste von Kontrollfeldern für alle verfügbaren Benutzerrollen (Rechte).</p>
+                <h2>Neue Benutzergruppe hinzuf&uuml;gen</h2>
 
-                    <p>Wenn Sie sich nicht darüber im Klaren sind, was die Benutzerrollen tatsächlich bedeuten, wenden Sie sich an Ihren Webmaster. Oder bitten Sie ihn doch gleich darum, die Benutzergruppen einzurichten, die Sie für Ihre Anwendung benötigen.</p>
-                 ]]></target>
+                <p>Um eine neue Benutzergruppe hinzuzuf&uuml;gen, klicken Sie zuerst auf die Schaltfl&auml;che &quot;+ Benutzergruppe hinzuf&uuml;gen&quot;. Das dann erscheinende Formular enth&auml;lt ein Namensfeld, gefolgt von einer Liste von Kontrollfeldern f&uuml;r alle verf&uuml;gbaren Benutzerrollen (Rechte).</p>
+
+                <p>Wenn Sie sich nicht dar&uuml;ber im Klaren sind, was die Benutzerrollen tats&auml;chlich bedeuten, wenden Sie sich an Ihren Webmaster. Oder bitten Sie ihn doch gleich darum, die Benutzergruppen einzurichten, die Sie f&uuml;r Ihre Anwendung ben&ouml;tigen.</p>]]>
+                </target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.group.create.title">
                 <source>sonata.user.admin.group.create.title</source>
-                <target>Create user group</target>
+                <target>Benutzergruppe erstellen</target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.group.create.text">
                 <source>sonata.user.admin.group.create.text</source>
-                <target><![CDATA[<p>A user group allows you to assign a group of users the same permissions without having to assign the same permissions to each individual user. In most cases your webmaster will setup the roles a group can use.</p>
+                <target><![CDATA[<p>Eine Gruppe erm&ouml;glicht Ihnen die Zuteilung von identischen Rechten an eine ganze Gruppe von Benutzern. In den meisten F&auml;llen wird der Webmaster die Gruppen aufsetzen, indem er Ihnen die entsprechenden Rechte gibt.</p>
 
-                <p><strong>Fields</strong></p>
+                <p><strong>Felder</strong></p>
 
-                <p>Name: The internal reference to a group</p>
+                <p>Name: Die interne Bezeichnung der Gruppe</p>
 
-                <p>Roles: Per module/object you have the ability to assign a permission they are</p>
-
-                <ul>
-                	<li>ROLE_XYZ_GUEST: a guest that is allowed to VIEW an object and a LIST of objects</li>
-                	<li>ROLE_XYZ_STAFF: probably the biggest part of the users, a staff user has the same permissions as guests and is additionally allowed to EDIT and CREATE new objects;</li>
-                	<li>ROLE_XYZ_EDITOR: an editor is granted all access and, compared to the staff users, is allowed to DELETE; </li>
-                	<li>ROLE_XYZ_ADMIN: an administrative user is granted all access and on top of that, the user is allowed to grant other users access.</li>
-                	<li>ROLE_XYZ_PUBLISHER: as the the same rights as Admin but in the case of the the Pages, can publish pages to be viewed in the frontend</li>
-                </ul>
-
-                <p>Owner:</p>
+                <p>Rollen: Pro Modul k&ouml;nnen dieser Gruppe die entsprechenden Rechte zugeteilt werden. Folgende Rollen stehen zur Verf&uuml;gung (XYZ steht f&uuml;r das Modul):</p>
 
                 <ul>
-                	<li>when an object is created, the currently logged in user is set as owner for that object and is granted all access for that object;</li>
-                	<li>this means the user owning the object is always allowed to DELETE the object, even when it only has the staff role.</li>
+                	<li>ROLE_XYZ_GUEST: Ein Gast kann das Objekt (des entsprechenden Moduls) und/oder eine Liste von Objekten ANSCHAUEN.</li>
+                	<li>ROLE_XYZ_STAFF: Wahrscheinlich die am h&auml;ufigsten ben&ouml;tigte Funktion. Ein &#39;Staff&#39; kann das Objekt anschauen sowie die Inhalte des Objekts &Auml;NDERN oder ein neues Objekt ERSTELLEN.</li>
+                	<li>ROLE_XYZ_EDITOR: Ein Editor hat dieselben Rechte wie ein &#39;Staff&#39; zudem kann er/sie auch Objekte L&Ouml;SCHEN.</li>
+                	<li>ROLE_XYZ_ADMIN: Ein Admin kann zus&auml;tzlich die eigenen Rechte sowie diejenigen von anderen Benutzern &auml;ndern.</li>
+                	<li>ROLE_XYZ_PUBLISHER: Ein Publisher hat dieselben Rechte wie ein Admin und kann zudem als Entwurf erstellte Seiten LIVE SCHALTEN.</li>
                 </ul>
 
-                <p>In order for a user to be able to use the backend you will need to assign the role &#39;ROLE_ADMIN&#39;</p>
-
-                <p>The role &#39;ROLE_ALLOWED_TO_SWITCH&#39; allows the user, if they have access to the user admin area, to impersonate another user to see what they would see.</p>
-
-                <p>Only super admin users can select the role ROLE_SUPER_ADMIN.</p>
-
-                <p>After you have finished configuring your group you can:</p>
+                <p>Eigent&uuml;mer:</p>
 
                 <ul>
-                	<li>Add item and edit it</li>
-                	<li>Add item and return to list</li>
-                	<li>Add item and create another</li>
+                	<li>Wenn ein Benutzer ein neues Objekt erstelll, dann ist er/sie automatisch der/die Eigent&uuml;mer/in und hat bez&uuml;glich diesem Objekt s&auml;mtliche Rechte;</li>
+                	<li>das heisst: dieser Benutzer hat auch die Erlaubnis das Objekt zu l&ouml;schen auch wenn er nur der Rolle &#39;Staff&#39; zugeteilt ist.</li>
                 </ul>
 
-                <p>With &#39;Cancel&#39; your changes will not be saved and you will be returned to the group list view.</p>
+                <p>Jeder Benutzer welcher Zugang zu einer noch so kleinen Funktion im CMS / Backend haben soll, ben&ouml;tigt die Rolle &#39;ROLE_ADMIN&#39;.</p>
+
+                <p>Die Rolle &#39;ROLE_ALLOWED_TO_SWITCH&#39; erm&auml;chtigt den Benutzer, in die Rolle eines anderen Backend Users &#39;zu schl&uuml;pfen&#39; - so kann zum Beispiel ein Administrator pr&uuml;fen ob der Textverantwortliche wirklich alle Rechte hat, die er/sie ben&ouml;tigt.</p>
+
+                <p>Nur Super Admin Benutzer k&ouml;nnen die Rolle &#39;ROLE_SUPER_ADMIN&#39; auch (bei anderen Benutzern) ausw&auml;hlen.</p>
+
+                <p>Wenn Sie die Gruppe fertig konfiguriert haben, k&ouml;nnen Sie:</p>
+
+                <ul>
+                	<li>Die Gruppe resp. die Konfiguration speichern (aktualisieren)</li>
+                	<li>Die Gruppe resp. die Konfiguration speichern (aktualisieren) und zur Gruppen&uuml;bersicht zur&uuml;ckkehren</li>
+                	<li>Die Gruppe resp. die Konfiguration speichern (aktualisieren) und gleich eine neue Erstellen</li>
+                </ul>
+
+                <p>Mit &#39;Abbrechen&#39; werden die Eingaben nicht gespeichert / die Gruppe wird nicht erstellt und Sie kehren zur Ansicht &#39;Gruppen&uuml;bersicht&#39; zur&uuml;ck.</p>
                 ]]></target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.group.edit.title">
                 <source>sonata.user.admin.group.edit.title</source>
-                <target>Edit user group</target>
+                <target>Benutzergruppe bearbeiten</target>
             </trans-unit>
             <trans-unit id="sonata.user.admin.group.edit.text">
                 <source>sonata.user.admin.group.edit.text</source>
-                <target><![CDATA[<p>By clicking on the &#39;Edit&#39; button in the group list you can edit an existing user group.</p>
+                <target><![CDATA[<p>Mit Klick auf die &#39;Bearbeiten&#39; Schaltfl&auml;che k&ouml;nnen Sie eine bestehende Gruppe editieren</p>
 
-                <p>A user group allows you to assign a group of users the same permissions without having to assign the same permissions to each individual user. In most cases your webmaster will setup the roles a group can use.</p>
+                <p>Eine Gruppe erm&ouml;glicht Ihnen die Zuteilung von identischen Rechten an eine ganze Gruppe von Benutzern. In den meisten F&auml;llen wird der Webmaster die Gruppen aufsetzen (und evt. auch bearbeiten), indem er Ihnen die entsprechenden Rechte gibt.</p>
 
-                <p><strong>Fields</strong></p>
+                <p><strong>Felder</strong></p>
 
-                <p>Name: The internal reference to a group</p>
+                <p>Name: Die interne Bezeichnung der Gruppe</p>
 
-                <p>Roles: Per module/object you have the ability to assign a permission they are</p>
-
-                <ul>
-                	<li>ROLE_XYZ_GUEST: a guest that is allowed to VIEW an object and a LIST of objects</li>
-                	<li>ROLE_XYZ_STAFF: probably the biggest part of the users, a staff user has the same permissions as guests and is additionally allowed to EDIT and CREATE new objects;</li>
-                	<li>ROLE_XYZ_EDITOR: an editor is granted all access and, compared to the staff users, is allowed to DELETE; </li>
-                	<li>ROLE_XYZ_ADMIN: an administrative user is granted all access and on top of that, the user is allowed to grant other users access.</li>
-                	<li>ROLE_XYZ_PUBLISHER: as the the same rights as Admin but in the case of the the Pages, can publish pages to be viewed in the frontend</li>
-                </ul>
-
-                <p>Owner:</p>
+                <p>Rollen: Pro Modul k&ouml;nnen dieser Gruppe die entsprechenden Rechte zugeteilt werden. Folgende Rollen stehen zur Verf&uuml;gung (XYZ steht f&uuml;r das Modul):</p>
 
                 <ul>
-                	<li>when an object is created, the currently logged in user is set as owner for that object and is granted all access for that object;</li>
-                	<li>this means the user owning the object is always allowed to DELETE the object, even when it only has the staff role.</li>
+                	<li>ROLE_XYZ_GUEST: Ein Gast kann ein Objekt des entsprechenden Moduls und/oder eine Liste von Objekten ANSCHAUEN.</li>
+                	<li>ROLE_XYZ_STAFF: Wahrscheinlich die am h&auml;ufigsten ben&ouml;tigte Funktion. Ein &#39;Staff&#39; kann das Objekt anschauen sowie die Inhalte des Objekts &Auml;NDERN oder ein neues Objekt ERSTELLEN.</li>
+                	<li>ROLE_XYZ_EDITOR: Ein Editor hat dieselben Rechte wie ein &#39;Staff&#39; zudem kann er/sie auch Objekte L&Ouml;SCHEN.</li>
+                	<li>ROLE_XYZ_ADMIN: Ein Admin kann zus&auml;tzlich die eigenen Rechte sowie diejenigen von anderen Benutzern &auml;ndern.</li>
+                	<li>ROLE_XYZ_PUBLISHER: Ein Publisher hat dieselben Rechte wie ein Admin und kann zudem als Entwurf erstellte Seiten LIVE SCHALTEN.</li>
                 </ul>
 
-                <p>In order for a user to be able to use the backend you will need to assign the role &#39;ROLE_ADMIN&#39;</p>
-
-                <p>The role &#39;ROLE_ALLOWED_TO_SWITCH&#39; allows the user, if they have access to the user admin area, to impersonate another user to see what they would see.</p>
-
-                <p>Only super admin users can select the role ROLE_SUPER_ADMIN.</p>
-
-                <p>After you have finished configuring your group you can:</p>
+                <p>Eigent&uuml;mer:</p>
 
                 <ul>
-                	<li>Add item and edit it</li>
-                	<li>Add item and return to list</li>
-                	<li>Add item and create another</li>
+                	<li>Wenn ein Benutzer ein neues Objekt erstellt, dann ist er/sie automatisch der/die Eigent&uuml;mer/in und hat bez&uuml;glich diesem Objekt s&auml;mtliche Rechte;</li>
+                	<li>das heisst: dieser Benutzer hat auch die Erlaubnis das Objekt zu l&ouml;schen auch wenn er nur der Rolle &#39;Staff&#39; zugeteilt ist.</li>
                 </ul>
 
-                <p>With &#39;Cancel&#39; your changes will not be saved and you will be returned to the group list view.</p>]]></target>
+                <p>Jeder Benutzer welcher Zugang zu einer noch so kleinen Funktion im CMS / Backend haben soll, ben&ouml;tigt die Rolle &#39;ROLE_ADMIN&#39;.</p>
+
+                <p>Die Rolle &#39;ROLE_ALLOWED_TO_SWITCH&#39; erm&auml;chtigt den Benutzer, in die Rolle eines anderen Backend Users &#39;zu schl&uuml;pfen&#39; - so kann zum Beispiel ein Administrator pr&uuml;fen ob der Textverantwortliche wirklich alle Rechte hat, die er/sie ben&ouml;tigt.</p>
+
+                <p>Nur Super Admin Benutzer k&ouml;nnen die Rolle &#39;ROLE_SUPER_ADMIN&#39; auch (bei anderen Benutzern auch) ausw&auml;hlen.</p>
+
+                <p>Wenn Sie die Konfiguration der Gruppe bearbeitet haben, k&ouml;nnen Sie:</p>
+
+                <ul>
+                	<li>Die Gruppe resp. die Konfiguration aktualisieren</li>
+                	<li>Die Gruppe resp. die Konfiguration aktualisieren und zur Gruppen&uuml;bersicht zur&uuml;ckkehren</li>
+                	<li>Die Gruppe resp. die Konfiguration aktualisieren und gleich eine neue erstellen</li>
+                </ul>
+
+                <p>Mit &#39;Abbrechen&#39; werden die &Auml;nderungen nicht gespeichert und Sie kehren zur Ansicht &#39;Gruppen&uuml;bersicht&#39; zur&uuml;ck.</p>]]></target>
             </trans-unit>
             <!-- default -->
 
             <trans-unit id="not_found.title">
                 <source>not_found.title</source>
-                <target>Sorry, no specific help text available!</target>
+                <target>Sorry, kein Hilfetext vorhanden</target>
             </trans-unit>
             <trans-unit id="not_found.text">
                 <source>not_found.text</source>
                 <target>
-                    <![CDATA[ <p>Leider ist f&uuml;r diese Funktion kein spezifischer Hilfetext vorhanden. Versuchen Sie im Hilfe Menu (links) einen entsprechenden Hilfetext zu finden. Wir verbessern die Hilfe-Funktion kontinuierlich und entschuldigen uns f&uuml;r die fehlenden Angaben.</p> ]]></target>
+                    <![CDATA[<p>Leider ist f&uuml;r diese Funktion kein spezifischer Hilfetext vorhanden. Versuchen Sie im Hilfe Menu (links) einen entsprechenden Hilfetext zu finden. Wir verbessern die Hilfe-Funktion kontinuierlich und entschuldigen uns f&uuml;r die fehlenden Angaben.</p>]]></target>
             </trans-unit>
             <trans-unit id="help_text.admin_menu_label">
                 <source>help_text.admin_menu_label</source>
