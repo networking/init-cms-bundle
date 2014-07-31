@@ -110,17 +110,42 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
      * @param RouteReferrersReadInterface $content
      * @return $this
      */
-    public function initializeRoute(RouteReferrersReadInterface $content)
+    public function setContent(RouteReferrersReadInterface $content)
     {
         $this->content = $content;
-        $this->setPath($this->getPath());
-        $this->setOptions(array('compiler_class' => 'Symfony\\Component\\Routing\\RouteCompiler'));
+        return $this;
+    }
 
-        if (method_exists($content, 'getLocale')) {
-            $this->setDefault('_locale', $content->getLocale());
+    /**
+     * {@inheritDoc}
+     *
+     * Handling the missing default 'compiler_class'
+     * @see setOptions
+     */
+    public function getOption($name)
+    {
+        $option = parent::getOption($name);
+        if (null === $option && 'compiler_class' === $name) {
+            return 'Symfony\\Component\\Routing\\RouteCompiler';
         }
 
-        return $this;
+        return $option;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Handling the missing default 'compiler_class'
+     * @see setOptions
+     */
+    public function getOptions()
+    {
+        $options = parent::getOptions();
+        if (!array_key_exists('compiler_class', $options)) {
+            $options['compiler_class'] = 'Symfony\\Component\\Routing\\RouteCompiler';
+        }
+
+        return $options;
     }
 
     /**

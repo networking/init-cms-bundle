@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,13 +37,17 @@ class FrontendPageController extends Controller
      */
     protected function getAdminPool()
     {
-        if ($this->get('security.context')->getToken() && $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+        if ($this->get('security.context')->getToken() && $this->get('security.context')->isGranted(
+                'ROLE_SONATA_ADMIN'
+            )
+        ) {
 
             return $this->get('sonata.admin.pool');
         }
 
         return false;
     }
+
 
     /**
      * @param Request $request
@@ -61,7 +67,7 @@ class FrontendPageController extends Controller
         if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
             if ($alias = $page->getAlias()) {
                 $alias->getFullPath();
-                $baseUrl = $this->getRequest()->getBaseUrl();
+                $baseUrl = $request->getBaseUrl();
 
                 return new RedirectResponse($baseUrl . $alias->getFullPath());
             }
@@ -78,13 +84,20 @@ class FrontendPageController extends Controller
         }
 
         if ($page->getStatus() != PageInterface::STATUS_PUBLISHED) {
-            if (!$this->get('security.context')->getToken() || false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+            if (!$this->get('security.context')->getToken() || false === $this->get('security.context')->isGranted(
+                    'ROLE_SONATA_ADMIN'
+                )
+            ) {
                 $message = 'The requested page has the status "' . $page->getStatus() . '", please login to view page';
                 throw $this->createNotFoundException($message);
             }
         }
 
-        $response = $this->render($request->get('_template'), array('page' => $page, 'admin_pool' => $this->getAdminPool()));
+        $response = $this->render(
+            $request->get('_template'),
+            array('page' => $page, 'admin_pool' => $this->getAdminPool())
+        );
+
         return $response;
     }
 
@@ -98,20 +111,22 @@ class FrontendPageController extends Controller
      */
     public function liveAction(Request $request)
     {
+        var_dump($request);
+        die;
         /** @var $page PageSnapshot */
         $pageSnapshot = $request->get('_content');
 
         /** @var $page PageInterface */
         $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot);
 
-        if(!$page->isActive()){
+        if (!$page->isActive()) {
             throw new NotFoundHttpException();
         }
 
         if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
             if ($alias = $page->getAlias()) {
                 $alias->getFullPath();
-                $baseUrl = $this->getRequest()->getBaseUrl();
+                $baseUrl = $request->getBaseUrl();
 
                 return new RedirectResponse($baseUrl . $alias->getFullPath());
             }
@@ -124,9 +139,12 @@ class FrontendPageController extends Controller
             }
         }
 
-        $response = $this->render($request->get('_template'), array('page' => $page, 'admin_pool' => $this->getAdminPool()));
+        $response = $this->render(
+            $request->get('_template'),
+            array('page' => $page, 'admin_pool' => $this->getAdminPool())
+        );
 
-        if(!$request->cookies || $request->cookies->get('_locale')){
+        if (!$request->cookies || $request->cookies->get('_locale')) {
             $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
         }
 
@@ -154,12 +172,23 @@ class FrontendPageController extends Controller
      */
     public function homeAction(Request $request)
     {
-        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
-        $pageManger = $this->get('networking_init_cms.page_manager');
+        if ($request->get('_route') === 'networking_init_cms_default') {
+            /** @var \Symfony\Cmf\Component\Routing\DynamicRouter $dynamicRouter */
+            $dynamicRouter = $this->get('networking_init_cms.cms_router');
+            $requestParams = $dynamicRouter->matchRequest($request);
+            $request->attributes->add($requestParams);
 
-        $page = $pageManger->findOneBy(array('isHome' => true, 'locale' => $request->getLocale()));
+            unset($requestParams['_route']);
+            unset($requestParams['_controller']);
+            $request->attributes->set('_route_params', $requestParams);
 
-        return array('page' => $page);
+            $configuration = $request->attributes->get('_template');
+            $request->attributes->set('_template', $configuration->getTemplate());
+            $request->attributes->set('_template_vars', $configuration->getVars());
+            $request->attributes->set('_template_streamable', $configuration->isStreamable());
+        }
+
+        return $this->indexAction($request);
     }
 
     /**
@@ -213,7 +242,7 @@ class FrontendPageController extends Controller
 
         $newURL = $this->get('router')->generate($routeName, $params);
 
-        $response =  new RedirectResponse($newURL);
+        $response = new RedirectResponse($newURL);
         $response->headers->setCookie(new Cookie('_locale', $locale));
 
         return $response;
@@ -300,12 +329,12 @@ class FrontendPageController extends Controller
     /**
      * @return Response
      */
-    public function translationNotFoundAction()
+    public function translationNotFoundAction(Request $request)
     {
         $params = array(
-            'language' => \Locale::getDisplayLanguage($this->getRequest()->getLocale())
+            'language' => \Locale::getDisplayLanguage($request->getLocale()),
+            'admin_pool' => $this->getAdminPool()
         );
-
 
         return $this->render($this->container->getParameter('networking_init_cms.no_translation_template'), $params);
     }

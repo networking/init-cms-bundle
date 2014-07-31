@@ -20,11 +20,11 @@ use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 interface ContentRouteInterface extends  RouteReferrersReadInterface
 {
     /**
-     * Initializes the object to function as a route
+     * Set the content of a route
      * @param RouteReferrersReadInterface $content
      * @return ContentRoute
      */
-    public function initializeRoute(RouteReferrersReadInterface $content);
+    public function setContent(RouteReferrersReadInterface $content);
 
     /**
      * @param  string $controller

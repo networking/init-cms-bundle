@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager as BaseContentRouteManager;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouteCollection;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
-
+use Doctrine\ORM\EntityManager;
 /**
  * Class ContentRouteManager
  * @package Networking\InitCmsBundle\Doctrine
@@ -55,7 +56,8 @@ abstract class ContentRouteManager extends BaseContentRouteManager
         $this->class = $metadata->getName();
     }
 
-    public function setRequest(Request $request = null){
+    public function setRequest(Request $request = null)
+    {
         $this->request = $request;
     }
 
@@ -78,7 +80,6 @@ abstract class ContentRouteManager extends BaseContentRouteManager
 
     public function findContentByContentRoute(ContentRouteInterface $contentRoute)
     {
-
         $repository = $this->objectManager->getRepository($contentRoute->getClassType());
 
         return $repository->find($contentRoute->getObjectId());
@@ -125,38 +126,43 @@ abstract class ContentRouteManager extends BaseContentRouteManager
             return $collection;
         }
 
-        if(empty($contentRoutes)){
+
+        if (empty($contentRoutes)) {
             return $collection;
         }
 
         $tempContentRoutes = array_filter($contentRoutes, array($this, 'filterByLocale'));
 
-        if(empty($tempContentRoutes)){
+        if (empty($tempContentRoutes)) {
             $tempContentRoutes = $contentRoutes;
         }
+
 
         foreach ($tempContentRoutes as $key => $contentRoute) {
 
 
-            /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
-            $content = $this->getRouteContent($contentRoute);
-
             $viewStatus = $this->request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED);
+            $test = new \ReflectionClass($contentRoute->getClassType());
 
-            if ($viewStatus == VersionableInterface::STATUS_DRAFT && ($content instanceof ResourceVersionInterface)) {
+            if ($viewStatus == VersionableInterface::STATUS_DRAFT && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface') )) {
                 continue;
-            } elseif ($viewStatus == VersionableInterface::STATUS_PUBLISHED && ($content instanceof VersionableInterface)) {
+            } elseif ($viewStatus == VersionableInterface::STATUS_PUBLISHED && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface'))) {
                 continue;
             }
 
-            $contentRoute->initializeRoute($content);
+            /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
+            $content = $this->getRouteContent($contentRoute);
+
+            $contentRoute->setContent($content);
 
             $contentRoute->setPath($url);
+
 
             $collection->add(
                 self::ROUTE_GENERATE_DUMMY_NAME . preg_replace('/[^a-z0-9A-Z_.]/', '_', $key),
                 $contentRoute
             );
+
         }
 
         return $collection;

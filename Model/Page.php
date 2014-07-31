@@ -1104,7 +1104,7 @@ abstract class Page implements PageInterface
      */
     public function getRoute()
     {
-        return $this->contentRoute->initializeRoute($this);
+        return $this->contentRoute->setContent($this);
     }
 
     /**

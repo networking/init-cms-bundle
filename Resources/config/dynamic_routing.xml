@@ -3,61 +3,16 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <parameter key="networking_init_cms.controllers_by_alias" type="collection">
-            <parameter key="Networking\InitCmsBundle\Model\Page">NetworkingInitCmsBundle:FrontendPage:index</parameter>
-            <parameter key="Networking\InitCmsBundle\Model\PageSnapshot">NetworkingInitCmsBundle:FrontendPage:live</parameter>
-        </parameter>
-    </parameters>
-
     <services>
-        <service id="networking_init_cms.enhancer_controllers_by_content"
-                 class="Symfony\Cmf\Component\Routing\Enhancer\RouteContentEnhancer">
-            <argument>_route</argument>
-            <argument>_content</argument>
-        </service>
-
-        <service id="networking_init_cms.enhancer_controllers_by_class"
-                 class="Symfony\Cmf\Component\Routing\Enhancer\FieldByClassEnhancer">
-            <argument>_content</argument>
-            <argument>_controller</argument>
-            <argument>%networking_init_cms.controllers_by_alias%</argument>
-        </service>
-
         <service id="networking_init_cms.cms_router" class="Symfony\Cmf\Component\Routing\DynamicRouter">
             <argument type="service" id="router.request_context"/>
-            <argument type="service" id="networking_init_cms.nested_matcher"/>
-            <argument type="service" id="networking_init_cms.generator"/>
+            <argument type="service" id="cmf_routing.nested_matcher"/>
+            <argument type="service" id="cmf_routing.generator"/>
             <call method="addRouteEnhancer">
-                <argument type="service" id="networking_init_cms.enhancer_controllers_by_content"/>
+                <argument type="service" id="cmf_routing.enhancer.route_content"/>
             </call>
             <call method="addRouteEnhancer">
-                <argument type="service" id="networking_init_cms.enhancer_controllers_by_class"/>
-            </call>
-            <tag name="router" priority="300"/>
-        </service>
-
-        <service id="networking_init_cms.nested_matcher" class="Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher">
-            <argument type="service" id="networking_init_cms.content_route_manager"/>
-            <call method="setFinalMatcher">
-                <argument type="service" id="networking_init_cms.final_matcher"/>
-            </call>
-        </service>
-
-        <service id="networking_init_cms.matcher.dummy_collection" class="Symfony\Component\Routing\RouteCollection"/>
-
-        <service id="networking_init_cms.matcher.dummy_context" class="Symfony\Component\Routing\RequestContext"/>
-
-        <service id="networking_init_cms.final_matcher" class="Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher">
-            <argument type="service" id="networking_init_cms.matcher.dummy_collection"/>
-            <argument type="service" id="networking_init_cms.matcher.dummy_context"/>
-        </service>
-
-        <service id="networking_init_cms.generator" class="Symfony\Cmf\Component\Routing\ContentAwareGenerator">
-            <argument type="service" id="networking_init_cms.content_route_manager"/>
-            <argument type="service" id="logger"/>
-            <call method="setContentRepository">
-                <argument type="service" id="networking_init_cms.page_manager"/>
+                <argument type="service" id="cmf_routing.enhancer.controllers_by_class"/>
             </call>
         </service>
     </services>
