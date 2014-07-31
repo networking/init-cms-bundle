@@ -14,6 +14,7 @@ use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Sonata\AdminBundle\Exception\NoValueException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class PageHelper
@@ -302,19 +303,53 @@ class PageHelper
 
     }
 
+    /**
+     * Fills the request object with the content route parameters if found
+     *
+     * @param Request $request
+     * @return Request
+     */
+    public function matchContentRouteRequest(Request $request)
+    {
+        /** @var \Symfony\Cmf\Component\Routing\DynamicRouter $dynamicRouter */
+        $dynamicRouter = $this->container->get('networking_init_cms.cms_router');
+        $requestParams = $dynamicRouter->matchRequest($request);
+
+        if (is_array($requestParams) && !empty($requestParams)) {
+            $request->attributes->add($requestParams);
+
+            unset($requestParams['_route']);
+            unset($requestParams['_controller']);
+            $request->attributes->set('_route_params', $requestParams);
+
+            $configuration = $request->attributes->get('_template');
+            $request->attributes->set('_template', $configuration->getTemplate());
+            $request->attributes->set('_template_vars', $configuration->getVars());
+            $request->attributes->set('_template_streamable', $configuration->isStreamable());
+        }
+
+        return $request;
+    }
+
+    /**
+     * Returns if a page is active or inactive based on json string from page snapshot
+     *
+     * @param $jsonString
+     * @return bool
+     */
     public function jsonPageIsActive($jsonString)
     {
         $page = json_decode($jsonString, true);
 
         $now = new \DateTime();
 
-        $activeStart =  array_key_exists('active_from', $page)?new \DateTime($page['active_from']): new \DateTime;
-        $activeEnd =  array_key_exists('active_to', $page)?new \DateTime($page['active_to']): new \DateTime;
+        $activeStart = array_key_exists('active_from', $page) ? new \DateTime($page['active_from']) : new \DateTime;
+        $activeEnd = array_key_exists('active_to', $page) ? new \DateTime($page['active_to']) : new \DateTime;
 
         if ($now->getTimestamp() >= $activeStart->getTimestamp() &&
             $now->getTimestamp() <= $activeEnd->getTimestamp()
         ) {
-            return ($page['status']== PageInterface::STATUS_PUBLISHED);
+            return ($page['status'] == PageInterface::STATUS_PUBLISHED);
         }
 
         return false;

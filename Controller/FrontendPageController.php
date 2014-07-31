@@ -58,7 +58,11 @@ class FrontendPageController extends Controller
     public function indexAction(Request $request)
     {
         /** @var $page \Networking\InitCmsBundle\Model\PageInterface */
-        $page = $request->get('_content');
+        $page = $request->get('_content', null);
+        
+        if (is_null($page)) {
+            throw $this->createNotFoundException('no page object found');
+        }
 
         if ($page instanceof PageSnapshot) {
             return $this->liveAction($request);
@@ -73,9 +77,6 @@ class FrontendPageController extends Controller
             }
         }
 
-        if (!$page) {
-            throw $this->createNotFoundException('no page object found');
-        }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
             if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
@@ -171,19 +172,7 @@ class FrontendPageController extends Controller
     public function homeAction(Request $request)
     {
         if ($request->get('_route') === 'networking_init_cms_default') {
-            /** @var \Symfony\Cmf\Component\Routing\DynamicRouter $dynamicRouter */
-            $dynamicRouter = $this->get('networking_init_cms.cms_router');
-            $requestParams = $dynamicRouter->matchRequest($request);
-            $request->attributes->add($requestParams);
-
-            unset($requestParams['_route']);
-            unset($requestParams['_controller']);
-            $request->attributes->set('_route_params', $requestParams);
-
-            $configuration = $request->attributes->get('_template');
-            $request->attributes->set('_template', $configuration->getTemplate());
-            $request->attributes->set('_template_vars', $configuration->getVars());
-            $request->attributes->set('_template_streamable', $configuration->isStreamable());
+            $request = $this->getPageHelper()->matchContentRouteRequest($request);
         }
 
         return $this->indexAction($request);
