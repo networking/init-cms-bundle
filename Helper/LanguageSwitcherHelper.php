@@ -118,7 +118,7 @@ class LanguageSwitcherHelper
             }
             //return a contentRoute object
 
-            return $translation->getContentRoute()->initializeRoute($translation);
+            return $translation->getContentRoute()->setContent($translation);
         }
 
         if ($content instanceof PageSnapshotInterface) {

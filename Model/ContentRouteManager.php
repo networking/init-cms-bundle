@@ -104,7 +104,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
      */
     public function findManyByUrl($url)
     {
-        $this->findContentRoutesBy($url);
+        return $this->findContentRoutesBy($url);
     }
 
 
@@ -115,7 +115,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
     {
         $content = $this->getRouteContent($contentRoute);
 
-        $contentRoute->initializeRoute($content);
+        $contentRoute->setContent($content);
     }
 
     /**
