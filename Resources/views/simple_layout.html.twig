@@ -1,0 +1,75 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block stylesheets %}
+        <!-- jQuery code -->
+
+        {% stylesheets filter='cssembed,?yui_css'
+        '@NetworkingInitCmsBundle/Resources/public/themes/flick/jquery-ui-1.8.16.custom.css'
+        '@SonataAdminBundle/Resources/public/select2/select2.css'
+        '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/build/build_standalone.less'
+        '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
+        '@NetworkingInitCmsBundle/Resources/public/css/bootstrap-editable.css'
+        output='css/initcms_admin.css' %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
+        {% endstylesheets %}
+    {% endblock %}
+
+    {% block javascripts %}
+        {% javascripts
+        '@NetworkingInitCmsBundle/Resources/public/js/jquery-1.9.1.min.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/jquery-ui-1.9.1.min.js'
+        '@SonatajQueryBundle/Resources/public/jquery-ui-i18n.js'
+        output='js/jquery-1.9.1.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts
+        '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
+        '@MopaBootstrapBundle/Resources/public/bootstrap/js/*.js'
+        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-editable.min.js'
+        output='js/bootstrap.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endblock javascripts %}
+
+    <title>
+        {% block meta_title %}
+        {% endblock %}
+    </title>
+</head>
+{% block body_tag %}
+<body class="{% block body_class %}initcms{% endblock %}">
+{% endblock body_tag %}
+
+{% block body_start %}
+{% endblock body_start %}
+
+{% block body %}
+    <div class="{% block container_class %}container{% endblock container_class %} row-offcanvas">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 content-main">
+
+                <div class="jumbotron">{% block headline %}{% endblock headline %}</div>
+
+                {% block sonata_admin_content %}
+                {% endblock sonata_admin_content %}
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+</body>
+</html>

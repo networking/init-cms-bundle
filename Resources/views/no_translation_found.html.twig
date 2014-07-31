@@ -1,8 +1,5 @@
-{% extends "NetworkingInitCmsBundle::admin_base.html.twig" %}
-{% block headline %}{{ 'page_not_found'|trans({}, 'NetworkingInitCmsBundle') }}{% endblock %}
-{% block navbar %}{% endblock %}
-{% block sidebar_left %}{% endblock %}
+{% extends "NetworkingInitCmsBundle::simple_layout.html.twig" %}
+{% block headline %}<h1>{{ 'title.translation_not_found'|trans({'%language%': language}, 'NetworkingInitCmsBundle')|raw }}</h1>{% endblock %}
 {% block sonata_admin_content %}
-    <h1>{{ 'title.translation_not_found'|trans({'%language%': language}, 'NetworkingInitCmsBundle')|raw }}</h1>
     {{ 'info.translation_not_found'|trans({'%language%': language}, 'NetworkingInitCmsBundle')|raw }}
 {% endblock %}
