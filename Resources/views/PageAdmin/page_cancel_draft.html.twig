@@ -27,6 +27,8 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
 
 {% block content %}
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
     <div class="sonata-ba-delete">
         {% if app.request.isxmlhttprequest %}
             <div class="modal-header">
@@ -56,6 +58,9 @@ file that was distributed with this source code.
                                         </a>
                 {% endif %}
             </form>
+        </div>
+    </div>
+
         </div>
     </div>
 {% endblock %}
