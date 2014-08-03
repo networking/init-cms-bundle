@@ -265,8 +265,15 @@ function onAfterLoad() {
         items: 'li.networking-sortable-list',
         connectWith: ".sortable",
         tolerance: 'pointer',
-        start: function () {
-            destroyCkeditor();
+        start: function (event, ui) {
+            var textareaId = ui.item.find('textarea').attr('id');
+            if (typeof textareaId != 'undefined') {
+                var editorInstance = CKEDITOR.instances[textareaId];
+                if (editorInstance) {
+                    editorInstance.destroy();
+                    CKEDITOR.remove(textareaId);
+                }
+            }
             jQuery(this).sortable('refreshPositions');
             var listItems = jQuery(this).find('.networking-sortable-list');
             if (listItems.length < 1) {
@@ -279,6 +286,14 @@ function onAfterLoad() {
             saveLayoutBlockSort(function (xhr) {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             });
+
+            var textareaId = ui.item.find('textarea').attr('id');
+            if (typeof textareaId != 'undefined') {
+                try {
+                    CKEDITOR.replace(textareaId);
+                } catch (err) {
+                }
+            }
         },
         update: function (event, ui) {
             var maxItems = jQuery(this).attr('data-max-items');
@@ -314,7 +329,7 @@ function onAfterLoad() {
                 var zone = jQuery(this).attr('id').substr(5);
                 var liItem = jQuery(ui.item);
                 liItem.find("[idjQuery='_zone']").val(zone);
-                setLayoutBlockPosition();
+//                setLayoutBlockPosition();
                 jQuery(this).find(".empty_layout_block").hide();
             }
         },

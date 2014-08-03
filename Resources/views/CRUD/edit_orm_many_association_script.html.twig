@@ -31,6 +31,11 @@ This code manage the many-to-[one|many] association field popup
     - if the parent has NO object then an ajax request is made to refresh the popup
 #}
 var field_dialog_form_list_link_{{ id }} = function (event) {
+
+    if (jQuery(event.target).hasClass('filter-close')) {
+        return;
+    }
+
     initialize_popup_{{ id }}();
 
     event.preventDefault();
@@ -145,12 +150,14 @@ var field_dialog_form_list_{{ id }} = function (event) {
 
             field_dialog_{{ id }}.modal('show');
 
-            field_dialog_{{ id }}.on('hide', function () {
+            field_dialog_{{ id }}.on('hide', function (e) {
+                if (!jQuery(e.target).hasClass('collapse')) {
                 Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
 
                 // make sure we have a clean state
                 jQuery('a', field_dialog_{{ id }}).die('click');
                 jQuery('form', field_dialog_{{ id }}).die('submit');
+                }
             });
         }
     });
@@ -187,12 +194,14 @@ var field_dialog_form_add_{{ id }} = function (event) {
             // open the dialog in modal mode
             field_dialog_{{ id }}.modal('show');
 
-            field_dialog_{{ id }}.on('hide', function () {
-                Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
+            field_dialog_{{ id }}.on('hide', function (e) {
 
+                if (!jQuery(e.target).hasClass('collapse')) {
+                    Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
                 // make sure we have a clean state
                 jQuery('a', field_dialog_{{ id }}).die('click');
                 jQuery('form', field_dialog_{{ id }}).die('submit');
+                }
             });
         }
     });
@@ -248,7 +257,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
 
             Admin.log('[{{ id }}|field_dialog_form_action] ajax success');
 
-            var ct = xhr.getResponseHeader("content-type") || "";
+            var ct = xhr.getResponseHeader("content-type") || "application/json";
             if (ct != 'application/json') {
                 var IS_JSON = true;
                 try {

@@ -1,10 +1,6 @@
-networking_init_cms_js:
-    path: /admin/init_cms.js
-    defaults: {_controller: NetworkingInitCmsBundle:CmsHelper:initCmsJs}
-
 networking_init_cms_default:
     path: /
-    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:index}
+    defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:home}
 
 networking_init_cms_home:
     path: /

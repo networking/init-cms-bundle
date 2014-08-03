@@ -1,9 +1,11 @@
 cmf_routing:
     chain:
          routers_by_id:
-             # enable the symfony default router with a lower priority
-             router.default: 100
-         # whether the chain router should replace the default router. defaults to true
-         # if you set this to false, the router is just available as service
-         # symfony_cmf_routing_extra.router and you  need to do somthing to trigger it
-         # replace_symfony_router: true
+            router.default: 300 #called first
+            networking_init_cms.cms_router: 100 #called second
+    dynamic:
+         route_provider_service_id: networking_init_cms.content_route_manager
+         controllers_by_class:
+            Networking\InitCmsBundle\Model\Page: NetworkingInitCmsBundle:FrontendPage:index
+            Networking\InitCmsBundle\Model\PageSnapshot: NetworkingInitCmsBundle:FrontendPage:live
+         content_repository_service_id: networking_init_cms.page_manager

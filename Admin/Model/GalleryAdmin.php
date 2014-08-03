@@ -213,4 +213,22 @@ class GalleryAdmin extends SonataGalleryAdmin
             $extension->configureDatagridFilters($mapper, $context);
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPersistentParameters()
+    {
+        if (!$this->hasRequest()) {
+            return array();
+        }
+
+        $contexts = $this->pool->getContexts();
+        reset($contexts);
+        $contextName = key($contexts);
+
+        return array(
+            'context' => $this->getRequest()->get('context', $contextName),
+        );
+    }
 }

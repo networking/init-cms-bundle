@@ -42,6 +42,10 @@
                 <source>media_context.default</source>
                 <target>Standard Media</target>
             </trans-unit>
+            <trans-unit id="Select">
+                <source>Select</source>
+                <target>Auswählen</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

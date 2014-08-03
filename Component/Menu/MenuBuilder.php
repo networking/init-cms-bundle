@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Component\Menu;
 
+use Knp\Menu\Iterator\RecursiveItemIterator;
 use Knp\Menu\Matcher\Voter\UriVoter;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,6 +87,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      * @param RouterInterface $router
      * @param MenuItemManagerInterface $menuManager
      * @param Translator $translator
+     * @param Matcher $matcher
      */
     public function __construct(
         FactoryInterface $factory,
@@ -167,20 +169,19 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function getParentMenu(Menu $menu, MenuItem $childNode, $startDepth)
     {
-        if ($menu->getName() == $childNode->getParent()->getId()) {
-            return $menu;
-        }
-
-        $parentId = $childNode->getParent()->getId();
-        $parentMenu = $menu->getChild($parentId);
-
-        if (!$parentMenu) {
-            foreach ($menu->getChildren() as $subMenu) {
-                $parentMenu = $this->getParentMenu($subMenu, $childNode, $startDepth);
+        $itemIterator = new RecursiveItemIterator($menu->getIterator());
+        $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $menuItem) {
+            /** @var \Knp\Menu\MenuItem $menuItem */
+            $parentId = $childNode->getParent()->getId();
+            if($menuItem->getName() != $parentId){
+                continue;
             }
+
+            return $menuItem;
         }
 
-        return $parentMenu;
+        return false;
     }
 
     /**
@@ -243,7 +244,14 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             return $menuIterator;
         }
 
-        $menuIterator = $this->menuManager->getChildrenByStatus($mainMenu, false, null, 'ASC', false, $this->viewStatus);
+        $menuIterator = $this->menuManager->getChildrenByStatus(
+            $mainMenu,
+            false,
+            null,
+            'ASC',
+            false,
+            $this->viewStatus
+        );
 
         return $menuIterator;
 
@@ -279,7 +287,14 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             return false;
         }
 
-        $menuIterator = $this->menuManager->getChildrenByStatus($currentParent, false, null, 'ASC', false, $this->viewStatus);
+        $menuIterator = $this->menuManager->getChildrenByStatus(
+            $currentParent,
+            false,
+            null,
+            'ASC',
+            false,
+            $this->viewStatus
+        );
 
         return $menuIterator;
     }
@@ -293,7 +308,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      * @param int $startDepth
      * @return Menu
      */
-    public function createMenu(Menu $menu, array $menuIterator, $startDepth)
+    public function createMenu(Menu $menu, $menuIterator, $startDepth)
     {
         foreach ($menuIterator as $childNode) {
             $this->addNodeToMenu($menu, $childNode, $startDepth);
@@ -345,13 +360,13 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function showOnlyCurrentChildren(\Knp\Menu\MenuItem $menu)
     {
-        foreach ($menu->getChildren() as $subMenu) {
-            /** @var \Knp\Menu\MenuItem $subMenu */
-            if (!$subMenu->isCurrent() && !$subMenu->isCurrentAncestor()) {
-                $subMenu->setDisplayChildren(false);
-            }
-            if ($subMenu->hasChildren()) {
-                $this->showOnlyCurrentChildren($subMenu);
+        $itemIterator = new RecursiveItemIterator($menu->getIterator());
+
+        $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $menuItem) {
+            /** @var \Knp\Menu\MenuItem $menuItem */
+            if (!$this->matcher->isCurrent($menuItem) && !$this->matcher->isAncestor($menuItem)) {
+                $menuItem->setDisplayChildren(false);
             }
         }
     }
@@ -359,17 +374,30 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
     /**
      * Recursively set attributes on all children of a given menu
      *
+     * @deprecated please use setRecursiveAttribute
+     * @alias setRecursiveAttribute
      * @param Menu $menu
      * @param array $attr
      */
     public function setRecursiveChildrenAttribute(\Knp\Menu\MenuItem $menu, array $attr)
     {
-        foreach ($menu->getChildren() as $subMenu) {
-            /** @var \Knp\Menu\MenuItem $subMenu */
-            $subMenu->setChildrenAttributes($attr);;
-            if ($subMenu->hasChildren()) {
-                $this->setRecursiveChildrenAttribute($subMenu, $attr);
-            }
+        $this->setRecursiveAttribute($menu, $attr);
+    }
+
+    /**
+     * Recursively set attributes on an item and its' children
+     *
+     * @param Menu $menu
+     * @param array $attr
+     */
+    public function setRecursiveAttribute(\Knp\Menu\MenuItem $menu, array $attr)
+    {
+        $itemIterator = new RecursiveItemIterator($menu->getIterator());
+
+        $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $menuItem) {
+            /** @var \Knp\Menu\MenuItem $menuItem */
+            $menuItem->setChildrenAttributes($attr);;
         }
     }
 }

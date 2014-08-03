@@ -93,10 +93,31 @@ abstract class MediaAdmin extends Admin
     public function configureRoutes(RouteCollection $collection)
     {
         parent::configureRoutes($collection);
-        $collection->add('uploadTextBlockImage', 'upload_text_block_image', array(), array('method' => 'POST'));
-        $collection->add('uploadedTextBlockImage', 'uploaded_text_block_image', array(), array('method' => 'GET'));
-        $collection->add('uploadTextBlockFile', 'upload_text_block_file', array(), array('method' => 'POST'));
-        $collection->add('uploadedTextBlockFile', 'uploaded_text_block_file', array(), array('method' => 'GET'));
+        $collection->add(
+            'init_ckeditor_browser',
+            'init_ckeditor_browser',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browser'
+            )
+        );
+
+        $collection->add(
+            'init_ckeditor_upload_file',
+            'init_ckeditor_upload_file',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
+                'type' => 'file'
+            )
+        );
+
+        $collection->add(
+            'init_ckeditor_upload_image',
+            'init_ckeditor_upload_image',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
+                'type' => 'image'
+            )
+        );
     }
 
     /**
@@ -124,38 +145,49 @@ abstract class MediaAdmin extends Admin
         $provider = $this->pool->getProvider($media->getProviderName());
 
 
-
         if ($media->getId()) {
             $provider->buildEditForm($formMapper);
         } else {
             $provider->buildCreateForm($formMapper);
         }
 
-        if ($media->getId() && ($media->getProviderName() == 'sonata.media.provider.image' || $media->getProviderName() == 'sonata.media.provider.youtube')) {
+        if ($media->getId() && ($media->getProviderName() == 'sonata.media.provider.image' || $media->getProviderName(
+                ) == 'sonata.media.provider.youtube')
+        ) {
 
-            $formMapper->remove('binaryContent','file');
+            $formMapper->remove('binaryContent', 'file');
 
-            if($media->getProviderName() == 'sonata.media.provider.youtube'){
+            if ($media->getProviderName() == 'sonata.media.provider.youtube') {
 
                 $formMapper->add(
-                'image','networking_type_mediaprint', array('required' => false,'label' =>'form.label_current_video')
+                    'image',
+                    'networking_type_mediaprint',
+                    array('required' => false, 'label' => 'form.label_current_video')
                 );
 
-                $formMapper->add('binaryContent', 'text', array('required' => false,'label' => 'form.label_binary_content_youtube_new'));
-            }
-            else{
                 $formMapper->add(
-                    'image','networking_type_mediaprint', array('required' => false)
+                    'binaryContent',
+                    'text',
+                    array('required' => false, 'label' => 'form.label_binary_content_youtube_new')
+                );
+            } else {
+                $formMapper->add(
+                    'image',
+                    'networking_type_mediaprint',
+                    array('required' => false)
                 );
 
-                $formMapper->add('binaryContent', 'file', array('required' => false,'label' => 'form.label_binary_content_new'));
+                $formMapper->add(
+                    'binaryContent',
+                    'file',
+                    array('required' => false, 'label' => 'form.label_binary_content_new')
+                );
             }
 
             //
         }
 
-        if(in_array($media->getProviderName(), $this->localisedMediaProviders ))
-        {
+        if (in_array($media->getProviderName(), $this->localisedMediaProviders)) {
             $formMapper->add(
                 'locale',
                 'choice',
@@ -164,9 +196,6 @@ abstract class MediaAdmin extends Admin
                 )
             );
         }
-
-
-
 
 
         if ($formMapper->has('enabled')) {
@@ -204,7 +233,14 @@ abstract class MediaAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('custom', 'string', array('template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig','label'=>'list.label_media'));
+            ->add(
+                'custom',
+                'string',
+                array(
+                    'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig',
+                    'label' => 'list.label_media'
+                )
+            );
 
         if ($this->request && $this->request->get('pcode') == '') {
             $listMapper->add(
@@ -234,10 +270,19 @@ abstract class MediaAdmin extends Admin
             ->add('authorName', null, array('hidden' => true));
 
         if ($context) {
-            $datagridMapper->add('context', null, array('hidden' => true));
+            $datagridMapper->add(
+                'context',
+                'networking_init_cms_simple_string',
+                array('field_type' => 'hidden', 'label_render' => false)
+            );
+
             $persistedParams = $this->getPersistentParameters();
             if (array_key_exists('context', $persistedParams) && $persistedParams['context'] == $context) {
-                $datagridMapper->add('providerName', null, array('hidden' => true));
+                $datagridMapper->add(
+                    'providerName',
+                    'networking_init_cms_simple_string',
+                    array('field_type' => 'hidden', 'label_render' => false)
+                );
 
             }
         }
@@ -264,6 +309,7 @@ abstract class MediaAdmin extends Admin
         }
 
         $filterParameters = $this->getFilterParameters();
+
 
         if ($context && array_key_exists('context', $filterParameters)) {
             if ($filterParameters['context']['value'] != $context) {
@@ -334,7 +380,11 @@ abstract class MediaAdmin extends Admin
             $this->getRequest()->query->set('context', $this->getSubject()->getContext());
         }
 
-        $context = $this->getRequest()->get('context', $this->pool->getDefaultContext());
+        $contexts = $this->pool->getContexts();
+        reset($contexts);
+        $contextName = key($contexts);
+
+        $context = $this->getRequest()->get('context', $contextName);
         $providers = $this->pool->getProvidersByContext($context);
         $provider = $this->getRequest()->get('provider');
 
@@ -348,33 +398,6 @@ abstract class MediaAdmin extends Admin
         return array(
             'provider' => $provider,
             'context' => $context,
-        );
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureSideMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
-    {
-        if (!in_array($action, array('edit', 'view'))) {
-            return;
-        }
-
-        $admin = $this->isChild() ? $this->getParent() : $this;
-
-        $id = $this->getRequest()->get('id');
-
-        $menu->setCurrentUri($this->request->getRequestUri());
-
-        $menu->addChild(
-            $this->trans('sidemenu.link_edit_media'),
-            array('uri' => $admin->generateUrl('edit', array('id' => $id)))
-        );
-
-        $menu->addChild(
-            $this->trans('sidemenu.link_media_view'),
-            array('uri' => $admin->generateUrl('show', array('id' => $id)))
         );
     }
 
@@ -437,7 +460,8 @@ abstract class MediaAdmin extends Admin
         return parent::generateUrl($name, $parameters, $absolute);
     }
 
-    public function setLocalisedMediaProviders(array $providers){
+    public function setLocalisedMediaProviders(array $providers)
+    {
         $this->localisedMediaProviders = $providers;
     }
 }

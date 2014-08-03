@@ -21,9 +21,7 @@ file that was distributed with this source code.
         {% stylesheets filter='cssembed,?yui_css'
         '@NetworkingInitCmsBundle/Resources/public/themes/flick/jquery-ui-1.8.16.custom.css'
         '@SonataAdminBundle/Resources/public/select2/select2.css'
-        '@SonataAdminBundle/Resources/public//x-editable/css/bootstrap-editable.css'
         '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
-        '@NetworkingInitCmsBundle/Resources/public/less/eyecon-bootstrap-datepicker.less'
         output='css/initcms_admin.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
         {% endstylesheets %}
@@ -152,8 +150,9 @@ file that was distributed with this source code.
     '@SonataAdminBundle/Resources/public/jquery/jquery.form.js'
     '@NetworkingInitCmsBundle/Resources/public/js/respond.min.js'
     '@NetworkingInitCmsBundle/Resources/public/js/bootstrap.js'
-    '@MopaBootstrapBundle/Resources/public/js/eyecon-bootstrap-datepicker.js'
+    '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-datepicker.js'
     '@SonataAdminBundle/Resources/public/x-editable/js/bootstrap-editable.min.js'
+    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
     output='js/footer_admin.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -171,10 +170,15 @@ file that was distributed with this source code.
     <script src="{{ asset('bundles/sonataadmin/jquery/jquery.confirmExit.js') }}"
             type="text/javascript"></script>{% endif %}
     <script src="{{ asset('bundles/sonataadmin/base.js') }}" type="text/javascript"></script>
-
+    {% if app.request.getLocale()|slice(0, 2) != 'en' %}
+    <script src="{{ asset('bundles/networkinginitcms/js/locales/bootstrap-datepicker.' ~ app.request.getLocale()|slice(0, 2) ~'.js') }}"
+            type="text/javascript"></script>
+    <script src="{{ asset('bundles/sonataadmin/select2/select2_locale_'~ app.request.getLocale()|slice(0, 2) ~'.js') }}"
+            type="text/javascript"></script>
+    {% endif %}
     {% if app.user is defined %}
     {% if is_granted('ROLE_SONATA_ADMIN') %}
-    <script src="{{ path('networking_init_cms_js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/js/init_cms.js') }}" type="text/javascript"></script>
     {% endif %}
     {% endif %}
 {% endblock before_body_end %}

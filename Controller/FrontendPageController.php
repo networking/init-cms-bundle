@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +21,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
-use Networking\InitCmsBundle\Entity\PageSnapshot;
+use Networking\InitCmsBundle\Model\PageSnapshot;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 
 /**
@@ -35,13 +37,17 @@ class FrontendPageController extends Controller
      */
     protected function getAdminPool()
     {
-        if ($this->get('security.context')->getToken() && $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+        if ($this->get('security.context')->getToken() && $this->get('security.context')->isGranted(
+                'ROLE_SONATA_ADMIN'
+            )
+        ) {
 
             return $this->get('sonata.admin.pool');
         }
 
         return false;
     }
+
 
     /**
      * @param Request $request
@@ -52,7 +58,11 @@ class FrontendPageController extends Controller
     public function indexAction(Request $request)
     {
         /** @var $page \Networking\InitCmsBundle\Model\PageInterface */
-        $page = $request->get('_content');
+        $page = $request->get('_content', null);
+        
+        if (is_null($page)) {
+            throw $this->createNotFoundException('no page object found');
+        }
 
         if ($page instanceof PageSnapshot) {
             return $this->liveAction($request);
@@ -61,15 +71,12 @@ class FrontendPageController extends Controller
         if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
             if ($alias = $page->getAlias()) {
                 $alias->getFullPath();
-                $baseUrl = $this->getRequest()->getBaseUrl();
+                $baseUrl = $request->getBaseUrl();
 
                 return new RedirectResponse($baseUrl . $alias->getFullPath());
             }
         }
 
-        if (!$page) {
-            throw $this->createNotFoundException('no page object found');
-        }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
             if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
@@ -78,13 +85,20 @@ class FrontendPageController extends Controller
         }
 
         if ($page->getStatus() != PageInterface::STATUS_PUBLISHED) {
-            if (!$this->get('security.context')->getToken() || false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+            if (!$this->get('security.context')->getToken() || false === $this->get('security.context')->isGranted(
+                    'ROLE_SONATA_ADMIN'
+                )
+            ) {
                 $message = 'The requested page has the status "' . $page->getStatus() . '", please login to view page';
                 throw $this->createNotFoundException($message);
             }
         }
 
-        $response = $this->render($request->get('_template'), array('page' => $page, 'admin_pool' => $this->getAdminPool()));
+        $response = $this->render(
+            $request->get('_template'),
+            array('page' => $page, 'admin_pool' => $this->getAdminPool())
+        );
+
         return $response;
     }
 
@@ -104,14 +118,14 @@ class FrontendPageController extends Controller
         /** @var $page PageInterface */
         $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot);
 
-        if(!$page->isActive()){
+        if (!$page->isActive()) {
             throw new NotFoundHttpException();
         }
 
         if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
             if ($alias = $page->getAlias()) {
                 $alias->getFullPath();
-                $baseUrl = $this->getRequest()->getBaseUrl();
+                $baseUrl = $request->getBaseUrl();
 
                 return new RedirectResponse($baseUrl . $alias->getFullPath());
             }
@@ -124,9 +138,12 @@ class FrontendPageController extends Controller
             }
         }
 
-        $response = $this->render($request->get('_template'), array('page' => $page, 'admin_pool' => $this->getAdminPool()));
+        $response = $this->render(
+            $request->get('_template'),
+            array('page' => $page, 'admin_pool' => $this->getAdminPool())
+        );
 
-        if(!$request->cookies || $request->cookies->get('_locale')){
+        if (!$request->cookies || $request->cookies->get('_locale')) {
             $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
         }
 
@@ -154,12 +171,11 @@ class FrontendPageController extends Controller
      */
     public function homeAction(Request $request)
     {
-        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
-        $pageManger = $this->get('networking_init_cms.page_manager');
+        if ($request->get('_route') === 'networking_init_cms_default') {
+            $request = $this->getPageHelper()->matchContentRouteRequest($request);
+        }
 
-        $page = $pageManger->findOneBy(array('isHome' => true, 'locale' => $request->getLocale()));
-
-        return array('page' => $page);
+        return $this->indexAction($request);
     }
 
     /**
@@ -213,7 +229,7 @@ class FrontendPageController extends Controller
 
         $newURL = $this->get('router')->generate($routeName, $params);
 
-        $response =  new RedirectResponse($newURL);
+        $response = new RedirectResponse($newURL);
         $response->headers->setCookie(new Cookie('_locale', $locale));
 
         return $response;
@@ -300,12 +316,12 @@ class FrontendPageController extends Controller
     /**
      * @return Response
      */
-    public function translationNotFoundAction()
+    public function translationNotFoundAction(Request $request)
     {
         $params = array(
-            'language' => \Locale::getDisplayLanguage($this->getRequest()->getLocale())
+            'language' => \Locale::getDisplayLanguage($request->getLocale()),
+            'admin_pool' => $this->getAdminPool()
         );
-
 
         return $this->render($this->container->getParameter('networking_init_cms.no_translation_template'), $params);
     }

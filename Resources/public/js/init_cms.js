@@ -3,18 +3,6 @@ function createInitCmsMessageBox(status, message) {
 
     jQuery('.notice-block').html(messageHtml);
 }
-function destroyCkeditor() {
-    var editors = CKEDITOR.instances;
-    jQuery.each(editors, function () {
-        var instance = this;
-        try{
-        if (instance && instance.getData()) {
-            instance.destroy(true);
-        }
-        }catch(err){
-        }
-    });
-}
 
 function trim(str) {
     str = str.replace(/^\s+/, '');
@@ -28,6 +16,7 @@ function trim(str) {
 }
 
 (function ($) {
+
     $('.modal').live('show', function(){
         var height = $(this).height();
         var windowHeight = $(window).height();
@@ -37,11 +26,13 @@ function trim(str) {
         }
     });
 
-    $('.notice-block').on('DOMNodeInserted', function () {
+    var noticeBlock = $('.notice-block');
+
+    noticeBlock.on('DOMNodeInserted', function () {
         $(this).fadeIn().delay('3000').fadeOut(500);
     });
 
-    $('.notice-block').each(function (k, e) {
+    noticeBlock.each(function (k, e) {
         if (trim($(e).html()) != '') {
             $(e).fadeIn().delay('3000').fadeOut(500);
         }

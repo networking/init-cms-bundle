@@ -2,10 +2,23 @@ ivory_ck_editor:
     default_config: init_cms
     configs:
         init_cms:
-            filebrowserUploadRoute: admin_networking_initcms_media_uploadTextBlockFile
-            filebrowserBrowseRoute: admin_networking_initcms_media_uploadedTextBlockFile
-            filebrowserImageUploadRoute: admin_networking_initcms_media_uploadTextBlockImage
-            filebrowserImageBrowseRoute: admin_networking_initcms_media_uploadedTextBlockImage
+            filebrowserBrowseRoute: admin_networking_initcms_media_init_ckeditor_browser
+            filebrowserBrowseRouteParameters:
+                provider: sonata.media.provider.file
+                context: default
+            filebrowserImageBrowseRoute: admin_networking_initcms_media_init_ckeditor_browser
+            # Display images by default when clicking the image dialog browse button
+            filebrowserImageBrowseRouteParameters:
+                provider: sonata.media.provider.image
+                context: default
+            filebrowserUploadRoute: admin_networking_initcms_media_init_ckeditor_upload_file
+            filebrowserUploadRouteParameters:
+                provider: sonata.media.provider.file
+            # Upload file as image when sending a file from the image dialog
+            filebrowserImageUploadRoute: admin_networking_initcms_media_init_ckeditor_upload_image
+            filebrowserImageUploadRouteParameters:
+                provider: sonata.media.provider.image
+                context: default # Optional, to upload in a custom context
             removeButtons: 'NewPage,Underline,Subscript,Superscript,Styles,PageBreak,Iframe,Flash,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Print,Preview'
             toolbar: "init_cms"
             bodyClass: row

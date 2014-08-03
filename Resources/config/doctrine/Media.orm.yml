@@ -15,10 +15,12 @@ Networking\InitCmsBundle\Entity\Media:
     galleryHasMedias:
       targetEntity: Networking\InitCmsBundle\Entity\GalleryHasMedia
       mappedBy: media
+      cascade: ["remove"]
       orphan-removal: true
   manyToMany:
     tags:
       targetEntity: Networking\InitCmsBundle\Entity\Tag
+      orphan-removal: true
       joinTable:
         name: media_tags
         joinColumns:

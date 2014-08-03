@@ -56,15 +56,16 @@ file that was distributed with this source code.
          role="dialog" aria-labelledby="{{ "legend.create_menu_item"|trans({}, admin.translationDomain) }}"
          aria-hidden="true">
         <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3>{{ 'legend.create_menu_item'|trans({}, admin.translationDomain) }}</h3>
-                    </div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>{{ 'legend.create_menu_item'|trans({}, admin.translationDomain) }}</h3>
+        </div>
         <div class="modal-body">
             <div id="menu_info_text"></div>
             <p>&nbsp;</p>
+
             <div>
                 <label class="checkbox" for="show_now_confirm_dialog">
-                    <input type="checkbox" id="show_now_confirm_dialog" name="show_now_confirm_dialog" />
+                    <input type="checkbox" id="show_now_confirm_dialog" name="show_now_confirm_dialog"/>
                     {{ 'label.show_no_more'|trans({}, admin.translationDomain) }}
                 </label>
             </div>
@@ -72,8 +73,9 @@ file that was distributed with this source code.
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal"
                     aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
-            <button type="submit" class="btn btn-primary" id="btn_create_menu" data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}" name="btn_create_menu">
-                  {{ 'button.continue'|trans({}, admin.translationDomain) }} &rarr;</button>
+            <button type="submit" class="btn btn-primary" id="btn_create_menu"
+                    data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}" name="btn_create_menu">
+                {{ 'button.continue'|trans({}, admin.translationDomain) }} &rarr;</button>
         </div>
     </div>
     <!-- end modal page form -->
@@ -81,7 +83,13 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-<script type="text/javascript" src="{{ asset('/bundles/ivoryckeditor/ckeditor.js') }}"></script>
+    {% if not ckeditor_is_loaded() %}
+        <script type="text/javascript">
+            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/ivoryckeditor/') }}";
+        </script>
+
+        <script type="text/javascript" src="{{ ckeditor_js_path('bundles/ivoryckeditor/ckeditor.js') }}"></script>
+    {% endif %}
     <script type="text/javascript">
         function uploadError(xhr) {
             alert(xhr.error);
