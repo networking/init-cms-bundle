@@ -83,6 +83,7 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
+    {% block confirm_exit %}false{% endblock %}
     {% if not ckeditor_is_loaded() %}
         <script type="text/javascript">
             var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/ivoryckeditor/') }}";
