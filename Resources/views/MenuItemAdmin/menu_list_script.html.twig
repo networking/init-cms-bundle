@@ -107,7 +107,7 @@ function setUpSortTree() {
 
     jQuery('div.navigation').each(function (e, ui) {
         jQuery(ui).find('ul:first').nestedSortable({
-            disableNesting: 'no-nest',
+            disableNestingClass: 'no-nest',
             forcePlaceholderSize: true,
             handle: 'i.glyphicon-move',
             tolerance: 'pointer',

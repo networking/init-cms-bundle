@@ -30,6 +30,12 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
             $definition->setClass('Networking\InitCmsBundle\Builder\ListBuilder');
         }
 
+        if ($container->hasDefinition('sonata.user.editable_role_builder')) {
+            $definition = $container->getDefinition('sonata.user.editable_role_builder');
+
+            $definition->setClass('Networking\InitCmsBundle\Security\EditableRolesBuilder');
+        }
+
         if ($container->hasDefinition('sonata.admin.builder.mongodb_list')) {
             $definition = $container->getDefinition('sonata.admin.builder.mongodb_list');
 

@@ -28,7 +28,7 @@ file that was distributed with this source code.
                             <td>
                                 {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
                                     {% if admin.subClasses is empty %}
-                                        <a class="btn" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin)})}}">
+                                        <a class="btn btn-default" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin)})}}">
                                             <i class="icon-plus"></i>
                                             {% trans from 'SonataAdminBundle' %}link_add{% endtrans %}
                                         </a>
@@ -52,7 +52,7 @@ file that was distributed with this source code.
                             </td>
                             <td>
                                 {% if admin.hasroute('list') and admin.isGranted('LIST') %}
-                                    <a class="btn" href="{{ admin.generateUrl('list')}}">
+                                    <a class="btn btn-default" href="{{ admin.generateUrl('list')}}">
                                         <i class="icon-list"></i>
                                         {% trans from 'SonataAdminBundle' %}link_list{% endtrans -%}
                                     </a>
