@@ -4,7 +4,7 @@
     {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
     <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
         {% if app.request.isxmlhttprequest %}
-            <button class="btn" data-dismiss="modal"
+            <button class="btn btn-default" data-dismiss="modal"
                     aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
             {% if admin.id(object) %}
                 <input type="submit" class="btn btn-primary" name="btn_update"
