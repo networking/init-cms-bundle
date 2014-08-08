@@ -222,7 +222,14 @@ abstract class MediaAdmin extends Admin
             $formMapper->add(
                 'tags',
                 'sonata_type_model',
-                array('required' => false, 'expanded' => true, 'multiple' => true, 'help_label' => 'help.media_tag')
+                array(
+                    'required' => false,
+                    'expanded' => false,
+                    'multiple' => true,
+                    'help_label' => 'help.media_tag',
+                    'taggable' => true,
+                    'attr' => array('style' => "width:220px"),
+                )
             );
         }
     }
