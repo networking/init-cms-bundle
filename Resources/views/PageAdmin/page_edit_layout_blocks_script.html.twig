@@ -382,7 +382,7 @@ function onAfterLoad() {
                     objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
                     uniqid: '{{ sonata_admin.admin.root.uniqid }}',
                     elementId: '{{ id }}',
-                    __method: 'DELETE'
+                    _method: 'DELETE'
                 },
                 success: function (xhr) {
                     createInitCmsMessageBox(xhr.messageStatus, xhr.message);

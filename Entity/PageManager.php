@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -65,7 +66,8 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             if (!$showChildren) {
                 /** @var $page PageInterface */
                 $page = $this->find($id);
-                $childrenIds = $page->getChildren()->map(
+                $collection = new ArrayCollection($page->getAllChildren());
+                $childrenIds = $collection->map(
                     function (PageInterface $p) {
                         return $p->getId();
                     }
