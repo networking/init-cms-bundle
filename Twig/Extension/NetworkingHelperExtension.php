@@ -707,7 +707,9 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
                 }else{
                     $value = '';
                 }
-
+                break;
+            case 'sonata_type_model_hidden':
+                $value = $fieldDescription->getValue($object);;
                 break;
             default:
                 var_dump($fieldDescription->getType());
