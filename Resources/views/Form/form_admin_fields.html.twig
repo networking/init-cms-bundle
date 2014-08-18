@@ -805,11 +805,13 @@ file that was distributed with this source code.
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 
     {% if enable %}
+
         <script type="text/javascript">
             var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
         </script>
-
+        {% if not ckeditor_is_rendered() %}
         <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
+        {% endif %}
 
         <script type="text/javascript">
             {{ ckeditor_destroy(id) }}
