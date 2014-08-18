@@ -109,6 +109,9 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
 
             if ($parents = $page->getParents()) {
                 foreach ($parents as $key => $parent) {
+                    if(is_array($parent) && array_key_exists('id', $parent)){
+                        $parent = $parent['id'];
+                    }
                     $parents[$key] = $er->find($parent);
                 }
 
