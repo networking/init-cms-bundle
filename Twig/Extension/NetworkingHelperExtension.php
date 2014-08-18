@@ -43,6 +43,11 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      */
     protected $collectedHtml = array();
 
+    /**
+     * @var bool
+     */
+    protected $ckeditorRendered = false;
+
 
     /**
      * Sets the Container.
@@ -143,7 +148,18 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             'is_admin_group_active' => new \Twig_Function_Method($this, 'isAdminGroupActive', array('is_safe' => array('html'))),
             'get_initcms_page_url' => new \Twig_Function_Method($this, 'getPageUrl', array('is_safe' => array('html'))),
             'get_media_by_id' => new \Twig_Function_Method($this, 'getMediaById', array('is_safe' => array('html'))),
+            'ckeditor_is_rendered' => new \Twig_Function_Method($this, 'ckeditorIsRendered'),
         );
+    }
+
+    public function ckeditorIsRendered()
+    {
+        if($this->ckeditorRendered){
+            return true;
+        }else{
+            $this->ckeditorRendered = true;
+            return false;
+        }
     }
 
     /**
