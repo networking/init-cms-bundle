@@ -556,6 +556,19 @@ file that was distributed with this source code.
             <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
             <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
         </div>
+        <script type="application/javascript">
+            //<![CDATA[
+            jQuery(document).ready(function () {
+                jQuery('[data-link-field="{{ id }}"]').datetimepicker();
+                jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                    if (jQuery(this).val()) {
+
+                        jQuery(this).parent().datetimepicker('setValue');
+                    }
+                });
+            });
+            //]]>
+        </script>
     {% else %}
         {{ block('form_widget_simple') }}
     {% endif %}
@@ -582,6 +595,19 @@ file that was distributed with this source code.
             <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
             <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
         </div>
+        <script type="application/javascript">
+            //<![CDATA[
+            jQuery(document).ready(function () {
+                jQuery('[data-link-field="{{ id }}"]').datetimepicker();
+                jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                    if (jQuery(this).val()) {
+
+                        jQuery(this).parent().datetimepicker('setValue');
+                    }
+                });
+            });
+            //]]>
+        </script>
     {% else %}
         {{ block('form_widget_simple') }}
     {% endif %}
@@ -608,6 +634,19 @@ file that was distributed with this source code.
                 <input type="hidden" value="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}" {{ block('widget_attributes') }}>
                 <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
             </div>
+            <script type="application/javascript">
+                //<![CDATA[
+                jQuery(document).ready(function () {
+                    jQuery('[data-link-field="{{ id }}"]').datetimepicker();
+                    jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                        if (jQuery(this).val()) {
+
+                            jQuery(this).parent().datetimepicker('setValue');
+                        }
+                    });
+                });
+                //]]>
+            </script>
         {% else %}
             {{ block('form_widget_simple') }}
         {% endif %}
