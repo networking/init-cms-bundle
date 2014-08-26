@@ -556,6 +556,19 @@ file that was distributed with this source code.
             <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
             <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
         </div>
+        <script type="application/javascript">
+            //<![CDATA[
+            jQuery(document).ready(function () {
+                jQuery('[data-link-field="{{ id }}"]').datetimepicker();
+                jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                    if (jQuery(this).val()) {
+
+                        jQuery(this).parent().datetimepicker('setValue');
+                    }
+                });
+            });
+            //]]>
+        </script>
     {% else %}
         {{ block('form_widget_simple') }}
     {% endif %}
@@ -582,6 +595,19 @@ file that was distributed with this source code.
             <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
             <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
         </div>
+        <script type="application/javascript">
+            //<![CDATA[
+            jQuery(document).ready(function () {
+                jQuery('[data-link-field="{{ id }}"]').datetimepicker();
+                jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                    if (jQuery(this).val()) {
+
+                        jQuery(this).parent().datetimepicker('setValue');
+                    }
+                });
+            });
+            //]]>
+        </script>
     {% else %}
         {{ block('form_widget_simple') }}
     {% endif %}
@@ -608,6 +634,19 @@ file that was distributed with this source code.
                 <input type="hidden" value="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}" {{ block('widget_attributes') }}>
                 <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
             </div>
+            <script type="application/javascript">
+                //<![CDATA[
+                jQuery(document).ready(function () {
+                    jQuery('[data-link-field="{{ id }}"]').datetimepicker();
+                    jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                        if (jQuery(this).val()) {
+
+                            jQuery(this).parent().datetimepicker('setValue');
+                        }
+                    });
+                });
+                //]]>
+            </script>
         {% else %}
             {{ block('form_widget_simple') }}
         {% endif %}
@@ -733,7 +772,7 @@ file that was distributed with this source code.
 
     {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
     {% if not label_render %}{% set widget_controls = false %}{% endif %}
-    {{ block('widget_form_group_start') }}
+    {#{{ block('widget_form_group_start') }}#}
     <div id="field_container_{{ id }}" class="field-container">
             <span id="field_widget_{{ id }}">
 
@@ -749,7 +788,8 @@ file that was distributed with this source code.
                     </span>
                 {% endif %}
             </span>
-        {{ form_widget(form) }}
+
+        {{ block('hidden_widget') }}
 
         <span id="field_actions_{{ id }}" class="field-actions">
                 <a href="{{ admin.generateUrl('list', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
@@ -797,7 +837,7 @@ file that was distributed with this source code.
             {{ form_errors(form) }}
         </div>
     {% endif %}
-    {{ block('widget_form_group_end') }}
+    {#{{ block('widget_form_group_end') }}#}
     {% include 'NetworkingInitCmsBundle:CRUD:edit_media_entity_script.html.twig' %}
 {% endblock %}
 
