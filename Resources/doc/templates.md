@@ -66,20 +66,28 @@ The navigation setup involves three parts, to be configured in your bundles serv
 Step 1. Setup the Networking FrontendMenuBuilder as your menu factory or extend it:
 
 ```
-    sandbox_init_cms.menu.frontend_menu_builder:
-        class: Networking\InitCmsBundle\Component\Menu\FrontendMenuBuilder
+     sandbox_init_cms.menu.frontend_menu_builder:
+        class: Networking\InitCmsBundle\Menu\FrontendMenuBuilder
         scope: request
-        arguments: [ '@knp_menu.factory', '@security.context', '@service_container' ]
+        arguments:
+            - @knp_menu.factory
+            - @security.context
+            - @request
+            - @router
+            - @networking_init_cms.menu_item_manager
+            - @translator
+            - @knp_menu.matcher
 ```
 
 Step 2. Configure the Knp menu to use your factory supplying it with the name of the menu and css classes to add the ```<ul>``` element
 
 ```
+
     sandbox_init_cms.menu.frontend_main_menu_left:
         class: Knp\Menu\MenuItem
         factory_service: sandbox_init_cms.menu.frontend_menu_builder
         factory_method: createMainMenu
-        arguments: [ '@request', path: "The main menu", classes:  "nav nav-tabs nav-main" ]
+        arguments: [menu_name: "Main menu", "nav nav-tabs nav-main" ]
         scope: request
         tags:
             - { name: knp_menu.menu, alias: mainMenu }
@@ -94,21 +102,8 @@ Step 2. Configure the Knp menu to use your factory supplying it with the name of
             - { name: knp_menu.menu, alias: langMenu }
 ```
 
-Step 3. (optional) Configure a [mopa bootstrap navbar](https://github.com/phiamo/MopaBootstrapBundle) with template parameters for easy inclusion in the main template
-
 ```
-    sandbox_init_cms.menu.frontend_top_menu_template:
-        class: %mopa_bootstrap.menu.generic%
-        scope: request
-        arguments:
-            - { pageMenu: @sandbox_init_cms.menu.frontend_main_menu_left=, langMenu: @sandbox_init_cms.menu.frontend_main_menu_language=}
-            - {}
-            - { logo: "bundles/sandboxinitcms/img/sailing_icon_grey.png", title: "Demo Sailing Club", titleRoute: "networking_init_cms_home", fixedTop: false, isFluid: false, template: SandboxInitCmsBundle:Navbar:navbar.html.twig }
-        tags:
-            - { name: mopa_bootstrap.menu, alias: cmsNavbar }
-
-```
-Then all you need to do is call ```{{ mopa_bootstrap_navbar('cmsNavbar' ) }}``` in your twig template and Bobs your uncle the
+Then all you need to do is call ```{{ mopa_bootstrap_menu('mainMenu') }}``` in your twig template and Bobs your uncle the
 navigation should appear.
 
 
