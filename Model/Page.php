@@ -1363,11 +1363,13 @@ abstract class Page implements PageInterface
      */
     public function convertParentsToArray()
     {
-        if (!is_array($this->parents)) {
-            $this->parents = array();
+        $parents = array();
+
+        foreach ($this->getParents() as $parent) {
+            $parents[] = $parent->getId();
         }
 
-        return $this->parents;
+        return $parents;
     }
 
     /**

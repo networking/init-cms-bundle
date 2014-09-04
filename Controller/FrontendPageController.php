@@ -50,24 +50,56 @@ class FrontendPageController extends Controller
 
 
     /**
+     * Render the page
+     *
      * @param Request $request
-     * @return array
-     * @throws AccessDeniedException
-     * @throws NotFoundHttpException
+     * @return Response
      */
     public function indexAction(Request $request)
     {
-        /** @var $page \Networking\InitCmsBundle\Model\PageInterface */
-        $page = $request->get('_content', null);
-        
-        if (is_null($page)) {
-            throw $this->createNotFoundException('no page object found');
+
+        $params = $this->getPageParameters($request);
+
+        if($params instanceof RedirectResponse){
+            return $params;
         }
 
-        if ($page instanceof PageSnapshot) {
-            return $this->liveAction($request);
+        $response = $this->render(
+            $request->get('_template'),
+            $params
+        );
+
+        if (!$request->cookies || $request->cookies->get('_locale')) {
+            $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
         }
 
+        return $response;
+    }
+
+
+    /**
+     * Render the Live version of a page
+     *
+     * @deprecated will be removed in version 3.0
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function liveAction(Request $request)
+    {
+
+        return $this->indexAction($request);
+    }
+
+    /**
+     * Check if page is an alias for another page
+     *
+     * @param Request $request
+     * @param PageInterface $page
+     * @return bool|RedirectResponse
+     */
+    public function getRedirect(Request $request, PageInterface $page)
+    {
         if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
             if ($alias = $page->getAlias()) {
                 $alias->getFullPath();
@@ -77,6 +109,31 @@ class FrontendPageController extends Controller
             }
         }
 
+        return false;
+    }
+
+    public function getPageParameters(Request $request)
+    {
+        /** @var $page \Networking\InitCmsBundle\Model\PageInterface */
+        $page = $request->get('_content', null);
+
+        if (is_null($page)) {
+            throw $this->createNotFoundException('no page object found');
+        }
+
+        if ($page instanceof PageSnapshot) {
+            return $this->getLiveParameters($request, $page);
+        }
+
+        return $this->getDraftParameters($request, $page);
+    }
+
+    public function getDraftParameters(Request $request, PageInterface $page)
+    {
+
+        if($redirect = $this->getRedirect($request, $page)){
+            return $redirect;
+        }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
             if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
@@ -94,26 +151,11 @@ class FrontendPageController extends Controller
             }
         }
 
-        $response = $this->render(
-            $request->get('_template'),
-            array('page' => $page, 'admin_pool' => $this->getAdminPool())
-        );
-
-        return $response;
+        return array('page' => $page, 'admin_pool' => $this->getAdminPool());
     }
 
-
-    /**
-     * @param Request $request
-     *
-     * @return array
-     * @throws AccessDeniedException
-     * @throws NotFoundHttpException
-     */
-    public function liveAction(Request $request)
+    public function getLiveParameters(Request $request, PageSnapshot $pageSnapshot)
     {
-        /** @var $page PageSnapshot */
-        $pageSnapshot = $request->get('_content');
 
         /** @var $page PageInterface */
         $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot);
@@ -122,13 +164,8 @@ class FrontendPageController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
-            if ($alias = $page->getAlias()) {
-                $alias->getFullPath();
-                $baseUrl = $request->getBaseUrl();
-
-                return new RedirectResponse($baseUrl . $alias->getFullPath());
-            }
+        if($redirect = $this->getRedirect($request, $page)){
+            return $redirect;
         }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
@@ -138,16 +175,7 @@ class FrontendPageController extends Controller
             }
         }
 
-        $response = $this->render(
-            $request->get('_template'),
-            array('page' => $page, 'admin_pool' => $this->getAdminPool())
-        );
-
-        if (!$request->cookies || $request->cookies->get('_locale')) {
-            $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
-        }
-
-        return $response;
+        return array('page' => $page, 'admin_pool' => $this->getAdminPool());
     }
 
     /**
@@ -342,7 +370,7 @@ class FrontendPageController extends Controller
      * @param null $page_id
      * @return Response
      */
-    public function adminNavbarAction($page_id = null)
+    public function adminNavbarAction(Request $request, $page_id = null)
     {
 
         if ($page_id) {
@@ -350,7 +378,7 @@ class FrontendPageController extends Controller
             /** @var \Networking\InitCmsBundle\Entity\PageManager $pageManager */
             $pageManager = $this->container->get('networking_init_cms.page_manager');
             $page = $pageManager->find($page_id);
-            $this->getRequest()->attributes->set('_content', $page);
+            $request->attributes->set('_content', $page);
         }
         $response = $this->render(
             'NetworkingInitCmsBundle:Admin:esi_admin_navbar.html.twig',

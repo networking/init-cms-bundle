@@ -31,16 +31,6 @@ file that was distributed with this source code.
 
     {% if admin is defined %}
         &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
-    {% else %}
-        {% if action is defined %}
-            -
-            {% for menu in admin.breadcrumbs(action) %}
-                {% if not loop.first %}
-                    &gt;
-                {% endif %}
-                {{ menu.label|raw|striptags|replace({'&quot;': ''}) }}
-            {% endfor %}
-        {% endif %}
     {% endif %}
 {% endblock %}
 

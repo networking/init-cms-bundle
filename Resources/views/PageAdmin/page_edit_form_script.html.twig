@@ -57,8 +57,8 @@ file that was distributed with this source code.
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             },
             error:function (xhr, textStatus, errorThrown) {
-                var formHtml = $($.parseHTML(xhr.responseText)).filter('#pageSettingsFieldsModal').html();
-                $('#pageSettingsFieldsModal').html(formHtml);
+                btn.button('reset');
+                $('#pageSettingsFieldsModal').html(xhr.responseText);
             }
         });
     };

@@ -33,13 +33,6 @@ function uploadError(xhr) {
         }
     });
 
-    // Restore value from hidden input
-    $('input[type=hidden]', '.date').each(function () {
-        if ($(this).val()) {
-            $(this).parent().datetimepicker('setValue');
-        }
-    });
-
     $(document).on('show.bs.modal', '.modal', function () {
         var modalBody = $('.modal .modal-body');
         modalBody.css('overflow-y', 'auto');
@@ -48,11 +41,6 @@ function uploadError(xhr) {
 
 
     // Restore value from hidden input
-    $('input[type=hidden]', '.date').each(function () {
-        if ($(this).val()) {
-            $(this).parent().datetimepicker('setValue');
-        }
-    });
 
 
     // handle the #toggle click event
@@ -61,27 +49,13 @@ function uploadError(xhr) {
         $(".row-offcanvas").toggleClass("active");
     });
 
-    $('[data-provider="datepicker"]').datetimepicker();
-
-    $('[data-provider="datetimepicker"]').datetimepicker();
-
-    $('[data-provider="timepicker"]').datetimepicker();
-
-    // Restore value from hidden input
-    $('input[type=hidden]', '.date').each(function () {
-        if ($(this).val()) {
-
-            $(this).parent().datetimepicker('setValue');
-        }
-    });
-
 })(jQuery);
 
 $.fn.modal.Constructor.prototype.enforceFocus = function () {
     modal_this = this
     $(document).on('focusin.modal', function (e) {
         if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length
-            // add whatever conditions you need here:
+                // add whatever conditions you need here:
             && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
             modal_this.$element.focus()
         }
