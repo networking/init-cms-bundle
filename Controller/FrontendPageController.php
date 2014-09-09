@@ -319,8 +319,8 @@ class FrontendPageController extends Controller
         } else {
             $url = $this->get('router')->generate('networking_init_cms_default');
         }
-
-        return new RedirectResponse($url);
+        header("location:".$url, null, 302);
+        exit;
     }
 
     /**
