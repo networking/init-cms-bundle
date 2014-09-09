@@ -1,6 +1,6 @@
 services:
     sandbox_init_cms.menu.frontend_menu_builder:
-        class: Networking\InitCmsBundle\Component\Menu\FrontendMenuBuilder
+        class: Networking\InitCmsBundle\Menu\FrontendMenuBuilder
         scope: request
         arguments:
             - @knp_menu.factory
@@ -9,6 +9,7 @@ services:
             - @router
             - @networking_init_cms.menu_item_manager
             - @translator
+            - @knp_menu.matcher
 
 
     # Create the left main menu and right main menu for the frontend
@@ -16,7 +17,7 @@ services:
         class: Knp\Menu\MenuItem
         factory_service: sandbox_init_cms.menu.frontend_menu_builder
         factory_method: createMainMenu
-        arguments: [ '@request', menu_name: "Main menu", "nav nav-tabs nav-main" ]
+        arguments: [menu_name: "Main menu", "nav nav-tabs nav-main" ]
         scope: request
         tags:
             - { name: knp_menu.menu, alias: mainMenu }
@@ -30,56 +31,24 @@ services:
         tags:
             - { name: knp_menu.menu, alias: langMenu }
 
-    sandbox_init_cms.menu.frontend_top_menu_template:
-        class: %mopa_bootstrap.menu.generic%
-        scope: request
-        arguments:
-            - { pageMenu: @sandbox_init_cms.menu.frontend_main_menu_left=, langMenu: @sandbox_init_cms.menu.frontend_main_menu_language=}
-            - {}
-            - { logo: "bundles/sandboxinitcms/img/sailing_icon_grey.png", title: "Demo Sailing Club", titleRoute: "networking_init_cms_home", fixedTop: false, isFluid: false, template: ApplicationNetworkingInitCmsBundle:Navbar:navbar.html.twig }
-        tags:
-            - { name: mopa_bootstrap.menu, alias: cmsNavbar }
 
     # Create the side menu for the frontend
     sandbox_init_cms.menu.frontend_sub_menu:
         class: Knp\Menu\MenuItem
         factory_service: sandbox_init_cms.menu.frontend_menu_builder
         factory_method: createSubnavMenu
-        arguments: [ '@request', "Main menu", 'nav nav-pills']
+        arguments: [ "Main menu", 'nav nav-pills']
         scope: request
         tags:
             - { name: knp_menu.menu, alias: subMenu }
 
 
-    sandbox_init_cms.menu.frontend_sub_menu_template:
-        class: %mopa_bootstrap.menu.generic%
-        arguments:
-            # first argument: a named array of menues:
-            - { menu: @sandbox_init_cms.menu.frontend_sub_menu= }
-            - {}
-            # third argument: a named array of options
-            - { template: ApplicationNetworkingInitCmsBundle:Navbar:subnavbar.html.twig }
-        tags:
-            # The alias is used to retrieve the navbar in templates
-            - { name: mopa_bootstrap.menu, alias: subNavbar }
 
     sandbox_init_cms.menu.frontend_footer_menu:
         class: Knp\Menu\MenuItem
         factory_service: sandbox_init_cms.menu.frontend_menu_builder
         factory_method: createFooterMenu
-        arguments: [ @request, 'Footer menu', 'nav nav-pills']
+        arguments: ['Footer menu', 'nav nav-pills']
         scope: request
         tags:
             - { name: knp_menu.menu, alias: footerMenu }
-
-    sandbox_init_cms.menu.frontend_footer_menu_template:
-        class: %mopa_bootstrap.menu.generic%
-        arguments:
-            # first argument: a named array of menues:
-            - { menu: @sandbox_init_cms.menu.frontend_footer_menu= }
-            - {}
-            # third argument: a named array of options
-            - { template: ApplicationNetworkingInitCmsBundle:Navbar:footernavbar.html.twig }
-        tags:
-            # The alias is used to retrieve the navbar in templates
-            - { name: mopa_bootstrap.menu, alias: footerNavbar }
