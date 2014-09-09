@@ -93,7 +93,7 @@ function submitAjaxForm(event) {
 }
 
 function updateMenu(e) {
-    var nodeArray = jQuery(e).nestedSortable('toArray', {startDepthCount: 0});
+   jQuery(e).nestedSortable('toArray', {startDepthCount: 0});
 
 }
 
@@ -237,12 +237,12 @@ jQuery(function () {
         lastTab = '#' + tab.attr('id');
         jQuery('a[href="' + lastTab + '"]').tab('show');
     }
-    $('.show-tooltip').tooltip({placement: 'bottom', delay: { show: 800, hide: 100 }});
-
-    jQuery('#hidden_filters').on('show hide', function () {
-        jQuery('#filter_toggle').toggleClass('icon-plus');
-        jQuery('#filter_toggle').toggleClass('icon-minus');
+    jQuery('body').on('show.bs.tab', function(e){
+        var target = jQuery(e.target);
+        lastTab = target.attr('href');
     });
+    jQuery('.show-tooltip').tooltip({placement: 'bottom', delay: { show: 800, hide: 100 }});
+
 
 });
 </script>

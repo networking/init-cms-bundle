@@ -30,7 +30,7 @@ file that was distributed with this source code.
 {% endif %}
 
 
-{% if admin.isGranted('PUBLISH') and not object.isPublished %}
+{% if admin.isGranted('PUBLISH', object) and not object.isPublished %}
     <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
        class="btn btn-default btn-sm {% if object.isPublished() %}disabled{% endif %}"
        {% if object.isPublished() %}onclick="return false"{% endif %}>
