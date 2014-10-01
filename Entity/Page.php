@@ -152,7 +152,7 @@ class Page implements RouteAwareInterface, VersionableInterface
 
     /**
      * @var Page
-     * @ORM\OneToOne(targetEntity="Page")
+     * @ORM\ManyToOne(targetEntity="Page")
      * @ORM\JoinColumn(name="alias_id", referencedColumnName="id")
      */
     protected $alias;
