@@ -577,8 +577,8 @@ file that was distributed with this source code.
         {{ block('form_widget_simple') }}
     {% endif %}
 {% else %}
-    {% set attr = attr|merge({'class': attr.class|default('inline')}) %}
-    	<div class="row">
+    {% set attr = attr|merge({'class': attr.class|default('form-inline')}) %}
+    	<div  {{ block('widget_container_attributes') }}>
         {{ date_pattern|replace({
             '{{ year }}':  form_widget(form.year, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
             '{{ month }}': form_widget(form.month, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
