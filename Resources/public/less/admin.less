@@ -457,15 +457,34 @@ li.table-row-style .menu-item-link {
   outline: none;
 }
 
+
+body.modal-open {
+  margin-right: 0;
+  position:fixed;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
 #login.modal {
-  position: relative;
   top: auto;
   right: auto;
   bottom: auto;
   left: auto;
+  padding: 0;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  position: relative;
   z-index: 1;
   display: block;
 }
+
+
+.modal.container {
+  max-width: none;
+}
+
 
 // Sontat CSS overwrites
 .initcms {
