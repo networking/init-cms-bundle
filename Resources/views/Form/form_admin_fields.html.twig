@@ -183,7 +183,7 @@ file that was distributed with this source code.
 
 {# Labels #}
 {% block form_label %}
-    {% if sonata_admin.admin is not defined %}
+    {% if sonata_admin.admin is not defined or not sonata_admin.admin %}
         {{ parent() }}
     {% elseif 'checkbox' in block_prefixes %}
         {% spaceless %}
