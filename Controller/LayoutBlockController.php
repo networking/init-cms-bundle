@@ -143,15 +143,54 @@ class LayoutBlockController extends CRUDController
         $objectId = $request->get('objectId');
         $uniqId = $request->get('uniqid');
 
-        $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqId, $code, $update = true);
+        $post = $request->request->all();
+        $post['page'] = $objectId;
 
-        if ($this->error) {
-            $status = 400;
-        } else {
+        $layoutBlock = $this->admin->getObject($post['id']);
+
+        /** @var $form \Symfony\Component\Form\Form */
+        $form = $this->admin->getForm();
+        $form->setData($layoutBlock);
+        /** @var \Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider  $csrf */
+        $csrf = $this->get('form.csrf_provider');
+        $token = $csrf->generateCsrfToken($form->getName());
+        $post['_token'] = $token;
+        unset($post['id']);
+
+        $request->request->set($this->admin->getUniqid(), $post);
+
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+            $this->admin->update($layoutBlock);
+            $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqId, $code);
             $status = 200;
+            return new Response($html, $status);
+        }else{
+            $this->error = true;
+
+            $response = new Response();
+            $response->setStatusCode(500);
         }
 
-        return new Response($html, $status);
+        $view = $form->createView();
+
+        // set the theme for the current Admin Form
+        $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+
+        return $this->render(
+            'NetworkingInitCmsBundle:PageAdmin:layout_block_fields.html.twig',
+            array(
+                'form' => $view,
+                'object' => $layoutBlock,
+                'code' => $code,
+                'classType' => $request->get('classType'),
+                'objectId' => $objectId,
+                'uniqid' => $uniqId,
+                'elementId' => $elementId
+            ),
+            $response
+        );
     }
 
     /**
@@ -199,17 +238,6 @@ class LayoutBlockController extends CRUDController
         $form = $formBuilder->getForm();
         $form->setData($page);
 
-        if ($update) {
-            $form->submit($this->getRequest());
-            if ($form->isValid()) {
-                /** @var \Networking\InitCmsBundle\Model\LayoutBlock $layoutBlock */
-                foreach ($page->getLayoutBlock() as $layoutBlock) {
-                    $this->admin->update($layoutBlock);
-                }
-            } else {
-                $this->error = true;
-            }
-        }
 
         /** @var \Sonata\AdminBundle\Admin\AdminHelper $helper */
         $helper = $this->get('sonata.admin.helper');
@@ -310,5 +338,15 @@ class LayoutBlockController extends CRUDController
             'message' => $this->translate('message.layout_block_deleted'),
             'html' => $html
         ));
+    }
+
+    public function uksort(&$array){
+        ksort($array);
+        foreach($array as $key => $value){
+            if(is_array($value)){
+                 $this->uksort($value);
+                $array[$key] = $value;
+            }
+        }
     }
 }
