@@ -181,7 +181,9 @@ function submitLayoutUpdate(form, data, liItem) {
 //        dataType: 'html',
         data: data,
         error: function (xhr) {
-            liItem.find('.modal-body').html(xhr.responseText);
+            if(liItem != undefined){
+                liItem.find('.modal-body').html(xhr.responseText);
+            }
         },
         success: function (html) {
             if (data.zone != undefined) {
