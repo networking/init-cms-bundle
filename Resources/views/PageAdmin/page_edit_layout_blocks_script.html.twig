@@ -155,12 +155,10 @@ function updateLayoutBlock(addLink, layoutId) {
         }
     });
 
-    liItem.find('[name*="[content]"]').each(function(i, e){
-        var field = jQuery(e);
-        var idArray = field.attr('id').split('_');
-        var fieldName = idArray[idArray.length-1];
-       data.content[fieldName] = jQuery(e).val();
-    });
+
+    data.content = liItem.find('[name*="[content]"]').fieldSerialize();
+
+
     var form = jQuery(addLink).closest('form');
 
     submitLayoutUpdate(form, data, liItem);

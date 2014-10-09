@@ -145,6 +145,7 @@ class LayoutBlockController extends CRUDController
 
         $post = $request->request->all();
         $post['page'] = $objectId;
+        $post['content'] = $this->cleanContentString($post['content']);
 
         $layoutBlock = $this->admin->getObject($post['id']);
 
@@ -348,5 +349,28 @@ class LayoutBlockController extends CRUDController
                 $array[$key] = $value;
             }
         }
+    }
+
+    public function cleanContentString($contentStr){
+        $query = urldecode($contentStr);
+        parse_str($query, $content);
+
+        foreach($content as $formId){
+            if(array_key_exists('content', $formId)){
+                return $formId['content'];
+            }
+            foreach($formId as $layoutBlock){
+                if(array_key_exists('content', $layoutBlock)){
+                    return $layoutBlock['content'];
+                }
+                foreach($layoutBlock as $contentEl){
+                    if(array_key_exists('content', $contentEl)){
+                        return $contentEl['content'];
+                    }
+                }
+            }
+        }
+
+        return array();
     }
 }
