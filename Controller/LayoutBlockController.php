@@ -138,10 +138,17 @@ class LayoutBlockController extends CRUDController
     public function updateFormFieldElementAction(Request $request)
     {
 
-        $code = $request->get('code');
-        $elementId = $request->get('elementId');
         $objectId = $request->get('objectId');
+        $elementId = $request->get('elementId');
         $uniqId = $request->get('uniqid');
+        $code = $request->get('code');
+
+        $post = $request->request->all();
+
+        if(empty($post)){
+            $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqId, $code);
+            return new Response($html, 200);
+        }
 
         $post = $request->request->all();
         $post['page'] = $objectId;
@@ -207,8 +214,7 @@ class LayoutBlockController extends CRUDController
         $objectId,
         $elementId,
         $uniqId = null,
-        $code = 'networking_init_cms.admin.page',
-        $update = false
+        $code = 'networking_init_cms.admin.page'
     ) {
 
         /** @var \Networking\InitCmsBundle\Admin\Model\PageAdmin $pageAdmin */

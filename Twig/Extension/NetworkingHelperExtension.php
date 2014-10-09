@@ -553,14 +553,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             $template = key($firstTemplate);
         }
 
-        if ($request->getMethod() === 'POST') {
-            $uniqid = $request->get('uniqid');
-            $postVars = $request->request->get($uniqid);
-            if(array_key_exists('templateName', $postVars))
-            {
-                $template = $postVars['templateName'];
-            }
-        }
+//        if ($request->getMethod() === 'POST') {
+//            $uniqid = $request->get('uniqid');
+//            $postVars = $request->request->get($uniqid);
+//            if(array_key_exists('templateName', $postVars))
+//            {
+//                $template = $postVars['templateName'];
+//            }
+//        }
 
         if (is_null($template)) {
             return array('Please Select Template first');
