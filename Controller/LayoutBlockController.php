@@ -358,10 +358,8 @@ class LayoutBlockController extends CRUDController
     }
 
     public function cleanContentString($contentStr){
-        $query = urldecode($contentStr);
-        parse_str($query, $content);
 
-        foreach($content as $formId){
+        foreach($contentStr as $formId){
             if(array_key_exists('content', $formId)){
                 return $formId['content'];
             }

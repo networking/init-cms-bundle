@@ -94,6 +94,24 @@ function createLayoutBlockForm(url, data) {
     });
 }
 
+function formToJSON( selector )
+{
+    var form = {};
+
+    selector.find('[name*="[content]"]').each( function() {
+        var self = $(this);
+        var name = self.attr('name');
+        if (form[name]) {
+            form[name] = form[name] + ',' + self.val();
+        }
+        else {
+            form[name] = self.val();
+        }
+    });
+
+    return form;
+}
+
 function submitLayoutCreate(event) {
     event.preventDefault();
     jQuery.each(CKEDITOR.instances, function () {
@@ -156,7 +174,7 @@ function updateLayoutBlock(addLink, layoutId) {
     });
 
 
-    data.content = liItem.find('[name*="[content]"]').fieldSerialize();
+    data.content = formToJSON(liItem);
 
 
     var form = jQuery(addLink).closest('form');
