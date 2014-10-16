@@ -107,13 +107,15 @@ file that was distributed with this source code.
                                 {% for object in datagrid.results %}
                                     <tr>
                                         <td colspan="{{ (admin.list.elements|length) - 1 }}">
-                                            <div>
+                                            <div class="pull-left" style="width: 80%;">
+                                                {% set path = 'networking_init_cms_file_download' %}
                                                 {% if object.width %}
-                                                    <a href="{% path object, 'reference' %}" class="select"
+                                                    <a href="{{ path('networking_init_cms_image_view', {'id': object.id, 'name': object.getMetadataValue('filename')}) }}" class="select"
                                                        style="float: left; margin-right: 6px;">
                                                         {% thumbnail object, 'admin' with {'width': 75, 'height': 60} %}</a>
+                                                    {% set path = 'networking_init_cms_image_view' %}
                                                 {% endif %}
-                                                <strong><a href="{{ path('networking_init_cms_file_download', {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"
+                                                <strong><a href="{{ path(path, {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"
                                                            class="select">{{ object.name }}</a></strong> <br/>
                                                 {{ object.providerName|trans({}, 'SonataMediaBundle') }}{% if object.width %}: {{ object.width }}{% if object.height %}x{{ object.height }}{% endif %}px{% endif %}
                                                 <br/>
@@ -128,6 +130,10 @@ file that was distributed with this source code.
                                                 {% endif %}
                                                 <br/>
                                             </div>
+                                            <div class="pull-right"><a href="{{ path(path, {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"
+                                                                       class="select btn btn-default btn-sm">
+                                                    <i class="glyphicon glyphicon-arrow-right"></i>
+                                                    {{ 'list_select'|trans({}, 'SonataAdminBundle') }}</a></div>
                                         </td>
                                     </tr>
                                 {% endfor %}
