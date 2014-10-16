@@ -185,8 +185,8 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
             success: function (html) {
                 Admin.log('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
 
-                $('#field_dialog_{{ id }}').html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
-                field_dialog_form_list_handle_action_{{ id }}();
+                field_dialog_{{ id }}.html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
+                {#field_dialog_form_list_handle_action_{{ id }}();#}
             }
         });
 
@@ -228,7 +228,6 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
                 Admin.log('[{{ id }}|field_dialog_form_list_handle_action] form submit success, restoring event');
 
                 field_dialog_{{ id }}.html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
-                field_dialog_form_list_handle_action_{{ id }}();
             }
         });
     });
