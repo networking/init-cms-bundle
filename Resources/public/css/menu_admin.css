@@ -35,7 +35,7 @@ ul.ui-sortable li .dotted{
     float: left;
     width: 10px;
     margin: 0px 10px 0 0;
-    line-height: .8em;
+    line-height: 1.3em;
 }
 li:last-child{
     border-left: none;
