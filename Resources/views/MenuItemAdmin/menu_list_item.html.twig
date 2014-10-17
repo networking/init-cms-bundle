@@ -9,6 +9,7 @@ file that was distributed with this source code.
 
 #}
 {% set last_edited = app.session.get('MenuItem.last_edited') %}
+<div class="dotted" >&nbsp;</div>
 <div class="menu_item {% if last_edited == node.id %}info{% endif %}">
     <div class="pull-left text"><i class="glyphicon glyphicon-move cursor-pointer"></i> <a
                 class="menu-dialog-link show-tooltip"
