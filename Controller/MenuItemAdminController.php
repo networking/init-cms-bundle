@@ -9,6 +9,7 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
+use Doctrine\ORM\Internal\Hydration\ArrayHydrator;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
+use Networking\InitCmsBundle\Entity\MenuItemManager;
 
 /**
  * Class MenuItemAdminController
@@ -69,7 +70,7 @@ class MenuItemAdminController extends CRUDController
 
         $menus = array();
 
-        /** @var MenuItemManagerInterface $menuItemManager */
+        /** @var MenuItemManager $menuItemManager */
         $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
 
 
@@ -119,13 +120,25 @@ class MenuItemAdminController extends CRUDController
         };
         $admin = $this->admin;
         $controller = $this;
-        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager) {
-            $node = $menuItemManager->find($node['id']);
 
-            return $controller->renderView(
-                'NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig',
-                array('admin' => $admin, 'node' => $node)
-            );
+
+        $datagrid = $this->admin->getDatagrid();
+
+       $results = $datagrid->getResults();
+
+
+
+        $pageAdmin = $this->get('networking_init_cms.admin.page');
+        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $pageAdmin, $results) {
+            foreach($results as $result){
+                if($node['id'] == $result->getId()){
+                    return $controller->renderView(
+                        'NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig',
+                        array('admin' => $admin, 'node' => $result, 'pageAdmin' => $pageAdmin)
+                    );
+                }
+            }
+
         };
 
         foreach ($rootNodes as $rootNode) {
@@ -167,8 +180,7 @@ class MenuItemAdminController extends CRUDController
 
         }
 
-
-        $datagrid = $this->admin->getDatagrid();
+        $datagrid->getResults();
 
         if ($menuId) {
             $menu = $menuItemManager->find($menuId);

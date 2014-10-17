@@ -20,7 +20,7 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
 use Sonata\AdminBundle\Exception\ModelManagerException;
-
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Class MenuItemAdmin
@@ -342,6 +342,20 @@ abstract class MenuItemAdmin extends BaseAdmin
             default:
                 return parent::getTemplate($name);
         }
+    }
+
+    public function createQuery($context = 'list')
+    {
+        /** @var QueryBuilder $query */
+        $query = parent::createQuery($context);
+        $aliases = $query->getRootAliases();
+        if($context === 'list'){
+            $query->select(sprintf('%s, p', $aliases[0]));
+            $query->leftJoin(sprintf('%s.page', $aliases[0]), 'p');
+        }
+
+
+        return $query;
     }
 
     /**
