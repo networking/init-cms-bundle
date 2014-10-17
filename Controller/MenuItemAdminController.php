@@ -375,7 +375,7 @@ class MenuItemAdminController extends CRUDController
         $this->admin->createObjectSecurity($menuItem);
 
         return $this->redirect(
-            $this->admin->generateUrl('list', array('page_id' => $page->getId(), 'menu_id' => $menuItem->getId()))
+            $this->admin->generateUrl('list', array('page_id' => $page->getId(), 'menu_id' => $menuItem->getId())).'#end'
         );
 
     }
