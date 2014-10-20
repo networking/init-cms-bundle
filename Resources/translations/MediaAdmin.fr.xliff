@@ -389,35 +389,35 @@
                 <target>Langue</target>
             </trans-unit><trans-unit id="form.label_image">
                  <source>form.label_image</source>
-                 <target>Current Image</target>
+                 <target>l'image actuelle</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_new">
                  <source>form.label_binary_content_new</source>
-                 <target>New File</target>
+                 <target>nouveau fichier</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube_new">
                 <source>form.label_binary_content_youtube_new</source>
-                <target>New Youtube Link</target>
+                <target>Nouveau Lien Youtube</target>
             </trans-unit>
             <trans-unit id="form.label_current_video">
                 <source>form.label_current_video</source>
-                <target>Current Video</target>
+                <target>Vidéo actuel</target>
             </trans-unit>
             <trans-unit id="filter.label_author_name">
                 <source>filter.label_author_name</source>
-                <target>Author</target>
+                <target>Autuer</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube">
                 <source>form.label_binary_content_youtube</source>
-                <target>Youtube Link</target>
+                <target>Lien Youtube</target>
             </trans-unit>
             <trans-unit id="button.create.media_item">
                 <source>button.create.media_item</source>
-                <target>Add Object</target>
+                <target>Ajouter objet</target>
             </trans-unit>
             <trans-unit id=" button.create.gallery_item">
                 <source>button.create.gallery_item</source>
-                <target>Add Gallery</target>
+                <target>Ajouter gallerie</target>
             </trans-unit>
         </body>
     </file>
