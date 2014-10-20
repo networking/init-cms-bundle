@@ -62,6 +62,10 @@
                 <source>admin_label_media</source>
                 <target>Médias</target>
             </trans-unit>
+            <trans-unit id="admin_label_gallery">
+                <source>admin_label_gallery</source>
+                <target>Galerie</target>
+            </trans-unit>
             <trans-unit id="media">
                 <source>media</source>
                 <target>Médias</target>
