@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="info.filter">
                 <source>info.filter</source>
-                <target>Filtre %admin_label%:</target>
+                <target>Filtre:</target>
             </trans-unit>
             <trans-unit id="link.website_">
                 <source>link.website_</source>
