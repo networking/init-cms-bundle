@@ -186,6 +186,10 @@
                 <source>flash_newPlacement_success</source>
                 <target>Les points du menu ont été réorganisés avec succès</target>
             </trans-unit>
+            <trans-unit id="menus.admin_menu_label">
+                <source>menus.admin_menu_label</source>
+                <target>Menus</target>
+            </trans-unit>
             <trans-unit id="menus.title">
                 <source>menus.title</source>
                 <target>Menus</target>

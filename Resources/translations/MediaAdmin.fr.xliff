@@ -58,6 +58,10 @@
                 <source>breadcrumb.link_gallery_delete</source>
                 <target>Supprimer</target>
             </trans-unit>
+            <trans-unit id="admin_label_media">
+                <source>admin_label_media</source>
+                <target>Médias</target>
+            </trans-unit>
             <trans-unit id="media">
                 <source>media</source>
                 <target>Médias</target>
@@ -323,7 +327,11 @@
             </trans-unit>
             <trans-unit id="list.label_media">
                 <source>list.label_media</source>
-                <target>Media</target>
+                <target>Médias</target>
+            </trans-unit>
+            <trans-unit id="sonata_media.admin_menu_label">
+                <source>sonata_media.admin_menu_label</source>
+                <target>Médias</target>
             </trans-unit>
             <trans-unit id="filter.label_name">
                 <source>filter.label_name</source>
