@@ -48,7 +48,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_gallery_list">
                 <source>breadcrumb.link_gallery_list</source>
-                <target>Galeries</target>
+                <target>Galerie</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_gallery_edit">
                 <source>breadcrumb.link_gallery_edit</source>
@@ -417,7 +417,7 @@
             </trans-unit>
             <trans-unit id=" button.create.gallery_item">
                 <source>button.create.gallery_item</source>
-                <target>Ajouter gallerie</target>
+                <target>Ajouter galerie</target>
             </trans-unit>
         </body>
     </file>
