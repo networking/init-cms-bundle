@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use JMS\Serializer\Serializer;
@@ -51,12 +52,24 @@ class LayoutBlockListener
                 try {
                     $em->persist($contentObject);
                     $contentObject = $em->merge($contentObject);
+                    $reflection = new \ReflectionClass($contentObject);
+                    foreach ($reflection->getProperties() as $property) {
+                        $method = sprintf('get%s', ucfirst($property->getName()));
+                        if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
+                            if ($var instanceof ArrayCollection) {
+                                foreach ($var as $v) {
+                                    $em->merge($v);
+                                }
+                            }
+                        }
+                    }
                 } catch (EntityNotFoundException $e) {
                     $em->detach($contentObject);
                     $classType = $layoutBlock->getClassType();
                     $contentObject = new $classType;
                     $em->persist($contentObject);
                 }
+
 
                 $em->flush($contentObject);
 
