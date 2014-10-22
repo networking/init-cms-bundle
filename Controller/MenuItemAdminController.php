@@ -506,8 +506,9 @@ class MenuItemAdminController extends CRUDController
     public function createNotLastEditedNavigation($rootNode, $admin, $controller, $menuItemManager)
     {
         $lastEdited = $this->get('session')->get('MenuItem.last_edited');
+        $pageAdmin = $this->get('networking_init_cms.admin.page');
 
-        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited) {
+        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited, $pageAdmin) {
 
             if ($lastEdited == $node['id']) {
                 return;
@@ -516,7 +517,7 @@ class MenuItemAdminController extends CRUDController
 
             return $controller->renderView(
                 'NetworkingInitCmsBundle:MenuItemAdmin:placement_item.html.twig',
-                array('admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node)
+                array('admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node, 'pageAdmin' => $pageAdmin)
             );
         };
 
@@ -526,7 +527,7 @@ class MenuItemAdminController extends CRUDController
             }
 
             return sprintf(
-                '<li class="table-row-style list_item" id="listItem_%s" style="padding: 5px; margin: 0;">',
+                '<li class="table-row-style list_item" id="listItem_%s">',
                 $node['id']
             );
         };
@@ -542,11 +543,22 @@ class MenuItemAdminController extends CRUDController
             );
         };
 
+
+        $rootOpen = function($tree){
+           $node = $tree[0];
+                if($node['lvl'] == 1){
+                    $class = 'ui-sortable';
+                }else{
+                    $class =  'table-row-style';
+                }
+           return sprintf('<ul class="%s">', $class);
+        };
+
         $navigation = $menuItemManager->childrenHierarchy(
             $rootNode,
             null,
             array(
-                'rootOpen' => '<ul class="table-row-style">',
+                'rootOpen' => $rootOpen,
                 'decorate' => true,
                 'childOpen' => $childOpen,
                 'childClose' => $childClose,
