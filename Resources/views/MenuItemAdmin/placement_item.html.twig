@@ -11,8 +11,8 @@ file that was distributed with this source code.
 <div class="dotted" >&nbsp;</div>
 <div class="menu_item {% if last_edited == node.id %}info{% endif %}">
     <div style="margin-right: 10px;  width: 100%">{{ node.name }}
-        <div class="stop" style="line-height: 3px; margin-left: 10px; width: 100%;">
-                <ul style="display: none;">
+        <div class="stop" style="margin: 0 0 0 25px; line-height: 3px; width: 100%;">
+                <ul style="margin: 0; display: none;">
                     <li class="table-row-style list_item" style="padding: 10px;">
                             <a class="colored-link  menu_place_holder" href="javascript:;"
                                onclick="saveSibling('{{ admin.generateUrl('newPlacement', {'newMenuItemId': last_edited, 'menuItemId': node.id, 'sibling':false }) }}')">

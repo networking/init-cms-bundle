@@ -18,7 +18,7 @@
 
                         $('.stop').each(function (i, el) {
                             var li = $(el);
-                            if (isNear($(el), 10, newEvent)) {
+                            if (isNear($(el), 5, newEvent)) {
                                 li.find('ul').show();
                             } else {
                                 li.find('ul').hide();
@@ -42,8 +42,6 @@
             </script>
         </div>
         <div class="modal-footer">
-            {#<input type="submit" class="btn btn-primary" name="btn_update"#}
-            {#value="{{ 'save_placement'|trans({}, admin.translationDomain) }}"/>#}
         </div>
     </div>
 </div>
