@@ -79,6 +79,11 @@ class MenuBuilder extends ContainerAware
      */
     protected $matcher;
 
+    /**
+     * @var array
+     */
+    protected $menuIterators = array();
+
 
     /**
      * @param FactoryInterface $factory
@@ -231,8 +236,14 @@ class MenuBuilder extends ContainerAware
      */
     public function getFullMenu($menuName)
     {
-        $menuIterator = array();
 
+        if(is_array($menuName)){
+            $menuName = reset($menuName);
+        }
+
+        if(array_key_exists($menuName, $this->menuIterators) && count($this->menuIterators[$menuName]) > 0){
+            return $this->menuIterators[$menuName];
+        }
 
         /** @var $mainMenu Menu */
         $mainMenu = $this->menuManager->findOneBy(
@@ -240,10 +251,10 @@ class MenuBuilder extends ContainerAware
         );
 
         if (!$mainMenu) {
-            return $menuIterator;
+            return array();
         }
 
-        $menuIterator = $this->menuManager->getChildrenByStatus(
+        $this->menuIterators[$menuName] = $this->menuManager->getChildrenByStatus(
             $mainMenu,
             false,
             null,
@@ -252,7 +263,8 @@ class MenuBuilder extends ContainerAware
             $this->viewStatus
         );
 
-        return $menuIterator;
+
+        return $this->menuIterators[$menuName];
 
     }
 
@@ -398,5 +410,22 @@ class MenuBuilder extends ContainerAware
             /** @var \Knp\Menu\MenuItem $menuItem */
             $menuItem->setChildrenAttributes($attr);;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getMenuIterators()
+    {
+        return $this->menuIterators;
+    }
+
+    /**
+     * @param $menuName
+     * @param $iterator
+     */
+    public function addMenuIterator($menuName, $iterator)
+    {
+        $this->menuIterators[$menuName] = $iterator;
     }
 }
