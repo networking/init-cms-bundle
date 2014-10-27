@@ -19,9 +19,6 @@ Other Features:
 
 The project is being developed by the small hard working team at [net working AG][1] in Zürich.
 
-**IMPORTANT NOTICE** This project is in an Beta stage.
-It is not yet advisable to use this for a production web site.
-
 If you would like to get up and running with a CMS in a symfony 2
 application you can either install this bundle in an  existing project
 or download and install the [networking init CMS sandbox][2]
