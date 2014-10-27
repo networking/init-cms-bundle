@@ -118,6 +118,12 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
                         }
                         $menuItem->setPath($item['path']);
                     }
+                }else{
+                    if (!$item['path']) {
+                        continue;
+                    } else {
+                        $menuItem->setPath($item['path']);
+                    }
                 }
             }
             $menuItems[] = $menuItem;
