@@ -213,7 +213,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
     var element = jQuery(this);
 
     // return if the link is an anchor inside the same page
-    if (this.nodeName == 'A' && (element.attr('href').length == 0 || element.attr('href')[0] == '#')) {
+    if (this.nodeName == 'A' && (element.attr('href').length == 0 || element.attr('href')[0] == '#'|| element.attr('href').substring(0, 10) == 'javascript')) {
         return;
     }
 
@@ -294,7 +294,8 @@ var field_dialog_form_action_{{ id }} = function (event) {
                                 'subclass':  sonata_admin.admin.getActiveSubclassCode(),
                                 'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
                                 'uniqid':    sonata_admin.admin.root.uniqid,
-                                'code':      sonata_admin.admin.root.code
+                                'code':      sonata_admin.admin.root.code,
+                                'locale':    app.request.locale
                             }) }}',
                     data: {_xml_http_request: true },
                     type: 'POST',
