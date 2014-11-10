@@ -347,6 +347,11 @@ class LayoutBlockController extends CRUDController
         ));
     }
 
+    /**
+     * Deep sort of array
+     * 
+     * @param $array
+     */
     public function uksort(&$array){
         ksort($array);
         foreach($array as $key => $value){
@@ -357,13 +362,22 @@ class LayoutBlockController extends CRUDController
         }
     }
 
+    /**
+     * extract a clean content array from parameter string
+     *
+     * @param $contentStr
+     * @return array
+     */
     public function cleanContentString($contentStr){
+        foreach($contentStr as $key => $formId){
 
-        foreach($contentStr as $formId){
             if(array_key_exists('content', $formId)){
                 return $formId['content'];
             }
             foreach($formId as $layoutBlock){
+                if(!is_array($layoutBlock)){
+                    return $formId;
+                }
                 if(array_key_exists('content', $layoutBlock)){
                     return $layoutBlock['content'];
                 }
