@@ -147,8 +147,8 @@ file that was distributed with this source code.
         });
         {% endif %}
 
-        $('#review_status').on('click', function () {
-            if ($(this).attr('checked')) {
+        $('body').on('click', '#review_status', function () {
+            if ($('#review_status').is(":checked")) {
                 window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
             } else {
                 window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
