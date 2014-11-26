@@ -35,6 +35,20 @@ abstract class MenuItemAdmin extends BaseAdmin
     protected $baseRoutePattern = 'cms/menu';
 
     /**
+     * The number of result to display in the list
+     *
+     * @var integer
+     */
+    protected $maxPerPage = 10000;
+
+    /**
+     * The maximum number of page numbers to display in the list
+     *
+     * @var integer
+     */
+    protected $maxPageLinks = 10000;
+
+    /**
      * @var bool
      */
     protected $isRoot = false;
