@@ -362,7 +362,7 @@ function start_field_dialog_form_add_{{ id }}(link) {
     initialize_popup_{{ id }}();
 
     // add the jQuery event to the a element
-    jQuery(link)
+    jQuery(link).on()
             .click(field_dialog_form_add_{{ id }})
             .trigger('click')
     ;

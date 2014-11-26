@@ -58,20 +58,37 @@ file that was distributed with this source code.
                         </table>
                     {% endif %}
                 {% elseif form.children|length > 0 %}
-                    <div>
-                        {% for nested_group_field_name, nested_group_field in form.children %}
-                            {% for field_name, nested_field in nested_group_field.children %}
-                                {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
-                                    {{ form_widget(nested_field, {
-                                    'inline': 'natural',
-                                    'edit'  : 'inline'
-                                    }) }}
-                                    {% set dummy = nested_group_field.setrendered %}
-                                {% else %}
-                                    {{ form_widget(nested_field) }}
-                                {% endif %}
+                    <div class="dropzone ">
+                        <ul class="sortable">
+                            {% for nested_group_field_name, nested_group_field in form.children %}
+                                {% set delete_button = '' %}
+                                <li style="border: 1px solid #f0f0f0; padding: 5px; margin-bottom: 10px;" class="list-item-{{ id }}">
+                                    {% for field_name, nested_field in nested_group_field.children %}
+                                        {% if field_name == '_delete' %}
+                                            {% set delete_button = form_widget(nested_field, {'attr': {'class': '__delete_input'}}) %}
+                                        {% else %}
+                                            <span class="sonata-ba-td-{{ id }}-{{ field_name }}">
+                                            {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
+                                                {{ form_row(nested_field, {
+                                                'inline': 'natural',
+                                                'edit'  : 'inline'
+                                                }) }}
+                                                {% set dummy = nested_group_field.setrendered %}
+                                            {% else %}
+                                                {{ form_widget(nested_field) }}
+                                            {% endif %}
+                                            </span>
+                                        {% endif %}
+                                        {% if loop.last %}
+                                            <a class="pull-right btn btn-danger btn-small __delete"><i class="glyphicon glyphicon-trash"></i><span style="display: none;">{{ delete_button|raw }}</span></a>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                <div class="clearfix">&nbsp;</div>
+
+                                </li>
                             {% endfor %}
-                        {% endfor %}
+                        </ul>
                     </div>
                 {% endif %}
             {% else %}
@@ -100,6 +117,7 @@ file that was distributed with this source code.
             {% if sonata_admin.field_description.options.sortable is defined %}
                 <script type="text/javascript">
                     jQuery(function () {
+                        {% if sonata_admin.inline == 'table' %}
                         jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody').sortable({
                             axis: 'y',
                             opacity: 0.6,
@@ -126,6 +144,40 @@ file that was distributed with this source code.
                             apply_position_value_{{ id }}();
                             jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody').sortable('refresh');
                         });
+                        {% elseif sonata_admin.inline == 'natural' %}
+                        jQuery('div#field_container_{{ id }} ul.sortable').sortable({
+                            axis: 'y',
+                            opacity: 0.6,
+                            items: 'li',
+                            stop: apply_position_value_{{ id }}
+                        });
+                        function apply_position_value_{{ id }}() {
+                            // update the input value position
+                            jQuery('div#field_container_{{ id }} ul span.sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }}').each(function (index, element) {
+
+                                element = jQuery(element).find('div.sonata-ba-field.sonata-ba-field-standard-natural');
+                                // remove the sortable handler and put it back
+                                jQuery('span.sonata-ba-sortable-handler', element).remove();
+                                jQuery(element).append('<span class="sonata-ba-sortable-handler"><i class="glyphicon glyphicon-move" class="cursor-pointer"></i></span>');
+                                jQuery('input', element).hide();
+                            });
+
+                            jQuery('div#field_container_{{ id }} ul span.sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }} input').each(function (index, value) {
+                                jQuery(value).val(index + 1);
+                            });
+                        }
+
+                        // refresh the sortable option when a new element is added
+                        jQuery('#sonata-ba-field-container-{{ id }}').bind('sonata.add_element', function () {
+                            apply_position_value_{{ id }}();
+                            jQuery('div#field_container_{{ id }} ul.sortable').sortable('refresh');
+                        });
+
+                        jQuery('body').on('click', 'a.__delete', function(e){
+                            jQuery(this).parent('li').hide();
+                            jQuery(this).find('input.__delete_input').prop('checked', true);
+                        });
+                        {% endif %}
 
                         apply_position_value_{{ id }}();
                     });

@@ -20,7 +20,7 @@ file that was distributed with this source code.
             <div class="modal-dialog modal-lg">
             <div class="modal-content">
         {% endif %}
-        <form class="form-{% if app.request.isXmlHttpRequest %}horizontal{% else %}vertical{% endif %}"
+        <form class="form-{% if app.request.isXmlHttpRequest %}horizontal{% else %}vertical{% endif %}" novalidate="novalidate"
               action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
               method="POST">
             {% if app.request.isxmlhttprequest %}

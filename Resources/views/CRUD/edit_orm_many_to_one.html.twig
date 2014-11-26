@@ -80,6 +80,9 @@ file that was distributed with this source code.
         <div class="modal" id="field_dialog_{{ id }}" style="display: none" role="dialog" aria-hidden="true">
         </div>
     </div>
+    {% if app.request.isxmlhttprequest %}
+        {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+    {% endif %}
     {% jsblock 'addToBottom' %}
     {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
     {% jsblock 'addToBottomEnd' %}

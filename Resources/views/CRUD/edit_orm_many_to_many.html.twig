@@ -35,6 +35,10 @@ file that was distributed with this source code.
         </div>
     </div>
 
+    {% if app.request.isxmlhttprequest %}
+        {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+    {% endif %}
+
     {% jsblock 'addToBottom' %}
     {% if taggable is defined and taggable %}
         <script type="application/javascript">
