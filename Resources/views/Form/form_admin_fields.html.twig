@@ -859,6 +859,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block ckeditor_widget %}
+    {% set attr = attr|merge({'class': attr.class|default('ckeditor')}) %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 
     {% if enable %}

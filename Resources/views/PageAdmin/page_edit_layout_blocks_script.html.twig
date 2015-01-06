@@ -295,7 +295,7 @@ function onAfterLoad() {
         connectWith: ".sortable",
         tolerance: 'pointer',
         start: function (event, ui) {
-            var textareaId = ui.item.find('textarea').attr('id');
+            var textareaId = ui.item.find('textarea.ckeditor').attr('id');
             if (typeof textareaId != 'undefined') {
                 var editorInstance = CKEDITOR.instances[textareaId];
                 if (editorInstance) {
@@ -317,7 +317,7 @@ function onAfterLoad() {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             });
 
-            var textareaId = ui.item.find('textarea').attr('id');
+            var textareaId = ui.item.find('textarea.ckeditor').attr('id');
             if (typeof textareaId != 'undefined') {
                 try {
                     CKEDITOR.replace(textareaId, ckeditorConfig);

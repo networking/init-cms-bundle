@@ -117,15 +117,39 @@ file that was distributed with this source code.
             {% if sonata_admin.field_description.options.sortable is defined %}
                 <script type="text/javascript">
                     jQuery(function () {
+                        var ckeditorConfig = '';
+
                         {% if sonata_admin.inline == 'table' %}
                         jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody').sortable({
                             axis: 'y',
                             opacity: 0.6,
                             items: 'tr',
-                            stop: apply_position_value_{{ id }}
+                            stop: function(event, ui){
+
+                                var textareaId = ui.item.find('textarea.ckeditor').attr('id');
+                                if (typeof textareaId != 'undefined') {
+                                    try {
+                                        CKEDITOR.replace(textareaId, ckeditorConfig);
+                                    } catch (err) {
+                                    }
+                                }
+                                apply_position_value_{{ id }}();
+                            },
+                            start: function(event, ui){
+                                var textareaId = ui.item.find('textarea.ckeditor').attr('id');
+                                if (typeof textareaId != 'undefined') {
+                                    var editorInstance = CKEDITOR.instances[textareaId];
+                                    if (editorInstance) {
+                                        ckeditorConfig = editorInstance.config;
+                                        editorInstance.destroy();
+                                        CKEDITOR.remove(textareaId);
+                                    }
+                                }
+                            }
                         });
 
                         function apply_position_value_{{ id }}() {
+
                             // update the input value position
                             jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody td.sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }}').each(function (index, element) {
                                 // remove the sortable handler and put it back
@@ -149,7 +173,28 @@ file that was distributed with this source code.
                             axis: 'y',
                             opacity: 0.6,
                             items: 'li',
-                            stop: apply_position_value_{{ id }}
+                            stop: function(event, ui){
+
+                                var textareaId = ui.item.find('textarea.ckeditor').attr('id');
+                                if (typeof textareaId != 'undefined') {
+                                    try {
+                                        CKEDITOR.replace(textareaId, ckeditorConfig);
+                                    } catch (err) {
+                                    }
+                                }
+                                apply_position_value_{{ id }}();
+                            },
+                            start: function(event, ui){
+                                var textareaId = ui.item.find('textarea.ckeditor').attr('id');
+                                if (typeof textareaId != 'undefined') {
+                                    var editorInstance = CKEDITOR.instances[textareaId];
+                                    if (editorInstance) {
+                                        ckeditorConfig = editorInstance.config;
+                                        editorInstance.destroy();
+                                        CKEDITOR.remove(textareaId);
+                                    }
+                                }
+                            }
                         });
                         function apply_position_value_{{ id }}() {
                             // update the input value position
