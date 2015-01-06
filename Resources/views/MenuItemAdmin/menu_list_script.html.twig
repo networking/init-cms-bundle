@@ -109,15 +109,16 @@ function setUpSortTree() {
         jQuery(ui).find('ul:first').nestedSortable({
             disableNestingClass: 'no-nest',
             forcePlaceholderSize: true,
+            forceHelperSize: true,
             handle: 'i.glyphicon-move',
             tolerance: 'pointer',
-            helper: 'clone',
             items: 'li',
             listType: 'ul',
             opacity: .6,
             placeholder: 'placeholder',
             revert: 250,
             tabSize: 20,
+            toleranceElement: 'div.menu_item',
             update: function (e, ui) {
                 updateMenu(this)
             }
