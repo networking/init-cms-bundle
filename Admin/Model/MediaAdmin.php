@@ -198,26 +198,6 @@ abstract class MediaAdmin extends Admin
         }
 
 
-        if ($formMapper->has('enabled')) {
-            $formMapper->add(
-                'enabled',
-                null,
-                array('required' => false),
-                array('inline_block' => true)
-            );
-        }
-
-        if ($formMapper->has('cdnIsFlushable')) {
-            $formMapper->add(
-                'cdnIsFlushable',
-                null,
-                array('required' => false),
-                array('inline_block' => true)
-            );
-            $formMapper->reorder(array('name', 'enabled', 'cdnIsFlushable'));
-        }
-
-
         if ($this->getSubject() && $this->getSubject()->getId()) {
             $formMapper->add(
                 'tags',
@@ -232,6 +212,28 @@ abstract class MediaAdmin extends Admin
                 )
             );
         }
+
+
+        if ($formMapper->has('enabled')) {
+            $formMapper->remove('enabled');
+            $formMapper->add(
+                'enabled',
+                null,
+                array('required' => false),
+                array('inline_block' => true)
+            );
+        }
+
+        if ($formMapper->has('cdnIsFlushable')) {
+            $formMapper->remove('cdnIsFlushable');
+            $formMapper->add(
+                'cdnIsFlushable',
+                null,
+                array('required' => false),
+                array('inline_block' => true)
+            );
+        }
+
     }
 
     /**
