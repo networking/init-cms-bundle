@@ -155,6 +155,10 @@ jQuery(function () {
 
     jQuery('#menuTabs').on('click', '.menu-dialog-link', createAjaxDialog);
 
+    {% if menu_id %}
+    jQuery('a.link-page-edit[data-page_id="{{ menu_id }}"]').trigger('click');
+    {% endif %}
+
     var nestedExtensions = {
         toArray: function (options) {
 

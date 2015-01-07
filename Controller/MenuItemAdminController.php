@@ -231,7 +231,8 @@ class MenuItemAdminController extends CRUDController
                 'datagrid' => $datagrid,
                 'menus' => $menus,
                 'last_edited' => $lastEdited,
-                'page_id' => $pageId
+                'page_id' => $pageId,
+                'menu_id' => $menuId
             )
         );
     }
