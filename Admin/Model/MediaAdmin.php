@@ -213,7 +213,7 @@ abstract class MediaAdmin extends Admin
             );
         }
 
-
+//        remove and re-add fields to control field order
         if ($formMapper->has('enabled')) {
             $formMapper->remove('enabled');
             $formMapper->add(
@@ -233,7 +233,6 @@ abstract class MediaAdmin extends Admin
                 array('inline_block' => true)
             );
         }
-
     }
 
     /**
