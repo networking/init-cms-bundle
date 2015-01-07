@@ -56,7 +56,6 @@
             </call>
             <call method="setTemplates">
                 <argument type="collection">
-                    <argument key="layout">NetworkingInitCmsBundle::admin_layout.html.twig</argument>
                     <argument key="list">NetworkingInitCmsBundle:MediaAdmin:list.html.twig</argument>
                     <argument key="edit">NetworkingInitCmsBundle:CRUD:edit.html.twig</argument>
                     <argument key="show">NetworkingInitCmsBundle:CRUD:show.html.twig</argument>
@@ -79,7 +78,6 @@
             </call>
             <call method="setTemplates">
                 <argument type="collection">
-                    <argument key="layout">NetworkingInitCmsBundle::admin_layout.html.twig</argument>
                     <argument key="list">NetworkingInitCmsBundle:GalleryAdmin:list.html.twig</argument>
                     <argument key="edit">NetworkingInitCmsBundle:GalleryAdmin:edit.html.twig</argument>
                     <argument key="show">NetworkingInitCmsBundle:CRUD:show.html.twig</argument>
