@@ -65,7 +65,8 @@
             </call>
             <tag name="sonata.admin" manager_type="orm"  label="admin_label_media"
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persist_filters="true"/>
         </service>
 
         <service id="sonata.media.admin.gallery" class="%sonata.media.admin.gallery.class%">
@@ -87,7 +88,8 @@
             </call>
             <tag name="sonata.admin" manager_type="orm" label="admin_label_gallery"
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persist_filters="true"/>
         </service>
 
         <service id="sonata.user.admin.user" class="%sonata.user.admin.user.class%">
@@ -102,7 +104,8 @@
             </call>
             <tag name="sonata.admin" manager_type="orm" label="users"
                  label_catalogue="SonataUserBundle"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persist_filters="true"/>
         </service>
 
         <service id="sonata.user.admin.group" class="%sonata.user.admin.group.class%">
@@ -114,7 +117,8 @@
             </call>
             <tag name="sonata.admin" manager_type="orm" label="groups"
                  label_catalogue="SonataUserBundle"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persist_filters="true"/>
         </service>
     </services>
 
