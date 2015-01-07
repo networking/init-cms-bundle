@@ -40,7 +40,7 @@ file that was distributed with this source code.
 {% endif %}
 {% if not object.isPublished %}
     {% set path = path(object.route()) %}
-    <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode()}) }}"
+    <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode}) }}"
        class="link-underlined">
         {{ 'link.preview'|trans({}, admin.translationDomain) }}</a>
 {% endif %}
@@ -54,7 +54,7 @@ file that was distributed with this source code.
 
         <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}" class="status-dialog-link link-nounderline">
         {{ 'link.revert_to_publish'|trans({}, admin.translationDomain) }}</a> <span class="info-soft">({{ 'info.revert_to_publish'|trans({}, admin.translationDomain) }})</span><br/>
-        <a href="{{ path('networking_init_view_live', {'locale': object.locale, 'path': path | base64_encode()}) }}"
+        <a href="{{ path('networking_init_view_live', {'locale': object.locale, 'path': path | base64_encode}) }}"
                class="link-nounderline">
                 {{ 'link.live'|trans({}, admin.translationDomain) }}</a>
         </p>

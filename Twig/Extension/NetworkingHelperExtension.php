@@ -115,7 +115,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             new \Twig_SimpleFilter('truncate', array($this, 'truncate'), array('needs_environment' => true)),
             new \Twig_SimpleFilter('excerpt', array($this, 'excerpt'), array('needs_environment' => true)),
             new \Twig_SimpleFilter('highlight', array($this, 'highlight'), array('needs_environment' => true)),
-            new \Twig_SimpleFilter('base64_encode', array($this, 'base64Encode'), array('needs_environment' => true))
+            new \Twig_SimpleFilter('base64_encode', array($this, 'base64Encode'))
         );
 
 
@@ -639,6 +639,10 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         return $zones;
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     public function base64Encode($value)
     {
         return base64_encode($value);
