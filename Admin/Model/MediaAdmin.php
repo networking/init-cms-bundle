@@ -156,15 +156,12 @@ abstract class MediaAdmin extends Admin
         ) {
 
             $formMapper->remove('binaryContent', 'file');
-
             if ($media->getProviderName() == 'sonata.media.provider.youtube') {
-
                 $formMapper->add(
                     'image',
                     'networking_type_mediaprint',
                     array('required' => false, 'label' => 'form.label_current_video')
                 );
-
                 $formMapper->add(
                     'binaryContent',
                     'text',
