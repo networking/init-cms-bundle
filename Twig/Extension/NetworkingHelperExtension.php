@@ -1091,11 +1091,54 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
     }
 
+    /**
+     * Return a media object by its' id
+     *
+     * @param $id
+     * @return mixed
+     */
     public function getMediaById($id)
     {
         $repo = $this->getService('doctrine')->getRepository('NetworkingInitCmsBundle:Media');
 
         return $repo->find($id);
+    }
+
+    /**
+     * Verify if the ckeditor has already been rendered on a page or not
+     * @return bool
+     */
+    public function ckeditorIsRendered()
+    {
+        if($this->ckeditorRendered){
+            return true;
+        }else{
+            $this->ckeditorRendered = true;
+            return false;
+        }
+    }
+
+    /**
+     * Return the path to the content css for the default or named ckeditor config contentsCss
+     *
+     * @param null $configName
+     * @return bool
+     */
+    public function getContentCss($configName = null)
+    {
+        /** @var \Ivory\CKEditorBundle\Model\ConfigManager $configManager */
+        $configManager = $this->getService('ivory_ck_editor.config_manager');
+
+        if(is_null($configName)){
+            $configName = $configManager->getDefaultConfig();
+        }
+
+        $configs = $configManager->getConfigs();
+        if(array_key_exists('contentsCss', $configs[$configName])){
+            return $configs[$configName]['contentsCss'];
+        }
+
+        return false;
     }
 }
 
