@@ -183,8 +183,6 @@ abstract class MediaAdmin extends Admin
                     array('required' => false, 'label' => 'form.label_binary_content_new')
                 );
             }
-
-            //
         }
 
         if (in_array($media->getProviderName(), $this->localisedMediaProviders)) {
