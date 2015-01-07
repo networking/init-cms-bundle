@@ -25,7 +25,9 @@ file that was distributed with this source code.
         output='css/initcms_admin.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
         {% endstylesheets %}
-        {% if content_css() %}<link href="{{ content_css() }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
+        {% block content_css %}
+        {% if content_css() %}<link href="{{ asset(content_css()) }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
+        {% endblock content_css %}
     {% endblock %}
 
     {% block javascripts %}
