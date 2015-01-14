@@ -114,7 +114,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $filters = array(
             new \Twig_SimpleFilter('truncate', array($this, 'truncate'), array('needs_environment' => true)),
             new \Twig_SimpleFilter('excerpt', array($this, 'excerpt'), array('needs_environment' => true)),
-            new \Twig_SimpleFilter('highlight', array($this, 'highlight'), array('needs_environment' => true)),
+            new \Twig_SimpleFilter('highlight', array($this, 'highlight')),
             new \Twig_SimpleFilter('base64_encode', array($this, 'base64Encode'))
         );
 
