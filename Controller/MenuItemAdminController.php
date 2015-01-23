@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Class MenuItemAdminController
  * @package Networking\InitCmsBundle\Controller
@@ -119,9 +119,17 @@ class MenuItemAdminController extends CRUDController
         };
         $admin = $this->admin;
         $controller = $this;
-        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager) {
-            $node = $menuItemManager->find($node['id']);
+        /** @var ArrayCollection $menuAllItems */
 
+        $menuAllItems = new ArrayCollection($menuItemManager->getAllWithPage());
+        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager,  $menuAllItems) {
+
+            $items = $menuAllItems->filter(function($menuItem)use($node){
+                if($menuItem->getId() == $node['id']){
+                    return $menuItem;
+                }
+            });
+            $node = $items->first();
             return $controller->renderView(
                 'NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig',
                 array('admin' => $admin, 'node' => $node)

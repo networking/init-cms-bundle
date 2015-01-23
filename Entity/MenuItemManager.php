@@ -124,4 +124,13 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         return $menuItems;
     }
 
+    public function getAllWithPage()
+    {
+        $qb =$this->createQueryBuilder('m');
+        $qb->select('m,p');
+        $qb->leftJoin('m.page', 'p');
+
+        return $qb->getQuery()->execute();
+    }
+
 } 
