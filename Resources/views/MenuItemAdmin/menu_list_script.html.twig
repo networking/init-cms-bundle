@@ -110,8 +110,9 @@ function setUpSortTree() {
             disableNesting: 'no-nest',
             forcePlaceholderSize: true,
             handle: 'i.icon-move',
+            disableNestingClass: 'no-nest',
+            forceHelperSize: true,
             tolerance: 'pointer',
-            toleranceElement: '> div',
             helper: 'clone',
             items: 'li',
             listType: 'ul',
@@ -119,6 +120,7 @@ function setUpSortTree() {
             placeholder: 'placeholder',
             revert: 250,
             tabSize: 20,
+            toleranceElement: 'div.menu_item',
             update: function (e, ui) {
                 updateMenu(this)
             }
