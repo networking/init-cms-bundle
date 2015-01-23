@@ -428,6 +428,17 @@ abstract class PageAdmin extends BaseAdmin
         return true;
     }
 
+    public function createQuery($context = 'list')
+    {
+        $query = parent::createQuery($context);
+        $query->addSelect('c');
+        $query->leftJoin(sprintf('%s.contentRoute', $query->getRootAlias()), 'c');
+        $query->orderBy('c.path', 'asc');
+
+
+        return $query;
+    }
+
     /**
      * @param ProxyQuery $ProxyQuery
      * @param $alias
@@ -442,10 +453,9 @@ abstract class PageAdmin extends BaseAdmin
             $locale = $this->getDefaultLocale();
             $active = false;
         }
-        $qb = $ProxyQuery->getQueryBuilder();
-        $qb->andWhere(sprintf('%s.locale = :locale', $alias));
-        $qb->orderBy(sprintf('%s.path', $alias), 'asc');
-        $qb->setParameter(':locale', $locale);
+
+        $ProxyQuery->andWhere(sprintf('%s.locale = :locale', $alias));
+        $ProxyQuery->setParameter(':locale', $locale);
 
         return $active;
     }
