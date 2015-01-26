@@ -60,7 +60,7 @@ class MediaController extends BaseMediaController
 
         $response = new Response($file->getContent(), 200, $headers);
 
-
+        $response->setLastModified($media->getUpdatedAt());
         $response->setPublic();
 
 
