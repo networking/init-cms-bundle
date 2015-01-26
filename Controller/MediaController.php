@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Validator\Constraints\Date;
 
 class MediaController extends BaseMediaController
 {
@@ -60,8 +61,10 @@ class MediaController extends BaseMediaController
 
         $response = new Response($file->getContent(), 200, $headers);
 
-        $response->setLastModified($media->getUpdatedAt());
         $response->setPublic();
+        $response->setMaxAge(604800);
+        $response->setLastModified($media->getUpdatedAt());
+        $response->getEtag(md5(sprintf('image_%s_updated_at', $id)));
 
 
         return $response;
