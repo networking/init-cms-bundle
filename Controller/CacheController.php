@@ -47,8 +47,7 @@ class CacheController extends Controller
         /*
          * to do: check if logged in user is sysadmin
          * */
-
-        {
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
             $phpCache = $this->get('networking_init_cms.lib.php_cache');
             $phpCache->clean();
@@ -58,6 +57,12 @@ class CacheController extends Controller
             $response = array("success" => $success);
             return new Response(json_encode($response));
 
+        }
+        else{
+            /*wrong autorisation */
+            $success = false;
+            $response = array("success" => $success);
+            return new Response(json_encode($response));
         }
     }
 
