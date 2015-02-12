@@ -44,9 +44,10 @@ class CacheController extends Controller
     public function clearAction(Request $request)
     {
 
-//        if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
-//            throw new AccessDeniedException();
-//        }else
+        /*
+         * to do: check if logged in user is sysadmin
+         * */
+
         {
             /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
             $phpCache = $this->get('networking_init_cms.lib.php_cache');
