@@ -11,6 +11,10 @@
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\EventListener\AdminToolbarListener;
+use Networking\InitCmsBundle\Lib\PhpCache;
+use Networking\InitCmsBundle\Model\PageSnapshotInterface;
+use Proxies\__CG__\Networking\InitCmsBundle\Entity\PageSnapshot;
+use Sonata\CoreBundle\Exception\InvalidParameterException;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -49,6 +53,8 @@ class NetworkingInitCmsExtension extends Extension
 
         $config = $this->processConfiguration($configuration, $defaults);
 
+
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('blocks.xml');
         $loader->load('dynamic_routing.xml');
@@ -65,6 +71,7 @@ class NetworkingInitCmsExtension extends Extension
             $loader->load(sprintf('ext_admin_%s.xml', $config['db_driver']));
             $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
         }
+
 
 
         $config['languages'] = $this->addShortLabels($config['languages']);
@@ -94,6 +101,19 @@ class NetworkingInitCmsExtension extends Extension
         if ($config['db_driver'] == 'orm') {
             $this->registerDoctrineORMMapping($config);
         }
+
+        $container->setParameter('networking_init_cms.cache.activate', $config['cache']['activate']);
+        $container->setParameter('networking_init_cms.cache.cache_time', $config['cache']['cache_time']);
+        $cacheClass = $config['cache']['cache_service_class'];
+        $reflectionClass = new \ReflectionClass($cacheClass);
+
+        if(in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())){
+            $container->setParameter('networking_init_cms.lib.php_cache.class', $config['cache']['cache_service_class']);
+        }else{
+            throw new InvalidParameterException('Cache class should implement the PhpCacheInterface interface');
+        }
+
+
         $this->configureClass($config, $container);
     }
 

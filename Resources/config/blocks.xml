@@ -24,6 +24,13 @@
             <argument type="service" id="networking_init_cms.page_manager"/>
             <tag name="sonata.block"/>
         </service>
+
+
+        <service id="networking_init_cms.block.service.cache" class="Networking\InitCmsBundle\Block\CacheBlockService">
+            <argument>networking_init_cms.cache</argument>
+            <argument type="service" id="templating"/>
+            <tag name="sonata.block"/>
+        </service>
     </services>
 
 </container>

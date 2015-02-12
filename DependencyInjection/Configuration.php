@@ -115,6 +115,14 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('cache')
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('activate')->defaultValue(false)->end()
+                            ->scalarNode('cache_time')->defaultValue('86400')->end()
+                            ->scalarNode('cache_service_class')->defaultValue('Networking\InitCmsBundle\Lib\PhpCache')->end()
+                    ->end()
+                ->end()
             ->end();
 
 

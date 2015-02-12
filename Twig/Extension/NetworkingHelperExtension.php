@@ -147,7 +147,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             new \Twig_SimpleFunction('get_initcms_page_url', array($this, 'getPageUrl'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('get_media_by_id', array($this, 'getMediaById'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ckeditor_is_rendered', array($this, 'ckeditorIsRendered')),
-            new \Twig_SimpleFunction('content_css', array($this, 'getContentCss'))
+            new \Twig_SimpleFunction('content_css', array($this, 'getContentCss')),
+            new \Twig_SimpleFunction('return_config_value', array($this, 'returnConfigValue'))
         );
     }
 
@@ -1118,6 +1119,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
+     * Return the config Value
+     */
+    public function returnConfigValue($name)
+    {   return $this->getParameter($name);
+    }
+
+
+    /**
      * Return the path to the content css for the default or named ckeditor config contentsCss
      *
      * @param null $configName
@@ -1140,5 +1149,3 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         return false;
     }
 }
-
-

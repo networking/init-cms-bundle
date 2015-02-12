@@ -37,6 +37,7 @@ sonata_admin:
             - { position: top, type: networking_init_cms.block.service.translatable_text, settings: { translation_key: "info.welcome_text", translation_domain: 'NetworkingInitCmsBundle'} }
             - { position: left, type: networking_init_cms.block.service.pages}
             - { position: right, type: networking_init_cms.block.service.online_users}
+            - { position: right, type: networking_init_cms.block.service.cache}
 
         groups:
             pages:
