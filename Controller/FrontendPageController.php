@@ -68,8 +68,7 @@ class FrontendPageController extends Controller
         /** @var PageSnapshotInterface $page */
         $page = $request->get('_content');
 
-
-        if($phpCache->isCacheable($request) && $page instanceof PageSnapshotInterface){
+        if($phpCache->isCacheable($request, $this->getUser()) && $page instanceof PageSnapshotInterface){
 
             $cacheTime =  $this->container->getParameter('networking_init_cms.cache.cache_time');
             $updatedAt = $phpCache->get(sprintf('page_%s_created_at', $page->getId()));

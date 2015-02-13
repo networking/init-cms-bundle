@@ -17,9 +17,10 @@ interface PhpCacheInterface
 
     /**
      * @param Request $request
+     * @param $user
      * @return bool
      */
-    public function isCacheable(Request $request);
+    public function isCacheable(Request $request, $user);
 
     /**
      * @param $keyword

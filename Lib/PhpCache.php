@@ -78,9 +78,10 @@ class PhpCache implements PhpCacheInterface {
 
     /**
      * @param Request $request
+     * @param $user
      * @return bool
      */
-    public function isCacheable(Request $request){
+    public function isCacheable(Request $request, $user){
 
 
         if($this->active == false)
@@ -91,9 +92,10 @@ class PhpCache implements PhpCacheInterface {
             return false;
         }
 
-        if($request->getUser()){
-            return false;
+        if($user)
+        {   return false;
         }
+
 
         if($request->getMethod() != 'GET'){
             return false;
