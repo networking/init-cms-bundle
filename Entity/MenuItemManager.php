@@ -106,7 +106,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $menuItems = array();
         foreach ($results as $item) {
             $menuItem = $item[0];
-            if (!$menuItem->getRedirectUrl() && !$menuItem->getInternalUrl()) {
+            if ($menuItem->getPage()) {
                 if ($viewStatus == Page::STATUS_PUBLISHED) {
                     if (!$item['path'] || !$item['ps_id']) {
                         continue;
@@ -114,6 +114,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
                         if (!$this->pageHelper->jsonPageIsActive($item['ps_versionedData'])) {
                             continue;
                         }
+
                         $menuItem->setPath($item['path']);
                     }
                 }
@@ -124,7 +125,12 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         return $menuItems;
     }
 
-    public function getAllWithPage()
+    /**
+     * Get all menu items and their pages if available
+     *
+     * @return mixed
+     */
+    public function findAllJoinPage()
     {
         $qb =$this->createQueryBuilder('m');
         $qb->select('m,p');

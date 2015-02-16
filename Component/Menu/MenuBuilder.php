@@ -79,6 +79,11 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     protected $matcher;
 
+    /**
+     * @var array
+     */
+    protected $menuIterators = array();
+
 
     /**
      * @param FactoryInterface $factory
@@ -232,8 +237,13 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function getFullMenu($menuName)
     {
-        $menuIterator = array();
+        if(is_array($menuName)){
+            $menuName = reset($menuName);
+        }
 
+        if(array_key_exists($menuName, $this->menuIterators) && count($this->menuIterators[$menuName]) > 0){
+            return $this->menuIterators[$menuName];
+        }
 
         /** @var $mainMenu Menu */
         $mainMenu = $this->menuManager->findOneBy(
@@ -241,10 +251,10 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         );
 
         if (!$mainMenu) {
-            return $menuIterator;
+            return array();
         }
 
-        $menuIterator = $this->menuManager->getChildrenByStatus(
+        $this->menuIterators[$menuName] = $this->menuManager->getChildrenByStatus(
             $mainMenu,
             false,
             null,
@@ -253,7 +263,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             $this->viewStatus
         );
 
-        return $menuIterator;
+        return $this->menuIterators[$menuName];
 
     }
 
@@ -399,5 +409,22 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             /** @var \Knp\Menu\MenuItem $menuItem */
             $menuItem->setChildrenAttributes($attr);;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getMenuIterators()
+    {
+        return $this->menuIterators;
+    }
+
+    /**
+     * @param $menuName
+     * @param $iterator
+     */
+    public function addMenuIterator($menuName, $iterator)
+    {
+        $this->menuIterators[$menuName] = $iterator;
     }
 }

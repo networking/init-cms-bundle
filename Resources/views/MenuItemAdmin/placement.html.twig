@@ -4,8 +4,8 @@
         {{ "placement_title"|trans({}, admin.translationDomain) }}
     </h3>
 </div>
-<div class="modal-body">
-    <div id="existingMenu">
+<div class="modal-body modal-body-lg">
+    <div id="existingMenu" class="sortable">
         {{ menus.navigation|raw }}
     </div>
     <script>
@@ -16,7 +16,7 @@
 
                 $('.stop').each(function (i, el) {
                     var li = $(el);
-                    if (isNear($(el), 15, newEvent)) {
+                    if (isNear($(el), 5, newEvent)) {
                         li.find('ul').show();
                     } else {
                         li.find('ul').hide();
@@ -33,13 +33,9 @@
                         x = event.pageX,
                         y = event.pageY;
                 return ( x > left && x < right && y > top && y < bottom );
-
-            };
-
+            }
         })(jQuery);
     </script>
 </div>
 <div class="modal-footer">
-    {#<input type="submit" class="btn btn-primary" name="btn_update"#}
-           {#value="{{ 'save_placement'|trans({}, admin.translationDomain) }}"/>#}
 </div>

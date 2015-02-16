@@ -120,8 +120,7 @@ class MenuItemAdminController extends CRUDController
         $admin = $this->admin;
         $controller = $this;
         /** @var ArrayCollection $menuAllItems */
-
-        $menuAllItems = new ArrayCollection($menuItemManager->getAllWithPage());
+        $menuAllItems = new ArrayCollection($menuItemManager->findAllJoinPage());
         $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager,  $menuAllItems) {
 
             $items = $menuAllItems->filter(function($menuItem)use($node){
@@ -227,7 +226,8 @@ class MenuItemAdminController extends CRUDController
                 'datagrid' => $datagrid,
                 'menus' => $menus,
                 'last_edited' => $lastEdited,
-                'page_id' => $pageId
+                'page_id' => $pageId,
+                'menu_id' => $menuId
             )
         );
     }
@@ -522,7 +522,7 @@ class MenuItemAdminController extends CRUDController
             }
 
             return sprintf(
-                '<li class="table-row-style list_item" id="listItem_%s" style="padding: 5px; margin: 0;">',
+                '<li class="table-row-style list_item" id="listItem_%s">',
                 $node['id']
             );
         };
@@ -537,12 +537,21 @@ class MenuItemAdminController extends CRUDController
                 array('admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node)
             );
         };
+        $rootOpen = function($tree){
+            $node = $tree[0];
+            if($node['lvl'] == 1){
+                $class = 'ui-sortable';
+            }else{
+                $class =  'table-row-style';
+            }
+            return sprintf('<ul class="%s">', $class);
+        };
 
         $navigation = $menuItemManager->childrenHierarchy(
             $rootNode,
             null,
             array(
-                'rootOpen' => '<ul class="table-row-style">',
+                'rootOpen' => $rootOpen,
                 'decorate' => true,
                 'childOpen' => $childOpen,
                 'childClose' => $childClose,

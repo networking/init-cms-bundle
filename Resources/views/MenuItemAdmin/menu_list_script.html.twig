@@ -38,7 +38,7 @@ function initializeDialog() {
             jQuery('input[type=submit]', this).off();
         });
         jQuery(document.body).append(menuDialog);
-        jQuery('form', menuDialog).live('submit', submitAjaxForm);
+        jQuery(menuDialog).on('submit', 'form',  submitAjaxForm);
     }
 }
 
@@ -107,13 +107,11 @@ function setUpSortTree() {
 
     jQuery('div.navigation').each(function (e, ui) {
         jQuery(ui).find('ul:first').nestedSortable({
-            disableNesting: 'no-nest',
-            forcePlaceholderSize: true,
-            handle: 'i.icon-move',
             disableNestingClass: 'no-nest',
+            forcePlaceholderSize: true,
             forceHelperSize: true,
+            handle: 'i.icon-move',
             tolerance: 'pointer',
-            helper: 'clone',
             items: 'li',
             listType: 'ul',
             opacity: .6,
@@ -155,16 +153,11 @@ jQuery(function () {
     var ua = navigator.userAgent,
             event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
+    jQuery('#menuTabs').on('click', '.menu-dialog-link', createAjaxDialog);
 
-    jQuery(".actions-toggle").live('click', function () {
-        jQuery('.row-actions').hide();
-        jQuery(this).parent().children('.row-actions').fadeToggle('fast');
-    });
-    jQuery(".actions-toggle-close").live('click', function () {
-        jQuery(this).parent().fadeToggle('fast');
-    });
-
-    jQuery('.menu-dialog-link').live('click', createAjaxDialog);
+    {% if menu_id %}
+    jQuery('a.link-page-edit[data-page_id="{{ menu_id }}"]').trigger('click');
+    {% endif %}
 
     var nestedExtensions = {
         toArray: function (options) {
@@ -249,12 +242,12 @@ jQuery(function () {
         lastTab = '#' + tab.attr('id');
         jQuery('a[href="' + lastTab + '"]').tab('show');
     }
+    jQuery('a[data-toggle="tab"]').on('shown', function(e){
+        var target = jQuery(e.target);
+        lastTab = target.attr('href');
+    });
     $('.show-tooltip').tooltip({placement: 'bottom', delay: { show: 800, hide: 100 }});
 
-    jQuery('#hidden_filters').on('show hide', function () {
-        jQuery('#filter_toggle').toggleClass('icon-plus');
-        jQuery('#filter_toggle').toggleClass('icon-minus');
-    });
 
 });
 </script>

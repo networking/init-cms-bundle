@@ -10,13 +10,14 @@ file that was distributed with this source code.
 #}
 {% set last_edited = app.session.get('MenuItem.last_edited') %}
 {% set pageAdmin = admin.getConfigurationPool.getAdminByAdminCode('networking_init_cms.admin.page') %}
+<div class="dotted" >&nbsp;</div>
 <div class="menu_item {% if last_edited == node.id %}info{% endif %}">
     <div class="pull-left text" style="margin-right: 10px;"><i class="icon-move cursor-pointer"></i> <a
                 class="menu-dialog-link show-tooltip"
                 data-original-title="{{ 'action_edit'|trans({}, admin.translationDomain) }}"
                 href="{{ admin.generateUrl('edit', {id: node.id}) }}">{{ node.name }}</a>
     </div>
-    <div class="pull-right text menu-item-link"><span style="color:#999;">
+    <div class="pull-right text menu-item-link"><span class="info-soft">
         {% if node.page %}
             {{ 'title.page'|trans({}, admin.translationDomain) }}:</span> <a class="show-tooltip"
                                                                              data-original-title="{{ 'action_page_edit'|trans({}, admin.translationDomain) }}"
@@ -27,7 +28,6 @@ file that was distributed with this source code.
         {% endif %}
     </div>
     <div class="icons pull-right">
-        <div style="position:relative;">
             <a href="{{ admin.generateUrl('edit', {id: node.id}) }}"
                class="menu-dialog-link btn btn-small button-in-row link-page-edit show-tooltip"
                data-original-title="{{ 'action_edit'|trans({}, admin.translationDomain) }}"
@@ -41,7 +41,7 @@ file that was distributed with this source code.
                data-page_id="{{ node.id }}">
                 <i class="icon-trash"></i>
             </a>
-        </div>
     </div>
-    <div style="clear: both"></div>
+    <div class="clearfix"></div>
 </div>
+<div class="clearfix"></div>

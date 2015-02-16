@@ -8,12 +8,12 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% set pageAdmin = admin.getConfigurationPool.getAdminByAdminCode('networking_init_cms.admin.page') %}
+<div class="dotted" >&nbsp;</div>
 <div class="menu_item {% if last_edited == node.id %}info{% endif %}">
     <div style="margin-right: 10px;  width: 100%">{{ node.name }}
-        <div class="stop" style="line-height: 3px; margin-left: 25px; width: 500px;">
-                <ul style="display: none;">
-                    <li class="table-row-style list_item placeholder" style="padding: 10px;">
+        <div class="stop" style="margin: 0 0 0 25px; line-height: 3px;">
+                <ul style="margin: 0; display: none;">
+                    <li class="table-row-style list_item" style="padding: 10px;">
                             <a class="colored-link  menu_place_holder" href="javascript:;"
                                onclick="saveSibling('{{ admin.generateUrl('newPlacement', {'newMenuItemId': last_edited, 'menuItemId': node.id, 'sibling':false }) }}')">
                                 + {{ 'menu_item.add_here'|trans({}, admin.translationDomain) }}</a>
