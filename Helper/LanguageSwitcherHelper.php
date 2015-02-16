@@ -58,14 +58,21 @@ class LanguageSwitcherHelper
     protected $fallbackRoute;
 
     /**
+     * @var PageHelper $pageHelper
+     */
+    protected $pageHelper;
+
+    /**
      * @param Request $request
      * @param ObjectManager $om
      * @param $fallbackRoute
+     * @param PageHelper $pageHelper
      */
-    public function __construct(Request $request, ObjectManager $om, $fallbackRoute){
+    public function __construct(Request $request, ObjectManager $om, $fallbackRoute, PageHelper $pageHelper){
         $this->request = $request;
         $this->om = $om;
         $this->fallbackRoute = $fallbackRoute;
+        $this->pageHelper = $pageHelper;
     }
 
     /**
@@ -101,13 +108,9 @@ class LanguageSwitcherHelper
     public function getTranslationRoute($oldUrl, $locale)
     {
 
-        /** @var $router RouterInterface */
-        $route = $this->router->matchRequest(Request::create($oldUrl));
+        $request = $this->pageHelper->matchContentRouteRequest(Request::create($oldUrl));
 
-        if (!array_key_exists('_content', $route)) return $route;
-
-        $content = $route['_content'];
-
+        if (!$content = $request->get('_content', false)) return $this->router->matchRequest(Request::create($oldUrl));
 
         if ($content instanceof PageInterface) {
             $translation = $content->getAllTranslations()->get($locale);
@@ -123,8 +126,7 @@ class LanguageSwitcherHelper
 
         if ($content instanceof PageSnapshotInterface) {
 
-            $content = $this->serializer->deserialize($content->getVersionedData(), $this->pageManager->getClassName(), 'json');
-
+            $content = $this->pageHelper->unserializePageSnapshotData($content);
 
             $translation = $content->getAllTranslations()->get($locale);
 
