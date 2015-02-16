@@ -29,16 +29,16 @@
                 {% set form_group = admin.formgroups.meta_settings %}
 
                 <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
-                        <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
-                            {% if form_group.collapsed %}
-                                <a class="sonata-ba-collapsed" data-toggle="collapse" data-target="#nav-collapse-meta"
-                                   title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationDomain) }}</a>
-                            {% else %}
-                                {{ 'meta_settings'|trans({}, admin.translationDomain) }}
-                            {% endif %}
-                        </legend>
+                    <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
+                        {% if form_group.collapsed %}
+                            <a class="sonata-ba-collapsed" data-toggle="collapse" data-target="#nav-collapse-meta"
+                               title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationDomain) }}</a>
+                        {% else %}
+                            {{ 'meta_settings'|trans({}, admin.translationDomain) }}
+                        {% endif %}
+                    </legend>
 
-                    <div class="sonata-ba-collapsed-fields collapse" id="nav-collapse-meta">
+                    <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}" id="nav-collapse-meta">
 
                         {% for field_name in form_group.fields %}
                             {% if admin.formfielddescriptions[field_name] is defined %}

@@ -80,21 +80,12 @@ file that was distributed with this source code.
     </div>
     <!-- end modal page form -->
 {% endblock %}
-
+{% block confirm_exit %}false{% endblock %}
 {% block before_body_end %}
     {{ parent() }}
-    {% block confirm_exit %}false{% endblock %}
-    {% if not ckeditor_is_loaded() %}
-        <script type="text/javascript">
-            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/ivoryckeditor/') }}";
-        </script>
-
-        <script type="text/javascript" src="{{ ckeditor_js_path('bundles/ivoryckeditor/ckeditor.js') }}"></script>
-    {% endif %}
     <script type="text/javascript">
-        function uploadError(xhr) {
-            alert(xhr.error);
-        }
+        var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/ivoryckeditor/') }}";
     </script>
+    <script type="text/javascript" src="{{ ckeditor_js_path('bundles/ivoryckeditor/ckeditor.js') }}"></script>
 {% endblock %}
 

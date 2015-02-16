@@ -18,7 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormView;
 /**
  * Class NetworkingHelperExtension
  * @package Networking\InitCmsBundle\Twig\Extension
@@ -42,6 +43,11 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      * @var array
      */
     protected $collectedHtml = array();
+
+    /**
+     * @var bool
+     */
+    protected $ckeditorRendered = false;
 
 
     /**
@@ -107,13 +113,10 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     public function getFilters()
     {
         $filters = array(
-            'truncate' => new \Twig_Filter_Function(array($this, 'truncate'), array('needs_environment' => true)),
-            'excerpt' => new \Twig_Filter_Function(array($this, 'excerpt'), array('needs_environment' => true)),
-            'highlight' => new \Twig_Filter_Function(array($this, 'highlight'), array('needs_environment' => false)),
-            'base64_encode' => new \Twig_Filter_Function(array(
-                    $this,
-                    'base64Encode'
-                ), array('needs_environment' => false)),
+            new \Twig_SimpleFilter('truncate', array($this, 'truncate'), array('needs_environment' => true)),
+            new \Twig_SimpleFilter('excerpt', array($this, 'excerpt'), array('needs_environment' => true)),
+            new \Twig_SimpleFilter('highlight', array($this, 'highlight')),
+            new \Twig_SimpleFilter('base64_encode', array($this, 'base64Encode'))
         );
 
 
@@ -128,21 +131,23 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     public function getFunctions()
     {
         return array(
-            'render_initcms_block' => new \Twig_Function_Method($this, 'renderInitCmsBlock', array('is_safe' => array('html'))),
-            'get_initcms_template_zones' => new \Twig_Function_Method($this, 'getInitCmsTemplateZones', array('is_safe' => array('html'))),
-            'render_initcms_field_as_string' => new \Twig_Function_Method($this, 'renderInitcmsFieldAsString', array('is_safe' => array('html'))),
-            'get_form_field_zone' => new \Twig_Function_Method($this, 'getFormFieldZone', array('is_safe' => array('html'))),
-            'get_sub_form_by_zone' => new \Twig_Function_Method($this, 'getSubFormsByZone', array('is_safe' => array('html'))),
-            'get_content_type_options' => new \Twig_Function_Method($this, 'getContentTypeOptions', array('is_safe' => array('html'))),
-            'get_initcms_admin_icon_path' => new \Twig_Function_Method($this, 'getInitcmsAdminIconPath', array('is_safe' => array('html'))),
-            'get_current_admin_locale' => new \Twig_Function_Method($this, 'getCurrentAdminLocale', array('is_safe' => array('html'))),
-            'render_initcms_admin_block' => new \Twig_Function_Method($this, 'renderInitcmsAdminBlock', array('is_safe' => array('html'))),
-            'render_content_type_name' => new \Twig_Function_Method($this, 'renderContentTypeName', array('is_safe' => array('html'))),
-            'render_admin_subnav' => new \Twig_Function_Method($this, 'renderAdminSubNav', array('is_safe' => array('html'))),
-            'is_admin_active' => new \Twig_Function_Method($this, 'isAdminActive', array('is_safe' => array('html'))),
-            'is_admin_group_active' => new \Twig_Function_Method($this, 'isAdminGroupActive', array('is_safe' => array('html'))),
-            'get_initcms_page_url' => new \Twig_Function_Method($this, 'getPageUrl', array('is_safe' => array('html'))),
-            'get_media_by_id' => new \Twig_Function_Method($this, 'getMediaById', array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('render_initcms_block', array($this, 'renderInitCmsBlock'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_initcms_template_zones', array($this, 'getInitCmsTemplateZones'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('render_initcms_field_as_string', array($this, 'renderInitcmsFieldAsString'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_form_field_zone', array($this, 'getFormFieldZone'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_sub_form_by_zone', array($this, 'getSubFormsByZone'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_content_type_options', array($this, 'getContentTypeOptions'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_initcms_admin_icon_path', array($this, 'getInitcmsAdminIconPath'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_current_admin_locale', array($this, 'getCurrentAdminLocale'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('render_initcms_admin_block', array($this, 'renderInitcmsAdminBlock'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('render_content_type_name', array($this, 'renderContentTypeName'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('render_admin_subnav', array($this, 'renderAdminSubNav'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('is_admin_active', array($this, 'isAdminActive'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('is_admin_group_active', array($this, 'isAdminGroupActive'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_initcms_page_url', array($this, 'getPageUrl'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_media_by_id', array($this, 'getMediaById'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ckeditor_is_rendered', array($this, 'ckeditorIsRendered')),
+            new \Twig_SimpleFunction('content_css', array($this, 'getContentCss'))
         );
     }
 
@@ -252,8 +257,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         if (method_exists($admin, 'getSubNavLinks')) {
 
             $menu = $admin->getMenuFactory()->createItem('root');
-            $request = $this->getService('request');
-            $menu->setCurrentUri($request->getRequestUri());
             $menu->setChildrenAttribute('class', 'ul-second-level');
 
             foreach ($admin->getSubNavLinks() as $label => $link) {
@@ -314,6 +317,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $active = false;
 
         foreach ($group['items'] as $admin) {
+            /** @var AdminInterface $admin */
             if ($admin->getCode() == $adminCode) {
                 $active = true;
                 break;
@@ -443,7 +447,9 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
         if ($subject = $admin->getSubject()) {
             return $this->getFieldValue($subject, 'locale');
+
         } elseif ($filter = $admin->getDatagrid()->getFilter('locale')) {
+            /** @var \Sonata\AdminBundle\Filter\Filter $filter */
             $data = $filter->getValue();
             if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
                 $locale = $this->getCurrentLocale();
@@ -596,13 +602,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
-     * @param \Symfony\Component\Form\FormView $formView
+     * @param FormView $formView
      * @return mixed
      */
-    public function getFormFieldZone(\Symfony\Component\Form\FormView $formView)
+    public function getFormFieldZone(FormView $formView)
     {
         $zones = $this->getZoneNames();
 
+        /** @var LayoutBlockInterface $layoutBlock */
         if ($layoutBlock = $formView->vars['value']) {
 
             if ($zone = $layoutBlock->getZone()) {
@@ -643,14 +650,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     /**
      * @param $template
      * @param $object
-     * @param \Symfony\Component\Form\FormView $formView
+     * @param FormView $formView
      * @param null $translationDomain
      * @return mixed
      */
     public function renderInitcmsFieldAsString(
         $template,
         $object,
-        \Symfony\Component\Form\FormView $formView,
+        FormView $formView,
         $translationDomain = null
     ) {
 
@@ -843,14 +850,13 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         if (!function_exists('mb_strlen')) {
             class_exists('Multibyte');
         }
-
+        $openTags = array();
         if ($html) {
             $text = html_entity_decode($text, null,  $env->getCharset() );
             if (mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
             }
             $totalLength = mb_strlen(strip_tags($ellipsis));
-            $openTags = array();
             $truncate = '';
 
             preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
@@ -1085,11 +1091,53 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getMediaById($id)
     {
+        /** @var EntityRepository $repo */
         $repo = $this->getService('doctrine')->getRepository('NetworkingInitCmsBundle:Media');
 
         return $repo->find($id);
+    }
+
+    /**
+     * Verify if the ckeditor has already been rendered on a page or not
+     * @return bool
+     */
+    public function ckeditorIsRendered()
+    {
+        if($this->ckeditorRendered){
+            return true;
+        }else{
+            $this->ckeditorRendered = true;
+            return false;
+        }
+    }
+
+    /**
+     * Return the path to the content css for the default or named ckeditor config contentsCss
+     *
+     * @param null $configName
+     * @return bool
+     */
+    public function getContentCss($configName = null)
+    {
+        /** @var \Ivory\CKEditorBundle\Model\ConfigManager $configManager */
+        $configManager = $this->getService('ivory_ck_editor.config_manager');
+
+        if(is_null($configName)){
+            $configName = $configManager->getDefaultConfig();
+        }
+
+        $configs = $configManager->getConfigs();
+        if(array_key_exists('contentsCss', $configs[$configName])){
+            return $configs[$configName]['contentsCss'];
+        }
+
+        return false;
     }
 }
 

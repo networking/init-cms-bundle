@@ -456,9 +456,7 @@ file that was distributed with this source code.
             <div id="securityRoles">
                 {{ block('choice_widget') }}
             </div>
-            <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a>
-
-            <p>
+            <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a><p>
                 <script>
                     $('.toggle-roles').click(function () {
                         $('#securityRoles input[id^="{{ id }}"]').each(function () {
@@ -563,14 +561,15 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block ckeditor_widget %}
+    {% set attr = attr|merge({'class': attr.class|default('ckeditor')}) %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 
     {% if enable %}
-        {% if not ckeditor_is_loaded() %}
-            <script type="text/javascript">
-                var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
-            </script>
 
+        <script type="text/javascript">
+            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
+        </script>
+        {% if not ckeditor_is_rendered() %}
             <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
         {% endif %}
 
