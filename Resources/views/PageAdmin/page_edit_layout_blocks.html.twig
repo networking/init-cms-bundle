@@ -101,7 +101,7 @@ file that was distributed with this source code.
                                             {{ form_rest(layout_block_field) }}
                                             <button class="btn" data-dismiss="modal"
                                                     aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
-                                            <a onclick="return updateLayoutBlock(this);"
+                                            <a onclick="return updateLayoutBlock(this, {{ layout_block_field.vars.value.id }});"
                                                data-content-type="{{ layout_block_field.vars.value.classType }}"
                                                class="btn btn-primary">
                                                 {{ 'button.save'|trans({}, 'PageAdmin') }}</a>
