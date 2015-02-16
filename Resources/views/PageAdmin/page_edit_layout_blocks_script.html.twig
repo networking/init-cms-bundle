@@ -18,19 +18,22 @@ var tmpListItem = '<li class="temp_item networking-sortable-list networking-sort
 function addLayoutBlock(addLink) {
     var restrictedTypes = eval(jQuery(addLink).attr('data-value'));
 
-    jQuery('#selectContentType').find('option').each(function (i) {
+    var selectContentType = jQuery('#selectContentType');
+    var contentTypeModal = jQuery('#contentTypeModal');
+
+    selectContentType.find('option').each(function (i) {
         if (jQuery.inArray($(this).val(), restrictedTypes) < 0 && restrictedTypes.length > 0) {
             jQuery(this).attr('disabled', 'disabled');
         } else {
             jQuery(this).removeAttr('disabled');
         }
     });
-    $("#selectContentType").val($("#selectContentType option:enabled:first").val());
+    selectContentType.val(jQuery("#selectContentType option:enabled:first").val());
 
-    jQuery('#contentTypeModal').modal('show');
+    contentTypeModal.modal('show');
 
-    jQuery('#contentTypeModal').bind('initcms.create_block', function (event) {
-        jQuery('button', '#contentTypeModal').die('click');
+    contentTypeModal.bind('initcms.create_block', function (event) {
+        jQuery('button', '#contentTypeModal').off('click');
         jQuery('#contentTypeModal').unbind('initcms.create_block');
         if (jQuery(this).data('create')) {
             jQuery('#contentLoading').show();
@@ -47,7 +50,7 @@ function addLayoutBlock(addLink) {
                 }
             });
 
-            var data = {zone: zone, sortOrder: sortOrder, classType: classType };
+            var data = {zone: zone, sortOrder: sortOrder, classType: classType};
 
             var url = '{{ url('admin_networking_initcms_layoutblock_create', {
                               'code':      sonata_admin.admin.root.code,
@@ -68,16 +71,21 @@ function createLayoutBlockForm(url, data) {
         url: url,
         data: data,
         success: function (xhr) {
-            jQuery('#layoutBlockModal').html(xhr);
-            jQuery('#layoutBlockModal').modal('show');
-            jQuery('#layoutBlockModal').on('hide', function () {
-                jQuery('#contentTypeModal').unbind('initcms.create_block');
-                jQuery('li.temp_item').remove();
-                jQuery('form', '#layoutBlockModal').unbind('submit');
+            var layoutBlockModal = jQuery('#layoutBlockModal');
+            layoutBlockModal.html(xhr);
+            layoutBlockModal.modal('show');
+            layoutBlockModal.on('hide.bs.modal', function (e) {
+                if(jQuery(e.target).attr('id') === layoutBlockModal.attr('id'))
+                {
+                    jQuery('#contentTypeModal').unbind('initcms.create_block');
+                    jQuery('li.temp_item').remove();
+                    jQuery('form', '#layoutBlockModal').unbind('submit');
+                }
             });
             jQuery('#contentTypeModal').modal('hide');
             jQuery('#createContentButton').button('reset');
             jQuery('#contentLoading').hide();
+
             jQuery('form', '#layoutBlockModal').bind('submit', submitLayoutCreate);
 
             jQuery('ul#zone_' + data.zone + ' > li:eq(' + data.sortOrder + ')').after(tmpListItem);
@@ -86,7 +94,26 @@ function createLayoutBlockForm(url, data) {
     });
 }
 
+function formToJSON( selector )
+{
+    var form = {};
+
+    selector.find('[name*="[content]"]').each( function() {
+        var self = $(this);
+        var name = self.attr('name');
+        if (form[name]) {
+            form[name] = form[name] + ',' + self.val();
+        }
+        else {
+            form[name] = self.val();
+        }
+    });
+
+    return form;
+}
+
 function submitLayoutCreate(event) {
+    event.preventDefault();
     jQuery.each(CKEDITOR.instances, function () {
         try {
             var editor = this;
@@ -123,12 +150,17 @@ function submitLayoutCreate(event) {
     return false;
 }
 
-function updateLayoutBlock(addLink) {
+function updateLayoutBlock(addLink, layoutId) {
     var liItem = jQuery(addLink).closest('li');
     var zone = liItem.find("[id$='_zone']").val();
     var sortOrder = liItem.find("[id$='_sortOrder']").val();
-    var data = {zone: zone, sortOrder: sortOrder, classType: jQuery(addLink).attr('data-content-type') };
-    var form = jQuery(addLink).closest('form');
+    var data = {
+        id: layoutId,
+        zone: zone,
+        sortOrder: sortOrder,
+        classType: jQuery(addLink).attr('data-content-type'),
+        content: {}
+    };
     jQuery.each(CKEDITOR.instances, function () {
         try {
             var editor = this;
@@ -140,11 +172,18 @@ function updateLayoutBlock(addLink) {
         } catch (err) {
         }
     });
-    submitLayoutUpdate(form, data);
+
+
+    data.content = formToJSON(liItem);
+
+
+    var form = jQuery(addLink).closest('form');
+
+    submitLayoutUpdate(form, data, liItem);
     return false;
 }
 
-function submitLayoutUpdate(form, data) {
+function submitLayoutUpdate(form, data, liItem) {
     var url = '{{ url('admin_networking_initcms_layoutblock_updateFormFieldElement', {
                     'code':      sonata_admin.admin.root.code,
                     'elementId': id,
@@ -153,38 +192,27 @@ function submitLayoutUpdate(form, data) {
                 }) }}';
     // the ajax post
 
-    jQuery(form).ajaxSubmit({
+
+    jQuery.ajax({
         url: url,
         type: "POST",
-        dataType: 'html',
-        data: {_xml_http_request: true},
+//        dataType: 'html',
+        data: data,
         error: function (xhr) {
-            jQuery('#field_container_{{ id }}').replaceWith(xhr.responseText);
-            jQuery('.modal-backdrop').remove();
-            if (data.zone != undefined) {
-                jQuery(form).find('#zone_' + data.zone + ' .layout_block_modal').each(function (i, value) {
-                    if (i + 1 == data.sortOrder) {
-                        jQuery(value).on('shown', function () {
-                            var windowHeight = $(window).height();
-                            if (windowHeight - 100 < 800) {
-                                var modalBodyHeight = windowHeight / 2;
-                                $('.modal-body', this).css('max-height', modalBodyHeight + 'px');
-                            }
-                        });
-                        jQuery(value).modal('show');
-                    }
-                });
+            if(liItem != undefined){
+                liItem.find('.modal-body').html(xhr.responseText);
             }
         },
         success: function (html) {
-            jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
-            jQuery('.modal-backdrop').remove();
             if (data.zone != undefined) {
                 jQuery(form).find('#zone_' + data.zone + ' .layout_block_modal').each(function (i, value) {
                     jQuery(value).modal('hide');
                 });
             }
+            jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
+            jQuery('.modal-backdrop').remove();
             jQuery('#contentLoading').hide();
+
             saveLayoutBlockSort();
         }
     });
@@ -194,14 +222,14 @@ function submitLayoutUpdate(form, data) {
 function setLayoutBlockPosition() {
     // update the input value position
     jQuery('ul.sortable').each(function (index, value) {
-        var index = 0;
+        var count = 0;
         var zone = jQuery(this).attr('id').replace('zone_', '');
         jQuery(value).find("li.networking-sort-zone").each(function (i, v) {
             if (!jQuery(v).find("input[id$='_delete']").is(':checked')) {
-                jQuery(v).find("[id$='_sortOrder']").val(index);
+                jQuery(v).find("[id$='_sortOrder']").val(count);
 
                 jQuery(v).find("[id$='_zone']").val(zone);
-                index++;
+                count++;
             }
         });
     });
@@ -226,6 +254,7 @@ function saveLayoutBlockSort(callback) {
 }
 function submitLayoutSort(zones) {
     var dfd = jQuery.Deferred();
+    var pageStatus = jQuery('.page_status');
     return jQuery.ajax({
         url: '{{ url('admin_networking_initcms_layoutblock_updateLayoutBlockSort') }}',
         data: {
@@ -238,11 +267,11 @@ function submitLayoutSort(zones) {
                 if (xhr.pageStatusSettings != undefined) jQuery('#pageStatusSettings').html(xhr.pageStatusSettings);
                 if (xhr.pageStatus != undefined) {
                     if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
-                        jQuery('.page_status').addClass('color-draft');
+                        pageStatus.addClass('color-draft');
                     } else {
-                        jQuery('.page_status').removeClass('color-draft');
+                        pageStatus.removeClass('color-draft');
                     }
-                    jQuery('.page_status').html(xhr.pageStatus);
+                    pageStatus.html(xhr.pageStatus);
                 }
             }
             dfd.resolve(xhr);
@@ -257,6 +286,7 @@ function uploadError(xhr) {
 function onAfterLoad() {
 
     setLayoutBlockPosition();
+    var ckeditorConfig = '';
 
     jQuery('div#field_container_{{ id }} ul.sortable').sortable({
         handle: 'i.icon-move',
@@ -266,10 +296,11 @@ function onAfterLoad() {
         connectWith: ".sortable",
         tolerance: 'pointer',
         start: function (event, ui) {
-            var textareaId = ui.item.find('textarea').attr('id');
+            var textareaId = ui.item.find('textarea.ckeditor').attr('id');
             if (typeof textareaId != 'undefined') {
                 var editorInstance = CKEDITOR.instances[textareaId];
                 if (editorInstance) {
+                    ckeditorConfig = editorInstance.config;
                     editorInstance.destroy();
                     CKEDITOR.remove(textareaId);
                 }
@@ -287,10 +318,10 @@ function onAfterLoad() {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             });
 
-            var textareaId = ui.item.find('textarea').attr('id');
+            var textareaId = ui.item.find('textarea.ckeditor').attr('id');
             if (typeof textareaId != 'undefined') {
                 try {
-                    CKEDITOR.replace(textareaId);
+                    CKEDITOR.replace(textareaId, ckeditorConfig);
                 } catch (err) {
                 }
             }
@@ -351,7 +382,6 @@ function onAfterLoad() {
 
             if (allowedTypes.length > 0 && jQuery.inArray(contentType, allowedTypes) < 0) {
                 placeholder.css('display', 'none');
-                return;
             } else if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length >= maxItems) {
 
                 if (jQuery(ui.sender).attr('id') == jQuery(this).attr('id')) {
@@ -361,7 +391,6 @@ function onAfterLoad() {
                 }
 
                 jQuery(this).find(".empty_layout_block").hide();
-                return;
             }
             else {
                 placeholder.css('display', 'block');
@@ -371,7 +400,7 @@ function onAfterLoad() {
 
     });
 
-    jQuery('i.delete_block').bind('click', function () {
+    jQuery('body').on('click', 'i.delete_block', function () {
         if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
             var blockId = jQuery(this).attr('data-value');
             jQuery.ajax({

@@ -12,6 +12,8 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Sonata\AdminBundle\Exception\ModelManagerException;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -89,25 +91,30 @@ class LayoutBlockController extends CRUDController
             $form->submit($this->get('request'));
 
             $isFormValid = $form->isValid();
+            try{
+                // persist if the form was valid and if in preview mode the preview was approved
+                if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
+                    $this->admin->create($layoutBlock);
 
-            // persist if the form was valid and if in preview mode the preview was approved
-            if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
-                $this->admin->create($layoutBlock);
-
-                if ($this->isXmlHttpRequest()) {
-                    return $this->renderJson(
-                        array(
-                            'result' => 'ok',
-                            'status' => 'success',
-                            'message' => $this->translate('message.layout_block_created'),
-                            'layoutBlockId' => $this->admin->getNormalizedIdentifier($layoutBlock),
-                            'zone' => $layoutBlock->getZone(),
-                            'sortOder' => $layoutBlock->getSortOrder(),
-                            'html' => $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid)
-                        )
-                    );
+                    if ($this->isXmlHttpRequest()) {
+                        return $this->renderJson(
+                            array(
+                                'result' => 'ok',
+                                'status' => 'success',
+                                'message' => $this->translate('message.layout_block_created'),
+                                'layoutBlockId' => $this->admin->getNormalizedIdentifier($layoutBlock),
+                                'zone' => $layoutBlock->getZone(),
+                                'sortOder' => $layoutBlock->getSortOrder(),
+                                'html' => $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid)
+                            )
+                        );
+                    }
                 }
+            }catch (ModelManagerException $e){
+                $formError = new FormError($e->getMessage());
+                $form->addError($formError);
             }
+
         }
 
         $view = $form->createView();
@@ -138,20 +145,67 @@ class LayoutBlockController extends CRUDController
     public function updateFormFieldElementAction(Request $request)
     {
 
-        $code = $request->get('code');
-        $elementId = $request->get('elementId');
         $objectId = $request->get('objectId');
+        $elementId = $request->get('elementId');
         $uniqId = $request->get('uniqid');
+        $code = $request->get('code');
 
-        $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqId, $code, $update = true);
+        $post = $request->request->all();
 
-        if ($this->error) {
-            $status = 400;
-        } else {
-            $status = 200;
+        if(empty($post)){
+            $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqId, $code);
+            return new Response($html, 200);
         }
 
-        return new Response($html, $status);
+        $post = $request->request->all();
+        $post['page'] = $objectId;
+        $post['content'] = $this->cleanContentString($post['content']);
+
+        $layoutBlock = $this->admin->getObject($post['id']);
+
+        /** @var $form \Symfony\Component\Form\Form */
+        $form = $this->admin->getForm();
+        $form->setData($layoutBlock);
+        /** @var \Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider  $csrf */
+        $csrf = $this->get('form.csrf_provider');
+        $token = $csrf->generateCsrfToken($form->getName());
+        $post['_token'] = $token;
+        unset($post['id']);
+
+        $request->request->set($this->admin->getUniqid(), $post);
+
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+            $this->admin->update($layoutBlock);
+            $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqId, $code);
+            $status = 200;
+            return new Response($html, $status);
+        }else{
+            $this->error = true;
+
+            $response = new Response();
+            $response->setStatusCode(500);
+        }
+
+        $view = $form->createView();
+
+        // set the theme for the current Admin Form
+        $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+
+        return $this->render(
+            'NetworkingInitCmsBundle:PageAdmin:layout_block_fields.html.twig',
+            array(
+                'form' => $view,
+                'object' => $layoutBlock,
+                'code' => $code,
+                'classType' => $request->get('classType'),
+                'objectId' => $objectId,
+                'uniqid' => $uniqId,
+                'elementId' => $elementId
+            ),
+            $response
+        );
     }
 
     /**
@@ -159,7 +213,6 @@ class LayoutBlockController extends CRUDController
      * @param $elementId
      * @param null $uniqId
      * @param string $code
-     * @param bool $update
      * @return mixed
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -167,8 +220,7 @@ class LayoutBlockController extends CRUDController
         $objectId,
         $elementId,
         $uniqId = null,
-        $code = 'networking_init_cms.admin.page',
-        $update = false
+        $code = 'networking_init_cms.admin.page'
     ) {
 
         /** @var \Networking\InitCmsBundle\Admin\Model\PageAdmin $pageAdmin */
@@ -199,17 +251,6 @@ class LayoutBlockController extends CRUDController
         $form = $formBuilder->getForm();
         $form->setData($page);
 
-        if ($update) {
-            $form->submit($this->getRequest());
-            if ($form->isValid()) {
-                /** @var \Networking\InitCmsBundle\Model\LayoutBlock $layoutBlock */
-                foreach ($page->getLayoutBlock() as $layoutBlock) {
-                    $this->admin->update($layoutBlock);
-                }
-            } else {
-                $this->error = true;
-            }
-        }
 
         /** @var \Sonata\AdminBundle\Admin\AdminHelper $helper */
         $helper = $this->get('sonata.admin.helper');
@@ -310,5 +351,50 @@ class LayoutBlockController extends CRUDController
             'message' => $this->translate('message.layout_block_deleted'),
             'html' => $html
         ));
+    }
+
+    /**
+     * Deep sort of array
+     *
+     * @param $array
+     */
+    public function uksort(&$array){
+        ksort($array);
+        foreach($array as $key => $value){
+            if(is_array($value)){
+                $this->uksort($value);
+                $array[$key] = $value;
+            }
+        }
+    }
+
+    /**
+     * extract a clean content array from parameter string
+     *
+     * @param $contentStr
+     * @return array
+     */
+    public function cleanContentString($contentStr){
+        foreach($contentStr as $key => $formId){
+
+            if(array_key_exists('content', $formId)){
+                return $formId['content'];
+            }
+            foreach($formId as $layoutBlock){
+                if(!is_array($layoutBlock)){
+                    return $formId;
+                }
+                if(array_key_exists('content', $layoutBlock)){
+                    return $layoutBlock['content'];
+                }
+                foreach($layoutBlock as $contentEl){
+                    if(array_key_exists('content', $contentEl)){
+                        return $contentEl['content'];
+                    }
+                }
+            }
+        }
+
+        return array();
     }
 }

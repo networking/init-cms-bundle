@@ -10,20 +10,17 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityNotFoundException;
 use JMS\Serializer\Serializer;
-use Networking\InitCmsBundle\Form\DataTransformer\ContentTypeTransformer;
 use Networking\InitCmsBundle\Model\LayoutBlock;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Form\DataTransformer\ArrayToModelTransformer;
+use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
+use Networking\InitCmsBundle\Model\ContentInterface;
 
 /**
  * Class LayoutBlockAdmin
@@ -124,21 +121,22 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         return $choices;
     }
 
-
     /**
-     * @param LayoutBlock $object
+     * @param mixed $object
      * @return mixed|void
+     * @throws ModelManagerException
      */
-    public function postPersist($object)
-    {
+    public function prePersist($object){
+        /** @var ContentInterface $contentObject */
         if ($contentObject = $object->getContent()) {
-
-            $this->getModelManager()->create($contentObject);
-            $object->setObjectId($contentObject->getId());
-            $this->getModelManager()->update($object);
+            try{
+                $this->getModelManager()->create($contentObject);
+                $object->setObjectId($contentObject->getId());
+                $this->autoPageDraft($object->getPage());
+            }catch (ModelManagerException $e){
+                throw new ModelManagerException('Cannot create content, object is invalid');
+            }
         }
-
-        $this->autoPageDraft($object->getPage());
     }
 
 
@@ -146,7 +144,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      * @param LayoutBlock $object
      * @return mixed|void
      */
-    public function postUpdate($object)
+    public function preUpdate($object)
     {
         if ($contentObject = $object->getContent()) {
             $this->getModelManager()->update($contentObject);
@@ -158,7 +156,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      * @param LayoutBlock $object
      * @return mixed|void
      */
-    public function postRemove($object)
+    public function preRemove($object)
     {
         if ($classType = $object->getClassType()) {
 
