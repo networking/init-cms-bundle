@@ -30,28 +30,30 @@ class PhpCache implements PhpCacheInterface {
      */
     protected $cacheDir;
 
-
     /**
      * @var boolean
      */
-
     protected $active;
+
     /**
      * @var string
      */
-    protected $cache_time;
+    protected $cacheTime;
+
 
     /**
-     * @param $type
-     * @param $rootDir
-     * @param $env
+     * @param string $type
+     * @param string $rootDir
+     * @param string $env
+     * @param bool $active
+     * @param string $cacheTime
      * @throws \Exception
      */
-    public function __construct($type = '', $rootDir = '', $env = '', $active = false, $cache_time = ''){
+    public function __construct($type = '', $rootDir = '', $env = '', $active = false, $cacheTime = ''){
         $this->env = $env;
         $this->cacheDir = $this->createDir($rootDir, $env);
         $this->active = $active;
-        $this->cache_time = $cache_time;
+        $this->cacheTime = $cacheTime;
 
         phpFastCache::$default_chmod = 0755;
         phpFastCache::setup("storage", $type);
@@ -59,6 +61,12 @@ class PhpCache implements PhpCacheInterface {
         $this->phpFastCache = new phpFastCache();
     }
 
+    /**
+     * @param $rootDir
+     * @param $env
+     * @return string
+     * @throws \Exception
+     */
     protected function createDir($rootDir, $env){
         $cacheDir = $rootDir.sprintf('cache/%s/php_fast_cache', $env);
         if(!file_exists($cacheDir) || !is_writable($cacheDir)) {
@@ -82,7 +90,6 @@ class PhpCache implements PhpCacheInterface {
      * @return bool
      */
     public function isCacheable(Request $request, $user){
-
 
         if($this->active == false)
         {   return false;
@@ -140,7 +147,9 @@ class PhpCache implements PhpCacheInterface {
      */
     public function clean($option = array())
     {
-        return $this->phpFastCache->clean($option);
+        if($this->active){
+            return $this->phpFastCache->clean($option);
+        }
     }
 
     /**

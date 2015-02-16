@@ -60,8 +60,6 @@ class FrontendPageController extends Controller
     public function indexAction(Request $request)
     {
 
-
-
         /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
         $phpCache = $this->get('networking_init_cms.lib.php_cache');
 
@@ -72,12 +70,13 @@ class FrontendPageController extends Controller
 
             $cacheTime =  $this->container->getParameter('networking_init_cms.cache.cache_time');
             $updatedAt = $phpCache->get(sprintf('page_%s_created_at', $page->getId()));
+            $cacheKey = $request->getLocale().$request->getPathInfo();
 
             if($updatedAt != $page->getSnapshotDate()){
-                $phpCache->delete($request->getLocale().$request->getUri());
+                $phpCache->delete($cacheKey);
             }
 
-            if(!$response = $phpCache->get($request->getLocale().$request->getUri())){
+            if(!$response = $phpCache->get($request->getLocale().$request->getPathInfo())){
                 $params = $this->getPageParameters($request);
 
                 if($params instanceof RedirectResponse){
@@ -92,12 +91,11 @@ class FrontendPageController extends Controller
                     $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
                 }
 
-                $phpCache->set($request->getLocale().$request->getUri(), $response, $cacheTime);
+                $phpCache->set($cacheKey, $response, $cacheTime);
                 $phpCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate(), $cacheTime);
             }else{
-                $response->send();
-                $phpCache->touch($request->getLocale().$request->getUri(), $cacheTime);
-                die;
+                $phpCache->touch($cacheKey, $cacheTime);
+                $phpCache->touch(sprintf('page_%s_created_at', $page->getId()), $cacheTime);
             }
 
         }else{
@@ -204,7 +202,7 @@ class FrontendPageController extends Controller
     {
 
         /** @var $page PageInterface */
-        $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot);
+        $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot, false);
 
         if (!$page->isActive()) {
             throw new NotFoundHttpException();

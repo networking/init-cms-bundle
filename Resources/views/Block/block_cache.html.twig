@@ -8,30 +8,27 @@
         <div class="well well-small">
             <h4>{{ 'title.cache'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
 
+            <div id="ajaxResponseDiv"></div>
             <div class="row">
                 {# check ob cache aktiviert ist#}
                 {% if return_config_value('networking_init_cms.cache.activate') %}
 
                     {% set cache_time = return_config_value('networking_init_cms.cache.cache_time') %}
 
-                    <div class="col-md-12"><span class="color-published">{{ 'cache.active'|trans({}, 'NetworkingInitCmsBundle') }}<br />
+                    <div class="col-span-12"><span
+                                class="color-published">{{ 'cache.active'|trans({}, 'NetworkingInitCmsBundle') }}<br/>
 
 
-                            {{ 'cache.time'|trans({}, 'NetworkingInitCmsBundle') }}  {{ cache_time / 60 / 60 | round(0, 'ceil') }} h</span></div>
+                            {{ 'cache.time'|trans({}, 'NetworkingInitCmsBundle') }}:  {{ cache_time }}</span></div>
 
                     <div class="clearfix"></div>
-                    <div id="ajaxResponseDiv">&nbsp; </div>
-
 
                     <div class="pull-right">
                         <button class="btn btn-default" data-dismiss="modal" type="button" id="button" name="button"
                                 aria-hidden="true">{{ 'cache.delete'|trans({}, 'NetworkingInitCmsBundle') }}</button>
 
-
                     </div>
                     <div class="clearfix"></div>
-
-
                     <script>
                         function aButtonPressed() {
                             $.post('{{path('networking_init_cms_clear_cache')}}',
@@ -47,24 +44,21 @@
 
                                     }, "json");
                         }
-
                         $(document).ready(function () {
                             $('button').on('click', function () {
                                 aButtonPressed();
                             });
                         });
-
-
                     </script>
-
                 {% else %}
                     {# cache is not activated #}
-                    <div class="col-md-12"><span class="color-draft">{{ 'cache.inactive'|trans({}, 'NetworkingInitCmsBundle')  }}</span></div>
+                    <div class="col-md-12"><span
+                                class="color-draft">{{ 'cache.inactive'|trans({}, 'NetworkingInitCmsBundle') }}</span>
+                    </div>
                     <div class="col-md-12">{{ 'cache.inactiveMoreInformation'|trans({}, 'NetworkingInitCmsBundle') | raw }}</div>
                 {% endif %}
             </div>
 
         </div>
     {% endif %}
-
 {% endblock %}

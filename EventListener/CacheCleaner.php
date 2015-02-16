@@ -25,31 +25,40 @@ class CacheCleaner {
      */
     protected $phpCache;
 
+    /**
+     * @param PhpCache $phpCache
+     */
     public function setPhpCache(PhpCache $phpCache){
         $this->phpCache = $phpCache;
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
 
-        // perhaps you only want to act on some "Product" entity
         if ($entity instanceof MenuItem) {
             $this->cleanCache();
-            // ... do something with the Product
         }
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
 
-        // perhaps you only want to act on some "Product" entity
         if ($entity instanceof MenuItem){
             $this->cleanCache();
         }
     }
 
+    /**
+     * remove items from the cache and stop after one item.
+     */
     protected function cleanCache(){
         if($this->cleanCount < 1) {
             $this->cleanCount++;

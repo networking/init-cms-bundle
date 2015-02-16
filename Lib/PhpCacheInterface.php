@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface PhpCacheInterface
 {
-    public function __construct();
-
     /**
      * @param Request $request
      * @param $user
@@ -28,7 +26,6 @@ interface PhpCacheInterface
      * @return mixed|null|string
      */
     public function get($keyword, $option = array());
-
 
     /**
      * @param $keyword

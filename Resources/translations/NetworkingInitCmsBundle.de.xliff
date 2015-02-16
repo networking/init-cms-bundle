@@ -256,6 +256,7 @@
                          cache_time: 86400 #in seconds<br />
                      ]]>
                  </target>
+            </trans-unit>
              <trans-unit id="cache.delete">
                  <source>cache.delete</source>
                  <target>Cache leeren</target>
