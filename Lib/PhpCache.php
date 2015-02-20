@@ -59,7 +59,7 @@ class PhpCache implements PhpCacheInterface {
             $securityKey = 'cache.storage.'.sha1(__FILE__);
         }
 
-        phpFastCache::$default_chmod = 0755;
+        phpFastCache::$default_chmod = 0777;
         phpFastCache::setup("storage", $type);
         phpFastCache::setup("path", $this->cacheDir );
         phpFastCache::setup("securityKey", $securityKey);
