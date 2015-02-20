@@ -10,8 +10,6 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageSnapshot;
+use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 
 /**
@@ -58,19 +57,57 @@ class FrontendPageController extends Controller
     public function indexAction(Request $request)
     {
 
-        $params = $this->getPageParameters($request);
+        /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
+        $phpCache = $this->get('networking_init_cms.lib.php_cache');
 
-        if($params instanceof RedirectResponse){
-            return $params;
-        }
+        /** @var PageSnapshotInterface $page */
+        $page = $request->get('_content');
 
-        $response = $this->render(
-            $request->get('_template'),
-            $params
-        );
+        if($phpCache->isCacheable($request, $this->getUser()) && $page instanceof PageSnapshotInterface){
 
-        if (!$request->cookies || $request->cookies->get('_locale')) {
-            $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
+            $updatedAt = $phpCache->get(sprintf('page_%s_created_at', $page->getId()));
+            $cacheKey = $request->getLocale().$request->getPathInfo();
+
+            if($updatedAt != $page->getSnapshotDate()){
+                $phpCache->delete($cacheKey);
+            }
+
+            if(!$response = $phpCache->get($request->getLocale().$request->getPathInfo())){
+                $params = $this->getPageParameters($request);
+
+                if($params instanceof RedirectResponse){
+                    return $params;
+                }
+                $html = $this->renderView(
+                    $request->get('_template'),
+                    $params
+                );
+                $response =  new Response($html);
+                if (!$request->cookies || $request->cookies->get('_locale')) {
+                    $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
+                }
+
+                $phpCache->set($cacheKey, $response);
+                $phpCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate());
+            }else{
+                $phpCache->touch($cacheKey);
+                $phpCache->touch(sprintf('page_%s_created_at', $page->getId()));
+            }
+
+        }else{
+            $params = $this->getPageParameters($request);
+
+            if($params instanceof RedirectResponse){
+                return $params;
+            }
+            $html = $this->renderView(
+                $request->get('_template'),
+                $params
+            );
+            $response =  new Response($html);
+            if (!$request->cookies || $request->cookies->get('_locale')) {
+                $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
+            }
         }
 
         return $response;
@@ -158,7 +195,7 @@ class FrontendPageController extends Controller
     {
 
         /** @var $page PageInterface */
-        $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot);
+        $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot, false);
 
         if (!$page->isActive()) {
             throw new NotFoundHttpException();

@@ -1,5 +1,5 @@
 {% block page_settings %}
-    {% if not form.vars.valid %}
+    <div {% if form.vars.valid %}id="pageSettingsFieldsModal"{% endif %}>
         {% spaceless %}
             {% if form.vars.errors|length > 0 %}
                 <div class="sonata-ba-form-error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
@@ -35,7 +35,8 @@
             </fieldset>
             <!-- end modal page form -->
         {% endspaceless %}
-    {% else %}
+    </div>
+    {% if form.vars.valid %}
         <div id="pageStatusSettings">
             {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig' %}
         </div>

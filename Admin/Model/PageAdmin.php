@@ -425,12 +425,12 @@ abstract class PageAdmin extends BaseAdmin
     public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
         if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
-            return;
+            return false;
         }
         $data['value'] = trim($data['value']);
 
         if (strlen($data['value']) == 0) {
-            return;
+            return false;
         }
 
         $fieldName = 'path';
@@ -442,6 +442,23 @@ abstract class PageAdmin extends BaseAdmin
         $qb->setParameter(sprintf(':%s', $parameterName), '%' . $data['value'] . '%');
 
         return true;
+    }
+
+    /**
+     * @param string $context
+     * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
+     */
+    public function createQuery($context = 'list')
+    {
+        $query = parent::createQuery($context);
+        if($context == 'list'){
+            $query->addSelect('c');
+            $query->leftJoin(sprintf('%s.contentRoute', $query->getRootAlias()), 'c');
+            $query->orderBy('c.path', 'asc');
+        }
+
+
+        return $query;
     }
 
     /**
@@ -570,7 +587,7 @@ abstract class PageAdmin extends BaseAdmin
         $translationLanguages = new \Doctrine\Common\Collections\ArrayCollection();
 
         if (!$id = $this->getRequest()->get('id')) {
-            return;
+            return false;
         }
 
         /** @var $pageManager PageManagerInterface */
@@ -643,7 +660,7 @@ abstract class PageAdmin extends BaseAdmin
             return $this->getSubject()->getTemplateName();
         }
         $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
-        $firstTemplate = reset($templates);
+        reset($templates);
         $defaultTemplate = key($templates);
 
         return $defaultTemplate;

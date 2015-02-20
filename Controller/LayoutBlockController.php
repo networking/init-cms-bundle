@@ -12,6 +12,8 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Sonata\AdminBundle\Exception\ModelManagerException;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -37,7 +39,7 @@ class LayoutBlockController extends CRUDController
     public function createAction()
     {
         if (!$this->isXmlHttpRequest()) {
-//            return new Response('cannot load external of page module', 500);
+            return new Response('cannot load external of page module', 500);
         }
 
 
@@ -89,24 +91,28 @@ class LayoutBlockController extends CRUDController
             $form->submit($this->get('request'));
 
             $isFormValid = $form->isValid();
+            try{
+                // persist if the form was valid and if in preview mode the preview was approved
+                if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
+                    $this->admin->create($layoutBlock);
 
-            // persist if the form was valid and if in preview mode the preview was approved
-            if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
-                $this->admin->create($layoutBlock);
-
-                if ($this->isXmlHttpRequest()) {
-                    return $this->renderJson(
-                        array(
-                            'result' => 'ok',
-                            'status' => 'success',
-                            'message' => $this->translate('message.layout_block_created'),
-                            'layoutBlockId' => $this->admin->getNormalizedIdentifier($layoutBlock),
-                            'zone' => $layoutBlock->getZone(),
-                            'sortOder' => $layoutBlock->getSortOrder(),
-                            'html' => $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid)
-                        )
-                    );
+                    if ($this->isXmlHttpRequest()) {
+                        return $this->renderJson(
+                            array(
+                                'result' => 'ok',
+                                'status' => 'success',
+                                'message' => $this->translate('message.layout_block_created'),
+                                'layoutBlockId' => $this->admin->getNormalizedIdentifier($layoutBlock),
+                                'zone' => $layoutBlock->getZone(),
+                                'sortOder' => $layoutBlock->getSortOrder(),
+                                'html' => $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid)
+                            )
+                        );
+                    }
                 }
+            }catch (ModelManagerException $e){
+                $formError = new FormError($e->getMessage());
+                $form->addError($formError);
             }
         }
 
@@ -206,7 +212,6 @@ class LayoutBlockController extends CRUDController
      * @param $elementId
      * @param null $uniqId
      * @param string $code
-     * @param bool $update
      * @return mixed
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -356,7 +361,7 @@ class LayoutBlockController extends CRUDController
         ksort($array);
         foreach($array as $key => $value){
             if(is_array($value)){
-                 $this->uksort($value);
+                $this->uksort($value);
                 $array[$key] = $value;
             }
         }

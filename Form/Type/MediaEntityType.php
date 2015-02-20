@@ -10,20 +10,13 @@
 
 namespace Networking\InitCmsBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Admin\Pool;
 use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
-use Sonata\AdminBundle\Form\Type\ModelHiddenType;
-use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityChoiceList;
-use Symfony\Bridge\Doctrine\Form\ChoiceList\ORMQueryBuilderLoader;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class MediaEntityType

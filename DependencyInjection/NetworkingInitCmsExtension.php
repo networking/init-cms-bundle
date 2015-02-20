@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\EventListener\AdminToolbarListener;
+use Sonata\CoreBundle\Exception\InvalidParameterException;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -35,10 +36,6 @@ class NetworkingInitCmsExtension extends Extension
 
         $configuration = new Configuration();
         $defaults = Yaml::parse(__DIR__ . '/../Resources/config/cms/config.yml');
-
-
-
-
 
         foreach ($configs as $config) {
                     foreach ($config as $key => $value) {
@@ -94,6 +91,18 @@ class NetworkingInitCmsExtension extends Extension
         if ($config['db_driver'] == 'orm') {
             $this->registerDoctrineORMMapping($config);
         }
+
+        $container->setParameter('networking_init_cms.cache.activate', $config['cache']['activate']);
+        $container->setParameter('networking_init_cms.cache.cache_time', $config['cache']['cache_time']);
+        $cacheClass = $config['cache']['cache_service_class'];
+        $reflectionClass = new \ReflectionClass($cacheClass);
+
+        if(in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())){
+            $container->setParameter('networking_init_cms.lib.php_cache.class', $config['cache']['cache_service_class']);
+        }else{
+            throw new InvalidParameterException('Cache class should implement the PhpCacheInterface interface');
+        }
+
         $this->configureClass($config, $container);
     }
 

@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormView;
 
 /**
  * Class NetworkingHelperExtension
@@ -146,7 +148,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             new \Twig_SimpleFunction('get_initcms_page_url', array($this, 'getPageUrl'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('get_media_by_id', array($this, 'getMediaById'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ckeditor_is_rendered', array($this, 'ckeditorIsRendered')),
-            new \Twig_SimpleFunction('content_css', array($this, 'getContentCss'))
+            new \Twig_SimpleFunction('content_css', array($this, 'getContentCss')),
+            new \Twig_SimpleFunction('return_config_value', array($this, 'returnConfigValue'))
         );
     }
 
@@ -256,8 +259,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         if (method_exists($admin, 'getSubNavLinks')) {
 
             $menu = $admin->getMenuFactory()->createItem('root');
-            $request = $this->getService('request');
-            $menu->setCurrentUri($request->getRequestUri());
             $menu->setChildrenAttribute('class', 'ul-second-level');
 
             foreach ($admin->getSubNavLinks() as $label => $link) {
@@ -316,7 +317,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     {
 
         $active = false;
-
+        /** @var AdminInterface $admin */
         foreach ($group['items'] as $admin) {
             if ($admin->getCode() == $adminCode) {
                 $active = true;
@@ -448,6 +449,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         if ($subject = $admin->getSubject()) {
             return $this->getFieldValue($subject, 'locale');
         } elseif ($filter = $admin->getDatagrid()->getFilter('locale')) {
+            /** @var \Sonata\AdminBundle\Filter\Filter $filter */
             $data = $filter->getValue();
             if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
                 $locale = $this->getCurrentLocale();
@@ -541,15 +543,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             $template = key($firstTemplate);
         }
 
-//        if ($request->getMethod() === 'POST') {
-//            $uniqid = $request->get('uniqid');
-//            $postVars = $request->request->get($uniqid);
-//            if(array_key_exists('templateName', $postVars))
-//            {
-//                $template = $postVars['templateName'];
-//            }
-//        }
-
         if (is_null($template)) {
             return array('Please Select Template first');
         }
@@ -600,13 +593,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
-     * @param \Symfony\Component\Form\FormView $formView
+     * @param FormView $formView
      * @return mixed
      */
-    public function getFormFieldZone(\Symfony\Component\Form\FormView $formView)
+    public function getFormFieldZone(FormView $formView)
     {
         $zones = $this->getZoneNames();
 
+        /** @var LayoutBlockInterface $layoutBlock */
         if ($layoutBlock = $formView->vars['value']) {
 
             if ($zone = $layoutBlock->getZone()) {
@@ -651,14 +645,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     /**
      * @param $template
      * @param $object
-     * @param \Symfony\Component\Form\FormView $formView
+     * @param FormView $formView
      * @param null $translationDomain
      * @return mixed
      */
     public function renderInitcmsFieldAsString(
         $template,
         $object,
-        \Symfony\Component\Form\FormView $formView,
+        FormView $formView,
         $translationDomain = null
     ) {
 
@@ -853,14 +847,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         if (!function_exists('mb_strlen')) {
             class_exists('Multibyte');
         }
-
+        $openTags = array();
         if ($html) {
             $text = html_entity_decode($text, null,  $env->getCharset() );
             if (mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
             }
             $totalLength = mb_strlen(strip_tags($ellipsis));
-            $openTags = array();
+
             $truncate = '';
 
             preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
@@ -1103,6 +1097,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      */
     public function getMediaById($id)
     {
+        /** @var EntityRepository $repo */
         $repo = $this->getService('doctrine')->getRepository('NetworkingInitCmsBundle:Media');
 
         return $repo->find($id);
@@ -1120,6 +1115,13 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             $this->ckeditorRendered = true;
             return false;
         }
+    }
+
+    /**
+     * Return the config Value
+     */
+    public function returnConfigValue($name)
+    {   return $this->getParameter($name);
     }
 
     /**
@@ -1145,5 +1147,3 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         return false;
     }
 }
-
-

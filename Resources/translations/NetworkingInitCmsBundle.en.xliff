@@ -235,6 +235,46 @@
                 <source>action._delete</source>
                 <target>Delete</target>
             </trans-unit>
+
+            <trans-unit id="title.cache">
+                <source>title.cache</source>
+                <target>Cache</target>
+            </trans-unit>
+            <trans-unit id="cache.active">
+                <source>cache.active</source>
+                <target>Cache is on</target>
+            </trans-unit>
+
+           <trans-unit id="cache.inactive">
+                <source>cache.inactive</source>
+                <target>Cache is off</target>
+            </trans-unit>
+            <trans-unit id="cache.inactiveMoreInformation">
+                 <source>cache.inactiveMoreInformation</source>
+                 <target><![CDATA[
+                     to activate, please add the following configurations to the app/config/config.yml File<br />
+                     cache:<br />
+                         activate: true <br />
+                         cache_time: 86400 #in seconds<br />
+                     ]]>
+                 </target>
+            </trans-unit>
+             <trans-unit id="cache.delete">
+                 <source>cache.delete</source>
+                 <target>clear cache</target>
+             </trans-unit>
+             <trans-unit id="cache.delete.answer">
+                 <source>cache.delete.answer</source>
+                 <target>Cache was cleared</target>
+             </trans-unit>
+             <trans-unit id="cache.delete.erroranswer">
+                 <source>cache.delete.erroranswer</source>
+                 <target>Cache was not cleared</target>
+             </trans-unit>
+             <trans-unit id="cache.time">
+                 <source>cache.time</source>
+                 <target>Cache time</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

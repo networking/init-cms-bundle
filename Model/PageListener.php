@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
+use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
@@ -87,6 +88,8 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
         $page = $event->getObject();
 
         if ($page instanceof PageInterface) {
+            $context = $event->getContext();
+
             $er = $this->getPageManager();
             if(!$page->getId()){
                 return;
@@ -139,15 +142,17 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
             } else {
                 $page->setOriginals(array());
             }
-            if ($translations = $page->getTranslations()) {
-                foreach ($translations as $key => $translation) {
-                    $translations[$key] = $er->find($translation);
+            if ($context instanceof PageSnapshotDeserializationContext &&  $context->deserializeTranslations()) {
+                if ($translations = $page->getTranslations()) {
+                    foreach ($translations as $key => $translation) {
+                        $translations[$key] = $er->find($translation);
+                    }
+                    $page->setTranslations($translations);
+                } else {
+                    $originalPageId = $page->getId();
+                    $originalPage = $er->find($originalPageId);
+                    $page->setTranslations($originalPage->getAllTranslations()->toArray());
                 }
-                $page->setTranslations($translations);
-            } else {
-                $originalPageId = $page->getId();
-                $originalPage = $er->find($originalPageId);
-                $page->setTranslations($originalPage->getAllTranslations()->toArray());
             }
 
             if (!$contentRoute = $page->getContentRoute()->getId()) {

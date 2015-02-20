@@ -1,35 +1,40 @@
-{% block admin_navbar %}
-    {% if app.user is defined %}
-        {% if is_granted('ROLE_SONATA_ADMIN') %}
-            <div class="navbar-initcms">
-                <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
-                    <div class="navbar-inner">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
-                                        <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
-                                             width="77">
-                                    </a>
-                                </div>
-                                <div class="col-md-5">
-                                    {% if admin_pool is defined %}
-                                        <a href="{{ url('sonata_admin_dashboard') }}" class="navbar-brand">
-                                            {{ admin_pool.title }}
-                                        </a>
-                                        {% include admin_pool.getTemplate('user_block') %}
-                                    {% endif %}
-                                </div>
-                                <div class="col-md-5 pull-right">
-                                    {% if admin_pool is defined %}
-                                        {{ mopa_bootstrap_menu('AdminMenu') }}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
+<div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container">
+            <div class="row">
+                <div class="navbar-header col-xs-8 col-sm-5">
+                    {% block toggle %}
+                        <button type="button" class="navbar-toggle" id="toggleNav">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    {% endblock %}
+                    <a href="{{ url('sonata_admin_dashboard') }}" class="hidden-sm hidden-xs pull-left">
+                        <img src="{{ admin_pool.titlelogo ? admin_pool.titlelogo : asset('bundles/networkinginitcms/img/logo_initcms.png') }}" alt="{{ admin_pool.title }}" width="77">
+                    </a>
+                    {% if admin_pool is defined %}
+                        <a href="{{ url('sonata_admin_dashboard') }}" class="hidden-xs brand">
+                            {{ admin_pool.title }}
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="col-xs-4 col-sm-3 col-md-2 text-center">
+                    {% if admin_pool is defined %}
+                        {% include admin_pool.getTemplate('user_block') %}
+                    {% endif %}
+                </div>
+
+                <div class="hidden-sm hidden-xs navbar-right col-md-5">
+                    <div class="pull-right nav-admin">
+                        {% if admin_pool is defined %}
+                            {{ mopa_bootstrap_menu('AdminMenu') }}
+                        {% endif %}
                     </div>
                 </div>
             </div>
-        {% endif %}
-    {% endif %}
-{% endblock %}
+        </div>
+    </div>
+</div>

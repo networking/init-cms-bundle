@@ -1,4 +1,4 @@
-{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+{% extends admin.getTemplate('base_list_field') %}
 
 {% block field %}
     {%- if value is empty -%}

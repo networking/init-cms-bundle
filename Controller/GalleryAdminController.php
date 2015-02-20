@@ -23,7 +23,7 @@ class GalleryAdminController extends SonataGalleryAdminController
     /**
      * return the Response object associated to the list action
      *
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|Response
+     * @return Response
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function listAction()

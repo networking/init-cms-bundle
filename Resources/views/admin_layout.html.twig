@@ -31,9 +31,13 @@ file that was distributed with this source code.
 
     {% if admin is defined %}
         &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
+        {% if _title is not empty %}&gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}{% endif %}
     {% endif %}
 {% endblock %}
 
+{% block init_cms_top_nav %}
+    {% include 'NetworkingInitCmsBundle:Navbar:admin_navbar.html.twig' %}
+{% endblock init_cms_top_nav %}
 
 {% block sidebar_left %}
     <div class="col-xs-12 col-md-2  sidebar-offcanvas">

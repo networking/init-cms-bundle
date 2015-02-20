@@ -59,6 +59,24 @@ networking_init_cms_help_dashboard:
     requirements:
         adminCode: .+
 
+networking_init_cms_file_download:
+    path: /file/download/{id}/{name}
+    defaults: { _controller: SonataMediaBundle:Media:download, format:'reference' }
+    requirements:
+        name: (.*)?
+        format: (.*)?
+
+networking_init_cms_image_view:
+    path: /image/view/{id}/{name}
+    defaults: { _controller: NetworkingInitCmsBundle:Media:viewImage, format:'reference' }
+    requirements:
+        name: (.*)?
+        format: (.*)?
+
+networking_init_cms_clear_cache:
+    pattern: /cache/clear
+    defaults: { _controller: NetworkingInitCmsBundle:Cache:clear }
+
 initcms_no_translation:
     path: /no_translation
     defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:translationNotFound}
@@ -80,20 +98,6 @@ _install_db:
     defaults: {_controller: NetworkingInitCmsBundle:InitCmsInstall:installDb, complete: 0}
     requirements:
         complete: /d+
-
-networking_init_cms_file_download:
-    path: /file/download/{id}/{name}
-    defaults: { _controller: SonataMediaBundle:Media:download, format:'reference' }
-    requirements:
-        name: (.*)?
-        format: (.*)?
-
-networking_init_cms_image_view:
-    path: /image/view/{id}/{name}
-    defaults: { _controller: NetworkingInitCmsBundle:Media:viewImage, format:'reference' }
-    requirements:
-        name: (.*)?
-        format: (.*)?
 
 _initcms_admin_navbar:
     pattern: '_initcms_admin_navbar/{page_id}'

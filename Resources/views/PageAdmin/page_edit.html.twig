@@ -10,47 +10,23 @@ file that was distributed with this source code.
 #}
 {% extends base_template %}
 
-
-
-
 {% block title %}
     {% if admin.id(object) %}
-        {{ admin.toString(object) }} <span class="info-soft font-medium">({{ language }})</span>
+        <span class="page_title">{{ admin.toString(object) }} </span> <span class="info-soft font-medium">({{ language }})</span>
     {% else %}
         {{ "title_create"|trans({}, 'SonataAdminBundle') }}
     {% endif %}
 {% endblock %}
 {% block page_title %}{% endblock %}
 
-{% block actions %}
-    <div class="sonata-actions">
-        {% if admin.hasroute('show') and admin.id(object) and admin.isGranted('VIEW', object) and admin.show|length > 0 %}
-            <a class="btn btn-default  sonata-action-element"
-               href="{{ admin.generateObjectUrl('show', object) }}">{{ 'link_action_show'|trans({}, 'SonataAdminBundle') }}</a>
-        {% endif %}
-        {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
-            <a class="btn btn-default  sonata-action-element"
-               href="{{ admin.generateObjectUrl('history', object) }}">{{ 'link_action_history'|trans({}, 'SonataAdminBundle') }}</a>
-        {% endif %}
-        {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
-        {% if admin.hasroute('list') and admin.isGranted('LIST') %}
-            <a class="btn btn-default  sonata-action-element"
-               href="{{ admin.generateUrl('list') }}">{{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
-        {% endif %}
-        {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) %}
-            {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
-            <a class="btn btn-danger"
-               href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}</a>
-        {% endif %}
-    </div>
-{% endblock %}
-
+{% block actions %}{% endblock %}
 
 {% use 'NetworkingInitCmsBundle:PageAdmin:page_edit_form.html.twig' with form as parentForm %}
 
 {% block form %}
     {{ block('parentForm') }}
-    <!-- start modal page form -->
+    {% if not app.request.isxmlhttprequest %}
+    <!-- start modal menu form -->
     <div class="modal form-horizontal" id="confirmMenuCreation"
          style="display: none"
          role="dialog" aria-labelledby="{{ "legend.create_menu_item"|trans({}, admin.translationDomain) }}"
@@ -83,7 +59,8 @@ file that was distributed with this source code.
             </div>
         </div>
     </div>
-    <!-- end modal page form -->
+        <!-- end modal menu form -->
+    {% endif %}
 {% endblock %}
 {% block confirm_exit %}false{% endblock %}
 {% block before_body_end %}

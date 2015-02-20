@@ -14,8 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use JMS\Serializer\Serializer;
-use Networking\InitCmsBundle\Entity\BasePage as Page;
-use Networking\InitCmsBundle\Model\ContentInterface;
 
 /**
  * Class LayoutBlockListener
@@ -88,10 +86,15 @@ class LayoutBlockListener
         if ($layoutBlock instanceof LayoutBlock) {
             if ($layoutBlock->getClassType() || $layoutBlock->getObjectId()) {
                 $em = $args->getEntityManager();
-                $content = $em->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
+                if ($layoutBlock->getObjectId()) {
+                    $content = $em->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
 
-                if ($content) {
-                    $layoutBlock->setContent($content);
+                    if ($content) {
+                        $layoutBlock->setContent($content);
+                    }
+                } else {
+                    $em->remove($layoutBlock);
+                    $em->flush($layoutBlock);
                 }
             }
         }

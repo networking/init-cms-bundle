@@ -27,7 +27,6 @@ file that was distributed with this source code.
         event.preventDefault();
         event.stopPropagation();
         var form = jQuery(this).closest('form');
-        var url = form.action
         var btn = jQuery(this);
         btn.button('loading');
         jQuery(form).ajaxSubmit({
@@ -46,11 +45,13 @@ file that was distributed with this source code.
                 var elements = $($.parseHTML(xhr.pageSettings));
                 var pageSettings = $(elements).filter('#pageSettings').html();
                 var pageStatusHtml = $(elements).filter('#pageStatusSettings').html();
+                var pageSettingsFieldsModal = $(elements).filter('#pageSettingsFieldsModal').html();
 
                 pageStatus.html(xhr.pageStatus);
-                $('.page_title h1').html(xhr.title);
+                $('.page_title').html(xhr.title);
                 $('#pageSettings').html(pageSettings);
                 $('#pageStatusSettings').html(pageStatusHtml);
+                $('#pageSettingsFieldsModal').html(pageSettingsFieldsModal);
                 $('#pageSettingFields').modal('hide');
 
                 submitLayoutUpdate(form, {});
@@ -67,32 +68,27 @@ file that was distributed with this source code.
         event.preventDefault();
         event.stopPropagation();
 
-        var confirmCreation = $('#confirmMenuCreation');
-        confirmCreation.modal('show');
-        var confirm = confirmCreation.find('#btn_create_menu');
-        var url = ui.href;
+        $('#confirmMenuCreation').modal('show');
         $('#show_now_confirm_dialog').attr('checked', false);
 
-        $(confirm).bind('click', function () {
+        $('body').on('click', '#btn_create_menu', function () {
             if ($('#show_now_confirm_dialog').attr('checked')) {
-                window.location = url + '?show_now_confirm_dialog=1';
+                window.location = ui.href + '?show_now_confirm_dialog=1';
             } else {
-                window.location = url;
+                window.location = ui.href;
             }
-
-
         });
     }
 
     (function ($) {
 
-        $("#{{ admin.uniqid }}_locale").on('change', function () {
+        $('body').on('change', '#{{ admin.uniqid }}_locale', function () {
             var locale = $(this).val();
             $.getJSON(
                     '{{ admin.generateUrl('parentPageList') }}',
-                    {locale:locale},
+                    {locale: locale},
                     function (data) {
-                        var parentPages = $("#{{ admin.getUniqid }}_parent");
+                        var parentPages = $('#{{ admin.getUniqid }}_parent');
                         parentPages.empty();
                         parentPages.append($('<option></option>'));
                         $.each(data, function (k, v) {
@@ -101,12 +97,12 @@ file that was distributed with this source code.
                             }
                         });
                     }
-            )
+            );
         });
 
-        $("#{{ admin.uniqid }}_parent").on("change", function (e) {
+        $('body').on('change', '#{{ admin.uniqid }}_parent', function (e) {
             var path = $('#{{ admin.uniqid }}_url').val();
-            var pageId = e.val
+            var pageId = e.val;
             if (pageId == '') {
                 $('#help_{{ admin.uniqid }}_url').html('/' + path);
             } else {
@@ -115,19 +111,18 @@ file that was distributed with this source code.
                 }
                 $.getJSON(
                         '{{ admin.generateUrl('getPath') }}',
-                        {'page_id':pageId, 'path':path},
+                        {'page_id': pageId, 'path': path},
                         function (xhr) {
-                            $('#sonata-ba-field-container-{{ admin.uniqid }}_url label > .help-block').html(xhr.path);
+                            $('#help_{{ admin.uniqid }}_url').html(xhr.path);
                         }
                 );
             }
-
         });
 
 
-        $('#{{ admin.uniqid }}_url').on('change', function () {
-                 $("#{{ admin.uniqid }}_parent").trigger('change');
-             });
+        $('body').on('change', '#{{ admin.uniqid }}_url', function () {
+            $("#{{ admin.uniqid }}_parent").trigger('change');
+        });
 
 
 
@@ -154,7 +149,6 @@ file that was distributed with this source code.
                 window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
             }
         })
-
 
     })(jQuery);
 

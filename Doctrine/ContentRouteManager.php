@@ -139,7 +139,6 @@ abstract class ContentRouteManager extends BaseContentRouteManager
         }
 
 
-
         foreach ($tempContentRoutes as $key => $contentRoute) {
 
 
@@ -172,13 +171,16 @@ abstract class ContentRouteManager extends BaseContentRouteManager
         return $collection;
     }
 
-    protected function filterByLocale($var)
+    /**
+     * @param ContentRouteInterface $var
+     * @return bool
+     */
+    protected function filterByLocale(ContentRouteInterface $var)
     {
         if($this->request){
             return $var->getLocale() == $this->request->getLocale();
         }else{
             return true;
         }
-
     }
 }

@@ -51,6 +51,15 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <!-- cache -->
+        <service id="networking_init_cms.lib.php_cache" class="%networking_init_cms.lib.php_cache.class%">
+            <argument>files</argument>
+            <argument>%kernel.root_dir%/</argument>
+            <argument>%kernel.environment%</argument>
+            <argument>%networking_init_cms.cache.activate%</argument>
+            <argument>%networking_init_cms.cache.cache_time%</argument>
+        </service>
+
     </services>
 
 </container>

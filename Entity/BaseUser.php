@@ -24,8 +24,6 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface {
 
     /**
      * @var integer $id
-     *
-     *
      */
     protected $id;
 

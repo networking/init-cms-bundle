@@ -3,7 +3,6 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\EventArgs;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Model\ModelChangedListener;
 
 class EntityChangedListener extends ModelChangedListener

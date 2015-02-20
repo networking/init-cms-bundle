@@ -54,7 +54,7 @@ class GalleryAdmin extends SonataGalleryAdmin
      */
     public function getIcon()
     {
-        return 'glyph-camera-retro';
+        return 'glyphicon-camera-retro';
     }
 
     /**

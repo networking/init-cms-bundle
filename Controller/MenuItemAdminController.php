@@ -9,7 +9,7 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
-use Doctrine\ORM\Internal\Hydration\ArrayHydrator;
+use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -120,25 +120,20 @@ class MenuItemAdminController extends CRUDController
         };
         $admin = $this->admin;
         $controller = $this;
+        /** @var ArrayCollection $menuAllItems */
+        $menuAllItems = new ArrayCollection($menuItemManager->findAllJoinPage());
+        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager,  $menuAllItems) {
 
-
-        $datagrid = $this->admin->getDatagrid();
-
-       $results = $datagrid->getResults();
-
-
-
-        $pageAdmin = $this->get('networking_init_cms.admin.page');
-        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $pageAdmin, $results) {
-            foreach($results as $result){
-                if($node['id'] == $result->getId()){
-                    return $controller->renderView(
-                        'NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig',
-                        array('admin' => $admin, 'node' => $result, 'pageAdmin' => $pageAdmin)
-                    );
+            $items = $menuAllItems->filter(function($menuItem)use($node){
+                if($menuItem->getId() == $node['id']){
+                    return $menuItem;
                 }
-            }
-
+            });
+            $node = $items->first();
+            return $controller->renderView(
+                'NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig',
+                array('admin' => $admin, 'node' => $node)
+            );
         };
 
         foreach ($rootNodes as $rootNode) {
@@ -149,7 +144,7 @@ class MenuItemAdminController extends CRUDController
 
                     $menus = array(
                         'rootNode' => $rootNode,
-                        'navigation' => $this->createNotLastEditedNavigation(
+                        'navigation' => $this->createPlacementNavigation(
                                 $rootNode,
                                 $admin,
                                 $controller,
@@ -180,7 +175,9 @@ class MenuItemAdminController extends CRUDController
 
         }
 
-        $datagrid->getResults();
+
+        $datagrid = $this->admin->getDatagrid();
+
 
         if ($menuId) {
             $menu = $menuItemManager->find($menuId);
@@ -479,6 +476,12 @@ class MenuItemAdminController extends CRUDController
         return $response;
     }
 
+    /**
+     * renders the template html for the modal
+     *
+     * @return bool|string|Response
+     * @throws \Sonata\AdminBundle\Exception\NoValueException
+     */
     public function placementAction()
     {
         /** @var \Networking\InitCmsBundle\Entity\MenuItem $rootNode */
@@ -503,13 +506,18 @@ class MenuItemAdminController extends CRUDController
         return empty($name) ? 'global' : $name;
     }
 
-
-    public function createNotLastEditedNavigation($rootNode, $admin, $controller, $menuItemManager)
+    /**
+     * @param $rootNode
+     * @param $admin
+     * @param $controller
+     * @param $menuItemManager
+     * @return mixed
+     */
+    public function createPlacementNavigation($rootNode, $admin, $controller, $menuItemManager)
     {
         $lastEdited = $this->get('session')->get('MenuItem.last_edited');
-        $pageAdmin = $this->get('networking_init_cms.admin.page');
 
-        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited, $pageAdmin) {
+        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited) {
 
             if ($lastEdited == $node['id']) {
                 return;
@@ -518,7 +526,7 @@ class MenuItemAdminController extends CRUDController
 
             return $controller->renderView(
                 'NetworkingInitCmsBundle:MenuItemAdmin:placement_item.html.twig',
-                array('admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node, 'pageAdmin' => $pageAdmin)
+                array('admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node)
             );
         };
 
@@ -571,11 +579,17 @@ class MenuItemAdminController extends CRUDController
         return $navigation;
     }
 
+    /**
+     * @param Request $request
+     * @param $newMenuItemId
+     * @param $menuItemId
+     * @return Response
+     */
     public function newPlacementAction(Request $request, $newMenuItemId, $menuItemId)
     {
-        $sibling = $this->getRequest()->get('sibling');
+        $sibling = $request->get('sibling');
 
-        /** @var MenuItemManagerInterface $menuItemManager */
+        /** @var MenuItemManager $menuItemManager */
         $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
         $newMenuItem = $menuItemManager->find($newMenuItemId);
         $menuItem = $menuItemManager->find($menuItemId);

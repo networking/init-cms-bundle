@@ -10,8 +10,8 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM,
-    Sonata\UserBundle\Entity\BaseGroup as BaseGroup;
+use Doctrine\ORM\Mapping as ORM;
+use Sonata\UserBundle\Entity\BaseGroup as BaseGroup;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>

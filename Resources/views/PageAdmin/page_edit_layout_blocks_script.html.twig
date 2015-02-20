@@ -222,14 +222,14 @@ function submitLayoutUpdate(form, data, liItem) {
 function setLayoutBlockPosition() {
     // update the input value position
     jQuery('ul.sortable').each(function (index, value) {
-        var index = 0;
+        var count = 0;
         var zone = jQuery(this).attr('id').replace('zone_', '');
         jQuery(value).find("li.networking-sort-zone").each(function (i, v) {
             if (!jQuery(v).find("input[id$='_delete']").is(':checked')) {
-                jQuery(v).find("[id$='_sortOrder']").val(index);
+                jQuery(v).find("[id$='_sortOrder']").val(count);
 
                 jQuery(v).find("[id$='_zone']").val(zone);
-                index++;
+                count++;
             }
         });
     });
@@ -254,6 +254,7 @@ function saveLayoutBlockSort(callback) {
 }
 function submitLayoutSort(zones) {
     var dfd = jQuery.Deferred();
+    var pageStatus = jQuery('.page_status');
     return jQuery.ajax({
         url: '{{ url('admin_networking_initcms_layoutblock_updateLayoutBlockSort') }}',
         data: {
@@ -266,11 +267,11 @@ function submitLayoutSort(zones) {
                 if (xhr.pageStatusSettings != undefined) jQuery('#pageStatusSettings').html(xhr.pageStatusSettings);
                 if (xhr.pageStatus != undefined) {
                     if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
-                        jQuery('.page_status').addClass('color-draft');
+                        pageStatus.addClass('color-draft');
                     } else {
-                        jQuery('.page_status').removeClass('color-draft');
+                        pageStatus.removeClass('color-draft');
                     }
-                    jQuery('.page_status').html(xhr.pageStatus);
+                    pageStatus.html(xhr.pageStatus);
                 }
             }
             dfd.resolve(xhr);
@@ -381,7 +382,6 @@ function onAfterLoad() {
 
             if (allowedTypes.length > 0 && jQuery.inArray(contentType, allowedTypes) < 0) {
                 placeholder.css('display', 'none');
-                return;
             } else if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length >= maxItems) {
 
                 if (jQuery(ui.sender).attr('id') == jQuery(this).attr('id')) {
@@ -391,7 +391,6 @@ function onAfterLoad() {
                 }
 
                 jQuery(this).find(".empty_layout_block").hide();
-                return;
             }
             else {
                 placeholder.css('display', 'block');
@@ -401,7 +400,7 @@ function onAfterLoad() {
 
     });
 
-    jQuery('i.delete_block').bind('click', function () {
+    jQuery('body').on('click', 'i.delete_block', function () {
         if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
             var blockId = jQuery(this).attr('data-value');
             jQuery.ajax({

@@ -10,12 +10,9 @@
 
 namespace Networking\InitCmsBundle\Form\Extension;
 
-use Networking\InitCmsBundle\Form\DataTransformer\ModelsToStringListTransformer;
-use Sonata\AdminBundle\Form\EventListener\MergeCollectionListener;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -25,19 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class TagExtension extends AbstractTypeExtension {
 
-    /**
-     * {@inheritDoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-//        if ($options['multiple'] && isset($options['taggable'])) {
-//            if($options['taggable']){
-//                $builder
-//                    ->addEventSubscriber(new MergeCollectionListener($options['model_manager']))
-//                    ->addViewTransformer(new ModelsToStringListTransformer($options['choice_list']), true);
-//            }
-//        }
-    }
 
     /**
      * {@inheritdoc}
@@ -45,17 +29,7 @@ class TagExtension extends AbstractTypeExtension {
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         if (true === $options['multiple'] && false === $options['expanded'] && isset($options['taggable'])) {
-//            $tags = array();
-//            $choices = array();
-//            foreach($view->vars['value'] as $key => $value){
-//                if($value === true){
-//                    $tags[] = $view->vars['choices'][$key]->label;
-//                }
-//                $choices[] =  sprintf('"%s"', $view->vars['choices'][$key]->label);
-//            }
             $view->vars['taggable'] = $options['taggable'];
-//            $view->vars['value'] = $tags;
-//            $view->vars['choices'] = $choices;
         }
     }
 

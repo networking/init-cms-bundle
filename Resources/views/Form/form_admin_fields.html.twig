@@ -556,8 +556,7 @@ file that was distributed with this source code.
             <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
             <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
         </div>
-        <script type="application/javascript">
-            //<![CDATA[
+        <script type="text/javascript">
             jQuery(document).ready(function () {
                 jQuery('[data-link-field="{{ id }}"]').datetimepicker({
                     autoclose: true,
@@ -571,7 +570,6 @@ file that was distributed with this source code.
                     }
                 });
             });
-            //]]>
         </script>
     {% else %}
         {{ block('form_widget_simple') }}
@@ -599,8 +597,7 @@ file that was distributed with this source code.
             <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
             <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
         </div>
-        <script type="application/javascript">
-            //<![CDATA[
+        <script type="text/javascript">
             jQuery(document).ready(function () {
                 jQuery('[data-link-field="{{ id }}"]').datetimepicker({
                     autoclose: true,
@@ -616,7 +613,6 @@ file that was distributed with this source code.
                     }
                 });
             });
-            //]]>
         </script>
     {% else %}
         {{ block('form_widget_simple') }}
@@ -644,8 +640,7 @@ file that was distributed with this source code.
                 <input type="hidden" value="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}" {{ block('widget_attributes') }}>
                 <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
             </div>
-            <script type="application/javascript">
-                //<![CDATA[
+            <script type="text/javascript">
                 jQuery(document).ready(function () {
                     jQuery('[data-link-field="{{ id }}"]').datetimepicker({
                         autoclose: true,
@@ -658,7 +653,6 @@ file that was distributed with this source code.
                         }
                     });
                 });
-                //]]>
             </script>
         {% else %}
             {{ block('form_widget_simple') }}
@@ -680,15 +674,13 @@ file that was distributed with this source code.
     {% if sonata_admin is defined and sonata_admin.admin %}
         {% set translation_domain = sonata_admin.admin.translationDomain %}
     {% endif %}
-    <script type="application/javascript">
-        //<![CDATA[
+    <script type="text/javascript">
         jQuery(document).ready(function () {
             jQuery("#{{ id }}").select2({
                 placeholder: "{{ 'Select'|trans() }}",
                 allowClear: true
             });
         });
-        //]]>
     </script>
 {% endblock %}
 
@@ -760,7 +752,7 @@ file that was distributed with this source code.
             <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a>
 
             <p>
-                <script>
+                <script type="text/javascript">
                     $('.toggle-roles').click(function () {
                         $('#securityRoles input[id^="{{ id }}"]').each(function () {
                             // toggle checkbox

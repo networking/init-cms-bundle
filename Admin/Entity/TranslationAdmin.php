@@ -24,6 +24,10 @@ use Symfony\Component\Intl\Intl;
  */
 class TranslationAdmin extends ORMTranslationAdmin
 {
+    /**
+     * @var array
+     */
+    protected $managedLocales;
 
     /**
      * Whether or not to persist the filters in the session
@@ -130,8 +134,8 @@ class TranslationAdmin extends ORMTranslationAdmin
     }
 
     /**
-     * @param string $name
-     * @return multitype|NULL
+     * @param \Ibrows\SonataTranslationBundle\Admin\unknown $name
+     * @return \Ibrows\SonataTranslationBundle\Admin\multitype|string
      */
     public function getTemplate($name)
     {

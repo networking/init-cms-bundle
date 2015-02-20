@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
+use Doctrine\ORM\Query;
 use Gedmo\Tree\RepositoryInterface;
 use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -38,12 +39,14 @@ interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInt
      */
     public function getParentPagesChoices($locale, $id = null);
 
+
     /**
      * @param $sort
      * @param string $order
+     * @param int $hydrationMode
      * @return mixed
      */
-    public function getAllSortBy($sort, $order = 'DESC');
+    public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT);
 
     /**
      * @param $draftPage

@@ -22,17 +22,6 @@ use Symfony\Component\Form\FormInterface;
  */
 class MediaPrintType extends AbstractType
 {
-
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function setDefaultOptions(OptionsResolverInterface $resolver)
-//    {
-//        $resolver->setDefaults(array(
-//                'mapped' => false
-//            ));
-//    }
-
     /**
      * @return string
      */

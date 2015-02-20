@@ -27,12 +27,12 @@
             <tag name="knp_menu.menu" alias="AdminMenu"/>
         </service>
 
-        <service id="networking_init_cms.menu.preview_menu" class="Knp\Menu\MenuItem"
+        <service id="networking_init_cms.menu.admin_side_menu" class="Knp\Menu\MenuItem"
                  factory-service="networking_init_cms.menu.admin_menu_builder"
-                 factory-method="createPreviewMenu"
+                 factory-method="createAdminSideMenu"
                  scope="request">
-            <argument type="service" id="request"/>
-            <tag name="knp_menu.menu" alias="PreviewMenu"/>
+            <argument key="menuGroups">%networking_init_cms.admin_menu_groups%</argument>
+            <tag name="knp_menu.menu" alias="AdminSideMenu"/>
         </service>
     </services>
 

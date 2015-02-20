@@ -18,7 +18,9 @@ use Ibrows\SonataTranslationBundle\Controller\TranslationCRUDController as Ibrow
  */
 class TranslationCRUDController extends IbrowsTranslationCRUDController
 {
-
+    /**
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function clearCacheAction()
     {
         $languages = $this->container->getParameter('networking_init_cms.page.languages');
@@ -29,7 +31,7 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
 
         $this->get('translator')->removeLocalesCacheFiles($localeChoices);
 
-        /** @var $session Session */
+        /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $this->get('session');
         $session->getFlashBag()->set('sonata_flash_success', 'translations.cache_removed');
 

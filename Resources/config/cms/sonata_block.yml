@@ -5,13 +5,14 @@ sonata_block:
         networking_init_cms.block.service.translatable_text:
         networking_init_cms.block.service.online_users:
         networking_init_cms.block.service.pages:
-        sonata.admin.block.admin_list:
-            contexts:   [admin]
+        networking_init_cms.block.service.cache:
+#        sonata.admin.block.admin_list:
+#            contexts:   [admin]
         #sonata.admin_doctrine_orm.block.audit:
         #    contexts:   [admin]
 
-        sonata.block.service.text:
-        sonata.block.service.rss:
+#        sonata.block.service.text:
+#        sonata.block.service.rss:
 
         # Some specific block from the SonataMediaBundle
         #sonata.media.block.media:

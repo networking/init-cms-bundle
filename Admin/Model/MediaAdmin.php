@@ -236,8 +236,8 @@ abstract class MediaAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add(
-                'custom',
+            ->addIdentifier(
+                'name',
                 'string',
                 array(
                     'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig',

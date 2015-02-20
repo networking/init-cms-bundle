@@ -30,7 +30,7 @@
                         <h5>{{ lang }}</h5>
                         {% for page in drafts %}
                             <a href="{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}"
-                               class="link-nounderline">{{ page.title }}</a> <span
+                               class="link-nounderline">{{ page.pageName }}</a> <span
                                 class="info-soft font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
                             <br/>
 
@@ -48,7 +48,7 @@
                         <h5>{{ lang }}</h5>
                         {% for page in drafts %}
                             <a href="{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}"
-                               class="link-nounderline">{{ page.title }}</a> <span
+                               class="link-nounderline">{{ page.pageName }}</a> <span
                                 class="info-soft font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
                             <br/>
                         {% endfor %}

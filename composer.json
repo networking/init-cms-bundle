@@ -32,7 +32,8 @@
         "jms/serializer-bundle": "0.13.*@dev",
         "ibrows/sonata-admin-annotation-bundle": "1.1.*",
         "ibrows/sonata-translation-bundle": "1.0.3",
-        "knplabs/knp-paginator-bundle": "dev-master"
+        "knplabs/knp-paginator-bundle": "dev-master",
+        "phpfastcache/phpfastcache": "dev-final"
     },
     "autoload": {
         "psr-0": {

@@ -130,9 +130,11 @@ class MenuBuilder extends ContainerAware
             ) . '/' : $request->getPathInfo();
         $this->currentUri = $request->getBaseUrl() . $this->currentPath;
 
+        $voter = new UriVoter($request->getBaseUrl() .$request->getPathInfo());
+        $this->matcher->addVoter($voter);
 
         $voter = new UriVoter($this->currentUri);
-        $matcher->addVoter($voter);
+        $this->matcher->addVoter($voter);
     }
 
 

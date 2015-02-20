@@ -11,6 +11,7 @@
             <argument type="service" id="request"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument>%networking_init_cms.translation_fallback_route%</argument>
+            <argument type="service" id="networking_init_cms.helper.page_helper"/>
             <call method="setRouter">
                 <argument type="service" id="router"/>
             </call>
