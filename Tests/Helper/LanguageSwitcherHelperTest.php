@@ -34,7 +34,7 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array('_content' => new Tag())));
 
 
-        $helper = $this->getLanguageHelper($request, $router);
+        $helper = $this->getLanguageHelper($request, $router, $request2);
         $helper->getTranslationRoute('/foo', 'de');
     }
 
@@ -55,8 +55,9 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
             ->with($request2)
             ->will($this->returnValue(array('_content' => $page)));
 
-        $helper = $this->getLanguageHelper($request, $router);
+        $helper = $this->getLanguageHelper($request, $router, $request2);
         $result = $helper->getTranslationRoute('/foo', 'de');
+
 
         $this->assertEquals(array("_route" => "networking_init_cms_home"), $result);
     }
@@ -90,7 +91,7 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
             ->with($request2)
             ->will($this->returnValue(array('_content' => $dePage)));
 
-        $helper = $this->getLanguageHelper($request, $router);
+        $helper = $this->getLanguageHelper($request, $router, $request2);
 
         $result = $helper->getTranslationRoute('/foo', 'en');
 
@@ -102,7 +103,7 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
     public function testGetQueryString()
     {
         $request = new Request();
-        $helper = $this->getLanguageHelper($request);
+        $helper = $this->getLanguageHelper($request, null, $request);
 
         $qs = $helper->getQueryString();
         $this->assertNull($qs);
@@ -116,11 +117,10 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
             'SCRIPT_NAME' => 'xy..php',
             'PHP_SELF' => 'xy',
             'ORIG_SCRIPT_NAME' => 'xy.php',
-            'ORIG_SCRIPT_NAME' => 'xy.php',
         );
         $request = new Request(array(), array(), array(), array(), array(), $serverParams);
 
-        $helper = $this->getLanguageHelper($request);
+        $helper = $this->getLanguageHelper($request, null, $request);
 
         $baseUrl = $helper->prepareBaseUrl('/xy/');
         $this->assertEquals('', $baseUrl);
@@ -133,18 +133,17 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
             'SCRIPT_NAME' => 'xy..php',
             'PHP_SELF' => 'xy',
             'ORIG_SCRIPT_NAME' => 'xy.php',
-            'ORIG_SCRIPT_NAME' => 'xy.php',
         );
 
         $request = new Request(array(), array(), array(), array(), array(), $serverParams);
 
-        $helper = $this->getLanguageHelper($request);
+        $helper = $this->getLanguageHelper($request, null, $request);
 
         $path = $helper->getPathInfo();
         $this->assertEquals('/', $path);
     }
 
-    public function getLanguageHelper(Request $request, $router = null)
+    public function getLanguageHelper(Request $request, $router = null, $request2 = null)
     {
 
         $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
@@ -156,6 +155,12 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
             ->disableOriginalConstructor()
             ->getMock();
+        $pageHelper = $this->getMockBuilder('Networking\InitCmsBundle\Helper\PageHelper')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $pageHelper->expects($this->any())
+            ->method('matchContentRouteRequest')
+            ->willReturn($request2);
 
         if ($router === null) {
 
@@ -163,7 +168,7 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
                 ->getMock();
         }
-        $helper = new LanguageSwitcherHelper($request, $em, '');
+        $helper = new LanguageSwitcherHelper($request, $em, '', $pageHelper);
         $helper->setRouter($router);
         $helper->setPageManager($pageManager);
         $helper->setSerializer($serializer);
