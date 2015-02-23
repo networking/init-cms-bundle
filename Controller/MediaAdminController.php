@@ -249,7 +249,6 @@ class MediaAdminController extends SonataMediaAdminController
 
         /** @var \Sonata\MediaBundle\Provider\Pool $mediaPool */
         $mediaPool = $this->container->get('sonata.media.pool');
-
         $contexts = $mediaPool->getContexts();
 
         reset($contexts);

@@ -12,7 +12,6 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use JMS\Serializer\Serializer;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Doctrine\ORM\EntityManager;
@@ -114,7 +113,12 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
                         if (!$this->pageHelper->jsonPageIsActive($item['ps_versionedData'])) {
                             continue;
                         }
-
+                        $menuItem->setPath($item['path']);
+                    }
+                }else{
+                    if (!$item['path']) {
+                        continue;
+                    } else {
                         $menuItem->setPath($item['path']);
                     }
                 }
@@ -124,6 +128,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
 
         return $menuItems;
     }
+
 
     /**
      * Get all menu items and their pages if available
@@ -139,4 +144,5 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         return $qb->getQuery()->execute();
     }
 
-} 
+
+}

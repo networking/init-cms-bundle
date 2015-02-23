@@ -20,6 +20,7 @@ use Sonata\AdminBundle\Admin\AdminInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormView;
+
 /**
  * Class NetworkingHelperExtension
  * @package Networking\InitCmsBundle\Twig\Extension
@@ -316,9 +317,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     {
 
         $active = false;
-
+        /** @var AdminInterface $admin */
         foreach ($group['items'] as $admin) {
-            /** @var AdminInterface $admin */
             if ($admin->getCode() == $adminCode) {
                 $active = true;
                 break;
@@ -448,7 +448,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
         if ($subject = $admin->getSubject()) {
             return $this->getFieldValue($subject, 'locale');
-
         } elseif ($filter = $admin->getDatagrid()->getFilter('locale')) {
             /** @var \Sonata\AdminBundle\Filter\Filter $filter */
             $data = $filter->getValue();
@@ -544,15 +543,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             $template = key($firstTemplate);
         }
 
-        if ($request->getMethod() === 'POST') {
-            $uniqid = $request->get('uniqid');
-            $postVars = $request->request->get($uniqid);
-            if(array_key_exists('templateName', $postVars))
-            {
-                $template = $postVars['templateName'];
-            }
-        }
-
         if (is_null($template)) {
             return array('Please Select Template first');
         }
@@ -643,6 +633,10 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         return $zones;
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     public function base64Encode($value)
     {
         return base64_encode($value);
@@ -715,7 +709,9 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
                 }else{
                     $value = '';
                 }
-
+                break;
+            case 'sonata_type_model_hidden':
+                $value = $fieldDescription->getValue($object);;
                 break;
             default:
                 var_dump($fieldDescription->getType());
@@ -858,6 +854,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
                 return $text;
             }
             $totalLength = mb_strlen(strip_tags($ellipsis));
+
             $truncate = '';
 
             preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
@@ -1093,6 +1090,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
+     * Return a media object by its' id
+     *
      * @param $id
      * @return mixed
      */
@@ -1124,7 +1123,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     public function returnConfigValue($name)
     {   return $this->getParameter($name);
     }
-
 
     /**
      * Return the path to the content css for the default or named ckeditor config contentsCss

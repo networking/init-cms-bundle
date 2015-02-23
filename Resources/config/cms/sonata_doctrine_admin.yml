@@ -1,10 +1,10 @@
 sonata_doctrine_orm_admin:
     templates:
         form: [ NetworkingInitCmsBundle:Form:form_admin_fields.html.twig ]
-        filter:
-            - NetworkingInitCmsBundle:Form:form_admin_fields.html.twig
+        filter: [NetworkingInitCmsBundle:Form:form_admin_fields.html.twig]
         types:
             list:
+                base:       NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
                 array:      NetworkingInitCmsBundle:CRUD:list_array.html.twig
                 boolean:    NetworkingInitCmsBundle:CRUD:list_boolean.html.twig
                 date:       NetworkingInitCmsBundle:CRUD:list_date.html.twig
@@ -18,6 +18,7 @@ sonata_doctrine_orm_admin:
                 integer:    NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
                 decimal:    NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
                 identifier: NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+                orm_many_to_many:  NetworkingInitCmsBundle:CRUD:list_orm_many_to_many.html.twig
 
             show:
                 array:      NetworkingInitCmsBundle:CRUD:show_array.html.twig

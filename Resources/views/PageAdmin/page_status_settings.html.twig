@@ -9,7 +9,7 @@ file that was distributed with this source code.
 
 #}
 <h4 class="pull-left">{{ 'legend.page_status'|trans({}, admin.translationDomain) }} -&nbsp;</h4>
-<h3 class="{% if not object.isPublished() %}color-draft{% endif %} page_status"> {{ object.statusLabel|trans({}, admin.translationDomain) }}</h3>
+<h3 class="color-{{ object.isPublished()?'published':'draft' }} page_status"> {{ object.statusLabel|trans({}, admin.translationDomain) }}</h3>
 
 
 {% if not object.isPublished %}

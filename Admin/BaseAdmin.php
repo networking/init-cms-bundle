@@ -48,6 +48,18 @@ abstract class BaseAdmin extends Admin
     }
 
     /**
+     * Set up listner to make sure the correct locale is used
+     */
+    public function setUpTranslatableLocale()
+    {
+        /** @var \Gedmo\Translatable\TranslatableListener $translatable */
+        $translatableListener = $this->getContainer()->get('stof_doctrine_extensions.listener.translatable', ContainerInterface::NULL_ON_INVALID_REFERENCE);
+        if($translatableListener){
+            $translatableListener->setTranslatableLocale($this->getDefaultLocale());
+        }
+    }
+
+    /**
      * Provide an array of locales where the locale is the key and the label is
      * the value for easy display in a dropdown select for example
      * example: array('de_CH' => 'Deutsch', 'en_GB' => 'English')
@@ -122,10 +134,8 @@ abstract class BaseAdmin extends Admin
                 }
             }
 
-        } else {
-            return $locale;
         }
-
+        return $locale;
     }
 
     /**

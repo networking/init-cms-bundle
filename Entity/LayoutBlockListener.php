@@ -14,9 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use JMS\Serializer\Serializer;
-use Networking\InitCmsBundle\Entity\BasePage as Page;
-use Networking\InitCmsBundle\Model\ContentInterface;
-use Sonata\AdminBundle\Exception\ModelManagerException;
 
 /**
  * Class LayoutBlockListener
@@ -70,10 +67,15 @@ class LayoutBlockListener
                     $contentObject = new $classType;
                     $em->persist($contentObject);
                 }
+
+
                 $em->flush($contentObject);
+
                 $layoutBlock->setObjectId($contentObject->getId());
+
                 $em->persist($layoutBlock);
                 $em->flush($layoutBlock);
+
             }
         }
     }
@@ -84,17 +86,16 @@ class LayoutBlockListener
         if ($layoutBlock instanceof LayoutBlock) {
             if ($layoutBlock->getClassType() || $layoutBlock->getObjectId()) {
                 $em = $args->getEntityManager();
-                if($layoutBlock->getObjectId()){
+                if ($layoutBlock->getObjectId()) {
                     $content = $em->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
 
                     if ($content) {
                         $layoutBlock->setContent($content);
                     }
-                }else{
+                } else {
                     $em->remove($layoutBlock);
                     $em->flush($layoutBlock);
                 }
-
             }
         }
     }

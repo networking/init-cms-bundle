@@ -51,7 +51,6 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-
         <!-- cache -->
         <service id="networking_init_cms.lib.php_cache" class="%networking_init_cms.lib.php_cache.class%">
             <argument>files</argument>
@@ -59,16 +58,6 @@
             <argument>%kernel.environment%</argument>
             <argument>%networking_init_cms.cache.activate%</argument>
             <argument>%networking_init_cms.cache.cache_time%</argument>
-
-
-
-        </service>
-
-        <service id="networking_init_cms.event_listener.cache_cleaner" class="Networking\InitCmsBundle\EventListener\CacheCleaner">
-            <!--<argument>@networking_init_cms.lib.php_cache</argument>-->
-            <argument type="service" id="networking_init_cms.lib.php_cache"/>
-            <tag name="doctrine.event_listener" event="postPersist" />
-            <tag name="doctrine.event_listener" event="postUpdate" />
         </service>
 
     </services>

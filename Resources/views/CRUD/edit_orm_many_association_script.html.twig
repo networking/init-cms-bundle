@@ -307,7 +307,11 @@ var field_dialog_form_action_{{ id }} = function (event) {
                         } else {
                             newElement.attr('selected', 'selected');
                         }
-
+                        {% if taggable is defined and taggable %}
+                        jQuery('#field_container_{{ id }}').on('sonata-admin-append-form-element', function () {
+                            jQuery("#{{ id }}").select2();
+                        });
+                        {% endif %}
                         jQuery('#field_container_{{ id }}').trigger('sonata-admin-append-form-element');
                     }
                 });

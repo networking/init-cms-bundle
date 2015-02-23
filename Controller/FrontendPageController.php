@@ -10,9 +10,6 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use Networking\InitCmsBundle\Model\PageSnapshotInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +20,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageSnapshot;
+use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
-use phpFastCache;
 
 /**
  * Class FrontendPageController
@@ -68,7 +65,6 @@ class FrontendPageController extends Controller
 
         if($phpCache->isCacheable($request, $this->getUser()) && $page instanceof PageSnapshotInterface){
 
-            $cacheTime =  $this->container->getParameter('networking_init_cms.cache.cache_time');
             $updatedAt = $phpCache->get(sprintf('page_%s_created_at', $page->getId()));
             $cacheKey = $request->getLocale().$request->getPathInfo();
 
@@ -91,11 +87,11 @@ class FrontendPageController extends Controller
                     $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
                 }
 
-                $phpCache->set($cacheKey, $response, $cacheTime);
-                $phpCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate(), $cacheTime);
+                $phpCache->set($cacheKey, $response);
+                $phpCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate());
             }else{
-                $phpCache->touch($cacheKey, $cacheTime);
-                $phpCache->touch(sprintf('page_%s_created_at', $page->getId()), $cacheTime);
+                $phpCache->touch($cacheKey);
+                $phpCache->touch(sprintf('page_%s_created_at', $page->getId()));
             }
 
         }else{
@@ -112,12 +108,9 @@ class FrontendPageController extends Controller
             if (!$request->cookies || $request->cookies->get('_locale')) {
                 $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
             }
-
         }
 
-
         return $response;
-
     }
 
 

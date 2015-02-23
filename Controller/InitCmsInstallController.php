@@ -133,8 +133,8 @@ class InitCmsInstallController extends Controller
 
                 $output = $this->getStreamOutput();
 
-                if ($complete == 0) {
 
+                if ($complete == 0) {
                     $this->initACL($output);
                     $this->createDB($output);
                     $returnCode = $this->sonataSetupACL($output);
@@ -146,6 +146,8 @@ class InitCmsInstallController extends Controller
                 if ($complete == 1) {
                     $output = $this->getStreamOutput($output);
                     $returnCode = $this->loadFixtures($output);
+                    $this->publishPages($output);
+
                     if (!$returnCode) {
                         $complete++;
                     }
@@ -158,7 +160,6 @@ class InitCmsInstallController extends Controller
                         $complete++;
                     }
                 }
-
 
 
                 if ($complete == 3) {
@@ -273,6 +274,32 @@ class InitCmsInstallController extends Controller
         $input = new ArrayInput($arguments);
 
         return $this->getApplication()->run($input, $output);
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return int
+     */
+    public function publishPages(OutputInterface $output)
+    {
+        /** @var \Networking\InitCmsBundle\Entity\PageManager $modelManager */
+        $modelManager = $this->get('networking_init_cms.page_manager');
+        $selectedModels = $modelManager->findAll();
+
+        try {
+            foreach ($selectedModels as $selectedModel) {
+                /** @var \Networking\InitCmsBundle\Model\PageInterface $selectedModel */
+                $selectedModel->setStatus(\Networking\InitCmsBundle\Model\PageInterface::STATUS_PUBLISHED);
+                $modelManager->save($selectedModel);
+                /** @var $pageHelper \Networking\InitCmsBundle\Helper\PageHelper */
+                $pageHelper = $this->get('networking_init_cms.helper.page_helper');
+                $pageHelper->makePageSnapshot($selectedModel);
+            }
+            return 0;
+        }catch (\Exception $e){
+            $output->writeln($e->getMessage());
+            return 1;
+        }
     }
 
     /**

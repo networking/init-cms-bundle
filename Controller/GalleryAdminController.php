@@ -12,7 +12,6 @@ namespace Networking\InitCmsBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sonata\MediaBundle\Controller\GalleryAdminController as SonataGalleryAdminController;
-
 /**
  * Class GalleryAdminController
  * @package Networking\InitCmsBundle\Controller
@@ -25,12 +24,17 @@ class GalleryAdminController extends SonataGalleryAdminController
      * return the Response object associated to the list action
      *
      * @return Response
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function listAction()
     {
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
+
+        /** @var \Symfony\Component\HttpFoundation\Request $request */
+        $request = $this->getRequest();
+
         /** @var \Sonata\MediaBundle\Provider\Pool $mediaPool */
         $mediaPool = $this->container->get('sonata.media.pool');
 
@@ -38,7 +42,6 @@ class GalleryAdminController extends SonataGalleryAdminController
 
         reset($contexts);
         $contextName = key($contexts);
-        $request = $this->getRequest();
         $datagrid = $this->admin->getDatagrid($request->get('context', $contextName));
         $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
 

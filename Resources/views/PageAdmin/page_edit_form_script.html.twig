@@ -26,36 +26,39 @@ file that was distributed with this source code.
         event.preventDefault();
         event.stopPropagation();
         var form = jQuery(this).closest('form');
-        var url = form.action
         var btn = jQuery(this);
         btn.button('loading');
         jQuery(form).ajaxSubmit({
-            url:form.action,
-            type:"POST",
-            dataType:'json',
-            data:{ _xml_http_request:true },
-            success:function (xhr) {
+            url: form.action,
+            type: "POST",
+            dataType: 'json',
+            data: {_xml_http_request: true},
+            success: function (xhr) {
                 btn.button('reset');
+                var pageStatus = jQuery('.page_status');
                 if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
-                    jQuery('.page_status').addClass('color-draft');
+                    pageStatus.addClass('color-draft');
                 } else {
-                    jQuery('.page_status').removeClass('color-draft');
+                    pageStatus.removeClass('color-draft');
                 }
-                var pageSettings = jQuery(xhr.pageSettings).filter('#pageSettings').html();
-                var pageStatus = jQuery(xhr.pageSettings).filter('#pageStatusSettings').html();
+                var elements = $($.parseHTML(xhr.pageSettings));
+                var pageSettings = $(elements).filter('#pageSettings').html();
+                var pageStatusHtml = $(elements).filter('#pageStatusSettings').html();
+                var pageSettingsFieldsModal = $(elements).filter('#pageSettingsFieldsModal').html();
 
-                jQuery('.page_status').html(xhr.pageStatus);
-                jQuery('.page_title h1').html(xhr.title);
-                jQuery('#pageSettings').html(pageSettings);
-                jQuery('#pageStatusSettings').html(pageStatus);
+                pageStatus.html(xhr.pageStatus);
+                $('.page_title').html(xhr.title);
+                $('#pageSettings').html(pageSettings);
+                $('#pageStatusSettings').html(pageStatusHtml);
+                $('#pageSettingsFieldsModal').html(pageSettingsFieldsModal);
                 $('#pageSettingFields').modal('hide');
 
                 submitLayoutUpdate(form, {});
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             },
-            error:function (xhr, textStatus, errorThrown) {
-                var formHtml = jQuery(xhr.responseText).filter('#pageSettingsFieldsModal').html();
-                $('#pageSettingsFieldsModal').html(formHtml);
+            error: function (xhr, textStatus, errorThrown) {
+                btn.button('reset');
+                $('#pageSettingsFieldsModal').html(xhr.responseText);
             }
         });
     };
@@ -65,44 +68,40 @@ file that was distributed with this source code.
         event.stopPropagation();
 
         $('#confirmMenuCreation').modal('show');
-        var confirm = $('#confirmMenuCreation').find('#btn_create_menu');
-        var url = ui.href;
         $('#show_now_confirm_dialog').attr('checked', false);
 
-        $(confirm).bind('click', function () {
+        $('body').on('click', '#btn_create_menu', function () {
             if ($('#show_now_confirm_dialog').attr('checked')) {
-                window.location = url + '?show_now_confirm_dialog=1';
+                window.location = ui.href + '?show_now_confirm_dialog=1';
             } else {
-                window.location = url;
+                window.location = ui.href;
             }
-
-
         });
     }
 
     (function ($) {
 
-        $("#{{ admin.uniqid }}_locale").live('change', function () {
+        $('body').on('change', '#{{ admin.uniqid }}_locale', function () {
             var locale = $(this).val();
             $.getJSON(
-                    '{{ admin.generateUrl('parentPageList') }}',
-                    {locale:locale},
-                    function (data) {
-                        var parentPages = $("#{{ admin.getUniqid }}_parent");
-                        parentPages.empty();
-                        parentPages.append($('<option></option>'));
-                        $.each(data, function (k, v) {
-                            if (v) {
-                                parentPages.append($('<option></option>').val(k).html(v));
-                            }
-                        });
-                    }
-            )
+                '{{ admin.generateUrl('parentPageList') }}',
+                {locale: locale},
+                function (data) {
+                    var parentPages = $('#{{ admin.getUniqid }}_parent');
+                    parentPages.empty();
+                    parentPages.append($('<option></option>'));
+                    $.each(data, function (k, v) {
+                        if (v) {
+                            parentPages.append($('<option></option>').val(k).html(v));
+                        }
+                    });
+                }
+            );
         });
 
-        $("#{{ admin.uniqid }}_parent").live("change", function (e) {
+        $('body').on('change', '#{{ admin.uniqid }}_parent', function (e) {
             var path = $('#{{ admin.uniqid }}_url').val();
-            var pageId = e.val
+            var pageId = e.val;
             if (pageId == '') {
                 $('#help_{{ admin.uniqid }}_url').html('/' + path);
             } else {
@@ -110,21 +109,19 @@ file that was distributed with this source code.
                     pageId = $("#{{ admin.uniqid }}_parent").val();
                 }
                 $.getJSON(
-                        '{{ admin.generateUrl('getPath') }}',
-                        {'page_id':pageId, 'path':path},
-                        function (xhr) {
-                            $('#help_{{ admin.uniqid }}_url').html(xhr.path);
-                        }
+                    '{{ admin.generateUrl('getPath') }}',
+                    {'page_id': pageId, 'path': path},
+                    function (xhr) {
+                        $('#help_{{ admin.uniqid }}_url').html(xhr.path);
+                    }
                 );
             }
-
         });
 
 
-        $('#{{ admin.uniqid }}_url').live('change', function () {
-                 $("#{{ admin.uniqid }}_parent").trigger('change');
-             });
-
+        $('body').on('change', '#{{ admin.uniqid }}_url', function () {
+            $("#{{ admin.uniqid }}_parent").trigger('change');
+        });
 
 
         {% if not app.user.getAdminSetting('menuAdmin.show_now_confirm_dialog') %}
@@ -143,7 +140,7 @@ file that was distributed with this source code.
         });
         {% endif %}
 
-        $('#review_status').live('click', function () {
+        $('body').on('click', '#review_status', function () {
             if ($(this).attr('checked')) {
                 window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
             } else {

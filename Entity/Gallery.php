@@ -11,8 +11,8 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM,
-    Sonata\MediaBundle\Entity\BaseGallery as BaseGallery;
+use Doctrine\ORM\Mapping as ORM;
+use Sonata\MediaBundle\Entity\BaseGallery as BaseGallery;
 
 /**
  * @author Yorkie Chawdick <y.chadwick@networking.ch>

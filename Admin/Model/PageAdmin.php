@@ -301,8 +301,8 @@ abstract class PageAdmin extends BaseAdmin
                     'catalogue' => $this->translationDomain
                 )
             )
-            ->add('activeFrom', null, array('required' => false, 'date_widget' => 'single_text', 'date_format' => 'dd.MM.yyyy', 'datepicker' => true))
-            ->add('activeTo', null, array('required' => false, 'date_widget' => 'single_text', 'date_format' => 'dd.MM.yyyy', 'datepicker' => true))
+            ->add('activeFrom', 'datetime', array('required' => false, 'date_widget' => 'single_text', 'date_format' => 'dd.MM.yyyy', 'datepicker' => true))
+            ->add('activeTo', 'datetime', array('required' => false, 'date_widget' => 'single_text', 'date_format' => 'dd.MM.yyyy', 'datepicker' => true))
             ->add(
                 'templateName',
                 'networking_type_iconradio',
@@ -409,12 +409,12 @@ abstract class PageAdmin extends BaseAdmin
     public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
         if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
-            return;
+            return false;
         }
         $data['value'] = trim($data['value']);
 
         if (strlen($data['value']) == 0) {
-            return;
+            return false;
         }
 
         $fieldName = 'path';
@@ -428,12 +428,18 @@ abstract class PageAdmin extends BaseAdmin
         return true;
     }
 
+    /**
+     * @param string $context
+     * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
+     */
     public function createQuery($context = 'list')
     {
         $query = parent::createQuery($context);
-        $query->addSelect('c');
-        $query->leftJoin(sprintf('%s.contentRoute', $query->getRootAlias()), 'c');
-        $query->orderBy('c.path', 'asc');
+        if($context == 'list'){
+            $query->addSelect('c');
+            $query->leftJoin(sprintf('%s.contentRoute', $query->getRootAlias()), 'c');
+            $query->orderBy('c.path', 'asc');
+        }
 
 
         return $query;
@@ -453,9 +459,10 @@ abstract class PageAdmin extends BaseAdmin
             $locale = $this->getDefaultLocale();
             $active = false;
         }
-
-        $ProxyQuery->andWhere(sprintf('%s.locale = :locale', $alias));
-        $ProxyQuery->setParameter(':locale', $locale);
+        $qb = $ProxyQuery->getQueryBuilder();
+        $qb->andWhere(sprintf('%s.locale = :locale', $alias));
+        $qb->orderBy(sprintf('%s.path', $alias), 'asc');
+        $qb->setParameter(':locale', $locale);
 
         return $active;
     }
@@ -564,7 +571,7 @@ abstract class PageAdmin extends BaseAdmin
         $translationLanguages = new \Doctrine\Common\Collections\ArrayCollection();
 
         if (!$id = $this->getRequest()->get('id')) {
-            return;
+            return false;
         }
 
         /** @var $pageManager PageManagerInterface */
@@ -637,7 +644,7 @@ abstract class PageAdmin extends BaseAdmin
             return $this->getSubject()->getTemplateName();
         }
         $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
-        $firstTemplate = reset($templates);
+        reset($templates);
         $defaultTemplate = key($templates);
 
         return $defaultTemplate;

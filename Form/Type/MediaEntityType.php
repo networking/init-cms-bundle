@@ -10,26 +10,20 @@
 
 namespace Networking\InitCmsBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Admin\Pool;
 use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
-use Sonata\AdminBundle\Form\Type\ModelHiddenType;
-use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityChoiceList;
-use Symfony\Bridge\Doctrine\Form\ChoiceList\ORMQueryBuilderLoader;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class MediaEntityType
  * @package Networking\InitCmsBundle\Form\Type
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MediaEntityType extends ModelHiddenType
+class MediaEntityType extends AbstractType
 {
     /**
      * @var array
@@ -74,8 +68,7 @@ class MediaEntityType extends ModelHiddenType
         }
 
         $builder
-                    ->addViewTransformer(new ModelToIdTransformer($options['model_manager'], $options['class']), true)
-                ;
+            ->addViewTransformer(new ModelToIdTransformer($options['model_manager'], $options['class']), true);
     }
 
     /**
@@ -105,15 +98,16 @@ class MediaEntityType extends ModelHiddenType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
 
-        parent::setDefaultOptions($resolver);
-
         $resolver->setDefaults(
             array(
+                'model_manager' => null,
+                'class' => null,
                 'required' => false,
                 'provider_name' => false,
                 'context' => false,
                 'admin_code' => 'sonata.media.admin.media',
-                'error_bubbling' => false
+                'error_bubbling' => false,
+                'compound' => false,
 
             )
         );
@@ -122,14 +116,6 @@ class MediaEntityType extends ModelHiddenType
 
 
         $resolver->addAllowedValues(array('required' => array(false)));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getParent()
-    {
-        return 'hidden';
     }
 
 

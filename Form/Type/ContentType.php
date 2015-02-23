@@ -51,6 +51,7 @@ class ContentType extends AbstractType
 
         $annotations = $this->annotationReader->getFormMapperAnnotations($options['class']);
 
+
         $defaultValue = null;
 
         foreach ($annotations as $propertyName => $annotation) {
@@ -59,9 +60,10 @@ class ContentType extends AbstractType
             $builder->add(
                 $fieldName,
                 $annotation->getType(),
-                $annotation->getOptions()
+                array_merge($annotation->getOptions(), array())
             );
         }
+        $this->invokeCallbacks($options['class'], $this->annotationReader->getFormMapperCallbacks($options['class']), array($builder));
         $options['data_class'] = $options['class'];
     }
 
@@ -99,6 +101,22 @@ class ContentType extends AbstractType
             )
         );
 
+    }
+
+    /**
+     * @param string $entity
+     * @param array $callbacks
+     * @param array $args
+     */
+    protected function invokeCallbacks($entity, array $callbacks, array $args)
+    {
+        if(count($callbacks) > 0){
+            $classReflection = new \ReflectionClass($entity);
+            foreach($callbacks as $methodName => $annotation){
+                $method = $classReflection->getMethod($methodName);
+                $method->invokeArgs(null, $args);
+            }
+        }
     }
 
     public function getName()

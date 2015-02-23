@@ -11,9 +11,6 @@
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\EventListener\AdminToolbarListener;
-use Networking\InitCmsBundle\Lib\PhpCache;
-use Networking\InitCmsBundle\Model\PageSnapshotInterface;
-use Proxies\__CG__\Networking\InitCmsBundle\Entity\PageSnapshot;
 use Sonata\CoreBundle\Exception\InvalidParameterException;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -40,10 +37,6 @@ class NetworkingInitCmsExtension extends Extension
         $configuration = new Configuration();
         $defaults = Yaml::parse(__DIR__ . '/../Resources/config/cms/config.yml');
 
-
-
-
-
         foreach ($configs as $config) {
                     foreach ($config as $key => $value) {
                         $defaults['networking_init_cms'][$key] = $value;
@@ -52,8 +45,6 @@ class NetworkingInitCmsExtension extends Extension
                 }
 
         $config = $this->processConfiguration($configuration, $defaults);
-
-
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('blocks.xml');
@@ -71,7 +62,6 @@ class NetworkingInitCmsExtension extends Extension
             $loader->load(sprintf('ext_admin_%s.xml', $config['db_driver']));
             $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
         }
-
 
 
         $config['languages'] = $this->addShortLabels($config['languages']);
@@ -112,7 +102,6 @@ class NetworkingInitCmsExtension extends Extension
         }else{
             throw new InvalidParameterException('Cache class should implement the PhpCacheInterface interface');
         }
-
 
         $this->configureClass($config, $container);
     }

@@ -46,18 +46,23 @@ class PhpCache implements PhpCacheInterface {
      * @param string $rootDir
      * @param string $env
      * @param bool $active
-     * @param string $cacheTime
+     * @param string $cacheTime in seconds
+     * @param null $securityKey possibilities are auto (domain name), a string or null
      * @throws \Exception
      */
-    public function __construct($type = '', $rootDir = '', $env = '', $active = false, $cacheTime = ''){
+    public function __construct($type = '', $rootDir = '', $env = '', $active = false, $cacheTime = '', $securityKey = null){
         $this->env = $env;
         $this->cacheDir = $this->createDir($rootDir, $env);
         $this->active = $active;
         $this->cacheTime = $cacheTime;
+        if(is_null($securityKey)){
+            $securityKey = 'cache.storage.'.sha1(__FILE__);
+        }
 
         phpFastCache::$default_chmod = 0755;
         phpFastCache::setup("storage", $type);
         phpFastCache::setup("path", $this->cacheDir );
+        phpFastCache::setup("securityKey", $securityKey);
         $this->phpFastCache = new phpFastCache();
     }
 
@@ -128,7 +133,10 @@ class PhpCache implements PhpCacheInterface {
      * @param array $option
      * @return array|bool|string
      */
-    public function set($keyword, $value = "", $time = 300, $option = array() ){
+    public function set($keyword, $value = "", $time = null, $option = array() ){
+        if(is_null($time)){
+            $time = $this->cacheTime;
+        }
         return $this->phpFastCache->set($keyword, $value, $time, $option);
     }
 
@@ -158,7 +166,10 @@ class PhpCache implements PhpCacheInterface {
      * @param array $option
      * @return bool
      */
-    public function touch($keyword, $time = 300, $option = array()){
+    public function touch($keyword, $time = null, $option = array()){
+        if(is_null($time)){
+            $time = $this->cacheTime;
+        }
         return $this->phpFastCache->touch($keyword, $time, $option);
     }
 
@@ -185,6 +196,14 @@ class PhpCache implements PhpCacheInterface {
     public function setPhpFastCache($phpFastCache)
     {
         $this->phpFastCache = $phpFastCache;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->active;
     }
 
 }

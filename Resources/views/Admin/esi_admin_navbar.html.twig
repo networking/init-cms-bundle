@@ -22,7 +22,11 @@
                             </div>
                             <div class="span5">
                                 {% if admin_pool is defined %}
-                                    {{ mopa_bootstrap_navbar('AdminMenu') }}
+                                    {{ knp_menu_render('AdminMenu',
+                                    {'currentClass': 'active',
+                                    'ancestorClass': 'active',
+                                    'allow_safe_labels': true
+                                    }) }}
                                 {% endif %}
                             </div>
                         </div>

@@ -26,14 +26,21 @@ class FrontendMenuBuilder extends MenuBuilder
     /**
      * Creates the main page navigation for the left side of the top frontend navigation
      *
-     * @param Request $request
      * @param $menuName
      * @param string $classes
      * @return \Knp\Menu\ItemInterface|\Knp\Menu\MenuItem
      */
-    public function createMainMenu(Request $request, $menuName, $classes = '')
+    /**
+     * Creates the main page navigation for the left side of the top frontend navigation
+     *
+     * @param $menuName
+     * @param string $classes
+     * @return \Knp\Menu\ItemInterface|\Knp\Menu\MenuItem
+     */
+    public function createMainMenu($menuName, $classes)
     {
-        $menu = $this->createNavbarMenuItem();
+        $classes = $classes ? $classes : 'nav nav-tabs nav-stacked';
+        $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', $classes);
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
@@ -52,14 +59,14 @@ class FrontendMenuBuilder extends MenuBuilder
     /**
      * Create frontend sub navigation on the left hand side of the screen
      *
-     * @param  \Symfony\Component\HttpFoundation\Request $request
      * @param  string $menuName
      * @param string $classes
      * @return bool|\Knp\Menu\ItemInterface
      */
-    public function createSubnavMenu(Request $request, $menuName, $classes = 'nav nav-tabs nav-stacked')
+    public function createSubnavMenu($menuName, $classes)
     {
-        $menu = $this->createNavbarMenuItem();
+        $classes = $classes ? $classes : 'nav nav-tabs nav-stacked';
+        $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', $classes);
 
         /** @var $mainMenu Menu */
@@ -74,6 +81,7 @@ class FrontendMenuBuilder extends MenuBuilder
         $menu = $this->createMenu($menu, $menuIterator, $startDepth);
         $this->showOnlyCurrentChildren($menu);
         $this->setRecursiveAttribute($menu, array('class' => 'nav nav-list'));
+
         return $menu;
     }
 
@@ -113,9 +121,9 @@ class FrontendMenuBuilder extends MenuBuilder
      * @param string $classes
      * @return \Knp\Menu\ItemInterface
      */
-    public function createFooterMenu(Request $request, $menuName, $classes = '')
+    public function createFooterMenu($menuName, $classes = '')
     {
-        $menu = $this->createNavbarMenuItem();
+        $menu = $this->factory->createItem($menuName);
         $menu->setChildrenAttribute('class', $classes);
 
         /** @var $mainMenu Menu */
@@ -133,19 +141,18 @@ class FrontendMenuBuilder extends MenuBuilder
     /**
      * Used to create nodes for the language navigation in the front- and backend
      *
-     * @param $menu
+     * @param  \Knp\Menu\ItemInterface $menu
      * @param array $languages
      * @param $currentLanguage
      * @param string $route
      */
     public function createDropdownLangMenu(
-        &$menu,
+        \Knp\Menu\ItemInterface &$menu,
         array $languages,
         $currentLanguage,
         $route = 'networking_init_change_language'
     )
     {
-        $this->addDivider($menu, true);
 
         $dropdown = $this->createDropdownMenuItem(
             $menu,
@@ -167,13 +174,13 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     /**
-     * @param $menu
+     * @param  \Knp\Menu\ItemInterface $menu
      * @param array $languages
      * @param $currentLanguage
      * @param string $route
      */
     public function createInlineLangMenu(
-        &$menu,
+        \Knp\Menu\ItemInterface &$menu,
         array $languages,
         $currentLanguage,
         $route = 'networking_init_change_language'

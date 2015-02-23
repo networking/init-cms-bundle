@@ -42,9 +42,16 @@ class PageHelper
         }
         $path = implode(PageInterface::PATH_SEPARATOR, $pathArray);
 
+        //add first slash
         if (substr($path, 0, 1) != PageInterface::PATH_SEPARATOR) {
             $path = PageInterface::PATH_SEPARATOR . $path;
         }
+
+        //remove last slash
+//        if(substr($path, -1, 1) == PageInterface::PATH_SEPARATOR){
+//            $path = substr($path,0, -1);
+//        }
+
 
         return $path;
     }
@@ -231,6 +238,7 @@ class PageHelper
      * Unserialize the PageSnapshot data into a page object
      *
      * @param PageSnapshotInterface $pageSnapshot
+     * @param bool $unserializeTranslations
      * @return PageInterface
      */
     public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $unserializeTranslations = true)
@@ -239,6 +247,7 @@ class PageHelper
         $serializer = $this->getService('serializer');
         $context = new PageSnapshotDeserializationContext();
         $context->setDeserializeTranslations($unserializeTranslations);
+
         return $serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json', $context);
     }
 

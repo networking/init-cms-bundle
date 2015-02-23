@@ -57,6 +57,7 @@ class HelpTextController extends Controller
         /** @var \Networking\InitCmsBundle\Admin\Pool $pool */
         $pool = $this->get('sonata.admin.pool');
         $parameters['admin_pool'] = $pool;
+        $parameters['base_template'] = isset($admin) ?  $this->getBaseTemplate($admin): 'NetworkingInitCmsBundle::admin_layout.html.twig';
         $dashBoardGroups = $pool->getDashboardNavigationGroups();
 
 
@@ -70,6 +71,20 @@ class HelpTextController extends Controller
             'NetworkingInitCmsBundle:HelpText:adminHelp.html.twig',
             $parameters
         );
+    }
+
+    /**
+     * return the base template name
+     *
+     * @return string the template name
+     */
+    protected function getBaseTemplate($admin)
+    {
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            return $admin->getTemplate('ajax');
+        }
+
+        return $admin->getTemplate('layout');
     }
 
     /**

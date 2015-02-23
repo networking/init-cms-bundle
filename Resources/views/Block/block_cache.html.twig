@@ -39,7 +39,6 @@
 
                                         } else {
                                             $('#ajaxResponseDiv').html('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ 'cache.delete.erroranswer'|trans({}, 'NetworkingInitCmsBundle') }}</div>');
-                                            //$('#ajaxResponseDiv').text('Cache nicht geleert');
                                         }
 
                                     }, "json");
@@ -52,10 +51,10 @@
                     </script>
                 {% else %}
                     {# cache is not activated #}
-                    <div class="col-md-12"><span
+                    <div class="col-span-12"><span
                                 class="color-draft">{{ 'cache.inactive'|trans({}, 'NetworkingInitCmsBundle') }}</span>
                     </div>
-                    <div class="col-md-12">{{ 'cache.inactiveMoreInformation'|trans({}, 'NetworkingInitCmsBundle') | raw }}</div>
+                    <div class="col-span-12">{{ 'cache.inactiveMoreInformation'|trans({}, 'NetworkingInitCmsBundle') | raw }}</div>
                 {% endif %}
             </div>
 

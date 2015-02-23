@@ -133,6 +133,7 @@ abstract class ContentRouteManager extends BaseContentRouteManager
 
         $tempContentRoutes = array_filter($contentRoutes, array($this, 'filterByLocale'));
 
+
         if (empty($tempContentRoutes)) {
             $tempContentRoutes = $contentRoutes;
         }
@@ -141,7 +142,9 @@ abstract class ContentRouteManager extends BaseContentRouteManager
         foreach ($tempContentRoutes as $key => $contentRoute) {
 
 
-            $viewStatus = $this->request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED);
+            $viewStatus = ($this->request)?$this->request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED): VersionableInterface::STATUS_PUBLISHED;
+
+
             $test = new \ReflectionClass($contentRoute->getClassType());
 
             if ($viewStatus == VersionableInterface::STATUS_DRAFT && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface') )) {
@@ -168,8 +171,16 @@ abstract class ContentRouteManager extends BaseContentRouteManager
         return $collection;
     }
 
-    protected function filterByLocale($var)
+    /**
+     * @param ContentRouteInterface $var
+     * @return bool
+     */
+    protected function filterByLocale(ContentRouteInterface $var)
     {
-        return $var->getLocale() == $this->request->getLocale();
+        if($this->request){
+            return $var->getLocale() == $this->request->getLocale();
+        }else{
+            return true;
+        }
     }
 }

@@ -47,8 +47,8 @@ var field_dialog_form_add_{{ id }} = function (event) {
 
             // capture the submit event to make an ajax call, ie : POST data to the
             // related create admin
-            jQuery('a', field_dialog_{{ id }}).live('click', field_dialog_form_action_{{ id }});
-            jQuery('form', field_dialog_{{ id }}).live('submit', field_dialog_form_action_{{ id }});
+            jQuery( field_dialog_{{ id }}).on('click', 'a', field_dialog_form_action_{{ id }});
+            jQuery(field_dialog_{{ id }}).on('submit', 'form', field_dialog_form_action_{{ id }});
 
 
             // open the dialog in modal mode
@@ -61,8 +61,8 @@ var field_dialog_form_add_{{ id }} = function (event) {
                 if (!jQuery(e.target).hasClass('collapse')) {
                     Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
                     // make sure we have a clean state
-                jQuery('a', field_dialog_{{ id }}).die('click');
-                jQuery('form', field_dialog_{{ id }}).die('submit');
+                    jQuery('a', field_dialog_{{ id }}).off('click');
+                    jQuery('form', field_dialog_{{ id }}).off('submit');
                 }
             });
         }
@@ -185,8 +185,8 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
             success: function (html) {
                 Admin.log('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
 
-                $('#field_dialog_{{ id }}').html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div>');
-                field_dialog_form_list_handle_action_{{ id }}();
+                field_dialog_{{ id }}.html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div>');
+                {#field_dialog_form_list_handle_action_{{ id }}();#}
             }
         });
 
@@ -210,8 +210,8 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
 
     // capture the submit event to make an ajax call, ie : POST data to the
     // related create admin
-    jQuery('a', field_dialog_{{ id }}).live('click', field_dialog_form_list_link_{{ id }});
-    jQuery('form', field_dialog_{{ id }}).live('submit', function (event) {
+    jQuery(field_dialog_{{ id }}).on('click', 'a', field_dialog_form_list_link_{{ id }});
+    jQuery(field_dialog_{{ id }}).on('submit', 'form', function (event) {
         event.preventDefault();
 
         var form = jQuery(this);
@@ -228,7 +228,6 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
                 Admin.log('[{{ id }}|field_dialog_form_list_handle_action] form submit success, restoring event');
 
                 field_dialog_{{ id }}.html('<div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div>');
-                field_dialog_form_list_handle_action_{{ id }}();
             }
         });
     });
@@ -263,8 +262,8 @@ var field_dialog_form_list_{{ id }} = function (event) {
 
             // capture the submit event to make an ajax call, ie : POST data to the
             // related create admin
-            jQuery('a', field_dialog_{{ id }}).live('click', field_dialog_form_list_link_{{ id }});
-            jQuery('form', field_dialog_{{ id }}).live('submit', function (event) {
+            jQuery(field_dialog_{{ id }}).on('click', 'a', field_dialog_form_list_link_{{ id }});
+            jQuery( field_dialog_{{ id }}).on('submit','form', function (event) {
                 event.preventDefault();
 
                 var form = jQuery(this);
@@ -288,8 +287,8 @@ var field_dialog_form_list_{{ id }} = function (event) {
                 if (!jQuery(e.target).hasClass('collapse')) {
                     Admin.log('[{{ id }}|field_dialog_form_list] close callback, removing js event');
                     // make sure we have a clean state
-                    jQuery('a', field_dialog_{{ id }}).die('click');
-                    jQuery('form', field_dialog_{{ id }}).die('submit');
+                    jQuery('a', field_dialog_{{ id }}).off('click');
+                    jQuery('form', field_dialog_{{ id }}).off('submit');
                 }
             });
         }
@@ -364,12 +363,12 @@ function field_remove_element_{{ id }}(event) {
     return false;
 }
 
-jQuery('#{{ id }}').live('change', function (event) {
+jQuery('#{{ id }}').on('change', function (event) {
 
     Admin.log('[{{ id }}] update the label');
 
     jQuery('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/sonataadmin/ajax-loader.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
-    if (field_value_{{ id }}) {
+    if (jQuery('#{{ id }}').val()) {
         jQuery.ajax({
             type: 'GET',
             url: '{{ url('sonata_admin_short_object_information', {
@@ -382,6 +381,8 @@ jQuery('#{{ id }}').live('change', function (event) {
                 jQuery('#field_widget_{{ id }}').html(html);
             }
         });
+    }else{
+        jQuery('#field_widget_{{ id }}').html('');
     }
 
 });

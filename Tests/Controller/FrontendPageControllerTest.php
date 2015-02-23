@@ -47,7 +47,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockRequest->expects($this->once())
+        $mockRequest->expects($this->any())
             ->method('get')
             ->with('_content')
             ->will($this->returnValue($mockPage));
@@ -55,6 +55,11 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockSecurityContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockSecurityContext->expects($this->any())
+            ->method('getToken')
+            ->will($this->returnValue(null));
+
         $mockSecurityContext->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
@@ -63,7 +68,28 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockContainer->expects($this->any())
+
+        //cache class
+        $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockContainer->expects($this->at(0))
+            ->method('get')
+            ->with('networking_init_cms.lib.php_cache')
+            ->will($this->returnValue($mockCacheClass));
+
+        $mockContainer->expects($this->at(1))
+            ->method('has')
+            ->with('security.context')
+            ->will($this->returnValue(true));
+
+        $mockContainer->expects($this->at(2))
+            ->method('get')
+            ->with('security.context')
+            ->will($this->returnValue($mockSecurityContext));
+
+        $mockContainer->expects($this->at(3))
             ->method('get')
             ->with('security.context')
             ->will($this->returnValue($mockSecurityContext));
@@ -102,7 +128,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockRequest->expects($this->once())
+        $mockRequest->expects($this->any())
             ->method('get')
             ->with('_content')
             ->will($this->returnValue($mockPage));
@@ -110,6 +136,12 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockSecurityContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
             ->disableOriginalConstructor()
             ->getMock();
+
+
+        $mockSecurityContext->expects($this->any())
+            ->method('getToken')
+            ->will($this->returnValue(null));
+
         $mockSecurityContext->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_SONATA_ADMIN')
@@ -118,7 +150,27 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockContainer->expects($this->any())
+        //cache class
+        $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockContainer->expects($this->at(0))
+            ->method('get')
+            ->with('networking_init_cms.lib.php_cache')
+            ->will($this->returnValue($mockCacheClass));
+
+        $mockContainer->expects($this->at(1))
+            ->method('has')
+            ->with('security.context')
+            ->will($this->returnValue(true));
+
+        $mockContainer->expects($this->at(2))
+            ->method('get')
+            ->with('security.context')
+            ->will($this->returnValue($mockSecurityContext));
+
+        $mockContainer->expects($this->at(3))
             ->method('get')
             ->with('security.context')
             ->will($this->returnValue($mockSecurityContext));
@@ -159,10 +211,16 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->method('unserializePageSnapshotData')
             ->will($this->returnValue($mockPage));
 
+        //cache class
+        $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         //security context
         $mockSecurityContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
             ->disableOriginalConstructor()
             ->getMock();
+
         $mockSecurityContext->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
@@ -177,7 +235,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockTemplating->expects($this->once())
-            ->method('renderResponse')
+            ->method('render')
             ->will($this->returnValue($mockResponse));
 
         //request
@@ -191,24 +249,46 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockRequest->expects($this->at(1))
             ->method('get')
+            ->with('_content')
+            ->will($this->returnValue($mockSnapshot));
+
+        $mockRequest->expects($this->at(2))
+            ->method('get')
             ->with('_template');
 
         //Container
         $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
             ->disableOriginalConstructor()
             ->getMock();
+
+
         $mockContainer->expects($this->at(0))
+            ->method('get')
+            ->with('networking_init_cms.lib.php_cache')
+            ->will($this->returnValue($mockCacheClass));
+
+        $mockContainer->expects($this->at(1))
+            ->method('has')
+            ->with('security.context')
+            ->will($this->returnValue(true));
+
+        $mockContainer->expects($this->at(2))
+            ->method('get')
+            ->with('security.context')
+            ->will($this->returnValue($mockSecurityContext));
+
+        $mockContainer->expects($this->at(3))
             ->method('get')
             ->with('networking_init_cms.helper.page_helper')
             ->will($this->returnValue($mockHelper));
 
-        $mockContainer->expects($this->at(1))
+        $mockContainer->expects($this->at(4))
             ->method('get')
             ->with('security.context')
             ->will($this->returnValue($mockSecurityContext));
 
 
-        $mockContainer->expects($this->at(2))
+        $mockContainer->expects($this->at(5))
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTemplating));
@@ -297,7 +377,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockTemplating->expects($this->once())
-            ->method('renderResponse')
+            ->method('render')
             ->will($this->returnValue($mockResponse));
         //request
         $request = new Request(array(), array(), array(), array(), array(), $_SERVER);
@@ -318,6 +398,11 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        //cache class
+        $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
+            ->disableOriginalConstructor()
+            ->getMock();
+
 
         $mockContainer->expects($this->at(0))
             ->method('get')
@@ -333,20 +418,36 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockContainer->expects($this->at(2))
             ->method('get')
-            ->with('networking_init_cms.helper.page_helper')
-            ->will($this->returnValue($pageHelper));
+            ->with('networking_init_cms.lib.php_cache')
+            ->will($this->returnValue($mockCacheClass));
 
         $mockContainer->expects($this->at(3))
-            ->method('get')
-            ->with('serializer')
-            ->willReturn($mockSerializer);
+            ->method('has')
+            ->with('security.context')
+            ->will($this->returnValue(true));
 
         $mockContainer->expects($this->at(4))
             ->method('get')
             ->with('security.context')
             ->will($this->returnValue($mockSecurityContext));
 
+
         $mockContainer->expects($this->at(5))
+            ->method('get')
+            ->with('networking_init_cms.helper.page_helper')
+            ->will($this->returnValue($pageHelper));
+
+        $mockContainer->expects($this->at(6))
+            ->method('get')
+            ->with('serializer')
+            ->willReturn($mockSerializer);
+
+        $mockContainer->expects($this->at(7))
+            ->method('get')
+            ->with('security.context')
+            ->will($this->returnValue($mockSecurityContext));
+
+        $mockContainer->expects($this->at(8))
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTemplating));

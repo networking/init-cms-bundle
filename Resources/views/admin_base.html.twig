@@ -25,6 +25,9 @@ file that was distributed with this source code.
         output='css/initcms_admin.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
         {% endstylesheets %}
+        {% block content_css %}
+            {% if content_css() %}<link href="{{ asset(content_css()) }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
+        {% endblock content_css %}
     {% endblock %}
 
     {% block javascripts %}
@@ -53,43 +56,6 @@ file that was distributed with this source code.
     {# initialize block value #}
 
 {% block init_cms_top_nav %}
-    <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
-        <div class="navbar-inner">
-            <div class="container">
-                <div class="row">
-                    <div class="span2">
-                        <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
-                            <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
-                        </a>
-                    </div>
-                    <div class="span5">
-                        {% if admin_pool is defined %}
-                            <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
-                                {{ admin_pool.title }}
-                            </a>
-                            {% include admin_pool.getTemplate('user_block') %}
-                        {% endif %}
-                    </div>
-                    <div class="span5">
-                        <div class="pull-right">
-                            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </a>
-                        </div>
-                        <div class="pull-right nav-admin">
-                            {% if admin_pool is defined %}
-                                {{ mopa_bootstrap_navbar('AdminMenu') }}
-                                {#{{ mopa_bootstrap_navbar('adminLangNavbar') }}#}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock init_cms_top_nav %}
 
 {% block navbar_spacer %}

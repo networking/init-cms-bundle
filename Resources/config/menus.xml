@@ -27,17 +27,12 @@
             <tag name="knp_menu.menu" alias="AdminMenu"/>
         </service>
 
-        <service id="networking_init_cms.menu.admin_menu_template" class="%mopa_bootstrap.navbar.generic%">
-            <argument type="collection">
-                <argument key="status_menu" on-invalid="null" strict="false" type="service" id="networking_init_cms.menu.admin_menu"/>
-            </argument>
-            <argument type="collection" />
-            <argument type="collection">
-                <argument key="fixedTop">false</argument>
-                <argument key="isFluid">false</argument>
-                <argument key="template">NetworkingInitCmsBundle:Navbar:admin_nav_items.html.twig</argument>
-            </argument>
-            <tag name="mopa_bootstrap.navbar" alias="AdminMenu" />
+        <service id="networking_init_cms.menu.admin_side_menu" class="Knp\Menu\MenuItem"
+                 factory-service="networking_init_cms.menu.admin_menu_builder"
+                 factory-method="createAdminSideMenu"
+                 scope="request">
+            <argument key="menuGroups">%networking_init_cms.admin_menu_groups%</argument>
+            <tag name="knp_menu.menu" alias="AdminSideMenu"/>
         </service>
 
     </services>

@@ -17,8 +17,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
-use Doctrine\Common\Collections\ArrayCollection;
+use Networking\InitCmsBundle\Entity\MenuItemManager;
+
 /**
  * Class MenuItemAdminController
  * @package Networking\InitCmsBundle\Controller
@@ -69,7 +69,7 @@ class MenuItemAdminController extends CRUDController
 
         $menus = array();
 
-        /** @var MenuItemManagerInterface $menuItemManager */
+        /** @var MenuItemManager $menuItemManager */
         $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
 
 
@@ -143,7 +143,7 @@ class MenuItemAdminController extends CRUDController
 
                     $menus = array(
                         'rootNode' => $rootNode,
-                        'navigation' => $this->createNotLastEditedNavigation(
+                        'navigation' => $this->createPlacementNavigation(
                                 $rootNode,
                                 $admin,
                                 $controller,
@@ -176,6 +176,7 @@ class MenuItemAdminController extends CRUDController
 
 
         $datagrid = $this->admin->getDatagrid();
+
 
         if ($menuId) {
             $menu = $menuItemManager->find($menuId);
@@ -371,7 +372,7 @@ class MenuItemAdminController extends CRUDController
         $this->admin->createObjectSecurity($menuItem);
 
         return $this->redirect(
-            $this->admin->generateUrl('list', array('page_id' => $page->getId(), 'menu_id' => $menuItem->getId()))
+            $this->admin->generateUrl('list', array('page_id' => $page->getId(), 'menu_id' => $menuItem->getId())).'#end'
         );
 
     }
@@ -474,6 +475,12 @@ class MenuItemAdminController extends CRUDController
         return $response;
     }
 
+    /**
+     * renders the template html for the modal
+     *
+     * @return bool|string|Response
+     * @throws \Sonata\AdminBundle\Exception\NoValueException
+     */
     public function placementAction()
     {
         /** @var \Networking\InitCmsBundle\Entity\MenuItem $rootNode */
@@ -498,8 +505,14 @@ class MenuItemAdminController extends CRUDController
         return empty($name) ? 'global' : $name;
     }
 
-
-    public function createNotLastEditedNavigation($rootNode, $admin, $controller, $menuItemManager)
+    /**
+     * @param $rootNode
+     * @param $admin
+     * @param $controller
+     * @param $menuItemManager
+     * @return mixed
+     */
+    public function createPlacementNavigation($rootNode, $admin, $controller, $menuItemManager)
     {
         $lastEdited = $this->get('session')->get('MenuItem.last_edited');
 
@@ -537,14 +550,16 @@ class MenuItemAdminController extends CRUDController
                 array('admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node)
             );
         };
+
+
         $rootOpen = function($tree){
-            $node = $tree[0];
-            if($node['lvl'] == 1){
-                $class = 'ui-sortable';
-            }else{
-                $class =  'table-row-style';
-            }
-            return sprintf('<ul class="%s">', $class);
+           $node = $tree[0];
+                if($node['lvl'] == 1){
+                    $class = 'ui-sortable';
+                }else{
+                    $class =  'table-row-style';
+                }
+           return sprintf('<ul class="%s">', $class);
         };
 
         $navigation = $menuItemManager->childrenHierarchy(
@@ -563,11 +578,17 @@ class MenuItemAdminController extends CRUDController
         return $navigation;
     }
 
+    /**
+     * @param Request $request
+     * @param $newMenuItemId
+     * @param $menuItemId
+     * @return Response
+     */
     public function newPlacementAction(Request $request, $newMenuItemId, $menuItemId)
     {
-        $sibling = $this->getRequest()->get('sibling');
+        $sibling = $request->get('sibling');
 
-        /** @var MenuItemManagerInterface $menuItemManager */
+        /** @var MenuItemManager $menuItemManager */
         $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
         $newMenuItem = $menuItemManager->find($newMenuItemId);
         $menuItem = $menuItemManager->find($menuItemId);

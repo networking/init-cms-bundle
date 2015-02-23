@@ -128,7 +128,7 @@ class Media extends BaseMedia
      * fake setter
      * @return $this
      */
-    public function setImage()
+    public function setImage($image)
     {
         return $this;
     }

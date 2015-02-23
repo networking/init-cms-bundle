@@ -110,7 +110,16 @@ class LanguageSwitcherHelper
 
         $request = $this->pageHelper->matchContentRouteRequest(Request::create($oldUrl));
 
-        if (!$content = $request->get('_content', false)) return $this->router->matchRequest(Request::create($oldUrl));
+        if (!$content = $request->get('_content', false)){
+            $route = $this->router->matchRequest(Request::create($oldUrl));
+            if (!array_key_exists('_content', $route)){
+                return $route;
+            }
+
+            if(!$content = $route['_content']){
+                return $route;
+            }
+        }
 
         if ($content instanceof PageInterface) {
             $translation = $content->getAllTranslations()->get($locale);
@@ -127,6 +136,7 @@ class LanguageSwitcherHelper
         if ($content instanceof PageSnapshotInterface) {
 
             $content = $this->pageHelper->unserializePageSnapshotData($content);
+
 
             $translation = $content->getAllTranslations()->get($locale);
 

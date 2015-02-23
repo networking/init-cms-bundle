@@ -12,6 +12,8 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -330,6 +332,7 @@ class PageAdminController extends CRUDController
      */
     public function editAction($id = null)
     {
+        /** @var Request $request */
         $request = $this->getRequest();
         // the key used to lookup the template
         $templateKey = 'edit';
@@ -354,63 +357,24 @@ class PageAdminController extends CRUDController
         $form = $this->admin->getForm();
         $form->setData($object);
 
-        $this->getRequest()->attributes->add(array('objectId' => $id));
-        $this->getRequest()->attributes->add(array('page_locale' => $object->getLocale()));
-
         if ($request->getMethod() == 'POST') {
-            $form->submit($this->get('request'));
+            if(!$this->isXmlHttpRequest()){
+                throw new NotFoundHttpException('Should only submit over ajax');
+            }
 
-            $isFormValid = $form->isValid();
+            $request->attributes->add(array('objectId' => $id));
+            $request->attributes->add(array('page_locale' => $object->getLocale()));
 
-            // persist if the form was valid and if in preview mode the preview was approved
-            if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
+            $form->submit($request);
+
+            if ($form->isValid()) {
                 $object->setStatus(PageInterface::STATUS_DRAFT);
                 $this->admin->update($object);
 
+                return $this->getAjaxEditResponse($form, $object);
 
-                if ($this->isXmlHttpRequest()) {
-
-                    $view = $form->createView();
-
-                    // set the theme for the current Admin Form
-                    $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
-
-
-                    $pageSettingsTemplate = $this->render(
-                        $this->admin->getTemplate($templateKey),
-                        array(
-                            'action' => 'edit',
-                            'form' => $view,
-                            'object' => $object,
-                        )
-                    );
-
-
-                    return $this->renderJson(
-                        array(
-                            'result' => 'ok',
-                            'objectId' => $this->admin->getNormalizedIdentifier($object),
-                            'title' => $object->__toString(),
-                            'messageStatus' => 'success',
-                            'message' => $this->admin->trans('info.page_settings_updated'),
-                            'pageStatus' => $this->admin->trans($object->getStatus()),
-                            'pageSettings' => $pageSettingsTemplate->getContent()
-                        )
-                    );
-                }
-
-                $request->getSession()->getFlashBag()->add('sonata_flash_success', 'flash_edit_success');
-
-                // redirect to edit mode
-                return $this->redirectTo($object);
-            }
-
-            // show an error message if the form failed validation
-            if (!$isFormValid) {
-                $request->getSession()->getFlashBag()->add('sonata_flash_error', 'flash_edit_error');
-            } elseif ($this->isPreviewRequested()) {
-                // enable the preview template if the form was valid and preview was requested
-                $templateKey = 'preview';
+            } else {
+                $form->addError(new FormError($this->admin->trans('flash_edit_error', array(), 'NetworkingInitCmsBundle')));
             }
         }
 
@@ -433,6 +397,43 @@ class PageAdminController extends CRUDController
                 'object' => $object,
                 'rootMenus' => $rootMenus,
                 'language' => \Locale::getDisplayLanguage($object->getLocale())
+            )
+        );
+    }
+
+    /**
+     * Return the json response for the ajax edit action
+     *
+     * @param Form $form
+     * @param PageInterface $page
+     * @return Response
+     */
+    protected function getAjaxEditResponse(Form $form, PageInterface $page){
+        $view = $form->createView();
+
+        // set the theme for the current Admin Form
+        $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+
+        $pageSettingsHtml = $this->renderView(
+            'NetworkingInitCmsBundle:PageAdmin:ajax_page_settings.html.twig',
+            array(
+                'action' => 'edit',
+                'form' => $view,
+                'object' => $page,
+                'admin' => $this->admin,
+                'admin_pool' => $this->get('sonata.admin.pool')
+            )
+        );
+
+        return $this->renderJson(
+            array(
+                'result' => 'ok',
+                'objectId' => $page->getId(),
+                'title' => $page->__toString(),
+                'messageStatus' => 'success',
+                'message' => $this->admin->trans('info.page_settings_updated'),
+                'pageStatus' => $this->admin->trans($page->getStatus()),
+                'pageSettings' => $pageSettingsHtml
             )
         );
     }
@@ -552,8 +553,7 @@ class PageAdminController extends CRUDController
      */
     public function cancelDraftAction(Request $request, $id = null)
     {
-        $id = $request->get($this->admin->getIdParameter());
-        /** @var $draftPage Page */
+        /** @var $draftPage PageInterface */
         $draftPage = $this->admin->getObject($id);
 
 
@@ -565,7 +565,7 @@ class PageAdminController extends CRUDController
             throw new AccessDeniedException();
         }
 
-        if ($this->getRequest()->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST') {
 
 
             $pageManager = $this->get('networking_init_cms.page_manager');
@@ -573,7 +573,7 @@ class PageAdminController extends CRUDController
 
             $publishedPage = $pageManager->revertToPublished($draftPage, $serializer);
 
-            if ($this->getRequest()->isXmlHttpRequest()) {
+            if ($request->isXmlHttpRequest()) {
                 $form = $this->admin->getForm();
                 $form->setData($publishedPage);
 

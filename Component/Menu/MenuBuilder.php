@@ -104,7 +104,6 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         Matcher $matcher
     ) {
 
-        parent::__construct($factory);
         $this->securityContext = $securityContext;
 
         if ($this->securityContext->getToken() && ($this->securityContext->isGranted(
@@ -115,7 +114,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         ) {
             $this->isLoggedIn = true;
         }
-
+        $this->factory = $factory;
         $this->router = $router;
         $this->request = $request;
         $this->menuManager = $menuManager;
@@ -132,8 +131,11 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
         $this->currentUri = $request->getBaseUrl() . $this->currentPath;
 
 
+        $voter = new UriVoter($request->getBaseUrl() .$request->getPathInfo());
+        $this->matcher->addVoter($voter);
+
         $voter = new UriVoter($this->currentUri);
-        $matcher->addVoter($voter);
+        $this->matcher->addVoter($voter);
     }
 
 
@@ -237,6 +239,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
      */
     public function getFullMenu($menuName)
     {
+
         if(is_array($menuName)){
             $menuName = reset($menuName);
         }
@@ -262,6 +265,7 @@ class MenuBuilder extends AbstractNavbarMenuBuilder
             false,
             $this->viewStatus
         );
+
 
         return $this->menuIterators[$menuName];
 

@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Command;
 
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
  * @package Networking\InitCmsBundle\Command
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class DataSetupCommand extends Command
+class DataSetupCommand extends ContainerAwareCommand
 {
     /**
      * configuration for the command
@@ -50,6 +51,7 @@ class DataSetupCommand extends Command
 
         if (!$input->getOption('no-fixtures')) {
             $this->loadFixtures($output);
+            $this->publishPages($output);
         }
     }
 
@@ -153,5 +155,27 @@ class DataSetupCommand extends Command
         $input = new ArrayInput($arguments);
 
         return $command->run($input, $output);
+    }
+
+    public function publishPages(OutputInterface $output)
+    {
+        /** @var \Networking\InitCmsBundle\Entity\PageManager $modelManager */
+        $modelManager = $this->getContainer()->get('networking_init_cms.page_manager');
+        $selectedModels = $modelManager->findAll();
+
+        try {
+            foreach ($selectedModels as $selectedModel) {
+                /** @var \Networking\InitCmsBundle\Model\PageInterface $selectedModel */
+                $selectedModel->setStatus(\Networking\InitCmsBundle\Model\PageInterface::STATUS_PUBLISHED);
+                $modelManager->save($selectedModel);
+                /** @var $pageHelper \Networking\InitCmsBundle\Helper\PageHelper */
+                $pageHelper = $this->getContainer()->get('networking_init_cms.helper.page_helper');
+                $pageHelper->makePageSnapshot($selectedModel);
+            }
+            return 0;
+        }catch (\Exception $e){
+            $output->writeln($e->getMessage());
+            return 1;
+        }
     }
 }

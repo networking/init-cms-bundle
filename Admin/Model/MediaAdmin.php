@@ -183,8 +183,6 @@ abstract class MediaAdmin extends Admin
                     array('required' => false, 'label' => 'form.label_binary_content_new')
                 );
             }
-
-            //
         }
 
         if (in_array($media->getProviderName(), $this->localisedMediaProviders)) {
@@ -198,7 +196,24 @@ abstract class MediaAdmin extends Admin
         }
 
 
+        if ($this->getSubject() && $this->getSubject()->getId()) {
+            $formMapper->add(
+                'tags',
+                'sonata_type_model',
+                array(
+                    'required' => false,
+                    'expanded' => false,
+                    'multiple' => true,
+                    'help_label' => 'help.media_tag',
+                    'taggable' => true,
+                    'attr' => array('style' => "width:220px"),
+                )
+            );
+        }
+
+        //remove and re-add fields to control field order
         if ($formMapper->has('enabled')) {
+            $formMapper->remove('enabled');
             $formMapper->add(
                 'enabled',
                 null,
@@ -208,21 +223,12 @@ abstract class MediaAdmin extends Admin
         }
 
         if ($formMapper->has('cdnIsFlushable')) {
+            $formMapper->remove('cdnIsFlushable');
             $formMapper->add(
                 'cdnIsFlushable',
                 null,
                 array('required' => false),
                 array('inline_block' => true)
-            );
-            $formMapper->reorder(array('name', 'enabled', 'cdnIsFlushable'));
-        }
-
-
-        if ($this->getSubject() && $this->getSubject()->getId()) {
-            $formMapper->add(
-                'tags',
-                'sonata_type_model',
-                array('required' => false, 'expanded' => true, 'multiple' => true, 'help_label' => 'help.media_tag')
             );
         }
     }
@@ -233,8 +239,8 @@ abstract class MediaAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add(
-                'custom',
+            ->addIdentifier(
+                'name',
                 'string',
                 array(
                     'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig',

@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -100,12 +101,20 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         return $qb->getQuery()->execute();
     }
 
-    public function getAllSortBy($sort, $order = 'DESC')
+    /**
+     * @param $sort
+     * @param string $order
+     * @param int $hydrationMode
+     * @return mixed
+     */
+    public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT )
     {
         $qb = $this->createQueryBuilder('p')
+            ->select('p','ps')
+            ->leftJoin('p.snapshots', 'ps')
             ->orderBy('p.' . $sort, $order);
 
-        return $qb->getQuery()->execute();
+        return $qb->getQuery()->execute(array(), $hydrationMode);
     }
 
     /**

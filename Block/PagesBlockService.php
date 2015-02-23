@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Block;
 
+use Doctrine\ORM\Query;
+use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\BlockBundle\Block\BaseBlockService;
 use Sonata\BlockBundle\Model\BlockInterface;
@@ -51,7 +53,7 @@ class PagesBlockService extends BaseBlockService
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
 
-        $pages = $this->em->getAllSortBy('updatedAt');
+        $pages = $this->em->getAllSortBy('updatedAt', 'DESC', Query::HYDRATE_ARRAY);
 
         $draftPageCount = 0;
         $reviewPageCount = 0;
@@ -59,20 +61,20 @@ class PagesBlockService extends BaseBlockService
         $reviewPages = array();
         $draftPages = array();
 
+
         foreach ($pages as $page) {
-            /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
-            if ($page->hasPublishedVersion()) {
+            if (array_key_exists('snapshots', $page) && count($page['snapshots']) > 0) {
                 $publishedPageCount++;
             }
-            if ($page->isReview()) {
+            if ($page['status'] == PageInterface::STATUS_REVIEW) {
                 $reviewPageCount++;
                 $draftPageCount++;
-                $reviewPages[\Locale::getDisplayLanguage($page->getLocale())][] = $page;
+                $reviewPages[\Locale::getDisplayLanguage($page['locale'])][] = $page;
             }
 
-            if ($page->isDraft()) {
+            if ($page['status'] == PageInterface::STATUS_DRAFT) {
                 $draftPageCount++;
-                $draftPages[\Locale::getDisplayLanguage($page->getLocale())][] = $page;
+                $draftPages[\Locale::getDisplayLanguage($page['locale'])][] = $page;
             }
         }
 

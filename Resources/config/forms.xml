@@ -9,6 +9,10 @@
             <tag name="form.type_extension" alias="form"/>
         </service>
 
+        <service id="networking_init_cms.form.tag_extension" class="Networking\InitCmsBundle\Form\Extension\TagExtension">
+            <tag name="form.type_extension" alias="sonata_type_model"/>
+        </service>
+
         <service id="networking_init_cms.form.extension.datetime" class="Networking\InitCmsBundle\Form\Extension\Field\Type\DateTimeTypeExtension">
             <tag name="form.type_extension" alias="datetime"/>
         </service>

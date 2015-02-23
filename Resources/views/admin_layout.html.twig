@@ -25,12 +25,16 @@ file that was distributed with this source code.
 {% if admin is defined %}
     {% set currentAdmin = admin %}
 {% endif %}
+{% block init_cms_top_nav %}
+    {% include 'NetworkingInitCmsBundle:Navbar:admin_navbar.html.twig' %}
+{% endblock init_cms_top_nav %}
 
 {% block meta_title %}
     {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
 
     {% if admin is defined %}
         &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
+        {% if _title is not empty %}&gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}{% endif %}
     {% else %}
         {% if action is defined %}
             -
@@ -48,13 +52,11 @@ file that was distributed with this source code.
 {% block sidebar_left %}
     <div class="span2">
         <div class="nav-collapse nav-main ">
-            {% block top_bar_before_nav %} {% endblock %}
-
+            {% block top_bar_before_nav %}{% endblock %}
             {% block sonata_top_bar_nav %}
                 {% include 'NetworkingInitCmsBundle:Navbar:admin_side_nav.html.twig' %}
             {% endblock %}
             {% block top_bar_after_nav %} {% endblock %}
-
         </div>
     </div>
 {% endblock %}
