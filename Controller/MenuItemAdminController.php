@@ -9,6 +9,7 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
