@@ -1,4 +1,6 @@
 sonata_admin:
+    options:
+        use_select2: false
     security:
         handler: sonata.admin.security.handler.acl
         # acl security information
