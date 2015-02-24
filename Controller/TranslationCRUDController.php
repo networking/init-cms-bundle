@@ -33,7 +33,9 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
 
         /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
         $phpCache = $this->get('networking_init_cms.lib.php_cache');
-        $phpCache->clean();
+        if ($phpCache->isActive()) {
+            $phpCache->clean();
+        }
 
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $this->get('session');
