@@ -251,9 +251,12 @@
                  <source>cache.inactiveMoreInformation</source>
                  <target><![CDATA[
                      zum aktivieren, bitte folgende Konfigurationen in der  app/config/config.yml Datei eintragen:<br />
-                     cache:<br />
-                         activate: true <br />
-                         cache_time: 86400 #in seconds<br />
+                     <code>
+                       networking_init_cms:<br />
+                       &nbsp;&nbsp;cache:<br />
+                       &nbsp;&nbsp;&nbsp;&nbsp;activate: true <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;cache_time: 86400 #in seconds<br />
+                        </code>
                      ]]>
                  </target>
             </trans-unit>
