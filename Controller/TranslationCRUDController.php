@@ -31,6 +31,12 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
 
         $this->get('translator')->removeLocalesCacheFiles($localeChoices);
 
+        /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
+        $phpCache = $this->get('networking_init_cms.lib.php_cache');
+        if ($phpCache->isActive()) {
+            $phpCache->clean();
+        }
+
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $this->get('session');
         $session->getFlashBag()->set('sonata_flash_success', 'translations.cache_removed');

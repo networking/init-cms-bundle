@@ -63,4 +63,11 @@ interface PhpCacheInterface
      * @return null
      */
     public function getInfo($keyword, $option = array());
+
+    /**
+     * Is Cache active
+     * 
+     * @return bool
+     */
+    public function isActive();
 }
