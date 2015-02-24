@@ -33,6 +33,8 @@ sonata_admin:
         short_object_description: NetworkingInitCmsBundle:Helper:short-object-description.html.twig
         # default values of block templates, they should extend the base_block template
         list_block: NetworkingInitCmsBundle:Block:block_admin_list.html.twig
+    options:
+        use_select2: false
     dashboard:
         blocks:
             - { position: top, type: networking_init_cms.block.service.translatable_text, settings: { translation_key: "info.welcome_text", translation_domain: 'NetworkingInitCmsBundle'} }
