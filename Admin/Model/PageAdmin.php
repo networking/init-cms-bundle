@@ -435,10 +435,10 @@ abstract class PageAdmin extends BaseAdmin
 
         $fieldName = 'path';
         $qb = $ProxyQuery->getQueryBuilder();
-        $qb->leftJoin(sprintf('%s.contentRoute', $alias), 'c');
+        $qb->leftJoin(sprintf('%s.contentRoute', $alias), 'cpath');
         $parameterName = sprintf('%s_%s', $fieldName, $ProxyQuery->getUniqueParameterId());
 
-        $qb->andWhere(sprintf('%s.%s LIKE :%s', 'c', $fieldName, $parameterName));
+        $qb->andWhere(sprintf('%s.%s LIKE :%s', 'cpath', $fieldName, $parameterName));
         $qb->setParameter(sprintf(':%s', $parameterName), '%' . $data['value'] . '%');
 
         return true;
