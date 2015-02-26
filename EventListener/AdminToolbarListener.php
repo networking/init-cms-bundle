@@ -70,7 +70,7 @@ class AdminToolbarListener implements EventSubscriberInterface
         }
 
         // do not capture admin cms urls
-        if(preg_match('/.*\/admin.*/', $request->getRequestUri())){
+        if(preg_match('/.*\/admin\/.*/', $request->getRequestUri())){
             return;
         }
 
