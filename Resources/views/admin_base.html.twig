@@ -69,7 +69,7 @@ file that was distributed with this source code.
         <div class="navbar-spacer"></div>
     {% endblock navbar_spacer %}
 
-    <div class="{% block container_class %}container{% endblock container_class %} row-offcanvas">
+    <div class="{% block container_class %}container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %}{% endblock container_class %} row-offcanvas">
         <div class="notice-block affix">
             {% block notice %}
                 {% for notice_level in ['success','error','info', 'warning'] %}

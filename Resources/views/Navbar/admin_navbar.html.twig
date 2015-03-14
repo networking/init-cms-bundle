@@ -1,6 +1,6 @@
 <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
     <div class="navbar-inner">
-        <div class="container">
+        <div class="container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %} ">
             <div class="row">
                 <div class="navbar-header col-xs-8 col-sm-5">
                     {% block toggle %}
@@ -12,7 +12,7 @@
                         </button>
                     {% endblock %}
                     <a href="{{ url('sonata_admin_dashboard') }}" class="hidden-sm hidden-xs pull-left">
-                        <img src="{{ admin_pool.titlelogo ? admin_pool.titlelogo : asset('bundles/networkinginitcms/img/logo_initcms.png') }}" alt="{{ admin_pool.title }}" width="77">
+                        <img  id="initcms-logo" src="{{ admin_pool.titlelogo ? admin_pool.titlelogo : asset('bundles/networkinginitcms/img/logo_initcms.png') }}" alt="{{ admin_pool.title }}" width="77">
                     </a>
                     {% if admin_pool is defined %}
                         <a href="{{ url('sonata_admin_dashboard') }}" class="hidden-xs brand">
@@ -28,6 +28,14 @@
                 </div>
 
                 <div class="hidden-sm hidden-xs navbar-right col-md-5">
+
+                    <div class="pull-right">
+                        {% if app.user %}
+                        <button type="button" class="btn btn-default navbar-btn"  id="toggleWidth">
+                        <i class="glyphicon glyphicon-{% if app.user and app.user.getAdminSetting('admin_portal_width') == 'full' %}resize-small{% else %}resize-full{% endif %}"></i>
+                        </button>
+                        {% endif %}
+                    </div>
                     <div class="pull-right nav-admin">
                         {% if admin_pool is defined %}
                             {{ mopa_bootstrap_menu('AdminMenu') }}

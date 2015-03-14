@@ -103,6 +103,10 @@ _initcms_admin_navbar:
     pattern: '_initcms_admin_navbar/{page_id}'
     defaults: { _controller: NetworkingInitCmsBundle:FrontendPage:adminNavbar }
 
+networking_init_cms_set_admin_portal_width:
+    pattern: /admin/set_admin_portal_width
+    defaults: { _controller: NetworkingInitCmsBundle:CmsHelper:setAdminPortalWidth }
+
 
 
 

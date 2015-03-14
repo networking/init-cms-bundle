@@ -49,6 +49,18 @@ function uploadError(xhr) {
         $(".row-offcanvas").toggleClass("active");
     });
 
+    $("#toggleWidth").on('click', function(){
+        var el = $(this).find('i.glyphicon');
+        if(el.hasClass('glyphicon-resize-full')){
+            $(".container").switchClass('container', "container-fluid", 500, "easeOutSine");
+            el.removeClass('glyphicon-resize-full').addClass('glyphicon-resize-small');
+            $.ajax('/admin/set_admin_portal_width', {data: {'size': 'full'}});
+        }else{
+            $(".container-fluid").switchClass('container-fluid', "container", 500, "easeOutSine");
+            el.removeClass('glyphicon-resize-small').addClass('glyphicon-resize-full');
+            $.ajax('/admin/set_admin_portal_width', {data: {'size': 'small'}});
+        }
+    });
 })(jQuery);
 
 $.fn.modal.Constructor.prototype.enforceFocus = function () {

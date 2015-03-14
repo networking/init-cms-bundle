@@ -73,9 +73,13 @@ class UserActivityListener implements ContainerAwareInterface
 
             //here we can update the user as necessary
             if (method_exists($user, 'setLastActivity')) {
-                $user->setLastActivity(new \DateTime('now'));
-                $this->em->persist($user);
-                $this->em->flush($user);
+                try{
+                    $user->setLastActivity(new \DateTime('now'));
+                    $this->em->persist($user);
+                    $this->em->flush($user);
+                }catch(\Doctrine\ORM\ORMException $e){
+                    //do nothing, entity manager is closed
+                }
 
             }
         }
