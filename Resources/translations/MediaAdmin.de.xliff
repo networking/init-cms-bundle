@@ -94,6 +94,14 @@
                 <source>title.informations</source>
                 <target>Information</target>
             </trans-unit>
+            <trans-unit id="label.sort_by">
+                <source>label.sort_by</source>
+                <target>sortieren nach</target>
+            </trans-unit>
+            <trans-unit id="label.created_at">
+                <source>label.created_at</source>
+                <target>Erstellungsdatum</target>
+            </trans-unit>
             <trans-unit id="label.size">
                 <source>label.size</source>
                 <target>Größe</target>
@@ -327,7 +335,11 @@
             </trans-unit>
             <trans-unit id="list.label_select">
                 <source>list.label_select</source>
-                <target>Selektieren</target>
+                <target>Auswählen</target>
+            </trans-unit>
+            <trans-unit id="list.label_original">
+                <source>list.label_original</source>
+                <target>Original Datei</target>
             </trans-unit>
             <trans-unit id="filter.label_name">
                 <source>filter.label_name</source>

@@ -275,4 +275,24 @@ class MediaAdminController extends SonataMediaAdminController
             )
         );
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function previewMediaAction(Request $request)
+    {
+        if (false === $this->admin->isGranted('SHOW')) {
+            throw new AccessDeniedException();
+        }
+
+        $id = $request->get($this->admin->getIdParameter());
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        return $this->render('NetworkingInitCmsBundle:MediaAdmin:preview_media.html.twig', array('media' => $object));
+    }
 }

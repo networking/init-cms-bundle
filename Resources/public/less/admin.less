@@ -934,6 +934,63 @@ body.modal-open {
   .has-error .help-inline {
     color: @state-danger-text;
   }
+
+  .media-element {
+    display: inline-block;
+    height: 144px;
+    width: 144px;
+  }
+
+  .media-element .glyphicon-file {
+    font-size: 5em;
+    padding-top: 35px;
+  }
+
+  .media-box {
+    width: 168px;
+    position: relative;
+    min-height: 1px;
+    padding-left: 7px;
+    padding-right: 7px;
+    float: left;
+  }
+
+  .media-box > .thumbnail {
+    margin-bottom: 7px;
+    height: 210px;
+    word-wrap: break-word;
+    text-align: center;
+    background-color: rgba(125, 125, 125, 0.10);
+  }
+
+  .context-menu {
+    position: absolute;
+    width: 144px;
+    text-align: right;
+    background-color: rgba(125, 125, 125, 0.20);
+  }
+
+  .context-menu a.dropdown-toggle {
+    color: #fff;
+  }
+  .sort-buttons {
+    text-align: right;
+  }
+  .media-title {
+    overflow: hidden;
+    height: 55px;
+    position: relative;
+    line-height: 60px;
+    color: #1c1c1c;
+  }
+  .media-title a {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+  }
+  .thumbnail .img-responsive {
+    max-height: 144px;
+  }
 }
 
 .cursor-pointer {

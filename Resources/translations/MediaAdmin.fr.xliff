@@ -102,9 +102,17 @@
                 <source>title.informations</source>
                 <target>Information</target>
             </trans-unit>
+            <trans-unit id="label.sort_by">
+                <source>label.sort_by</source>
+                <target>trier par</target>
+            </trans-unit>
+            <trans-unit id="label.created_at">
+                <source>label.created_at</source>
+                <target>Date de création</target>
+            </trans-unit>
             <trans-unit id="label.size">
                 <source>label.size</source>
-                <target>Taille</target>
+                <target>Dimension</target>
             </trans-unit>
             <trans-unit id="label.width">
                 <source>label.width</source>
@@ -332,6 +340,14 @@
             <trans-unit id="list.label_media">
                 <source>list.label_media</source>
                 <target>Médias</target>
+            </trans-unit>
+            <trans-unit id="list.label_select">
+                <source>list.label_select</source>
+                <target>Choisir</target>
+            </trans-unit>
+            <trans-unit id="list.label_original">
+                <source>list.label_original</source>
+                <target>Fichier original</target>
             </trans-unit>
             <trans-unit id="sonata_media.admin_menu_label">
                 <source>sonata_media.admin_menu_label</source>

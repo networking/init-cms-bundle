@@ -1,0 +1,8 @@
+<div id="popup-{{ media.id }}" class="black-popup-block">
+    {% if media.providerName == 'sonata.media.provider.file' %}
+        <iframe src="http://docs.google.com/gview?url=http://die-meister.ch{% path media, 'reference' %}&embedded=true"
+                style="width: 495px; height: 700px;" frameborder="0"></iframe>
+    {% else %}
+        {% media media, 'reference' with {'class': 'img-responsive', 'style': 'margin:auto;'} %}
+    {% endif %}
+</div>
