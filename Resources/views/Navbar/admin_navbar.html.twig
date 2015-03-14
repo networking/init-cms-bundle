@@ -32,7 +32,7 @@
                     <div class="pull-right">
                         {% if app.user %}
                         <button type="button" class="btn btn-default navbar-btn"  id="toggleWidth">
-                        <i class="glyphicon glyphicon-{% if app.user and app.user.getAdminSetting('admin_portal_width') == 'small' %}resize-small{% else %}resize-full{% endif %}"></i>
+                        <i class="glyphicon glyphicon-{% if app.user and app.user.getAdminSetting('admin_portal_width') == 'small' %}resize-full{% else %}resize-small{% endif %}"></i>
                         </button>
                         {% endif %}
                     </div>
