@@ -16,14 +16,14 @@ file that was distributed with this source code.
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        {% if app.request.isxmlhttprequest %}
+        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
             <div class="modal-dialog modal-lg">
             <div class="modal-content">
         {% endif %}
-        <form class="form-{% if app.request.isXmlHttpRequest %}horizontal{% else %}vertical{% endif %}" novalidate="novalidate"
+        <form class="form-{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}horizontal{% else %}vertical{% endif %}" novalidate="novalidate"
               action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
               method="POST">
-            {% if app.request.isxmlhttprequest %}
+            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3>
@@ -46,11 +46,11 @@ file that was distributed with this source code.
                     </h3>
                 </div>
             {% endif %}
-            <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
+            <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-body{% endif %}">
 
 
                 {% if form.vars.errors|length > 0 %}
-                    <div class="sonata-ba-form-error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
+                    <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
                         {{ form_errors(form) }}
                     </div>
                 {% endif %}
@@ -76,7 +76,7 @@ file that was distributed with this source code.
 
                             {% for field_name in form_group.fields %}
                                 {% if admin.formfielddescriptions[field_name] is defined %}
-                                    {{ form_row(form[field_name], {'horizontal': (app.request.isXmlHttpRequest ? 'true': form[field_name].vars.horizontal)}) }}
+                                    {{ form_row(form[field_name], {'horizontal': (app.request.isXmlHttpRequest or app.request.get('_xml_http_request') ? 'true': form[field_name].vars.horizontal)}) }}
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -84,14 +84,14 @@ file that was distributed with this source code.
                 {% endfor %}
 
                 {% block sonata_post_fieldsets %}{% endblock %}
-                {{ form_rest(form, {'horizontal': (app.request.isXmlHttpRequest ? 'true': form.vars.horizontal)}) }}
+                {{ form_rest(form, {'horizontal': (app.request.isXmlHttpRequest or app.request.get('_xml_http_request') ? 'true': form.vars.horizontal)}) }}
 
             </div>
 
             {% block formactions %}
                 {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
-                    {% if app.request.isxmlhttprequest %}
+                <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
+                    {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
                         <button class="btn btn-default" data-dismiss="modal"
                                 aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
                         {% if admin.id(object) %}
@@ -131,7 +131,7 @@ file that was distributed with this source code.
                 </div>
             {% endblock formactions %}
         </form>
-        {% if app.request.isxmlhttprequest %}
+        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
             </div>
             </div>
         {% endif %}

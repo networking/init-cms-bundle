@@ -1,7 +1,7 @@
 <style type="text/css">
 .navbar-initcms {
     line-height: 20px;
-    top: 0px !important;
+    top: 0 !important;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
     z-index: 2000;
@@ -41,7 +41,7 @@
 }
 
 .navbar-initcms .row {
-    margin-left: -20px;
+    margin: auto;
     *zoom: 1;
 }
 
@@ -58,18 +58,22 @@
 
 .navbar-initcms [class*="span"] {
     float: left;
-    min-height: 1px;
-    margin-left: 20px;
+    background-color: #1B1B1B;
+    background-image: -moz-linear-gradient(top, #222222, #111111);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222), to(#111));
+    background-image: -webkit-linear-gradient(top, #222, #111);
+    background-image: -o-linear-gradient(top, #222222, #111111);
+    background-image: linear-gradient(to bottom, #222, #111);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff222222', endColorstr='#ff111111', GradientType=0);
+    border-color: #252525;
 }
 
-.navbar-initcms .container,
-.navbar-initcms .initnavbar-fixed-top .container {
-    width: 1000px;
-}
 
 .navbar-initcms .container {
-    margin-right: auto;
-    margin-left: auto;
+    padding-right: 20px;
+    padding-left: 20px;
+    background: initial;
     *zoom: 1;
 }
 
@@ -100,13 +104,13 @@
 @font-face {
     font-family: 'FontAwesome';
     src: url(/bundles/mopabootstrap/fonts/fa/fontawesome-webfont.eot?v=3.2.1);
-    src: url(/bundles/mopabootstrap/fonts/fa/fontawesome-webfont.eot?#iefix&v=3.2.1) format('embedded-opentype'), url(/bundles/mopabootstrap/fonts/fa/fontawesome-webfont.woff?v=3.2.1) format('woff'), url(/bundles/mopabootstrap/fonts/fa/fontawesome-webfont.ttf?v=3.2.1) format('truetype'), url(/bundles/mopabootstrap/fonts/fa/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1) format('svg');
+    src: url(/bundles/mopabootstrap/fonts/fa/fontawesome-webfont.eot?#iefix&v=3.2.1) format('embedded-opentype'), url(/bundles/mopabootstrap/fonts/fa/fontawesome-webfont.woff?v=3.2.1) format('woff'), url(../../bundles/mopabootstrap/fonts/fa/fontawesome-webfont.ttf?v=3.2.1) format('truetype'), url(../../bundles/mopabootstrap/fonts/fa/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1) format('svg');
     font-weight: normal;
     font-style: normal;
 }
 
-.navbar-initcms [class^="glyphicon-"],
-.navbar-initcms [class*=" glyphicon-"] {
+.navbar-initcms [class^="icon-"],
+.navbar-initcms [class*=" icon-"] {
     font-family: FontAwesome;
     font-weight: normal;
     font-style: normal;
@@ -115,11 +119,14 @@
     *margin-right: .3em;
 }
 
-.navbar-initcms [class^="glyphicon-"]:before,
-.navbar-initcms [class*=" glyphicon-"]:before {
+.navbar-initcms [class^="icon-"]:before,
+.navbar-initcms [class*=" icon-"]:before {
     text-decoration: inherit;
     display: inline-block;
     speak: none;
+}
+.navbar-initcms .span6 {
+    width: 50%;
 }
 
 .navbar-initcms .span5 {
@@ -138,8 +145,8 @@
     width: 140px;
 }
 
-.navbar-initcms a [class^="glyphicon-"],
-.navbar-initcms a [class*=" glyphicon-"] {
+.navbar-initcms a [class^="icon-"],
+.navbar-initcms a [class*=" icon-"] {
     display: inline;
 }
 
@@ -152,8 +159,8 @@
     float: left;
 }
 
-.navbar-initcms [class^="glyphicon-"],
-.navbar-initcms [class*=" glyphicon-"] {
+.navbar-initcms [class^="icon-"],
+.navbar-initcms [class*=" icon-"] {
     display: inline;
     width: auto;
     height: auto;
@@ -165,7 +172,7 @@
     margin-top: 0;
 }
 
-.navbar-initcms .glyphicon-white {
+.navbar-initcms .icon-white {
     background-image: none;
 }
 
@@ -279,7 +286,7 @@
     content: "";
 }
 
-.navbar-initcms .glyphicon-pencil:before {
+.navbar-initcms .icon-pencil:before {
     content: "\f040";
 }
 
@@ -403,7 +410,6 @@
     float: left;
     display: block;
     padding: 10px 20px 10px;
-    margin-left: -20px;
     font-size: 16px;
     font-weight: 200;
     color: #777;
@@ -444,12 +450,6 @@
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
-}
-
-.navbar-initcms .navbar-static-top .container,
-.navbar-initcms .initnavbar-fixed-top .container,
-.navbar-initcms .initnavbar-fixed-bottom .container {
-    width: 1000px;
 }
 
 .navbar-initcms .initnavbar-fixed-top {
@@ -697,11 +697,6 @@
 
 
 @media (min-width: 1200px) {
-    .navbar-initcms .container,
-    .navbar-initcms .initnavbar-fixed-top .container {
-        width: 1200px;
-    }
-
     .navbar-initcms .span5 {
         width: 442px;
     }

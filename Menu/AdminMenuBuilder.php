@@ -169,10 +169,10 @@ class AdminMenuBuilder extends MenuBuilder
                             'SonataAdminBundle',
                             $adminLocale
                         ),
-                        'uri' => $editPath,
-                        'icon' => 'pencil icon-white'
+                        'uri' => $editPath
                     )
                 );
+                $this->addIcon($menu['Edit'], array('icon' => 'pencil icon-white', 'append' => false));
             }
             if (!$sonataAdmin && $request->get('_route') != 'sonata_admin_dashboard') {
                 $menu->addChild('Admin', array('uri' => $lastActionUrl));
@@ -287,11 +287,11 @@ class AdminMenuBuilder extends MenuBuilder
         $menu = $largeMenu;
         foreach ($menuGroups as $key => $item) {
             foreach ($item['items'] as $mainMenu) {
-                if(array_key_exists($mainMenu, $groups)){
+                if (array_key_exists($mainMenu, $groups)) {
                     $group = $groups[$mainMenu];
                     if (count($group['items']) > 0) {
                         $first = reset($group['items']);
-                        if ($first instanceof AdminInterface  && $first->hasRoute('list')) {
+                        if ($first instanceof AdminInterface && $first->hasRoute('list')) {
 
                             $current = false;
                             $icon = 'glyphicon-unchecked';
@@ -317,7 +317,7 @@ class AdminMenuBuilder extends MenuBuilder
                                     if ($this->request->get('_sonata_admin') == $subItem->getCode()) {
                                         $current = true;
                                     }
-                                    if ($subItem instanceof AdminInterface  && $subItem->hasRoute('list')) {
+                                    if ($subItem instanceof AdminInterface && $subItem->hasRoute('list')) {
                                         $mainItem->addChild(
                                             $this->translator->trans($subItem->getLabel(), array(), $subItem->getTranslationDomain()),
                                             array(
@@ -343,6 +343,31 @@ class AdminMenuBuilder extends MenuBuilder
 
 
         return $adminMenu;
+    }
+
+    /**
+     * @param $item
+     * @param $icon
+     * @return mixed
+     */
+    protected function addIcon($item, $icon)
+    {
+
+        $icon = array_merge(array('tag' => (isset($icon['glyphicon'])) ? 'span' : 'i'), $icon);
+        $addclass = "";
+        if (isset($icon['inverted']) && $icon['inverted'] === true) {
+            $addclass = " icon-white";
+        }
+        $classicon = (isset($icon['glyphicon'])) ? ' class="' . $icon['glyphicon'] : ' class="icon-' . $icon['icon'];
+        $myicon = ' <' . $icon['tag'] . $classicon . $addclass . '"></' . $icon['tag'] . '>';
+        if (!isset($icon['append']) || $icon['append'] === true) {
+            $label = $item->getLabel() . " " . $myicon;
+        } else {
+            $label = $myicon . " " . $item->getLabel();
+        }
+        $item->setLabel($label)
+            ->setExtra('safe_label', true);
+        return $item;
     }
 
 

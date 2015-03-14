@@ -32,10 +32,6 @@
             <join-column name="content_route_id" referenced-column-name="id"/>
         </one-to-one>
 
-        <many-to-one target-entity="Application\Networking\InitCmsBundle\Entity\Page" field="alias">
-            <join-column name="alias_id" referenced-column-name="id" on-delete="SET NULL"/>
-        </many-to-one>
-
         <one-to-many target-entity="Networking\InitCmsBundle\Entity\LayoutBlock" field="layoutBlock" mapped-by="page"
                      orphan-removal="true">
             <cascade>
@@ -61,17 +57,39 @@
 
         <one-to-many target-entity="Application\Networking\InitCmsBundle\Entity\Page" field="children"
                      mapped-by="parent"/>
+
+
+        <many-to-one target-entity="Application\Networking\InitCmsBundle\Entity\Page" field="alias">
+            <join-column name="alias_id" referenced-column-name="id" on-delete="SET NULL"/>
+        </many-to-one>
+
         <many-to-one target-entity="Application\Networking\InitCmsBundle\Entity\Page" field="parent"
                      orphan-removal="false"
                      inversed-by="children">
             <cascade>
                 <cascade-persist/>
             </cascade>
-            <gedmo:tree-parent/>
             <join-columns>
                 <join-column name="parent_id" referenced-column-name="id" on-delete="SET NULL"/>
             </join-columns>
+            <gedmo:tree-parent/>
         </many-to-one>
+
+        <many-to-many field="originals" target-entity="Application\Networking\InitCmsBundle\Entity\Page" inversed-by="translations" fetch="EXTRA_LAZY">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-table name="page_translation">
+                <join-columns>
+                    <join-column name="translation_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="original_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+
+        </many-to-many>
+        <many-to-many field="translations" target-entity="Application\Networking\InitCmsBundle\Entity\Page" mapped-by="originals" fetch="EXTRA_LAZY"/>
 
 
     </entity>
