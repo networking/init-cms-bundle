@@ -38,7 +38,7 @@ file that was distributed with this source code.
     {% if app.request.isxmlhttprequest %}
         {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
         {% if taggable is defined and taggable %}
-            <script type="application/javascript">
+            <script type="text/javascript">
                 jQuery(document).ready(function () {
                     jQuery("#{{ id }}").select2();
                 });
@@ -48,7 +48,7 @@ file that was distributed with this source code.
 
     {% jsblock 'addToBottom' %}
     {% if taggable is defined and taggable %}
-        <script type="application/javascript">
+        <script type="text/javascript">
             jQuery(document).ready(function () {
                 jQuery("#{{ id }}").select2();
             });
