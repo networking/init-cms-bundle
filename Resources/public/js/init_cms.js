@@ -33,10 +33,17 @@ function uploadError(xhr) {
         }
     });
 
-    $(document).on('show.bs.modal', '.modal', function () {
-        var modalBody = $('.modal .modal-body');
+    $('.show-tooltip, [data-toggle="tooltip"]').tooltip({placement:'bottom', container: 'body', delay:{ show:800, hide:100 }});
+
+    $(document).on('show.bs.modal', '.modal', function (e) {
+        var modalBody = $(this).find('.modal-body');
         modalBody.css('overflow-y', 'auto');
-        modalBody.css('max-height', $(window).height() * 0.7);
+        if(modalBody.parents('.modal-full').length > 0){
+            modalBody.css('height', $(window).height() -190);
+            modalBody.css('max-height', '900px');
+        }else{
+            modalBody.css('max-height', $(window).height() * 0.7);
+        }
     });
 
 
@@ -63,13 +70,17 @@ function uploadError(xhr) {
     });
 })(jQuery);
 
-$.fn.modal.Constructor.prototype.enforceFocus = function () {
-    modal_this = this
-    $(document).on('focusin.modal', function (e) {
-        if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length
-                // add whatever conditions you need here:
-            && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
-            modal_this.$element.focus()
-        }
-    })
+
+$.fn.modal.Constructor.prototype.enforceFocus = function() {
+    $(document)
+        .off('focusin.bs.modal') // guard against infinite focus loop
+        .on('focusin.bs.modal', $.proxy(function (e) {
+            if (this.$element[0] !== e.target && !this.$element.has(e.target).length
+                    // add whatever conditions you need here:
+                && !$(e.target).hasClass('select2-input')
+                && !$(e.target.parentNode).hasClass('cke')
+            ) {
+                this.$element.focus()
+            }
+        }, this))
 };

@@ -6,7 +6,7 @@
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-full">
             <div class="modal-content">
                 <form class="form-horizontal"
                       action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': uniqid, 'classType': classType, 'elementId': elementId, 'code': code, 'objectId': objectId}) }}" {{ form_enctype(form) }}
