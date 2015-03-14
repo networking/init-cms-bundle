@@ -429,6 +429,18 @@
                 <source>action._delete</source>
                 <target>Delete</target>
             </trans-unit>
+            <trans-unit id="close">
+                <source>close</source>
+                <target>Close</target>
+            </trans-unit>
+            <trans-unit id="loading">
+                <source>loading</source>
+                <target>Loading....</target>
+            </trans-unit>
+            <trans-unit id="loading_failed">
+                <source>loading_failed</source>
+                <target>File could not be found</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

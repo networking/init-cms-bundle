@@ -435,6 +435,18 @@
                 <source>button.create.gallery_item</source>
                 <target>Ajouter galerie</target>
             </trans-unit>
+            <trans-unit id="close">
+                <source>close</source>
+                <target>Fermer</target>
+            </trans-unit>
+            <trans-unit id="loading">
+                <source>loading</source>
+                <target>Chargement....</target>
+            </trans-unit>
+            <trans-unit id="loading_failed">
+                <source>loading_failed</source>
+                <target>Fichier introuvable</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
