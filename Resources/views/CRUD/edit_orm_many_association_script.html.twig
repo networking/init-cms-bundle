@@ -75,7 +75,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
 
     // return if the link is an anchor inside the same page
     if (this.nodeName == 'A' && (element.hasClass('image-preview-link') || element.attr('href').length == 0 || element.attr('href')[0] == '#' || element.attr('href').substring(0, 10) == 'javascript')) {
-        return;
+        return true;
     }
 
     event.preventDefault();

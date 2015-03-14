@@ -63,9 +63,6 @@ var field_dialog_form_add_{{ id }} = function (event) {
 //submit create form
 var field_dialog_form_action_{{ id }} = function (event) {
     Admin.log('[{{ id }}|field_dialog_form_action] action catch', this);
-    event.preventDefault();
-    event.stopPropagation();
-    initialize_popup_{{ id }}();
 
     var element = jQuery(this);
     var url, type = '';
@@ -73,8 +70,12 @@ var field_dialog_form_action_{{ id }} = function (event) {
 
     // return if the link is an anchor inside the same page
     if (this.nodeName == 'A' && (element.attr('href').length == 0 || element.attr('href')[0] == '#' || element.hasClass('image-preview-link'))) {
-        return;
+        return true;
     }
+
+    event.preventDefault();
+    event.stopPropagation();
+    initialize_popup_{{ id }}();
 
     if (this.nodeName == 'FORM') {
          url = element.attr('action');
@@ -149,7 +150,7 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
     var link = jQuery(this);
 
     //trigger javascript actions
-    if (link.hasClass('filter-close') || link.hasClass('dropdown-toggle') || link.hasClass('image-preview-link')) return;
+    if (link.hasClass('filter-close') || link.hasClass('dropdown-toggle') || link.hasClass('image-preview-link')) return true;
 
     event.preventDefault();
     event.stopPropagation();
