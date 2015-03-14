@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
