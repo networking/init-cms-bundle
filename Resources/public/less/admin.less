@@ -494,7 +494,7 @@ body.modal-open {
   .badge-published {
     background-color: @color-published;
   }
-  #initcms-logo{
+  #initcms-logo {
     margin-top: 5px;
   }
   .brand {
@@ -1094,11 +1094,13 @@ body.modal-open {
     padding-right: 0;
   }
 }
+
 @media screen and (max-width: @screen-phone) {
   .initcms .brand {
     padding-right: 0;
   }
-   /* sidebar */
+
+  /* sidebar */
   .sidebar-offcanvas {
     left: -80%;
     width: -80%;
@@ -1121,20 +1123,22 @@ body.modal-open {
   }
 
   .nav-tabs > li {
-    float:none;
-    border:1px solid #dddddd;
+    float: none;
+    border: 1px solid #dddddd;
   }
-  .nav-tabs > li.active > a{
-    border:none;
+
+  .nav-tabs > li.active > a {
+    border: none;
   }
+
   .nav > li > a:hover, .nav > li > a:focus,
   .nav > li > a:hover, .nav > li > a:focus,
-  .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus
-  {
-    background:none;
-    border:none;
+  .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    background: none;
+    border: none;
   }
 }
+
 .navbar-inverse .navbar-btn {
   background-color: #222222;
   border-color: #444444;
@@ -1142,17 +1146,20 @@ body.modal-open {
   font-size: 16px;
   margin-bottom: 0;
 }
+
 .navbar-inverse .navbar-btn:hover {
   color: #ffffff;
   background-color: #333333;
 }
-a.image-preview-link{
+
+a.image-preview-link {
   cursor: zoom-in;
 }
 
-.initcms .table .sonata-ba-list-field-order-active a{
+.initcms .table .sonata-ba-list-field-order-active a {
   color: @link-color;
 }
+
 th.sonata-ba-list-field-header-order-desc a,
 th.sonata-ba-list-field-header-order-asc a {
   position: relative;
@@ -1188,13 +1195,33 @@ th.sonata-ba-list-field-header-order-asc.sonata-ba-list-field-order-active a:hov
   right: -10px;
   margin-top: -5px;
 }
+
 .pagination-xs > li > a, .pagination-xs > li > span {
   padding: 2px 6px;
   font-size: 11px;
 }
-.tooltip{
+
+.tooltip {
   z-index: 10300;
 }
-.tooltip-inner{
+
+.tooltip-inner {
   max-width: 350px;
+}
+
+.featherlight.initcms-featherlight {
+  z-index: 10300;
+  .featherlight-content {
+    background: none;
+  }
+  .featherlight-close-icon {
+    background: none;
+    color: #FFF;
+    font-size: 16px;
+  }
+}
+
+.featherlight.initcms-featherlight.featherlight-iframe .featherlight-content {
+  padding: 25px 25px;
+  min-width: initial;
 }

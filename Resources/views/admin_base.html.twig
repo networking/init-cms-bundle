@@ -22,7 +22,7 @@ file that was distributed with this source code.
         '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/build/build_standalone.less'
         '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
         '@NetworkingInitCmsBundle/Resources/public/css/bootstrap-editable.css'
-        '@NetworkingInitCmsBundle/Resources/public/css/magnific-popup.css'
+        '@NetworkingInitCmsBundle/Resources/public/css/featherlight.css'
         output='css/initcms_admin.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
         {% endstylesheets %}
@@ -123,12 +123,11 @@ file that was distributed with this source code.
         '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'
         '@SonataAdminBundle/Resources/public/select2/select2.min.js'
         '@SonataAdminBundle/Resources/public/jquery/jquery.form.js'
-        '@NetworkingInitCmsBundle/Resources/public/js/jquery.magnific-popup.min.js'
         '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-contextmenu.js'
-        output='js/footer_admin.js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-
+        '@NetworkingInitCmsBundle/Resources/public/js/featherlight.js'
+    output='js/footer_admin.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
         <script type="text/javascript">
             window.SONATA_CONFIG = {
                 CONFIRM_EXIT: {% block confirm_exit %}{% if admin_pool is defined and admin_pool.getOption('confirm_exit') %}true{% else %}false{% endif %}{% endblock %},
@@ -136,11 +135,6 @@ file that was distributed with this source code.
             };
             window.SONATA_TRANSLATIONS = {
                 CONFIRM_EXIT: '{{ 'confirm_exit'|trans({}, 'SonataAdminBundle')|escape('js') }}'
-            };
-            window.MAGNIFIC_TRANSLATIONS = {
-                close: '{{ 'close'|trans({}, 'MediaAdmin')|escape('js') }}',
-                loading: '{{ 'loading'|trans({}, 'MediaAdmin')|escape('js') }}',
-                error: '{{ 'loading_failed'|trans({}, 'MediaAdmin')|escape('js') }}'
             };
         </script>
 

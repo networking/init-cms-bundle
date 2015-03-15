@@ -233,11 +233,15 @@ file that was distributed with this source code.
                         {% for object in datagrid.results %}
                             {% if object.width is defined and object.width %}
                                 {% if object.providerName == 'sonata.media.provider.youtube' %}
-                                    {% set previewLink %}//www.youtube.com/?v={{ object.providerreference }}{% endset %}
+                                    {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
                                     {% set previewType = 'iframe'%}
+                                    {% set iframeWidth = '600px' %}
+                                    {% set iframeHeight = '300px' %}
                                 {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
-                                    {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}{% endset %}
+                                    {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
                                     {% set previewType = 'iframe'%}
+                                    {% set iframeWidth = '600px' %}
+                                    {% set iframeHeight = '300px' %}
                                 {% else %}
                                     {% set previewLink %}{% path object, 'reference' %}{% endset %}
                                     {% set previewType = 'image'%}
@@ -245,6 +249,8 @@ file that was distributed with this source code.
                             {% else %}
                                 {% set previewLink %}https://docs.google.com/gview?url={{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}&embedded=true{% endset %}
                                 {% set previewType = 'iframe' %}
+                                {% set iframeWidth = '500px' %}
+                                {% set iframeHeight = '800px' %}
                             {% endif %}
                             <div class="media-box">
                                 <div id="context-menu-{{ object.id }}">
@@ -264,7 +270,14 @@ file that was distributed with this source code.
                                                     </a></li>
                                             {% endif %}
                                             <li>
-                                                <a href="{{ previewLink }}" class="mfp-{{ previewType }} image-preview-link" title="{{ object.name }}">
+                                                <a href="{{ previewLink }}"
+                                                    {% if previewType == 'iframe' %}
+                                                    data-featherlight-iframe-width="{{ iframeWidth }}"
+                                                    data-featherlight-iframe-height="{{ iframeHeight }}"
+                                                    {% endif %}
+                                                   data-featherlight-variant="initcms-featherlight"
+                                                   data-featherlight="{{ previewType }}"
+                                                   class="image-preview-link" title="{{ object.name }}">
                                                     <i class="glyphicon glyphicon-zoom-in"></i> {{ 'action_show'|trans({}, 'SonataAdminBundle') }}
                                                 </a>
                                             </li>
@@ -282,7 +295,14 @@ file that was distributed with this source code.
                                 </div>
                                 <div class="thumbnail context" >
                                     <div class="media-element" data-toggle="context" data-target="#context-menu-{{ object.id }}">
-                                        <a href="{{ previewLink }}" class="mfp-{{ previewType }} image-preview-link" title="{{ object.name }}">
+                                        <a href="{{ previewLink }}"
+                                           {% if previewType == 'iframe' %}
+                                           data-featherlight-iframe-width="{{ iframeWidth }}"
+                                           data-featherlight-iframe-height="{{ iframeHeight }}"
+                                           {% endif %}
+                                           data-featherlight-variant="initcms-featherlight"
+                                           data-featherlight="{{ previewType }}"
+                                           class="image-preview-link" title="{{ object.name }}">
                                         {% if object.width is defined and object.width %}
                                             <img src="{% path object, 'reference' %}" class="img-responsive" height="120" />
                                         {% else %}
@@ -388,7 +408,6 @@ file that was distributed with this source code.
                 <p>
                     {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}
                     :
-
                     {% for format in admin.getExportFormats() %}
                         <a
                         href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(datagrid, 0) + {'format' : format}) }}"
@@ -412,9 +431,7 @@ file that was distributed with this source code.
     <script type="text/javascript">
         $(function () {
             Admin.add_filters();
-            $('.image-preview-link').magnificPopup(magnificPopupOptions);
         });
-
     </script>
 {% endif %}
 {% endblock %}

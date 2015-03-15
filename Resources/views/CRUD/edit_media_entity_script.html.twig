@@ -59,6 +59,7 @@ var field_dialog_form_add_{{ id }} = function (event) {
             });
         }
     });
+    return false;
 };
 //submit create form
 var field_dialog_form_action_{{ id }} = function (event) {
@@ -85,12 +86,12 @@ var field_dialog_form_action_{{ id }} = function (event) {
          type = 'GET';
     } else {
         alert('unexpected element : @' + this.nodeName + '@');
-        return;
+        return false;
     }
 
     if (element.hasClass('sonata-ba-action')) {
         Admin.log('[{{ id }}|field_dialog_form_action] reserved action stop catch all events');
-        return;
+        return false;
     }
 
     Admin.log('[{{ id }}|field_dialog_form_action] execute ajax call');
@@ -116,7 +117,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
 
                 if (IS_JSON === false && typeof data == 'string') {
                     field_dialog_{{ id }}.html(data);
-                    return;
+                    return false;
                 }
             }
 
@@ -130,7 +131,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
                 field_{{ id }}.change();
 
                 field_dialog_{{ id }}.modal('hide');
-                return;
+                return false;
             }
 
             // otherwise, display form error
@@ -147,17 +148,21 @@ var field_dialog_form_action_{{ id }} = function (event) {
 };
 //handle a click in the list view
 var field_dialog_form_list_link_{{ id }} = function (event) {
+    Admin.log('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
+
     var link = jQuery(this);
 
     //trigger javascript actions
-    if (link.hasClass('filter-close') || link.hasClass('dropdown-toggle') || link.hasClass('image-preview-link')) return true;
+    if (link.hasClass('filter-close') || link.hasClass('dropdown-toggle') || link.hasClass('image-preview-link')){
+        return true;
+    }
 
     event.preventDefault();
     event.stopPropagation();
 
     initialize_popup_{{ id }}();
 
-    Admin.log('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
+
     var element = link.parents('#field_dialog_{{ id }} .sonata-ba-list-field');
 
     //select media
@@ -181,7 +186,7 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
         }
     });
 
-    return true;
+    return false;
 
 };
 
@@ -243,6 +248,7 @@ var field_dialog_form_list_{{ id }} = function (event) {
             });
         }
     });
+    return false;
 };
 
 function initialize_popup_{{ id }}() {
@@ -262,7 +268,7 @@ function open_media_list_{{ id }}(link) {
     link.onclick = null;
     initialize_popup_{{ id }}();
     // add the jQuery event to the a element
-    jQuery(link).click(field_dialog_form_list_{{ id }}).trigger('click');
+    jQuery(link).on('click', field_dialog_form_list_{{ id }}).trigger('click');
     return false;
 }
 //set up event handlers for opening dialog for form add view
@@ -271,7 +277,7 @@ function start_field_dialog_form_add_{{ id }}(link) {
     link.onclick = null;
     initialize_popup_{{ id }}();
     // add the jQuery event to the a element
-    jQuery(link).click(field_dialog_form_add_{{ id }}).trigger('click');
+    jQuery(link).on('click', field_dialog_form_add_{{ id }}).trigger('click');
     return false;
 }
 //set up event handlers for removing an element
@@ -279,7 +285,7 @@ function remove_selected_element_{{ id }}(link) {
     // remove the html event
     link.onclick = null;
     // add the jQuery event to the a element
-    jQuery(link).click(field_remove_element_{{ id}}) .trigger('click') ;
+    jQuery(link).on('click', field_remove_element_{{ id}}) .trigger('click') ;
     return false;
 }
 //remove the image
