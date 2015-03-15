@@ -247,7 +247,7 @@ file that was distributed with this source code.
                                     {% set previewType = 'image'%}
                                 {% endif %}
                             {% else %}
-                                {% set previewLink %}https://docs.google.com/gview?url={{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}&embedded=true{% endset %}
+                                {% set previewLink %}//docs.google.com/gview?url={{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}&embedded=true{% endset %}
                                 {% set previewType = 'iframe' %}
                                 {% set iframeWidth = '500px' %}
                                 {% set iframeHeight = '800px' %}
