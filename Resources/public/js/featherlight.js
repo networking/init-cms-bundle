@@ -235,7 +235,7 @@
         /* opens the lightbox. "this" contains $instance with the lightbox, and with the config */
         open: function(event){
             var self = this;
-            self.$instance.hide().appendTo(self.root);
+            self.$instance.appendTo(self.root);
             if((!event || !event.isDefaultPrevented())
                 && self.beforeOpen(event) !== false) {
 
@@ -349,11 +349,10 @@
             iframe: {
                 process: function(url) {
                     var deferred = new $.Deferred();
-                    var $content = $('<iframe/>')
-                        .hide()
+                    var $content = $('<iframe frameborder="0"/>')
                         .attr('src', url)
                         .css(structure(this, 'iframe'))
-                        .on('load', function() { deferred.resolve($content.show()); })
+                        //.on('load', function() { deferred.resolve($content.show()); })
                         // We can't move an <iframe> and avoid reloading it,
                         // so let's put it in place ourselves right now:
                         .appendTo(this.$instance.find('.' + this.namespace + '-content'));
