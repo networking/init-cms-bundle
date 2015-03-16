@@ -25,7 +25,7 @@
         "sonata-project/media-bundle": "~2.3.0",
         "sonata-project/block-bundle": "~2.2,>=2.2.7,<2.3",
         "sonata-project/user-bundle": "~2.2,>=2.2.3,<2.3",
-        "sonata-project/formatter-bundle": "dev-master",
+        "sonata-project/formatter-bundle": "~2.3.0",
         "stof/doctrine-extensions-bundle": "v1.1.0",
         "mopa/bootstrap-bundle": "dev-master",
         "twbs/bootstrap": "v3.2.0",
