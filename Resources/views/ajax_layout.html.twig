@@ -33,7 +33,6 @@ file that was distributed with this source code.
     {% autoescape false %}
     <script type="text/javascript">
         jQuery('select.per-page').change(function(event) {
-            jQuery('input[type=submit]').hide();
             var that = this;
             jQuery.ajax({
                 type: 'GET',
