@@ -527,7 +527,65 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
+     * @param MenuItemInterface $menu
+     * @param $action
+     * @param AdminInterface $childAdmin
+     * @return mixed|void
+     */
+    protected function configureTabMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
+    {
+
+        if (!in_array($action, array('edit'))) {
+            return;
+        }
+
+        $admin = $this->isChild() ? $this->getParent() : $this;
+
+        if (!$id = $this->getRequest()->get('id')) {
+            return;
+        }
+
+        /** @var $pageManager PageManagerInterface */
+        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
+
+        /** @var $page PageInterface */
+        $page = $pageManager->findById($id);
+
+        $translatedLocales = $page->getAllTranslations();
+
+        $originalLocale = $page->getLocale();
+        foreach ($this->languages as $language) {
+
+            if ($language['locale'] == $originalLocale) {
+                continue;
+            }
+
+            if ($translatedLocales->containsKey($language['locale'])) {
+
+                $page = $translatedLocales->get($language['locale']);
+                $menu->addChild(
+                    $this->trans('View %language% version', array('%language%' => $language['label'])),
+                    array('uri' => $admin->generateUrl('edit', array('id' => $page->getId())))
+                );
+
+            } else {
+                $menu->addChild(
+                    $this->trans('Translate %language%', array('%language%' => $language['label'])),
+                    array(
+                        'uri' => $admin->generateUrl(
+                            'translatePage',
+                            array('id' => $id, 'locale' => $language['locale'])
+                        )
+                    )
+                );
+            }
+
+        }
+    }
+
+    /**
      * {@inheritdoc}
+     * @deprecated will be removed in alignment with sonata-project/admin-bundle
      */
     protected function configureSideMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
     {
