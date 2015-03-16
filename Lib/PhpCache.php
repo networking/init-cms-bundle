@@ -121,7 +121,7 @@ class PhpCache implements PhpCacheInterface {
      * @return mixed|null|string
      */
     public function get($keyword, $option = array()){
-        return $this->phpFastCache->get($keyword, $option);
+        return $this->phpFastCache->instance->get($keyword, $option);
     }
 
 
@@ -136,7 +136,7 @@ class PhpCache implements PhpCacheInterface {
         if(is_null($time)){
             $time = $this->cacheTime;
         }
-        return $this->phpFastCache->set($keyword, $value, $time, $option);
+        return $this->phpFastCache->instance->set($keyword, $value, $time, $option);
     }
 
     /**
@@ -145,7 +145,7 @@ class PhpCache implements PhpCacheInterface {
      * @return bool|\string[]
      */
     public function delete($keyword, $options = array()){
-        return $this->phpFastCache->delete($keyword, $options);
+        return $this->phpFastCache->instance->delete($keyword, $options);
     }
 
     /**
@@ -155,7 +155,7 @@ class PhpCache implements PhpCacheInterface {
     public function clean($option = array())
     {
         if($this->active){
-            return $this->phpFastCache->clean($option);
+            return $this->phpFastCache->instance->clean($option);
         }
     }
 
@@ -169,7 +169,7 @@ class PhpCache implements PhpCacheInterface {
         if(is_null($time)){
             $time = $this->cacheTime;
         }
-        return $this->phpFastCache->touch($keyword, $time, $option);
+        return $this->phpFastCache->instance->touch($keyword, $time, $option);
     }
 
     /**
@@ -178,7 +178,7 @@ class PhpCache implements PhpCacheInterface {
      * @return null
      */
     public function getInfo($keyword, $option = array()){
-        return $this->phpFastCache->getInfo($keyword, $option);
+        return $this->phpFastCache->instance->getInfo($keyword, $option);
     }
 
     /**
