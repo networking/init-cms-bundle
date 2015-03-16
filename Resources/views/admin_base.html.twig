@@ -17,8 +17,8 @@ file that was distributed with this source code.
 
     {% block stylesheets %}
         {% stylesheets filter='cssembed,?yui_css'
-        '@NetworkingInitCmsBundle/Resources/public/themes/flick/jquery-ui-1.8.16.custom.css'
-        '@SonataAdminBundle/Resources/public/select2/select2.css'
+        '@SonataAdminBundle/Resources/public/vendor/select2/select2.css'
+        '@SonataAdminBundle/Resources/public/vendor/jqueryui/themes/base/jquery-ui.css'
         '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/build/build_standalone.less'
         '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
         '@NetworkingInitCmsBundle/Resources/public/css/bootstrap-editable.css'
@@ -33,10 +33,10 @@ file that was distributed with this source code.
 
     {% block javascripts %}
         {% javascripts
-        '@NetworkingInitCmsBundle/Resources/public/js/jquery-1.9.1.min.js'
-        '@NetworkingInitCmsBundle/Resources/public/js/jquery-ui-1.9.1.min.js'
+        '@SonataAdminBundle/Resources/public/vendor/jquery/dist/jquery.min.js'
+        '@SonataAdminBundle/Resources/public/vendor/jqueryui/ui/minified/jquery-ui.min.js'
         '@NetworkingInitCmsBundle/Resources/public/js/jquery.ui.touch-punch.min.js'
-        '@SonatajQueryBundle/Resources/public/jquery-ui-i18n.js'
+        '@SonataAdminBundle/Resources/public/vendor/jqueryui/ui/minified/i18n/jquery-ui-i18n.min.js'
         output='js/jquery-1.9.1.min.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -121,7 +121,7 @@ file that was distributed with this source code.
         {% javascripts filter="?yui_js"
         '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
         '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'
-        '@SonataAdminBundle/Resources/public/select2/select2.min.js'
+        '@SonataAdminBundle/Resources/public/vendor/select2/select2.min.js'
         '@SonataAdminBundle/Resources/public/jquery/jquery.form.js'
         '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-contextmenu.js'
         '@NetworkingInitCmsBundle/Resources/public/js/featherlight.js'
@@ -145,7 +145,7 @@ file that was distributed with this source code.
         {% if app.request.getLocale()|slice(0, 2) != 'en' %}
         <script src="{{ asset('bundles/mopabootstrap/components/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.' ~ app.request.getLocale()|slice(0, 2) ~'.js') }}"
                 type="text/javascript"></script>
-        <script src="{{ asset('bundles/sonataadmin/select2/select2_locale_'~ app.request.getLocale()|slice(0, 2) ~'.js') }}"
+        <script src="{{ asset('bundles/sonataadmin/vendor/select2/select2_locale_'~ app.request.getLocale()|slice(0, 2) ~'.js') }}"
                 type="text/javascript"></script>
         {% endif %}
         {% if app.user is defined %}
