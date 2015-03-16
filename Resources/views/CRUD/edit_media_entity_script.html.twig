@@ -42,8 +42,8 @@ var field_dialog_form_add_{{ id }} = function (event) {
 
             // capture the submit event to make an ajax call, ie : POST data to the
             // related create admin
-            jQuery(field_dialog_{{ id }}).on('click', 'a', field_dialog_form_action_{{ id }});
-            jQuery(field_dialog_{{ id }}).on('submit', 'form', field_dialog_form_action_{{ id }});
+            field_dialog_{{ id }}.on('click', 'a', field_dialog_form_action_{{ id }});
+            field_dialog_{{ id }}.on('submit', 'form', field_dialog_form_action_{{ id }});
 
             // open the dialog in modal mode
             field_dialog_{{ id }}.modal('show');
@@ -53,8 +53,8 @@ var field_dialog_form_add_{{ id }} = function (event) {
                 if (!jQuery(e.target).hasClass('collapse')) {
                     Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
                     // make sure we have a clean state
-                    jQuery(field_dialog_{{ id }}).off('click', 'a');
-                    jQuery(field_dialog_{{ id }}).off('submit', 'form');
+                    field_dialog_{{ id }}.off('click', 'a');
+                    field_dialog_{{ id }}.off('submit', 'form');
                 }
             });
         }
@@ -168,8 +168,7 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
     //select media
     if(link.hasClass('select-media') || element.length > 0){
         field_value_{{ id }} = link.data('object-id');
-        field_{{ id }}.val(field_value_{{ id }});
-        field_{{ id }}.trigger('change');
+        field_{{ id }}.val(field_value_{{ id }}).trigger('change');
         field_dialog_{{ id }}.modal('hide');
         return true;
     }
@@ -219,8 +218,8 @@ var field_dialog_form_list_{{ id }} = function (event) {
 
             // capture the submit event to make an ajax call, ie : POST data to the
             // related create admin
-            jQuery(field_dialog_{{ id }}).on('click', 'a', field_dialog_form_list_link_{{ id }});
-            jQuery( field_dialog_{{ id }}).on('submit','form', function (event) {
+            field_dialog_{{ id }}.on('click', 'a', field_dialog_form_list_link_{{ id }});
+            field_dialog_{{ id }}.on('submit','form', function (event) {
                 event.preventDefault();
                 var form = jQuery(this);
                 jQuery(form).ajaxSubmit({
@@ -242,8 +241,8 @@ var field_dialog_form_list_{{ id }} = function (event) {
                 if (!jQuery(e.target).hasClass('collapse')) {
                     Admin.log('[{{ id }}|field_dialog_form_list] close callback, removing js event');
                     // make sure we have a clean state
-                    jQuery(field_dialog_{{ id }}).off('click', 'a');
-                    jQuery(field_dialog_{{ id }}).off('submit', 'form');
+                    field_dialog_{{ id }}.off('click', 'a');
+                    field_dialog_{{ id }}.off('submit', 'form');
                 }
             });
         }
