@@ -37,9 +37,8 @@
         "phpfastcache/phpfastcache": "dev-final"
     },
     "autoload": {
-        "psr-4": {"Networking\\InitCmsBundle": ""}
+        "psr-4": {"Networking\\InitCmsBundle\\": ""}
     },
-    "target-dir": "Networking/InitCmsBundle",
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
