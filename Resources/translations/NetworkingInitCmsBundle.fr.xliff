@@ -198,6 +198,14 @@
                 <source>flash_batch_publish_success</source>
                 <target>Une erreur est survenue, l’élément sélectionné n’a pas pu être publiées</target>
             </trans-unit>
+            <trans-unit id="flash_batch_cache_clear_success">
+                <source>flash_batch_cache_clear_success</source>
+                <target>Pages mises en cache supprimés avec succès</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_cache_clear_error">
+                <source>flash_batch_cache_clear_error</source>
+                <target>Pages mises en cache ne peuvent pas être supprimés</target>
+            </trans-unit>
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>
                 <target>Aucun élément sélectionné</target>

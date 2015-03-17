@@ -410,6 +410,10 @@
                 <source>label.action_publish</source>
                 <target>Publier les pages sélectionnées</target>
             </trans-unit>
+            <trans-unit id="label.action_cache_clear">
+                <source>label.action_cache_clear</source>
+                <target>Supprimer le cache de pages sélectionnées</target>
+            </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
                 <target>Cette partie de votre page est vide. Cliquez sur l‘icône + ci-dessus pour entrer votre premier contenu, ou faites glisser dans celui-ci un élément de contenu à partir de l’une des autres zones de contenu.</target>

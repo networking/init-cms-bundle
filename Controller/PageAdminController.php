@@ -291,6 +291,46 @@ class PageAdminController extends CRUDController
     }
 
     /**
+     * @param ProxyQueryInterface $selectedModelQuery
+     * @return RedirectResponse
+     * @throws AccessDeniedException
+     */
+    public function batchActionCacheClear(ProxyQueryInterface $selectedModelQuery)
+    {
+        if ($this->admin->isGranted('PUBLISH') === false) {
+            throw new AccessDeniedException();
+        }
+
+        $modelManager = $this->admin->getModelManager();
+
+        $selectedModels = $selectedModelQuery->execute();
+
+
+        // do the merge work here
+
+        try {
+            foreach ($selectedModels as $selectedModel) {
+                /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
+                $phpCache = $this->get('networking_init_cms.lib.php_cache');
+                if($phpCache->isActive()){
+                    /** @var PageInterface $selectedModel */
+                    $cacheKey = $selectedModel->getLocale().$selectedModel->getFullPath();
+                    $phpCache->delete($cacheKey);
+                }
+            }
+
+        } catch (\Exception $e) {
+            $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_cache_clear_error');
+
+            return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+        }
+
+        $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_cache_clear_success');
+
+        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+    }
+
+    /**
      * @param null $id
      * @return Response
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException

@@ -199,6 +199,14 @@
                 <source>flash_batch_publish_error</source>
                 <target>Pages could not be published at present</target>
             </trans-unit>
+            <trans-unit id="flash_batch_cache_clear_success">
+                <source>flash_batch_cache_clear_success</source>
+                <target>Cached pages successfully deleted</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_cache_clear_error">
+                <source>flash_batch_cache_clear_error</source>
+                <target>Cached pages could not be deleted</target>
+            </trans-unit>
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>
                 <target>Nothing was selected</target>

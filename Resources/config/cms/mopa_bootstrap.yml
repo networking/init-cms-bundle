@@ -10,6 +10,8 @@ mopa_bootstrap:
                 icon: trash
             widget_add_btn:
                 icon: plus-sign
+    icons:
+        # Icon set to use: ['glyphicons','fontawesome','fontawesome4']
         #show_legend: false # default is true
         #show_child_legend: false # default is true
         #error_type: block # or inline which is default

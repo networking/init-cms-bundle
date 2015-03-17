@@ -1016,12 +1016,18 @@ body.modal-open {
   margin-right: 5px;
 }
 
-.notice-block {
+.affix.notice-block {
   top: 55px;
   z-index: 999;
-  padding-left: 5px;
-  padding-right: 30px;
-
+  left:0;
+  .alert {
+    padding: 6px 15px;
+  }
+}
+.container .affix.notice-block{
+  margin: auto;
+  left: auto;
+  right: auto;
   @media (max-width: @screen-phone) {
     width: 100%;
   }
@@ -1036,9 +1042,6 @@ body.modal-open {
   }
   @media (min-width: @screen-lg-desktop) {
     width: @container-lg;
-  }
-  .alert {
-    padding: 6px 15px;
   }
 }
 
@@ -1070,8 +1073,8 @@ body.modal-open {
 
   /* sidebar */
   .sidebar-offcanvas {
-    left: -30%;
-    width: -30%;
+    left: -45%;
+    width: 1000%;
     position: absolute;
     top: 0;
     background-color: #F7F7F7;
@@ -1102,13 +1105,13 @@ body.modal-open {
 
   /* sidebar */
   .sidebar-offcanvas {
-    left: -80%;
+    left: -100%;
     width: -80%;
   }
 
   /* content */
   .row-offcanvas.active {
-    left: 80%;
+    left: 70%%;
   }
 }
 

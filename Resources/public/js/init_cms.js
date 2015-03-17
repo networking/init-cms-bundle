@@ -1,5 +1,5 @@
 function createInitCmsMessageBox(status, message) {
-    var messageHtml = '<div class="col-sm-12 col-xs-12 col-md-offset-2 col-md-10 alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
+    var messageHtml = '<div class="alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
 
     jQuery('.notice-block').html(messageHtml);
 }
@@ -66,8 +66,6 @@ function uploadError(xhr) {
         }
         return false;
     });
-
-    //$('.image-preview-link').magnificPopup(magnificPopupOptions);
 })(jQuery);
 
 

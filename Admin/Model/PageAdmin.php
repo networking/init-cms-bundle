@@ -757,6 +757,9 @@ abstract class PageAdmin extends BaseAdmin
                 'label' => $this->trans('label.action_publish', array(), $this->translationDomain),
                 'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
             );
+            $actions['cache_clear'] = array(
+                'label' => $this->trans('label.action_cache_clear', array(), $this->translationDomain),
+            );
 
         }
 

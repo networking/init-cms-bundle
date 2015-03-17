@@ -196,7 +196,15 @@
             </trans-unit>
             <trans-unit id="flash_batch_publish_error">
                 <source>flash_batch_publish_error</source>
-                <target>Die Seiten konntent zurzeit nicht veröffentlicht werden </target>
+                <target>Die Seiten konnten zurzeit nicht veröffentlicht werden </target>
+            </trans-unit>
+            <trans-unit id="flash_batch_cache_clear_success">
+                <source>flash_batch_cache_clear_success</source>
+                <target>Seiten-Cache erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_cache_clear_error">
+                <source>flash_batch_cache_clear_error</source>
+                <target>Seiten-Cache konnten zurzeit nicht gelöscht werden </target>
             </trans-unit>
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>

@@ -24,14 +24,25 @@ file that was distributed with this source code.
         </div>
         <div class="modal-body">
     {% endif %}
-    <ul>
-        {% for code, provider in providers %}
-            <li><a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}">{{ provider.name|trans() }}</a>
-            </li>
-        {% else %}
-            <li>{{ 'no_provider_available'|trans({}, 'MediaAdmin') }}</li>
-        {% endfor %}
-    </ul>
+    {% for code, provider in providers %}
+        <a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}"
+           class="btn btn-default"
+           data-toggle="tooltip"
+           data-placement="top"
+           title="{{ provider.providerMetadata.description|trans({}, 'MediaAdmin') }}"
+                >
+            {% if provider.providerMetadata.image is null %}
+                <i class="{{ provider.providerMetadata.option('class') }}"></i>
+            {% else %}
+                <img src="{{ asset(provider.providerMetadata.image) }}" style="max-height: 20px; max-width: 100px;"/>
+                <br />
+            {% endif %}
+            {{ provider.providerMetadata.title|trans({}, 'MediaAdmin') }}
+
+        </a>
+    {% else %}
+        <span class="alert alert-info">{{ 'no_provider_available'|trans({}, 'SonataMediaBundle') }}</span>
+    {% endfor %}
     {% if app.request.isXmlHttpRequest %}
         </div>
 
