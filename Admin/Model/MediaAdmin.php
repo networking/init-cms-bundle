@@ -84,7 +84,7 @@ abstract class MediaAdmin extends Admin
      */
     public function getIcon()
     {
-        return 'glyphicon-picture';
+        return 'fa-picture-o';
     }
 
     /**

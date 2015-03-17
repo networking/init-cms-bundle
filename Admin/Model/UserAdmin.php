@@ -62,7 +62,7 @@ abstract class UserAdmin extends SonataUserAdmin
      */
     public function getIcon()
     {
-        return 'glyphicon-user';
+        return 'fa-users';
     }
 
     /**

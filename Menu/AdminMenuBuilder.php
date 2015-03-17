@@ -279,7 +279,7 @@ class AdminMenuBuilder extends MenuBuilder
             array(
                 'uri' => $this->router->generate('sonata_admin_dashboard'),
                 'current' => $this->request->get('_sonata_admin') ? false : true,
-                'attributes' => array('class' => $firstLevelClass, 'icon' => 'glyphicon-dashboard', 'icon_size' => $iconSize),
+                'attributes' => array('class' => $firstLevelClass, 'icon' => 'glyphicon glyphicon-dashboard', 'icon_size' => 'glyphicon-'.$iconSize),
                 'linkAttributes' => array('class' => 'pull-left first-level-text')
             )
         );
@@ -295,18 +295,26 @@ class AdminMenuBuilder extends MenuBuilder
 
                             $current = false;
                             $icon = 'glyphicon-unchecked';
+                            $iconType = 'glyphicon';
+
                             if ($this->request->get('_sonata_admin') == $first->getCode()) {
                                 $current = true;
                             }
+
                             if (method_exists($first, 'getIcon')) {
                                 $icon = $first->getIcon();
                             }
+                            if(substr($icon, 0, '2') == 'fa'){
+                                $iconType = 'fa';
+                            }
+
+
                             $mainItem = $menu->addChild(
                                 $this->translator->trans($group['label'], array(), $group['label_catalogue'] != 'SonataAdminBundle' ? $group['label_catalogue'] : $first->getTranslationDomain()),
                                 array(
                                     'uri' => $first->generateUrl('list'),
                                     'current' => $current,
-                                    'attributes' => array('class' => $firstLevelClass, 'icon' => $icon, 'icon_size' => $iconSize),
+                                    'attributes' => array('class' => $firstLevelClass, 'icon' => sprintf('%s %s', $iconType, $icon), 'icon_size' => sprintf('%s-%s', $iconType, $iconSize)),
                                     'linkAttributes' => array('class' => 'pull-left first-level-text')
                                 )
                             );
@@ -335,7 +343,7 @@ class AdminMenuBuilder extends MenuBuilder
             }
 
             //
-            $iconSize = 'medium';
+            $iconSize = 'small';
             $firstLevelClass = 'first-level-small';
             $this->showOnlyCurrentChildren($menu);
             $menu = $smallMenu;

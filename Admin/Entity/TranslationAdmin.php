@@ -37,6 +37,14 @@ class TranslationAdmin extends ORMTranslationAdmin
     protected $persistFilters = true;
 
     /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return 'fa-globe';
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $filter)

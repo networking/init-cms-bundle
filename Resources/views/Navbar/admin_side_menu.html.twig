@@ -92,7 +92,7 @@
             {% if item.level is  sameas(2) %}
             <div class="pull-left menu_icon">
                 {% if item.attribute('icon') is defined %}
-                    <i class="glyphicon {{ item.attribute('icon') }} glyphicon-{{ item.attribute('icon_size') }}"></i>
+                    <i class="{{ item.attribute('icon') }} {{ item.attribute('icon_size') }}"></i>
                 {% endif %}
             </div>
 
