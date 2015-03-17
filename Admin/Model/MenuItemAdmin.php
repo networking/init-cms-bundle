@@ -147,8 +147,10 @@ abstract class MenuItemAdmin extends BaseAdmin
         if ($this->isRoot) {
             $formMapper
                 ->add('description', null, array('horizontal' => true))
-                ->add('isRoot', 'hidden', array('data' => true));
+                ->add('isRoot', 'hidden', array('data' => true))
+                ->end();
         } else {
+            $formMapper->end();
             // start group page_or_url
             $formMapper
                 ->with(
