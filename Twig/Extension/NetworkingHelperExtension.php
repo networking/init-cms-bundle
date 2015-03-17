@@ -1148,7 +1148,13 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         return false;
     }
 
-        public function getFileIcon($filename)
+    /**
+     * Guess which fontawesome icon to use
+     * 
+     * @param $filename
+     * @return string
+     */
+    public function getFileIcon($filename)
     {
         $parts = explode('.', $filename);
         $postfix = strtolower(end($parts));
