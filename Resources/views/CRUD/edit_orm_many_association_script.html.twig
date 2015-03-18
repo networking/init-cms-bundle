@@ -332,7 +332,6 @@ function initialize_popup_{{ id }}() {
     // initialize component
     if (!field_dialog_{{ id }}) {
         field_dialog_{{ id }} = jQuery("#field_dialog_{{ id }}");
-        field_dialog_{{ id }}.addClass('modal-full');
         // move the dialog as a child of the root element, nested form breaks html ...
         jQuery(document.body).append(field_dialog_{{ id }});
 
