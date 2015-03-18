@@ -157,6 +157,7 @@ class PhpCache implements PhpCacheInterface {
         if($this->active){
             return $this->phpFastCache->instance->clean($option);
         }
+        return false;
     }
 
     /**
