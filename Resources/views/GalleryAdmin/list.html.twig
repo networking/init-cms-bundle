@@ -25,7 +25,7 @@ file that was distributed with this source code.
         {% for name, context in media_pool.contexts %}
             <div class="tab-pane {% if (active_tab is null and loop.first) or active_tab == name %}active{% endif %}"
                  id="gallery_{{ name }}">
-                <div class="row">
+                <div class="row-fluid">
                     <div class="span10">
                         <h1><span class="info-soft">{{ ('media_context.' ~ name)|trans({}) }}</span>
                             <a class="btn btn-primary btn-small menu-dialog-link"
@@ -246,12 +246,11 @@ file that was distributed with this source code.
                 {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
                 {% set label = admin.label|trans({}, admin.translationDomain) %}
                 <div>
-                    <div class="pull-left ">
                         <fieldset class="filter_legend">
                             <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
 
-                            <div class="filter_container row">
-                                <div class="span10">
+                            <div class="filter_container row-fluid">
+                                <div class="span12">
                                     {{ filter_main }}
                                     <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
                                     {% set foo = form.children['_page'].setRendered() %}
@@ -282,7 +281,6 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         </fieldset>
-                    </div>
                     <div class="clearfix">&nbsp;</div>
                 </div>
             </form>
