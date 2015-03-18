@@ -272,7 +272,7 @@ file that was distributed with this source code.
                                         {% if object.width is defined and object.width %}
                                                 <img src="{% path object, 'reference' %}" class="img-responsive" height="120" />
                                         {% else %}
-                                                <i class="glyphicon glyphicon-file"></i>
+                                            <i class="{{ get_file_icon(object.getMetadataValue('filename')) }}"></i>
                                         {% endif %}
                                         </a>
                                     </div>
