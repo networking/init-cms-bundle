@@ -17,26 +17,20 @@ file that was distributed with this source code.
 {% block content %}
     <div class="row-fluid">
         <div class="span12">
-            {% for block in blocks %}
-                {% if block.position == 'top' %}
+            {% for block in blocks.top %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
-                {% endif %}
             {% endfor %}
         </div>
     </div>
     <div class="row-fluid">
         <div class="span6">
-            {% for block in blocks %}
-                {% if block.position == 'left' %}
+            {% for block in blocks.left %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
-                {% endif %}
             {% endfor %}
         </div>
         <div class="span6">
-            {% for block in blocks %}
-                {% if block.position == 'right' %}
+            {% for block in blocks.right %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
-                {% endif %}
             {% endfor %}
         </div>
     </div>
