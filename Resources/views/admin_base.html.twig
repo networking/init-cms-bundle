@@ -22,13 +22,13 @@ file that was distributed with this source code.
         '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/build/build_standalone.less'
         '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
         '@NetworkingInitCmsBundle/Resources/public/css/bootstrap-editable.css'
-        '@NetworkingInitCmsBundle/Resources/public/css/featherlight.css'
         output='css/networking_initcms.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
         {% endstylesheets %}
         {% block content_css %}
         {% if content_css() %}<link href="{{ asset(content_css()) }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
         {% endblock content_css %}
+        <link href="{{ asset('bundles/networkinginitcms/css/featherlight.css') }}" type="text/css" rel="stylesheet" media="screen"/>
     {% endblock %}
 
     {% block javascripts %}
