@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_edit">
                 <source>breadcrumb.link_page_edit</source>
-                <target>Seite bearbeiten </target>
+                <target>Seite bearbeiten</target>
             </trans-unit>
             <trans-unit id="are_you_sure">
                 <source>page_admin.confirm</source>
@@ -48,7 +48,7 @@
             </trans-unit>
             <trans-unit id="form.label_parent">
                 <source>form.label_parent</source>
-                <target>Übergeordnete Seite </target>
+                <target>Übergeordnete Seite</target>
             </trans-unit>
             <trans-unit id="form.label_show_in_navigation">
                 <source>form.label_show_in_navigation</source>
@@ -92,7 +92,7 @@
             </trans-unit>
             <trans-unit id="legend.translate_page">
                 <source>legend.translate_page</source>
-                <target>Seitenübersetzungen </target>
+                <target>Seitenübersetzungen</target>
             </trans-unit>
             <trans-unit id="legend.page_settings">
                 <source>legend.page_settings</source>
@@ -128,7 +128,7 @@
             </trans-unit>
             <trans-unit id="translation.message_saved">
                 <source>translation.message_saved</source>
-                <target>Diese Seite wurde erfolgreich übersetzt </target>
+                <target>Diese Seite wurde erfolgreich übersetzt</target>
             </trans-unit>
             <trans-unit id="admin.menu.dashboard">
                 <source>admin.menu.dashboard</source>
@@ -188,7 +188,7 @@
             </trans-unit>
             <trans-unit id="info.translations">
                 <source>info.translations</source>
-                <target>Seitenalternativen in anderen Sprachen </target>
+                <target>Seitenalternativen in anderen Sprachen</target>
             </trans-unit>
             <trans-unit id="legend.menu_connections">
                 <source>legend.menu_connections</source>
@@ -196,7 +196,7 @@
             </trans-unit>
             <trans-unit id="link_add_page_to_menu">
                 <source>link_add_page_to_menu</source>
-                <target>Seite zum Menü hinzufügen </target>
+                <target>Seite zum Menü hinzufügen</target>
             </trans-unit>
             <trans-unit id="message.translation_link">
                 <source>message.translation_link</source>
@@ -239,7 +239,7 @@
             </trans-unit>
             <trans-unit id="title.delete_translation_link">
                 <source>title.delete_translation_link</source>
-                <target>Übersetzungslink entfernen </target>
+                <target>Übersetzungslink entfernen</target>
             </trans-unit>
             <trans-unit id="info.delete_translation_link">
                 <source>info.delete_translation_link</source>
@@ -248,7 +248,7 @@
             </trans-unit>
             <trans-unit id="label.account_settings">
                 <source>label.account_settings</source>
-                <target>Kontoeinstellungen </target>
+                <target>Kontoeinstellungen</target>
             </trans-unit>
             <trans-unit id="label.exit">
                 <source>label.exit</source>
@@ -288,7 +288,7 @@
             </trans-unit>
             <trans-unit id="label_filters">
                 <source>label_filters</source>
-                <target>Seiten durchsuchen </target>
+                <target>Seiten durchsuchen</target>
             </trans-unit>
             <trans-unit id="link_reset_filter">
                 <source>link_reset_filter</source>
@@ -336,11 +336,11 @@
             </trans-unit>
             <trans-unit id="metaDescription">
                 <source>metaDescription</source>
-                <target>Meta-Beschreibung </target>
+                <target>Meta-Beschreibung</target>
             </trans-unit>
             <trans-unit id="metaTitle">
                 <source>metaTitle</source>
-                <target>Meta-Titel </target>
+                <target>Meta-Titel</target>
             </trans-unit>
             <trans-unit id="visiblity">
                 <source>visibility</source>
@@ -368,19 +368,19 @@
             </trans-unit>
             <trans-unit id="flash_status_success">
                 <source>flash_status_success</source>
-                <target>Status erfolgreich geändert </target>
+                <target>Status erfolgreich geändert</target>
             </trans-unit>
             <trans-unit id="flash_publish_success">
                 <source>flash_publish_success</source>
-                <target>Die Seite wurde jetzt veröffentlicht. </target>
+                <target>Die Seite wurde jetzt veröffentlicht.</target>
             </trans-unit>
             <trans-unit id="message.layout_blocks_sorted">
                 <source>message.layout_blocks_sorted</source>
-                <target>Die Blöcke sind jetzt sortiert. </target>
+                <target>Die Blöcke sind jetzt sortiert.</target>
             </trans-unit>
             <trans-unit id="info.page_settings_updated">
                 <source>info.page_settings_updated</source>
-                <target>Die Seiteneinstellungen wurden erfolgreich aktualisiert </target>
+                <target>Die Seiteneinstellungen wurden erfolgreich aktualisiert</target>
             </trans-unit>
             <trans-unit id="message.layout_block_deleted">
                 <source>message.layout_block_deleted</source>
@@ -416,15 +416,15 @@
             </trans-unit>
             <trans-unit id="info.revert_to_publish">
                 <source>info.revert_to_publish</source>
-                <target>Auf den veröffentlichten  Stand zurücksetzen</target>
+                <target>Auf den veröffentlichten Stand zurücksetzen</target>
             </trans-unit>
             <trans-unit id="link.revert_to_publish">
                 <source>link.revert_to_publish</source>
-                <target>Entwurf verwerfen </target>
+                <target>Entwurf verwerfen</target>
             </trans-unit>
             <trans-unit id="label.action_publish">
                 <source>label.action_publish</source>
-                <target>Gewählte Seiten veröffentlichen </target>
+                <target>Gewählte Seiten veröffentlichen</target>
             </trans-unit>
             <trans-unit id="label.action_cache_clear">
                 <source>label.action_cache_clear</source>
@@ -432,23 +432,29 @@
             </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
-                <target>Dieser  Teil Ihrer Seite ist leer. Klicken Sie auf das + darüber, um Ihre ersten Inhalte einzugeben oder ziehen Sie einen Inhalt aus einem der anderen Inhaltsbereiche in diesen Bereich. </target>
+                <target>Dieser Teil Ihrer Seite ist leer. Klicken Sie auf das + darüber, um Ihre ersten Inhalte
+                    einzugeben oder ziehen Sie einen Inhalt aus einem der anderen Inhaltsbereiche in diesen Bereich.
+                </target>
             </trans-unit>
             <trans-unit id="legend.create_menu">
                 <source>legend.create_menu</source>
-                <target>Erstellen eines Punktes im Menü "%menu_name%" für diese Seite. </target>
+                <target>Erstellen eines Punktes im Menü "%menu_name%" für diese Seite.</target>
             </trans-unit>
             <trans-unit id="legend.edit_menu">
                 <source>legend.edit_menu</source>
-                <target>Bearbeiten des ausgewählten Menüpunktes </target>
+                <target>Bearbeiten des ausgewählten Menüpunktes</target>
             </trans-unit>
             <trans-unit id="info.create_menu_item">
                 <source>info.create_menu_item</source>
-                <target>Wenn Sie fortfahren, werden Sie zum Menü-Manager weitergeleitet, wo ein Punkt für die Verwendung des Seitentitels erstellt wird. Sie müssen ihn nur an der gewünschten Position platzieren.</target>
+                <target>Wenn Sie fortfahren, werden Sie zum Menü-Manager weitergeleitet, wo ein Punkt für die Verwendung
+                    des Seitentitels erstellt wird. Sie müssen ihn nur an der gewünschten Position platzieren.
+                </target>
             </trans-unit>
             <trans-unit id="info.edit_menu_item">
                 <source>info.edit_menu_item</source>
-                <target>Wenn Sie fortfahren, werden Sie zum Menü-Manager weitergeleitet, wo Sie den gewählten Menüpunkt bearbeiten können.</target>
+                <target>Wenn Sie fortfahren, werden Sie zum Menü-Manager weitergeleitet, wo Sie den gewählten Menüpunkt
+                    bearbeiten können.
+                </target>
             </trans-unit>
             <trans-unit id="button.continue">
                 <source>button.continue</source>
@@ -456,25 +462,27 @@
             </trans-unit>
             <trans-unit id="label.show_no_more">
                 <source>label.show_no_more</source>
-                <target>Nicht erneut anzeigen </target>
+                <target>Nicht erneut anzeigen</target>
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
-                <target>Neue Seite erstellen </target>
+                <target>Neue Seite erstellen</target>
             </trans-unit>
             <trans-unit id="info.page_create">
                 <source>info.page_create</source>
                 <target>Bitte füllen Sie die folgenden wichtigen Seitenfelder aus, bevor Sie weiter Inhalte hinzufügen.
                     Wenn die Seite erstellt wurde, werden Sie direkt zur Ansicht „Seite bearbeiten“ weitergeleitet.
-                    Sie können diese Einstellungen jederzeit in der Ansicht „Seite bearbeiten“ ändern. Suchen Sie einfach das „Bearbeiten“-Symbol in den Einstellungen &amp; SEO.</target>
+                    Sie können diese Einstellungen jederzeit in der Ansicht „Seite bearbeiten“ ändern. Suchen Sie
+                    einfach das „Bearbeiten“-Symbol in den Einstellungen &amp; SEO.
+                </target>
             </trans-unit>
             <trans-unit id="locale.helper.text">
                 <source>locale.helper.text</source>
-                <target>Inhaltssprache dieser Seite </target>
+                <target>Inhaltssprache dieser Seite</target>
             </trans-unit>
             <trans-unit id="page_name.helper.text">
                 <source>page_name.helper.text</source>
-                <target>Interner Seitentitel. Wird im Frontend nicht angezeigt. </target>
+                <target>Interner Seitentitel. Wird im Frontend nicht angezeigt.</target>
             </trans-unit>
             <trans-unit id="parent.helper.text">
                 <source>parent.helper.text</source>
@@ -486,11 +494,11 @@
             </trans-unit>
             <trans-unit id="visibility.helper.text">
                 <source>visibility.helper.text</source>
-                <target>Öffentliche oder passwortgeschützte Seite </target>
+                <target>Öffentliche oder passwortgeschützte Seite</target>
             </trans-unit>
             <trans-unit id="template.helper.text">
                 <source>template.helper.text</source>
-                <target>Das gewünschte Layout für Ihre Seite zu dem </target>
+                <target>Das gewünschte Layout für Ihre Seite zu dem</target>
             </trans-unit>
             <trans-unit id="meta_settings">
                 <source>meta_settings</source>
@@ -510,7 +518,7 @@
             </trans-unit>
             <trans-unit id="link.live">
                 <source>link.live</source>
-                <target>Veröffentlichte Versionen anzeigen </target>
+                <target>Veröffentlichte Versionen anzeigen</target>
             </trans-unit>
             <trans-unit id="or">
                 <source>or</source>
@@ -518,7 +526,8 @@
             </trans-unit>
             <trans-unit id="info.last_published_version">
                 <source>info.last_published_version</source>
-                <target>Die letzte veröffentlichte Version ist: <![CDATA[<span class="info-soft">%date%</span>]]></target>
+                <target>Die letzte veröffentlichte Version ist:
+                    <![CDATA[<span class="info-soft">%date%</span>]]></target>
             </trans-unit>
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>
@@ -531,7 +540,9 @@
             </trans-unit>
             <trans-unit id="message.translation_not_saved">
                 <source>message.translation_not_saved</source>
-                <target>Eine Kopie dieser Seite in %language% konnte nicht erstellt werden. Prüfen Sie, ob es bereits eine Seite mit der URL "%url%" in %language% gibt.</target>
+                <target>Eine Kopie dieser Seite in %language% konnte nicht erstellt werden. Prüfen Sie, ob es bereits
+                    eine Seite mit der URL "%url%" in %language% gibt.
+                </target>
             </trans-unit>
             <trans-unit id="title.copy_page">
                 <source>title.copy_page</source>
@@ -548,27 +559,27 @@
             </trans-unit>
             <trans-unit id="title.edit_content">
                 <source>title.edit_content</source>
-                <target>Bearbeiten Sie Ihren Inhalt </target>
+                <target>Bearbeiten Sie Ihren Inhalt</target>
             </trans-unit>
             <trans-unit id="title.page_status_count">
                 <source>title.page_status_count</source>
-                <target>Seiten-Status-Zusammenfassung </target>
+                <target>Seiten-Status-Zusammenfassung</target>
             </trans-unit>
             <trans-unit id="title.actual_drafts">
                 <source>title.actual_drafts</source>
-                <target>Aktuelle Entwurfsseiten </target>
+                <target>Aktuelle Entwurfsseiten</target>
             </trans-unit>
             <trans-unit id="title.actual_reviews">
                 <source>title.actual_reviews</source>
-                <target>Aktuelle Seiten zur Überprüfung </target>
+                <target>Aktuelle Seiten zur Überprüfung</target>
             </trans-unit>
             <trans-unit id="link.see_all">
                 <source>link.see_all</source>
-                <target>Siehe alle Seiten </target>
+                <target>Siehe alle Seiten</target>
             </trans-unit>
             <trans-unit id="info.last_edited">
                 <source>info.last_edited</source>
-                <target>Zuletzt bearbeitet bei </target>
+                <target>Zuletzt bearbeitet bei</target>
             </trans-unit>
             <trans-unit id="pages.admin_menu_label">
                 <source>pages.admin_menu_label</source>

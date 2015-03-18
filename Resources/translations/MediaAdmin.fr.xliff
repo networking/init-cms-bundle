@@ -148,7 +148,7 @@
             </trans-unit>
             <trans-unit id="label.public_url">
                 <source>label.public_url</source>
-                <target>URL publique </target>
+                <target>URL publique</target>
             </trans-unit>
             <trans-unit id="label.name">
                 <source>label.name</source>
@@ -216,11 +216,11 @@
             </trans-unit>
             <trans-unit id="label.protected_download_url">
                 <source>label.protected_download_url</source>
-                <target> URL protégée</target>
+                <target>URL protégée</target>
             </trans-unit>
             <trans-unit id="description.roles_download_strategy">
                 <source>description.roles_download_strategy</source>
-                <target> Les utilisateurs ayant les rôles suivants peuvent accéder au média: %roles%.</target>
+                <target>Les utilisateurs ayant les rôles suivants peuvent accéder au média: %roles%.</target>
             </trans-unit>
             <trans-unit id="label.protected_download_url_notice">
                 <source>label.protected_download_url_notice</source>
@@ -403,13 +403,14 @@
             <trans-unit id="form.label_locale">
                 <source>form.label_locale</source>
                 <target>Langue</target>
-            </trans-unit><trans-unit id="form.label_image">
-                 <source>form.label_image</source>
-                 <target>l'image actuelle</target>
+            </trans-unit>
+            <trans-unit id="form.label_image">
+                <source>form.label_image</source>
+                <target>l'image actuelle</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_new">
-                 <source>form.label_binary_content_new</source>
-                 <target>nouveau fichier</target>
+                <source>form.label_binary_content_new</source>
+                <target>nouveau fichier</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube_new">
                 <source>form.label_binary_content_youtube_new</source>

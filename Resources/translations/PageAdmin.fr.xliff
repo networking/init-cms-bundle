@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="form.label_meta_title">
                 <source>form.label_meta_title</source>
-                <target>Méta-titre </target>
+                <target>Méta-titre</target>
             </trans-unit>
             <trans-unit id="form.label_navigation_title">
                 <source>form.label_navigation_title</source>
@@ -56,11 +56,11 @@
             </trans-unit>
             <trans-unit id="form.label_meta_keyword">
                 <source>form.label_meta_keyword</source>
-                <target>Méta-mots-clés </target>
+                <target>Méta-mots-clés</target>
             </trans-unit>
             <trans-unit id="form.label_meta_description">
                 <source>form.label_meta_description</source>
-                <target>Méta-description </target>
+                <target>Méta-description</target>
             </trans-unit>
             <trans-unit id="form.label_status ">
                 <source>form.label_status</source>
@@ -192,9 +192,12 @@
             </trans-unit>
             <trans-unit id="message.translation_link">
                 <source>message.translation_link</source>
-                <target> Ici, vous pouvez créer une connexion à une page existante dans la langue sélectionnée %language%.
-                    Seules les pages en %language% qui ne sont pas traduites en %original_language% sont énumérées ci-dessous.
-                    Sélectionnez la page en %language% à laquelle vous voulez associer "%object%", puis cliquez sur le bouton Envoyer.
+                <target>Ici, vous pouvez créer une connexion à une page existante dans la langue sélectionnée
+                    %language%.
+                    Seules les pages en %language% qui ne sont pas traduites en %original_language% sont énumérées
+                    ci-dessous.
+                    Sélectionnez la page en %language% à laquelle vous voulez associer "%object%", puis cliquez sur le
+                    bouton Envoyer.
                 </target>
             </trans-unit>
             <trans-unit id="title.translation_link">
@@ -219,7 +222,7 @@
             </trans-unit>
             <trans-unit id="info.cancel_draft">
                 <source>info.cancel_draft</source>
-                <target> Voulez-vous restaurer cette page "%object%" dans la dernière version publiée ?</target>
+                <target>Voulez-vous restaurer cette page "%object%" dans la dernière version publiée ?</target>
             </trans-unit>
             <trans-unit id="button.confirm_cancel_draft">
                 <source>button.confirm_cancel_draft</source>
@@ -235,7 +238,7 @@
             </trans-unit>
             <trans-unit id="info.delete_translation_link">
                 <source>info.delete_translation_link</source>
-                <target> Êtes-vous sûr que vous voulez dissocier cette page de - "%translatedPage%" (%locale%)
+                <target>Êtes-vous sûr que vous voulez dissocier cette page de - "%translatedPage%" (%locale%)
                 </target>
             </trans-unit>
             <trans-unit id="label.account_settings">
@@ -328,11 +331,11 @@
             </trans-unit>
             <trans-unit id="metaDescription">
                 <source>metaDescription</source>
-                <target>Méta-description </target>
+                <target>Méta-description</target>
             </trans-unit>
             <trans-unit id="metaTitle">
                 <source>metaTitle</source>
-                <target>Méta-titre </target>
+                <target>Méta-titre</target>
             </trans-unit>
             <trans-unit id="visiblity">
                 <source>visibility</source>
@@ -384,7 +387,8 @@
             </trans-unit>
             <trans-unit id="info.create.layout_block">
                 <source>info.create.layout_block</source>
-                <target>Sélectionnez le type de contenu que vous souhaitez créer à partir de la liste ci-dessous</target>
+                <target>Sélectionnez le type de contenu que vous souhaitez créer à partir de la liste ci-dessous
+                </target>
             </trans-unit>
             <trans-unit id="url.helper.text">
                 <source>url.helper.text</source>
@@ -416,11 +420,14 @@
             </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
-                <target>Cette partie de votre page est vide. Cliquez sur l‘icône + ci-dessus pour entrer votre premier contenu, ou faites glisser dans celui-ci un élément de contenu à partir de l’une des autres zones de contenu.</target>
+                <target>Cette partie de votre page est vide. Cliquez sur l‘icône + ci-dessus pour entrer votre premier
+                    contenu, ou faites glisser dans celui-ci un élément de contenu à partir de l’une des autres zones de
+                    contenu.
+                </target>
             </trans-unit>
             <trans-unit id="legend.create_menu">
                 <source>legend.create_menu</source>
-                <target> Créer un point dans le menu "%menu_name%" pour cette page</target>
+                <target>Créer un point dans le menu "%menu_name%" pour cette page</target>
             </trans-unit>
             <trans-unit id="legend.edit_menu">
                 <source>legend.edit_menu</source>
@@ -428,11 +435,16 @@
             </trans-unit>
             <trans-unit id="info.create_menu_item">
                 <source>info.create_menu_item</source>
-                <target>Si vous choisissez de continuer, vous serez redirigé vers le gestionnaire de menu où un point sera créé pour que vous puissiez utiliser le titre de la page. Tout ce que vous devez faire, c’est le positionner où vous voulez.</target>
+                <target>Si vous choisissez de continuer, vous serez redirigé vers le gestionnaire de menu où un point
+                    sera créé pour que vous puissiez utiliser le titre de la page. Tout ce que vous devez faire, c’est
+                    le positionner où vous voulez.
+                </target>
             </trans-unit>
             <trans-unit id="info.edit_menu_item">
                 <source>info.edit_menu_item</source>
-                <target>Si vous choisissez de continuer, vous serez redirigé vers le gestionnaire de menu où vous pourrez éditer le point du menu sélectionné.</target>
+                <target>Si vous choisissez de continuer, vous serez redirigé vers le gestionnaire de menu où vous
+                    pourrez éditer le point du menu sélectionné.
+                </target>
             </trans-unit>
             <trans-unit id="button.continue">
                 <source>button.continue</source>
@@ -448,8 +460,11 @@
             </trans-unit>
             <trans-unit id="info.page_create">
                 <source>info.page_create</source>
-                <target> Veuillez remplir les champs importants suivants avant d’ajouter de nouveaux contenus. Une fois la page créée, vous serez dirigé vers l’affichage d’édition de la page. Pour modifier ces paramètres dans l’affichage d’édition de la page, il vous suffit de chercher l'icône d'édition dans
-                Paramètres &amp; SEO.</target>
+                <target>Veuillez remplir les champs importants suivants avant d’ajouter de nouveaux contenus. Une fois
+                    la page créée, vous serez dirigé vers l’affichage d’édition de la page. Pour modifier ces paramètres
+                    dans l’affichage d’édition de la page, il vous suffit de chercher l'icône d'édition dans
+                    Paramètres &amp; SEO.
+                </target>
             </trans-unit>
             <trans-unit id="locale.helper.text">
                 <source>locale.helper.text</source>
@@ -506,15 +521,19 @@
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>
                 <target>Il n’y a pas de pages en %language% pouvant être associées comme traduction de cette page.
-                    Vous pouvez copier cette page (cliquez sur le lien "Traduire") ou créer une nouvelle page en %language% et ensuite associer les deux pages.</target>
+                    Vous pouvez copier cette page (cliquez sur le lien "Traduire") ou créer une nouvelle page en
+                    %language% et ensuite associer les deux pages.
+                </target>
             </trans-unit>
             <trans-unit id="message.translation_saved">
                 <source>message.translation_saved</source>
-                <target>Cette copie de la page en %language% a été créée avec succès </target>
+                <target>Cette copie de la page en %language% a été créée avec succès</target>
             </trans-unit>
             <trans-unit id="message.translation_not_saved">
                 <source>message.translation_not_saved</source>
-                <target>Une copie de cette page en %language% n’a pas pu être créée. Vérifiez si une page avec l‘URL "%url%" en %language% existe déjà.</target>
+                <target>Une copie de cette page en %language% n’a pas pu être créée. Vérifiez si une page avec l‘URL
+                    "%url%" en %language% existe déjà.
+                </target>
             </trans-unit>
             <trans-unit id="title.copy_page">
                 <source>title.copy_page</source>
@@ -522,7 +541,8 @@
             </trans-unit>
             <trans-unit id="info.copy_page">
                 <source>info.copy_page</source>
-                <target>Une copie du contenu et des paramètres de cette page sera effectuée en %language%. Une fois la page créée, allez à Traduction et cliquez sur "Éditer" pour modifier le contenu.
+                <target>Une copie du contenu et des paramètres de cette page sera effectuée en %language%. Une fois la
+                    page créée, allez à Traduction et cliquez sur "Éditer" pour modifier le contenu.
                 </target>
             </trans-unit>
             <trans-unit id="button.copy_page">
@@ -539,7 +559,7 @@
             </trans-unit>
             <trans-unit id="title.actual_drafts">
                 <source>title.actual_drafts</source>
-                <target>Ebauches de pages actuelles </target>
+                <target>Ebauches de pages actuelles</target>
             </trans-unit>
             <trans-unit id="title.actual_reviews">
                 <source>title.actual_reviews</source>
@@ -551,7 +571,7 @@
             </trans-unit>
             <trans-unit id="info.last_edited">
                 <source>info.last_edited</source>
-                <target>Dernière modification le </target>
+                <target>Dernière modification le</target>
             </trans-unit>
             <trans-unit id="pages.admin_menu_label">
                 <source>pages.admin_menu_label</source>

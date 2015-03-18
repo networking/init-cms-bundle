@@ -28,7 +28,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_list">
                 <source>breadcrumb.link_media_list</source>
-        <target><![CDATA[<small>Verwalten Sie Ihre</small> Medien]]></target>
+                <target><![CDATA[<small>Verwalten Sie Ihre</small> Medien]]></target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_media_edit">
                 <source>breadcrumb.link_media_edit</source>
@@ -228,11 +228,11 @@
             </trans-unit>
             <trans-unit id="link.test_protected_url">
                 <source>link.test_protected_url</source>
-                <target>Link Vorschau </target>
+                <target>Link Vorschau</target>
             </trans-unit>
             <trans-unit id="label.edit_with_pixlr">
                 <source>label.edit_with_pixlr</source>
-                <target>Diese Medien mit Pixlr bearbeiten </target>
+                <target>Diese Medien mit Pixlr bearbeiten</target>
             </trans-unit>
             <trans-unit id="label.pixlr_warning">
                 <source>label.pixlr_warning</source>
@@ -379,11 +379,11 @@
             </trans-unit>
             <trans-unit id="form.label_tags">
                 <source>form.label_tags</source>
-                <target>Taggen Sie Ihre Medien </target>
+                <target>Taggen Sie Ihre Medien</target>
             </trans-unit>
             <trans-unit id="help.media_tag">
                 <source>help.media_tag</source>
-                <target>So können Sie sie später leichter finden </target>
+                <target>So können Sie sie später leichter finden</target>
             </trans-unit>
             <trans-unit id="form.label_locale">
                 <source>form.label_locale</source>
@@ -391,11 +391,11 @@
             </trans-unit>
             <trans-unit id="form.label_image">
                 <source>form.label_image</source>
-        <target>Aktuelles Bild</target>
+                <target>Aktuelles Bild</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_new">
                 <source>form.label_binary_content_new</source>
-        <target>Datei ersetzen</target>
+                <target>Datei ersetzen</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube_new">
                 <source>form.label_binary_content_youtube_new</source>
@@ -407,11 +407,11 @@
             </trans-unit>
             <trans-unit id="filter.label_author_name">
                 <source>filter.label_author_name</source>
-        <target>Autor</target>
+                <target>Autor</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube">
                 <source>form.label_binary_content_youtube</source>
-        <target>Youtube-Link</target>
+                <target>Youtube-Link</target>
             </trans-unit>
             <trans-unit id="button.create.media_item">
                 <source>button.create.media_item</source>
@@ -422,8 +422,8 @@
                 <target>Galerie hinzufügen</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube:new">
-              <source>form.label_binary_content_youtube:new</source>
-              <target>Neuer Youtube-Link</target>
+                <source>form.label_binary_content_youtube:new</source>
+                <target>Neuer Youtube-Link</target>
             </trans-unit>
             <trans-unit id="action._publish">
                 <source>action._publish</source>
