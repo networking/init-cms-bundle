@@ -53,7 +53,7 @@ file that was distributed with this source code.
 {% block navbar_spacer %}{% endblock %}
 
 {% block sonata_admin_content %}
-    <div class="row row-content-wide">
+    <div class="row-fluid row-content-wide">
         {% if _preview is not empty %}
             <div class="sonata-ba-preview span{% if _side_menu is empty %}12{% else %}10{% endif %}">{{ _preview|raw }}</div>
         {% endif %}

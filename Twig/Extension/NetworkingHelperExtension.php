@@ -149,7 +149,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             new \Twig_SimpleFunction('get_media_by_id', array($this, 'getMediaById'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ckeditor_is_rendered', array($this, 'ckeditorIsRendered')),
             new \Twig_SimpleFunction('content_css', array($this, 'getContentCss')),
-            new \Twig_SimpleFunction('return_config_value', array($this, 'returnConfigValue'))
+            new \Twig_SimpleFunction('return_config_value', array($this, 'returnConfigValue')),
+            new \Twig_SimpleFunction('get_file_icon', array($this, 'getFileIcon'))
         );
     }
 
@@ -1145,5 +1146,56 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         }
 
         return false;
+    }
+
+    /**
+     * Guess which fontawesome icon to use
+     *
+     * @param $filename
+     * @return string
+     */
+    public function getFileIcon($filename)
+    {
+        $parts = explode('.', $filename);
+        $postfix = strtolower(end($parts));
+        switch($postfix){
+            case 'doc':
+            case 'docx':
+                $icon = 'fa-file-word-o';
+                break;
+            case 'pdf':
+                $icon = 'fa-file-pdf-o';
+                break;
+            case 'xls':
+            case 'xlsx':
+                $icon = 'fa-file-excel-o';
+                break;
+            case 'ppt':
+            case 'pptx':
+                $icon = 'fa-file-powerpoint-o';
+                break;
+            case 'zip':
+                $icon = 'fa-file-archive-o';
+                break;
+            case 'txt':
+            case 'rtf':
+                $icon = 'fa-file-text-o';
+                break;
+            case 'png':
+            case 'gif':
+            case 'jpeg':
+            case 'jpg':
+            case 'svg':
+                $icon = 'fa-file-image-o';
+                break;
+            default:
+                $icon = 'fa-file-o';
+                break;
+
+
+        }
+
+
+        return 'fa '.$icon;
     }
 }

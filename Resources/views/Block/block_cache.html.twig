@@ -9,13 +9,13 @@
             <h4>{{ 'title.cache'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
 
             <div id="ajaxResponseDiv"></div>
-            <div class="row">
+            <div class="row-fluid">
                 {# check ob cache aktiviert ist#}
                 {% if return_config_value('networking_init_cms.cache.activate') %}
 
                     {% set cache_time = return_config_value('networking_init_cms.cache.cache_time') %}
 
-                    <div class="col-span-12"><span
+                    <div class="span12"><span
                                 class="color-published">{{ 'cache.active'|trans({}, 'NetworkingInitCmsBundle') }}<br/>
 
 
@@ -24,40 +24,36 @@
                     <div class="clearfix"></div>
 
                     <div class="pull-right">
-                        <button class="btn btn-default" data-dismiss="modal" type="button" id="button" name="button"
+                        <button class="btn btn-default" data-dismiss="modal" type="button" id="clear-cache"
+                                name="button"
                                 aria-hidden="true">{{ 'cache.delete'|trans({}, 'NetworkingInitCmsBundle') }}</button>
 
                     </div>
                     <div class="clearfix"></div>
                     <script>
-                        function aButtonPressed() {
-                            $.post('{{path('networking_init_cms_clear_cache')}}',
-
-                                    function (response) {
-                                        if (response.success) {//cache wurde geleert
-                                            $('#ajaxResponseDiv').html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ 'cache.delete.answer'|trans({}, 'NetworkingInitCmsBundle') }}</div>');
-
-                                        } else {
-                                            $('#ajaxResponseDiv').html('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ 'cache.delete.erroranswer'|trans({}, 'NetworkingInitCmsBundle') }}</div>');
-                                        }
-
-                                    }, "json");
-                        }
                         $(document).ready(function () {
-                            $('button').on('click', function () {
-                                aButtonPressed();
+                            $('#clear-cache').on('click', function () {
+                                $.get('{{path('networking_init_cms_clear_cache')}}',
+                                function (response) {
+                                    if (response.success) {//cache wurde geleert
+                                        $('#ajaxResponseDiv').html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ 'cache.delete.answer'|trans({}, 'NetworkingInitCmsBundle') }}</div>');
+
+                                    } else {
+                                        $('#ajaxResponseDiv').html('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ 'cache.delete.erroranswer'|trans({}, 'NetworkingInitCmsBundle') }}</div>');
+                                    }
+
+                                }, "json");
                             });
                         });
                     </script>
                 {% else %}
                     {# cache is not activated #}
-                    <div class="col-span-12"><span
+                    <div class="span12"><span
                                 class="color-draft">{{ 'cache.inactive'|trans({}, 'NetworkingInitCmsBundle') }}</span>
                     </div>
-                    <div class="col-span-12">{{ 'cache.inactiveMoreInformation'|trans({}, 'NetworkingInitCmsBundle') | raw }}</div>
+                    <div class="span12">{{ 'cache.inactiveMoreInformation'|trans({}, 'NetworkingInitCmsBundle') | raw }}</div>
                 {% endif %}
             </div>
-
         </div>
     {% endif %}
 {% endblock %}

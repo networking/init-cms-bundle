@@ -98,6 +98,8 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface {
     {
         if (!$this->adminSettings) {
             $this->adminSettings = new AdminSettings();
+        }else{
+            $this->adminSettings = clone $this->adminSettings;
         }
 
         $this->adminSettings->setSetting($key, $value);

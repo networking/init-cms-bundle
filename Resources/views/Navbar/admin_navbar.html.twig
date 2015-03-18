@@ -1,28 +1,38 @@
 <div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
     <div class="navbar-inner">
-        <div class="container">
-            <div class="row">
-                <div class="span2">
-                    <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
-                        <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
-                    </a>
+        <div class="container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %}">
+            <div class="row-fluid">
+                <div class="span6">
+                   <div class="pull-left">
+                       <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
+                           <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
+                       </a>
+                       {% if admin_pool is defined %}
+                           <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+                               {{ admin_pool.title }}
+                           </a>
+                       {% endif %}
+                   </div>
+                    <div class="pull-right">
+                        {% if admin_pool is defined %}
+                            {% include admin_pool.getTemplate('user_block') %}
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="span5">
-                    {% if admin_pool is defined %}
-                        <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                            {#<img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />#}
-                            {{ admin_pool.title }}
-                        </a>
-                        {% include admin_pool.getTemplate('user_block') %}
-                    {% endif %}
-                </div>
-                <div class="span5">
+                <div class="span6">
                     <div class="pull-right">
                         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </a>
+                    </div>
+                    <div class="pull-right">
+                        {% if app.user %}
+                            <button type="button" class="btn btn-default navbar-btn"  id="toggleWidth">
+                                <i class="icon icon-{% if app.user and app.user.getAdminSetting('admin_portal_width') == 'small' %}resize-full{% else %}resize-small{% endif %}"></i>
+                            </button>
+                        {% endif %}
                     </div>
                     <div class="pull-right nav-admin">
                         {% if admin_pool is defined %}

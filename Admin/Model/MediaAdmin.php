@@ -118,6 +118,17 @@ abstract class MediaAdmin extends Admin
                 'type' => 'image'
             )
         );
+
+        $collection->add(
+            'preview_media',
+            'preview_media',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:previewMedia',
+            ),
+            array(
+                'id' => '.+'
+            )
+        );
     }
 
     /**
@@ -244,9 +255,11 @@ abstract class MediaAdmin extends Admin
                 'string',
                 array(
                     'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig',
-                    'label' => 'list.label_media'
                 )
-            );
+            )
+            ->add('createdAt', 'string', array('label' => 'label.created_at'))
+            ->add('size', 'string', array('label' => 'label.size'))
+        ;
 
         if ($this->request && $this->request->get('pcode') == '') {
             $listMapper->add(

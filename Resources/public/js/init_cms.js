@@ -14,17 +14,11 @@ function trim(str) {
     }
     return str;
 }
+function uploadError(xhr) {
+    alert(xhr.error);
+}
 
 (function ($) {
-
-    $('.modal').live('show', function(){
-        var height = $(this).height();
-        var windowHeight = $(window).height();
-        if(windowHeight - 100 < height){
-            height = windowHeight /2;
-            $('.modal-body', this).css('max-height', height+'px');
-        }
-    });
 
     var noticeBlock = $('.notice-block');
 
@@ -37,15 +31,43 @@ function trim(str) {
             $(e).fadeIn().delay('3000').fadeOut(500);
         }
     });
+
+    $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
+
+    $(document).on('show', '.modal', function(){
+        var modalBody = $(this).find('.modal-body');
+        modalBody.css('overflow-y', 'auto');
+        if(modalBody.parents('.modal-full').length > 0){
+            modalBody.css('height', $(window).height() -190);
+            modalBody.css('max-height', '900px');
+        }else{
+            modalBody.css('max-height', $(window).height() * 0.7);
+        }
+    });
+
+    $("#toggleWidth").on('click', function(){
+        var el = $(this).find('i.icon');
+        if(el.hasClass('icon-resize-full')){
+            $(".container").switchClass('container', "container-fluid", 500, "easeOutSine");
+            el.removeClass('icon-resize-full').addClass('icon-resize-small');
+            $.ajax('/admin/set_admin_portal_width', {data: {'size': 'full'}});
+        }else{
+            $(".container-fluid").switchClass('container-fluid', "container", 500, "easeOutSine");
+            el.removeClass('icon-resize-small').addClass('icon-resize-full');
+            $.ajax('/admin/set_admin_portal_width', {data: {'size': 'small'}});
+        }
+    });
+
 })(jQuery);
 
 $.fn.modal.Constructor.prototype.enforceFocus = function() {
-  modal_this = this
-  $(document).on('focusin.modal', function (e) {
-    if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length
-    // add whatever conditions you need here:
-    && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
-      modal_this.$element.focus()
-    }
-  })
+  $(document).on('focusin.modal', $.proxy(function (e) {
+      if (this.$element[0] !== e.target && !this.$element.has(e.target).length
+              // add whatever conditions you need here:
+          && !$(e.target).hasClass('select2-input')
+          && !$(e.target.parentNode).hasClass('cke')
+      ) {
+          this.$element.focus()
+      }
+  }, this));
 };

@@ -29,9 +29,9 @@ file that was distributed with this source code.
             </div>
         {% endif %}
         {% block sonata_pre_fieldsets %}{% endblock %}
-        <div class="span7">
-                    <div class="row">
-                        <div class="span6">
+        <div class="span8">
+                    <div class="row-fluid">
+                        <div class="span11">
                             <h1 class="break-word">
                                 {% if block('title') is not empty %}
                                     {{ block('title')|raw }}
@@ -78,7 +78,7 @@ file that was distributed with this source code.
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="span3 right-bar">
+        <div class="span4 right-bar">
             {# page status accordion #}
             <div id="pageStatusSettings">
                 {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig' %}

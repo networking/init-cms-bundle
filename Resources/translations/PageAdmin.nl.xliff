@@ -193,7 +193,8 @@
             <trans-unit id="message.translation_link">
                 <source>message.translation_link</source>
                 <target>Hier kunt u een koppeling maken met een bestaande pagina in het %language%.
-                    Alleen de pagina's in het %language% die nog geen koppeling hebben met een pagina in het %original_language%
+                    Alleen de pagina's in het %language% die nog geen koppeling hebben met een pagina in het
+                    %original_language%
                     worden hieronder weergegeven.
                     Kies de pagina die u wilt koppelen en klik op de knop Linken.
                 </target>
@@ -414,7 +415,8 @@
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
                 <target>Dit gedeelte van de pagina is nog leeg. Klik op het + icoon om een blok toe te voegen
-                of sleep een blok uit een ander gedeelte hier naar toe. </target>
+                    of sleep een blok uit een ander gedeelte hier naar toe.
+                </target>
             </trans-unit>
             <trans-unit id="legend.create_menu">
                 <source>legend.create_menu</source>
@@ -426,12 +428,16 @@
             </trans-unit>
             <trans-unit id="info.create_menu_item">
                 <source>info.create_menu_item</source>
-                <target>Als u doorgaat, wordt u doorgestuurd naar het menubeheer waar automatisch een menu-item wordt aangemaakt op basis van de paginanaam.
-                Het enige wat u nog hoeft te doen, is het menu-item op de gewenste positie zetten.</target>
+                <target>Als u doorgaat, wordt u doorgestuurd naar het menubeheer waar automatisch een menu-item wordt
+                    aangemaakt op basis van de paginanaam.
+                    Het enige wat u nog hoeft te doen, is het menu-item op de gewenste positie zetten.
+                </target>
             </trans-unit>
             <trans-unit id="info.edit_menu_item">
                 <source>info.edit_menu_item</source>
-                <target>Als u doorgaat, wordt u doorgestuurd naar het menubeheer waar u het geselecteerde menu-item kunt aanpassen.</target>
+                <target>Als u doorgaat, wordt u doorgestuurd naar het menubeheer waar u het geselecteerde menu-item kunt
+                    aanpassen.
+                </target>
             </trans-unit>
             <trans-unit id="button.continue">
                 <source>button.continue</source>
@@ -448,7 +454,8 @@
             <trans-unit id="info.page_create">
                 <source>info.page_create</source>
                 <target>Vul eerste onderstaande velden in voordat we verder gaan met het toevoegen van content.
-                U kunt deze instellingen altijd nog aanpassen via Instellingen &amp; SEO.</target>
+                    U kunt deze instellingen altijd nog aanpassen via Instellingen &amp; SEO.
+                </target>
             </trans-unit>
             <trans-unit id="locale.helper.text">
                 <source>locale.helper.text</source>
@@ -504,8 +511,11 @@
             </trans-unit>
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>
-                <target>Er zijn geen pagina's beschikbaar in het %language% om als vertaling te koppelen aan deze pagina.
-                    U kunt deze pagina kopiëren (kies "Vertalen") of een nieuwe pagina aanmaken in het %language% en deze twee vervolgens koppelen.</target>
+                <target>Er zijn geen pagina's beschikbaar in het %language% om als vertaling te koppelen aan deze
+                    pagina.
+                    U kunt deze pagina kopiëren (kies "Vertalen") of een nieuwe pagina aanmaken in het %language% en
+                    deze twee vervolgens koppelen.
+                </target>
             </trans-unit>
             <trans-unit id="message.translation_saved">
                 <source>message.translation_saved</source>
@@ -513,7 +523,9 @@
             </trans-unit>
             <trans-unit id="message.translation_not_saved">
                 <source>message.translation_not_saved</source>
-                <target>Een kopie van deze pagina in het %language% kon niet gemaakt worden. Controleer of er al een pagina met de URL "%url%" in het %language% bestaat.</target>
+                <target>Een kopie van deze pagina in het %language% kon niet gemaakt worden. Controleer of er al een
+                    pagina met de URL "%url%" in het %language% bestaat.
+                </target>
             </trans-unit>
             <trans-unit id="title.copy_page">
                 <source>title.copy_page</source>
@@ -521,7 +533,8 @@
             </trans-unit>
             <trans-unit id="info.copy_page">
                 <source>info.copy_page</source>
-                <target>Een kopie van deze pagina en de inhoud zal gemaakt worden in het %language%. Nadat de kopie is aangemaakt, gaat u naar Vertalingen
+                <target>Een kopie van deze pagina en de inhoud zal gemaakt worden in het %language%. Nadat de kopie is
+                    aangemaakt, gaat u naar Vertalingen
                     en klikt op op "Wijzigen" om de content te wijzigen.
                 </target>
             </trans-unit>
@@ -551,7 +564,7 @@
             </trans-unit>
             <trans-unit id="info.last_edited">
                 <source>info.last_edited</source>
-                <target>Laatst aangepast op </target>
+                <target>Laatst aangepast op</target>
             </trans-unit>
             <trans-unit id="pages.label">
                 <source>pages.label</source>

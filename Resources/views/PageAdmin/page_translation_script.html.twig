@@ -77,7 +77,7 @@ file that was distributed with this source code.
     }
 
     (function ($) {
-        $('.translation-dialog-link').live('click', createTranslationAjaxDialog);
+        $('body').on('click', '.translation-dialog-link', createTranslationAjaxDialog);
 
     })(jQuery);
 </script>

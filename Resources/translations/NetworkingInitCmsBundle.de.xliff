@@ -196,7 +196,15 @@
             </trans-unit>
             <trans-unit id="flash_batch_publish_error">
                 <source>flash_batch_publish_error</source>
-                <target>Die Seiten konntent zurzeit nicht veröffentlicht werden </target>
+                <target>Die Seiten konnten zurzeit nicht veröffentlicht werden </target>
+            </trans-unit>
+            <trans-unit id="flash_batch_cache_clear_success">
+                <source>flash_batch_cache_clear_success</source>
+                <target>Seiten-Cache erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="flash_batch_cache_clear_error">
+                <source>flash_batch_cache_clear_error</source>
+                <target>Seiten-Cache konnten zurzeit nicht gelöscht werden </target>
             </trans-unit>
             <trans-unit id="flash_batch_empty">
                 <source>flash_batch_empty</source>
@@ -252,11 +260,11 @@
                  <target><![CDATA[
                      zum aktivieren, bitte folgende Konfigurationen in der  app/config/config.yml Datei eintragen:<br />
                      <code>
-                       networking_init_cms:<br />
-                       &nbsp;&nbsp;cache:<br />
-                       &nbsp;&nbsp;&nbsp;&nbsp;activate: true <br />
-                        &nbsp;&nbsp;&nbsp;&nbsp;cache_time: 86400 #in seconds<br />
-                        </code>
+                      networking_init_cms:<br />
+                      &nbsp;&nbsp;cache:<br />
+                      &nbsp;&nbsp;&nbsp;&nbsp;activate: true <br />
+                       &nbsp;&nbsp;&nbsp;&nbsp;cache_time: 86400 #in seconds<br />
+                       </code>
                      ]]>
                  </target>
             </trans-unit>

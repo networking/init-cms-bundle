@@ -11,6 +11,8 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -33,6 +35,33 @@ class CmsHelperController extends Controller
         $response->headers->add(array('content-type' => 'text/javascript'));
 
         return $response;
+    }
+
+    /**
+     * Set user Admin preferred width
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function setAdminPortalWidthAction(Request $request){
+        $size = $request->get('size', 'full');
+
+        /** @var \Networking\InitCmsBundle\Model\UserInterface $user */
+        $user = $this->getUser();
+        $status = 200;
+        $message = 'OK';
+        try{
+            $user->setLastActivity(new \DateTime());
+            $user->setAdminSetting('admin_portal_width', $size);
+            /** @var \FOS\UserBundle\Doctrine\UserManager $userManager */
+            $userManager = $this->get('fos_user.user_manager');
+            $userManager->updateUser($user);
+        }catch (\Exception $e){
+            $status = 500;
+            $message = $e->getMessage();
+        }
+        return new JsonResponse(array('message' => $message, 'size' => $size, 'admin_portal_width' => $user->getAdminSetting('admin_portal_width')), $status);
+
     }
 
 }

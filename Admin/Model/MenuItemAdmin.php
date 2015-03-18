@@ -20,7 +20,7 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
 use Sonata\AdminBundle\Exception\ModelManagerException;
-
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Class MenuItemAdmin
@@ -103,6 +103,7 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+
         if (!$locale = $this->getRequest()->get('locale')) {
             $locale = $this->getRequest()->getLocale();
         }
@@ -146,7 +147,8 @@ abstract class MenuItemAdmin extends BaseAdmin
         if ($this->isRoot) {
             $formMapper
                 ->add('description')
-                ->add('isRoot', 'hidden', array('data' => true));
+                ->add('isRoot', 'hidden', array('data' => true))
+                ->end();
         } else {
             // start group page_or_url
             $formMapper
@@ -232,7 +234,6 @@ abstract class MenuItemAdmin extends BaseAdmin
             $menuField->addModelTransformer($transformer);
             $formMapper
                 ->add($menuField, 'hidden');
-
         }
     }
 

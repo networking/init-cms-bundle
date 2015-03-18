@@ -6,21 +6,24 @@
                 <div class="initnavbar-inner">
                     <div class="container">
                         <div class="row">
-                            <div class="span2">
-                                <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
-                                    <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
-                                         width="77">
-                                </a>
-                            </div>
-                            <div class="span5">
-                                {% if admin_pool is defined %}
-                                    <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                        {{ admin_pool.title }}
+                            <div class="span6">
+                                <div class="pull-left">
+                                    <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
+                                        <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
                                     </a>
-                                    {% include admin_pool.getTemplate('user_block') %}
-                                {% endif %}
+                                    {% if admin_pool is defined %}
+                                        <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+                                            {{ admin_pool.title }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div class="pull-right">
+                                    {% if admin_pool is defined %}
+                                        {% include admin_pool.getTemplate('user_block') %}
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="span5">
+                            <div class="span6">
                                 {% if admin_pool is defined %}
                                     {{ knp_menu_render('AdminMenu',
                                     {'currentClass': 'active',

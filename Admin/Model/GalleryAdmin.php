@@ -223,12 +223,17 @@ class GalleryAdmin extends SonataGalleryAdmin
             return array();
         }
 
+        if ($this->getSubject()) {
+            return array(
+                'context' => $this->getSubject()->getContext(),
+            );
+        }
+
         $contexts = $this->pool->getContexts();
         reset($contexts);
-        $contextName = key($contexts);
 
         return array(
-            'context' => $this->getRequest()->get('context', $contextName),
+            'context' => $this->getRequest()->query->get('context', key($contexts)),
         );
     }
 }

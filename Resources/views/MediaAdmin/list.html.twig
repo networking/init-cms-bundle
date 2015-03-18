@@ -18,360 +18,416 @@ file that was distributed with this source code.
 {% block actions %}
 {% endblock %}
 
-{% block list_table %}
+{% block list_filters %}
+    {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
+    {% if datagrid.filters %}
+        <form action="{{ admin.generateUrl('list') }}" method="GET"
+              class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
 
-    {% if not app.request.isXmlHttpRequest %}
-    <div id="objectList">
+            <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
+            {% if persistent_parameters.provider is defined %}
+                <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
+            {% endif %}
+            <input type="hidden" name="active_tab" value="{{ name }}"/>
+
+            {% set filter_main = '' %}
+            {% set filter_hidden = '' %}
+            {% set showHiddenFilters = 0 %}
+            {% for filter in datagrid.filters if (filter.options.field_type != 'hidden' ) %}
+                {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
+                    {% set filter_main %}
+                    {{ filter_main }}
+                    <div class="control-group">
+                        <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                               class="control-label filter">{{ admin.trans(filter.label) }}</label>
+
+                        <div>
+                            {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
+                            ) }}
+                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                        </div>
+                    </div>
+                    {% endset %}
+                {% else %}
+                    {% set filter_hidden %}
+                    {% if filter.isActive %}
+                        {% set showHiddenFilters = 1 %}
+                    {% endif %}
+                    {{ filter_hidden }}
+                    <div class="control-group">
+                        <label class="control-label filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+
+                        <div>
+                            {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
+                            ) }}
+                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
+                            ) }}
+                        </div>
+                    </div>
+                    {% endset %}
+                {% endif %}
+            {% endfor %}
+
+            {% set label = admin.label|trans({}, admin.translationDomain) %}
+            <div>
+                <div class="pull-left row-fluid">
+                    <fieldset class="filter_legend">
+                        <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
+
+                        <div class="filter_container row-fluid">
+                            <div class="span{{ galleryListMode ? '10':'12' }}">
+                                {{ filter_main }}
+                                <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                                {% set foo = form.children['_page'].setRendered() %}
+                                <div id="hidden_filters"
+                                     class="collapse {{ showHiddenFilters?'in': '' }} hidden_filters">
+                                    {% for paramKey, paramValue in admin.persistentParameters %}
+                                        <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
+                                    {% endfor %}
+                                    {% if filter_hidden != '' %}
+                                        {# add div with hidden / show function #}
+                                        {{ filter_hidden }}
+                                    {% endif %}
+                                    {% set foo = form.children['_page'].setRendered() %}
+                                </div>
+                                <div>
+                                    <input type="submit" class="btn btn-small"
+                                           value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                                    {% if not app.request.isXmlHttpRequest %}
+                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                                           class="link-underlined">
+                                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                    {% endif %}
+                                    {% if filter_hidden %}
+                                        <a data-toggle="collapse" data-target=".hidden_filters"
+                                           id="filter_toggle"
+                                           class="filter-close cursor-pointer">
+                                            {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
+                                        </a>
+                                    {% endif %}
+                                    {{ form_rest(form) }}
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="clearfix">&nbsp;</div>
+            </div>
+        </form>
     {% endif %}
-
-    {# start of tabs navigation#}
-    {# filters #}
-
-    {# end of tabs navigation#}
-    <div class="{% if not app.request.isxmlhttprequest %}tab-content{% endif %}">
-    <div class="tab-pane active">
-    <div class="{% if not app.request.isxmlhttprequest %}row{% endif %}">
-    <div class="{% if not app.request.isxmlhttprequest %}span10{% endif %}">
-
-    {# provider #}
-
-    <ul class="nav nav-pills">
-        {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
-
-        {% if providers|length > 1 %}
-            <li>
-                <a><strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong></a>
+    <ul class="nav menu-tabs nav-tabs">
+        {% if galleryListMode and persistent_parameters.context %}
+            <li class="active">
+                <a href="{{ admin.generateUrl('list', {'context' : persistent_parameters.context}) }}">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
             </li>
 
-            {% if not persistent_parameters.provider %}
-                <li class="active"><a
-                            href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
-                </li>
-            {% endif %}
+        {% else %}
+            {% for name, context in media_pool.contexts %}
 
-            {% for provider_name in providers %}
-                {% if persistent_parameters.provider == provider_name %}
+                {% if context.providers|length == 0 %}
+                    {% set urlParams = {'context' : name} %}
+                {% else %}
+                    {% set urlParams = {'context' : name, 'provider' : context.providers[0]} %}
+                {% endif %}
+
+                {% if name == persistent_parameters.context %}
                     <li class="active"><a
-                                href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}) }}">{{ provider_name|trans({}) }}</a>
+                                href="{{ admin.generateUrl('list', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
                     </li>
                 {% else %}
                     <li>
-                        <a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}) }}">{{ provider_name|trans({}) }}</a>
+                        <a href="{{ admin.generateUrl('list', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
         {% endif %}
     </ul>
-
-    {# create button #}
-    {% if galleryListMode is defined and not galleryListMode %}
-        <h1>
-            <span class="info-soft">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</span>
-            {% set create_text =  'link_action_create'|trans({}, admin.translationDomain) %}
-            {% if create_text == 'link_action_create' %}
-                {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
-            {% endif %}
-            <a class="btn btn-primary btn-small menu-dialog-link"
-               href="{{ admin.generateUrl('create', {'context' : persistent_parameters.context, 'provider' : null}) }}">
-                <i class="icon-plus icon-white"></i> {{ create_text }}
-            </a>
-        </h1>
-    {% endif %}
-
-    {% set batchactions = admin.batchactions %}
-    {% set filterParameters = admin.filterParameters|merge({'context': persistent_parameters.context}) %}
-    {% if datagrid.results|length > 0 %}
-        {% if admin.hasRoute('batch') %}
-            <form action="{{ admin.generateUrl('batch', filterParameters) }}" method="POST">
-            <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
-        {% endif %}
-        <table class="table table-hover table-compact">
-            {% block table_header %}
-                <thead>
-                <tr>
-                    {% for field_description in admin.list.elements %}
-                        {% if field_description.getOption('code') == '_batch' and batchactions|length > 0 %}
-                            <th class="sonata-ba-list-field-header sonata-ba-list-field-header-batch">
-                                {#<input type="checkbox" id="list_batch_checkbox"/>#}
-                            </th>
-                        {% else %}
-                            {% set sortable = false %}
-                            {% if field_description.options.sortable is defined and field_description.options.sortable %}
-                                {% set sortable             = true %}
-                                {% set current              = datagrid.values._sort_by == field_description %}
-                                {% set sort_parameters      = admin.modelmanager.sortparameters(field_description, datagrid) %}
-                                {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
-                                {% set sort_by              = current ? datagrid.values._sort_order : field_description.options._sort_order %}
-                            {% endif %}
-
-                            {% spaceless %}
-                                <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
-                                    {% if sortable %}<a
-                                            href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
-
-                                        {{ admin.trans(field_description.label) }}
-                                        {% if sortable %}</a>{% endif %}
-                                </th>
-                            {% endspaceless %}
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                </thead>
-            {% endblock %}
-
-            {% block table_body %}
-                <tbody>
-                {% for object in datagrid.results %}
-                    <tr>
-                        {% for field_description in admin.list.elements %}
-                            {{ object|render_list_element(field_description) }}
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                {% if batchactions|length > 0 %}
-                    <tr>
-                        <td>
-                            <input type="checkbox" id="list_batch_checkbox" name="all_elements"/>
-                        </td>
-                        <td colspan="{{ admin.list.elements|length -1 }}">
-                            <label for="list_batch_checkbox"><strong>{{ 'all_elements'|trans({}, 'SonataAdminBundle') }}</strong></label>
-                        </td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            {% endblock %}
-
-            {% block table_footer %}
-                <tfoot>
-                <tr>
-                    {% if admin.list.elements|length > 1 %}
-                        <th colspan="{{ admin.list.elements|length - 1 }}">
-                            {{ block('batch') }}
-                        </th>
-                    {% endif %}
-
-                    <th class="align-right">
-                        {% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
-                        list_results_count{% endtranschoice %}
-                    </th>
-                </tr>
-                </tfoot>
-            {% endblock %}
-        </table>
-        {% if datagrid.pager.haveToPaginate() %}
-
-            <div class="pagination pagination-centered">
-                <ul>
-
-                    {% if datagrid.pager.page != 1 %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, 1)) }}"
-                               title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
-                        </li>
-                    {% endif %}
-
-                    {% if datagrid.pager.page != datagrid.pager.previouspage %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.previouspage)) }}"
-                               title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
-                        </li>
-                    {% endif %}
-
-                    {# Set the number of pages to display in the pager #}
-                    {% for page in datagrid.pager.getLinks() %}
-                        {% if page == datagrid.pager.page %}
-                            <li class="active"><a
-                                        href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
-                            </li>
-                        {% else %}
-                            <li>
-                                <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if datagrid.pager.page != datagrid.pager.nextpage %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.nextpage)) }}"
-                               title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
-                        </li>
-                    {% endif %}
-
-                    {% if datagrid.pager.page != datagrid.pager.lastpage %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.lastpage)) }}"
-                               title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
-                        </li>
-                    {% endif %}
-
-                </ul>
-            </div>
-
-        {% endif %}
-
-        {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and (galleryListMode is not defined or not galleryListMode) %}
-            <p>
-                {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}
-                :
-
-                {% for format in admin.getExportFormats() %}
-                    <a
-                    href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(datagrid, 0) + {'format' : format}) }}"
-                    class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
-                {% endfor %}
-            </p>
-        {% endif %}
-        {% if admin.hasRoute('batch') %}
-            </form>
-        {% endif %}
-    {% else %}
-        <p class="notice">
-            {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
-        </p>
-    {% endif %}
-    </div>
-    </div>
-    </div>
-
-    </div>
-    {% if not app.request.isXmlHttpRequest %}
-    </div>
-    {% else %}
-        <script type="text/javascript">
-            $(function () {
-                    Admin.add_filters();
-            });
-        </script>
-    {% endif %}
 {% endblock %}
 
-        {% block list_filters %}
-            {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
-            {% if datagrid.filters %}
-                <form action="{{ admin.generateUrl('list') }}" method="GET"
-                      class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
+{% block list_table %}
 
-                    <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
-                    {% if persistent_parameters.provider is defined %}
-                        <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
-                    {% endif %}
-                    <input type="hidden" name="active_tab" value="{{ name }}"/>
+{% if not app.request.isXmlHttpRequest %}
+<div id="objectList">
+{% endif %}
+    <div class="{% if not app.request.isxmlhttprequest %}row-fluid{% endif %}">
+        <div class="{% if not app.request.isxmlhttprequest %}span12{% endif %}">
 
-                    {% set filter_main = '' %}
-                    {% set filter_hidden = '' %}
-                    {% set showHiddenFilters = 0 %}
-                    {% for filter in datagrid.filters if (filter.options.field_type != 'hidden' ) %}
-                        {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
-                            {% set filter_main %}
-                            {{ filter_main }}
-                            <div class="control-group">
-                                <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                                       class="control-label filter">{{ admin.trans(filter.label) }}</label>
+        {# create button #}
+        {% if galleryListMode is defined and not galleryListMode %}
+            <h1>
+                <span class="info-soft">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</span>
+                {% set create_text =  'link_action_create'|trans({}, admin.translationDomain) %}
+                {% if create_text == 'link_action_create' %}
+                    {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
+                {% endif %}
+                <a class="btn btn-primary btn-small menu-dialog-link"
+                   href="{{ admin.generateUrl('create', {'context' : persistent_parameters.context, 'provider' : null}) }}">
+                    <i class="icon-plus icon-white"></i> {{ create_text }}
+                </a>
+            </h1>
+            <hr>
+        {% endif %}
 
-                                <div>
-                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
-                                    ) }}
-                                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
-                                </div>
-                            </div>
-                            {% endset %}
-                        {% else %}
-                            {% set filter_hidden %}
-                            {% if filter.isActive %}
-                                {% set showHiddenFilters = 1 %}
+        {# provider #}
+        <div class="row-fluid">
+            <div class="span6">
+                {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
+                {% if providers|length > 1 %}
+                    <strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong>
+                    <div class="btn-group btn-group-sm">
+                        <a class="btn btn-sm btn-{{ persistent_parameters.provider ? 'default': 'primary' }}"
+                           href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                        {% for provider_name in providers %}
+                            <a class="btn btn-sm btn-{{ persistent_parameters.provider == provider_name? 'primary':'default' }}"
+                               href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}) }}">{{ provider_name|trans({}) }}</a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="span6 sort-buttons">
+                <strong>{{ 'label.sort_by'|trans({}, 'MediaAdmin') }}:</strong>
+
+                <div class="btn-group btn-group-sm">
+
+                    {% for field_description in admin.list.elements %}
+                        {% if field_description.options.sortable is defined and field_description.options.sortable %}
+
+                            {% set sortable             = true %}
+                            {% set current              = datagrid.values._sort_by == field_description %}
+                            {% set sort_parameters      = admin.modelmanager.sortparameters(field_description, datagrid) %}
+                            {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
+                            {% set sort_by              = current ? datagrid.values._sort_order : field_description.options._sort_order %}
+
+                            {% if sortable %}
+                                <a href="{{ admin.generateUrl('list', sort_parameters) }}" class="btn btn-sm btn-{{ sort_active_class ? 'primary':'default' }}">{% endif %}
+                            {% if sort_active_class %}
+                                <i class="icon icon-chevron-{{ sort_by|lower == 'desc'? 'up':'down' }}"></i>
                             {% endif %}
-                            {{ filter_hidden }}
-                            <div class="control-group">
-                                <label class="control-label filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-
-                                <div>
-                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
-                                    ) }}
-                                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                                    ) }}
-                                </div>
-                            </div>
-                            {% endset %}
+                            {{ admin.trans(field_description.label) }}
+                            </a>
                         {% endif %}
                     {% endfor %}
+                </div>
+            </div>
+            <div class="clearfix"><p>&nbsp;</p></div>
+        </div>
 
-                    {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
-                    {% set label = admin.label|trans({}, admin.translationDomain) %}
-                    <div>
-                        <div class="pull-left ">
-                            <fieldset class="filter_legend">
-                                <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
+        {% set batchactions = admin.batchactions %}
+        {% set filterParameters = admin.filterParameters|merge({'context': persistent_parameters.context}) %}
+        {% if datagrid.results|length > 0 %}
+            {% if admin.hasRoute('batch') %}
+                <form action="{{ admin.generateUrl('batch', filterParameters) }}" method="POST">
+                <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
+            {% endif %}
+            <div>
+                {% block table_header %}
 
-                                <div class="filter_container row">
-                                    <div class="span{{ galleryListMode ? '8':'10' }}">
-                                        {{ filter_main }}
-                                        <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
-                                        {% set foo = form.children['_page'].setRendered() %}
-                                        <div id="hidden_filters"
-                                             class="collapse {{ showHiddenFilters?'in': '' }} hidden_filters">
-                                            {% for paramKey, paramValue in admin.persistentParameters %}
-                                                <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
-                                            {% endfor %}
-                                            {% if filter_hidden != '' %}
-                                                {# add div with hidden / show function #}
-                                                {{ filter_hidden }}
+                {% endblock %}
+
+                {% block table_body %}
+                    <div class="row-fluid">
+                        {% for object in datagrid.results %}
+                            {% if object.width is defined and object.width %}
+                                {% if object.providerName == 'sonata.media.provider.youtube' %}
+                                    {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
+                                    {% set previewType = 'iframe'%}
+                                    {% set iframeWidth = '600px' %}
+                                    {% set iframeHeight = '300px' %}
+                                {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
+                                    {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
+                                    {% set previewType = 'iframe'%}
+                                    {% set iframeWidth = '600px' %}
+                                    {% set iframeHeight = '300px' %}
+                                {% else %}
+                                    {% set previewLink %}{% path object, 'reference' %}{% endset %}
+                                    {% set previewType = 'image'%}
+                                {% endif %}
+                            {% else %}
+                                {% set previewLink %}//docs.google.com/gview?url={{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}&embedded=true{% endset %}
+                                {% set previewType = 'iframe' %}
+                                {% set iframeWidth = '400px' %}
+                                {% set iframeHeight = '560px' %}
+                            {% endif %}
+                            <div class="media-box">
+                                <div id="context-menu-{{ object.id }}">
+                                    <ul class="dropdown-menu" role="menu"
+                                        aria-labelledby="context-menu_{{ object.id }}">
+                                        {% if app.request.isxmlhttprequest %}
+                                            <li>
+                                                <a class="select-media" href="#" data-object-id="{{ object.id }}">
+                                                    {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            {% if(admin.isGranted('EDIT', object)) %}
+                                                <li><a href="{{ admin.generateObjectUrl('edit', object) }}"
+                                                       title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}" data-follow="{{ admin.generateObjectUrl('edit', object) }}">
+                                                        <i class="icon icon-pencil"></i> {{ 'action_edit'|trans({}, 'SonataAdminBundle') }}
+                                                    </a></li>
                                             {% endif %}
-                                            {% set foo = form.children['_page'].setRendered() %}
-                                        </div>
-                                        <div>
-                                            <input type="submit" class="btn btn-small"
-                                                   value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                            {% if not app.request.isXmlHttpRequest %}
-                                                <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
-                                                   class="link-underlined">
-                                                    {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                            <li>
+                                                <a href="{{ previewLink }}"
+                                                    {% if previewType == 'iframe' %}
+                                                        data-featherlight-iframe-width="{{ iframeWidth }}"
+                                                        data-featherlight-iframe-height="{{ iframeHeight }}"
+                                                    {% endif %}
+                                                   data-featherlight-variant="initcms-featherlight"
+                                                   data-featherlight="{{ previewType }}"
+                                                   class="image-preview-link" title="{{ object.name }}">
+                                                    <i class="icon icon-zoom-in"></i> {{ 'action_show'|trans({}, 'SonataAdminBundle') }}
+                                                </a>
+                                            </li>
+                                            {% if(admin.isGranted('DELETE', object)) %}
+                                                <li class="divider"></li>
+                                                <li><a href="{{ admin.generateObjectUrl('delete', object) }}"
+                                                       class="dialog-link"
+                                                       id="{{ admin.getClassnameLabel() }}_{{ object.id }}"
+                                                       title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
+                                                        <i class="icon icon-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                                                    </a></li>
                                             {% endif %}
-                                            {% if filter_hidden %}
-                                                <a data-toggle="collapse" data-target=".hidden_filters"
-                                                      id="filter_toggle"
-                                                      class="filter-close cursor-pointer">
-                                                {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
-                                            </a>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <div class="thumbnail context" >
+                                    <div class="media-element" data-toggle="context" data-target="#context-menu-{{ object.id }}">
+                                        <a href="{{ previewLink }}"
+                                            {% if previewType == 'iframe' %}
+                                                data-featherlight-iframe-width="{{ iframeWidth }}"
+                                                data-featherlight-iframe-height="{{ iframeHeight }}"
                                             {% endif %}
-                                            {{ form_rest(form) }}
-                                        </div>
+                                           data-featherlight-variant="initcms-featherlight"
+                                           data-featherlight="{{ previewType }}"
+                                           class="image-preview-link" title="{{ object.name }}">
+                                            {% if object.width is defined and object.width %}
+                                                <img src="{% path object, 'reference' %}" class="img-responsive" height="120" />
+                                            {% else %}
+                                                <i class="{{ get_file_icon(object.getMetadataValue('filename')) }}"></i>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="media-title small" data-toggle="context" data-target="#context-menu-{{ object.id }}">
+                                        {% if app.request.isxmlhttprequest %}
+                                            <a class="select-media show-tooltip" href="#" data-object-id="{{ object.id }}" data-original-title="{{ object.name }}" >{{ object.name }}</a>
+                                        {% else %}
+                                            <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}" class="show-tooltip" data-original-title="{{ object.name }}" >{{ object.name }}</a>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </fieldset>
-                        </div>
-                        <div class="clearfix">&nbsp;</div>
+
+
+                            </div>
+                        {% endfor %}
                     </div>
+                    <div class="clearfix">&nbsp;</div>
+                {% endblock %}
+
+                {% block table_footer %}
+                    <div class="row-fluid">
+                        <div class="span3 form-inline pull-right text-right">
+                            <strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
+                                    list_results_count{% endtranschoice %}</strong>:
+                            {% block max_per_page %}
+                                <br/>
+                               {% trans from 'SonataAdminBundle' %}
+                                    label_per_page{% endtrans %}
+                                <select class="per-page small" id="{{ admin.uniqid }}_per_page"
+                                        style="width: auto; height: auto">
+                                    {% for per_page in admin.getperpageoptions %}
+                                        <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                                                value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
+                                            {{ per_page }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% endblock %}
+                        </div>
+                        {% if datagrid.pager.haveToPaginate() %}
+                            <div class="pagination span3 hidden-sm hidden-xs">
+                                <p >{{ datagrid.pager.page }} / {{ datagrid.pager.lastpage }}</p>
+
+                            </div>
+                            <div class="span6 pagination text-center">
+                                <ul class="pagination-xs">
+
+                                    {% if datagrid.pager.page != 1 %}
+                                        <li>
+                                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, 1)) }}"
+                                               title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if datagrid.pager.page != datagrid.pager.previouspage %}
+                                        <li>
+                                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.previouspage)) }}"
+                                               title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {# Set the number of pages to display in the pager #}
+                                    {% for page in datagrid.pager.getLinks() %}
+                                        {% if page == datagrid.pager.page %}
+                                            <li class="active"><a
+                                                        href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if datagrid.pager.page != datagrid.pager.nextpage %}
+                                        <li>
+                                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.nextpage)) }}"
+                                               title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if datagrid.pager.page != datagrid.pager.lastpage %}
+                                        <li>
+                                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.lastpage)) }}"
+                                               title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
+                                        </li>
+                                    {% endif %}
+
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endblock %}
+            </div>
+
+
+            {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and (galleryListMode is not defined or not galleryListMode) %}
+                <p>
+                    {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}
+                    :
+
+                    {% for format in admin.getExportFormats() %}
+                        <a
+                        href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(datagrid, 0) + {'format' : format}) }}"
+                        class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+            {% if admin.hasRoute('batch') %}
                 </form>
             {% endif %}
-            <ul class="nav menu-tabs nav-tabs">
-                {% if galleryListMode and persistent_parameters.context %}
-                    <li class="active">
-                        <a href="{{ admin.generateUrl('list', {'context' : persistent_parameters.context}) }}">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
-                    </li>
-
-                {% else %}
-                    {% for name, context in media_pool.contexts %}
-
-                        {% if context.providers|length == 0 %}
-                            {% set urlParams = {'context' : name} %}
-                        {% else %}
-                            {% set urlParams = {'context' : name, 'provider' : context.providers[0]} %}
-                        {% endif %}
-
-                        {% if name == persistent_parameters.context %}
-                            <li class="active"><a
-                                        href="{{ admin.generateUrl('list', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
-                            </li>
-                        {% else %}
-                            <li>
-                                <a href="{{ admin.generateUrl('list', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            </ul>
-        {% endblock %}
+        {% else %}
+            <p class="notice">
+                {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+            </p>
+        {% endif %}
+        </div>
+    </div>
+{% if not app.request.isXmlHttpRequest %}
+</div>
+{% else %}
+    <script type="text/javascript">
+        $(function () {
+            Admin.add_filters();
+        });
+    </script>
+{% endif %}
+{% endblock %}

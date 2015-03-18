@@ -13,7 +13,7 @@ file that was distributed with this source code.
 
     (function ($) {
 
-        $("#{{ admin.getUniqid }}_locale").live('change', function () {
+        $("#{{ admin.getUniqid }}_locale").on('change', function () {
             var locale = $(this).val();
             $.getJSON(
                     '{{ admin.generateUrl('parentPageList') }}',

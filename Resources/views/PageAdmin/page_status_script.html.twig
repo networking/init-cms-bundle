@@ -24,7 +24,6 @@ file that was distributed with this source code.
                 jQuery('input[type=submit]', this).off();
             });
             jQuery(document.body).append(statusDialog);
-//            jQuery('form', statusDialog).live('submit', submitTranslationAjaxForm);
         }
     }
 
@@ -51,38 +50,8 @@ file that was distributed with this source code.
         });
     }
 
-    {#function submitStatusAjaxForm(event) {#}
-        {#event.preventDefault();#}
-        {#event.stopPropagation();#}
-
-        {#var form = jQuery(this);#}
-
-        {#jQuery(form).ajaxSubmit({#}
-            {#type:form.attr('method'),#}
-            {#url:form.attr('action'),#}
-            {#dataType:'json',#}
-            {#success:function (xhr) {#}
-                {#if (xhr.result == 'ok') {#}
-                    {#if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {#}
-                        {#jQuery('.page_status').addClass('color-draft');#}
-                    {#} else {#}
-                        {#jQuery('.page_status').removeClass('color-draft');#}
-                    {#}#}
-                    {#var pageSettings = jQuery(xhr.pageSettings).filter('#pageSettings').html();#}
-                    {#var pageStatus = jQuery(xhr.pageSettings).filter('#pageStatusSettings').html();#}
-
-                    {#jQuery('.page_status').html(xhr.pageStatus);#}
-                    {#jQuery('.page_title h1').html(xhr.title);#}
-                    {#jQuery('#pageSettings').html(pageSettings);#}
-                    {#jQuery('#pageStatusSettings').html(pageStatus);#}
-                    {#statusDialog.modal('hide');#}
-                {#}#}
-            {#}#}
-        {#});#}
-    {#}#}
-
     (function ($) {
-        $('.status-dialog-link').live('click', createStatusAjaxDialog);
+        $('body').on('click', '.status-dialog-link', createStatusAjaxDialog);
 
     })(jQuery);
 </script>

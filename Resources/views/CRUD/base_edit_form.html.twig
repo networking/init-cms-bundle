@@ -16,10 +16,10 @@ file that was distributed with this source code.
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        <form class="form-{% if app.request.isXmlHttpRequest %}horizontal{% else %}vertical{% endif %}"
+        <form class="form-{% if app.request.isxmlhttprequest  or app.request.get('_xml_http_request') %}horizontal{% else %}vertical{% endif %}"
               action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
               method="POST">
-            {% if app.request.isxmlhttprequest %}
+            {% if app.request.isxmlhttprequest  or app.request.get('_xml_http_request') %}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3>
@@ -42,11 +42,11 @@ file that was distributed with this source code.
                     </h3>
                 </div>
             {% endif %}
-            <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
+            <div class="{% if app.request.isxmlhttprequest  or app.request.get('_xml_http_request') %}modal-body{% endif %}">
 
 
                 {% if form.vars.errors|length > 0 %}
-                    <div class="sonata-ba-form-error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
+                    <div class="sonata-ba-form-error {% if app.request.isxmlhttprequest  or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
                         {{ form_errors(form) }}
                     </div>
                 {% endif %}
@@ -86,8 +86,8 @@ file that was distributed with this source code.
 
             {% block formactions %}
                 {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
-                    {% if app.request.isxmlhttprequest %}
+                <div class="{% if app.request.isxmlhttprequest  or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
+                    {% if app.request.isxmlhttprequest  or app.request.get('_xml_http_request') %}
                         <button class="btn" data-dismiss="modal"
                                 aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
                         {% if admin.id(object) %}
@@ -99,7 +99,7 @@ file that was distributed with this source code.
                         {% endif %}
                     {% else %}
                         <a class="btn"
-                           href="{{ admin.generateObjectUrl('list', object) }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                           href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
                         {% if admin.supportsPreviewMode %}
                             <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
                                    value="{{ 'btn_preview'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>

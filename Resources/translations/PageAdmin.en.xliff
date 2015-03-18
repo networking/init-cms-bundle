@@ -82,6 +82,14 @@
                 <source>form.label_alias</source>
                 <target>Redirect to this page</target>
             </trans-unit>
+            <trans-unit id="form.label_active_from">
+                <source>form.label_active_from</source>
+                <target>Online from</target>
+            </trans-unit>
+            <trans-unit id="form.label_active_to">
+                <source>form.label_active_to</source>
+                <target>Online till</target>
+            </trans-unit>
             <trans-unit id="legend.translate_page">
                 <source>legend.translate_page</source>
                 <target>Page Translations</target>
@@ -411,6 +419,10 @@
             <trans-unit id="label.action_publish">
                 <source>label.action_publish</source>
                 <target>Publish selected pages</target>
+            </trans-unit>
+            <trans-unit id="label.action_cache_clear">
+                <source>label.action_cache_clear</source>
+                <target>Delete selected pages' cache</target>
             </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
