@@ -37,6 +37,15 @@ class TranslationAdmin extends ORMTranslationAdmin
     protected $persistFilters = true;
 
     /**
+     * Not exportable
+     * @return array
+     */
+    public function getExportFormats()
+    {
+        return array();
+    }
+
+    /**
      * @return string
      */
     public function getIcon()
