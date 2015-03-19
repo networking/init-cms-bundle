@@ -5,33 +5,28 @@
             <div class="initnavbar initnavbar-fixed-top navbar-initcms initnavbar-inverse">
                 <div class="initnavbar-inner">
                     <div class="container">
-                        <div class="row">
-                            <div class="span6">
-                                <div class="pull-left">
-                                    <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
-                                        <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}" width="77">
-                                    </a>
-                                    {% if admin_pool is defined %}
-                                        <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                            {{ admin_pool.title }}
-                                        </a>
-                                    {% endif %}
-                                </div>
-                                <div class="pull-right">
-                                    {% if admin_pool is defined %}
-                                        {% include admin_pool.getTemplate('user_block') %}
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="span6">
-                                {% if admin_pool is defined %}
-                                    {{ knp_menu_render('AdminMenu',
-                                    {'currentClass': 'active',
-                                    'ancestorClass': 'active',
-                                    'allow_safe_labels': true
-                                    }) }}
-                                {% endif %}
-                            </div>
+                        <div class="pull-left">
+                            <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
+                                <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
+                                     width="77">
+                            </a>
+                            {% if admin_pool is defined %}
+                                <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+                                    {{ admin_pool.title }}
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="pull-right nav-admin">
+                            {% if admin_pool is defined %}
+                                {% include admin_pool.getTemplate('user_block') %}
+                            {% endif %}
+                            {% if admin_pool is defined %}
+                                {{ knp_menu_render('AdminMenu',
+                                {'currentClass': 'active',
+                                'ancestorClass': 'active',
+                                'allow_safe_labels': true
+                                }) }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -178,7 +178,7 @@
 
 // Navbar
 // -------------------------
-@navbarCollapseWidth:             979px;
+@navbarCollapseWidth:             768px;
 @navbarCollapseDesktopWidth:      @navbarCollapseWidth + 1;
 
 @navbarHeight:                    40px;
@@ -284,7 +284,7 @@
 
 // 768px-979px
 @gridColumnWidth768:      42px;
-@gridGutterWidth768:      20px;
+@gridGutterWidth768:      10px;
 @gridRowWidth768:         (@gridColumns * @gridColumnWidth768) + (@gridGutterWidth768 * (@gridColumns - 1));
 
 
@@ -300,3 +300,4 @@
 // 768px-979px
 @fluidGridColumnWidth768:      percentage(@gridColumnWidth768/@gridRowWidth768);
 @fluidGridGutterWidth768:      percentage(@gridGutterWidth768/@gridRowWidth768);
+//@fluidGridGutterWidth768:      percentage(@gridGutterWidth768/@gridRowWidth768);
