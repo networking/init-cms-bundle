@@ -172,7 +172,7 @@ class AdminMenuBuilder extends MenuBuilder
                         'uri' => $editPath
                     )
                 );
-                $this->addIcon($menu['Edit'], array('icon' => 'pencil icon-white', 'append' => false));
+                $this->addIcon($menu['Edit'], array('icon' => 'pencil', 'append' => false));
             }
             if (!$sonataAdmin && $request->get('_route') != 'sonata_admin_dashboard') {
                 $menu->addChild('Admin', array('uri' => $lastActionUrl));
@@ -366,7 +366,7 @@ class AdminMenuBuilder extends MenuBuilder
         if (isset($icon['inverted']) && $icon['inverted'] === true) {
             $addclass = " icon-white";
         }
-        $classicon = (isset($icon['glyphicon'])) ? ' class="' . $icon['glyphicon'] : ' class="icon-' . $icon['icon'];
+        $classicon = (isset($icon['glyphicon'])) ? ' class="' . $icon['glyphicon'] : ' class="fa fa-' . $icon['icon'];
         $myicon = ' <' . $icon['tag'] . $classicon . $addclass . '"></' . $icon['tag'] . '>';
         if (!isset($icon['append']) || $icon['append'] === true) {
             $label = $item->getLabel() . " " . $myicon;

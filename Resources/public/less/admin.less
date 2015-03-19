@@ -1064,7 +1064,6 @@ body.modal-open {
 
   /* outer div */
   .row-offcanvas {
-    position: absolute;
     left: 0;
     -webkit-transition: left .3s ease-in;
     -most-transition: left .3s ease-in;
@@ -1074,7 +1073,7 @@ body.modal-open {
   /* sidebar */
   .sidebar-offcanvas {
     left: -45%;
-    width: 1000%;
+    width: 45%;
     position: absolute;
     top: 0;
     background-color: #F7F7F7;
@@ -1085,6 +1084,7 @@ body.modal-open {
   /* content */
   .row-offcanvas.active {
     left: 30%;
+    position: absolute;
   }
 
   .navbar-toggle {
@@ -1092,30 +1092,36 @@ body.modal-open {
   }
 }
 
-@media screen and (max-width: @screen-tablet) {
+
+@media screen and (max-width: @screen-xs) {
   .initcms .brand {
     padding-right: 0;
   }
-}
 
-@media screen and (max-width: @screen-phone) {
-  .initcms .brand {
-    padding-right: 0;
+  .initcms .navbar-nav {
+    margin: 7.5px 0px;
   }
 
   /* sidebar */
   .sidebar-offcanvas {
     left: -100%;
-    width: -80%;
+    width: 100%;
   }
 
   /* content */
   .row-offcanvas.active {
-    left: 70%%;
+    left: 60%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: @screen-sm) {
+  .initcms .brand {
+    padding-right: 0;
+  }
+
+  .initcms .navbar-nav {
+    margin: 7.5px 0px;
+  }
   .navbar-toggle {
     display: block;
   }
