@@ -183,6 +183,7 @@ class PageHelper
         /** @var \JMS\Serializer\SerializerInterface $serializer */
         $serializer = $this->getService('serializer');
 
+
         if ($this->getParameter('networking_init_cms.db_driver') == 'orm') {
             /** @var \Doctrine\Common\Persistence\ObjectManager $em */
             $em = $this->getService('doctrine')->getManager();
@@ -223,11 +224,21 @@ class PageHelper
         $pageSnapshot->setContentRoute($snapshotContentRoute);
         $pageSnapshot->setPath(self::getPageRoutePath($page->getPath()));
 
+
+
         $em->persist($pageSnapshot);
         $em->flush();
 
         $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
         $snapshotContentRoute->setObjectId($pageSnapshot->getId());
+
+
+        if($oldPageSnapshot && ($oldPageSnapshot->getPath() != self::getPageRoutePath($page->getPath()))){
+            /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
+            $phpCache = $this->getService('networking_init_cms.lib.php_cache');
+            $phpCache->clean();
+        }
+
 
         $em->persist($snapshotContentRoute);
         $em->flush();
