@@ -840,13 +840,7 @@ file that was distributed with this source code.
         </div>
 
     </div>
-    {{ block('form_message') }}
-    {% if errors|length > 0 %}
-        <div class="help-block sonata-ba-field-error-messages">
-            {{ form_errors(form) }}
-        </div>
-    {% endif %}
-    {#{{ block('widget_form_group_end') }}#}
+
     {% include 'NetworkingInitCmsBundle:CRUD:edit_media_entity_script.html.twig' %}
 {% endblock %}
 
