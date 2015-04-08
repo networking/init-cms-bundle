@@ -751,7 +751,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             $getters[] = $method;
         }
 
-        $camelizedFieldName = self::camelize($fieldName);
+        $camelizedFieldName = self::camelize($fieldName, true);
         $getters[] = 'get' . $camelizedFieldName;
         $getters[] = 'is' . $camelizedFieldName;
 
@@ -768,16 +768,18 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      * Camelize a string
      *
      * @static
-     * @param  string $property
-     * @return string
+     * @param $str
+     * @param bool $firstToCapital
+     * @return mixed
      */
-    public static function camelize($property)
+    public static function camelize($str, $firstToCapital = false)
     {
-        return preg_replace(
-            array('/(^|_| )+(.)/e', '/\.(.)/e'),
-            array("strtoupper('\\2')", "'_'.strtoupper('\\1')"),
-            $property
-        );
+        if($firstToCapital) {
+            $str[0] = strtoupper($str[0]);
+        }
+        return preg_replace_callback('/_([a-z])/', function($s){
+            return strtoupper($s[1]);
+        }, $str);
     }
 
     /**
