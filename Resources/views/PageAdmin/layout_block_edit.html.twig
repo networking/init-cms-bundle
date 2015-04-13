@@ -1,6 +1,5 @@
 {% block form %}
     {% set url = admin.id(object) ? 'edit' : 'create' %}
-
     {% if not admin.hasRoute(url) %}
         <div>
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
@@ -11,55 +10,25 @@
                 <form class="form-horizontal"
                       action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': uniqid, 'classType': classType, 'elementId': elementId, 'code': code, 'objectId': objectId}) }}" {{ form_enctype(form) }}
                       method="POST">
-
-
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}
                             - {{ render_content_type_name(object) }}</h4>
                     </div>
                     <div class="modal-body">
-
-
                         {% if form.vars.errors|length > 0 %}
-                            <div class="sonata-ba-form-error control-group error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
                                 {{ form_errors(form) }}
-                            </div>
                         {% endif %}
-
-                        {% block sonata_pre_fieldsets %}{% endblock %}
-
+                        {# Layout Block hidden fields #}
                         {% for name, form_group in admin.formgroups %}
-                            <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
-                                {% if admin.formgroups|length > 1 and name != admin.label %}
-                                    <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
-                                        {% if form_group.collapsed %}
-                                            <a class="sonata-ba-collapsed" data-toggle="collapse"
-                                               data-target="#{{ admin.uniqid }}_{{ loop.index }}"
-                                               title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationDomain) }}</a>
-                                        {% else %}
-                                            {{ name|trans({}, admin.translationDomain) }}
-                                        {% endif %}
-                                    </legend>
+                            {% for field_name in form_group.fields %}
+                                {% if admin.formfielddescriptions[field_name] is defined %}
+                                    {{ form_widget(form[field_name]) }}
                                 {% endif %}
-
-                                <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}"
-                                     id="{{ admin.uniqid }}_{{ loop.index }}">
-
-                                    {% for field_name in form_group.fields %}
-                                        {% if admin.formfielddescriptions[field_name] is defined %}
-                                            {{ form_widget(form[field_name]) }}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </fieldset>
+                            {% endfor %}
                         {% endfor %}
-
-                        {% block sonata_post_fieldsets %}{% endblock %}
                         {{ form_rest(form) }}
-
                     </div>
-
                     {% block formactions %}
                         {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
                         <div class="modal-footer">
@@ -78,5 +47,4 @@
             </div>
         </div>
     {% endif %}
-
 {% endblock %}
