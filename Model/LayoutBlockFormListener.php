@@ -151,17 +151,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
         $errors = $this->validator->validate($contentObject);
 
         if (count($errors) > 0) {
-            /** @var \Symfony\Component\Validator\ConstraintViolation $error */
-            foreach ($errors->getIterator() as $error) {
-                $fieldName = $error->getPropertyPath();
-                /** @var \Symfony\Component\Form\Form $field */
-                $field = $form->get('content')->get($fieldName);
-                $field->addError(
-                    new FormError($error->getMessage(), $error->getMessageTemplate(), $error->getMessageParameters(
-                    ), $error->getMessagePluralization())
-                );
 
-            }
             if ($contentObject->getId()) {
                 $message = $this->admin->getTranslator()->trans(
                     'message.layout_block_not_edited',
@@ -178,6 +168,16 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
             }
             $form->addError(new FormError($message));
 
+            /** @var \Symfony\Component\Validator\ConstraintViolation $error */
+            foreach ($errors->getIterator() as $error) {
+                $fieldName = $error->getPropertyPath();
+                /** @var \Symfony\Component\Form\Form $field */
+                $field = $form->get('content')->get($fieldName);
+                $field->addError(
+                    new FormError($error->getMessage(), $error->getMessageTemplate(), $error->getMessageParameters(
+                    ), $error->getMessagePluralization())
+                );
+            }
         }
 
         return $event;
