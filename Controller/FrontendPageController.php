@@ -68,6 +68,13 @@ class FrontendPageController extends Controller
             if (!$this->isSnapshotActive($page)) {
                 throw new NotFoundHttpException();
             }
+            
+            if ($this->getSnapshotVisibility($page) != PageInterface::VISIBILITY_PUBLIC) {
+
+                if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+                    throw new AccessDeniedException();
+                }
+            }
 
             $updatedAt = $phpCache->get(sprintf('page_%s_created_at', $page->getId()));
             $cacheKey = $request->getLocale().$request->getPathInfo();
@@ -444,6 +451,17 @@ class FrontendPageController extends Controller
 
     /**
      * @param PageSnapshotInterface $page
+     * @return mixed
+     */
+    public function getSnapshotVisibility(PageSnapshotInterface $page){
+
+        $jsonObject = json_decode($page->getVersionedData());
+
+        return $jsonObject->visibility;
+    }
+
+    /**
+     * @param PageSnapshotInterface $page
      * @return bool
      */
     public function isSnapshotActive(PageSnapshotInterface $page)
@@ -462,6 +480,7 @@ class FrontendPageController extends Controller
         return false;
 
     }
+
     /**
      * Get activeFrom
      *
@@ -476,8 +495,6 @@ class FrontendPageController extends Controller
 
         return new \DateTime($page->active_from);
     }
-
-
 
     /**
      * @return \Datetime
