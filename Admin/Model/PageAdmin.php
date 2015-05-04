@@ -91,6 +91,7 @@ abstract class PageAdmin extends BaseAdmin
     {
         $collection->add('translatePage', 'translate_page/{id}/locale/{locale}', array(), array('method' => 'POST'));
         $collection->add('parentPageList', 'parent_page/', array(), array('method' => 'GET'));
+        $collection->add('pageSettings', 'page_settings/{id}', array(), array('method' => 'GET'));
         $collection->add('link', 'link/{id}/locale/{locale}', array(), array('method' => 'GET'));
         $collection->add('draft', 'draft/{id}', array(), array('method' => 'GET'));
         $collection->add('review', 'review/{id}', array(), array('method' => 'GET'));

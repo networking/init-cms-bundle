@@ -45,13 +45,13 @@ file that was distributed with this source code.
                 var elements = $($.parseHTML(xhr.pageSettings));
                 var pageSettings = $(elements).filter('#pageSettings').html();
                 var pageStatusHtml = $(elements).filter('#pageStatusSettings').html();
-                var pageSettingsFieldsModal = $(elements).filter('#pageSettingsFieldsModal').html();
+
 
                 pageStatus.html(xhr.pageStatus);
                 $('.page_title').html(xhr.title);
-                $('#pageSettings').html(pageSettings);
-                $('#pageStatusSettings').html(pageStatusHtml);
-                $('#pageSettingsFieldsModal').html(pageSettingsFieldsModal);
+                $('#pageSettings').html($.parseHTML(pageSettings));
+                $('#pageStatusSettings').html($.parseHTML(pageStatusHtml));
+                $('#pageSettingsFieldsModal').load("{{ admin.generateObjectUrl('pageSettings', object, { 'uniqid': admin.getUniqid }) }}");
                 $('#pageSettingFields').modal('hide');
 
                 submitLayoutUpdate(form, {});

@@ -441,6 +441,49 @@ class PageAdminController extends CRUDController
         );
     }
 
+    public function pageSettingsAction($id = null, $uniqid = null)
+    {
+        /** @var Request $request */
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        // the key used to lookup the template
+        $templateKey = 'edit';
+
+        if ($id === null) {
+            $id = $request->get($this->admin->getIdParameter());
+        }
+
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('EDIT', $object)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->admin->setSubject($object);
+
+        /** @var $form \Symfony\Component\Form\Form */
+        $form = $this->admin->getForm();
+        $form->setData($object);
+
+        $view = $form->createView();
+
+        // set the theme for the current Admin Form
+        $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+
+        return $this->render(
+            $this->admin->getTemplate($templateKey),
+            array(
+                'action' => 'edit',
+                'form' => $view,
+                'object' => $object,
+                'language' => \Locale::getDisplayLanguage($object->getLocale())
+            )
+        );
+    }
+
     /**
      * Return the json response for the ajax edit action
      *
