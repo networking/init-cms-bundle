@@ -230,6 +230,12 @@ class PageHelper
         $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
         $snapshotContentRoute->setObjectId($pageSnapshot->getId());
 
+        if($oldPageSnapshot && ($oldPageSnapshot->getPath() != self::getPageRoutePath($page->getPath()))){
+            /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
+            $phpCache = $this->getService('networking_init_cms.lib.php_cache');
+            $phpCache->clean();
+        }
+
         $em->persist($snapshotContentRoute);
         $em->flush();
     }
