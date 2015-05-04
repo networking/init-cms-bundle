@@ -18,7 +18,7 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
 
 {% block list_filters %}
-    {% if admin.datagrid.filters and not app.request.isxmlhttprequest %}
+    {% if admin.datagrid.filters %}
 
         <form action="{{ admin.generateUrl('list') }}" method="GET"
               class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters">
@@ -118,10 +118,17 @@ file that was distributed with this source code.
                 <thead>
                 <tr>
                     {% for field_description in admin.list.elements %}
-                        {% if field_description.getOption('code') == '_batch' and batchactions|length > 0 %}
-                            <th class="sonata-ba-list-field-header sonata-ba-list-field-header-batch">
-                                {#<input type="checkbox" id="list_batch_checkbox"/>#}
-                            </th>
+                        {% if admin.hasRoute('batch') and field_description.getOption('code') == '_batch' and batchactions|length > 0 %}
+                            {% if not app.request.isXmlHttpRequest %}
+                                <th class="sonata-ba-list-field-header sonata-ba-list-field-header-batch">
+                                </th>
+                            {% endif %}
+                        {% elseif field_description.getOption('code') == '_select' %}
+                            <th class="sonata-ba-list-field-header sonata-ba-list-field-header-select"></th>
+                        {% elseif field_description.name == '_action' and app.request.isXmlHttpRequest %}
+                            {# Action buttons disabled in ajax view! #}
+                        {% elseif field_description.getOption('ajax_hidden') == true and app.request.isXmlHttpRequest %}
+                            {# Disable fields with 'ajax_hidden' option set to true #}
                         {% else %}
                             {% set sortable = false %}
                             {% if field_description.options.sortable is defined and field_description.options.sortable %}
@@ -150,12 +157,10 @@ file that was distributed with this source code.
                 <tbody>
                 {% for object in admin.datagrid.results %}
                     <tr>
-                        {% for field_description in admin.list.elements %}
-                            {{ object|render_list_element(field_description) }}
-                        {% endfor %}
+                        {% include admin.getTemplate('inner_list_row') %}
                     </tr>
                 {% endfor %}
-                {% if batchactions|length > 0 %}
+                {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}
                     <tr>
                         <td>
                             <input type="checkbox" id="list_batch_checkbox" name="all_elements"/>
@@ -171,28 +176,28 @@ file that was distributed with this source code.
             {% block table_footer %}
                 <tfoot>
                 <tr>
-                    <th colspan="{{ admin.list.elements|length - 2 }}">
-                        {{ block('batch') }}
-                    </th>
-
-                    <th class="align-right form-inline" colspan="2">
-                        <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
-                                list_results_count{% endtranschoice %}</strong></label>
-                        {% block max_per_page %}
-                            <label class="control-label"
-                                   for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
-                                label_per_page{% endtrans %}
-                                <select class="per-page small" id="{{ admin.uniqid }}_per_page"
-                                        style="width: auto; height: auto">
-                                    {% for per_page in admin.getperpageoptions %}
-                                        <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
-                                                value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
-                                            {{ per_page }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </label>
-                        {% endblock %}
+                    <th colspan="{{ admin.list.elements|length - (app.request.isXmlHttpRequest ? (admin.list.has('_action') + admin.list.has('batch')) : 0) }}">
+                        <div class="form-inline">
+                            {% if not app.request.isxmlhttprequest %}{{ block('batch') }}{% endif %}
+                            <div class="pull-right">
+                                <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
+                                        list_results_count{% endtranschoice %}</strong></label>
+                                {% block max_per_page %}
+                                    <label class="control-label"
+                                           for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
+                                        label_per_page{% endtrans %}</label>
+                                    <select class="per-page small" id="{{ admin.uniqid }}_per_page"
+                                            style="width: auto; height: auto">
+                                        {% for per_page in admin.getperpageoptions %}
+                                            <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                                                    value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
+                                                {{ per_page }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                {% endblock %}
+                            </div>
+                        </div>
                     </th>
                 </tr>
                 </tfoot>
@@ -252,14 +257,16 @@ file that was distributed with this source code.
 
             </div>
         {% endif %}
-        {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
-            <p> {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}:
-                {% for format in admin.getExportFormats() %}
-                    <a
-                    href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}"
-                    class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
-                {% endfor %}
-            </p>
+        {% if not app.request.isxmlhttprequest %}
+            {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
+                <p> {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}:
+                    {% for format in admin.getExportFormats() %}
+                        <a
+                        href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}"
+                        class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
         {% endif %}
 
         {% if admin.hasRoute('batch') %}
@@ -271,8 +278,14 @@ file that was distributed with this source code.
         </p>
     {% endif %}
 
-    {% if not  app.request.isxmlhttprequest %}
+    {% if not app.request.isXmlHttpRequest %}
         </div>
+    {% else %}
+        <script type="text/javascript">
+            $(function () {
+                Admin.add_filters();
+            });
+        </script>
     {% endif %}
 {% endblock %}
 

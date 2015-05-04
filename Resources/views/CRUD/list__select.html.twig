@@ -1,0 +1,8 @@
+{% extends admin.getTemplate('base_list_field') %}
+
+{% block field %}
+    <a class="btn btn-default btn-sm select-media pull-right"  href="#" data-object-id="{{ object.id }}">
+        <i class="glyphicon glyphicon-arrow-right"></i>
+        {{ 'list_select'|trans({}, 'SonataAdminBundle') }}
+    </a>
+{% endblock %}

@@ -27,8 +27,10 @@ sonata_admin:
         delete:     NetworkingInitCmsBundle:CRUD:delete.html.twig
         action:     NetworkingInitCmsBundle:CRUD:action.html.twig
         dashboard:  NetworkingInitCmsBundle:Core:dashboard.html.twig
+        select:     NetworkingInitCmsBundle:CRUD:list__select.html.twig
         batch_confirmation: NetworkingInitCmsBundle:CRUD:batch_confirmation.html.twig
         base_list_field: NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+        inner_list_row: NetworkingInitCmsBundle:CRUD:list_inner_row.html.twig
         # default values of helper templates
         short_object_description: NetworkingInitCmsBundle:Helper:short-object-description.html.twig
         # default values of block templates, they should extend the base_block template
