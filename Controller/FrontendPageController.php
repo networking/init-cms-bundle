@@ -65,6 +65,10 @@ class FrontendPageController extends Controller
 
         if($phpCache->isCacheable($request, $this->getUser()) && $page instanceof PageSnapshotInterface){
 
+            if (!$this->isSnapshotActive($page)) {
+                throw new NotFoundHttpException();
+            }
+
             $updatedAt = $phpCache->get(sprintf('page_%s_created_at', $page->getId()));
             $cacheKey = $request->getLocale().$request->getPathInfo();
 
@@ -436,6 +440,55 @@ class FrontendPageController extends Controller
     {
 
         return $this->container->get('networking_init_cms.helper.page_helper');
+    }
+
+    /**
+     * @param PageSnapshotInterface $page
+     * @return bool
+     */
+    public function isSnapshotActive(PageSnapshotInterface $page)
+    {
+        $jsonObject = json_decode($page->getVersionedData());
+
+
+        $now = new \DateTime();
+
+        if ($now->getTimestamp() >= $this->getActiveStart($jsonObject)->getTimestamp() &&
+            $now->getTimestamp() <= $this->getActiveEnd($jsonObject)->getTimestamp()
+        ) {
+            return ($jsonObject->status == PageInterface::STATUS_PUBLISHED);
+        }
+
+        return false;
+
+    }
+    /**
+     * Get activeFrom
+     *
+     * @return \DateTime
+     */
+    public function getActiveStart($page)
+    {
+        if (!property_exists($page, 'active_from')) {
+
+            return new \DateTime();
+        }
+
+        return new \DateTime($page->active_from);
+    }
+
+
+
+    /**
+     * @return \Datetime
+     */
+    public function getActiveEnd($page)
+    {
+        if (!property_exists($page, 'active_to')) {
+            return new \DateTime();
+        }
+
+        return new \DateTime($page->active_to);
     }
 
 }
