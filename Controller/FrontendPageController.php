@@ -69,6 +69,13 @@ class FrontendPageController extends Controller
                 throw new NotFoundHttpException();
             }
 
+            if ($this->getSnapshotVisibility($page) != PageInterface::VISIBILITY_PUBLIC) {
+
+                if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+                    throw new AccessDeniedException();
+                }
+            }
+
             $updatedAt = $phpCache->get(sprintf('page_%s_created_at', $page->getId()));
             $cacheKey = $request->getLocale().$request->getPathInfo();
 
@@ -440,6 +447,17 @@ class FrontendPageController extends Controller
     {
 
         return $this->container->get('networking_init_cms.helper.page_helper');
+    }
+
+    /**
+     * @param PageSnapshotInterface $page
+     * @return mixed
+     */
+    public function getSnapshotVisibility(PageSnapshotInterface $page){
+
+        $jsonObject = json_decode($page->getVersionedData());
+
+        return $jsonObject->visibility;
     }
 
     /**
