@@ -26,29 +26,11 @@
                 {% block sonata_pre_fieldsets %}{% endblock %}
 
                 {% for name, form_group in admin.formgroups %}
-                    <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
-                        {% if admin.formgroups|length > 1 and name != admin.label %}
-                            <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
-                                {% if form_group.collapsed %}
-                                    <a class="sonata-ba-collapsed" data-toggle="collapse"
-                                       data-target="#{{ admin.uniqid }}_{{ loop.index }}"
-                                       title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationDomain) }}</a>
-                                {% else %}
-                                    {{ name|trans({}, admin.translationDomain) }}
-                                {% endif %}
-                            </legend>
+                    {% for field_name in form_group.fields %}
+                        {% if admin.formfielddescriptions[field_name] is defined %}
+                            {{ form_widget(form[field_name]) }}
                         {% endif %}
-
-                        <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}"
-                             id="{{ admin.uniqid }}_{{ loop.index }}">
-
-                            {% for field_name in form_group.fields %}
-                                {% if admin.formfielddescriptions[field_name] is defined %}
-                                    {{ form_widget(form[field_name]) }}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </fieldset>
+                    {% endfor %}
                 {% endfor %}
 
                 {% block sonata_post_fieldsets %}{% endblock %}
