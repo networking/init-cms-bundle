@@ -141,7 +141,8 @@ abstract class MenuItemAdmin extends BaseAdmin
 
         $formMapper
             ->add('locale', 'hidden', array('data' => $locale))
-            ->add('name');
+            ->add('name')
+            ->end();
 
 
         if ($this->isRoot) {
