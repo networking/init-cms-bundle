@@ -100,7 +100,11 @@ class HelpTextController extends Controller
         $navArray = array();
 
         //add overview & dashboard manually
-        $navArray['overview']['group_name'] = 'Help';
+        $navArray['overview']['group_name'] = $this->get('translator')->trans(
+            'title.help',
+            array(),
+            'HelpTextAdmin'
+        );;
         $navArray['overview']['group_items']['0']['adminCode'] = 'overview';
         $navArray['overview']['group_items']['0']['action'] = '';
         $navArray['overview']['group_items']['0']['title'] = $this->get('translator')->trans(

@@ -538,15 +538,11 @@
                 <source>sonata.media.admin.media.edit.text</source>
                 <target><![CDATA[<p>Edit an existing media by first selecting a media context first (e.g. standard media, background images, publications etc) via the avaliable media context tabs.</p>
 
-                <p>Click the edit button next to the media item that you wish to edit. You will then be able to switch between two views, edit and preview.</p>
+                <p>Rightclick on the Image of themedia item that you wish to edit and you will get a menu for Edit, Show and Delete. You can also leftclick on the image to show a preview or leftclick on the name to edit the item.</p>
 
                 <p><strong>Edit</strong></p>
 
                 <p>Name: Per default the name of the item (if it is a file) will be the name of the file that was originally uploaded, you can change this to what ever you would like, with or without a file ending (.pdf, .jpg etc).</p>
-
-                <p>Enabled: This is a field that can be then used in the frontend to define if a media item is enabled or not, check with your webmaster to see if this is used in your frontend templates</p>
-
-                <p>Flush CDN: Should you media be saved on a Cloud based Content Delivery Network (CDN), it is often necessary to flush (delete) cached media on these servers should you make a change to the file. This field is used to mark which files should have their CDN cache cleaned, your webmaster must, however program a task which will carry this out.</p>
 
                 <p>Author: the Author of the given media item, which can be used in the frontend HTML.</p>
 
@@ -558,45 +554,33 @@
 
                 <p>Tag your media: You can assign your media with multiple tags as a way of categorising them. The function is sensible to enable easier location of media within a large media library. Should a tag that meets your requirements not be available, click the &#39;+ Add new&#39; button to create a new media tag.</p>
 
+                <p>Enabled: This is a field that can be then used in the frontend to define if a media item is enabled or not, check with your webmaster to see if this is used in your frontend templates</p>
+
+                <p>Flush CDN: Should you media be saved on a Cloud based Content Delivery Network (CDN), it is often necessary to flush (delete) cached media on these servers should you make a change to the file. This field is used to mark which files should have their CDN cache cleaned, your webmaster must, however program a task which will carry this out.</p>
+
+                <p>Preview: Open this section to get the following insights.</p>
+
+                <ul>
+                    <li>Information about Size, Content type and CDN (Content Delivery Network)</li>
+                    <li>Protected URL: A URL which can be protected via a login (if implemented) to protect the access to media.&nbsp;The warning message shows that if you use this URL, it is not possible for the application to protect it.</li>
+                    <li>reference: show the URL to the original file</li>
+                    <li>default_xxx: The name is made of the context name (e.g. default) plus the name of the format size. Your webmaster should set up predefined sizes for use with images and YouTube videos for displaying the same image in different formats on your webpage.</li>
+                </ul>
+
                 <p>Now you can:</p>
 
                 <ul>
-                	<li>Add item and edit it</li>
-                	<li>Add item and return to list</li>
-                	<li>Add item and create another</li>
+                    <li>Add item and edit it</li>
+                    <li>Add item and return to list</li>
+                    <li>Add item and create another</li>
                 </ul>
 
                 <p>Cancel will return you back to the list view, and your changes will not be saved.</p>
 
-                <p><strong>View</strong></p>
+                <p><strong>Show</strong></p>
 
-                <p>This view allows you to view your media (image and YouTube only)</p>
-
-                <p>The following general information is thereafter displayed:</p>
-
-                <p>Size (in Bytes if image or file)<br />
-                Width (in pixels if image or YouTube)<br />
-                Height  (in pixels if image or YouTube)<br />
-                Content type (if known)<br />
-                Copyright (if entered in form)<br />
-                Author (if entered in form)<br />
-                CDN Flushed at (last update date)</p>
-
-                <p>Protected URL: A URL which can be protected via a login (if implemented) to protect the access to media</p>
-
-                <p>Public URL: URL to the file on the server (imagen and file) or the splash image in the case of a YouTube video.</p>
-
-                <p>The warning message shows that if you use this URL, it is not possible for the application to protect it.</p>
-
-                <p>Afterwards follow the formats:</p>
-
-                <p>reference: show the URL to the original file</p>
-
-                <p>default_xxx: The name is made of the context name (e.g. default) plus the name of the format size. Your webmaster should set up predefined sizes for use with images and YouTube videos for displaying the same image in different formats on your webpage.</p>
-                ]]></target>
+                <p>This view allows you to quickly preview your media &nbsp;(only available if media format is supported)</p>]]></target>
             </trans-unit>
-
-
             <trans-unit id="sonata.media.admin.gallery.list.title">
                 <source>sonata.media.admin.gallery.list.title</source>
                 <target>Media Gallery</target>

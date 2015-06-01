@@ -557,16 +557,10 @@
                 <source>sonata.media.admin.media.edit.text</source>
                 <target><![CDATA[<p>Bearbeiten Sie ein bestehendes Medienelement in dem Sie zuerst den Medien-Kontext ausw&auml;hlen (z.B. Standard Medien, Hintergrundbilder, Publikationen, etc.) &uuml;ber die vorhandenen Reiter ausw&auml;hlen.</p>
 
-                        <p>W&auml;hlen Sie im gew&auml;hlten Kontext den grauen Button &#39;Bearbeiten&#39; (Zeichenstift) oder klicken Sie einfach auf das Bild / den Link. Oder Sie haben das Medienelement neu erstellt indem Sie&nbsp; &#39;Aktualisieren und Bearbeiten&#39; gew&auml;hlt haben.</p>
-
-                        <p>Sie k&ouml;nnen nun zwischen den Modi &#39;Bearbeiten&#39; und &#39;Ansicht&#39; &uuml;ber die Navigationsbox rechts wechseln.</p>
+                        <p>Ein Medienelement k&ouml;nnen Sie bearbeiten, eine Vorschau davon ansehen oder l&ouml;schen. Sie erhalten ein Auswahlmen&uuml; bei&nbsp;einem Rechtsklick auf das Bild. Sie k&ouml;nnen alternativ f&uuml;r die Vorschau ein Linksklick auf das Bild machen und f&uuml;r das Bearbeiten einen Linksklick auf den Namen.&nbsp;Oder Sie haben das Medienelement neu erstellt indem Sie&nbsp; &#39;Hinzuf&uuml;gen&nbsp;und Bearbeiten&#39; gew&auml;hlt haben.</p>
 
                         <p><strong>Bearbeiten</strong><br />
                         Name: Standardm&auml;ssig wird der bestehende Dateiname des Objekts angezeigt / gespeichert. Sie k&ouml;nnen den Namen &auml;ndern, falls z.B. das Bild anders verwendet werden soll, macht es Sinn das Dateiformat (.jpg) beizubehalten.</p>
-
-                        <p>Aktiviert: Medienelement aktiv oder inaktiv. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
-
-                        <p>CDN leeren: Falls Sie mit Content Delivery Networks wie Amazon Servern arbeiten, k&ouml;nnen Sie mit dieser Checkbox das Sever Cache aktualisieren. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
 
                         <p>Autor: Geben Sie den Autor als beschreibenden HTML Tag an.</p>
 
@@ -578,8 +572,20 @@
 
                         <p>Taggen Sie ihre Medien: Sie k&ouml;nnen ihre Medien mit beliebig vielen Tags versehen um sie leichter zu finden / gruppieren. Diese Funktion hilft Ihnen die Medien sinnvoll zu organisieren. &Uuml;ber den &#39;+ Neu&#39; Button k&ouml;nnen Sie ganz einfach neue Tags erstellen ohne die Seite / den Kontext zu wechseln.</p>
 
-                        <p>Sie k&ouml;nnen nun:</p>
+                        <p>Aktiviert: Medienelement aktiv oder inaktiv. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
 
+                        <p>CDN leeren: Falls Sie mit Content Delivery Networks wie Amazon Servern arbeiten, k&ouml;nnen Sie mit dieser Checkbox das Sever Cache aktualisieren. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>
+
+                        <p>Vorschau: Die Vorschau k&ouml;nnen Sie aufklappen um noch genauere Information &uuml;ber das Medium und die verschiedenen URL&#39;s zu erhalten.</p>
+
+                        <ul>
+                            <li>Infos &uuml;ber Gr&ouml;sse, Content type und CDN (Content Delivery Network)</li>
+                            <li>Gesch&uuml;tzte URL: Sie k&ouml;nnen dem Medienobjekt eine spezifische URL zur einfachen Kennung mitgeben.&nbsp;Die allf&auml;llige Warnung zeigt an, ob das Medienobjekt nicht spezifisch gesch&uuml;tzt ist (also von allen aufgerufen werden kann).</li>
+                            <li>reference: zeigt den Ort des Medienelements auf dem Webserver als URL an</li>
+                            <li>default_xxx: zeigt den Ort der unterschiedlich gerenderten (Bild-)Formate als URL an. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</li>
+                        </ul>
+
+                        <p>Sie k&ouml;nnen nun:</p>
                         <ul>
                             <li>Aktualisieren</li>
                             <li>Aktualisieren und zur&uuml;ck zur Liste</li>
@@ -588,32 +594,8 @@
 
                         <p>Mit &#39;Abbrechen&#39; wird die Funktion Medienelement bearbeiten r&uuml;ckg&auml;ngig gemacht und die &Auml;nderungen NICHT gespeichert.</p>
 
-                        <p><strong>Ansicht</strong><br />
-                        In der Ansicht sehen Sie eine Vorschau des Medienobjekts (nur Bild).</p>
-
-                        <p>Danach folgen die generellen Informationen:</p>
-
-                        <ul>
-                            <li>Gr&ouml;sse (Anzahl Bytes)</li>
-                            <li>Breite (falls Bild)</li>
-                            <li>H&ouml;he (falls Bild)</li>
-                            <li>Inhaltstyp (falls bekannt)</li>
-                            <li>Copyright (falls ausgef&uuml;llt)</li>
-                            <li>Autor (falls ausgef&uuml;llt)</li>
-                            <li>CDN (letzte Aktualisierung)</li>
-                        </ul>
-
-                        <p>Gesch&uuml;tzte URL: Sie k&ouml;nnen dem Medienobjekt eine spezifische URL zur einfachen Kennung mitgeben</p>
-
-                        <p>&Ouml;ffentliche URL: Eindeutige, vom CMS generierte URL</p>
-
-                        <p>Die allf&auml;llige Warnung zeigt an, ob das Medienobjekt nicht spezifisch gesch&uuml;tzt ist (also von allen aufgerufen werden kann).</p>
-
-                        <p>Danach folgen die Formate:</p>
-
-                        <p>reference: zeigt den Ort des Medienelements auf dem Webserver als URL an</p>
-
-                        <p>default_xxx: zeigt den Ort der unterschiedlich gerenderten (Bild-)Formate als URL an. Dies muss aber im Projekt entsprechend programmiert sein, fragen Sie Ihren Webmaster.</p>]]>
+                        <p><strong>Anzeigen</strong><br />
+                        In der Ansicht sehen Sie eine Vorschau des Medienobjekts (falls das Format unterst&uuml;tzt wird).</p>]]>
                 </target>
             </trans-unit>
 
