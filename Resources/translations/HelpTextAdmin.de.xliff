@@ -492,8 +492,6 @@
                 <source>sonata.media.admin.media.create.text</source>
                 <target><![CDATA[<p>Erstellen Sie ein neues Medienelement in dem Sie zuerst den Medien-Kontext ausw&auml;hlen (z.B. Standard Medien, Hintergrundbilder, Publikationen, etc.).</p>
 
-                        <p>Erstellen Sie ein neues Medienelement in dem Sie zuerst den Medien-Kontext ausw&auml;hlen (z.B. Standard Medien, Hintergrundbilder, Publikationen, etc.).</p>
-
                         <p>Klicken Sie im gew&auml;hlten Kontext den Button &#39;+ Neue Medien hinzuf&uuml;gen an&#39;.</p>
 
                         <p>W&auml;hlen Sie nun den Medien-Typ. Je nach Medien-Kontext und je nach Ihrem System sind unterschiedliche Medientypen erlaubt.</p>
