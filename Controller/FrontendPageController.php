@@ -83,7 +83,9 @@ class FrontendPageController extends Controller
                 $phpCache->delete($cacheKey);
             }
 
-            if(!$response = $phpCache->get($request->getLocale().$request->getPathInfo())){
+            $response = $phpCache->get($request->getLocale().$request->getPathInfo());
+
+            if(!$response || !$response instanceof Response){
                 $params = $this->getPageParameters($request);
 
                 if($params instanceof RedirectResponse){
