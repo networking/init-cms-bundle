@@ -107,6 +107,15 @@ networking_init_cms_set_admin_portal_width:
     pattern: /admin/set_admin_portal_width
     defaults: { _controller: NetworkingInitCmsBundle:CmsHelper:setAdminPortalWidth }
 
+networking_init_cms_admin_login:
+    pattern: /admin/login{trailingSlash}
+    defaults:
+      _controller: FrameworkBundle:Redirect:urlRedirect
+      path: /admin/
+      permanent: true
+    requirements: { trailingSlash : "[/]{1}" }
+
+
 
 
 
