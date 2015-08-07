@@ -34,7 +34,7 @@
         "ibrows/sonata-admin-annotation-bundle": "1.2",
         "ibrows/sonata-translation-bundle": "1.0.3",
         "knplabs/knp-paginator-bundle": "~2.4",
-        "phpfastcache/phpfastcache": "dev-final"
+        "phpfastcache/phpfastcache": "3.0.*"
     },
     "autoload": {
         "psr-4": {"Networking\\InitCmsBundle\\": ""}
