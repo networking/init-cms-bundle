@@ -141,10 +141,10 @@ abstract class BaseAdmin extends Admin
     }
 
     /**
-     * @param $trackedActions
+     * @param array $trackedActions
      * @return BaseAdmin
      */
-    public function setTrackedActions($trackedActions)
+    public function setTrackedActions(array $trackedActions)
     {
         $this->trackedActions = $trackedActions;
 
