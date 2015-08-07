@@ -152,7 +152,7 @@ abstract class BaseAdmin extends Admin
     }
 
     /**
-     * @return Array
+     * @return array
      */
     public function getTrackedActions()
     {
