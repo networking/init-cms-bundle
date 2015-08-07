@@ -94,7 +94,7 @@ abstract class BaseAdmin extends Admin
     }
 
     /**
-     * @return int|string
+     * @return string
      */
     public function getDefaultLocale()
     {
