@@ -32,7 +32,7 @@ abstract class BaseAdmin extends Admin
     protected $languages;
 
     /**
-     * @var Array $trackedActions
+     * @var array $trackedActions
      */
     protected $trackedActions = array('list', 'edit');
 
