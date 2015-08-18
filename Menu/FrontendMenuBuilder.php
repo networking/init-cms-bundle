@@ -31,11 +31,14 @@ class FrontendMenuBuilder extends MenuBuilder
      * @param string $classes
      * @return \Knp\Menu\ItemInterface|\Knp\Menu\MenuItem
      */
-    public function createMainMenu($menuName, $classes)
+    public function createMainMenu($menuName, $classes = 'nav nav-tabs nav-stacked')
     {
-        $classes = $classes ? $classes : 'nav nav-tabs nav-stacked';
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', $classes);
+
+        if ($classes) {
+            $menu->setChildrenAttribute('class', $classes);
+        }
+
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
 
@@ -57,11 +60,13 @@ class FrontendMenuBuilder extends MenuBuilder
      * @param string $classes
      * @return bool|\Knp\Menu\ItemInterface
      */
-    public function createSubnavMenu($menuName, $classes)
+    public function createSubnavMenu($menuName, $classes = 'nav nav-tabs nav-stacked')
     {
-        $classes = $classes ? $classes : 'nav nav-tabs nav-stacked';
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', $classes);
+
+        if ($classes) {
+            $menu->setChildrenAttribute('class', $classes);
+        }
 
         /** @var $mainMenu Menu */
         $menuIterator = $this->getSubMenu($menuName, 1);
@@ -93,9 +98,12 @@ class FrontendMenuBuilder extends MenuBuilder
         $languages,
         $classes = 'nav pull-right',
         $dropDownMenu = false
-    ) {
+    )
+    {
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', $classes);
+        if ($classes) {
+            $menu->setChildrenAttribute('class', $classes);
+        }
 
         if ($dropDownMenu) {
             $this->createDropdownLangMenu($menu, $languages, $request->getLocale());
@@ -116,7 +124,9 @@ class FrontendMenuBuilder extends MenuBuilder
     public function createFooterMenu($menuName, $classes = '')
     {
         $menu = $this->factory->createItem($menuName);
-        $menu->setChildrenAttribute('class', $classes);
+        if ($classes) {
+            $menu->setChildrenAttribute('class', $classes);
+        }
 
         /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
@@ -144,7 +154,8 @@ class FrontendMenuBuilder extends MenuBuilder
         array $languages,
         $currentLanguage,
         $route = 'networking_init_change_language'
-    ) {
+    )
+    {
 
         $dropdown = $menu->addChild(
             $this->translator->trans('Change Language'),
@@ -164,7 +175,7 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     /**
-     * @param \Knp\Menu\ItemInterface  $menu
+     * @param \Knp\Menu\ItemInterface $menu
      * @param array $languages
      * @param $currentLanguage
      * @param string $route
@@ -174,7 +185,8 @@ class FrontendMenuBuilder extends MenuBuilder
         array $languages,
         $currentLanguage,
         $route = 'networking_init_change_language'
-    ) {
+    )
+    {
         foreach ($languages as $language) {
             $node = $menu->addChild(
                 $language['label'],
