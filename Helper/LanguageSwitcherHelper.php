@@ -16,6 +16,7 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -107,8 +108,12 @@ class LanguageSwitcherHelper
      */
     public function getTranslationRoute($oldUrl, $locale)
     {
-
-        $request = $this->pageHelper->matchContentRouteRequest(Request::create($oldUrl));
+        $oldRequest = Request::create($oldUrl);
+        try{
+            $request = $this->pageHelper->matchContentRouteRequest($oldRequest);
+        }catch (ResourceNotFoundException $e){
+            $request = $oldRequest;
+        }
 
         if (!$content = $request->get('_content', false)){
             $route = $this->router->matchRequest(Request::create($oldUrl));
