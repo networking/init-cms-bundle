@@ -21,7 +21,7 @@ use Knp\Menu\MenuItem as Menu;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\DataCollectorTranslator as Translator;
 use Knp\Menu\Matcher\Matcher;
 /**
  * Class MenuBuilder
