@@ -10,8 +10,8 @@
 
 namespace Networking\InitCmsBundle\Form\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
@@ -20,7 +20,7 @@ use Symfony\Component\Form\FormInterface;
  * @package Networking\InitCmsBundle\Form\Type
  * @author Sonja Brodersen <s.brodersen@networking.ch>
  */
-class IconradioType extends ChoiceType
+class IconradioType extends AbstractType
 {
     /**
      * @var array
@@ -36,22 +36,16 @@ class IconradioType extends ChoiceType
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'networking_type_iconradio';
-    }
-
-    /**
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         parent::setDefaultOptions($resolver);
-        $resolver->setDefaults(array(
-            'icons' => $this->getIconsFromTemplates()
-        ));
+        $resolver->setDefaults(
+            array(
+                'icons' => $this->getIconsFromTemplates()
+            )
+        );
     }
 
     /**
@@ -62,9 +56,12 @@ class IconradioType extends ChoiceType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
-        $view->vars = array_replace($view->vars, array(
-            'icons' => $options['icons'],
-        ));
+        $view->vars = array_replace(
+            $view->vars,
+            array(
+                'icons' => $options['icons'],
+            )
+        );
     }
 
     /**
@@ -74,8 +71,25 @@ class IconradioType extends ChoiceType
     {
         $choices = array();
         foreach ($this->templates as $key => $template) {
-            $choices[$key] = isset($template['icon'])?$template['icon']:'';
+            $choices[$key] = isset($template['icon']) ? $template['icon'] : '';
         }
+
         return $choices;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParent()
+    {
+        return 'choice';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'networking_type_iconradio';
     }
 }
