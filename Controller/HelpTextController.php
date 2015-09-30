@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation\AdminInterface;
+use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -57,7 +59,7 @@ class HelpTextController extends Controller
         /** @var \Networking\InitCmsBundle\Admin\Pool $pool */
         $pool = $this->get('sonata.admin.pool');
         $parameters['admin_pool'] = $pool;
-        $parameters['base_template'] = isset($admin) ?  $this->getBaseTemplate($admin): 'NetworkingInitCmsBundle::admin_layout.html.twig';
+        $parameters['base_template'] = isset($admin) ?  $this->getBaseTemplate($request, $admin): 'NetworkingInitCmsBundle::admin_layout.html.twig';
         $dashBoardGroups = $pool->getDashboardNavigationGroups();
 
 
@@ -76,11 +78,13 @@ class HelpTextController extends Controller
     /**
      * return the base template name
      *
+     * @param Request $request
+     * @param BaseAdmin $admin
      * @return string the template name
      */
-    protected function getBaseTemplate($admin)
+    protected function getBaseTemplate(Request $request, BaseAdmin $admin)
     {
-        if ($this->getRequest()->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             return $admin->getTemplate('ajax');
         }
 
