@@ -148,7 +148,7 @@ class MediaAdminController extends SonataMediaAdminController
             throw new AccessDeniedException();
         }
         /** @var Request $request */
-        $request = $this->getRequest();
+        $request = $this->get('request_stack')->getCurrentRequest();
         if ($request->getMethod() == 'DELETE') {
             try {
                 $this->admin->delete($object);
