@@ -48,7 +48,8 @@ class LayoutBlockController extends CRUDController
         }
 
         $layoutBlock = $this->admin->getNewInstance();
-        $request = $this->getRequest();
+        /** @var Request $request */
+        $request = $this->get('request_stack')->getCurrentRequest();
         $this->admin->setSubject($layoutBlock);
 
         $elementId = $request->get('elementId');
@@ -73,8 +74,8 @@ class LayoutBlockController extends CRUDController
             throw new NotFoundHttpException;
         }
 
-        $this->getRequest()->attributes->add(array('objectId' => $objectId));
-        $this->getRequest()->attributes->add(array('page_locale' => $page->getLocale()));
+        $request->attributes->add(array('objectId' => $objectId));
+        $request->attributes->add(array('page_locale' => $page->getLocale()));
 
         $pageAdmin->setSubject($page);
 
@@ -224,7 +225,10 @@ class LayoutBlockController extends CRUDController
 
         /** @var \Networking\InitCmsBundle\Admin\Model\PageAdmin $pageAdmin */
         $pageAdmin = $this->container->get($code);
-        $pageAdmin->setRequest($this->getRequest());
+
+        /** @var Request $request */
+        $request = $this->get('request_stack')->getCurrentRequest();
+        $pageAdmin->setRequest($request);
 
 
         if ($uniqId) {
@@ -240,8 +244,8 @@ class LayoutBlockController extends CRUDController
             $page = $pageAdmin->getNewInstance();
         }
 
-        $this->getRequest()->attributes->add(array('objectId' => $objectId));
-        $this->getRequest()->attributes->add(array('page_locale' => $page->getLocale()));
+        $request->attributes->add(array('objectId' => $objectId));
+        $request->attributes->add(array('page_locale' => $page->getLocale()));
 
         $pageAdmin->setSubject($page);
         $formBuilder = $pageAdmin->getFormBuilder();
