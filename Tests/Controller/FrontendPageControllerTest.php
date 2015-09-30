@@ -17,10 +17,11 @@ use \Networking\InitCmsBundle\Controller\FrontendPageController,
     \Networking\InitCmsBundle\Model\Page,
     \Symfony\Component\Security\Core\Exception\AccessDeniedException,
     \Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
-    \Symfony\Component\Security\Core\SecurityContext,
+    \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage,
     Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /** @author sonja brodersen s.brodersen@networking.ch */
 class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
@@ -30,10 +31,10 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIndexActionWithAccessDeniedException()
     {
-        $this->setExpectedException('\Symfony\Component\Security\Core\Exception\AccessDeniedException');
+
         // because no user is authenticated: a AuthenticationCredentialsNotFoundException
         $this->setExpectedException(
-            'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException'
+            'Symfony\Component\Security\Core\Exception\AccessDeniedException'
         );
 
         //Mocks
@@ -52,15 +53,37 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->with('_content')
             ->will($this->returnValue($mockPage));
 
-        $mockSecurityContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+        $mockTokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSecurityContext->expects($this->any())
-            ->method('getToken')
-            ->will($this->returnValue(null));
+        $mockAccessDecisionManager = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AccessDecisionManager')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $mockSecurityContext->expects($this->any())
+
+        $mockAuthorizationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationChecker')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $property = new \ReflectionProperty('Symfony\Component\Security\Core\Authorization\AuthorizationChecker', 'tokenStorage');
+        $property->setAccessible(true);
+        $property->setValue($mockAuthorizationChecker, $mockTokenStorage);
+
+        $property = new \ReflectionProperty('Symfony\Component\Security\Core\Authorization\AuthorizationChecker', 'accessDecisionManager');
+        $property->setAccessible(true);
+        $property->setValue($mockAuthorizationChecker, $mockAccessDecisionManager);
+
+
+        $mockTokenStorage->expects($this->any())
+            ->method('getToken')
+            ->will($this->returnValue(new AnonymousToken('anon', 'anon')));
+
+        $mockAccessDecisionManager->expects($this->any())
+            ->method('decide')
+            ->willReturn(false);
+
+        $mockAuthorizationChecker->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(false));
@@ -81,18 +104,18 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockContainer->expects($this->at(1))
             ->method('has')
-            ->with('security.context')
+            ->with('security.token_storage')
             ->will($this->returnValue(true));
 
         $mockContainer->expects($this->at(2))
             ->method('get')
-            ->with('security.context')
-            ->will($this->returnValue($mockSecurityContext));
+            ->with('security.token_storage')
+            ->will($this->returnValue($mockTokenStorage));
 
         $mockContainer->expects($this->at(3))
             ->method('get')
-            ->with('security.context')
-            ->will($this->returnValue($mockSecurityContext));
+            ->with('security.authorization_checker')
+            ->will($this->returnValue($mockAuthorizationChecker));
 
         // Controller
         $controller = new FrontendPageController();
@@ -133,16 +156,23 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->with('_content')
             ->will($this->returnValue($mockPage));
         //security context
-        $mockSecurityContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+        $mockTokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
             ->disableOriginalConstructor()
             ->getMock();
 
+        $mockAuthorizationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationChecker')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $property = new \ReflectionProperty('Symfony\Component\Security\Core\Authorization\AuthorizationChecker', 'tokenStorage');
+        $property->setAccessible(true);
+        $property->setValue($mockAuthorizationChecker, $mockTokenStorage);
 
-        $mockSecurityContext->expects($this->any())
+
+        $mockTokenStorage->expects($this->any())
             ->method('getToken')
             ->will($this->returnValue(null));
 
-        $mockSecurityContext->expects($this->any())
+        $mockAuthorizationChecker->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_SONATA_ADMIN')
             ->will($this->returnValue(false));
@@ -162,18 +192,18 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockContainer->expects($this->at(1))
             ->method('has')
-            ->with('security.context')
+            ->with('security.token_storage')
             ->will($this->returnValue(true));
 
         $mockContainer->expects($this->at(2))
             ->method('get')
-            ->with('security.context')
-            ->will($this->returnValue($mockSecurityContext));
+            ->with('security.token_storage')
+            ->will($this->returnValue($mockTokenStorage));
 
         $mockContainer->expects($this->at(3))
             ->method('get')
-            ->with('security.context')
-            ->will($this->returnValue($mockSecurityContext));
+            ->with('security.token_storage')
+            ->will($this->returnValue($mockTokenStorage));
 
         // Controller
         $controller = new FrontendPageController();
@@ -217,11 +247,11 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         //security context
-        $mockSecurityContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+        $mockTokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSecurityContext->expects($this->any())
+        $mockTokenStorage->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(true));
@@ -269,13 +299,13 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockContainer->expects($this->at(1))
             ->method('has')
-            ->with('security.context')
+            ->with('security.token_storage')
             ->will($this->returnValue(true));
 
         $mockContainer->expects($this->at(2))
             ->method('get')
-            ->with('security.context')
-            ->will($this->returnValue($mockSecurityContext));
+            ->with('security.token_storage')
+            ->will($this->returnValue($mockTokenStorage));
 
         $mockContainer->expects($this->at(3))
             ->method('get')
@@ -284,8 +314,8 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockContainer->expects($this->at(4))
             ->method('get')
-            ->with('security.context')
-            ->will($this->returnValue($mockSecurityContext));
+            ->with('security.token_storage')
+            ->will($this->returnValue($mockTokenStorage));
 
 
         $mockContainer->expects($this->at(5))
@@ -345,10 +375,10 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($mockPage);
 
         //security context
-        $mockSecurityContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+        $mockTokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockSecurityContext->expects($this->any())
+        $mockTokenStorage->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(true));
@@ -423,13 +453,13 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockContainer->expects($this->at(3))
             ->method('has')
-            ->with('security.context')
+            ->with('security.token_storage')
             ->will($this->returnValue(true));
 
         $mockContainer->expects($this->at(4))
             ->method('get')
-            ->with('security.context')
-            ->will($this->returnValue($mockSecurityContext));
+            ->with('security.token_storage')
+            ->will($this->returnValue($mockTokenStorage));
 
 
         $mockContainer->expects($this->at(5))
@@ -444,8 +474,8 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockContainer->expects($this->at(7))
             ->method('get')
-            ->with('security.context')
-            ->will($this->returnValue($mockSecurityContext));
+            ->with('security.token_storage')
+            ->will($this->returnValue($mockTokenStorage));
 
         $mockContainer->expects($this->at(8))
             ->method('get')
