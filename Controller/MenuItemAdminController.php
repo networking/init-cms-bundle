@@ -44,11 +44,14 @@ class MenuItemAdminController extends CRUDController
             throw new AccessDeniedException();
         }
 
-        if ($this->getRequest()->get('page_id')) {
+        /** @var Request $request */
+        $request = $this->get('request_stack')->getCurrentRequest();
+
+        if ($request->get('page_id')) {
             $pageId = $this->getRequest()->get('page_id');
         }
 
-        if ($this->getRequest()->get('menu_id')) {
+        if ($request->get('menu_id')) {
             $menuId = $this->getRequest()->get('menu_id');
             if ($menuId) {
                 $this->get('session')->set('MenuItem.last_edited', $menuId);
@@ -58,7 +61,7 @@ class MenuItemAdminController extends CRUDController
 
         $this->get('session')->set('admin/last_page_id', $pageId);
 
-        if ($this->getRequest()->get('show_now_confirm_dialog')) {
+        if ($request->get('show_now_confirm_dialog')) {
             $user = $this->getUser();
             $user->setAdminSetting('menuAdmin.show_now_confirm_dialog', true);
 
@@ -88,10 +91,10 @@ class MenuItemAdminController extends CRUDController
             }
 
         }
-        if ($postArray = $this->getRequest()->get($this->admin->getUniqid())) {
+        if ($postArray = $request->get($this->admin->getUniqid())) {
 
             // posted locale
-            if (array_key_exists('locale', $this->getRequest()->get($this->admin->getUniqid()))) {
+            if (array_key_exists('locale', $request->get($this->admin->getUniqid()))) {
                 $this->currentMenuLanguage = $postArray['locale'];
             }
         } elseif ($filterParameters = $this->admin->getFilterParameters()) {
@@ -196,7 +199,7 @@ class MenuItemAdminController extends CRUDController
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
         if ($this->isXmlHttpRequest()) {
-            if ($this->getRequest()->get('render')) {
+            if ($request->get('render')) {
                 return $this->render(
                     'NetworkingInitCmsBundle:MenuItemAdmin:' . $ajaxTemplate . '.html.twig',
                     array(
@@ -239,17 +242,19 @@ class MenuItemAdminController extends CRUDController
      */
     public function createAction()
     {
+        /** @var Request $request */
+        $request = $this->get('request_stack')->getCurrentRequest();
 
-        if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
+        if ($request->get('subclass') && $request->get('subclass') == 'menu') {
             if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
                 throw new AccessDeniedException();
             }
         }
 
-        if ($this->getRequest()->get('subclass') == 'menu item') {
+        if ($request->get('subclass') == 'menu item') {
             $this->isNewMenuItem = true;
-            if ($this->getRequest()->get('root_id')) {
-                $this->get('session')->set('root_menu_id', $this->getRequest()->get('root_id'));
+            if ($request->get('root_id')) {
+                $this->get('session')->set('root_menu_id', $request->get('root_id'));
             }
         }
 
@@ -261,8 +266,10 @@ class MenuItemAdminController extends CRUDController
      */
     public function editAction($id = null)
     {
+        /** @var Request $request */
+        $request = $this->get('request_stack')->getCurrentRequest();
 
-        if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
+        if ($request->get('subclass') && $request->get('subclass') == 'menu') {
             if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
                 throw new AccessDeniedException();
             }
@@ -276,6 +283,10 @@ class MenuItemAdminController extends CRUDController
      */
     public function deleteAction($id)
     {
+        /** @var Request $request */
+        $request = $this->get('request_stack')->getCurrentRequest();
+
+
         $id = $this->get('request')->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
@@ -287,13 +298,13 @@ class MenuItemAdminController extends CRUDController
             throw new AccessDeniedException();
         }
 
-        if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
+        if ($request->get('subclass') && $request->get('subclass') == 'menu') {
             if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
                 throw new AccessDeniedException();
             }
         }
 
-        if ($this->getRequest()->getMethod() == 'DELETE') {
+        if ($request->getMethod() == 'DELETE') {
             try {
                 $this->currentMenuLanguage = $object->getLocale();
                 $this->admin->delete($object);
@@ -396,7 +407,8 @@ class MenuItemAdminController extends CRUDController
      */
     public function updateNodes()
     {
-        $request = $this->getRequest();
+        /** @var Request $request */
+        $request = $this->container->get('request_stack')->getCurrentRequest();
         $nodes = $request->get('nodes') ? $request->get('nodes') : array();
 
         try {
@@ -437,6 +449,10 @@ class MenuItemAdminController extends CRUDController
 
 
         if (!array_key_exists('message', $data)) {
+
+            /** @var Request $request */
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+
             //getFlashBag()->get('notice'
             if ($message = $this->get('session')->getFlashBag()->get('sonata_flash_success')) {
                 $data['is_new_menu_item'] = $this->isNewMenuItem;
@@ -444,7 +460,7 @@ class MenuItemAdminController extends CRUDController
             } elseif ($message = $this->get('session')->getFlashBag()->get('sonata_flash_error')) {
                 $data['status'] = 'error';
             } elseif ($data['result'] == 'ok') {
-                $this->getRequest()->request->all();
+                $request->request->all();
                 $message = 'flash_' . str_replace('Action', '', $this->getCaller()) . '_success';
                 $data['is_new_menu_item'] = $this->isNewMenuItem;
 
@@ -453,7 +469,7 @@ class MenuItemAdminController extends CRUDController
                 }
                 $data['status'] = 'success';
             } else {
-                $this->getRequest()->request->all();
+                $request->request->all();
                 $message = 'flash_' . str_replace('Action', '', $this->getCaller()) . '_error';
                 $data['status'] = 'error';
             }
