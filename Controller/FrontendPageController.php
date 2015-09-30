@@ -36,7 +36,7 @@ class FrontendPageController extends Controller
      */
     protected function getAdminPool()
     {
-        if ($this->get('security.context')->getToken() && $this->get('security.context')->isGranted(
+        if ($this->get('security.token_storage')->getToken() && $this->get('security.authorization_checker')->isGranted(
                 'ROLE_SONATA_ADMIN'
             )
         ) {
@@ -71,7 +71,7 @@ class FrontendPageController extends Controller
             
             if ($this->getSnapshotVisibility($page) != PageInterface::VISIBILITY_PUBLIC) {
 
-                if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+                if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
                     throw new AccessDeniedException();
                 }
             }
@@ -186,13 +186,13 @@ class FrontendPageController extends Controller
         }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
-            if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
             }
         }
 
         if ($page->getStatus() != PageInterface::STATUS_PUBLISHED) {
-            if (!$this->get('security.context')->getToken() || false === $this->get('security.context')->isGranted(
+            if (!$this->get('security.token_storage')->getToken() || false === $this->get('security.authorization_checker')->isGranted(
                     'ROLE_SONATA_ADMIN'
                 )
             ) {
@@ -220,7 +220,7 @@ class FrontendPageController extends Controller
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
 
-            if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
             }
         }
@@ -357,7 +357,7 @@ class FrontendPageController extends Controller
      */
     protected function changeViewMode(Request $request, $status, $path)
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_SONATA_ADMIN')) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SONATA_ADMIN')) {
             $message = 'Please login to carry out this action';
             throw new AccessDeniedException($message);
         }
