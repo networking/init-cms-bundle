@@ -62,12 +62,11 @@ class CkeditorAdminController extends BaseMediaAdminController
 
 
     /**
+     * @param Request $request
      * @param string $type
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function uploadAction($type = 'image')
+    public function uploadAction(Request $request, $type = 'image')
     {
         $this->checkIfMediaBundleIsLoaded();
 
@@ -78,8 +77,6 @@ class CkeditorAdminController extends BaseMediaAdminController
         $filePath = '';
         $mediaManager = $this->get('sonata.media.manager.media');
 
-        /** @var Request $request */
-        $request = $this->getRequest();
         $provider = $request->get('provider');
         $file = $request->files->get('upload');
 
