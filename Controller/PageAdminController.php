@@ -133,7 +133,7 @@ class PageAdminController extends CRUDController
 
         if ($request->getMethod() == 'POST') {
 
-            $linkPageId = $this->getRequest()->get('page');
+            $linkPageId = $request->get('page');
             if (!$linkPageId) {
                 $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_link_error');
             } else {
@@ -338,7 +338,8 @@ class PageAdminController extends CRUDController
      */
     public function showAction($id = null)
     {
-        $request = $this->getRequest();
+        /** @var Request $request */
+        $request = $this->get('request_stack')->getCurrentRequest();
 
         $id = $request->get($this->admin->getIdParameter());
 
