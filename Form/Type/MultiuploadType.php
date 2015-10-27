@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class MultiuploadType
@@ -37,9 +37,9 @@ class MultiuploadType extends AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver){
+    public function configureOptions(OptionsResolver $resolver){
         $resolver->setDefaults(array(
             'error_mapping' => array(
                 'validate' => 'binaryContent',

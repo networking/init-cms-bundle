@@ -12,16 +12,10 @@
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
-use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
-use Networking\InitCmsBundle\Model\LayoutBlockFormListener;
-use Networking\InitCmsBundle\Model\LayoutBlockFormListenerInterface;
-use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 /**
@@ -46,6 +40,10 @@ class ContentType extends AbstractType
 
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -84,12 +82,14 @@ class ContentType extends AbstractType
         return $options['sonata_field_description'];
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        parent::configureOptions($resolver);
 
         $dataClass = function (Options $options)  {
-//            return null;
             return $options['class'];
         };
 
@@ -122,6 +122,9 @@ class ContentType extends AbstractType
         }
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'networking_type_content_block';

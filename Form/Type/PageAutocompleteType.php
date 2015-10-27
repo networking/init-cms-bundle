@@ -10,13 +10,9 @@
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Bridge\Doctrine\Form\ChoiceList\ORMQueryBuilderLoader;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -29,8 +25,14 @@ class PageAutocompleteType extends EntityType
      */
     protected $locale = null;
 
+    /**
+     * @var null
+     */
     protected $pageId = null;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function setContainer(ContainerInterface $container)
     {
 
@@ -47,9 +49,12 @@ class PageAutocompleteType extends EntityType
     }
 
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        parent::configureOptions($resolver);
 
         if ($this->pageId) {
             $queryBuilder = $this->getClosureByPageId($this->pageId);
@@ -60,6 +65,10 @@ class PageAutocompleteType extends EntityType
         $resolver->setDefaults(array('query_builder' => $queryBuilder));
     }
 
+    /**
+     * @param $locale
+     * @return callable
+     */
     public function getClosureByLocale($locale)
     {
         return $queryBuilder = function (EntityRepository $er) use ($locale) {
@@ -71,6 +80,10 @@ class PageAutocompleteType extends EntityType
         };
     }
 
+    /**
+     * @param $pageId
+     * @return callable
+     */
     public function getClosureByPageId($pageId)
     {
         return $queryBuilder = function (EntityRepository $er) use ($pageId) {

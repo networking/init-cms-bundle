@@ -16,7 +16,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class MediaEntityType
@@ -45,6 +45,9 @@ class MediaEntityType extends AbstractType
      */
     public $pool;
 
+    /**
+     * @param Pool $pool
+     */
     public function setPool(Pool $pool)
     {
         $this->pool = $pool;
@@ -95,7 +98,7 @@ class MediaEntityType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
 
         $resolver->setDefaults(
