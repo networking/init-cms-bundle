@@ -21,7 +21,7 @@ use Knp\Menu\MenuItem as Menu;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\DataCollectorTranslator as Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Knp\Menu\Matcher\Matcher;
 /**
  * Class MenuBuilder
@@ -45,7 +45,7 @@ class MenuBuilder extends ContainerAware
     protected $menuManager;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     protected $translator;
 
@@ -91,7 +91,7 @@ class MenuBuilder extends ContainerAware
      * @param Request $request
      * @param RouterInterface $router
      * @param MenuItemManagerInterface $menuManager
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      * @param Matcher $matcher
      */
     public function __construct(
@@ -100,7 +100,7 @@ class MenuBuilder extends ContainerAware
         Request $request,
         RouterInterface $router,
         MenuItemManagerInterface $menuManager,
-        Translator $translator,
+        TranslatorInterface $translator,
         Matcher $matcher
     ) {
 
