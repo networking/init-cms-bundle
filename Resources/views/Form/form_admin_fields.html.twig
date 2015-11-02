@@ -379,71 +379,71 @@ file that was distributed with this source code.
 
 
 {% block form_row %}
-{% spaceless %}
-    {% if sonata_admin is not defined or not sonata_admin_enabled or not sonata_admin.field_description %}
-        {{ parent() }}
-    {% else %}
-        {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-            {% set translation_domain = sonata_admin.field_description.translationDomain %}
-        {% endif %}
-        {% set inline_block = false %}
-        {% if sonata_admin.field_description.options.inline_block is defined and sonata_admin.field_description.options.inline_block %}
-            {% set inline_block = true %}
-        {% endif %}
-
-        {% if sonata_admin.field_description.options.name is defined %}
-            {% set label = sonata_admin.field_description.options.name %}
-        {% endif %}
-
-        {% if label is sameas(false) %}
-            {% set label_render = false %}
+    {% spaceless %}
+        {% if sonata_admin is not defined or not sonata_admin_enabled or not sonata_admin.field_description %}
+            {{ parent() }}
         {% else %}
-            {% set label_render = true %}
-        {% endif %}
+            {% if sonata_admin.admin is defined and  sonata_admin.admin %}
+                {% set translation_domain = sonata_admin.field_description.translationDomain %}
+            {% endif %}
+            {% set inline_block = false %}
+            {% if sonata_admin.field_description.options.inline_block is defined and sonata_admin.field_description.options.inline_block %}
+                {% set inline_block = true %}
+            {% endif %}
+
+            {% if sonata_admin.field_description.options.name is defined %}
+                {% set label = sonata_admin.field_description.options.name %}
+            {% endif %}
+
+            {% if label is sameas(false) %}
+                {% set label_render = false %}
+            {% else %}
+                {% set label_render = true %}
+            {% endif %}
 
 
-        {% set widget_form_group_attr = widget_form_group_attr|merge({id: 'sonata-ba-field-container-'~id}) %}
+            {% set widget_form_group_attr = widget_form_group_attr|merge({id: 'sonata-ba-field-container-'~id}) %}
 
-        {{ block('widget_form_group_start') }}
+            {{ block('widget_form_group_start') }}
 
-        {% set show_horizontal_wrapper = horizontal and not (form.parent is not null and 'collection' in form.parent.vars.block_prefixes) %}
+            {% set show_horizontal_wrapper = horizontal and not (form.parent is not null and 'collection' in form.parent.vars.block_prefixes and form.parent.vars.horizontal_wrap_children is same as(false)) %}
 
-        {% if horizontal and not label_render %}
-            {% set horizontal_input_wrapper_class = horizontal_input_wrapper_class ~ ' ' ~ horizontal_label_offset_class %}
-        {% endif %}
+            {% if horizontal and not label_render %}
+                {% set horizontal_input_wrapper_class = horizontal_input_wrapper_class ~ ' ' ~ horizontal_label_offset_class %}
+            {% endif %}
 
-        {% if show_horizontal_wrapper %}
-            <div class="{{ horizontal_input_wrapper_class }}">
-        {% endif %}
-        {% if sonata_admin.edit or sonata_admin.inline %}
+            {% if show_horizontal_wrapper %}
+                <div class="{{ horizontal_input_wrapper_class }}">
+            {% endif %}
+            {% if sonata_admin.edit or sonata_admin.inline %}
             <div class="sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }}">
         {% endif %}
 
 
-        {{ widget_prefix|trans({}, translation_domain)|raw }}  {{ form_widget(form) }} {{ widget_suffix|trans({}, translation_domain)|raw }}
+            {{ widget_prefix|trans({}, translation_domain)|raw }}  {{ form_widget(form) }} {{ widget_suffix|trans({}, translation_domain)|raw }}
 
-        {% set type = type|default('text') %}
-        {% if type != 'hidden' %}
-            {{ block('form_message') }}
-        {% endif %}
+            {% set type = type|default('text') %}
+            {% if type != 'hidden' %}
+                {{ block('form_message') }}
+            {% endif %}
 
-        {% if sonata_admin.edit or sonata_admin.inline %}
-        </div>
-    {% endif %}
-
-        {% if show_horizontal_wrapper %}
+            {% if sonata_admin.edit or sonata_admin.inline %}
             </div>
         {% endif %}
 
+            {% if show_horizontal_wrapper %}
+                </div>
+            {% endif %}
 
 
-        {% if form.parent is not null and 'collection' in form.parent.vars.block_prefixes and widget_remove_btn|default(null) and form.parent.vars.allow_delete|default(false) %}
-            {{ block('form_widget_remove_btn') }}
-        {% endif -%}
-        {{ block('widget_form_group_end') }}
 
-    {% endif %}
-{% endspaceless %}
+            {% if form.parent is not null and 'collection' in form.parent.vars.block_prefixes and widget_remove_btn|default(null) and form.parent.vars.allow_delete|default(false) %}
+                {{ block('form_widget_remove_btn') }}
+            {% endif -%}
+            {{ block('widget_form_group_end') }}
+
+        {% endif %}
+    {% endspaceless %}
 {% endblock form_row %}
 
 {# Support #}
@@ -455,20 +455,20 @@ file that was distributed with this source code.
 {% endblock form_message %}
 
 {% block form_widget_remove_btn %}
-{% spaceless %}
-    {% if widget_remove_btn.wrapper_div is not sameas(false) %}
+    {% spaceless %}
+        {% if widget_remove_btn.wrapper_div is not sameas(false) %}
             <div class="{{ widget_remove_btn.wrapper_div.class }} col-sm-offset-3">
-    {% endif %}
-    {% if widget_remove_btn|default(null) %}
-    {% set button_type = 'remove' %}
-    {% set button_values = widget_remove_btn %}
-    {{ block('collection_button') }}
-    {% endif %}
-    {% if widget_remove_btn.wrapper_div is not sameas(false) %}
-        </div>
-        <div class="clearfix"></div>
-    {% endif %}
-{% endspaceless %}
+        {% endif %}
+        {% if widget_remove_btn|default(null) %}
+            {% set button_type = 'remove' %}
+            {% set button_values = widget_remove_btn %}
+            {{ block('collection_button') }}
+        {% endif %}
+        {% if widget_remove_btn.wrapper_div is not sameas(false) %}
+            </div>
+            <div class="clearfix"></div>
+        {% endif %}
+    {% endspaceless %}
 {% endblock form_widget_remove_btn %}
 
 {% block widget_form_group_start %}
@@ -547,117 +547,130 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block date_widget %}
-{% spaceless %}
-{% if widget == 'single_text' %}
-    {% if datepicker is defined %}
-        {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'calendar'  %}
-        <div data-provider="datepicker" class="{{ attr.widget_class|default('') ~ ' input-group date' }}" data-date="{{ value }}" data-link-field="{{ id }}" data-date-format="dd.mm.yyyy" data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
-            <input {% if widget_form_control_class is not sameas(false) %}class="{{ widget_form_control_class }}" {% endif %}type="text" {% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if 'placeholder' in attr|keys %} placeholder="{{ attr['placeholder'] }}"{% endif %}>
-            <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
-            <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
-        </div>
-        <script type="text/javascript">
-            jQuery(document).ready(function () {
-                jQuery('[data-link-field="{{ id }}"]').datetimepicker({
-                    autoclose: true,
-                    minView: 'month',
-                    startView: 'month',
-                    todayBtn: true
-                });
-                jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
-                    if (jQuery(this).val()) {
-                        jQuery(this).parent().datetimepicker('setValue');
-                    }
-                });
-            });
-        </script>
-    {% else %}
-        {{ block('form_widget_simple') }}
-    {% endif %}
-{% else %}
-    {% set attr = attr|merge({'class': attr.class|default('form-inline')}) %}
-    	<div  {{ block('widget_container_attributes') }}>
-        {{ date_pattern|replace({
-            '{{ year }}':  form_widget(form.year, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
-            '{{ month }}': form_widget(form.month, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
-            '{{ day }}':   form_widget(form.day, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
-        })|raw }}
-        </div>
-{% endif %}
-{% endspaceless %}
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {% if datepicker is defined %}
+                {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'calendar' %}
+                <div data-provider="datepicker" class="{{ attr.widget_class|default('') ~ ' input-group date' }}"
+                     data-date="{{ value }}" data-link-field="{{ id }}" data-date-format="dd.mm.yyyy"
+                     data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
+                    <input {% if widget_form_control_class is not sameas(false) %}class="{{ widget_form_control_class }}"
+                           {% endif %}type="text" {% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if 'placeholder' in attr|keys %} placeholder="{{ attr['placeholder'] }}"{% endif %}>
+                    <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
+                    <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                </div>
+                <script type="text/javascript">
+                    jQuery(document).ready(function () {
+                        jQuery('[data-link-field="{{ id }}"]').datetimepicker({
+                            autoclose: true,
+                            minView: 'month',
+                            startView: 'month',
+                            todayBtn: true
+                        });
+                        jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                            if (jQuery(this).val()) {
+                                jQuery(this).parent().datetimepicker('setValue');
+                            }
+                        });
+                    });
+                </script>
+            {% else %}
+                {{ block('form_widget_simple') }}
+            {% endif %}
+        {% else %}
+            {% set attr = attr|merge({'class': attr.class|default('form-inline')}) %}
+            <div {{ block('widget_container_attributes') }}>
+                {{ date_pattern|replace({
+                    '{{ year }}':  form_widget(form.year, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
+                    '{{ month }}': form_widget(form.month, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
+                    '{{ day }}':   form_widget(form.day, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
+                })|raw }}
+            </div>
+        {% endif %}
+    {% endspaceless %}
 {% endblock date_widget %}
 
 {% block time_widget %}
-{% spaceless %}
-{% if widget == 'single_text' %}
-    {% if timepicker is defined %}
-        {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'time'  %}
-        <div data-provider="timepicker" class="input-group date" data-date="{{ value }}" data-link-field="{{ id }}" data-link-format="hh:ii">
-            <input class="form-control" type="text" {% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if 'placeholder' in attr|keys %} placeholder="{{ attr['placeholder'] }}"{% endif %}>
-            <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
-            <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
-        </div>
-        <script type="text/javascript">
-            jQuery(document).ready(function () {
-                jQuery('[data-link-field="{{ id }}"]').datetimepicker({
-                    autoclose: true,
-                    formatViewType: 'time',
-                    maxView: 'day',
-                    minView: 'hour',
-                    startView: 'day'
-                });
-                jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
-                    if (jQuery(this).val()) {
-
-                        jQuery(this).parent().datetimepicker('setValue');
-                    }
-                });
-            });
-        </script>
-    {% else %}
-        {{ block('form_widget_simple') }}
-    {% endif %}
-{% else %}
-    {% set attr = attr|merge({'class': attr.class|default('')}) %}
     {% spaceless %}
-    {{ form_widget(form.hour, { 'attr': {  'size': '1'}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
-    {{ form_widget(form.minute, { 'attr': { 'size': '1' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
-    {% if with_seconds %}
-        :{{ form_widget(form.second, { 'attr': { 'size': '1' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2') }) }}
-    {% endif %}
+        {% if widget == 'single_text' %}
+            {% if timepicker is defined %}
+                {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'time' %}
+                <div data-provider="timepicker" class="input-group date" data-date="{{ value }}"
+                     data-link-field="{{ id }}" data-link-format="hh:ii">
+                    <input class="form-control"
+                           type="text" {% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if 'placeholder' in attr|keys %} placeholder="{{ attr['placeholder'] }}"{% endif %}>
+                    <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
+                    <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                </div>
+                <script type="text/javascript">
+                    jQuery(document).ready(function () {
+                        jQuery('[data-link-field="{{ id }}"]').datetimepicker({
+                            autoclose: true,
+                            formatViewType: 'time',
+                            maxView: 'day',
+                            minView: 'hour',
+                            startView: 'day'
+                        });
+                        jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                            if (jQuery(this).val()) {
+
+                                jQuery(this).parent().datetimepicker('setValue');
+                            }
+                        });
+                    });
+                </script>
+            {% else %}
+                {{ block('form_widget_simple') }}
+            {% endif %}
+        {% else %}
+            {% set attr = attr|merge({'class': attr.class|default('form-inline')}) %}
+            {% spaceless %}
+                <div {{ block('widget_container_attributes') }}>
+                    {{ form_widget(form.hour, { 'attr': {  'size': '2'}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
+                    {% if with_minutes %}
+                        {{ form_widget(form.minute, { 'attr': { 'size': '2' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
+                    {% endif %}
+                    {% if with_seconds %}
+                        :{{ form_widget(form.second, { 'attr': { 'size': '2' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2') }) }}
+                    {% endif %}
+                </div>
+            {% endspaceless %}
+        {% endif %}
     {% endspaceless %}
-{% endif %}
-{% endspaceless %}
 {% endblock time_widget %}
 
 {% block datetime_widget %}
-{% spaceless %}
-    {% if widget == 'single_text' %}
-        {% if datetimepicker is defined %}
-            {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'th'  %}
-            <div data-provider="datetimepicker" class="input-group date" data-date="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}" data-link-field="{{ id }}" data-date-format="dd.mm.yyyy hh:ii" data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
-                <input class="form-control" type="text" {% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if 'placeholder' in attr|keys %} placeholder="{{ attr['placeholder'] }}"{% endif %}>
-                <input type="hidden" value="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}" {{ block('widget_attributes') }}>
-                <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
-            </div>
-            <script type="text/javascript">
-                jQuery(document).ready(function () {
-                    jQuery('[data-link-field="{{ id }}"]').datetimepicker({
-                        autoclose: true,
-                        todayBtn: true
-                    });
-                    jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
-                        if (jQuery(this).val()) {
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {% if datetimepicker is defined %}
+                {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'th' %}
+                <div data-provider="datetimepicker" class="input-group date"  data-date="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}"
+                     data-link-field="{{ id }}"
+                     data-date-format="dd.mm.yyyy hh:ii" data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
+                    <input class="form-control"
+                           type="text" {% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if 'placeholder' in attr|keys %} placeholder="{{ attr['placeholder'] }}"{% endif %}>
+                    <input type="hidden"
+                           value="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}" {{ block('widget_attributes') }}>
+                    <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                </div>
+                <script type="text/javascript">
+                    jQuery(document).ready(function () {
+                        jQuery('[data-link-field="{{ id }}"]').datetimepicker({
+                            autoclose: true,
+                            todayBtn: true
+                        });
+                        jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                            if (jQuery(this).val()) {
 
-                            jQuery(this).parent().datetimepicker('setValue');
-                        }
+                                jQuery(this).parent().datetimepicker('setValue');
+                            }
+                        });
                     });
-                });
-            </script>
+                </script>
+            {% else %}
+                {{ block('form_widget_simple') }}
+            {% endif %}
         {% else %}
-            {{ block('form_widget_simple') }}
-        {% endif %}
-    {% else %}
             {% set attr = attr|merge({'class': attr.class|default('')}) %}
             <div {{ block('widget_container_attributes') }}>
                 {{ form_errors(form.date) }}
@@ -665,8 +678,8 @@ file that was distributed with this source code.
                 {{ form_widget(form.date, {'attr': {'class': attr.widget_class|default('')}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}) }}
                 {{ form_widget(form.time, {'attr': {'class': attr.widget_class|default('')}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
             </div>
-    {% endif %}
-{% endspaceless %}
+        {% endif %}
+    {% endspaceless %}
 {% endblock datetime_widget %}
 
 {% block networking_type_autocomplete_widget %}

@@ -28,34 +28,34 @@ file that was distributed with this source code.
 
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
-                    {{ filter_main }}
-                    <div class="form-group">
-                        <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                               class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
+                        {{ filter_main }}
+                        <div class="form-group">
+                            <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                                   class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
 
-                        <div class="form-inline col-md-9">
-                            {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
-                            ) }}
-                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                            <div class="form-inline col-md-9">
+                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
+                                ) }}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                            </div>
                         </div>
-                    </div>
                     {% endset %}
                 {% else %}
                     {% if filter.isActive %}
                         {% set showHiddenFilters = 1 %}
                     {% endif %}
                     {% set filter_hidden %}
-                    {{ filter_hidden }}
-                    <div class="form-group">
-                        <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                        {{ filter_hidden }}
+                        <div class="form-group">
+                            <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
 
-                        <div class="form-inline col-md-9">
-                            {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
-                            ) }}
-                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                            ) }}
+                            <div class="form-inline col-md-9">
+                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
+                                ) }}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
+                                ) }}
+                            </div>
                         </div>
-                    </div>
                     {% endset %}
                 {% endif %}
             {% endfor %}
@@ -64,7 +64,7 @@ file that was distributed with this source code.
             <div>
                 <div>
                     <fieldset class="filter_legend">
-                        <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</p>
+                        <h4 class="filter_legend"><small>{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</small></h4>
 
                         <div class="filter_container row">
                             <div class="col-md-12">
