@@ -65,8 +65,8 @@ file that was distributed with this source code.
 
             <div>
                 <div>
-                    <fieldset class="filter_legend">
-                        <p class="info-soft">{{ 'info.filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</p>
+                    <fieldset>
+                        <h4 class="filter_legend"><small>{{ 'info.filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</small></h4>
                         {{ filter_main }}
                         <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
                         {% set foo = form.children['_page'].setRendered() %}
