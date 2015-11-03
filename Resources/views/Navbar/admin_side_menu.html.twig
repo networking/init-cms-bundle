@@ -2,8 +2,8 @@
 
 {% macro attributes(attributes) %}
     {% for name, value in attributes %}
-        {%- if value is not none and value is not sameas(false) -%}
-            {{- ' %s="%s"'|format(name, value is sameas(true) ? name|e : value|e)|raw -}}
+        {%- if value is not none and value is not same as(false) -%}
+            {{- ' %s="%s"'|format(name, value is same as(true) ? name|e : value|e)|raw -}}
         {%- endif -%}
     {%- endfor -%}
 {% endmacro %}
@@ -20,13 +20,13 @@
 {% endblock %}
 
 {% block list %}
-    {% if item.hasChildren and options.depth is not sameas(0) and item.displayChildren %}
-        {% if item.level is sameas(1) %}<div {{ knp_menu.attributes(item.attributes) }}>{% endif %}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        {% if item.level is same as(1) %}<div {{ knp_menu.attributes(item.attributes) }}>{% endif %}
         {% import _self as knp_menu %}
-        {% if item.level is not sameas(0) %}<ul{{ knp_menu.attributes(listAttributes) }}>{% endif %}
+        {% if item.level is not same as(0) %}<ul{{ knp_menu.attributes(listAttributes) }}>{% endif %}
             {{ block('children') }}
-        {% if item.level is not sameas(0) %}</ul>{% endif %}
-    {% if item.level is sameas(1) %}</div>{% endif %}
+        {% if item.level is not same as(0) %}</ul>{% endif %}
+    {% if item.level is same as(1) %}</div>{% endif %}
     {% endif %}
 {% endblock %}
 
@@ -67,7 +67,7 @@
         {%- endif %}
 
         {# Mark item as "leaf" (no children) or as "branch" (has children that are displayed) #}
-        {% if item.hasChildren and options.depth is not sameas(0) %}
+        {% if item.hasChildren and options.depth is not same as(0) %}
             {% if options.branch_class is not empty and item.displayChildren %}
                 {%- set classes = classes|merge([options.branch_class]) %}
             {% endif %}
@@ -81,7 +81,7 @@
         {%- endif %}
         {# displaying the item #}
         {% import _self as knp_menu %}
-        {% if item.level is sameas(1) %}
+        {% if item.level is same as(1) %}
 
             {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
             {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
@@ -89,7 +89,7 @@
             {{ block('list') }}
             {% else %}
             <li{{ knp_menu.attributes(attributes) }}>
-            {% if item.level is  sameas(2) %}
+            {% if item.level is  same as(2) %}
             <div class="pull-left menu_icon">
                 {% if item.attribute('icon') is defined %}
                     <i class="{{ item.attribute('icon') }} {{ item.attribute('icon_size') }}"></i>
@@ -107,7 +107,7 @@
             {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
             {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
             {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
-            {% if item.level is sameas(2)%}
+            {% if item.level is same as(2)%}
                 {% if matcher.isCurrent(item) %}
                 <div class="pull-right" style="position:relative;">
                     <div class="active-corner-top">&nbsp;</div>
@@ -118,7 +118,7 @@
 
             {{ block('list') }}
 
-            {% if matcher.isCurrent(item) and item.level is sameas(1) %}
+            {% if matcher.isCurrent(item) and item.level is same as(1) %}
                 <div class="pull-right" style="position:relative;">
                     <div class="active-corner-bottom"></div>
                 </div>

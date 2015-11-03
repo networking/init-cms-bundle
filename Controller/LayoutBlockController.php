@@ -329,11 +329,11 @@ class LayoutBlockController extends CRUDController
 
 
     /**
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function deleteAjaxAction()
+    public function deleteAjaxAction(Request $request)
     {
-        $request = $this->getRequest();
         $layoutBlockId = $request->get('layoutBlockId');
         $objectId = $request->get('objectId');
         $uniqid = $request->get('uniqid');

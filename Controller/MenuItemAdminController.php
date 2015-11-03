@@ -48,11 +48,11 @@ class MenuItemAdminController extends CRUDController
         $request = $this->get('request_stack')->getCurrentRequest();
 
         if ($request->get('page_id')) {
-            $pageId = $this->getRequest()->get('page_id');
+            $pageId = $request->get('page_id');
         }
 
         if ($request->get('menu_id')) {
-            $menuId = $this->getRequest()->get('menu_id');
+            $menuId = $request->get('menu_id');
             if ($menuId) {
                 $this->get('session')->set('MenuItem.last_edited', $menuId);
             }
