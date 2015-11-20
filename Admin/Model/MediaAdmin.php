@@ -118,17 +118,6 @@ abstract class MediaAdmin extends Admin
                 'type' => 'image'
             )
         );
-
-        $collection->add(
-            'preview_media',
-            'preview_media',
-            array(
-                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:previewMedia',
-            ),
-            array(
-                'id' => '.+'
-            )
-        );
     }
 
     /**

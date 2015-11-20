@@ -248,7 +248,8 @@ file that was distributed with this source code.
                                     {% set previewType = 'image'%}
                                 {% endif %}
                             {% else %}
-                                {% set previewLink %}//docs.google.com/gview?url={{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}&embedded=true{% endset %}
+                                {% set media_link %}{% path object, 'reference' %}{% endset %}
+                                {% set previewLink %}//docs.google.com/gview?url={% if 'http://' not in media_link.__toString and 'https://' not in media_link.__toString%}{{ app.request.getSchemeAndHttpHost() }}{% endif %}{{ media_link }}&embedded=true{% endset %}
                                 {% set previewType = 'iframe' %}
                                 {% set iframeWidth = '400px' %}
                                 {% set iframeHeight = '560px' %}
