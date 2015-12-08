@@ -9,18 +9,11 @@
  */
 namespace Networking\InitCmsBundle\Tests\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use \Networking\InitCmsBundle\Controller\FrontendPageController,
-    \Networking\InitCmsBundle\Helper\LanguageSwitcherHelper,
-    \Symfony\Component\HttpFoundation\Request,
-    \Symfony\Component\HttpFoundation\Response,
-    \Networking\InitCmsBundle\Model\Page,
-    \Symfony\Component\Security\Core\Exception\AccessDeniedException,
-    \Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
-    \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage,
-    Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Networking\InitCmsBundle\Controller\FrontendPageController;
+use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /** @author sonja brodersen s.brodersen@networking.ch */
@@ -218,6 +211,9 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     *
+     */
     public function testLiveAction()
     {
 
@@ -317,8 +313,13 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->with('security.token_storage')
             ->will($this->returnValue($mockTokenStorage));
 
-
         $mockContainer->expects($this->at(5))
+            ->method('has')
+            ->with('templating')
+            ->will($this->returnValue(true));
+
+
+        $mockContainer->expects($this->at(6))
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTemplating));
@@ -327,7 +328,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         // controller
         $controller = new FrontendPageController();
         $controller->setContainer($mockContainer);
-        $response = $controller->liveAction($mockRequest);
+        $response = $controller->indexAction($mockRequest);
 
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response, 'response object returned');
 
@@ -478,6 +479,12 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockTokenStorage));
 
         $mockContainer->expects($this->at(8))
+            ->method('has')
+            ->with('templating')
+            ->will($this->returnValue(true));
+
+
+        $mockContainer->expects($this->at(9))
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTemplating));
@@ -504,6 +511,9 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     *
+     */
     public function testChangeAdminLanguageAction()
     {
         // session
@@ -537,4 +547,3 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
     }
 
 }
-
