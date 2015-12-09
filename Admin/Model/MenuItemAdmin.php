@@ -259,7 +259,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                 array('callback' => array($this, 'getByLocale')),
                 'choice',
                 array(
-                    'empty_value' => false,
+                    'placeholder' => false,
                     'choices' => $this->getLocaleChoices(),
                     'preferred_choices' => array($this->getDefaultLocale())
                 )

@@ -23,6 +23,7 @@ use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Knp\Menu\Matcher\Matcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Class MenuBuilder
  * @package Networking\InitCmsBundle\Component\Menu
@@ -88,7 +89,7 @@ class MenuBuilder extends ContainerAware
     /**
      * @param FactoryInterface $factory
      * @param SecurityContextInterface $securityContext
-     * @param Request $request
+     * @param RequestStack $request
      * @param RouterInterface $router
      * @param MenuItemManagerInterface $menuManager
      * @param TranslatorInterface $translator
@@ -97,7 +98,7 @@ class MenuBuilder extends ContainerAware
     public function __construct(
         FactoryInterface $factory,
         SecurityContextInterface $securityContext,
-        Request $request,
+        RequestStack $request,
         RouterInterface $router,
         MenuItemManagerInterface $menuManager,
         TranslatorInterface $translator,
@@ -116,21 +117,21 @@ class MenuBuilder extends ContainerAware
         }
         $this->factory = $factory;
         $this->router = $router;
-        $this->request = $request;
+        $this->request = $request->getCurrentRequest();
         $this->menuManager = $menuManager;
         $this->translator = $translator;
         $this->matcher = $matcher;
 
-        $this->viewStatus = $request->getSession()->get('_viewStatus')
-            ? $request->getSession()->get('_viewStatus')
+        $this->viewStatus = $this->request->getSession()->get('_viewStatus')
+            ? $this->request->getSession()->get('_viewStatus')
             : Page::STATUS_PUBLISHED;
 
 
-        $this->currentPath = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo(
-            ) . '/' : $request->getPathInfo();
-        $this->currentUri = $request->getBaseUrl() . $this->currentPath;
+        $this->currentPath = substr($this->request->getPathInfo(), -1) != '/' ? $this->request->getPathInfo(
+            ) . '/' : $this->request->getPathInfo();
+        $this->currentUri = $this->request->getBaseUrl() . $this->currentPath;
 
-        $voter = new UriVoter($request->getBaseUrl() .$request->getPathInfo());
+        $voter = new UriVoter($this->request->getBaseUrl() .$this->request->getPathInfo());
         $this->matcher->addVoter($voter);
 
         $voter = new UriVoter($this->currentUri);

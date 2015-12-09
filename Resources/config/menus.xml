@@ -6,10 +6,10 @@
 
     <services>
         <service id="networking_init_cms.menu.admin_menu_builder"
-                 class="Networking\InitCmsBundle\Menu\AdminMenuBuilder" scope="request">
+                 class="Networking\InitCmsBundle\Menu\AdminMenuBuilder">
             <argument type="service" id="knp_menu.factory"/>
             <argument type="service" id="security.context"/>
-            <argument type="service" id="request"/>
+            <argument type="service" id="request_stack"/>
             <argument type="service" id="router"/>
             <argument type="service" id="networking_init_cms.menu_item_manager"/>
             <argument type="service" id="translator"/>

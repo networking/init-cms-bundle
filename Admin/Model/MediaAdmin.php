@@ -203,6 +203,7 @@ abstract class MediaAdmin extends Admin
                     'multiple' => true,
                     'help_label' => 'help.media_tag',
                     'taggable' => true,
+                    'choices_as_values' => true,
                     'attr' => array('style' => "width:220px"),
                 )
             );

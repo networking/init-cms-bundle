@@ -10,10 +10,10 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Sonata\UserBundle\Admin\Entity\UserAdmin as SonataUserAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\UserBundle\Admin\Entity\UserAdmin as SonataUserAdmin;
 
 /**
  * Class UserAdmin
@@ -39,6 +39,14 @@ abstract class UserAdmin extends SonataUserAdmin
     protected $trackedActions = array('list');
 
     /**
+     * @return Array
+     */
+    public function getTrackedActions()
+    {
+        return $this->trackedActions;
+    }
+
+    /**
      * @param $trackedActions
      * @return $this
      */
@@ -47,14 +55,6 @@ abstract class UserAdmin extends SonataUserAdmin
         $this->trackedActions = $trackedActions;
 
         return $this;
-    }
-
-    /**
-     * @return Array
-     */
-    public function getTrackedActions()
-    {
-        return $this->trackedActions;
     }
 
     /**
@@ -82,6 +82,16 @@ abstract class UserAdmin extends SonataUserAdmin
         return $links;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function postUpdate($object)
+    {
+        $securityContext = $this->getConfigurationPool()->getContainer()->get('security.context');
+        if ($object == $securityContext->getToken()->getUser()) {
+            $this->getRequest()->getSession()->set('admin/_locale', $object->getLocale());
+        }
+    }
 
     /**
      * {@inheritdoc}
@@ -119,7 +129,6 @@ abstract class UserAdmin extends SonataUserAdmin
         );
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -139,24 +148,29 @@ abstract class UserAdmin extends SonataUserAdmin
     {
         $formMapper
             ->with('General')
-                ->add('username')
-                ->add('email')
-                ->add('plainPassword', 'text', array('required' => (!$this->getSubject() || is_null($this->getSubject()->getId()))))
-                ->end()
+            ->add('username')
+            ->add('email')
+            ->add('plainPassword', 'text', array('required' => (!$this->getSubject() || is_null($this->getSubject()->getId()))))
+            ->end()
             ->with('Groups')
-                ->add('groups', 'sonata_type_model', array('required' => false, 'expanded' => true, 'multiple' => true))
+            ->add('groups', 'sonata_type_model', array(
+                'required' => false,
+                'expanded' => true,
+                'multiple' => true,
+                'choices_as_values' => true
+            ))
             ->end()
             ->with('Profile')
-                ->add('firstname', null, array('required' => false))
-                ->add('lastname', null, array('required' => false))
-                ->add('locale', 'locale', array('required' => false))
+            ->add('firstname', null, array('required' => false))
+            ->add('lastname', null, array('required' => false))
+            ->add('locale', 'locale', array('required' => false))
             ->end();
 
 
         if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
 
-        $formMapper
-            ->with('Management')
+            $formMapper
+                ->with('Management')
                 ->add(
                     'realRoles',
                     'sonata_security_roles',
@@ -172,19 +186,8 @@ abstract class UserAdmin extends SonataUserAdmin
                 ->add('expired', null, array('required' => false), array('inline_block' => true))
                 ->add('enabled', null, array('required' => false), array('inline_block' => true))
                 ->add('credentialsExpired', null, array('required' => false), array('inline_block' => true))
-            ->end();
+                ->end();
         }
 
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function postUpdate($object)
-    {
-        $securityContext = $this->getConfigurationPool()->getContainer()->get('security.context');
-        if($object == $securityContext->getToken()->getUser()){
-            $this->getRequest()->getSession()->set( 'admin/_locale', $object->getLocale());
-        }
     }
 }
