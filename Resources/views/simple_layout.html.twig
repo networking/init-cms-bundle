@@ -16,41 +16,19 @@ file that was distributed with this source code.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% block stylesheets %}
-        <!-- jQuery code -->
-
         {% stylesheets filter='cssembed,?yui_css'
-        '@NetworkingInitCmsBundle/Resources/public/themes/flick/jquery-ui-1.8.16.custom.css'
-        '@SonataAdminBundle/Resources/public/select2/select2.css'
+        '@SonataAdminBundle/Resources/public/vendor/select2/select2.css'
+        '@SonataAdminBundle/Resources/public/vendor/jqueryui/themes/base/jquery-ui.css'
         '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/build/build_standalone.less'
         '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
         '@NetworkingInitCmsBundle/Resources/public/css/bootstrap-editable.css'
-        '@NetworkingInitCmsBundle/Resources/public/css/featherlight.css'
-        output='css/initcms_admin.css' %}
+        output='css/networking_initcms.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
         {% endstylesheets %}
         {% block content_css %}
         {% if content_css() %}<link href="{{ asset(content_css()) }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
         {% endblock content_css %}
     {% endblock %}
-
-    {% block javascripts %}
-        {% javascripts
-        '@NetworkingInitCmsBundle/Resources/public/js/jquery-1.9.1.min.js'
-        '@NetworkingInitCmsBundle/Resources/public/js/jquery-ui-1.9.1.min.js'
-        '@NetworkingInitCmsBundle/Resources/public/js/jquery.ui.touch-punch.min.js'
-        '@SonatajQueryBundle/Resources/public/jquery-ui-i18n.js'
-        output='js/jquery-1.9.1.min.js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-        {% javascripts
-        '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
-        '@MopaBootstrapBundle/Resources/public/bootstrap/js/*.js'
-        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-editable.min.js'
-        output='js/bootstrap.js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-    {% endblock javascripts %}
-
     <title>
         {% block meta_title %}
         {% endblock %}
