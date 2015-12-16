@@ -29,25 +29,6 @@ file that was distributed with this source code.
         {% if content_css() %}<link href="{{ asset(content_css()) }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
         {% endblock content_css %}
     {% endblock %}
-
-    {% block javascripts %}
-        {% javascripts
-        '@SonataAdminBundle/Resources/public/vendor/jquery/dist/jquery.min.js'
-        '@SonataAdminBundle/Resources/public/vendor/jqueryui/ui/minified/jquery-ui.min.js'
-        '@NetworkingInitCmsBundle/Resources/public/js/jquery.ui.touch-punch.min.js'
-        '@SonataAdminBundle/Resources/public/vendor/jqueryui/ui/minified/i18n/jquery-ui-i18n.min.js'
-        output='js/jquery.js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-        {% javascripts
-        '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
-        '@MopaBootstrapBundle/Resources/public/bootstrap/js/*.js'
-        '@NetworkingInitCmsBundle/Resources/public/js/bootstrap-editable.min.js'
-        output='js/bootstrap.js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-    {% endblock javascripts %}
-
     <title>
         {% block meta_title %}
         {% endblock %}
