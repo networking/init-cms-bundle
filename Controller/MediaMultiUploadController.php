@@ -43,7 +43,9 @@ class MediaMultiUploadController extends AbstractController
             }
         }
 
-        return $this->createSupportedJsonResponse($response);
+        $status = $response->getError() ? 500 : 200;
+
+        return $this->createSupportedJsonResponse($response->assemble(), $status);
     }
 
     /**
@@ -86,26 +88,4 @@ class MediaMultiUploadController extends AbstractController
         }
 
     }
-
-    /**
-     * Creates and returns a JsonResponse with the given data.
-     *
-     * On top of that, if the client does not support the application/json type,
-     * then the content type of the response will be set to text/plain instead.
-     *
-     * @param FineUploaderResponse $response
-     *
-     * @return JsonResponse
-     */
-    protected function createSupportedJsonResponse($response)
-    {
-        $jsonResponse = parent::createSupportedJsonResponse($response->assemble());
-        if ($response->getError()) {
-            $jsonResponse->setStatusCode('500');
-        }
-
-        return $jsonResponse;
-    }
-
-
 }
