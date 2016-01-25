@@ -473,7 +473,7 @@ abstract class MediaAdmin extends Admin
             $providerName = $provider->getName();
 
             if ($providerName == 'sonata.media.provider.image' || $providerName == 'sonata.media.provider.youtube') {
-                $previewImageLabel = null;
+                $previewImageLabel = "form.label_image";
                 $label = "form.label_binary_content_image_new";
 
                 if ($providerName == 'sonata.media.provider.youtube') {
