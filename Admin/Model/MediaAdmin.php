@@ -124,8 +124,7 @@ abstract class MediaAdmin extends Admin
         );
 
         $collection->add(
-            '
-            ',
+            'init_ckeditor_upload_image',
             'init_ckeditor_upload_image',
             array(
                 '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
