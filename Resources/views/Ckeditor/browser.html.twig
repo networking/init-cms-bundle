@@ -279,7 +279,7 @@ file that was distributed with this source code.
                                 <div class="thumbnail context">
                                     <div class="media-element" data-toggle="context" data-target="#context-menu-{{ object.id }}">
                                         {% if object.width is defined and object.width %}
-                                                <img src="{% path object, 'reference' %}" class="img-responsive" height="120" />
+                                            <img src="{% path object, 'admin' %}" class="img-responsive  center-block"/>
                                         {% else %}
                                             <i class="{{ get_file_icon(object.getMetadataValue('filename')) }}"></i>
                                         {% endif %}
