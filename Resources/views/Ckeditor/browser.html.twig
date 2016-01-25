@@ -240,7 +240,23 @@ file that was distributed with this source code.
                             {% endif %}
 
                             <div class="media-box">
-                                <div id="context-menu-{{ object.id }}">
+                                <div class="zero-clipboard">
+                                    <div class="btn-clipboard btn-clipboard-left">
+                                        <a href="{{ previewLink }}"
+                                                {% if previewType == 'iframe' %}
+                                                    data-featherlight-iframe-width="{{ iframeWidth }}"
+                                                    data-featherlight-iframe-height="{{ iframeHeight }}"
+                                                {% endif %}
+                                           data-featherlight-variant="initcms-featherlight"
+                                           data-featherlight="{{ previewType }}"
+                                           class="image-preview-link" title="{{ object.name }}">
+                                            <i class="glyphicon glyphicon-zoom-in"></i>
+                                        </a>
+                                    </div>
+                                    <div class="btn-clipboard btn-clipboard-right">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                           aria-haspopup="true" aria-expanded="false">Actions <span
+                                                    class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu" >
                                         <li>
                                             <a href="{{ path(path, {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"  tabindex="-1"
@@ -259,22 +275,14 @@ file that was distributed with this source code.
                                         {% endif %}
                                     </ul>
                                 </div>
+                                </div>
                                 <div class="thumbnail context">
                                     <div class="media-element" data-toggle="context" data-target="#context-menu-{{ object.id }}">
-                                        <a href="{{ previewLink }}"
-                                            {% if previewType == 'iframe' %}
-                                                data-featherlight-iframe-width="{{ iframeWidth }}"
-                                                data-featherlight-iframe-height="{{ iframeHeight }}"
-                                            {% endif %}
-                                           data-featherlight-variant="initcms-featherlight"
-                                           data-featherlight="{{ previewType }}"
-                                           class="image-preview-link" title="{{ object.name }}">
                                         {% if object.width is defined and object.width %}
                                                 <img src="{% path object, 'reference' %}" class="img-responsive" height="120" />
                                         {% else %}
                                             <i class="{{ get_file_icon(object.getMetadataValue('filename')) }}"></i>
                                         {% endif %}
-                                        </a>
                                     </div>
                                     <div class="media-title small" data-toggle="context" data-target="#context-menu-{{ object.id }}">
                                         <a href="{{ path(path, {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"

@@ -12,3 +12,4 @@ imports:
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/lexik_translation.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/ibrows_sonata_translation.yml }
     - { resource: @NetworkingInitCmsBundle/Resources/config/cms/ivory_ck_editor.yml }
+    - { resource: @NetworkingInitCmsBundle/Resources/config/cms/oneuploader.yml }

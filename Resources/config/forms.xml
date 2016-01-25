@@ -18,7 +18,12 @@
         </service>
 
         <service id="networking_init_cms.form.type.printmedia" class="Networking\InitCmsBundle\Form\Type\MediaPrintType">
+            <call method="setMediaManager"><argument type="service" id="sonata.media.admin.media.manager"/> </call>
             <tag name="form.type" alias="networking_type_mediaprint"/>
+        </service>
+
+        <service id="networking_init_cms.form.type.media_preview" class="Networking\InitCmsBundle\Form\Type\MediaPreviewType">
+            <tag name="form.type" alias="networking_type_media_preview"/>
         </service>
 
         <service id="networking_init_cms.form.type.iconradio" class="Networking\InitCmsBundle\Form\Type\IconradioType">

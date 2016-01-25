@@ -10,14 +10,16 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
-use Sonata\AdminBundle\Datagrid\ListMapper;
+use Gaufrette\Util;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Admin\AdminInterface;
-use Knp\Menu\ItemInterface as MenuItemInterface;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
+use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
+use Sonata\MediaBundle\Provider\FileProvider;
+use Sonata\MediaBundle\Provider\MediaProviderInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class MediaAdmin
@@ -47,6 +49,18 @@ abstract class MediaAdmin extends Admin
      */
     protected $localisedMediaProviders = array('sonata.media.provider.file');
 
+    /**
+     * Default values to the datagrid.
+     *
+     * @var array
+     */
+    protected $datagridValues = array(
+        '_page'       => 1,
+        '_per_page'   => 50,
+        '_sort_order' => 'DESC',
+        '_sort_by' => 'createdAt'
+    );
+
 
     /**
      * Set the language paramenter to contain a list of languages most likely
@@ -59,6 +73,13 @@ abstract class MediaAdmin extends Admin
         $this->languages = $languages;
     }
 
+    /**
+     * @return Array
+     */
+    public function getTrackedActions()
+    {
+        return $this->trackedActions;
+    }
 
     /**
      * @param $trackedActions
@@ -69,14 +90,6 @@ abstract class MediaAdmin extends Admin
         $this->trackedActions = $trackedActions;
 
         return $this;
-    }
-
-    /**
-     * @return Array
-     */
-    public function getTrackedActions()
-    {
-        return $this->trackedActions;
     }
 
     /**
@@ -111,13 +124,260 @@ abstract class MediaAdmin extends Admin
         );
 
         $collection->add(
-            'init_ckeditor_upload_image',
+            '
+            ',
             'init_ckeditor_upload_image',
             array(
                 '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
                 'type' => 'image'
             )
         );
+
+        $collection->add(
+            'refresh_list',
+            'refresh_list',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:refreshList',
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildDatagrid()
+    {
+        if ($this->datagrid) {
+            $this->datagrid = null;
+            $this->filterFieldDescriptions = array();
+        }
+
+
+
+        $filterParameters = $this->getFilterParameters();
+
+        $persistentParameters = $this->getPersistentParameters();
+        $context = $persistentParameters['context'];
+        $provider = $persistentParameters['provider'];
+
+
+        if ($context && array_key_exists('context', $filterParameters)) {
+            if ($filterParameters['context']['value'] != $context) {
+                $filterParameters['context']['value'] = $context;
+                $filterParameters['_page'] = 1;
+            }
+        }else{
+            $filterParameters['context'] = array('value' => $persistentParameters['context']);
+        }
+
+
+        if ($provider && array_key_exists('providerName', $filterParameters)) {
+            if ($filterParameters['providerName']['value'] != $provider) {
+                $filterParameters['providerName']['value'] = $provider;
+                $filterParameters['_page'] = 1;
+            }
+        }elseif($provider){
+            $filterParameters['providerName']['value'] = $provider;
+            $filterParameters['_page'] = 1;
+        }
+        else{
+            $filterParameters['providerName'] = array('value' => $persistentParameters['provider']);
+        }
+
+        $this->request->getSession()->set($this->getCode().'.filter.parameters', $filterParameters);
+
+        // transform _sort_by from a string to a FieldDescriptionInterface for the datagrid.
+        if (isset($filterParameters['_sort_by']) && is_string($filterParameters['_sort_by'])) {
+            if ($this->hasListFieldDescription($filterParameters['_sort_by'])) {
+                $filterParameters['_sort_by'] = $this->getListFieldDescription($filterParameters['_sort_by']);
+            } else {
+                $filterParameters['_sort_by'] = $this->getModelManager()->getNewFieldDescriptionInstance(
+                    $this->getClass(),
+                    $filterParameters['_sort_by'],
+                    array()
+                );
+
+                $this->getListBuilder()->buildField(null, $filterParameters['_sort_by'], $this);
+            }
+        }
+
+        // initialize the datagrid
+        $this->datagrid = $this->getDatagridBuilder()->getBaseDatagrid($this, $filterParameters);
+
+        $this->datagrid->getPager()->setMaxPageLinks($this->maxPageLinks);
+
+        $mapper = new DatagridMapper($this->getDatagridBuilder(), $this->datagrid, $this);
+
+
+        // build the datagrid filter
+        $this->configureDatagridFilters($mapper, $context, $provider);
+
+        // ok, try to limit to add parent filter
+        if ($this->isChild() && $this->getParentAssociationMapping() && !$mapper->has(
+                $this->getParentAssociationMapping()
+            )
+        ) {
+            $mapper->add(
+                $this->getParentAssociationMapping(),
+                null,
+                array(
+                    'field_type' => 'sonata_type_model_reference',
+                    'field_options' => array(
+                        'model_manager' => $this->getModelManager()
+                    ),
+                    'operator_type' => 'hidden'
+                )
+            );
+        }
+
+        foreach ($this->getExtensions() as $extension) {
+            $extension->configureDatagridFilters($mapper, $context);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '', $provider = '')
+    {
+
+        $datagridMapper
+            ->add('name', 'networking_init_cms_simple_string')
+            ->add('tags')
+            ->add('authorName', null, array('hidden' => true));
+
+        $datagridMapper->add(
+            'context',
+            'networking_init_cms_simple_string',
+            array('field_type' => 'hidden', 'label_render' => false)
+        );
+
+        $datagridMapper->add(
+            'providerName',
+            'networking_init_cms_simple_string',
+            array('field_type' => 'hidden', 'label_render' => false)
+        );
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBatchActions()
+    {
+        if ($this->request && $this->request->get('pcode') == '') {
+            return parent::getBatchActions();
+        }
+
+        return array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExportFormats()
+    {
+        if ($this->request->get('pcode') == '') {
+            return parent::getExportFormats();
+        }
+
+        return array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generateUrl($name, array $parameters = array(), $absolute = false)
+    {
+        try {
+            if ($this->getRequest()->get('pcode')) {
+                $parameters['pcode'] = $this->getRequest()->get('pcode');
+            }
+        } catch (\Exception $e) {
+            //do nothing
+        }
+
+
+        return parent::generateUrl($name, $parameters, $absolute);
+    }
+
+    /**
+     * @param array $providers
+     */
+    public function setLocalisedMediaProviders(array $providers)
+    {
+        $this->localisedMediaProviders = $providers;
+    }
+
+    /**
+     * @param string $name
+     * @return null|string|void
+     */
+    public function getTemplate($name)
+    {
+        if ($name === 'edit' && is_null($this->getSubject()->getId()) && !$this->request->get('pcode')) {
+            $provider = $this->pool->getProvider($this->request->get('provider'));
+            if ($provider instanceof FileProvider) {
+                return 'NetworkingInitCmsBundle:MediaAdmin:multifileupload_jquery.html.twig';
+            }
+        }
+
+        return parent::getTemplate($name);
+    }
+
+    /**
+     * @param mixed $media
+     * @return mixed|void
+     */
+    public function prePersist($media)
+    {
+        if($checksum = $this->getChecksum($media)){
+            $media->setMd5File($checksum);
+        }
+
+        return parent::prePersist($media);
+    }
+
+    /**
+     * @param $media
+     * @return string
+     */
+    public function getChecksum($media)
+    {
+        if($media->getBinaryContent() instanceof UploadedFile){
+            return Util\Checksum::fromFile($media->getBinaryContent()->getPathName());
+        }
+        return false;
+    }
+
+    /**
+     * @param mixed $media
+     * @return mixed|void
+     */
+    public function preUpdate($media)
+    {
+        if($checksum = $this->getChecksum($media)){
+            $media->setMd5File($checksum);
+        }
+        return parent::preUpdate($media);
+    }
+
+    /**
+     * @param $media
+     * @return object
+     */
+    public function checkForDuplicate($media, $checksum)
+    {
+        $duplicate = $this->getModelManager()->findOneBy(
+            $this->getClass(),
+            array(
+                'context' => $media->getContext(),
+                'md5File' => $checksum
+            )
+        );
+
+        return $duplicate;
+
     }
 
     /**
@@ -134,55 +394,23 @@ abstract class MediaAdmin extends Admin
 
         if (!$media || !$media->getProviderName()) {
             return;
-
-
         }
 
         $formMapper->getFormBuilder()->addModelTransformer(
             new ProviderDataTransformer($this->pool, $this->getClass()),
             true
         );
+
         $provider = $this->pool->getProvider($media->getProviderName());
 
-
         if ($media->getId()) {
-            $provider->buildEditForm($formMapper);
+            $this->buildEditForm($formMapper, $provider);
         } else {
             $provider->buildCreateForm($formMapper);
         }
 
-        if ($media->getId() && ($media->getProviderName() == 'sonata.media.provider.image' || $media->getProviderName(
-                ) == 'sonata.media.provider.youtube')
-        ) {
 
-            $formMapper->remove('binaryContent', 'file');
-            if ($media->getProviderName() == 'sonata.media.provider.youtube') {
-                $formMapper->add(
-                    'image',
-                    'networking_type_mediaprint',
-                    array('required' => false, 'label' => 'form.label_current_video')
-                );
-                $formMapper->add(
-                    'binaryContent',
-                    'text',
-                    array('required' => false, 'label' => 'form.label_binary_content_youtube_new')
-                );
-            } else {
-                $formMapper->add(
-                    'image',
-                    'networking_type_mediaprint',
-                    array('required' => false)
-                );
-
-                $formMapper->add(
-                    'binaryContent',
-                    'file',
-                    array('required' => false, 'label' => 'form.label_binary_content_new')
-                );
-            }
-        }
-
-        if (in_array($media->getProviderName(), $this->localisedMediaProviders)) {
+        if (in_array($provider->getName(), $this->localisedMediaProviders)) {
             $formMapper->add(
                 'locale',
                 'choice',
@@ -192,8 +420,7 @@ abstract class MediaAdmin extends Admin
             );
         }
 
-
-        if ($this->getSubject() && $this->getSubject()->getId()) {
+        if ($media->getId()) {
             $formMapper->add(
                 'tags',
                 'sonata_type_model',
@@ -232,204 +459,40 @@ abstract class MediaAdmin extends Admin
     }
 
     /**
-     * {@inheritdoc}
+     * @param FormMapper $formMapper
+     * @param MediaProviderInterface $provider
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function buildEditForm(FormMapper $formMapper, MediaProviderInterface $provider)
     {
-        $listMapper
-            ->addIdentifier(
-                'name',
-                'string',
-                array(
-                    'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig',
-                )
-            )
-            ->add('createdAt', 'string', array('label' => 'label.created_at'))
-            ->add('size', 'string', array('label' => 'label.size'))
-        ;
+        $provider->buildEditForm($formMapper);
 
-        if ($this->request && $this->request->get('pcode') == '') {
-            $listMapper->add(
-                '_action',
-                'actions',
-                array(
-                    'actions' => array(
-                        'show' => array(),
-                        'edit' => array(),
-                        'delete' => array()
-                    )
-                )
-            );
-        }
+        if ($formMapper->get('binaryContent')) {
+            /** @var \Symfony\Component\Form\FormBuilder $formBuilder */
+            $field = $formMapper->get('binaryContent');
+            $options = $field->getOptions();
+            $label = "form.label_binary_content_new";
+            $providerName = $provider->getName();
 
-    }
+            if ($providerName == 'sonata.media.provider.image' || $providerName == 'sonata.media.provider.youtube') {
+                $previewImageLabel = null;
+                $label = "form.label_binary_content_image_new";
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '')
-    {
+                if ($providerName == 'sonata.media.provider.youtube') {
+                    $previewImageLabel = 'form.label_current_video';
+                    $label = "form.label_binary_content_youtube_new";
+                }
 
-        $datagridMapper
-            ->add('name', 'networking_init_cms_simple_string')
-            ->add('tags')
-            ->add('authorName', null, array('hidden' => true));
-
-        if ($context) {
-            $datagridMapper->add(
-                'context',
-                'networking_init_cms_simple_string',
-                array('field_type' => 'hidden', 'label_render' => false)
-            );
-
-            $persistedParams = $this->getPersistentParameters();
-            if (array_key_exists('context', $persistedParams) && $persistedParams['context'] == $context) {
-                $datagridMapper->add(
-                    'providerName',
-                    'networking_init_cms_simple_string',
-                    array('field_type' => 'hidden', 'label_render' => false)
+                $formMapper->remove('binaryContent');
+                $formMapper->add(
+                    'self',
+                    'networking_type_media_preview',
+                    array('required' => false, 'label' => $previewImageLabel, 'provider' => $providerName)
                 );
-
             }
+
+            $options['label'] = $label;
+            $formMapper->add('binaryContent', $field->getType()->getName(), $options);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDatagrid($context = '')
-    {
-        $this->buildDatagrid($context);
-
-        return $this->datagrid;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildDatagrid($context = '')
-    {
-        if ($this->datagrid) {
-            $this->datagrid = null;
-            $this->filterFieldDescriptions = array();
-        }
-
-        $filterParameters = $this->getFilterParameters();
-
-
-        if ($context && array_key_exists('context', $filterParameters)) {
-            if ($filterParameters['context']['value'] != $context) {
-                $filterParameters['_page'] = 1;
-            }
-        }
-
-
-        // transform _sort_by from a string to a FieldDescriptionInterface for the datagrid.
-        if (isset($filterParameters['_sort_by']) && is_string($filterParameters['_sort_by'])) {
-            if ($this->hasListFieldDescription($filterParameters['_sort_by'])) {
-                $filterParameters['_sort_by'] = $this->getListFieldDescription($filterParameters['_sort_by']);
-            } else {
-                $filterParameters['_sort_by'] = $this->getModelManager()->getNewFieldDescriptionInstance(
-                    $this->getClass(),
-                    $filterParameters['_sort_by'],
-                    array()
-                );
-
-                $this->getListBuilder()->buildField(null, $filterParameters['_sort_by'], $this);
-            }
-        }
-
-        // initialize the datagrid
-        $this->datagrid = $this->getDatagridBuilder()->getBaseDatagrid($this, $filterParameters);
-
-        $this->datagrid->getPager()->setMaxPageLinks($this->maxPageLinks);
-
-        $mapper = new DatagridMapper($this->getDatagridBuilder(), $this->datagrid, $this);
-
-
-        // build the datagrid filter
-        $this->configureDatagridFilters($mapper, $context);
-
-        // ok, try to limit to add parent filter
-        if ($this->isChild() && $this->getParentAssociationMapping() && !$mapper->has(
-                $this->getParentAssociationMapping()
-            )
-        ) {
-            $mapper->add(
-                $this->getParentAssociationMapping(),
-                null,
-                array(
-                    'field_type' => 'sonata_type_model_reference',
-                    'field_options' => array(
-                        'model_manager' => $this->getModelManager()
-                    ),
-                    'operator_type' => 'hidden'
-                )
-            );
-        }
-
-        foreach ($this->getExtensions() as $extension) {
-            $extension->configureDatagridFilters($mapper, $context);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPersistentParameters()
-    {
-        if (!$this->hasRequest()) {
-            return array();
-        }
-
-        if ($this->getSubject()) {
-            $this->getRequest()->query->set('context', $this->getSubject()->getContext());
-        }
-
-        $contexts = $this->pool->getContexts();
-        reset($contexts);
-        $contextName = key($contexts);
-
-
-        $context = $this->getRequest()->get('context', $contextName);
-        $providers = $this->pool->getProvidersByContext($context);
-        $provider = $this->getRequest()->get('provider');
-
-        // if the context has only one provider, set it into the request
-        // so the intermediate provider selection is skipped
-        if (count($providers) == 1 && null === $provider) {
-            $provider = array_shift($providers)->getName();
-            $this->getRequest()->query->set('provider', $provider);
-        }
-
-        return array(
-            'provider' => $provider,
-            'context' => $context,
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBatchActions()
-    {
-        if ($this->request && $this->request->get('pcode') == '') {
-            return parent::getBatchActions();
-        }
-
-        return array();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExportFormats()
-    {
-        if ($this->request->get('pcode') == '') {
-            return parent::getExportFormats();
-        }
-
-        return array();
     }
 
     /**
@@ -453,22 +516,81 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function generateUrl($name, array $parameters = array(), $absolute = false)
+    protected function configureListFields(ListMapper $listMapper)
     {
-        try {
-            if ($this->getRequest()->get('pcode')) {
-                $parameters['pcode'] = $this->getRequest()->get('pcode');
+        $listMapper
+            ->addIdentifier(
+                'name',
+                'string',
+                array(
+                    'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig',
+                )
+            )
+            ->add('createdAt', 'string', array('label' => 'label.created_at'))
+            ->add('size', 'string', array('label' => 'label.size'));
+
+        if ($this->request && $this->request->get('pcode') == '') {
+            $listMapper->add(
+                '_action',
+                'actions',
+                array(
+                    'actions' => array(
+                        'show' => array(),
+                        'edit' => array(),
+                        'delete' => array()
+                    )
+                )
+            );
+        }
+
+    }
+
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPersistentParameters()
+    {
+        if (!$this->hasRequest()) {
+            return array();
+        }
+
+        $filterParameters = $this->getFilterParameters();
+        $context   = $this->getRequest()->get('context');
+        $provider  = $this->getRequest()->get('provider');
+
+        if(is_array($context) && array_key_exists('value', $context)){
+            $context = $context['value'];
+        }
+
+        if(!$provider && array_key_exists('providerName', $filterParameters)){
+            if(!$provider && !$context){
+                $provider = $filterParameters['providerName']['value'];
             }
-        } catch (\Exception $e) {
-            //do nothing
+        }
+
+        if(!$context &&  array_key_exists('context', $filterParameters)){
+            $context = $filterParameters['context']['value'];
+        }elseif(!$context){
+            $context = $this->pool->getDefaultContext();
         }
 
 
-        return parent::generateUrl($name, $parameters, $absolute);
-    }
 
-    public function setLocalisedMediaProviders(array $providers)
-    {
-        $this->localisedMediaProviders = $providers;
+        $providers = $this->pool->getProvidersByContext($context);
+
+
+        // if the context has only one provider, set it into the request
+        // so the intermediate provider selection is skipped
+        if (count($providers) == 1 && null === $provider) {
+            $provider = array_shift($providers)->getName();
+            $this->getRequest()->query->set('provider', $provider);
+        }
+
+        return array(
+            'provider' => $provider,
+            'context'  => $context,
+        );
     }
 }

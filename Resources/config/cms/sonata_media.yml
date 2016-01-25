@@ -19,7 +19,6 @@ sonata_media:
                 small: { width: 100 , quality: 70}
                 medium: { width: 400, height: 300 , quality: 70}
                 big:   { width: 800, quality: 70}
-                admin: { width: 100, quality: 70}
     cdn:
         server:
             path: /uploads/media # http://media.sonata-project.org/

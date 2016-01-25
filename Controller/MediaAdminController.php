@@ -247,32 +247,57 @@ class MediaAdminController extends SonataMediaAdminController
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $galleryListMode = $request->get('pcode') ? true : false;
 
-        /** @var \Sonata\MediaBundle\Provider\Pool $mediaPool */
-        $mediaPool = $this->container->get('sonata.media.pool');
-        $contexts = $mediaPool->getContexts();
+        $datagrid = $this->admin->getDatagrid();
 
-        reset($contexts);
-        $contextName = key($contexts);
-
-        $datagrid = $this->admin->getDatagrid($request->get('context', $contextName));
-        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
-        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+        $persistentParameters = $this->admin->getPersistentParameters();
 
         $formView = $datagrid->getForm()->createView();
 
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
-
         return $this->render(
             $this->admin->getTemplate('list'),
             array(
+                'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
+                    $request->get('context', $persistentParameters['context'])
+                ),
                 'action' => 'list',
                 'form' => $formView,
                 'datagrid' => $datagrid,
                 'galleryListMode' => $galleryListMode,
-                'csrf_token' => $this->getCsrfToken('sonata.batch')
-
+                'csrf_token' => $this->getCsrfToken('sonata.batch'),
+                'show_actions' => true
             )
         );
     }
+
+    /**
+     * @return Response
+     */
+    public function refreshListAction()
+    {
+        if (false === $this->admin->isGranted('LIST')) {
+            throw new AccessDeniedException();
+        }
+        /** @var Request $request */
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $galleryListMode = $request->get('pcode') ? true : false;
+        $datagrid = $this->admin->getDatagrid();
+
+        $persistentParameters = $this->admin->getPersistentParameters();
+
+        return $this->render(
+            'NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig',
+            array(
+                'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
+                    $request->get('context', $persistentParameters['context'])
+                ),
+                'action' => 'list',
+                'datagrid' => $datagrid,
+                'galleryListMode' => $galleryListMode,
+                'show_actions' => true
+            )
+        );
+    }
+
 }

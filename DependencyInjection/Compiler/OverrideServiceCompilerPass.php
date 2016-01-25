@@ -42,6 +42,12 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
             $definition->setClass('Networking\InitCmsBundle\Builder\MongoDBListBuilder');
         }
 
+        if ($container->hasDefinition('sonata.media.provider.youtube')) {
+            $definition = $container->getDefinition('sonata.media.provider.youtube');
+
+            $definition->setClass('Networking\InitCmsBundle\Provider\YouTubeProvider');
+        }
+
         $definition = $container->getDefinition('sonata.admin.pool');
         $definition->setClass('Networking\InitCmsBundle\Admin\Pool');
     }

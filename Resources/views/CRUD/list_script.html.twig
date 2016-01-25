@@ -133,8 +133,8 @@
             $('#filter_toggle').toggleClass('filter-open');
         });
         $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
-        $('.dialog-link').on('click', createAjaxDialog);
-        $('.batch-dialog-link').on('click', createBatchDialog);
+        $('body').on('click', '.dialog-link', createAjaxDialog);
+        $('body').on('click', '.batch-dialog-link', createBatchDialog);
         initializeDialog();
 
 

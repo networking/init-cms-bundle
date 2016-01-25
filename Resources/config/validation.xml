@@ -28,7 +28,6 @@
         </property>
     </class>
 
-
     <class name="FOS\UserBundle\Model\User">
         <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
             <option name="fields">usernameCanonical</option>

@@ -43,6 +43,11 @@ class Media extends BaseMedia
     protected $galleryHasMedias;
 
     /**
+     * @var string
+     */
+    protected $md5File;
+
+    /**
      *
      */
     public function __construct()
@@ -58,6 +63,17 @@ class Media extends BaseMedia
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setBinaryContent($binaryContent)
+    {
+        $this->previousProviderReference = $this->providerReference;
+        $this->providerReference = null;
+        $this->binaryContent = $binaryContent;
+        $this->setMd5File($binaryContent);
     }
 
     /**
@@ -130,6 +146,29 @@ class Media extends BaseMedia
      */
     public function setImage($image)
     {
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMd5File()
+    {
+        return $this->md5File;
+    }
+
+    /**
+     * @param string $md5File
+     */
+    public function setMd5File($md5File)
+    {
+        $this->md5File = $md5File;
+    }
+
+    /**
+     * @return $this
+     */
+    public function getSelf(){
         return $this;
     }
 }

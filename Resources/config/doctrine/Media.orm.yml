@@ -11,6 +11,11 @@ Networking\InitCmsBundle\Entity\Media:
       type: string
       length: 6
       nullable: true
+    md5File:
+      column: md5_file
+      type: string
+      length: 255
+      nullable: true
   oneToMany:
     galleryHasMedias:
       targetEntity: Networking\InitCmsBundle\Entity\GalleryHasMedia

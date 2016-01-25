@@ -10,15 +10,15 @@
 
 namespace Networking\InitCmsBundle\Twig\Extension;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
+use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Sonata\AdminBundle\Admin\AdminInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormView;
 
 /**
@@ -73,31 +73,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         return 'networking_init_cms_helper';
     }
 
-
-    /**
-     * Gets a service.
-     *
-     * @param string $id The service identifier
-     *
-     * @return object The associated service
-     */
-    public function getService($id)
-    {
-        return $this->container->get($id);
-    }
-
-    /**
-     * Get parameters from the service container
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function getParameter($name)
-    {
-        return $this->container->getParameter($name);
-    }
-
     /**
      * Returns the token parser instance to add to the existing list.
      *
@@ -150,7 +125,9 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             new \Twig_SimpleFunction('ckeditor_is_rendered', array($this, 'ckeditorIsRendered')),
             new \Twig_SimpleFunction('content_css', array($this, 'getContentCss')),
             new \Twig_SimpleFunction('return_config_value', array($this, 'returnConfigValue')),
-            new \Twig_SimpleFunction('get_file_icon', array($this, 'getFileIcon'))
+            new \Twig_SimpleFunction('get_file_icon', array($this, 'getFileIcon')),
+            new \Twig_SimpleFunction('crop_middle', array($this, 'cropMiddle')),
+            new \Twig_SimpleFunction('human_readable_filesize', array($this, 'getHumanReadableSize'))
         );
     }
 
@@ -191,6 +168,18 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
 
         return $this->getService('templating')->render($template, $options);
+    }
+
+    /**
+     * Gets a service.
+     *
+     * @param string $id The service identifier
+     *
+     * @return object The associated service
+     */
+    public function getService($id)
+    {
+        return $this->container->get($id);
     }
 
     /**
@@ -338,6 +327,70 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
+     * @param $template
+     * @return mixed
+     */
+    protected function getZonesByTemplate($template)
+    {
+        $templates = $this->getParameter('networking_init_cms.page.templates');
+
+        $zones = $templates[$template]['zones'];
+
+        foreach ($zones as $key => $zone) {
+            $temp = array_map(array($this, 'jsString'), $zone['restricted_types']);
+            $zones[$key]['restricted_types'] = '[' . implode(',', $temp) . ']';
+
+            $zones[$key]['restricted_types'] = json_encode($zone['restricted_types']);
+        }
+
+        return $zones;
+
+    }
+
+    /**
+     * Get parameters from the service container
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getParameter($name)
+    {
+        return $this->container->getParameter($name);
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getCurrentTemplate()
+    {
+        $request = $this->getService('request');
+        $pageId = (!$request->get('objectId')) ? $request->get('id') : $request->get('objectId');
+
+        $template = null;
+
+
+        /** @var $pageManager PageManagerInterface */
+        $pageManager = $this->getService('networking_init_cms.page_manager');
+
+
+        if ($pageId) {
+            $page = $pageManager->findById($pageId);
+            $template = $page->getTemplateName();
+        } else {
+            $templates = $this->getParameter('networking_init_cms.page.templates');
+            $firstTemplate = reset($templates);
+            $template = key($firstTemplate);
+        }
+
+        if (is_null($template)) {
+            return array('Please Select Template first');
+        }
+
+        return $template;
+    }
+
+    /**
      * @return mixed
      */
     public function getContentTypeOptions()
@@ -359,7 +412,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         \Sonata\AdminBundle\Admin\AdminInterface $admin,
         $size = 'small',
         $active = false
-    ) {
+    )
+    {
         $state = $active ? '_active' : '';
         $imagePath = '/bundles/networkinginitcms/img/icons/icon_blank_' . $size . $state . '.png';
 
@@ -472,6 +526,55 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
+     * Fetch the variables from the given content type object
+     *
+     * @param  $object
+     * @param $fieldName
+     * @param  null $method
+     * @return mixed
+     * @throws \Sonata\AdminBundle\Exception\NoValueException
+     */
+    public function getFieldValue($object, $fieldName, $method = null)
+    {
+
+        $getters = array();
+        // prefer method name given in the code option
+        if ($method) {
+            $getters[] = $method;
+        }
+
+        $camelizedFieldName = self::camelize($fieldName, true);
+        $getters[] = 'get' . $camelizedFieldName;
+        $getters[] = 'is' . $camelizedFieldName;
+
+        foreach ($getters as $getter) {
+            if (method_exists($object, $getter)) {
+                return call_user_func(array($object, $getter));
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Camelize a string
+     *
+     * @static
+     * @param $str
+     * @param bool $firstToCapital
+     * @return mixed
+     */
+    public static function camelize($str, $firstToCapital = false)
+    {
+        if ($firstToCapital) {
+            $str[0] = strtoupper($str[0]);
+        }
+        return preg_replace_callback('/_([a-z])/', function ($s) {
+            return strtoupper($s[1]);
+        }, $str);
+    }
+
+    /**
      * @return mixed
      */
     private function getCurrentLocale()
@@ -521,76 +624,23 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
-     * @return array|mixed
-     */
-    public function getCurrentTemplate()
-    {
-        $request = $this->getService('request');
-        $pageId = (!$request->get('objectId')) ? $request->get('id') : $request->get('objectId');
-
-        $template = null;
-
-
-        /** @var $pageManager PageManagerInterface */
-        $pageManager = $this->getService('networking_init_cms.page_manager');
-
-
-        if ($pageId) {
-            $page = $pageManager->findById($pageId);
-            $template = $page->getTemplateName();
-        } else {
-            $templates = $this->getParameter('networking_init_cms.page.templates');
-            $firstTemplate = reset($templates);
-            $template = key($firstTemplate);
-        }
-
-        if (is_null($template)) {
-            return array('Please Select Template first');
-        }
-
-        return $template;
-    }
-
-    /**
+     * Gets a list of forms sorted to a particular zone
+     *
+     * @param $formChildren
+     * @param $zone
      * @return array
      */
-    public function getZoneNames()
+    public function getSubFormsByZone($formChildren, $zone)
     {
         $zones = array();
 
-        $template = $this->getCurrentTemplate();
-
-        foreach ($this->getZonesByTemplate($template) as $zone) {
-            $zones[] = $zone['name'];
+        foreach ($formChildren as $subForms) {
+            if ($this->getFormFieldZone($subForms) == $zone) {
+                $zones[] = $subForms;
+            }
         }
 
         return $zones;
-    }
-
-    /**
-     * @param $template
-     * @return mixed
-     */
-    protected function getZonesByTemplate($template)
-    {
-        $templates = $this->getParameter('networking_init_cms.page.templates');
-
-        $zones = $templates[$template]['zones'];
-
-        foreach ($zones as $key => $zone) {
-            $temp = array_map(array($this, 'jsString'), $zone['restricted_types']);
-            $zones[$key]['restricted_types'] = '[' . implode(',', $temp) . ']';
-
-            $zones[$key]['restricted_types'] = json_encode($zone['restricted_types']);
-        }
-
-        return $zones;
-
-    }
-
-    protected function jsString($s)
-    {
-        return '"' . addcslashes($s, "\0..\37\"\\") . '"';
     }
 
     /**
@@ -615,20 +665,16 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
-     * Gets a list of forms sorted to a particular zone
-     *
-     * @param $formChildren
-     * @param $zone
      * @return array
      */
-    public function getSubFormsByZone($formChildren, $zone)
+    public function getZoneNames()
     {
         $zones = array();
 
-        foreach ($formChildren as $subForms) {
-            if ($this->getFormFieldZone($subForms) == $zone) {
-                $zones[] = $subForms;
-            }
+        $template = $this->getCurrentTemplate();
+
+        foreach ($this->getZonesByTemplate($template) as $zone) {
+            $zones[] = $zone['name'];
         }
 
         return $zones;
@@ -655,7 +701,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $object,
         FormView $formView,
         $translationDomain = null
-    ) {
+    )
+    {
 
         /** @var $fieldDescription \Sonata\DoctrineORMAdminBundle\Admin\FieldDescription */
         $fieldDescription = $formView->vars['sonata_admin']['field_description'];
@@ -705,9 +752,9 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             case 'datetime':
                 /** @var $date  \DateTime */
                 $date = $fieldDescription->getValue($object);
-                if($date){
+                if ($date) {
                     $value = $date->format('d.m.Y H:i');
-                }else{
+                } else {
                     $value = '';
                 }
                 break;
@@ -731,55 +778,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         );
 
         return $this->getService('templating')->render($template, $options);
-    }
-
-    /**
-     * Fetch the variables from the given content type object
-     *
-     * @param  $object
-     * @param $fieldName
-     * @param  null $method
-     * @return mixed
-     * @throws \Sonata\AdminBundle\Exception\NoValueException
-     */
-    public function getFieldValue($object, $fieldName, $method = null)
-    {
-
-        $getters = array();
-        // prefer method name given in the code option
-        if ($method) {
-            $getters[] = $method;
-        }
-
-        $camelizedFieldName = self::camelize($fieldName, true);
-        $getters[] = 'get' . $camelizedFieldName;
-        $getters[] = 'is' . $camelizedFieldName;
-
-        foreach ($getters as $getter) {
-            if (method_exists($object, $getter)) {
-                return call_user_func(array($object, $getter));
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Camelize a string
-     *
-     * @static
-     * @param $str
-     * @param bool $firstToCapital
-     * @return mixed
-     */
-    public static function camelize($str, $firstToCapital = false)
-    {
-        if($firstToCapital) {
-            $str[0] = strtoupper($str[0]);
-        }
-        return preg_replace_callback('/_([a-z])/', function($s){
-            return strtoupper($s[1]);
-        }, $str);
     }
 
     /**
@@ -822,6 +820,54 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
+     * Extracts an excerpt from the text surrounding the phrase with a number of characters on each side
+     * determined by radius.
+     *
+     * @param \Twig_Environment $env
+     * @param string $text String to search the phrase in
+     * @param string $phrase Phrase that will be searched for
+     * @param integer $radius The amount of characters that will be returned on each side of the founded phrase
+     * @param string $ellipsis Ending that will be appended
+     * @return string
+     */
+    public function excerpt(\Twig_Environment $env, $text, $phrase, $radius = 100, $ellipsis = '...')
+    {
+        if (empty($text) || empty($phrase)) {
+            return $this->truncate($env, $text, $radius * 2, $ellipsis);
+        }
+
+        $text = html_entity_decode($text, null, $env->getCharset());
+
+        $append = $prepend = $ellipsis;
+
+        $phraseLen = mb_strlen($phrase);
+        $textLen = mb_strlen($text);
+
+        $pos = mb_strpos(mb_strtolower($text, $env->getCharset()), mb_strtolower($phrase, $env->getCharset()));
+
+        if ($pos === false) {
+            return mb_substr($text, 0, $radius, $env->getCharset()) . $ellipsis;
+        }
+
+        $startPos = $pos - $radius;
+        if ($startPos <= 0) {
+            $startPos = 0;
+            $prepend = '';
+        }
+
+        $endPos = $pos + $phraseLen + $radius;
+        if ($endPos >= $textLen) {
+            $endPos = $textLen;
+            $append = '';
+        }
+
+        $excerpt = mb_substr($text, $startPos, $endPos - $startPos, $env->getCharset());
+        $excerpt = $prepend . $excerpt . $append;
+
+        return $excerpt;
+    }
+
+    /**
      * Cuts a string to the length of $length and replaces the last characters
      * with the ellipsis if the text is longer than length.
      *
@@ -841,7 +887,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $ellipsis = '...',
         $exact = true,
         $html = false
-    ) {
+    )
+    {
 
         if ($html && $ellipsis == '...' && $env->getCharset() == 'UTF-8') {
             $ellipsis = "\xe2\x80\xa6";
@@ -852,7 +899,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         }
         $openTags = array();
         if ($html) {
-            $text = html_entity_decode($text, null,  $env->getCharset() );
+            $text = html_entity_decode($text, null, $env->getCharset());
             if (mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
             }
@@ -958,54 +1005,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     }
 
     /**
-     * Extracts an excerpt from the text surrounding the phrase with a number of characters on each side
-     * determined by radius.
-     *
-     * @param \Twig_Environment $env
-     * @param string $text String to search the phrase in
-     * @param string $phrase Phrase that will be searched for
-     * @param integer $radius The amount of characters that will be returned on each side of the founded phrase
-     * @param string $ellipsis Ending that will be appended
-     * @return string
-     */
-    public function excerpt(\Twig_Environment $env, $text, $phrase, $radius = 100, $ellipsis = '...')
-    {
-        if (empty($text) || empty($phrase)) {
-            return $this->truncate($env, $text, $radius * 2, $ellipsis);
-        }
-
-        $text = html_entity_decode($text, null,  $env->getCharset() );
-
-        $append = $prepend = $ellipsis;
-
-        $phraseLen = mb_strlen($phrase);
-        $textLen = mb_strlen($text);
-
-        $pos = mb_strpos(mb_strtolower($text, $env->getCharset()), mb_strtolower($phrase, $env->getCharset()));
-
-        if ($pos === false) {
-            return mb_substr($text, 0, $radius, $env->getCharset()) . $ellipsis;
-        }
-
-        $startPos = $pos - $radius;
-        if ($startPos <= 0) {
-            $startPos = 0;
-            $prepend = '';
-        }
-
-        $endPos = $pos + $phraseLen + $radius;
-        if ($endPos >= $textLen) {
-            $endPos = $textLen;
-            $append = '';
-        }
-
-        $excerpt = mb_substr($text, $startPos, $endPos - $startPos, $env->getCharset());
-        $excerpt = $prepend . $excerpt . $append;
-
-        return $excerpt;
-    }
-
-    /**
      * Highlights a given phrase in a text. You can specify any expression in highlighter that
      * may include the \1 expression to include the $phrase found.
      *
@@ -1023,7 +1022,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $format = '<span class="highlight">\1</span>',
         $html = false,
         $regex = "|%s|iu"
-    ) {
+    )
+    {
         if (empty($phrase)) {
             return $text;
         }
@@ -1062,33 +1062,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
         $request = $this->getService('request');
 
-        return $request->getBaseUrl().$page->getFullPath();
-
-    }
-
-    /**
-     * Shortcut to return the Doctrine Registry service.
-     *
-     * @return Registry
-     *
-     * @throws \LogicException If DoctrineBundle is not available
-     */
-    protected function getDoctrine()
-    {
-        $db_driver = $this->getParameter('networking_init_cms.db_driver');
-
-        switch ($db_driver) {
-            case 'orm':
-                return $this->getService('doctrine');
-                break;
-            case 'mongodb':
-                return $this->getService('doctrine_mongodb');
-                break;
-            default:
-                throw new \LogicException('cannot find doctrine for db_driver');
-                break;
-        }
-
+        return $request->getBaseUrl() . $page->getFullPath();
 
     }
 
@@ -1112,9 +1086,9 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      */
     public function ckeditorIsRendered()
     {
-        if($this->ckeditorRendered){
+        if ($this->ckeditorRendered) {
             return true;
-        }else{
+        } else {
             $this->ckeditorRendered = true;
             return false;
         }
@@ -1124,7 +1098,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      * Return the config Value
      */
     public function returnConfigValue($name)
-    {   return $this->getParameter($name);
+    {
+        return $this->getParameter($name);
     }
 
     /**
@@ -1138,12 +1113,12 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         /** @var \Ivory\CKEditorBundle\Model\ConfigManager $configManager */
         $configManager = $this->getService('ivory_ck_editor.config_manager');
 
-        if(is_null($configName)){
+        if (is_null($configName)) {
             $configName = $configManager->getDefaultConfig();
         }
 
         $configs = $configManager->getConfigs();
-        if(array_key_exists('contentsCss', $configs[$configName])){
+        if (array_key_exists('contentsCss', $configs[$configName])) {
             return $configs[$configName]['contentsCss'];
         }
 
@@ -1152,7 +1127,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
     /**
      * Guess which fontawesome icon to use
-     * 
+     *
      * @param $filename
      * @return string
      */
@@ -1160,7 +1135,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     {
         $parts = explode('.', $filename);
         $postfix = strtolower(end($parts));
-        switch($postfix){
+        switch ($postfix) {
             case 'doc':
             case 'docx':
                 $icon = 'fa-file-word-o';
@@ -1198,6 +1173,81 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         }
 
 
-        return 'fa '.$icon;
+        return 'fa ' . $icon;
+    }
+
+    /**
+     * @param $text
+     * @param $maxLength
+     * @param string $delimiter
+     * @return string
+     */
+    public function cropMiddle($text, $maxLength, $delimiter = '...')
+    {
+
+        // return text if it doesn't need to be cropped
+        if (!$text || strlen($text) <= $maxLength || !substr($text, 0)) {
+            return $text;
+        }
+
+
+        $substrLength = floor(($maxLength - strlen($delimiter)) / 2);
+
+        return substr($text, 0, $substrLength) . $delimiter . substr($text, -$substrLength);
+    }
+
+    /**
+     * @param $size
+     * @param null $unit
+     * @param int $decemals
+     * @return string
+     */
+    public function getHumanReadableSize($size, $unit = null, $decemals = 2) {
+        $byteUnits = array(' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB');
+        if (!is_null($unit) && !in_array($unit, $byteUnits)) {
+            $unit = null;
+        }
+        $extent = 1;
+        foreach ($byteUnits as $rank) {
+            if ((is_null($unit) && ($size < $extent <<= 10)) || ($rank == $unit)) {
+                break;
+            }
+        }
+        return number_format($size / ($extent >> 10), $decemals) . $rank;
+    }
+
+    /**
+     * @param $s
+     * @return string
+     */
+    protected function jsString($s)
+    {
+        return '"' . addcslashes($s, "\0..\37\"\\") . '"';
+    }
+
+    /**
+     * Shortcut to return the Doctrine Registry service.
+     *
+     * @return Registry
+     *
+     * @throws \LogicException If DoctrineBundle is not available
+     */
+    protected function getDoctrine()
+    {
+        $db_driver = $this->getParameter('networking_init_cms.db_driver');
+
+        switch ($db_driver) {
+            case 'orm':
+                return $this->getService('doctrine');
+                break;
+            case 'mongodb':
+                return $this->getService('doctrine_mongodb');
+                break;
+            default:
+                throw new \LogicException('cannot find doctrine for db_driver');
+                break;
+        }
+
+
     }
 }

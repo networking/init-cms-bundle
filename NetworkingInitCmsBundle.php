@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle;
 
+use Networking\InitCmsBundle\DependencyInjection\Compiler\AddProviderCompilerPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Networking\InitCmsBundle\DependencyInjection\Compiler\OverrideServiceCompilerPass;
@@ -29,6 +30,7 @@ class NetworkingInitCmsBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new OverrideServiceCompilerPass());
+        $container->addCompilerPass(new AddProviderCompilerPass());
     }
 
     /**

@@ -50,4 +50,8 @@ media:
     resource: '@SonataMediaBundle/Resources/config/routing/media.xml'
     prefix: /media
 
+oneup_uploader:
+    resource: .
+    type: uploader
+
 

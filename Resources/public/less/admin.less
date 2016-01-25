@@ -193,7 +193,7 @@ html {
   display: inline-block;
   height: 0;
   opacity: 1;
-  vertical-align: center;
+  vertical-align: middle;
   width: 0;
 }
 
@@ -204,7 +204,7 @@ html {
   display: inline-block;
   height: 0;
   opacity: 1;
-  vertical-align: center;
+  vertical-align: middle;
 
   width: 0;
 }
@@ -233,7 +233,7 @@ html {
 }
 
 .word-break {
-  word-break: break-word;
+  word-break: break-all;
 }
 
 .table-compact td.icons {
@@ -674,7 +674,7 @@ body.modal-open {
     width: 22px;
     text-align: center;
   }
-  .nav-custom li.first-level.active, {
+  .nav-custom li.first-level.active{
     background: #fff;
     padding: 6px 0px 6px 5px;
     border-top: 1px solid #efefef;
@@ -935,18 +935,20 @@ body.modal-open {
   }
 
   .media-element {
-    display: inline-block;
     height: 144px;
-    width: 144px;
+    display: flex;
+    align-items: center;
   }
 
-  .media-element i.fa {
-    font-size: 5em;
-    padding-top: 35px;
+  .media-element img {
+    -webkit-box-shadow: 1px 1px 1px 1px rgba(138,136,138,0.3);
+    -moz-box-shadow: 1px 1px 1px 1px rgba(138,136,138,0.3);
+    box-shadow: 1px 1px 1px 1px rgba(138,136,138,0.3);
+    padding: 2px;
   }
 
   .media-box {
-    width: 168px;
+    width: 218px;
     position: relative;
     min-height: 1px;
     padding-left: 7px;
@@ -959,7 +961,6 @@ body.modal-open {
     height: 210px;
     word-wrap: break-word;
     text-align: center;
-    background-color: rgba(125, 125, 125, 0.10);
   }
 
   .context-menu {
@@ -979,8 +980,8 @@ body.modal-open {
     overflow: hidden;
     height: 55px;
     position: relative;
-    line-height: 60px;
     color: #1c1c1c;
+    padding-top: 10px;
   }
   .media-title a {
     display: inline-block;
@@ -1234,4 +1235,32 @@ th.sonata-ba-list-field-header-order-asc.sonata-ba-list-field-order-active a:hov
 .featherlight.initcms-featherlight.featherlight-iframe .featherlight-content {
   padding: 25px 25px;
   min-width: initial;
+}
+.zero-clipboard {
+  position: relative;
+}
+
+.btn-clipboard {
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #767676;
+  cursor: pointer;
+  background-color: rgba(255,255,255,0.8);
+  border: 1px solid #e1e1e8;
+  border-radius: 0 4px 0 4px;
+}
+.btn-clipboard.btn-clipboard-right{
+  right: 0;
+}
+.btn-clipboard.btn-clipboard-left{
+  left: 0;
+  border-radius: 4px 0 4px 0;
+}
+.btn-clipboard.btn-clipboard-bottom {
+  top: 178px;
+  left: 0;
 }

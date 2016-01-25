@@ -35,7 +35,7 @@ class CkeditorAdminController extends BaseMediaAdminController
             throw new AccessDeniedException();
         }
 
-        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'));
+        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'), $this->admin->getPersistentParameter('provider'));
         $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
         $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
 
@@ -64,7 +64,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     /**
      * @param Request $request
      * @param string $type
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function uploadAction(Request $request, $type = 'image')
     {

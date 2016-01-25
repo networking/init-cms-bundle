@@ -465,6 +465,34 @@
                 <source>sonata.media.provider.file.description</source>
                 <target>Fügen Sie jede Art von Datei ein</target>
             </trans-unit>
+            <trans-unit id="upload_btn_edit">
+                <source>upload_btn_edit</source>
+                <target>Bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_cancel">
+                <source>upload_btn_cancel</source>
+                <target>Upload entfernen</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_cancel_all">
+                <source>upload_btn_cancel_all</source>
+                <target>Alle löschen</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_start">
+                <source>upload_btn_start</source>
+                <target>Hochladen beginnen</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_add_files">
+                <source>upload_btn_add_files</source>
+                <target>Dateien hinzufügen...</target>
+            </trans-unit>
+            <trans-unit id="dropdown_options">
+                <source>dropdown_options</source>
+                <target>Optionen</target>
+            </trans-unit>
+            <trans-unit id="upload_help_text">
+                <source>upload_help_text</source>
+                <target>Drop files or folders here or click to upload.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

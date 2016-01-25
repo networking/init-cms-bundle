@@ -395,11 +395,15 @@
             </trans-unit>
             <trans-unit id="form.label_binary_content_new">
                 <source>form.label_binary_content_new</source>
-                <target>New File</target>
+                <target>Replace File</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_image_new">
+                <source>form.label_binary_content_image_new</source>
+                <target>Replace Image</target>
             </trans-unit>
             <trans-unit id="form.label_binary_content_youtube_new">
                 <source>form.label_binary_content_youtube_new</source>
-                <target>New Youtube Link</target>
+                <target>Replace Youtube Link</target>
             </trans-unit>
             <trans-unit id="form.label_current_video">
                 <source>form.label_current_video</source>
@@ -460,6 +464,34 @@
             <trans-unit id="sonata.media.provider.file.description">
                 <source>sonata.media.provider.file.description</source>
                 <target>Add any type of file</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_edit">
+                <source>upload_btn_edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_cancel">
+                <source>upload_btn_cancel</source>
+                <target>Remove upload</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_cancel_all">
+                <source>upload_btn_cancel_all</source>
+                <target>Clear all</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_start">
+                <source>upload_btn_start</source>
+                <target>Start upload</target>
+            </trans-unit>
+            <trans-unit id="upload_btn_add_files">
+                <source>upload_btn_add_files</source>
+                <target>Add files...</target>
+            </trans-unit>
+            <trans-unit id="dropdown_options">
+                <source>dropdown_options</source>
+                <target>Options</target>
+            </trans-unit>
+            <trans-unit id="upload_help_text">
+                <source>upload_help_text</source>
+                <target>Drop files or folders here or click to upload.</target>
             </trans-unit>
         </body>
     </file>
