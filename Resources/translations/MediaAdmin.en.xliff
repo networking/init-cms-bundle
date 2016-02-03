@@ -64,7 +64,7 @@
             </trans-unit>
             <trans-unit id="admin_label_gallery">
                 <source>admin_label_gallery</source>
-                <target>Gallery</target>
+                <target>Galleries</target>
             </trans-unit>
             <trans-unit id="title_select_provider">
                 <source>title_select_provider</source>
