@@ -31,8 +31,8 @@
         "twbs/bootstrap": "v3.2.0",
         "symfony-cmf/routing-bundle": "1.1.0",
         "jms/serializer-bundle": "0.13",
-        "ibrows/sonata-admin-annotation-bundle": "1.2",
-        "ibrows/sonata-translation-bundle": "1.0.3",
+        "ibrows/sonata-admin-annotation-bundle": "2.*",
+        "ibrows/sonata-translation-bundle": "1.*",
         "knplabs/knp-paginator-bundle": "~2.4",
         "phpfastcache/phpfastcache": "3.0.*",
         "oneup/uploader-bundle": "~1.3"
