@@ -63,6 +63,12 @@ class FrontendPageController extends Controller
         /** @var PageSnapshotInterface $page */
         $page = $request->get('_content');
 
+        $template =  $request->get('_template');
+        if($template instanceof \Sensio\Bundle\FrameworkExtraBundle\Configuration\Template )
+        {
+            $template = $template->getTemplate();
+        }
+
         if($phpCache->isCacheable($request, $this->getUser()) && $page instanceof PageSnapshotInterface){
 
             if (!$this->isSnapshotActive($page)) {
@@ -92,7 +98,7 @@ class FrontendPageController extends Controller
                     return $params;
                 }
                 $html = $this->renderView(
-                    $request->get('_template'),
+                    $template,
                     $params
                 );
                 $response =  new Response($html);
@@ -114,7 +120,7 @@ class FrontendPageController extends Controller
                 return $params;
             }
             $html = $this->renderView(
-                $request->get('_template'),
+                $template,
                 $params
             );
             $response =  new Response($html);
