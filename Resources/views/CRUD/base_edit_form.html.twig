@@ -9,6 +9,8 @@ file that was distributed with this source code.
 
 #}
 {% block form %}
+    {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
+
     {% set url = admin.id(object) ? 'edit' : 'create' %}
 
     {% if not admin.hasRoute(url) %}
@@ -137,4 +139,5 @@ file that was distributed with this source code.
         {% endif %}
     {% endif %}
 
+    {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
 {% endblock %}
