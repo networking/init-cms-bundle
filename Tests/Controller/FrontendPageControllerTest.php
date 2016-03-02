@@ -41,6 +41,9 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockPage = $this->getMockBuilder('\Networking\InitCmsBundle\Model\Page')
             ->disableOriginalConstructor()
             ->getMock();
+
+
+
         $mockPage->expects($this->once())
             ->method('getVisibility')
             ->will($this->returnValue(PageInterface::VISIBILITY_PROTECTED));
@@ -48,10 +51,26 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockRequest->expects($this->any())
+
+
+
+
+        $mockRequest->expects($this->at(0))
             ->method('get')
             ->with('_content')
             ->will($this->returnValue($mockPage));
+
+        $mockRequest->expects($this->at(1))
+            ->method('get')
+            ->with('_template');
+
+
+        $mockRequest->expects($this->at(2))
+            ->method('get')
+            ->with('_content')
+            ->will($this->returnValue($mockPage));
+
+
 
         $mockTokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
             ->disableOriginalConstructor()
@@ -151,7 +170,17 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
         $mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockRequest->expects($this->any())
+        $mockRequest->expects($this->at(0))
+            ->method('get')
+            ->with('_content')
+            ->will($this->returnValue($mockPage));
+
+        $mockRequest->expects($this->at(1))
+            ->method('get')
+            ->with('_template');
+
+
+        $mockRequest->expects($this->at(2))
             ->method('get')
             ->with('_content')
             ->will($this->returnValue($mockPage));
@@ -279,12 +308,12 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
 
         $mockRequest->expects($this->at(1))
             ->method('get')
-            ->with('_content')
-            ->will($this->returnValue($mockSnapshot));
+            ->with('_template');
 
         $mockRequest->expects($this->at(2))
             ->method('get')
-            ->with('_template');
+            ->with('_content')
+            ->will($this->returnValue($mockSnapshot));
 
         //Container
         $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
