@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -37,15 +38,31 @@ class AdminToolbarListener implements EventSubscriberInterface
     const DISABLED = 1;
     const ENABLED  = 2;
 
+    /**
+     * @var \Twig_Environment
+     */
     protected $twig;
-    protected $securityContext;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    protected $authorizationChecker;
+
+    /**
+     * @var int
+     */
     protected $mode;
+
+    /**
+     * @var string
+     */
     protected $position;
 
-    public function __construct(\Twig_Environment $twig, SecurityContextInterface $securityContext,  $mode = self::ENABLED, $position = 'top')
+    public function __construct(\Twig_Environment $twig, AuthorizationCheckerInterface $securityContext,  $mode = self::ENABLED, $position =
+    'top')
     {
         $this->twig = $twig;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $securityContext;
         $this->mode = (integer) $mode;
         $this->position = $position;
     }
@@ -78,8 +95,7 @@ class AdminToolbarListener implements EventSubscriberInterface
             || $response->isRedirection()
             || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->getRequestFormat()
-            || !$this->securityContext->getToken()
-            || !$this->securityContext->isGranted('ROLE_ADMIN')
+            || !$this->authorizationChecker->isGranted('ROLE_ADMIN')
         ) {
             return;
         }
