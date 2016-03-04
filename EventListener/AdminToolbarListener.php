@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -91,11 +92,17 @@ class AdminToolbarListener implements EventSubscriberInterface
             return;
         }
 
+        try{
+            $isGranted = $this->authorizationChecker->isGranted('ROLE_ADMIN');
+        }catch (AuthenticationCredentialsNotFoundException $e){
+            $isGranted = false;
+        }
+
         if (self::DISABLED === $this->mode
             || $response->isRedirection()
             || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->getRequestFormat()
-            || !$this->authorizationChecker->isGranted('ROLE_ADMIN')
+            || !$isGranted
         ) {
             return;
         }
