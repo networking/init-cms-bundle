@@ -1,6 +1,81 @@
 {% block table_header %}
 
 {% endblock %}
+{% block paginator %}
+<div class="row">
+    <div class="col-md-3 col-xs-12 pull-right text-right">
+        <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
+                list_results_count{% endtranschoice %}</strong>:</label>
+        {% block max_per_page %}
+            <br/>
+            <label class="control-label"
+                   for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
+                label_per_page{% endtrans %}</label>
+            <select class="per-page small" id="{{ admin.uniqid }}_per_page"
+                    style="width: auto; height: auto">
+                {% for per_page in admin.getperpageoptions %}
+                    <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                            value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
+                        {{ per_page }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endblock %}
+    </div>
+    {% if datagrid.pager.haveToPaginate() %}
+        <div class="pagination col-md-3 hidden-sm hidden-xs">
+            <p>{{ datagrid.pager.page }} / {{ datagrid.pager.lastpage }}</p>
+
+        </div>
+        <div class="col-md-6 col-xs-12 text-center">
+            <ul class="pagination pagination-xs">
+
+                {% if datagrid.pager.page != 1 %}
+                    <li>
+                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, 1)) }}"
+                           title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
+                    </li>
+                {% endif %}
+
+                {% if datagrid.pager.page != datagrid.pager.previouspage %}
+                    <li>
+                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.previouspage)) }}"
+                           title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
+                    </li>
+                {% endif %}
+
+                {# Set the number of pages to display in the pager #}
+                {% for page in datagrid.pager.getLinks() %}
+                    {% if page == datagrid.pager.page %}
+                        <li class="active"><a
+                                    href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if datagrid.pager.page != datagrid.pager.nextpage %}
+                    <li>
+                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.nextpage)) }}"
+                           title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
+                    </li>
+                {% endif %}
+
+                {% if datagrid.pager.page != datagrid.pager.lastpage %}
+                    <li>
+                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.lastpage)) }}"
+                           title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}
 
 {% block table_body %}
     <div class="row">
@@ -82,7 +157,7 @@
                 <div class="thumbnail context">
                     <div class="media-element">
                         {% if object.width is defined and object.width %}
-                            <img src="{% path object, 'admin' %}" class="img-responsive  center-block"/>
+                            <img src="{% path object, 'admin' %}?{{ date().timestamp }}" class="img-responsive  center-block"/>
                         {% else %}
 
                             <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fa-5x center-block"></i>
@@ -90,10 +165,10 @@
                     </div>
                     <div class="media-title">
                             {% if app.request.isxmlhttprequest %}
-                                <a class="select-media" href="#" data-object-id="{{ object.id }}"
+                                <a class="select-media link-underlined" href="#" data-object-id="{{ object.id }}"
                                    data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
                             {% else %}
-                                <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}"
+                                <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}" class="link-underlined"
                                    data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
                             {% endif %}<br>
                         <span class="help-block">{{ object.contentType }}, {{ human_readable_filesize(object.size, null, 2) }}</span>
@@ -108,78 +183,8 @@
     <div class="clearfix">&nbsp;</div>
 {% endblock %}
 
+
+
 {% block table_footer %}
-    <div class="row">
-        <div class="col-md-3 col-xs-12 pull-right text-right">
-            <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
-                    list_results_count{% endtranschoice %}</strong>:</label>
-            {% block max_per_page %}
-                <br/>
-                <label class="control-label"
-                       for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
-                    label_per_page{% endtrans %}</label>
-                <select class="per-page small" id="{{ admin.uniqid }}_per_page"
-                        style="width: auto; height: auto">
-                    {% for per_page in admin.getperpageoptions %}
-                        <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
-                                value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
-                            {{ per_page }}
-                        </option>
-                    {% endfor %}
-                </select>
-            {% endblock %}
-        </div>
-        {% if datagrid.pager.haveToPaginate() %}
-            <div class="pagination col-md-3 hidden-sm hidden-xs">
-                <p>{{ datagrid.pager.page }} / {{ datagrid.pager.lastpage }}</p>
-
-            </div>
-            <div class="col-md-6 col-xs-12 text-center">
-                <ul class="pagination pagination-xs">
-
-                    {% if datagrid.pager.page != 1 %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, 1)) }}"
-                               title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
-                        </li>
-                    {% endif %}
-
-                    {% if datagrid.pager.page != datagrid.pager.previouspage %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.previouspage)) }}"
-                               title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
-                        </li>
-                    {% endif %}
-
-                    {# Set the number of pages to display in the pager #}
-                    {% for page in datagrid.pager.getLinks() %}
-                        {% if page == datagrid.pager.page %}
-                            <li class="active"><a
-                                        href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
-                            </li>
-                        {% else %}
-                            <li>
-                                <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if datagrid.pager.page != datagrid.pager.nextpage %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.nextpage)) }}"
-                               title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
-                        </li>
-                    {% endif %}
-
-                    {% if datagrid.pager.page != datagrid.pager.lastpage %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.lastpage)) }}"
-                               title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
-                        </li>
-                    {% endif %}
-
-                </ul>
-            </div>
-        {% endif %}
-    </div>
+        {{ block('paginator') }}
 {% endblock %}

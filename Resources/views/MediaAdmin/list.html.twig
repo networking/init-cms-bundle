@@ -250,10 +250,6 @@ file that was distributed with this source code.
                 {% include "NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig" %}
                 </div>
 
-                {% if admin.hasRoute('batch') %}
-                </form>
-                {% endif %}
-
 
                 {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and (galleryListMode is not defined or not galleryListMode) %}
                     <p>
@@ -267,9 +263,14 @@ file that was distributed with this source code.
                     </p>
                 {% endif %}
             {% else %}
+                <div id="item_list">
                 <p class="notice">
                     {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
                 </p>
+                </div>
+            {% endif %}
+                {% if admin.hasRoute('batch') %}
+            </form>
             {% endif %}
     </div>
 </div>
