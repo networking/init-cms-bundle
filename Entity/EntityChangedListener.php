@@ -29,16 +29,19 @@ class EntityChangedListener extends ModelChangedListener
     public function getLoggingInfo(EventArgs $args, $method = '')
     {
         $entity = $args->getEntity();
-        if ($this->getSecurityContext()->getToken() && $this->getSecurityContext()->getToken()->getUser() != 'anon.') {
 
-            $username = $this->getSecurityContext()->getToken()->getUser()->getUsername();
+
+        if ($this->getTokenStorage()->getToken() && $this->getTokenStorage()->getToken()->getUser() != 'anon.') {
+
+            $username = $this->getTokenStorage()->getToken()->getUser()->getUsername();
 
         } else {
             $username = 'doctrine:fixtures:load!';
         }
+        $id = method_exists($entity, 'getId') ?  $entity->getId() : null;
         $this->logger->info(
             sprintf('entity %s', $method),
-            array('username' => $username, 'class' => get_class($entity), 'id' => $entity->getId())
+            array('username' => $username, 'class' => get_class($entity), 'id' => $id)
         );
 
     }

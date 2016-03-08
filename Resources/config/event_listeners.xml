@@ -22,7 +22,6 @@
 
         <service id="networking_init_cms.locale_listener" class="Networking\InitCmsBundle\EventListener\LocaleListener">
             <argument type="service" id="security.access_map"/>
-            <argument type="service" id="security.context"/>
             <argument>%networking_init_cms.page.languages%</argument>
             <argument>%kernel.default_locale%</argument>
             <argument type="service" id="router"/>

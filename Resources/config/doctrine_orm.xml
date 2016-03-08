@@ -74,8 +74,8 @@
         <service id="networking_init_cms.event_listener.user_activity"
                  class="Networking\InitCmsBundle\EventListener\UserActivityListener">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
+            <call method="setTokenStorage">
+                <argument type="service" id="security.token_storage"/>
             </call>
             <tag name="kernel.event_listener" event="kernel.controller" method="onCoreController"/>
         </service>
@@ -104,8 +104,8 @@
         <service id="networking_init_cms.entity_changed_listener"
                  class="Networking\InitCmsBundle\Entity\EntityChangedListener">
             <argument type="service" id="networking_init_cms.logger"/>
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
+            <call method="setTokenStorage">
+                <argument type="service" id="security.token_storage"/>
             </call>
             <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
             <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>

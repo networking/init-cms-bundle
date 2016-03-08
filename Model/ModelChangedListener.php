@@ -12,26 +12,20 @@ namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\EventArgs;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * Class ModelChangedListener
  * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class ModelChangedListener implements ModelChangedListenerInterface, ContainerAwareInterface
+abstract class ModelChangedListener implements ModelChangedListenerInterface
 {
 
     /**
-     * @var ContainerInterface
+     * @var TokenStorage
      */
-    protected $container;
-    /**
-     * @var SecurityContext
-     */
-    protected $securityContext;
+    protected $tokenStorage;
 
     /**
      * @var Logger
@@ -46,27 +40,17 @@ abstract class ModelChangedListener implements ModelChangedListenerInterface, Co
         $this->logger = $logger;
     }
 
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function setTokenStorage(TokenStorage $tokenStorage)
     {
-        $this->container = $container;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
-     * @return object|SecurityContext
+     * @return TokenStorage
      */
-    public function getSecurityContext()
+    public function getTokenStorage()
     {
-        if(!$this->securityContext){
-            $this->securityContext =  $this->container->get('security.context');
-        }
-        return $this->securityContext;
+        return $this->tokenStorage;
     }
 
     /**

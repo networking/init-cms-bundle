@@ -10,9 +10,7 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Networking\InitCmsBundle\Model\UserInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -22,12 +20,12 @@ use Doctrine\Common\Persistence\ObjectManager;
  * @package Networking\InitCmsBundle\EventListener
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class UserActivityListener implements ContainerAwareInterface
+class UserActivityListener
 {
     /**
-     * @var SecurityContext
+     * @var TokenStorage
      */
-    protected $context;
+    protected $tokenStorage;
 
     /**
      * @var ObjectManager
@@ -40,20 +38,11 @@ class UserActivityListener implements ContainerAwareInterface
     }
 
     /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
+     * @param TokenStorage $tokenStorage
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function setTokenStorage(TokenStorage $tokenStorage)
     {
-       $this->setSecurityContext($container->get('security.context'));
-    }
-
-    public function setSecurityContext(SecurityContext $context)
-    {
-        $this->context = $context;
+        $this->tokenStorage = $tokenStorage;
 
     }
 
@@ -65,10 +54,10 @@ class UserActivityListener implements ContainerAwareInterface
      */
     public function onCoreController(FilterControllerEvent $event)
     {
-        if (!$this->context->getToken()) {
+        if (!$this->tokenStorage->getToken()) {
             return;
         }
-        $user = $this->context->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof UserInterface) {
 
             //here we can update the user as necessary

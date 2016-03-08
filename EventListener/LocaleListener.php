@@ -42,11 +42,6 @@ class LocaleListener implements EventSubscriberInterface
     private $accessMap;
 
     /**
-     * @var \Symfony\Component\Security\Core\SecurityContext $securityContext
-     */
-    private $securityContext;
-
-    /**
      * @var array $availableLanguages;
      */
     private $availableLanguages;
@@ -54,20 +49,17 @@ class LocaleListener implements EventSubscriberInterface
 
     /**
      * @param \Symfony\Component\Security\Http\AccessMapInterface $accessMap
-     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      * @param array $availableLanguages
      * @param string $defaultLocale
      * @param \Symfony\Component\Routing\RouterInterface $router
      */
     public function __construct(
         AccessMapInterface $accessMap,
-        SecurityContext $securityContext,
         array $availableLanguages,
         $defaultLocale = 'en',
         RouterInterface $router = null
     ){
         $this->accessMap = $accessMap;
-        $this->securityContext = $securityContext;
         $this->availableLanguages = $availableLanguages;
         $this->defaultLocale = $defaultLocale;
         $this->router = $router;

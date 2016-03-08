@@ -50,7 +50,7 @@ class AdminTrackerListener
             return;
         }
 
-        if (!$request->getSession()) {
+        if (!$request->hasSession()) {
             return;
         }
 
