@@ -283,7 +283,7 @@ class MediaAdminController extends SonataMediaAdminController
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $galleryListMode = $request->get('pcode') ? true : false;
         $datagrid = $this->admin->getDatagrid();
-
+        $formView = $datagrid->getForm()->createView();
         $persistentParameters = $this->admin->getPersistentParameters();
 
         return $this->render(
