@@ -10,12 +10,13 @@
 
 namespace Networking\InitCmsBundle\Menu;
 
+use Knp\Menu\ItemInterface;
 use Knp\Menu\Iterator\RecursiveItemIterator;
 use Knp\Menu\Matcher\Voter\UriVoter;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\MenuItem as Menu;
 use Networking\InitCmsBundle\Entity\MenuItem;
@@ -29,12 +30,24 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @package Networking\InitCmsBundle\Component\Menu
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MenuBuilder extends ContainerAware
+class MenuBuilder
 {
+
     /**
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     * @var FactoryInterface
      */
-    protected $securityContext;
+    protected $factory;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    protected $authorizationChecker;
+
     /**
      * @var bool
      */
@@ -87,9 +100,11 @@ class MenuBuilder extends ContainerAware
 
 
     /**
+     * MenuBuilder constructor.
      * @param FactoryInterface $factory
-     * @param SecurityContextInterface $securityContext
-     * @param RequestStack $request
+     * @param TokenStorageInterface $tokenStorage
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param RequestStack $requestStack
      * @param RouterInterface $router
      * @param MenuItemManagerInterface $menuManager
      * @param TranslatorInterface $translator
@@ -97,44 +112,79 @@ class MenuBuilder extends ContainerAware
      */
     public function __construct(
         FactoryInterface $factory,
-        SecurityContextInterface $securityContext,
-        RequestStack $request,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorizationChecker,
+        RequestStack $requestStack,
         RouterInterface $router,
         MenuItemManagerInterface $menuManager,
         TranslatorInterface $translator,
         Matcher $matcher
     ) {
 
-        $this->securityContext = $securityContext;
+        $this->factory = $factory;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->router = $router;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->menuManager = $menuManager;
+        $this->translator = $translator;
+        $this->matcher = $matcher;
 
-        if ($this->securityContext->getToken() && ($this->securityContext->isGranted(
+        $this->setLoggedIn();
+        $this->setViewStatus();
+        $this->setCurrentPath();
+        $this->setCurrentUri();
+        $this->addVoter($this->request->getBaseUrl() .$this->request->getPathInfo());
+        $this->addVoter($this->currentUri);
+    }
+
+    /**
+     *
+     */
+    public function setLoggedIn()
+    {
+        if ($this->tokenStorage->getToken() && ($this->authorizationChecker->isGranted(
                     'IS_AUTHENTICATED_FULLY'
-                ) || $this->securityContext->isGranted(
+                ) || $this->authorizationChecker->isGranted(
                     'IS_AUTHENTICATED_REMEMBERED'
                 ))
         ) {
             $this->isLoggedIn = true;
         }
-        $this->factory = $factory;
-        $this->router = $router;
-        $this->request = $request->getCurrentRequest();
-        $this->menuManager = $menuManager;
-        $this->translator = $translator;
-        $this->matcher = $matcher;
+    }
 
+    /**
+     *
+     */
+    public function setViewStatus()
+    {
         $this->viewStatus = $this->request->getSession()->get('_viewStatus')
             ? $this->request->getSession()->get('_viewStatus')
             : Page::STATUS_PUBLISHED;
+    }
 
-
+    /**
+     *
+     */
+    public function setCurrentPath(){
         $this->currentPath = substr($this->request->getPathInfo(), -1) != '/' ? $this->request->getPathInfo(
             ) . '/' : $this->request->getPathInfo();
+    }
+
+    /**
+     *
+     */
+    public function setCurrentUri()
+    {
         $this->currentUri = $this->request->getBaseUrl() . $this->currentPath;
+    }
 
-        $voter = new UriVoter($this->request->getBaseUrl() .$this->request->getPathInfo());
-        $this->matcher->addVoter($voter);
-
-        $voter = new UriVoter($this->currentUri);
+    /**
+     * @param $path string
+     */
+    public function addVoter($path)
+    {
+        $voter = new UriVoter($path);
         $this->matcher->addVoter($voter);
     }
 
@@ -153,15 +203,11 @@ class MenuBuilder extends ContainerAware
         $menu->setChildrenAttribute('class', $classes);
 
         if ($this->isLoggedIn) {
-            $menu->addChild($this->translator->trans('logout'), array('route' => 'fos_user_security_logout'));
+            $menu->addChild('logout', array('route' => 'fos_user_security_logout'));
         } else {
-            $menu->addChild($this->translator->trans('login'), array('route' => 'fos_user_security_login'));
-            $menu->addChild(
-                $this->translator->trans('register'),
-                array('route' => 'fos_user_registration_register')
-            );
+            $menu->addChild('login', array('route' => 'fos_user_security_login'));
+            $menu->addChild('register', array('route' => 'fos_user_registration_register'));
         }
-
 
         return $menu;
     }
@@ -171,15 +217,13 @@ class MenuBuilder extends ContainerAware
      *
      * @param $menu - menu to look for the parent in
      * @param $childNode - menu node whose parent we are looking for
-     * @param $startDepth - starting depth of the first menu level
      * @return mixed
      */
-    public function getParentMenu(Menu $menu, MenuItem $childNode, $startDepth)
+    public function getParentMenu(Menu $menu, MenuItem $childNode)
     {
         $itemIterator = new RecursiveItemIterator($menu->getIterator());
         $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $menuItem) {
-            /** @var \Knp\Menu\MenuItem $menuItem */
             $parentId = $childNode->getParent()->getId();
             if($menuItem->getName() != $parentId){
                 continue;
@@ -346,7 +390,7 @@ class MenuBuilder extends ContainerAware
         }
 
         if ($node->getLvl() > $startDepth) {
-            $menu = $this->getParentMenu($menu, $node, $startDepth);
+            $menu = $this->getParentMenu($menu, $node);
         }
 
         if (is_object($menu)) {
@@ -370,9 +414,9 @@ class MenuBuilder extends ContainerAware
      * Set the children menu item nodes to be shown only if the node
      * is current or the parent is a current ancestor
      *
-     * @param \Knp\Menu\MenuItem $menu
+     * @param ItemInterface $menu
      */
-    public function showOnlyCurrentChildren(\Knp\Menu\MenuItem $menu)
+    public function showOnlyCurrentChildren(ItemInterface $menu)
     {
         $itemIterator = new RecursiveItemIterator($menu->getIterator());
 
@@ -390,10 +434,10 @@ class MenuBuilder extends ContainerAware
      *
      * @deprecated please use setRecursiveAttribute
      * @alias setRecursiveAttribute
-     * @param Menu $menu
+     * @param ItemInterface $menu
      * @param array $attr
      */
-    public function setRecursiveChildrenAttribute(\Knp\Menu\MenuItem $menu, array $attr)
+    public function setRecursiveChildrenAttribute(ItemInterface $menu, array $attr)
     {
         $this->setRecursiveAttribute($menu, $attr);
     }
@@ -401,16 +445,16 @@ class MenuBuilder extends ContainerAware
     /**
      * Recursively set attributes on an item and its' children
      *
-     * @param Menu $menu
+     * @param ItemInterface $menu
      * @param array $attr
      */
-    public function setRecursiveAttribute(\Knp\Menu\MenuItem $menu, array $attr)
+    public function setRecursiveAttribute(ItemInterface $menu, array $attr)
     {
         $itemIterator = new RecursiveItemIterator($menu->getIterator());
 
         $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $menuItem) {
-            /** @var \Knp\Menu\MenuItem $menuItem */
+            /** @var ItemInterface $menuItem */
             $menuItem->setChildrenAttributes($attr);;
         }
     }

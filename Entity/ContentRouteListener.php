@@ -10,7 +10,7 @@
 
 
 namespace Networking\InitCmsBundle\Entity;
-use Doctrine\Common\EventArgs;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Model\ContentRoute;
 use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteListener;
 
@@ -20,12 +20,12 @@ use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteList
 class ContentRouteListener extends ModelContentRouteListener
 {
     /**
-     * @param EventArgs $args
+     * @param LifecycleEventArgs $args
      * @return mixed|void
      */
-    public function prePersist(EventArgs $args)
+    public function prePersist(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
 
         if ($entity instanceof ContentRoute) {
 
@@ -38,13 +38,13 @@ class ContentRouteListener extends ModelContentRouteListener
     }
 
     /**
-     * @param EventArgs $args
+     * @param LifecycleEventArgs $args
      * @return mixed|void
      */
-    public function preUpdate(EventArgs $args)
+    public function preUpdate(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
-        $em = $args->getEntityManager();
+        $entity = $args->getObject();
+        $em = $args->getObjectManager();
         $uow = $em->getUnitOfWork();
 
         if ($entity instanceof ContentRoute) {

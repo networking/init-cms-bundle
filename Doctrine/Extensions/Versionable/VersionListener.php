@@ -26,7 +26,7 @@ class VersionListener
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        $em = $args->getEntityManager();
+        $em = $args->getObjectManager();
             if ($entity instanceof VersionableInterface) {
                 if (!$entity->hasListener()) {
                     $this->makeSnapshot($entity, $em);
@@ -40,7 +40,7 @@ class VersionListener
     public function postUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        $em = $args->getEntityManager();
+        $em = $args->getObjectManager();
             if ($entity instanceof VersionableInterface) {
                 if (!$entity->hasListener()) {
                 $this->makeSnapshot($entity, $em);

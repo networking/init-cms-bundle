@@ -8,7 +8,8 @@
         <service id="networking_init_cms.menu.admin_menu_builder"
                  class="Networking\InitCmsBundle\Menu\AdminMenuBuilder">
             <argument type="service" id="knp_menu.factory"/>
-            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.authorization_checker"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="router"/>
             <argument type="service" id="networking_init_cms.menu_item_manager"/>
@@ -19,18 +20,14 @@
             </call>
         </service>
 
-        <service id="networking_init_cms.menu.admin_menu" class="Knp\Menu\MenuItem"
-                 factory-service="networking_init_cms.menu.admin_menu_builder"
-                 factory-method="createAdminMenu"
-                 scope="request">
-            <argument type="service" id="request"/>
+        <service id="networking_init_cms.menu.admin_menu" class="Knp\Menu\MenuItem" scope="request">
+            <factory service="networking_init_cms.menu.admin_menu_builder" method="createAdminMenu"/>
+            <argument type="service" id="request_stack"/>
             <tag name="knp_menu.menu" alias="AdminMenu"/>
         </service>
 
-        <service id="networking_init_cms.menu.admin_side_menu" class="Knp\Menu\MenuItem"
-                 factory-service="networking_init_cms.menu.admin_menu_builder"
-                 factory-method="createAdminSideMenu"
-                 scope="request">
+        <service id="networking_init_cms.menu.admin_side_menu" class="Knp\Menu\MenuItem" scope="request">
+            <factory service="networking_init_cms.menu.admin_menu_builder" method="createAdminSideMenu"/>
             <argument key="menuGroups">%networking_init_cms.admin_menu_groups%</argument>
             <tag name="knp_menu.menu" alias="AdminSideMenu"/>
         </service>

@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\Common\EventArgs;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 
 
 /**
@@ -20,14 +20,14 @@ use Doctrine\Common\EventArgs;
 interface ContentRouteListenerInterface {
 
     /**
-     * @param EventArgs $args
+     * @param LifecycleEventArgs $args
      * @return mixed
      */
-    public function prePersist(EventArgs $args);
+    public function prePersist(LifecycleEventArgs $args);
 
     /**
-     * @param EventArgs $args
+     * @param LifecycleEventArgs $args
      * @return mixed
      */
-    public function preUpdate(EventArgs $args);
+    public function preUpdate(LifecycleEventArgs $args);
 } 

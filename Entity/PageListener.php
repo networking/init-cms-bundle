@@ -11,6 +11,9 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\EventArgs;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
@@ -25,14 +28,15 @@ class PageListener extends ModelPageListener
 {
 
     /**
-     * @param EventArgs $args
+     * @param LifecycleEventArgs $args
      * @return mixed|void
      */
-    public function postPersist(EventArgs $args)
+    public function postPersist(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
 
-        $em = $args->getEntityManager();
+        /** @var EntityManager $em */
+        $em = $args->getObjectManager();
 
         if ($entity instanceof PageInterface) {
 
@@ -48,12 +52,13 @@ class PageListener extends ModelPageListener
     }
 
     /**
-     * @param EventArgs $args
+     * @param OnFlushEventArgs $args
      * @return mixed|void
      */
-    public function onFlush(EventArgs $args)
+    public function onFlush(OnFlushEventArgs $args)
     {
         $em = $args->getEntityManager();
+        
         $unitOfWork = $em->getUnitOfWork();
 
         foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
@@ -96,7 +101,5 @@ class PageListener extends ModelPageListener
                 }
             }
         }
-
-
     }
 }

@@ -11,10 +11,10 @@
 namespace Networking\InitCmsBundle\Menu;
 
 use Sonata\AdminBundle\Admin\AdminInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Admin\Pool;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class AdminMenuBuilder
@@ -37,11 +37,11 @@ class AdminMenuBuilder extends MenuBuilder
     }
 
     /**
-     * @param Request $request
      * @return bool|\Knp\Menu\ItemInterface
      */
-    public function createAdminMenu(Request $request)
+    public function createAdminMenu()
     {
+
         // Default to homepage
         $liveRoute = null;
 
@@ -59,9 +59,9 @@ class AdminMenuBuilder extends MenuBuilder
 
         $defaultHome = $this->router->generate('networking_init_cms_default');
 
-        $adminLocale = $request->getSession()->get('admin/_locale');
+        $adminLocale = $this->request->getSession()->get('admin/_locale');
         $class = 'nav navbar-nav';
-        if ($request->isXmlHttpRequest()) {
+        if ($this->request->isXmlHttpRequest()) {
             $class = 'initnav';
         }
 
@@ -72,21 +72,21 @@ class AdminMenuBuilder extends MenuBuilder
 
             $dashboardUrl = $this->router->generate('sonata_admin_dashboard');
 
-            if ($sonataAdminParam = $request->get('_sonata_admin')) {
+            if ($sonataAdminParam = $this->request->get('_sonata_admin')) {
 
                 $possibleAdmins = explode('|', $sonataAdminParam);
 
                 foreach ($possibleAdmins as $adminCode) {
                     // we are in the admin area
                     $sonataAdmin = $this->adminPool->getAdminByAdminCode($adminCode);
-                    if ($id = $request->get('id')) {
+                    if ($id = $this->request->get('id')) {
                         $entity = $sonataAdmin->getObject($id);
                     }
                 }
 
             } else {
                 // we are in the frontend
-                $entity = $request->get('_content');
+                $entity = $this->request->get('_content');
             }
 
             if ($entity instanceof VersionableInterface) {
@@ -109,7 +109,7 @@ class AdminMenuBuilder extends MenuBuilder
             }
 
             if (!isset($language)) {
-                $language = $request->getLocale();
+                $language = $this->request->getLocale();
             }
 
 
@@ -147,7 +147,7 @@ class AdminMenuBuilder extends MenuBuilder
             if ($lastActions) {
                 $lastActionArray = json_decode($lastActions);
                 if (count($lastActionArray)) {
-                    if ($request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
+                    if ($this->request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
                         $lastAction = next($lastActionArray);
                     } else {
                         $lastAction = reset($lastActionArray);
@@ -174,7 +174,7 @@ class AdminMenuBuilder extends MenuBuilder
                 );
                 $this->addIcon($menu['Edit'], array('icon' => 'pencil', 'append' => false));
             }
-            if (!$sonataAdmin && $request->get('_route') != 'sonata_admin_dashboard') {
+            if (!$sonataAdmin && $this->request->get('_route') != 'sonata_admin_dashboard') {
                 $menu->addChild('Admin', array('uri' => $lastActionUrl));
             }
 
@@ -256,7 +256,7 @@ class AdminMenuBuilder extends MenuBuilder
         $groups = $this->adminPool->getDashboardGroups();
         $adminMenu = $this->factory->createItem('admin_side_menu');
 
-        if (!$this->securityContext->isGranted('ROLE_SONATA_ADMIN')) {
+        if (!$this->authorizationChecker->isGranted('ROLE_SONATA_ADMIN')) {
             return $adminMenu;
         }
 

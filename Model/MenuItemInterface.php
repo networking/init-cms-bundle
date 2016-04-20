@@ -32,6 +32,11 @@ interface MenuItemInterface
     public function __toString();
 
     /**
+     * @return integer
+     */
+    public function getId();
+
+    /**
      * @param  PageInterface $page
      * @return $this
      */

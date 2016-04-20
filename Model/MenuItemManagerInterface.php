@@ -42,4 +42,13 @@ interface MenuItemManagerInterface
         $viewStatus = Page::STATUS_PUBLISHED
     );
 
+    /**
+     * Finds a single object by a set of criteria.
+     *
+     * @param array $criteria The criteria.
+     *
+     * @return object The object.
+     */
+    public function findOneBy(array $criteria);
+
 } 

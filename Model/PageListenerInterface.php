@@ -10,7 +10,8 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\Common\EventArgs;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 
 /**
  * Class PageListenerInterface
@@ -20,15 +21,15 @@ use Doctrine\Common\EventArgs;
 interface PageListenerInterface {
 
     /**
-     * @param EventArgs $args
+     * @param LifecycleEventArgs $args
      * @return mixed
      */
-    public function postPersist(EventArgs $args);
+    public function postPersist(LifecycleEventArgs $args);
 
     /**
-     * @param EventArgs $args
+     * @param OnFlushEventArgs $args
      * @return mixed
      */
-    public function onFlush(EventArgs $args);
+    public function onFlush(OnFlushEventArgs $args);
 }
  

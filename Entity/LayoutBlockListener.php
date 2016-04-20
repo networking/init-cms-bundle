@@ -11,9 +11,11 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use JMS\Serializer\Serializer;
+use Networking\InitCmsBundle\Model\ContentInterface;
 
 /**
  * Class LayoutBlockListener
@@ -45,7 +47,7 @@ class LayoutBlockListener
         if ($layoutBlock instanceof LayoutBlock) {
             if ($contentObject = $layoutBlock->getSnapshotContent()) {
                 $contentObject = $this->serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
-                $em = $args->getEntityManager();
+                $em = $args->getObjectManager();
 
                 try {
                     $em->persist($contentObject);
@@ -80,15 +82,19 @@ class LayoutBlockListener
         }
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postLoad(LifecycleEventArgs $args)
     {
         $layoutBlock = $args->getEntity();
         if ($layoutBlock instanceof LayoutBlock) {
             if ($layoutBlock->getClassType() || $layoutBlock->getObjectId()) {
-                $em = $args->getEntityManager();
+                /** @var EntityManager $em */
+                $em = $args->getObjectManager();
                 if ($layoutBlock->getObjectId()) {
+                    /** @var ContentInterface $content */
                     $content = $em->getRepository($layoutBlock->getClassType())->find($layoutBlock->getObjectId());
-
                     if ($content) {
                         $layoutBlock->setContent($content);
                     }

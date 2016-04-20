@@ -51,13 +51,13 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         // args methods:
-        // getEntity
+        // getObject
         $args->expects($this->once())
-            ->method('getEntity')
+            ->method('getObject')
             ->will($this->returnValue($entity));
-        // getEntityManager
+        // getObjectManager
         $args->expects($this->once())
-            ->method('getEntityManager')
+            ->method('getObjectManager')
             ->will($this->returnValue($em));
 
         $pageListener->postPersist($args);
@@ -121,13 +121,13 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         // args methods:
-        // getEntity
+        // getObject
         $args->expects($this->once())
-            ->method('getEntity')
+            ->method('getObject')
             ->will($this->returnValue($entity));
-        // getEntityManager
+        // getObjectManager
         $args->expects($this->once())
-            ->method('getEntityManager')
+            ->method('getObjectManager')
             ->will($this->returnValue($em));
 
         $pageListener->postPersist($args);
@@ -174,7 +174,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         // args methods:
 
-        // getEntityManager
+        // getObjectManager
         $args->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($em));
@@ -245,7 +245,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         // args methods:
 
-        // getEntityManager
+        // getObjectManager
         $args->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($em));
@@ -314,7 +314,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         // args methods:
 
-        // getEntityManager
+        // getObjectManager
         $args->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($em));
