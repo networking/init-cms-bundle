@@ -303,6 +303,8 @@ class FrontendPageController extends Controller
             }
         }
 
+        $params['_locale'] = $locale;
+
         $parts = parse_url($request->headers->get('referer'));
 
         if (array_key_exists('query', $parts) && $parts['query']) {
