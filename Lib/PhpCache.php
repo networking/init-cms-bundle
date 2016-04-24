@@ -62,7 +62,7 @@ class PhpCache implements PhpCacheInterface {
         phpFastCache::setup("storage", $type);
         phpFastCache::setup("path", $this->cacheDir );
         phpFastCache::setup("securityKey", $securityKey);
-        $this->phpFastCache = new phpFastCache();
+        $this->phpFastCache = new phpFastCache($type);
     }
 
     /**
