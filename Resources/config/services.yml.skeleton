@@ -4,8 +4,9 @@ services:
         scope: request
         arguments:
             - @knp_menu.factory
-            - @security.context
-            - @request
+            - @security.token_storage
+            - @security.authorization_checker
+            - @request_stack
             - @router
             - @networking_init_cms.menu_item_manager
             - @translator
