@@ -100,13 +100,16 @@ function formToJSON( selector )
 
     selector.find('[name*="[content]"]').each( function() {
         var self = $(this);
-        var name = self.attr('name');
-        if (form[name]) {
-            form[name] = form[name] + ',' + self.val();
+        if(self.val()){
+            var name = self.attr('name');
+            if (form[name]) {
+                form[name] = form[name] + ',' + self.val();
+            }
+            else {
+                form[name] = self.val();
+            }
         }
-        else {
-            form[name] = self.val();
-        }
+
     });
 
     return form;
@@ -176,7 +179,6 @@ function updateLayoutBlock(addLink, layoutId) {
 
 
     data.content = formToJSON(liItem);
-
 
     var form = jQuery(addLink).closest('form');
 
