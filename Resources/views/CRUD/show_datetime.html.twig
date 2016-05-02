@@ -15,7 +15,7 @@ file that was distributed with this source code.
     {%- if value is empty -%}
         &nbsp;
     {%- elseif field_description.options.format is defined -%}
-        {{ value|format_datedate(field_description.options.format) }}
+        {{ value|format_datetime(field_description.options.format) }}
     {%- else -%}
         {{ value|date }}
     {%- endif -%}
