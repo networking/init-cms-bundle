@@ -28,22 +28,22 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * @var string $router
      */
-    private $router;
+    protected $router;
 
     /**
      * @var string $defaultLocale
      */
-    private $defaultLocale;
+    protected $defaultLocale;
 
     /**
      * @var \Symfony\Component\Security\Http\AccessMapInterface $accessMap
      */
-    private $accessMap;
+    protected $accessMap;
 
     /**
      * @var array $availableLanguages;
      */
-    private $availableLanguages;
+    protected $availableLanguages;
 
 
     /**
