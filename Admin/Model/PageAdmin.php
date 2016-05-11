@@ -98,6 +98,7 @@ abstract class PageAdmin extends BaseAdmin
         $collection->add('publish', 'publish/{id}', array(), array('method' => 'GET'));
         $collection->add('cancelDraft', 'cancel_draft/{id}', array(), array('method' => 'GET'));
         $collection->add('getPath', 'get_path/', array(), array('method' => 'GET'));
+        $collection->add('batchCopy', 'batch_copy', array());
         $collection->add(
             'unlink',
             'unlink/{id}/translation_id/{translationId}',

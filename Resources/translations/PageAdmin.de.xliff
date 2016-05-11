@@ -605,6 +605,22 @@
                 <source>action._delete</source>
                 <target>Löschen</target>
             </trans-unit>
+            <trans-unit id="page_batch_copy">
+                <source>page_batch_copy</source>
+                <target>Seitenbaum kopieren</target>
+            </trans-unit>
+            <trans-unit id="button.page_batch_copy">
+                <source>button.page_batch_copy</source>
+                <target>Seitenbaum kopieren</target>
+            </trans-unit>
+            <trans-unit id="form.label_from_locale">
+                <source>form.label_from_locale</source>
+                <target>Von Sprache</target>
+            </trans-unit>
+            <trans-unit id="form.label_to_locale">
+                <source>form.label_to_locale</source>
+                <target>Zu Sprache</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

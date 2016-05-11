@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -291,6 +292,48 @@ class PageAdminController extends CRUDController
     }
 
     /**
+     * @param Request $request
+     * @return Response
+     */
+    public function batchCopyAction(Request $request){
+
+        if ($this->admin->isGranted('ROLE_SUPER_ADMIN') === false) {
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->createForm('Networking\InitCmsBundle\Form\Type\PageBatchCopyType', array(), array
+        ('locales' => $this->getParameter('networking_init_cms.page.languages')));
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $data = $form->getData();
+
+            /** @var PageHelper $pageHelper */
+            $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
+
+            $pages = $this->admin->getModelManager()->findBy($this->admin->getClass(), array('locale' =>
+                $data['fromLocale']));
+            /** @var PageInterface $page */
+            foreach ($pages as $page){
+                $translatedLocales = $page->getTranslatedLocales();
+
+                if(in_array($data['toLocale'], $translatedLocales)){
+                    continue;
+                }
+                $pageHelper->makeTranslationCopy($page, $data['toLocale']);
+            }
+
+            $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_copy_success');
+        }
+
+        return $this->render('NetworkingInitCmsBundle:PageAdmin:batch_page_copy.html.twig',
+            array('action' => 'batchCopy', 'form' => $form->createView())
+        );
+    }
+
+    /**
      * @param ProxyQueryInterface $selectedModelQuery
      * @return RedirectResponse
      * @throws AccessDeniedException
@@ -301,12 +344,7 @@ class PageAdminController extends CRUDController
             throw new AccessDeniedException();
         }
 
-        $modelManager = $this->admin->getModelManager();
-
         $selectedModels = $selectedModelQuery->execute();
-
-
-        // do the merge work here
 
         try {
             foreach ($selectedModels as $selectedModel) {

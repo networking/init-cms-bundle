@@ -5,5 +5,7 @@ init_cms:
         blank: Seitentitel darf nicht leer sein
     url:
         blank: URL darf nicht leer sein
+    page_copy:
+        duplicate_locale: Die ausgewählten Sprachen müssen unterschiedlich sein
 
 'Cannot create content, object is invalid': Bitte controllieren sie Ihren Angaben

@@ -21,7 +21,17 @@ Here is an example from the Text entity
 /**
  * @var text $content
  * @ORM\Column(name="text", type="text", nullable=true)
- * @Sonata\FormMapper(name="text", type="textarea", options={"required"=false, "property_path" = false, "attr"={"class"="wysiwyg-editor"}})
+ *  @Sonata\FormMapper(
+ *      name="text",
+ *      type="ckeditor",
+ *      options={
+ *          "label_render" = false,
+ *          "horizontal_input_wrapper_class" = "col-md-12",
+ *          "horizontal_label_offset_class" = "",
+ *          "label" = false,
+ *          "required"=false
+ *      }
+ * )
  */
 protected $text;
 ```
@@ -57,8 +67,8 @@ public function getAdminContent()
 ```
 
 
-#### Serializing for versioning ####
 ------------------------------------
+#### Serializing for versioning ####
 
 The last very important part is the serializing mechanism. This can be a bit tricky depending on how complex your content type is. The more DB associations that an entity has the more mapping you will need to do.
 
@@ -82,3 +92,12 @@ Networking\InitCmsBundle\Entity\Text:
 ```
 
 For a more detailed look at serialization have a look at the [JMSSerializerBundle documentation](http://jmsyst.com/bundles/JMSSerializerBundle)
+
+
+------------------------------------    
+#### Page copying and translations ####   
+ 
+There is the possibility to copy page singularily, which is done in the translation panel of the page editing mask, or batch translation from one language to another via the route /admin/pages/batch_translation.
+The batch function is at the moment only available to the super admin users, and will try to copy the whole tree, skipping pages that have already been translated.
+
+If you want to have your content be able to be copied correctly to another language it is important that you add a clone method, where the id is set to null and you tack care of any entity relationships.

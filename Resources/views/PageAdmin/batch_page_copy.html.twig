@@ -1,0 +1,45 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% extends 'NetworkingInitCmsBundle:CRUD:edit.html.twig' %}
+
+{% block title %}{{ 'page_batch_copy'|trans({}, admin.translationDomain) }}{% endblock %}
+
+{% block actions %}{% endblock %}
+{% block side_menu %}{% endblock %}
+
+{% block form %}
+    {{ form_errors(form) }}
+    <form class="form-{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}horizontal{% else %}vertical{% endif %}" novalidate="novalidate"
+          action="{{ admin.generateUrl('batchCopy') }}" method="POST">
+        {{ form_row(form.fromLocale) }}
+        {{ form_row(form.toLocale) }}
+        {{ form_row(form._token) }}
+        {% block formactions %}
+            {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+            <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
+                {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+                    <button class="btn btn-default" data-dismiss="modal"
+                            aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
+
+                        <input type="submit" class="btn btn-primary" name="btn_copy"
+                               value="{{ 'button.page_batch_copy'|trans({}, admin.translationDomain) }}"/>
+                {% else %}
+                    <a class="btn btn-default"
+                       href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                        <input class="btn btn-primary" type="submit" name="btn_copy"
+                               value="{{ 'button.page_batch_copy'|trans({}, admin.translationDomain) }}"/>
+                {% endif %}
+            </div>
+        {% endblock formactions %}
+    </form>
+{% endblock %}
+{% block confirm_exit %}false{% endblock %}
+
