@@ -27,37 +27,4 @@
             </constraint>
         </property>
     </class>
-
-    <class name="FOS\UserBundle\Model\User">
-        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
-            <option name="fields">usernameCanonical</option>
-            <option name="errorPath">username</option>
-            <option name="message">fos_user.username.already_used</option>
-            <option name="groups">
-                <value>Registration</value>
-                <value>Profile</value>
-            </option>
-        </constraint>
-
-        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
-            <option name="fields">emailCanonical</option>
-            <option name="errorPath">email</option>
-            <option name="message">fos_user.email.already_used</option>
-            <option name="groups">
-                <value>Registration</value>
-                <value>Profile</value>
-            </option>
-        </constraint>
-        <property name="enabled">
-            <constraint name="Length">
-                <option name="min">0</option>
-                <option name="max">4096</option>
-                <option name="minMessage">not used</option>
-                <option name="groups">
-                    <value>Registration</value>
-                    <value>Profile</value>
-                </option>
-            </constraint>
-        </property>
-    </class>
 </constraint-mapping>
