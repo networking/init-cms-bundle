@@ -100,8 +100,14 @@ function formToJSON( selector )
 
     selector.find('[name*="[content]"]').each( function() {
         var self = $(this);
-        if(self.val()){
-            var name = self.attr('name');
+        var type = this.type || this.tagName.toLowerCase();
+        var name = self.attr('name');
+        if (type === 'checkbox') {
+            var checked = self.is(':checked');
+            if (checked) {
+                form[name] = 1;
+            }
+        } else if(self.val()){
             if (form[name]) {
                 form[name] = form[name] + ',' + self.val();
             }
