@@ -2,6 +2,7 @@
 
 {% endblock %}
 {% block paginator %}
+{% if datagrid.results|length > 0 %}
 <div class="row">
     <div class="col-md-3 col-xs-12 pull-right text-right">
         <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
@@ -75,6 +76,7 @@
         </div>
     {% endif %}
     </div>
+{% endif %}
 {% endblock %}
 
 {% block table_body %}
