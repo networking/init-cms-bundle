@@ -74,7 +74,7 @@ networking_init_cms_image_view:
         format: (.*)?
 
 networking_init_cms_clear_cache:
-    pattern: /cache/clear
+    path: /cache/clear
     defaults: { _controller: NetworkingInitCmsBundle:Cache:clear }
 
 initcms_no_translation:
