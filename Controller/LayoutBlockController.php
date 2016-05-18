@@ -39,7 +39,7 @@ class LayoutBlockController extends CRUDController
     public function createAction()
     {
         if (!$this->isXmlHttpRequest()) {
-            return new Response('cannot load external of page module', 500);
+            return new Response('cannot load external of page module', 403);
         }
 
 
