@@ -119,7 +119,8 @@ abstract class MediaAdmin extends Admin
             'init_ckeditor_upload_file',
             array(
                 '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
-                'type' => 'file'
+                'type' => 'file',
+                'method' => 'POST'
             )
         );
 
@@ -128,7 +129,8 @@ abstract class MediaAdmin extends Admin
             'init_ckeditor_upload_image',
             array(
                 '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
-                'type' => 'image'
+                'type' => 'image',
+                'method' => 'POST'
             )
         );
 
