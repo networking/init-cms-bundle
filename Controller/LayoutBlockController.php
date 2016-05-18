@@ -223,6 +223,10 @@ class LayoutBlockController extends CRUDController
         $code = 'networking_init_cms.admin.page'
     ) {
 
+        if(!$elementId || !$code){
+            throw new NotFoundHttpException;
+        }
+
         /** @var \Networking\InitCmsBundle\Admin\Model\PageAdmin $pageAdmin */
         $pageAdmin = $this->container->get($code);
 
