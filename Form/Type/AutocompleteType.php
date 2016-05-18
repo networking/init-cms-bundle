@@ -332,14 +332,6 @@ class AutocompleteType extends DoctrineType
     /**
      * @return string
      */
-    public function getParent()
-    {
-        return 'entity';
-    }
-
-    /**
-     * @return string
-     */
     public function getName()
     {
         return 'networking_type_autocomplete';
