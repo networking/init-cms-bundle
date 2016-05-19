@@ -399,6 +399,9 @@ class MenuItemAdminController extends CRUDController
             'operation'
         );
 
+        if(!$operation){
+            throw new NotFoundHttpException();
+        }
         return new JsonResponse($this->$operation());
     }
 
@@ -502,6 +505,10 @@ class MenuItemAdminController extends CRUDController
     {
         /** @var \Networking\InitCmsBundle\Entity\MenuItem $rootNode */
         $rootNode = $this->admin->getObject($this->get('session')->get('root_menu_id'));
+
+        if(!$rootNode){
+            throw new NotFoundHttpException();
+        }
 
         if($rootNode->getChildren()->count() > 1){
             return $this->listAction(null, null, 'placement', $this->get('session')->get('root_menu_id'));
@@ -609,6 +616,11 @@ class MenuItemAdminController extends CRUDController
         $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
         $newMenuItem = $menuItemManager->find($newMenuItemId);
         $menuItem = $menuItemManager->find($menuItemId);
+
+        if(!$newMenuItem || $menuItem){
+            throw new NotFoundHttpException();
+        }
+
         $data = array();
         try {
             if ($sibling) {
