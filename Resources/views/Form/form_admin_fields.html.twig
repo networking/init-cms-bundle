@@ -558,6 +558,9 @@ file that was distributed with this source code.
                            {% endif %}type="text" {% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if 'placeholder' in attr|keys %} placeholder="{{ attr['placeholder'] }}"{% endif %}>
                     <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    {% if widget_reset_icon is defined %}
+                        <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                    {%  endif %}
                 </div>
                 <script type="text/javascript">
                     jQuery(document).ready(function () {
@@ -601,6 +604,9 @@ file that was distributed with this source code.
                            type="text" {% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if 'placeholder' in attr|keys %} placeholder="{{ attr['placeholder'] }}"{% endif %}>
                     <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    {% if widget_reset_icon is defined %}
+                        <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                    {%  endif %}
                 </div>
                 <script type="text/javascript">
                     jQuery(document).ready(function () {
@@ -652,6 +658,9 @@ file that was distributed with this source code.
                     <input type="hidden"
                            value="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}" {{ block('widget_attributes') }}>
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    {% if widget_reset_icon is defined %}
+                        <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                    {%  endif %}
                 </div>
                 <script type="text/javascript">
                     jQuery(document).ready(function () {

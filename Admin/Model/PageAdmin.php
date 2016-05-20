@@ -311,6 +311,7 @@ abstract class PageAdmin extends BaseAdmin
                     'required' => false,
                     'widget' => 'single_text',
                     'datetimepicker' => true,
+                    'widget_reset_icon' => 'remove'
                 )
             )
             ->add('activeTo',
@@ -320,6 +321,7 @@ abstract class PageAdmin extends BaseAdmin
                     'required' => false,
                     'widget' => 'single_text',
                     'datetimepicker' => true,
+                    'widget_reset_icon' => 'remove'
                 ))
             ->add(
                 'templateName',
