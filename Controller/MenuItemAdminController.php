@@ -116,7 +116,7 @@ class MenuItemAdminController extends CRUDController
         }
 
         //use one of the locale to filter the list of menu entries (see above
-        $rootNodes = $menuItemManager->getRootNodesByLocale($this->currentMenuLanguage);
+        $rootNodes = $menuItemManager->getRootNodesByLocale($this->currentMenuLanguage, 'id');
 
         $childOpen = function ($node) {
             return sprintf('<li class="table-row-style" id="listItem_%s">', $node['id']);
