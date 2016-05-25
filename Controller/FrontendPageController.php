@@ -102,9 +102,6 @@ class FrontendPageController extends Controller
                     $params
                 );
                 $response =  new Response($html);
-                if (!$request->cookies || $request->cookies->get('_locale')) {
-                    $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
-                }
 
                 $phpCache->set($cacheKey, $response);
                 $phpCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate());
@@ -124,10 +121,9 @@ class FrontendPageController extends Controller
                 $params
             );
             $response =  new Response($html);
-            if (!$request->cookies || $request->cookies->get('_locale')) {
-                $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
-            }
         }
+
+        $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
 
         return $response;
     }
