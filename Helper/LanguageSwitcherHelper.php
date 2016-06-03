@@ -114,9 +114,16 @@ class LanguageSwitcherHelper
         }catch (ResourceNotFoundException $e){
             $request = $oldRequest;
         }
-
         if (!$content = $request->get('_content', false)){
-            $route = $this->router->matchRequest(Request::create($oldUrl));
+            try {
+                $route = $this->router->matchRequest(Request::create($oldUrl));
+            }catch(ResourceNotFoundException $e){
+                if($route = $this->router->matchRequest(Request::create('/404'))){
+                    return $route;
+                }
+                throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for this request"', $locale));
+            }
+
             if (!array_key_exists('_content', $route)){
                 return $route;
             }
