@@ -491,7 +491,7 @@
             </trans-unit>
             <trans-unit id="upload_help_text">
                 <source>upload_help_text</source>
-                <target>Drop files or folders here or click to upload.</target>
+                <target>Dateien oder Ordner hier hineinziehen oder hier klicken zum hochladen.</target>
             </trans-unit>
         </body>
     </file>
