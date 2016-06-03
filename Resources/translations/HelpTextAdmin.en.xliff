@@ -314,6 +314,10 @@
           <h2>Settings &amp; SEO</h2>
 
           <p>Here you find the same fields as used when creating a page. You can edit the page name (by clicking on the pen icon), the URL, the page visibility, the page layout and other page meta settings.</p>
+
+          <h2>Email Address Encryption</h2>
+
+          <p>If you use email addresses in the text editor, please make sure to create a link for every email address (click chain symbol, choose Email as Link-Type). The cms will encrypt these email addresses automatically and they will not be readable by spam robots. You should never write email addresses without creating a link out of it, because then the address is visible to the spam robots and they can use it to send spam to the email address.</p>
                 ]]>
                 </target>
             </trans-unit>

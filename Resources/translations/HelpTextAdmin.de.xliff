@@ -303,7 +303,12 @@
 
                         <h2>Einstellungen &amp; SEO</h2>
 
-                        <p>Hier finden Sie dieselben Felder, die Sie beim Erstellen einer Seite benutzt haben. Sie k&ouml;nnen den Seitennamen (durch Anklicken des Bleistift-Symbols), die URL, die Seitensichtbarkeit, das Seiten-layout und andere Meta-Einstellungen der Seite editieren.</p>]]>
+                        <p>Hier finden Sie dieselben Felder, die Sie beim Erstellen einer Seite benutzt haben. Sie k&ouml;nnen den Seitennamen (durch Anklicken des Bleistift-Symbols), die URL, die Seitensichtbarkeit, das Seiten-layout und andere Meta-Einstellungen der Seite editieren.</p>
+
+                        <h2>E-Mail Adressen verschl&uuml;sseln</h2>
+
+                        <p>Wenn Sie E-Mail Adressen im Texteditor eintragen, sollten Sie immer einen Link daraus machen (Kettensymbol klicken, als Link-Typ E-Mail auswählen). Das CMS verschlüsselt diese E-Mail-Adresse automatisch, damit diese nicht für Spam-Roboter lesbar ist. Sie sollten deshalb nie E-Mail Adressen ohne einen Link erstellen, weil diese im Klartest erscheinen und Spam-Roboter diese auslesen und für Spam verwenden können.</p>]]>
+
                 </target>
             </trans-unit>
 
