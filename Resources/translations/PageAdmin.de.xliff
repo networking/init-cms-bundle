@@ -529,6 +529,10 @@
                 <target>Die letzte veröffentlichte Version ist:
                     <![CDATA[<span class="info-soft">%date%</span>]]></target>
             </trans-unit>
+            <trans-unit id="info.last_changed_by">
+                <source>info.last_changed_by</source>
+                <target>Letzte Änderung von</target>
+            </trans-unit>
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>
                 <target><![CDATA[Es gibt keine Seiten in %language%, die als Übersetzung dieser Seite verknüpft werden können.

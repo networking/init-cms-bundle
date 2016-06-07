@@ -45,7 +45,10 @@ file that was distributed with this source code.
         {{ 'link.preview'|trans({}, admin.translationDomain) }}</a>
 {% endif %}
 
-
+{% if admin.lastEditedBy() %}
+<hr/>
+<p class="font-mini">{{ 'info.last_changed_by'|trans([], admin.translationDomain) }} {{ admin.lastEditedBy().username }} <span class="info-soft">{{ admin.lastEditedBy().loggedAt|date('H:i:s d.m.Y') }}</span></p>
+{% endif %}
 
 {% if not object.isPublished() and object.getSnapshot() %}
     <hr/>

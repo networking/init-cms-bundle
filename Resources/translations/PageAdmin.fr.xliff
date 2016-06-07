@@ -518,6 +518,10 @@
                 <source>info.last_published_version</source>
                 <target>Dernière version publiée:<![CDATA[<span class="info-soft">%date%</span>]]></target>
             </trans-unit>
+            <trans-unit id="info.last_changed_by">
+                <source>info.last_changed_by</source>
+                <target>Dernière modification par</target>
+            </trans-unit>
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>
                 <target>Il n’y a pas de pages en %language% pouvant être associées comme traduction de cette page.

@@ -315,6 +315,7 @@ class LayoutBlockController extends CRUDController
         );
 
         $page = $pageAdmin->getModelManager()->find($pageAdmin->getClass(), $objectId);
+        $pageAdmin->setSubject($page);
 
         if ($page) {
             $pageStatus = $this->renderView(

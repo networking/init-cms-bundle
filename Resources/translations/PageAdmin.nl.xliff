@@ -509,6 +509,10 @@
                 <source>info.last_published_version</source>
                 <target>Laatst gepubliceerde versie: <![CDATA[<span class="info-soft">%date%</span>]]></target>
             </trans-unit>
+            <trans-unit id="info.last_changed_by">
+                <source>info.last_changed_by</source>
+                <target>Laatst gewijzigd door</target>
+            </trans-unit>
             <trans-unit id="info.no_pages_for_translation">
                 <source>info.no_pages_for_translation</source>
                 <target>Er zijn geen pagina's beschikbaar in het %language% om als vertaling te koppelen aan deze

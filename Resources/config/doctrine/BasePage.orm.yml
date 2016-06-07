@@ -3,7 +3,7 @@ Networking\InitCmsBundle\Entity\BasePage:
   gedmo:
     tree:
       type: materializedPath
-    loggable:
+    loggable: true
   fields:
     createdAt:
       type: datetime
@@ -11,6 +11,8 @@ Networking\InitCmsBundle\Entity\BasePage:
     updatedAt:
       type: datetime
       column: updated_at
+      gedmo:
+        - versioned
     pageName:
       type: string
       length: 255

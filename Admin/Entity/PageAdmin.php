@@ -30,4 +30,18 @@ class PageAdmin extends ModelPageAdmin
 
         return $layoutBlock->getPage();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLastEditedBy()
+    {
+        $loggableClass = 'Gedmo\\Loggable\\Entity\\LogEntry';
+        /** @var \Gedmo\Loggable\Entity\Repository\LogEntryRepository  $repo */
+        $repo = $this->getModelManager()->getEntityManager($this->getClass())->getRepository($loggableClass);
+        $logEntries = $repo->getLogEntries($this->subject);
+
+        return array_shift($logEntries);
+
+    }
 }
