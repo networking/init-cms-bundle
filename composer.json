@@ -25,7 +25,7 @@
         "sonata-project/formatter-bundle": "^2.3",
         "sonata-project/intl-bundle": "~2.1",
         "sonata-project/notification-bundle": "~2.3.0",
-        "sonata-project/media-bundle": "~2.3",
+        "sonata-project/media-bundle": "2.3.3",
         "stof/doctrine-extensions-bundle": "~1.1",
         "mopa/bootstrap-bundle": "~3.0.0",
         "twbs/bootstrap": "v3.2.0",
