@@ -1,6 +1,7 @@
 <?php
 namespace Networking\InitCmsBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Exception\DuplicateMediaException;
 use Oneup\UploaderBundle\Controller\AbstractController;
@@ -66,6 +67,18 @@ class MediaMultiUploadController extends AbstractController
         $media->setEnabled(true);
         $media->setName($file->getClientOriginalName());
         $media->setBinaryContent($file);
+        $tags = explode(',', $request->get('tags'));
+        $tagCollection = new ArrayCollection();
+        foreach($tags as $tagId){
+            $tag = $this->container->get('doctrine')->getRepository('NetworkingInitCmsBundle:Tag')->find($tagId);
+
+            if($tag){
+                $tagCollection->add($tag);
+            }
+        }
+
+        $media->setTags($tagCollection);
+
 
         $checksum = Util\Checksum::fromFile($file->getPathName());
         $duplicate = $mediaAdmin->checkForDuplicate($media, $checksum);

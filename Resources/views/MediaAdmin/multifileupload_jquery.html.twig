@@ -41,7 +41,6 @@
               </div>
             </span>
         </div>
-
         <div class="col-md-3">
             <!-- The fileinput-button span is used to style the file input field as button -->
         {#<span class="btn btn-success fileinput-button dz-clickable">#}
@@ -56,6 +55,13 @@
                 <span>{{ 'upload_btn_cancel_all'|trans({}, 'MediaAdmin') }}</span>
             </a>
         </div>
+    </div>
+    <div>
+        <form>
+        {{ form_row(form.tags) }}
+            <input type="hidden" name="provider" value="{{app.request.get('provider')}}">
+            <input type="hidden" name="with_js" value="0">
+        </form>
     </div>
     <div class="well">
         <p class="fileinput-zone lead text-center" data-dz-clickable><a href="#" title="{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}">{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}</a></p>
@@ -112,6 +118,7 @@
                 $(file.previewElement.querySelector(".progress")).hide();
             }
 
+
             var fileDropzone = new Dropzone("div#dropzone-area", {
                 init: function () {
                     this.on("success", function (file, response) {
@@ -139,7 +146,8 @@
                 document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
             });
 
-            fileDropzone.on("sending", function (file) {
+            fileDropzone.on("sending", function (file, xhr, formData) {
+                formData.append("tags", $('#{{ admin.uniqid }}_tags').val());
                 // Show the total progress bar when upload starts
                 document.querySelector("#total-progress").style.opacity = "1";
             });

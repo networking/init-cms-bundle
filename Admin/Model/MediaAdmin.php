@@ -421,7 +421,6 @@ abstract class MediaAdmin extends Admin
             );
         }
 
-        if ($media->getId()) {
             $formMapper->add(
                 'tags',
                 'sonata_type_model',
@@ -435,7 +434,6 @@ abstract class MediaAdmin extends Admin
                     'attr' => array('style' => "width:220px"),
                 )
             );
-        }
 
         //remove and re-add fields to control field order
         if ($formMapper->has('enabled')) {
