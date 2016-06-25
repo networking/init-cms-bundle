@@ -617,7 +617,7 @@ class MenuItemAdminController extends CRUDController
         $newMenuItem = $menuItemManager->find($newMenuItemId);
         $menuItem = $menuItemManager->find($menuItemId);
 
-        if(!$newMenuItem || $menuItem){
+        if(!$newMenuItem || !$menuItem){
             throw new NotFoundHttpException();
         }
 
