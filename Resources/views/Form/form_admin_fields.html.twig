@@ -491,7 +491,7 @@ file that was distributed with this source code.
                 {% if form.vars.data %}
                     {% render url('sonata_admin_short_object_information', {
                     'code':     admin.code,
-                    'objectId': admin.id(form.vars.data),
+                    'objectId': value,
                     'uniqid':   admin.uniqid
                     }) %}
                     &nbsp;
