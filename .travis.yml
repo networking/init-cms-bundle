@@ -5,7 +5,7 @@ php:
   - 5.4
 
 before_script:
-  - php -i | grep memory_limit
   - phpenv config-rm xdebug.ini
   - phpenv config-add travis.php.ini
+  - php -i | grep memory_limit
   - composer install
