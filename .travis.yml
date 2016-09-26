@@ -5,5 +5,7 @@ php:
   - 5.4
 
 before_script:
+  - phpenv config-rm xdebug.ini
+  - phpenv config-add travis.php.ini
   - wget http://getcomposer.org/composer.phar
-  - php -d memory_limit=-1 composer.phar install
+  - php composer.phar install
