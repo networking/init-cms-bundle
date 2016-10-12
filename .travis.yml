@@ -1,9 +1,11 @@
 language: php
 
 php:
+  - 5.3
   - 5.4
-  - 5.5
 
 before_script:
-  - wget http://getcomposer.org/composer.phar
-  - php -d memory_limit=-1 composer.phar install
+  - phpenv config-rm xdebug.ini
+  - phpenv config-add travis.php.ini
+  - php -i | grep memory_limit
+  - composer install
