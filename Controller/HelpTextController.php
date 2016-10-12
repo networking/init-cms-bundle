@@ -10,8 +10,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation\AdminInterface;
-use Networking\InitCmsBundle\Admin\BaseAdmin;
+use Sonata\AdminBundle\Admin\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -79,10 +78,10 @@ class HelpTextController extends Controller
      * return the base template name
      *
      * @param Request $request
-     * @param BaseAdmin $admin
+     * @param Admin $admin
      * @return string the template name
      */
-    protected function getBaseTemplate(Request $request, BaseAdmin $admin)
+    protected function getBaseTemplate(Request $request, Admin $admin)
     {
         if ($request->isXmlHttpRequest()) {
             return $admin->getTemplate('ajax');
