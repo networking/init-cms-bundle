@@ -18,7 +18,7 @@ use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
  * @package Networking\InitCmsBundle\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class Text implements ContentInterface, SearchableContentInterface
+abstract class Text implements ContentInterface, TextInterface
 {
     /**
      * @var integer $id
