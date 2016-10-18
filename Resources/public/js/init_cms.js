@@ -102,7 +102,7 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {
                 && !$(e.target).hasClass('select2-input')
                 && !$(e.target.parentNode).hasClass('cke')
             ) {
-                this.$element.focus()
+                this.$element.blur(); //fix for IE (focus to blur for IE 11)
             }
         }, this))
 };
