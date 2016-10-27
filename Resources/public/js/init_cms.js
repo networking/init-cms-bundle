@@ -1,4 +1,5 @@
 function createInitCmsMessageBox(status, message) {
+    status = status == 'error'?'danger':status;
     var messageHtml = '<div class="alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
 
     jQuery('.notice-block').html(messageHtml);
