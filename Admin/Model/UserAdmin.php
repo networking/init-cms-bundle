@@ -39,7 +39,7 @@ abstract class UserAdmin extends SonataUserAdmin
     protected $trackedActions = array('list');
 
     /**
-     * @return Array
+     * @return array
      */
     public function getTrackedActions()
     {

@@ -10,9 +10,7 @@
  */
 namespace Networking\InitCmsBundle\Model;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
-use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -108,7 +106,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection
      */
     protected $children;
 
