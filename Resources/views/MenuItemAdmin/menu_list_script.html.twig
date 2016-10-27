@@ -98,12 +98,6 @@ function updateMenu(e) {
 }
 
 function setUpSortTree() {
-    jQuery('a[data-toggle="tab"]').on('shown', function (e) {
-        //save the latest tab; use cookies if you like 'em better:
-        localStorage.setItem('lastTab', $(e.target).attr('href'));
-        lastTab = localStorage.getItem('lastTab');
-
-    });
 
     jQuery('div.navigation').each(function (e, ui) {
         jQuery(ui).find('ul:first').nestedSortable({
@@ -178,14 +172,9 @@ jQuery(function () {
 
 
             jQuery.post(
-                    "{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}",
-                    {
-
-                        "nodes": ret
-                    },
-                    function (xhr) {
-                        createInitCmsMessageBox('success', xhr.message);
-                    }
+                "{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}",
+                {"nodes": ret},
+                function (xhr) {createInitCmsMessageBox('success', xhr.message);}
             );
 
             return ret;
@@ -227,7 +216,8 @@ jQuery(function () {
         }
     };
 
-    lastTab = jQuery('.nav-tabs a:first').attr('href');
+
+    var lastTab = localStorage.getItem('lastTab');
 
     jQuery.extend(jQuery.mjs.nestedSortable.prototype, nestedExtensions);
 
@@ -235,17 +225,15 @@ jQuery(function () {
 
     setUpSortTree();
 
-    var lastEdited = '{{ last_edited }}';
-
-    if (lastEdited) {
-        var tab = jQuery('#listItem_' + lastEdited).closest('div.tab-pane');
-        lastTab = '#' + tab.attr('id');
+    if (lastTab) {
         jQuery('a[href="' + lastTab + '"]').tab('show');
     }
+
     jQuery('body').on('show.bs.tab', function(e){
         var target = jQuery(e.target);
-        lastTab = target.attr('href');
+        localStorage.setItem('lastTab', target.attr('href'));
     });
+
     jQuery('.show-tooltip').tooltip({placement: 'bottom', delay: { show: 800, hide: 100 }});
 
 
