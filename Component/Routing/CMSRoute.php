@@ -20,6 +20,63 @@ namespace Networking\InitCmsBundle\Component\Routing;
 class CMSRoute extends AbstractRoute
 {
 
+
+    /**
+     * @var array
+     */
+    private $defaults = array();
+
+    public function setDefaults(array $defaults)
+    {
+
+        $this->defaults = array(
+            'route_params' => '',
+            '_locale' => $defaults['locale'],
+            self::CONTROLLER_NAME => $defaults['controller'],
+            self::TEMPLATE_NAME => $defaults['template'],
+            self::CONTENT_OBJECT => $this->content
+        );
+    }
+
+
+    /**
+     * {@inheritDoc}
+     *
+     * Handling the missing default 'compiler_class'
+     * @see setOptions
+     */
+    public function getOption($name)
+    {
+        $option = parent::getOption($name);
+        if (null === $option && 'compiler_class' === $name) {
+            return 'Symfony\\Component\\Routing\\RouteCompiler';
+        }
+
+        return $option;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Handling the missing default 'compiler_class'
+     * @see setOptions
+     */
+    public function getOptions()
+    {
+        $options = parent::getOptions();
+        if (!array_key_exists('compiler_class', $options)) {
+            $options['compiler_class'] = 'Symfony\\Component\\Routing\\RouteCompiler';
+        }
+
+        return $options;
+    }
+
+    public function getDefaults()
+    {
+        return $this->defaults;
+    }
+
+
     /**
      * Get the content document this route entry stands for. If non-null,
      * the ControllerClassMapper uses it to identify a controller and

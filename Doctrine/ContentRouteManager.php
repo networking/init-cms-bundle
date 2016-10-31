@@ -13,9 +13,11 @@ namespace Networking\InitCmsBundle\Doctrine;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\Query;
+use Networking\InitCmsBundle\Component\Routing\CMSRoute;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager as BaseContentRouteManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -156,14 +158,17 @@ abstract class ContentRouteManager extends BaseContentRouteManager
             /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
             $content = $this->getRouteContent($contentRoute);
 
-            $contentRoute->setContent($content);
+            $defaults = array(
+                'locale' => $contentRoute->getLocale(),
+                'controller' => $contentRoute->getController(),
+                'template' => new Template(array('template' => $contentRoute->getTemplate(), 'vars' => array()))
+            );
 
-            $contentRoute->setPath($url);
-
+            $route = new CMSRoute($content, $url, $defaults);
 
             $collection->add(
                 self::ROUTE_GENERATE_DUMMY_NAME . preg_replace('/[^a-z0-9A-Z_.]/', '_', $key),
-                $contentRoute
+                $route
             );
 
         }
