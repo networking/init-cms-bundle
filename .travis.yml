@@ -5,8 +5,7 @@ php:
   - 5.4
 
 before_script:
-  - wget http://getcomposer.org/composer.phar
-  - php -d memory_limit=-1 composer.phar install
-
-notifications:
-  slack: networking:FJp7dKkwRdDRwuFLJKqd6oZd
+  - phpenv config-rm xdebug.ini
+  - phpenv config-add travis.php.ini
+  - php -i | grep memory_limit
+  - composer install
