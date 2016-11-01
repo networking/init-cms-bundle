@@ -57,6 +57,18 @@ class CacheCleaner {
     }
 
     /**
+     * @param LifecycleEventArgs $args
+     */
+    public function postRemove(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
+
+        if ($entity instanceof MenuItem){
+            $this->cleanCache();
+        }
+    }
+
+    /**
      * remove items from the cache and stop after one item.
      */
     protected function cleanCache(){
