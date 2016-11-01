@@ -97,26 +97,41 @@ file that was distributed with this source code.
 
                                 {% block table_footer %}
                                     <tfoot>
-                                        <tr>
-                                            <th colspan="{{ admin.list.elements|length - 1 }}">
-                                                {{ block('batch') }}
-                                            </th>
-
-                                            <th class="align-right">
-                                                {% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
-                                                list_results_count{% endtranschoice %}
-                                            </th>
-                                        </tr>
+                                    <tr>
+                                        <th colspan="{{ admin.list.elements|length - (app.request.isXmlHttpRequest ? (admin.list.has('_action') + admin.list.has('batch')) : 0) }}">
+                                            <div class="form-inline">
+                                                {% if not app.request.isxmlhttprequest %}{{ block('batch') }}{% endif %}
+                                                <div class="pull-right">
+                                                    <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
+                                                            list_results_count{% endtranschoice %}</strong></label>
+                                                    {% block max_per_page %}
+                                                        <label class="control-label"
+                                                               for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
+                                                            label_per_page{% endtrans %}</label>
+                                                        <select class="per-page small" id="{{ admin.uniqid }}_per_page"
+                                                                style="width: auto; height: auto">
+                                                            {% for per_page in admin.getperpageoptions %}
+                                                                <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                                                                        value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
+                                                                    {{ per_page }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    {% endblock %}
+                                                </div>
+                                            </div>
+                                        </th>
+                                    </tr>
                                     </tfoot>
                                 {% endblock %}
                             </table>
                             {% if datagrid.pager.haveToPaginate() %}
                                 <div class="row">
-                                    <div class="col-xs-1">
+                                    <div class="col-xs-2">
                                         <div class="clearfix">&nbsp;</div>
                                         {{ datagrid.pager.page }} / {{ datagrid.pager.lastpage }}</div>
-                                    <div class="col-xs-10 text-center">
-                                        <ul class="pagination pagination-sm">
+                                    <div class="col-xs-8 text-center">
+                                        <ul class="pagination pagination-xs">
 
                                             {% if datagrid.pager.page != 1 %}
                                                 <li>
@@ -161,7 +176,6 @@ file that was distributed with this source code.
 
                                         </ul>
                                     </div>
-                                    <div class="col-xs-1"></div>
                                 </div>
                             {% endif %}
                             {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
@@ -307,3 +321,4 @@ file that was distributed with this source code.
         </ul>
     {% endif %}
 {% endblock %}
+
