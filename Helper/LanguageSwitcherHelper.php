@@ -104,13 +104,17 @@ class LanguageSwitcherHelper
      *
      * @param $oldUrl
      * @param $locale
-     * @return array|\Networking\InitCmsBundle\Entity\ContentRoute
+     * @return array|\Networking\InitCmsBundle\Component\Routing\Route
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function getTranslationRoute($oldUrl, $locale)
     {
-        $oldRequest = Request::create($oldUrl, 'GET', array(), $this->request->cookies->all());
-        $oldRequest->setSession($this->request->getSession());
+
+        $cookies = $this->request->cookies ? $this->request->cookies->all(): array();
+        $oldRequest = Request::create($oldUrl, 'GET', array(), $cookies);
+        if($this->request->getSession()){
+            $oldRequest->setSession($this->request->getSession());
+        }
 
         try{
             $request = $this->pageHelper->matchContentRouteRequest($oldRequest);
@@ -146,9 +150,9 @@ class LanguageSwitcherHelper
                 return array('_route' => 'networking_init_cms_home');
             }
             //return a contentRoute object
+            $contentRoute = $translation->getContentRoute()->setContent($translation);
 
-
-            return $translation->getContentRoute()->setContent($translation);
+            return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
         }
 
         if ($content instanceof PageSnapshotInterface) {
