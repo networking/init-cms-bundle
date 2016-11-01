@@ -95,7 +95,7 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
         $result = $helper->getTranslationRoute('/foo', 'en');
 
-        $this->assertInstanceOf('Networking\InitCmsBundle\Entity\ContentRoute', $result);
+        $this->assertInstanceOf('Networking\InitCmsBundle\Component\Routing\Route', $result);
 
     }
 
