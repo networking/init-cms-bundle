@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Menu;
 
+use Networking\InitCmsBundle\Model\ContentRoute;
+use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
@@ -91,16 +93,17 @@ class AdminMenuBuilder extends MenuBuilder
 
             if ($entity instanceof VersionableInterface) {
                 if ($snapShot = $entity->getSnapshot()) {
-                    $liveRoute = $this->router->generate($snapShot->getRoute());
+                    $liveRoute = $this->router->generate($this->getRoute($snapShot->getRoute()));
                 }
-                $draftRoute = $this->router->generate($entity->getRoute());
+
+                $draftRoute = $this->router->generate($this->getRoute($snapShot->getRoute()));
                 $pageAdmin = $this->adminPool->getAdminByAdminCode('networking_init_cms.admin.page');
                 $editPath = $pageAdmin->generateObjectUrl('edit', $entity);
 
                 $language = $entity->getRoute()->getLocale();
             } elseif ($entity instanceof ResourceVersionInterface) {
-                $liveRoute = $this->router->generate($entity->getRoute());
-                $draftRoute = $this->router->generate($entity->getPage()->getRoute());
+                $liveRoute = $this->router->generate($this->getRoute($entity->getRoute()));
+                $draftRoute = $this->router->generate($this->getRoute($entity->getPage()->getRoute()));
 
                 $pageAdmin = $this->adminPool->getAdminByAdminCode('networking_init_cms.admin.page');
                 $editPath = $pageAdmin->generateObjectUrl('edit', $entity->getPage());
@@ -376,6 +379,15 @@ class AdminMenuBuilder extends MenuBuilder
         $item->setLabel($label)
             ->setExtra('safe_label', true);
         return $item;
+    }
+
+    /**
+     * @param ContentRoute $contentRoute
+     * @return \Networking\InitCmsBundle\Component\Routing\Route
+     */
+    protected function getRoute(ContentRoute $contentRoute)
+    {
+        return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
     }
 
 

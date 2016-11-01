@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Helper;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\Serializer\Serializer;
+use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
@@ -108,9 +109,12 @@ class LanguageSwitcherHelper
      */
     public function getTranslationRoute($oldUrl, $locale)
     {
-        $oldRequest = Request::create($oldUrl);
+        $oldRequest = Request::create($oldUrl, 'GET', array(), $this->request->cookies->all());
+        $oldRequest->setSession($this->request->getSession());
+
         try{
             $request = $this->pageHelper->matchContentRouteRequest($oldRequest);
+
         }catch (ResourceNotFoundException $e){
             $request = $oldRequest;
         }
@@ -133,6 +137,7 @@ class LanguageSwitcherHelper
             }
         }
 
+
         if ($content instanceof PageInterface) {
             $translation = $content->getAllTranslations()->get($locale);
 
@@ -141,6 +146,7 @@ class LanguageSwitcherHelper
                 return array('_route' => 'networking_init_cms_home');
             }
             //return a contentRoute object
+
 
             return $translation->getContentRoute()->setContent($translation);
         }
@@ -152,13 +158,14 @@ class LanguageSwitcherHelper
 
             $translation = $content->getAllTranslations()->get($locale);
 
+
             if ($translation && $snapshotId = $translation->getId()) {
                 /** @var $snapshot PageSnapshotInterface */
                 $snapshot = $this->om->getRepository($content->getSnapshotClassType())->findOneBy(array('resourceId' => $snapshotId));
 
                 if ($snapshot) {
-                    //return a contentRoute object
-                    return $snapshot->getRoute();
+                    $contentRoute = $snapshot->getRoute();
+                    return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
                 }
             }
         }

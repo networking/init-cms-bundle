@@ -10,19 +10,146 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\EntityManager;
-use Networking\InitCmsBundle\Doctrine\ContentRouteManager as DoctrineContentRouteManager;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectRepository;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+use Networking\InitCmsBundle\Model\ContentRouteInterface;
+use Networking\InitCmsBundle\Model\ContentRouteManager as BaseContentRouteManager;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouteCollection;
+
 /**
- * @author net working AG <info@networking.ch>
+ * Class ContentRouteManager
+ * @package Networking\InitCmsBundle\Entity
+ * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class ContentRouteManager extends DoctrineContentRouteManager
+class ContentRouteManager extends BaseContentRouteManager
 {
-    public function __construct(EntityManager $em, $class)
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected $objectManager;
+    /**
+     * @var Request
+     */
+    protected $request;
+    /**
+     * @var ObjectRepository
+     */
+    protected $repository;
+
+    /**
+     * ContentRouteManager constructor.
+     * @param ObjectManager $om
+     * @param $class
+     */
+    public function __construct(ObjectManager $om, $class)
     {
-        parent::__construct($em, $class);
+        $this->objectManager = $om;
+        $this->repository = $om->getRepository($class);
     }
 
+    /**
+     * @param $criteria
+     * @return mixed
+     */
+    public function findContentRouteBy(array $criteria)
+    {
+        return $this->repository->findOneBy($criteria);
+    }
+
+    /**
+     * @param ContentRouteInterface $contentRoute
+     * @return object
+     */
+    public function findContentByContentRoute(ContentRouteInterface $contentRoute)
+    {
+        $repository = $this->objectManager->getRepository($contentRoute->getClassType());
+
+        return $repository->find($contentRoute->getObjectId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRouteCollectionForRequest(Request $request)
+    {
+        $url = $request->getPathInfo();
+
+        $collection = new RouteCollection();
+
+        /** @var $connection \Doctrine\DBAL\Connection */
+        $connection = $this->objectManager->getConnection();
+
+        try {
+            $connection->connect();
+        } catch (\Exception $e) {
+            return $collection;
+        }
+
+        if (!$connection->isConnected()) {
+            return $collection;
+        }
+
+        $searchUrl = (substr($url, -1) != '/') ? $url . '/' : $url;
 
 
+        $params = array('path' => $searchUrl);
+
+
+        try {
+            $contentRoutes = $this->repository->findBy($params);
+        } catch (\Doctrine\DBAL\DBALException $e) {
+
+            return $collection;
+        }
+
+
+        if (empty($contentRoutes)) {
+            return $collection;
+        }
+
+        $filterByLocale = function (ContentRouteInterface $var) use ($request)
+        {
+            if ($request) {
+                return $var->getLocale() == $request->getLocale();
+            } else {
+                return true;
+            }
+        };
+
+        $tempContentRoutes = array_filter($contentRoutes, $filterByLocale);
+
+
+        if (empty($tempContentRoutes)) {
+            $tempContentRoutes = $contentRoutes;
+        }
+
+        foreach ($tempContentRoutes as $key => $contentRoute) {
+
+            $viewStatus = ($request) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
+
+            $test = new \ReflectionClass($contentRoute->getClassType());
+
+            if ($viewStatus == VersionableInterface::STATUS_DRAFT
+                && ($test->implementsInterface(ResourceVersionInterface::class))
+            ) {
+                continue;
+            } elseif ($viewStatus == VersionableInterface::STATUS_PUBLISHED
+                && ($test->implementsInterface(VersionableInterface::class))
+            ) {
+                continue;
+            }
+
+            /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
+            $content = $this->getRouteContent($contentRoute);
+
+            $collection->add(
+                sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
+                static::generateRoute($contentRoute, $url, $content));
+        }
+
+        return $collection;
+    }
 }

@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Route;
  *
  * @author net working AG <info@networking.ch>
  */
-class ContentRoute extends AbstractRoute implements ContentRouteInterface
+class ContentRoute implements ContentRouteInterface
 {
 
     /**
@@ -116,37 +116,6 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
         return $this;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * Handling the missing default 'compiler_class'
-     * @see setOptions
-     */
-    public function getOption($name)
-    {
-        $option = parent::getOption($name);
-        if (null === $option && 'compiler_class' === $name) {
-            return 'Symfony\\Component\\Routing\\RouteCompiler';
-        }
-
-        return $option;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Handling the missing default 'compiler_class'
-     * @see setOptions
-     */
-    public function getOptions()
-    {
-        $options = parent::getOptions();
-        if (!array_key_exists('compiler_class', $options)) {
-            $options['compiler_class'] = 'Symfony\\Component\\Routing\\RouteCompiler';
-        }
-
-        return $options;
-    }
 
     /**
      * @param  string $controller
@@ -297,34 +266,10 @@ class ContentRoute extends AbstractRoute implements ContentRouteInterface
         return $this->templateName;
     }
 
-    /**
-     * @return array
-     */
-    public function getDefaults()
-    {
-        $template = new Template(array('template' => $this->getTemplate(), 'vars' => array()));
-
-        return array(
-            'route_params' => '',
-            '_locale' => $this->getLocale(),
-            self::CONTROLLER_NAME => $this->getController(),
-            self::TEMPLATE_NAME => $template,
-            self::CONTENT_OBJECT => $this->content
-        );
-    }
 
     public function getContent()
     {
         return $this->content;
     }
 
-    /**
-     * Get the routes that point to this content.
-     *
-     * @return Route[] Route instances that point to this content
-     */
-    public function getRoutes()
-    {
-        // TODO: Implement getRoutes() method.
-    }
 }

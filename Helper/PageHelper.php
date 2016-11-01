@@ -47,11 +47,6 @@ class PageHelper
             $path = PageInterface::PATH_SEPARATOR . $path;
         }
 
-        //remove last slash
-//        if(substr($path, -1, 1) == PageInterface::PATH_SEPARATOR){
-//            $path = substr($path,0, -1);
-//        }
-
         return $path;
     }
 

@@ -17,7 +17,7 @@ use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface ContentRouteInterface extends  RouteReferrersReadInterface
+interface ContentRouteInterface
 {
     /**
      * Set the content of a route
@@ -112,10 +112,4 @@ interface ContentRouteInterface extends  RouteReferrersReadInterface
      * @return string
      */
     public function getTemplateName();
-
-    /**
-     * @return array
-     */
-    public function getDefaults();
-
 }

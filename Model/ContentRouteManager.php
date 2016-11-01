@@ -11,9 +11,9 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Networking\InitCmsBundle\Component\Routing\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
@@ -32,6 +32,17 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
     protected $className;
 
     /**
+     * @var string
+     */
+    protected $class;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+
+    /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
     protected $container;
@@ -45,16 +56,14 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
         $this->className = $className;
     }
 
-    public function getClass(){
-        return $this->class;
-    }
-
     /**
      * {@inheritDoc}
      */
     public function getRouteByName($name, $parameters = array())
     {
         $dynamicRouteName = self::ROUTE_GENERATE_DUMMY_NAME;
+
+
         if ($name !== $dynamicRouteName) {
 
             throw new RouteNotFoundException("Route name '$name' does not begin with the route name prefix '{ $dynamicRouteName }'");
@@ -75,21 +84,14 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
         return $route;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getRouteCollectionForRequest(Request $request)
-    {
-        $url = $request->getPathInfo();
 
-        return $this->findContentRoutesBy($url);
-    }
 
     /**
      * {@inheritDoc}
      */
     public function getRoutesByNames($names, $parameters = array())
     {
+
         $collection = new RouteCollection();
 
         foreach ($names as $name) {
@@ -97,14 +99,6 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
         }
 
         return $collection;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function findManyByUrl($url)
-    {
-        return $this->findContentRoutesBy($url);
     }
 
 
@@ -127,4 +121,26 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
 
         return $this->findContentByContentRoute($contentRoute);
     }
+
+    /**
+     * @param ContentRouteInterface $contentRoute
+     * @param $path
+     * @param $content
+     * @return Route
+     */
+    public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content){
+
+
+        $template = new Template(array('template' => $contentRoute->getTemplate()));
+        $defaults = array(
+            'route_params' => '',
+            '_locale' => $contentRoute->getLocale(),
+            RouteObjectInterface::CONTROLLER_NAME => $contentRoute->getController(),
+            RouteObjectInterface::TEMPLATE_NAME => $template,
+            RouteObjectInterface::CONTENT_OBJECT => $content
+        );
+
+        return new Route($path, $defaults);
+    }
+
 }
