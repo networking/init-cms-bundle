@@ -9,6 +9,7 @@
  */
 
 namespace Networking\InitCmsBundle\Model;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class Tag
@@ -30,9 +31,35 @@ abstract class Tag
     protected $name;
 
     /**
+     * @var string $path
+     */
+    protected $path;
+
+    /**
+     * @var integer $level
+     */
+    protected $level;
+
+    /**
      * @var string $slug
      */
     protected $slug;
+
+
+    /**
+     * @var ArrayCollection
+     */
+    protected $children;
+
+    /**
+     * @var
+     */
+    protected $parent;
+
+    /**
+     * @var array
+     */
+    protected $parentNames;
 
     /**
      * Get id
@@ -71,7 +98,7 @@ abstract class Tag
      * Set slug
      *
      * @param  string $slug
-     * @return Tag
+     * @return Tag|false
      */
     public function setSlug($slug)
     {
@@ -90,6 +117,109 @@ abstract class Tag
     {
         return $this->slug;
     }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param int $level
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * @param Tag $parent
+     */
+    public function setParent(Tag $parent = null){
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return Tag
+     */
+    public function getParent(){
+        return $this->parent;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getChildren(){
+        return $this->children;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getAdminTitle()
+    {
+        $countParents = $this->getLevel();
+        $prefix = '';
+        for ($i = 0; $i < $countParents; $i++) {
+            $prefix .= '- ';
+        }
+
+        return join($this->getParentNames(), '/');
+    }
+
+
+
+    /**
+     * @param  array $parentNames
+     * @return $this
+     */
+    public function setParentNames(array $parentNames)
+    {
+        $this->parentNames = $parentNames;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParentNames()
+    {
+        if (!$this->parentNames) {
+
+            $page = $this;
+            $parentNames = array($page->getName());
+
+            while ($page->getParent()) {
+                $page = $page->getParent();
+                $parentNames[] = $page->getName();
+            }
+
+            $this->setParentNames(array_reverse($parentNames));
+        }
+
+        return $this->parentNames;
+    }
+
 
     /**
      * @return string

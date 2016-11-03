@@ -1,0 +1,28 @@
+{% import _self as macros %}
+{% macro tag_tree(tags) %}
+    {% for tag in tags %}
+        <li class="table-row-style sortable-tag" id="tag_{{ tag.id }}" data-tag-name="{{ tag.name }}">
+                <div class="dotted">&nbsp;</div>
+                <div class="handle menu_item tag_item" id="div_{{ tag.id }}">
+                    <i class="glyphicon glyphicon-folder-close cursor-pointer tag-folder" data-pk="{{ tag.id }}" data-toggle="collapse" data-target="#div_{{ tag.id }} + ul"></i>&nbsp;
+                    <a class="tag_link" data-pk="{{ tag.id }}" href="#" >{{ tag.name }}</a>
+                </div>
+            {% if tag.children %}
+                <ul class="table-row-style collapse">
+                    {{ _self.tag_tree(tag.children) }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+
+<div class="sortable">
+    <ul class="table-row-style ui-sortable">
+        <li class="table-row-style no-nest">
+            <div class="dotted">&nbsp;</div>
+            <div class="handle menu_item tag_item"><a class="show_all_media"  href="#">Show All</a></div>
+        </li>
+        {{ macros.tag_tree(tags) }}
+    </ul>
+</div>

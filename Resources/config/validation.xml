@@ -27,4 +27,13 @@
             </constraint>
         </property>
     </class>
+
+    <class name="Networking\InitCmsBundle\Model\Tag">
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">
+                <value>name</value>
+                <value>parent</value>
+            </option>
+        </constraint>
+    </class>
 </constraint-mapping>

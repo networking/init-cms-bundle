@@ -10,16 +10,15 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
+use Networking\InitCmsBundle\Model\Tag;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
  * Class MediaAdminController
@@ -133,7 +132,7 @@ class MediaAdminController extends SonataMediaAdminController
      *
      * @throws NotFoundHttpException
      * @throws AccessDeniedException
-     * @return Response|RedirectResponse
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response|RedirectResponse
      */
     public function deleteAction($id)
     {
@@ -255,12 +254,17 @@ class MediaAdminController extends SonataMediaAdminController
 
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
+        $tags = $this->getDoctrine()
+            ->getRepository('NetworkingInitCmsBundle:Tag')
+            ->findBy(array('level' => 1), array('path' => 'ASC') );
+
         return $this->render(
             $this->admin->getTemplate('list'),
             array(
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
+                'tags' => $tags,
                 'action' => 'list',
                 'form' => $formView,
                 'datagrid' => $datagrid,
@@ -298,6 +302,36 @@ class MediaAdminController extends SonataMediaAdminController
                 'show_actions' => true
             )
         );
+    }
+
+    public function updateTagTreeAction(Request $request)
+    {
+        /** @var Request $request */
+        $nodes = $request->get('nodes') ? $request->get('nodes') : array();
+
+        $admin = $this->get('networking_init_cms.admin.tag');
+        try {
+            foreach ($nodes as $node) {
+                if(!$node['item_id']) continue;
+                /** @var $tag Tag */
+                $tag = $admin->getObject($node['item_id']);
+                if ($node['parent_id']) {
+                    $parent = $admin->getObject($node['parent_id']);
+                    $tag->setParent($parent);
+                } else {
+                    $tag->setParent(null);
+                }
+
+                $tag->setLevel($node['depth']+1);
+                $admin->update($tag);
+            }
+
+            $response = array('status' => 'ok', 'message' => $this->admin->trans('info.menu_sorted'));
+        } catch (\Exception $e) {
+            $response = array('status' => 'error', 'message' => $this->admin->trans('info.menu_sorted_error'));
+        }
+
+        return $this->renderJson($response);
     }
 
 }

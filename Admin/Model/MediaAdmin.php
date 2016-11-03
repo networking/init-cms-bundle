@@ -10,11 +10,13 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Doctrine\ORM\EntityRepository;
 use Gaufrette\Util;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
@@ -141,6 +143,14 @@ abstract class MediaAdmin extends Admin
                 '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:refreshList',
             )
         );
+
+        $collection->add(
+            'update_tag_tree',
+            'update_tag_tree',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:updateTagTree',
+            )
+        );
     }
 
     /**
@@ -241,10 +251,14 @@ abstract class MediaAdmin extends Admin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '', $provider = '')
     {
-
+        $queryBuilder = function (EntityRepository $er)  {
+            $qb = $er->createQueryBuilder('t');
+            $qb->orderBy('t.path', 'asc');
+            return $qb;
+        };
         $datagridMapper
             ->add('name', 'networking_init_cms_simple_string')
-            ->add('tags')
+            ->add('tags', null, array(), null, array('property' => 'adminTitle', 'query_builder' => $queryBuilder))
             ->add('authorName', null, array('hidden' => true));
 
         $datagridMapper->add(
@@ -428,6 +442,7 @@ abstract class MediaAdmin extends Admin
                     'required' => false,
                     'expanded' => false,
                     'multiple' => true,
+                    'property' => 'adminTitle',
                     'help_label' => 'help.media_tag',
                     'taggable' => true,
                     'choices_as_values' => true,
