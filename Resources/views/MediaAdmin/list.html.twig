@@ -321,7 +321,8 @@ file that was distributed with this source code.
                 $('#item_list').load("{{ admin.generateUrl('refresh_list')|raw }}");
             }
 
-            var lastLink, showAll = $('.show_all_media');
+            var showAll = $('.show_all_media');
+            var lastLink = showAll;
 
             $('.tag_link').on('click', function(e){
                 e.preventDefault();
