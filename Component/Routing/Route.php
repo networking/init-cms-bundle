@@ -22,6 +22,8 @@ use Symfony\Component\Routing\Route as SymfonyRoute;
 class Route extends SymfonyRoute implements RouteObjectInterface
 {
 
+    const LOCALE = '_locale';
+
     /**
      * @var array
      */
@@ -140,5 +142,13 @@ class Route extends SymfonyRoute implements RouteObjectInterface
     public function getContent()
     {
         return $this->getDefault(self::CONTENT_OBJECT);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocale()
+    {
+        return $this->getDefault(self::LOCALE);
     }
 }
