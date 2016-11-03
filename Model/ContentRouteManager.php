@@ -25,7 +25,6 @@ use Symfony\Component\Routing\RouteCollection;
 abstract class ContentRouteManager implements ContentRouteManagerInterface
 {
 
-
     /**
      * @var string $className
      */
@@ -134,7 +133,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
         $template = new Template(array('template' => $contentRoute->getTemplate()));
         $defaults = array(
             'route_params' => '',
-            '_locale' => $contentRoute->getLocale(),
+            Route::LOCALE => $contentRoute->getLocale(),
             RouteObjectInterface::CONTROLLER_NAME => $contentRoute->getController(),
             RouteObjectInterface::TEMPLATE_NAME => $template,
             RouteObjectInterface::CONTENT_OBJECT => $content
