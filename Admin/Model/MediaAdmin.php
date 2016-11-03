@@ -151,6 +151,14 @@ abstract class MediaAdmin extends Admin
                 '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:updateTagTree',
             )
         );
+
+        $collection->add(
+           'update_tag',
+           'update_tag',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:updateTag',
+            )
+        );
     }
 
     /**

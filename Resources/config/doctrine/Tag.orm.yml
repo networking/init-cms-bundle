@@ -22,6 +22,7 @@ Networking\InitCmsBundle\Entity\Tag:
       nullable: true
       gedmo:
         treePath:
+          appendId: false
           separator: '/'
     level:
       type: integer
@@ -56,4 +57,4 @@ Networking\InitCmsBundle\Entity\Tag:
         onDelete: 'SET NULL'
   uniqueConstraints:
       uniqueConstraint:
-          columns: [name, parent_id]
+          columns: [path]

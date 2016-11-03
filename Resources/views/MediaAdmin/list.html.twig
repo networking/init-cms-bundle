@@ -288,6 +288,11 @@ file that was distributed with this source code.
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/menu_admin.css') }}" type="text/css"
           media="all"/>
+    <style>
+        .sortable li.mjs-nestedSortable-collapsed > ul {
+            display: none;
+        }
+    </style>
 {% endblock stylesheets %}
 
 
@@ -311,8 +316,14 @@ file that was distributed with this source code.
                     $('.batch-actions').fadeOut();
                 }
             });
-            var lastLink = null;
-            $('.tag-folder').on('click', function(e){
+
+            function refreshList(){
+                $('#item_list').load("{{ admin.generateUrl('refresh_list')|raw }}");
+            }
+
+            var lastLink, showAll = $('.show_all_media');
+
+            $('.tag_link').on('click', function(e){
                 e.preventDefault();
                 if(lastLink){
                     lastLink.parent().removeClass('info');
@@ -320,13 +331,18 @@ file that was distributed with this source code.
                 var link = $(this);
                 var tagId = link.data('pk');
                 link.parent().addClass('info');
+                var listItem = link.closest('li');
+                if($(listItem).hasClass('mjs-nestedSortable-collapsed')){
+                    link.siblings('i').trigger('click');
+                }
+
                 lastLink = link;
                 $('.media-box').each(function(){
                     if($(this).hasClass('tag_'+tagId)){$(this).show()}else{$(this).hide()};
                 });
             });
 
-            $('.show_all_media').on('click', function (e) {
+            showAll.on('click', function (e) {
                 e.preventDefault();
                 if(lastLink){
                     lastLink.parent().removeClass('info');
@@ -338,22 +354,25 @@ file that was distributed with this source code.
             })
         });
 
-        function refreshList(){
-            $('#item_list').load("{{ admin.generateUrl('refresh_list')|raw }}");
-        }
-
         function updateMenu(e) {
             jQuery.post(
                     "{{ admin.generateUrl('update_tag_tree') }}",
                     {"nodes": jQuery(e).nestedSortable('toArray')},
-                    function (xhr) {createInitCmsMessageBox('success', xhr.message);}
+                    function (xhr) {
+                        createInitCmsMessageBox(xhr.status, xhr.message);
+                    }
             );
         }
 
         $.fn.editable.defaults.mode = 'popup';
 
         $('.tag_link').editable({
-            'toggle': 'dblclick'
+            'toggle': 'manual',
+            'url': '{{ admin.generateUrl('update_tag') }}',
+            'name': 'name'
+        }).on('contextmenu', function(e){
+            $(this).editable('show');
+            e.preventDefault();
         });
 
         $('.ui-sortable').nestedSortable({
@@ -371,9 +390,27 @@ file that was distributed with this source code.
             forceHelperSize: true,
             startCollapsed: true,
             expandOnHover: 100,
-            expandedClass: 'list-expand',
-            collapsedClass: 'list-collapsed',
-            hoveringClass: 'list-hovering',
+            isAllowed: function(placeholder, placeholderParent, currentItem) {
+                var allowed = true;
+                var currentId = $(currentItem).attr('id');
+                var currentText = $(currentItem).find('> div.handle > a.tag_link').text();
+
+                if(placeholderParent){
+                    $(placeholderParent[0]).find(' > ul > li.sortable-tag').each(function(i, e){
+                        if(currentId != $(e).attr('id')){
+                            if($(e).find('> div.handle > a.tag_link').text() == currentText ){allowed = false;}
+                        }
+                    });
+                }else{
+                    $('#tag-tree').find(' > li.sortable-tag').each(function(i, e){
+                        if(currentId != $(e).attr('id')){
+                            if($(e).find('> div > a.tag_link').text() == currentText ){ allowed = false; }
+                        }
+                    });
+                }
+
+                return allowed;
+            },
             update: function (e, ui) {
                 updateMenu(this)
             },
@@ -387,29 +424,14 @@ file that was distributed with this source code.
                 }).appendTo( $(list) );
             },
             expand: function(event, ui){
-                $('li.list-hovering > ul.collapse').collapse('show');
+                $('li.mjs-nestedSortable-hovering > div > i.glyphicon-folder-close').toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open')
             }
         });
 
-        $(document).on('hide.bs.collapse', function (e) {
-            var parent = $(e.target).parent();
-            $(parent).removeClass('list-expand').addClass('list-collapsed');
-
-            var icon = $(parent).find('div > i').first();
-
-            $(icon).removeClass('glyphicon-folder-open').addClass('glyphicon-folder-close');
-            e.stopPropagation();
-        }).on('show.bs.collapse', function (e) {
-
-            var parent = $(e.target).parent();
-            $(parent).removeClass('list-collapsed').addClass('list-expand');
-
-            var icon = $(parent).find('div > i').first();
-
-            $(icon).removeClass('glyphicon-folder-close').addClass('glyphicon-folder-open');
-            e.stopPropagation();
-        })
-
+        $('i.tag_folder').on('click', function() {
+            $(this).closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
+            $(this).toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
+        });
 
     </script>
 {% endblock %}

@@ -11,5 +11,13 @@
             <argument type="service" id="networking_init_cms.page_manager"/>
             <tag name="validator.constraint_validator" alias="unique_url_validator"/>
         </service>
+        <service id="networking_init_cms.unique_tag_validator"
+                 class="Networking\InitCmsBundle\Validator\Constraints\UniqueTagValidator"
+                 scope="prototype">
+            <call method="setTagAdmin">
+                <argument type="service" id="networking_init_cms.admin.tag"/>
+            </call>
+            <tag name="validator.constraint_validator" alias="unique_tag_validator"/>
+        </service>
     </services>
 </container>

@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 use Doctrine\Common\Collections\ArrayCollection;
+use Networking\InitCmsBundle\Helper\PageHelper;
 
 /**
  * Class Tag
@@ -177,16 +178,8 @@ abstract class Tag
      */
     public function getAdminTitle()
     {
-        $countParents = $this->getLevel();
-        $prefix = '';
-        for ($i = 0; $i < $countParents; $i++) {
-            $prefix .= '- ';
-        }
-
-        return join($this->getParentNames(), '/');
+        return $this->path;
     }
-
-
 
     /**
      * @param  array $parentNames

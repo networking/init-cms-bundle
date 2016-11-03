@@ -1,5 +1,6 @@
 error:
     unique_url: A page with the same URL (URL & parent page) "{{ value }}" exists, please select another one
+    unique_tag: A tag with the same path (name & parent tag) "{{ value }}" exists, please select another one
 init_cms:
     pagename:
         blank: The page title should not be empty

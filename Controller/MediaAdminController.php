@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * Class MediaAdminController
@@ -287,7 +288,7 @@ class MediaAdminController extends SonataMediaAdminController
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $galleryListMode = $request->get('pcode') ? true : false;
         $datagrid = $this->admin->getDatagrid();
-        $formView = $datagrid->getForm()->createView();
+        $datagrid->getForm()->createView();
         $persistentParameters = $this->admin->getPersistentParameters();
 
         return $this->render(
@@ -304,12 +305,52 @@ class MediaAdminController extends SonataMediaAdminController
         );
     }
 
+    public function updateTagAction(Request $request)
+    {
+        $id = $request->get('pk');
+        $name = $request->get('value');
+        $admin = $this->get('networking_init_cms.admin.tag');
+
+        /** @var $tag Tag */
+        if(!$tag = $admin->getObject($id)){
+            throw new NotFoundHttpException('unable to find the tag with the id');
+        }
+
+        $tag->setName($name);
+
+        $validator = $this->get('validator');
+        $errors = $validator->validate($tag);
+
+        if (count($errors) > 0) {
+
+            $messages = array();
+            foreach ($errors as $error){
+                $messages[] = $error->getMessage();
+            }
+
+            return new Response(join(', ', $messages), 400);
+        }
+
+        $admin->update($tag);
+
+        return $this->renderJson(array(
+            'result'    => 'ok',
+            'objectId'  => $id,
+        ));
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function updateTagTreeAction(Request $request)
     {
         /** @var Request $request */
         $nodes = $request->get('nodes') ? $request->get('nodes') : array();
 
         $admin = $this->get('networking_init_cms.admin.tag');
+
+        $validator = $this->get('validator');
         try {
             foreach ($nodes as $node) {
                 if(!$node['item_id']) continue;
@@ -323,10 +364,16 @@ class MediaAdminController extends SonataMediaAdminController
                 }
 
                 $tag->setLevel($node['depth']+1);
+
+                $errors = $validator->validate($tag);
+                if(count($errors) > 0){
+                    throw new ValidatorException();
+                }
+
                 $admin->update($tag);
             }
 
-            $response = array('status' => 'ok', 'message' => $this->admin->trans('info.menu_sorted'));
+            $response = array('status' => 'success', 'message' => $this->admin->trans('info.menu_sorted'));
         } catch (\Exception $e) {
             $response = array('status' => 'error', 'message' => $this->admin->trans('info.menu_sorted_error'));
         }
