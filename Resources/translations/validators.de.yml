@@ -8,5 +8,7 @@ init_cms:
         blank: URL darf nicht leer sein
     page_copy:
         duplicate_locale: Die ausgewählten Sprachen müssen unterschiedlich sein
+    name:
+        no_slash: Die Name sollte keine "/" enthalten
 
 'Cannot create content, object is invalid': Bitte controllieren sie Ihren Angaben

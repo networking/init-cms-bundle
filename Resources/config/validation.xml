@@ -32,6 +32,10 @@
         <constraint name="Networking\InitCmsBundle\Validator\Constraints\UniqueTag"/>
         <property name="name">
             <constraint name="NotBlank"/>
+            <constraint name="Regex">
+                <option name="pattern">/^[^\/]+$/</option>
+                <option name="message">init_cms.name.no_slash</option>
+            </constraint>
         </property>
     </class>
 </constraint-mapping>

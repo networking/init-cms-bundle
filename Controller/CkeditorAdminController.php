@@ -12,7 +12,6 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,9 +48,18 @@ class CkeditorAdminController extends BaseMediaAdminController
 
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
+        $tags = $this->getDoctrine()
+            ->getRepository('NetworkingInitCmsBundle:Tag')
+            ->findBy(array('level' => 1), array('path' => 'ASC'));
+
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+
         return $this->render(
             $this->getTemplate('browser'),
             array(
+                'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'lastItem' => 0,
                 'action' => 'browser',
                 'form' => $formView,
                 'datagrid' => $datagrid,

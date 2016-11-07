@@ -14,9 +14,9 @@ use Networking\InitCmsBundle\Model\Tag;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
@@ -57,8 +57,8 @@ class MediaAdminController extends SonataMediaAdminController
                 'security' => $this->get('sonata.media.pool')->getDownloadSecurity($media),
                 'action' => 'view',
                 'pixlr' => $this->container->has('sonata.media.extra.pixlr') ? $this->container->get(
-                        'sonata.media.extra.pixlr'
-                    ) : false,
+                    'sonata.media.extra.pixlr'
+                ) : false,
             )
         );
     }
@@ -81,8 +81,8 @@ class MediaAdminController extends SonataMediaAdminController
                 'NetworkingInitCmsBundle:MediaAdmin:select_provider.html.twig',
                 array(
                     'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
-                            $this->get('request')->get('context', $this->get('sonata.media.pool')->getDefaultContext())
-                        ),
+                        $this->get('request')->get('context', $this->get('sonata.media.pool')->getDefaultContext())
+                    ),
                     'base_template' => $this->getBaseTemplate(),
                     'admin' => $this->admin,
                     'action' => 'create'
@@ -257,7 +257,9 @@ class MediaAdminController extends SonataMediaAdminController
 
         $tags = $this->getDoctrine()
             ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(array('level' => 1), array('path' => 'ASC') );
+            ->findBy(array('level' => 1), array('path' => 'ASC'));
+
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
         return $this->render(
             $this->admin->getTemplate('list'),
@@ -266,6 +268,8 @@ class MediaAdminController extends SonataMediaAdminController
                     $request->get('context', $persistentParameters['context'])
                 ),
                 'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'lastItem' => 0,
                 'action' => 'list',
                 'form' => $formView,
                 'datagrid' => $datagrid,
@@ -291,94 +295,27 @@ class MediaAdminController extends SonataMediaAdminController
         $datagrid->getForm()->createView();
         $persistentParameters = $this->admin->getPersistentParameters();
 
+        $tags = $this->getDoctrine()
+            ->getRepository('NetworkingInitCmsBundle:Tag')
+            ->findBy(array('level' => 1), array('path' => 'ASC'));
+
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+
         return $this->render(
             'NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig',
             array(
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
+                'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'lastItem' => 0,
                 'action' => 'list',
                 'datagrid' => $datagrid,
                 'galleryListMode' => $galleryListMode,
                 'show_actions' => true
             )
         );
-    }
-
-    public function updateTagAction(Request $request)
-    {
-        $id = $request->get('pk');
-        $name = $request->get('value');
-        $admin = $this->get('networking_init_cms.admin.tag');
-
-        /** @var $tag Tag */
-        if(!$tag = $admin->getObject($id)){
-            throw new NotFoundHttpException('unable to find the tag with the id');
-        }
-
-        $tag->setName($name);
-
-        $validator = $this->get('validator');
-        $errors = $validator->validate($tag);
-
-        if (count($errors) > 0) {
-
-            $messages = array();
-            foreach ($errors as $error){
-                $messages[] = $error->getMessage();
-            }
-
-            return new Response(join(', ', $messages), 400);
-        }
-
-        $admin->update($tag);
-
-        return $this->renderJson(array(
-            'result'    => 'ok',
-            'objectId'  => $id,
-        ));
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     */
-    public function updateTagTreeAction(Request $request)
-    {
-        /** @var Request $request */
-        $nodes = $request->get('nodes') ? $request->get('nodes') : array();
-
-        $admin = $this->get('networking_init_cms.admin.tag');
-
-        $validator = $this->get('validator');
-        try {
-            foreach ($nodes as $node) {
-                if(!$node['item_id']) continue;
-                /** @var $tag Tag */
-                $tag = $admin->getObject($node['item_id']);
-                if ($node['parent_id']) {
-                    $parent = $admin->getObject($node['parent_id']);
-                    $tag->setParent($parent);
-                } else {
-                    $tag->setParent(null);
-                }
-
-                $tag->setLevel($node['depth']+1);
-
-                $errors = $validator->validate($tag);
-                if(count($errors) > 0){
-                    throw new ValidatorException();
-                }
-
-                $admin->update($tag);
-            }
-
-            $response = array('status' => 'success', 'message' => $this->admin->trans('info.menu_sorted'));
-        } catch (\Exception $e) {
-            $response = array('status' => 'error', 'message' => $this->admin->trans('info.menu_sorted_error'));
-        }
-
-        return $this->renderJson($response);
     }
 
 }

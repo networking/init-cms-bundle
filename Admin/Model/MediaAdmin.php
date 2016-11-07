@@ -143,22 +143,6 @@ abstract class MediaAdmin extends Admin
                 '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:refreshList',
             )
         );
-
-        $collection->add(
-            'update_tag_tree',
-            'update_tag_tree',
-            array(
-                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:updateTagTree',
-            )
-        );
-
-        $collection->add(
-           'update_tag',
-           'update_tag',
-            array(
-                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:updateTag',
-            )
-        );
     }
 
     /**
@@ -266,7 +250,6 @@ abstract class MediaAdmin extends Admin
         };
         $datagridMapper
             ->add('name', 'networking_init_cms_simple_string')
-            ->add('tags', null, array(), null, array('property' => 'adminTitle', 'query_builder' => $queryBuilder))
             ->add('authorName', null, array('hidden' => true));
 
         $datagridMapper->add(

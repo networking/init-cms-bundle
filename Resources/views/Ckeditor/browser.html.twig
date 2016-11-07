@@ -25,14 +25,62 @@ file that was distributed with this source code.
 
 {% block javascripts %}
     {{ parent() }}
-
+    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/menu_admin.css') }}" type="text/css"
+          media="all"/>
     <script>
+
+
         $(function () {
+            var body = $('body');
+            var lastLink = $('.show_all_media');
+
             $(".select").click(function (e) {
                 e.preventDefault();
                 window.opener.CKEDITOR.tools.callFunction({{ app.request.get('CKEditorFuncNum')|escape('js') }}, $(this).attr("href"));
                 window.close();
             });
+
+            body.on('click', '.tag_link', function(e){
+                e.preventDefault();
+                if(lastLink){
+                    lastLink.parent().removeClass('info');
+                    lastLink.siblings('a.dialog-link').hide();
+                }
+                var link = $(e.target);
+                var tagId = link.data('pk');
+                link.parent().addClass('info');
+                if(link.parent().siblings('ul').children().length < 1){
+                    link.siblings('a.dialog-link').show();
+                }
+                var listItem = link.closest('li');
+                if($(listItem).hasClass('mjs-nestedSortable-collapsed')){
+                    link.siblings('i').trigger('click');
+                }
+
+                lastLink = link;
+                $('.media-box').each(function(){
+                    if($(this).hasClass('tag_'+tagId)){$(this).show()}else{$(this).hide()};
+                });
+            });
+
+            body.on('click', '.show_all_media', function (e) {
+                e.preventDefault();
+                if(lastLink){
+                    lastLink.parent().removeClass('info');
+                    lastLink.siblings('a.dialog-link').hide();
+                }
+                $('.media-box').show();
+                var link = $(e.target);
+                link.parent().addClass('info');
+                lastLink = link;
+            });
+
+            body.on('click', 'i.tag_folder', function(e) {
+                var target = $(e.target);
+                target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
+                target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
+            });
+
         });
     </script>
 {% endblock %}
@@ -211,6 +259,13 @@ file that was distributed with this source code.
             <div>
                 {% block table_body %}
                     <div class="row">
+                        <div class="col-md-3 col-xs-12">
+                            <div  id="tagsContainer">
+                                {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'noSort': true, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
+                            </div>
+                        </div>
+                        <div id="item_list" class="col-md-9 col-xs-12 text-center">
+
                         {% for object in datagrid.results %}
                             {% set path = 'networking_init_cms_file_download' %}
                             {% if object.width %}
@@ -239,7 +294,7 @@ file that was distributed with this source code.
                                 {% set iframeHeight = '560px' %}
                             {% endif %}
 
-                            <div class="media-box">
+                            <div class="media-box  {% for tag in object.tags %}tag_{{ tag.id }}{% endfor %}">
                                 <div class="zero-clipboard">
                                     <div class="btn-clipboard btn-clipboard-left">
                                         <a href="{{ previewLink }}"
@@ -291,6 +346,7 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         {% endfor %}
+                    </div>
                     </div>
                     <div class="clearfix">&nbsp;</div>
                 {% endblock %}

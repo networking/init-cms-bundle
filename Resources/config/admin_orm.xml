@@ -77,7 +77,7 @@
         <service id="networking_init_cms.admin.tag" class="Networking\InitCmsBundle\Admin\Entity\TagAdmin">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\Tag</argument>
-            <argument>NetworkingInitCmsBundle:CRUD</argument>
+            <argument>NetworkingInitCmsBundle:TagAdmin</argument>
             <call method="setTranslationDomain">
                 <argument>TagAdmin</argument>
             </call>

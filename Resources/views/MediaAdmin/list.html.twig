@@ -164,10 +164,6 @@ file that was distributed with this source code.
                     {% if create_text == 'link_action_create' %}
                         {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
                     {% endif %}
-                    {#<a class="btn btn-primary btn-sm menu-dialog-link"#}
-                    {#href="{{ admin.generateUrl('create', {'context' : persistent_parameters.context, 'provider' : null}) }}">#}
-                    {#<i class="glyphicon glyphicon-plus icon-white"></i> {{ create_text }}#}
-                    {#</a>#}
                     {% for code, provider in providers %}
                         <a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}"
                            class="btn btn-default dialog-link"
@@ -245,8 +241,27 @@ file that was distributed with this source code.
             </div>
 
             {% if datagrid.results|length > 0 %}
-                <div id="item_list">
-                {% include "NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig" %}
+
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <div  id="tagsContainer">
+                            {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
+                        </div>
+
+                        {% if  tagAdmin.isGranted('CREATE')%}
+                            <hr>
+                                {% set create_text =  'link_action_create'|trans({}, tagAdmin.translationDomain) %}
+                                {% if create_text == 'link_action_create' %}
+                                    {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
+                                {% endif %}
+                                <a class="btn btn-primary btn-sm tag-dialog-link" href="{{ tagAdmin.generateUrl('create') }}">
+                                    <i class="glyphicon glyphicon-plus icon-white"></i> {{create_text }}
+                                </a>
+                        {% endif %}
+                    </div>
+                    <div id="item_list" class="col-md-9 col-xs-12 text-center">
+                        {% include "NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig" %}
+                    </div>
                 </div>
                 {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and (galleryListMode is not defined or not galleryListMode) %}
                     <p>
@@ -272,6 +287,8 @@ file that was distributed with this source code.
     </div>
 </div>
     {% if not app.request.isXmlHttpRequest %}
+    <div class="modal fade" tabindex="-1" role="dialog" id="tag_dialog">
+    </div>
     </div>
 {% else %}
     <script type="text/javascript">
@@ -288,153 +305,12 @@ file that was distributed with this source code.
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/menu_admin.css') }}" type="text/css"
           media="all"/>
-    <style>
-        .sortable li.mjs-nestedSortable-collapsed > ul {
-            display: none;
-        }
-    </style>
 {% endblock stylesheets %}
 
 
 {% block before_body_end %}
     {{ parent() }}
-    <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}"
-            type="text/javascript"></script>
-    <script>
-        $(function(){
-            $('.batch-actions').hide();
-            $('body').on('click', '.delete_check_box', function(){
-                var active = false;
-                $('.delete_check_box').each(function(i, item){
-                    if(item.checked){
-                        active = true;
-                    }
-                });
-                if(active){
-                    $('.batch-actions').fadeIn();
-                }else{
-                    $('.batch-actions').fadeOut();
-                }
-            });
-
-            function refreshList(){
-                $('#item_list').load("{{ admin.generateUrl('refresh_list')|raw }}");
-            }
-
-            var showAll = $('.show_all_media');
-            var lastLink = showAll;
-
-            $('.tag_link').on('click', function(e){
-                e.preventDefault();
-                if(lastLink){
-                    lastLink.parent().removeClass('info');
-                }
-                var link = $(this);
-                var tagId = link.data('pk');
-                link.parent().addClass('info');
-                var listItem = link.closest('li');
-                if($(listItem).hasClass('mjs-nestedSortable-collapsed')){
-                    link.siblings('i').trigger('click');
-                }
-
-                lastLink = link;
-                $('.media-box').each(function(){
-                    if($(this).hasClass('tag_'+tagId)){$(this).show()}else{$(this).hide()};
-                });
-            });
-
-            showAll.on('click', function (e) {
-                e.preventDefault();
-                if(lastLink){
-                    lastLink.parent().removeClass('info');
-                }
-                $('.media-box').show();
-                var link = $(this);
-                link.parent().addClass('info');
-                lastLink = link;
-            })
-        });
-
-        function updateMenu(e) {
-            jQuery.post(
-                    "{{ admin.generateUrl('update_tag_tree') }}",
-                    {"nodes": jQuery(e).nestedSortable('toArray')},
-                    function (xhr) {
-                        createInitCmsMessageBox(xhr.status, xhr.message);
-                    }
-            );
-        }
-
-        $.fn.editable.defaults.mode = 'popup';
-
-        $('.tag_link').editable({
-            'toggle': 'manual',
-            'url': '{{ admin.generateUrl('update_tag') }}',
-            'name': 'name'
-        }).on('contextmenu', function(e){
-            $(this).editable('show');
-            e.preventDefault();
-        });
-
-        $('.ui-sortable').nestedSortable({
-            disableNestingClass: 'no-nest',
-            handle: 'i.glyphicon',
-            listType: 'ul',
-            items: 'li',
-            opacity: .6,
-            placeholder: 'placeholder',
-            revert: 250,
-            tabSize: 10,
-            toleranceElement: 'div.menu_item',
-            isTree: true,
-            forcePlaceholderSize: true,
-            forceHelperSize: true,
-            startCollapsed: true,
-            expandOnHover: 100,
-            isAllowed: function(placeholder, placeholderParent, currentItem) {
-                var allowed = true;
-                var currentId = $(currentItem).attr('id');
-                var currentText = $(currentItem).find('> div.handle > a.tag_link').text();
-
-                if(placeholderParent){
-                    $(placeholderParent[0]).find(' > ul > li.sortable-tag').each(function(i, e){
-                        if(currentId != $(e).attr('id')){
-                            if($(e).find('> div.handle > a.tag_link').text() == currentText ){allowed = false;}
-                        }
-                    });
-                }else{
-                    $('#tag-tree').find(' > li.sortable-tag').each(function(i, e){
-                        if(currentId != $(e).attr('id')){
-                            if($(e).find('> div > a.tag_link').text() == currentText ){ allowed = false; }
-                        }
-                    });
-                }
-
-                return allowed;
-            },
-            update: function (e, ui) {
-                updateMenu(this)
-            },
-            stop: function(event, ui) {
-                var list = ui.item.context.parentElement;
-                $(list).addClass('collapse in');
-                $(list).find(' > li.sortable-tag').sort(function(a,b){
-                    var keyA = $(a).data('tag-name').toLowerCase();
-                    var keyB = $(b).data('tag-name').toLowerCase();
-                    return (keyA < keyB ? -1 : (keyA > keyB ? +1 : 0));
-                }).appendTo( $(list) );
-            },
-            expand: function(event, ui){
-                $('li.mjs-nestedSortable-hovering > div > i.glyphicon-folder-close').toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open')
-            }
-        });
-
-        $('i.tag_folder').on('click', function() {
-            $(this).closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
-            $(this).toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
-        });
-
-    </script>
+    {% include 'NetworkingInitCmsBundle:MediaAdmin:list_script.html.twig' %}
 {% endblock %}
 
 

@@ -12,10 +12,6 @@ namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Sluggable\Util\Urlizer;
-use Networking\InitCmsBundle\Model\PageInterface;
-use Networking\InitCmsBundle\Model\LayoutBlockInterface;
-use Networking\InitCmsBundle\Model\ContentRouteInterface;
-use Networking\InitCmsBundle\Model\MenuItemInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 

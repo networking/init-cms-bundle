@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityRepository;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
@@ -25,7 +26,6 @@ use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
  */
 class TagAdmin extends Admin
 {
-
 
     /**
      * Default values to the datagrid.
@@ -48,6 +48,32 @@ class TagAdmin extends Admin
     }
 
     /**
+     * @param RouteCollection $collection
+     */
+    public function configureRoutes(RouteCollection $collection)
+    {
+
+        parent::configureRoutes($collection);
+
+        $collection->add(
+            'update_tree',
+            'update_tree',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:updateTree',
+            )
+        );
+
+        $collection->add(
+            'inline_edit',
+            'inline_edit',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:inlineEdit',
+            )
+        );
+    }
+
+
+    /**
      * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
@@ -55,27 +81,26 @@ class TagAdmin extends Admin
         $id = $this->getSubject() ? $this->getSubject()->getId(): null;
         $formMapper
             ->add('name')
-            ->add(
-                    'parent',
-                    'networking_type_autocomplete',
-                    array(
-                        'help_block' => 'parent.helper.text',
-                        'attr' => array('style' => "width:220px"),
-                        'property' => 'AdminTitle',
-                        'class' => $this->getClass(),
-                        'required' => false,
-                        'query_builder' => function (EntityRepository $er) use ($id)  {
-                            $qb = $er->createQueryBuilder('t');
-                            $qb->orderBy('t.path', 'asc');
-                            if($id){
-                                $qb->where('t.id != :id')
-                                    ->setParameter(':id', $id);
-                            }
+            ->add('parent',
+                'networking_type_autocomplete',
+                array(
+                    'help_block' => 'parent.helper.text',
+                    'attr' => array('style' => "width:220px"),
+                    'property' => 'AdminTitle',
+                    'class' => $this->getClass(),
+                    'required' => false,
+                    'query_builder' => function (EntityRepository $er) use ($id)  {
+                        $qb = $er->createQueryBuilder('t');
+                        $qb->orderBy('t.path', 'asc');
+                        if($id){
+                            $qb->where('t.id != :id')
+                                ->setParameter(':id', $id);
+                        }
 
-                            return $qb;
-                        },
-                    )
-                );
+                        return $qb;
+                    },
+                )
+            );
     }
 
     /**
@@ -85,38 +110,7 @@ class TagAdmin extends Admin
     {
         $datagridMapper
             ->add('name')
-            ->add(
-                'path',
-                'doctrine_orm_callback',
-                array('callback' => array($this, 'matchPath'), 'hidden' => true)
-            );
-    }
-
-    /**
-     * @param ProxyQuery $ProxyQuery
-     * @param $alias
-     * @param $field
-     * @param $data
-     * @return bool
-     */
-    public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
-    {
-        if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
-            return false;
-        }
-        $data['value'] = trim($data['value']);
-
-        if (strlen($data['value']) == 0) {
-            return false;
-        }
-
-        $fieldName = 'path';
-        $qb = $ProxyQuery->getQueryBuilder();
-
-        $qb->where(sprintf('%s.%s LIKE :path', $alias, $fieldName));
-        $qb->setParameter(':path', '%' . $data['value'] . '%');
-
-        return true;
+            ->add('path');
     }
 
     /**
@@ -126,7 +120,7 @@ class TagAdmin extends Admin
     {
         $listMapper
             ->addIdentifier('name')
-            ->add('adminTitle')
+            ->add('path')
             ->add(
                 '_action',
                 'actions',
@@ -138,19 +132,5 @@ class TagAdmin extends Admin
                     )
                 )
             );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validate(ErrorElement $errorElement, $object)
-    {
-        $errorElement
-            ->with('name')
-            ->assertNotNull(array())
-            ->assertNotBlank()
-            ->assertLength(array('max' => 255))
-            ->end();
-
     }
 }
