@@ -80,7 +80,7 @@ class TagAdmin extends Admin
     {
         $id = $this->getSubject() ? $this->getSubject()->getId(): null;
         $formMapper
-            ->add('name')
+            ->add('name', null, array('attr' => array('class' => 'tag_name_input')))
             ->add('parent',
                 'networking_type_autocomplete',
                 array(

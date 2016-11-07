@@ -15,6 +15,9 @@
             tagDialog.on('hide.bs.modal', function (e) {
                 jQuery('input[type=submit]', this).off();
             });
+            tagDialog.on('shown.bs.modal', function(){
+                jQuery('input.tag_name_input').focus();
+            });
             jQuery(document.body).append(tagDialog);
             jQuery(tagDialog).on('submit', 'form',  submitAjaxTagForm);
         }
