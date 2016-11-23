@@ -11,7 +11,9 @@
 namespace Networking\InitCmsBundle\Controller;
 
 
+use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Model\Tag;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,17 +33,32 @@ class TagAdminController extends CRUDController
         /** @var Response $response */
         $response = parent::createAction();
 
-        if($this->isXmlHttpRequest()){
+        if ($this->isXmlHttpRequest()) {
             $content = $response->getContent();
             $jsonArray = json_decode($content, true);
 
-            if($jsonArray['result'] == 'ok'){
+            if ($jsonArray['result'] == 'ok') {
                 $jsonArray['html'] = $this->getTagTree($jsonArray['objectId']);
                 $response = $this->renderJson($jsonArray, 200);
             }
         }
 
         return $response;
+    }
+
+    /**
+     * @param $objectId
+     * @return string
+     */
+    public function getTagTree($objectId)
+    {
+        $tagRepo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Tag');
+        $tags = $tagRepo->findBy(array('level' => 1), array('path' => 'ASC'));
+
+        return $this->renderView('NetworkingInitCmsBundle:TagAdmin:tags.html.twig', array(
+            'tags' => $tags,
+            'tagAdmin' => $this->admin,
+            'lastItem' => $objectId));
     }
 
     /**
@@ -53,7 +70,7 @@ class TagAdminController extends CRUDController
         $request = $this->get('request_stack')->getCurrentRequest();
         $returnToMedia = $request->get('returnToMedia');
 
-        $id     = $this->get('request')->get($this->admin->getIdParameter());
+        $id = $this->get('request')->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
         if (!$object) {
@@ -84,7 +101,7 @@ class TagAdminController extends CRUDController
                     )
                 );
 
-                if($returnToMedia){
+                if ($returnToMedia) {
                     $mediaAdmin = $this->get('sonata.media.admin.media');
                     $url = $mediaAdmin->generateUrl('list');
                     return new RedirectResponse($url);
@@ -111,8 +128,8 @@ class TagAdminController extends CRUDController
 
 
         return $this->render('NetworkingInitCmsBundle:TagAdmin:delete.html.twig', array(
-            'object'     => $object,
-            'action'     => 'delete',
+            'object' => $object,
+            'action' => 'delete',
             'returnToMedia' => $returnToMedia,
             'csrf_token' => $this->getCsrfToken('sonata.delete'),
         ));
@@ -129,7 +146,6 @@ class TagAdminController extends CRUDController
         }
         $this->getLogger()->error($e->getMessage(), $context);
     }
-
 
     /**
      * @param Request $request
@@ -212,17 +228,20 @@ class TagAdminController extends CRUDController
     }
 
     /**
-     * @param $objectId
-     * @return string
+     * @param Request $request
+     * @return Response
      */
-    public function getTagTree($objectId)
+    public function searchTagsAction(Request $request)
     {
-        $tagRepo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Tag');
-        $tags = $tagRepo->findBy(array('level' => 1), array('path' => 'ASC'));
+        $q = $request->get('q');
+        $response = array();
+        $query = $this->admin->getModelManager()->createQuery($this->admin->getClass(), 't');
+        $query->select('t.id, t.path AS text');
+        $query->andWhere('t.path LIKE :q');
+        $query->orderBy('text', 'ASC');
+        $query->setParameter(':q', '%' . $q . '%');
+        $response = $query->execute(array(), Query::HYDRATE_ARRAY);
 
-        return $this->renderView('NetworkingInitCmsBundle:TagAdmin:tags.html.twig', array(
-            'tags' => $tags,
-            'tagAdmin' => $this->admin,
-            'lastItem' => $objectId));
+        return $this->renderJson($response);
     }
 }

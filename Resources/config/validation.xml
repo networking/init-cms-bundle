@@ -38,4 +38,14 @@
             </constraint>
         </property>
     </class>
+    <class name="Networking\InitCmsBundle\Entity\Media">
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">
+                <value>context</value>
+                <value>md5File</value>
+            </option>
+            <option name="errorPath">binaryContent</option>
+            <option name="message">File is duplicate</option>
+        </constraint>
+    </class>
 </constraint-mapping>

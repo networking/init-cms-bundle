@@ -10,9 +10,11 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gaufrette\Util;
+use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class Media
@@ -56,16 +58,6 @@ class Media extends BaseMedia
     }
 
     /**
-     * Get id
-     *
-     * @return integer $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function setBinaryContent($binaryContent)
@@ -73,7 +65,8 @@ class Media extends BaseMedia
         $this->previousProviderReference = $this->providerReference;
         $this->providerReference = null;
         $this->binaryContent = $binaryContent;
-        $this->setMd5File($binaryContent);
+        $checksum = $this->getChecksum();
+        $this->setMd5File($checksum);
     }
 
     /**
@@ -90,6 +83,16 @@ class Media extends BaseMedia
     }
 
     /**
+     * Get tags
+     *
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
      * @param  \Doctrine\Common\Collections\ArrayCollection $tags
      * @return $this
      */
@@ -101,13 +104,11 @@ class Media extends BaseMedia
     }
 
     /**
-     * Get tags
-     *
-     * @return ArrayCollection
+     * @return string
      */
-    public function getTags()
+    public function getLocale()
     {
-        return $this->tags;
+        return $this->locale;
     }
 
     /**
@@ -122,15 +123,6 @@ class Media extends BaseMedia
     }
 
     /**
-     * @return string
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-
-    /**
      * Getter Used in Form(field:networking_type_mediaprint)
      *
      * @return integer $id
@@ -138,6 +130,16 @@ class Media extends BaseMedia
     public function getImage()
     {
         return $this->getId();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer $id
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -165,10 +167,19 @@ class Media extends BaseMedia
         $this->md5File = $md5File;
     }
 
+    public function getChecksum()
+    {
+        if ($this->getBinaryContent() instanceof UploadedFile) {
+            return Util\Checksum::fromFile($this->getBinaryContent()->getPathName());
+        }
+        return Util\Checksum::fromContent($this->getBinaryContent());
+    }
+
     /**
      * @return $this
      */
-    public function getSelf(){
+    public function getSelf()
+    {
         return $this;
     }
 }

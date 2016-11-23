@@ -27,7 +27,7 @@ file that was distributed with this source code.
 
 <div class="tab-content">
     {% for key, menu in menus %}
-        <div class="tab-pane navigation sortable {% if loop.first %}active{% endif %}" id="menu_{{ menu.rootNode.id }}">
+        <div class="tab-pane navigation menu-tree sortable {% if loop.first %}active{% endif %}" id="menu_{{ menu.rootNode.id }}">
             <div class="row">
                 <div class="col-md-12">
                     <p class="info-soft margin-top">

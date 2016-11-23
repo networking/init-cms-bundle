@@ -78,17 +78,36 @@ class MediaMultiUploadController extends AbstractController
         }
 
         $media->setTags($tagCollection);
+        $provider = $mediaAdmin->getPool()->getProvider($media->getProviderName());
 
 
-        $checksum = Util\Checksum::fromFile($file->getPathName());
-        $duplicate = $mediaAdmin->checkForDuplicate($media, $checksum);
+        $provider->transform($media);
 
-        if($duplicate){
-            $path = $mediaAdmin->generateObjectUrl('edit', $duplicate);
-            $response->offsetSet('url', $path);
-            $response->offsetSet('id', $duplicate->getId());
+        $validator = $this->container->get('validator');
 
-            throw new DuplicateMediaException('File is duplicate');
+        $errors = $validator->validate($media);
+
+        $errorMessages = array();
+        if($errors->count() > 0){
+            $duplicate = false;
+            foreach ($errors as $error){
+                $errorMessages[] = $error->getMessage();
+
+                if($error->getMessage() == 'File is duplicate'){
+                    $duplicate = true;
+                }
+            }
+
+            if($duplicate){
+                $originalMedia = $mediaAdmin->checkForDuplicate($media);
+                $path = $mediaAdmin->generateObjectUrl('edit', $originalMedia);
+                $response->offsetSet('url', $path);
+                $response->offsetSet('id', $originalMedia->getId());
+
+                throw new DuplicateMediaException('File is duplicate');
+            }
+
+            throw new UploadException(join(', ', $errorMessages));
         }
 
         try{

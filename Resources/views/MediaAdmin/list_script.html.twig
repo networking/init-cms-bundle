@@ -23,6 +23,32 @@
         }
     }
 
+    function submitAjaxBatchForm(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var form = jQuery(this).closest('form');
+
+        if (jQuery('[name^="idx[]"]:checked', form).length == 0 && jQuery('[name^="all_elements"]:checked', form).length == 0) {
+            createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
+            return;
+        }
+
+        jQuery(form).ajaxSubmit({
+            type: form.attr('method'),
+            url: form.attr('action'),
+            dataType: 'json',
+            success: function (xhr) {
+                if (xhr.result == 'ok') {
+                    createInitCmsMessageBox(xhr.status, xhr.message);
+                    $('.batch-actions').hide();
+                    refreshList();
+                }
+            }
+        });
+
+    }
+
     function createAjaxTagDialog(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -78,8 +104,6 @@
         lastItem.find('> div > a.tag_link').trigger('click');
     }
 
-
-
     function setUpSortTree(){
 
         $('.ui-sortable').nestedSortable({
@@ -122,13 +146,7 @@
             },
             stop: function(e, ui) {
                 var list = ui.item.context.parentElement;
-                $(list).find(' > li.sortable-tag').sort(function(a,b){
-                    var keyA = $(a).data('tag-name').toLowerCase();
-                    var keyB = $(b).data('tag-name').toLowerCase();
-                    return (keyA < keyB ? -1 : (keyA > keyB ? +1 : 0));
-                }).appendTo( $(list) );
-
-
+                sortList(list);
             },
             expand: function(){
                 $('li.mjs-nestedSortable-hovering > div > i.glyphicon-folder-close').toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open')
@@ -142,26 +160,39 @@
         }).on('contextmenu', function(e){
             $(this).editable('show');
             e.preventDefault();
+        }).on('save', function(e, params){
+            $(this).parent().closest('li').data('tag-name', params.newValue);
+        }).on('hidden', function(e, r){
+            if(r == 'save'){
+                var list = $(this).parent().closest('ul');
+                sortList(list);
+            }
         });
+    }
+
+    function sortList(list){
+        $(list).find(' > li.sortable-tag').sort(function(a,b){
+            var keyA = $(a).data('tag-name').toString().toLowerCase();
+            var keyB = $(b).data('tag-name').toString().toLowerCase();
+            return (keyA < keyB ? -1 : (keyA > keyB ? +1 : 0));
+        }).appendTo( $(list) );
     }
 
     function updateTree(e) {
         jQuery.post(
-                "{{ tagAdmin.generateUrl('update_tree') }}",
-                {"nodes": jQuery(e).nestedSortable('toArray')},
-                function (xhr) {
-                    createInitCmsMessageBox(xhr.status, xhr.message);
-                }
+            "{{ tagAdmin.generateUrl('update_tree') }}",
+            {"nodes": jQuery(e).nestedSortable('toArray')},
+            function (xhr) {
+                createInitCmsMessageBox(xhr.status, xhr.message);
+            }
         );
     }
-
 
     function refreshList(){
         $('#item_list').load(
                 "{{ admin.generateUrl('refresh_list')|raw }}",
                 function(){$('.info > a.tag_link').trigger('click');}
         );
-
     }
 
 
@@ -169,7 +200,7 @@
         var body = $('body');
 
         var ua = navigator.userAgent, event = (ua.match(/iPad/i)) ? "touchstart" : "click";
-        $('.batch-actions').hide();
+
         body.on('click', '.delete_check_box', function(){
             var active = false;
             $('.delete_check_box').each(function(i, item){
@@ -182,6 +213,10 @@
             }else{
                 $('.batch-actions').fadeOut();
             }
+        });
+
+        $('.content-main').on('click', "button[type='submit']", function(e){
+            $("input[name='action']").val(this.value);
         });
 
         lastLink = $('.show_all_media');
@@ -226,6 +261,21 @@
             var target = $(e.target);
             target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
             target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
+        });
+
+        body.on('click', '.batch-add-tags', submitAjaxBatchForm);
+
+        $(".tag-select").select2({
+            ajax: {
+                url: "{{ tagAdmin.generateUrl('search_tags') }}",
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
         });
 
         $.fn.editable.defaults.mode = 'popup';

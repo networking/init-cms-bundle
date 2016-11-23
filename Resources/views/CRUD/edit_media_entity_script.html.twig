@@ -148,14 +148,22 @@ var field_dialog_form_action_{{ id }} = function (event) {
 };
 //handle a click in the list view
 var field_dialog_form_list_link_{{ id }} = function (event) {
-    Admin.log('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
 
     var link = jQuery(this);
 
     //trigger javascript actions
-    if (link.hasClass('filter-close') || link.hasClass('dropdown-toggle') || link.hasClass('image-preview-link')){
-        return true;
+    if (link.hasClass('filter-close') ||
+            link.hasClass('dropdown-toggle') ||
+            link.hasClass('image-preview-link') ||
+            link.hasClass('tag_link') ||
+            link.hasClass('show_all_media')
+    ){
+        Admin.log('[{{ id }}|field_dialog_form_list_link] handle default javascript action');
+        return;
     }
+
+
+    Admin.log('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
 
     event.preventDefault();
     event.stopPropagation();

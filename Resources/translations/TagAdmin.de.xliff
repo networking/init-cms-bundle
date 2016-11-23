@@ -14,9 +14,21 @@
                 <source>form.label_name</source>
                 <target>Tag-Name</target>
             </trans-unit>
+            <trans-unit id="form.label_parent">
+                <source>form.label_parent</source>
+                <target>Übergeordnetes Medien-Tag</target>
+            </trans-unit>
             <trans-unit id="list.label_name">
                 <source>list.label_name</source>
                 <target>Tag-Name</target>
+            </trans-unit>
+            <trans-unit id="list.label_path">
+                <source>list.label_path</source>
+                <target>Mediena-Tag Hierarchy</target>
+            </trans-unit>
+            <trans-unit id="parent.helper_text">
+                <source>parent.helper_text</source>
+                <target>Wählen Sie ein übergeordnetes Medien-Tag aus, um Ihre Medien-Tags besser zu organisieren</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_tag_delete">
                 <source>breadcrumb.link_tag_delete</source>
@@ -33,6 +45,18 @@
             <trans-unit id="action._delete">
                 <source>action._delete</source>
                 <target>Löschen</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Neuer Tag erstellen</target>
+            </trans-unit>
+            <trans-unit id="show_all_media">
+                <source>show_all_media</source>
+                <target>Alle Medien anzeigen</target>
+            </trans-unit>
+            <trans-unit id="action._add_tag">
+                <source>action._add_tag</source>
+                <target>Medien einem Medien-Tag zuordnen</target>
             </trans-unit>
         </body>
     </file>

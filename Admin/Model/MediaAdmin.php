@@ -243,11 +243,6 @@ abstract class MediaAdmin extends Admin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '', $provider = '')
     {
-        $queryBuilder = function (EntityRepository $er)  {
-            $qb = $er->createQueryBuilder('t');
-            $qb->orderBy('t.path', 'asc');
-            return $qb;
-        };
         $datagridMapper
             ->add('name', 'networking_init_cms_simple_string')
             ->add('authorName', null, array('hidden' => true));
@@ -271,11 +266,25 @@ abstract class MediaAdmin extends Admin
      */
     public function getBatchActions()
     {
+        $actions = array();
         if ($this->request && $this->request->get('pcode') == '') {
-            return parent::getBatchActions();
+
+            // retrieve the default batch actions (currently only delete)
+            $actions = parent::getBatchActions();
+
+            if (
+                $this->hasRoute('edit') && $this->isGranted('EDIT') &&
+                $this->hasRoute('delete') && $this->isGranted('DELETE')
+            ) {
+                $actions['add_tags'] = array(
+                    'label' => 'add_tags',
+                    'translation_domain' => $this->getTranslationDomain(),
+                    'ask_confirmation' => false
+                );
+            }
         }
 
-        return array();
+        return $actions;
     }
 
     /**
@@ -331,54 +340,18 @@ abstract class MediaAdmin extends Admin
         return parent::getTemplate($name);
     }
 
-    /**
-     * @param mixed $media
-     * @return mixed|void
-     */
-    public function prePersist($media)
-    {
-        if($checksum = $this->getChecksum($media)){
-            $media->setMd5File($checksum);
-        }
-
-        return parent::prePersist($media);
-    }
-
-    /**
-     * @param $media
-     * @return string
-     */
-    public function getChecksum($media)
-    {
-        if($media->getBinaryContent() instanceof UploadedFile){
-            return Util\Checksum::fromFile($media->getBinaryContent()->getPathName());
-        }
-        return false;
-    }
-
-    /**
-     * @param mixed $media
-     * @return mixed|void
-     */
-    public function preUpdate($media)
-    {
-        if($checksum = $this->getChecksum($media)){
-            $media->setMd5File($checksum);
-        }
-        return parent::preUpdate($media);
-    }
 
     /**
      * @param $media
      * @return object
      */
-    public function checkForDuplicate($media, $checksum)
+    public function checkForDuplicate($media)
     {
         $duplicate = $this->getModelManager()->findOneBy(
             $this->getClass(),
             array(
                 'context' => $media->getContext(),
-                'md5File' => $checksum
+                'md5File' => $media->getMd5File()
             )
         );
 

@@ -70,6 +70,14 @@ class TagAdmin extends Admin
                 '_controller' => 'NetworkingInitCmsBundle:TagAdmin:inlineEdit',
             )
         );
+
+        $collection->add(
+            'search_tags',
+            'search_tags',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:searchTags',
+            )
+        );
     }
 
 
@@ -84,7 +92,7 @@ class TagAdmin extends Admin
             ->add('parent',
                 'networking_type_autocomplete',
                 array(
-                    'help_block' => 'parent.helper.text',
+                    'help_block' => 'parent.helper_text',
                     'attr' => array('style' => "width:220px"),
                     'property' => 'AdminTitle',
                     'class' => $this->getClass(),
@@ -109,8 +117,7 @@ class TagAdmin extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-            ->add('path');
+            ->add('path', null, array('label' => 'filter.label_name'));
     }
 
     /**

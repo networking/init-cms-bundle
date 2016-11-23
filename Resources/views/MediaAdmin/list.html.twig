@@ -205,9 +205,16 @@ file that was distributed with this source code.
                         </div>&nbsp;
                     {% endif %}
                     {% if not app.request.isxmlhttprequest %}
-                        <span class="batch-actions" style="display: none;"><input type="hidden" name="action" value="delete">
-                            <button type="submit" class="btn btn-danger btn-sm batch-dialog-link">
+                        <input type="hidden" name="action">
+                        <span class="batch-actions" style="display: none;">
+                            <button type="submit" class="btn btn-danger btn-sm batch-dialog-link batch" value="delete">
                                 <i class="fa fa-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                            </button>
+                        </span>
+                        <span class="batch-actions form-inline" style="display: none;" >
+                            <select name="tags" class="tag-select input-medium form-control"></select>
+                            <button type="submit" class="btn btn-info btn-sm batch-add-tags batch" value="add_tags">
+                                <i class="fa fa-tags"></i> {{ 'action._add_tag'|trans({}, tagAdmin.translationDomain) }}
                             </button>
                         </span>
                     {% endif %}
@@ -245,10 +252,9 @@ file that was distributed with this source code.
                 <div class="row">
                     <div class="col-md-3 col-xs-12">
                         <div  id="tagsContainer">
-                            {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
+                            {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
                         </div>
-
-                        {% if  tagAdmin.isGranted('CREATE')%}
+                        {% if not app.request.isXmlHttpRequest and tagAdmin.isGranted('CREATE')%}
                             <hr>
                                 {% set create_text =  'link_action_create'|trans({}, tagAdmin.translationDomain) %}
                                 {% if create_text == 'link_action_create' %}
@@ -287,26 +293,61 @@ file that was distributed with this source code.
     </div>
 </div>
     {% if not app.request.isXmlHttpRequest %}
-    <div class="modal fade" tabindex="-1" role="dialog" id="tag_dialog">
-    </div>
-    </div>
+<div class="modal fade" tabindex="-1" role="dialog" id="tag_dialog"></div>
+</div>
 {% else %}
     <script type="text/javascript">
         $(function () {
             Admin.add_filters();
+
+            var tagContainer = $('#tagsContainer');
+            var lastLink = $('.show_all_media');
+
+            tagContainer.on('click', '.tag_link', function(e){
+                e.preventDefault();
+                if(lastLink){
+                    lastLink.parent().removeClass('info');
+                    lastLink.siblings('a.dialog-link').hide();
+                }
+                var link = $(e.target);
+                var tagId = link.data('pk');
+                link.parent().addClass('info');
+                if(link.parent().siblings('ul').children().length < 1){
+                    link.siblings('a.dialog-link').show();
+                }
+                var listItem = link.closest('li');
+                if($(listItem).hasClass('mjs-nestedSortable-collapsed')){
+                    link.siblings('i').trigger('click');
+                }
+
+                lastLink = link;
+                $('.media-box').each(function(){
+                    if($(this).hasClass('tag_'+tagId)){$(this).show()}else{$(this).hide()};
+                });
+            });
+
+            tagContainer.on('click', '.show_all_media', function (e) {
+                e.preventDefault();
+                if(lastLink){
+                    lastLink.parent().removeClass('info');
+                    lastLink.siblings('a.dialog-link').hide();
+                }
+                $('.media-box').show();
+                var link = $(e.target);
+                link.parent().addClass('info');
+                lastLink = link;
+            });
+
+            tagContainer.on('click', 'i.tag_folder', function(e) {
+                var target = $(e.target);
+                target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
+                target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
+            });
         });
 
     </script>
 {% endif %}
 {% endblock %}
-
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/menu_admin.css') }}" type="text/css"
-          media="all"/>
-{% endblock stylesheets %}
-
 
 {% block before_body_end %}
     {{ parent() }}

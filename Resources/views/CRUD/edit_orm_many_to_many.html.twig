@@ -43,16 +43,18 @@ file that was distributed with this source code.
                 });
             </script>
         {% endif %}
-    {% endif %}
-
-    {% jsblock 'addToBottom' %}
-    {% if taggable is defined and taggable %}
-        <script type="text/javascript">
+    {% else %}
+        {% jsblock 'addToBottom' %}
+        {% if taggable is defined and taggable %}
+            <script type="text/javascript">
             jQuery(document).ready(function () {
                 jQuery("#{{ id }}").select2();
             });
-        </script>
+            </script>
+        {% endif %}
+        {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+        {% jsblock 'addToBottomEnd' %}
     {% endif %}
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
-    {% jsblock 'addToBottomEnd' %}
+
+
 {% endif %}

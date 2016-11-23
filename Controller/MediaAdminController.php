@@ -202,6 +202,55 @@ class MediaAdminController extends SonataMediaAdminController
         ));
     }
 
+    public function batchActionAddTags(ProxyQueryInterface $selectedModelQuery)
+    {
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+        if (!$this->admin->isGranted('EDIT') || !$this->admin->isGranted('DELETE')) {
+            throw new AccessDeniedException();
+        }
+
+        $modelManager = $tagAdmin->getModelManager();
+
+        /** @var Tag $tag */
+        $tag = $modelManager->find($tagAdmin->getClass(), $this->get('request_stack')->getCurrentRequest()->get('tags'));
+
+
+        $data = array(
+            'result' => 'ok',
+            'status' => 'warning',
+            'message' => $this->admin->trans('tag_not_selected')
+        );
+
+        if ($tag !== null) {
+
+            $selectedModels = $selectedModelQuery->execute();
+
+            try {
+                foreach ($selectedModels as $selectedModel) {
+                    $selectedModel->addTags($tag);
+                    $this->admin->getModelManager()->update($selectedModel);
+                }
+
+                $status = 'success';
+                $message = 'tag_added';
+
+            } catch (\Exception $e) {
+                $status = 'error';
+                $message = 'tag_not_added';
+            }
+
+            $data = array(
+                'result' => 'ok',
+                'status' => $status,
+                'message' => $this->admin->trans($message, array('%tag%' => $tag->getPath())));
+        }
+
+
+
+        return $this->renderJson($data);
+
+    }
+
     protected function doBatchDelete(ProxyQueryInterface $queryProxy)
     {
         $modelManager = $this->admin->getModelManager();

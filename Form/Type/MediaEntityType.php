@@ -61,8 +61,10 @@ class MediaEntityType extends AbstractType
         if ($options['model_manager'] === null) {
             $pool = $this->pool;
             $adminCode = $options['admin_code'];
+
             if ($adminCode !== null) {
                 $admin = $pool->getAdminByAdminCode($adminCode);
+                $options['class'] = $admin->getClass();
             } else {
                 $admin = $pool->getAdminByClass($options['class']);
             }

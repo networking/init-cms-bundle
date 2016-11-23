@@ -201,7 +201,15 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
     var link = jQuery(this);
 
     //trigger javascript actions
-    if (link.hasClass('filter-close') || link.hasClass('dropdown-toggle') || link.hasClass('image-preview-link')) return;
+    if (link.hasClass('filter-close') ||
+            link.hasClass('dropdown-toggle') ||
+            link.hasClass('image-preview-link') ||
+            link.hasClass('tag_link') ||
+            link.hasClass('show_all_media')
+    ){
+        Admin.log('[{{ id }}|field_dialog_form_list_link] handle default javascript action');
+        return;
+    }
 
     initialize_popup_{{ id }}();
 
@@ -241,6 +249,9 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
     Admin.log('[{{ id }}|field_dialog_form_list_handle_action] attaching valid js event');
 
     Admin.add_filters(field_dialog_{{ id }});
+
+    field_dialog_{{ id }}.off('click', 'a');
+    field_dialog_{{ id }}.off('submit', 'form');
 
     // capture the submit event to make an ajax call, ie : POST data to the
     // related create admin

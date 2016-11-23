@@ -73,11 +73,6 @@ class GalleryAdmin extends SonataGalleryAdmin
             $formats[$name] = $name;
         }
 
-        $contexts = array();
-        foreach ((array)$this->pool->getContexts() as $contextItem => $format) {
-            $contexts[$contextItem] = $contextItem;
-        }
-
         $formMapper
             ->add('enabled', null, array('required' => true))
             ->add('context', 'hidden')

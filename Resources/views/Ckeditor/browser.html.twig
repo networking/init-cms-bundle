@@ -25,8 +25,6 @@ file that was distributed with this source code.
 
 {% block javascripts %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/menu_admin.css') }}" type="text/css"
-          media="all"/>
     <script>
 
 
@@ -294,7 +292,7 @@ file that was distributed with this source code.
                                 {% set iframeHeight = '560px' %}
                             {% endif %}
 
-                            <div class="media-box  {% for tag in object.tags %}tag_{{ tag.id }}{% endfor %}">
+                            <div class="media-box  {% for tag in object.tags %}tag_{{ tag.id }} {% endfor %}">
                                 <div class="zero-clipboard">
                                     <div class="btn-clipboard btn-clipboard-left">
                                         <a href="{{ previewLink }}"

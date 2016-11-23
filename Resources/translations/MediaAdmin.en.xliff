@@ -493,6 +493,18 @@
                 <source>upload_help_text</source>
                 <target>Drop multiple files here or click to upload.</target>
             </trans-unit>
+            <trans-unit id="tag_added">
+                <source>tag_added</source>
+                <target>The tag '%tag%' was assigned to your selected media</target>
+            </trans-unit>
+            <trans-unit id="tag_not_added">
+                <source>tag_not_added</source>
+                <target>The tag '%tag%' could not be assigned to your selected media</target>
+            </trans-unit>
+            <trans-unit id="tag_not_selected">
+                <source>tag_not_selected</source>
+                <target>Please select a tag to assign to your media</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
