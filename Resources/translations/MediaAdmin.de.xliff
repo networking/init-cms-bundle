@@ -397,6 +397,10 @@
                 <source>form.label_binary_content_new</source>
                 <target>Datei ersetzen</target>
             </trans-unit>
+            <trans-unit id="form.label_binary_content_image_new">
+                <source>form.label_binary_content_image_new</source>
+                <target>Bild Image</target>
+            </trans-unit>
             <trans-unit id="form.label_binary_content_youtube_new">
                 <source>form.label_binary_content_youtube_new</source>
                 <target>Neuer Youtube Link</target>
