@@ -40,6 +40,11 @@ class ContentRouteManager extends BaseContentRouteManager
     protected $repository;
 
     /**
+     * @var string
+     */
+    protected $class;
+
+    /**
      * ContentRouteManager constructor.
      * @param ObjectManager $om
      * @param $class
@@ -48,6 +53,17 @@ class ContentRouteManager extends BaseContentRouteManager
     {
         $this->objectManager = $om;
         $this->repository = $om->getRepository($class);
+        $this->class = $class;
+    }
+
+    /**
+     * Return the class used for content routes
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
     }
 
     /**
