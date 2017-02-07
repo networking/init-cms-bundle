@@ -18,13 +18,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MediaController extends BaseMediaController
 {
-
     /**
-     * output image direct to browser, retrieve from cache if activated
+     * output image direct to browser, retrieve from cache if activated.
      *
      * @param Request $request
      * @param $id
      * @param string $format
+     *
      * @return Response
      */
     public function viewImageAction(Request $request, $id, $format = 'reference')
@@ -42,14 +42,12 @@ class MediaController extends BaseMediaController
         /** @var \Networking\InitCmsBundle\Lib\PhpCache $phpCache */
         $phpCache = $this->get('networking_init_cms.lib.php_cache');
         if ($phpCache->isActive()) {
-
             if ($phpCache->get(sprintf('image_%s_updated_at', $id)) != $media->getUpdatedAt()) {
-                $phpCache->delete('image_' . $id);
+                $phpCache->delete('image_'.$id);
             }
 
-            if (!$response = $phpCache->get('image_' . $media->getId())) {
+            if (!$response = $phpCache->get('image_'.$media->getId())) {
                 $provider = $this->getProvider($media);
-
 
                 if ($format == 'reference') {
                     $file = $provider->getReferenceFile($media);
@@ -61,26 +59,24 @@ class MediaController extends BaseMediaController
                     'Content-Type' => $media->getContentType(),
                     'Accept-Ranges' => 'bytes',
                     'Content-Length' => $media->getSize(),
-                    'Content-Disposition' => sprintf('inline; filename="%s"', $media->getMetadataValue('filename'))
+                    'Content-Disposition' => sprintf('inline; filename="%s"', $media->getMetadataValue('filename')),
                 ), array());
 
                 $response = new Response($content, 200, $headers);
-
 
                 $response->setPublic();
                 $response->setMaxAge(604800);
                 $response->setLastModified($media->getUpdatedAt());
                 $response->getEtag(md5(sprintf('image_%s_updated_at', $id)));
 
-                $phpCache->set('image_' . $media->getId(), $response, null);
+                $phpCache->set('image_'.$media->getId(), $response, null);
                 $phpCache->set(sprintf('image_%s_updated_at', $media->getId()), $media->getUpdatedAt(), null);
             } else {
-                $phpCache->touch('image_' . $media->getId(), null);
+                $phpCache->touch('image_'.$media->getId(), null);
                 $phpCache->touch(sprintf('image_%s_updated_at', $media->getId()), null);
             }
         } else {
             $provider = $this->getProvider($media);
-
 
             if ($format == 'reference') {
                 $file = $provider->getReferenceFile($media);
@@ -92,11 +88,10 @@ class MediaController extends BaseMediaController
                 'Content-Type' => $media->getContentType(),
                 'Accept-Ranges' => 'bytes',
                 'Content-Length' => $media->getSize(),
-                'Content-Disposition' => sprintf('inline; filename="%s"', $media->getMetadataValue('filename'))
+                'Content-Disposition' => sprintf('inline; filename="%s"', $media->getMetadataValue('filename')),
             ), array());
 
             $response = new Response($content, 200, $headers);
-
 
             $response->setPublic();
             $response->setMaxAge(604800);
@@ -105,6 +100,5 @@ class MediaController extends BaseMediaController
         }
 
         return $response;
-
     }
 }

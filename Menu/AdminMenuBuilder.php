@@ -96,7 +96,7 @@ class AdminMenuBuilder extends MenuBuilder
                     $liveRoute = $this->router->generate($this->getRoute($snapShot->getRoute()));
                 }
 
-                $draftRoute = $this->router->generate($this->getRoute($snapShot->getRoute()));
+                $draftRoute = $this->router->generate($entity->getRoute());
                 $pageAdmin = $this->adminPool->getAdminByAdminCode('networking_init_cms.admin.page');
                 $editPath = $pageAdmin->generateObjectUrl('edit', $entity);
 
