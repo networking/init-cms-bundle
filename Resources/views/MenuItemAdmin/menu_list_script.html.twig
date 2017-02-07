@@ -12,7 +12,9 @@ file that was distributed with this source code.
 <script type="text/javascript">
 var menuDialog;
 
-var lastTab = '';
+var lastTab = localStorage.getItem('lastTab');
+
+var lastEdited = '{{ last_edited }}';
 
 function initializeDialog() {
     if (!menuDialog) {
@@ -42,6 +44,11 @@ function initializeDialog() {
     }
 }
 
+
+function setLastTab(tab){
+    lastTab = tab;
+    localStorage.setItem('lastTab', lastTab);
+}
 function createAjaxDialog(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -217,8 +224,6 @@ jQuery(function () {
     };
 
 
-    var lastTab = localStorage.getItem('lastTab');
-
     jQuery.extend(jQuery.mjs.nestedSortable.prototype, nestedExtensions);
 
     initializeDialog();
@@ -229,9 +234,15 @@ jQuery(function () {
         jQuery('a[href="' + lastTab + '"]').tab('show');
     }
 
+    if (lastEdited) {
+        var tab = jQuery('#listItem_' + lastEdited).closest('div.tab-pane');
+        setLastTab('#' + tab.attr('id'));
+        jQuery('a[href="' + lastTab + '"]').tab('show');
+    }
+
     jQuery('body').on('show.bs.tab', function(e){
         var target = jQuery(e.target);
-        localStorage.setItem('lastTab', target.attr('href'));
+        setLastTab(target.attr('href'));
     });
 
     jQuery('.show-tooltip').tooltip({placement: 'bottom', delay: { show: 800, hide: 100 }});
