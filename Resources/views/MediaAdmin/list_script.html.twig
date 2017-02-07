@@ -1,3 +1,4 @@
+{% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
 <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
 <script>
     var tagDialog;
@@ -166,6 +167,7 @@
             if(r == 'save'){
                 var list = $(this).parent().closest('ul');
                 sortList(list);
+                history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
             }
         });
     }
@@ -184,6 +186,7 @@
             {"nodes": jQuery(e).nestedSortable('toArray')},
             function (xhr) {
                 createInitCmsMessageBox(xhr.status, xhr.message);
+                history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
             }
         );
     }
@@ -193,6 +196,8 @@
                 "{{ admin.generateUrl('refresh_list')|raw }}",
                 function(){$('.info > a.tag_link').trigger('click');}
         );
+
+        history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
     }
 
 
