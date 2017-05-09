@@ -144,14 +144,18 @@ var field_dialog_form_action_{{ id }} = function (event) {
 
                 // reload the form element
                 jQuery('#field_widget_{{ id }}').closest('form').ajaxSubmit({
-                    url: '{{ url('sonata_admin_retrieve_form_element', {
+                    {% set params = {
                                 'elementId': id,
                                 'subclass':  sonata_admin.admin.getActiveSubclassCode(),
                                 'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
                                 'uniqid':    sonata_admin.admin.root.uniqid,
                                 'code':      sonata_admin.admin.root.code,
                                 'locale':    app.request.locale
-                            }) }}',
+                            } %}
+                    {% if app.request.query.has('provider') %}
+                        {% set params = params|merge({'provider': app.request.query.get('provider')}) %}
+                    {% endif %}
+                    url: '{{ url('sonata_admin_retrieve_form_element', params) }}',
                     data: {_xml_http_request: true},
                     type: 'POST',
                     success: function (html) {
