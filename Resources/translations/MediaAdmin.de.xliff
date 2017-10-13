@@ -375,7 +375,7 @@
             </trans-unit>
             <trans-unit id="title.select_media">
                 <source>title.select_media</source>
-                <target><![CDATA[<small>Wählen Sie ein Object von Ihren </small> Medien]]></target>
+                <target><![CDATA[<small>Wählen Sie ein Objekt von Ihren </small> Medien]]></target>
             </trans-unit>
             <trans-unit id="form.label_tags">
                 <source>form.label_tags</source>
