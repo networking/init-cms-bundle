@@ -123,8 +123,20 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('cache_service_class')->defaultValue('Networking\InitCmsBundle\Lib\PhpCache')->end()
                         ->end()
                 ->end()
+            ->end()
+            ->arrayNode('xml_sitemap')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                    ->scalarNode('sitemap_url')->defaultValue('')->end()
+                    ->arrayNode('additional_links')
+                        ->prototype('array')
+                            ->children()
+                                ->scalarNode('locale')->defaultValue('')->end()
+                                ->arrayNode('links')->prototype('scalar')->end()->end()
+                            ->end()
+                        ->end()
+                    ->end()
             ->end();
-
 
 
         return $treeBuilder;

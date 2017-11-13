@@ -31,6 +31,14 @@
             <argument type="service" id="templating"/>
             <tag name="sonata.block"/>
         </service>
+
+
+        <service id="networking_init_cms.block.service.sitemap" class="Networking\InitCmsBundle\Block\SitemapBlockService">
+            <argument>networking_init_cms.sitemap</argument>
+            <argument type="service" id="templating"/>
+            <tag name="sonata.block"/>
+        </service>
+
     </services>
 
 </container>
