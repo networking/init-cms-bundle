@@ -289,6 +289,38 @@
                 <source>flash_batch_copy_success</source>
                 <target>Der Seitenbaum wurde erfolgreich kopiert</target>
             </trans-unit>
+
+
+             <trans-unit id="title.sitemap">
+                 <source>title.sitemap</source>
+                 <target>XML Sitemap</target>
+             </trans-unit>
+
+             <trans-unit id="infotext.sitemap">
+                 <source>infotext.sitemap</source>
+                 <target><![CDATA[
+                <p>
+                Das CMS generiert eine XML Sitemap mit allen published, public Seiten. Zusätzliche Seiten (z.B. von einem Modul) können manuell über die Konfiguration dazugefügt werden.<br />
+                Die URL zur Sitemap ist <a href="/xml_sitemap">/xml_sitemap</a><br />
+                Bitte diese URL bei der robots.txt hinzufügen-.</p>
+
+                <p><strong>Konfiguration:</strong><br />
+                    <code>
+                     networking_init_cms:<br />
+                     &nbsp;&nbsp;xml_sitemap:<br />
+                     &nbsp;&nbsp;&nbsp;&nbsp;sitemap_url: http://www.website.com <br />
+                     &nbsp;&nbsp;&nbsp;&nbsp;additional_links: <br />
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- { locale: en_US , links: ['/team', '/news', '/news/archive']}<br />
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- { locale: de_CH , links: ['/event'] }<br />
+
+                     </code></p>
+                  ]]>
+                 </target>
+             </trans-unit>
+
+
+
+
         </body>
     </file>
 </xliff>
