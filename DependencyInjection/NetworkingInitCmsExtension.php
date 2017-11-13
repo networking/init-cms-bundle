@@ -97,6 +97,11 @@ class NetworkingInitCmsExtension extends Extension
         $cacheClass = $config['cache']['cache_service_class'];
         $reflectionClass = new \ReflectionClass($cacheClass);
 
+
+        $container->setParameter('networking_init_cms.xml_sitemap.sitemap_url', $config['xml_sitemap']['sitemap_url']);
+        $container->setParameter('networking_init_cms.xml_sitemap.additional_links', $config['xml_sitemap']['additional_links']);
+
+
         if(in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())){
             $container->setParameter('networking_init_cms.lib.php_cache.class', $config['cache']['cache_service_class']);
         }else{

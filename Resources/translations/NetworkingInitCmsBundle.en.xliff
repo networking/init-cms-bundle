@@ -286,6 +286,39 @@
                  <source>cache.time</source>
                  <target>Cache time</target>
              </trans-unit>
+
+
+             <trans-unit id="title.sitemap">
+                 <source>title.sitemap</source>
+                 <target>XML Sitemap</target>
+             </trans-unit>
+
+
+             <trans-unit id="infotext.sitemap">
+                 <source>infotext.sitemap</source>
+                 <target><![CDATA[
+                <p>
+                The CMS generates a XML Sitemap with all published, public pages. Additional pages (e.g. from a module) can be added manually through the configuration.<br />
+                The URL to the Sitemap is <a href="/xml_sitemap">/xml_sitemap</a><br />
+                Please add the URL to the robots.txt file.</p>
+
+                <p><strong>Configuration:</strong><br />
+                    <code>
+                     networking_init_cms:<br />
+                     &nbsp;&nbsp;xml_sitemap:<br />
+                     &nbsp;&nbsp;&nbsp;&nbsp;sitemap_url: http://www.website.com <br />
+                     &nbsp;&nbsp;&nbsp;&nbsp;additional_links: <br />
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- { locale: en_US , links: ['/team', '/news', '/news/archive']}<br />
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- { locale: de_CH , links: ['/event'] }<br />
+
+                     </code></p>
+                  ]]>
+                 </target>
+             </trans-unit>
+
+
+
+
         </body>
     </file>
 </xliff>

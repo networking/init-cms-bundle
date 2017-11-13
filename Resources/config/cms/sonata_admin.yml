@@ -43,6 +43,7 @@ sonata_admin:
             - { position: left, type: networking_init_cms.block.service.pages}
             - { position: right, type: networking_init_cms.block.service.online_users}
             - { position: right, type: networking_init_cms.block.service.cache}
+            - { position: right, type: networking_init_cms.block.service.sitemap}
 
         groups:
             pages:

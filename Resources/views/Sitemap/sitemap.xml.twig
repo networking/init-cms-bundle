@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+    {% for page in pages %}
+
+
+        <url>
+            <loc>{{ domain }}{{ page.contentRoute }}</loc>
+
+
+            {% for translations in page.translations %}
+
+                <xhtml:link rel="alternate" hreflang="{{ translations.locale | slice(0, 2) }}" href="{{ domain }}{{ translations.contentRoute }}" />
+
+            {% endfor %}
+
+
+
+
+
+        </url>
+    {% endfor %}
+
+
+    {% for link in additional_links %}
+        <url>
+            <loc>{{ domain }}{{ link }}</loc>
+        </url>
+
+    {% endfor %}
+
+</urlset>
