@@ -43,7 +43,7 @@ class PageAdminController extends CRUDController
      * @return RedirectResponse|Response
      * @throws NotFoundHttpException
      */
-    public function translatePageAction(Request $request, $id, $locale)
+    public function translateAction(Request $request, $id, $locale)
     {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -108,6 +108,78 @@ class PageAdminController extends CRUDController
                 'id' => $id,
                 'locale' => $locale,
                 'language' => $language,
+                'admin' => $this->admin
+            )
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponse|Response
+     */
+    public function copyPageAction(Request $request, $id)
+    {
+        /** @var PageInterface $page */
+        $page = $this->admin->getObject($id);
+
+        if (!$page) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if ($request->getMethod() == 'POST') {
+
+            $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
+
+            try {
+
+                $pageCopy = $pageHelper->makePageCopy($page);
+                $this->admin->createObjectSecurity($pageCopy);
+                $status = 'success';
+                $message = $this->translate(
+                    'message.copy_saved',
+                    array('%page%' => $pageCopy)
+                );
+                $result = 'ok';
+                $html = $this->renderView(
+                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                    array('object' => $page, 'admin' => $this->admin)
+                );
+            } catch (\Exception $e) {
+                $status = 'error';
+                $message = $message = $this->translate(
+                    'message.copy_not_saved',
+                    array('%page%' => $page, '%url%' => $page->getFullPath())
+                );
+                $result = 'error';
+                $html = '';
+            }
+
+            if ($this->isXmlHttpRequest()) {
+                return $this->renderJson(
+                    array(
+                        'result' => $result,
+                        'status' => $status,
+                        'html' => $html,
+                        'message' => $message
+                    )
+                );
+            }
+
+            $this->get('session')->getFlashBag()->add(
+                'sonata_flash_' . $status,
+                $message
+            );
+
+            return $this->redirect($this->admin->generateUrl('edit', array('id' => $id)));
+        }
+
+        return $this->render(
+            'NetworkingInitCmsBundle:PageAdmin:page_translation_copy.html.twig',
+            array(
+                'action' => 'copy',
+                'page' => $page,
+                'id' => $id,
                 'admin' => $this->admin
             )
         );
@@ -292,10 +364,44 @@ class PageAdminController extends CRUDController
     }
 
     /**
+     * @param ProxyQueryInterface $selectedModelQuery
+     * @return RedirectResponse
+     * @throws AccessDeniedException
+     */
+    public function batchActionCopy(ProxyQueryInterface $selectedModelQuery)
+    {
+        if ($this->admin->isGranted('EDIT') === false) {
+            throw new AccessDeniedException();
+        }
+
+        $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
+
+        $selectedModels = $selectedModelQuery->execute();
+
+        try {
+
+            foreach ($selectedModels as $selectedModel) {
+                /** @var PageInterface $selectedModel */
+                $pageHelper->makePageCopy($selectedModel);
+            }
+
+        } catch (\Exception $e) {
+
+            $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_copy_error');
+
+            return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+        }
+
+        $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_copy_success');
+
+        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+    }
+
+    /**
      * @param Request $request
      * @return Response
      */
-    public function batchCopyAction(Request $request){
+    public function batchTranslateAction(Request $request){
 
         if ($this->admin->isGranted('ROLE_SUPER_ADMIN') === false) {
             throw new AccessDeniedException();

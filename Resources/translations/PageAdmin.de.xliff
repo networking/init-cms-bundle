@@ -430,6 +430,10 @@
                 <source>label.action_cache_clear</source>
                 <target>Gewählte Seiten-Cache löschen</target>
             </trans-unit>
+            <trans-unit id="label.action_copy">
+                <source>label.action_copy</source>
+                <target>Gewählte Seiten kopieren</target>
+            </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
                 <target>Dieser Teil Ihrer Seite ist leer. Klicken Sie auf das + darüber, um Ihre ersten Inhalte

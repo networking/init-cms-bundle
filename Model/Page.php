@@ -889,6 +889,8 @@ abstract class Page implements PageInterface
     {
         $this->locale = $locale;
 
+        $this->getContentRoute()->setLocale($locale);
+
         return $this;
     }
 

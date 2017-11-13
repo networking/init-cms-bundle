@@ -244,7 +244,7 @@ class PageHelper
      *
      * @param PageSnapshotInterface $pageSnapshot
      * @param bool $unserializeTranslations
-     * @return PageInterface
+     * @return array|\JMS\Serializer\scalar|object
      */
     public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $unserializeTranslations = true)
     {
@@ -259,9 +259,9 @@ class PageHelper
     /**
      * create a copy of a given page object in a given locale
      *
-     * @param $page
+     * @param PageInterface $page
      * @param $locale
-     * @return \Networking\InitCmsBundle\Model\Page
+     * @return PageInterface
      */
     public function makeTranslationCopy(PageInterface $page, $locale)
     {
@@ -292,6 +292,69 @@ class PageHelper
         $pageCopy->setTemplateName($page->getTemplateName());
         $pageCopy->setOriginal($page);
 
+        $layoutBlocks = $page->getLayoutBlock();
+
+        foreach ($layoutBlocks as $layoutBlock) {
+
+            /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
+            $newLayoutBlock = clone $layoutBlock;
+
+            $content = $em->getRepository($newLayoutBlock->getClassType())->find(
+                $newLayoutBlock->getObjectId()
+            );
+            $newContent = clone $content;
+
+            $em->persist($newContent);
+            $em->flush();
+
+            $newLayoutBlock->setObjectId($newContent->getId());
+            $newLayoutBlock->setPage($pageCopy);
+            $em->persist($newLayoutBlock);
+        }
+
+        $em->persist($pageCopy);
+        $em->flush();
+
+        return $pageCopy;
+
+    }
+
+    /**
+     * create a copy of a given page object
+     *
+     * @param PageInterface $page
+     * @return PageInterface
+     */
+    public function makePageCopy(PageInterface $page)
+    {
+        if ($this->getParameter('networking_init_cms.db_driver') == 'orm') {
+            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
+            $em = $this->getService('doctrine')->getManager();
+        } else {
+            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
+            $em = $this->getService('doctrine_mongodb')->getManager();
+        }
+
+        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
+        $pageManger = $this->getService('networking_init_cms.page_manager');
+
+        $pageClass = $pageManger->getClassName();
+        /** @var PageInterface $pageCopy */
+        $pageCopy = new $pageClass;
+
+        $now = new \DateTime();
+
+        $postfix = sprintf('_copy_%s', $now->getTimestamp());
+
+        $pageCopy->setPageName($page->getPageName().$postfix);
+        $pageCopy->setMetaTitle($page->getMetaTitle());
+        $pageCopy->setUrl($page->getUrl().$postfix);
+        $pageCopy->setMetaKeyword($page->getMetaKeyword());
+        $pageCopy->setMetaDescription($page->getMetaDescription());
+        $pageCopy->setActiveFrom($page->getActiveFrom());
+        $pageCopy->setIsHome(false);
+        $pageCopy->setTemplateName($page->getTemplateName());
+        $pageCopy->setLocale($page->getLocale());
         $layoutBlocks = $page->getLayoutBlock();
 
         foreach ($layoutBlocks as $layoutBlock) {

@@ -89,7 +89,8 @@ abstract class PageAdmin extends BaseAdmin
      */
     protected function configureRoutes(RouteCollection $collection)
     {
-        $collection->add('translatePage', 'translate_page/{id}/locale/{locale}', array(), array('method' => 'POST'));
+        $collection->add('translate', 'translate/{id}/locale/{locale}', array(), array('method' => 'POST'));
+        $collection->add('copy', 'copy/{id}', array(), array('method' => 'POST'));
         $collection->add('parentPageList', 'parent_page/', array(), array('method' => 'GET'));
         $collection->add('pageSettings', 'page_settings/{id}', array(), array('method' => 'GET'));
         $collection->add('link', 'link/{id}/locale/{locale}', array(), array('method' => 'GET'));
@@ -98,7 +99,7 @@ abstract class PageAdmin extends BaseAdmin
         $collection->add('publish', 'publish/{id}', array(), array('method' => 'GET'));
         $collection->add('cancelDraft', 'cancel_draft/{id}', array(), array('method' => 'GET'));
         $collection->add('getPath', 'get_path/', array(), array('method' => 'GET'));
-        $collection->add('batchCopy', 'batch_copy', array());
+        $collection->add('batchTranslate', 'batch_translate', array());
         $collection->add(
             'unlink',
             'unlink/{id}/translation_id/{translationId}',
@@ -755,16 +756,23 @@ abstract class PageAdmin extends BaseAdmin
         // retrieve the default (currently only the delete action) actions
         $actions = array();
 
-        // check user permissions
         if ($this->isGranted('PUBLISH')) {
             $actions['publish'] = array(
                 'label' => $this->trans('label.action_publish', array(), $this->translationDomain),
                 'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
             );
+        }
+
+        if($this->isGranted('EDIT')){
+            $actions['copy'] = array(
+                'label' => $this->trans('label.action_copy', array(), $this->translationDomain),
+            );
+        }
+
+        if ($this->isGranted('PUBLISH')) {
             $actions['cache_clear'] = array(
                 'label' => $this->trans('label.action_cache_clear', array(), $this->translationDomain),
             );
-
         }
 
         if ($this->hasRoute('delete') && $this->isGranted('DELETE')) {

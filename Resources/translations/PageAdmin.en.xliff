@@ -424,6 +424,10 @@
                 <source>label.action_cache_clear</source>
                 <target>Delete selected pages' cache</target>
             </trans-unit>
+            <trans-unit id="label.action_copy">
+                <source>label.action_copy</source>
+                <target>Copy selected</target>
+            </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
                 <target>This part of your page is empty. Click on the + icon above to enter your first piece of

@@ -31,7 +31,7 @@ file that was distributed with this source code.
                 </div>
                 <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
                     <form method="POST"
-                          action="{{ admin.generateUrl('translatePage', {id: page.id, locale: locale}) }}">
+                          action="{{ admin.generateUrl('translate', {id: page.id, locale: locale}) }}">
                         <input type="hidden" name="locale" value="{{ locale }}"/>
                         <input type=hidden name="page_id" value="{{ id }}"/>
                         {% if app.request.isxmlhttprequest %}

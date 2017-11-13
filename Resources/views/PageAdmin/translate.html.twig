@@ -22,7 +22,7 @@ Translate "{{ object.getTitle() }}"
                     {{ form_errors(form) }}
                 </div>
             {% endif %}
-<form class="form-horizontal" action="{{ admin.generateUrl('translatePage', {'id': object.id}) }}" method="post" {{ form_enctype(form) }}>
+<form class="form-horizontal" action="{{ admin.generateUrl('translate', {'id': object.id}) }}" method="post" {{ form_enctype(form) }}>
 	<fieldset>
 		<div class="sonata-ba-collapsed-fields">
 			<div class="control-group" id="sonata-ba-field-container">
@@ -34,7 +34,6 @@ Translate "{{ object.getTitle() }}"
 			</div>
 		</div>
 	</fieldset>
-
 
 	{{ form_rest(form) }}
 

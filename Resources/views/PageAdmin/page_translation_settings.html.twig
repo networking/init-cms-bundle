@@ -28,7 +28,7 @@ file that was distributed with this source code.
         </a>
     {% else %}
         <i class="info-soft">{{ 'info.empty'|trans({}, admin.translationDomain) }}</i>
-        <a href="{{ admin.generateUrl('translatePage', {'id': object.id, 'locale': locale }) }}" class="link-underlined translation-dialog-link">
+        <a href="{{ admin.generateUrl('translate', {'id': object.id, 'locale': locale }) }}" class="link-underlined translation-dialog-link">
             {{ 'link.translate'|trans({}, admin.translationDomain) }}
         </a> | <a href="{{ admin.generateUrl('link', {'id': object.id, 'locale': locale }) }}" class="link-underlined translation-dialog-link">
             {{ 'link.link'|trans({}, admin.translationDomain) }}

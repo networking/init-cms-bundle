@@ -285,9 +285,13 @@
                  <source>cache.time</source>
                  <target>Cache Zeit</target>
              </trans-unit>
+            <trans-unit id="flash_batch_copy_error">
+                <source>flash_batch_copy_error</source>
+                <target>Die Seiten konnten nicht kopiert werden.</target>
+            </trans-unit>
             <trans-unit id="flash_batch_copy_success">
                 <source>flash_batch_copy_success</source>
-                <target>Der Seitenbaum wurde erfolgreich kopiert</target>
+                <target>Die Seiten wurden erfolgreich kopiert.</target>
             </trans-unit>
         </body>
     </file>
