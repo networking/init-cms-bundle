@@ -524,7 +524,7 @@ abstract class Page implements PageInterface
      */
     public function setStatus($status)
     {
-        if (!in_array($status, array(self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_REVIEW))) {
+        if (!in_array($status, array(self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_REVIEW, self::STATUS_OFFLINE))) {
             throw new \InvalidArgumentException("Invalid status");
         }
         $this->status = $status;
@@ -594,6 +594,15 @@ abstract class Page implements PageInterface
     public function isPublished()
     {
         return ($this->status == self::STATUS_PUBLISHED);
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isOffline()
+    {
+        return ($this->status == self::STATUS_OFFLINE);
     }
 
     /**
@@ -1431,6 +1440,10 @@ abstract class Page implements PageInterface
     {
         if ($this->isPublished()) {
             return self::STATUS_PUBLISHED;
+        }
+
+        if($this->isOffline()){
+            return self::STATUS_OFFLINE;
         }
 
         return self::STATUS_DRAFT;

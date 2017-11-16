@@ -213,7 +213,7 @@ class FrontendPageController extends Controller
         $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot, false);
 
         if (!$page->isActive()) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('page status '.$page->getStatus());
         }
 
         if($redirect = $this->getRedirect($request, $page)){
@@ -473,7 +473,6 @@ class FrontendPageController extends Controller
     public function isSnapshotActive(PageSnapshotInterface $page)
     {
         $jsonObject = json_decode($page->getVersionedData());
-
 
         $now = new \DateTime();
 

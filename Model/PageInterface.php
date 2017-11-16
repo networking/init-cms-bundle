@@ -256,6 +256,12 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      *
      * @return bool
      */
+    public function isOffline();
+
+    /**
+     *
+     * @return bool
+     */
     public function isActive();
 
 

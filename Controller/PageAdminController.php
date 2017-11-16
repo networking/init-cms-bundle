@@ -713,6 +713,73 @@ class PageAdminController extends CRUDController
     }
 
     /**
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function offlineAction(Request $request)
+    {
+        $id = $request->get($this->admin->getIdParameter());
+
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('PUBLISH', $object)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->admin->setSubject($object);
+
+        $form = $this->admin->getForm();
+
+
+        $object->setStatus(PageInterface::STATUS_OFFLINE);
+
+        // persist if the form was valid and if in preview mode the preview was approved
+        $this->admin->update($object);
+
+        if ($object->getStatus() == PageInterface::STATUS_OFFLINE) {
+            $this->makeSnapshot($object);
+        }
+
+        if ($this->isXmlHttpRequest()) {
+
+            $view = $form->createView();
+
+            // set the theme for the current Admin Form
+            $this->get('twig')->getExtension('form')->renderer->setTheme($view, $this->admin->getFormTheme());
+
+            $pageSettingsTemplate = $this->render(
+                $this->admin->getTemplate('edit'),
+                array(
+                    'action' => 'edit',
+                    'form' => $view,
+                    'object' => $object,
+                )
+            );
+
+            return $this->renderJson(
+                array(
+                    'result' => 'ok',
+                    'objectId' => $this->admin->getNormalizedIdentifier($object),
+                    'title' => $object->__toString(),
+                    'pageStatus' => $this->admin->trans($object->getStatus()),
+                    'pageSettings' => $pageSettingsTemplate
+                )
+            );
+        }
+
+        $request->getSession()->getFlashBag()->add(
+            'sonata_flash_success',
+            $this->admin->trans('flash_publish_success')
+        );
+
+        return $this->redirect($this->admin->generateObjectUrl('edit', $object));
+    }
+
+    /**
      * @param $id
      * @param $status
      * @return RedirectResponse|Response

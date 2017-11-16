@@ -118,6 +118,10 @@
                 <source>status_published</source>
                 <target>Published</target>
             </trans-unit>
+            <trans-unit id="status_offline">
+                <source>status_offline</source>
+                <target>Offline</target>
+            </trans-unit>
             <trans-unit id="visibility_public">
                 <source>visibility_public</source>
                 <target>Public</target>
@@ -223,6 +227,10 @@
                 <source>button.publish</source>
                 <target>Publish</target>
             </trans-unit>
+            <trans-unit id="button.offline">
+                <source>button.offline</source>
+                <target>Offline setzten</target>
+            </trans-unit>
             <trans-unit id="title.cancel_draft">
                 <source>title.cancel_draft</source>
                 <target>Revert to last published</target>
@@ -264,13 +272,17 @@
                 <source>button.save</source>
                 <target>Save</target>
             </trans-unit>
-            <trans-unit id="list.label_admin_title">
-                <source>list.label_admin_title</source>
+            <trans-unit id="list.label_page_name">
+                <source>list.label_page_name</source>
                 <target>Page Name</target>
             </trans-unit>
             <trans-unit id="list.label_full_path">
                 <source>list.label_full_path</source>
                 <target>URL</target>
+            </trans-unit>
+            <trans-unit id="list.label_get_menu_item">
+                <source>list.label_get_menu_item</source>
+                <target>In Menu verknüpft</target>
             </trans-unit>
             <trans-unit id="filter.label_locale">
                 <source>filter.label_locale</source>
@@ -351,6 +363,14 @@
             <trans-unit id="template">
                 <source>template</source>
                 <target>Page Layout</target>
+            </trans-unit>
+            <trans-unit id="activeFrom">
+                <source>activeFrom</source>
+                <target>Online ab</target>
+            </trans-unit>
+            <trans-unit id="activeTo">
+                <source>activeTo</source>
+                <target>Online bis</target>
             </trans-unit>
             <trans-unit id="positive">
                 <source>positive</source>
@@ -610,6 +630,38 @@
             <trans-unit id="action._delete">
                 <source>action._delete</source>
                 <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="page_batch_copy">
+                <source>page_batch_copy</source>
+                <target>Seitenbaum kopieren</target>
+            </trans-unit>
+            <trans-unit id="button.page_batch_copy">
+                <source>button.page_batch_copy</source>
+                <target>Seitenbaum kopieren</target>
+            </trans-unit>
+            <trans-unit id="form.label_from_locale">
+                <source>form.label_from_locale</source>
+                <target>Von Sprache</target>
+            </trans-unit>
+            <trans-unit id="form.label_to_locale">
+                <source>form.label_to_locale</source>
+                <target>Zu Sprache</target>
+            </trans-unit>
+            <trans-unit id="title.duplicate_page">
+                <source>title.duplicate_page</source>
+                <target>Copy page "%page_title%"</target>
+            </trans-unit>
+            <trans-unit id="info.duplicate_page">
+                <source>info.duplicate_page</source>
+                <target><![CDATA[A copy of the page and the page contents will be made]]></target>
+            </trans-unit>
+            <trans-unit id="button.duplicate_page">
+                <source>button.duplicate_page</source>
+                <target>Copy this page</target>
+            </trans-unit>
+            <trans-unit id="action._copy">
+                <source>action._copy</source>
+                <target>Copy page</target>
             </trans-unit>
         </body>
     </file>

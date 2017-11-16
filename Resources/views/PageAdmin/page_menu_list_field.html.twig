@@ -1,0 +1,16 @@
+{% extends 'NetworkingInitCmsBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+    {% for menuItem in value %}
+         <a href="{{ url('admin_networking_initcms_menuitem_list', {'page_id': object.id, 'menu_id':menuItem.id,
+             "filter": {'type':'locale', 'value': field_description.options.locale}}) }}"
+            class="link-underlined menu_edit_link">
+             {{ menuItem.name }}</a>{% if not loop.last %} | {% endif %}
+    {% else %}
+        {#{% for rootNode in field_description.options.rootMenus %}#}
+            {#<a href="{{ url('admin_networking_initcms_menuitem_createFromPage', {"rootId":rootNode.id, "pageId": object.id, "locale": field_description.options.locale}) }}"#}
+               {#class="btn btn-default btn-sm menu_add_link" title="{{ 'legend.create_menu'|trans({'%menu_name%': rootNode.name }, admin.translationDomain) }}">#}
+                {#{{ 'legend.create_menu'|trans({'%menu_name%': rootNode.name }, admin.translationDomain) }}</a>#}
+        {#{% endfor %}#}
+    {% endfor %}
+{% endblock %}

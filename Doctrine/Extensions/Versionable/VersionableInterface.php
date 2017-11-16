@@ -33,6 +33,11 @@ interface VersionableInterface
     const STATUS_PUBLISHED = 'status_published';
 
     /**
+     * @var string
+     */
+    const STATUS_OFFLINE = 'status_offline';
+
+    /**
      * @return mixed
      */
     public function getSnapshot();

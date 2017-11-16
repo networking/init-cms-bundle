@@ -118,6 +118,10 @@
                 <source>status_published</source>
                 <target>Veröffentlicht</target>
             </trans-unit>
+            <trans-unit id="status_offline">
+                <source>status_offline</source>
+                <target>Offline</target>
+            </trans-unit>
             <trans-unit id="visibility_public">
                 <source>visibility_public</source>
                 <target>Öffentlich</target>
@@ -221,6 +225,10 @@
                 <source>button.publish</source>
                 <target>Veröffentlichen</target>
             </trans-unit>
+            <trans-unit id="button.offline">
+                <source>button.offline</source>
+                <target>Offline setzten</target>
+            </trans-unit>
             <trans-unit id="title.cancel_draft">
                 <source>title.cancel_draft</source>
                 <target>Auf letzten veröffentlichten Stand zurücksetzen</target>
@@ -262,13 +270,17 @@
                 <source>button.save</source>
                 <target>Speichern</target>
             </trans-unit>
-            <trans-unit id="list.label_admin_title">
-                <source>list.label_admin_title</source>
+            <trans-unit id="list.label_page_name">
+                <source>list.label_page_name</source>
                 <target>Seiten-Name</target>
             </trans-unit>
             <trans-unit id="list.label_full_path">
                 <source>list.label_full_path</source>
                 <target>URL</target>
+            </trans-unit>
+            <trans-unit id="list.label_get_menu_item">
+                <source>list.label_get_menu_item</source>
+                <target>In Menu verknüpft</target>
             </trans-unit>
             <trans-unit id="filter.label_locale">
                 <source>filter.label_locale</source>

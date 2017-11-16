@@ -97,6 +97,7 @@ abstract class PageAdmin extends BaseAdmin
         $collection->add('draft', 'draft/{id}', array(), array('method' => 'GET'));
         $collection->add('review', 'review/{id}', array(), array('method' => 'GET'));
         $collection->add('publish', 'publish/{id}', array(), array('method' => 'GET'));
+        $collection->add('offline', 'offline/{id}', array(), array('method' => 'GET'));
         $collection->add('cancelDraft', 'cancel_draft/{id}', array(), array('method' => 'GET'));
         $collection->add('getPath', 'get_path/', array(), array('method' => 'GET'));
         $collection->add('batchTranslate', 'batch_translate', array());
@@ -494,10 +495,20 @@ abstract class PageAdmin extends BaseAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
+        $currentFilter = $this->getFilterParameters();
+        $locale = $this->getDefaultLocale();
+        if(array_key_exists('locale', $currentFilter)){
+            $locale = $currentFilter['locale']['value'];
+        }
 
+
+        $rootMenus = $this->getModelManager()->findBy(
+            'NetworkingInitCmsBundle:MenuItem',
+            array('isRoot' => 1, 'locale' => $locale)
+        );
         $listMapper
             ->add(
-                'adminTitle',
+                'pageName',
                 'string',
                 array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig')
             )
@@ -516,7 +527,18 @@ abstract class PageAdmin extends BaseAdmin
                 array(
                     'sortable' => false,
                 )
-            );
+            )
+            ->add(
+                'getMenuItem',
+                null,
+                array(
+                    'sortable' => false,
+                    'template' => 'NetworkingInitCmsBundle:PageAdmin:page_menu_list_field.html.twig',
+                    'rootMenus' => $rootMenus,
+                    'locale' => $locale
+                )
+            )
+        ;
 
         $listMapper->add(
             '_action',

@@ -21,7 +21,7 @@ file that was distributed with this source code.
 
 {% endif %}
 <hr/>
-{% if object.isPublished %}
+{% if object.isPublished or object.isOffline %}
     <a href="{{ admin.generateUrl('draft', {id: object.id}) }}"
        class="btn btn-warning btn-sm {% if object.isDraft() %}disabled{% endif %}"
        {% if object.isDraft() %}onclick="return false"{% endif %}>
@@ -29,20 +29,31 @@ file that was distributed with this source code.
     </a>
 {% endif %}
 
-
-{% if admin.isGranted('PUBLISH', object) and not object.isPublished %}
+{% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
     <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
        class="btn btn-default btn-sm {% if object.isPublished() %}disabled{% endif %}"
        {% if object.isPublished() %}onclick="return false"{% endif %}>
         {{ 'button.publish'|trans({}, admin.translationDomain) }}
     </a>
-    {{ 'or'|trans({}, admin.translationDomain) }}
 {% endif %}
+
 {% if not object.isPublished %}
+    {{ 'or'|trans({}, admin.translationDomain) }}
     {% set path = path(object.route()) %}
     <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode}) }}"
        class="link-underlined">
         {{ 'link.preview'|trans({}, admin.translationDomain) }}</a>
+{% endif %}
+
+{% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
+    <br>
+    {{ 'or'|trans({}, admin.translationDomain) }}
+    <br>
+    <a href="{{ admin.generateUrl('offline', {id: object.id}) }}"
+       class="btn btn-default btn-sm {% if object.isPublished() %}disabled{% endif %}"
+       {% if object.isPublished() %}onclick="return false"{% endif %}>
+        {{ 'button.offline'|trans({}, admin.translationDomain) }}
+    </a>
 {% endif %}
 
 {% if admin.lastEditedBy() %}
