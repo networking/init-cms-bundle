@@ -1,0 +1,57 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends base_template %}
+
+
+{% block content %}
+    <div class="sonata-ba-delete">
+
+        {% if app.request.isxmlhttprequest %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>{{ 'title.duplicate_page'|trans({'%page_title%':page}, admin.translationDomain) }}</h4>
+                </div>
+                {% else %}
+                    <h1>{{ 'title.duplicate_page'|trans({}, admin.translationDomain) }}</h1>
+                {% endif %}
+
+                <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
+                    {{ 'info.duplicate_page'|trans({ '%language%': language }, admin.translationDomain) }}
+                </div>
+                <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
+                    <form method="POST"
+                          action="{{ admin.generateUrl('copy', {id: page.id}) }}">
+                        <input type=hidden name="page_id" value="{{ id }}"/>
+                        {% if app.request.isxmlhttprequest %}
+                            <button class="btn btn-default " data-dismiss="modal"
+                                    aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+
+                            <input type="submit" class="btn btn-primary"
+                                   value="{{ 'button.duplicate_page'|trans({}, admin.translationDomain) }}"/>
+                        {% else %}
+                            <input type="submit" class="btn btn-primary"
+                                   value="{{ 'button.duplicate_page'|trans({}, admin.translationDomain) }}"/>
+
+                            <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">
+                                {{ 'button.cancel'|trans({}, admin.translationDomain) }}
+                            </a>
+                        {% endif %}
+                    </form>
+                </div>
+        {% if app.request.isxmlhttprequest %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

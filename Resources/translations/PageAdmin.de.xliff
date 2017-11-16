@@ -629,6 +629,22 @@
                 <source>form.label_to_locale</source>
                 <target>Zu Sprache</target>
             </trans-unit>
+            <trans-unit id="title.duplicate_page">
+                <source>title.duplicate_page</source>
+                <target>Seite "%page_title%" kopieren</target>
+            </trans-unit>
+            <trans-unit id="info.duplicate_page">
+                <source>info.duplicate_page</source>
+                <target><![CDATA[Eine Kopie der Seite und Seiteninhalte wird erstellt]]></target>
+            </trans-unit>
+            <trans-unit id="button.duplicate_page">
+                <source>button.duplicate_page</source>
+                <target>Kopieren Sie die Seite</target>
+            </trans-unit>
+            <trans-unit id="action._copy">
+                <source>action._copy</source>
+                <target>Seite kopieren</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -118,7 +118,7 @@ class PageAdminController extends CRUDController
      * @param $id
      * @return RedirectResponse|Response
      */
-    public function copyPageAction(Request $request, $id)
+    public function copyAction(Request $request, $id)
     {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -171,12 +171,15 @@ class PageAdminController extends CRUDController
                 $message
             );
 
-            return $this->redirect($this->admin->generateUrl('edit', array('id' => $id)));
+            $request->getSession()->set('Page.last_edited', $pageCopy->getId());
+
+            return $this->redirect($this->admin->generateUrl('list'));
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_translation_copy.html.twig',
+            'NetworkingInitCmsBundle:PageAdmin:page_copy.html.twig',
             array(
+                'language' => \Locale::getDisplayLanguage($page->getLocale()),
                 'action' => 'copy',
                 'page' => $page,
                 'id' => $id,
@@ -487,6 +490,7 @@ class PageAdminController extends CRUDController
 
         $id = $request->get($this->admin->getIdParameter());
 
+        /** @var PageInterface $object */
         $object = $this->admin->getObject($id);
 
         if (!$object) {

@@ -158,7 +158,7 @@ file that was distributed with this source code.
             {% block table_body %}
                 <tbody>
                 {% for object in admin.datagrid.results %}
-                    <tr>
+                    <tr {% if last_edited is defined and object.id == last_edited %}class="info"{% endif %}>
                         {% include admin.getTemplate('inner_list_row') %}
                     </tr>
                 {% endfor %}

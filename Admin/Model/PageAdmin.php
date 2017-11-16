@@ -525,6 +525,8 @@ abstract class PageAdmin extends BaseAdmin
                 'label' => ' ',
                 'actions' => array(
                     'edit' => array(),
+                    'copy' => array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_action_copy.html.twig'),
+                    'show' => array('template' => 'NetworkingInitCmsBundle:PageAdmin:page_action_show.html.twig'),
                     'delete' => array(),
                 )
             )
