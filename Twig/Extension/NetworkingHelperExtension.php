@@ -763,7 +763,14 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
                 }
                 break;
             case 'sonata_type_model_hidden':
-                $value = $fieldDescription->getValue($object);;
+                $value = $fieldDescription->getValue($object);
+                break;
+            case 'checkbox':
+                if ($fieldDescription->getValue($object)) {
+                    $value = 'positive';
+                } else {
+                    $value = 'negative';
+                }
                 break;
             default:
                 var_dump($fieldDescription->getType());

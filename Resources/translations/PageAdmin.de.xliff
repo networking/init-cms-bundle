@@ -88,7 +88,7 @@
             </trans-unit>
             <trans-unit id="form.label_active_to">
                 <source>form.label_active_to</source>
-                <target>Seite aktiv bis (optional</target>
+                <target>Seite aktiv bis (optional)</target>
             </trans-unit>
             <trans-unit id="legend.translate_page">
                 <source>legend.translate_page</source>
