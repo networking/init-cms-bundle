@@ -12,7 +12,8 @@ file that was distributed with this source code.
     <div style="position:relative;">
 
         {% if field_description.options.actions|length > 2 %}
-        {% include "NetworkingInitCmsBundle:CRUD:list__action_edit.html.twig" %}
+
+        {% include field_description.options.actions.edit.template %}
                 <a class="btn btn-default btn-sm actions-toggle"
                         data-original-title="{{ 'link.show_more_actions'|trans({}, 'NetworkingInitCmsBundle') }}"
                         data-toggle="row-actions">
