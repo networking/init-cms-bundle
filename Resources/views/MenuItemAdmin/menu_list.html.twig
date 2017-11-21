@@ -89,7 +89,6 @@ file that was distributed with this source code.
                 <div class="clearfix">&nbsp;</div>
             </div>
 
-
             <div id="hidden_filters" class="collapse">
                 {% if filter_hidden != '' %}
                     {# add div with hidden / show function #}
@@ -102,12 +101,6 @@ file that was distributed with this source code.
 
     {% endif %}
 {% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/css/menu_admin.css') }}" type="text/css"
-          media="all"/>
-{% endblock stylesheets %}
 
 {% block before_body_end %}
     {{ parent() }}

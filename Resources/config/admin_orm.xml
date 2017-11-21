@@ -70,20 +70,20 @@
             </call>
             <tag name="sonata.admin" manager_type="orm" label="help_text.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
-                 persis_filters="true"/>
+                 persist_filters="true"/>
         </service>
 
         <!-- Layout Block Admin-->
         <service id="networking_init_cms.admin.tag" class="Networking\InitCmsBundle\Admin\Entity\TagAdmin">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\Tag</argument>
-            <argument>NetworkingInitCmsBundle:CRUD</argument>
+            <argument>NetworkingInitCmsBundle:TagAdmin</argument>
             <call method="setTranslationDomain">
                 <argument>TagAdmin</argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="tags.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
-                 persis_filters="true"/>
+                 persist_filters="true"/>
         </service>
 
     </services>

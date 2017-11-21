@@ -164,10 +164,6 @@ file that was distributed with this source code.
                     {% if create_text == 'link_action_create' %}
                         {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
                     {% endif %}
-                    {#<a class="btn btn-primary btn-sm menu-dialog-link"#}
-                    {#href="{{ admin.generateUrl('create', {'context' : persistent_parameters.context, 'provider' : null}) }}">#}
-                    {#<i class="glyphicon glyphicon-plus icon-white"></i> {{ create_text }}#}
-                    {#</a>#}
                     {% for code, provider in providers %}
                         <a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}"
                            class="btn btn-default dialog-link"
@@ -209,9 +205,16 @@ file that was distributed with this source code.
                         </div>&nbsp;
                     {% endif %}
                     {% if not app.request.isxmlhttprequest %}
-                        <span class="batch-actions" style="display: none;"><input type="hidden" name="action" value="delete">
-                            <button type="submit" class="btn btn-danger btn-sm batch-dialog-link">
+                        <input type="hidden" name="action">
+                        <span class="batch-actions" style="display: none;">
+                            <button type="submit" class="btn btn-danger btn-sm batch-dialog-link batch" value="delete">
                                 <i class="fa fa-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                            </button>
+                        </span>
+                        <span class="batch-actions form-inline" style="display: none;" >
+                            <select name="tags" class="tag-select input-medium form-control"></select>
+                            <button type="submit" class="btn btn-info btn-sm batch-add-tags batch" value="add_tags">
+                                <i class="fa fa-tags"></i> {{ 'action._add_tag'|trans({}, tagAdmin.translationDomain) }}
                             </button>
                         </span>
                     {% endif %}
@@ -246,11 +249,26 @@ file that was distributed with this source code.
 
             {% if datagrid.results|length > 0 %}
 
-                <div id="item_list">
-                {% include "NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig" %}
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <div  id="tagsContainer">
+                            {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
+                        </div>
+                        {% if not app.request.isXmlHttpRequest and tagAdmin.isGranted('CREATE')%}
+                            <hr>
+                                {% set create_text =  'link_action_create'|trans({}, tagAdmin.translationDomain) %}
+                                {% if create_text == 'link_action_create' %}
+                                    {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
+                                {% endif %}
+                                <a class="btn btn-primary btn-sm tag-dialog-link" href="{{ tagAdmin.generateUrl('create') }}">
+                                    <i class="glyphicon glyphicon-plus icon-white"></i> {{create_text }}
+                                </a>
+                        {% endif %}
+                    </div>
+                    <div id="item_list" class="col-md-9 col-xs-12 text-center">
+                        {% include "NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig" %}
+                    </div>
                 </div>
-
-
                 {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and (galleryListMode is not defined or not galleryListMode) %}
                     <p>
                         {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}
@@ -274,37 +292,66 @@ file that was distributed with this source code.
             {% endif %}
     </div>
 </div>
-{% if not app.request.isXmlHttpRequest %}
+    {% if not app.request.isXmlHttpRequest %}
+<div class="modal fade" tabindex="-1" role="dialog" id="tag_dialog"></div>
 </div>
-    <script>
-        $(function(){
-           $('.batch-actions').hide();
-            $('body').on('click', '.delete_check_box', function(){
-                var active = false;
-                $('.delete_check_box').each(function(i, item){
-                    if(item.checked){
-                        active = true;
-                    }
-                });
-                if(active){
-                    $('.batch-actions').fadeIn();
-                }else{
-                    $('.batch-actions').fadeOut();
-                }
-
-            });
-        });
-
-        function refreshList(){
-            $('#item_list').load("{{ admin.generateUrl('refresh_list')|raw }}");
-        }
-    </script>
 {% else %}
     <script type="text/javascript">
         $(function () {
             Admin.add_filters();
+
+            var tagContainer = $('#tagsContainer');
+            var lastLink = $('.show_all_media');
+
+            tagContainer.on('click', '.tag_link', function(e){
+                e.preventDefault();
+                if(lastLink){
+                    lastLink.parent().removeClass('info');
+                    lastLink.siblings('a.dialog-link').hide();
+                }
+                var link = $(e.target);
+                var tagId = link.data('pk');
+                link.parent().addClass('info');
+                if(link.parent().siblings('ul').children().length < 1){
+                    link.siblings('a.dialog-link').show();
+                }
+                var listItem = link.closest('li');
+                if($(listItem).hasClass('mjs-nestedSortable-collapsed')){
+                    link.siblings('i').trigger('click');
+                }
+
+                lastLink = link;
+                $('.media-box').each(function(){
+                    if($(this).hasClass('tag_'+tagId)){$(this).show()}else{$(this).hide()};
+                });
+            });
+
+            tagContainer.on('click', '.show_all_media', function (e) {
+                e.preventDefault();
+                if(lastLink){
+                    lastLink.parent().removeClass('info');
+                    lastLink.siblings('a.dialog-link').hide();
+                }
+                $('.media-box').show();
+                var link = $(e.target);
+                link.parent().addClass('info');
+                lastLink = link;
+            });
+
+            tagContainer.on('click', 'i.tag_folder', function(e) {
+                var target = $(e.target);
+                target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
+                target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
+            });
         });
 
     </script>
 {% endif %}
 {% endblock %}
+
+{% block before_body_end %}
+    {{ parent() }}
+    {% include 'NetworkingInitCmsBundle:MediaAdmin:list_script.html.twig' %}
+{% endblock %}
+
+

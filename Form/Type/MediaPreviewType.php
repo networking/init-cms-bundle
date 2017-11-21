@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Form\Type;
 
+use Networking\InitCmsBundle\Entity\Media;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
@@ -33,8 +34,17 @@ class MediaPreviewType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $media = $form->getData();
+
         if(!$media instanceof MediaInterface){
             throw new InvalidArgumentException('This field can only be used with objects that are instances of Sonata\MediaBundle\Model\MediaInterface');
+        }
+
+        if($form->getParent()->getErrors(true)->count() > 0){
+            /** @var Media $media */
+            $media = $view->vars['value'];
+
+            $media->setProviderReference($media->getPreviousProviderReference());
+            $view->vars['value'] = $media;
         }
 
         $contentType = $media->getContentType();

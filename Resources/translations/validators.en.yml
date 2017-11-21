@@ -1,9 +1,14 @@
 error:
     unique_url: A page with the same URL (URL & parent page) "{{ value }}" exists, please select another one
+    unique_tag: A tag with the same path (name & parent tag) "{{ value }}" exists, please select another one
 init_cms:
     pagename:
         blank: The page title should not be empty
     url:
         blank: The URL should not be empty
+    page_copy:
+        duplicate_locale: The selected language must be diferrent
+    name:
+        no_slash: The name should not contain a "/"
 
 'Cannot create content, object is invalid': Please check your data, content is invalid or missing

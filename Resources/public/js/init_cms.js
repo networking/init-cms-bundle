@@ -93,7 +93,7 @@ function uploadError(xhr) {
     $(window).trigger('resize');
 })(jQuery);
 
-
+$.fn.select2.defaults.set( "theme", "bootstrap" );
 $.fn.modal.Constructor.prototype.enforceFocus = function() {
     $(document)
         .off('focusin.bs.modal') // guard against infinite focus loop

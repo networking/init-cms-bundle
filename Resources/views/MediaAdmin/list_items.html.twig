@@ -1,192 +1,179 @@
-{% block table_header %}
 
-{% endblock %}
-{% block paginator %}
-{% if datagrid.results|length > 0 %}
-<div class="row">
-    <div class="col-md-3 col-xs-12 pull-right text-right">
-        <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
-                list_results_count{% endtranschoice %}</strong>:</label>
-        {% block max_per_page %}
-            <br/>
-            <label class="control-label"
-                   for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
-                label_per_page{% endtrans %}</label>
-            <select class="per-page small" id="{{ admin.uniqid }}_per_page"
-                    style="width: auto; height: auto">
-                {% for per_page in admin.getperpageoptions %}
-                    <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
-                            value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
-                        {{ per_page }}
-                    </option>
-                {% endfor %}
-            </select>
-        {% endblock %}
-    </div>
-    {% if datagrid.pager.haveToPaginate() %}
-        <div class="pagination col-md-3 hidden-sm hidden-xs">
-            <p>{{ datagrid.pager.page }} / {{ datagrid.pager.lastpage }}</p>
 
-        </div>
-        <div class="col-md-6 col-xs-12 text-center">
-            <ul class="pagination pagination-xs">
+{% set random = date().timestamp %}
 
-                {% if datagrid.pager.page != 1 %}
-                    <li>
-                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, 1)) }}"
-                           title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
-                    </li>
-                {% endif %}
-
-                {% if datagrid.pager.page != datagrid.pager.previouspage %}
-                    <li>
-                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.previouspage)) }}"
-                           title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
-                    </li>
-                {% endif %}
-
-                {# Set the number of pages to display in the pager #}
-                {% for page in datagrid.pager.getLinks() %}
-                    {% if page == datagrid.pager.page %}
-                        <li class="active"><a
-                                    href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
-                        </li>
-                    {% else %}
-                        <li>
-                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-
-                {% if datagrid.pager.page != datagrid.pager.nextpage %}
-                    <li>
-                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.nextpage)) }}"
-                           title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
-                    </li>
-                {% endif %}
-
-                {% if datagrid.pager.page != datagrid.pager.lastpage %}
-                    <li>
-                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.lastpage)) }}"
-                           title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
-                    </li>
-                {% endif %}
-
-            </ul>
-        </div>
+{% for object in datagrid.results %}
+    {% if object.width is defined and object.width %}
+        {% if object.providerName == 'sonata.media.provider.youtube' %}
+            {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
+            {% set previewType = 'iframe' %}
+            {% set iframeWidth = '600px' %}
+            {% set iframeHeight = '300px' %}
+        {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
+            {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
+            {% set previewType = 'iframe' %}
+            {% set iframeWidth = '600px' %}
+            {% set iframeHeight = '300px' %}
+        {% else %}
+            {% set previewLink %}{% path object, 'reference' %}{% endset %}
+            {% set previewType = 'image' %}
+        {% endif %}
+    {% else %}
+        {% set media_link %}{% path object, 'reference' %}{% endset %}
+        {% set previewLink %}//docs.google.com/gview?url={% if 'http://' not in media_link.__toString and 'https://' not in media_link.__toString %}{{ app.request.getSchemeAndHttpHost() }}{% endif %}{{ media_link }}&embedded=true{% endset %}
+        {% set previewType = 'iframe' %}
+        {% set iframeWidth = '400px' %}
+        {% set iframeHeight = '560px' %}
     {% endif %}
-    </div>
-{% endif %}
-{% endblock %}
-
-{% block table_body %}
-    <div class="row">
-        {% set random = date().timestamp %}
-        {% for object in datagrid.results %}
-            {% if object.width is defined and object.width %}
-                {% if object.providerName == 'sonata.media.provider.youtube' %}
-                    {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
-                    {% set previewType = 'iframe' %}
-                    {% set iframeWidth = '600px' %}
-                    {% set iframeHeight = '300px' %}
-                {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
-                    {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
-                    {% set previewType = 'iframe' %}
-                    {% set iframeWidth = '600px' %}
-                    {% set iframeHeight = '300px' %}
-                {% else %}
-                    {% set previewLink %}{% path object, 'reference' %}{% endset %}
-                    {% set previewType = 'image' %}
-                {% endif %}
-            {% else %}
-                {% set media_link %}{% path object, 'reference' %}{% endset %}
-                {% set previewLink %}//docs.google.com/gview?url={% if 'http://' not in media_link.__toString and 'https://' not in media_link.__toString %}{{ app.request.getSchemeAndHttpHost() }}{% endif %}{{ media_link }}&embedded=true{% endset %}
-                {% set previewType = 'iframe' %}
-                {% set iframeWidth = '400px' %}
-                {% set iframeHeight = '560px' %}
-            {% endif %}
-            <div class="media-box">
-                <div class="zero-clipboard">
-                    <div class="btn-clipboard btn-clipboard-left">
-                        <a href="{{ previewLink }}"
-                                {% if previewType == 'iframe' %}
-                                    data-featherlight-iframe-width="{{ iframeWidth }}"
-                                    data-featherlight-iframe-height="{{ iframeHeight }}"
-                                {% endif %}
-                           data-featherlight-variant="initcms-featherlight"
-                           data-featherlight="{{ previewType }}"
-                           class="image-preview-link" title="{{ object.name }}">
-                            <i class="fa fa-search-plus"></i>
-                        </a>
-                    </div>
-                    {% if not galleryListMode %}
-                    <div class="btn-clipboard btn-clipboard-right">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">{{ "dropdown_options"|trans({}, admin.translationDomain) }} <span
-                                    class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu"
-                            aria-labelledby="context-menu_{{ object.id }}">
-                            {% if app.request.isxmlhttprequest and not show_actions %}
-                                <li>
-                                    <a class="select-media" href="#" data-object-id="{{ object.id }}">
-                                        {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
-                                    </a>
-                                </li>
-                            {% else %}
-                                {% if(admin.isGranted('EDIT', object)) %}
-                                    <li><a href="{{ admin.generateObjectUrl('edit', object) }}"
-                                           title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
-                                           data-follow="{{ admin.generateObjectUrl('edit', object) }}">
-                                            <i class="glyphicon glyphicon-pencil"></i> {{ 'action_edit'|trans({}, 'SonataAdminBundle') }}
-                                        </a></li>
-                                {% endif %}
-                                {% if(admin.isGranted('DELETE', object)) %}
-                                    <li><a href="{{ admin.generateObjectUrl('delete', object) }}"
-                                           class="dialog-link"
-                                           id="{{ admin.getClassnameLabel() }}_{{ object.id }}"
-                                           title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
-                                            <i class="glyphicon glyphicon-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
-                                        </a></li>
-                                {% endif %}
-                            {% endif %}
-                        </ul>
-                    </div>
-                    <div class="btn-clipboard btn-clipboard-bottom">
-                        <input type="checkbox" name="idx[]" class="delete_check_box" value="{{ admin.id(object) }}" />
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="thumbnail context">
-                    <div class="media-element">
-                        {% if object.width is defined and object.width %}
-                            <img src="{% path object, 'admin' %}?{{ date().timestamp }}" class="img-responsive  center-block"/>
-                        {% else %}
-
-                            <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fa-5x center-block"></i>
+    <div class="media-box {% for tag in object.tags %}tag_{{ tag.id }} {% endfor %}">
+        <div class="zero-clipboard">
+            <div class="btn-clipboard btn-clipboard-left">
+                <a href="{{ previewLink }}"
+                        {% if previewType == 'iframe' %}
+                            data-featherlight-iframe-width="{{ iframeWidth }}"
+                            data-featherlight-iframe-height="{{ iframeHeight }}"
                         {% endif %}
-                    </div>
-                    <div class="media-title">
-                            {% if app.request.isxmlhttprequest %}
-                                <a class="select-media link-underlined" href="#" data-object-id="{{ object.id }}"
-                                   data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
-                            {% else %}
-                                <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}" class="link-underlined"
-                                   data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
-                            {% endif %}<br>
-                        <span class="help-block">{{ object.contentType }}, {{ human_readable_filesize(object.size, null, 2) }}</span>
-
-                    </div>
+                   data-featherlight-variant="initcms-featherlight"
+                   data-featherlight="{{ previewType }}"
+                   class="image-preview-link" title="{{ object.name }}">
+                    <i class="fa fa-search-plus"></i>
+                </a>
+            </div>
+            {% if not galleryListMode %}
+                <div class="btn-clipboard btn-clipboard-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true"
+                       aria-expanded="false">{{ "dropdown_options"|trans({}, admin.translationDomain) }} <span
+                                class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu"
+                        aria-labelledby="context-menu_{{ object.id }}">
+                        {% if app.request.isxmlhttprequest and not show_actions %}
+                            <li>
+                                <a class="select-media" href="#" data-object-id="{{ object.id }}">
+                                    {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
+                                </a>
+                            </li>
+                        {% else %}
+                            {% if(admin.isGranted('EDIT', object)) %}
+                                <li><a href="{{ admin.generateObjectUrl('edit', object) }}"
+                                       title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
+                                       data-follow="{{ admin.generateObjectUrl('edit', object) }}">
+                                        <i class="glyphicon glyphicon-pencil"></i> {{ 'action_edit'|trans({}, 'SonataAdminBundle') }}
+                                    </a></li>
+                            {% endif %}
+                            {% if(admin.isGranted('DELETE', object)) %}
+                                <li><a href="{{ admin.generateObjectUrl('delete', object) }}"
+                                       class="dialog-link"
+                                       id="{{ admin.getClassnameLabel() }}_{{ object.id }}"
+                                       title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
+                                        <i class="glyphicon glyphicon-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                                    </a></li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
                 </div>
+                <div class="btn-clipboard btn-clipboard-bottom">
+                    <input type="checkbox" name="idx[]" class="delete_check_box" value="{{ admin.id(object) }}"/>
+                </div>
+            {% endif %}
+        </div>
+        <div class="thumbnail context">
+            <div class="media-element">
+                {% if object.width is defined and object.width %}
+                    <img src="{% path object, 'admin' %}?{{ date().timestamp }}"
+                         class="img-responsive  center-block"/>
+                {% else %}
+                    <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fa-4x center-block"></i>
+                {% endif %}
+            </div>
+            <div class="media-title">
+                {% if app.request.isxmlhttprequest and not show_actions %}
+                <a class="select-media link-underlined" href="#" data-object-id="{{ object.id }}"
+                   data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
+            {% else %}
+                <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}" class="link-underlined"
+                   data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
+                {% endif %}<br>
+                {#<span class="help-block">{{ object.contentType }}, {{ human_readable_filesize(object.size, null, 2) }}</span>#}
+            </div>
+        </div>
 
+
+    </div>
+{% endfor %}
+<div class="clearfix">&nbsp;</div>
+{% if datagrid.results|length > 0 %}
+    <div class="row">
+        <div class="col-md-3 col-xs-12 pull-right text-right">
+            <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
+                    list_results_count{% endtranschoice %}</strong>:</label>
+            {% block max_per_page %}
+                <br/>
+                <label class="control-label"
+                       for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
+                    label_per_page{% endtrans %}</label>
+                <select class="per-page small" id="{{ admin.uniqid }}_per_page"
+                        style="width: auto; height: auto">
+                    {% for per_page in admin.getperpageoptions %}
+                        <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                                value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
+                            {{ per_page }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% endblock %}
+        </div>
+        {% if datagrid.pager.haveToPaginate() %}
+            <div class="pagination col-md-3 hidden-sm hidden-xs">
+                <p>{{ datagrid.pager.page }} / {{ datagrid.pager.lastpage }}</p>
 
             </div>
-        {% endfor %}
+            <div class="col-md-6 col-xs-12 text-center">
+                <ul class="pagination pagination-xs">
+
+                    {% if datagrid.pager.page != 1 %}
+                        <li>
+                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, 1)) }}"
+                               title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    {% if datagrid.pager.page != datagrid.pager.previouspage %}
+                        <li>
+                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.previouspage)) }}"
+                               title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
+                        </li>
+                    {% endif %}
+
+                    {# Set the number of pages to display in the pager #}
+                    {% for page in datagrid.pager.getLinks() %}
+                        {% if page == datagrid.pager.page %}
+                            <li class="active"><a
+                                        href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if datagrid.pager.page != datagrid.pager.nextpage %}
+                        <li>
+                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.nextpage)) }}"
+                               title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
+                        </li>
+                    {% endif %}
+
+                    {% if datagrid.pager.page != datagrid.pager.lastpage %}
+                        <li>
+                            <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.lastpage)) }}"
+                               title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+        {% endif %}
     </div>
-    <div class="clearfix">&nbsp;</div>
-{% endblock %}
-
-
-
-{% block table_footer %}
-        {{ block('paginator') }}
-{% endblock %}
+{% endif %}

@@ -10,16 +10,16 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
+use Networking\InitCmsBundle\Model\Tag;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Networking\InitCmsBundle\Model\PageInterface;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * Class MediaAdminController
@@ -57,8 +57,8 @@ class MediaAdminController extends SonataMediaAdminController
                 'security' => $this->get('sonata.media.pool')->getDownloadSecurity($media),
                 'action' => 'view',
                 'pixlr' => $this->container->has('sonata.media.extra.pixlr') ? $this->container->get(
-                        'sonata.media.extra.pixlr'
-                    ) : false,
+                    'sonata.media.extra.pixlr'
+                ) : false,
             )
         );
     }
@@ -81,8 +81,8 @@ class MediaAdminController extends SonataMediaAdminController
                 'NetworkingInitCmsBundle:MediaAdmin:select_provider.html.twig',
                 array(
                     'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
-                            $this->get('request')->get('context', $this->get('sonata.media.pool')->getDefaultContext())
-                        ),
+                        $this->get('request')->get('context', $this->get('sonata.media.pool')->getDefaultContext())
+                    ),
                     'base_template' => $this->getBaseTemplate(),
                     'admin' => $this->admin,
                     'action' => 'create'
@@ -133,7 +133,7 @@ class MediaAdminController extends SonataMediaAdminController
      *
      * @throws NotFoundHttpException
      * @throws AccessDeniedException
-     * @return Response|RedirectResponse
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response|RedirectResponse
      */
     public function deleteAction($id)
     {
@@ -202,6 +202,55 @@ class MediaAdminController extends SonataMediaAdminController
         ));
     }
 
+    public function batchActionAddTags(ProxyQueryInterface $selectedModelQuery)
+    {
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+        if (!$this->admin->isGranted('EDIT') || !$this->admin->isGranted('DELETE')) {
+            throw new AccessDeniedException();
+        }
+
+        $modelManager = $tagAdmin->getModelManager();
+
+        /** @var Tag $tag */
+        $tag = $modelManager->find($tagAdmin->getClass(), $this->get('request_stack')->getCurrentRequest()->get('tags'));
+
+
+        $data = array(
+            'result' => 'ok',
+            'status' => 'warning',
+            'message' => $this->admin->trans('tag_not_selected')
+        );
+
+        if ($tag !== null) {
+
+            $selectedModels = $selectedModelQuery->execute();
+
+            try {
+                foreach ($selectedModels as $selectedModel) {
+                    $selectedModel->addTags($tag);
+                    $this->admin->getModelManager()->update($selectedModel);
+                }
+
+                $status = 'success';
+                $message = 'tag_added';
+
+            } catch (\Exception $e) {
+                $status = 'error';
+                $message = 'tag_not_added';
+            }
+
+            $data = array(
+                'result' => 'ok',
+                'status' => $status,
+                'message' => $this->admin->trans($message, array('%tag%' => $tag->getPath())));
+        }
+
+
+
+        return $this->renderJson($data);
+
+    }
+
     protected function doBatchDelete(ProxyQueryInterface $queryProxy)
     {
         $modelManager = $this->admin->getModelManager();
@@ -255,12 +304,21 @@ class MediaAdminController extends SonataMediaAdminController
 
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
+        $tags = $this->getDoctrine()
+            ->getRepository('NetworkingInitCmsBundle:Tag')
+            ->findBy(array('level' => 1), array('path' => 'ASC'));
+
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+
         return $this->render(
             $this->admin->getTemplate('list'),
             array(
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
+                'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'lastItem' => 0,
                 'action' => 'list',
                 'form' => $formView,
                 'datagrid' => $datagrid,
@@ -283,8 +341,14 @@ class MediaAdminController extends SonataMediaAdminController
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $galleryListMode = $request->get('pcode') ? true : false;
         $datagrid = $this->admin->getDatagrid();
-        $formView = $datagrid->getForm()->createView();
+        $datagrid->getForm()->createView();
         $persistentParameters = $this->admin->getPersistentParameters();
+
+        $tags = $this->getDoctrine()
+            ->getRepository('NetworkingInitCmsBundle:Tag')
+            ->findBy(array('level' => 1), array('path' => 'ASC'));
+
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
         return $this->render(
             'NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig',
@@ -292,6 +356,9 @@ class MediaAdminController extends SonataMediaAdminController
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
+                'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'lastItem' => 0,
                 'action' => 'list',
                 'datagrid' => $datagrid,
                 'galleryListMode' => $galleryListMode,

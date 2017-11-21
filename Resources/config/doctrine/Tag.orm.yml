@@ -1,6 +1,9 @@
 Networking\InitCmsBundle\Entity\Tag:
   type: entity
   table: tag
+  gedmo:
+    tree:
+      type: materializedPath
   repositoryClass: Doctrine\ORM\EntityRepository
   id:
     id:
@@ -11,6 +14,22 @@ Networking\InitCmsBundle\Entity\Tag:
     name:
       type: string
       length: 255
+      gedmo:
+        0: treePathSource
+    path:
+      type: string
+      length: 255
+      nullable: true
+      gedmo:
+        treePath:
+          appendId: false
+          separator: '/'
+    level:
+      type: integer
+      column: lvl
+      nullable: true
+      gedmo:
+        0: treeLevel
     slug:
       type: string
       length: 255
@@ -21,3 +40,21 @@ Networking\InitCmsBundle\Entity\Tag:
             0: name
           unique: false
           updateable: true
+  oneToMany:
+    children:
+      targetEntity: Networking\InitCmsBundle\Entity\Tag
+      mappedBy: parent
+      orderBy: {"path": "ASC"}
+  manyToOne:
+    parent:
+      targetEntity: Networking\InitCmsBundle\Entity\Tag
+      inversedBy: children
+      gedmo:
+         0: treeParent
+      joinColumn:
+        name: parent_id
+        referenced-column-name: id
+        onDelete: 'SET NULL'
+  uniqueConstraints:
+      uniqueConstraint:
+          columns: [path]

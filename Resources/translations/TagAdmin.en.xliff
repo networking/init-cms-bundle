@@ -14,9 +14,21 @@
                 <source>form.label_name</source>
                 <target>Tag Name</target>
             </trans-unit>
+            <trans-unit id="form.label_parent">
+                <source>form.label_parent</source>
+                <target>Parent Tag</target>
+            </trans-unit>
             <trans-unit id="list.label_name">
                 <source>list.label_name</source>
                 <target>Tag Name</target>
+            </trans-unit>
+            <trans-unit id="list.label_path">
+                <source>list.label_path</source>
+                <target>Tag hierarchy</target>
+            </trans-unit>
+            <trans-unit id="parent.helper_text">
+                <source>parent.helper_text</source>
+                <target>Select a parent tag to organise your tags better</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_tag_delete">
                 <source>breadcrumb.link_tag_delete</source>
@@ -33,6 +45,18 @@
             <trans-unit id="action._delete">
                 <source>action._delete</source>
                 <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Add new tag</target>
+            </trans-unit>
+            <trans-unit id="show_all_media">
+                <source>show_all_media</source>
+                <target>Show all media</target>
+            </trans-unit>
+            <trans-unit id="action._add_tag">
+                <source>action._add_tag</source>
+                <target>Assign media a tag</target>
             </trans-unit>
         </body>
     </file>

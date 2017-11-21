@@ -10,11 +10,14 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Doctrine\ORM\EntityRepository;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 
 /**
  * Class TagAdmin
@@ -23,6 +26,19 @@ use Sonata\AdminBundle\Form\FormMapper;
  */
 class TagAdmin extends Admin
 {
+
+    /**
+     * Default values to the datagrid.
+     *
+     * @var array
+     */
+    protected $datagridValues = array(
+        '_page'       => 1,
+        '_per_page'   => 25,
+        '_sort_by' => 'path',
+        '_sort_order'    => 'ASC'
+    );
+
     /**
      * @return string
      */
@@ -32,12 +48,67 @@ class TagAdmin extends Admin
     }
 
     /**
+     * @param RouteCollection $collection
+     */
+    public function configureRoutes(RouteCollection $collection)
+    {
+
+        parent::configureRoutes($collection);
+
+        $collection->add(
+            'update_tree',
+            'update_tree',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:updateTree',
+            )
+        );
+
+        $collection->add(
+            'inline_edit',
+            'inline_edit',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:inlineEdit',
+            )
+        );
+
+        $collection->add(
+            'search_tags',
+            'search_tags',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:searchTags',
+            )
+        );
+    }
+
+
+    /**
      * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        $id = $this->getSubject() ? $this->getSubject()->getId(): null;
         $formMapper
-            ->add('name');
+            ->add('name', null, array('attr' => array('class' => 'tag_name_input')))
+            ->add('parent',
+                'networking_type_autocomplete',
+                array(
+                    'help_block' => 'parent.helper_text',
+                    'attr' => array('style' => "width:220px"),
+                    'property' => 'AdminTitle',
+                    'class' => $this->getClass(),
+                    'required' => false,
+                    'query_builder' => function (EntityRepository $er) use ($id)  {
+                        $qb = $er->createQueryBuilder('t');
+                        $qb->orderBy('t.path', 'asc');
+                        if($id){
+                            $qb->where('t.id != :id')
+                                ->setParameter(':id', $id);
+                        }
+
+                        return $qb;
+                    },
+                )
+            );
     }
 
     /**
@@ -46,7 +117,7 @@ class TagAdmin extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name');
+            ->add('path', null, array('label' => 'filter.label_name'));
     }
 
     /**
@@ -56,6 +127,7 @@ class TagAdmin extends Admin
     {
         $listMapper
             ->addIdentifier('name')
+            ->add('path')
             ->add(
                 '_action',
                 'actions',
@@ -67,19 +139,5 @@ class TagAdmin extends Admin
                     )
                 )
             );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validate(ErrorElement $errorElement, $object)
-    {
-        $errorElement
-            ->with('name')
-            ->assertNotNull(array())
-            ->assertNotBlank()
-            ->assertLength(array('max' => 255))
-            ->end();
-
     }
 }

@@ -497,6 +497,18 @@
                 <source>upload_help_text</source>
                 <target>Dateien hier hineinziehen oder hier klicken zum hochladen.</target>
             </trans-unit>
+            <trans-unit id="tag_added">
+                <source>tag_added</source>
+                <target>Medien wurden den Tag '%tag%' zugeordnet</target>
+            </trans-unit>
+            <trans-unit id="tag_not_added">
+                <source>tag_not_added</source>
+                <target>Medien konnten nicht zum Tag '%tag%' zugeordnet werden</target>
+            </trans-unit>
+            <trans-unit id="tag_not_selected">
+                <source>tag_not_selected</source>
+                <target>Bitte einen Tag auswählen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
