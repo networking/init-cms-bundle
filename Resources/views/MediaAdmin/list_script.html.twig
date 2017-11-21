@@ -210,7 +210,10 @@
             var active = false;
             $('.delete_check_box').each(function(i, item){
                 if(item.checked){
+                    $(item).addClass('ui-selected');
                     active = true;
+                }else{
+                    $(item).removeClass('ui-selected');
                 }
             });
             if(active){
@@ -290,6 +293,5 @@
         setUpSortTree();
 
         body.on('click', '.tag-dialog-link', createAjaxTagDialog);
-
     });
 </script>

@@ -12,6 +12,10 @@ file that was distributed with this source code.
 {% extends 'NetworkingInitCmsBundle:CRUD:list.html.twig' %}
 {% form_theme form 'NetworkingInitCmsBundle:Form:form_admin_fields.html.twig' %}
 {% set active_tab = app.request.get('context') %}
+{% block javascripts %}
+        {{ parent() }}
+    {% include 'NetworkingInitCmsBundle:MediaAdmin:list_script_draggable.html.twig' %}
+{% endblock %}
 
 {% block preview %}
 {% endblock %}
@@ -211,12 +215,6 @@ file that was distributed with this source code.
                                 <i class="fa fa-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
                             </button>
                         </span>
-                        <span class="batch-actions form-inline" style="display: none;" >
-                            <select name="tags" class="tag-select input-medium form-control"></select>
-                            <button type="submit" class="btn btn-info btn-sm batch-add-tags batch" value="add_tags">
-                                <i class="fa fa-tags"></i> {{ 'action._add_tag'|trans({}, tagAdmin.translationDomain) }}
-                            </button>
-                        </span>
                     {% endif %}
                 </div>
                 <div class="col-sm-6 sort-buttons">
@@ -247,7 +245,6 @@ file that was distributed with this source code.
                 <div class="clearfix"><p>&nbsp;</p></div>
             </div>
 
-            {% if datagrid.results|length > 0 %}
 
                 <div class="row">
                     <div class="col-md-3 col-xs-12">
@@ -264,9 +261,23 @@ file that was distributed with this source code.
                                     <i class="glyphicon glyphicon-plus icon-white"></i> {{create_text }}
                                 </a>
                         {% endif %}
+                        {#{% if not app.request.isxmlhttprequest %}#}
+                            {#<span class="batch-actions form-inline" style="display: none;" >#}
+                                    {#<select name="tags" class="tag-select input-medium form-control"></select>#}
+                                    {#<button type="submit" class="btn btn-info btn-sm batch-add-tags batch" value="add_tags">#}
+                                        {#<i class="fa fa-tags"></i> {{ 'action._add_tag'|trans({}, tagAdmin.translationDomain) }}#}
+                                    {#</button>#}
+                                {#</span>#}
+                        {#{% endif %}#}
                     </div>
                     <div id="item_list" class="col-md-9 col-xs-12 text-center">
+                    {% if datagrid.results|length > 0 %}
                         {% include "NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig" %}
+                    {% else %}
+                            <p class="notice">
+                                {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+                            </p>
+                    {% endif %}
                     </div>
                 </div>
                 {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and (galleryListMode is not defined or not galleryListMode) %}
@@ -280,13 +291,7 @@ file that was distributed with this source code.
                         {% endfor %}
                     </p>
                 {% endif %}
-            {% else %}
-                <div id="item_list">
-                <p class="notice">
-                    {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
-                </p>
-                </div>
-            {% endif %}
+
                 {% if admin.hasRoute('batch') %}
             </form>
             {% endif %}

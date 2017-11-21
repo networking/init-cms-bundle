@@ -9,7 +9,9 @@
  */
 namespace Networking\InitCmsBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
+use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Model\Tag;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
@@ -226,7 +228,11 @@ class MediaAdminController extends SonataMediaAdminController
             $selectedModels = $selectedModelQuery->execute();
 
             try {
+                /** @var Media $selectedModel */
                 foreach ($selectedModels as $selectedModel) {
+                    if(!$this->getParameter('networking_init_cms.multiple_media_tags')){
+                        $selectedModel->setTags(new ArrayCollection());
+                    }
                     $selectedModel->addTags($tag);
                     $this->admin->getModelManager()->update($selectedModel);
                 }

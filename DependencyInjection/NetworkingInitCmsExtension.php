@@ -73,6 +73,10 @@ class NetworkingInitCmsExtension extends Extension
             'networking_init_cms.translation_fallback_route',
             $config['translation_fallback_route']
         );
+        $container->setParameter(
+            'networking_init_cms.multiple_media_tags',
+            $config['multiple_media_tags']
+        );
 
 
         if (!$config['admin_toolbar']['toolbar']) {

@@ -1,0 +1,40 @@
+{% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
+<script>
+    function openTag(ev, id) {
+        ev.preventDefault();
+        $('#div_'+id+' > a.tag_link').trigger('click');
+    }
+
+
+    function dropTag(ev, id) {
+        var media = ev.dataTransfer.getData('id');
+
+        $.ajax({
+            type: "POST",
+            url: "{{ admin.generateUrl('batch', {'filter':  admin.filterParameters}) }}",
+            data: JSON.stringify({action: "add_tags", tags: id, idx: [media], _sonata_csrf_token :"{{ csrf_token }}"}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(xhr){
+                if (xhr.result == 'ok') {
+                    createInitCmsMessageBox(xhr.status, xhr.message);
+                    $('#item_list').load(
+                        "{{ admin.generateUrl('refresh_list')|raw }}",
+                        function(){$('.info > a.tag_link').trigger('click');}
+                    );
+
+                    history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
+                }
+            },
+            failure: function(errMsg) {
+                alert(errMsg);
+            }
+        });
+
+
+    }
+
+    function dragStart(event, id) {
+        event.dataTransfer.setData("id", id);
+    }
+</script>
