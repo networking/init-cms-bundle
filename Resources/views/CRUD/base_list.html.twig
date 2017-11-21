@@ -180,7 +180,7 @@ file that was distributed with this source code.
                 <tr>
                     <th colspan="{{ admin.list.elements|length - (app.request.isXmlHttpRequest ? (admin.list.has('_action') + admin.list.has('batch')) : 0) }}">
                         <div class="form-inline">
-                            {% if not app.request.isxmlhttprequest %}{{ block('batch') }}{% endif %}
+                            {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}{{ block('batch') }}{% endif %}
                             <div class="pull-right">
                                 <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
                                         list_results_count{% endtranschoice %}</strong></label>
@@ -304,12 +304,13 @@ file that was distributed with this source code.
             <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
         {% endif %}
 
-
+        {% if batchactions|length > 0  %}
         <select name="action" class="input-medium form-control">
             {% for action, options in batchactions %}
                 <option value="{{ action }}">{{ options.label }}</option>
             {% endfor %}
         </select>
+        {% endif %}
     {% endblock %}
 
     <input type="submit" class="btn btn-primary btn-sm batch-dialog-link" value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}">
