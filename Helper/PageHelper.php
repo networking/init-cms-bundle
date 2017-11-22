@@ -344,7 +344,7 @@ class PageHelper
 
         $now = new \DateTime();
 
-        $postfix = sprintf('_copy_%s', $now->getTimestamp());
+        $postfix = sprintf(' copy %s', $now->format('d.m.Y H:i:s'));
 
         $pageCopy->setPageName($page->getPageName().$postfix);
         $pageCopy->setMetaTitle($page->getMetaTitle());
