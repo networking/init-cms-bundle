@@ -773,7 +773,7 @@ class PageAdminController extends CRUDController
 
         $request->getSession()->getFlashBag()->add(
             'sonata_flash_success',
-            $this->admin->trans('flash_publish_success')
+            $this->admin->trans('flash_status_success')
         );
 
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
