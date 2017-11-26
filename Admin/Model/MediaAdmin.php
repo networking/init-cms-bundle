@@ -364,32 +364,13 @@ abstract class MediaAdmin extends Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        parent::configureFormFields($formMapper);
         $media = $this->getSubject();
-
-
-        if (!$media) {
-            $media = $this->getNewInstance();
-        }
-
-        if (!$media || !$media->getProviderName()) {
-            return;
-        }
-
-        $formMapper->getFormBuilder()->addModelTransformer(
-            new ProviderDataTransformer($this->pool, $this->getClass()),
-            true
-        );
-
-        $provider = $this->pool->getProvider($media->getProviderName());
-
         if ($media->getId()) {
-            $this->buildEditForm($formMapper, $provider);
-        } else {
-            $provider->buildCreateForm($formMapper);
+            $this->addPreviewToEditForm($formMapper);
         }
 
-
-        if (in_array($provider->getName(), $this->localisedMediaProviders)) {
+        if (in_array($media->getProviderName(), $this->localisedMediaProviders)) {
             $formMapper->add(
                 'locale',
                 'choice',
@@ -399,20 +380,20 @@ abstract class MediaAdmin extends Admin
             );
         }
 
-            $formMapper->add(
-                'tags',
-                'sonata_type_model',
-                array(
-                    'required' => false,
-                    'expanded' => false,
-                    'multiple' => true,
-                    'property' => 'adminTitle',
-                    'help_label' => 'help.media_tag',
-                    'taggable' => true,
-                    'choices_as_values' => true,
-                    'attr' => array('style' => "width:220px"),
-                )
-            );
+        $formMapper->add(
+            'tags',
+            'sonata_type_model',
+            array(
+                'required' => false,
+                'expanded' => false,
+                'multiple' => true,
+                'property' => 'adminTitle',
+                'help_label' => 'help.media_tag',
+                'taggable' => true,
+                'choices_as_values' => true,
+                'attr' => array('style' => "width:220px"),
+            )
+        );
 
         //remove and re-add fields to control field order
         if ($formMapper->has('enabled')) {
@@ -440,16 +421,18 @@ abstract class MediaAdmin extends Admin
      * @param FormMapper $formMapper
      * @param MediaProviderInterface $provider
      */
-    protected function buildEditForm(FormMapper $formMapper, MediaProviderInterface $provider)
+    protected function addPreviewToEditForm(FormMapper $formMapper)
     {
-        $provider->buildEditForm($formMapper);
-
         if ($formMapper->get('binaryContent')) {
             /** @var \Symfony\Component\Form\FormBuilder $formBuilder */
             $field = $formMapper->get('binaryContent');
             $options = $field->getOptions();
+            //remove and re-add field at the end to control field order
+            $formMapper->remove('binaryContent');
+
             $label = "form.label_binary_content_new";
-            $providerName = $provider->getName();
+            $media = $this->getSubject();
+            $providerName = $media->getProviderName();
 
             if ($providerName == 'sonata.media.provider.image' || $providerName == 'sonata.media.provider.youtube') {
                 $previewImageLabel = "form.label_image";
@@ -460,7 +443,6 @@ abstract class MediaAdmin extends Admin
                     $label = "form.label_binary_content_youtube_new";
                 }
 
-                $formMapper->remove('binaryContent');
                 $formMapper->add(
                     'self',
                     'networking_type_media_preview',
