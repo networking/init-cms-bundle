@@ -87,7 +87,7 @@
                 {% endif %}
             </div>
             <div class="media-title">
-                {% if app.request.isxmlhttprequest and not show_actions %}
+                {% if app.request.isxmlhttprequest and galleryListMode %}
                 <a class="select-media link-underlined" href="#" data-object-id="{{ object.id }}"
                    data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
             {% else %}
