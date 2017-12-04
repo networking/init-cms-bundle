@@ -375,6 +375,16 @@ file that was distributed with this source code.
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
     {% endif %}
     {{ parent() }}
+    {% if select2 is defined and select2 %}
+    <script type="text/javascript">
+            jQuery(document).ready(function () {
+                jQuery("#{{ id }}").select2({
+                    placeholder: "{{ 'Select'|trans() }}",
+                    allowClear: {{ multiple }}
+                });
+            });
+        </script>
+    {% endif %}
 {% endblock choice_widget %}
 
 

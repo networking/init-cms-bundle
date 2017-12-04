@@ -6,11 +6,15 @@
 
     <services>
         <service id="networking_init_cms.form.extension.field" class="Networking\InitCmsBundle\Form\Extension\Field\Type\FormTypeFieldExtension">
-            <tag name="form.type_extension" alias="form"/>
+            <tag name="form.type_extension" alias="form" extended-type="Symfony\Component\Form\Extension\Core\Type\FormType"/>
         </service>
 
         <service id="networking_init_cms.form.tag_extension" class="Networking\InitCmsBundle\Form\Extension\TagExtension">
             <tag name="form.type_extension" alias="sonata_type_model"/>
+        </service>
+
+        <service id="networking_init_cms.form.select2_extension" class="Networking\InitCmsBundle\Form\Extension\Select2Extension">
+            <tag name="form.type_extension" alias="choice" extended-type="Symfony\Component\Form\Extension\Core\Type\ChoiceType"/>
         </service>
 
         <service id="networking_init_cms.form.type.autocomplete" class="Networking\InitCmsBundle\Form\Type\AutocompleteType">
