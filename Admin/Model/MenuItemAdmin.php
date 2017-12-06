@@ -214,7 +214,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'horizontal' => true,
                         'help_block' => 'visibility.helper.text',
                         'choices' => MenuItem::getVisibilityList(),
-                        'catalogue' => $this->translationDomain
+                        'translation_domain' => $this->translationDomain
                     )
                 )
                 ->add(

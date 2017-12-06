@@ -11,10 +11,10 @@ file that was distributed with this source code.
 {% extends 'NetworkingInitCmsBundle:CRUD:base_show_field.html.twig' %}
 
 {% block field%}
-    {% if field_description.options.catalogue is not defined %}
+    {% if field_description.options.translation_domain is not defined %}
         {% set value = value|trans %}
     {% else %}
-        {% set value = value|trans({}, field_description.options.catalogue) %}
+        {% set value = value|trans({}, field_description.options.translation_domain) %}
     {% endif %}
 
     {% if field_description.options.safe %}

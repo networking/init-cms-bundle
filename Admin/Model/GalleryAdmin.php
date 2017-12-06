@@ -101,8 +101,8 @@ class GalleryAdmin extends SonataGalleryAdmin
         $listMapper
             ->add('enabled', null, array('editable' => true))
             ->addIdentifier('name')
-            ->add('context', 'trans', array('catalogue' => 'SonataMediaBundle'))
-            ->add('defaultFormat', 'trans', array('catalogue' => 'SonataMediaBundle'));
+            ->add('context', 'trans', array('translation_domain' => 'SonataMediaBundle'))
+            ->add('defaultFormat', 'trans', array('translation_domain' => 'SonataMediaBundle'));
 
         $listMapper->add(
             '_action',

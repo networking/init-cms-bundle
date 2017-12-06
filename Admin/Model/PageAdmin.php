@@ -303,7 +303,7 @@ abstract class PageAdmin extends BaseAdmin
                 array(
                     'help_block' => 'visibility.helper.text',
                     'choices' => $subject::getVisibilityList(),
-                    'catalogue' => $this->translationDomain
+                    'translation_domain' => $this->translationDomain
                 )
             )
             ->add('activeFrom',
