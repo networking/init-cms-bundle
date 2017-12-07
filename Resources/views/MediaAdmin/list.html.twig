@@ -10,6 +10,12 @@ file that was distributed with this source code.
 #}
 
 {% extends 'NetworkingInitCmsBundle:CRUD:list.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/ios-html5-drag-drop-shim/release/default.css') }}">
+{% endblock %}
+
+
 {% form_theme form 'NetworkingInitCmsBundle:Form:form_admin_fields.html.twig' %}
 {% set active_tab = app.request.get('context') %}
 {% block javascripts %}
