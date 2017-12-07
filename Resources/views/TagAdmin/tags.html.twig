@@ -3,7 +3,7 @@
     {% for tag in tags %}
         <li  class="table-row-style sortable-tag {% if noSort %}mjs-nestedSortable-collapsed{% endif %} {% if lastItem and tag.id == lastItem %}last-item{% endif %}" id="tag_{{ tag.id }}" data-tag-name="{{ tag.name }}">
                 <div class="dotted">&nbsp;</div>
-                <div class="handle menu_item tag_item" id="div_{{ tag.id }}" ondrop="dropTag(event, {{ tag.id }})"   ondragover="openTag(event, {{ tag.id }})" >
+                <div class="handle menu_item tag_item" id="div_{{ tag.id }}" ondrop="dropTag(event, '{{ tag.id }}')"   ondragover="openTag(event, '{{ tag.id }}')" >
                     <i class="tag_folder glyphicon glyphicon-folder-close cursor-pointer"></i>&nbsp;
                     <a class="tag_link" data-pk="{{ tag.id }}" href="#" >{{ tag.name }}</a>
 

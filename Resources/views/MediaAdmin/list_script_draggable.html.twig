@@ -14,10 +14,8 @@
         $('#div_'+id+' > a.tag_link').trigger('click');
     }
 
-
     function dropTag(ev, id) {
-        var media = ev.dataTransfer.getData('id');
-
+        var media = ev.dataTransfer.getData('text/plain');
         $.post(
             "{{ admin.generateUrl('batch', {'filter':  admin.filterParameters}) }}",
             {action: "add_tags", tags: id, idx: [media], _sonata_csrf_token :"{{ csrf_token }}"},
@@ -33,11 +31,5 @@
                 }
             }
         );
-
-
-    }
-
-    function dragStart(event, id) {
-        event.dataTransfer.setData("id", id);
     }
 </script>
