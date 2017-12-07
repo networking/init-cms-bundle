@@ -15,6 +15,7 @@
     }
 
     function dropTag(ev, id) {
+        ev.preventDefault();
         var media = ev.dataTransfer.getData('text/plain');
         $.post(
             "{{ admin.generateUrl('batch', {'filter':  admin.filterParameters}) }}",
