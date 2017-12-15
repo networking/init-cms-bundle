@@ -85,7 +85,7 @@ abstract class UserAdmin extends SonataUserAdmin
     /**
      * {@inheritdoc}
      */
-    public function postUpdate($object)
+    public function postUpdate($object): void
     {
         $securityContext = $this->getConfigurationPool()->getContainer()->get('security.context');
         if ($object == $securityContext->getToken()->getUser()) {
@@ -96,7 +96,7 @@ abstract class UserAdmin extends SonataUserAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier('username')
@@ -132,7 +132,7 @@ abstract class UserAdmin extends SonataUserAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $filterMapper)
+    protected function configureDatagridFilters(DatagridMapper $filterMapper): void
     {
         $filterMapper
             ->add('username')
@@ -144,7 +144,7 @@ abstract class UserAdmin extends SonataUserAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
             ->with('General')

@@ -35,7 +35,7 @@ class NetworkingInitCmsExtension extends Extension
     {
 
         $configuration = new Configuration();
-        $defaults = Yaml::parse(__DIR__ . '/../Resources/config/cms/config.yml');
+        $defaults = Yaml::parseFile(__DIR__ . '/../Resources/config/cms/config.yml');
 
         foreach ($configs as $config) {
                     foreach ($config as $key => $value) {

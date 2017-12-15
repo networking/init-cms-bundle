@@ -52,6 +52,7 @@ class PhpCache implements PhpCacheInterface {
      */
     public function __construct($type = '', $rootDir = '', $env = '', $active = false, $cacheTime = '', $securityKey = null){
         $this->env = $env;
+
         $this->cacheDir = $this->createDir($rootDir, $env);
         $this->active = $active;
         $this->cacheTime = $cacheTime;
@@ -72,7 +73,7 @@ class PhpCache implements PhpCacheInterface {
      * @throws \Exception
      */
     protected function createDir($rootDir, $env){
-        $cacheDir = $rootDir.sprintf('cache/%s/php_fast_cache', $env);
+        $cacheDir = $rootDir.sprintf('../var/cache/%s/php_fast_cache', $env);
         if(!file_exists($cacheDir) || !is_writable($cacheDir)) {
             if(!file_exists($cacheDir)) {
                 @mkdir($cacheDir,0777);

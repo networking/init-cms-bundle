@@ -24,7 +24,7 @@ services:
     sandbox_init_cms.menu.frontend_main_menu_language:
         class: Knp\Menu\MenuItem
         factory: ['@sandbox_init_cms.menu.frontend_menu_builder', 'createFrontendLangMenu']
-        arguments: [ '@request', %networking_init_cms.page.languages%, "nav nav-pills pull-right" ]
+        arguments: [ '@request_stack', %networking_init_cms.page.languages%, "nav nav-pills pull-right" ]
         scope: request
         tags:
             - { name: knp_menu.menu, alias: langMenu }

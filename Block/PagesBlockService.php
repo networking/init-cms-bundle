@@ -13,38 +13,31 @@ namespace Networking\InitCmsBundle\Block;
 use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Sonata\BlockBundle\Block\BaseBlockService;
+use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
 use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Validator\ErrorElement;
+use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PagesBlockService
  * @package Networking\InitCmsBundle\Block
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class PagesBlockService extends BaseBlockService
+class PagesBlockService extends AbstractAdminBlockService
 {
     /**
      * @var PageManagerInterface $em
      */
     protected $em;
 
-    /**
-     * @param string $name
-     * @param EngineInterface $templating
-     * @param PageManagerInterface $em
-     */
-    public function __construct($name, EngineInterface $templating, PageManagerInterface $em)
-    {
-        $this->name = $name;
-        $this->templating = $templating;
-        $this->em = $em;
 
+    public function setPagManager(PageManagerInterface $em)
+    {
+        $this->em = $em;
     }
 
     /**
@@ -118,7 +111,7 @@ class PagesBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
+    public function configureSettings(OptionsResolver$resolver)
     {
         $resolver->setDefaults(array('template' => 'NetworkingInitCmsBundle:Block:block_page_status.html.twig'));
     }

@@ -10,12 +10,8 @@
 
 namespace Networking\InitCmsBundle\Menu;
 
-use Knp\Menu\FactoryInterface;
-use Knp\Menu\Matcher\Matcher;
-use Knp\Menu\Matcher\Voter\UriVoter;
-use Knp\Menu\Renderer\ListRenderer;
-use Symfony\Component\HttpFoundation\Request;
 use Networking\InitCmsBundle\Entity\MenuItem as Menu;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class FrontendMenuBuilder
@@ -87,14 +83,14 @@ class FrontendMenuBuilder extends MenuBuilder
     /**
      * Creates the login and change language navigation for the right side of the top frontend navigation
      *
-     * @param Request $request
+     * @param RequestStack $requestStack
      * @param $languages
      * @param string $classes
      * @param bool $dropDownMenu
      * @return \Knp\Menu\ItemInterface
      */
     public function createFrontendLangMenu(
-        Request $request,
+        RequestStack $requestStack,
         $languages,
         $classes = 'nav pull-right',
         $dropDownMenu = false
@@ -106,9 +102,9 @@ class FrontendMenuBuilder extends MenuBuilder
         }
 
         if ($dropDownMenu) {
-            $this->createDropdownLangMenu($menu, $languages, $request->getLocale());
+            $this->createDropdownLangMenu($menu, $languages, $requestStack->getCurrentRequest()->getLocale());
         } else {
-            $this->createInlineLangMenu($menu, $languages, $request->getLocale());
+            $this->createInlineLangMenu($menu, $languages, $requestStack->getCurrentRequest()->getLocale());
         }
 
         return $menu;

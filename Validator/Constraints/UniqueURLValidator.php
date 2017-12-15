@@ -12,7 +12,6 @@ namespace Networking\InitCmsBundle\Validator\Constraints;
 
 use Gedmo\Sluggable\Util\Urlizer;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManager;
@@ -29,18 +28,17 @@ class UniqueURLValidator extends ConstraintValidator
      */
     protected $om;
 
-    /**
-     * @var Request
-     */
-    protected $request;
 
     /**
-     * @param Request $request
+     * @var PageManagerInterface
+     */
+    protected $pageManager;
+
+    /**
      * @param PageManagerInterface $pageManager
      */
-    public function __construct(Request $request, PageManagerInterface $pageManager)
+    public function __construct(PageManagerInterface $pageManager)
     {
-        $this->request = $request;
         $this->pageManager = $pageManager;
     }
 

@@ -17,6 +17,7 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -30,9 +31,9 @@ class LanguageSwitcherHelper
 {
 
     /**
-     * @var Request $request
+     * @var RequestStack $requestStack
      */
-    protected $request;
+    protected $requestStack;
 
     /**
      * @var RouterInterface $router
@@ -65,13 +66,13 @@ class LanguageSwitcherHelper
     protected $pageHelper;
 
     /**
-     * @param Request $request
+     * @param RequestStack $requestStack
      * @param ObjectManager $om
      * @param $fallbackRoute
      * @param PageHelper $pageHelper
      */
-    public function __construct(Request $request, ObjectManager $om, $fallbackRoute, PageHelper $pageHelper){
-        $this->request = $request;
+    public function __construct(RequestStack $requestStack, ObjectManager $om, $fallbackRoute, PageHelper $pageHelper){
+        $this->requestStack = $requestStack;
         $this->om = $om;
         $this->fallbackRoute = $fallbackRoute;
         $this->pageHelper = $pageHelper;
@@ -110,10 +111,10 @@ class LanguageSwitcherHelper
     public function getTranslationRoute($oldUrl, $locale)
     {
 
-        $cookies = $this->request->cookies ? $this->request->cookies->all(): array();
+        $cookies = $this->requestStack->getCurrentRequest()->cookies ? $this->requestStack->cookies->all(): array();
         $oldRequest = Request::create($oldUrl, 'GET', array(), $cookies);
-        if($this->request->getSession()){
-            $oldRequest->setSession($this->request->getSession());
+        if($this->requestStack->getCurrentRequest()->getSession()){
+            $oldRequest->setSession($this->requestStack->getCurrentRequest()->getSession());
         }
 
         try{
@@ -195,7 +196,7 @@ class LanguageSwitcherHelper
      */
     public function getQueryString()
     {
-        $qs = Request::normalizeQueryString($this->request->server->get('QUERY_STRING'));
+        $qs = Request::normalizeQueryString($this->requestStack->getCurrentRequest()->server->get('QUERY_STRING'));
 
         return '' === $qs ? null : $qs;
     }
@@ -222,7 +223,7 @@ class LanguageSwitcherHelper
             $referrer = substr($referrer, 0, $pos);
         }
 
-        $host = $this->request->getHost();
+        $host = $this->requestStack->getCurrentRequest()->getHost();
         if ((null !== $baseUrl) && (false === ($pathInfo = substr($referrer, strlen($baseUrl))))) {
             // If substr() returns false then PATH_INFO is set to an empty string
             return '/';
@@ -243,19 +244,19 @@ class LanguageSwitcherHelper
      */
     public function prepareBaseUrl($referrer)
     {
-        $filename = basename($this->request->server->get('SCRIPT_FILENAME'));
+        $filename = basename($this->requestStack->getCurrentRequest()->server->get('SCRIPT_FILENAME'));
 
-        if (basename($this->request->server->get('SCRIPT_NAME')) === $filename) {
-            $baseUrl = $this->request->server->get('SCRIPT_NAME');
-        } elseif (basename($this->request->server->get('PHP_SELF')) === $filename) {
-            $baseUrl = $this->request->server->get('PHP_SELF');
-        } elseif (basename($this->request->server->get('ORIG_SCRIPT_NAME')) === $filename) {
-            $baseUrl = $this->request->server->get('ORIG_SCRIPT_NAME'); // 1and1 shared hosting compatibility
+        if (basename($this->requestStack->getCurrentRequest()->server->get('SCRIPT_NAME')) === $filename) {
+            $baseUrl = $this->requestStack->getCurrentRequest()->server->get('SCRIPT_NAME');
+        } elseif (basename($this->requestStack->getCurrentRequest()->server->get('PHP_SELF')) === $filename) {
+            $baseUrl = $this->requestStack->getCurrentRequest()->server->get('PHP_SELF');
+        } elseif (basename($this->requestStack->getCurrentRequest()->server->get('ORIG_SCRIPT_NAME')) === $filename) {
+            $baseUrl = $this->requestStack->getCurrentRequest()->server->get('ORIG_SCRIPT_NAME'); // 1and1 shared hosting compatibility
         } else {
             // Backtrack up the script_filename to find the portion matching
             // php_self
-            $path = $this->request->server->get('PHP_SELF', '');
-            $file = $this->request->server->get('SCRIPT_FILENAME', '');
+            $path = $this->requestStack->getCurrentRequest()->server->get('PHP_SELF', '');
+            $file = $this->requestStack->getCurrentRequest()->server->get('SCRIPT_FILENAME', '');
             $segs = explode('/', trim($file, '/'));
             $segs = array_reverse($segs);
             $index = 0;

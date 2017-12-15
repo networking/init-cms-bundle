@@ -43,7 +43,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
     }
 
     /**
-     * @return Array
+     * @return array
      */
     public function getTrackedActions()
     {
@@ -53,7 +53,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier('name');
@@ -82,7 +82,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
             ->add('name')

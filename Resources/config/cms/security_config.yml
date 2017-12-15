@@ -19,21 +19,23 @@ security:
 
     providers:
         fos_userbundle:
-            id: fos_user.user_manager
+            id: fos_user.user_provider.username_email
 
     encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
+        FOS\UserBundle\Model\UserInterface: bcrypt
     acl:
         connection: default
 
     firewalls:
         # -> custom firewall for the admin area of the URL
         admin:
+            logout_on_user_change: true
             switch_user:        true
             context:            user
             pattern:            /admin(.*)
             form_login:
-                provider:       fos_userbundle
+                provider: fos_userbundle
+                csrf_token_generator: security.csrf.token_manager
                 login_path:     /admin/login
                 use_forward:    false
                 check_path:     /admin/login_check
@@ -54,11 +56,13 @@ security:
 
         # defaut login area for standard users
         main:
+            logout_on_user_change: true
             switch_user:        true
             context:            user
             pattern:            .*
             form_login:
-                provider:       fos_userbundle
+                provider: fos_userbundle
+                csrf_token_generator: security.csrf.token_manager
                 login_path:     /login
                 use_forward:    false
                 check_path:     /login_check

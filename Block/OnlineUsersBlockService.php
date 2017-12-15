@@ -11,21 +11,21 @@
 namespace Networking\InitCmsBundle\Block;
 
 use Networking\InitCmsBundle\Model\UserManagerInterface;
-use Sonata\BlockBundle\Block\BaseBlockService;
+use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
 use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Validator\ErrorElement;
+use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class OnlineUsersBlockService
  * @package Networking\InitCmsBundle\Block
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class OnlineUsersBlockService extends BaseBlockService
+class OnlineUsersBlockService extends AbstractAdminBlockService
 {
 
     /**
@@ -36,12 +36,15 @@ class OnlineUsersBlockService extends BaseBlockService
     /**
      * @param string $name
      * @param EngineInterface $templating
-     * @param UserManagerInterface $um
      */
-    public function __construct($name, EngineInterface $templating, UserManagerInterface $um)
+    public function __construct($name, EngineInterface $templating)
     {
         $this->name = $name;
         $this->templating = $templating;
+    }
+
+    public function setUserManager(UserManagerInterface $um)
+    {
         $this->um = $um;
     }
 
@@ -89,7 +92,7 @@ class OnlineUsersBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
+    public function configureSettings(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

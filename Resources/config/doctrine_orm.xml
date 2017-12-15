@@ -7,8 +7,8 @@
     <services>
         <!-- Helpers -->
         <service id="networking_init_cms.page.helper.language_switcher"
-                 class="Networking\InitCmsBundle\Helper\LanguageSwitcherHelper" scope="request">
-            <argument type="service" id="request"/>
+                 class="Networking\InitCmsBundle\Helper\LanguageSwitcherHelper" >
+            <argument type="service" id="request_stack"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument>%networking_init_cms.translation_fallback_route%</argument>
             <argument type="service" id="networking_init_cms.helper.page_helper"/>
@@ -19,7 +19,7 @@
                 <argument type="service" id="networking_init_cms.page_manager"/>
             </call>
             <call method="setSerializer">
-                <argument type="service" id="serializer"/>
+                <argument type="service" id="jms_serializer.serializer"/>
             </call>
         </service>
 
@@ -30,10 +30,9 @@
         </service>
 
         <service id="networking_init_cms.user_manager" class="Networking\InitCmsBundle\Entity\UserManager">
-            <argument type="service" id="security.encoder_factory"/>
-            <argument type="service" id="fos_user.util.username_canonicalizer"/>
-            <argument type="service" id="fos_user.util.email_canonicalizer"/>
-            <argument type="service" id="fos_user.entity_manager"/>
+            <argument type="service" id="fos_user.util.password_updater" />
+            <argument type="service" id="fos_user.util.canonical_fields_updater" />
+            <argument type="service" id="fos_user.object_manager" />
             <argument>%networking_init_cms.admin.user.class%</argument>
         </service>
 
@@ -79,14 +78,14 @@
 
         <service id="networking_init_cms.layout_block_listener"
                  class="Networking\InitCmsBundle\Entity\LayoutBlockListener">
-            <argument type="service" id="serializer"/>
+            <argument type="service" id="jms_serializer.serializer"/>
             <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
             <tag name="doctrine.event_listener" event="postLoad" method="postLoad"/>
         </service>
 
         <service id="networking_init_cms.layout_block_form_listener"
                  class="Networking\InitCmsBundle\Entity\LayoutBlockFormListener"
-                 scope="prototype">
+                 shared="false">
             <argument type="service" id="doctrine.orm.entity_manager"/>
 
             <call method="setContentTypes">

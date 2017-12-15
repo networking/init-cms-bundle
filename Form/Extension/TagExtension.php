@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Form\Extension;
 
+use Sonata\AdminBundle\Form\Type\ModelType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -48,6 +49,6 @@ class TagExtension extends AbstractTypeExtension {
      */
     public function getExtendedType()
     {
-        return 'sonata_type_model';
+        return ModelType::class;
     }
 }

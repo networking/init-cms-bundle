@@ -10,20 +10,20 @@
 
 namespace Networking\InitCmsBundle\Block;
 
-use Sonata\BlockBundle\Block\BaseBlockService;
+use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
 use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Validator\ErrorElement;
+use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class TranslatableTextBlockService
  * @package Networking\InitCmsBundle\Block
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class TranslatableTextBlockService extends BaseBlockService
+class TranslatableTextBlockService extends AbstractAdminBlockService
 {
 
     /**
@@ -72,7 +72,7 @@ class TranslatableTextBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
+    public function configureSettings(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'translation_key' => 'Insert your translation key',

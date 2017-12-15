@@ -10,15 +10,13 @@
 
 namespace Networking\InitCmsBundle\Block;
 
-use Networking\InitCmsBundle\Model\UserManagerInterface;
-use Sonata\BlockBundle\Block\BaseBlockService;
-use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Validator\ErrorElement;
+use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
+use Sonata\BlockBundle\Model\BlockInterface;
+use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 /**
@@ -26,7 +24,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  * @package Networking\InitCmsBundle\Block
  * @author info@networking.ch
  */
-class CacheBlockService extends BaseBlockService
+class CacheBlockService extends AbstractAdminBlockService
 {
 
     /**
@@ -71,7 +69,7 @@ class CacheBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
+    public function configureSettings(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

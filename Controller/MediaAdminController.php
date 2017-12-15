@@ -32,13 +32,11 @@ class MediaAdminController extends SonataMediaAdminController
 {
     /**
      * @param null $id
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return Response
      */
     public function showAction($id = null)
     {
-        if (false === $this->admin->isGranted('VIEW')) {
+        if (false === $this->admin->checkAccess('VIEW')) {
             throw new AccessDeniedException();
         }
 
@@ -48,7 +46,7 @@ class MediaAdminController extends SonataMediaAdminController
             throw new NotFoundHttpException('unable to find the media with the id');
         }
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             'NetworkingInitCmsBundle:MediaAdmin:show.html.twig',
             array(
                 'media' => $media,
@@ -66,13 +64,12 @@ class MediaAdminController extends SonataMediaAdminController
     }
 
     /**
-     *
-     * @throws AccessDeniedException
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response
+     * @param Request|null $request
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request = null)
     {
-        if (false === $this->admin->isGranted('CREATE')) {
+        if (false === $this->admin->checkAccess('CREATE')) {
             throw new AccessDeniedException();
         }
 
@@ -83,7 +80,7 @@ class MediaAdminController extends SonataMediaAdminController
                 'NetworkingInitCmsBundle:MediaAdmin:select_provider.html.twig',
                 array(
                     'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
-                        $this->get('request')->get('context', $this->get('sonata.media.pool')->getDefaultContext())
+                        $request->get('context', $this->get('sonata.media.pool')->getDefaultContext())
                     ),
                     'base_template' => $this->getBaseTemplate(),
                     'admin' => $this->admin,
@@ -92,7 +89,7 @@ class MediaAdminController extends SonataMediaAdminController
             );
         }
 
-        return parent::createAction();
+        return parent::createAction($request);
     }
 
     /**
@@ -106,18 +103,18 @@ class MediaAdminController extends SonataMediaAdminController
     {
         $url = false;
 
-        if ($this->get('request')->get('btn_update_and_list')) {
+        if ($this->getRequest()->get('btn_update_and_list')) {
             $url = $this->admin->generateUrl('list', array('active_tab' => $this->get('request')->get('context')));
         }
-        if ($this->get('request')->get('btn_create_and_list')) {
+        if ($this->getRequest()->get('btn_create_and_list')) {
             $url = $this->admin->generateUrl('list', array('active_tab' => $this->get('request')->get('context')));
         }
 
 
-        if ($this->get('request')->get('btn_create_and_create')) {
+        if ($this->getRequest()->get('btn_create_and_create')) {
             $params = array();
             if ($this->admin->hasActiveSubClass()) {
-                $params['subclass'] = $this->get('request')->get('subclass');
+                $params['subclass'] = $this->getRequest()->get('subclass');
             }
             $url = $this->admin->generateUrl('create', $params);
         }
@@ -139,7 +136,7 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function deleteAction($id)
     {
-        $id = $this->get('request')->get($this->admin->getIdParameter());
+        $id = $this->getRequest()->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
         if (!$object) {
@@ -185,7 +182,7 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function batchActionDelete(ProxyQueryInterface $query)
     {
-        if (false === $this->admin->isGranted('DELETE')) {
+        if (false === $this->admin->checkAccess('DELETE')) {
             throw new AccessDeniedException();
         }
 
@@ -257,6 +254,10 @@ class MediaAdminController extends SonataMediaAdminController
 
     }
 
+    /**
+     * @param ProxyQueryInterface $queryProxy
+     * @throws ModelManagerException
+     */
     protected function doBatchDelete(ProxyQueryInterface $queryProxy)
     {
         $modelManager = $this->admin->getModelManager();
@@ -288,18 +289,14 @@ class MediaAdminController extends SonataMediaAdminController
 
 
     /**
-     * return the Response object associated to the list action
-     *
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response
-     * @throws AccessDeniedException
+     * @param Request|null $request
+     * @return Response
      */
-    public function listAction()
+    public function listAction(Request $request = null)
     {
-        if (false === $this->admin->isGranted('LIST')) {
+        if (false === $this->admin->checkAccess('LIST')) {
             throw new AccessDeniedException();
         }
-        /** @var Request $request */
-        $request = $this->container->get('request_stack')->getCurrentRequest();
         $galleryListMode = $request->get('pcode') ? true : false;
 
         $datagrid = $this->admin->getDatagrid();
@@ -336,15 +333,14 @@ class MediaAdminController extends SonataMediaAdminController
     }
 
     /**
+     * @param Request $request
      * @return Response
      */
-    public function refreshListAction()
+    public function refreshListAction(Request $request)
     {
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
-        /** @var Request $request */
-        $request = $this->container->get('request_stack')->getCurrentRequest();
         $galleryListMode = $request->get('pcode') ? true : false;
         $datagrid = $this->admin->getDatagrid();
         $datagrid->getForm()->createView();

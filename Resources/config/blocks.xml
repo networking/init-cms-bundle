@@ -15,13 +15,18 @@
             <argument>networking_init_cms.block_online_users</argument>
             <argument type="service" id="templating"/>
             <argument type="service" id="networking_init_cms.user_manager"/>
+            <call method="setUserManager">
+                <argument type="service" id="networking_init_cms.user_manager"/>
+            </call>
             <tag name="sonata.block"/>
         </service>
 
         <service id="networking_init_cms.block.service.pages" class="Networking\InitCmsBundle\Block\PagesBlockService">
             <argument>networking_init_cms.block_pages</argument>
             <argument type="service" id="templating"/>
-            <argument type="service" id="networking_init_cms.page_manager"/>
+            <call method="setPagManager">
+                <argument type="service" id="networking_init_cms.page_manager"/>
+            </call>
             <tag name="sonata.block"/>
         </service>
 

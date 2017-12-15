@@ -41,7 +41,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface {
     /**
      * Hook on pre-persist operations
      */
-    public function prePersist()
+    public function prePersist(): void
     {
         $this->createdAt = new \DateTime;
         $this->updatedAt = new \DateTime;
@@ -50,7 +50,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface {
     /**
      * Hook on pre-update operations
      */
-    public function preUpdate()
+    public function preUpdate(): void
     {
         $this->updatedAt = new \DateTime;
     }

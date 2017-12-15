@@ -20,15 +20,15 @@
             </call>
         </service>
 
-        <service id="networking_init_cms.menu.admin_menu" class="Knp\Menu\MenuItem" scope="request">
-            <factory service="networking_init_cms.menu.admin_menu_builder" method="createAdminMenu"/>
+        <service id="networking_init_cms.menu.admin_menu" class="Knp\Menu\MenuItem" >
+            <factory class="Networking\InitCmsBundle\Menu\AdminMenuBuilder" method="createAdminMenu"/>
             <argument type="service" id="request_stack"/>
             <tag name="knp_menu.menu" alias="AdminMenu"/>
         </service>
 
-        <service id="networking_init_cms.menu.admin_side_menu" class="Knp\Menu\MenuItem" scope="request">
-            <factory service="networking_init_cms.menu.admin_menu_builder" method="createAdminSideMenu"/>
-            <argument key="menuGroups">%networking_init_cms.admin_menu_groups%</argument>
+        <service id="networking_init_cms.menu.admin_side_menu" class="Knp\Menu\MenuItem">
+            <factory class="Networking\InitCmsBundle\Menu\AdminMenuBuilder" method="createAdminSideMenu"/>
+            <argument>%networking_init_cms.admin_menu_groups%</argument>
             <tag name="knp_menu.menu" alias="AdminSideMenu"/>
         </service>
     </services>
