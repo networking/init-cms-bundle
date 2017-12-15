@@ -40,5 +40,5 @@
     "autoload": {
         "psr-4": {"Networking\\InitCmsBundle\\": ""}
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "dev"
 }
