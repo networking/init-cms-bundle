@@ -9,10 +9,11 @@
  */
 namespace Networking\InitCmsBundle\Tests\Helper;
 
+use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
 use Networking\InitCmsBundle\Entity\Text;
 
-class ContentInterfaceHelperTest extends \PHPUnit_Framework_TestCase
+class ContentInterfaceHelperTest extends TestCase
 {
     public $object;
     public $text;

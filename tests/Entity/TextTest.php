@@ -9,25 +9,27 @@
  */
 namespace Networking\InitCmsBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use \Networking\InitCmsBundle\Entity\Text;
 
-class TextTest extends \PHPUnit_Framework_TestCase
+class TextTest extends TestCase
 {
 	public function testOnPrePersist_ShouldSetDates()
 	{
 		$text = new Text();
 		$this->assertEquals(null, $text->getUpdatedAt());
 		$text->prePersist();
-		$this->assertEquals(new \DateTime('now'), $text->getUpdatedAt());
-		$this->assertEquals(new \DateTime('now'), $text->getCreatedAt());
+        $this->assertNotNull($text->getUpdatedAt());
+        $this->assertEquals($text->getUpdatedAt(), $text->getCreatedAt());
 	}
 
 	public function testOnPreUpdate_ShouldSetUpdatedAt()
 	{
+	    $now = new \DateTime('now');
 		$text = new Text();
 		$this->assertEquals(null, $text->getUpdatedAt());
 		$text->preUpdate();
-		$this->assertEquals(new \DateTime('now'), $text->getUpdatedAt());
+		$this->assertEquals($now->format('Y-m-d H:i:s'), $text->getUpdatedAt()->format('Y-m-d H:i:s'));
 		$this->assertEquals(null, $text->getCreatedAt());
 	}
 

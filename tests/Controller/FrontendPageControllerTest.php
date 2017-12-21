@@ -9,15 +9,19 @@
  */
 namespace Networking\InitCmsBundle\Tests\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Controller\FrontendPageController;
 use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /** @author sonja brodersen s.brodersen@networking.ch */
-class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
+class FrontendPageControllerTest extends TestCase
 {
     /**
      *
@@ -26,7 +30,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
     {
 
         // because no user is authenticated: a AuthenticationCredentialsNotFoundException
-        $this->setExpectedException(
+        $this->expectException(
             'Symfony\Component\Security\Core\Exception\AccessDeniedException'
         );
 
@@ -145,7 +149,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIndexActionWithNotFoundHttpException()
     {
-        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         //Mocks
         // page
@@ -247,7 +251,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
     {
 
         // MOCKS
-        $mockPage = $this->getMock('Networking\InitCmsBundle\Model\Page');
+        $mockPage = $this->createMock('Networking\InitCmsBundle\Model\Page');
         $mockPage->expects($this->once())
             ->method('getVisibility')
             ->will($this->returnValue(PageInterface::VISIBILITY_PUBLIC));
@@ -272,17 +276,23 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         //security context
-        $mockTokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
+        $mockAuthorizationChecker = $this->getMockBuilder(AuthorizationChecker::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockTokenStorage->expects($this->any())
+        $mockAuthorizationChecker->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(true));
 
+
+        $mockTokenStorage = $this->getMockBuilder(TokenStorage::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
         //templating
-        $mockTemplating = $this->getMockBuilder('\Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine')
+        $mockTemplating = $this->getMockBuilder(TwigEngine::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -379,7 +389,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHomeAction()
     {
-        $mockPage = $this->getMock('\Networking\InitCmsBundle\Model\Page');
+        $mockPage = $this->createMock('\Networking\InitCmsBundle\Model\Page');
         $mockSnapshot = $this->getMockForAbstractClass(
             '\Networking\InitCmsBundle\Model\PageSnapshot',
             [$mockPage]
@@ -405,21 +415,22 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($mockPage);
 
         //security context
-        $mockTokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
+        $mockAuthorisationChecker = $this->getMockBuilder(AuthorizationChecker::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mockTokenStorage->expects($this->any())
+        $mockAuthorisationChecker->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(true));
-
+        $mockTokenStorage = $this->getMockBuilder(TokenStorage::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $_SERVER = [
             'PATH_INFO' => '/',
             'SCRIPT_NAME' => 'app.php'
         ];
         $templateParams = [
             'template' => 'DemoInitCmsBundle:Default:one_column.html.twig',
-            'engine' => 'twig',
             'vars' => [],
             'isStreamable' => false
         ];
@@ -429,7 +440,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             '_template' => $template
         ];
         //templating
-        $mockTemplating = $this->getMockBuilder('\Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine')
+        $mockTemplating = $this->getMockBuilder(TwigEngine::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -563,7 +574,7 @@ class FrontendPageControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getSession')
             ->will($this->returnValue($session));
         // request headers
-        $headers = $this->getMock('\Symfony\Component\HttpFoundation\HeaderBag');
+        $headers = $this->createMock('\Symfony\Component\HttpFoundation\HeaderBag');
         $headers->expects($this->once())
             ->method('get')
             ->will($this->returnValue('/test/'))

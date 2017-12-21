@@ -9,10 +9,12 @@
  */
 namespace Networking\InitCmsBundle\Tests\Entity;
 
+use Networking\InitCmsBundle\Model\ContentRoute;
+use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Entity\PageListener;
 use Networking\InitCmsBundle\Helper\PageHelper;
 
-class PageListenerTest extends \PHPUnit_Framework_TestCase
+class PageListenerTest extends TestCase
 {
     /**
      * @covers PageHelper::getPageRoutePath()
@@ -30,11 +32,10 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostPersist_WithTag()
     {
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-        $pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
+        $pageListener = new PageListener();
 
         // entity
-        $entity = $this->getMock('\StdClass');
+        $entity = $this->getMockBuilder('\StdClass')->setMethods(['getContentRoute'])->getMock();
         $entity->expects($this->never())
             ->method('getContentRoute');
         // em
@@ -68,9 +69,8 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostPersist_WithPage()
     {
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-        $pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
-        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath', 'setObjectId']);
+        $pageListener = new PageListener();
+        $contentRoute = $this->createMock(ContentRoute::class);
         $contentRoute->expects($this->once())
             ->method('setPath')
             ->with($this->equalTo('/some/random-pi/path'));
@@ -79,7 +79,7 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(108));
 
         // entity
-        $entity = $this->getMock('\Networking\InitCmsBundle\Model\Page');
+        $entity = $this->createMock('\Networking\InitCmsBundle\Model\Page');
 
         $entity->expects($this->once())
             ->method('getId')
@@ -139,11 +139,10 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostUpdate_WithStdClass()
     {
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-        $pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
+        $pageListener = new PageListener();
 
         // entity
-        $entity = $this->getMock('\StdClass');
+        $entity = $this->getMockBuilder('\StdClass')->setMethods(['getContentRoute'])->getMock();
         $entity->expects($this->never())
             ->method('getContentRoute');
         // em
@@ -188,17 +187,16 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostUpdate_WithPage()
     {
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-        $pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
+        $pageListener = new PageListener();
 
         // contentRoute
-        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath']);
+        $contentRoute = $this->createMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath']);
         $contentRoute->expects($this->once())
             ->method('setPath')
             ->with($this->equalTo('/'));
 
         // entity
-        $entity = $this->getMock('\Networking\InitCmsBundle\Model\Page');
+        $entity = $this->createMock('\Networking\InitCmsBundle\Model\Page');
         $entity->expects($this->once())
             ->method('getContentRoute')
             ->will($this->returnValue($contentRoute));
@@ -258,17 +256,16 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostUpdate_WithPageAndTenChildren()
     {
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
-        $pageListener = new PageListener(new \Symfony\Component\HttpFoundation\Session\Session(), $container);
+        $pageListener = new PageListener();
 
         // contentRoute
-        $contentRoute = $this->getMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath']);
+        $contentRoute = $this->createMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath']);
         $contentRoute->expects($this->once())
             ->method('setPath')
             ->with($this->equalTo('/'));
 
         // entity
-        $entity = $this->getMock('\Networking\InitCmsBundle\Model\Page');
+        $entity = $this->createMock('\Networking\InitCmsBundle\Model\Page');
         $entity->expects($this->once())
             ->method('getContentRoute')
             ->will($this->returnValue($contentRoute));
@@ -331,12 +328,12 @@ class PageListenerTest extends \PHPUnit_Framework_TestCase
     {
         $array = [];
         for ($i = 0; $i < $count; $i++) {
-            $contentRoute = $this->getMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath']);
+            $contentRoute = $this->createConfiguredMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath' => '']);
             $contentRoute->expects($this->once())
                 ->method('setPath')
                 ->with($this->equalTo('/some/path-p/' . $count));
 
-            $mockPage = $this->getMock('\Networking\InitCmsBundle\Model\Page');
+            $mockPage = $this->createMock('\Networking\InitCmsBundle\Model\Page');
             $mockPage->expects($this->once())
                 ->method('getContentRoute')
                 ->will($this->returnValue($contentRoute));

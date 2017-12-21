@@ -9,17 +9,23 @@
  */
 namespace Networking\InitCmsBundle\Tests\Helper;
 
+use Doctrine\ORM\EntityManager;
+use Networking\InitCmsBundle\Entity\PageManager;
+use Networking\InitCmsBundle\Helper\PageHelper;
+use PHPUnit\Framework\TestCase;
 use \Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use \Symfony\Component\HttpFoundation\Request;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Entity\ContentRoute;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
+class LanguageSwitcherHelperTest extends TestCase
 {
     public function testGetTranslationRoute_WithException()
     {
-        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         $request = new Request();
         $request2 = Request::create('/foo');
@@ -79,7 +85,7 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
         $dePage->setTranslations([$enPage]);
 
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         $request2 = Request::create('/foo');
 
         $router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
@@ -145,17 +151,20 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
 
     public function getLanguageHelper(Request $request, $router = null, $request2 = null)
     {
+        $requestStack = new RequestStack();
+        $request->cookies = new ParameterBag();
+        $requestStack->push($request);
 
-        $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $em = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $pageManager = $this->getMockBuilder('Networking\InitCmsBundle\Entity\PageManager')
+        $pageManager = $this->getMockBuilder(PageManager::class)
             ->disableOriginalConstructor()
             ->getMock();
         $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
             ->disableOriginalConstructor()
             ->getMock();
-        $pageHelper = $this->getMockBuilder('Networking\InitCmsBundle\Helper\PageHelper')
+        $pageHelper = $this->getMockBuilder(PageHelper::class)
             ->disableOriginalConstructor()
             ->getMock();
         $pageHelper->expects($this->any())
@@ -168,7 +177,7 @@ class LanguageSwitcherHelperTest extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
                 ->getMock();
         }
-        $helper = new LanguageSwitcherHelper($request, $em, '', $pageHelper);
+        $helper = new LanguageSwitcherHelper($requestStack, $em, '', $pageHelper);
         $helper->setRouter($router);
         $helper->setPageManager($pageManager);
         $helper->setSerializer($serializer);

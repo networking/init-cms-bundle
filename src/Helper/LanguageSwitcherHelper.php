@@ -111,7 +111,7 @@ class LanguageSwitcherHelper
     public function getTranslationRoute($oldUrl, $locale)
     {
 
-        $cookies = $this->requestStack->getCurrentRequest()->cookies ? $this->requestStack->cookies->all(): [];
+        $cookies = $this->requestStack->getCurrentRequest()->cookies ? $this->requestStack->getCurrentRequest()->cookies->all(): [];
         $oldRequest = Request::create($oldUrl, 'GET', [], $cookies);
         if($this->requestStack->getCurrentRequest()->getSession()){
             $oldRequest->setSession($this->requestStack->getCurrentRequest()->getSession());

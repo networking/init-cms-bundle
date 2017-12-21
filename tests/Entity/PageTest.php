@@ -9,7 +9,9 @@
  */
 namespace Networking\InitCmsBundle\Tests\Entity;
 
-class PageTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class PageTest extends TestCase
 {
 
     public function testOnPrePersist_ShouldSetDates()
@@ -17,8 +19,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $obj = $this->getPage();
 		$this->assertEquals(null, $obj->getUpdatedAt());
 		$obj->prePersist();
-		$this->assertEquals(new \DateTime('now'), $obj->getUpdatedAt());
-		$this->assertEquals(new \DateTime('now'), $obj->getCreatedAt());
+		$this->assertNotNull($obj->getUpdatedAt());
+		$this->assertEquals($obj->getUpdatedAt(), $obj->getCreatedAt());
     }
 
 	public function testOnPrePersist_ShouldSetMetaTitle()
