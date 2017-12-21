@@ -23,5 +23,6 @@ sonata_user:
             translation:    SonataUserBundle
 
         group:
+            class:          Networking\InitCmsBundle\Admin\Entity\GroupAdmin
             controller:     NetworkingInitCmsBundle:CRUD
             translation:    SonataUserBundle

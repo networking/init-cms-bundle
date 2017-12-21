@@ -23,7 +23,7 @@ use Sonata\AdminBundle\Form\FormMapper;
  * @package Networking\InitCmsBundle\Admin\Model
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class TagAdmin extends AbstractAdmin
+abstract class TagAdmin extends AbstractAdmin
 {
 
     /**

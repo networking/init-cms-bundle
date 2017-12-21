@@ -17,9 +17,6 @@
             <tag name="sonata.admin.extension" target="sonata.media.admin.gallery"/>
         </service>
 
-        <service id="group_admin_extension" class="Networking\InitCmsBundle\Admin\Extension\GroupAdminExtension">
-            <tag name="sonata.admin.extension" target="sonata.user.admin.group"/>
-        </service>
 
         <service id="ibrows_sonata_translation.admin.orm"
                  class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
@@ -71,22 +68,6 @@
                  persist_filters="true"/>
         </service>
 
-
-        <service id="sonata.user.admin.user" class="%sonata.user.admin.user.class%">
-            <argument></argument>
-            <argument>%sonata.user.admin.user.entity%</argument>
-            <argument>%sonata.user.admin.user.controller%</argument>
-            <call method="setUserManager">
-                <argument type="service" id="fos_user.user_manager"/>
-            </call>
-            <call method="setTranslationDomain">
-                <argument>%sonata.user.admin.user.translation_domain%</argument>
-            </call>
-            <tag name="sonata.admin" manager_type="orm" label="users"
-                 label_catalogue="SonataUserBundle"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"
-                 persist_filters="true"/>
-        </service>
     </services>
 
 </container>

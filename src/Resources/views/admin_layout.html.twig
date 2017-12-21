@@ -67,9 +67,19 @@ file that was distributed with this source code.
                         {{ _title|raw }}
                     {% else %}
                         {% if action is defined %}
-                            {% for menu in admin.breadcrumbs(action) %}
-                                {% if loop.last %}
-                                    {{ menu.label|raw }}
+                            {% for menu in breadcrumbs_builder.breadcrumbs(admin, action) %}
+                                {% if not loop.first %}
+                                    {% if loop.index != 2 %}
+                                        &gt;
+                                    {% endif %}
+
+                                    {%- set translation_domain = menu.extra('translation_domain', 'messages') -%}
+                                    {%- set label = menu.label -%}
+                                    {%- if translation_domain is not same as(false) -%}
+                                        {%- set label = label|trans(menu.extra('translation_params', {}), translation_domain) -%}
+                                    {%- endif -%}
+
+                                    {{ label|raw }}
                                 {% endif %}
                             {% endfor %}
                         {% endif %}

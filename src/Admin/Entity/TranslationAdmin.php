@@ -374,10 +374,10 @@ class TranslationAdmin extends AbstractAdmin
     public function getBatchActions()
     {
         $actions = parent::getBatchActions();
-        $actions['download'] = array(
+        $actions['download'] = [
             'label'            => $this->trans($this->getLabelTranslatorStrategy()->getLabel('download', 'batch', 'IbrowsSonataTranslationBundle')),
             'ask_confirmation' => false,
-        );
+        ];
 
         return $actions;
     }
