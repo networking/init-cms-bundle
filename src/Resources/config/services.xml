@@ -14,8 +14,6 @@
         <service id="networking_init_cms.session.attribute_bag"
                  class="Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag"/>
 
-        <service id="networking_init_cms.helper.bundle_guesser" class="Networking\InitCmsBundle\Helper\BundleGuesser"/>
-
         <service id="networking_init_cms.helper.page_helper" class="Networking\InitCmsBundle\Helper\PageHelper" public="true">
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
@@ -59,7 +57,6 @@
             <argument>%networking_init_cms.cache.activate%</argument>
             <argument>%networking_init_cms.cache.cache_time%</argument>
         </service>
-
     </services>
 
 </container>

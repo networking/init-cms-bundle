@@ -9,11 +9,13 @@
  */
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\CoreBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Class HelpTextAdmin
@@ -74,7 +76,7 @@ abstract class HelpTextAdmin extends BaseAdmin
         $formMapper
             ->add(
                 'locale',
-                'choice',
+                ChoiceType::class,
                 [
                     'choices' => $this->getLocaleChoices(),
                     'preferred_choices' => [$locale]
@@ -84,7 +86,7 @@ abstract class HelpTextAdmin extends BaseAdmin
             ->add('title', null, ['required' => true])
             ->add(
                 'text',
-                'ckeditor',
+                CKEditorType::class,
                 ['config' => ['toolbar' => 'standard', 'contentsCss' => null]]
             );
 
@@ -106,11 +108,12 @@ abstract class HelpTextAdmin extends BaseAdmin
                     ],
                     'hidden' => false
                 ],
-                'choice',
+                ChoiceType::class,
                 [
-                    'empty_value' => false,
+                    'placeholder' => false,
                     'choices' => $this->getLocaleChoices(),
-                    'preferred_choices' => [$this->getDefaultLocale()]
+                    'preferred_choices' => [$this->getDefaultLocale()],
+                    'required' => true
                 ]
 
             );

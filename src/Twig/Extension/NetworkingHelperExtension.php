@@ -26,7 +26,7 @@ use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Sonata\CoreBundle\Form\Type\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -72,49 +72,46 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     /**
      * @var KernelInterface
      */
-    protected $kernel ;
+    protected $kernel;
 
     /**
-     * @var TwigEngine
+     * @var EngineInterface
      */
-    protected $templating ;
+    protected $templating;
 
     /**
      * @var RequestStack
      */
-    protected $requestStack ;
+    protected $requestStack;
     /**
      * @var ManagerRegistry
      */
-    protected $doctrine ;
+    protected $doctrine;
     /**
      * @var TranslatorInterface
      */
-    protected $translator ;
+    protected $translator;
     /**
      * @var LayoutBlockAdmin
      */
-    protected $layoutBlockAdmin ;
+    protected $layoutBlockAdmin;
     /**
      * @var SerializerInterface
      */
-    protected $serializer ;
+    protected $serializer;
     /**
      * @var PageManagerInterface
      */
-    protected $pageManager ;
-    /**
-     * @var BundleGuesser
-     */
-    protected $bundleGuesser ;
+    protected $pageManager;
+
     /**
      * @var ConfigManager
      */
-    protected $ivoryConfigManager ;
+    protected $ivoryConfigManager;
     /**
      * @var array
      */
-    protected $templates ;
+    protected $templates;
 
     /**
      * @var array
@@ -124,28 +121,26 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     /**
      * NetworkingHelperExtension constructor.
      * @param KernelInterface $kernel
-     * @param TwigEngine $templating
+     * @param EngineInterface $templating
      * @param RequestStack $requestStack
      * @param ManagerRegistry $doctrine
      * @param TranslatorInterface $translator
      * @param LayoutBlockAdmin $layoutBlockAdmin
      * @param SerializerInterface $serializer
      * @param PageManagerInterface $pageManager
-     * @param BundleGuesser $bundleGuesser
      * @param ConfigManager $ivoryConfigManager
      * @param array $templates
      * @param array $contentTypes
      */
     public function __construct(
         KernelInterface $kernel,
-        TwigEngine $templating,
+        EngineInterface $templating,
         RequestStack $requestStack,
         ManagerRegistry $doctrine,
         TranslatorInterface $translator,
         LayoutBlockAdmin $layoutBlockAdmin,
         SerializerInterface $serializer,
         PageManagerInterface $pageManager,
-        BundleGuesser $bundleGuesser,
         ConfigManager $ivoryConfigManager,
         $templates = [],
         $contentTypes = []
@@ -160,10 +155,10 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $this->layoutBlockAdmin = $layoutBlockAdmin;
         $this->serializer = $serializer;
         $this->pageManager = $pageManager;
-        $this->bundleGuesser = $bundleGuesser;
         $this->ivoryConfigManager = $ivoryConfigManager;
         $this->templates = $templates;
         $this->contentTypes = $contentTypes;
+
     }
 
 
@@ -247,7 +242,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      * @param LayoutBlockInterface $layoutBlock
      * @param array $params
      * @return string
-     * @throws \Twig\Error\Error
      */
     public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = [])
     {
@@ -257,7 +251,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
 
         } else {
             // Live View
-            $contentItem = $this->getService('jms_serializer')->deserialize(
+            $contentItem = $this->serializer->deserialize(
                 $serializedContent,
                 $layoutBlock->getClassType(),
                 'json'
@@ -283,7 +277,6 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      *
      * @param LayoutBlockInterface $layoutBlock
      * @return bool|string
-     * @throws \Twig\Error\Error
      */
     public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock)
     {
@@ -492,9 +485,9 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     {
         $state = $active ? '_active' : '';
         $imagePath = '/bundles/networkinginitcms/img/icons/icon_blank_' . $size . $state . '.png';
-
-        $this->bundleGuesser->initialize($admin);
-        $bundleName = $this->bundleGuesser->getBundleShortName();
+        $bundleGuesser = new BundleGuesser();
+        $bundleGuesser->initialize($admin);
+        $bundleName = $bundleGuesser->getBundleShortName();
         $bundles = $this->kernel->getBundle($bundleName, false);
         $bundle = end($bundles);
 
@@ -815,7 +808,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
                 $date = $fieldDescription->getValue($object);
                 if ($date) {
                     $value = $date->format('d.m.Y');
-                }else{
+                } else {
                     $value = '';
                 }
                 break;
@@ -1276,7 +1269,8 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      * @param int $decemals
      * @return string
      */
-    public function getHumanReadableSize($size, $unit = null, $decemals = 2) {
+    public function getHumanReadableSize($size, $unit = null, $decemals = 2)
+    {
         $byteUnits = [' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
         if (!is_null($unit) && !in_array($unit, $byteUnits)) {
             $unit = null;

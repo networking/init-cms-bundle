@@ -16,10 +16,7 @@
         <service id="gallery_admin_extension" class="Networking\InitCmsBundle\Admin\Extension\GalleryAdminExtension">
             <tag name="sonata.admin.extension" target="sonata.media.admin.gallery"/>
         </service>
-        <service id="gallery_has_media_admin_extension"
-                 class="Networking\InitCmsBundle\Admin\Extension\GalleryHasMediaAdminExtension">
-            <tag name="sonata.admin.extension" target="sonata.media.admin.gallery_has_media"/>
-        </service>
+
         <service id="group_admin_extension" class="Networking\InitCmsBundle\Admin\Extension\GroupAdminExtension">
             <tag name="sonata.admin.extension" target="sonata.user.admin.group"/>
         </service>
@@ -46,7 +43,7 @@
                  label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
         </service>
 
-        <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%">
+        <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%" public="true">
             <argument></argument>
             <argument>%sonata.media.admin.media.entity%</argument>
             <argument>%sonata.media.admin.media.controller%</argument>

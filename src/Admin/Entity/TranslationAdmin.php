@@ -13,9 +13,14 @@ namespace Networking\InitCmsBundle\Admin\Entity;
 
 use Doctrine\ORM\Query;
 use Ibrows\SonataTranslationBundle\Admin\ORMTranslationAdmin;
+use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -26,12 +31,101 @@ use Symfony\Component\Intl\Intl;
  * @package Networking\InitCmsBundle\Admin\Entity
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class TranslationAdmin extends ORMTranslationAdmin
+class TranslationAdmin extends AbstractAdmin
 {
     /**
      * @var array
      */
     protected $managedLocales;
+
+    /**
+     * @var TransUnitManagerInterface
+     */
+    protected $transUnitManager;
+    /**
+     * @var array
+     */
+    protected $editableOptions;
+
+    /**
+     * @var array
+     */
+    protected $defaultSelections = [];
+
+    /**
+     * @var array
+     */
+    protected $emptyFieldPrefixes = [];
+
+    /**
+     * @var array
+     */
+    protected $filterLocales = [];
+
+
+    /**
+     * @param array $options
+     */
+    public function setEditableOptions(array $options)
+    {
+        $this->editableOptions = $options;
+    }
+
+    /**
+     * @param TransUnitManagerInterface $translationManager
+     */
+    public function setTransUnitManager(TransUnitManagerInterface $translationManager)
+    {
+        $this->transUnitManager = $translationManager;
+    }
+
+    /**
+     * @param array $managedLocales
+     */
+    public function setManagedLocales(array $managedLocales)
+    {
+        $this->managedLocales = $managedLocales;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEmptyFieldPrefixes()
+    {
+        return $this->emptyFieldPrefixes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultSelections()
+    {
+        return $this->defaultSelections;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getNonTranslatedOnly()
+    {
+        return array_key_exists('nonTranslatedOnly', $this->getDefaultSelections()) && (bool) $this->defaultSelections['nonTranslatedOnly'];
+    }
+
+    /**
+     * @param array $selections
+     */
+    public function setDefaultSelections(array $selections)
+    {
+        $this->defaultSelections = $selections;
+    }
+
+    /**
+     * @param array $prefixes
+     */
+    public function setEmptyPrefixes(array $prefixes)
+    {
+        $this->emptyFieldPrefixes = $prefixes;
+    }
 
     /**
      * Whether or not to persist the filters in the session
@@ -202,6 +296,90 @@ class TranslationAdmin extends ORMTranslationAdmin
         }
 
         return parent::getTemplate($name);
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function getOriginalTemplate($name)
+    {
+        return parent::getTemplate($name);
+    }
+
+    /**
+     * @param RouteCollection $collection
+     */
+    protected function configureRoutes(RouteCollection $collection)
+    {
+        $collection
+            ->add('clear_cache')
+            ->add('create_trans_unit');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildDatagrid()
+    {
+        if ($this->datagrid) {
+            return;
+        }
+
+        $filterParameters = $this->getFilterParameters();
+
+        // transform _sort_by from a string to a FieldDescriptionInterface for the datagrid.
+        if (isset($filterParameters['locale']) && is_array($filterParameters['locale'])) {
+            $this->filterLocales = array_key_exists('value', $filterParameters['locale']) ? $filterParameters['locale']['value'] : $this->managedLocales;
+        }
+
+        parent::buildDatagrid();
+    }
+
+    /**
+     * @param FormMapper $form
+     */
+    protected function configureFormFields(FormMapper $form)
+    {
+        $subject = $this->getSubject();
+
+        if (null === $subject->getId()) {
+            $subject->setDomain($this->getDefaultDomain());
+        }
+
+        $form
+            ->add('key', 'text')
+            ->add('domain', 'text');
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    protected function getContainer()
+    {
+        return $this->getConfigurationPool()->getContainer();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDefaultDomain()
+    {
+        return $this->getContainer()->getParameter('ibrows_sonata_translation.defaultDomain');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBatchActions()
+    {
+        $actions = parent::getBatchActions();
+        $actions['download'] = array(
+            'label'            => $this->trans($this->getLabelTranslatorStrategy()->getLabel('download', 'batch', 'IbrowsSonataTranslationBundle')),
+            'ask_confirmation' => false,
+        );
+
+        return $actions;
     }
 }
  

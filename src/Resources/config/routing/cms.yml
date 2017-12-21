@@ -61,14 +61,14 @@ networking_init_cms_help_dashboard:
 
 networking_init_cms_file_download:
     path: /file/download/{id}/{name}
-    defaults: { _controller: SonataMediaBundle:Media:download, format:'reference' }
+    defaults: { _controller: SonataMediaBundle:Media:download, format: 'reference' }
     requirements:
         name: (.*)?
         format: (.*)?
 
 networking_init_cms_image_view:
     path: /image/view/{id}/{name}
-    defaults: { _controller: NetworkingInitCmsBundle:Media:viewImage, format:'reference' }
+    defaults: { _controller: NetworkingInitCmsBundle:Media:viewImage, format: 'reference' }
     requirements:
         name: (.*)?
         format: (.*)?
@@ -89,7 +89,6 @@ xml_sitemap:
     path: /xml_sitemap/{locale}
     defaults: {_controller: NetworkingInitCmsBundle:Xml:sitemap, locale: ''}
     requirements:
-    methods: GET
     methods: GET
 
 _configure_cms:

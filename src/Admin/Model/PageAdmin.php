@@ -400,6 +400,7 @@ abstract class PageAdmin extends BaseAdmin
                 ],
                 ChoiceType::class,
                 [
+                    'placeholder' => false,
                     'choices' => $this->getLocaleChoices(),
                     'preferred_choices' => [$this->getDefaultLocale()]
                 ]
@@ -412,7 +413,7 @@ abstract class PageAdmin extends BaseAdmin
             )
             ->add(
                 'status',
-                'doctrine_orm_choice',
+                SimpleStringFilter::class,
                 ['hidden' => true],
                 ChoiceType::class,
                 [

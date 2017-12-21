@@ -203,7 +203,7 @@ interface LayoutBlockInterface extends ContentInterface
     public function setSnapshotContent($snapshotContent);
 
     /**
-     * @return array
+     * @return string
      */
     public function getSnapshotContent();
 

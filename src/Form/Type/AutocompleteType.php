@@ -91,7 +91,7 @@ class AutocompleteType extends DoctrineType
                 // If there is no QueryBuilder we can safely cache DoctrineChoiceLoader,
                 // also if concrete Type can return important QueryBuilder parts to generate
                 // hash key we go for it as well
-                if (!$options['query_builder'] || false !== ($qbParts = $type->getQueryBuilderPartsForCachingHash($options['query_builder']))) {
+                if (!$options['query_builder'] || false !== ($qbParts = $type->getQueryBuilderForCachingHash($options['query_builder']))) {
                     $hash = self::generateHash([
                         $options['em'],
                         $options['class'],
@@ -287,7 +287,7 @@ class AutocompleteType extends DoctrineType
      * @return array
      *
      */
-    public function getQueryBuilderPartsForCachingHash($queryBuilder)
+    private function getQueryBuilderForCachingHash($queryBuilder)
     {
         return [
             $queryBuilder->getQuery()->getSQL(),

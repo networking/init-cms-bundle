@@ -87,7 +87,7 @@ abstract class BaseAdmin extends AbstractAdmin
         $localeList = Intl::getLocaleBundle()->getLocaleNames(substr($locale, 0, 2));
 
         foreach ($this->languages as $language) {
-            $localeChoices[$language['locale']] =  $localeList[$language['locale']];
+            $localeChoices[$localeList[$language['locale']]] =  $language['locale'];
         }
 
         return $localeChoices;

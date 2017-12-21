@@ -9,7 +9,7 @@
   </transformer>
   <files>
     <directory>.</directory>
-    <ignore>Tests/*</ignore>
+    <ignore>tests/*</ignore>
     <ignore>vendor/*</ignore>
   </files>
     <plugins>

@@ -5,13 +5,13 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
 
-        <service id="networking_init_cms.block.service.translatable_text" class="Networking\InitCmsBundle\Block\TranslatableTextBlockService">
+        <service id="networking_init_cms.block.service.translatable_text" class="Networking\InitCmsBundle\Block\TranslatableTextBlockService" public="true">
             <argument>networking_init_cms.block.service.translatable_text</argument>
             <argument type="service" id="templating"/>
             <tag name="sonata.block"/>
         </service>
 
-        <service id="networking_init_cms.block.service.online_users" class="Networking\InitCmsBundle\Block\OnlineUsersBlockService">
+        <service id="networking_init_cms.block.service.online_users" class="Networking\InitCmsBundle\Block\OnlineUsersBlockService" public="true">
             <argument>networking_init_cms.block.service.online_users</argument>
             <argument type="service" id="templating"/>
             <argument type="service" id="networking_init_cms.user_manager"/>
@@ -21,7 +21,7 @@
             <tag name="sonata.block"/>
         </service>
 
-        <service id="networking_init_cms.block.service.pages" class="Networking\InitCmsBundle\Block\PagesBlockService">
+        <service id="networking_init_cms.block.service.pages" class="Networking\InitCmsBundle\Block\PagesBlockService" public="true">
             <argument>networking_init_cms.block.service.pages</argument>
             <argument type="service" id="templating"/>
             <call method="setPageManager">
@@ -31,7 +31,7 @@
         </service>
 
 
-        <service id="networking_init_cms.block.service.cache" class="Networking\InitCmsBundle\Block\CacheBlockService">
+        <service id="networking_init_cms.block.service.cache" class="Networking\InitCmsBundle\Block\CacheBlockService" public="true">
             <argument>networking_init_cms.block.service.cache</argument>
             <argument type="service" id="templating"/>
             <argument type="service" id="networking_init_cms.lib.php_cache" />
@@ -39,7 +39,7 @@
         </service>
 
 
-        <service id="networking_init_cms.block.service.sitemap" class="Networking\InitCmsBundle\Block\SitemapBlockService">
+        <service id="networking_init_cms.block.service.sitemap" class="Networking\InitCmsBundle\Block\SitemapBlockService" public="true">
             <argument>networking_init_cms.block.service.sitemap</argument>
             <argument type="service" id="templating"/>
             <tag name="sonata.block"/>

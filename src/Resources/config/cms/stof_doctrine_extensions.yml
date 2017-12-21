@@ -1,5 +1,5 @@
 stof_doctrine_extensions:
-    default_locale: %locale%
+    default_locale: '%locale%'
     orm:
         default:
             tree: true
