@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- Media -->
+        <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\Entity\MediaAdmin</parameter>
+        <parameter key="sonata.media.admin.media.controller">NetworkingInitCmsBundle:MediaAdmin</parameter>
+        <parameter key="sonata.media.admin.media.translation_domain">MediaAdmin</parameter>
+    </parameters>
+
+
+    <services>
+        <service id="gallery_admin_extension" class="Networking\InitCmsBundle\Admin\Extension\GalleryAdminExtension">
+            <tag name="sonata.admin.extension" target="sonata.media.admin.gallery"/>
+        </service>
+        <service id="gallery_has_media_admin_extension"
+                 class="Networking\InitCmsBundle\Admin\Extension\GalleryHasMediaAdminExtension">
+            <tag name="sonata.admin.extension" target="sonata.media.admin.gallery_has_media"/>
+        </service>
+        <service id="group_admin_extension" class="Networking\InitCmsBundle\Admin\Extension\GroupAdminExtension">
+            <tag name="sonata.admin.extension" target="sonata.user.admin.group"/>
+        </service>
+
+        <service id="ibrows_sonata_translation.admin.orm"
+                 class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
+            <argument></argument>
+            <argument>Lexik\Bundle\TranslationBundle\Entity\TransUnit</argument>
+            <argument>NetworkingInitCmsBundle:TranslationCRUD</argument>
+            <call method="setEditableOptions">
+                <argument>%ibrows_sonata_translation.editable%</argument>
+            </call>
+            <call method="setTranslationDomain">
+                <argument>IbrowsSonataTranslationBundle</argument>
+            </call>
+            <call method="setTransUnitManager">
+                <argument type="service" id="lexik_translation.trans_unit.manager"/>
+            </call>
+            <call method="setManagedLocales">
+                <argument>%lexik_translation.managed_locales%</argument>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="translation.title"
+                 label_catalogue="IbrowsSonataTranslationBundle"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
+        </service>
+
+        <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%">
+            <argument></argument>
+            <argument>%sonata.media.admin.media.entity%</argument>
+            <argument>%sonata.media.admin.media.controller%</argument>
+            <argument type="service" id="sonata.media.pool"/>
+            <call method="setModelManager">
+                <argument type="service" id="sonata.media.admin.media.manager"/>
+            </call>
+            <call method="setTranslationDomain">
+                <argument>%sonata.media.admin.media.translation_domain%</argument>
+            </call>
+            <call method="setLanguages">
+                <argument>%networking_init_cms.page.languages%</argument>
+            </call>
+            <call method="setTemplates">
+                <argument type="collection">
+                    <argument key="list">NetworkingInitCmsBundle:MediaAdmin:list.html.twig</argument>
+                    <argument key="edit">NetworkingInitCmsBundle:MediaAdmin:edit.html.twig</argument>
+                    <argument key="show">NetworkingInitCmsBundle:CRUD:show.html.twig</argument>
+                    <argument key="ajax">NetworkingInitCmsBundle::ajax_layout.html.twig</argument>
+                </argument>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="admin_label_media"
+                 label_catalogue="%sonata.media.admin.media.translation_domain%"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persist_filters="true"/>
+        </service>
+
+
+        <service id="sonata.user.admin.user" class="%sonata.user.admin.user.class%">
+            <argument></argument>
+            <argument>%sonata.user.admin.user.entity%</argument>
+            <argument>%sonata.user.admin.user.controller%</argument>
+            <call method="setUserManager">
+                <argument type="service" id="fos_user.user_manager"/>
+            </call>
+            <call method="setTranslationDomain">
+                <argument>%sonata.user.admin.user.translation_domain%</argument>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="users"
+                 label_catalogue="SonataUserBundle"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persist_filters="true"/>
+        </service>
+    </services>
+
+</container>

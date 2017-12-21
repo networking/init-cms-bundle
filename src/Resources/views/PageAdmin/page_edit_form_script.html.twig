@@ -1,0 +1,156 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% autoescape false %}
+<script type="text/javascript">
+
+
+    function start_save_page_settings(link) {
+        link.onclick = null;
+
+        // add the jQuery event to the a element
+        jQuery(link)
+                .click(update_page_settings)
+                .trigger('click')
+        ;
+        return false;
+    }
+
+    var update_page_settings = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var form = jQuery(this).closest('form');
+        var btn = jQuery(this);
+        btn.button('loading');
+        jQuery(form).ajaxSubmit({
+            url:form.action,
+            type:"POST",
+            dataType:'json',
+            data:{ _xml_http_request:true },
+            success:function (xhr) {
+                btn.button('reset');
+                var pageStatus = jQuery('.page_status');
+                if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
+                    pageStatus.addClass('color-draft');
+                } else {
+                    pageStatus.removeClass('color-draft');
+                }
+                var elements = $($.parseHTML(xhr.pageSettings));
+                var pageSettings = $(elements).filter('#pageSettings').html();
+                var pageStatusHtml = $(elements).filter('#pageStatusSettings').html();
+
+
+                pageStatus.html(xhr.pageStatus);
+                $('.page_title').html(xhr.title);
+                $('#pageSettings').html($.parseHTML(pageSettings));
+                $('#pageStatusSettings').html($.parseHTML(pageStatusHtml));
+                $('#pageSettingsFieldsModal').load("{{ admin.generateObjectUrl('pageSettings', object, { 'uniqid': admin.getUniqid }) }}");
+                $('#pageSettingFields').modal('hide');
+
+                submitLayoutUpdate(form, {});
+                createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+            },
+            error:function (xhr, textStatus, errorThrown) {
+                btn.button('reset');
+                $('#pageSettingsFieldsModal').html(xhr.responseText);
+            }
+        });
+    };
+
+    function openMenuDialog(event, ui) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        $('#confirmMenuCreation').modal('show');
+        $('#show_now_confirm_dialog').attr('checked', false);
+
+        $('body').on('click', '#btn_create_menu', function () {
+            if ($('#show_now_confirm_dialog').attr('checked')) {
+                window.location = ui.href + '?show_now_confirm_dialog=1';
+            } else {
+                window.location = ui.href;
+            }
+        });
+    }
+
+    (function ($) {
+
+        $('body').on('change', '#{{ admin.uniqid }}_locale', function () {
+            var locale = $(this).val();
+            $.getJSON(
+                    '{{ admin.generateUrl('parentPageList') }}',
+                    {locale: locale},
+                    function (data) {
+                        var parentPages = $('#{{ admin.getUniqid }}_parent');
+                        parentPages.empty();
+                        parentPages.append($('<option></option>'));
+                        $.each(data, function (k, v) {
+                            if (v) {
+                                parentPages.append($('<option></option>').val(k).html(v));
+                            }
+                        });
+                    }
+            );
+        });
+
+        $('body').on('change', '#{{ admin.uniqid }}_parent', function (e) {
+            var path = $('#{{ admin.uniqid }}_url').val();
+            var pageId = e.val;
+            if (pageId == '') {
+                $('#help_{{ admin.uniqid }}_url').html('/' + path);
+            } else {
+                if (pageId == undefined) {
+                    pageId = $("#{{ admin.uniqid }}_parent").val();
+                }
+                $.getJSON(
+                        '{{ admin.generateUrl('getPath') }}',
+                        {'page_id': pageId, 'path': path},
+                        function (xhr) {
+                            $('#help_{{ admin.uniqid }}_url').html(xhr.path);
+                        }
+                );
+            }
+        });
+
+
+        $('body').on('change', '#{{ admin.uniqid }}_url', function () {
+            $("#{{ admin.uniqid }}_parent").trigger('change');
+        });
+
+
+
+        {% if not app.user.getAdminSetting('menuAdmin.show_now_confirm_dialog') %}
+
+        $('.menu_add_link').on('click', function (event) {
+            $('#menu_info_text').html('{{ 'info.create_menu_item'|trans({}, admin.translationDomain)|replace({"\n": ' '}) }}');
+            $('#confirmMenuCreation .modal-header h4').html(this.title);
+            openMenuDialog(event, this);
+        });
+
+        $('.menu_edit_link').on('click', function (event) {
+            $('#menu_info_text').html('{{ 'info.edit_menu_item'|trans({}, admin.translationDomain)|replace({"\n": ' '}) }}');
+            $('#confirmMenuCreation .modal-header h4').html('{{ 'legend.edit_menu'|trans({}, admin.translationDomain)|replace({"\n": ' '}) }}');
+            openMenuDialog(event, this);
+
+        });
+        {% endif %}
+
+        $('body').on('click', '#review_status', function () {
+            if ($('#review_status').is(":checked")) {
+                window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
+            } else {
+                window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
+            }
+        })
+
+    })(jQuery);
+
+</script>
+{% endautoescape %}

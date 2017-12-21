@@ -38,7 +38,7 @@
         "oneup/uploader-bundle": "^1.9"
     },
     "autoload": {
-        "psr-4": {"Networking\\InitCmsBundle\\": ""}
+        "psr-4": {"Networking\\InitCmsBundle\\": "src"}
     },
     "minimum-stability": "dev"
 }

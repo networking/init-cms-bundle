@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Networking\InitCmsBundle\Menu\AdminMenuBuilder">
+            <argument type="service" id="knp_menu.factory"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.authorization_checker"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="networking_init_cms.menu_item_manager"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="knp_menu.matcher"/>
+            <call method="setAdminPool">
+                <argument type="service" id="sonata.admin.pool"/>
+            </call>
+        </service>
+
+        <service id="networking_init_cms.menu.admin_menu" class="Knp\Menu\MenuItem" >
+            <factory service="Networking\InitCmsBundle\Menu\AdminMenuBuilder" method="createAdminMenu"/>
+            <tag name="knp_menu.menu" alias="AdminMenu"/>
+        </service>
+
+        <service id="networking_init_cms.menu.admin_side_menu" class="Knp\Menu\MenuItem">
+            <factory service="Networking\InitCmsBundle\Menu\AdminMenuBuilder" method="createAdminSideMenu"/>
+            <argument>%networking_init_cms.admin_menu_groups%</argument>
+            <tag name="knp_menu.menu" alias="AdminSideMenu"/>
+        </service>
+    </services>
+
+</container>

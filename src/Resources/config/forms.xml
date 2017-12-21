@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <defaults autowire="true" autoconfigure="true" public="true" />
+
+        <service id="networking_init_cms.form.extension.field" class="Networking\InitCmsBundle\Form\Extension\Field\Type\FormTypeFieldExtension">
+            <tag name="form.type_extension"  extended-type="Symfony\Component\Form\Extension\Core\Type\FormType"/>
+        </service>
+
+        <service id="networking_init_cms.form.tag_extension" class="Networking\InitCmsBundle\Form\Extension\TagExtension">
+            <tag name="form.type_extension" extended-type="Sonata\AdminBundle\Form\Type\ModelType"/>
+        </service>
+
+        <service id="networking_init_cms.form.select2_extension" class="Networking\InitCmsBundle\Form\Extension\Select2Extension">
+            <tag name="form.type_extension" extended-type="Symfony\Component\Form\Extension\Core\Type\ChoiceType"/>
+        </service>
+
+        <service id="networking_init_cms.form.type.autocomplete" class="Networking\InitCmsBundle\Form\Type\AutocompleteType">
+            <tag name="form.type" alias="networking_type_autocomplete"/>
+        </service>
+
+        <service id="networking_init_cms.form.type.printmedia" class="Networking\InitCmsBundle\Form\Type\MediaPrintType">
+            <tag name="form.type" alias="networking_type_mediaprint"/>
+        </service>
+
+        <service id="networking_init_cms.form.type.media_preview" class="Networking\InitCmsBundle\Form\Type\MediaPreviewType">
+            <tag name="form.type" alias="networking_type_media_preview"/>
+        </service>
+
+        <service id="networking_init_cms.form.type.iconradio" class="Networking\InitCmsBundle\Form\Type\IconradioType">
+            <argument>%networking_init_cms.page.templates%</argument>
+            <tag name="form.type" alias="networking_type_iconradio"/>
+        </service>
+
+        <service id="networking_init_cms.form.data_transformer.page_to_number_transformer" class="Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer">
+            <argument type="service" id="networking_init_cms.page_manager"/>
+        </service>
+
+        <service id="networking_init_cms.form.type.content_block" class="Networking\InitCmsBundle\Form\Type\ContentType" >
+            <argument type="service" id="ibrows_sonataadmin.annotation.reader"/>
+            <tag name="form.type" alias="networking_type_content_block"/>
+        </service>
+
+        <service id="networking_init_cms.form.type.page_autocomplete" class="Networking\InitCmsBundle\Form\Type\PageAutocompleteType" >
+            <argument type="service" id="doctrine"/>
+            <call method="setContainer"><argument type="service" id="service_container"/> </call>
+            <tag name="form.type" alias="networking_type_page_autocomplete"/>
+        </service>
+    </services>
+
+</container>

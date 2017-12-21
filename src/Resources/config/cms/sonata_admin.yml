@@ -1,0 +1,74 @@
+sonata_core:
+    form:
+        mapping:
+            enabled: false
+
+sonata_admin:
+    persist_filters: true
+    options:
+        use_select2: false
+    security:
+        handler: sonata.admin.security.handler.acl
+        # acl security information
+        information:
+           GUEST:    [VIEW, LIST]
+           STAFF:    [EDIT, LIST, CREATE]
+           EDITOR:   [OPERATOR, EXPORT]
+           ADMIN:    [MASTER, PUBLISH]
+           PUBLISHER: [PUBLISH, EDIT, LIST, CREATE]
+
+        # permissions not related to an object instance and also to be available when objects do not exist
+        # the DELETE admin permission means the user is allowed to batch delete objects
+        admin_permissions: [CREATE, LIST, DELETE, UNDELETE, EXPORT, OPERATOR, MASTER, PUBLISH]
+        # permission related to the objects
+        object_permissions: [VIEW, EDIT, DELETE, UNDELETE, OPERATOR, MASTER, OWNER, PUBLISH]
+    title:      Networking CMS
+    title_logo: /bundles/networkinginitcms/img/logo_initcms.png
+    templates:
+        user_block: NetworkingInitCmsBundle:Admin:user_block.html.twig
+        layout:     NetworkingInitCmsBundle::admin_layout.html.twig
+        ajax:       NetworkingInitCmsBundle::ajax_layout.html.twig
+        list:       NetworkingInitCmsBundle:CRUD:list.html.twig
+        show:       NetworkingInitCmsBundle:CRUD:show.html.twig
+        edit:       NetworkingInitCmsBundle:CRUD:edit.html.twig
+        preview:    NetworkingInitCmsBundle:CRUD:preview.html.twig
+        delete:     NetworkingInitCmsBundle:CRUD:delete.html.twig
+        action:     NetworkingInitCmsBundle:CRUD:action.html.twig
+        select:     NetworkingInitCmsBundle:CRUD:list__select.html.twig
+        dashboard:  NetworkingInitCmsBundle:Core:dashboard.html.twig
+        batch_confirmation: NetworkingInitCmsBundle:CRUD:batch_confirmation.html.twig
+        base_list_field: NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
+        inner_list_row: NetworkingInitCmsBundle:CRUD:list_inner_row.html.twig
+        # default values of helper templates
+        short_object_description: NetworkingInitCmsBundle:Helper:short-object-description.html.twig
+        # default values of block templates, they should extend the base_block template
+        list_block: NetworkingInitCmsBundle:Block:block_admin_list.html.twig
+    dashboard:
+        blocks:
+            - { position: top, type: networking_init_cms.block.service.translatable_text, settings: { translation_key: "info.welcome_text", translation_domain: 'NetworkingInitCmsBundle'} }
+            - { position: left, type: networking_init_cms.block.service.pages}
+            - { position: right, type: networking_init_cms.block.service.online_users}
+            - { position: right, type: networking_init_cms.block.service.cache}
+            - { position: right, type: networking_init_cms.block.service.sitemap}
+
+        groups:
+            pages:
+                label: "pages.admin_menu_label"
+                items: [networking_init_cms.admin.page]
+            menu:
+                label: "menu.admin_menu_label"
+                items: [ networking_init_cms.admin.menu_item]
+            media:
+                label: "sonata_media.admin_menu_label"
+                items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
+            users:
+                label: "sonata_user"
+                items: [sonata.user.admin.user, sonata.user.admin.group]
+            help_text:
+                label: "help_text.admin_menu_label"
+                items: [networking_init_cms.admin.help_text]
+            translation:
+                label: "translation.admin_menu_label"
+                items: [ibrows_sonata_translation.admin.orm]
+
+

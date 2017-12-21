@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="networking_init_cms.cms_router" class="Symfony\Cmf\Component\Routing\DynamicRouter" public="true">
+            <argument type="service" id="router.request_context"/>
+            <argument type="service" id="cmf_routing.nested_matcher"/>
+            <argument type="service" id="cmf_routing.generator"/>
+            <call method="addRouteEnhancer">
+                <argument type="service" id="cmf_routing.enhancer.route_content"/>
+            </call>
+            <call method="addRouteEnhancer">
+                <argument type="service" id="cmf_routing.enhancer.controllers_by_class"/>
+            </call>
+        </service>
+    </services>
+</container>

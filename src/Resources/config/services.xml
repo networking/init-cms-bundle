@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="session" class="Symfony\Component\HttpFoundation\Session\Session">
+            <argument type="service" id="session.storage"/>
+            <argument type="service" id="networking_init_cms.session.attribute_bag"/>
+            <argument type="service" id="session.flash_bag"/>
+        </service>
+
+        <service id="networking_init_cms.session.attribute_bag"
+                 class="Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag"/>
+
+        <service id="networking_init_cms.helper.bundle_guesser" class="Networking\InitCmsBundle\Helper\BundleGuesser"/>
+
+        <service id="networking_init_cms.helper.page_helper" class="Networking\InitCmsBundle\Helper\PageHelper" public="true">
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <service id="networking_init_cms.page.admin.helper" class="Networking\InitCmsBundle\Admin\PageAdminHelper">
+            <argument type="service" id="sonata.admin.pool"/>
+        </service>
+
+        <service id="networking_init_cms.filter.type.simple_string"
+                 class="Networking\InitCmsBundle\Filter\SimpleStringFilter">
+            <tag name="sonata.admin.filter.type" alias="networking_init_cms_simple_string"/>
+        </service>
+
+        <service id="networking_init_cms.logger" class="Symfony\Bridge\Monolog\Logger">
+            <argument>newo</argument>
+            <call method="pushHandler">
+                <argument type="service" id="networking_init_cms.handler"/>
+            </call>
+        </service>
+
+        <service id="networking_init_cms.handler" class="Monolog\Handler\StreamHandler">
+            <argument>%kernel.logs_dir%/%kernel.environment%.changed_entities.log</argument>
+            <argument>200</argument>
+        </service>
+
+        <service id="networking_init_cms.admin_toolbar" class="Networking\InitCmsBundle\EventListener\AdminToolbarListener">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="security.authorization_checker"/>
+            <argument>%networking_init_cms.admin_toolbar.mode%</argument>
+            <argument>%networking_init_cms.admin_toolbar.position%</argument>
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <!-- cache -->
+        <service id="networking_init_cms.lib.php_cache" class="%networking_init_cms.lib.php_cache.class%" public="true">
+            <argument>files</argument>
+            <argument>%kernel.root_dir%/</argument>
+            <argument>%kernel.environment%</argument>
+            <argument>%networking_init_cms.cache.activate%</argument>
+            <argument>%networking_init_cms.cache.cache_time%</argument>
+        </service>
+
+    </services>
+
+</container>
