@@ -10,6 +10,39 @@ networking_init_cms_admin:
     path: /admin/
     defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:admin}
 
+networking_init_cms_admin_security_login:
+    path: /admin/login
+    defaults: { _controller: NetworkingInitCmsBundle:AdminSecurity:login }
+
+networking_init_cms_admin_security_check:
+    path: /admin/login_check
+    defaults: { _controller: NetworkingInitCmsBundle:AdminSecurity:check }
+    methods: [POST]
+
+networking_init_cms_admin_security_logout:
+    path: /admin/logout
+    defaults: { _controller: NetworkingInitCmsBundle:AdminSecurity:logout }
+
+networking_init_cms_admin_resetting_request:
+    path: /admin/request
+    defaults: { _controller: NetworkingInitCmsBundle:AdminResetting:request }
+    methods: [GET]
+
+networking_init_cms_admin_resetting_send_email:
+    path: /admin/send-email
+    defaults: { _controller: NetworkingInitCmsBundle:AdminResetting:sendEmail }
+    methods: [POST]
+
+networking_init_cms_admin_resetting_check_email:
+    path: /admin/check-email
+    defaults: { _controller: NetworkingInitCmsBundle:AdminResetting:checkEmail }
+    methods: [GET]
+
+networking_init_cms_admin_resetting_reset:
+    path: /admin/reset/{token}
+    defaults: { _controller: NetworkingInitCmsBundle:AdminResetting:reset }
+    methods: [GET|POST]
+
 networking_init_change_admin_language:
     path: /change_admin_language/{locale}
     defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:changeAdminLanguage}

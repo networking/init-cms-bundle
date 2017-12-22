@@ -33,11 +33,4 @@ class NetworkingInitCmsBundle extends Bundle
         $container->addCompilerPass(new AddProviderCompilerPass());
     }
 
-    /**
-     * @return string
-     */
-    public function getParent()
-    {
-        return 'SonataUserBundle';
-    }
 }

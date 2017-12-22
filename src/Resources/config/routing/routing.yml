@@ -38,13 +38,6 @@ _sonata_admin:
     type: sonata_admin
     prefix: /admin
 
-sonata_user:
-    resource: '@SonataUserBundle/Resources/config/routing/admin_security.xml'
-    prefix: /admin
-
-sonata_user_resetting:
-    resource: '@SonataUserBundle/Resources/config/routing/admin_resetting.xml'
-    prefix: /admin
 
 gallery:
     resource: '@SonataMediaBundle/Resources/config/routing/gallery.xml'

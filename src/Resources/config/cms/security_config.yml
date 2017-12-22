@@ -81,6 +81,10 @@ security:
         - { path: ^/admin/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/login_check$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/request, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/send-email, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/check-email, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/_initcms_admin_navbar/.*$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         # -> end
 
