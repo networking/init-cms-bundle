@@ -13,42 +13,52 @@
     ],
     "require": {
         "php": "^7.1",
-        "symfony/symfony": "3.4.*",
-        "sensio/framework-extra-bundle": "^5.0.0",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-fixtures-bundle": "~2.2",
+        "ibrows/sonata-admin-annotation-bundle": "2.*",
+        "ibrows/sonata-translation-bundle": "1.*",
         "incenteev/composer-parameter-handler": "^2.0",
+        "jms/serializer-bundle": "^2.0",
+        "knplabs/knp-paginator-bundle": "^2.7",
+        "oneup/uploader-bundle": "^1.9",
+        "phpfastcache/phpfastcache": "^3.0",
+        "mopa/bootstrap-bundle": "^3.2",
         "sensio/distribution-bundle": "^5.0.19",
-        "symfony/monolog-bundle": "^3.1.0",
-        "symfony/polyfill-apcu": "^1.0",
-        "symfony/swiftmailer-bundle": "^2.6.4",
-        "twig/twig": "^1.0||^2.0",
+        "sensio/framework-extra-bundle": "^5.0.0",
         "sonata-project/admin-bundle": "^3.0",
         "sonata-project/doctrine-orm-admin-bundle": "^3.2",
-        "sonata-project/user-bundle": "^4.0",
         "sonata-project/easy-extends-bundle": "^2.2",
         "sonata-project/formatter-bundle": "^3.4",
         "sonata-project/intl-bundle": "^2.4",
-        "sonata-project/notification-bundle": "^3.3",
         "sonata-project/media-bundle": "^3.10",
+        "sonata-project/notification-bundle": "^3.3",
+        "sonata-project/user-bundle": "^4.0",
         "stof/doctrine-extensions-bundle": "~1.1",
-        "mopa/bootstrap-bundle": "^3.2",
-        "twbs/bootstrap": ">2.0,<4.0-dev",
+        "symfony/monolog-bundle": "^3.1.0",
+        "symfony/polyfill-apcu": "^1.0",
+        "symfony/symfony": "3.4.*",
+        "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony-cmf/routing-bundle": "^2.0",
-        "jms/serializer-bundle": "^2.0",
-        "ibrows/sonata-admin-annotation-bundle": "2.*",
-        "ibrows/sonata-translation-bundle": "1.*",
-        "knplabs/knp-paginator-bundle": "^2.7",
-        "phpfastcache/phpfastcache": "3.0.*",
-        "oneup/uploader-bundle": "^1.9"
+        "twbs/bootstrap": ">2.0,<4.0-dev",
+        "twig/twig": "^1.0||^2.0"
     },
     "autoload": {
-        "psr-4": {"Networking\\InitCmsBundle\\": "src"}
+        "psr-4": {
+            "Networking\\InitCmsBundle\\": "src"
+        }
     },
-
     "autoload-dev": {
-        "psr-4": { "Networking\\InitCmsBundle\\Tests\\": "tests/" }
+        "psr-4": {
+            "Networking\\InitCmsBundle\\Tests\\": "tests/"
+        }
     },
-    "minimum-stability": "dev"
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    }
 }
