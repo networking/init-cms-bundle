@@ -56,8 +56,20 @@ file that was distributed with this source code.
                     </h1>
                 </div>
                 <div class="col-md-2">
-
-                    ldldld
+                    {% if block('help_text') is empty %}
+                        {% if admin is not defined %}
+                            {% set adminCode = 'dashboard' %}
+                            {% set actionHelp = '' %}
+                        {% else %}
+                            {% set adminCode = admin.code %}
+                            {% set actionHelp = action %}
+                        {% endif %}
+                        <div class="level-headline-icon pull-right"><a
+                                    href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
+                                    target="_blank">
+                                <div class="info_button_medium"></div>
+                            </a></div>
+                    {% endif %}
                 </div>
             </div>
 
