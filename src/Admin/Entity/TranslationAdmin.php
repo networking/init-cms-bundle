@@ -348,8 +348,8 @@ class TranslationAdmin extends AbstractAdmin
         }
 
         $form
-            ->add('key', 'text')
-            ->add('domain', 'text');
+            ->add('key', TextType::class)
+            ->add('domain', TextType::class);
     }
 
     /**
@@ -375,8 +375,9 @@ class TranslationAdmin extends AbstractAdmin
     {
         $actions = parent::getBatchActions();
         $actions['download'] = [
-            'label'            => $this->trans($this->getLabelTranslatorStrategy()->getLabel('download', 'batch', 'IbrowsSonataTranslationBundle')),
+            'label'            => 'batch.download',
             'ask_confirmation' => false,
+            'translation_domain' => 'IbrowsSonataTranslationBundle'
         ];
 
         return $actions;

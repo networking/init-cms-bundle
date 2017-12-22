@@ -3,5 +3,5 @@ oneup_uploader:
         media_admin:
             frontend: custom
             custom_frontend:
-                class: "Networking\\InitCmsBundle\\Controller\\MediaMultiUploadController"
+                class: "Networking\\InitCmsBundle\\Controller\\OneUploader\\MediaMultiUploadController"
                 name: "mediaAdminMultiUploader"

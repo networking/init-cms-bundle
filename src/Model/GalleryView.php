@@ -3,12 +3,11 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Entity\Gallery as MediaGallery;
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 
 /**
- * Networking\GalleryBundle\Model\GalleryView
+ * Networking\InitCmsBundle\Model\GalleryView
  *
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="gallery_view")
@@ -31,7 +30,16 @@ class GalleryView implements GalleryViewInterface
      * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Gallery", cascade={"merge"})
      * @ORM\JoinColumn( name="media_gallery_id", onDelete="CASCADE" )
      *
-     * @Sonata\FormMapper(name="mediaGallery", type="entity", options={"label" = "form.label_gallery","data_class"=null,"class"="Networking\InitCmsBundle\Entity\Gallery"})
+     * @Sonata\FormMapper(
+     *      name="mediaGallery",
+     *      type="Symfony\Bridge\Doctrine\Form\Type\EntityType",
+     *      options={
+     *          "label" = "form.label_gallery",
+     *          "data_class"=null,
+     *          "class"="Networking\InitCmsBundle\Entity\Gallery",
+     *          "layout" = "horizontal",
+     *      }
+     * )
      */
     protected $mediaGallery;
 
@@ -39,7 +47,15 @@ class GalleryView implements GalleryViewInterface
      * @var string $galleryType
      *
      * @ORM\Column(name="gallery_type", type="string", length=50)
-     * @Sonata\FormMapper(name="galleryType", type="choice", options={"label" = "form.label_gallery_type", "choices" = {"list" = "list", "lightbox" = "lightbox", "carousel" = "carousel"}})
+     * @Sonata\FormMapper(
+     *     name="galleryType",
+     *     type="Symfony\Component\Form\Extension\Core\Type\ChoiceType",
+     *     options={
+     *          "label" = "form.label_gallery_type",
+     *          "choices" = {"list" = "list", "lightbox" = "lightbox", "carousel" = "carousel"},
+     *          "layout" = "horizontal",
+     *     }
+     * )
      */
     protected $galleryType = 'lightbox';
 

@@ -91,7 +91,7 @@ abstract class UserAdmin extends SonataUserAdmin
      */
     public function postUpdate($object): void
     {
-        $securityContext = $this->getConfigurationPool()->getContainer()->get('security.context');
+        $securityContext = $this->getConfigurationPool()->getContainer()->get('security.token_storage');
         if ($object == $securityContext->getToken()->getUser()) {
             $this->getRequest()->getSession()->set('admin/_locale', $object->getLocale());
         }

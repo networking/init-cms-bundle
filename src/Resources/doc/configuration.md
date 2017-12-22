@@ -79,7 +79,7 @@ networking_init_cms:
                 - { name: right , class: 'col-md-9'}
     content_types:
         - { name: 'Text' , class: 'Networking\InitCmsBundle\Entity\Text'}
-        - { name: 'Gallery' , class: 'Networking\GalleryBundle\Entity\Gallery'}
+        - { name: 'Gallery' , class: 'Networking\InitCmsBundle\Entity\GalleryView'}
 ```
 
 
@@ -182,7 +182,7 @@ many-to-one relationship with a Networking\MediaBundle\Entity\Gallery entity (wh
 ```
 content_types:
     - { name: 'Text' , class: 'Networking\InitCmsBundle\Entity\Text'}
-    - { name: 'Gallery' , class: 'Networking\GalleryBundle\Entity\Gallery'}
+    - { name: 'Gallery' , class: 'Networking\InitCmsBundle\Entity\GalleryView'}
 ```
 
 To learn more about templates see:

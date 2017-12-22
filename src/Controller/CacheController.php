@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -33,7 +34,19 @@ use phpFastCache;
  */
 class CacheController extends Controller
 {
+    /**
+     * @var AuthorizationChecker
+     */
+    protected $authorizationChecker;
 
+    /**
+     * CacheController constructor.
+     * @param AuthorizationChecker $authorizationChecker
+     */
+    public function __construct(AuthorizationChecker $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
 
     /**
      * clear the Cache
@@ -47,7 +60,7 @@ class CacheController extends Controller
         /*
          * to do: check if logged in user is sysadmin
          * */
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
             /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
             $phpCache = $this->get('networking_init_cms.lib.php_cache');
             $phpCache->clean();

@@ -4,7 +4,7 @@ namespace Networking\InitCmsBundle\Model;
 
 
 /**
- * Networking\GalleryBundle\Model\GalleryViewInterface
+ * Networking\InitCmsBundle\Model\GalleryViewInterface
  *
  */
 interface GalleryViewInterface extends ContentInterface

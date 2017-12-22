@@ -11,7 +11,6 @@
                 jQuery('input[type=submit]', this).off();
             });
             jQuery(document.body).append(listDialog);
-            //jQuery('form', listDialog).on('submit', submitAjaxForm);
         }
     }
 
@@ -46,7 +45,6 @@
             createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
             return;
         }
-
 
         jQuery(form).ajaxSubmit({
             type:form.attr('method'),
@@ -85,36 +83,6 @@
             replace(/\)/g, '\\)').
             replace(/\?/g, '\\?').
             replace(/"/g, '\\"');
-    }
-
-    function submitAjaxForm(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var form = jQuery(this);
-
-        jQuery(form).ajaxSubmit({
-            type:form.attr('method'),
-            url:form.attr('action'),
-            success:function (xhr) {
-
-                if (xhr.result == 'ok') {
-                    jQuery('#objectList').load(xhr.url);
-                    if (jQuery('input[name=_method]', form).val() == 'DELETE') {
-                        if(jQuery(linkClicked).parents('tr')){
-                            jQuery(linkClicked).parents('tr').remove();
-                        }
-                    }
-                    listDialog.modal('hide');
-                } else {
-                    jQuery('#objectList').html(xhr);
-                    listDialog.modal('hide');
-                }
-            },
-            error:function (xhr, textStatus, errorThrown) {
-                console.log(errorThrown);
-                listDialog.html(xhr.responseText);
-            }
-        });
     }
 
     (function ($) {

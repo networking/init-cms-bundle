@@ -61,7 +61,7 @@ public function getAdminContent()
 
     return array(
         'content' => array('mediaItems' => $mediaItems),
-        'template' => 'NetworkingGalleryBundle:Gallery:admin_gallery_block.html.twig'
+        'template' => 'NetworkingInitCmsBundle:GalleryAdmin:gallery_view_block.html.twig'
     );
 }
 ```

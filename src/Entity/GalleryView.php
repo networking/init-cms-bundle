@@ -3,8 +3,10 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Networking\InitCmsBundle\Model\GalleryView as ModelGalleryView;
+
 /**
- * Networking\GalleryBundle\Entity\GalleryView
+ * Class GalleryView
+ * @package Networking\InitCmsBundle\Entity
  */
 class GalleryView extends ModelGalleryView
 {

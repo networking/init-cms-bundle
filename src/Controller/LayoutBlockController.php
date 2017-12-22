@@ -51,7 +51,7 @@ class LayoutBlockController extends CRUDController
 
         $layoutBlock = $this->admin->getNewInstance();
         /** @var Request $request */
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
         $this->admin->setSubject($layoutBlock);
 
         $elementId = $request->get('elementId');
@@ -89,16 +89,12 @@ class LayoutBlockController extends CRUDController
         /** @var $form \Symfony\Component\Form\Form */
         $form = $this->admin->getForm();
         $form->setData($layoutBlock);
-
+        $form->handleRequest($this->getRequest());
         if ($this->getRestMethod() == 'POST') {
-            $form->submit($this->get('request'));
-
-            $isFormValid = $form->isValid();
             try{
                 // persist if the form was valid and if in preview mode the preview was approved
-                if ($isFormValid && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
+                if ($form->isValid() && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
                     $this->admin->create($layoutBlock);
-
                     if ($this->isXmlHttpRequest()) {
                         return $this->renderJson(
                             [
@@ -216,7 +212,7 @@ class LayoutBlockController extends CRUDController
      * @param null $uniqId
      * @param string $code
      * @return mixed
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \Twig_Error_Runtime
      */
     protected function getLayoutBlockFormWidget(
         $objectId,
@@ -233,7 +229,7 @@ class LayoutBlockController extends CRUDController
         $pageAdmin = $this->container->get($code);
 
         /** @var Request $request */
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
         $pageAdmin->setRequest($request);
 
 
@@ -336,6 +332,7 @@ class LayoutBlockController extends CRUDController
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws \Twig_Error_Runtime
      */
     public function deleteAjaxAction(Request $request)
     {

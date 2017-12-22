@@ -112,7 +112,8 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
             [
                 'label_render' => false,
                 'label' => false,
-                'class' => $this->getContentType($layoutBlock)
+                'class' => $this->getContentType($layoutBlock),
+                'widget_form_group' => false
             ]
         );
         $form->remove('_delete');

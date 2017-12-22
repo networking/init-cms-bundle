@@ -1,5 +1,5 @@
 <?php
-namespace Networking\InitCmsBundle\Controller;
+namespace Networking\InitCmsBundle\Controller\OneUploader;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Entity\Media;
