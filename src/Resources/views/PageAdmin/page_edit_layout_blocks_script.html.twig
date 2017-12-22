@@ -208,12 +208,12 @@ function submitLayoutUpdate(form, data, liItem) {
 //        dataType: 'html',
         data: data,
         error: function (xhr) {
-            if(liItem != undefined){
+            if(liItem !== undefined){
                 liItem.find('.modal-body').html(xhr.responseText);
             }
         },
         success: function (html) {
-            if (data.zone != undefined) {
+            if (data.zone !== undefined) {
                 jQuery(form).find('#zone_' + data.zone + ' .layout_block_modal').each(function (i, value) {
                     jQuery(value).modal('hide');
                 });
@@ -255,7 +255,7 @@ function saveLayoutBlockSort(callback) {
     });
 
     jQuery.when(submitLayoutSort(zones)).done(function (xhr) {
-        if (callback != undefined) {
+        if (callback !== undefined) {
             callback(xhr)
         }
     });
@@ -273,9 +273,9 @@ function submitLayoutSort(zones) {
         type: 'post',
         success: function (xhr) {
             if (xhr.status != 'error') {
-                if (xhr.pageStatusSettings != undefined) jQuery('#pageStatusSettings').html(xhr.pageStatusSettings);
-                if (xhr.pageStatus != undefined) {
-                    if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
+                if (xhr.pageStatusSettings !== undefined) jQuery('#pageStatusSettings').html(xhr.pageStatusSettings);
+                if (xhr.pageStatus !== undefined) {
+                    if (xhr.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
                         pageStatus.addClass('color-draft');
                     } else {
                         pageStatus.removeClass('color-draft');
@@ -296,7 +296,6 @@ function onAfterLoad() {
 
     var ckeditorConfig = '';
     setLayoutBlockPosition();
-
     jQuery('div#field_container_{{ id }} ul.sortable').sortable({
         handle: 'i.glyphicon-move',
         opacity: 0.6,
@@ -306,7 +305,7 @@ function onAfterLoad() {
         tolerance: 'pointer',
         start: function (event, ui) {
             var textareaId = ui.item.find('textarea.ckeditor').attr('id');
-            if (typeof textareaId != 'undefined') {
+            if (typeof textareaId !== 'undefined') {
                 var editorInstance = CKEDITOR.instances[textareaId];
                 if (editorInstance) {
                     ckeditorConfig = editorInstance.config;
@@ -393,7 +392,7 @@ function onAfterLoad() {
                 placeholder.css('display', 'none');
             } else if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length >= maxItems) {
 
-                if (jQuery(ui.sender).attr('id') == jQuery(this).attr('id')) {
+                if (jQuery(ui.sender).attr('id') === jQuery(this).attr('id')) {
                     placeholder.css('display', 'block');
                 } else {
                     placeholder.css('display', 'none');
@@ -408,7 +407,11 @@ function onAfterLoad() {
         }
 
     });
+}
 
+(function ($) {
+    // refresh the sortable option when a new element is added
+    onAfterLoad();
     jQuery('body').on('click', 'i.delete_block', function () {
         if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
             var blockId = jQuery(this).attr('data-value');
@@ -430,11 +433,6 @@ function onAfterLoad() {
             });
         }
     });
-}
-
-(function ($) {
-    // refresh the sortable option when a new element is added
-    onAfterLoad();
 })(jQuery);
 </script>
 

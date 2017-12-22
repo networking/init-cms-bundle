@@ -81,7 +81,6 @@ file that was distributed with this source code.
     }
 
     (function ($) {
-
         $('body').on('change', '#{{ admin.uniqid }}_locale', function () {
             var locale = $(this).val();
             $.getJSON(
@@ -98,15 +97,13 @@ file that was distributed with this source code.
                         });
                     }
             );
-        });
-
-        $('body').on('change', '#{{ admin.uniqid }}_parent', function (e) {
+        }).on('change', '#{{ admin.uniqid }}_parent', function (e) {
             var path = $('#{{ admin.uniqid }}_url').val();
             var pageId = e.val;
-            if (pageId == '') {
+            if (pageId === '') {
                 $('#help_{{ admin.uniqid }}_url').html('/' + path);
             } else {
-                if (pageId == undefined) {
+                if (pageId === undefined) {
                     pageId = $("#{{ admin.uniqid }}_parent").val();
                 }
                 $.getJSON(
@@ -117,11 +114,14 @@ file that was distributed with this source code.
                         }
                 );
             }
-        });
-
-
-        $('body').on('change', '#{{ admin.uniqid }}_url', function () {
+        }).on('change', '#{{ admin.uniqid }}_url', function () {
             $("#{{ admin.uniqid }}_parent").trigger('change');
+        }).on('click', '#review_status', function () {
+            if ($('#review_status').is(":checked")) {
+                window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
+            } else {
+                window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
+            }
         });
 
 
@@ -142,13 +142,6 @@ file that was distributed with this source code.
         });
         {% endif %}
 
-        $('body').on('click', '#review_status', function () {
-            if ($('#review_status').is(":checked")) {
-                window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
-            } else {
-                window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
-            }
-        })
 
     })(jQuery);
 
