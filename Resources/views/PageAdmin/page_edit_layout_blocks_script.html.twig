@@ -408,7 +408,11 @@ function onAfterLoad() {
         }
 
     });
+}
 
+(function ($) {
+    // refresh the sortable option when a new element is added
+    onAfterLoad();
     jQuery('body').on('click', 'i.delete_block', function () {
         if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
             var blockId = jQuery(this).attr('data-value');
@@ -430,11 +434,6 @@ function onAfterLoad() {
             });
         }
     });
-}
-
-(function ($) {
-    // refresh the sortable option when a new element is added
-    onAfterLoad();
 })(jQuery);
 </script>
 
