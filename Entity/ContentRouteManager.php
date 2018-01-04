@@ -149,11 +149,11 @@ class ContentRouteManager extends BaseContentRouteManager
             $test = new \ReflectionClass($contentRoute->getClassType());
 
             if ($viewStatus == VersionableInterface::STATUS_DRAFT
-                && ($test->implementsInterface(ResourceVersionInterface::class))
+                && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface'))
             ) {
                 continue;
             } elseif ($viewStatus == VersionableInterface::STATUS_PUBLISHED
-                && ($test->implementsInterface(VersionableInterface::class))
+                && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface'))
             ) {
                 continue;
             }
