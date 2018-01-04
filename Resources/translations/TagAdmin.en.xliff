@@ -58,6 +58,14 @@
                 <source>action._add_tag</source>
                 <target>Assign media a tag</target>
             </trans-unit>
+            <trans-unit id="info.tag_sorted">
+                <source>info.tag_sorted</source>
+                <target>Position saved</target>
+            </trans-unit>
+            <trans-unit id="info.tag_sorted_error">
+                <source>info.tag_sorted_error</source>
+                <target>Position could not be saved</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

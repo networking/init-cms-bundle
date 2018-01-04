@@ -58,6 +58,14 @@
                 <source>action._add_tag</source>
                 <target>Medien einem Medien-Tag zuordnen</target>
             </trans-unit>
+            <trans-unit id="info.tag_sorted">
+                <source>info.tag_sorted</source>
+                <target>Position wurde gespeichert</target>
+            </trans-unit>
+            <trans-unit id="info.tag_sorted_error">
+                <source>info.tag_sorted_error</source>
+                <target>Position konnte nicht gespeichert werden</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Admin\Model;
 
 use Doctrine\ORM\EntityRepository;
 use Gaufrette\Util;
+use Networking\InitCmsBundle\Admin\Pool;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -52,13 +53,19 @@ abstract class MediaAdmin extends Admin
     protected $localisedMediaProviders = array('sonata.media.provider.file');
 
     /**
+     * The number of result to display in the list.
+     *
+     * @var int
+     */
+    protected $maxPerPage = 0;
+
+    /**
      * Default values to the datagrid.
      *
      * @var array
      */
     protected $datagridValues = array(
         '_page'       => 1,
-        '_per_page'   => 50,
         '_sort_order' => 'DESC',
         '_sort_by' => 'createdAt'
     );
@@ -292,11 +299,7 @@ abstract class MediaAdmin extends Admin
      */
     public function getExportFormats()
     {
-        if ($this->request->get('pcode') == '') {
-            return parent::getExportFormats();
-        }
-
-        return array();
+       return array();
     }
 
     /**
@@ -326,7 +329,7 @@ abstract class MediaAdmin extends Admin
 
     /**
      * @param string $name
-     * @return null|string|void
+     * @return null|string
      */
     public function getTemplate($name)
     {

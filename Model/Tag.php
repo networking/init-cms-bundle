@@ -178,7 +178,7 @@ abstract class Tag
      */
     public function getAdminTitle()
     {
-        return $this->path;
+        return implode(' / ', $this->getParentNames());
     }
 
     /**
@@ -199,12 +199,12 @@ abstract class Tag
     {
         if (!$this->parentNames) {
 
-            $page = $this;
-            $parentNames = array($page->getName());
+            $tag = $this;
+            $parentNames = array($tag->getName());
 
-            while ($page->getParent()) {
-                $page = $page->getParent();
-                $parentNames[] = $page->getName();
+            while ($tag->getParent()) {
+                $tag = $tag->getParent();
+                $parentNames[] = $tag->getName();
             }
 
             $this->setParentNames(array_reverse($parentNames));
