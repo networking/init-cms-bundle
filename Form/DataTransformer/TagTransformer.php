@@ -53,8 +53,13 @@ class TagTransformer implements DataTransformerInterface
     public function transform($value)
     {
         if(!$this->hasMultipleTags){
-            return $value->first();
+            if($value){
+                return $value->first();
+            }
+
         }
+
+
 
         return $value;
     }
@@ -85,7 +90,7 @@ class TagTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        if(!$this->hasMultipleTags){
+        if(!$this->hasMultipleTags && $value){
             return new ArrayCollection(array($value));
         }
         return $value;
