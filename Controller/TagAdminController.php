@@ -56,6 +56,7 @@ class TagAdminController extends CRUDController
         $tags = $tagRepo->findBy(array('level' => 1), array('path' => 'ASC'));
 
         return $this->renderView('NetworkingInitCmsBundle:TagAdmin:tags.html.twig', array(
+            'noSort' => false,
             'tags' => $tags,
             'tagAdmin' => $this->admin,
             'lastItem' => $objectId));
@@ -67,10 +68,10 @@ class TagAdminController extends CRUDController
      */
     public function deleteAction($id)
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
         $returnToMedia = $request->get('returnToMedia');
 
-        $id = $this->get('request')->get($this->admin->getIdParameter());
+        $id = $request->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
         if (!$object) {
