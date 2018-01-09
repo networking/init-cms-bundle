@@ -36,22 +36,8 @@ file that was distributed with this source code.
     </div>
     {% if app.request.isxmlhttprequest and app.request.get('with_js')|default(true) %}
         {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
-        {% if taggable is defined and taggable %}
-            <script type="text/javascript">
-                jQuery(document).ready(function () {
-                    jQuery("#{{ id }}").select2();
-                });
-            </script>
-        {% endif %}
     {% else %}
         {% jsblock 'addToBottom' %}
-        {% if taggable is defined and taggable %}
-            <script type="text/javascript">
-            jQuery(document).ready(function () {
-                jQuery("#{{ id }}").select2();
-            });
-            </script>
-        {% endif %}
         {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
         {% jsblock 'addToBottomEnd' %}
     {% endif %}

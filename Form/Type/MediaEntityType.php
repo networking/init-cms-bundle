@@ -127,6 +127,15 @@ class MediaEntityType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    public function getBlockPrefix()
+    {
+        return 'media_entity_type';
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'media_entity_type';

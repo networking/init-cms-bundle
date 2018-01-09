@@ -10,14 +10,16 @@
 
 namespace Networking\InitCmsBundle\Form\Extension\Field\Type;
 
-use Sonata\AdminBundle\Form\Extension\Field\Type\FormTypeFieldExtension as SonataFormTypeFieldExtension;
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class FormTypeFieldExtension
  * @package Networking\InitCmsBundle\Form\Extension\Field\Type
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class FormTypeFieldExtension extends SonataFormTypeFieldExtension
+class FormTypeFieldExtension extends AbstractTypeExtension
 {
     /**
      * @var array $defaultClasses
@@ -31,6 +33,7 @@ class FormTypeFieldExtension extends SonataFormTypeFieldExtension
     {
         $this->defaultClasses = $defaultClasses;
     }
+
 
     /**
      * @return array
@@ -50,4 +53,16 @@ class FormTypeFieldExtension extends SonataFormTypeFieldExtension
 
         return $this;
     }
+
+    /**
+     * Returns the name of the type being extended.
+     *
+     * @return string The name of the type being extended
+     */
+    public function getExtendedType()
+    {
+        return 'Symfony\Component\Form\Extension\Core\Type\FormType';
+    }
+
+
 }

@@ -25,7 +25,7 @@
         {% set iframeWidth = '400px' %}
         {% set iframeHeight = '560px' %}
     {% endif %}
-    <div class="media-box {% for tag in object.tags %}tag_{{ tag.id }} {% endfor %}" draggable="true" ondragstart="event.dataTransfer.setData('text/plain', '{{ object.id }}')">
+    <div class="media-box {% for tag in object.tags %}tag_{{ tag.id }} {% endfor %}" draggable="true" ondragstart="event.dataTransfer.setData('Text', '{{ object.id }}')">
         <div class="zero-clipboard">
             <div class="btn-clipboard btn-clipboard-left">
                 <a href="{{ previewLink }}"

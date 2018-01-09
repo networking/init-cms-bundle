@@ -56,6 +56,9 @@
             <call method="setLanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
             </call>
+            <call method="setMultipleMediaTags">
+                <argument>%networking_init_cms.multiple_media_tags%</argument>
+            </call>
             <call method="setTemplates">
                 <argument type="collection">
                     <argument key="list">NetworkingInitCmsBundle:MediaAdmin:list.html.twig</argument>

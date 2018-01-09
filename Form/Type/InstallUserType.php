@@ -53,6 +53,11 @@ class InstallUserType extends AbstractType
         );
     }
 
+    public function getBlockPrefix()
+    {
+        return 'user';
+    }
+
     public function getName()
     {
         return 'user';

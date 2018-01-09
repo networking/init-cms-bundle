@@ -9,12 +9,12 @@
             <tag name="form.type_extension" alias="form" extended-type="Symfony\Component\Form\Extension\Core\Type\FormType"/>
         </service>
 
-        <service id="networking_init_cms.form.tag_extension" class="Networking\InitCmsBundle\Form\Extension\TagExtension">
-            <tag name="form.type_extension" alias="sonata_type_model"/>
-        </service>
-
         <service id="networking_init_cms.form.select2_extension" class="Networking\InitCmsBundle\Form\Extension\Select2Extension">
             <tag name="form.type_extension" alias="choice" extended-type="Symfony\Component\Form\Extension\Core\Type\ChoiceType"/>
+        </service>
+
+        <service id="networking_init_cms.form_extension.model_type_extension" class="Networking\InitCmsBundle\Form\Extension\ModelTypeExtension">
+            <tag name="form.type_extension" alias="sonata_type_model" extended-type="Sonata\AdminBundle\Form\Type\ModelType"/>
         </service>
 
         <service id="networking_init_cms.form.type.autocomplete" class="Networking\InitCmsBundle\Form\Type\AutocompleteType">

@@ -10,19 +10,13 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Doctrine\ORM\EntityRepository;
-use Gaufrette\Util;
-use Networking\InitCmsBundle\Admin\Pool;
+use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
-use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
-use Sonata\MediaBundle\Provider\MediaProviderInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class MediaAdmin
@@ -60,6 +54,11 @@ abstract class MediaAdmin extends Admin
     protected $maxPerPage = 0;
 
     /**
+     * @var bool
+     */
+    protected $hasMultipleMediaTags;
+
+    /**
      * Default values to the datagrid.
      *
      * @var array
@@ -83,7 +82,7 @@ abstract class MediaAdmin extends Admin
     }
 
     /**
-     * @return Array
+     * return Array
      */
     public function getTrackedActions()
     {
@@ -97,6 +96,17 @@ abstract class MediaAdmin extends Admin
     public function setTrackedActions($trackedActions)
     {
         $this->trackedActions = $trackedActions;
+
+        return $this;
+    }
+
+    /**
+     * @param $hasMultipleMediaTags
+     * @return $this
+     */
+    public function setMultipleMediaTags($hasMultipleMediaTags)
+    {
+        $this->hasMultipleMediaTags = $hasMultipleMediaTags;
 
         return $this;
     }
@@ -383,19 +393,26 @@ abstract class MediaAdmin extends Admin
             );
         }
 
+
+        $transformer = new TagTransformer($this->hasMultipleMediaTags);
+
+
         $formMapper->add(
             'tags',
             'sonata_type_model',
             array(
                 'required' => false,
                 'expanded' => false,
-                'multiple' => true,
+                'multiple' => $this->hasMultipleMediaTags,
+                'select2' => true,
                 'property' => 'adminTitle',
                 'help_label' => 'help.media_tag',
-                'taggable' => true,
+                'taggable' => $this->hasMultipleMediaTags,
                 'choices_as_values' => true,
                 'attr' => array('style' => "width:220px"),
+                'transformer' => $transformer
             )
+
         );
 
         //remove and re-add fields to control field order
@@ -422,7 +439,6 @@ abstract class MediaAdmin extends Admin
 
     /**
      * @param FormMapper $formMapper
-     * @param MediaProviderInterface $provider
      */
     protected function addPreviewToEditForm(FormMapper $formMapper)
     {

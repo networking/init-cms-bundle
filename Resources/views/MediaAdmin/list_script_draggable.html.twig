@@ -16,7 +16,8 @@
 
     function dropTag(ev, id) {
         ev.preventDefault();
-        var media = ev.dataTransfer.getData('text/plain');
+        var media = ev.dataTransfer.getData('Text');
+
         $.post(
             "{{ admin.generateUrl('batch', {'filter':  admin.filterParameters}) }}",
             {action: "add_tags", tags: id, idx: [media], _sonata_csrf_token :"{{ csrf_token }}"},

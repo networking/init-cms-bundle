@@ -261,7 +261,8 @@ class AutocompleteType extends DoctrineType
             'choice_value' => $choiceValue,
             'id_reader' => null, // internal
             'choice_translation_domain' => false,
-            'query_hints' => array()
+            'query_hints' => array(),
+            'select2' => true
         ));
 
         $resolver->setRequired(array('class'));
@@ -327,6 +328,14 @@ class AutocompleteType extends DoctrineType
         }
 
         return $loader;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlockPrefix()
+    {
+        return 'networking_type_autocomplete';
     }
 
     /**

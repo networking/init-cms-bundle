@@ -88,6 +88,14 @@ class IconradioType extends AbstractType
     /**
      * @return string
      */
+    public function getBlockPrefix()
+    {
+        return 'networking_type_iconradio';
+    }
+
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'networking_type_iconradio';
