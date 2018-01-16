@@ -9,6 +9,12 @@
  */
 namespace Networking\InitCmsBundle\Tests\Controller;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Networking\InitCmsBundle\Component\Routing\DynamicRouter;
+use Networking\InitCmsBundle\Entity\ContentRouteManager;
+use Networking\InitCmsBundle\Entity\PageManager;
+use Networking\InitCmsBundle\Entity\PageSnapshotManager;
+use Networking\InitCmsBundle\Lib\PhpCache;
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Controller\FrontendPageController;
 use Networking\InitCmsBundle\Model\Page;
@@ -404,7 +410,7 @@ class FrontendPageControllerTest extends TestCase
             ->will($this->returnValue(true));
 
 
-        $pageHelper = new \Networking\InitCmsBundle\Helper\PageHelper();
+
 
         $mockSerializer = $this->getMockBuilder('\JMS\Serializer\SerializerInterface')
             ->disableOriginalConstructor()
@@ -425,6 +431,19 @@ class FrontendPageControllerTest extends TestCase
         $mockTokenStorage = $this->getMockBuilder(TokenStorage::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $mockRegistry= $this->getMockBuilder(Registry::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockPageSnapshotManager= $this->getMockBuilder(PageSnapshotManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockContentRouteManager= $this->getMockBuilder(ContentRouteManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $_SERVER = [
             'PATH_INFO' => '/',
             'SCRIPT_NAME' => 'app.php'
@@ -440,14 +459,14 @@ class FrontendPageControllerTest extends TestCase
             '_template' => $template
         ];
         //templating
-        $mockTemplating = $this->getMockBuilder(TwigEngine::class)
+        $mockTwig = $this->getMockBuilder(TwigEngine::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $mockResponse = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Response')
             ->getMock();
 
-        $mockTemplating->expects($this->once())
+        $mockTwig->expects($this->once())
             ->method('render')
             ->will($this->returnValue($mockResponse));
         //request
@@ -456,7 +475,7 @@ class FrontendPageControllerTest extends TestCase
         $request->attributes->set('_locale', 'en');
 
         //dynamic router
-        $mockDynamicRouter = $this->getMockBuilder('\Symfony\Cmf\Component\Routing\DynamicRouter')
+        $mockDynamicRouter = $this->getMockBuilder(DynamicRouter::class)
             ->disableOriginalConstructor()
             ->getMock();
         $mockDynamicRouter->expects($this->once())
@@ -470,10 +489,14 @@ class FrontendPageControllerTest extends TestCase
             ->getMock();
 
         //cache class
-        $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
+        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
             ->disableOriginalConstructor()
             ->getMock();
 
+        $pageHelper = new \Networking\InitCmsBundle\Helper\PageHelper(
+            $mockSerializer, $mockRegistry,  $mockPageManager, $mockPageSnapshotManager, $mockContentRouteManager,
+            $mockDynamicRouter, $mockCacheClass
+        );
 
         $mockContainer->expects($this->at(0))
             ->method('get')
@@ -483,51 +506,39 @@ class FrontendPageControllerTest extends TestCase
 
         $mockContainer->expects($this->at(1))
             ->method('get')
-            ->with('networking_init_cms.cms_router')
-            ->will($this->returnValue($mockDynamicRouter));
-
-
-        $mockContainer->expects($this->at(2))
-            ->method('get')
             ->with('networking_init_cms.lib.php_cache')
             ->will($this->returnValue($mockCacheClass));
 
-        $mockContainer->expects($this->at(3))
+        $mockContainer->expects($this->at(2))
             ->method('has')
             ->with('security.token_storage')
             ->will($this->returnValue(true));
 
-        $mockContainer->expects($this->at(4))
+        $mockContainer->expects($this->at(3))
             ->method('get')
             ->with('security.token_storage')
             ->will($this->returnValue($mockTokenStorage));
-
-
-        $mockContainer->expects($this->at(5))
+        $mockContainer->expects($this->at(4))
             ->method('get')
             ->with('networking_init_cms.helper.page_helper')
             ->will($this->returnValue($pageHelper));
 
-        $mockContainer->expects($this->at(6))
-            ->method('get')
-            ->with('jms_serializer')
-            ->willReturn($mockSerializer);
-
-        $mockContainer->expects($this->at(7))
+        $mockContainer->expects($this->at(5))
             ->method('get')
             ->with('security.token_storage')
             ->will($this->returnValue($mockTokenStorage));
 
-        $mockContainer->expects($this->at(8))
+
+        $mockContainer->expects($this->at(6))
             ->method('has')
             ->with('templating')
             ->will($this->returnValue(true));
 
 
-        $mockContainer->expects($this->at(9))
+        $mockContainer->expects($this->at(7))
             ->method('get')
             ->with('templating')
-            ->will($this->returnValue($mockTemplating));
+            ->will($this->returnValue($mockTwig));
 
         $requestAfter = clone $request;
 
@@ -541,7 +552,6 @@ class FrontendPageControllerTest extends TestCase
         $requestAfter->attributes->set('_template_vars', $configuration->getVars());
         $requestAfter->attributes->set('_template_streamable', $configuration->isStreamable());
 
-        $pageHelper->setContainer($mockContainer);
 
         $controller = new FrontendPageController();
         $controller->setContainer($mockContainer);

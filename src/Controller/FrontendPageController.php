@@ -68,8 +68,8 @@ class FrontendPageController extends Controller
         {
             $template = $template->getTemplate();
         }
-
-        if($phpCache->isCacheable($request, $this->getUser()) && $page instanceof PageSnapshotInterface){
+        $user = $this->getUser();
+        if($phpCache->isCacheable($request, $user) && $page instanceof PageSnapshotInterface){
 
             if (!$this->isSnapshotActive($page)) {
                 throw new NotFoundHttpException();
