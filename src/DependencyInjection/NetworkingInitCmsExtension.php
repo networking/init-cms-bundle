@@ -10,7 +10,7 @@
  */
 namespace Networking\InitCmsBundle\DependencyInjection;
 
-use Networking\InitCmsBundle\EventListener\AdminToolbarListener;
+use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
 use Sonata\CoreBundle\Exception\InvalidParameterException;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -48,7 +48,6 @@ class NetworkingInitCmsExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('blocks.xml');
-        $loader->load('dynamic_routing.xml');
         $loader->load('event_listeners.xml');
         $loader->load('forms.xml');
         $loader->load('menus.xml');
@@ -80,9 +79,9 @@ class NetworkingInitCmsExtension extends Extension
 
 
         if (!$config['admin_toolbar']['toolbar']) {
-            $mode = AdminToolbarListener::DISABLED;
+            $mode = AdminToolbarSubscriber::DISABLED;
         } else {
-            $mode = AdminToolbarListener::ENABLED;
+            $mode = AdminToolbarSubscriber::ENABLED;
         }
         $container->setParameter('networking_init_cms.admin_toolbar.mode', $mode);
         $container->setParameter('networking_init_cms.admin_toolbar.position', $config['admin_toolbar']['position']);

@@ -20,7 +20,7 @@
 
         <service id="ibrows_sonata_translation.admin.orm"
                  class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
-            <argument></argument>
+            <argument/>
             <argument>Lexik\Bundle\TranslationBundle\Entity\TransUnit</argument>
             <argument>NetworkingInitCmsBundle:TranslationCRUD</argument>
             <call method="setEditableOptions">
@@ -37,11 +37,12 @@
             </call>
             <tag name="sonata.admin" manager_type="orm" label="translation.title"
                  label_catalogue="IbrowsSonataTranslationBundle"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persist_filters="true"/>
         </service>
 
         <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%" public="true">
-            <argument></argument>
+            <argument/>
             <argument>%sonata.media.admin.media.entity%</argument>
             <argument>%sonata.media.admin.media.controller%</argument>
             <argument type="service" id="sonata.media.pool"/>
@@ -53,6 +54,9 @@
             </call>
             <call method="setLanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
+            </call>
+            <call method="setMultipleMediaTags">
+                <argument>%networking_init_cms.multiple_media_tags%</argument>
             </call>
             <call method="setTemplates">
                 <argument type="collection">

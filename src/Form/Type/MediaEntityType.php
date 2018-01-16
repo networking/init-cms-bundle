@@ -25,10 +25,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MediaEntityType extends AbstractType
 {
-    /**
-     * @var array
-     */
-    private $choiceListCache = [];
 
     /**
      * @var null

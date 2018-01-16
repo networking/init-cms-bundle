@@ -56,6 +56,7 @@ class TagAdminController extends CRUDController
         $tags = $tagRepo->findBy(['level' => 1], ['path' => 'ASC']);
 
         return $this->renderView('NetworkingInitCmsBundle:TagAdmin:tags.html.twig', [
+            'noSort' => false,
             'tags' => $tags,
             'tagAdmin' => $this->admin,
             'lastItem' => $objectId]);
@@ -67,10 +68,9 @@ class TagAdminController extends CRUDController
      */
     public function deleteAction($id)
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
         $returnToMedia = $request->get('returnToMedia');
-
-        $id = $this->get('request')->get($this->admin->getIdParameter());
+        $id = $request->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
         if (!$object) {
@@ -84,7 +84,7 @@ class TagAdminController extends CRUDController
         if ($this->getRestMethod() == 'DELETE') {
             // check the csrf token
             $this->validateCsrfToken('sonata.delete');
-
+            $translator = $this->get('translator');
             try {
                 $this->admin->delete($object);
 
@@ -92,9 +92,10 @@ class TagAdminController extends CRUDController
                     return $this->renderJson(['result' => 'ok']);
                 }
 
+
                 $this->addFlash(
                     'sonata_flash_success',
-                    $this->admin->trans(
+                    $translator->trans(
                         'flash_delete_success',
                         ['%name%' => $this->escapeHtml($this->admin->toString($object))],
                         'SonataAdminBundle'
@@ -115,7 +116,7 @@ class TagAdminController extends CRUDController
 
                 $this->addFlash(
                     'sonata_flash_error',
-                    $this->admin->trans(
+                    $translator->trans(
                         'flash_delete_error',
                         ['%name%' => $this->escapeHtml($this->admin->toString($object))],
                         'SonataAdminBundle'

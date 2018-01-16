@@ -98,6 +98,7 @@ class PageAdminHelper extends SonataAdminHelper
      */
     public function addNewInstance($object, FieldDescriptionInterface $fieldDescription)
     {
+
         $instance = $fieldDescription->getAssociationAdmin()->getNewInstance();
 
         foreach ($this->newLayoutBlockParameters as $attr => $value) {

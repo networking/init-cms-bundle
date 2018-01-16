@@ -41,7 +41,6 @@ class IconradioType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
         $resolver->setDefaults(
             [
                 'icons' => $this->getIconsFromTemplates()
@@ -56,7 +55,6 @@ class IconradioType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        parent::buildView($view, $form, $options);
         $view->vars = array_replace(
             $view->vars,
             [

@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Entity\MenuItem;
+use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -19,7 +20,6 @@ use Sonata\CoreBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Doctrine\ORM\EntityRepository;
-use Networking\InitCmsBundle\Form\DataTransformer\MenuItemToNumberTransformer;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -149,7 +149,7 @@ abstract class MenuItemAdmin extends BaseAdmin
         if ($this->isRoot) {
             $formMapper
                 ->add('description', null, ['horizontal' => true])
-                ->add('isRoot', 'hidden', ['data' => true])
+                ->add('isRoot', HiddenType::class, ['data' => true])
                 ->end();
         } else {
             $formMapper->end();
@@ -177,7 +177,6 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'property' => 'AdminTitle',
                         'query_builder' => function (EntityRepository $er) use ($locale) {
                                 $qb = $er->createQueryBuilder('p');
-
                                 $qb->where('p.locale = :locale')
                                     ->orderBy('p.path', 'asc')
                                     ->setParameter(':locale', $locale);
@@ -224,16 +223,15 @@ abstract class MenuItemAdmin extends BaseAdmin
                 ->end();
 
 
-            $transformer = new MenuItemToNumberTransformer($this->getModelManager(), $this->getClass());
+            $transformer = new ModelToIdTransformer($this->getModelManager(), $this->getClass());
 
             $menuField = $formMapper->getFormBuilder()->create(
                 'menu',
                 HiddenType::class,
                 ['data' => $root, 'data_class' => null]
-            );
-            $menuField->addModelTransformer($transformer);
+            )->addModelTransformer($transformer);
             $formMapper
-                ->add($menuField, 'hidden');
+                ->add($menuField, HiddenType::class);
         }
     }
 

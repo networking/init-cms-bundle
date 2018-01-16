@@ -378,15 +378,17 @@ file that was distributed with this source code.
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
     {% endif %}
     {{ parent() }}
-    {% if select2 is defined and select2 %}
+    {% if taggable is defined and taggable or select2 is defined and select2 %}
+    {% jsblock 'addToBottom' %}
     <script type="text/javascript">
-            jQuery(document).ready(function () {
-                jQuery("#{{ id }}").select2({
-                    placeholder: "{{ 'Select'|trans() }}",
-                    allowClear: {{ multiple }}
-                });
+        jQuery(document).ready(function () {
+            jQuery("#{{ id }}").select2({
+                placeholder: "{{ 'Select'|trans() }}",
+                allowClear: {{ multiple|default('false') }}
             });
-        </script>
+        });
+    </script>
+    {% jsblock 'addToBottomEnd' %}
     {% endif %}
 {% endblock choice_widget %}
 
@@ -708,21 +710,6 @@ file that was distributed with this source code.
         {% endif %}
     {% endspaceless %}
 {% endblock datetime_widget %}
-
-{% block networking_type_autocomplete_widget %}
-    {{ form_widget(form) }}
-    {% if sonata_admin is defined and sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.admin.translationDomain %}
-    {% endif %}
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-            jQuery("#{{ id }}").select2({
-                placeholder: "{{ 'Select'|trans() }}",
-                allowClear: true
-            });
-        });
-    </script>
-{% endblock %}
 
 {% block networking_type_mediaprint_widget %}
     {% media get_media_by_id(value), 'admin' %}

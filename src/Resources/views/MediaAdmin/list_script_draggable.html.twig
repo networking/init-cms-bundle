@@ -1,7 +1,7 @@
 {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
 
-<script src="{{ asset('bundles/networkinginitcms/ios-html5-drag-drop-shim/release/index.min.js') }}"></script>
-<script src="{{ asset('bundles/networkinginitcms/ios-html5-drag-drop-shim/release/scroll-behaviour.min.js') }}"></script>
+<script src="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/index.min.js') }}"></script>
+<script src="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/scroll-behaviour.min.js') }}"></script>
 <script>
 
     MobileDragDrop.polyfill({
@@ -16,12 +16,12 @@
 
     function dropTag(ev, id) {
         ev.preventDefault();
-        var media = ev.dataTransfer.getData('text/plain');
+        var media = ev.dataTransfer.getData('Text');
         $.post(
             "{{ admin.generateUrl('batch', {'filter':  admin.filterParameters}) }}",
             {action: "add_tags", tags: id, idx: [media], _sonata_csrf_token :"{{ csrf_token }}"},
             function(xhr){
-                if (xhr.result == 'ok') {
+                if (xhr.result === 'ok') {
                     createInitCmsMessageBox(xhr.status, xhr.message);
                     $('#item_list').load(
                         "{{ admin.generateUrl('refresh_list')|raw }}",

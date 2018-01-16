@@ -93,10 +93,10 @@ class Media extends BaseMedia
     }
 
     /**
-     * @param  \Doctrine\Common\Collections\ArrayCollection $tags
+     * @param ArrayCollection|null $tags
      * @return $this
      */
-    public function setTags(ArrayCollection $tags)
+    public function setTags(ArrayCollection $tags = null)
     {
         $this->tags = $tags;
 

@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Form\Extension;
 
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,7 +22,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @package Application\Networking\InitCmsBundle\Form\Extension
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class TagExtension extends AbstractTypeExtension {
+class ModelTypeExtension extends AbstractTypeExtension {
 
 
     /**
@@ -34,13 +35,25 @@ class TagExtension extends AbstractTypeExtension {
         }
     }
 
+
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+
+        if($options['transformer']){
+            $builder->addViewTransformer($options['transformer'], true) ;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefined('taggable');
+        $resolver->setDefaults(['taggable' => false, 'transformer' => false]);
+        $resolver->setDefined(['taggable', 'transformer']);
     }
+
 
     /**
      * Returns the name of the type being extended.

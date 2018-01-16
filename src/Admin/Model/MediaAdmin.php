@@ -10,6 +10,9 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Networking\InitCmsBundle\Filter\SimpleStringFilter;
+use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
+use Networking\InitCmsBundle\Form\Type\MediaPreviewType;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -17,7 +20,6 @@ use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Provider\FileProvider;
-use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
@@ -45,9 +47,19 @@ abstract class MediaAdmin extends Admin
     protected $languages;
 
     /**
+     * @var int
+     */
+    protected $maxPerPage = 1000000;
+
+    /**
      * @var array
      */
     protected $localisedMediaProviders = ['sonata.media.provider.file'];
+
+    /**
+     * @var bool
+     */
+    protected $hasMultipleMediaTags;
 
     /**
      * Default values to the datagrid.
@@ -56,7 +68,6 @@ abstract class MediaAdmin extends Admin
      */
     protected $datagridValues = [
         '_page'       => 1,
-        '_per_page'   => 50,
         '_sort_order' => 'DESC',
         '_sort_by' => 'createdAt'
     ];
@@ -98,6 +109,17 @@ abstract class MediaAdmin extends Admin
     public function getIcon()
     {
         return 'fa-picture-o';
+    }
+
+    /**
+     * @param $hasMultipleMediaTags
+     * @return $this
+     */
+    public function setMultipleMediaTags($hasMultipleMediaTags)
+    {
+        $this->hasMultipleMediaTags = $hasMultipleMediaTags;
+
+        return $this;
     }
 
     /**
@@ -243,12 +265,12 @@ abstract class MediaAdmin extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '', $provider = '')
     {
         $datagridMapper
-            ->add('name', 'networking_init_cms_simple_string')
-            ->add('authorName', null, ['hidden' => true])
-            ->add('context', 'networking_init_cms_simple_string', [
+            ->add('name', SimpleStringFilter::class)
+            ->add('authorName', SimpleStringFilter::class, ['hidden' => true])
+            ->add('context', SimpleStringFilter::class, [
                 'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false
             ])
-            ->add('providerName', 'networking_init_cms_simple_string', [
+            ->add('providerName', SimpleStringFilter::class, [
                 'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false
             ])
         ;
@@ -286,10 +308,6 @@ abstract class MediaAdmin extends Admin
      */
     public function getExportFormats()
     {
-        if ($this->request->get('pcode') == '') {
-            return parent::getExportFormats();
-        }
-
         return [];
     }
 
@@ -372,19 +390,24 @@ abstract class MediaAdmin extends Admin
             );
         }
 
+        $transformer = new TagTransformer($this->hasMultipleMediaTags);
+
         $formMapper->add(
             'tags',
             ModelType::class,
             [
                 'required' => false,
                 'expanded' => false,
-                'multiple' => true,
+                'multiple' => $this->hasMultipleMediaTags,
+                'select2' => true,
                 'property' => 'adminTitle',
                 'help_label' => 'help.media_tag',
-                'taggable' => true,
+                'taggable' => $this->hasMultipleMediaTags,
                 'choices_as_values' => true,
-                'attr' => ['style' => "width:220px"]
+                'attr' => ['style' => "width:220px"],
+                'transformer' => $transformer
             ]
+
         );
 
         //remove and re-add fields to control field order
@@ -415,8 +438,9 @@ abstract class MediaAdmin extends Admin
     protected function addPreviewToEditForm(FormMapper $formMapper)
     {
         if ($formMapper->get('binaryContent')) {
-            /** @var \Symfony\Component\Form\FormBuilder $formBuilder */
+            /** @var \Symfony\Component\Form\FormBuilder $field */
             $field = $formMapper->get('binaryContent');
+
             $options = $field->getOptions();
             //remove and re-add field at the end to control field order
             $formMapper->remove('binaryContent');
@@ -436,13 +460,14 @@ abstract class MediaAdmin extends Admin
 
                 $formMapper->add(
                     'self',
-                    'networking_type_media_preview',
+                    MediaPreviewType::class,
                     ['required' => false, 'label' => $previewImageLabel, 'provider' => $providerName]
                 );
             }
 
             $options['label'] = $label;
-            $formMapper->add('binaryContent', $field->getType()->getName(), $options);
+            $type = $field->getType()->getInnerType();
+            $formMapper->add('binaryContent', get_class($type), $options);
         }
     }
 
@@ -474,7 +499,7 @@ abstract class MediaAdmin extends Admin
                 'name',
                 'string',
                 [
-                    'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_custom.html.twig',
+                    'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_name.html.twig',
                 ]
             )
             ->add('createdAt', 'string', ['label' => 'label.created_at'])

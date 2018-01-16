@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Command;
 
+use Networking\InitCmsBundle\Helper\PageHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -168,8 +169,7 @@ class DataSetupCommand extends ContainerAwareCommand
                 /** @var \Networking\InitCmsBundle\Model\PageInterface $selectedModel */
                 $selectedModel->setStatus(\Networking\InitCmsBundle\Model\PageInterface::STATUS_PUBLISHED);
                 $modelManager->save($selectedModel);
-                /** @var $pageHelper \Networking\InitCmsBundle\Helper\PageHelper */
-                $pageHelper = $this->getContainer()->get('networking_init_cms.helper.page_helper');
+                $pageHelper = $this->getContainer()->get(PageHelper::class);
                 $pageHelper->makePageSnapshot($selectedModel);
             }
             return 0;

@@ -14,25 +14,26 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 
 /**
  * Class PageToNumberTransformer
  * @package Networking\InitCmsBundle\Form\DataTransformer
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class PageToNumberTransformer implements DataTransformerInterface
+class PageToIdTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager
      */
-    private $om;
+    private $pageManager;
 
     /**
-     * @param \Networking\InitCmsBundle\Model\PageManagerInterface $om
+     * @param PageManagerInterface $om
      */
-    public function __construct(\Networking\InitCmsBundle\Model\PageManagerInterface $om)
+    public function __construct(PageManagerInterface $om)
     {
-        $this->om = $om;
+        $this->pageManager = $om;
     }
 
     /**
@@ -63,7 +64,7 @@ class PageToNumberTransformer implements DataTransformerInterface
             return null;
         }
 
-        $page = $this->om->findById($id);
+        $page = $this->pageManager->findById($id);
 
         if (null === $page) {
             throw new TransformationFailedException(sprintf(

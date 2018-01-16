@@ -36,13 +36,18 @@ class CRUDController extends SonataCRUDController
      */
     protected $dispatcher;
 
+    public function __construct(CmsEventDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
     /**
      * Set up the lasted edited dispatcher
      */
     public function configure()
     {
         parent::configure();
-        $this->dispatcher = $this->get('networking_init_cms.event_dispatcher');
+
 
         /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
         $session = $this->get('session');

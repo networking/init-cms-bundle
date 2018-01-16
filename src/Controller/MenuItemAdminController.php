@@ -45,7 +45,7 @@ class MenuItemAdminController extends CRUDController
         }
 
         /** @var Request $request */
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
 
         if ($request->get('page_id')) {
             $pageId = $request->get('page_id');
@@ -243,7 +243,7 @@ class MenuItemAdminController extends CRUDController
     public function createAction()
     {
         /** @var Request $request */
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
 
         if ($request->get('subclass') && $request->get('subclass') == 'menu') {
             if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
@@ -267,7 +267,7 @@ class MenuItemAdminController extends CRUDController
     public function editAction($id = null)
     {
         /** @var Request $request */
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
 
         if ($request->get('subclass') && $request->get('subclass') == 'menu') {
             if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
@@ -284,10 +284,10 @@ class MenuItemAdminController extends CRUDController
     public function deleteAction($id)
     {
         /** @var Request $request */
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
 
 
-        $id = $this->get('request')->get($this->admin->getIdParameter());
+        $id = $request->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
         if (!$object) {
@@ -411,7 +411,7 @@ class MenuItemAdminController extends CRUDController
     public function updateNodes()
     {
         /** @var Request $request */
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $request = $this->getRequest();
         $nodes = $request->get('nodes') ? $request->get('nodes') : [];
 
         try {
@@ -454,7 +454,7 @@ class MenuItemAdminController extends CRUDController
         if (!array_key_exists('message', $data)) {
 
             /** @var Request $request */
-            $request = $this->container->get('request_stack')->getCurrentRequest();
+            $request = $this->getRequest();
 
             //getFlashBag()->get('notice'
             if ($message = $this->get('session')->getFlashBag()->get('sonata_flash_success')) {

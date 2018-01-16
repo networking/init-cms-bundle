@@ -18,7 +18,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Form\FormMapper;
-use Networking\InitCmsBundle\Form\DataTransformer\PageToNumberTransformer;
+use Networking\InitCmsBundle\Form\DataTransformer\PageToIdTransformer;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Model\ContentInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -69,7 +69,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         $formMapper->getFormBuilder()->addEventSubscriber($listener);
 
         $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
-        $transformer = new PageToNumberTransformer($pageManager);
+        $transformer = new PageToIdTransformer($pageManager);
 
 
         $formMapper

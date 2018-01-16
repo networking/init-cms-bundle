@@ -27,6 +27,11 @@ interface ContentRouteManagerInterface extends RouteProviderInterface
      */
     public function setClassName($className = null);
 
+    /**
+     * @return string
+     */
+    public function getClassName();
+
 
     /**
      * @param ContentRouteInterface $contentRoute

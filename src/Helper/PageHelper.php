@@ -10,10 +10,16 @@
 
 namespace Networking\InitCmsBundle\Helper;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use JMS\Serializer\SerializerInterface;
+use Networking\InitCmsBundle\Component\Routing\DynamicRouter;
+use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Model\ContentRouteManagerInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
+use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use Sonata\AdminBundle\Exception\NoValueException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,9 +31,75 @@ use Symfony\Component\HttpFoundation\Request;
 class PageHelper
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var SerializerInterface
      */
-    protected $container;
+    protected $serializer;
+
+    /**
+     * @var Registry
+     */
+    protected $registry;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager|object
+     */
+    protected $objectManager;
+
+    /**
+     * @var PageManagerInterface
+     */
+    protected $pageManager;
+
+    /**
+     * @var PageSnapshotManagerInterface
+     */
+    protected $pageSnapshotManager;
+
+    /**
+     * @var ContentRouteManagerInterface
+     */
+    protected $contentRouteManager;
+
+    /**
+     * @var DynamicRouter
+     */
+    protected $router;
+
+    /**
+     * @var PhpCacheInterface
+     */
+    protected $phpCache;
+
+    /**
+     * PageHelper constructor.
+     * @param SerializerInterface $serializer
+     * @param Registry $registry
+     * @param PageManagerInterface $pageManager
+     * @param PageSnapshotManagerInterface $pageSnapshotManager
+     * @param ContentRouteManagerInterface $contentRouteManager
+     * @param DynamicRouter $router
+     * @param PhpCacheInterface $phpCache
+     */
+    public function __construct(
+        SerializerInterface $serializer,
+        Registry $registry,
+        PageManagerInterface $pageManager,
+        PageSnapshotManagerInterface $pageSnapshotManager,
+        ContentRouteManagerInterface $contentRouteManager,
+        DynamicRouter $router,
+        PhpCacheInterface $phpCache
+    )
+    {
+        $this->serializer = $serializer;
+        $this->registry = $registry;
+        $this->objectManager = $registry->getManager();
+        $this->pageManager = $pageManager;
+        $this->pageSnapshotManager = $pageSnapshotManager;
+        $this->contentRouteManager = $contentRouteManager;
+        $this->router = $router;
+        $this->phpCache = $phpCache;
+    }
+
 
     /**
      * @param $path
@@ -143,75 +215,32 @@ class PageHelper
     }
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * @param $id
-     * @return object
-     */
-    public function getService($id)
-    {
-        return $this->container->get($id);
-    }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function getParameter($id)
-    {
-        return $this->container->getParameter($id);
-    }
-
-    /**
      * Create a snapshot of a given page.
      *
      * @param PageInterface $page
      */
     public function makePageSnapshot(PageInterface $page)
     {
-        /** @var \JMS\Serializer\SerializerInterface $serializer */
-        $serializer = $this->getService('jms_serializer');
-
-
-        if ($this->getParameter('networking_init_cms.db_driver') == 'orm') {
-            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
-            $em = $this->getService('doctrine')->getManager();
-        } else {
-            /** @var \Doctrine\Common\Persistence\ObjectManager $manager */
-            $em = $this->getService('doctrine_mongodb')->getManager();
-        }
-
-        foreach ($page->getLayoutBlock() as $layoutBlock) {
-
-            /** @var \Networking\InitCmsBundle\Model\layoutBlockInterface $layoutBlock */
-            $layoutBlockContent = $em->getRepository($layoutBlock->getClassType())->find(
+        foreach ($page->getLayoutBlock() as $layoutBlock)
+        {
+            $layoutBlockContent = $this->registry->getManagerForClass($layoutBlock->getClassType())->getRepository($layoutBlock->getClassType())->find(
                 $layoutBlock->getObjectId()
             );
-            $layoutBlock->takeSnapshot($serializer->serialize($layoutBlockContent, 'json'));
+            $layoutBlock->takeSnapshot($this->serializer->serialize($layoutBlockContent, 'json'));
         }
-        /**  @var  \Networking\InitCmsBundle\Model\PageSnapshotManagerInterface $pageSnapshotManager */
-        $pageSnapshotManager = $this->getService('networking_init_cms.page_snapshot_manager');
-        $pageSnapshotClass = $pageSnapshotManager->getClassName();
+
+        $pageSnapshotClass = $this->pageSnapshotManager->getClassName();
 
         /** @var  \Networking\InitCmsBundle\Model\PageSnapshotInterface $pageSnapshot */
         $pageSnapshot = new $pageSnapshotClass($page);
-        $pageSnapshot->setVersionedData($serializer->serialize($page, 'json'))
+        $pageSnapshot->setVersionedData($this->serializer->serialize($page, 'json'))
             ->setPage($page);
 
         if ($oldPageSnapshot = $page->getSnapshot()) {
             $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
         } else {
 
-
-            $contentRouteManager = $this->getService('networking_init_cms.content_route_manager');
-            $contentRouteClass = $contentRouteManager->getClass();
-
+            $contentRouteClass = $this->contentRouteManager->getClassName();
             /** @var  \Networking\InitCmsBundle\Model\ContentRouteInterface $snapshotContentRoute */
             $snapshotContentRoute = new $contentRouteClass();
         }
@@ -219,24 +248,21 @@ class PageHelper
         $pageSnapshot->setContentRoute($snapshotContentRoute);
         $pageSnapshot->setPath(self::getPageRoutePath($page->getPath()));
 
-
-
-        $em->persist($pageSnapshot);
-        $em->flush();
+        $om = $this->registry->getManagerForClass($pageSnapshotClass);
+        $om->persist($pageSnapshot);
+        $om->flush();
 
         $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
         $snapshotContentRoute->setObjectId($pageSnapshot->getId());
 
 
-        if($oldPageSnapshot && ($oldPageSnapshot->getPath() != self::getPageRoutePath($page->getPath()))){
-            /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
-            $phpCache = $this->getService('networking_init_cms.lib.php_cache');
-            $phpCache->clean();
+        if ($oldPageSnapshot && ($oldPageSnapshot->getPath() != self::getPageRoutePath($page->getPath()))) {
+            $this->phpCache->clean();
         }
 
-
-        $em->persist($snapshotContentRoute);
-        $em->flush();
+        $om = $this->registry->getManagerForClass(get_class($snapshotContentRoute));
+        $om->persist($snapshotContentRoute);
+        $om->flush();
     }
 
     /**
@@ -248,12 +274,10 @@ class PageHelper
      */
     public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $unserializeTranslations = true)
     {
-        /** @var \JMS\Serializer\SerializerInterface $serializer */
-        $serializer = $this->getService('jms_serializer');
         $context = new PageSnapshotDeserializationContext();
         $context->setDeserializeTranslations($unserializeTranslations);
 
-        return $serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json', $context);
+        return $this->serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json', $context);
     }
 
     /**
@@ -265,19 +289,8 @@ class PageHelper
      */
     public function makeTranslationCopy(PageInterface $page, $locale)
     {
-        if ($this->getParameter('networking_init_cms.db_driver') == 'orm') {
-            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
-            $em = $this->getService('doctrine')->getManager();
-        } else {
-            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
-            $em = $this->getService('doctrine_mongodb')->getManager();
-        }
 
-        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
-        $pageManger = $this->getService('networking_init_cms.page_manager');
-
-
-        $pageClass = $pageManger->getClassName();
+        $pageClass = $this->pageManager->getClassName();
         /** @var PageInterface $pageCopy */
         $pageCopy = new $pageClass;
 
@@ -299,21 +312,23 @@ class PageHelper
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
 
-            $content = $em->getRepository($newLayoutBlock->getClassType())->find(
+            $om = $this->registry->getManagerForClass($newLayoutBlock->getClassType());
+
+            $content = $om->getRepository($newLayoutBlock->getClassType())->find(
                 $newLayoutBlock->getObjectId()
             );
             $newContent = clone $content;
 
-            $em->persist($newContent);
-            $em->flush();
+            $om->persist($newContent);
+            $om->flush();
 
             $newLayoutBlock->setObjectId($newContent->getId());
             $newLayoutBlock->setPage($pageCopy);
-            $em->persist($newLayoutBlock);
+
+            $om->persist($newLayoutBlock);
         }
 
-        $em->persist($pageCopy);
-        $em->flush();
+        $this->pageManager->save($pageCopy);
 
         return $pageCopy;
 
@@ -327,18 +342,9 @@ class PageHelper
      */
     public function makePageCopy(PageInterface $page)
     {
-        if ($this->getParameter('networking_init_cms.db_driver') == 'orm') {
-            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
-            $em = $this->getService('doctrine')->getManager();
-        } else {
-            /** @var \Doctrine\Common\Persistence\ObjectManager $em */
-            $em = $this->getService('doctrine_mongodb')->getManager();
-        }
 
-        /** @var \Networking\InitCmsBundle\Model\PageManagerInterface $pageManger */
-        $pageManger = $this->getService('networking_init_cms.page_manager');
 
-        $pageClass = $pageManger->getClassName();
+        $pageClass = $this->pageManager->getClassName();
         /** @var PageInterface $pageCopy */
         $pageCopy = new $pageClass;
 
@@ -346,15 +352,16 @@ class PageHelper
 
         $postfix = sprintf(' copy %s', $now->format('d.m.Y H:i:s'));
 
-        $pageCopy->setPageName($page->getPageName().$postfix);
+        $pageCopy->setPageName($page->getPageName() . $postfix);
         $pageCopy->setMetaTitle($page->getMetaTitle());
-        $pageCopy->setUrl($page->getUrl().$postfix);
+        $pageCopy->setUrl($page->getUrl() . $postfix);
         $pageCopy->setMetaKeyword($page->getMetaKeyword());
         $pageCopy->setMetaDescription($page->getMetaDescription());
         $pageCopy->setActiveFrom($page->getActiveFrom());
         $pageCopy->setIsHome(false);
         $pageCopy->setTemplateName($page->getTemplateName());
         $pageCopy->setLocale($page->getLocale());
+
         $layoutBlocks = $page->getLayoutBlock();
 
         foreach ($layoutBlocks as $layoutBlock) {
@@ -362,21 +369,23 @@ class PageHelper
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
 
-            $content = $em->getRepository($newLayoutBlock->getClassType())->find(
+            $om = $this->registry->getManagerForClass($newLayoutBlock->getClassType());
+
+            $content = $om->getRepository($newLayoutBlock->getClassType())->find(
                 $newLayoutBlock->getObjectId()
             );
             $newContent = clone $content;
 
-            $em->persist($newContent);
-            $em->flush();
+            $om->persist($newContent);
+            $om->flush();
 
             $newLayoutBlock->setObjectId($newContent->getId());
             $newLayoutBlock->setPage($pageCopy);
-            $em->persist($newLayoutBlock);
+
+            $om->persist($newLayoutBlock);
         }
 
-        $em->persist($pageCopy);
-        $em->flush();
+        $this->pageManager->save($pageCopy);
 
         return $pageCopy;
 
@@ -390,9 +399,8 @@ class PageHelper
      */
     public function matchContentRouteRequest(Request $request)
     {
-        /** @var \Symfony\Cmf\Component\Routing\DynamicRouter $dynamicRouter */
-        $dynamicRouter = $this->container->get('networking_init_cms.cms_router');
-        $requestParams = $dynamicRouter->matchRequest($request);
+
+        $requestParams = $this->router->matchRequest($request);
 
         if (is_array($requestParams) && !empty($requestParams)) {
             $request->attributes->add($requestParams);

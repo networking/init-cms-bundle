@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Form\ChoiceList\DoctrineChoiceLoader;
 use Doctrine\ORM\Query\Parameter;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\IdReader;
 use Doctrine\ORM\QueryBuilder;
-use Networking\InitCmsBundle\Form\ORMQueryBuilderLoader;
+use Networking\InitCmsBundle\Form\ChoiceList\ORMQueryBuilderLoader;
 use Symfony\Bridge\Doctrine\Form\Type\DoctrineType;
 use Symfony\Component\Form\ChoiceList\Factory\CachingFactoryDecorator;
 use Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface;
@@ -67,6 +67,8 @@ class AutocompleteType extends DoctrineType
                 $propertyAccessor
             )
         );
+
+        parent::__construct($registry);
     }
 
     /**

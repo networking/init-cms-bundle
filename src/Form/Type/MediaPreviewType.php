@@ -34,7 +34,6 @@ class MediaPreviewType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $media = $form->getData();
-
         if(!$media instanceof MediaInterface){
             throw new InvalidArgumentException('This field can only be used with objects that are instances of Sonata\MediaBundle\Model\MediaInterface');
         }
@@ -65,7 +64,7 @@ class MediaPreviewType extends AbstractType
         $resolver->setRequired(['provider']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'networking_type_media_preview';
     }

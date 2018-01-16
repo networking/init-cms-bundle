@@ -1,5 +1,5 @@
 <?php
-namespace Networking\InitCmsBundle\Form;
+namespace Networking\InitCmsBundle\Form\ChoiceList;
 
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;

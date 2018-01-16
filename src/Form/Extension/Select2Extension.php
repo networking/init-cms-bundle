@@ -23,7 +23,7 @@ class Select2Extension extends AbstractTypeExtension {
      */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
-        if (true === $options['multiple'] && false === $options['expanded'] && isset($options['select2'])) {
+        if (false === $options['expanded'] && isset($options['select2'])) {
             $view->vars['select2'] = $options['select2'];
         }
     }

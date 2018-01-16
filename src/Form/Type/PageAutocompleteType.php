@@ -9,9 +9,11 @@
  */
 namespace Networking\InitCmsBundle\Form\Type;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -31,23 +33,21 @@ class PageAutocompleteType extends EntityType
     protected $pageId = null;
 
     /**
-     * @param ContainerInterface $container
+     * @var RequestStack
      */
-    public function setContainer(ContainerInterface $container)
+    protected $requestStack;
+
+    /**
+     * PageAutocompleteType constructor.
+     * @param ManagerRegistry $registry
+     * @param RequestStack $requestStack
+     */
+    public function __construct(ManagerRegistry $registry, RequestStack $requestStack)
     {
+        $this->requestStack = $requestStack;
 
-        $request = $container->get('request');
-
-        if ($locale = $request->get('page_locale')) {
-            $this->locale = $locale;
-            return;
-        }
-
-        if (!$this->locale) {
-            $this->pageId = $request->get('objectId');
-        }
+        parent::__construct($registry);
     }
-
 
     /**
      * @param OptionsResolver $resolver
@@ -55,6 +55,15 @@ class PageAutocompleteType extends EntityType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
+
+        if ($locale = $this->requestStack->getCurrentRequest()->get('page_locale')) {
+            $this->locale = $locale;
+            return;
+        }
+
+        if (!$this->locale) {
+            $this->pageId = $this->requestStack->getCurrentRequest()->get('objectId');
+        }
 
         if ($this->pageId) {
             $queryBuilder = $this->getClosureByPageId($this->pageId);
@@ -108,13 +117,13 @@ class PageAutocompleteType extends EntityType
      */
     public function getParent()
     {
-        return 'networking_type_autocomplete';
+        return AutocompleteType::class;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'networking_type_page_autocomplete';
     }

@@ -9,23 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\EventListener;
+namespace Networking\InitCmsBundle\EventSubscriber;
 
-use FOS\UserBundle\Model\UserInterface;
-use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
- * AdminToolbarListener injects the Admin Toolbar.
+ * AdminToolbarSubscriber injects the Admin Toolbar.
  *
  * The onKernelResponse method must be connected to the kernel.response event.
  *
@@ -34,7 +30,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class AdminToolbarListener implements EventSubscriberInterface
+class AdminToolbarSubscriber implements EventSubscriberInterface
 {
     const DISABLED = 1;
     const ENABLED  = 2;
@@ -73,6 +69,12 @@ class AdminToolbarListener implements EventSubscriberInterface
         return self::DISABLED !== $this->mode;
     }
 
+    /**
+     * @param FilterResponseEvent $event
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
@@ -93,10 +95,13 @@ class AdminToolbarListener implements EventSubscriberInterface
         }
 
         try{
-            $isGranted = $this->authorizationChecker->isGranted('ROLE_ADMIN');
+            if(!$this->authorizationChecker->isGranted('ROLE_ADMIN')){
+                return;
+            };
         }catch (AuthenticationCredentialsNotFoundException $e){
-            $isGranted = false;
+            return;
         }
+
 
         if (self::DISABLED === $this->mode
             || $response->isRedirection()
@@ -114,6 +119,9 @@ class AdminToolbarListener implements EventSubscriberInterface
      *
      * @param Response $response
      * @param Request $request
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     protected function injectToolbar(Response $response, Request $request)
     {
