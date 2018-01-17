@@ -109,10 +109,19 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      */
     public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT )
     {
-        $qb = $this->createQueryBuilder('p')
-            ->select('p','ps')
+
+        $qb = $this->createQueryBuilder('p');
+        $qb2 = $this->getEntityManager()->getRepository(PageSnapshot::class)->createQueryBuilder('pp');
+        $qb->select('p','ps')
             ->leftJoin('p.snapshots', 'ps')
-            ->orderBy('p.' . $sort, $order);
+            ->where($qb->expr()->eq(
+                'ps.id',
+                '('.$qb2->select('MAX(pp.id)')
+                    ->where('p.id = pp.page')
+                    ->getDQL().')'
+            ))
+            ->orWhere('ps.id IS NULL')
+            ->orderBy('p.' . $sort,  $order);
 
         return $qb->getQuery()->execute([], $hydrationMode);
     }
