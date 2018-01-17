@@ -263,7 +263,8 @@ class AutocompleteType extends DoctrineType
             'choice_value' => $choiceValue,
             'id_reader' => null, // internal
             'choice_translation_domain' => false,
-            'query_hints' => []
+            'query_hints' => [],
+            'select2' => true
         ]);
 
         $resolver->setRequired(['class']);
