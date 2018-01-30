@@ -276,7 +276,7 @@ abstract class Page implements PageInterface
         $this->oldTitle = $this->pageName;
         $this->pageName = $title;
 
-        if($this->pageName){
+        if($this->pageName && $this->getContentRoute()){
             $this->getContentRoute()->setName($this->pageName);
         }
 
@@ -1449,4 +1449,5 @@ abstract class Page implements PageInterface
 
         return self::STATUS_DRAFT;
     }
+
 }

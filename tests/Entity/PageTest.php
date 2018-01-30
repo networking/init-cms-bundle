@@ -9,6 +9,8 @@
  */
 namespace Networking\InitCmsBundle\Tests\Entity;
 
+use Networking\InitCmsBundle\Model\Page;
+use Networking\InitCmsBundle\Model\PageInterface;
 use PHPUnit\Framework\TestCase;
 
 class PageTest extends TestCase
@@ -60,7 +62,7 @@ class PageTest extends TestCase
 		$parent3->setPageName('parent3');
 		$parents = [$parent1, $parent2, $parent3];
 		$obj->setParents($parents);
-		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Model\PageInterface', $obj->getParents());
+		$this->assertContainsOnlyInstancesOf(PageInterface::class, $obj->getParents());
 		$this->assertEquals('parent1', $obj->getParent(0)->getTitle());
 		$this->assertEquals('parent2', $obj->getParent(1)->getTitle());
 		$this->assertEquals('parent3', $obj->getParent(2)->getTitle());
@@ -76,7 +78,7 @@ class PageTest extends TestCase
 		$child1 = $this->getPage();
 		$child1->setPageName('child1');
 		$obj->addChildren($child1);
-		$this->assertContainsOnlyInstancesOf('Networking\InitCmsBundle\Model\PageInterface', $obj->getChildren());
+		$this->assertContainsOnlyInstancesOf(PageInterface::class, $obj->getChildren());
 		$children = $obj->getChildren();
 		$this->assertEquals('child1', $children[0]->getTitle());
 		$this->assertEquals('original page', $children[0]->getParent()->getTitle());
@@ -94,6 +96,7 @@ class PageTest extends TestCase
      */
     public function getPage()
     {
-        return $this->getMockForAbstractClass('Networking\InitCmsBundle\Model\Page');
+        return $this->getMockForAbstractClass(Page::class);
+
     }
 }
