@@ -36,6 +36,13 @@ class ContentRoute implements ContentRouteInterface
     protected $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    protected $name;
+
+    /**
      * @var string $classType
      *
      * @ORM\Column(name="class_type", type="string", length=255)
@@ -89,13 +96,6 @@ class ContentRoute implements ContentRouteInterface
      */
     protected $locale;
 
-    /**
-     *
-     */
-    public function __construct()
-    {
-        $this->menuItem = new ArrayCollection();
-    }
 
     /**
      * @return string
@@ -104,6 +104,26 @@ class ContentRoute implements ContentRouteInterface
     {
         return $this->path;
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
 
     /**
      * Initializes the object to function as a route

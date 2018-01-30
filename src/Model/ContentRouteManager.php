@@ -63,29 +63,11 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function getRouteByName($name, $parameters = [])
+    public function getRouteByName($name)
     {
-        $dynamicRouteName = self::ROUTE_GENERATE_DUMMY_NAME;
 
+        throw new RouteNotFoundException("No route found for name '$name'");
 
-        if ($name !== $dynamicRouteName) {
-
-            throw new RouteNotFoundException("Route name '$name' does not begin with the route name prefix '{ $dynamicRouteName }'");
-        }
-
-        $parameters['classType'] = $this->className;
-
-        /** @var $route ContentRouteInterface */
-        $route = $this->findContentRouteBy($parameters['route_params']);
-
-
-        if (!$route) {
-            throw new RouteNotFoundException("No route found for name '$name'");
-        }
-
-        $this->initializeContentRoute($route);
-
-        return $route;
     }
 
 
@@ -93,16 +75,11 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function getRoutesByNames($names, $parameters = [])
+    public function getRoutesByNames($names)
     {
 
-        $collection = new RouteCollection();
+        return  new RouteCollection();
 
-        foreach ($names as $name) {
-            $collection->add($name, $this->getRouteByName($name, $parameters));
-        }
-
-        return $collection;
     }
 
 

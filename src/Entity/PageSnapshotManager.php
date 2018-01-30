@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -28,6 +29,7 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
      */
     public function __construct(EntityManager $em, $class)
     {
+        $this->manager = $em;
         $classMetaData = $em->getClassMetadata($class);
 
         parent::__construct($em, $classMetaData);
@@ -46,7 +48,6 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
 
         return $qb->getQuery()->execute();
     }
-
 
 
 }

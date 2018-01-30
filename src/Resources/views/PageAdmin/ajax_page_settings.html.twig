@@ -37,11 +37,11 @@
         {% endspaceless %}
     </div>
     {% if form.vars.valid %}
-        <div id="pageStatusSettings">
-            {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig' %}
-        </div>
-        <div id="pageSettings">
-            {% include 'NetworkingInitCmsBundle:PageAdmin:page_settings_fields.html.twig' %}
-        </div>
+    <div id="pageStatusSettings">
+        {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig' %}
+    </div>
+    <div id="pageSettings">
+        {% include 'NetworkingInitCmsBundle:PageAdmin:page_settings_fields.html.twig' %}
+    </div>
     {% endif %}
 {% endblock page_settings %}

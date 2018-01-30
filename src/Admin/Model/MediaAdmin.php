@@ -179,10 +179,12 @@ abstract class MediaAdmin extends Admin
 
         $filterParameters = $this->getFilterParameters();
 
+
         $persistentParameters = $this->getPersistentParameters();
 
+
         $context = $persistentParameters['context'];
-        $provider = $persistentParameters['providerName'];
+        $provider = $persistentParameters['provider'];
 
 
         if ($context && array_key_exists('context', $filterParameters)) {
@@ -204,9 +206,7 @@ abstract class MediaAdmin extends Admin
             $filterParameters['providerName']['value'] = $provider;
             $filterParameters['_page'] = 1;
         }
-        else{
-            $filterParameters['providerName'] = ['value' => $persistentParameters['providerName']];
-        }
+
 
         $this->request->getSession()->set($this->getCode().'.filter.parameters', $filterParameters);
 
@@ -483,7 +483,7 @@ abstract class MediaAdmin extends Admin
         $locale = [];
 
         foreach ($this->languages as $language) {
-            $locale[$language['locale']] = $language['label'];
+            $locale[$language['label']] = $language['locale'];
         }
 
         return $locale;
@@ -558,6 +558,7 @@ abstract class MediaAdmin extends Admin
         }
 
         $filterParameters = $this->getFilterParameters();
+
         $context   = $this->getRequest()->get('context');
         $provider  = $this->getRequest()->get('provider');
 
@@ -594,7 +595,7 @@ abstract class MediaAdmin extends Admin
         }
 
         return [
-            'providerName' => $provider,
+            'provider' => $provider,
             'context'  => $context,
         ];
     }

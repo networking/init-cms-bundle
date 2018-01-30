@@ -639,6 +639,7 @@ class PageAdminController extends CRUDController
      * @param Form $form
      * @param PageInterface $page
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     protected function getAjaxEditResponse(Form $form, PageInterface $page){
         $view = $form->createView();

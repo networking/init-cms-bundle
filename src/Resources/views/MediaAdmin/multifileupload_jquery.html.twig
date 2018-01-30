@@ -31,7 +31,6 @@
         <div class="modal-body">
     {% endif %}
     <div id="actions" class="row">
-
         <div class="col-md-9">
             <!-- The global file processing state -->
             <span class="fileupload-process">
@@ -42,15 +41,6 @@
             </span>
         </div>
         <div class="col-md-3">
-            <!-- The fileinput-button span is used to style the file input field as button -->
-        {#<span class="btn btn-success fileinput-button dz-clickable">#}
-            {#<i class="glyphicon glyphicon-plus"></i>#}
-            {#<span>{{ 'upload_btn_add_files'|trans({}, admin.translationDomain) }}</span>#}
-        {#</span>#}
-            {#<button type="submit" class="btn btn-primary start">#}
-                {#<i class="glyphicon glyphicon-upload"></i>#}
-                {#<span>{{ 'upload_btn_start'|trans({}, admin.translationDomain) }}</span>#}
-            {#</button>#}
             <a href="#" class="cancel pull-right">
                 <span>{{ 'upload_btn_cancel_all'|trans({}, 'MediaAdmin') }}</span>
             </a>
@@ -87,17 +77,6 @@
                 </div>
                 </div>
                 <hr>
-                {#<div class="col-md-3">#}
-                    {#<button class="btn btn-primary start">#}
-                        {#<i class="glyphicon glyphicon-upload"></i>#}
-                        {#&#123;&#35;<span>{{ 'upload_btn_start'|trans({}, admin.translationDomain) }}</span>&#35;&#125;#}
-                    {#</button>#}
-
-                    {#<button data-dz-remove class="btn btn-warning cancel">#}
-                        {#<i class="glyphicon glyphicon-ban-circle"></i>#}
-                        {#&#123;&#35;<span>{{ 'upload_btn_cancel'|trans({}, admin.translationDomain) }}</span>&#35;&#125;#}
-                    {#</button>#}
-                {#</div>#}
             </div>
         </div>
     </div>

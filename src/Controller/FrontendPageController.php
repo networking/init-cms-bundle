@@ -69,6 +69,7 @@ class FrontendPageController extends Controller
             $template = $template->getTemplate();
         }
         $user = $this->getUser();
+
         if($phpCache->isCacheable($request, $user) && $page instanceof PageSnapshotInterface){
 
             if (!$this->isSnapshotActive($page)) {
@@ -130,20 +131,6 @@ class FrontendPageController extends Controller
 
 
     /**
-     * Render the Live version of a page
-     *
-     * @deprecated will be removed in version 3.0
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function liveAction(Request $request)
-    {
-
-        return $this->indexAction($request);
-    }
-
-    /**
      * Check if page is an alias for another page
      *
      * @param Request $request
@@ -164,6 +151,10 @@ class FrontendPageController extends Controller
         return false;
     }
 
+    /**
+     * @param Request $request
+     * @return array|bool|RedirectResponse
+     */
     public function getPageParameters(Request $request)
     {
         /** @var $page \Networking\InitCmsBundle\Model\PageInterface */
@@ -180,6 +171,11 @@ class FrontendPageController extends Controller
         return $this->getDraftParameters($request, $page);
     }
 
+    /**
+     * @param Request $request
+     * @param PageInterface $page
+     * @return array|bool|RedirectResponse
+     */
     public function getDraftParameters(Request $request, PageInterface $page)
     {
 
@@ -212,7 +208,7 @@ class FrontendPageController extends Controller
         /** @var $page PageInterface */
         $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot, false);
 
-        if (!$page->isActive()) {
+        if (!$pageSnapshot->getPage()->isActive()) {
             throw new NotFoundHttpException('page status '.$page->getStatus());
         }
 
@@ -246,8 +242,7 @@ class FrontendPageController extends Controller
      * Show the home page (start page) for given locale
      *
      * @param Request $request
-     *
-     * @return array
+     * @return Response
      */
     public function homeAction(Request $request)
     {

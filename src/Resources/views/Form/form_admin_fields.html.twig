@@ -379,7 +379,6 @@ file that was distributed with this source code.
     {% endif %}
     {{ parent() }}
     {% if taggable is defined and taggable or select2 is defined and select2 %}
-    {% jsblock 'addToBottom' %}
     <script type="text/javascript">
         jQuery(document).ready(function () {
             jQuery("#{{ id }}").select2({
@@ -388,7 +387,6 @@ file that was distributed with this source code.
             });
         });
     </script>
-    {% jsblock 'addToBottomEnd' %}
     {% endif %}
 {% endblock choice_widget %}
 
@@ -572,9 +570,8 @@ file that was distributed with this source code.
                      data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
                     <input {% if widget_form_control_class is not same as(false) %}class="{{ widget_form_control_class }}"
                            {% endif %}type="text" {% if required %} required="required"{% endif %}
-                            {{ block('widget_attributes') }}
+                            {{ block('widget_attributes') }} value="{{ value }}"
                     >
-                    <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
                     {% if widget_reset_icon is defined %}
                         <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
@@ -588,7 +585,7 @@ file that was distributed with this source code.
                             startView: 'month',
                             todayBtn: true
                         });
-                        jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                        jQuery('input[type=text]', '[data-link-field="{{ id }}"]').each(function () {
                             if (jQuery(this).val()) {
                                 jQuery(this).parent().datetimepicker('setValue');
                             }
@@ -620,9 +617,8 @@ file that was distributed with this source code.
                      data-link-field="{{ id }}" data-link-format="hh:ii">
                     <input class="form-control"
                            type="text" {% if required %} required="required"{% endif %}
-                            {{ block('widget_attributes') }}
+                            {{ block('widget_attributes') }} value="{{ value }}"
                     >
-                    <input type="hidden" value="{{ value }}" {{ block('widget_attributes') }}>
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
                     {% if widget_reset_icon is defined %}
                         <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
@@ -637,7 +633,7 @@ file that was distributed with this source code.
                             minView: 'hour',
                             startView: 'day'
                         });
-                        jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
+                        jQuery('input[type=text]', '[data-link-field="{{ id }}"]').each(function () {
                             if (jQuery(this).val()) {
 
                                 jQuery(this).parent().datetimepicker('setValue');
@@ -672,11 +668,11 @@ file that was distributed with this source code.
                 {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'th' %}
                 <div data-provider="datetimepicker" class="input-group date"  data-date="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}"
                      data-link-field="{{ id }}"
-                     data-date-format="dd.mm.yyyy hh:ii" data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
+                     data-link-format="dd.mm.yyyy hh:ii" data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
                     <input class="form-control"
-                           type="text" {% if required %} required="required"{% endif %} {{ block('widget_attributes') }}>
-                    <input type="hidden"
-                           value="{% if value %}{{ value|date('Y-m-d H:i') }}{% endif %}" {{ block('widget_attributes') }}>
+                           type="text" {% if required %} required="required"{% endif %} {{ block('widget_attributes') }}
+                           value="{% if value %}{{ value|date('d.m.Y h:i') }}{% endif %}"
+                    >
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
                     {% if widget_reset_icon is defined %}
                         <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
@@ -687,12 +683,6 @@ file that was distributed with this source code.
                         jQuery('[data-link-field="{{ id }}"]').datetimepicker({
                             autoclose: true,
                             todayBtn: true
-                        });
-                        jQuery('input[type=hidden]', '[data-link-field="{{ id }}"]').each(function () {
-                            if (jQuery(this).val()) {
-
-                                jQuery(this).parent().datetimepicker('setValue');
-                            }
                         });
                     });
                 </script>

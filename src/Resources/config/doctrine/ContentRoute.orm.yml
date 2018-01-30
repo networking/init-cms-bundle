@@ -7,6 +7,10 @@ Networking\InitCmsBundle\Entity\ContentRoute:
       generator:
         strategy: AUTO
   fields:
+    name:
+      type: string
+      length: 255
+      column: name
     classType:
       type: string
       length: 255

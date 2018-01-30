@@ -229,6 +229,7 @@ abstract class PageSnapshot implements PageSnapshotInterface{
         $contentRoute->setClassType(get_class($this));
         $contentRoute->setLocale($this->page->getLocale());
         $contentRoute->setTemplateName($this->page->getTemplateName());
+        $contentRoute->setName($this->page->getPageName());
         $this->contentRoute = $contentRoute;
 
         return $this;

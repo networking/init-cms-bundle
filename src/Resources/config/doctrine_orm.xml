@@ -61,9 +61,6 @@
                  class="Networking\InitCmsBundle\Entity\ContentRouteManager">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument>Networking\InitCmsBundle\Entity\ContentRoute</argument>
-            <call method="setClassName">
-                <argument>%networking_init_cms.admin.page.class%</argument>
-            </call>
         </service>
 
         <!-- Event Listeners -->

@@ -404,6 +404,7 @@ class MenuBuilder
             if (!is_null($knpMenuNode)) {
                 $menu->addChild($knpMenuNode);
                 $knpMenuNode->setAttribute('class', $node->getLinkClass());
+                $knpMenuNode->setExtra('translation_domain', false);
                 if ($node->getVisibility() != MenuItem::VISIBILITY_PUBLIC && !$this->isLoggedIn) {
                     $knpMenuNode->setDisplay(false);
                 }

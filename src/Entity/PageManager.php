@@ -110,6 +110,18 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT )
     {
 
+        $query = $this->getAllSortByQuery($sort, $order);
+
+        return $query->execute([], $hydrationMode);
+    }
+
+    /**
+     * @param $sort
+     * @param string $order
+     * @return Query
+     */
+    public function getAllSortByQuery($sort, $order = 'DESC')
+    {
         $qb = $this->createQueryBuilder('p');
         $qb2 = $this->getEntityManager()->getRepository(PageSnapshot::class)->createQueryBuilder('pp');
         $qb->select('p','ps')
@@ -123,7 +135,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             ->orWhere('ps.id IS NULL')
             ->orderBy('p.' . $sort,  $order);
 
-        return $qb->getQuery()->execute([], $hydrationMode);
+        return $qb->getQuery();
     }
 
     /**

@@ -37,7 +37,7 @@ file that was distributed with this source code.
             success:function (xhr) {
                 btn.button('reset');
                 var pageStatus = jQuery('.page_status');
-                if (xhr.pageStatus != "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
+                if (xhr.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
                     pageStatus.addClass('color-draft');
                 } else {
                     pageStatus.removeClass('color-draft');
@@ -45,14 +45,15 @@ file that was distributed with this source code.
                 var elements = $($.parseHTML(xhr.pageSettings));
                 var pageSettings = $(elements).filter('#pageSettings').html();
                 var pageStatusHtml = $(elements).filter('#pageStatusSettings').html();
-
+                var pageSettingsFieldsModal = $(elements).filter('#pageSettingsFieldsModal').html();
 
                 pageStatus.html(xhr.pageStatus);
                 $('.page_title').html(xhr.title);
                 $('#pageSettings').html($.parseHTML(pageSettings));
                 $('#pageStatusSettings').html($.parseHTML(pageStatusHtml));
-                $('#pageSettingsFieldsModal').load("{{ admin.generateObjectUrl('pageSettings', object, { 'uniqid': admin.getUniqid }) }}");
+                $('#pageSettingsFieldsModal').html($.parseHTML(pageSettingsFieldsModal));
                 $('#pageSettingFields').modal('hide');
+
 
                 submitLayoutUpdate(form, {});
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);

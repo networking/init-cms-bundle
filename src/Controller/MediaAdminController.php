@@ -77,7 +77,7 @@ class MediaAdminController extends SonataMediaAdminController
         $parameters = $this->admin->getPersistentParameters();
 
 
-        if (!array_key_exists('providerName', $parameters) || !$parameters['providerName']) {
+        if (!array_key_exists('provider', $parameters) || !$parameters['provider']) {
             return $this->render(
                 'NetworkingInitCmsBundle:MediaAdmin:select_provider.html.twig',
                 [

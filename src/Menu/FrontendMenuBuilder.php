@@ -167,6 +167,7 @@ class FrontendMenuBuilder extends MenuBuilder
             if ($language['locale'] == $currentLanguage) {
                 $node->setCurrent(true);
             }
+            $node->setExtra('translation_domain', false);
         }
     }
 
@@ -194,6 +195,7 @@ class FrontendMenuBuilder extends MenuBuilder
             if ($language['locale'] == $currentLanguage) {
                 $node->setCurrent(true);
             }
+            $node->setExtra('translation_domain', false);
         }
     }
 }
