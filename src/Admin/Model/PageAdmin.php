@@ -25,6 +25,8 @@ use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Knp\Menu\ItemInterface as MenuItemInterface;
+use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
+use Sonata\DoctrineORMAdminBundle\Filter\ChoiceFilter;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -391,7 +393,7 @@ abstract class PageAdmin extends BaseAdmin
         $datagridMapper
             ->add(
                 'locale',
-                'doctrine_orm_callback',
+                CallbackFilter::class,
                 [
                     'callback' => [
                         $this,
@@ -408,7 +410,7 @@ abstract class PageAdmin extends BaseAdmin
             ->add('pageName', SimpleStringFilter::class)
             ->add(
                 'path',
-                'doctrine_orm_callback',
+                CallbackFilter::class,
                 ['callback' => [$this, 'matchPath'], 'hidden' => true]
             )
             ->add(
@@ -427,6 +429,17 @@ abstract class PageAdmin extends BaseAdmin
                 ]
             );
 
+    }
+
+    /**
+     * @param array $filterValues
+     */
+    public function configureDefaultFilterValues(array &$filterValues)
+    {
+        $filterValues['locale'] = [
+            'type'  => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'value' => $this->getDefaultLocale(),
+        ];
     }
 
     /**
@@ -489,6 +502,7 @@ abstract class PageAdmin extends BaseAdmin
             $locale = $this->getDefaultLocale();
             $active = false;
         }
+
         $qb = $ProxyQuery->getQueryBuilder();
         $qb->andWhere(sprintf('%s.locale = :locale', $alias));
         $qb->orderBy(sprintf('%s.path', $alias), 'asc');

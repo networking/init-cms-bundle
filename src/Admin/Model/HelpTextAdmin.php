@@ -15,6 +15,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\CoreBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
@@ -100,7 +101,7 @@ abstract class HelpTextAdmin extends BaseAdmin
         $datagridMapper
             ->add(
                 'locale',
-                'doctrine_orm_callback',
+                CallbackFilter::class,
                 [
                     'callback' => [
                         $this,
@@ -118,6 +119,17 @@ abstract class HelpTextAdmin extends BaseAdmin
 
             );
 
+    }
+
+    /**
+     * @param array $filterValues
+     */
+    public function configureDefaultFilterValues(array &$filterValues)
+    {
+        $filterValues['locale'] = [
+            'type'  => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'value' => $this->getDefaultLocale(),
+        ];
     }
 
     /**

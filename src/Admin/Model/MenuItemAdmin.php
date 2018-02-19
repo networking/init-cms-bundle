@@ -21,6 +21,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Doctrine\ORM\EntityRepository;
 use Sonata\AdminBundle\Exception\ModelManagerException;
+use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -242,10 +243,9 @@ abstract class MenuItemAdmin extends BaseAdmin
     {
 
         $datagridMapper
-
             ->add(
                 'locale',
-                'doctrine_orm_callback',
+                CallbackFilter::class,
                 ['callback' => [$this, 'getByLocale']],
                 ChoiceType::class,
                 [ 'placeholder' => false,
@@ -277,6 +277,17 @@ abstract class MenuItemAdmin extends BaseAdmin
     }
 
     /**
+     * @param array $filterValues
+     */
+    public function configureDefaultFilterValues(array &$filterValues)
+    {
+        $filterValues['locale'] = [
+            'type'  => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'value' => $this->getDefaultLocale(),
+        ];
+    }
+
+    /**
      * @param $queryBuilder
      * @param $alias
      * @param $field
@@ -289,6 +300,7 @@ abstract class MenuItemAdmin extends BaseAdmin
         $field,
         $value
     ) {
+
         if (!$locale = $value['value']) {
             $locale = $this->getDefaultLocale();
         }

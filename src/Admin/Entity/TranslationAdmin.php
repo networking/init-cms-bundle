@@ -14,12 +14,14 @@ namespace Networking\InitCmsBundle\Admin\Entity;
 use Doctrine\ORM\Query;
 use Ibrows\SonataTranslationBundle\Admin\ORMTranslationAdmin;
 use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
+use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+use Sonata\DoctrineORMAdminBundle\Filter\StringFilter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -159,14 +161,11 @@ class TranslationAdmin extends AbstractAdmin
     {
 
         $filter
-            ->add('key', 'doctrine_orm_string')
-            ->add(
-                'translations.content',
-                'doctrine_orm_string'
-            )
+            ->add('key', StringFilter::class)
+            ->add('translations.content',StringFilter::class)
             ->add(
                 'domain',
-                'doctrine_orm_choice',
+                SimpleStringFilter::class,
                 [],
                 ChoiceType::class,
                 [
