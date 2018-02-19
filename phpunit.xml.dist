@@ -20,20 +20,13 @@
 
     <testsuites>
         <testsuite name="init CMS bundle">
-            <directory>./Tests/</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
-        <!-- Ignore these for Code Coverage -->
         <whitelist>
-            <directory>./</directory>
-            <exclude>
-                <directory>./Tests/</directory>
-                <directory>./Resources/</directory>
-                <directory>./DependencyInjection/</directory>
-                <directory>./vendor/</directory>
-            </exclude>
+            <directory suffix=".php">./src/</directory>
         </whitelist>
     </filter>
 

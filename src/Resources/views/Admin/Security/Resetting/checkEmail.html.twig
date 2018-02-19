@@ -1,0 +1,44 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends base_template %}
+
+{% block sonata_nav %}
+{% endblock sonata_nav %}
+
+{% block logo %}
+{% endblock logo %}
+
+{% block sidebar_left %}
+{% endblock %}
+
+{% block body_attributes %}class="sonata-bc login-page"{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div id="login" class="connection modal" >
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="login-box-body">
+                        <p>{{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime}, 'FOSUserBundle')|nl2br }}</p>
+                        <a href="{{ path('networking_init_cms_admin_security_login') }}">{{ 'title_user_authentication'|trans({}, 'SonataUserBundle') }}</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+{% endblock content %}

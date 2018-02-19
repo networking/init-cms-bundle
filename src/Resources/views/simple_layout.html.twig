@@ -1,0 +1,59 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block stylesheets %}
+        {% stylesheets filter='cssembed,?yui_css'
+        '@NetworkingInitCmsBundle/Resources/public/vendor/select2/css/select2.min.css'
+        '@NetworkingInitCmsBundle/Resources/public/vendor/select2/css/select2-bootstrap.min.css'
+        '@SonataAdminBundle/Resources/public/vendor/jqueryui/themes/base/jquery-ui.css'
+        '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/build/build_standalone.less'
+        '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
+        '@NetworkingInitCmsBundle/Resources/public/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
+        output='css/networking_initcms.css' %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
+        {% endstylesheets %}
+        {% block content_css %}
+        {% if content_css() %}<link href="{{ asset(content_css()) }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
+        {% endblock content_css %}
+    {% endblock %}
+    <title>
+        {% block meta_title %}
+        {% endblock %}
+    </title>
+</head>
+{% block body_tag %}
+<body class="{% block body_class %}initcms{% endblock %}">
+{% endblock body_tag %}
+
+{% block body_start %}
+{% endblock body_start %}
+
+{% block body %}
+    <div class="{% block container_class %}container{% endblock container_class %} row-offcanvas">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 content-main">
+
+                <div class="jumbotron">{% block headline %}{% endblock headline %}</div>
+
+                {% block sonata_admin_content %}
+                {% endblock sonata_admin_content %}
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+</body>
+</html>

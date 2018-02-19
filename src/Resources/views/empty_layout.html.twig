@@ -1,0 +1,103 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% extends 'NetworkingInitCmsBundle::admin_base.html.twig' %}
+
+{%- set _preview = block('preview') is defined ? block('preview')|trim : null %}
+{% set _form = block('form') is defined ? block('form')|trim : null %}
+{% set _show = block('show') is defined ? block('show')|trim : null %}
+{% set _list_table = block('list_table') is defined ? block('list_table')|trim : null %}
+{% set _list_filters = block('list_filters') is defined ? block('list_filters')|trim : null %}
+{% set _side_menu    = block('side_menu') is defined ? block('side_menu')|trim : null  %}
+{% set _help_text    = block('help_text') is defined ? block('help_text')|trim : null  %}
+{% set _tab_menu = block('tab_menu') is defined ? block('tab_menu')|trim : null %}
+{% set _content = block('content') is defined ? block('content')|trim : null %}
+{% set _title = block('title') is defined ? block('title')|trim : null %}
+{% set _breadcrumb = block('breadcrumb') is defined ? block('breadcrumb')|trim : null %}
+{% set _actions = block('actions') is defined ? block('actions')|trim : null %}
+{% set _navbar_title = block('navbar_title') is defined ? block('navbar_title')|trim : null %}
+{% set _list_filters_actions = block('list_filters_actions') is defined ? block('list_filters_actions')|trim : null -%}
+{% set isActive      = false %}
+{% if admin is defined %}
+    {% set currentAdmin = admin %}
+{% endif %}
+
+{% block meta_title %}
+    {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
+
+    {% if admin is defined %}
+        &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
+    {% else %}
+        {% if action is defined %}
+            -
+            {% for menu in admin.breadcrumbs(action) %}
+                {% if not loop.first %}
+                    &gt;
+                {% endif %}
+                {{ menu.label|raw|striptags|replace({'&quot;': ''}) }}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+
+
+
+{% block page_title %}{% endblock %}
+{% block init_cms_top_nav %}{% endblock %}
+{% block sidebar_left %}{% endblock %}
+{% block navbar_spacer %}{% endblock %}
+
+{% block sonata_admin_content %}
+    <div class="row row-content-wide">
+        {% if _preview is not empty %}
+            <div class="sonata-ba-preview col-md-{% if _side_menu is empty %}12{% else %}10{% endif %}">{{ _preview|raw }}</div>
+        {% endif %}
+
+        {% if _content is not empty %}
+            <div class="sonata-ba-content col-md-{% if block('sidebar_left') is empty %}12{% elseif _side_menu is empty %}10{% else %}8{% endif %}">{{ _content|raw }}</div>
+        {% endif %}
+
+        {% if _help_text is not empty %}
+            <div class="sonata-ba-content col-md-{% if _side_menu is empty %}12{% else %}10{% endif %}">{{ _help_text|raw }}</div>
+        {% endif %}
+
+        {% if _show is not empty %}
+            <div class="sonata-ba-show col-md-{% if _side_menu is empty %}12{% else %}10{% endif %}">{{ _show|raw }}</div>
+        {% endif %}
+
+        {% if _form is not empty %}
+            <div>{{ _form|raw }}</div>
+        {% endif %}
+
+        {% if _list_table is not empty or _list_filters is not empty %}
+
+            <div class="col-md-{% if _side_menu is not empty %}10{% else %}12{% endif %}">
+                {{ _list_filters|raw }}
+                {% if _actions is not empty %}
+                    {{ _actions|raw }}
+                {% endif %}
+                {{ _list_table|raw }}
+            </div>
+
+        {% endif %}
+
+
+
+        {% if _side_menu is not empty %}
+            <div class="sidebar span2">
+                <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+

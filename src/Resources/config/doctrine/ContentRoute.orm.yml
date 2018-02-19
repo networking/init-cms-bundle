@@ -1,0 +1,44 @@
+Networking\InitCmsBundle\Entity\ContentRoute:
+  type: entity
+  table: content_route
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+      length: 255
+      column: name
+    classType:
+      type: string
+      length: 255
+      column: class_type
+    objectId:
+      type: integer
+      nullable: true
+      column: object_id
+    path:
+      type: string
+      length: 255
+      nullable: true
+    controller:
+      type: string
+      length: 255
+      nullable: true
+    template:
+      type: string
+      length: 255
+      nullable: true
+    templateName:
+      type: string
+      length: 255
+      column: template_name
+      nullable: true
+    locale:
+      type: string
+      length: 6
+  uniqueConstraints:
+    content_route_idx:
+      columns: [path,locale,class_type]

@@ -1,0 +1,341 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends base_template %}
+
+{% block title %}
+    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+    {% if admin.id(object) is not null %}
+        {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
+        {% if  title ==  "title_edit" %}
+            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+        {% else %}
+            {{ title }}
+        {% endif %}
+    {% else %}
+        {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
+        {% if title == 'title_create' %}
+            {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+        {% else %}
+            {{ title }}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        button.btn.btn-sm.btn-default.pixlr-link {
+            margin-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block form %}
+    {% set url = admin.id(object) ? 'edit' : 'create' %}
+
+    {% if not admin.hasRoute(url) %}
+        <div>
+            {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
+        </div>
+    {% else %}
+        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+        {% endif %}
+        <form class="form-horizontal" novalidate="novalidate"
+              action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
+                {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
+              method="POST">
+        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>
+                    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                    {% if admin.id(object) is not null %}
+                        {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
+                        {% if  title ==  "title_edit" %}
+                            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+                        {% else %}
+                            {{ title }}
+                        {% endif %}
+                    {% else %}
+                        {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
+                        {% if title == 'title_create' %}
+                            {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+                        {% else %}
+                            {{ title }}
+                        {% endif %}
+                    {% endif %}
+                </h3>
+            </div>
+        {% endif %}
+        <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-body{% endif %}">
+
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    {% block sonata_pre_fieldsets %}{% endblock %}
+                    {% for name, form_group in admin.formgroups %}
+                        <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
+                            {% if admin.formgroups|length > 1 and name != admin.label %}
+                                <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
+                                    {% if form_group.collapsed %}
+                                        <a class="sonata-ba-collapsed" data-toggle="collapse"
+                                           data-target="#{{ admin.uniqid }}_{{ loop.index }}"
+                                           title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationDomain) }}</a>
+                                    {% else %}
+                                        {{ name|trans({}, admin.translationDomain) }}
+                                    {% endif %}
+                                </legend>
+                            {% endif %}
+
+                            <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}"
+                                 id="{{ admin.uniqid }}_{{ loop.index }}">
+
+                                {% for field_name in form_group.fields %}
+                                    {% if admin.formfielddescriptions[field_name] is defined %}
+                                        {{ form_row(form[field_name], {'horizontal': 'true'}) }}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+                    {% endfor %}
+
+                    {% block sonata_post_fieldsets %}{% endblock %}
+                    {{ form_rest(form, {'horizontal': (app.request.isXmlHttpRequest or app.request.get('_xml_http_request') ? 'true': form.vars.horizontal)}) }}
+
+                </div>
+            </div>
+            {% if object.id %}
+                {% block sonata_media_show_reference %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <a class="btn btn-default" data-toggle="collapse" href="#media-preview" aria-expanded="false" aria-controls="media-preview" >
+                            <i class="glyphicon glyphicon-chevron-down"></i> {{ 'title.media_preview'|trans({}, 'SonataMediaBundle') }}</a>
+                        {% if sonata_media.pixlr and sonata_media.pixlr.isEditable(object) %}
+                                <button class="btn btn-sm btn-default pixlr-link"
+                                        data-href="{{ path('sonata_media_pixlr_open_editor', { 'id': object|sonata_urlsafeid }) }}"
+                                        data-toggle="modal"
+                                        data-target="#pixlr-modal"
+                                        >
+                                    <i class="fa fa-pencil-square-o"></i> {{ "label.edit_with_pixlr"|trans({}, "SonataMediaBundle") }}
+                                </button>
+                        {% endif %}
+                        <hr>
+                    </div>
+                </div>
+                <div class="row collapse" id="media-preview">
+                    {% if object.width is defined and object.width %}
+                        {% if object.providerName == 'sonata.media.provider.youtube' %}
+                            {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
+                            {% set previewType = 'iframe' %}
+                            {% set iframeWidth = '600px' %}
+                            {% set iframeHeight = '300px' %}
+                        {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
+                            {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
+                            {% set previewType = 'iframe' %}
+                            {% set iframeWidth = '600px' %}
+                            {% set iframeHeight = '300px' %}
+                        {% else %}
+                            {% set previewLink %}{% path object, 'reference' %}{% endset %}
+                            {% set previewType = 'image' %}
+                        {% endif %}
+                    {% else %}
+                        {% set media_link %}{% path object, 'reference' %}{% endset %}
+                        {% set previewLink %}//docs.google.com/gview?url={% if 'http://' not in media_link.__toString and 'https://' not in media_link.__toString%}{{ app.request.getSchemeAndHttpHost() }}{% endif %}{{ media_link }}&embedded=true{% endset %}
+                        {% set previewType = 'iframe' %}
+                        {% set iframeWidth = '400px' %}
+                        {% set iframeHeight = '560px' %}
+                    {% endif %}
+                    <div class="col-md-6">
+                        {% if object.width is defined and object.width %}
+                        {% media object, 'reference' with {'width': null, 'height': null, 'class': 'img-responsive'} %}
+                        {% else %}
+                        <iframe src="{{ previewLink }}" frameborder="0" width="400px" height="560px"></iframe>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th>{{ 'label.size'|trans({}, 'SonataMediaBundle') }}</th>
+                                <td>
+                                    {% if object.width is defined and object.width %}{{ object.width|number_format_decimal }}px
+                                    x {{ object.height|number_format_decimal }}px
+                                    {% if object.size > 0 %}({{ object.size|number_format_decimal }} Bytes){% endif %}
+                                    {% else %}
+                                        {% if object.size > 0 %}{{ object.size|number_format_decimal }} Bytes{% endif %}
+                                    {% endif %}
+                                </td>
+                            <tr>
+                            <tr>
+                                <th>{{ 'label.content_type'|trans({}, 'SonataMediaBundle') }}</th>
+                                <td>{{ object.contenttype }}</td>
+                            <tr>
+                            <tr>
+                                <th>{{ 'label.cdn'|trans({}, 'SonataMediaBundle') }}</th>
+                                <td>
+                                    {% if object.cdnisflushable %}
+                                        {{ 'label.to_be_flushed'|trans({}, 'SonataMediaBundle') }}
+                                    {% else %}
+                                        {{ 'label.flushed_at'|trans({}, 'SonataMediaBundle') }}
+                                        {{ object.cdnflushat|date }}
+                                    {% endif %}
+                                </td>
+                            <tr>
+                            <tr>
+                                <th>
+                                    <a href="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}">{{ 'label.protected_download_url'|trans({}, 'SonataMediaBundle') }}</a>
+                                </th>
+                                <td>
+                                    <input type="text" class="form-control" onClick="this.select();"
+                                           readonly="readonly"
+                                           value="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
+                                    <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadSecurity(object).description|raw }}
+                                </td>
+                            <tr>
+                                {% if object.width is defined and object.width %}
+                            <tr>
+                                <th>
+                                    <a href="{% path object, 'reference' %}"
+                                            {% if previewType == 'iframe' %}
+                                                data-featherlight-iframe-width="{{ iframeWidth }}"
+                                                data-featherlight-iframe-height="{{ iframeHeight }}"
+                                            {% endif %}
+                                       data-featherlight-variant="initcms-featherlight"
+                                       data-featherlight="{{ previewType }}"
+                                       target="_blank">reference</a>
+                                </th>
+                                <td>
+                                    <input type="text" class="form-control" onClick="this.select();"
+                                           readonly="readonly" value="{% path object, 'reference' %}"/>
+                                </td>
+                            </tr>
+
+                            {% for name, format in sonata_media.pool.formatNamesByContext(object.context) %}
+                                <tr>
+                                    <th>
+                                        <a href="{% path object, name %}"
+                                                {% if previewType == 'iframe' %}
+                                                    data-featherlight-iframe-width="{{ iframeWidth }}"
+                                                    data-featherlight-iframe-height="{{ iframeHeight }}"
+                                                {% endif %}
+                                           data-featherlight-variant="initcms-featherlight"
+                                           data-featherlight="{{ previewType }}"
+                                           target="_blank">{{ name }}</a>
+                                    </th>
+                                    <td>
+                                        <input type="text" class="form-control" onClick="this.select();"
+                                               readonly="readonly" value="{% path object, name %}"/>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </table>
+                    </div>
+                    <div class="col-md-12">
+                    <hr>
+                    </div>
+                </div>
+
+                {% endblock sonata_media_show_reference %}
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% block formactions %}
+                        {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                        <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
+                            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+                                <button class="btn btn-default" data-dismiss="modal"
+                                        aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
+                                {% if admin.id(object) %}
+                                    <input type="submit" class="btn btn-primary" name="btn_update"
+                                           value="{{ 'btn_update'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                {% else %}
+                                    <input type="submit" class="btn btn-primary" name="btn_create"
+                                           value="{{ 'btn_create'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                {% endif %}
+                            {% else %}
+                                <a class="btn btn-default"
+                                   href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                                {% if admin.supportsPreviewMode %}
+                                    <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
+                                           value="{{ 'btn_preview'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                {% endif %}
+                                {% if admin.id(object) %}
+                                    <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
+                                           value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                    <input type="submit" class="btn btn-default" name="btn_update_and_list"
+                                           value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+
+                                    {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
+                                        {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
+                                        <a class="btn btn-danger"
+                                           href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                                    {% endif %}
+                                {% else %}
+                                    <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
+                                           value="{{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                    <input type="submit" class="btn btn-default" name="btn_create_and_list"
+                                           value="{{ 'btn_create_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                    <input class="btn btn-default" type="submit" name="btn_create_and_create"
+                                           value="{{ 'btn_create_and_create_a_new_one'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endblock formactions %}
+                </div>
+            </div>
+        </div>
+        </form>
+        {% if sonata_media.pixlr and sonata_media.pixlr.isEditable(object) %}
+            <div class="modal fade" id="pixlr-modal" tabindex="-1" role="dialog"
+                 aria-labelledby="{{ "label.edit_with_pixlr"|trans({}, "SonataMediaBundle") }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title"
+                                id="myModalLabel">{{ "label.edit_with_pixlr"|trans({}, "SonataMediaBundle") }}</h4>
+                        </div>
+                        <div class="modal-body" id="pixlr-modal-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                window.closeModal = function () {
+                    jQuery('#pixlr-modal').modal('hide');
+                }
+
+                jQuery('button.pixlr-link').on('click', function (e) {
+                    e.preventDefault();
+                    var url = jQuery(this).attr('data-href');
+                    jQuery("#pixlr-modal-body").html('<iframe width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true" src="' + url + '"></iframe>');
+                });
+
+                Admin.setup_list_modal(jQuery('#pixlr-modal'));
+            </script>
+        {% endif %}
+        {# close modal #}
+        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+            </div>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock form %}

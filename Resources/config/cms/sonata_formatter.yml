@@ -1,5 +1,0 @@
-sonata_formatter:
-    ckeditor:
-        templates:
-            browser: NetworkingInitCmsBundle:Ckeditor:browser.html.twig
-            upload: NetworkingInitCmsBundle:Ckeditor:upload.html.twig
