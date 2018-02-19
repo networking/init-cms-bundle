@@ -9,7 +9,7 @@ file that was distributed with this source code.
 
 #}
 {% extends base_template %}
-
+{% block confirm_exit %}false{% endblock %}
 {% block title %}
     {% if admin.id(object) %}
         <span class="page_title">{{ admin.toString(object) }} </span> <span class="info-soft font-medium">({{ language }})</span>
@@ -63,7 +63,7 @@ file that was distributed with this source code.
         <!-- end modal menu form -->
     {% endif %}
 {% endblock %}
-{% block confirm_exit %}false{% endblock %}
+
 {% block before_body_end %}
     {{ parent() }}
         <script type="text/javascript">
