@@ -31,11 +31,25 @@ class AdminMenuBuilder extends MenuBuilder
     protected $adminPool;
 
     /**
+     * @var array
+     */
+    protected $menuGroups;
+
+
+    /**
      * @param $adminPool
      */
     public function setAdminPool($adminPool)
     {
         $this->adminPool = $adminPool;
+    }
+
+    /**
+     * @param array $menuGroups
+     */
+    public function setMenuGroups($menuGroups = [])
+    {
+        $this->menuGroups = $menuGroups;
     }
 
     /**
@@ -254,7 +268,7 @@ class AdminMenuBuilder extends MenuBuilder
      * @param array $menuGroups
      * @return \Knp\Menu\ItemInterface
      */
-    public function createAdminSideMenu(array $menuGroups)
+    public function createAdminSideMenu()
     {
         $groups = $this->adminPool->getDashboardGroups();
         $adminMenu = $this->factory->createItem('admin_side_menu');
@@ -288,7 +302,7 @@ class AdminMenuBuilder extends MenuBuilder
         );
 
         $menu = $largeMenu;
-        foreach ($menuGroups as $key => $item) {
+        foreach ($this->menuGroups as $key => $item) {
             foreach ($item['items'] as $mainMenu) {
                 if (array_key_exists($mainMenu, $groups)) {
                     $group = $groups[$mainMenu];
