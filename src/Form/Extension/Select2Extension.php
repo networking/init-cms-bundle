@@ -26,6 +26,7 @@ class Select2Extension extends AbstractTypeExtension {
         if (false === $options['expanded'] && isset($options['select2'])) {
             $view->vars['select2'] = $options['select2'];
         }
+
     }
 
     /**
@@ -43,6 +44,7 @@ class Select2Extension extends AbstractTypeExtension {
      */
     public function getExtendedType()
     {
-        return ChoiceType::class;
+
+         return 'Symfony\Component\Form\Extension\Core\Type\ChoiceType';
     }
 }

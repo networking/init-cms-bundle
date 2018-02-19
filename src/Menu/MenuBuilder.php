@@ -108,6 +108,7 @@ class MenuBuilder
      * @param RouterInterface $router
      * @param MenuItemManagerInterface $menuManager
      * @param TranslatorInterface $translator
+     * @param Matcher $matcher
      */
     public function __construct(
         FactoryInterface $factory,
@@ -116,7 +117,8 @@ class MenuBuilder
         RequestStack $requestStack,
         RouterInterface $router,
         MenuItemManagerInterface $menuManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        Matcher $matcher
     ) {
 
         $this->factory = $factory;
@@ -126,17 +128,12 @@ class MenuBuilder
         $this->request = $requestStack->getCurrentRequest();
         $this->menuManager = $menuManager;
         $this->translator = $translator;
-
+        $this->matcher = $matcher;
 
         $this->setLoggedIn();
         $this->setViewStatus();
         $this->setCurrentPath();
         $this->setCurrentUri();
-        $paths = [$this->request->getBaseUrl() .$this->request->getPathInfo(), $this->currentUri];
-
-        $this->addVoters($paths);
-
-
     }
 
     /**
@@ -178,20 +175,6 @@ class MenuBuilder
     public function setCurrentUri()
     {
         $this->currentUri = $this->request->getBaseUrl() . $this->currentPath;
-    }
-
-    /**
-     * @param $paths
-     */
-    public function addVoters($paths)
-    {
-        $voters = [];
-        foreach ($paths as $path){
-            $voters[] = new UriVoter($path);
-        }
-
-
-        $this->matcher = new Matcher($voters);
     }
 
 
