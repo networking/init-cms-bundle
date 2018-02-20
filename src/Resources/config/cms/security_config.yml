@@ -1,11 +1,8 @@
-jms_security_extra:
-    secure_all_services: false
-    expressions: true
-
-parameters:
-    # ... other parameters
-    security.acl.permission.map.class: Networking\InitCmsBundle\Security\Acl\Permission\AdminPermissionMap
-    sonata.admin.security.mask.builder.class: Networking\InitCmsBundle\Security\Acl\Permission\MaskBuilder
+services:
+    security.acl.permission.map:
+        class: Sonata\AdminBundle\Security\Acl\Permission\AdminPermissionMap
+    sonata.admin.security.mask.builder:
+          class: Networking\InitCmsBundle\Security\Acl\Permission\MaskBuilder
 
 security:
     access_decision_manager:
