@@ -15,9 +15,9 @@
             <tag name="controller.service_arguments" />
         </prototype>
 
-        <service id="networking_init_cms.helper.page_helper" class="Networking\InitCmsBundle\Helper\PageHelper" autowire="true" public="true" />
+        <service id="Networking\InitCmsBundle\Helper\PageHelper" autowire="true"  public="false"/>
 
-        <service id="Networking\InitCmsBundle\Helper\PageHelper" alias="networking_init_cms.helper.page_helper" />
+        <service id="networking_init_cms.helper.page_helper" alias="Networking\InitCmsBundle\Helper\PageHelper" public="true"/>
 
         <service id="networking_init_cms.logger" class="Symfony\Bridge\Monolog\Logger">
             <argument>newo</argument>

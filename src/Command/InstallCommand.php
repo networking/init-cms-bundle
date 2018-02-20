@@ -34,7 +34,9 @@ class InstallCommand extends Command
             )
             ->addOption('username', '', InputOption::VALUE_REQUIRED, 'username of the to be created super user')
             ->addOption('email', '', InputOption::VALUE_REQUIRED, 'the email address of the to be created super user')
-            ->addOption('password', '', InputOption::VALUE_REQUIRED, 'password of the to be created super user');
+            ->addOption('password', '', InputOption::VALUE_REQUIRED, 'password of the to be created super user')
+            ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl')
+        ;
 
     }
 
@@ -43,7 +45,7 @@ class InstallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->setupData($output);
+        $this->setupData($input, $output);
         $this->createAdminUser($input, $output);
         $this->dumpAssetic($output);
     }
@@ -52,13 +54,13 @@ class InstallCommand extends Command
      * @param $output
      * @return int
      */
-    private function setupData($output)
+    private function setupData($input, $output)
     {
         $command = $this->getApplication()->find('networking:initcms:data-setup');
-
         $arguments = [
             'command' => 'networking:initcms:data-setup',
             '--drop' => true,
+            '--use-acl' => $input->getOption('use-acl')
         ];
 
         $input = new ArrayInput($arguments);

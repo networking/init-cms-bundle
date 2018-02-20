@@ -33,7 +33,9 @@ class DataSetupCommand extends ContainerAwareCommand
         $this->setName('networking:initcms:data-setup')
             ->setDescription('create and update db schema and append fixtures')
             ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
-            ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures');
+            ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
+            ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl')
+        ;
 
     }
 
@@ -47,13 +49,18 @@ class DataSetupCommand extends ContainerAwareCommand
         }
 
         $this->updateSchema($output);
-        $this->initACL($output);
-        $this->sonataSetupACL($output);
+
+        if ($input->getOption('use-acl')){
+            $this->initACL($output);
+            $this->sonataSetupACL($output);
+        }
+
 
         if (!$input->getOption('no-fixtures')) {
             $this->loadFixtures($output);
             $this->publishPages($output);
         }
+
     }
 
     /**
@@ -98,10 +105,10 @@ class DataSetupCommand extends ContainerAwareCommand
      */
     private function initACL($output)
     {
-        $command = $this->getApplication()->find('init:acl');
+        $command = $this->getApplication()->find('acl:init');
 
         $arguments = [
-            'command' => 'init:acl'
+            'command' => 'acl:init'
         ];
 
         $input = new ArrayInput($arguments);
@@ -161,20 +168,24 @@ class DataSetupCommand extends ContainerAwareCommand
     public function publishPages(OutputInterface $output)
     {
         /** @var \Networking\InitCmsBundle\Entity\PageManager $modelManager */
+        $doctrine = $this->getContainer()->get('doctrine');
+        $doctrine->resetManager();
+
         $modelManager = $this->getContainer()->get('networking_init_cms.page_manager');
-        $selectedModels = $modelManager->findAll();
+        $modelManager->resetEntityManager($doctrine->getManager());
 
         try {
-            foreach ($selectedModels as $selectedModel) {
-                /** @var \Networking\InitCmsBundle\Model\PageInterface $selectedModel */
-                $selectedModel->setStatus(\Networking\InitCmsBundle\Model\PageInterface::STATUS_PUBLISHED);
-                $modelManager->save($selectedModel);
-                $pageHelper = $this->getContainer()->get(PageHelper::class);
-                $pageHelper->makePageSnapshot($selectedModel);
+            $pages = $modelManager->findAll();
+            foreach ($pages as $page) {
+                /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
+                $pageHelper = $this->getContainer()->get('networking_init_cms.helper.page_helper');
+                $pageHelper->makePageSnapshot($page);
+                $modelManager->save($page);
             }
             return 0;
         }catch (\Exception $e){
-            $output->writeln($e->getMessage());
+            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            die;
             return 1;
         }
     }

@@ -204,9 +204,15 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      */
     public function save(PageInterface $page)
     {
-        if (!$page->getId()) {
+        if (!$page->getId() && !$page->getContentRoute()->getTemplateName()) {
             $page->setContentRoute(new ContentRoute());
         }
         $this->_em->persist($page);
     }
+
+    public function resetEntityManager($em)
+    {
+        $this->_em = $em;
+    }
+
 }
