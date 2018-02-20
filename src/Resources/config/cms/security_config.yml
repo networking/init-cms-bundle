@@ -1,6 +1,6 @@
 services:
     security.acl.permission.map:
-        class: Sonata\AdminBundle\Security\Acl\Permission\AdminPermissionMap
+        class: Networking\InitCmsBundle\Security\Acl\Permission\AdminPermissionMap
 
 parameters:
     sonata.admin.security.mask.builder.class: Networking\InitCmsBundle\Security\Acl\Permission\MaskBuilder
