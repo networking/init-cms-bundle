@@ -114,21 +114,22 @@ abstract class BaseAdmin extends AbstractAdmin
             }
         }
 
-        if (!array_key_exists($locale, $this->getLocaleChoices())) {
+        $localeChoices = array_flip($this->getLocaleChoices());
+        if (!array_key_exists($locale, $localeChoices)) {
             if (strlen($locale) > 2) {
                 $shortLocale = substr($locale, 0, 2);
             } else {
                 $shortLocale = $locale;
             }
 
-            foreach ($this->getLocaleChoices() as $key => $locale) {
+            foreach ($localeChoices as $key => $locale) {
                 if (strpos($key, $shortLocale) !== false) {
                     return $key;
                 }
             }
 
 
-            foreach ($this->getLocaleChoices() as $key => $locale) {
+            foreach ($localeChoices as $key => $locale) {
                 if (strpos($key, $this->getContainer()->getParameter('locale')) !== false) {
                     return $key;
                 }
