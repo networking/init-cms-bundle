@@ -18,7 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
-use Symfony\Component\Validator\Validator\TraceableValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -60,7 +60,10 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 
     }
 
-    public function setValidator(TraceableValidator $validator)
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function setValidator(ValidatorInterface $validator)
     {
         $this->validator = $validator;
     }
