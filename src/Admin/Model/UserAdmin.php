@@ -186,9 +186,7 @@ abstract class UserAdmin extends SonataUserAdmin
                         'label' => false,
                     ]
                 )
-                ->add('expired', null, ['required' => false], ['inline_block' => true])
                 ->add('enabled', null, ['required' => false], ['inline_block' => true])
-                ->add('credentialsExpired', null, ['required' => false], ['inline_block' => true])
                 ->end();
         }
 
