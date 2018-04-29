@@ -1,4 +1,4 @@
-ivory_ck_editor:
+fos_ck_editor:
     default_config: init_cms
     configs:
         init_cms:

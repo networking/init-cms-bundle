@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Doctrine\ORM\EntityRepository;
-use Ivory\CKEditorBundle\Model\ConfigManager;
+use FOS\CKEditorBundle\Model\ConfigManager;
 use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
