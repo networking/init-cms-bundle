@@ -253,6 +253,7 @@ file that was distributed with this source code.
 
 
                 <div class="row">
+                    {% if admin.showTagTree %}
                     <div class="col-md-3 col-xs-12">
                         <div  id="tagsContainer">
                             {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
@@ -276,7 +277,8 @@ file that was distributed with this source code.
                                 {#</span>#}
                         {#{% endif %}#}
                     </div>
-                    <div id="item_list" class="col-md-9 col-xs-12 text-center">
+                    {% endif %}
+                    <div id="item_list" class="col-md-{{ admin.showTagTree?'9':'12' }} col-xs-12 text-center">
                     {% if datagrid.results|length > 0 %}
                         {% include "NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig" %}
                     {% else %}
@@ -285,7 +287,9 @@ file that was distributed with this source code.
                             </p>
                     {% endif %}
                     </div>
+
                 </div>
+
                 {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length and (galleryListMode is not defined or not galleryListMode) %}
                     <p>
                         {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}
@@ -308,11 +312,28 @@ file that was distributed with this source code.
 </div>
 {% else %}
     <script type="text/javascript">
+        function refreshList(filters){
+            if(!filters){
+                filters = {}
+            }
+            $.get(
+                "{{ admin.generateUrl('refresh_list')|raw }}",
+                filters,
+                function(xhr){
+                    $('#item_list').html(xhr);
+                }
+            );
+
+            history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': persistent_parameters.context}) }}&time='+jQuery.now());
+        }
+
         $(function () {
             Admin.add_filters();
 
             var tagContainer = $('#tagsContainer');
-            var lastLink = $('.show_all_media');
+            {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
+            var tagDialog;
+            var lastLink = $('{{ selected }}');
 
             tagContainer.on('click', '.tag_link', function(e){
                 e.preventDefault();
@@ -332,9 +353,7 @@ file that was distributed with this source code.
                 }
 
                 lastLink = link;
-                $('.media-box').each(function(){
-                    if($(this).hasClass('tag_'+tagId)){$(this).show()}else{$(this).hide()};
-                });
+                refreshList({'filter': {'tags':{'value':tagId}}});
             });
 
             tagContainer.on('click', '.show_all_media', function (e) {
@@ -343,7 +362,8 @@ file that was distributed with this source code.
                     lastLink.parent().removeClass('info');
                     lastLink.siblings('a.dialog-link').hide();
                 }
-                $('.media-box').show();
+                // $('.media-box').show();
+                refreshList({'filter': {'_page':1}});
                 var link = $(e.target);
                 link.parent().addClass('info');
                 lastLink = link;

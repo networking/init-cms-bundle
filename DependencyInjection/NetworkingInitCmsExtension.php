@@ -77,6 +77,10 @@ class NetworkingInitCmsExtension extends Extension
             'networking_init_cms.multiple_media_tags',
             $config['multiple_media_tags']
         );
+        $container->setParameter(
+            'networking_init_cms.show_tag_tree',
+            $config['show_tag_tree']
+        );
 
 
         if (!$config['admin_toolbar']['toolbar']) {

@@ -1,8 +1,10 @@
 {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
 <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
 <script>
+    {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
     var tagDialog;
-    var lastLink;
+    var lastLink = $('{{ selected }}');
+
     function initializeTagDialog() {
         if (!tagDialog) {
             tagDialog = jQuery('#tag_dialog');
@@ -191,10 +193,16 @@
         );
     }
 
-    function refreshList(){
-        $('#item_list').load(
-                "{{ admin.generateUrl('refresh_list')|raw }}",
-                function(){$('.info > a.tag_link').trigger('click');}
+    function refreshList(filters){
+        if(!filters){
+            filters = {}
+        }
+        $.get(
+            "{{ admin.generateUrl('refresh_list')|raw }}",
+            filters,
+            function(xhr){
+                $('#item_list').html(xhr);
+            }
         );
 
         history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
@@ -227,8 +235,6 @@
             $("input[name='action']").val(this.value);
         });
 
-        lastLink = $('.show_all_media');
-
         body.on('click', '.tag_link', function(e){
             e.preventDefault();
             if(lastLink){
@@ -247,9 +253,7 @@
             }
 
             lastLink = link;
-            $('.media-box').each(function(){
-                if($(this).hasClass('tag_'+tagId)){$(this).show()}else{$(this).hide()};
-            });
+            refreshList({'filter': {'tags':{'value':tagId}}});
         });
 
         body.on('click', '.show_all_media', function (e) {
@@ -258,11 +262,23 @@
                 lastLink.parent().removeClass('info');
                 lastLink.siblings('a.dialog-link').hide();
             }
-            $('.media-box').show();
+            // $('.media-box').show();
+            refreshList({'filter': {'_page':1}});
             var link = $(e.target);
             link.parent().addClass('info');
             lastLink = link;
         });
+
+        body.on('click', 'a.media-pager', function (e) {
+            e.preventDefault();
+            refreshList({'filter': {
+                '_page':$(this).data('page'),
+                '_sort_order':$(this).data('sort-order'),
+                '_sort_by':$(this).data('sort-by'),
+                'tags':{'value': $(this).data('tags')},
+                'name':{'value': $(this).data('name')},
+            }});
+        })
 
 
         body.on('click', 'i.tag_folder', function(e) {

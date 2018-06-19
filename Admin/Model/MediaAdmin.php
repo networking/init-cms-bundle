@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
+use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -51,12 +52,17 @@ abstract class MediaAdmin extends Admin
      *
      * @var int
      */
-    protected $maxPerPage = 0;
+    protected $maxPerPage = 50;
 
     /**
      * @var bool
      */
     protected $hasMultipleMediaTags;
+
+    /**
+     * @var bool
+     */
+    protected $showTagTree;
 
     /**
      * Default values to the datagrid.
@@ -112,6 +118,25 @@ abstract class MediaAdmin extends Admin
     }
 
     /**
+     * @param $showTagTree boolean
+     * @return $this
+     */
+    public function setShowTagTree($showTagTree)
+    {
+        $this->showTagTree = $showTagTree;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowTagTree()
+    {
+        return $this->showTagTree;
+    }
+
+    /**
      * @return string
      */
     public function getIcon()
@@ -130,6 +155,13 @@ abstract class MediaAdmin extends Admin
             'init_ckeditor_browser',
             array(
                 '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browser'
+            )
+        );
+        $collection->add(
+            'init_ckeditor_browser_refresh',
+            'init_ckeditor_browser_refresh',
+            array(
+                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browserRefresh'
             )
         );
 
@@ -260,10 +292,29 @@ abstract class MediaAdmin extends Admin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '', $provider = '')
     {
+
+
+
         $datagridMapper
             ->add('name', 'networking_init_cms_simple_string')
             ->add('authorName', null, array('hidden' => true));
+        if($this->showTagTree) {
+            $datagridMapper->add('tags', 'doctrine_orm_callback', [
+                'callback' => function ($queryBuilder, $alias, $field, $value) {
+                if (!$value['value']) {
+                    return;
+                }
 
+                $queryBuilder->leftJoin(sprintf('%s.tags', $alias), 't');
+                $queryBuilder->andWhere('t.id = :id');
+                $queryBuilder->setParameter('id', $value['value']);
+
+                return true;
+
+                }, 'field_type' => 'hidden', 'label_render' => false, 'label' => false]);
+        }else{
+            $datagridMapper->add('tags');
+        }
         $datagridMapper->add(
             'context',
             'networking_init_cms_simple_string',

@@ -68,6 +68,48 @@ class CkeditorAdminController extends BaseMediaAdminController
         );
     }
 
+    public function browserRefreshAction()
+    {
+        $this->checkIfMediaBundleIsLoaded();
+
+        if (false === $this->admin->isGranted('LIST')) {
+            throw new AccessDeniedException();
+        }
+
+        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'), $this->admin->getPersistentParameter('provider'));
+        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
+        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+
+        $formats = array();
+
+        foreach ($datagrid->getResults() as $media) {
+            $formats[$media->getId()] = $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
+        }
+
+        $formView = $datagrid->getForm()->createView();
+
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
+
+        $tags = $this->getDoctrine()
+            ->getRepository('NetworkingInitCmsBundle:Tag')
+            ->findBy(array('level' => 1), array('path' => 'ASC'));
+
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+
+        return $this->render(
+            'NetworkingInitCmsBundle:Ckeditor:browser_list_items.html.twig',
+            array(
+                'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'lastItem' => 0,
+                'action' => 'browser',
+                'form' => $formView,
+                'datagrid' => $datagrid,
+                'formats' => $formats
+            )
+        );
+    }
+
 
     /**
      * @param Request $request

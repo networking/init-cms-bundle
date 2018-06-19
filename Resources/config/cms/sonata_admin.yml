@@ -1,6 +1,7 @@
 sonata_admin:
     options:
         use_select2: false
+        pager_links: 10
     security:
         handler: sonata.admin.security.handler.acl
         # acl security information
