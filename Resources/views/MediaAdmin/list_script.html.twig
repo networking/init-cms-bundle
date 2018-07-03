@@ -235,7 +235,7 @@
             $("input[name='action']").val(this.value);
         });
 
-        body.on('click', '.tag_link', function(e){
+        body.on('click', '.tag_link', function(e, noLoad){
             e.preventDefault();
             if(lastLink){
                 lastLink.parent().removeClass('info');
@@ -253,7 +253,9 @@
             }
 
             lastLink = link;
-            refreshList({'filter': {'tags':{'value':tagId}}});
+            if(noLoad == undefined){
+                refreshList({'filter': {'tags':{'value':tagId}}});
+            }
         });
 
         body.on('click', '.show_all_media', function (e) {

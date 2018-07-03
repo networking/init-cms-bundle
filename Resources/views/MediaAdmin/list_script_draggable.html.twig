@@ -11,7 +11,7 @@
 
     function openTag(ev, id) {
         ev.preventDefault();
-        $('#div_'+id+' > a.tag_link').trigger('click');
+        $('#div_'+id+' > a.tag_link').trigger('click', true);
     }
 
     function dropTag(ev, id) {
@@ -24,11 +24,7 @@
             function(xhr){
                 if (xhr.result == 'ok') {
                     createInitCmsMessageBox(xhr.status, xhr.message);
-                    $('#item_list').load(
-                        "{{ admin.generateUrl('refresh_list')|raw }}",
-                        function(){$('.info > a.tag_link').trigger('click');}
-                    );
-
+                    $('.info > a.tag_link').trigger('click');
                     history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
                 }
             }

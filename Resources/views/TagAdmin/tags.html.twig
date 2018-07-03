@@ -1,9 +1,9 @@
 {% import _self as macros %}
 {% macro tag_tree(tags, lastItem, tagAdmin, noSort, selected) %}
     {% for tag in tags %}
-        <li  class="table-row-style sortable-tag {% if noSort %}mjs-nestedSortable-collapsed{% endif %} {% if lastItem and tag.id == lastItem %}last-item{% endif %}" id="tag_{{ tag.id }}" data-tag-name="{{ tag.name }}">
+        <li  class="table-row-style sortable-tag mjs-nestedSortable-{{ selected==tag.id or tag.hasChild(selected)?'expanded':'collapsed' }} {% if lastItem and tag.id == lastItem %}last-item{% endif %}" id="tag_{{ tag.id }}" data-tag-name="{{ tag.name }}">
                 <div class="dotted">&nbsp;</div>
-                <div class="handle menu_item tag_item {{ selected==tag.id or tag.hasChild(selected)?'info':'' }} " id="div_{{ tag.id }}" ondrop="dropTag(event, '{{ tag.id }}')"   ondragover="openTag(event, '{{ tag.id }}')" >
+                <div class="handle menu_item tag_item {{ selected==tag.id?'info':'' }} " id="div_{{ tag.id }}" ondrop="dropTag(event, '{{ tag.id }}')"   ondragover="openTag(event, '{{ tag.id }}')" >
                     <i class="tag_folder glyphicon glyphicon-folder-{{ selected==tag.id or tag.hasChild(selected)?'open':'close' }} cursor-pointer"></i>&nbsp;
                     <a class="tag_link" id="tag_link_{{ tag.id }}" data-pk="{{ tag.id }}" href="#" >{{ tag.name }}</a>
 
@@ -21,6 +21,7 @@
     {% endfor %}
 {% endmacro %}
 {% set selected = datagrid.values.tags?datagrid.values.tags.value:0 %}
+
 <div class="sortable menu-tree">
     <ul id="tag-tree" class="table-row-style ui-sortable">
         <li class="table-row-style no-nest ">
