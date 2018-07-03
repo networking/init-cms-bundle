@@ -11,6 +11,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Entity\Tag;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,11 +48,15 @@ class CkeditorAdminController extends BaseMediaAdminController
 
         $formView = $datagrid->getForm()->createView();
 
-            $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
+        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
         $tags = $this->getDoctrine()
-            ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(['level' => 1], ['path' => 'ASC']);
+            ->getRepository(Tag::class)
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
@@ -147,6 +152,57 @@ class CkeditorAdminController extends BaseMediaAdminController
                             ]
                         );
 
+    }
+
+    /**
+     * @return Response
+     * @throws \Twig_Error_Runtime
+     */
+    public function browserRefreshAction()
+    {
+        $this->checkIfMediaBundleIsLoaded();
+
+        if (false === $this->admin->isGranted('LIST')) {
+            throw new AccessDeniedException();
+        }
+
+        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'), $this->admin->getPersistentParameter('provider'));
+        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
+        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+
+        $formats = [];
+
+        foreach ($datagrid->getResults() as $media) {
+            $formats[$media->getId()] = $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
+        }
+
+        $formView = $datagrid->getForm()->createView();
+
+        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
+
+
+        $tags = $this->getDoctrine()
+            ->getRepository(Tag::class)
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
+
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+
+        return $this->render(
+            'NetworkingInitCmsBundle:Ckeditor:browser_list_items.html.twig',
+            [
+                'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'lastItem' => 0,
+                'action' => 'browser',
+                'form' => $formView,
+                'datagrid' => $datagrid,
+                'formats' => $formats
+            ]
+        );
     }
 
     /**

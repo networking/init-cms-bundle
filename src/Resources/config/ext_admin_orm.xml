@@ -58,6 +58,9 @@
             <call method="setMultipleMediaTags">
                 <argument>%networking_init_cms.multiple_media_tags%</argument>
             </call>
+            <call method="setShowTagTree">
+                <argument>%networking_init_cms.show_tag_tree%</argument>
+            </call>
             <call method="setTemplates">
                 <argument type="collection">
                     <argument key="list">NetworkingInitCmsBundle:MediaAdmin:list.html.twig</argument>

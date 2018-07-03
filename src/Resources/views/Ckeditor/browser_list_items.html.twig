@@ -1,0 +1,152 @@
+{% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
+{% for object in datagrid.results %}
+    {% set path = 'networking_init_cms_file_download' %}
+    {% if object.width %}
+        {% set path = 'networking_init_cms_image_view' %}
+    {% endif %}
+
+    {% if object.width is defined and object.width %}
+        {% if object.providerName == 'sonata.media.provider.youtube' %}
+            {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
+            {% set previewType = 'iframe'%}
+            {% set iframeWidth = '600px' %}
+            {% set iframeHeight = '300px' %}
+        {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
+            {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
+            {% set previewType = 'iframe'%}
+            {% set iframeWidth = '600px' %}
+            {% set iframeHeight = '300px' %}
+        {% else %}
+            {% set previewLink %}{% path object, 'reference' %}{% endset %}
+            {% set previewType = 'image'%}
+        {% endif %}
+    {% else %}
+        {% set previewLink %}//docs.google.com/gview?url={{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}&embedded=true{% endset %}
+        {% set previewType = 'iframe' %}
+        {% set iframeWidth = '400px' %}
+        {% set iframeHeight = '560px' %}
+    {% endif %}
+
+    <div class="media-box">
+        <div class="zero-clipboard">
+            <div class="btn-clipboard btn-clipboard-left">
+                <a href="{{ previewLink }}"
+                        {% if previewType == 'iframe' %}
+                            data-featherlight-iframe-width="{{ iframeWidth }}"
+                            data-featherlight-iframe-height="{{ iframeHeight }}"
+                        {% endif %}
+                   data-featherlight-variant="initcms-featherlight"
+                   data-featherlight="{{ previewType }}"
+                   class="image-preview-link" title="{{ object.name }}">
+                    <i class="glyphicon glyphicon-zoom-in"></i>
+                </a>
+            </div>
+            <div class="btn-clipboard btn-clipboard-right">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                   aria-haspopup="true" aria-expanded="false">Actions <span
+                            class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" >
+                    <li>
+                        <a href="{{ path(path, {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"  tabindex="-1"
+                           class="select">{{ 'list.label_select'|trans({}, 'MediaAdmin') }}: {{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
+                    </li>
+                    {% if formats[object.id]|length > 0 %}
+                        {% if object.width %}
+                            <li class="divider"></li>
+                            <li class="dropdown-header">{{ 'list.label_select'|trans({}, 'MediaAdmin') }} - {{ 'title.formats'|trans({}, 'SonataMediaBundle') }}:</li>
+                            {% for name, format in formats[object.id] %}
+                                <li><a href="{% path object, name %}" tabindex="-1"
+                                       class="select">{% if format.width %}{{ 'label.width'|trans({}, 'MediaAdmin') }}: {{ format.width }}{% if format.height %}x {{ 'label.height'|trans({}, 'MediaAdmin') }}: {{ format.height }}{% endif %}px{% endif %}</a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="thumbnail context">
+            <div class="media-element" data-toggle="context" data-target="#context-menu-{{ object.id }}">
+                {% if object.width is defined and object.width %}
+                    <img src="{% path object, 'admin' %}" class="img-responsive  center-block"/>
+                {% else %}
+                    <i class="{{ get_file_icon(object.getMetadataValue('filename')) }}"></i>
+                {% endif %}
+            </div>
+            <div class="media-title small" data-toggle="context" data-target="#context-menu-{{ object.id }}">
+                <a href="{{ path(path, {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"
+                   data-toggle="tooltip" data-placement="top"  class="select" title="{{ object.name }}">{{ object.name }}</a> <br/>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+<div class="clearfix">&nbsp;</div>
+{% if datagrid.pager.haveToPaginate() %}
+<div class="col-md-3 col-xs-12 text-right pull-right">
+    <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
+                list_results_count{% endtranschoice %}</strong></label>
+    {% block max_per_page %}
+        <br>
+        <label class="control-label"
+               for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
+                label_per_page{% endtrans %}</label>
+        <select class="per-page small" id="{{ admin.uniqid }}_per_page"
+                style="width: auto; height: auto">
+            {% for per_page in admin.getperpageoptions %}
+                <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                        value="{{ admin.generateUrl('init_ckeditor_browser', {'filter':datagrid.values|merge({'_per_page': per_page})}|merge(ckParameters)) }}">
+                    {{ per_page }}
+                </option>
+            {% endfor %}
+        </select>
+    {% endblock %}
+</div>
+    <div class="pagination col-md-3 hidden-xs hidden-sm text-left">
+        {{ datagrid.pager.page }} / {{ datagrid.pager.lastpage }}
+    </div>
+    <div class="col-xs-12 col-md-6 text-center">
+        <ul class="pagination pagination-xs">
+
+            {% if datagrid.pager.page != 1 %}
+                <li>
+                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( datagrid, 1)|merge(ckParameters)) }}"
+                       title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
+                </li>
+            {% endif %}
+
+            {% if datagrid.pager.page != datagrid.pager.previouspage %}
+                <li>
+                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.previouspage)|merge(ckParameters)) }}"
+                       title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
+                </li>
+            {% endif %}
+
+            {# Set the number of pages to display in the pager #}
+            {% for page in datagrid.pager.getLinks(admin_pool.getOption('pager_links')) %}
+                {% if page == datagrid.pager.page %}
+                    <li class="active"><a
+                                href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, page)|merge(ckParameters)) }}">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, page)|merge(ckParameters)) }}">{{ page }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if datagrid.pager.page != datagrid.pager.nextpage %}
+                <li>
+                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.nextpage)|merge(ckParameters)) }}"
+                       title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
+                </li>
+            {% endif %}
+
+            {% if datagrid.pager.page != datagrid.pager.lastpage %}
+                <li>
+                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.lastpage)|merge(ckParameters)) }}"
+                       title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </div>
+{% endif %}

@@ -12,7 +12,7 @@ namespace Networking\InitCmsBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
 use Networking\InitCmsBundle\Entity\Media;
-use Networking\InitCmsBundle\Model\Tag;
+use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * Class MediaAdminController
@@ -311,9 +310,15 @@ class MediaAdminController extends SonataMediaAdminController
 
         $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
+
         $tags = $this->getDoctrine()
-            ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(['level' => 1], ['path' => 'ASC']);
+            ->getRepository(Tag::class)
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
+
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
@@ -351,8 +356,12 @@ class MediaAdminController extends SonataMediaAdminController
         $persistentParameters = $this->admin->getPersistentParameters();
 
         $tags = $this->getDoctrine()
-            ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(['level' => 1], ['path' => 'ASC']);
+            ->getRepository(Tag::class)
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 

@@ -18,6 +18,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Provider\FileProvider;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -49,7 +50,7 @@ abstract class MediaAdmin extends Admin
     /**
      * @var int
      */
-    protected $maxPerPage = 1000000;
+    protected $maxPerPage = 64;
 
     /**
      * @var array
@@ -60,6 +61,11 @@ abstract class MediaAdmin extends Admin
      * @var bool
      */
     protected $hasMultipleMediaTags;
+
+    /**
+     * @var bool
+     */
+    protected $showTagTree;
 
     /**
      * Default values to the datagrid.
@@ -104,14 +110,6 @@ abstract class MediaAdmin extends Admin
     }
 
     /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'fa-picture-o';
-    }
-
-    /**
      * @param $hasMultipleMediaTags
      * @return $this
      */
@@ -120,6 +118,33 @@ abstract class MediaAdmin extends Admin
         $this->hasMultipleMediaTags = $hasMultipleMediaTags;
 
         return $this;
+    }
+
+    /**
+     * @param $showTagTree boolean
+     * @return $this
+     */
+    public function setShowTagTree($showTagTree)
+    {
+        $this->showTagTree = $showTagTree;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowTagTree()
+    {
+        return $this->showTagTree;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return 'fa-picture-o';
     }
 
     /**
@@ -133,6 +158,13 @@ abstract class MediaAdmin extends Admin
             'init_ckeditor_browser',
             [
                 '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browser'
+            ]
+        );
+        $collection->add(
+            'init_ckeditor_browser_refresh',
+            'init_ckeditor_browser_refresh',
+            [
+                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browserRefresh'
             ]
         );
 
@@ -179,10 +211,7 @@ abstract class MediaAdmin extends Admin
 
         $filterParameters = $this->getFilterParameters();
 
-
         $persistentParameters = $this->getPersistentParameters();
-
-
         $context = $persistentParameters['context'];
         $provider = $persistentParameters['provider'];
 
@@ -206,7 +235,9 @@ abstract class MediaAdmin extends Admin
             $filterParameters['providerName']['value'] = $provider;
             $filterParameters['_page'] = 1;
         }
-
+        else{
+            $filterParameters['providerName'] = ['value' => $persistentParameters['provider']];
+        }
 
         $this->request->getSession()->set($this->getCode().'.filter.parameters', $filterParameters);
 
@@ -266,8 +297,26 @@ abstract class MediaAdmin extends Admin
     {
         $datagridMapper
             ->add('name', SimpleStringFilter::class)
-            ->add('authorName', SimpleStringFilter::class, ['hidden' => true])
-            ->add('context', SimpleStringFilter::class, [
+            ->add('authorName', SimpleStringFilter::class, ['hidden' => true]);
+
+        if($this->showTagTree) {
+            $datagridMapper->add('tags', CallbackFilter::class, [
+                'callback' => function ($queryBuilder, $alias, $field, $value) {
+
+                if (!$value['value']) {
+                    return false;
+                }
+                $queryBuilder->leftJoin(sprintf('%s.tags', $alias), 't');
+                $queryBuilder->andWhere('t.id = :id');
+                $queryBuilder->setParameter('id', $value['value']);
+
+                return true;
+                }, 'field_type' => HiddenType::class, 'label_render' => false, 'label' => false]);
+        }else{
+            $datagridMapper->add('tags');
+        }
+
+        $datagridMapper->add('context', SimpleStringFilter::class, [
                 'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false
             ])
             ->add('providerName', SimpleStringFilter::class, [

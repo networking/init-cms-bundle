@@ -213,6 +213,21 @@ abstract class Tag
         return $this->parentNames;
     }
 
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function hasChild($id)
+    {
+        foreach($this->children as $child){
+            if($child->getId() == $id){
+                return true;
+            }
+            return $child->hasChild($id);
+        }
+        return false;
+    }
+
 
     /**
      * @return string

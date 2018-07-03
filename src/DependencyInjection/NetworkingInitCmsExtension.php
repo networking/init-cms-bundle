@@ -29,7 +29,9 @@ use Symfony\Component\Yaml\Yaml;
 class NetworkingInitCmsExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * @param array $configs
+     * @param ContainerBuilder $container
+     * @throws \ReflectionException|\Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -75,6 +77,10 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter(
             'networking_init_cms.multiple_media_tags',
             $config['multiple_media_tags']
+        );
+        $container->setParameter(
+            'networking_init_cms.show_tag_tree',
+            $config['show_tag_tree']
         );
 
 
