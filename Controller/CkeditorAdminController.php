@@ -50,7 +50,11 @@ class CkeditorAdminController extends BaseMediaAdminController
 
         $tags = $this->getDoctrine()
             ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(array('level' => 1), array('path' => 'ASC'));
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
@@ -92,7 +96,11 @@ class CkeditorAdminController extends BaseMediaAdminController
 
         $tags = $this->getDoctrine()
             ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(array('level' => 1), array('path' => 'ASC'));
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
