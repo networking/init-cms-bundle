@@ -35,7 +35,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
     /**
      * @var bool
      */
-    protected $lastestSnapshotIds = false;
+    protected $latestSnapshotIds = false;
 
     /**
      * @param EntityManager $em
@@ -102,7 +102,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
                 Expr\Join::WITH,
                 sprintf('%s.page = ps.page ', $aliases[0])
             );
-            $qb->andWhere($qb->expr()->in('ps.id', $this->getLastestSnapshotIds()));
+            $qb->andWhere($qb->expr()->in('ps.id', $this->getLatestSnapshotIds()));
             $qb->leftJoin('ps.contentRoute', 'cr');
 
         } else {
@@ -157,18 +157,18 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
     /**
      * @return array
      */
-    protected function getLastestSnapshotIds()
+    protected function getLatestSnapshotIds()
     {
-        if(!$this->lastestSnapshotIds){
+        if(!$this->latestSnapshotIds){
             $em = $this->getEntityManager();
             $metadata = $em->getClassMetadata('\Networking\InitCmsBundle\Entity\PageSnapshot');
             $rsm = new Query\ResultSetMapping();
             $rsm->addScalarResult('ps_id', 'ps_id');
             $qb = $em->createNativeQuery(sprintf("SELECT MAX(id) AS ps_id FROM %s GROUP BY page_id", $metadata->getTableName()), $rsm);
             $result = $qb->getScalarResult();
-            $this->lastestSnapshotIds = array_map('current', $result);
+            $this->latestSnapshotIds = array_map('current', $result);
         }
-        return $this->lastestSnapshotIds;
+        return $this->latestSnapshotIds;
     }
 
 
