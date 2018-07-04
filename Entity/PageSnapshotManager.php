@@ -59,7 +59,7 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
             ->setMaxResults(1)
             ->setParameter(':pageId', $pageId);
 
-        return $qb->getQuery()->execute();
+        return $qb->getQuery()->getSingleResult();
     }
 
 
