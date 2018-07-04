@@ -47,6 +47,21 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
         return $qb->getQuery()->execute();
     }
 
+    /**
+     * @param $pageId
+     * @return mixed
+     */
+    public function findLastPageSnapshot($pageId)
+    {
+        $qb = $this->createQueryBuilder('ps')
+            ->where('ps.page = :pageId')
+            ->orderBy('ps.version', 'desc')
+            ->setMaxResults(1)
+            ->setParameter(':pageId', $pageId);
+
+        return $qb->getQuery()->execute();
+    }
+
 
 
 }

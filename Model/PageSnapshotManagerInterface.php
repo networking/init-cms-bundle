@@ -26,6 +26,12 @@ interface PageSnapshotManagerInterface
     public function findSnapshotByPageId($pageId);
 
     /**
+     * @param $pageId
+     * @return mixed
+     */
+    public function findLastPageSnapshot($pageId);
+
+    /**
      * @return string
      */
     public function getClassName();

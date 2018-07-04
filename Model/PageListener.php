@@ -158,7 +158,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
             if (!$contentRoute = $page->getContentRoute()->getId()) {
 
                 $pageSnapshotManager = $this->getPageSnapshotManager();
-                $pageSnapshots = $pageSnapshotManager->findSnapshotByPageId($page->getId());
+                $pageSnapshots = $pageSnapshotManager->findLastPageSnapshot($page->getId());
                 $lastPageSnapshot = reset($pageSnapshots);
 
                 $page->setContentRoute($lastPageSnapshot->getContentRoute());
