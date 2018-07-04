@@ -202,3 +202,9 @@
 
     </div>
 {% endif %}
+
+{% if datagrid.results|length < 1 %}
+    <p class="notice">
+        {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+    </p>
+{% endif %}

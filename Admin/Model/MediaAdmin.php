@@ -216,7 +216,6 @@ abstract class MediaAdmin extends Admin
         if ($context && array_key_exists('context', $filterParameters)) {
             if ($filterParameters['context']['value'] != $context) {
                 $filterParameters['context']['value'] = $context;
-                $filterParameters['_page'] = 1;
             }
         }else{
             $filterParameters['context'] = array('value' => $persistentParameters['context']);
@@ -226,11 +225,9 @@ abstract class MediaAdmin extends Admin
         if ($provider && array_key_exists('providerName', $filterParameters)) {
             if ($filterParameters['providerName']['value'] != $provider) {
                 $filterParameters['providerName']['value'] = $provider;
-                $filterParameters['_page'] = 1;
             }
         }elseif($provider){
             $filterParameters['providerName']['value'] = $provider;
-            $filterParameters['_page'] = 1;
         }
         else{
             $filterParameters['providerName'] = array('value' => $persistentParameters['provider']);

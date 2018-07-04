@@ -202,6 +202,7 @@
             filters,
             function(xhr){
                 $('#item_list').html(xhr);
+                $("html, body").animate({ scrollTop: $('#item_list').scrollTop() }, "slow");
             }
         );
 

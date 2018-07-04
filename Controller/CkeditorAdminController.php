@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
-use Sonata\MediaBundle\Controller\MediaAdminController as BaseMediaAdminController;
+use Networking\InitCmsBundle\Controller\MediaAdminController as BaseMediaAdminController;
 
 class CkeditorAdminController extends BaseMediaAdminController
 {
@@ -34,9 +34,11 @@ class CkeditorAdminController extends BaseMediaAdminController
             throw new AccessDeniedException();
         }
 
-        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'), $this->admin->getPersistentParameter('provider'));
-        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
-        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+        $datagrid = $this->admin->getDatagrid();
+        $datagrid->setValue('context', null, $this->getRequest()->get('context'));
+        $datagrid->setValue('provider', null, $this->getRequest('provider'));
+        $datagrid->setValue('_page', null, 1);
+        $datagrid->setValue('tags', null, null);
 
         $formats = array();
 
@@ -74,25 +76,22 @@ class CkeditorAdminController extends BaseMediaAdminController
 
     public function browserRefreshAction()
     {
+
         $this->checkIfMediaBundleIsLoaded();
 
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
 
-        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'), $this->admin->getPersistentParameter('provider'));
-        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
-        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+        $datagrid = $this->admin->getDatagrid();
+        $datagrid->getForm()->createView();
+
 
         $formats = array();
 
         foreach ($datagrid->getResults() as $media) {
             $formats[$media->getId()] = $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
         }
-
-        $formView = $datagrid->getForm()->createView();
-
-        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
         $tags = $this->getDoctrine()
             ->getRepository('NetworkingInitCmsBundle:Tag')
@@ -111,7 +110,6 @@ class CkeditorAdminController extends BaseMediaAdminController
                 'tagAdmin' => $tagAdmin,
                 'lastItem' => 0,
                 'action' => 'browser',
-                'form' => $formView,
                 'datagrid' => $datagrid,
                 'formats' => $formats
             )
