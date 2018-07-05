@@ -321,7 +321,7 @@ file that was distributed with this source code.
                 filters,
                 function(xhr){
                     $('#item_list').html(xhr);
-                    $("html, body").animate({ scrollTop: $('#item_list').scrollTop() }, "slow");
+                    $(".modal-body").animate({ scrollTop: $('#item_list').scrollTop() }, "slow");
                 }
             );
 
