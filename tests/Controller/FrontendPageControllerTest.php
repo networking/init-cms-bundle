@@ -269,10 +269,6 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSnapshot->expects($this->once())
-            ->method('getPage')
-            ->will($this->returnValue($mockPage));
-
         $mockHelper = $this->getMockBuilder('Networking\InitCmsBundle\Helper\PageHelper')
             ->disableOriginalConstructor()
             ->getMock();
