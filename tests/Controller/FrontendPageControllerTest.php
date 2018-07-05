@@ -409,11 +409,6 @@ class FrontendPageControllerTest extends TestCase
             ->method('isActive')
             ->will($this->returnValue(true));
 
-        $mockSnapshot->expects($this->once())
-            ->method('getPage')
-            ->will($this->returnValue($mockPage));
-
-
 
         $mockSerializer = $this->getMockBuilder('\JMS\Serializer\SerializerInterface')
             ->disableOriginalConstructor()
