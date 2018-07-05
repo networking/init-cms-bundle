@@ -22,11 +22,8 @@ use Sonata\MediaBundle\Controller\MediaAdminController as BaseMediaAdminControll
 class CkeditorAdminController extends BaseMediaAdminController
 {
     /**
-     * Returns the response object associated with the browser action
-     *
      * @return Response
-     *
-     * @throws AccessDeniedException
+     * @throws \Twig_Error_Runtime
      */
     public function browserAction()
     {
@@ -36,9 +33,10 @@ class CkeditorAdminController extends BaseMediaAdminController
             throw new AccessDeniedException();
         }
 
-        $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'), $this->admin->getPersistentParameter('provider'));
-        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
-        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+        $datagrid = $this->admin->getDatagrid();
+        $datagrid->setValue('context', null, $this->getRequest()->get('context'));
+        $datagrid->setValue('provider', null, $this->getRequest()->get('provider'));
+        $datagrid->setValue('_page', null, 1);
 
         $formats = [];
 

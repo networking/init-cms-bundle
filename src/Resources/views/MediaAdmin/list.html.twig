@@ -311,10 +311,9 @@ file that was distributed with this source code.
                 filters,
                 function(xhr){
                     $('#item_list').html(xhr);
+                    $(".modal-body").animate({ scrollTop: $('#item_list').scrollTop() }, "slow");
                 }
             );
-
-            history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': persistent_parameters.context}) }}&time='+jQuery.now());
         }
 
         $(function () {

@@ -48,6 +48,7 @@ file that was distributed with this source code.
                     filters,
                     function(xhr){
                         $('#item_list').html(xhr);
+                        $("html, body").animate({ scrollTop: $('#item_list').scrollTop() }, "slow");
                     }
                 );
 
@@ -93,6 +94,17 @@ file that was distributed with this source code.
                 target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
                 target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
             });
+
+            body.on('click', 'a.media-pager', function (e) {
+                e.preventDefault();
+                refreshList({'filter': {
+                        '_page':$(this).data('page'),
+                        '_sort_order':$(this).data('sort-order'),
+                        '_sort_by':$(this).data('sort-by'),
+                        'tags':{'value': $(this).data('tags')},
+                        'name':{'value': $(this).data('name')},
+                    }});
+            })
 
         });
     </script>
@@ -267,33 +279,33 @@ file that was distributed with this source code.
                 </div>
             </div>
             <div class="clearfix"><p>&nbsp;</p></div>
-
-            {% if datagrid.results|length > 0 %}
-                <div>
-                    {% block table_body %}
-                        <div class="row">
+            <div>
+                {% block table_body %}
+                    <div class="row">
+                        {% if admin.showTagTree %}
                             <div class="col-md-3 col-xs-12">
-                                <div  id="tagsContainer">
+                                <div id="tagsContainer">
                                     {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'noSort': true, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
                                 </div>
                             </div>
-                            <div id="item_list" class="col-md-9 col-xs-12 text-center">
+                        {% endif %}
+                        <div id="item_list" class="col-md-{{ admin.showTagTree?'9':'12' }} col-xs-12 text-center">
+                            {% if datagrid.results|length > 0 %}
                                 {% include "NetworkingInitCmsBundle:Ckeditor:browser_list_items.html.twig" %}
-                            </div>
+                            {% else %}
+                                <p class="notice">
+                                    {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+                                </p>
+                            {% endif %}
                         </div>
-                        <div class="clearfix">&nbsp;</div>
-                    {% endblock %}
+                    </div>
+                    <div class="clearfix">&nbsp;</div>
+                {% endblock %}
 
-                    {% block table_footer %}
-                        <div class="row"></div>
-                    {% endblock %}
-                </div>
-
-            {% else %}
-                <p class="notice">
-                    {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
-                </p>
-            {% endif %}
+                {% block table_footer %}
+                    <div class="row"></div>
+                {% endblock %}
+            </div>
         </div>
     </div>
 {% endblock %}

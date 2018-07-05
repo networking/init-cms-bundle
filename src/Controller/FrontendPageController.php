@@ -207,7 +207,7 @@ class FrontendPageController extends Controller
 
         /** @var $page PageInterface */
         $page = $this->getPageHelper()->unserializePageSnapshotData($pageSnapshot, false);
-        if (!$pageSnapshot->getPage()->isActive()) {
+        if (!$page->isActive()) {
             throw new NotFoundHttpException('page status '.$page->getStatus());
         }
 
