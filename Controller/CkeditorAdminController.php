@@ -36,7 +36,7 @@ class CkeditorAdminController extends BaseMediaAdminController
 
         $datagrid = $this->admin->getDatagrid();
         $datagrid->setValue('context', null, $this->getRequest()->get('context'));
-        $datagrid->setValue('provider', null, $this->getRequest('provider'));
+        $datagrid->setValue('provider', null, $this->getRequest()->get('provider'));
         $datagrid->setValue('_page', null, 1);
         $datagrid->setValue('tags', null, null);
 
