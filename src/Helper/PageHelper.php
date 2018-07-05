@@ -10,9 +10,7 @@
 
 namespace Networking\InitCmsBundle\Helper;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use JMS\Serializer\SerializerInterface;
-use Networking\InitCmsBundle\Component\Routing\DynamicRouter;
 use Networking\InitCmsBundle\Lib\PhpCacheInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManagerInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -21,7 +19,9 @@ use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use Sonata\AdminBundle\Exception\NoValueException;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * Class PageHelper
@@ -36,7 +36,7 @@ class PageHelper
     protected $serializer;
 
     /**
-     * @var Registry
+     * @var ManagerRegistry
      */
     protected $registry;
 
@@ -73,7 +73,7 @@ class PageHelper
     /**
      * PageHelper constructor.
      * @param SerializerInterface $serializer
-     * @param Registry $registry
+     * @param ManagerRegistry $registry
      * @param PageManagerInterface $pageManager
      * @param PageSnapshotManagerInterface $pageSnapshotManager
      * @param ContentRouteManagerInterface $contentRouteManager
@@ -82,7 +82,7 @@ class PageHelper
      */
     public function __construct(
         SerializerInterface $serializer,
-        Registry $registry,
+        ManagerRegistry $registry,
         PageManagerInterface $pageManager,
         PageSnapshotManagerInterface $pageSnapshotManager,
         ContentRouteManagerInterface $contentRouteManager,

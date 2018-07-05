@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Menu;
 
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Iterator\RecursiveItemIterator;
+use Knp\Menu\Matcher\MatcherInterface;
 use Knp\Menu\Matcher\Voter\UriVoter;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,7 +119,7 @@ class MenuBuilder
         RouterInterface $router,
         MenuItemManagerInterface $menuManager,
         TranslatorInterface $translator,
-        Matcher $matcher
+        MatcherInterface $matcher
     ) {
 
         $this->factory = $factory;

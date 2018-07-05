@@ -75,7 +75,7 @@ class CRUDController extends SonataCRUDController
      * @param Response $response
      * @return Response
      */
-    public function render($view, array $parameters = [], Response $response = null)
+    public function renderWithExtraParams($view, array $parameters = [], Response $response = null)
     {
         if (array_key_exists('action', $parameters) && $parameters['action'] == 'edit') {
 

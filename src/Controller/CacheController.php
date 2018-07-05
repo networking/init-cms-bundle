@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -43,7 +44,7 @@ class CacheController extends Controller
      * CacheController constructor.
      * @param AuthorizationChecker $authorizationChecker
      */
-    public function __construct(AuthorizationChecker $authorizationChecker)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->authorizationChecker = $authorizationChecker;
     }
@@ -51,10 +52,9 @@ class CacheController extends Controller
     /**
      * clear the Cache
      *
-     * @param Request $request
      * @return Response
      */
-    public function clearAction(Request $request)
+    public function clearAction()
     {
 
         /*

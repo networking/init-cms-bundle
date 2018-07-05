@@ -17,12 +17,13 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class ContentRouteManager implements ContentRouteManagerInterface
+abstract class ContentRouteManager implements ContentRouteManagerInterface, RouteProviderInterface
 {
 
     /**

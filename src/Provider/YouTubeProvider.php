@@ -34,20 +34,4 @@ class YouTubeProvider extends BaseProvider
         $this->postPersist($media);
 
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function fixBinaryContent(MediaInterface $media)
-    {
-        if (!$media->getBinaryContent()) {
-            return;
-        }
-        if (strlen($media->getBinaryContent()) === 11) {
-            return;
-        }
-        if (preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\#\?&\"'>]+)/", $media->getBinaryContent(), $matches)) {
-            $media->setBinaryContent($matches[1]);
-        }
-    }
 }

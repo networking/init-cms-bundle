@@ -9,6 +9,9 @@
  */
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
+use Networking\InitCmsBundle\Admin\Pool;
+use Networking\InitCmsBundle\Builder\ListBuilder;
+use Networking\InitCmsBundle\Provider\YouTubeProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -26,26 +29,13 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
     {
         if ($container->hasDefinition('sonata.admin.builder.orm_list')) {
             $definition = $container->getDefinition('sonata.admin.builder.orm_list');
-
-            $definition->setClass('Networking\InitCmsBundle\Builder\ListBuilder');
+            $definition->setClass(ListBuilder::class);
         }
-
-        if ($container->hasDefinition('sonata.user.editable_role_builder')) {
-            $definition = $container->getDefinition('sonata.user.editable_role_builder');
-
-            $definition->setClass('Networking\InitCmsBundle\Security\EditableRolesBuilder');
-        }
-
-        if ($container->hasDefinition('sonata.admin.builder.mongodb_list')) {
-            $definition = $container->getDefinition('sonata.admin.builder.mongodb_list');
-
-            $definition->setClass('Networking\InitCmsBundle\Builder\MongoDBListBuilder');
-        }
+        
 
         if ($container->hasDefinition('sonata.media.provider.youtube')) {
             $definition = $container->getDefinition('sonata.media.provider.youtube');
-
-            $definition->setClass('Networking\InitCmsBundle\Provider\YouTubeProvider');
+            $definition->setClass(YouTubeProvider::class);
         }
 
         if ($container->has('sonata.media.admin.gallery')){
@@ -62,6 +52,6 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         }
 
         $definition = $container->getDefinition('sonata.admin.pool');
-        $definition->setClass('Networking\InitCmsBundle\Admin\Pool');
+        $definition->setClass(Pool::class);
     }
 }

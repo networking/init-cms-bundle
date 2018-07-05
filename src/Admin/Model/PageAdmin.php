@@ -72,7 +72,7 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * @var \Networking\InitCmsBundle\Model\PageManagerInterface
      */
-    protected $pageManger;
+    protected $pageManager;
 
     /**
      * @return string

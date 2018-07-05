@@ -20,14 +20,7 @@ use Sonata\AdminBundle\Guesser\TypeGuesserInterface;
  */
 class ListBuilder extends SonataDoctrineOrmListBuilder
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(TypeGuesserInterface $guesser, $templates = [])
-    {
-        $this->guesser = $guesser;
-        $this->templates = $templates;
-    }
+
 
     /**
      * {@inheritdoc}
