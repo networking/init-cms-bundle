@@ -33,6 +33,11 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
     protected $pageHelper;
 
     /**
+     * @var bool
+     */
+    protected $latestSnapshotIds = false;
+
+    /**
      * @param EntityManager $em
      * @param \Doctrine\ORM\Mapping\ClassMetadata $class
      */
@@ -80,24 +85,26 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $direction = 'ASC',
         $includeNode = false,
         $viewStatus = Page::STATUS_PUBLISHED
-    ) {
+    )
+    {
 
         $qb = $this->childrenQueryBuilder($node, $direct, $sortByField, $direction, $includeNode);
         $aliases = $qb->getRootAliases();
         if ($viewStatus == Page::STATUS_PUBLISHED) {
-            $qb->addSelect('ps.id AS ps_id');
-            $qb->addSelect('ps.versionedData AS ps_versionedData');
-            $qb->leftJoin(
-                '\Networking\InitCmsBundle\Entity\PageSnapshot',
-                'ps',
-                Expr\Join::WITH,
-                sprintf('%s.page = ps.page ', $aliases[0])
-            );
-            $qb->leftJoin('ps.contentRoute', 'cr');
+            $qb->addSelect('ps.id AS ps_id')
+                ->addSelect('ps.versionedData AS ps_versionedData')
+                ->leftJoin(
+                    PageSnapshot::class,
+                    'ps',
+                    Expr\Join::WITH,
+                    sprintf('%s.page = ps.page ', $aliases[0])
+                )
+                ->andWhere($qb->expr()->in('ps.id', $this->getLatestSnapshotIds()))
+                ->leftJoin('ps.contentRoute', 'cr');
 
         } else {
-            $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p');
-            $qb->leftJoin('p.contentRoute', 'cr');
+            $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p')
+                ->leftJoin('p.contentRoute', 'cr');
         }
         $qb->addSelect('cr.path AS path');
         $results = $qb->getQuery()->getResult();
@@ -115,7 +122,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
                         }
                         $menuItem->setPath($item['path']);
                     }
-                }else{
+                } else {
                     if (!$item['path']) {
                         continue;
                     } else {
@@ -137,11 +144,28 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
      */
     public function findAllJoinPage()
     {
-        $qb =$this->createQueryBuilder('m');
+        $qb = $this->createQueryBuilder('m');
         $qb->select('m,p');
         $qb->leftJoin('m.page', 'p');
 
         return $qb->getQuery()->execute();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getLatestSnapshotIds()
+    {
+        if (!$this->latestSnapshotIds) {
+            $em = $this->getEntityManager();
+            $metadata = $em->getClassMetadata(PageSnapshot::class);
+            $rsm = new Query\ResultSetMapping();
+            $rsm->addScalarResult('ps_id', 'ps_id');
+            $qb = $em->createNativeQuery(sprintf("SELECT MAX(id) AS ps_id FROM %s GROUP BY page_id", $metadata->getTableName()), $rsm);
+            $result = $qb->getScalarResult();
+            $this->latestSnapshotIds = array_map('current', $result);
+        }
+        return $this->latestSnapshotIds;
     }
 
 

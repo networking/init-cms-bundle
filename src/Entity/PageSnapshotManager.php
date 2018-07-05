@@ -11,6 +11,8 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
 use Doctrine\ORM\EntityManager;
@@ -47,6 +49,27 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
             ->setParameter(':pageId', $pageId);
 
         return $qb->getQuery()->execute();
+    }
+
+    /**
+     * @param $pageId
+     * @return mixed
+     */
+    public function findLastPageSnapshot($pageId)
+    {
+        $qb = $this->createQueryBuilder('ps')
+            ->where('ps.page = :pageId')
+            ->orderBy('ps.version', 'desc')
+            ->setMaxResults(1)
+            ->setParameter(':pageId', 2);
+
+        try{
+            return $qb->getQuery()->getSingleResult();
+        }catch (NoResultException $e){
+            return null;
+        }catch (NonUniqueResultException $e){
+            return null;
+        }
     }
 
 
