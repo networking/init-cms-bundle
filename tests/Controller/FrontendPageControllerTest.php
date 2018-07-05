@@ -478,7 +478,7 @@ class FrontendPageControllerTest extends TestCase
         $request->attributes->set('_locale', 'en');
 
         //dynamic router
-        $mockDynamicRouter = $this->getMockBuilder(DynamicRouter::class)
+        $mockDynamicRouter = $this->getMockBuilder('\Symfony\Cmf\Component\Routing\DynamicRouter')
             ->disableOriginalConstructor()
             ->getMock();
         $mockDynamicRouter->expects($this->once())
