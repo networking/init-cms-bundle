@@ -27,7 +27,7 @@
         "sonata-project/notification-bundle": "~2.3.0",
         "sonata-project/media-bundle": "2.3.3",
         "stof/doctrine-extensions-bundle": "~1.1",
-        "gedmo/doctrine-extensions": "2.4.33",
+        "gedmo/doctrine-extensions": "v2.4.31",
         "mopa/bootstrap-bundle": "~3.0.0",
         "twbs/bootstrap": "v3.2.0",
         "symfony-cmf/routing-bundle": "1.1.0",
