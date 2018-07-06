@@ -1,3 +1,5 @@
+<!-- load bar -->
+{% if is_granted('ROLE_SONATA_ADMIN') %}
 <div id="initcmsnavadmin" style="display: none;"></div>
 <script>/*<![CDATA[*/
 {% spaceless %}
@@ -186,3 +188,5 @@
     };
 {% endspaceless %}
 /*]]>*/</script>
+{% endif %}
+<!-- end load bar -->
