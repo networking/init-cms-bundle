@@ -547,6 +547,7 @@ abstract class PageAdmin extends BaseAdmin
                 null,
                 [
                     'sortable' => false,
+                    'template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_show_field.html.twig'
                 ]
             )
             ->add(
