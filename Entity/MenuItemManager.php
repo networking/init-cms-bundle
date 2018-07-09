@@ -102,7 +102,12 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
                 Expr\Join::WITH,
                 sprintf('%s.page = ps.page ', $aliases[0])
             );
-            $qb->andWhere($qb->expr()->in('ps.id', $this->getLatestSnapshotIds()));
+
+            $orx = $qb->expr()->orX();
+            $conditionA = $qb->expr()->in('ps.id', $this->getLatestSnapshotIds());
+            $conditionB = $qb->expr()->isNull('ps.id');
+            $orx->addMultiple([$conditionA, $conditionB]);
+            $qb->andWhere($orx);
             $qb->leftJoin('ps.contentRoute', 'cr');
 
         } else {
