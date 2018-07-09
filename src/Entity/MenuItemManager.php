@@ -91,6 +91,10 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $qb = $this->childrenQueryBuilder($node, $direct, $sortByField, $direction, $includeNode);
         $aliases = $qb->getRootAliases();
         if ($viewStatus == Page::STATUS_PUBLISHED) {
+            $orx = $qb->expr()->orX();
+            $conditionA = $qb->expr()->in('ps.id', $this->getLatestSnapshotIds());
+            $conditionB = $qb->expr()->isNull('ps.id');
+            $orx->addMultiple([$conditionA, $conditionB]);
             $qb->addSelect('ps.id AS ps_id')
                 ->addSelect('ps.versionedData AS ps_versionedData')
                 ->leftJoin(
@@ -99,7 +103,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
                     Expr\Join::WITH,
                     sprintf('%s.page = ps.page ', $aliases[0])
                 )
-                ->andWhere($qb->expr()->in('ps.id', $this->getLatestSnapshotIds()))
+                ->andWhere($orx)
                 ->leftJoin('ps.contentRoute', 'cr');
 
         } else {
