@@ -134,7 +134,7 @@ class MenuItemAdminController extends CRUDController
             });
             $node = $items->first();
             return $controller->renderView(
-                'NetworkingInitCmsBundle:MenuItemAdmin:menu_list_item.html.twig',
+                '@NetworkingInitCms/MenuItemAdmin/menu_list_item.html.twig',
                 ['admin' => $admin, 'node' => $node]
             );
         };
@@ -548,7 +548,7 @@ class MenuItemAdminController extends CRUDController
             $node = $menuItemManager->find($node['id']);
 
             return $controller->renderView(
-                'NetworkingInitCmsBundle:MenuItemAdmin:placement_item.html.twig',
+                '@NetworkingInitCms/MenuItemAdmin/placement_item.html.twig',
                 ['admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node]
             );
         };
@@ -570,7 +570,7 @@ class MenuItemAdminController extends CRUDController
             }
 
             return $controller->renderView(
-                'NetworkingInitCmsBundle:MenuItemAdmin:placement_item_end.html.twig',
+                '@NetworkingInitCms/MenuItemAdmin/placement_item_end.html.twig',
                 ['admin' => $admin, 'last_edited' => $lastEdited, 'node' => $node]
             );
         };

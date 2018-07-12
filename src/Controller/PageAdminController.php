@@ -68,7 +68,7 @@ class PageAdminController extends CRUDController
                 );
                 $result = 'ok';
                 $html = $this->renderView(
-                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                    '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
             } catch (\Exception $e) {
@@ -101,7 +101,7 @@ class PageAdminController extends CRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_translation_copy.html.twig',
+            '@NetworkingInitCms/PageAdmin/page_translation_copy.html.twig',
             [
                 'action' => 'copy',
                 'page' => $page,
@@ -142,7 +142,7 @@ class PageAdminController extends CRUDController
                 );
                 $result = 'ok';
                 $html = $this->renderView(
-                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                    '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
             } catch (\Exception $e) {
@@ -177,7 +177,7 @@ class PageAdminController extends CRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_copy.html.twig',
+            '@NetworkingInitCms/PageAdmin/page_copy.html.twig',
             [
                 'language' => \Locale::getDisplayLanguage($page->getLocale()),
                 'action' => 'copy',
@@ -223,7 +223,7 @@ class PageAdminController extends CRUDController
                 if ($this->isXmlHttpRequest()) {
 
                     $html = $this->renderView(
-                        'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                        '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                         ['object' => $page, 'admin' => $this->admin]
                     );
 
@@ -255,7 +255,7 @@ class PageAdminController extends CRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_translation_link_list.html.twig',
+            '@NetworkingInitCms/PageAdmin/page_translation_link_list.html.twig',
             [
                 'page' => $page,
                 'pages' => $pages,
@@ -297,7 +297,7 @@ class PageAdminController extends CRUDController
             if ($this->isXmlHttpRequest()) {
 
                 $html = $this->renderView(
-                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                    '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
 
@@ -316,7 +316,7 @@ class PageAdminController extends CRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_translation_unlink.html.twig',
+            '@NetworkingInitCms/PageAdmin/page_translation_unlink.html.twig',
             [
                 'action' => 'unlink',
                 'page' => $page,
@@ -437,7 +437,7 @@ class PageAdminController extends CRUDController
             $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_copy_success');
         }
 
-        return $this->render('NetworkingInitCmsBundle:PageAdmin:batch_page_copy.html.twig',
+        return $this->render('@NetworkingInitCms/PageAdmin/batch_page_copy.html.twig',
             ['action' => 'batchCopy', 'form' => $form->createView()]
         );
     }
@@ -648,7 +648,7 @@ class PageAdminController extends CRUDController
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
         $pageSettingsHtml = $this->renderView(
-            'NetworkingInitCmsBundle:PageAdmin:ajax_page_settings.html.twig',
+            '@NetworkingInitCms/PageAdmin/ajax_page_settings.html.twig',
             [
                 'action' => 'edit',
                 'form' => $view,
@@ -903,7 +903,7 @@ class PageAdminController extends CRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_cancel_draft.html.twig',
+            '@NetworkingInitCms/PageAdmin/page_cancel_draft.html.twig',
             [
                 'action' => 'cancelDraft',
                 'page' => $draftPage,

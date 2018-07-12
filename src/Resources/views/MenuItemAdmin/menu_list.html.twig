@@ -8,11 +8,11 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'NetworkingInitCmsBundle:CRUD:base_list.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/base_list.html.twig' %}
 
 {% block list_table %}
     <div id="menuTabs">
-        {% include "NetworkingInitCmsBundle:MenuItemAdmin:menu_tabs.html.twig" %}
+        {% include "@NetworkingInitCms/MenuItemAdmin/menu_tabs.html.twig" %}
     </div>
 {% endblock %}
 {% block actions %}
@@ -106,5 +106,5 @@ file that was distributed with this source code.
     {{ parent() }}
     <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}"
             type="text/javascript"></script>
-    {% include "NetworkingInitCmsBundle:MenuItemAdmin:menu_list_script.html.twig" %}
+    {% include "@NetworkingInitCms/MenuItemAdmin/menu_list_script.html.twig" %}
 {% endblock %}

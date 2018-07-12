@@ -8,13 +8,13 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'NetworkingInitCmsBundle:CRUD:base_list.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/base_list.html.twig' %}
 
 
 
 {% block actions %}
     <div class="sonata-actions">
-        {% include 'NetworkingInitCmsBundle:Core:clear_cache_button.html.twig' %}
+        {% include '@NetworkingInitCms/Core/clear_cache_button.html.twig' %}
     </div>
 {% endblock %}
 {% block list_table %}
@@ -32,7 +32,7 @@ file that was distributed with this source code.
 {% endblock %}
 {% block before_body_end %}
     {{ parent() }}
-    {% include 'NetworkingInitCmsBundle:TranslationAdmin:list_script.html.twig' %}
+    {% include '@NetworkingInitCms/TranslationAdmin/list_script.html.twig' %}
 {% endblock %}
 
 {% block batch_actions %}

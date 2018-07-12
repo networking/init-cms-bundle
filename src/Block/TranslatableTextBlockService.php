@@ -32,7 +32,7 @@ class TranslatableTextBlockService extends AbstractAdminBlockService
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
 
-        return $this->renderResponse('NetworkingInitCmsBundle:Block:block_translatable_text.html.twig', [
+        return $this->renderResponse('@NetworkingInitCms/Block/block_translatable_text.html.twig', [
                     'block'     => $blockContext->getBlock(),
                     'settings'  => $blockContext->getSettings()
         ], $response);

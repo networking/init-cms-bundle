@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'NetworkingInitCmsBundle::admin_base.html.twig' %}
+{% extends '@NetworkingInitCms/admin_base.html.twig' %}
 
 {%- set _preview = block('preview') is defined ? block('preview')|trim : null %}
 {% set _form = block('form') is defined ? block('form')|trim : null %}
@@ -40,7 +40,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block init_cms_top_nav %}
-    {% include 'NetworkingInitCmsBundle:Navbar:admin_navbar.html.twig' %}
+    {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}
 {% endblock init_cms_top_nav %}
 
 {% block sidebar_left %}
@@ -50,7 +50,7 @@ file that was distributed with this source code.
             {% endblock %}
 
             {% block sonata_top_bar_nav %}
-                {% include 'NetworkingInitCmsBundle:Navbar:admin_side_nav.html.twig' %}
+                {% include '@NetworkingInitCms/Navbar/admin_side_nav.html.twig' %}
             {% endblock %}
             {% block top_bar_after_nav %} {% endblock %}
 

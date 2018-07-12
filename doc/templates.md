@@ -16,7 +16,7 @@ So lets have a look at getting out some of our saved content:
 ```
    <div class="hero-unit">
         {% for layoutBlock in page.layoutBlock('header') %}
-		{{ render_initcms_block('ApplicationNetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('@ApplicationNetworkingInitCms/Content/cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
     </div>
 ```

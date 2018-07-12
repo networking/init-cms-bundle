@@ -47,7 +47,7 @@ class MediaAdminController extends SonataMediaAdminController
         }
 
         return $this->renderWithExtraParams(
-            'NetworkingInitCmsBundle:MediaAdmin:show.html.twig',
+            '@NetworkingInitCms/MediaAdmin/show.html.twig',
             [
                 'media' => $media,
                 'formats' => $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext()),
@@ -78,7 +78,7 @@ class MediaAdminController extends SonataMediaAdminController
 
         if (!array_key_exists('provider', $parameters) || !$parameters['provider']) {
             return $this->render(
-                'NetworkingInitCmsBundle:MediaAdmin:select_provider.html.twig',
+                '@NetworkingInitCms/MediaAdmin/select_provider.html.twig',
                 [
                     'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                         $request->get('context', $this->get('sonata.media.pool')->getDefaultContext())
@@ -366,7 +366,7 @@ class MediaAdminController extends SonataMediaAdminController
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
         return $this->render(
-            'NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig',
+            '@NetworkingInitCms/MediaAdmin/list_items.html.twig',
             [
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])

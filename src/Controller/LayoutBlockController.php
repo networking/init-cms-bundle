@@ -121,7 +121,7 @@ class LayoutBlockController extends CRUDController
         $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:layout_block_edit.html.twig',
+            '@NetworkingInitCms/PageAdmin/layout_block_edit.html.twig',
             [
                 'action' => 'create',
                 'form' => $view,
@@ -192,7 +192,7 @@ class LayoutBlockController extends CRUDController
         $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:layout_block_fields.html.twig',
+            '@NetworkingInitCms/PageAdmin/layout_block_fields.html.twig',
             [
                 'form' => $view,
                 'object' => $layoutBlock,
@@ -315,7 +315,7 @@ class LayoutBlockController extends CRUDController
 
         if ($page) {
             $pageStatus = $this->renderView(
-                'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig',
+                '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig',
                 [
                     'admin' => $pageAdmin,
                     'object' => $page

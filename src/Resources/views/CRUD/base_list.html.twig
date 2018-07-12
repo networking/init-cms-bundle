@@ -12,7 +12,7 @@ file that was distributed with this source code.
 {% extends base_template %}
 
 {% block actions %}
-    {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
+    {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
 {% endblock %}
 
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}

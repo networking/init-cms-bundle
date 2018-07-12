@@ -58,7 +58,7 @@ class HelpTextController extends Controller
         /** @var \Networking\InitCmsBundle\Admin\Pool $pool */
         $pool = $this->get('sonata.admin.pool');
         $parameters['admin_pool'] = $pool;
-        $parameters['base_template'] = isset($admin) ?  $this->getBaseTemplate($request, $admin): 'NetworkingInitCmsBundle::admin_layout.html.twig';
+        $parameters['base_template'] = isset($admin) ?  $this->getBaseTemplate($request, $admin): '@NetworkingInitCms/admin_layout.html.twig';
         $dashBoardGroups = $pool->getDashboardNavigationGroups();
 
 
@@ -69,7 +69,7 @@ class HelpTextController extends Controller
         );
 
         return $this->render(
-            'NetworkingInitCmsBundle:HelpText:adminHelp.html.twig',
+            '@NetworkingInitCms/HelpText/adminHelp.html.twig',
             $parameters
         );
     }

@@ -11,7 +11,7 @@ file that was distributed with this source code.
 #}
 
 
-{% extends 'NetworkingInitCmsBundle:CRUD:base_show_field.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/base_show_field.html.twig' %}
 
 {% block field %}
     {% if field_description.hasAssociationAdmin and field_description.associationadmin.id(value) and field_description.associationadmin.isGranted('EDIT') and field_description.associationadmin.hasRoute('edit') %}

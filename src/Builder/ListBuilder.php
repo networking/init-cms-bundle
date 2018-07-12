@@ -28,7 +28,7 @@ class ListBuilder extends SonataDoctrineOrmListBuilder
     public function buildActionFieldDescription(FieldDescriptionInterface $fieldDescription)
     {
         if (null === $fieldDescription->getTemplate()) {
-            $fieldDescription->setTemplate('NetworkingInitCmsBundle:CRUD:list__action.html.twig');
+            $fieldDescription->setTemplate('@NetworkingInitCms/CRUD/list__action.html.twig');
         }
 
         if (null === $fieldDescription->getType()) {

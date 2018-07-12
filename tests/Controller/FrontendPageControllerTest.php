@@ -447,7 +447,7 @@ class FrontendPageControllerTest extends TestCase
             'SCRIPT_NAME' => 'app.php'
         ];
         $templateParams = [
-            'template' => 'DemoInitCmsBundle:Default:one_column.html.twig',
+            'template' => '@DemoInitCms/Default/one_column.html.twig',
             'vars' => [],
             'isStreamable' => false
         ];

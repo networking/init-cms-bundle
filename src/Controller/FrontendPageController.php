@@ -429,7 +429,7 @@ class FrontendPageController extends Controller
             $request->attributes->set('_content', $page);
         }
         $response = $this->render(
-            'NetworkingInitCmsBundle:Admin:esi_admin_navbar.html.twig',
+            '@NetworkingInitCms/Admin/esi_admin_navbar.html.twig',
             ['admin_pool' => $this->getAdminPool()]
         );
 

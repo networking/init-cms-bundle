@@ -199,7 +199,7 @@ class TranslationAdmin extends AbstractAdmin
 
             $fieldDescription = $this->modelManager->getNewFieldDescriptionInstance($this->getClass(), $locale);
             $fieldDescription->setTemplate(
-                'NetworkingInitCmsBundle:CRUD:base_inline_translation_field.html.twig'
+                '@NetworkingInitCms/CRUD/base_inline_translation_field.html.twig'
             );
             $fieldDescription->setOption('locale', $locale);
             $fieldDescription->setOption('editable', $this->editableOptions);
@@ -287,11 +287,11 @@ class TranslationAdmin extends AbstractAdmin
         }
 
         if ($name === 'list') {
-            return 'NetworkingInitCmsBundle:TranslationAdmin:list.html.twig';
+            return '@NetworkingInitCms/TranslationAdmin/list.html.twig';
         }
 
         if ($name === 'edit') {
-            return 'NetworkingInitCmsBundle:TranslationAdmin:edit.html.twig';
+            return '@NetworkingInitCms/TranslationAdmin/edit.html.twig';
         }
 
         return parent::getTemplate($name);

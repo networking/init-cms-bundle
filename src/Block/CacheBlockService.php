@@ -92,7 +92,7 @@ class CacheBlockService extends AbstractAdminBlockService
     {
         $resolver->setDefaults(
             [
-                'template' => 'NetworkingInitCmsBundle:Block:block_cache.html.twig'
+                'template' => '@NetworkingInitCms/Block/block_cache.html.twig'
             ]
         );
 

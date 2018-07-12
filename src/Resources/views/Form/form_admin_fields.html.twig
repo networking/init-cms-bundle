@@ -8,26 +8,26 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'MopaBootstrapBundle:Form:fields.html.twig' %}
+{% extends '@MopaBootstrap/Form/fields.html.twig' %}
 
 {# Custom Sonata Admin Extension, template override#}
 {% block sonata_admin_orm_one_to_one_widget %}
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_to_one.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_one.html.twig' %}
 {% endblock %}
 
 {% block sonata_admin_orm_many_to_many_widget %}
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_to_many.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_many_to_many.html.twig' %}
 {% endblock %}
 
 {% block sonata_admin_orm_many_to_one_widget %}
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_to_one.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_many_to_one.html.twig' %}
 {% endblock %}
 
 {% block sonata_admin_orm_one_to_many_widget %}
     {% if sonata_admin.field_description.name == 'layoutBlock' %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks.html.twig' %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
     {% else %}
-        {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_to_many.html.twig' %}
+        {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_many.html.twig' %}
     {% endif %}
 {% endblock %}
 
@@ -121,7 +121,7 @@ file that was distributed with this source code.
 
     </div>
 
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
 {% endblock %}
 
 {% block sonata_type_admin_widget %}
@@ -867,7 +867,7 @@ file that was distributed with this source code.
 
     </div>
 
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_media_entity_script.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_media_entity_script.html.twig' %}
 {% endblock %}
 
 {% block ckeditor_widget %}

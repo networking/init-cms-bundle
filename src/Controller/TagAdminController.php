@@ -55,7 +55,7 @@ class TagAdminController extends CRUDController
         $tagRepo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Tag');
         $tags = $tagRepo->findBy(['level' => 1], ['path' => 'ASC']);
 
-        return $this->renderView('NetworkingInitCmsBundle:TagAdmin:tags.html.twig', [
+        return $this->renderView('@NetworkingInitCms/TagAdmin/tags.html.twig', [
             'noSort' => false,
             'tags' => $tags,
             'tagAdmin' => $this->admin,
@@ -128,7 +128,7 @@ class TagAdminController extends CRUDController
         }
 
 
-        return $this->render('NetworkingInitCmsBundle:TagAdmin:delete.html.twig', [
+        return $this->render('@NetworkingInitCms/TagAdmin/delete.html.twig', [
             'object' => $object,
             'action' => 'delete',
             'returnToMedia' => $returnToMedia,

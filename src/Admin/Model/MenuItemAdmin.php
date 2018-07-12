@@ -266,7 +266,7 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->add(
                 'page',
                 'many_to_one',
-                ['template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_field.html.twig']
+                ['template' => '@NetworkingInitCms/PageAdmin/page_list_field.html.twig']
             )
             ->add('redirect_url')
             ->add('link_target')
@@ -347,10 +347,10 @@ abstract class MenuItemAdmin extends BaseAdmin
     {
         switch ($name) {
             case 'list':
-                return 'NetworkingInitCmsBundle:MenuItemAdmin:menu_list.html.twig';
+                return '@NetworkingInitCms/MenuItemAdmin/menu_list.html.twig';
                 break;
             case 'placement':
-                return 'NetworkingInitCmsBundle:MenuItemAdmin:placement.html.twig';
+                return '@NetworkingInitCms/MenuItemAdmin/placement.html.twig';
                 break;
             default:
                 return parent::getTemplate($name);

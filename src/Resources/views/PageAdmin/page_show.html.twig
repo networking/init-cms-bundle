@@ -19,7 +19,7 @@ file that was distributed with this source code.
         {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
             <a class="btn sonata-action-element" href="{{ admin.generateObjectUrl('history', object) }}">{{ 'link_action_history'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
-        {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
+        {% include '@SonataAdmin/Core/create_button.html.twig' %}
         {% if admin.hasroute('list') and admin.isGranted('LIST')%}
             <a class="btn sonata-action-element" href="{{ admin.generateUrl('list') }}">{{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}

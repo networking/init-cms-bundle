@@ -9,18 +9,18 @@ file that was distributed with this source code.
 
 #}
 
-{% extends 'NetworkingInitCmsBundle:CRUD:list.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/default.css') }}">
 {% endblock %}
 
 
-{% form_theme form 'NetworkingInitCmsBundle:Form:form_admin_fields.html.twig' %}
+{% form_theme form '@NetworkingInitCms/Form/form_admin_fields.html.twig' %}
 {% set active_tab = app.request.get('context') %}
 {% block javascripts %}
         {{ parent() }}
-    {% include 'NetworkingInitCmsBundle:MediaAdmin:list_script_draggable.html.twig' %}
+    {% include '@NetworkingInitCms/MediaAdmin/list_script_draggable.html.twig' %}
 {% endblock %}
 
 {% block preview %}
@@ -254,7 +254,7 @@ file that was distributed with this source code.
                     {% if admin.showTagTree %}
                     <div class="col-md-3 col-xs-12">
                         <div  id="tagsContainer">
-                            {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
+                            {% include "@NetworkingInitCms/TagAdmin/tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
                         </div>
                         {% if not app.request.isXmlHttpRequest and tagAdmin.isGranted('CREATE')%}
                             <hr>
@@ -270,7 +270,7 @@ file that was distributed with this source code.
                     {% endif %}
                     <div id="item_list" class="col-md-{{ admin.showTagTree?'9':'12' }} col-xs-12 text-center">
                     {% if datagrid.results|length > 0 %}
-                        {% include "NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig" %}
+                        {% include "@NetworkingInitCms/MediaAdmin/list_items.html.twig" %}
                     {% else %}
                             <p class="notice">
                                 {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
@@ -371,7 +371,7 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-    {% include 'NetworkingInitCmsBundle:MediaAdmin:list_script.html.twig' %}
+    {% include '@NetworkingInitCms/MediaAdmin/list_script.html.twig' %}
 {% endblock %}
 
 

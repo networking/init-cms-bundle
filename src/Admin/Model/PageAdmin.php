@@ -364,20 +364,20 @@ abstract class PageAdmin extends BaseAdmin
 
         switch ($name) {
             case 'show':
-                return 'NetworkingInitCmsBundle:PageAdmin:page_show.html.twig';
+                return '@NetworkingInitCms/PageAdmin/page_show.html.twig';
                 break;
             case 'preview':
-                return 'NetworkingInitCmsBundle:PageAdmin:page_preview.html.twig';
+                return '@NetworkingInitCms/PageAdmin/page_preview.html.twig';
                 break;
             case 'edit':
                 if ($this->getSubject()->getId()) {
-                    return 'NetworkingInitCmsBundle:PageAdmin:page_edit.html.twig';
+                    return '@NetworkingInitCms/PageAdmin/page_edit.html.twig';
                 } else {
-                    return 'NetworkingInitCmsBundle:PageAdmin:page_create.html.twig';
+                    return '@NetworkingInitCms/PageAdmin/page_create.html.twig';
                 }
                 break;
             case 'list':
-                return 'NetworkingInitCmsBundle:PageAdmin:page_list.html.twig';
+                return '@NetworkingInitCms/PageAdmin/page_list.html.twig';
                 break;
             default:
                 return parent::getTemplate($name);
@@ -531,7 +531,7 @@ abstract class PageAdmin extends BaseAdmin
             ->add(
                 'pageName',
                 'string',
-                ['template' => 'NetworkingInitCmsBundle:PageAdmin:page_title_list_field.html.twig']
+                ['template' => '@NetworkingInitCms/PageAdmin/page_title_list_field.html.twig']
             )
             ->add(
                 'status',
@@ -539,7 +539,7 @@ abstract class PageAdmin extends BaseAdmin
                 [
                     'label' => ' ',
                     'sortable' => false,
-                    'template' => 'NetworkingInitCmsBundle:PageAdmin:page_status_list_field.html.twig'
+                    'template' => '@NetworkingInitCms/PageAdmin/page_status_list_field.html.twig'
                 ]
             )
             ->add(
@@ -547,7 +547,7 @@ abstract class PageAdmin extends BaseAdmin
                 null,
                 [
                     'sortable' => false,
-                    'template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_show_field.html.twig'
+                    'template' => '@NetworkingInitCms/PageAdmin/page_list_show_field.html.twig'
                 ]
             )
             ->add(
@@ -555,7 +555,7 @@ abstract class PageAdmin extends BaseAdmin
                 null,
                 [
                     'sortable' => false,
-                    'template' => 'NetworkingInitCmsBundle:PageAdmin:page_menu_list_field.html.twig',
+                    'template' => '@NetworkingInitCms/PageAdmin/page_menu_list_field.html.twig',
                     'rootMenus' => $rootMenus,
                     'locale' => $locale
                 ]
@@ -569,8 +569,8 @@ abstract class PageAdmin extends BaseAdmin
                 'label' => ' ',
                 'actions' => [
                     'edit' => [],
-                    'show' => ['template' => 'NetworkingInitCmsBundle:PageAdmin:page_action_show.html.twig'],
-                    'copy' => ['template' => 'NetworkingInitCmsBundle:PageAdmin:page_action_copy.html.twig'],
+                    'show' => ['template' => '@NetworkingInitCms/PageAdmin/page_action_show.html.twig'],
+                    'copy' => ['template' => '@NetworkingInitCms/PageAdmin/page_action_copy.html.twig'],
                     'delete' => [],
                 ]
             ]

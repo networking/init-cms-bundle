@@ -215,7 +215,7 @@ class GalleryView implements GalleryViewInterface
     {
         return [
             'content' => ['galleryView' => $this],
-            'template' => 'NetworkingInitCmsBundle:GalleryAdmin:gallery_view_block.html.twig'
+            'template' => '@NetworkingInitCms/GalleryAdmin/gallery_view_block.html.twig'
         ];
     }
 

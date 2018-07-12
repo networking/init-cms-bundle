@@ -96,7 +96,7 @@ class OnlineUsersBlockService extends AbstractAdminBlockService
     {
         $resolver->setDefaults(
             [
-                'template' => 'NetworkingInitCmsBundle:Block:block_online_users.html.twig'
+                'template' => '@NetworkingInitCms/Block/block_online_users.html.twig'
             ]
         );
     }

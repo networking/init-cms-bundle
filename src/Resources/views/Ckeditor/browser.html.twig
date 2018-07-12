@@ -9,7 +9,7 @@ file that was distributed with this source code.
 
 #}
 
-{% extends 'NetworkingInitCmsBundle::empty_layout.html.twig' %}
+{% extends '@NetworkingInitCms/empty_layout.html.twig' %}
 {% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
 {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
 
@@ -285,13 +285,13 @@ file that was distributed with this source code.
                         {% if admin.showTagTree %}
                             <div class="col-md-3 col-xs-12">
                                 <div id="tagsContainer">
-                                    {% include "NetworkingInitCmsBundle:TagAdmin:tags.html.twig" with {'noSort': true, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
+                                    {% include "@NetworkingInitCms/TagAdmin/tags.html.twig" with {'noSort': true, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
                                 </div>
                             </div>
                         {% endif %}
                         <div id="item_list" class="col-md-{{ admin.showTagTree?'9':'12' }} col-xs-12 text-center">
                             {% if datagrid.results|length > 0 %}
-                                {% include "NetworkingInitCmsBundle:Ckeditor:browser_list_items.html.twig" %}
+                                {% include "@NetworkingInitCms/Ckeditor/browser_list_items.html.twig" %}
                             {% else %}
                                 <p class="notice">
                                     {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}

@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'NetworkingInitCmsBundle::admin_base.html.twig' %}
+{% extends '@NetworkingInitCms/admin_base.html.twig' %}
 
 {%- set _preview = block('preview') is defined ? block('preview')|trim : null %}
 {% set _form = block('form') is defined ? block('form')|trim : null %}

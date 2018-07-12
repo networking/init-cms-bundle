@@ -391,7 +391,7 @@ abstract class MediaAdmin extends Admin
         if ($name === 'edit' && is_null($this->getSubject()->getId()) && !$this->request->get('pcode')) {
             $provider = $this->pool->getProvider($this->request->get('provider'));
             if ($provider instanceof FileProvider) {
-                return 'NetworkingInitCmsBundle:MediaAdmin:multifileupload_jquery.html.twig';
+                return '@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig';
             }
         }
 
@@ -545,7 +545,7 @@ abstract class MediaAdmin extends Admin
                 'name',
                 'string',
                 [
-                    'template' => 'NetworkingInitCmsBundle:MediaAdmin:list_name.html.twig',
+                    'template' => '@NetworkingInitCms/MediaAdmin/list_name.html.twig',
                 ]
             )
             ->add('createdAt', 'string', ['label' => 'label.created_at'])

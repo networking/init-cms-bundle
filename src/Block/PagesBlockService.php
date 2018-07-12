@@ -113,6 +113,6 @@ class PagesBlockService extends AbstractAdminBlockService
      */
     public function configureSettings(OptionsResolver$resolver)
     {
-        $resolver->setDefaults(['template' => 'NetworkingInitCmsBundle:Block:block_page_status.html.twig']);
+        $resolver->setDefaults(['template' => '@NetworkingInitCms/Block/block_page_status.html.twig']);
     }
 }

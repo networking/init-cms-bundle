@@ -105,7 +105,7 @@ abstract class UserAdmin extends SonataUserAdmin
         $listMapper
             ->addIdentifier('username')
             ->add('email')
-            ->add('groups', null, ['template' => 'NetworkingInitCmsBundle:CRUD:list_orm_many_to_many.html.twig'])
+            ->add('groups', null, ['template' => '@NetworkingInitCms/CRUD/list_orm_many_to_many.html.twig'])
             ->add(
                 'enabled',
                 null,

@@ -32,17 +32,17 @@ file that was distributed with this source code.
 
 {% block actions %}
     <div class="sonata-actions">
-        {% include 'SonataAdminBundle:Button:show_button.html.twig' %}
-        {% include 'SonataAdminBundle:Button:history_button.html.twig' %}
-        {% include 'SonataAdminBundle:Button:acl_button.html.twig' %}
-        {% include 'SonataAdminBundle:Button:create_button.html.twig' %}
-        {% include 'SonataAdminBundle:Button:list_button.html.twig' %}
+        {% include '@SonataAdmin/Button/show_button.html.twig' %}
+        {% include '@SonataAdmin/Button/history_button.html.twig' %}
+        {% include '@SonataAdmin/Button/acl_button.html.twig' %}
+        {% include '@SonataAdmin/Button/create_button.html.twig' %}
+        {% include '@SonataAdmin/Button/list_button.html.twig' %}
     </div>
 {% endblock %}
 
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
 {% set _side_menu = block('side_menu') %}
-{% use 'NetworkingInitCmsBundle:CRUD:base_edit_form.html.twig' with form as parentForm %}
+{% use '@NetworkingInitCms/CRUD/base_edit_form.html.twig' with form as parentForm %}
 
 {% block form %}
     {{ block('parentForm') }}

@@ -38,5 +38,5 @@ sonata_formatter:
             extensions: [] # Twig formatter cannot have extensions
     ckeditor:
         templates:
-            browser: NetworkingInitCmsBundle:Ckeditor:browser.html.twig
-            upload: NetworkingInitCmsBundle:Ckeditor:upload.html.twig
+            browser: '@NetworkingInitCms/Ckeditor/browser.html.twig'
+            upload: '@NetworkingInitCms/Ckeditor/upload.html.twig'

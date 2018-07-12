@@ -75,7 +75,7 @@ class InitCmsInstallController extends Controller
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:InitCmsInstall:index.html.twig',
+            '@NetworkingInitCms/InitCmsInstall/index.html.twig',
             [
                 'action' => ['url' => $url, 'label' => $label],
                 'title' => 'Welcome to the init cms',
@@ -174,7 +174,7 @@ class InitCmsInstallController extends Controller
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:InitCmsInstall:index.html.twig',
+            '@NetworkingInitCms/InitCmsInstall/index.html.twig',
             [
                 'form' => $form->createView(),
                 'title' => 'Install the init cms',

@@ -190,7 +190,7 @@ class CkeditorAdminController extends BaseMediaAdminController
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
         return $this->render(
-            'NetworkingInitCmsBundle:Ckeditor:browser_list_items.html.twig',
+            '@NetworkingInitCms/Ckeditor/browser_list_items.html.twig',
             [
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,

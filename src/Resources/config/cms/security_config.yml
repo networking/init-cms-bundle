@@ -5,6 +5,9 @@ services:
 parameters:
     sonata.admin.security.mask.builder.class: Networking\InitCmsBundle\Security\Acl\Permission\MaskBuilder
 
+acl:
+    connection: default
+
 security:
     access_decision_manager:
         # Strategy can be: affirmative, unanimous or consensus
@@ -21,8 +24,6 @@ security:
 
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
-    acl:
-        connection: default
 
     firewalls:
         # -> custom firewall for the admin area of the URL

@@ -147,7 +147,7 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
 
         if (false !== $pos) {
             $toolbar = "\n".str_replace("\n", '', $this->twig->render(
-                'NetworkingInitCmsBundle:Admin:toolbar_js.html.twig',
+                '@NetworkingInitCms/Admin/toolbar_js.html.twig',
                 [
                     'position' => $this->position,
                     'page_id' => $page_id

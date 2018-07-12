@@ -165,7 +165,7 @@ abstract class Text implements ContentInterface, TextInterface
     {
         return [
             'content' => ['text' => $this],
-            'template' => 'NetworkingInitCmsBundle:Text:admin_text_block.html.twig'
+            'template' => '@NetworkingInitCms/Text/admin_text_block.html.twig'
         ];
     }
 

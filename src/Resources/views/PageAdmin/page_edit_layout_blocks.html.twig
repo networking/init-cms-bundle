@@ -149,12 +149,12 @@ file that was distributed with this source code.
     {% endif %}
     {# add dependent javascript based on if the request is ajax or not #}
     {% if app.request.isXmlHttpRequest %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_orm_one_ajax.html.twig' %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_orm_one_ajax.html.twig' %}
     {% else %}
         {# addToBottom adds the content in the block to the end of the page #}
         {% jsblock 'addToBottom' %}
-        {% include 'NetworkingInitCmsBundle:Form:content_type_select.html.twig' %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks_script.html.twig' with {'admin': admin} %}
+        {% include '@NetworkingInitCms/Form/content_type_select.html.twig' %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks_script.html.twig' with {'admin': admin} %}
         {% jsblock 'addToBottomEnd' %}
     {% endif %}
 </div>

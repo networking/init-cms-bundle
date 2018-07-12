@@ -232,7 +232,7 @@ file that was distributed with this source code.
 
             {# include association code #}
             {% jsblock 'addToBottom' %}
-            {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_association_script.html.twig' %}
+            {% include '@NetworkingInitCms/CRUD/edit_orm_one_association_script.html.twig' %}
             {% jsblock 'addToBottomEnd' %}
         {% else %}
             <span id="field_actions_{{ id }}">
@@ -255,7 +255,7 @@ file that was distributed with this source code.
 
             </div>
             {% jsblock 'addToBottom' %}
-            {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+            {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
             {% jsblock 'addToBottomEnd' %}
         {% endif %}
     </div>

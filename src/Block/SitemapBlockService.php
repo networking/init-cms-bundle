@@ -73,7 +73,7 @@ class SitemapBlockService extends AbstractAdminBlockService
     {
         $resolver->setDefaults(
             [
-                'template' => 'NetworkingInitCmsBundle:Block:block_sitemap.html.twig'
+                'template' => '@NetworkingInitCms/Block/block_sitemap.html.twig'
             ]
         );
     }

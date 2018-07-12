@@ -1,4 +1,4 @@
-{% extends "NetworkingInitCmsBundle::simple_layout.html.twig" %}
+{% extends "@NetworkingInitCms/simple_layout.html.twig" %}
 {% block headline %}<h1>{{ 'title.translation_not_found'|trans({'%language%': language}, 'NetworkingInitCmsBundle')|raw }}</h1>{% endblock %}
 {% block sonata_admin_content %}
     {{ 'info.translation_not_found'|trans({'%language%': language}, 'NetworkingInitCmsBundle')|raw }}

@@ -41,10 +41,10 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         if ($container->has('sonata.media.admin.gallery')){
             $galleryAdmin = $container->getDefinition('sonata.media.admin.gallery');
             $templates = [
-                'list' => 'NetworkingInitCmsBundle:GalleryAdmin:list.html.twig',
-                'edit' => 'NetworkingInitCmsBundle:GalleryAdmin:edit.html.twig',
-                'show' => 'NetworkingInitCmsBundle:CRUD:show.html.twig',
-                'ajax' => 'NetworkingInitCmsBundle::ajax_layout.html.twig'
+                'list' => '@NetworkingInitCms/GalleryAdmin/list.html.twig',
+                'edit' => '@NetworkingInitCms/GalleryAdmin/edit.html.twig',
+                'show' => '@NetworkingInitCms/CRUD/show.html.twig',
+                'ajax' => '@NetworkingInitCms/ajax_layout.html.twig'
             ];
             foreach ($templates as $key =>  $template){
                 $galleryAdmin->addMethodCall('setTemplate', [$key, $template]);

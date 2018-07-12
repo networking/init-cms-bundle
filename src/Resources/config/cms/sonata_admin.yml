@@ -26,24 +26,24 @@ sonata_admin:
     title:      Networking CMS
     title_logo: /bundles/networkinginitcms/img/logo_initcms.png
     templates:
-        user_block: NetworkingInitCmsBundle:Admin:user_block.html.twig
-        layout:     NetworkingInitCmsBundle::admin_layout.html.twig
-        ajax:       NetworkingInitCmsBundle::ajax_layout.html.twig
-        list:       NetworkingInitCmsBundle:CRUD:list.html.twig
-        show:       NetworkingInitCmsBundle:CRUD:show.html.twig
-        edit:       NetworkingInitCmsBundle:CRUD:edit.html.twig
-        preview:    NetworkingInitCmsBundle:CRUD:preview.html.twig
-        delete:     NetworkingInitCmsBundle:CRUD:delete.html.twig
-        action:     NetworkingInitCmsBundle:CRUD:action.html.twig
-        select:     NetworkingInitCmsBundle:CRUD:list__select.html.twig
-        dashboard:  NetworkingInitCmsBundle:Core:dashboard.html.twig
-        batch_confirmation: NetworkingInitCmsBundle:CRUD:batch_confirmation.html.twig
-        base_list_field: NetworkingInitCmsBundle:CRUD:base_list_field.html.twig
-        inner_list_row: NetworkingInitCmsBundle:CRUD:list_inner_row.html.twig
+        user_block: '@NetworkingInitCms/Admin/user_block.html.twig'
+        layout:     '@NetworkingInitCms/admin_layout.html.twig'
+        ajax:       '@NetworkingInitCms/ajax_layout.html.twig'
+        list:       '@NetworkingInitCms/CRUD/list.html.twig'
+        show:       '@NetworkingInitCms/CRUD/show.html.twig'
+        edit:       '@NetworkingInitCms/CRUD/edit.html.twig'
+        preview:    '@NetworkingInitCms/CRUD/preview.html.twig'
+        delete:     '@NetworkingInitCms/CRUD/delete.html.twig'
+        action:     '@NetworkingInitCms/CRUD/action.html.twig'
+        select:     '@NetworkingInitCms/CRUD/list__select.html.twig'
+        dashboard:  '@NetworkingInitCms/Core/dashboard.html.twig'
+        batch_confirmation: '@NetworkingInitCms/CRUD/batch_confirmation.html.twig'
+        base_list_field: '@NetworkingInitCms/CRUD/base_list_field.html.twig'
+        inner_list_row: '@NetworkingInitCms/CRUD/list_inner_row.html.twig'
         # default values of helper templates
-        short_object_description: NetworkingInitCmsBundle:Helper:short-object-description.html.twig
+        short_object_description: '@NetworkingInitCms/Helper/short-object-description.html.twig'
         # default values of block templates, they should extend the base_block template
-        list_block: NetworkingInitCmsBundle:Block:block_admin_list.html.twig
+        list_block: '@NetworkingInitCms/Block/block_admin_list.html.twig'
     dashboard:
         blocks:
             - { position: top, type: networking_init_cms.block.service.translatable_text, settings: { translation_key: "info.welcome_text", translation_domain: 'NetworkingInitCmsBundle'} }

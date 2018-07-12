@@ -35,10 +35,10 @@ file that was distributed with this source code.
         </div>
     </div>
     {% if app.request.isxmlhttprequest and app.request.get('with_js')|default(true) %}
-        {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+        {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
     {% else %}
         {% jsblock 'addToBottom' %}
-        {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+        {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
         {% jsblock 'addToBottomEnd' %}
     {% endif %}
 
