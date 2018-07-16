@@ -22,8 +22,10 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Doctrine\ORM\EntityRepository;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 
@@ -175,7 +177,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'class' => $pageClass,
                         'required' => false,
                         'horizontal' => true,
-                        'property' => 'AdminTitle',
+                        'choice_label' => 'AdminTitle',
                         'query_builder' => function (EntityRepository $er) use ($locale) {
                                 $qb = $er->createQueryBuilder('p');
                                 $qb->where('p.locale = :locale')
@@ -247,10 +249,11 @@ abstract class MenuItemAdmin extends BaseAdmin
                 'locale',
                 CallbackFilter::class,
                 ['callback' => [$this, 'getByLocale']],
-                ChoiceType::class,
+                LanguageType::class,
                 [ 'placeholder' => false,
-                    'choices' => $this->getLocaleChoices(),
-                    'preferred_choices' => [$this->getDefaultLocale()]
+                    'choice_loader' => new CallbackChoiceLoader(function (){return $this->getLocaleChoices();}),
+                    'preferred_choices' => [$this->getDefaultLocale()],
+	                'translation_domain' => $this->translationDomain
                 ]
             );
     }
@@ -353,7 +356,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                 return '@NetworkingInitCms/MenuItemAdmin/placement.html.twig';
                 break;
             default:
-                return parent::getTemplate($name);
+                return $this->getTemplateRegistry()->getTemplate($name);;
         }
     }
 

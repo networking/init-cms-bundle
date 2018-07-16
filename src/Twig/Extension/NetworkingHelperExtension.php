@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Doctrine\ORM\EntityRepository;
-use Ivory\CKEditorBundle\Model\ConfigManager;
+use FOS\CKEditorBundle\Model\ConfigManager;
 use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
@@ -107,7 +107,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     /**
      * @var ConfigManager
      */
-    protected $ivoryConfigManager;
+    protected $ckEditorConfigManager;
     /**
      * @var array
      */
@@ -128,7 +128,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
      * @param LayoutBlockAdmin $layoutBlockAdmin
      * @param SerializerInterface $serializer
      * @param PageManagerInterface $pageManager
-     * @param ConfigManager $ivoryConfigManager
+     * @param ConfigManager $ckEditorConfigManager
      * @param array $templates
      * @param array $contentTypes
      */
@@ -141,7 +141,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         LayoutBlockAdmin $layoutBlockAdmin,
         SerializerInterface $serializer,
         PageManagerInterface $pageManager,
-        ConfigManager $ivoryConfigManager,
+        ConfigManager $ckEditorConfigManager,
         $templates = [],
         $contentTypes = []
 
@@ -155,7 +155,7 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         $this->layoutBlockAdmin = $layoutBlockAdmin;
         $this->serializer = $serializer;
         $this->pageManager = $pageManager;
-        $this->ivoryConfigManager = $ivoryConfigManager;
+        $this->ckEditorConfigManager = $ckEditorConfigManager;
         $this->templates = $templates;
         $this->contentTypes = $contentTypes;
 
@@ -841,10 +841,23 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
             $value = $this->getFieldValue($object, $fieldDescription->getFieldName(), $displayMethod);
         }
 
+        $valueTranslationDomain = $fieldDescription->getTranslationDomain();
+
+        if('visibility' === $fieldDescription->getName() || 'templateName' === $fieldDescription->getName()){
+
+        	if(array_key_exists('choice_translation_domain', $formView->vars)){
+		        $valueTranslationDomain = $formView->vars['choice_translation_domain'];
+	        }
+
+        	$value = $this->translator->trans($value, [], $valueTranslationDomain);
+        }
+
+
+
         $options = [
             'page' => $object,
             'field' => $fieldDescription->getName(),
-            'value' => $this->translator->trans($value, [], $translationDomain),
+            'value' => $value,
             'translation_domain' => $translationDomain
         ];
 
@@ -1181,10 +1194,10 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
     {
 
         if (is_null($configName)) {
-            $configName = $this->ivoryConfigManager->getDefaultConfig();
+            $configName = $this->ckEditorConfigManager->getDefaultConfig();
         }
 
-        $configs = $this->ivoryConfigManager->getConfigs();
+        $configs = $this->ckEditorConfigManager->getConfigs();
         if (array_key_exists('contentsCss', $configs[$configName])) {
             return $configs[$configName]['contentsCss'];
         }

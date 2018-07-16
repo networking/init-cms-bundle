@@ -509,6 +509,10 @@
                 <source>tag_not_selected</source>
                 <target>Bitte einen Tag auswählen</target>
             </trans-unit>
+            <trans-unit id="gallery">
+                <source>gallery</source>
+                <target>Galerien</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -15,5 +15,6 @@ file that was distributed with this source code.
     {% elseif object.status == 'status_review' %}label label-info
     {% elseif object.status == 'status_offline' %}label label-danger
     {% else %}label label-success{% endif %} show-tooltip"
-          data-original-title="{{ value|trans({}, admin.translationDomain) }}">{{ value|trans({}, admin.translationDomain) }}</span>
+          data-original-title="{{ value|trans({}, admin.translationDomain) }}">
+            {{ value|trans({}, admin.translationDomain) }}</span>
 {% endblock %}

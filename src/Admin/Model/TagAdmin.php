@@ -93,7 +93,7 @@ abstract class TagAdmin extends AbstractAdmin
                 [
                     'help_block' => 'parent.helper_text',
                     'attr' => ['style' => "width:220px"],
-                    'property' => 'AdminTitle',
+                    'choice_label' => 'AdminTitle',
                     'class' => $this->getClass(),
                     'required' => false,
                     'query_builder' => function (EntityRepository $er) use ($id)  {

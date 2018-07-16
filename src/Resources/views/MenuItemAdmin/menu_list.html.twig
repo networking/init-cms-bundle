@@ -36,12 +36,12 @@ file that was distributed with this source code.
                     {% set filter_main %}
                     <div class="form-group">
                         <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                               class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
+                               class="control-label col-md-3 filter">{{ filter.label|trans({}, admin.translationDomain) }}</label>
 
                         <div class="form-inline col-md-9">
                             {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
                             ) }}
-                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label, 'class': 'input-medium'} }) }}
                         </div>
                     </div>
                     {% endset %}
@@ -50,12 +50,12 @@ file that was distributed with this source code.
                     {{ filter_hidden }}
                     <div class="form-group">
                         <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                               class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
+                               class="control-label col-md-3 filter">{{ filter.label|trans({}, admin.translationDomain) }}</label>
 
                         <div class="form-inline col-md-9">
                             {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
                             ) }}
-                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label, 'class': 'input-medium'} }) }}
                         </div>
                     </div>
                     {% endset %}

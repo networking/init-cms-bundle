@@ -48,4 +48,22 @@
             <option name="message">File is duplicate</option>
         </constraint>
     </class>
+
+    <class name="Networking\InitCmsBundle\Entity\HelpText">
+        <property name="locale">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="translationKey">
+            <constraint name="NotBlank"/>
+            <constraint name="Length">
+                <option name="max">255</option>
+            </constraint>
+        </property>
+        <property name="title">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="text">
+            <constraint name="NotBlank"/>
+        </property>
+    </class>
 </constraint-mapping>

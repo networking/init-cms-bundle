@@ -103,7 +103,7 @@ file that was distributed with this source code.
                             <div class="alert {{ (notice_level=='error')?'alert-danger':'alert-' ~ notice_level }}"
                                  role="alert">
                                 <a class="close" data-dismiss="alert" href="#">×</a>
-                                {{ flash|trans([], 'NetworkingInitCmsBundle') }}
+                                {{ flash }}
                             </div>
                         {% endfor %}
                     {% endfor %}

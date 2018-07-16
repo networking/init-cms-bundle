@@ -136,7 +136,7 @@ file that was distributed with this source code.
                     {% set filter_main %}
                     {{ filter_main }}
                     <div class="form-group">
-                        <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                        <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
 
                         <div class="form-inline col-md-9">
                             {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
@@ -150,7 +150,7 @@ file that was distributed with this source code.
                     {% set filter_hidden %}
                     {{ filter_hidden }}
                     <div class="form-group">
-                        <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                        <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain)  }}</label>
 
                         <div class="form-inline col-md-9">
                             {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
@@ -271,7 +271,7 @@ file that was distributed with this source code.
                                 {% if sort_active_class %}
                                     <i class="glyphicon glyphicon-chevron-{{ sort_by|lower == 'desc'? 'up':'down' }}"></i>
                                 {% endif %}
-                                {{ admin.trans(field_description.label) }}
+                                {{ field_description.label|trans({}, admin.translationDomain)  }}
                                 </a>
                             {% endif %}
                         {% endfor %}

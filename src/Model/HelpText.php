@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * HelpText

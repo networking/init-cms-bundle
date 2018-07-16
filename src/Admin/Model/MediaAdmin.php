@@ -297,7 +297,7 @@ abstract class MediaAdmin extends Admin
             ->add('authorName', SimpleStringFilter::class, ['hidden' => true]);
 
         if($this->showTagTree) {
-            $datagridMapper->add('tags', CallbackFilter::class, [
+            $datagridMapper->add('tags', CallbackFilter::class, ['label_render' => false, 'label' => false,
                 'callback' => function ($queryBuilder, $alias, $field, $value) {
 
                 if (!$value['value']) {
@@ -394,8 +394,8 @@ abstract class MediaAdmin extends Admin
                 return '@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig';
             }
         }
+        return $this->getTemplateRegistry()->getTemplate($name);
 
-        return parent::getTemplate($name);
     }
 
 

@@ -193,7 +193,7 @@ file that was distributed with this source code.
             {% if app.request.get('provider') and label == 'form.label_binary_content' %}
                 {% set provider = app.request.get('provider')|split('.')[3] %}
                 {% set mylabel = label~'_'~provider %}
-                {% set test = sonata_admin.admin.trans(mylabel, {}, sonata_admin.field_description.translationDomain) %}
+                {% set test = mylabel|trans({}, sonata_admin.field_description.translationDomain)%}
                 {% if test != mylabel %}
                     {% set label = mylabel %}
                 {% endif %}
@@ -244,7 +244,7 @@ file that was distributed with this source code.
             {% if app.request.get('provider') and label == 'form.label_binary_content' %}
                 {% set provider = app.request.get('provider')|split('.')[3] %}
                 {% set mylabel = label~'_'~provider %}
-                {% set test = sonata_admin.admin.trans(mylabel, {}, sonata_admin.field_description.translationDomain) %}
+                {% set test = mylabel|trans( {}, sonata_admin.field_description.translationDomain) %}
                 {% if test != mylabel %}
                     {% set label = mylabel %}
                 {% endif %}
@@ -382,7 +382,7 @@ file that was distributed with this source code.
     <script type="text/javascript">
         jQuery(document).ready(function () {
             jQuery("#{{ id }}").select2({
-                placeholder: "{{ 'Select'|trans() }}",
+                placeholder: "{{ 'Select'|trans({}) }}",
                 allowClear: {{ multiple|default('false') }}
             });
         });
@@ -414,7 +414,6 @@ file that was distributed with this source code.
                 {% set label_render = true %}
             {% endif %}
 
-
             {% set widget_form_group_attr = widget_form_group_attr|merge({id: 'sonata-ba-field-container-'~id}) %}
 
             {{ block('widget_form_group_start') }}
@@ -430,10 +429,11 @@ file that was distributed with this source code.
             {% endif %}
             {% if sonata_admin.edit or sonata_admin.inline %}
             <div class="sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }}">
-        {% endif %}
+            {% endif %}
 
-
-            {{ widget_prefix|trans({}, translation_domain)|raw }}  {{ form_widget(form) }} {{ widget_suffix|trans({}, translation_domain)|raw }}
+                {% if widget_prefix %}{{ widget_prefix|trans({}, translation_domain)|raw }}{% endif %}
+                    {{ form_widget(form) }}
+                {% if widget_suffix %}{{ widget_suffix|trans({}, translation_domain)|raw }}{% endif %}
 
             {% set type = type|default('text') %}
             {% if type != 'hidden' %}
@@ -441,20 +441,16 @@ file that was distributed with this source code.
             {% endif %}
 
             {% if sonata_admin.edit or sonata_admin.inline %}
-            </div>
-        {% endif %}
+                </div>
+            {% endif %}
 
             {% if show_horizontal_wrapper %}
                 </div>
             {% endif %}
-
-
-
             {% if form.parent is not null and 'collection' in form.parent.vars.block_prefixes and widget_remove_btn|default(null) and form.parent.vars.allow_delete|default(false) %}
                 {{ block('form_widget_remove_btn') }}
             {% endif -%}
             {{ block('widget_form_group_end') }}
-
         {% endif %}
     {% endspaceless %}
 {% endblock form_row %}
@@ -741,7 +737,7 @@ file that was distributed with this source code.
                         <label class="radio-inline">
                             {{ form_widget(child, {'horizontal_label_class': horizontal_label_class, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class, 'attr': {'class': attr.widget_class|default('') }}
                             ) }}
-                            {{ child.vars.label|trans({}, translation_domain) }}
+                            {{ child.vars.label|trans({}, choice_translation_domain) }}
                         </label>
 
                         <div class="clearfix"></div>
@@ -873,7 +869,6 @@ file that was distributed with this source code.
 {% block ckeditor_widget %}
     {% set attr = attr|merge({'class': attr.class|default('ckeditor')}) %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-
     {% if enable %}
         {% if autoload %}
             <script type="text/javascript">

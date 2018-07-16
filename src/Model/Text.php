@@ -30,7 +30,7 @@ abstract class Text implements ContentInterface, TextInterface
      * @var string $content
      * @Sonata\FormMapper(
      *      name="text",
-     *      type="Ivory\CKEditorBundle\Form\Type\CKEditorType",
+     *      type="FOS\CKEditorBundle\Form\Type\CKEditorType",
      *      options={
      *          "label_render" = false,
      *          "horizontal_input_wrapper_class" = "col-md-12",

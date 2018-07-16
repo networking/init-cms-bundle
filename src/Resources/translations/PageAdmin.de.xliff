@@ -446,6 +446,10 @@
                 <source>label.action_copy</source>
                 <target>Gewählte Seiten kopieren</target>
             </trans-unit>
+            <trans-unit id="label.action_delete">
+                <source>label.action_delete</source>
+                <target>Gewählte Seiten löschen</target>
+            </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
                 <target>Dieser Teil Ihrer Seite ist leer. Klicken Sie auf das + darüber, um Ihre ersten Inhalte
@@ -615,7 +619,7 @@
             </trans-unit>
             <trans-unit id="templateName">
                 <source>templateName</source>
-                <target>Template Name</target>
+                <target>Seitenlayout</target>
             </trans-unit>
             <trans-unit id="action._publish">
                 <source>action._publish</source>
@@ -656,6 +660,14 @@
             <trans-unit id="action._copy">
                 <source>action._copy</source>
                 <target>Seite kopieren</target>
+            </trans-unit>
+            <trans-unit id="empty_option">
+                <source>empty_option</source>
+                <target>-</target>
+            </trans-unit>
+            <trans-unit id="">
+                <source></source>
+                <target>blah blah blah</target>
             </trans-unit>
         </body>
     </file>

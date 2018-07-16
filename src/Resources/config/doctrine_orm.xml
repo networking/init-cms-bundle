@@ -84,7 +84,7 @@
 
         <service id="networking_init_cms.layout_block_form_listener"
                  class="Networking\InitCmsBundle\Entity\LayoutBlockFormListener"
-                 shared="false">
+                 public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
 
             <call method="setContentTypes">

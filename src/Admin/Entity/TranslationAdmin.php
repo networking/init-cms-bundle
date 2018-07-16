@@ -281,10 +281,6 @@ class TranslationAdmin extends AbstractAdmin
      */
     public function getTemplate($name)
     {
-        if ($name === 'layout') {
-
-            return $this->getOriginalTemplate('layout');
-        }
 
         if ($name === 'list') {
             return '@NetworkingInitCms/TranslationAdmin/list.html.twig';
@@ -294,16 +290,8 @@ class TranslationAdmin extends AbstractAdmin
             return '@NetworkingInitCms/TranslationAdmin/edit.html.twig';
         }
 
-        return parent::getTemplate($name);
-    }
+        return $this->getTemplateRegistry()->getTemplate($name);
 
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function getOriginalTemplate($name)
-    {
-        return parent::getTemplate($name);
     }
 
     /**

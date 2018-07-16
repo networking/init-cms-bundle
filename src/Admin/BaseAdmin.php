@@ -90,6 +90,7 @@ abstract class BaseAdmin extends AbstractAdmin
             $localeChoices[$localeList[$language['locale']]] =  $language['locale'];
         }
 
+
         return $localeChoices;
     }
 

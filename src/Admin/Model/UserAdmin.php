@@ -124,7 +124,7 @@ abstract class UserAdmin extends SonataUserAdmin
             '_action',
             'actions',
             [
-                'label' => ' ',
+                'label' => false,
                 'actions' => [
                     'edit' => [],
                     'delete' => []
@@ -139,7 +139,7 @@ abstract class UserAdmin extends SonataUserAdmin
     protected function configureDatagridFilters(DatagridMapper $filterMapper): void
     {
         $filterMapper
-            ->add('username')
+            ->add('username', null, ['field_options' => ['translation_domain' => $this->translationDomain]])
             ->add('email', null, ['hidden' => true])
             ->add('groups', null, ['hidden' => true]);
     }
@@ -161,7 +161,8 @@ abstract class UserAdmin extends SonataUserAdmin
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
-                'choices_as_values' => true
+                'choices_as_values' => true,
+	            'translation_domain' => false
             ])
             ->end()
             ->with('Profile')

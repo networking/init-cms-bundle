@@ -63,7 +63,7 @@ file that was distributed with this source code.
                                                     <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
                                                         {% if sortable %}<a
                                                                 href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
-                                                            {{ admin.trans(field_description.label) }}
+                                                            {{ field_description.label|trans({}, admin.translationDomain) }}
                                                             {% if sortable %}</a>{% endif %}
                                                     </th>
                                                 {% endspaceless %}
@@ -228,7 +228,7 @@ file that was distributed with this source code.
                     {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                         {% set filter_main %}
                         <div class="form-group">
-                            <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                            <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
 
                             <div class="form-inline col-md-9">
                                 {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
@@ -242,7 +242,7 @@ file that was distributed with this source code.
                         {% set filter_hidden %}
                         {{ filter_hidden }}
                         <div class="form-group">
-                            <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
+                            <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
 
                             <div class="form-inline col-md-9">
                                 {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}

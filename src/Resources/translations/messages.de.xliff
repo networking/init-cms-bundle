@@ -46,6 +46,42 @@
                 <source>Select</source>
                 <target>Auswählen</target>
             </trans-unit>
+            <trans-unit id="Text Block">
+                <source>Text Block</source>
+                <target>Text Inhalt mit Editor</target>
+            </trans-unit>
+            <trans-unit id="Gallery Viewer">
+                <source>Gallery Viewer</source>
+                <target>Bildergallerie</target>
+            </trans-unit>
+            <trans-unit id="header">
+                <source>header</source>
+                <target>Kopfzeile</target>
+            </trans-unit>
+            <trans-unit id="main_content">
+                <source>main_content</source>
+                <target>Hauptinhaltsbereich</target>
+            </trans-unit>
+            <trans-unit id="Single Column">
+                <source>Single Column</source>
+                <target>Seite mit einer Spalte</target>
+            </trans-unit>
+            <trans-unit id="Two Column">
+                <source>Two Column</source>
+                <target>Seite mit zwei Spalten</target>
+            </trans-unit>
+            <trans-unit id="list">
+                <source>list</source>
+                <target>Liste</target>
+            </trans-unit>
+            <trans-unit id="lightbox">
+                <source>lightbox</source>
+                <target>In einem Modalfenster</target>
+            </trans-unit>
+            <trans-unit id="carousel">
+                <source>carousel</source>
+                <target>Karusell</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

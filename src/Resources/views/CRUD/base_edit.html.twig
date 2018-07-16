@@ -17,8 +17,6 @@ file that was distributed with this source code.
         {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
         {% if  title ==  "title_edit" %}
             {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
-        {% else %}
-            {{ title }}
         {% endif %}
     {% else %}
         {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
