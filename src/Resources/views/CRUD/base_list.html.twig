@@ -81,12 +81,6 @@ file that was distributed with this source code.
                                     {% endif %}
                                     {% set foo = form.children['_page'].setRendered() %}
                                 </div>
-                                {#<div >#}
-                                    {#<a data-toggle="advanced-filter" class=" cursor-pointer">#}
-                                        {#<i class="fa fa-gears"></i>#}
-                                        {#{{ 'link.show_advanced_filters'|trans({}, 'NetworkingInitCmsBundle') }}#}
-                                    {#</a>#}
-                                {#</div>#}
                                 <div>
                                     <input type="submit" class="btn  btn-default btn-sm"
                                            value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
@@ -151,8 +145,20 @@ file that was distributed with this source code.
                                 <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if loop.index in [1,2] %}nowrap {% endif %} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
                                     {% if sortable %}<a
                                             href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
-                                {% if field_description.label %}{{ field_description.label|trans({}, admin.translationDomain)  }}{% endif %}
-                                        {% if sortable %}</a>{% endif %}
+                                        {% if field_description.label %}
+
+                                            {% set translation_domain = admin.translationDomain %}
+                                            {% if field_description.translationDomain %}
+                                                {% set translation_domain = field_description.translationDomain %}
+                                            {% endif %}
+                                            {% if field_description.translationDomain is same as('none') %}
+                                                {{ field_description.label }}
+                                            {% else %}
+                                                {{ field_description.label|trans({}, translation_domain)  }}
+                                            {% endif %}
+
+                                        {% endif %}
+                                     {% if sortable %}</a>{% endif %}
                                 </th>
                             {% endspaceless %}
                         {% endif %}

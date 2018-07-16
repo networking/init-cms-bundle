@@ -11,8 +11,6 @@
 
 namespace Networking\InitCmsBundle\Admin\Entity;
 
-use Doctrine\ORM\Query;
-use Ibrows\SonataTranslationBundle\Admin\ORMTranslationAdmin;
 use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -23,7 +21,6 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\StringFilter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Intl\Intl;
@@ -161,8 +158,8 @@ class TranslationAdmin extends AbstractAdmin
     {
 
         $filter
-            ->add('key', StringFilter::class)
-            ->add('translations.content',StringFilter::class)
+            ->add('key', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
+            ->add('translations.content',StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
             ->add(
                 'domain',
                 SimpleStringFilter::class,
@@ -170,8 +167,9 @@ class TranslationAdmin extends AbstractAdmin
                 ChoiceType::class,
                 [
                     'choices' => $this->getDomains(),
-                    'empty_data' => true,
-                    'placeholder' => $this->trans('translation.domain.all_choices', [], $this->getTranslationDomain())
+                    'placeholder' => 'translation.domain.all_choices',
+	                'translation_domain' => $this->translationDomain,
+	                'choice_translation_domain' => false
                 ]
             );
     }
@@ -204,6 +202,7 @@ class TranslationAdmin extends AbstractAdmin
             $fieldDescription->setOption('locale', $locale);
             $fieldDescription->setOption('editable', $this->editableOptions);
             $fieldDescription->setOption('label', $localeList[$locale]);
+            $fieldDescription->setOption('translation_domain', 'none');
             $list->add($fieldDescription);
         }
     }
