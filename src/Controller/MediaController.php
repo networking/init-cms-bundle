@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Sonata\MediaBundle\Controller\MediaController as BaseMediaController;
+use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,7 +28,7 @@ class MediaController extends BaseMediaController
      *
      * @return Response
      */
-    public function viewImageAction(Request $request, $id, $format = 'reference')
+    public function viewImageAction(Request $request, $id, $format = MediaProviderInterface::FORMAT_REFERENCE)
     {
         $media = $this->getMedia($id);
 
@@ -35,16 +36,18 @@ class MediaController extends BaseMediaController
             throw new NotFoundHttpException(sprintf('unable to find the media with the id : %s', $id));
         }
 
-        if (!$this->get('sonata.media.pool')->getDownloadSecurity($media)->isGranted($media, $request)) {
+        if (!$this->get('sonata.media.pool')->getDownloadStrategy($media)->isGranted($media, $request)) {
             throw new AccessDeniedException();
         }
 
         /** @var \Networking\InitCmsBundle\Lib\PhpCache $phpCache */
         $phpCache = $this->get('networking_init_cms.lib.php_cache');
         if ($phpCache->isActive()) {
+
             if ($phpCache->get(sprintf('image_%s_updated_at', $id)) != $media->getUpdatedAt()) {
                 $phpCache->delete('image_'.$id);
             }
+
 
             if (!$response = $phpCache->get('image_'.$media->getId())) {
                 $provider = $this->getProvider($media);
@@ -78,7 +81,7 @@ class MediaController extends BaseMediaController
         } else {
             $provider = $this->getProvider($media);
 
-            if ($format == 'reference') {
+            if ($format == MediaProviderInterface::FORMAT_REFERENCE) {
                 $file = $provider->getReferenceFile($media);
             } else {
                 $file = $provider->getFilesystem()->get($provider->generatePrivateUrl($media, $format));
