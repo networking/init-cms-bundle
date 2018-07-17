@@ -22,6 +22,9 @@ file that was distributed with this source code.
 
 {% block content %}
     <div class="sonata-ba-delete">
+        {% if batch_translation_domain is not same as(false) %}
+            {% set action_label = action_label|trans({}, batch_translation_domain) %}
+        {% endif %}
         <h1>{% trans with {'%action%': action_label} from 'SonataAdminBundle' %}title_batch_confirmation{% endtrans %}</h1>
 
         {% if data.all_elements %}
