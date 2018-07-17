@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: yorkie
  * Date: 19.02.18
- * Time: 16:54
+ * Time: 16:54.
  */
 
 namespace Networking\InitCmsBundle\Menu;
-
 
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Matcher\Voter\VoterInterface;
@@ -22,22 +21,22 @@ class CmsMenuVoter implements VoterInterface
 
     /**
      * CmsMenuVoter constructor.
+     *
      * @param RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
-
     }
 
     /**
      * @param ItemInterface $item
+     *
      * @return bool|null
      */
     public function matchItem(ItemInterface $item)
     {
-
-        foreach($this->currentUriWithAndWithoutSlash() as $path){
+        foreach ($this->currentUriWithAndWithoutSlash() as $path) {
             if (null === $path || null === $item->getUri()) {
                 return null;
             }
@@ -57,8 +56,9 @@ class CmsMenuVoter implements VoterInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        $withSlash = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo() . '/' : $request->getPathInfo();
+        $withSlash = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo().'/' : $request->getPathInfo();
         $withOutSlash = substr($request->getPathInfo(), -1) == '/' ? substr($request->getPathInfo(), 0, -1) : $request->getPathInfo();
-        return [$request->getBaseUrl() . $withSlash,  $request->getBaseUrl() .$withOutSlash];
+
+        return [$request->getBaseUrl().$withSlash,  $request->getBaseUrl().$withOutSlash];
     }
 }

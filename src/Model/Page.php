@@ -13,50 +13,47 @@ namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Sluggable\Util\Urlizer;
-use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Class Page
- * @package Networking\InitCmsBundle\Model
+ * Class Page.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class Page implements PageInterface
 {
-
     /**
-     * @var integer $id
-     *
+     * @var int
      */
     protected $id;
 
     /**
-     * @var \Datetime $createdAt
+     * @var \Datetime
      */
     protected $createdAt;
 
     /**
-     * @var \Datetime $updatedAt
+     * @var \Datetime
      */
     protected $updatedAt;
 
     /**
-     * @var string $pageName
+     * @var string
      */
     protected $pageName;
 
     /**
-     * @var string $metaTitle
+     * @var string
      */
     protected $metaTitle;
 
     /**
-     * @var string $url
+     * @var string
      */
     protected $url;
 
     /**
-     * @var string $path
+     * @var string
      */
     protected $path;
 
@@ -66,98 +63,97 @@ abstract class Page implements PageInterface
     protected $level;
 
     /**
-     * @var string $metaKeyword
+     * @var string
      */
     protected $metaKeyword;
 
     /**
-     * @var string $metaDescription
+     * @var string
      */
     protected $metaDescription;
 
     /**
-     * @var PageInterface|NULL
+     * @var PageInterface|null
      */
     protected $parent;
 
     /**
-     * @var array $parents
+     * @var array
      */
     protected $parents;
 
     /**
-     * @var array $children
+     * @var array
      */
     protected $children;
 
     /**
-     * @var array $allChildren
+     * @var array
      */
     protected $allChildren = [];
 
     /**
-     * @var PageInterface $alias
+     * @var PageInterface
      */
     protected $alias;
 
     /**
-     * @var ArrayCollection $layoutBlock
+     * @var ArrayCollection
      */
     protected $layoutBlock;
 
     /**
-     * @var ArrayCollection $menuItem
+     * @var ArrayCollection
      */
     protected $menuItem;
 
     /**
-     * @var boolean $isHome
+     * @var bool
      */
     protected $isHome = false;
 
     /**
-     * @var string $status
+     * @var string
      */
     protected $status = self::STATUS_DRAFT;
 
     /**
-     * @var string $visibility
+     * @var string
      */
     protected $visibility = self::VISIBILITY_PUBLIC;
 
     /**
-     * @var \Datetime $activeFrom
+     * @var \Datetime
      */
     protected $activeFrom;
 
-
     /**
-     * @var \Datetime $activeTo
+     * @var \Datetime
      */
     protected $activeTo;
 
     /**
-     * @var string $locale
+     * @var string
      */
     protected $locale;
 
     /**
-     * @var ArrayCollection $translations
+     * @var ArrayCollection
      */
     protected $translations;
 
     /**
-     * @var ArrayCollection $originals
+     * @var ArrayCollection
      */
     protected $originals;
 
     /**
-     * @var ContentRouteInterface $contentRoute
+     * @var ContentRouteInterface
      */
     protected $contentRoute;
 
     /**
-     * @var ArrayCollection $snapshots
+     * @var ArrayCollection
      */
     protected $snapshots;
 
@@ -167,13 +163,10 @@ abstract class Page implements PageInterface
     protected $snapshotClassType = 'Networking\InitCmsBundle\Entity\PageSnapshot';
 
     /**
-     * @var string $oldTitle
+     * @var string
      */
     protected $oldTitle;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->translations = new ArrayCollection();
@@ -183,11 +176,11 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Hook on to pre-persist action
+     * Hook on to pre-persist action.
      */
     public function prePersist()
     {
-        $this->createdAt = $this->updatedAt = new \DateTime("now");
+        $this->createdAt = $this->updatedAt = new \DateTime('now');
 
         if (!$this->metaTitle) {
             $this->setMetaTitle($this->pageName);
@@ -195,7 +188,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Hook on to pre-update action
+     * Hook on to pre-update action.
      */
     public function preUpdate()
     {
@@ -203,21 +196,21 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @return $this
      */
     public function setUpdatedAt()
     {
-        $this->updatedAt = new \DateTime("now");
+        $this->updatedAt = new \DateTime('now');
 
         return $this;
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -225,9 +218,10 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
-     * @param  \Datetime $createdAt
+     * @param \Datetime $createdAt
+     *
      * @return $this
      */
     public function setCreatedAt($createdAt)
@@ -238,7 +232,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \Datetime
      */
@@ -248,7 +242,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \Datetime
      */
@@ -266,9 +260,10 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Set pageName
+     * Set pageName.
      *
-     * @param  string $title
+     * @param string $title
+     *
      * @return $this
      */
     public function setPageName($title)
@@ -276,7 +271,7 @@ abstract class Page implements PageInterface
         $this->oldTitle = $this->pageName;
         $this->pageName = $title;
 
-        if($this->pageName && $this->getContentRoute()){
+        if ($this->pageName && $this->getContentRoute()) {
             $this->getContentRoute()->setName($this->pageName);
         }
 
@@ -284,7 +279,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get pageName
+     * Get pageName.
      *
      * @return string
      */
@@ -294,9 +289,10 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Set metaTitle
+     * Set metaTitle.
      *
-     * @param  string $title
+     * @param string $title
+     *
      * @return $this
      */
     public function setMetaTitle($title)
@@ -307,7 +303,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get metaTitle
+     * Get metaTitle.
      *
      * @return string
      */
@@ -372,9 +368,9 @@ abstract class Page implements PageInterface
         return $this->metaDescription;
     }
 
-
     /**
-     * @param  PageInterface $parent
+     * @param PageInterface $parent
+     *
      * @return $this
      */
     public function setParent(PageInterface $parent = null)
@@ -386,6 +382,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param $level
+     *
      * @return PageInterface|null
      */
     public function getParent($level = -1)
@@ -420,7 +417,8 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @param  array $parents
+     * @param array $parents
+     *
      * @return $this
      */
     public function setParents(array $parents)
@@ -436,7 +434,6 @@ abstract class Page implements PageInterface
     public function getParents()
     {
         if (!$this->parents) {
-
             $page = $this;
             $parents = [];
 
@@ -452,7 +449,8 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @param  PageInterface $children
+     * @param PageInterface $children
+     *
      * @return $this
      */
     public function addChildren(PageInterface $children)
@@ -474,6 +472,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param $children
+     *
      * @return $this
      */
     public function setChildren($children)
@@ -484,13 +483,13 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @param  array $children
+     * @param array $children
+     *
      * @return array
      */
     public function getAllChildren(&$children = [])
     {
         if (!$this->allChildren && $this->getChildren()) {
-
             $page = $this;
             foreach ($page->getChildren() as $child) {
                 $children[] = $child;
@@ -507,6 +506,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param $children
+     *
      * @return $this
      */
     public function setAllChildren($children)
@@ -517,16 +517,18 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Set active
+     * Set active.
      *
      * @param string $status
+     *
      * @return $this
+     *
      * @throws \InvalidArgumentException
      */
     public function setStatus($status)
     {
         if (!in_array($status, [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_REVIEW, self::STATUS_OFFLINE])) {
-            throw new \InvalidArgumentException("Invalid status");
+            throw new \InvalidArgumentException('Invalid status');
         }
         $this->status = $status;
 
@@ -534,7 +536,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -544,16 +546,18 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Set page visibility
+     * Set page visibility.
      *
      * @param string $visibility
+     *
      * @return $this
+     *
      * @throws \InvalidArgumentException
      */
     public function setVisibility($visibility)
     {
         if (!in_array($visibility, [self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC])) {
-            throw new \InvalidArgumentException("Invalid visibility");
+            throw new \InvalidArgumentException('Invalid visibility');
         }
         $this->visibility = $visibility;
 
@@ -561,7 +565,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get page visibility
+     * Get page visibility.
      *
      * @return string
      */
@@ -571,43 +575,38 @@ abstract class Page implements PageInterface
     }
 
     /**
-     *
      * @return bool
      */
     public function isDraft()
     {
-        return ($this->status == self::STATUS_DRAFT);
+        return $this->status == self::STATUS_DRAFT;
     }
 
     /**
-     *
      * @return bool
      */
     public function isReview()
     {
-        return ($this->status == self::STATUS_REVIEW);
+        return $this->status == self::STATUS_REVIEW;
     }
 
     /**
-     *
      * @return bool
      */
     public function isPublished()
     {
-        return ($this->status == self::STATUS_PUBLISHED);
+        return $this->status == self::STATUS_PUBLISHED;
     }
 
     /**
-     *
      * @return bool
      */
     public function isOffline()
     {
-        return ($this->status == self::STATUS_OFFLINE);
+        return $this->status == self::STATUS_OFFLINE;
     }
 
     /**
-     *
      * @return bool
      */
     public function isActive()
@@ -617,16 +616,17 @@ abstract class Page implements PageInterface
         if ($now->getTimestamp() >= $this->getActiveStart()->getTimestamp() &&
             $now->getTimestamp() <= $this->getActiveEnd()->getTimestamp()
         ) {
-            return ($this->status == self::STATUS_PUBLISHED);
+            return $this->status == self::STATUS_PUBLISHED;
         }
 
         return false;
     }
 
     /**
-     * Set activeFrom
+     * Set activeFrom.
      *
      * @param  $activeFrom
+     *
      * @return $this
      */
     public function setActiveFrom($activeFrom)
@@ -637,7 +637,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get activeFrom
+     * Get activeFrom.
      *
      * @return \DateTime
      */
@@ -647,14 +647,13 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get activeFrom
+     * Get activeFrom.
      *
      * @return \DateTime
      */
     public function getActiveStart()
     {
         if (!$this->activeFrom) {
-
             return new \DateTime();
         }
 
@@ -674,7 +673,6 @@ abstract class Page implements PageInterface
      */
     public function getActiveTo()
     {
-
         return $this->activeTo;
     }
 
@@ -691,9 +689,10 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Add layout block
+     * Add layout block.
      *
-     * @param  LayoutBlockInterface $layoutBlock
+     * @param LayoutBlockInterface $layoutBlock
+     *
      * @return $this
      */
     public function addLayoutBlock(LayoutBlockInterface $layoutBlock)
@@ -705,9 +704,10 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * remove content
+     * remove content.
      *
-     * @param  LayoutBlockInterface $layoutBlock
+     * @param LayoutBlockInterface $layoutBlock
+     *
      * @return $this
      */
     public function removeLayoutBlock(LayoutBlockInterface $layoutBlock)
@@ -719,7 +719,7 @@ abstract class Page implements PageInterface
 
     /**
      * Remove all layout blocks and replace with those in the
-     * serialized page snapshot
+     * serialized page snapshot.
      *
      * @param ArrayCollection $publishedBlocks
      */
@@ -734,12 +734,12 @@ abstract class Page implements PageInterface
 
     /**
      * @param $layoutBlocks
+     *
      * @return $this
      */
     public function setLayoutBlock($layoutBlocks)
     {
-
-        if (gettype($layoutBlocks) == "array") {
+        if (gettype($layoutBlocks) == 'array') {
             $layoutBlocks = new ArrayCollection($layoutBlocks);
         }
 
@@ -752,9 +752,6 @@ abstract class Page implements PageInterface
         return $this;
     }
 
-    /**
-     *
-     */
     public function orderLayoutBlocks()
     {
         $layoutBlocks = $this->layoutBlock->toArray();
@@ -769,6 +766,7 @@ abstract class Page implements PageInterface
     /**
      * @param $a
      * @param $b
+     *
      * @return int
      */
     private function compareSortOrder($a, $b)
@@ -777,9 +775,10 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get menuItem
+     * Get menuItem.
      *
-     * @param  null $zone
+     * @param null $zone
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
      */
     public function getLayoutBlock($zone = null)
@@ -787,25 +786,25 @@ abstract class Page implements PageInterface
         if (!is_null($zone)) {
             $layoutBlocks = $this->layoutBlock->filter(
                 function ($layoutBlock) use ($zone) {
-                    return ($layoutBlock->getZone() == $zone && $layoutBlock->isActive());
+                    return $layoutBlock->getZone() == $zone && $layoutBlock->isActive();
                 }
             );
+
             return array_merge($layoutBlocks->toArray());
         }
-
 
         return $this->layoutBlock;
     }
 
     /**
-     * Add menuItem
+     * Add menuItem.
      *
-     * @param  MenuItemInterface $menuItem
+     * @param MenuItemInterface $menuItem
+     *
      * @return $this
      */
     public function setMenuItem(MenuItemInterface $menuItem)
     {
-
         $menuItem->setPage($this);
         $this->menuItem = $menuItem;
 
@@ -813,9 +812,10 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * remove menuItem
+     * remove menuItem.
      *
-     * @param  MenuItemInterface $menuItem
+     * @param MenuItemInterface $menuItem
+     *
      * @return $this
      */
     public function removeMenuItem(MenuItemInterface $menuItem)
@@ -826,7 +826,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * Get menuItem
+     * Get menuItem.
      *
      * @return ArrayCollection
      */
@@ -837,13 +837,14 @@ abstract class Page implements PageInterface
 
     /**
      * @param $rootId
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getMenuItemByRoot($rootId)
     {
         return $this->menuItem->filter(
             function ($menuItem) use ($rootId) {
-                return ($menuItem->getRoot() == $rootId);
+                return $menuItem->getRoot() == $rootId;
             }
         );
     }
@@ -866,6 +867,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param $isHome
+     *
      * @return $this
      */
     public function setIsHome($isHome)
@@ -892,7 +894,8 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @param  string $locale
+     * @param string $locale
+     *
      * @return $this
      */
     public function setLocale($locale)
@@ -913,12 +916,13 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @param  array $originals
+     * @param array $originals
+     *
      * @return $this
      */
     public function setOriginals(array $originals)
     {
-        if (gettype($originals) == "array") {
+        if (gettype($originals) == 'array') {
             $originals = new ArrayCollection($originals);
         }
 
@@ -928,7 +932,8 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @param  PageInterface $page
+     * @param PageInterface $page
+     *
      * @return $this
      */
     public function setOriginal(PageInterface $page)
@@ -948,6 +953,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param PageInterface $page
+     *
      * @return bool
      */
     public function isDirectTranslation(PageInterface $page)
@@ -963,6 +969,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param PageInterface $page
+     *
      * @return mixed
      */
     public function getDirectTranslationFor(PageInterface $page)
@@ -976,6 +983,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param PageInterface $page
+     *
      * @return $this
      */
     public function addTranslation(PageInterface $page)
@@ -988,6 +996,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param PageInterface $page
+     *
      * @return $this
      */
     public function removeTranslation(PageInterface $page)
@@ -998,15 +1007,14 @@ abstract class Page implements PageInterface
         return $this;
     }
 
-
     /**
-     * @param  array $translations
+     * @param array $translations
+     *
      * @return $this
      */
     public function setTranslations(array $translations)
     {
-
-        if (gettype($translations) == "array") {
+        if (gettype($translations) == 'array') {
             $translations = new ArrayCollection($translations);
         }
 
@@ -1046,11 +1054,11 @@ abstract class Page implements PageInterface
     {
         $countParents = count($this->getParents());
         $prefix = '';
-        for ($i = 0; $i < $countParents; $i++) {
+        for ($i = 0; $i < $countParents; ++$i) {
             $prefix .= '- ';
         }
 
-        return $prefix . '' . $this->getPageName();
+        return $prefix.''.$this->getPageName();
     }
 
     /**
@@ -1071,7 +1079,8 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @param  ContentRouteInterface $contentRoute
+     * @param ContentRouteInterface $contentRoute
+     *
      * @return $this
      */
     public function setContentRoute(ContentRouteInterface $contentRoute)
@@ -1081,14 +1090,14 @@ abstract class Page implements PageInterface
         return $this;
     }
 
-
     /**
      * @param $snapshots
+     *
      * @return $this
      */
     public function setSnapshots($snapshots)
     {
-        if (gettype($snapshots) == "array") {
+        if (gettype($snapshots) == 'array') {
             $snapshots = new ArrayCollection($snapshots);
         } elseif (!$snapshots instanceof ArrayCollection) {
             $snapshots = new ArrayCollection([$snapshots]);
@@ -1112,7 +1121,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoute()
     {
@@ -1120,7 +1129,7 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoutes()
     {
@@ -1129,6 +1138,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param $template
+     *
      * @return $this
      */
     public function setTemplate($template)
@@ -1154,14 +1164,13 @@ abstract class Page implements PageInterface
         return $this->contentRoute->getTemplate();
     }
 
-
     /**
      * @param $templateName
+     *
      * @return $this
      */
     public function setTemplateName($templateName)
     {
-
         if (!$this->id) {
             $this->getContentRoute()->setClassType(get_class($this));
             $this->getContentRoute()->setLocale($this->getLocale());
@@ -1208,7 +1217,6 @@ abstract class Page implements PageInterface
      */
     public function getAllTranslations()
     {
-
         $translationsArray = [];
 
         $this->getRecursiveTranslations($translationsArray);
@@ -1222,7 +1230,8 @@ abstract class Page implements PageInterface
      * Recursively search for all possible translations of this page, either originals
      * of this page, translations of this page or translations of the original of this page.
      *
-     * @param  array $translationsArray
+     * @param array $translationsArray
+     *
      * @return array
      */
     public function getRecursiveTranslations(&$translationsArray)
@@ -1236,7 +1245,6 @@ abstract class Page implements PageInterface
                     $translation->getRecursiveTranslations($translationsArray);
                 }
             }
-
         }
 
         // find all possible originals
@@ -1257,11 +1265,10 @@ abstract class Page implements PageInterface
      */
     public static function getStatusList()
     {
-
         $status = [
             'status_draft' => self::STATUS_DRAFT,
             'status_review' => self::STATUS_REVIEW,
-            'status_published' => self::STATUS_PUBLISHED
+            'status_published' => self::STATUS_PUBLISHED,
         ];
 
         return $status;
@@ -1273,8 +1280,8 @@ abstract class Page implements PageInterface
     public static function getVisibilityList()
     {
         return [
-            'visibility_public' => self::VISIBILITY_PUBLIC ,
-            'visibility_protected' => self::VISIBILITY_PROTECTED
+            'visibility_public' => self::VISIBILITY_PUBLIC,
+            'visibility_protected' => self::VISIBILITY_PROTECTED,
         ];
     }
 
@@ -1361,6 +1368,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param $id
+     *
      * @return $this|null
      */
     public function convertIntegerToPage($id)
@@ -1449,5 +1457,4 @@ abstract class Page implements PageInterface
 
         return self::STATUS_DRAFT;
     }
-
 }

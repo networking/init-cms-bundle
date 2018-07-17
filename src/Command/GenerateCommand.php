@@ -10,18 +10,15 @@
 
 namespace Networking\InitCmsBundle\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\Output;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Sonata\EasyExtendsBundle\Command\GenerateCommand as SonataGenerateCommand;
 use Symfony\Component\Finder\Finder;
 use Sonata\EasyExtendsBundle\Bundle\BundleMetadata;
 
 /**
- * Generate Application entities from bundle entities
+ * Generate Application entities from bundle entities.
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
@@ -33,15 +30,14 @@ class GenerateCommand extends SonataGenerateCommand
     protected $extendedSerializerDirectory;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
-
         $this
             ->setName('networking:initcms:generate')
             ->setHelp(
-                <<<EOT
+                <<<'EOT'
                 The <info>easy-extends:generate:entities</info> command generating an extension of the NetworkingInitCmsBundle.
 EOT
             );
@@ -58,7 +54,7 @@ EOT
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -66,12 +62,11 @@ EOT
         if ($dest) {
             $dest = realpath($dest);
         } else {
-            $dest = $this->getContainer()->get('kernel')->getRootDir() . '/../src';
+            $dest = $this->getContainer()->get('kernel')->getRootDir().'/../src';
         }
 
-
         $configuration = [
-            'application_dir' => sprintf("%s/Application", $dest)
+            'application_dir' => sprintf('%s/Application', $dest),
         ];
 
         $bundleName = 'NetworkingInitCmsBundle';
@@ -98,7 +93,6 @@ EOT
 
         $processed = false;
         foreach ($this->getContainer()->get('kernel')->getBundles() as $bundle) {
-
             if ($bundle->getName() != $bundleName) {
                 continue;
             }
@@ -125,11 +119,11 @@ EOT
             $this->getContainer()->get('sonata.easy_extends.generator.bundle')
                 ->generate($output, $bundleMetadata);
 
-                $dir = sprintf('%s/%s', $bundleMetadata->getExtendedDirectory(), 'Resources/config/serializer');
-                if (!is_dir($dir)) {
-                    $output->writeln(sprintf('  > generating bundle directory <comment>%s</comment>', $dir));
-                    mkdir($dir, 0755, true);
-                }
+            $dir = sprintf('%s/%s', $bundleMetadata->getExtendedDirectory(), 'Resources/config/serializer');
+            if (!is_dir($dir)) {
+                $output->writeln(sprintf('  > generating bundle directory <comment>%s</comment>', $dir));
+                mkdir($dir, 0755, true);
+            }
 
             $output->writeln(sprintf('Processing Doctrine ORM : "<info>%s</info>"', $bundleMetadata->getName()));
             $this->getContainer()->get('sonata.easy_extends.generator.orm')
@@ -167,9 +161,7 @@ EOT
     {
         $output->writeln(' - Copy serializer files');
 
-
         $files = $this->getSerializerFiles();
-
 
         foreach ($files as $file) {
             // copy mapping definition
@@ -199,9 +191,7 @@ EOT
     {
         $output->writeln(' - Copy config files');
 
-
         $files = $this->getConfigFiles();
-
 
         foreach ($files as $file) {
             // copy mapping definition
@@ -276,15 +266,13 @@ EOT
         return $this->mappingSerializerDirectory;
     }
 
-
     /**
      * @return array|\Iterator
      */
     public function getConfigFiles()
     {
-
         try {
-            $f = new Finder;
+            $f = new Finder();
             $f->name('*.xml.skeleton');
             $f->name('*.yml.skeleton');
             $f->notName('*.orm.xml.skeleton');
@@ -299,15 +287,13 @@ EOT
         }
     }
 
-
     /**
      * @return array|\Iterator
      */
     public function getSerializerFiles()
     {
-
         try {
-            $f = new Finder;
+            $f = new Finder();
             $f->name('*.xml.skeleton');
             $f->name('*.yml.skeleton');
             $f->in($this->getMappingSerializerDirectory());

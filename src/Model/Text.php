@@ -8,26 +8,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
 
-use Networking\InitCmsBundle\Model\ContentInterface;
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 
 /**
- * Class Text
- * @package Networking\InitCmsBundle\Model
+ * Class Text.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class Text implements ContentInterface, TextInterface
 {
     /**
-     * @var integer $id
+     * @var int
      */
     protected $id;
 
-
     /**
-     * @var string $content
+     * @var string
      * @Sonata\FormMapper(
      *      name="text",
      *      type="FOS\CKEditorBundle\Form\Type\CKEditorType",
@@ -44,17 +43,17 @@ abstract class Text implements ContentInterface, TextInterface
     protected $text;
 
     /**
-     * @var \DateTime $createdAt
+     * @var \DateTime
      */
     protected $createdAt;
 
     /**
-     * @var \DateTime $updatedAt
+     * @var \DateTime
      */
     protected $updatedAt;
 
     /**
-     * clone action, set id null
+     * clone action, set id null.
      */
     public function __clone()
     {
@@ -62,9 +61,9 @@ abstract class Text implements ContentInterface, TextInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -72,9 +71,10 @@ abstract class Text implements ContentInterface, TextInterface
     }
 
     /**
-     * Set content
+     * Set content.
      *
-     * @param  string $text
+     * @param string $text
+     *
      * @return $this
      */
     public function setText($text)
@@ -85,7 +85,7 @@ abstract class Text implements ContentInterface, TextInterface
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -95,7 +95,7 @@ abstract class Text implements ContentInterface, TextInterface
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @return $this
      */
@@ -107,7 +107,7 @@ abstract class Text implements ContentInterface, TextInterface
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -117,9 +117,10 @@ abstract class Text implements ContentInterface, TextInterface
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
-     * @param  \DateTime $updatedAt
+     * @param \DateTime $updatedAt
+     *
      * @return $this
      */
     public function setUpdatedAt($updatedAt)
@@ -130,7 +131,7 @@ abstract class Text implements ContentInterface, TextInterface
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -139,9 +140,9 @@ abstract class Text implements ContentInterface, TextInterface
         return $this->updatedAt;
     }
 
-
     /**
      * @param array $params
+     *
      * @return array
      */
     public function getTemplateOptions($params = [])
@@ -157,7 +158,6 @@ abstract class Text implements ContentInterface, TextInterface
         return strip_tags($this->getText());
     }
 
-
     /**
      * @return array
      */
@@ -165,7 +165,7 @@ abstract class Text implements ContentInterface, TextInterface
     {
         return [
             'content' => ['text' => $this],
-            'template' => '@NetworkingInitCms/Text/admin_text_block.html.twig'
+            'template' => '@NetworkingInitCms/Text/admin_text_block.html.twig',
         ];
     }
 

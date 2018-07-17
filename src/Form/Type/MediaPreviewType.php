@@ -19,26 +19,25 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class MediaPrintype
- * @package Networking\InitCmsBundle\Form\Type
+ * Class MediaPrintype.
+ *
  * @author Marc Bissegger <m.bissegger@networking.ch>
  */
 class MediaPreviewType extends AbstractType
 {
-
     /**
-     * @param FormView $view
+     * @param FormView      $view
      * @param FormInterface $form
-     * @param array $options
+     * @param array         $options
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $media = $form->getData();
-        if(!$media instanceof MediaInterface){
+        if (!$media instanceof MediaInterface) {
             throw new InvalidArgumentException('This field can only be used with objects that are instances of Sonata\MediaBundle\Model\MediaInterface');
         }
 
-        if($form->getParent()->getErrors(true)->count() > 0){
+        if ($form->getParent()->getErrors(true)->count() > 0) {
             /** @var Media $media */
             $media = $view->vars['value'];
 
@@ -68,5 +67,4 @@ class MediaPreviewType extends AbstractType
     {
         return 'networking_type_media_preview';
     }
-
 }

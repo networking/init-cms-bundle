@@ -10,19 +10,17 @@
 
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
-
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AddProviderCompilerPass implements CompilerPassInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
         foreach ($container->findTaggedServiceIds('sonata.media.provider') as $id => $attributes) {
-
             $container->getDefinition($id)->addMethodCall('addFormat', ['admin', [
                 'quality' => 100,
                 'width' => 190,
@@ -30,10 +28,5 @@ class AddProviderCompilerPass implements CompilerPassInterface
                 'constraint' => true,
             ]]);
         }
-
-
-
-
     }
-
 }

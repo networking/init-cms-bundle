@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: yorkie
  * Date: 20.12.17
- * Time: 16:38
+ * Time: 16:38.
  */
 
 namespace Networking\InitCmsBundle\Admin\Model;
@@ -15,16 +15,14 @@ use Sonata\UserBundle\Form\Type\SecurityRolesType;
 
 abstract class GroupAdmin extends SonataGroupAdmin
 {
-
-
     /**
      * @var array
      */
     protected $trackedActions = ['list'];
 
-
     /**
      * @param $trackedActions
+     *
      * @return $this
      */
     public function setTrackedActions($trackedActions)
@@ -57,8 +55,8 @@ abstract class GroupAdmin extends SonataGroupAdmin
                 'label' => ' ',
                 'actions' => [
                     'edit' => [],
-                    'delete' => []
-                ]
+                    'delete' => [],
+                ],
             ]
         );
     }
@@ -84,7 +82,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
                 [
                     'expanded' => true,
                     'multiple' => true,
-                    'required' => false
+                    'required' => false,
                 ]
             );
     }

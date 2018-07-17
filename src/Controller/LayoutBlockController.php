@@ -11,7 +11,6 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
-use Networking\InitCmsBundle\Model\PageInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormRenderer;
@@ -20,12 +19,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
- * Class PageAdminController
- * @package Networking\InitCmsBundle\Controller
+ * Class PageAdminController.
  *
  * @author net working AG <info@networking.ch>
  */
@@ -35,6 +32,7 @@ class LayoutBlockController extends CRUDController
 
     /**
      * @return Response
+     *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -43,7 +41,6 @@ class LayoutBlockController extends CRUDController
         if (!$this->isXmlHttpRequest()) {
             return new Response('cannot load external of page module', 403);
         }
-
 
         if (false === $this->admin->isGranted('CREATE')) {
             throw new AccessDeniedException();
@@ -69,11 +66,11 @@ class LayoutBlockController extends CRUDController
 
         $page = $this->get('networking_init_cms.page_manager')->find($objectId);
         if ($objectId && !$page) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         if (!$page) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         $request->attributes->add(['objectId' => $objectId]);
@@ -91,7 +88,7 @@ class LayoutBlockController extends CRUDController
         $form->setData($layoutBlock);
         $form->handleRequest($this->getRequest());
         if ($this->getRestMethod() == 'POST') {
-            try{
+            try {
                 // persist if the form was valid and if in preview mode the preview was approved
                 if ($form->isValid() && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
                     $this->admin->create($layoutBlock);
@@ -104,12 +101,12 @@ class LayoutBlockController extends CRUDController
                                 'layoutBlockId' => $this->admin->getNormalizedIdentifier($layoutBlock),
                                 'zone' => $layoutBlock->getZone(),
                                 'sortOder' => $layoutBlock->getSortOrder(),
-                                'html' => $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid)
+                                'html' => $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqid),
                             ]
                         );
                     }
                 }
-            }catch (ModelManagerException $e){
+            } catch (ModelManagerException $e) {
                 $formError = new FormError($e->getMessage());
                 $form->addError($formError);
             }
@@ -130,19 +127,20 @@ class LayoutBlockController extends CRUDController
                 'classType' => $request->get('classType'),
                 'objectId' => $objectId,
                 'uniqid' => $uniqid,
-                'elementId' => $elementId
+                'elementId' => $elementId,
             ]
         );
     }
 
     /**
      * @param Request $request
+     *
      * @return Response
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function updateFormFieldElementAction(Request $request)
     {
-
         $objectId = $request->get('objectId');
         $elementId = $request->get('elementId');
         $uniqId = $request->get('uniqid');
@@ -150,8 +148,9 @@ class LayoutBlockController extends CRUDController
 
         $post = $request->request->all();
 
-        if(empty($post)){
+        if (empty($post)) {
             $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqId, $code);
+
             return new Response($html, 200);
         }
 
@@ -164,7 +163,7 @@ class LayoutBlockController extends CRUDController
         /** @var $form \Symfony\Component\Form\Form */
         $form = $this->admin->getForm();
         $form->setData($layoutBlock);
-        /** @var CsrfTokenManagerInterface  $csrf */
+        /** @var CsrfTokenManagerInterface $csrf */
         $csrf = $this->get('security.csrf.token_manager');
         $token = $csrf->getToken($form->getName());
         $post['_token'] = $token;
@@ -174,12 +173,13 @@ class LayoutBlockController extends CRUDController
 
         $form->handleRequest($request);
 
-        if($form->isValid()){
+        if ($form->isValid()) {
             $this->admin->update($layoutBlock);
             $html = $this->getLayoutBlockFormWidget($objectId, $elementId, $uniqId, $code);
             $status = 200;
+
             return new Response($html, $status);
-        }else{
+        } else {
             $this->error = true;
 
             $response = new Response();
@@ -200,7 +200,7 @@ class LayoutBlockController extends CRUDController
                 'classType' => $request->get('classType'),
                 'objectId' => $objectId,
                 'uniqid' => $uniqId,
-                'elementId' => $elementId
+                'elementId' => $elementId,
             ],
             $response
         );
@@ -209,9 +209,11 @@ class LayoutBlockController extends CRUDController
     /**
      * @param $objectId
      * @param $elementId
-     * @param null $uniqId
+     * @param null   $uniqId
      * @param string $code
+     *
      * @return mixed
+     *
      * @throws \Twig_Error_Runtime
      */
     protected function getLayoutBlockFormWidget(
@@ -220,9 +222,8 @@ class LayoutBlockController extends CRUDController
         $uniqId = null,
         $code = 'networking_init_cms.admin.page'
     ) {
-
-        if(!$elementId || !$code){
-            throw new NotFoundHttpException;
+        if (!$elementId || !$code) {
+            throw new NotFoundHttpException();
         }
 
         /** @var \Networking\InitCmsBundle\Admin\Model\PageAdmin $pageAdmin */
@@ -232,14 +233,13 @@ class LayoutBlockController extends CRUDController
         $request = $this->getRequest();
         $pageAdmin->setRequest($request);
 
-
         if ($uniqId) {
             $pageAdmin->setUniqid($uniqId);
         }
 
         $page = $pageAdmin->getModelManager()->find($pageAdmin->getClass(), $objectId);
         if ($objectId && !$page) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         if (!$page) {
@@ -256,7 +256,6 @@ class LayoutBlockController extends CRUDController
         $form = $formBuilder->getForm();
         $form->setData($page);
 
-
         /** @var \Sonata\AdminBundle\Admin\AdminHelper $helper */
         $helper = $this->get('sonata.admin.helper');
         $view = $helper->getChildFormView($form->createView(), $elementId);
@@ -269,11 +268,11 @@ class LayoutBlockController extends CRUDController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function updateLayoutBlockSortAction(Request $request)
     {
-
         $zones = $request->get('zones', []);
         $objectId = $request->get('objectId');
         $pageAdmin = $this->container->get('networking_init_cms.admin.page');
@@ -300,14 +299,13 @@ class LayoutBlockController extends CRUDController
                             return new JsonResponse(['messageStatus' => 'error', 'message' => $message]);
                         }
                     }
-
                 }
             }
         }
 
         $data = [
             'messageStatus' => 'success',
-            'message' => $this->translate('message.layout_blocks_sorted', ['zone' => ''])
+            'message' => $this->translate('message.layout_blocks_sorted', ['zone' => '']),
         ];
 
         $page = $pageAdmin->getModelManager()->find($pageAdmin->getClass(), $objectId);
@@ -318,7 +316,7 @@ class LayoutBlockController extends CRUDController
                 '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig',
                 [
                     'admin' => $pageAdmin,
-                    'object' => $page
+                    'object' => $page,
                 ]
             );
             $data['pageStatusSettings'] = $pageStatus;
@@ -328,10 +326,11 @@ class LayoutBlockController extends CRUDController
         return new JsonResponse($data);
     }
 
-
     /**
      * @param Request $request
+     *
      * @return JsonResponse
+     *
      * @throws \Twig_Error_Runtime
      */
     public function deleteAjaxAction(Request $request)
@@ -342,7 +341,6 @@ class LayoutBlockController extends CRUDController
         $elementId = $request->get('elementId');
 
         if ($layoutBlockId) {
-
             $layoutBlock = $this->admin->getObject($layoutBlockId);
             if ($layoutBlock) {
                 $this->admin->delete($layoutBlock);
@@ -354,19 +352,20 @@ class LayoutBlockController extends CRUDController
         return new JsonResponse([
             'messageStatus' => 'success',
             'message' => $this->translate('message.layout_block_deleted'),
-            'html' => $html
+            'html' => $html,
         ]);
     }
 
     /**
-     * Deep sort of array
-     * 
+     * Deep sort of array.
+     *
      * @param $array
      */
-    public function uksort(&$array){
+    public function uksort(&$array)
+    {
         ksort($array);
-        foreach($array as $key => $value){
-            if(is_array($value)){
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
                 $this->uksort($value);
                 $array[$key] = $value;
             }
@@ -374,26 +373,27 @@ class LayoutBlockController extends CRUDController
     }
 
     /**
-     * extract a clean content array from parameter string
+     * extract a clean content array from parameter string.
      *
      * @param $contentStr
+     *
      * @return array
      */
-    public function cleanContentString($contentStr){
-        foreach($contentStr as $key => $formId){
-
-            if(array_key_exists('content', $formId)){
+    public function cleanContentString($contentStr)
+    {
+        foreach ($contentStr as $key => $formId) {
+            if (array_key_exists('content', $formId)) {
                 return $formId['content'];
             }
-            foreach($formId as $layoutBlock){
-                if(!is_array($layoutBlock)){
+            foreach ($formId as $layoutBlock) {
+                if (!is_array($layoutBlock)) {
                     return $formId;
                 }
-                if(array_key_exists('content', $layoutBlock)){
+                if (array_key_exists('content', $layoutBlock)) {
                     return $layoutBlock['content'];
                 }
-                foreach($layoutBlock as $contentEl){
-                    if(array_key_exists('content', $contentEl)){
+                foreach ($layoutBlock as $contentEl) {
+                    if (array_key_exists('content', $contentEl)) {
                         return $contentEl['content'];
                     }
                 }

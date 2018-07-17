@@ -7,29 +7,28 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\EventListener;
 
-use Sonata\AdminBundle\Admin\AdminInterface;
-use  Sonata\AdminBundle\Admin\Pool;
-use  Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Sonata\AdminBundle\Admin\Pool;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Class AdminTrackerListener
- * @package Networking\InitCmsBundle\EventListener
+ * Class AdminTrackerListener.
+ *
  * @author sonja brodersen <s.brodersen@networking.ch>
  */
 class AdminTrackerListener
 {
     /**
-     * @var \Sonata\AdminBundle\Admin\Pool $adminPool
+     * @var \Sonata\AdminBundle\Admin\Pool
      */
     protected $adminPool;
 
     /**
-     * @var \Sonata\AdminBundle\Admin\AdminInterface $admin
+     * @var \Sonata\AdminBundle\Admin\AdminInterface
      */
     protected $admin;
-
 
     /**
      * @param \Sonata\AdminBundle\Admin\Pool $adminPool
@@ -41,6 +40,7 @@ class AdminTrackerListener
 
     /**
      * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+     *
      * @throws \RuntimeException
      */
     public function onKernelRequest(GetResponseEvent $event)
@@ -67,7 +67,7 @@ class AdminTrackerListener
                 ));
             }
 
-            foreach ($this->admin->getExtensions() as $extension){
+            foreach ($this->admin->getExtensions() as $extension) {
                 $this->setTrackedAction($extension);
             }
             $this->setTrackedAction($this->admin);
@@ -83,14 +83,14 @@ class AdminTrackerListener
             $request = $this->admin->getRequest();
             foreach ($object->getTrackedActions() as $trackedAction) {
                 // if an action which is flagged as 'to be tracked' is matching the end of the route: add info to session
-                if (preg_match('#' . $trackedAction . '$#', $request->get('_route'), $matches)) {
+                if (preg_match('#'.$trackedAction.'$#', $request->get('_route'), $matches)) {
                     $this->updateTrackedInfo(
                         $request->getSession(),
                         '_networking_initcms_admin_tracker',
                         [
                             'url' => $request->getRequestUri(),
                             'controller' => $this->admin->getBaseControllerName(),
-                            'action' => $trackedAction
+                            'action' => $trackedAction,
                         ]
                     );
                 }
@@ -98,13 +98,13 @@ class AdminTrackerListener
         }
     }
 
-
     /**
-     * update tracker info in session
+     * update tracker info in session.
+     *
      * @param $session
      * @param string $sessionKey
-     * @param array $trackInfoArray
-     * @param int $limit
+     * @param array  $trackInfoArray
+     * @param int    $limit
      */
     protected function updateTrackedInfo($session, $sessionKey, $trackInfoArray, $limit = 5)
     {
@@ -120,7 +120,7 @@ class AdminTrackerListener
         );
 
         // remove last value, if array has more than limit items
-        if ($limit > 0 AND count($value) > $limit) {
+        if ($limit > 0 and count($value) > $limit) {
             array_pop($value);
         }
 

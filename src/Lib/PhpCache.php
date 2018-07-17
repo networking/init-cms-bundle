@@ -9,6 +9,7 @@
  */
 
 namespace Networking\InitCmsBundle\Lib;
+
 umask(0002);
 
 use phpFastCache;
@@ -16,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PhpCache implements PhpCacheInterface
 {
-
     /**
      * @var phpFastCache
      */
@@ -33,7 +33,7 @@ class PhpCache implements PhpCacheInterface
     protected $cacheDir;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $active;
 
@@ -42,14 +42,14 @@ class PhpCache implements PhpCacheInterface
      */
     protected $cacheTime;
 
-
     /**
      * @param string $type
      * @param string $rootDir
      * @param string $env
-     * @param bool $active
+     * @param bool   $active
      * @param string $cacheTime
-     * @param null $securityKey possibilities are auto (domain name), a string or null
+     * @param null   $securityKey possibilities are auto (domain name), a string or null
+     *
      * @throws \Exception
      */
     public function __construct($type = '', $rootDir = '', $env = '', $active = false, $cacheTime = '', $securityKey = null)
@@ -60,24 +60,26 @@ class PhpCache implements PhpCacheInterface
         $this->active = $active;
         $this->cacheTime = $cacheTime;
         if (is_null($securityKey)) {
-            $securityKey = 'cache.storage.' . sha1(__FILE__);
+            $securityKey = 'cache.storage.'.sha1(__FILE__);
         }
 
-        phpFastCache::setup("storage", $type);
-        phpFastCache::setup("path", $this->cacheDir);
-        phpFastCache::setup("securityKey", $securityKey);
+        phpFastCache::setup('storage', $type);
+        phpFastCache::setup('path', $this->cacheDir);
+        phpFastCache::setup('securityKey', $securityKey);
         $this->phpFastCache = new phpFastCache($type);
     }
 
     /**
      * @param $rootDir
      * @param $env
+     *
      * @return string
+     *
      * @throws \Exception
      */
     protected function createDir($rootDir, $env)
     {
-        $cacheDir = $rootDir . sprintf('../var/cache/%s/php_fast_cache', $env);
+        $cacheDir = $rootDir.sprintf('../var/cache/%s/php_fast_cache', $env);
         if (!file_exists($cacheDir) || !is_writable($cacheDir)) {
             if (!file_exists($cacheDir)) {
                 @mkdir($cacheDir, 0777);
@@ -86,7 +88,7 @@ class PhpCache implements PhpCacheInterface
                 @chmod($cacheDir, 0777);
             }
             if (!file_exists($cacheDir) || !is_writable($cacheDir)) {
-                throw new \Exception("Sorry, Please create " . $cacheDir . "/ and SET Mode 0777 or any Writable Permission!", 100);
+                throw new \Exception('Sorry, Please create '.$cacheDir.'/ and SET Mode 0777 or any Writable Permission!', 100);
             }
         }
 
@@ -96,11 +98,11 @@ class PhpCache implements PhpCacheInterface
     /**
      * @param Request $request
      * @param $user
+     *
      * @return bool
      */
     public function isCacheable(Request $request, $user)
     {
-
         if (!$this->active) {
             return false;
         }
@@ -111,14 +113,13 @@ class PhpCache implements PhpCacheInterface
 
         if ($request->getSession()->get('no_cache', false)) {
             $request->getSession()->remove('no_cache');
+
             return false;
         }
-
 
         if ($this->env != 'prod') {
             return false;
         }
-
 
         if ($request->getMethod() != 'GET') {
             return false;
@@ -130,6 +131,7 @@ class PhpCache implements PhpCacheInterface
     /**
      * @param $keyword
      * @param array $option
+     *
      * @return mixed|null|string
      */
     public function get($keyword, $option = [])
@@ -137,25 +139,27 @@ class PhpCache implements PhpCacheInterface
         return $this->phpFastCache->instance->get($keyword, $option);
     }
 
-
     /**
      * @param $keyword
      * @param string $value
-     * @param int $time
-     * @param array $option
+     * @param int    $time
+     * @param array  $option
+     *
      * @return array|bool|string
      */
-    public function set($keyword, $value = "", $time = null, $option = [])
+    public function set($keyword, $value = '', $time = null, $option = [])
     {
         if (is_null($time)) {
             $time = $this->cacheTime;
         }
+
         return $this->phpFastCache->instance->set($keyword, $value, $time, $option);
     }
 
     /**
      * @param $keyword
      * @param array $options
+     *
      * @return bool|\string[]
      */
     public function delete($keyword, $options = [])
@@ -165,6 +169,7 @@ class PhpCache implements PhpCacheInterface
 
     /**
      * @param array $option
+     *
      * @return mixed
      */
     public function clean($option = [])
@@ -172,13 +177,15 @@ class PhpCache implements PhpCacheInterface
         if ($this->active) {
             return $this->phpFastCache->instance->clean($option);
         }
+
         return false;
     }
 
     /**
      * @param $keyword
-     * @param int $time
+     * @param int   $time
      * @param array $option
+     *
      * @return bool
      */
     public function touch($keyword, $time = null, $option = [])
@@ -186,13 +193,13 @@ class PhpCache implements PhpCacheInterface
         if (is_null($time)) {
             $time = $this->cacheTime;
         }
+
         return $this->phpFastCache->instance->touch($keyword, $time, $option);
     }
 
     /**
      * @param $keyword
      * @param array $option
-     * @return null
      */
     public function getInfo($keyword, $option = [])
     {
@@ -270,6 +277,4 @@ class PhpCache implements PhpCacheInterface
     {
         $this->cacheTime = $cacheTime;
     }
-
-
 }

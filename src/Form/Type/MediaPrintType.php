@@ -11,9 +11,10 @@
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+
 /**
- * Class MediaPrintype
- * @package Networking\InitCmsBundle\Form\Type
+ * Class MediaPrintype.
+ *
  * @author Marc Bissegger <m.bissegger@networking.ch>
  */
 class MediaPrintType extends AbstractType
@@ -25,5 +26,4 @@ class MediaPrintType extends AbstractType
     {
         return 'networking_type_mediaprint';
     }
-
 }

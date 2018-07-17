@@ -23,6 +23,7 @@ class CkeditorAdminController extends BaseMediaAdminController
 {
     /**
      * @return Response
+     *
      * @throws \Twig_Error_Runtime
      */
     public function browserAction()
@@ -67,15 +68,15 @@ class CkeditorAdminController extends BaseMediaAdminController
                 'action' => 'browser',
                 'form' => $formView,
                 'datagrid' => $datagrid,
-                'formats' => $formats
+                'formats' => $formats,
             ]
         );
     }
 
-
     /**
      * @param Request $request
-     * @param string $type
+     * @param string  $type
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function uploadAction(Request $request, $type = 'image')
@@ -96,7 +97,6 @@ class CkeditorAdminController extends BaseMediaAdminController
             throw $this->createNotFoundException();
         }
         if ($file instanceof UploadedFile && $file->isValid()) {
-
             try {
                 $context = $request->get('context', $this->get('sonata.media.pool')->getDefaultContext());
 
@@ -119,16 +119,12 @@ class CkeditorAdminController extends BaseMediaAdminController
                         break;
                 }
 
-
-
                 $message = '';
                 $status = 200;
             } catch (\Exception $e) {
-
                 $message = $e->getMessage();
                 $status = 500;
             }
-
         } elseif ($file instanceof UploadedFile && !$file->isValid()) {
             $message = $file->getError();
             $status = 500;
@@ -146,14 +142,14 @@ class CkeditorAdminController extends BaseMediaAdminController
                                 'action' => 'list',
                                 'filePath' => $filePath,
                                 'message' => $message,
-                                'status' => $status
+                                'status' => $status,
                             ]
                         );
-
     }
 
     /**
      * @return Response
+     *
      * @throws \Twig_Error_Runtime
      */
     public function browserRefreshAction()
@@ -178,7 +174,6 @@ class CkeditorAdminController extends BaseMediaAdminController
 
         $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
-
         $tags = $this->getDoctrine()
             ->getRepository(Tag::class)
             ->createQueryBuilder('t')
@@ -198,13 +193,13 @@ class CkeditorAdminController extends BaseMediaAdminController
                 'action' => 'browser',
                 'form' => $formView,
                 'datagrid' => $datagrid,
-                'formats' => $formats
+                'formats' => $formats,
             ]
         );
     }
 
     /**
-     * Returns a template
+     * Returns a template.
      *
      * @param string $name
      *
@@ -222,7 +217,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     }
 
     /**
-     * Checks if SonataMediaBundle is loaded otherwise throws an exception
+     * Checks if SonataMediaBundle is loaded otherwise throws an exception.
      *
      * @throws \RuntimeException
      */

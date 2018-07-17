@@ -13,20 +13,18 @@ namespace Networking\InitCmsBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Class PageSnapshotManager
- * @package Networking\InitCmsBundle\Entity
+ * Class PageSnapshotManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageSnapshotManager extends EntityRepository implements PageSnapshotManagerInterface
 {
-
     /**
-     * @param EntityManager $em
+     * @param EntityManager                       $em
      * @param \Doctrine\ORM\Mapping\ClassMetadata $class
      */
     public function __construct(EntityManager $em, $class)
@@ -39,6 +37,7 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
 
     /**
      * @param $pageId
+     *
      * @return mixed
      */
     public function findSnapshotByPageId($pageId)
@@ -53,6 +52,7 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
 
     /**
      * @param $pageId
+     *
      * @return mixed
      */
     public function findLastPageSnapshot($pageId)
@@ -63,14 +63,12 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
             ->setMaxResults(1)
             ->setParameter(':pageId', 2);
 
-        try{
+        try {
             return $qb->getQuery()->getSingleResult();
-        }catch (NoResultException $e){
+        } catch (NoResultException $e) {
             return null;
-        }catch (NonUniqueResultException $e){
+        } catch (NonUniqueResultException $e) {
             return null;
         }
     }
-
-
 }

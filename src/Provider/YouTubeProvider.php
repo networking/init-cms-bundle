@@ -1,4 +1,5 @@
 <?php
+
 namespace Networking\InitCmsBundle\Provider;
 
 use Sonata\MediaBundle\Model\MediaInterface;
@@ -14,7 +15,6 @@ use Sonata\MediaBundle\Provider\YouTubeProvider as BaseProvider;
  */
 class YouTubeProvider extends BaseProvider
 {
-
     /**
      * {@inheritdoc}
      */
@@ -26,12 +26,10 @@ class YouTubeProvider extends BaseProvider
 
         $file = $this->getReferenceFile($oldMedia);
 
-
         if ($this->getFilesystem()->has($file->getKey())) {
             $this->getFilesystem()->delete($file->getKey());
         }
 
         $this->postPersist($media);
-
     }
 }

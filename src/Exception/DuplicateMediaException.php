@@ -1,5 +1,7 @@
 <?php
+
 namespace Networking\InitCmsBundle\Exception;
+
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 
 /**
@@ -12,5 +14,4 @@ use Symfony\Component\HttpFoundation\File\Exception\UploadException;
  */
 class DuplicateMediaException extends UploadException
 {
-
 }

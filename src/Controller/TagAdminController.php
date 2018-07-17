@@ -10,10 +10,8 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-
 use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Model\Tag;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +22,6 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 
 class TagAdminController extends CRUDController
 {
-
     /**
      * @return Response
      */
@@ -48,6 +45,7 @@ class TagAdminController extends CRUDController
 
     /**
      * @param $objectId
+     *
      * @return string
      */
     public function getTagTree($objectId)
@@ -59,11 +57,12 @@ class TagAdminController extends CRUDController
             'noSort' => false,
             'tags' => $tags,
             'tagAdmin' => $this->admin,
-            'lastItem' => $objectId]);
+            'lastItem' => $objectId, ]);
     }
 
     /**
      * @param int|null|string $id
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function deleteAction($id)
@@ -92,7 +91,6 @@ class TagAdminController extends CRUDController
                     return $this->renderJson(['result' => 'ok']);
                 }
 
-
                 $this->addFlash(
                     'sonata_flash_success',
                     $translator->trans(
@@ -105,6 +103,7 @@ class TagAdminController extends CRUDController
                 if ($returnToMedia) {
                     $mediaAdmin = $this->get('sonata.media.admin.media');
                     $url = $mediaAdmin->generateUrl('list');
+
                     return new RedirectResponse($url);
                 }
             } catch (ModelManagerException $e) {
@@ -126,7 +125,6 @@ class TagAdminController extends CRUDController
 
             return $this->redirectTo($object);
         }
-
 
         return $this->render('@NetworkingInitCms/TagAdmin/delete.html.twig', [
             'object' => $object,
@@ -150,13 +148,13 @@ class TagAdminController extends CRUDController
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
     public function inlineEditAction(Request $request)
     {
         $id = $request->get('pk');
         $name = $request->get('value');
-
 
         /** @var $tag Tag */
         if (!$tag = $this->admin->getObject($id)) {
@@ -169,13 +167,12 @@ class TagAdminController extends CRUDController
         $errors = $validator->validate($tag);
 
         if (count($errors) > 0) {
-
             $messages = [];
             foreach ($errors as $error) {
                 $messages[] = $error->getMessage();
             }
 
-            return new Response(join(', ', $messages), 400);
+            return new Response(implode(', ', $messages), 400);
         }
 
         $this->admin->update($tag);
@@ -188,6 +185,7 @@ class TagAdminController extends CRUDController
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
     public function updateTreeAction(Request $request)
@@ -200,7 +198,9 @@ class TagAdminController extends CRUDController
         $validator = $this->get('validator');
         try {
             foreach ($nodes as $node) {
-                if (!$node['item_id']) continue;
+                if (!$node['item_id']) {
+                    continue;
+                }
                 /** @var $tag Tag */
                 $tag = $admin->getObject($node['item_id']);
                 if ($node['parent_id']) {
@@ -230,6 +230,7 @@ class TagAdminController extends CRUDController
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
     public function searchTagsAction(Request $request)
@@ -240,7 +241,7 @@ class TagAdminController extends CRUDController
         $query->select('t.id, t.path AS text');
         $query->andWhere('t.path LIKE :q');
         $query->orderBy('text', 'ASC');
-        $query->setParameter(':q', '%' . $q . '%');
+        $query->setParameter(':q', '%'.$q.'%');
         $response = $query->execute([], Query::HYDRATE_ARRAY);
 
         return $this->renderJson($response);

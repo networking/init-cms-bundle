@@ -8,22 +8,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Doctrine\Types;
 
 /**
- * Class EnumPageStatusType
- * @package Networking\InitCmsBundle\Doctrine\Types
+ * Class EnumPageStatusType.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class EnumPageStatusType extends EnumType
 {
     /**
-     * @var string $name
+     * @var string
      */
     protected $name = 'enumpagestatus';
 
     /**
-     * @var array $value
+     * @var array
      */
     protected $values = ['draft', 'review', 'published'];
 }

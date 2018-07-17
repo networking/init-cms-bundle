@@ -19,22 +19,20 @@ use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class TranslatableTextBlockService
- * @package Networking\InitCmsBundle\Block
+ * Class TranslatableTextBlockService.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class TranslatableTextBlockService extends AbstractAdminBlockService
 {
-
     /**
      * {@inheritdoc}
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-
         return $this->renderResponse('@NetworkingInitCms/Block/block_translatable_text.html.twig', [
-                    'block'     => $blockContext->getBlock(),
-                    'settings'  => $blockContext->getSettings()
+                    'block' => $blockContext->getBlock(),
+                    'settings' => $blockContext->getSettings(),
         ], $response);
     }
 
@@ -46,8 +44,6 @@ class TranslatableTextBlockService extends AbstractAdminBlockService
         // TODO: Implement validateBlock() method.
     }
 
-
-
     /**
      * {@inheritdoc}
      */
@@ -57,7 +53,7 @@ class TranslatableTextBlockService extends AbstractAdminBlockService
             'keys' => [
                 ['translation_key', 'text', []],
                 ['translation_domain', 'text', []],
-            ]
+            ],
         ]);
     }
 

@@ -57,7 +57,6 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
         ObjectManager $om
     ) {
         $this->om = $om;
-
     }
 
     /**
@@ -81,8 +80,6 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
         return $this->contentTypes;
     }
 
-    /**
-     */
     public function setContentTypes($contentTypes)
     {
         $this->contentTypes = $contentTypes;
@@ -95,7 +92,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
     {
         return [
             FormEvents::PRE_SET_DATA => 'preSetData',
-            FormEvents::POST_SUBMIT => 'postBindData'
+            FormEvents::POST_SUBMIT => 'postBindData',
         ];
     }
 
@@ -116,7 +113,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
                 'label_render' => false,
                 'label' => false,
                 'class' => $this->getContentType($layoutBlock),
-                'widget_form_group' => false
+                'widget_form_group' => false,
             ]
         );
         $form->remove('_delete');
@@ -128,6 +125,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
      * Set the Content objects contentType and objectId fields accordingly.
      *
      * @param FormEvent $event
+     *
      * @throws \RuntimeException
      */
     public function postBindData(FormEvent $event)
@@ -154,14 +152,12 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
         $errors = $this->validator->validate($contentObject);
 
         if (count($errors) > 0) {
-
             if ($contentObject->getId()) {
                 $message = $this->admin->getTranslator()->trans(
                     'message.layout_block_not_edited',
                     [],
                     $this->admin->getTranslationDomain()
                 );
-
             } else {
                 $message = $this->admin->getTranslator()->trans(
                     'message.layout_block_not_created',
@@ -186,17 +182,16 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
         return $event;
     }
 
-
     /**
-     * Get the content type of the content object, if the object is new, use the first available type
+     * Get the content type of the content object, if the object is new, use the first available type.
      *
      * @param LayoutBlockInterface $layoutBlock
+     *
      * @return string
      */
     public function getContentType(LayoutBlockInterface $layoutBlock = null)
     {
         if (is_null($layoutBlock) || !$classType = $layoutBlock->getClassType()) {
-
             if ($this->contentType) {
                 return $this->contentType;
             }
@@ -208,6 +203,4 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 
         return $classType;
     }
-
-
 }

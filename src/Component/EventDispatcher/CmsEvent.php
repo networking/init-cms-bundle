@@ -7,19 +7,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Component\EventDispatcher;
 
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class CmsEvent
- * @package Networking\InitCmsBundle\Component\EventDispatcher
+ * Class CmsEvent.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class CmsEvent extends Event
 {
     /**
-     * @var $entity
+     * @var
      */
     protected $entity;
 

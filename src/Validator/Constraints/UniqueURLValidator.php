@@ -17,8 +17,8 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Class UniqueURLValidator
- * @package Networking\InitCmsBundle\Validator\Constraints
+ * Class UniqueURLValidator.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UniqueURLValidator extends ConstraintValidator
@@ -27,7 +27,6 @@ class UniqueURLValidator extends ConstraintValidator
      * @var EntityManager
      */
     protected $om;
-
 
     /**
      * @var PageManagerInterface
@@ -43,29 +42,27 @@ class UniqueURLValidator extends ConstraintValidator
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
-
         $url = Urlizer::urlize($value->getUrl());
         $pages = $this->pageManager->findBy(['url' => $url, 'parent' => $value->getParent(), 'locale' => $value->getLocale()]);
 
         if ($value->getParent()) {
-            $url = $value->getParent()->getFullPath() . $url;
+            $url = $value->getParent()->getFullPath().$url;
         }
         if (count($pages) > 0) {
             foreach ($pages as $page) {
                 /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
                 if ($page->getId() != $value->getId()) {
                     $this->context->addViolationAt('url', $constraint->message, ['{{ value }}' => $url]);
+
                     return false;
                 }
             }
         }
 
-
         return true;
-
     }
 }

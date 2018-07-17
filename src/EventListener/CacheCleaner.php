@@ -10,7 +10,6 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
-
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Lib\PhpCache;
 use Networking\InitCmsBundle\Lib\PhpCacheInterface;
@@ -18,7 +17,6 @@ use Networking\InitCmsBundle\Model\MenuItem;
 
 class CacheCleaner
 {
-
     /**
      * @var int
      */
@@ -75,11 +73,10 @@ class CacheCleaner
     protected function cleanCache()
     {
         if ($this->cleanCount < 1) {
-            $this->cleanCount++;
+            ++$this->cleanCount;
             if (is_object($this->phpCache)) {
                 $this->phpCache->clean();
             }
-
         }
     }
-} 
+}

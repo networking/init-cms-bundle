@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,12 +18,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class MenuItem implements MenuItemInterface, \IteratorAggregate
 {
-
     /**
-     * @var array $options
+     * @var array
      */
     protected $options = [];
-
 
     /**
      * @var int
@@ -44,66 +43,55 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
      */
     protected $redirectUrl;
 
-
     /**
      * @var string
      */
     protected $internalUrl;
 
-
     /**
-     * @var boolean
+     * @var bool
      */
     protected $hidden;
-
 
     /**
      * @var string
      */
     protected $linkTarget;
 
-
     /**
      * @var string
      */
     protected $linkClass;
-
 
     /**
      * @var string
      */
     protected $linkRel;
 
-
     /**
      * @var int
      */
     protected $lft;
-
 
     /**
      * @var int
      */
     protected $lvl;
 
-
     /**
      * @var int
      */
     protected $rgt;
-
 
     /**
      * @var int
      */
     protected $root;
 
-
     /**
      * @var MenuItemInterface
      */
     protected $parent;
-
 
     /**
      * @var ArrayCollection
@@ -116,30 +104,25 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     protected $isRoot = false;
 
     /**
-     * @var string $locale ;
+     * @var string ;
      */
     protected $locale;
 
     /**
-     * @var string $path
+     * @var string
      */
     protected $path;
 
-
     /**
-     * @var text $description
+     * @var text
      */
     protected $description;
 
     /**
-     * @var string $visibility
-     *
+     * @var string
      */
     protected $visibility = self::VISIBILITY_PUBLIC;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -150,13 +133,9 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
      */
     public function __toString()
     {
-        return (string)$this->name;
+        return (string) $this->name;
     }
 
-
-    /**
-     *
-     */
     public function prePersist()
     {
         if ($this->getParent()) {
@@ -174,6 +153,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param PageInterface $page
+     *
      * @return $this
      */
     public function setPage(PageInterface $page = null)
@@ -193,6 +173,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $redirectUrl
+     *
      * @return $this
      */
     public function setRedirectUrl($redirectUrl)
@@ -212,6 +193,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $hidden
+     *
      * @return $this
      */
     public function setHidden($hidden)
@@ -239,6 +221,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $route
+     *
      * @return $this
      */
     public function setInternalUrl($route)
@@ -258,6 +241,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -268,7 +252,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -279,6 +263,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param MenuItemInterface $parent
+     *
      * @return $this
      */
     public function setParent(MenuItemInterface $parent = null)
@@ -298,6 +283,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $lft
+     *
      * @return $this
      */
     public function setLft($lft)
@@ -317,6 +303,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $lvl
+     *
      * @return $this
      */
     public function setLvl($lvl)
@@ -336,6 +323,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $rgt
+     *
      * @return $this
      */
     public function setRgt($rgt)
@@ -355,6 +343,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $root
+     *
      * @return $this
      */
     public function setRoot($root)
@@ -381,7 +370,8 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @param boolean $isRoot
+     * @param bool $isRoot
+     *
      * @return $this
      */
     public function setIsRoot($isRoot)
@@ -392,7 +382,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsRoot()
     {
@@ -400,7 +390,8 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @param  MenuItemInterface $menuItem
+     * @param MenuItemInterface $menuItem
+     *
      * @return MenuItemInterface
      */
     public function getRootParent(MenuItemInterface $menuItem)
@@ -417,7 +408,8 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @param  int $level
+     * @param int $level
+     *
      * @return bool|MenuItemInterface
      */
     public function getParentByLevel($level = 1)
@@ -438,7 +430,8 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @param  MenuItemInterface $menuItem
+     * @param MenuItemInterface $menuItem
+     *
      * @return $this
      */
     public function setMenu(MenuItemInterface $menuItem = null)
@@ -476,6 +469,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $status
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getChildrenByStatus($status)
@@ -493,9 +487,9 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
         return $children;
     }
 
-
     /**
      * @param $path
+     *
      * @return $this
      */
     public function setPath($path)
@@ -534,7 +528,8 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @param  null $locale
+     * @param null $locale
+     *
      * @return $this
      */
     public function setLocale($locale = null)
@@ -557,6 +552,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param \Networking\InitCmsBundle\Entity\text $description
+     *
      * @return $this
      */
     public function setDescription($description)
@@ -575,16 +571,16 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * Implements IteratorAggregate
+     * Implements IteratorAggregate.
      */
     public function getIterator()
     {
         return $this->children->getIterator();
     }
 
-
     /**
      * @param $linkClass
+     *
      * @return $this
      */
     public function setLinkClass($linkClass)
@@ -595,7 +591,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getLinkClass()
     {
@@ -604,6 +600,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $linkRel
+     *
      * @return $this
      */
     public function setLinkRel($linkRel)
@@ -614,7 +611,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getLinkRel()
     {
@@ -623,6 +620,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param $linkTarget
+     *
      * @return $this
      */
     public function setLinkTarget($linkTarget)
@@ -633,7 +631,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getLinkTarget()
     {
@@ -642,13 +640,15 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
 
     /**
      * @param string $visibility
+     *
      * @return $this
+     *
      * @throws \InvalidArgumentException
      */
     public function setVisibility($visibility)
     {
         if (!in_array($visibility, [self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC])) {
-            throw new \InvalidArgumentException("Invalid visibility");
+            throw new \InvalidArgumentException('Invalid visibility');
         }
         $this->visibility = $visibility;
 
@@ -656,7 +656,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * Get page visibility
+     * Get page visibility.
      *
      * @return string
      */
@@ -672,7 +672,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     {
         return [
             'visibility_public' => self::VISIBILITY_PUBLIC,
-            'visibility_protected' => self::VISIBILITY_PROTECTED
+            'visibility_protected' => self::VISIBILITY_PROTECTED,
         ];
     }
 
@@ -711,6 +711,4 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     {
         return !is_null($this->page);
     }
-
 }
-

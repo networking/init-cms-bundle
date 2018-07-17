@@ -10,7 +10,6 @@
 
 namespace Networking\InitCmsBundle\Command;
 
-use Networking\InitCmsBundle\Helper\PageHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,14 +18,14 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class DataSetupCommand
- * @package Networking\InitCmsBundle\Command
+ * Class DataSetupCommand.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class DataSetupCommand extends ContainerAwareCommand
 {
     /**
-     * configuration for the command
+     * configuration for the command.
      */
     protected function configure()
     {
@@ -36,7 +35,6 @@ class DataSetupCommand extends ContainerAwareCommand
             ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
             ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl')
         ;
-
     }
 
     /**
@@ -50,21 +48,20 @@ class DataSetupCommand extends ContainerAwareCommand
 
         $this->updateSchema($output);
 
-        if ($input->getOption('use-acl')){
+        if ($input->getOption('use-acl')) {
             $this->initACL($output);
             $this->sonataSetupACL($output);
         }
-
 
         if (!$input->getOption('no-fixtures')) {
             $this->loadFixtures($output);
             $this->publishPages($output);
         }
-
     }
 
     /**
      * @param OutputInterface $output
+     *
      * @return int
      */
     public function dropSchema(OutputInterface $output)
@@ -82,7 +79,8 @@ class DataSetupCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return int|string
      */
     private function updateSchema(OutputInterface $output)
@@ -101,6 +99,7 @@ class DataSetupCommand extends ContainerAwareCommand
 
     /**
      * @param $output
+     *
      * @return int
      */
     private function initACL($output)
@@ -108,7 +107,7 @@ class DataSetupCommand extends ContainerAwareCommand
         $command = $this->getApplication()->find('acl:init');
 
         $arguments = [
-            'command' => 'acl:init'
+            'command' => 'acl:init',
         ];
 
         $input = new ArrayInput($arguments);
@@ -118,6 +117,7 @@ class DataSetupCommand extends ContainerAwareCommand
 
     /**
      * @param $output
+     *
      * @return int
      */
     private function sonataSetupACL($output)
@@ -125,7 +125,7 @@ class DataSetupCommand extends ContainerAwareCommand
         $command = $this->getApplication()->find('sonata:admin:setup-acl');
 
         $arguments = [
-            'command' => 'sonata:admin:setup-acl'
+            'command' => 'sonata:admin:setup-acl',
         ];
 
         $input = new ArrayInput($arguments);
@@ -133,21 +133,22 @@ class DataSetupCommand extends ContainerAwareCommand
         return $command->run($input, $output);
     }
 
-
     /**
      * interact
-     * unused at the moment
-     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * unused at the moment.
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @throws \Exception
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
     }
 
-
     /**
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return int|string
      */
     private function loadFixtures(OutputInterface $output)
@@ -156,8 +157,8 @@ class DataSetupCommand extends ContainerAwareCommand
 
         $arguments = [
             'command' => 'doctrine:fixtures:load',
-            '--fixtures' => __DIR__ . '/../Fixtures',
-            '--append' => true
+            '--fixtures' => __DIR__.'/../Fixtures',
+            '--append' => true,
         ];
 
         $input = new ArrayInput($arguments);
@@ -182,10 +183,12 @@ class DataSetupCommand extends ContainerAwareCommand
                 $pageHelper->makePageSnapshot($page);
                 $modelManager->save($page);
             }
+
             return 0;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             die;
+
             return 1;
         }
     }

@@ -19,23 +19,22 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Form\FormMapper;
 
 /**
- * Class TagAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class TagAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class TagAdmin extends AbstractAdmin
 {
-
     /**
      * Default values to the datagrid.
      *
      * @var array
      */
     protected $datagridValues = [
-        '_page'       => 1,
-        '_per_page'   => 25,
+        '_page' => 1,
+        '_per_page' => 25,
         '_sort_by' => 'path',
-        '_sort_order'    => 'ASC'
+        '_sort_order' => 'ASC',
     ];
 
     /**
@@ -51,7 +50,6 @@ abstract class TagAdmin extends AbstractAdmin
      */
     public function configureRoutes(RouteCollection $collection)
     {
-
         parent::configureRoutes($collection);
 
         $collection->add(
@@ -79,27 +77,26 @@ abstract class TagAdmin extends AbstractAdmin
         );
     }
 
-
     /**
      * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $id = $this->getSubject() ? $this->getSubject()->getId(): null;
+        $id = $this->getSubject() ? $this->getSubject()->getId() : null;
         $formMapper
             ->add('name', null, ['attr' => ['class' => 'tag_name_input']])
             ->add('parent',
                 AutocompleteType::class,
                 [
                     'help_block' => 'parent.helper_text',
-                    'attr' => ['style' => "width:220px"],
+                    'attr' => ['style' => 'width:220px'],
                     'choice_label' => 'AdminTitle',
                     'class' => $this->getClass(),
                     'required' => false,
-                    'query_builder' => function (EntityRepository $er) use ($id)  {
+                    'query_builder' => function (EntityRepository $er) use ($id) {
                         $qb = $er->createQueryBuilder('t');
                         $qb->orderBy('t.path', 'asc');
-                        if($id){
+                        if ($id) {
                             $qb->where('t.id != :id')
                                 ->setParameter(':id', $id);
                         }
@@ -134,8 +131,8 @@ abstract class TagAdmin extends AbstractAdmin
                     'label' => ' ',
                     'actions' => [
                         'edit' => [],
-                        'delete' => []
-                    ]
+                        'delete' => [],
+                    ],
                 ]
             );
     }

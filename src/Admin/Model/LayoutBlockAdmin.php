@@ -24,20 +24,18 @@ use Networking\InitCmsBundle\Model\ContentInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
- * Class LayoutBlockAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class LayoutBlockAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class LayoutBlockAdmin extends BaseAdmin
 {
-
-
     /**
      * @var string
      */
     protected $baseRoutePattern = 'cms/layout_block';
     /**
-     * used to prefix dynamically generated form fields
+     * used to prefix dynamically generated form fields.
      */
     const CUSTOM_FIELD_PREFIX = 'networking_init_cms_content_';
 
@@ -49,7 +47,6 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         $collection->add('deleteAjax', 'delete_ajax', [], ['method' => 'POST']);
         $collection->add('updateFormFieldElement', 'update_form_fields', [], ['method' => 'POST']);
         $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', [], ['method' => 'GET']);
-
     }
 
     /**
@@ -70,7 +67,6 @@ abstract class LayoutBlockAdmin extends BaseAdmin
 
         $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
         $transformer = new PageToIdTransformer($pageManager);
-
 
         $formMapper
             ->add(
@@ -124,25 +120,28 @@ abstract class LayoutBlockAdmin extends BaseAdmin
 
     /**
      * @param mixed $object
+     *
      * @return mixed|void
+     *
      * @throws ModelManagerException
      */
-    public function prePersist($object){
+    public function prePersist($object)
+    {
         /** @var ContentInterface $contentObject */
         if ($contentObject = $object->getContent()) {
-            try{
+            try {
                 $this->getModelManager()->create($contentObject);
                 $object->setObjectId($contentObject->getId());
                 $this->autoPageDraft($object->getPage());
-            }catch (ModelManagerException $e){
+            } catch (ModelManagerException $e) {
                 throw new ModelManagerException($this->trans('Cannot create content, object is invalid', [], 'validators'));
             }
         }
     }
 
-
     /**
      * @param LayoutBlock $object
+     *
      * @return mixed|void
      */
     public function preUpdate($object)
@@ -155,14 +154,14 @@ abstract class LayoutBlockAdmin extends BaseAdmin
 
     /**
      * @param LayoutBlock $object
+     *
      * @return mixed|void
      */
     public function preRemove($object)
     {
         if ($classType = $object->getClassType()) {
-
             $contentObject = $this->getModelManager()->find($classType, $object->getObjectId());
-            if($contentObject){
+            if ($contentObject) {
                 $this->getModelManager()->delete($contentObject);
             }
         }

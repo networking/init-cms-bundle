@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
@@ -19,32 +20,31 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Yaml\Yaml;
 
-
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ *
  * @author net working AG <info@networking.ch>
  */
 class NetworkingInitCmsExtension extends Extension
 {
     /**
-     * @param array $configs
+     * @param array            $configs
      * @param ContainerBuilder $container
+     *
      * @throws \ReflectionException|\Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-
         $configuration = new Configuration();
-        $defaults = Yaml::parseFile(__DIR__ . '/../Resources/config/cms/config.yml');
+        $defaults = Yaml::parseFile(__DIR__.'/../Resources/config/cms/config.yml');
 
         foreach ($configs as $config) {
-                    foreach ($config as $key => $value) {
-                        $defaults['networking_init_cms'][$key] = $value;
-
-                    }
-                }
+            foreach ($config as $key => $value) {
+                $defaults['networking_init_cms'][$key] = $value;
+            }
+        }
 
         $config = $this->processConfiguration($configuration, $defaults);
 
@@ -64,7 +64,6 @@ class NetworkingInitCmsExtension extends Extension
             $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
         }
 
-
         $config['languages'] = $this->addShortLabels($config['languages']);
 
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
@@ -82,7 +81,6 @@ class NetworkingInitCmsExtension extends Extension
             'networking_init_cms.show_tag_tree',
             $config['show_tag_tree']
         );
-
 
         if (!$config['admin_toolbar']['toolbar']) {
             $mode = AdminToolbarSubscriber::DISABLED;
@@ -106,14 +104,12 @@ class NetworkingInitCmsExtension extends Extension
         $cacheClass = $config['cache']['cache_service_class'];
         $reflectionClass = new \ReflectionClass($cacheClass);
 
-
         $container->setParameter('networking_init_cms.xml_sitemap.sitemap_url', $config['xml_sitemap']['sitemap_url']);
         $container->setParameter('networking_init_cms.xml_sitemap.additional_links', $config['xml_sitemap']['additional_links']);
 
-
-        if(in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())){
+        if (in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())) {
             $container->setParameter('networking_init_cms.lib.php_cache.class', $config['cache']['cache_service_class']);
-        }else{
+        } else {
             throw new InvalidParameterException('Cache class should implement the PhpCacheInterface interface');
         }
 
@@ -123,6 +119,7 @@ class NetworkingInitCmsExtension extends Extension
     /**
      * @param $config
      * @param ContainerBuilder $container
+     *
      * @throws \InvalidArgumentException
      */
     public function configureClass($config, ContainerBuilder $container)
@@ -137,11 +134,10 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.manager.layout_block.class', $config['class']['layout_block']);
         $container->setParameter('networking_init_cms.manager.user.class', $config['class']['user']);
 
-        if($config['db_driver'] == 'mongodb'){
-
+        if ($config['db_driver'] == 'mongodb') {
         }
 
-        switch ($config['db_driver']){
+        switch ($config['db_driver']) {
             case 'orm':
                 $container->setParameter('networking_init_cms.admin.layout_block.class', 'Networking\InitCmsBundle\Entity\LayoutBlock');
                 break;
@@ -158,6 +154,7 @@ class NetworkingInitCmsExtension extends Extension
      * Add short labels for languages (e.g. de_CH becomes DE).
      *
      * @param array $languages
+     *
      * @return array
      */
     protected function addShortLabels(array $languages)
@@ -177,7 +174,6 @@ class NetworkingInitCmsExtension extends Extension
     public function registerDoctrineORMMapping(array $config)
     {
         foreach ($config['class'] as $type => $class) {
-
             if (!class_exists($class)) {
                 return;
             }
@@ -201,85 +197,82 @@ class NetworkingInitCmsExtension extends Extension
             ]
         );
 
-
         $collector->addAssociation(
             $config['class']['page'],
             'mapManyToMany',
             [
                 'fieldName' => 'originals',
                 'targetEntity' => $config['class']['page'],
-                'inversedBy' => "translations",
+                'inversedBy' => 'translations',
                 'cascade' => ['persist'],
                 'joinTable' => [
                     'name' => 'page_translation',
                     'joinColumns' => [
                         [
                             'name' => 'translation_id',
-                            'referencedColumnName' => 'id'
+                            'referencedColumnName' => 'id',
                         ],
                     ],
                     'inverseJoinColumns' => [
                         [
                             'name' => 'original_id',
-                            'referencedColumnName' => 'id'
-                        ]
+                            'referencedColumnName' => 'id',
+                        ],
                     ],
-                ]
+                ],
             ]
         );
 
-
         //LayoutBlock
         $collector->addAssociation(
-            $baseNameSpace . '\\LayoutBlock',
+            $baseNameSpace.'\\LayoutBlock',
             'mapManyToOne',
             [
                 'fieldName' => 'page',
                 'targetEntity' => $config['class']['page'],
-                'inversedBy' => "layoutBlock",
+                'inversedBy' => 'layoutBlock',
                 'cascade' => ['persist', 'detach'],
                 'joinColumns' => [
                     [
                         'name' => 'page_id',
                         'referencedColumnName' => 'id',
-                        'onDelete' => 'CASCADE'
-                    ]
-                ]
+                        'onDelete' => 'CASCADE',
+                    ],
+                ],
 
             ]
         );
 
-
         //MenuItem
         $collector->addAssociation(
-            $baseNameSpace . '\\MenuItem',
+            $baseNameSpace.'\\MenuItem',
             'mapManyToOne',
             [
                 'fieldName' => 'page',
                 'targetEntity' => $config['class']['page'],
-                'inversedBy' => "menuItem",
+                'inversedBy' => 'menuItem',
                 'cascade' => ['persist'],
                 'joinColumns' => [
                     [
                         'name' => 'page_id',
                         'referencedColumnName' => 'id',
                         'onDelete' => 'SET NULL',
-                        'nullable' => 'true'
-                    ]
-                ]
+                        'nullable' => 'true',
+                    ],
+                ],
 
             ]
         );
 
         //PageSnapshot
         $collector->addAssociation(
-            $baseNameSpace . '\\PageSnapshot',
+            $baseNameSpace.'\\PageSnapshot',
             'mapManyToOne',
             [
                 'fieldName' => 'page',
                 'targetEntity' => $config['class']['page'],
-                'inversedBy' => "snapshots",
-                'cascade' => ['persist']
+                'inversedBy' => 'snapshots',
+                'cascade' => ['persist'],
 
             ]
         );

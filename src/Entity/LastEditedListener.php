@@ -16,15 +16,14 @@ use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener;
 
 /**
- * Class LastEditedListener
- * @package Networking\InitCmsBundle\Entity
+ * Class LastEditedListener.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LastEditedListener extends ModelLastEditedListener
 {
-
     /**
-     * On Menu Create
+     * On Menu Create.
      *
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
      */
@@ -34,7 +33,7 @@ class LastEditedListener extends ModelLastEditedListener
     }
 
     /**
-     * On Menu Update
+     * On Menu Update.
      *
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
      */
@@ -57,12 +56,11 @@ class LastEditedListener extends ModelLastEditedListener
     protected function setSessionVariable($entity)
     {
         if ($entity instanceof MenuItem || $entity instanceof Page) {
-
             $this->bundleGuesser->initialize($entity);
 
             $name = $this->bundleGuesser->getShortName();
 
-            $this->session->set($name . '.last_edited', $entity->getId());
+            $this->session->set($name.'.last_edited', $entity->getId());
         }
     }
 }

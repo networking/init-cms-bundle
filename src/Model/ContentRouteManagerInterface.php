@@ -8,11 +8,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
-
-
-
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -31,29 +27,29 @@ interface ContentRouteManagerInterface
      */
     public function getClassName();
 
-
     /**
      * @param ContentRouteInterface $contentRoute
      */
     public function initializeContentRoute(ContentRouteInterface &$contentRoute);
 
     /**
-     * @param  ContentRouteInterface $contentRoute
+     * @param ContentRouteInterface $contentRoute
+     *
      * @return object
      */
     public function getRouteContent(ContentRouteInterface $contentRoute);
 
-
     /**
      * @param $criteria
+     *
      * @return mixed
      */
     public function findContentRouteBy(array $criteria);
 
     /**
      * @param $contentRoute
+     *
      * @return mixed
      */
     public function findContentByContentRoute(ContentRouteInterface $contentRoute);
-
 }

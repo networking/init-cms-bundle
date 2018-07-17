@@ -14,11 +14,10 @@ use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
-use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
 
 /**
- * Class PageListener
- * @package Networking\InitCmsBundle\Model
+ * Class PageListener.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class PageListener implements EventSubscriberInterface, PageListenerInterface, ContainerAwareInterface
@@ -37,7 +36,6 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
      * Sets the Container.
      *
      * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -62,7 +60,6 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
     public function getPageSnapshotManager()
     {
         return $this->container->get('networking_init_cms.page_snapshot_manager');
-
     }
 
     /**
@@ -74,7 +71,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
             [
                 'event' => 'serializer.post_deserialize',
                 'method' => 'onPostDeserialize',
-                'format' => 'json'
+                'format' => 'json',
             ],
         ];
     }
@@ -91,18 +88,17 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
             $context = $event->getContext();
 
             $er = $this->getPageManager();
-            if(!$page->getId()){
+            if (!$page->getId()) {
                 return;
             }
 
             if ($parent = $page->getParent()) {
-
                 $parent = $er->find($page->getParent());
                 $page->setParent($parent);
             } else {
                 $page->setParent(null);
             }
-            
+
             if ($alias = $page->getAlias()) {
                 $alias = $er->find($page->getAlias());
                 $page->setAlias($alias);
@@ -112,7 +108,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
 
             if ($parents = $page->getParents()) {
                 foreach ($parents as $key => $parent) {
-                    if(is_array($parent) && array_key_exists('id', $parent)){
+                    if (is_array($parent) && array_key_exists('id', $parent)) {
                         $parent = $parent['id'];
                     }
                     $parents[$key] = $er->find($parent);
@@ -142,7 +138,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
             } else {
                 $page->setOriginals([]);
             }
-            if ($context instanceof PageSnapshotDeserializationContext &&  $context->deserializeTranslations()) {
+            if ($context instanceof PageSnapshotDeserializationContext && $context->deserializeTranslations()) {
                 if ($translations = $page->getTranslations()) {
                     foreach ($translations as $key => $translation) {
                         $translations[$key] = $er->find($translation);
@@ -156,16 +152,13 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
             }
 
             if (!$contentRoute = $page->getContentRoute()->getId()) {
-
                 $pageSnapshotManager = $this->getPageSnapshotManager();
                 $lastPageSnapshot = $pageSnapshotManager->findLastPageSnapshot($page->getId());
 
-                if($lastPageSnapshot){
+                if ($lastPageSnapshot) {
                     $page->setContentRoute($lastPageSnapshot->getContentRoute());
                 }
             }
         }
     }
-
 }
- 

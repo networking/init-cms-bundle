@@ -11,17 +11,15 @@
 namespace Networking\InitCmsBundle\Twig\TokenParser;
 
 use Twig_TokenParser;
-use Twig_Token;
 use Networking\InitCmsBundle\Twig\Node\JSNode;
 
 /**
- * Class JSTokenParser
- * @package Networking\InitCmsBundle\Twig\TokenParser
+ * Class JSTokenParser.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class JSTokenParser extends Twig_TokenParser
 {
-
     /**
      * Parses a token and returns a node.
      *
@@ -40,7 +38,6 @@ class JSTokenParser extends Twig_TokenParser
 
     /**
      * Gets the tag name associated with this token parser.
-     *
      */
     public function getTag()
     {

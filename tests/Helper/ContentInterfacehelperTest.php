@@ -7,13 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Tests\Helper;
 
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
 use Networking\InitCmsBundle\Entity\Text;
 
-class ContentInterfaceHelperTest extends TestCase
+class ContentInterfacehelperTest extends TestCase
 {
     public $object;
     public $text;
@@ -58,7 +59,7 @@ class ContentInterfaceHelperTest extends TestCase
     }
 
     /**
-     * @expectedException Sonata\AdminBundle\Exception\NoValueException
+     * @expectedException \Sonata\AdminBundle\Exception\NoValueException
      */
     public function testGetFieldValue_ShouldThrowException()
     {

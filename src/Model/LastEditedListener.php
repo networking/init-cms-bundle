@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
 
 namespace Networking\InitCmsBundle\Model;
 
@@ -18,15 +17,15 @@ use Networking\InitCmsBundle\Helper\BundleGuesser;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class LastEditedListener implements EventSubscriberInterface {
-
+abstract class LastEditedListener implements EventSubscriberInterface
+{
     /**
-     * @var Session $session
+     * @var Session
      */
     protected $session;
 
     /**
-     * @var BundleGuesser $bundleGuesser
+     * @var BundleGuesser
      */
     protected $bundleGuesser;
 
@@ -37,7 +36,6 @@ abstract class LastEditedListener implements EventSubscriberInterface {
     {
         $this->session = $session;
         $this->bundleGuesser = new BundleGuesser();
-
     }
 
     /**
@@ -50,4 +48,3 @@ abstract class LastEditedListener implements EventSubscriberInterface {
         ];
     }
 }
- 

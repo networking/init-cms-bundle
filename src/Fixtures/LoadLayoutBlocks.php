@@ -19,14 +19,14 @@ use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Model\TextInterface;
 
 /**
- * Class LoadLayoutBlocks
- * @package Networking\InitCmsBundle\Fixtures
+ * Class LoadLayoutBlocks.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     private $container;
 
@@ -59,13 +59,13 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
         $textClass = false;
 
         $contentTypes = $this->container->getParameter('networking_init_cms.page.content_types');
-        foreach($contentTypes as $type){
-            if($type['name'] == 'Text'){
+        foreach ($contentTypes as $type) {
+            if ($type['name'] == 'Text') {
                 $textClass = $type['class'];
                 break;
             }
         }
-        if(!$textClass){
+        if (!$textClass) {
             return;
         }
 
@@ -79,7 +79,7 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
         $manager->persist($layoutBlock);
         $manager->flush();
 
-        /** @var TextInterface  $text */
+        /** @var TextInterface $text */
         $text = new $textClass();
         $text->setText('<h1>Hello World</h1><p>The locale of this page is '.$locale.'</p>');
 

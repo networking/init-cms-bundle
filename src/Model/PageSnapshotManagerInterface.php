@@ -10,23 +10,23 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-
 /**
- * Class PageSnapshotManagerInterface
- * @package Networking\InitCmsBundle\Model
+ * Class PageSnapshotManagerInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface PageSnapshotManagerInterface
 {
-
     /**
      * @param $pageId
+     *
      * @return mixed
      */
     public function findSnapshotByPageId($pageId);
 
     /**
      * @param $pageId
+     *
      * @return mixed
      */
     public function findLastPageSnapshot($pageId);
@@ -35,5 +35,4 @@ interface PageSnapshotManagerInterface
      * @return string
      */
     public function getClassName();
-
 }

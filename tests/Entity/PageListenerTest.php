@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Tests\Entity;
 
 use Networking\InitCmsBundle\Model\ContentRoute;
@@ -17,7 +18,7 @@ use Networking\InitCmsBundle\Helper\PageHelper;
 class PageListenerTest extends TestCase
 {
     /**
-     * @covers PageHelper::getPageRoutePath()
+     * @covers \PageHelper::getPageRoutePath()
      */
     public function testGetPageRoutePath()
     {
@@ -27,8 +28,9 @@ class PageListenerTest extends TestCase
     }
 
     /**
-     * postPersist with Tag
-     * @covers PageListener::postPersist()
+     * postPersist with Tag.
+     *
+     * @covers \PageListener::postPersist()
      */
     public function testPostPersist_WithTag()
     {
@@ -65,7 +67,7 @@ class PageListenerTest extends TestCase
     }
 
     /**
-     * postPersist with Page
+     * postPersist with Page.
      */
     public function testPostPersist_WithPage()
     {
@@ -112,7 +114,6 @@ class PageListenerTest extends TestCase
             ->method('getClassMetadata')
             ->will($this->returnValue($classMetaData));
 
-
         $em->expects($this->once())
             ->method('persist');
 
@@ -134,8 +135,9 @@ class PageListenerTest extends TestCase
     }
 
     /**
-     * postUpdate with Tag
-     * @covers PageListener::postUpdate()
+     * postUpdate with Tag.
+     *
+     * @covers \PageListener::postUpdate()
      */
     public function testPostUpdate_WithStdClass()
     {
@@ -182,8 +184,7 @@ class PageListenerTest extends TestCase
     }
 
     /**
-     * postUpdate with Page and no children
-     *
+     * postUpdate with Page and no children.
      */
     public function testPostUpdate_WithPage()
     {
@@ -252,7 +253,7 @@ class PageListenerTest extends TestCase
     }
 
     /**
-     * postUpdate with Page and 10 children
+     * postUpdate with Page and 10 children.
      */
     public function testPostUpdate_WithPageAndTenChildren()
     {
@@ -297,7 +298,6 @@ class PageListenerTest extends TestCase
         $em->expects($this->exactly(11))
             ->method('persist');
 
-
         $uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
             ->will($this->returnValue([$entity]));
@@ -319,19 +319,19 @@ class PageListenerTest extends TestCase
         $pageListener->onFlush($args);
     }
 
-
     /**
      * @param int $count
+     *
      * @return array
      */
     private function getMockChildren($count = 0)
     {
         $array = [];
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $contentRoute = $this->createConfiguredMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath' => '']);
             $contentRoute->expects($this->once())
                 ->method('setPath')
-                ->with($this->equalTo('/some/path-p/' . $count));
+                ->with($this->equalTo('/some/path-p/'.$count));
 
             $mockPage = $this->createMock('\Networking\InitCmsBundle\Model\Page');
             $mockPage->expects($this->once())
@@ -339,14 +339,11 @@ class PageListenerTest extends TestCase
                 ->will($this->returnValue($contentRoute));
             $mockPage->expects($this->once())
                 ->method('getPath')
-                ->will($this->returnValue('/some-234/path-p/' . $count));
-
+                ->will($this->returnValue('/some-234/path-p/'.$count));
 
             $array[] = $mockPage;
-
         }
 
         return $array;
     }
-
 }

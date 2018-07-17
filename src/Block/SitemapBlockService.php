@@ -18,25 +18,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 /**
- * Class OnlineUsersBlockService
- * @package Networking\InitCmsBundle\Block
+ * Class OnlineUsersBlockService.
+ *
  * @author info@networking.ch
  */
 class SitemapBlockService extends AbstractAdminBlockService
 {
-
     /**
      * {@inheritdoc}
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-
-            return $this->renderResponse(
+        return $this->renderResponse(
             $blockContext->getTemplate(),
             [
-                'block' => $blockContext->getBlock()
+                'block' => $blockContext->getBlock(),
             ],
             $response
         );
@@ -73,7 +70,7 @@ class SitemapBlockService extends AbstractAdminBlockService
     {
         $resolver->setDefaults(
             [
-                'template' => '@NetworkingInitCms/Block/block_sitemap.html.twig'
+                'template' => '@NetworkingInitCms/Block/block_sitemap.html.twig',
             ]
         );
     }

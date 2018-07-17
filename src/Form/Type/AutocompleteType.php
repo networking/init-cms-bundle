@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -28,13 +29,12 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Form\ChoiceList\Factory\PropertyAccessDecorator;
 
 /**
- * Class AutocompleteType
- * @package Networking\InitCmsBundle\Form\Type
+ * Class AutocompleteType.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class AutocompleteType extends DoctrineType
 {
-
     protected $hints;
 
     /**
@@ -54,8 +54,9 @@ class AutocompleteType extends DoctrineType
 
     /**
      * AutocompleteType constructor.
-     * @param ManagerRegistry $registry
-     * @param PropertyAccessorInterface|null $propertyAccessor
+     *
+     * @param ManagerRegistry                 $registry
+     * @param PropertyAccessorInterface|null  $propertyAccessor
      * @param ChoiceListFactoryInterface|null $choiceListFactory
      */
     public function __construct(ManagerRegistry $registry, PropertyAccessorInterface $propertyAccessor = null, ChoiceListFactoryInterface $choiceListFactory = null)
@@ -76,7 +77,6 @@ class AutocompleteType extends DoctrineType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-
         $registry = $this->registry;
         $choiceListFactory = $this->choiceListFactory;
         $idReaders = &$this->idReaders;
@@ -264,7 +264,7 @@ class AutocompleteType extends DoctrineType
             'id_reader' => null, // internal
             'choice_translation_domain' => false,
             'query_hints' => [],
-            'select2' => true
+            'select2' => true,
         ]);
 
         $resolver->setRequired(['class']);
@@ -288,7 +288,6 @@ class AutocompleteType extends DoctrineType
      * @param QueryBuilder $queryBuilder
      *
      * @return array
-     *
      */
     private function getQueryBuilderForCachingHash($queryBuilder)
     {
@@ -314,16 +313,17 @@ class AutocompleteType extends DoctrineType
      * Return the default loader object.
      *
      * @param ObjectManager $manager
-     * @param mixed $queryBuilder
-     * @param string $class
-     * @param array $hints
+     * @param mixed         $queryBuilder
+     * @param string        $class
+     * @param array         $hints
+     *
      * @return ORMQueryBuilderLoader|\Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface
      */
     public function getLoader(ObjectManager $manager, $queryBuilder, $class, $hints = [])
     {
         $loader = new ORMQueryBuilderLoader($queryBuilder, $manager, $class);
 
-        foreach ($hints as $name => $value){
+        foreach ($hints as $name => $value) {
             $loader->setHint($name, $value);
         }
 
@@ -340,7 +340,6 @@ class AutocompleteType extends DoctrineType
      * @param string $namespace Optional. The namespace
      *
      * @return string The SHA-256 hash
-     *
      */
     public static function generateHash($value, $namespace = '')
     {

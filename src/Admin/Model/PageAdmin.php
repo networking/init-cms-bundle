@@ -34,8 +34,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Valid;
 
 /**
- * Class PageAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class PageAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class PageAdmin extends BaseAdmin
@@ -144,7 +144,6 @@ abstract class PageAdmin extends BaseAdmin
 
         $homePage = $pageManager->findOneBy(['isHome' => true, 'locale' => $this->pageLocale]);
 
-
         $this->canCreateHomepage = (!$homePage) ? true : false;
 
         if (!$this->canCreateHomepage) {
@@ -155,11 +154,9 @@ abstract class PageAdmin extends BaseAdmin
 
         $this->formOptions['constraints'] = new Valid();
 
-
         $this->formOptions['validation_groups'] = $validationGroups;
 
         return parent::getFormBuilder();
-
     }
 
     /**
@@ -190,12 +187,11 @@ abstract class PageAdmin extends BaseAdmin
                         'label' => false,
                         'label_render' => false,
                         'error_bubbling' => false,
-                        'type_options' => ['error_bubbling' => false]
+                        'type_options' => ['error_bubbling' => false],
                     ]
                 )
                 ->end();
         }
-
 
         $formMapper->with('page_settings');
 
@@ -209,7 +205,6 @@ abstract class PageAdmin extends BaseAdmin
         }
 
         if (!$this->getSubject()->getId()) {
-
             $formMapper
                 ->add(
                     'locale',
@@ -217,10 +212,9 @@ abstract class PageAdmin extends BaseAdmin
                     [
                         'choices' => $this->getLocaleChoices(),
                         'preferred_choices' => [$this->pageLocale],
-                        'help_block' => 'locale.helper.text'
+                        'help_block' => 'locale.helper.text',
                     ]
                 );
-
         }
 
         $formMapper->add(
@@ -230,7 +224,6 @@ abstract class PageAdmin extends BaseAdmin
         );
 
         if (!$this->canCreateHomepage) {
-
             if (!$this->getSubject()->getId() || !$this->getSubject()->isHome()) {
                 $formMapper
                     ->add(
@@ -238,7 +231,7 @@ abstract class PageAdmin extends BaseAdmin
                         AutocompleteType::class,
                         [
                             'help_block' => 'parent.helper.text',
-                            'attr' => ['style' => "width:220px"],
+                            'attr' => ['style' => 'width:220px'],
                             'choice_label' => 'AdminTitle',
                             'class' => $this->getClass(),
                             'required' => false,
@@ -259,7 +252,7 @@ abstract class PageAdmin extends BaseAdmin
                         AutocompleteType::class,
                         [
                             'help_block' => 'alias.helper.text',
-                            'attr' => ['style' => "width:220px"],
+                            'attr' => ['style' => 'width:220px'],
                             'property' => 'AdminTitle',
                             'class' => $this->getClass(),
                             'required' => false,
@@ -273,14 +266,12 @@ abstract class PageAdmin extends BaseAdmin
                         ['display_method' => 'getAliasFullPath']
                     );
             }
-
         }
 
         $requireUrl = $this->canCreateHomepage ? false : true;
 
         if ($this->getSubject()->getId()) {
-
-            $attr = $this->getSubject()->isHome()?['readonly' => 'readonly']:[];
+            $attr = $this->getSubject()->isHome() ? ['readonly' => 'readonly'] : [];
             $formMapper
                 ->add(
                     'url',
@@ -288,7 +279,7 @@ abstract class PageAdmin extends BaseAdmin
                     [
                         'required' => $requireUrl,
                         'help_label' => $this->getSubject()->getFullPath(),
-                        'help_block' => 'url.helper.text'
+                        'help_block' => 'url.helper.text',
                     ],
                     ['display_method' => 'getFullPath', 'attr' => $attr]
                 );
@@ -300,7 +291,7 @@ abstract class PageAdmin extends BaseAdmin
                     [
                         'required' => $requireUrl,
                         'help_label' => '/',
-                        'help_block' => 'url.helper.text'
+                        'help_block' => 'url.helper.text',
                     ],
                     ['display_method' => 'getFullPath']
                 );
@@ -314,7 +305,7 @@ abstract class PageAdmin extends BaseAdmin
                 [
                     'help_block' => 'visibility.helper.text',
                     'choices' => $subject::getVisibilityList(),
-                    'translation_domain' => $this->translationDomain
+                    'translation_domain' => $this->translationDomain,
                 ]
             )
             ->add('activeFrom',
@@ -324,7 +315,7 @@ abstract class PageAdmin extends BaseAdmin
                     'required' => false,
                     'widget' => 'single_text',
                     'datetimepicker' => true,
-                    'widget_reset_icon' => 'remove'
+                    'widget_reset_icon' => 'remove',
                 ]
             )
             ->add('activeTo',
@@ -334,7 +325,7 @@ abstract class PageAdmin extends BaseAdmin
                     'required' => false,
                     'widget' => 'single_text',
                     'datetimepicker' => true,
-                    'widget_reset_icon' => 'remove'
+                    'widget_reset_icon' => 'remove',
                 ])
             ->add(
                 'templateName',
@@ -345,7 +336,7 @@ abstract class PageAdmin extends BaseAdmin
                     'expanded' => true,
                     'choices' => $this->getPageTemplates(),
                     'data' => $this->getDefaultTemplate(),
-	                'choice_translation_domain' => 'messages'
+                    'choice_translation_domain' => 'messages',
                 ]
             );
         $formMapper->end();
@@ -357,10 +348,9 @@ abstract class PageAdmin extends BaseAdmin
             ->add('metaDescription')
             ->end();
 
-	    foreach ($this->getExtensions() as $extension) {
-		    $extension->configureFormFields($formMapper);
-	    }
-
+        foreach ($this->getExtensions() as $extension) {
+            $extension->configureFormFields($formMapper);
+        }
     }
 
     /**
@@ -368,7 +358,6 @@ abstract class PageAdmin extends BaseAdmin
      */
     public function getTemplate($name)
     {
-
         switch ($name) {
             case 'show':
                 return '@NetworkingInitCms/PageAdmin/page_show.html.twig';
@@ -404,15 +393,17 @@ abstract class PageAdmin extends BaseAdmin
                 [
                     'callback' => [
                         $this,
-                        'getByLocale'
-                    ]
+                        'getByLocale',
+                    ],
                 ],
                 LanguageType::class,
                 [
                     'placeholder' => false,
-                    'choice_loader' => new CallbackChoiceLoader(function() {return $this->getLocaleChoices();}),
+                    'choice_loader' => new CallbackChoiceLoader(function () {
+                        return $this->getLocaleChoices();
+                    }),
                     'preferred_choices' => [$this->getDefaultLocale()],
-	                'translation_domain' => $this->translationDomain
+                    'translation_domain' => $this->translationDomain,
                 ]
             )
             ->add('pageName', SimpleStringFilter::class, [], null, ['translation_domain' => $this->translationDomain])
@@ -433,15 +424,13 @@ abstract class PageAdmin extends BaseAdmin
                         PageInterface::STATUS_REVIEW => PageInterface::STATUS_REVIEW,
                         PageInterface::STATUS_PUBLISHED => PageInterface::STATUS_PUBLISHED,
                     ],
-                    'translation_domain' => $this->translationDomain
+                    'translation_domain' => $this->translationDomain,
                 ]
             );
 
-
-	    foreach ($this->getExtensions() as $extension) {
-		    $extension->configureDatagridFilters($datagridMapper);
-	    }
-
+        foreach ($this->getExtensions() as $extension) {
+            $extension->configureDatagridFilters($datagridMapper);
+        }
     }
 
     /**
@@ -450,7 +439,7 @@ abstract class PageAdmin extends BaseAdmin
     public function configureDefaultFilterValues(array &$filterValues)
     {
         $filterValues['locale'] = [
-            'type'  => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
             'value' => $this->getDefaultLocale(),
         ];
     }
@@ -460,6 +449,7 @@ abstract class PageAdmin extends BaseAdmin
      * @param $alias
      * @param $field
      * @param $data
+     *
      * @return bool
      */
     public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -478,24 +468,24 @@ abstract class PageAdmin extends BaseAdmin
         $parameterName = sprintf('%s_%s', $field, $ProxyQuery->getUniqueParameterId());
 
         $qb->andWhere(sprintf('%s.%s LIKE :%s', 'cpath', $field, $parameterName));
-        $qb->setParameter(sprintf(':%s', $parameterName), '%' . $data['value'] . '%');
+        $qb->setParameter(sprintf(':%s', $parameterName), '%'.$data['value'].'%');
 
         return true;
     }
 
     /**
      * @param string $context
+     *
      * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
      */
     public function createQuery($context = 'list')
     {
-    	/** @var ProxyQuery $query */
-	    $query = $this->getModelManager()->createQuery($this->getClass(), 'p');
+        /** @var ProxyQuery $query */
+        $query = $this->getModelManager()->createQuery($this->getClass(), 'p');
         $qb = $query->getQueryBuilder();
-	    $qb->addSelect('c');
-	    $qb->leftJoin('p.contentRoute', 'c');
-	    $qb->orderBy('c.path', 'asc');
-
+        $qb->addSelect('c');
+        $qb->leftJoin('p.contentRoute', 'c');
+        $qb->orderBy('c.path', 'asc');
 
         return $query;
     }
@@ -505,6 +495,7 @@ abstract class PageAdmin extends BaseAdmin
      * @param $alias
      * @param $field
      * @param $data
+     *
      * @return bool
      */
     public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -530,10 +521,9 @@ abstract class PageAdmin extends BaseAdmin
     {
         $currentFilter = $this->getFilterParameters();
         $locale = $this->getDefaultLocale();
-        if(array_key_exists('locale', $currentFilter)){
+        if (array_key_exists('locale', $currentFilter)) {
             $locale = $currentFilter['locale']['value'];
         }
-
 
         $rootMenus = $this->getModelManager()->findBy(
             'NetworkingInitCmsBundle:MenuItem',
@@ -551,7 +541,7 @@ abstract class PageAdmin extends BaseAdmin
                 [
                     'label' => false,
                     'sortable' => false,
-                    'template' => '@NetworkingInitCms/PageAdmin/page_status_list_field.html.twig'
+                    'template' => '@NetworkingInitCms/PageAdmin/page_status_list_field.html.twig',
                 ]
             )
             ->add(
@@ -559,7 +549,7 @@ abstract class PageAdmin extends BaseAdmin
                 null,
                 [
                     'sortable' => false,
-                    'template' => '@NetworkingInitCms/PageAdmin/page_list_show_field.html.twig'
+                    'template' => '@NetworkingInitCms/PageAdmin/page_list_show_field.html.twig',
                 ]
             )
             ->add(
@@ -569,7 +559,7 @@ abstract class PageAdmin extends BaseAdmin
                     'sortable' => false,
                     'template' => '@NetworkingInitCms/PageAdmin/page_menu_list_field.html.twig',
                     'rootMenus' => $rootMenus,
-                    'locale' => $locale
+                    'locale' => $locale,
                 ]
             )
         ;
@@ -584,17 +574,14 @@ abstract class PageAdmin extends BaseAdmin
                     'show' => ['template' => '@NetworkingInitCms/PageAdmin/page_action_show.html.twig'],
                     'copy' => ['template' => '@NetworkingInitCms/PageAdmin/page_action_copy.html.twig'],
                     'delete' => [],
-                ]
+                ],
             ]
         );
 
-
-	    foreach ($this->getExtensions() as $extension) {
-		    $extension->configureListFields($listMapper);
-	    }
+        foreach ($this->getExtensions() as $extension) {
+            $extension->configureListFields($listMapper);
+        }
     }
-
-
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
@@ -618,7 +605,6 @@ abstract class PageAdmin extends BaseAdmin
         $originalLocale = $page->getLocale();
 
         foreach ($this->languages as $language) {
-
             if ($language['locale'] == $originalLocale) {
                 continue;
             }
@@ -629,17 +615,16 @@ abstract class PageAdmin extends BaseAdmin
                     [
                         'short_label' => $language['short_label'],
                         'translation' => $translatedLocales->get($language['locale']),
-                        'label' => \Locale::getDisplayLanguage($language['locale'])
+                        'label' => \Locale::getDisplayLanguage($language['locale']),
                     ]
                 );
-
             } else {
                 $translationLanguages->set(
                     $language['locale'],
                     [
                         'short_label' => $language['short_label'],
                         'translation' => false,
-                        'label' => \Locale::getDisplayLanguage($language['locale'])
+                        'label' => \Locale::getDisplayLanguage($language['locale']),
                     ]
                 );
             }
@@ -650,7 +635,7 @@ abstract class PageAdmin extends BaseAdmin
 
     /**
      * Get the page templates from the configuration and create an array to use in the
-     * choice field in the admin form
+     * choice field in the admin form.
      *
      * @return array
      */
@@ -667,7 +652,7 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * If there is an object get the object template variable, else get first in template array
+     * If there is an object get the object template variable, else get first in template array.
      *
      * @return string
      */
@@ -684,7 +669,7 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * Get the icons which represent the templates
+     * Get the icons which represent the templates.
      *
      * @return array
      */
@@ -700,7 +685,6 @@ abstract class PageAdmin extends BaseAdmin
         return $icons;
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -712,11 +696,11 @@ abstract class PageAdmin extends BaseAdmin
         if ($this->isGranted('PUBLISH')) {
             $actions['publish'] = [
                 'label' => 'label.action_publish',
-                'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
+                'ask_confirmation' => true, // If true, a confirmation will be asked before performing the action
             ];
         }
 
-        if($this->isGranted('EDIT')){
+        if ($this->isGranted('EDIT')) {
             $actions['copy'] = [
                 'label' => 'label.action_copy',
             ];
@@ -748,19 +732,18 @@ abstract class PageAdmin extends BaseAdmin
 
     /**
      * @param PageInterface $object
+     *
      * @return mixed|void
      */
     public function postRemove($object)
     {
         $contentRoute = $object->getContentRoute();
 
-        try{
+        try {
             $this->getModelManager()->delete($contentRoute);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             var_dump($e);
             die;
         }
-
     }
-
 }

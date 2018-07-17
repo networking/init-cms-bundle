@@ -11,10 +11,9 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * HelpText
+ * HelpText.
  *
  * @ORM\Table(name="help_text")
  * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\HelpTextRepository")
@@ -22,7 +21,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class HelpText implements HelpTextInterface
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -59,7 +58,7 @@ class HelpText implements HelpTextInterface
     protected $title;
 
     /**
-     * @var string $isDeletable
+     * @var string
      *
      * @ORM\Column(name="is_deletable", type="boolean")
      */
@@ -74,9 +73,9 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -84,9 +83,10 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return $this
      */
     public function setLocale($locale)
@@ -97,7 +97,7 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -107,9 +107,10 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Set translationKey
+     * Set translationKey.
      *
      * @param string $translationKey
+     *
      * @return $this
      */
     public function setTranslationKey($translationKey)
@@ -120,7 +121,7 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Get translationKey
+     * Get translationKey.
      *
      * @return string
      */
@@ -130,9 +131,10 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
+     *
      * @return $this
      */
     public function setText($text)
@@ -143,7 +145,7 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -153,9 +155,10 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Set translationDomain
+     * Set translationDomain.
      *
      * @param string $translationDomain
+     *
      * @return $this
      */
     public function setTitle($translationDomain)
@@ -166,7 +169,7 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Get translationDomain
+     * Get translationDomain.
      *
      * @return string
      */
@@ -175,11 +178,11 @@ class HelpText implements HelpTextInterface
         return $this->title;
     }
 
-
     /**
-     * Set isDeletable
+     * Set isDeletable.
      *
      * @param string $isDeletable
+     *
      * @return $this
      */
     public function setIsDeletable($isDeletable)
@@ -190,7 +193,7 @@ class HelpText implements HelpTextInterface
     }
 
     /**
-     * Get isDeletable
+     * Get isDeletable.
      *
      * @return string
      */

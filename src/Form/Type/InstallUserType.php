@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
 
 namespace Networking\InitCmsBundle\Form\Type;
 
@@ -15,6 +14,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
@@ -27,7 +27,7 @@ class InstallUserType extends AbstractType
             'text',
             [
                 'required' => true,
-                'constraints' => [new NotBlank()]
+                'constraints' => [new NotBlank()],
             ]
         )
             ->add(
@@ -35,7 +35,7 @@ class InstallUserType extends AbstractType
             'email',
             [
                 'required' => true,
-                'constraints' => [new Email()]
+                'constraints' => [new Email()],
             ]
         )
             ->add(

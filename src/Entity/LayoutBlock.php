@@ -13,23 +13,22 @@ namespace Networking\InitCmsBundle\Entity;
 use Networking\InitCmsBundle\Model\LayoutBlock as ModelLayoutBlock;
 
 /**
- * Class LayoutBlock
- * @package Networking\InitCmsBundle\Entity
+ * Class LayoutBlock.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LayoutBlock extends ModelLayoutBlock
 {
-
     /**
-     * Hook on pre-persist operations
+     * Hook on pre-persist operations.
      */
     public function prePersist()
     {
-        $this->createdAt = $this->updatedAt = new \DateTime("now");
+        $this->createdAt = $this->updatedAt = new \DateTime('now');
     }
 
     /**
-     * Hook on pre-update operations
+     * Hook on pre-update operations.
      */
     public function preUpdate()
     {

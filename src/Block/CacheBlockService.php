@@ -20,10 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 /**
- * Class OnlineUsersBlockService
- * @package Networking\InitCmsBundle\Block
+ * Class OnlineUsersBlockService.
+ *
  * @author info@networking.ch
  */
 class CacheBlockService extends AbstractAdminBlockService
@@ -35,8 +34,9 @@ class CacheBlockService extends AbstractAdminBlockService
 
     /**
      * CacheBlockService constructor.
-     * @param string $name
-     * @param EngineInterface $templating
+     *
+     * @param string            $name
+     * @param EngineInterface   $templating
      * @param PhpCacheInterface $cache
      */
     public function __construct(string $name, EngineInterface $templating, PhpCacheInterface $cache)
@@ -55,7 +55,7 @@ class CacheBlockService extends AbstractAdminBlockService
                     $blockContext->getTemplate(),
                     [
                         'block' => $blockContext->getBlock(),
-                        'cache' => $this->cache
+                        'cache' => $this->cache,
                     ],
                     $response
                 );
@@ -92,9 +92,8 @@ class CacheBlockService extends AbstractAdminBlockService
     {
         $resolver->setDefaults(
             [
-                'template' => '@NetworkingInitCms/Block/block_cache.html.twig'
+                'template' => '@NetworkingInitCms/Block/block_cache.html.twig',
             ]
         );
-
     }
 }

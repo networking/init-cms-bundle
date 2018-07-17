@@ -7,13 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Admin\Model;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
@@ -21,8 +21,8 @@ use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
- * Class HelpTextAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class HelpTextAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class HelpTextAdmin extends BaseAdmin
@@ -45,7 +45,6 @@ abstract class HelpTextAdmin extends BaseAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
-
         $listMapper
             ->addIdentifier('title')
             ->addIdentifier('translationKey')
@@ -57,8 +56,8 @@ abstract class HelpTextAdmin extends BaseAdmin
                     'label' => false,
                     'actions' => [
                         'edit' => [],
-                        'delete' => []
-                    ]
+                        'delete' => [],
+                    ],
                 ]
             );
     }
@@ -68,15 +67,16 @@ abstract class HelpTextAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-
         $formMapper
             ->add(
                 'locale',
                 ChoiceType::class,
                 [
-	                'choice_loader' => new CallbackChoiceLoader(function() {return $this->getLocaleChoices();}),
-	                'preferred_choices' => [$this->getDefaultLocale()],
-	                'translation_domain' => false
+                    'choice_loader' => new CallbackChoiceLoader(function () {
+                        return $this->getLocaleChoices();
+                    }),
+                    'preferred_choices' => [$this->getDefaultLocale()],
+                    'translation_domain' => false,
                 ]
             )
             ->add('translationKey')
@@ -86,7 +86,6 @@ abstract class HelpTextAdmin extends BaseAdmin
                 CKEditorType::class,
                 ['config' => ['toolbar' => 'standard', 'contentsCss' => null]]
             );
-
     }
 
     /**
@@ -101,20 +100,21 @@ abstract class HelpTextAdmin extends BaseAdmin
                 [
                     'callback' => [
                         $this,
-                        'getByLocale'
+                        'getByLocale',
                     ],
                     'hidden' => false,
                 ],
                 ChoiceType::class,
                 [
                     'placeholder' => false,
-                    'choice_loader' => new CallbackChoiceLoader(function() {return $this->getLocaleChoices();}),
+                    'choice_loader' => new CallbackChoiceLoader(function () {
+                        return $this->getLocaleChoices();
+                    }),
                     'preferred_choices' => [$this->getDefaultLocale()],
-                    'translation_domain' => false
+                    'translation_domain' => false,
                 ]
 
             );
-
     }
 
     /**
@@ -123,7 +123,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     public function configureDefaultFilterValues(array &$filterValues)
     {
         $filterValues['locale'] = [
-            'type'  => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
             'value' => $this->getDefaultLocale(),
         ];
     }
@@ -133,6 +133,7 @@ abstract class HelpTextAdmin extends BaseAdmin
      * @param $alias
      * @param $field
      * @param $data
+     *
      * @return bool
      */
     public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -143,11 +144,11 @@ abstract class HelpTextAdmin extends BaseAdmin
             $active = false;
         }
 
-	    $qb = $ProxyQuery->getQueryBuilder();
+        $qb = $ProxyQuery->getQueryBuilder();
 
-	    $qb->andWhere(sprintf('%s.%s = :locale', $alias, $field));
-	    $qb->orderBy(sprintf('%s.translationKey', $alias), 'asc');
-	    $qb->setParameter(':locale', $locale);
+        $qb->andWhere(sprintf('%s.%s = :locale', $alias, $field));
+        $qb->orderBy(sprintf('%s.translationKey', $alias), 'asc');
+        $qb->setParameter(':locale', $locale);
 
         return $active;
     }

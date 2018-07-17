@@ -16,18 +16,18 @@ use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
- * Class PageManagerInterface
- * @package Networking\InitCmsBundle\Model
+ * Class PageManagerInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInterface, ObjectRepository
 {
-
     /**
      * @param $locale
      * @param null $id
      * @param bool $showHome
      * @param bool $showChildren
+     *
      * @return mixed
      */
     public function getParentPagesQuery($locale, $id = null, $showHome = false, $showChildren = false);
@@ -35,15 +35,16 @@ interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInt
     /**
      * @param $locale
      * @param null $id
+     *
      * @return mixed
      */
     public function getParentPagesChoices($locale, $id = null);
 
-
     /**
      * @param $sort
      * @param string $order
-     * @param int $hydrationMode
+     * @param int    $hydrationMode
+     *
      * @return mixed
      */
     public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT);
@@ -51,14 +52,15 @@ interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInt
     /**
      * @param $draftPage
      * @param $serializer
+     *
      * @return mixed
      */
     public function revertToPublished(PageInterface $draftPage, \JMS\Serializer\SerializerInterface $serializer);
 
     /**
      * @param PageInterface $page
+     *
      * @return mixed
      */
     public function save(PageInterface $page);
-
 }

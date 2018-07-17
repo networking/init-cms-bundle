@@ -15,18 +15,17 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Networking\InitCmsBundle\Entity\MenuItem;
 
 /**
- * Class LoadMenu
- * @package Networking\InitCmsBundle\Fixtures
+ * Class LoadMenu.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     private $container;
 
@@ -70,7 +69,7 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
 
         $homePageMenu = new MenuItem();
         $homePageMenu->setName('Homepage');
-        $homePageMenu->setPage($this->getReference('homepage_' . $locale));
+        $homePageMenu->setPage($this->getReference('homepage_'.$locale));
         $homePageMenu->setParent($menuRoot);
 
         $manager->persist($homePageMenu);
@@ -86,7 +85,6 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
 
         $manager->persist($footerRoot);
         $manager->flush();
-
     }
 
     /**

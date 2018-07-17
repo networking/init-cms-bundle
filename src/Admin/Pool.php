@@ -13,36 +13,32 @@ namespace Networking\InitCmsBundle\Admin;
 use Sonata\AdminBundle\Admin\Pool as AdminPool;
 
 /**
- * Class Pool
- * @package Networking\InitCmsBundle\Admin
+ * Class Pool.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Pool extends AdminPool
 {
     /**
      * Get the groups of admins that will be used to display the
-     * admin menu on the side
+     * admin menu on the side.
      *
      * @return array
      */
-    public function getDashboardNavigationGroups(){
-
+    public function getDashboardNavigationGroups()
+    {
         $groups = $this->getDashboardGroups();
 
         $menuGroups = $this->getContainer()->getParameter('networking_init_cms.admin_menu_groups');
 
         foreach ($menuGroups as $key => $menuGroup) {
-
-            foreach($menuGroup['items'] as $k =>  $item){
-                if(array_key_exists($item, $groups)){
+            foreach ($menuGroup['items'] as $k => $item) {
+                if (array_key_exists($item, $groups)) {
                     $menuGroups[$key]['sub_group'][$k] = $groups[$item];
                 }
-
             }
         }
 
         return $menuGroups;
-
     }
-
 }

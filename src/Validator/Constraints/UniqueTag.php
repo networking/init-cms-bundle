@@ -10,13 +10,12 @@
 
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
-
 use Symfony\Component\Validator\Constraint;
 
 class UniqueTag extends Constraint
 {
     /**
-     * @var string $message
+     * @var string
      */
     public $message = 'error.unique_tag';
 

@@ -43,11 +43,9 @@ class MediaController extends BaseMediaController
         /** @var \Networking\InitCmsBundle\Lib\PhpCache $phpCache */
         $phpCache = $this->get('networking_init_cms.lib.php_cache');
         if ($phpCache->isActive()) {
-
             if ($phpCache->get(sprintf('image_%s_updated_at', $id)) != $media->getUpdatedAt()) {
                 $phpCache->delete('image_'.$id);
             }
-
 
             if (!$response = $phpCache->get('image_'.$media->getId())) {
                 $provider = $this->getProvider($media);

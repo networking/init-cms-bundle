@@ -7,21 +7,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Builder;
 
 use Sonata\DoctrineORMAdminBundle\Builder\ListBuilder as SonataDoctrineOrmListBuilder;
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
-use Sonata\AdminBundle\Guesser\TypeGuesserInterface;
 
 /**
- * Class ListBuilder
- * @package Networking\InitCmsBundle\Builder
+ * Class ListBuilder.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class ListBuilder extends SonataDoctrineOrmListBuilder
 {
-
-
     /**
      * {@inheritdoc}
      */

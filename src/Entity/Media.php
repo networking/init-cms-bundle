@@ -11,36 +11,34 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Gaufrette\Util;
 use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class Media
- * @package Networking\InitCmsBundle\Entity
+ * Class Media.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Media extends BaseMedia
 {
-
     /**
-     * @var integer $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var ArrayCollection $tags
+     * @var ArrayCollection
      */
     protected $tags;
 
     /**
-     * @var string $locale
+     * @var string
      */
     protected $locale;
 
     /**
-     * @var ArrayCollection $galleryHasMedias
+     * @var ArrayCollection
      */
     protected $galleryHasMedias;
 
@@ -49,9 +47,6 @@ class Media extends BaseMedia
      */
     protected $md5File;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -70,9 +65,10 @@ class Media extends BaseMedia
     }
 
     /**
-     * Add tags
+     * Add tags.
      *
      * @param \Networking\InitCmsBundle\Entity\Tag $tag
+     *
      * @return $this
      */
     public function addTags(Tag $tag)
@@ -83,7 +79,7 @@ class Media extends BaseMedia
     }
 
     /**
-     * Get tags
+     * Get tags.
      *
      * @return ArrayCollection
      */
@@ -94,6 +90,7 @@ class Media extends BaseMedia
 
     /**
      * @param ArrayCollection|null $tags
+     *
      * @return $this
      */
     public function setTags(ArrayCollection $tags = null)
@@ -113,6 +110,7 @@ class Media extends BaseMedia
 
     /**
      * @param string $locale
+     *
      * @return $this
      */
     public function setLocale($locale)
@@ -123,9 +121,9 @@ class Media extends BaseMedia
     }
 
     /**
-     * Getter Used in Form(field:networking_type_mediaprint)
+     * Getter Used in Form(field:networking_type_mediaprint).
      *
-     * @return integer $id
+     * @return int $id
      */
     public function getImage()
     {
@@ -133,9 +131,9 @@ class Media extends BaseMedia
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer $id
+     * @return int $id
      */
     public function getId()
     {
@@ -143,7 +141,8 @@ class Media extends BaseMedia
     }
 
     /**
-     * fake setter
+     * fake setter.
+     *
      * @return $this
      */
     public function setImage($image)
@@ -172,6 +171,7 @@ class Media extends BaseMedia
         if ($this->getBinaryContent() instanceof UploadedFile) {
             return Util\Checksum::fromFile($this->getBinaryContent()->getPathName());
         }
+
         return Util\Checksum::fromContent($this->getBinaryContent());
     }
 

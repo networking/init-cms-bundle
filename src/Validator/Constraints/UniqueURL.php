@@ -13,20 +13,18 @@ namespace Networking\InitCmsBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class UniqueURL
+ * Class UniqueURL.
  *
  * @Annotation
  *
- * @package Networking\InitCmsBundle\Validator\Constraints
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UniqueURL extends Constraint
 {
     /**
-     * @var string $message
+     * @var string
      */
     public $message = 'error.unique_url';
-
 
     /**
      * @return array|string

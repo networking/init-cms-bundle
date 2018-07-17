@@ -17,48 +17,46 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
- * Class GalleryAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class GalleryAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class GalleryAdminExtension extends AbstractAdminExtension
 {
-
     /**
      * {@inheritdoc}
      */
     public function configureFormFields(FormMapper $formMapper)
     {
-       $formMapper->remove('context')
+        $formMapper->remove('context')
                   ->add('context', HiddenType::class);
     }
 
-	/**
-	 * {@inheritdoc}
-	 */
-    public function configureDatagridFilters( DatagridMapper $datagridMapper ) {
-	    $datagridMapper->remove('context');
+    /**
+     * {@inheritdoc}
+     */
+    public function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
+        $datagridMapper->remove('context');
     }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function configureListFields( ListMapper $listMapper ) {
-
-	    $listMapper->remove('defaultFormat')
-	               ->remove('context')
-		    ->add(
-			    '_action',
-			    'actions',
-			    [
-				    'actions' => [
-					    'show' => [],
-					    'edit' => [],
-					    'delete' => []
-				    ]
-			    ])
-	    ;
+    /**
+     * {@inheritdoc}
+     */
+    public function configureListFields(ListMapper $listMapper)
+    {
+        $listMapper->remove('defaultFormat')
+                   ->remove('context')
+            ->add(
+                '_action',
+                'actions',
+                [
+                    'actions' => [
+                        'show' => [],
+                        'edit' => [],
+                        'delete' => [],
+                    ],
+                ])
+        ;
     }
-
-
 }

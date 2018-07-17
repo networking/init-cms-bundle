@@ -8,64 +8,53 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
 
 /**
- * Class PageInterface
- * @package Networking\InitCmsBundle\Model
+ * Class PageInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface, \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
-
 {
-
-    /**
-     *
-     */
     const PATH_SEPARATOR = '/';
 
-    /**
-     *
-     */
     const VISIBILITY_PUBLIC = 'public';
 
-    /**
-     *
-     */
     const VISIBILITY_PROTECTED = 'protected';
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @return $this
      */
     public function setUpdatedAt();
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId();
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
-     * @param  \Datetime $createdAt
+     * @param \Datetime $createdAt
+     *
      * @return $this
      */
     public function setCreatedAt($createdAt);
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \Datetime
      */
     public function getCreatedAt();
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \Datetime
      */
@@ -77,30 +66,32 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getTitle();
 
     /**
-     * Set pageName
+     * Set pageName.
      *
-     * @param  string $title
+     * @param string $title
+     *
      * @return $this
      */
     public function setPageName($title);
 
     /**
-     * Get pageName
+     * Get pageName.
      *
      * @return string
      */
     public function getPageName();
 
     /**
-     * Set metaTitle
+     * Set metaTitle.
      *
-     * @param  string $title
+     * @param string $title
+     *
      * @return $this
      */
     public function setMetaTitle($title);
 
     /**
-     * Get metaTitle
+     * Get metaTitle.
      *
      * @return string
      */
@@ -141,16 +132,15 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      */
     public function getMetaDescription();
 
-
     /**
-     * @param  PageInterface $parent
+     * @param PageInterface $parent
+     *
      * @return $this
      */
     public function setParent(PageInterface $parent = null);
 
     /**
      * @param $level
-     * @return null
      */
     public function getParent($level = -1);
 
@@ -165,7 +155,8 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getAlias();
 
     /**
-     * @param  array $parents
+     * @param array $parents
+     *
      * @return $this
      */
     public function setParents(array $parents);
@@ -176,7 +167,8 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getParents();
 
     /**
-     * @param  PageInterface $children
+     * @param PageInterface $children
+     *
      * @return $this
      */
     public function addChildren(PageInterface $children);
@@ -188,133 +180,135 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
 
     /**
      * @param $children
+     *
      * @return $this
      */
     public function setChildren($children);
 
     /**
-     * @param  array $children
+     * @param array $children
+     *
      * @return array
      */
     public function getAllChildren(&$children = []);
 
     /**
      * @param $children
+     *
      * @return $this
      */
     public function setAllChildren($children);
 
     /**
-     * Set active
+     * Set active.
      *
      * @param string $status
+     *
      * @return $this
      */
     public function setStatus($status);
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
     public function getStatus();
 
     /**
-     * Set page visibility
+     * Set page visibility.
      *
      * @param string $visibility
+     *
      * @return $this
      */
     public function setVisibility($visibility);
 
     /**
-     * Get page visibility
+     * Get page visibility.
      *
      * @return string
      */
     public function getVisibility();
 
     /**
-     *
      * @return bool
      */
     public function isDraft();
 
     /**
-     *
      * @return bool
      */
     public function isReview();
 
     /**
-     *
      * @return bool
      */
     public function isPublished();
 
     /**
-     *
      * @return bool
      */
     public function isOffline();
 
     /**
-     *
      * @return bool
      */
     public function isActive();
 
-
     /**
-     * Set activeTo
+     * Set activeTo.
      *
      * @param  $activeTo
+     *
      * @return $this
      */
     public function setActiveTo($activeTo);
 
     /**
-     * Get activeTo
+     * Get activeTo.
      *
      * @return string
      */
     public function getActiveTo();
-    
 
     /**
-     * Set activeFrom
+     * Set activeFrom.
      *
      * @param  $activeFrom
+     *
      * @return $this
      */
     public function setActiveFrom($activeFrom);
 
     /**
-     * Get activeFrom
+     * Get activeFrom.
      *
      * @return string
      */
     public function getActiveFrom();
 
     /**
-     * Add layout block
+     * Add layout block.
      *
-     * @param  LayoutBlockInterface $layoutBlock
+     * @param LayoutBlockInterface $layoutBlock
+     *
      * @return $this
      */
     public function addLayoutBlock(LayoutBlockInterface $layoutBlock);
 
     /**
-     * remove content
+     * remove content.
      *
-     * @param  LayoutBlockInterface $layoutBlock
+     * @param LayoutBlockInterface $layoutBlock
+     *
      * @return $this
      */
     public function removeLayoutBlock(LayoutBlockInterface $layoutBlock);
 
     /**
      * Remove all layout blocks and replace with those in the
-     * serialized page snapshot
+     * serialized page snapshot.
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $publishedBlocks
      */
@@ -322,41 +316,42 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
 
     /**
      * @param $layoutBlocks
+     *
      * @return $this
      */
     public function setLayoutBlock($layoutBlocks);
 
-    /**
-     *
-     */
     public function orderLayoutBlocks();
 
     /**
-     * Get menuItem
+     * Get menuItem.
      *
-     * @param  null $zone
+     * @param null $zone
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
      */
     public function getLayoutBlock($zone = null);
 
     /**
-     * Add menuItem
+     * Add menuItem.
      *
-     * @param  MenuItemInterface $menuItem
+     * @param MenuItemInterface $menuItem
+     *
      * @return $this
      */
     public function setMenuItem(MenuItemInterface $menuItem);
 
     /**
-     * remove menuItem
+     * remove menuItem.
      *
-     * @param  MenuItemInterface $menuItem
+     * @param MenuItemInterface $menuItem
+     *
      * @return $this
      */
     public function removeMenuItem(MenuItemInterface $menuItem);
 
     /**
-     * Get menuItem
+     * Get menuItem.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -364,6 +359,7 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
 
     /**
      * @param $rootId
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getMenuItemByRoot($rootId);
@@ -375,6 +371,7 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
 
     /**
      * @param $isHome
+     *
      * @return $this
      */
     public function setIsHome($isHome);
@@ -390,7 +387,8 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function isHome();
 
     /**
-     * @param  string $locale
+     * @param string $locale
+     *
      * @return $this
      */
     public function setLocale($locale);
@@ -401,13 +399,15 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getLocale();
 
     /**
-     * @param  array $originals
+     * @param array $originals
+     *
      * @return $this
      */
     public function setOriginals(array $originals);
 
     /**
-     * @param  PageInterface $page
+     * @param PageInterface $page
+     *
      * @return $this
      */
     public function setOriginal(PageInterface $page);
@@ -419,31 +419,35 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
 
     /**
      * @param PageInterface $page
+     *
      * @return bool
      */
     public function isDirectTranslation(PageInterface $page);
 
     /**
      * @param PageInterface $page
+     *
      * @return mixed
      */
     public function getDirectTranslationFor(PageInterface $page);
 
     /**
      * @param PageInterface $page
+     *
      * @return $this
      */
     public function addTranslation(PageInterface $page);
 
     /**
      * @param PageInterface $page
+     *
      * @return $this
      */
     public function removeTranslation(PageInterface $page);
 
-
     /**
-     * @param  array $translations
+     * @param array $translations
+     *
      * @return $this
      */
     public function setTranslations(array $translations);
@@ -474,7 +478,8 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getUrl();
 
     /**
-     * @param  ContentRouteInterface $contentRoute
+     * @param ContentRouteInterface $contentRoute
+     *
      * @return $this
      */
     public function setContentRoute(ContentRouteInterface $contentRoute);
@@ -484,9 +489,9 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      */
     public function getContentRoute();
 
-
     /**
      * @param $snapshots
+     *
      * @return $this
      */
     public function setSnapshots($snapshots);
@@ -497,12 +502,13 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function getSnapshots();
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoute();
 
     /**
      * @param $template
+     *
      * @return $this
      */
     public function setTemplate($template);
@@ -512,9 +518,9 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      */
     public function getTemplate();
 
-
     /**
      * @param $templateName
+     *
      * @return $this
      */
     public function setTemplateName($templateName);
@@ -543,7 +549,8 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      * Recursively search for all possible translations of this page, either originals
      * of this page, translations of this page or translations of the original of this page.
      *
-     * @param  array $translationsArray
+     * @param array $translationsArray
+     *
      * @return array
      */
     public function getRecursiveTranslations(&$translationsArray);
@@ -559,7 +566,7 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public static function getVisibilityList();
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasPublishedVersion();
 
@@ -575,6 +582,7 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
 
     /**
      * @param $id
+     *
      * @return $this|null
      */
     public function convertIntegerToPage($id);

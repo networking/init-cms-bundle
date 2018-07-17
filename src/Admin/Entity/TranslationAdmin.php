@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Admin\Entity;
 
 use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
@@ -26,8 +25,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Intl\Intl;
 
 /**
- * Class TranslationAdmin
- * @package Networking\InitCmsBundle\Admin\Entity
+ * Class TranslationAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class TranslationAdmin extends AbstractAdmin
@@ -60,7 +59,6 @@ class TranslationAdmin extends AbstractAdmin
      * @var array
      */
     protected $filterLocales = [];
-
 
     /**
      * @param array $options
@@ -127,14 +125,15 @@ class TranslationAdmin extends AbstractAdmin
     }
 
     /**
-     * Whether or not to persist the filters in the session
+     * Whether or not to persist the filters in the session.
      *
-     * @var boolean
+     * @var bool
      */
     protected $persistFilters = true;
 
     /**
-     * Not exportable
+     * Not exportable.
+     *
      * @return array
      */
     public function getExportFormats()
@@ -150,16 +149,14 @@ class TranslationAdmin extends AbstractAdmin
         return 'fa-globe';
     }
 
-
     /**
      * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $filter)
     {
-
         $filter
             ->add('key', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
-            ->add('translations.content',StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
+            ->add('translations.content', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
             ->add(
                 'domain',
                 SimpleStringFilter::class,
@@ -168,8 +165,8 @@ class TranslationAdmin extends AbstractAdmin
                 [
                     'choices' => $this->getDomains(),
                     'placeholder' => 'translation.domain.all_choices',
-	                'translation_domain' => $this->translationDomain,
-	                'choice_translation_domain' => false
+                    'translation_domain' => $this->translationDomain,
+                    'choice_translation_domain' => false,
                 ]
             );
     }
@@ -187,7 +184,6 @@ class TranslationAdmin extends AbstractAdmin
             ->add('domain', 'string');
 
         foreach ($this->managedLocales as $locale) {
-
             if ($this->request) {
                 $localeString = $this->request->getLocale();
             } else {
@@ -207,7 +203,6 @@ class TranslationAdmin extends AbstractAdmin
         }
     }
 
-
     /**
      * @return array
      */
@@ -222,9 +217,9 @@ class TranslationAdmin extends AbstractAdmin
             // if persisting filters, save filters to session, or pull them out of session if no new filters set
             if ($this->persistFilters) {
                 if ($filters == [] && $this->request->query->get('filters') != 'reset') {
-                    $filters = $this->request->getSession()->get($this->getCode() . '.filter.parameters', []);
+                    $filters = $this->request->getSession()->get($this->getCode().'.filter.parameters', []);
                 } else {
-                    $this->request->getSession()->set($this->getCode() . '.filter.parameters', $filters);
+                    $this->request->getSession()->set($this->getCode().'.filter.parameters', $filters);
                 }
             }
 
@@ -243,14 +238,13 @@ class TranslationAdmin extends AbstractAdmin
                 $parameters[$this->getParentAssociationMapping()] = [
                     'value' => $this->request->get(
                         $this->getParent()->getIdParameter()
-                    )
+                    ),
                 ];
             }
         }
 
         return $parameters;
     }
-
 
     /**
      * @return array
@@ -276,11 +270,11 @@ class TranslationAdmin extends AbstractAdmin
 
     /**
      * @param \Ibrows\SonataTranslationBundle\Admin\unknown $name
+     *
      * @return \Ibrows\SonataTranslationBundle\Admin\multitype|string
      */
     public function getTemplate($name)
     {
-
         if ($name === 'list') {
             return '@NetworkingInitCms/TranslationAdmin/list.html.twig';
         }
@@ -290,7 +284,6 @@ class TranslationAdmin extends AbstractAdmin
         }
 
         return $this->getTemplateRegistry()->getTemplate($name);
-
     }
 
     /**
@@ -361,12 +354,11 @@ class TranslationAdmin extends AbstractAdmin
     {
         $actions = parent::getBatchActions();
         $actions['download'] = [
-            'label'            => 'batch.download',
+            'label' => 'batch.download',
             'ask_confirmation' => false,
-            'translation_domain' => 'IbrowsSonataTranslationBundle'
+            'translation_domain' => 'IbrowsSonataTranslationBundle',
         ];
 
         return $actions;
     }
 }
- 

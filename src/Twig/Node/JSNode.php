@@ -9,19 +9,20 @@
  */
 
 namespace Networking\InitCmsBundle\Twig\Node;
+
 use Networking\InitCmsBundle\Twig\Extension\NetworkingHelperExtension;
 
 /**
- * Class JSNode
- * @package Networking\InitCmsBundle\Twig\Node
+ * Class JSNode.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class JSNode extends \Twig_Node
 {
     /**
      * @param \Twig_Node $method
-     * @param array $lineno
-     * @param null $tag
+     * @param array      $lineno
+     * @param null       $tag
      */
     public function __construct(\Twig_Node $method, $lineno, $tag = null)
     {
@@ -40,6 +41,5 @@ class JSNode extends \Twig_Node
                 ->write("print \$this->env->getExtension('".NetworkingHelperExtension::class."')->")
                 ->raw($this->getNode('method')->getAttribute('value'))
                 ->raw("();\n");
-        ;
     }
 }

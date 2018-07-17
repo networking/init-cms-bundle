@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
 
 namespace Networking\InitCmsBundle\Entity;
 
@@ -18,47 +17,44 @@ use Networking\InitCmsBundle\Model\AdminSettings;
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class BaseUser extends SonataBaseUser implements UserInterface {
-
-
-
+abstract class BaseUser extends SonataBaseUser implements UserInterface
+{
     /**
-     * @var integer $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var $adminSettings \Networking\InitCmsBundle\Model\AdminSettings
-     *
+     * @var \Networking\InitCmsBundle\Model\AdminSettings
      */
     protected $adminSettings;
 
     /**
-     * @var $lastActivity \DateTime
+     * @var \DateTime
      */
     protected $lastActivity;
 
     /**
-     * Hook on pre-persist operations
+     * Hook on pre-persist operations.
      */
     public function prePersist(): void
     {
-        $this->createdAt = new \DateTime;
-        $this->updatedAt = new \DateTime;
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
     }
 
     /**
-     * Hook on pre-update operations
+     * Hook on pre-update operations.
      */
     public function preUpdate(): void
     {
-        $this->updatedAt = new \DateTime;
+        $this->updatedAt = new \DateTime();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer $id
+     * @return int $id
      */
     public function getId()
     {
@@ -79,6 +75,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface {
 
     /**
      * @param $key
+     *
      * @return mixed
      */
     public function getAdminSetting($key)
@@ -98,7 +95,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface {
     {
         if (!$this->adminSettings) {
             $this->adminSettings = new AdminSettings();
-        }else{
+        } else {
             $this->adminSettings = clone $this->adminSettings;
         }
 

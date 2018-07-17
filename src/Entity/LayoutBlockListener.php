@@ -18,15 +18,14 @@ use JMS\Serializer\Serializer;
 use Networking\InitCmsBundle\Model\ContentInterface;
 
 /**
- * Class LayoutBlockListener
- * @package Networking\InitCmsBundle\Entity
+ * Class LayoutBlockListener.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LayoutBlockListener
 {
-
     /**
-     * @var \JMS\Serializer\Serializer $serializer
+     * @var \JMS\Serializer\Serializer
      */
     protected $serializer;
 
@@ -66,10 +65,9 @@ class LayoutBlockListener
                 } catch (EntityNotFoundException $e) {
                     $em->detach($contentObject);
                     $classType = $layoutBlock->getClassType();
-                    $contentObject = new $classType;
+                    $contentObject = new $classType();
                     $em->persist($contentObject);
                 }
-
 
                 $em->flush($contentObject);
 
@@ -77,7 +75,6 @@ class LayoutBlockListener
 
                 $em->persist($layoutBlock);
                 $em->flush($layoutBlock);
-
             }
         }
     }

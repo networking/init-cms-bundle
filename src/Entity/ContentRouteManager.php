@@ -19,8 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class ContentRouteManager
- * @package Networking\InitCmsBundle\Entity
+ * Class ContentRouteManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class ContentRouteManager extends BaseContentRouteManager
@@ -40,6 +40,7 @@ class ContentRouteManager extends BaseContentRouteManager
 
     /**
      * ContentRouteManager constructor.
+     *
      * @param ObjectManager $om
      * @param $class
      */
@@ -50,9 +51,9 @@ class ContentRouteManager extends BaseContentRouteManager
         $this->setClassName($class);
     }
 
-
     /**
      * @param $criteria
+     *
      * @return mixed
      */
     public function findContentRouteBy(array $criteria)
@@ -62,6 +63,7 @@ class ContentRouteManager extends BaseContentRouteManager
 
     /**
      * @param ContentRouteInterface $contentRoute
+     *
      * @return object
      */
     public function findContentByContentRoute(ContentRouteInterface $contentRoute)
@@ -72,7 +74,7 @@ class ContentRouteManager extends BaseContentRouteManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRouteCollectionForRequest(Request $request)
     {
@@ -93,26 +95,21 @@ class ContentRouteManager extends BaseContentRouteManager
             return $collection;
         }
 
-        $searchUrl = (substr($url, -1) != '/') ? $url . '/' : $url;
-
+        $searchUrl = (substr($url, -1) != '/') ? $url.'/' : $url;
 
         $params = ['path' => $searchUrl];
-
 
         try {
             $contentRoutes = $this->repository->findBy($params);
         } catch (\Doctrine\DBAL\DBALException $e) {
-
             return $collection;
         }
-
 
         if (empty($contentRoutes)) {
             return $collection;
         }
 
-        $filterByLocale = function (ContentRouteInterface $var) use ($request)
-        {
+        $filterByLocale = function (ContentRouteInterface $var) use ($request) {
             if ($request) {
                 return $var->getLocale() == $request->getLocale();
             } else {
@@ -122,13 +119,11 @@ class ContentRouteManager extends BaseContentRouteManager
 
         $tempContentRoutes = array_filter($contentRoutes, $filterByLocale);
 
-
         if (empty($tempContentRoutes)) {
             $tempContentRoutes = $contentRoutes;
         }
 
         foreach ($tempContentRoutes as $key => $contentRoute) {
-
             $viewStatus = ($request) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
 
             $test = new \ReflectionClass($contentRoute->getClassType());

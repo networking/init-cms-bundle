@@ -20,13 +20,12 @@ use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class UserAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class UserAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class UserAdmin extends SonataUserAdmin
 {
-
     /**
      * @var string
      */
@@ -52,6 +51,7 @@ abstract class UserAdmin extends SonataUserAdmin
 
     /**
      * @param $trackedActions
+     *
      * @return $this
      */
     public function setTrackedActions($trackedActions)
@@ -79,7 +79,7 @@ abstract class UserAdmin extends SonataUserAdmin
 
         $links = [
             $this->trans($this->getLabel()) => $this,
-            $groupAdmin->trans($groupAdmin->getLabel()) => $groupAdmin
+            $groupAdmin->trans($groupAdmin->getLabel()) => $groupAdmin,
 
         ];
 
@@ -127,8 +127,8 @@ abstract class UserAdmin extends SonataUserAdmin
                 'label' => false,
                 'actions' => [
                     'edit' => [],
-                    'delete' => []
-                ]
+                    'delete' => [],
+                ],
             ]
         );
     }
@@ -149,7 +149,6 @@ abstract class UserAdmin extends SonataUserAdmin
      */
     protected function configureFormFields(FormMapper $formMapper): void
     {
-
         $formMapper
             ->with('General')
             ->add('username')
@@ -162,7 +161,7 @@ abstract class UserAdmin extends SonataUserAdmin
                 'expanded' => true,
                 'multiple' => true,
                 'choices_as_values' => true,
-	            'translation_domain' => false
+                'translation_domain' => false,
             ])
             ->end()
             ->with('Profile')
@@ -171,9 +170,7 @@ abstract class UserAdmin extends SonataUserAdmin
             ->add('locale', LocaleType::class, ['required' => false])
             ->end();
 
-
         if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
-
             $formMapper
                 ->with('Management')
                 ->add(
@@ -190,6 +187,5 @@ abstract class UserAdmin extends SonataUserAdmin
                 ->add('enabled', null, ['required' => false], ['inline_block' => true])
                 ->end();
         }
-
     }
 }

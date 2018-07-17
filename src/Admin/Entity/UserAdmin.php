@@ -7,17 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Admin\Entity;
 
 use Networking\InitCmsBundle\Admin\Model\UserAdmin as ModelUserAdmin;
 
 /**
- * Class UserAdmin
- * @package Networking\InitCmsBundle\Admin\Entity
+ * Class UserAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UserAdmin extends ModelUserAdmin
 {
-
-
 }

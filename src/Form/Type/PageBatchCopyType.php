@@ -10,7 +10,6 @@
 
 namespace Networking\InitCmsBundle\Form\Type;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,21 +17,20 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * Class PageBatchTranslationType
- * @package Networking\InitCmsBundle\Form\Type
+ * Class PageBatchTranslationType.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageBatchCopyType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $choices = [];
-        foreach ($options['locales'] as $value){
-
+        foreach ($options['locales'] as $value) {
             $choices[$value['locale']] = $value['locale'];
         }
 
@@ -45,9 +43,9 @@ class PageBatchCopyType extends AbstractType
      * @param $data
      * @param ExecutionContextInterface $executionContext
      */
-    public function validateChoices($data, ExecutionContextInterface $executionContext){
-
-        if($data['fromLocale'] === $data['toLocale']){
+    public function validateChoices($data, ExecutionContextInterface $executionContext)
+    {
+        if ($data['fromLocale'] === $data['toLocale']) {
             $executionContext->addViolation('init_cms.page_copy.duplicate_locale');
         }
     }
@@ -64,5 +62,4 @@ class PageBatchCopyType extends AbstractType
         $resolver->setDefault('constraints', new Callback([$this, 'validateChoices']));
         $resolver->setDefault('translation_domain', 'PageAdmin');
     }
-
 }

@@ -13,15 +13,14 @@ namespace Networking\InitCmsBundle\Entity;
 use Networking\InitCmsBundle\Model\MenuItem as ModelMenuItem;
 
 /**
- * Class MenuItem
- * @package Networking\InitCmsBundle\Entity
+ * Class MenuItem.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuItem extends ModelMenuItem
 {
-
     /**
-     * Hook on pre-persist operations
+     * Hook on pre-persist operations.
      */
     public function prePersist()
     {
@@ -30,4 +29,3 @@ class MenuItem extends ModelMenuItem
         }
     }
 }
-

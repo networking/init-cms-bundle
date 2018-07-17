@@ -3,21 +3,18 @@
  * Created by PhpStorm.
  * User: yorkie
  * Date: 04.12.17
- * Time: 13:34
+ * Time: 13:34.
  */
 
 namespace Networking\InitCmsBundle\Form\Extension;
 
-
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Select2Extension extends AbstractTypeExtension {
-
-
+class Select2Extension extends AbstractTypeExtension
+{
     /**
      * {@inheritdoc}
      */
@@ -26,7 +23,6 @@ class Select2Extension extends AbstractTypeExtension {
         if (false === $options['expanded'] && isset($options['select2'])) {
             $view->vars['select2'] = $options['select2'];
         }
-
     }
 
     /**
@@ -44,7 +40,6 @@ class Select2Extension extends AbstractTypeExtension {
      */
     public function getExtendedType()
     {
-
-         return 'Symfony\Component\Form\Extension\Core\Type\ChoiceType';
+        return 'Symfony\Component\Form\Extension\Core\Type\ChoiceType';
     }
 }

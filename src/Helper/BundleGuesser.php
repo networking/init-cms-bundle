@@ -11,13 +11,12 @@
 namespace Networking\InitCmsBundle\Helper;
 
 /**
- * Class BundleGuesser
- * @package Networking\InitCmsBundle\Helper
+ * Class BundleGuesser.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class BundleGuesser
 {
-
     /**
      * @var \ReflectionClass
      */
@@ -25,6 +24,7 @@ class BundleGuesser
 
     /**
      * @param $class
+     *
      * @return BundleGuesser
      */
     public function initialize($class)
@@ -35,7 +35,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function getBundleName()
@@ -45,7 +44,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function getBundleShortName()
@@ -54,7 +52,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function getNamespace()
@@ -63,7 +60,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function getShortName()
@@ -72,7 +68,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function getName()
@@ -81,7 +76,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessEntityNamespace()
@@ -91,7 +85,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessEntityShortName()
@@ -101,7 +94,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessEntityName()
@@ -110,7 +102,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessRepositoryNamespace()
@@ -120,7 +111,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessRepositoryShortName()
@@ -132,7 +122,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessRepositoryName()
@@ -141,7 +130,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessFormTypeNamespace()
@@ -151,7 +139,6 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessFormTypeShortName()
@@ -163,12 +150,10 @@ class BundleGuesser
     }
 
     /**
-     *
      * @return string
      */
     public function guessFormTypeName()
     {
         return sprintf('%s\%s', $this->guessFormTypeNamespace(), $this->guessFormTypeShortName());
     }
-
 }

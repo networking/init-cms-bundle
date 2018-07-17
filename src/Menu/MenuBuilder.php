@@ -13,7 +13,6 @@ namespace Networking\InitCmsBundle\Menu;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Iterator\RecursiveItemIterator;
 use Knp\Menu\Matcher\MatcherInterface;
-use Knp\Menu\Matcher\Voter\UriVoter;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -26,14 +25,14 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Knp\Menu\Matcher\Matcher;
 use Symfony\Component\HttpFoundation\RequestStack;
+
 /**
- * Class MenuBuilder
- * @package Networking\InitCmsBundle\Component\Menu
+ * Class MenuBuilder.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuBuilder
 {
-
     /**
      * @var FactoryInterface
      */
@@ -65,12 +64,12 @@ class MenuBuilder
     protected $translator;
 
     /**
-     * @var RouterInterface $router
+     * @var RouterInterface
      */
     protected $router;
 
     /**
-     * @var Request $request
+     * @var Request
      */
     protected $request;
 
@@ -99,17 +98,17 @@ class MenuBuilder
      */
     protected $menuIterators = [];
 
-
     /**
      * MenuBuilder constructor.
-     * @param FactoryInterface $factory
-     * @param TokenStorageInterface $tokenStorage
+     *
+     * @param FactoryInterface              $factory
+     * @param TokenStorageInterface         $tokenStorage
      * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param RequestStack $requestStack
-     * @param RouterInterface $router
-     * @param MenuItemManagerInterface $menuManager
-     * @param TranslatorInterface $translator
-     * @param Matcher $matcher
+     * @param RequestStack                  $requestStack
+     * @param RouterInterface               $router
+     * @param MenuItemManagerInterface      $menuManager
+     * @param TranslatorInterface           $translator
+     * @param Matcher                       $matcher
      */
     public function __construct(
         FactoryInterface $factory,
@@ -121,7 +120,6 @@ class MenuBuilder
         TranslatorInterface $translator,
         MatcherInterface $matcher
     ) {
-
         $this->factory = $factory;
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
@@ -137,9 +135,6 @@ class MenuBuilder
         $this->setCurrentUri();
     }
 
-    /**
-     *
-     */
     public function setLoggedIn()
     {
         if ($this->tokenStorage->getToken() && ($this->authorizationChecker->isGranted(
@@ -152,9 +147,6 @@ class MenuBuilder
         }
     }
 
-    /**
-     *
-     */
     public function setViewStatus()
     {
         $this->viewStatus = $this->request->getSession()->get('_viewStatus')
@@ -162,29 +154,25 @@ class MenuBuilder
             : Page::STATUS_PUBLISHED;
     }
 
-    /**
-     *
-     */
-    public function setCurrentPath(){
+    public function setCurrentPath()
+    {
         $this->currentPath = substr($this->request->getPathInfo(), -1) != '/' ? $this->request->getPathInfo(
-            ) . '/' : $this->request->getPathInfo();
+            ).'/' : $this->request->getPathInfo();
     }
 
-    /**
-     *
-     */
     public function setCurrentUri()
     {
-        $this->currentUri = $this->request->getBaseUrl() . $this->currentPath;
+        $this->currentUri = $this->request->getBaseUrl().$this->currentPath;
     }
 
-
     /**
-     * Creates the login and change language navigation for the right side of the top frontend navigation
+     * Creates the login and change language navigation for the right side of the top frontend navigation.
      *
      * @param string $classes
+     *
      * @internal param \Symfony\Component\HttpFoundation\Request $request
      * @internal param $languages
+     *
      * @return \Knp\Menu\ItemInterface
      */
     public function createLoginMenu($classes = 'nav pull-right')
@@ -203,10 +191,11 @@ class MenuBuilder
     }
 
     /**
-     * Recursively get parents
+     * Recursively get parents.
      *
      * @param $menu - menu to look for the parent in
      * @param $childNode - menu node whose parent we are looking for
+     *
      * @return mixed
      */
     public function getParentMenu(Menu $menu, MenuItem $childNode)
@@ -215,7 +204,7 @@ class MenuBuilder
         $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $menuItem) {
             $parentId = $childNode->getParent()->getId();
-            if($menuItem->getName() != $parentId){
+            if ($menuItem->getName() != $parentId) {
                 continue;
             }
 
@@ -226,19 +215,20 @@ class MenuBuilder
     }
 
     /**
-     * Create an new node using the ContentRoute object to generate the uri
+     * Create an new node using the ContentRoute object to generate the uri.
      *
-     * @param  \Networking\InitCmsBundle\Entity\MenuItem $menuItem
+     * @param \Networking\InitCmsBundle\Entity\MenuItem $menuItem
+     *
      * @return \Knp\Menu\ItemInterface
      */
     public function createFromMenuItem(MenuItem $menuItem)
     {
         if ($menuItem->getPath()) {
-            $uri = $this->request->getBaseUrl() . $menuItem->getPath();
+            $uri = $this->request->getBaseUrl().$menuItem->getPath();
         } elseif ($menuItem->getRedirectUrl()) {
             $uri = $menuItem->getRedirectUrl();
         } elseif ($menuItem->getInternalUrl()) {
-            $uri = $this->request->getBaseUrl() . $menuItem->getInternalUrl();
+            $uri = $this->request->getBaseUrl().$menuItem->getInternalUrl();
         } else {
             $uri = '#';
         }
@@ -264,21 +254,20 @@ class MenuBuilder
         return $item;
     }
 
-
     /**
-     * Retrieve the full menu tree
+     * Retrieve the full menu tree.
      *
      * @param string $menuName
+     *
      * @return array|bool
      */
     public function getFullMenu($menuName)
     {
-
-        if(is_array($menuName)){
+        if (is_array($menuName)) {
             $menuName = reset($menuName);
         }
 
-        if(array_key_exists($menuName, $this->menuIterators) && count($this->menuIterators[$menuName]) > 0){
+        if (array_key_exists($menuName, $this->menuIterators) && count($this->menuIterators[$menuName]) > 0) {
             return $this->menuIterators[$menuName];
         }
 
@@ -300,16 +289,15 @@ class MenuBuilder
             $this->viewStatus
         );
 
-
         return $this->menuIterators[$menuName];
-
     }
 
     /**
-     * Retrieves the sub menu array based on the current url
+     * Retrieves the sub menu array based on the current url.
      *
      * @param string $menuName
-     * @param int $level
+     * @param int    $level
+     *
      * @return array|bool
      */
     public function getSubMenu($menuName, $level = 1)
@@ -323,7 +311,6 @@ class MenuBuilder
         }
 
         foreach ($mainMenuIterator as $menuItem) {
-
             if ($this->currentPath === $menuItem->getPath()
                 || $this->currentPath === $menuItem->getInternalUrl()
             ) {
@@ -347,13 +334,13 @@ class MenuBuilder
         return $menuIterator;
     }
 
-
     /**
-     * Creates a full menu based on the starting point given
+     * Creates a full menu based on the starting point given.
      *
-     * @param Menu $menu
+     * @param Menu  $menu
      * @param array $menuIterator
-     * @param int $startDepth
+     * @param int   $startDepth
+     *
      * @return Menu
      */
     public function createMenu(Menu $menu, $menuIterator, $startDepth)
@@ -366,11 +353,12 @@ class MenuBuilder
     }
 
     /**
-     * Add a menu item node at the correct place in the menu
+     * Add a menu item node at the correct place in the menu.
      *
-     * @param Menu $menu
+     * @param Menu     $menu
      * @param MenuItem $node
      * @param $startDepth
+     *
      * @return bool|\Knp\Menu\ItemInterface
      */
     public function addNodeToMenu(Menu $menu, MenuItem $node, $startDepth)
@@ -398,12 +386,11 @@ class MenuBuilder
         }
 
         return false;
-
     }
 
     /**
      * Set the children menu item nodes to be shown only if the node
-     * is current or the parent is a current ancestor
+     * is current or the parent is a current ancestor.
      *
      * @param ItemInterface $menu
      */
@@ -421,12 +408,13 @@ class MenuBuilder
     }
 
     /**
-     * Recursively set attributes on all children of a given menu
+     * Recursively set attributes on all children of a given menu.
      *
      * @deprecated please use setRecursiveAttribute
      * @alias setRecursiveAttribute
+     *
      * @param ItemInterface $menu
-     * @param array $attr
+     * @param array         $attr
      */
     public function setRecursiveChildrenAttribute(ItemInterface $menu, array $attr)
     {
@@ -434,10 +422,10 @@ class MenuBuilder
     }
 
     /**
-     * Recursively set attributes on an item and its' children
+     * Recursively set attributes on an item and its' children.
      *
      * @param ItemInterface $menu
-     * @param array $attr
+     * @param array         $attr
      */
     public function setRecursiveAttribute(ItemInterface $menu, array $attr)
     {
@@ -445,8 +433,8 @@ class MenuBuilder
 
         $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $menuItem) {
-            /** @var ItemInterface $menuItem */
-            $menuItem->setChildrenAttributes($attr);;
+            /* @var ItemInterface $menuItem */
+            $menuItem->setChildrenAttributes($attr);
         }
     }
 

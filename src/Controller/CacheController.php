@@ -10,27 +10,14 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use Networking\InitCmsBundle\Model\PageSnapshotInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Networking\InitCmsBundle\Model\PageInterface;
-use Networking\InitCmsBundle\Model\PageSnapshot;
-use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
-use phpFastCache;
 
 /**
- * Class FrontendPageController
- * @package Networking\InitCmsBundle\Controller
+ * Class FrontendPageController.
+ *
  * @author net working AG <info@networking.ch>
  */
 class CacheController extends Controller
@@ -42,6 +29,7 @@ class CacheController extends Controller
 
     /**
      * CacheController constructor.
+     *
      * @param AuthorizationChecker $authorizationChecker
      */
     public function __construct(AuthorizationCheckerInterface $authorizationChecker)
@@ -50,7 +38,7 @@ class CacheController extends Controller
     }
 
     /**
-     * clear the Cache
+     * clear the Cache.
      *
      * @return Response
      */
@@ -67,17 +55,15 @@ class CacheController extends Controller
 
             /*clean function does not return status, therefore set success to true */
             $success = true;
-            $response = ["success" => $success];
-            return new Response(json_encode($response));
+            $response = ['success' => $success];
 
-        }
-        else{
+            return new Response(json_encode($response));
+        } else {
             /*wrong autorisation */
             $success = false;
-            $response = ["success" => $success];
+            $response = ['success' => $success];
+
             return new Response(json_encode($response));
         }
     }
-
-
 }

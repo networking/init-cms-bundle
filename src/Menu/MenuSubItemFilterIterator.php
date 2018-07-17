@@ -11,8 +11,8 @@
 namespace Networking\InitCmsBundle\Menu;
 
 /**
- * Class MenuSubItemFilterIterator
- * @package Networking\InitCmsBundle\Component\Menu
+ * Class MenuSubItemFilterIterator.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuSubItemFilterIterator extends \FilterIterator
@@ -37,7 +37,6 @@ class MenuSubItemFilterIterator extends \FilterIterator
      */
     public function accept()
     {
-
         if ($this->currentUri === $this->current()->getPath()
             || $this->currentUri === $this->current()->getInternalUrl()
             || $this->currentUri === $this->current()->getRedirectUrl()) {
@@ -45,6 +44,5 @@ class MenuSubItemFilterIterator extends \FilterIterator
         }
 
         return false;
-
     }
 }

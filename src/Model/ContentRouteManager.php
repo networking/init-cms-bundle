@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Component\Routing\Route;
@@ -19,15 +18,13 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
-
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class ContentRouteManager implements ContentRouteManagerInterface, RouteProviderInterface
 {
-
     /**
-     * @var string $className
+     * @var string
      */
     protected $className;
 
@@ -41,15 +38,13 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
      */
     protected $request;
 
-
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     protected $container;
 
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setClassName($className = null)
     {
@@ -62,27 +57,20 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRouteByName($name)
     {
-
         throw new RouteNotFoundException("No route found for name '$name'");
-
     }
 
-
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoutesByNames($names)
     {
-
         return  new RouteCollection();
-
     }
-
 
     /**
      * @param ContentRouteInterface $contentRoute
@@ -95,12 +83,12 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
     }
 
     /**
-     * @param  ContentRouteInterface $contentRoute
+     * @param ContentRouteInterface $contentRoute
+     *
      * @return object
      */
     public function getRouteContent(ContentRouteInterface $contentRoute)
     {
-
         return $this->findContentByContentRoute($contentRoute);
     }
 
@@ -108,21 +96,20 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
      * @param ContentRouteInterface $contentRoute
      * @param $path
      * @param $content
+     *
      * @return Route
      */
-    public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content){
-
-
+    public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content)
+    {
         $template = new Template(['template' => $contentRoute->getTemplate()]);
         $defaults = [
             'route_params' => '',
             Route::LOCALE => $contentRoute->getLocale(),
             RouteObjectInterface::CONTROLLER_NAME => $contentRoute->getController(),
             RouteObjectInterface::TEMPLATE_NAME => $template,
-            RouteObjectInterface::CONTENT_OBJECT => $content
+            RouteObjectInterface::CONTENT_OBJECT => $content,
         ];
 
         return new Route($path, $defaults);
     }
-
 }

@@ -16,13 +16,12 @@ use Networking\InitCmsBundle\Model\HelpTextManagerInterface;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Class HelpTextManager
- * @package Networking\InitCmsBundle\Entity
+ * Class HelpTextManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class HelpTextManager extends EntityRepository implements HelpTextManagerInterface
 {
-
     public function __construct(EntityManager $em, $class)
     {
         $classMetaData = $em->getClassMetadata($class);
@@ -30,21 +29,20 @@ class HelpTextManager extends EntityRepository implements HelpTextManagerInterfa
         parent::__construct($em, $classMetaData);
     }
 
-
     /**
      * @param $translationKey
      * @param $locale
+     *
      * @return object
      */
     public function getHelpTextByKeyLocale($translationKey, $locale)
     {
-
         $qb = $this->createQueryBuilder('h');
         $qb->where('h.locale LIKE :locale')
             ->andWhere('h.translationKey LIKE :translationKey')
             ->orderBy('h.id', 'asc')
-            ->setParameter(':locale', substr($locale, 0, 2) . '%')
-            ->setParameter(':translationKey', $translationKey . "%");
+            ->setParameter(':locale', substr($locale, 0, 2).'%')
+            ->setParameter(':translationKey', $translationKey.'%');
 
         try {
             $helpText = $qb->getQuery()->getSingleResult();
@@ -53,8 +51,8 @@ class HelpTextManager extends EntityRepository implements HelpTextManagerInterfa
             $qb->where('h.locale LIKE :locale')
                 ->andWhere('h.translationKey = :translationKey')
                 ->orderBy('h.id', 'asc')
-                ->setParameter(':locale', substr($locale, 0, 2) . '%')
-                ->setParameter(':translationKey', "not_found");
+                ->setParameter(':locale', substr($locale, 0, 2).'%')
+                ->setParameter(':translationKey', 'not_found');
             $helpText = $qb->getQuery()->getSingleResult();
         }
 
@@ -64,6 +62,7 @@ class HelpTextManager extends EntityRepository implements HelpTextManagerInterfa
     /**
      * @param $translationKey
      * @param $locale
+     *
      * @return array
      */
     public function searchHelpTextByKeyLocale($translationKey, $locale)
@@ -72,8 +71,8 @@ class HelpTextManager extends EntityRepository implements HelpTextManagerInterfa
         $qb->where('h.locale LIKE :locale')
             ->andWhere('h.translationKey LIKE :translationKey')
             ->orderBy('h.id', 'asc')
-            ->setParameter(':locale', substr($locale, 0, 2) . '%')
-            ->setParameter(':translationKey', $translationKey . "%");
+            ->setParameter(':locale', substr($locale, 0, 2).'%')
+            ->setParameter(':translationKey', $translationKey.'%');
 
         return $qb->getQuery()->getResult();
     }

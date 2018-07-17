@@ -21,20 +21,19 @@ use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class OnlineUsersBlockService
- * @package Networking\InitCmsBundle\Block
+ * Class OnlineUsersBlockService.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class OnlineUsersBlockService extends AbstractAdminBlockService
 {
-
     /**
      * @var \Networking\InitCmsBundle\Model\UserManagerInterface
      */
     protected $um;
 
     /**
-     * @param string $name
+     * @param string          $name
      * @param EngineInterface $templating
      */
     public function __construct($name, EngineInterface $templating)
@@ -59,7 +58,7 @@ class OnlineUsersBlockService extends AbstractAdminBlockService
             $blockContext->getTemplate(),
             [
                 'block' => $blockContext->getBlock(),
-                'online_users' => $users
+                'online_users' => $users,
             ],
             $response
         );
@@ -96,7 +95,7 @@ class OnlineUsersBlockService extends AbstractAdminBlockService
     {
         $resolver->setDefaults(
             [
-                'template' => '@NetworkingInitCms/Block/block_online_users.html.twig'
+                'template' => '@NetworkingInitCms/Block/block_online_users.html.twig',
             ]
         );
     }

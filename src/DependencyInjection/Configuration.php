@@ -7,20 +7,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Class Configuration
- * @package Networking\InitCmsBundle\DependencyInjection
+ * Class Configuration.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -139,7 +140,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
             ->end();
-
 
         return $treeBuilder;
     }

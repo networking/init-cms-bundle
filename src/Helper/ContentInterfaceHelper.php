@@ -14,20 +14,22 @@ use Networking\InitCmsBundle\Model\ContentInterface;
 use Sonata\AdminBundle\Exception\NoValueException;
 
 /**
- * Class ContentInterfaceHelper
- * @package Networking\InitCmsBundle\Helper
+ * Class ContentInterfaceHelper.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class ContentInterfaceHelper
 {
     /**
-     * Set the variables to the given content type object
+     * Set the variables to the given content type object.
      *
      * @param ContentInterface $object
      * @param $fieldName
      * @param $value
-     * @param  null                                           $method
+     * @param null $method
+     *
      * @return mixed
+     *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public function setFieldValue(ContentInterface $object, $fieldName, $value, $method = null)
@@ -40,7 +42,7 @@ class ContentInterfaceHelper
         }
 
         $camelizedFieldName = self::camelize($fieldName);
-        $setters[] = 'set' . $camelizedFieldName;
+        $setters[] = 'set'.$camelizedFieldName;
 
         foreach ($setters as $setter) {
             if (method_exists($object, $setter)) {
@@ -58,17 +60,18 @@ class ContentInterfaceHelper
     }
 
     /**
-     * Fetch the variables from the given content type object
+     * Fetch the variables from the given content type object.
      *
      * @param ContentInterface $object
      * @param $fieldName
-     * @param  null                                           $method
+     * @param null $method
+     *
      * @return mixed
+     *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public function getFieldValue(ContentInterface $object, $fieldName, $method = null)
     {
-
         $getters = [];
         // prefer method name given in the code option
         if ($method) {
@@ -76,8 +79,8 @@ class ContentInterfaceHelper
         }
 
         $camelizedFieldName = self::camelize($fieldName);
-        $getters[] = 'get' . $camelizedFieldName;
-        $getters[] = 'is' . $camelizedFieldName;
+        $getters[] = 'get'.$camelizedFieldName;
+        $getters[] = 'is'.$camelizedFieldName;
 
         foreach ($getters as $getter) {
             if (method_exists($object, $getter)) {
@@ -89,10 +92,12 @@ class ContentInterfaceHelper
     }
 
     /**
-     * Camelize a string
+     * Camelize a string.
      *
      * @static
-     * @param  string $property
+     *
+     * @param string $property
+     *
      * @return string
      */
     public static function camelize($property)
@@ -101,8 +106,10 @@ class ContentInterfaceHelper
             if ($matches[1] === '.') {
                 return '_'.strtoupper($matches[2]);
             }
+
             return strtoupper($matches[2]);
         };
+
         return ucfirst(preg_replace_callback('/([_\ .])(.)/', $callback, $property));
     }
 }

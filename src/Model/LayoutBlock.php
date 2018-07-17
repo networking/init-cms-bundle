@@ -8,110 +8,94 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Networking\InitCmsBundle\Model\ContentInterface;
 
 /**
- * Networking\InitCmsBundle\Entity\LayoutBlock
+ * Networking\InitCmsBundle\Entity\LayoutBlock.
  *
  * @author net working AG <info@networking.ch>
  */
 class LayoutBlock implements LayoutBlockInterface
 {
     /**
-     * @var integer $id
-     *
+     * @var int
      */
     protected $id;
 
     /**
-     * @var string $name
-     *
+     * @var string
      */
     protected $name;
 
     /**
-     * @var string $zone
-     *
+     * @var string
      */
     protected $zone;
 
     /**
-     * @var PageInterface $page
-     *
+     * @var PageInterface
      */
     protected $page;
 
     /**
-     * @var string $classType
-     *
+     * @var string
      */
     protected $classType;
 
     /**
-     * @var int $objectId
-     *
+     * @var int
      */
     protected $objectId;
 
     /**
-     * @var boolean $isActive
-     *
+     * @var bool
      */
     protected $isActive = true;
 
     /**
-     * @var integer $sortOrder
-     *
+     * @var int
      */
     protected $sortOrder;
 
     /**
-     * @var \DateTime $createdAt
-     *
+     * @var \DateTime
      */
     protected $createdAt;
 
     /**
-     * @var \DateTime $updatedAt
-     *
+     * @var \DateTime
      */
     protected $updatedAt;
 
     /**
-     * @var ContentInterface $content
+     * @var ContentInterface
      */
     protected $content;
 
     /**
-     * @var string $oldClassType
+     * @var string
      */
     protected $origClassType;
 
     /**
-     * @var boolean $isSnapshot
+     * @var bool
      */
     protected $isSnapshot = false;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection $snapshotContent
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $snapshotContent;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->snapshotContent = new ArrayCollection();
         $this->page = null;
     }
 
-    /**
-     *
-     */
     public function __clone()
     {
         $this->id = null;
@@ -126,15 +110,13 @@ class LayoutBlock implements LayoutBlockInterface
         return $this->getContentTypeName();
     }
 
-    /**
-     */
     public function prePersist()
     {
-        $this->createdAt = $this->updatedAt = new \DateTime("now");
+        $this->createdAt = $this->updatedAt = new \DateTime('now');
     }
 
     /**
-     * Hook on pre-update operations
+     * Hook on pre-update operations.
      */
     public function preUpdate()
     {
@@ -142,9 +124,9 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -152,9 +134,10 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Set name
+     * Set name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -165,7 +148,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -175,9 +158,10 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Set zone
+     * Set zone.
      *
-     * @param  string $zone
+     * @param string $zone
+     *
      * @return $this
      */
     public function setZone($zone)
@@ -188,7 +172,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Get zone
+     * Get zone.
      *
      * @return string
      */
@@ -198,9 +182,10 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Set page
+     * Set page.
      *
-     * @param  PageInterface $page
+     * @param PageInterface $page
+     *
      * @return $this
      */
     public function setPage(PageInterface $page)
@@ -211,7 +196,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Get conversation
+     * Get conversation.
      *
      * @return PageInterface
      */
@@ -221,7 +206,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Get conversation
+     * Get conversation.
      *
      * @return int
      */
@@ -231,7 +216,8 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @param  string $classType
+     * @param string $classType
+     *
      * @return $this
      */
     public function setClassType($classType)
@@ -261,7 +247,8 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @param  int $objectId
+     * @param int $objectId
+     *
      * @return $this
      */
     public function setObjectId($objectId)
@@ -280,9 +267,10 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Set isActive
+     * Set isActive.
      *
-     * @param  boolean $active
+     * @param bool $active
+     *
      * @return $this
      */
     public function setIsActive($active)
@@ -294,9 +282,9 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Get isActive
+     * Get isActive.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsActive()
     {
@@ -304,7 +292,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Alias for getIsActive
+     * Alias for getIsActive.
      *
      * @return bool
      */
@@ -314,7 +302,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @return $this
      */
@@ -326,7 +314,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -336,9 +324,10 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
-     * @param  \DateTime $updatedAt
+     * @param \DateTime $updatedAt
+     *
      * @return $this
      */
     public function setUpdatedAt($updatedAt)
@@ -349,7 +338,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -359,7 +348,8 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @param  int $sortOrder
+     * @param int $sortOrder
+     *
      * @return $this
      */
     public function setSortOrder($sortOrder)
@@ -387,16 +377,19 @@ class LayoutBlock implements LayoutBlockInterface
 
     /**
      * @param ContentInterface $content
+     *
      * @return $this
      */
     public function setContent($content)
     {
         $this->content = $content;
+
         return $this;
     }
 
     /**
-     * @param boolean $isSnapshot
+     * @param bool $isSnapshot
+     *
      * @return \Networking\InitCmsBundle\Entity\LayoutBlock
      */
     public function setIsSnapshot($isSnapshot)
@@ -407,7 +400,8 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @param boolean $isSnapshot
+     * @param bool $isSnapshot
+     *
      * @return \Networking\InitCmsBundle\Entity\LayoutBlock
      */
     public function setNoAutoDraft($isSnapshot)
@@ -418,7 +412,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsSnapshot()
     {
@@ -426,7 +420,7 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getSetNoAutoDraft()
     {
@@ -435,6 +429,7 @@ class LayoutBlock implements LayoutBlockInterface
 
     /**
      * @param array $snapshotContent
+     *
      * @return \Networking\InitCmsBundle\Entity\LayoutBlock
      */
     public function setSnapshotContent($snapshotContent)
@@ -457,18 +452,18 @@ class LayoutBlock implements LayoutBlockInterface
 
     /**
      * @param $snapshotContent
-     * @return void
+     *
      * @internal param $content
      */
     public function takeSnapshot($snapshotContent)
     {
-
         $this->setNoAutoDraft = true;
         $this->setSnapshotContent($snapshotContent);
     }
 
     /**
      * @param array $params
+     *
      * @return array|bool
      */
     public function getTemplateOptions($params = [])
@@ -503,7 +498,7 @@ class LayoutBlock implements LayoutBlockInterface
     public function import(LayoutBlockInterface $object)
     {
         foreach (get_object_vars($object) as $key => $value) {
-            if($key != 'id'){
+            if ($key != 'id') {
                 $this->$key = $value;
             }
         }

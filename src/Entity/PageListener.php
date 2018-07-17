@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Common\EventArgs;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -20,15 +20,15 @@ use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageListener as ModelPageListener;
 
 /**
- * Class PageListener
- * @package Networking\InitCmsBundle\Entity
+ * Class PageListener.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageListener extends ModelPageListener
 {
-
     /**
      * @param LifecycleEventArgs $args
+     *
      * @return mixed|void
      */
     public function postPersist(LifecycleEventArgs $args)
@@ -39,9 +39,7 @@ class PageListener extends ModelPageListener
         $em = $args->getObjectManager();
 
         if ($entity instanceof PageInterface) {
-
             if ($contentRoute = $entity->getContentRoute()) {
-
                 $contentRoute->setObjectId($entity->getId());
                 $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
 
@@ -53,16 +51,16 @@ class PageListener extends ModelPageListener
 
     /**
      * @param OnFlushEventArgs $args
+     *
      * @return mixed|void
      */
     public function onFlush(OnFlushEventArgs $args)
     {
         $em = $args->getEntityManager();
-        
+
         $unitOfWork = $em->getUnitOfWork();
 
         foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
-
             if ($entity instanceof PageInterface) {
                 if ($contentRoute = $entity->getContentRoute()) {
                     $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
@@ -94,7 +92,6 @@ class PageListener extends ModelPageListener
                                     $em->getClassMetadata(get_class($snapshotRoute)),
                                     $snapshotRoute
                                 );
-
                             }
                         }
                     }

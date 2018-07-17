@@ -17,17 +17,15 @@ use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 
-
 /**
- * Class PageManager
- * @package Networking\InitCmsBundle\Entity
+ * Class PageManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageManager extends MaterializedPathRepository implements PageManagerInterface
 {
-
     /**
-     * @param EntityManager $om
+     * @param EntityManager                       $om
      * @param \Doctrine\ORM\Mapping\ClassMetadata $class
      */
     public function __construct(EntityManager $om, $class)
@@ -37,11 +35,11 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
             parent::__construct($om, $classMetaData);
         }
-
     }
 
     /**
-     * @param  string $id
+     * @param string $id
+     *
      * @return object
      */
     public function findById($id)
@@ -49,19 +47,19 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         return $this->find($id);
     }
 
-
     /**
      * @param $locale
      * @param null $id
      * @param bool $showHome
      * @param bool $showChildren
+     *
      * @return \Doctrine\ORM\QueryBuilder|mixed
      */
     public function getParentPagesQuery($locale, $id = null, $showHome = false, $showChildren = false)
     {
         $qb = $this->createQueryBuilder('p');
-        if(!$showHome){
-            $qb->where($qb->expr()->isNull('p.isHome') . ' OR p.isHome <> 1');
+        if (!$showHome) {
+            $qb->where($qb->expr()->isNull('p.isHome').' OR p.isHome <> 1');
         }
         if ($id) {
             if (!$showChildren) {
@@ -92,6 +90,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     /**
      * @param $locale
      * @param null $id
+     *
      * @return mixed
      */
     public function getParentPagesChoices($locale, $id = null)
@@ -104,12 +103,12 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     /**
      * @param $sort
      * @param string $order
-     * @param int $hydrationMode
+     * @param int    $hydrationMode
+     *
      * @return mixed
      */
-    public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT )
+    public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT)
     {
-
         $query = $this->getAllSortByQuery($sort, $order);
 
         return $query->execute([], $hydrationMode);
@@ -118,13 +117,14 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     /**
      * @param $sort
      * @param string $order
+     *
      * @return Query
      */
     public function getAllSortByQuery($sort, $order = 'DESC')
     {
         $qb = $this->createQueryBuilder('p');
         $qb2 = $this->getEntityManager()->getRepository(PageSnapshot::class)->createQueryBuilder('pp');
-        $qb->select('p','ps')
+        $qb->select('p', 'ps')
             ->leftJoin('p.snapshots', 'ps')
             ->where($qb->expr()->eq(
                 'ps.id',
@@ -133,7 +133,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
                     ->getDQL().')'
             ))
             ->orWhere('ps.id IS NULL')
-            ->orderBy('p.' . $sort,  $order);
+            ->orderBy('p.'.$sort,  $order);
 
         return $qb->getQuery();
     }
@@ -152,8 +152,9 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     }
 
     /**
-     * @param PageInterface $draftPage
+     * @param PageInterface              $draftPage
      * @param \JMS\Serializer\Serializer $serializer
+     *
      * @return PageInterface
      */
     public function revertToPublished(PageInterface $draftPage, \JMS\Serializer\SerializerInterface $serializer)
@@ -161,14 +162,12 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         $pageSnapshot = $draftPage->getSnapshot();
         $contentRoute = $draftPage->getContentRoute();
 
-
         /** @var $publishedPage PageInterface */
         $publishedPage = $serializer->deserialize(
             $pageSnapshot->getVersionedData(),
             $this->getClassName(),
             'json'
         );
-
 
         // Save the layout blocks in a temp variable so that we can
         // assure the correct layout blocks will be saved and not
@@ -178,7 +177,6 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         // tell the entity manager to handle our published page
         // as if it came from the DB and not a serialized object
         $publishedPage = $this->_em->merge($publishedPage);
-
 
         $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
         $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
@@ -197,9 +195,9 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         return $publishedPage;
     }
 
-
     /**
      * @param PageInterface $page
+     *
      * @return mixed
      */
     public function save(PageInterface $page)
@@ -214,5 +212,4 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     {
         $this->_em = $em;
     }
-
 }

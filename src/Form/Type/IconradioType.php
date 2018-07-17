@@ -17,8 +17,8 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Class IconradioType
- * @package Networking\InitCmsBundle\Form\Type
+ * Class IconradioType.
+ *
  * @author Sonja Brodersen <s.brodersen@networking.ch>
  */
 class IconradioType extends AbstractType
@@ -43,15 +43,15 @@ class IconradioType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'icons' => $this->getIconsFromTemplates()
+                'icons' => $this->getIconsFromTemplates(),
             ]
         );
     }
 
     /**
-     * @param FormView $view
+     * @param FormView      $view
      * @param FormInterface $form
-     * @param array $options
+     * @param array         $options
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {

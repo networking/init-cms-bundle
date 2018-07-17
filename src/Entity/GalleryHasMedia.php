@@ -22,21 +22,19 @@ use Sonata\MediaBundle\Entity\BaseGalleryHasMedia as BaseGalleryHasMedia;
  */
 class GalleryHasMedia extends BaseGalleryHasMedia
 {
-
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
      */
     protected $id;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer $id
+     * @return int $id
      */
     public function getId()
     {
