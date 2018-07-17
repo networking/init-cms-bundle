@@ -568,6 +568,15 @@
                     eine Seite mit der URL "%url%" in %language% gibt.
                 </target>
             </trans-unit>
+            <trans-unit id="message.copy_saved">
+                <source>message.copy_saved</source>
+                <target>Eine Kopie dieser Seite wurde erfolgreich in erstellt</target>
+            </trans-unit>
+            <trans-unit id="message.copy_not_saved">
+                <source>message.copy_not_saved</source>
+                <target>Eine Kopie dieser Seite in konnte nicht erstellt werden.
+                </target>
+            </trans-unit>
             <trans-unit id="title.copy_page">
                 <source>title.copy_page</source>
                 <target>Seite "%page_title%" kopieren nach %language%</target>
