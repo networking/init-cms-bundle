@@ -307,6 +307,8 @@ class PageHelper
 
         $layoutBlocks = $page->getLayoutBlock();
 
+
+
         foreach ($layoutBlocks as $layoutBlock) {
 
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
@@ -326,9 +328,12 @@ class PageHelper
             $newLayoutBlock->setPage($pageCopy);
 
             $om->persist($newLayoutBlock);
+
         }
 
-        $this->pageManager->save($pageCopy);
+
+	    $om->flush();
+
 
         return $pageCopy;
 
@@ -385,7 +390,7 @@ class PageHelper
             $om->persist($newLayoutBlock);
         }
 
-        $this->pageManager->save($pageCopy);
+	    $om->flush();
 
         return $pageCopy;
 
