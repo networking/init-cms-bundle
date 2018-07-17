@@ -18,7 +18,7 @@
                 </div>
                 {% if tag.children %}
                 <ul class="table-row-style">
-                    {{ macros.tag_tree(tag.children, lastItem, tagAdmin, noSort, selected) }}
+                    {{ macros.tag_tree(tag.children, lastItem, tagAdmin, noSort, selected, tag.level+1) }}
                 </ul>
                 {% endif %}
         </li>
