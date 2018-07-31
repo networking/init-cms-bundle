@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Tests\Helper;
+namespace Networking\InitCmsBundle\tests\Helper;
 
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;

@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Tests\Entity;
+namespace Networking\InitCmsBundle\tests\Entity;
 
 use Networking\InitCmsBundle\Model\ContentRoute;
 use PHPUnit\Framework\TestCase;

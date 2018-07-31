@@ -66,7 +66,7 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
         $response = new StreamedResponse(
             function () use ($queryProxy, &$flashType, $dumper) {
                 try {
-                    /**
+                    /*
                      * @var TransUnit
                      */
                     foreach ($queryProxy->getQuery()->getResult() as $pos => $transUnit) {

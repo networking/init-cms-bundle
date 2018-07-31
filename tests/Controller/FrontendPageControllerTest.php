@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Tests\Controller;
+namespace Networking\InitCmsBundle\tests\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Networking\InitCmsBundle\Entity\ContentRouteManager;
