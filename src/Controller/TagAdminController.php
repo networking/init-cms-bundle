@@ -198,11 +198,11 @@ class TagAdminController extends CRUDController
         $validator = $this->get('validator');
         try {
             foreach ($nodes as $node) {
-                if (!$node['item_id']) {
+                if (!$node['id']) {
                     continue;
                 }
                 /** @var $tag Tag */
-                $tag = $admin->getObject($node['item_id']);
+                $tag = $admin->getObject($node['id']);
                 if ($node['parent_id']) {
                     $parent = $admin->getObject($node['parent_id']);
                     $tag->setParent($parent);

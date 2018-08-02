@@ -122,6 +122,8 @@
             forceHelperSize: true,
             startCollapsed: true,
             expandOnHover: 100,
+            excludeRoot:true,
+            disabledClass: 'no-sort',
             isAllowed: function(placeholder, placeholderParent, currentItem) {
                 var allowed = true;
                 var currentId = $(currentItem).attr('id');
