@@ -13,7 +13,6 @@
                 <argument>%networking_init_cms.admin_menu_groups%</argument>
             </call>
             <tag name="knp_menu.menu_builder" method="createAdminMenu" alias="AdminMenu" />
-            <tag name="knp_menu.menu_builder" method="createAdminSideMenu" alias="AdminSideMenu" />
         </service>
 
         <service id="Networking\InitCmsBundle\Menu\CmsMenuVoter" autowire="true">

@@ -1,11 +1,9 @@
 {% macro lightbox(gallery, relName, largeFormat, thumbFormat, shownName ) %}
-    <ul class="thumbnails">
+    <section data-featherlight-gallery  data-featherlight-filter="a[rel='{{ relName|default('featherlight') }}[{{ gallery.name }}]']" >
         {% for galleryMedia in gallery.galleryHasMedias %}
 
-            <li>
-                <div class="thumbnail">
-                    <a href="{% path galleryMedia.media, largeFormat|default(gallery.defaultFormat) %}"
-                       rel="{{ relName|default('prettyPhoto') }}[{{ gallery.name }}]">
+                    <a href="{% path galleryMedia.media, largeFormat|default(gallery.defaultFormat) %}" class="thumbnail"
+                       rel="{{ relName|default('featherlight') }}[{{ gallery.name }}]">
                         {% thumbnail galleryMedia.media, thumbFormat|default(gallery.defaultFormat) %}
                     </a>
                     {% if  galleryMedia.media.name is defined and shownName|default(false) %}
@@ -14,10 +12,8 @@
                     {% if  galleryMedia.media.description is defined and shownName|default(false) %}
                         <p>{{ galleryMedia.media.description }}</p>
                     {% endif %}
-                </div>
-            </li>
         {% endfor %}
-    </ul>
+    </section>
 {% endmacro %}
 
 {% macro carousel(gallery, id, transition, format, height ) %}

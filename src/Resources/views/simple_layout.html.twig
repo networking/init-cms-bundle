@@ -16,16 +16,7 @@ file that was distributed with this source code.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% block stylesheets %}
-        {% stylesheets filter='cssembed,?yui_css'
-        '@NetworkingInitCmsBundle/Resources/public/vendor/select2/css/select2.min.css'
-        '@NetworkingInitCmsBundle/Resources/public/vendor/select2/css/select2-bootstrap.min.css'
-        '@SonataAdminBundle/Resources/public/vendor/jqueryui/themes/base/jquery-ui.css'
-        '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/build/build_standalone.less'
-        '@NetworkingInitCmsBundle/Resources/public/less/initcms_bootstrap.less'
-        '@NetworkingInitCmsBundle/Resources/public/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
-        output='css/networking_initcms.css' %}
-        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
-        {% endstylesheets %}
+        <link href="{{ asset('bundles/networkinginitcms/css/networking_initcms.css') }}" type="text/css" rel="stylesheet" media="screen"/>
         {% block content_css %}
         {% if content_css() %}<link href="{{ asset(content_css()) }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
         {% endblock content_css %}

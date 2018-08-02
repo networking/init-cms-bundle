@@ -1,6 +1,6 @@
 {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
 {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
-<script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/networkinginitcms/vendor/nestedSortable/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
 <script>
     var tagDialog;
     var lastLink = $('{{ selected }}');

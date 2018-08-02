@@ -26,6 +26,7 @@ sonata_admin:
     title:      Networking CMS
     title_logo: /bundles/networkinginitcms/img/logo_initcms.png
     templates:
+        knp_menu_template: "@NetworkingInitCms/Menu/initcms_knp_menu.html.twig"
         user_block: '@NetworkingInitCms/Admin/user_block.html.twig'
         layout:     '@NetworkingInitCms/admin_layout.html.twig'
         ajax:       '@NetworkingInitCms/ajax_layout.html.twig'
@@ -53,23 +54,47 @@ sonata_admin:
             - { position: right, type: networking_init_cms.block.service.sitemap}
 
         groups:
+            dashboard:
+                on_top: true
+                label: "admin.menu.dashboard"
+                label_catalogue: "PageAdmin"
+                icon: '<i class="glyphicon glyphicon-dashboard glyphicon-large"></i>'
+                items:
+                    - route: sonata_admin_dashboard
+                      label: admin.menu.dashboard
             pages:
+                on_top: true
                 label: "pages.admin_menu_label"
+                label_catalogue: "PageAdmin"
+                icon: '<i class="glyphicon glyphicon-file glyphicon-large"></i>'
                 items: [networking_init_cms.admin.page]
             menu:
+                on_top: true
                 label: "menu.admin_menu_label"
+                label_catalogue: "MenuItemAdmin"
+                icon: '<i class="glyphicon glyphicon-align-left glyphicon-large"></i>'
                 items: [ networking_init_cms.admin.menu_item]
             media:
                 label: "sonata_media.admin_menu_label"
+                label_catalogue: "MediaAdmin"
+                icon: '<i class="fa fa-picture-o fa-large"></i>'
                 items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
             users:
                 label: "sonata_user"
+                label_catalogue: "SonataUserBundle"
+                icon: '<i class="fa fa-users fa-small"></i>'
                 items: [sonata.user.admin.user, sonata.user.admin.group]
             help_text:
+                on_top: true
                 label: "help_text.admin_menu_label"
+                label_catalogue: "HelpTextAdmin"
+                icon: '<i class="glyphicon glyphicon-question-sign glyphicon-small"></i>'
                 items: [networking_init_cms.admin.help_text]
             translation:
+                on_top: true
                 label: "translation.admin_menu_label"
+                label_catalogue: "IbrowsSonataTranslationBundle"
+                icon: '<i class="fa fa-globe fa-small"></i>'
                 items: [ibrows_sonata_translation.admin.orm]
 
 
