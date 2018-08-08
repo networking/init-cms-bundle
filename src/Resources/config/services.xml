@@ -3,7 +3,6 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
     <services>
 
         <defaults autowire="true" autoconfigure="true" public="false" />
@@ -66,6 +65,13 @@
                  alias="networking_init_cms.cms_router"
                  public="false"/>
 
+
+
+        <service id="networking_init_cms.media.generator.media_path" class="Networking\InitCmsBundle\Generator\MediaPathGenerator"/>
+
+        <service id="networking_init_cms.media.thumbnail.format" class="Networking\InitCmsBundle\Thumbnail\FormatThumbnail">
+            <argument type="string">%sonata.media.thumbnail.format.default%</argument>
+        </service>
 
         <!-- object manager aliases -->
         <service id="Networking\InitCmsBundle\Model\PageManagerInterface"

@@ -184,7 +184,7 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function batchActionDelete(ProxyQueryInterface $query)
     {
-        if (false === $this->admin->checkAccess('DELETE')) {
+        if (false === $this->admin->checkAccess('batchDelete')) {
             throw new AccessDeniedException();
         }
 
@@ -372,5 +372,17 @@ class MediaAdminController extends SonataMediaAdminController
                 'show_actions' => true,
             ]
         );
+    }
+
+    /**
+     * @param $id
+     *
+     * @return Response
+     */
+    public function previewPdfAction($id)
+    {
+        $object = $this->admin->getObject($id);
+
+        return $this->render('NetworkingInitCmsBundle:MediaAdmin:preview.html.twig', ['object' => $object]);
     }
 }

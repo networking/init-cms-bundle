@@ -12,7 +12,6 @@ namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
 use Networking\InitCmsBundle\Admin\Pool;
 use Networking\InitCmsBundle\Builder\ListBuilder;
-use Networking\InitCmsBundle\Provider\YouTubeProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -31,11 +30,6 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         if ($container->hasDefinition('sonata.admin.builder.orm_list')) {
             $definition = $container->getDefinition('sonata.admin.builder.orm_list');
             $definition->setClass(ListBuilder::class);
-        }
-
-        if ($container->hasDefinition('sonata.media.provider.youtube')) {
-            $definition = $container->getDefinition('sonata.media.provider.youtube');
-            $definition->setClass(YouTubeProvider::class);
         }
 
         if ($container->has('sonata.media.admin.gallery')) {

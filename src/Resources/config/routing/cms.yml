@@ -100,7 +100,7 @@ networking_init_cms_file_download:
         format: (.*)?
 
 networking_init_cms_image_view:
-    path: /image/view/{id}/{name}
+    path: /image/view/{id}/{format}/{name}
     defaults: { _controller: NetworkingInitCmsBundle:Media:viewImage, format: 'reference' }
     requirements:
         name: (.*)?

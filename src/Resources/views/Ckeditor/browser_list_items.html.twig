@@ -1,6 +1,7 @@
 {% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
+{% set previewLink = false %}
 {% for object in datagrid.results %}
-    {% set path = 'networking_init_cms_file_download' %}
+    {% set path = path('networking_init_cms_file_download', {'id': object.id, 'name': object.getMetadataValue('filename')}) %}
     {% if object.width %}
         {% set path = 'networking_init_cms_image_view' %}
     {% endif %}
@@ -21,14 +22,17 @@
             {% set previewType = 'image'%}
         {% endif %}
     {% else %}
-        {% set previewLink %}//docs.google.com/gview?url={{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}&embedded=true{% endset %}
+        {% if object.contentType == 'application/pdf' %}
+            {% set previewLink %}{{ admin.generateUrl('pdf_preview', {'id': object.id}) }}{% endset %}
+        {% endif %}
         {% set previewType = 'iframe' %}
-        {% set iframeWidth = '400px' %}
-        {% set iframeHeight = '560px' %}
+        {% set iframeWidth = '700px' %}
+        {% set iframeHeight = '989px' %}
     {% endif %}
 
     <div class="media-box">
         <div class="zero-clipboard">
+            {% if previewLink %}
             <div class="btn-clipboard btn-clipboard-left">
                 <a href="{{ previewLink }}"
                         {% if previewType == 'iframe' %}
@@ -41,13 +45,14 @@
                     <i class="glyphicon glyphicon-zoom-in"></i>
                 </a>
             </div>
+            {% endif %}
             <div class="btn-clipboard btn-clipboard-right">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                    aria-haspopup="true" aria-expanded="false">Actions <span
                             class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" >
                     <li>
-                        <a href="{{ path(path, {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"  tabindex="-1"
+                        <a href="{% path object, 'reference' %}"  tabindex="-1"
                            class="select">{{ 'list.label_select'|trans({}, 'MediaAdmin') }}: {{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
                     </li>
                     {% if formats[object.id]|length > 0 %}
@@ -73,7 +78,7 @@
                 {% endif %}
             </div>
             <div class="media-title small" data-toggle="context" data-target="#context-menu-{{ object.id }}">
-                <a href="{{ path(path, {'id': object.id, 'name': object.getMetadataValue('filename')}) }}"
+                <a href="{% path object, 'reference' %}"
                    data-toggle="tooltip" data-placement="top"  class="select" title="{{ object.name }}">{{ object.name }}</a> <br/>
             </div>
         </div>

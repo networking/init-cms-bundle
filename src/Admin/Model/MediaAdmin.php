@@ -12,7 +12,6 @@ namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
-use Networking\InitCmsBundle\Form\Type\MediaPreviewType;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -20,6 +19,7 @@ use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
+use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -195,6 +195,14 @@ abstract class MediaAdmin extends Admin
             'refresh_list',
             [
                 '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:refreshList',
+            ]
+        );
+
+        $collection->add(
+            'pdf_preview',
+            'pdf/view/{id}',
+            [
+                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:previewPdf',
             ]
         );
     }
@@ -415,10 +423,26 @@ abstract class MediaAdmin extends Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        parent::configureFormFields($formMapper);
         $media = $this->getSubject();
+
+        if (!$media) {
+            $media = $this->getNewInstance();
+        }
+
+        if (!$media || !$media->getProviderName()) {
+            return;
+        }
+
+        $formMapper->add('providerName', HiddenType::class);
+
+        $formMapper->getFormBuilder()->addModelTransformer(new ProviderDataTransformer($this->pool, $this->getClass(), ['new_on_update' => false]), true);
+
+        $provider = $this->pool->getProvider($media->getProviderName());
+
         if ($media->getId()) {
-            $this->addPreviewToEditForm($formMapper);
+            $provider->buildEditForm($formMapper);
+        } else {
+            $provider->buildCreateForm($formMapper);
         }
 
         if (in_array($media->getProviderName(), $this->localisedMediaProviders)) {
@@ -448,66 +472,6 @@ abstract class MediaAdmin extends Admin
             ]
 
         );
-
-        //remove and re-add fields to control field order
-        if ($formMapper->has('enabled')) {
-            $formMapper->remove('enabled');
-            $formMapper->add(
-                'enabled',
-                null,
-                ['required' => false],
-                ['inline_block' => true]
-            );
-        }
-
-        if ($formMapper->has('cdnIsFlushable')) {
-            $formMapper->remove('cdnIsFlushable');
-            $formMapper->add(
-                'cdnIsFlushable',
-                null,
-                ['required' => false],
-                ['inline_block' => true]
-            );
-        }
-    }
-
-    /**
-     * @param FormMapper $formMapper
-     */
-    protected function addPreviewToEditForm(FormMapper $formMapper)
-    {
-        if ($formMapper->get('binaryContent')) {
-            /** @var \Symfony\Component\Form\FormBuilder $field */
-            $field = $formMapper->get('binaryContent');
-
-            $options = $field->getOptions();
-            //remove and re-add field at the end to control field order
-            $formMapper->remove('binaryContent');
-
-            $label = 'form.label_binary_content_new';
-            $media = $this->getSubject();
-            $providerName = $media->getProviderName();
-
-            if ($providerName == 'sonata.media.provider.image' || $providerName == 'sonata.media.provider.youtube') {
-                $previewImageLabel = 'form.label_image';
-                $label = 'form.label_binary_content_image_new';
-
-                if ($providerName == 'sonata.media.provider.youtube') {
-                    $previewImageLabel = 'form.label_current_video';
-                    $label = 'form.label_binary_content_youtube_new';
-                }
-
-                $formMapper->add(
-                    'self',
-                    MediaPreviewType::class,
-                    ['required' => false, 'label' => $previewImageLabel, 'provider' => $providerName]
-                );
-            }
-
-            $options['label'] = $label;
-            $type = $field->getType()->getInnerType();
-            $formMapper->add('binaryContent', get_class($type), $options);
-        }
     }
 
     /**

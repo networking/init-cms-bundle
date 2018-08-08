@@ -405,6 +405,10 @@
                 <source>form.label_binary_content_youtube_new</source>
                 <target>Neuer Youtube Link</target>
             </trans-unit>
+            <trans-unit id="form.label_binary_content_vimeo_new">
+                <source>form.label_binary_content_vimeo_new</source>
+                <target>Neuer Vimeo Link</target>
+            </trans-unit>
             <trans-unit id="form.label_current_video">
                 <source>form.label_current_video</source>
                 <target>Aktuelles Video</target>
@@ -416,6 +420,10 @@
             <trans-unit id="form.label_binary_content_youtube">
                 <source>form.label_binary_content_youtube</source>
                 <target>Youtube-Link</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_vimeo">
+                <source>form.label_binary_content_vimeo</source>
+                <target>Vimeo-Link</target>
             </trans-unit>
             <trans-unit id="button.create.media_item">
                 <source>button.create.media_item</source>

@@ -3,6 +3,7 @@
 {% set random = date().timestamp %}
 
 {% for object in datagrid.results %}
+    {% set previewLink = false %}
     {% if object.width is defined and object.width %}
         {% if object.providerName == 'sonata.media.provider.youtube' %}
             {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
@@ -19,14 +20,16 @@
             {% set previewType = 'image' %}
         {% endif %}
     {% else %}
-        {% set media_link %}{% path object, 'reference' %}{% endset %}
-        {% set previewLink %}//docs.google.com/gview?url={% if 'http://' not in media_link.__toString and 'https://' not in media_link.__toString %}{{ app.request.getSchemeAndHttpHost() }}{% endif %}{{ media_link }}&embedded=true{% endset %}
+        {% if object.contentType == 'application/pdf' %}
+            {% set previewLink %}{{ admin.generateUrl('pdf_preview', {'id': object.id}) }}{% endset %}
+        {% endif %}
         {% set previewType = 'iframe' %}
-        {% set iframeWidth = '400px' %}
-        {% set iframeHeight = '560px' %}
+        {% set iframeWidth = '700px' %}
+        {% set iframeHeight = '989px' %}
     {% endif %}
     <div class="media-box" draggable="true" ondragstart="event.dataTransfer.setData('Text', '{{ object.id }}')">
         <div class="zero-clipboard">
+                {% if previewLink %}
             <div class="btn-clipboard btn-clipboard-left">
                 <a href="{{ previewLink }}"
                         {% if previewType == 'iframe' %}
@@ -39,6 +42,7 @@
                     <i class="fa fa-search-plus"></i>
                 </a>
             </div>
+                {% endif %}
             {% if not galleryListMode %}
                 <div class="btn-clipboard btn-clipboard-right">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
