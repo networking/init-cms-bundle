@@ -282,7 +282,7 @@
             </trans-unit>
             <trans-unit id="list.label_get_menu_item">
                 <source>list.label_get_menu_item</source>
-                <target>In Menu verknüpft</target>
+                <target>Menu links</target>
             </trans-unit>
             <trans-unit id="filter.label_locale">
                 <source>filter.label_locale</source>
