@@ -36,7 +36,31 @@ sonata_media:
             thumbnail:  networking_init_cms.media.thumbnail.format
         file:
             generator:  networking_init_cms.media.generator.media_path
-            allowed_mime_types: [ 'application/pdf', 'application/x-pdf', 'application/rtf', 'text/html', 'text/rtf', 'text/plain','application/excel', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'application/vnd.ms-powerpoint', 'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.graphics', 'application/vnd.oasis.opendocument.presentation', 'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.chart', 'application/vnd.oasis.opendocument.formula', 'application/vnd.oasis.opendocument.database', 'application/vnd.oasis.opendocument.image','text/comma-separated-values','text/xml', 'application/xml']
+            allowed_mime_types:
+                - 'application/pdf'
+                - 'application/x-pdf'
+                - 'application/rtf'
+                - 'text/html'
+                - 'text/rtf'
+                - 'text/plain'
+                - 'application/excel'
+                - 'application/msword'
+                - 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                - 'application/vnd.ms-excel'
+                - 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                - 'application/vnd.ms-powerpoint'
+                - 'application/vnd.ms-powerpoint'
+                - 'application/vnd.oasis.opendocument.text'
+                - 'application/vnd.oasis.opendocument.graphics'
+                - 'application/vnd.oasis.opendocument.presentation'
+                - 'application/vnd.oasis.opendocument.spreadsheet'
+                - 'application/vnd.oasis.opendocument.chart'
+                - 'application/vnd.oasis.opendocument.formula'
+                - 'application/vnd.oasis.opendocument.database'
+                - 'application/vnd.oasis.opendocument.image'
+                - 'text/comma-separated-values'
+                - 'text/xml'
+                - 'application/xml'
         youtube:
             generator:  networking_init_cms.media.generator.media_path
             thumbnail:  networking_init_cms.media.thumbnail.format
