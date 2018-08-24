@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\EventListener\LocaleListener;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class LocaleListenerTest extends TestCase
 {
@@ -54,6 +55,10 @@ class LocaleListenerTest extends TestCase
         $event->expects($this->once())
             ->method('getRequest')
             ->will($this->returnValue($request));
+
+        $event->expects($this->once())
+            ->method('getRequestType')
+            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
         $accessMapStub = $this->createMock('\Symfony\Component\Security\Http\AccessMap');
         $accessMapStub
@@ -121,6 +126,10 @@ class LocaleListenerTest extends TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
+	    $event->expects($this->once())
+	          ->method('getRequestType')
+	          ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+
         $accessMapStub = $this->createMock('\Symfony\Component\Security\Http\AccessMap');
         $accessMapStub
             ->expects($this->once())
@@ -164,6 +173,10 @@ class LocaleListenerTest extends TestCase
         $event->expects($this->once())
             ->method('getRequest')
             ->will($this->returnValue($request));
+
+	    $event->expects($this->once())
+	          ->method('getRequestType')
+	          ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
         $accessMapStub = $this->createMock('\Symfony\Component\Security\Http\AccessMap');
         $accessMapStub

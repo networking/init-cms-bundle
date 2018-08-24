@@ -12,13 +12,10 @@ namespace Networking\InitCmsBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\SecurityEvents;
 
 /**
  * Class LocaleListener.
@@ -90,7 +87,7 @@ class LocaleListener
             $locale = $request->cookies->get($localeType);
         }
 
-        if(!$locale){
+        if(!$locale && $request->attributes){
 	        $locale = $request->attributes->get('_locale');
         }
 
