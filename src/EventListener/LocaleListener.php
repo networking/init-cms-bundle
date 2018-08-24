@@ -11,19 +11,21 @@
 namespace Networking\InitCmsBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\SecurityEvents;
 
 /**
  * Class LocaleListener.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LocaleListener implements EventSubscriberInterface
+class LocaleListener
 {
     /**
      * @var string
@@ -63,18 +65,6 @@ class LocaleListener implements EventSubscriberInterface
         $this->router = $router;
     }
 
-    /**
-     * @static
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            // must be registered after the Router to have access to the _locale
-            KernelEvents::REQUEST => [['onKernelRequest', 16]],
-        ];
-    }
 
     /**
      * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
@@ -82,6 +72,10 @@ class LocaleListener implements EventSubscriberInterface
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        if($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST){
+        	return;
+        }
 
         if (!$request) {
             return;
@@ -94,6 +88,10 @@ class LocaleListener implements EventSubscriberInterface
             $locale = $request->getSession()->get($localeType);
         } else {
             $locale = $request->cookies->get($localeType);
+        }
+
+        if(!$locale){
+	        $locale = $request->attributes->get('_locale');
         }
 
         /*
