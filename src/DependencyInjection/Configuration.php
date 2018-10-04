@@ -62,6 +62,8 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('user')->defaultValue('Application\\Networking\\InitCmsBundle\\Entity\\User')->end()
                     ->end()
                 ->end()
+                ->scalarNode('allow_locale_cookie')->defaultTrue()->end()
+                ->scalarNode('single_language')->defaultFalse()->end()
                 ->scalarNode('translation_fallback_route')->defaultValue('initcms_404')->end()
                 ->scalarNode('404_template')->isRequired()->end()
                 ->scalarNode('no_translation_template')->isRequired()->end()

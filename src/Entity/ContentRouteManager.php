@@ -97,11 +97,13 @@ class ContentRouteManager extends BaseContentRouteManager
 
         $searchUrl = (substr($url, -1) != '/') ? $url.'/' : $url;
 
+        $searchUrl = self::stripLocale($searchUrl, $request->getLocale());
+
         $params = ['path' => $searchUrl];
 
         try {
             $contentRoutes = $this->repository->findBy($params);
-        } catch (\Doctrine\DBAL\DBALException $e) {
+        } catch (\UnexpectedValueException $e) {
             return $collection;
         }
 
@@ -125,8 +127,11 @@ class ContentRouteManager extends BaseContentRouteManager
 
         foreach ($tempContentRoutes as $key => $contentRoute) {
             $viewStatus = ($request) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
-
-            $test = new \ReflectionClass($contentRoute->getClassType());
+            try {
+                $test = new \ReflectionClass($contentRoute->getClassType());
+            } catch (\ReflectionException $e) {
+                continue;
+            }
 
             if ($viewStatus == VersionableInterface::STATUS_DRAFT
                 && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface'))
@@ -141,9 +146,15 @@ class ContentRouteManager extends BaseContentRouteManager
             /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
             $content = $this->getRouteContent($contentRoute);
 
-            $collection->add(
-                sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
-                static::generateRoute($contentRoute, $url, $content));
+            if ($searchUrl === '/') {
+                $collection->add(
+                    sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
+                    static::generateRoute($contentRoute, $url, $content, false));
+            } else {
+                $collection->add(
+                    sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
+                    static::generateRoute($contentRoute, $url, $content));
+            }
         }
 
         return $collection;

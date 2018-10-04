@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -45,23 +46,54 @@ class LocaleListener
     protected $availableLanguages;
 
     /**
-     * @param \Symfony\Component\Security\Http\AccessMapInterface $accessMap
-     * @param array                                               $availableLanguages
-     * @param string                                              $defaultLocale
-     * @param \Symfony\Component\Routing\RouterInterface          $router
+     * @var bool
+     */
+    protected $allowLocaleCookie;
+
+    /**
+     * @var bool
+     */
+    protected $singleLanguage;
+
+    /**
+     * LocaleListener constructor.
+     *
+     * @param AccessMapInterface   $accessMap
+     * @param array                $availableLanguages
+     * @param string               $defaultLocale
+     * @param RouterInterface|null $router
+     * @param bool                 $allowLocaleCookie
+     * @param bool                 $singleLanguage
      */
     public function __construct(
         AccessMapInterface $accessMap,
         array $availableLanguages,
+        $allowLocaleCookie,
+        $singleLanguage,
         $defaultLocale = 'en',
         RouterInterface $router = null
+
     ) {
         $this->accessMap = $accessMap;
         $this->availableLanguages = $availableLanguages;
         $this->defaultLocale = $defaultLocale;
         $this->router = $router;
-    }
+        $this->allowLocaleCookie = $allowLocaleCookie;
+        $this->singleLanguage = $singleLanguage;
 
+        $env = [];
+
+        if(false === getenv('ALLOW_LOCALE_COOKIE')){
+	        $env['ALLOW_LOCALE_COOKIE'] = $this->allowLocaleCookie;
+        }
+
+	    if(false === getenv('SINGLE_LANGUAGE')){
+		    $env['SINGLE_LANGUAGE'] = $this->singleLanguage;
+	    }
+	    if(count($env)){
+		    (new Dotenv())->populate($env);
+	    }
+    }
 
     /**
      * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
@@ -70,8 +102,8 @@ class LocaleListener
     {
         $request = $event->getRequest();
 
-        if($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST){
-        	return;
+        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+            return;
         }
 
         if (!$request) {
@@ -84,11 +116,17 @@ class LocaleListener
         if ($localeType == 'admin/_locale') {
             $locale = $request->getSession()->get($localeType);
         } else {
-            $locale = $request->cookies->get($localeType);
+            if ($this->singleLanguage) {
+                $locale = $this->defaultLocale;
+            } elseif ($this->allowLocaleCookie) {
+                $locale = $request->cookies->get($localeType);
+            } else {
+                $locale = $this->getLocaleFromUrl($request->getPathInfo());
+            }
         }
 
-        if(!$locale && $request->attributes){
-	        $locale = $request->attributes->get('_locale');
+        if (!$locale && $request->query->get('_locale')) {
+            $locale = $request->query->get('_locale');
         }
 
         /*
@@ -108,6 +146,25 @@ class LocaleListener
         if (null !== $this->router) {
             $this->router->getContext()->setParameter($localeType, $request->getLocale());
         }
+    }
+
+    /**
+     * @param $url
+     *
+     * @return bool|mixed
+     */
+    protected function getLocaleFromUrl($url)
+    {
+        $parts = explode('/', $url);
+        $locale = $parts[1];
+
+        foreach ($this->availableLanguages as $language) {
+            if ($locale === substr($language['locale'], 0, 2)) {
+                return $language['locale'];
+            }
+        }
+
+        return false;
     }
 
     /**

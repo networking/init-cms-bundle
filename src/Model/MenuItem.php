@@ -392,7 +392,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     /**
      * @param MenuItemInterface $menuItem
      *
-     * @return MenuItemInterface
+     * @return bool|MenuItemInterface
      */
     public function getRootParent(MenuItemInterface $menuItem)
     {
@@ -500,7 +500,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     }
 
     /**
-     * @return string
+     * @return bool|string
      */
     public function getPath()
     {
@@ -509,22 +509,34 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
         }
 
         if (!$this->getPage()) {
-            return;
+            return false;
         }
 
         return $this->getPage()->getContentRoute()->getPath();
     }
 
     /**
-     * @return string
+     * @return bool|int|string
      */
     public function getRouteId()
     {
         if (!$this->getPage()) {
-            return;
+            return false;
         }
 
         return $this->getPage()->getContentRoute()->getId();
+    }
+
+    /**
+     * @return bool|ContentRouteInterface
+     */
+    public function getContentRoute()
+    {
+        if (!$this->getPage()) {
+            return false;
+        }
+
+        return $this->getPage()->getContentRoute();
     }
 
     /**

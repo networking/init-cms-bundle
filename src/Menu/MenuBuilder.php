@@ -13,6 +13,7 @@ namespace Networking\InitCmsBundle\Menu;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Iterator\RecursiveItemIterator;
 use Knp\Menu\Matcher\MatcherInterface;
+use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -99,6 +100,11 @@ class MenuBuilder
     protected $menuIterators = [];
 
     /**
+     * @var bool
+     */
+    protected $allowLocaleCookie;
+
+    /**
      * MenuBuilder constructor.
      *
      * @param FactoryInterface              $factory
@@ -108,7 +114,8 @@ class MenuBuilder
      * @param RouterInterface               $router
      * @param MenuItemManagerInterface      $menuManager
      * @param TranslatorInterface           $translator
-     * @param Matcher                       $matcher
+     * @param MatcherInterface              $matcher
+     * @param bool                          $allowLocaleCookie
      */
     public function __construct(
         FactoryInterface $factory,
@@ -118,7 +125,8 @@ class MenuBuilder
         RouterInterface $router,
         MenuItemManagerInterface $menuManager,
         TranslatorInterface $translator,
-        MatcherInterface $matcher
+        MatcherInterface $matcher,
+        $allowLocaleCookie = true
     ) {
         $this->factory = $factory;
         $this->tokenStorage = $tokenStorage;
@@ -128,6 +136,7 @@ class MenuBuilder
         $this->menuManager = $menuManager;
         $this->translator = $translator;
         $this->matcher = $matcher;
+        $this->allowLocaleCookie = $allowLocaleCookie;
 
         $this->setLoggedIn();
         $this->setViewStatus();
@@ -223,8 +232,9 @@ class MenuBuilder
      */
     public function createFromMenuItem(MenuItem $menuItem)
     {
-        if ($menuItem->getPath()) {
-            $uri = $this->request->getBaseUrl().$menuItem->getPath();
+        if ($contentRoute = $menuItem->getContentRoute()) {
+            $route = ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
+            $uri = $this->request->getBaseUrl().$route->getPath();
         } elseif ($menuItem->getRedirectUrl()) {
             $uri = $menuItem->getRedirectUrl();
         } elseif ($menuItem->getInternalUrl()) {

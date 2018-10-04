@@ -108,25 +108,30 @@ class LanguageSwitcherHelper
      * If none is found it returns the original route object.
      *
      * @param $oldUrl
+     * @param $oldLocale
      * @param $locale
      *
-     * @return array|\Networking\InitCmsBundle\Component\Routing\Route
+     * @return array|\Networking\InitCmsBundle\Component\Routing\Route|string
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function getTranslationRoute($oldUrl, $locale)
+    public function getTranslationRoute($oldUrl, $oldLocale, $locale)
     {
         $cookies = $this->requestStack->getCurrentRequest()->cookies ? $this->requestStack->getCurrentRequest()->cookies->all() : [];
         $oldRequest = Request::create($oldUrl, 'GET', [], $cookies);
+        $oldRequest->setLocale($oldLocale);
+
         if ($this->requestStack->getCurrentRequest()->getSession()) {
             $oldRequest->setSession($this->requestStack->getCurrentRequest()->getSession());
         }
 
         try {
             $request = $this->pageHelper->matchContentRouteRequest($oldRequest);
+
         } catch (ResourceNotFoundException $e) {
             $request = $oldRequest;
         }
+
         if (!$content = $request->get('_content', false)) {
             try {
                 $route = $this->router->matchRequest(Request::create($oldUrl));
@@ -148,15 +153,16 @@ class LanguageSwitcherHelper
 
         if ($content instanceof PageInterface) {
             $translation = $content->getAllTranslations()->get($locale);
+	        if (is_null($translation)) {
+		        //@todo does this make sense, or should we throw an exception
+		        return ['_route' => 'networking_init_cms_home'];
+	        }
+            if (!is_null($translation)) {
+                //return a contentRoute object
+                $contentRoute = $translation->getContentRoute()->setContent($translation);
 
-            if (is_null($translation)) {
-                //@todo does this make sense, or should we throw an exception
-                return ['_route' => 'networking_init_cms_home'];
+                return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
             }
-            //return a contentRoute object
-            $contentRoute = $translation->getContentRoute()->setContent($translation);
-
-            return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
         }
 
         if ($content instanceof PageSnapshotInterface) {

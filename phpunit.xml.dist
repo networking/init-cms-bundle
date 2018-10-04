@@ -18,6 +18,11 @@
         </php>
     -->
 
+    <php>
+        <env name="ALLOW_LOCALE_COOKIE" value="true" force="true" />
+        <env name="SINGLE_LANGUAGE" value="false" force="true" />
+    </php>
+
     <testsuites>
         <testsuite name="init CMS bundle">
             <directory>./tests/</directory>

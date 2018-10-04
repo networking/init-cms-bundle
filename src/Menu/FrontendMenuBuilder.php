@@ -161,7 +161,7 @@ class FrontendMenuBuilder extends MenuBuilder
         foreach ($languages as $language) {
             $node = $dropdown->addChild(
                 $language['label'],
-                ['uri' => $this->router->generate($route, ['locale' => $language['locale']])]
+                ['uri' => $this->router->generate($route, ['oldLocale' => $this->request->getLocale(), 'locale' => $language['locale']])]
             );
 
             if ($language['locale'] == $currentLanguage) {
@@ -187,7 +187,7 @@ class FrontendMenuBuilder extends MenuBuilder
             $node = $menu->addChild(
                 $language['label'],
                 [
-                    'uri' => $this->router->generate($route, ['locale' => $language['locale']]),
+                    'uri' => $this->router->generate($route, ['oldLocale' => $this->request->getLocale(), 'locale' => $language['locale']]),
                     'linkAttributes' => ['class' => 'language'],
                 ]
             );

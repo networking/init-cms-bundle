@@ -16,6 +16,7 @@ use Sonata\CoreBundle\Exception\InvalidParameterException;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Yaml\Yaml;
@@ -42,7 +43,7 @@ class NetworkingInitCmsExtension extends Extension
 
         foreach ($configs as $config) {
             foreach ($config as $key => $value) {
-                $defaults['networking_init_cms'][$key] = $value;
+                $defaults['networking_init_cms'][ $key ] = $value;
             }
         }
 
@@ -112,8 +113,22 @@ class NetworkingInitCmsExtension extends Extension
         } else {
             throw new InvalidParameterException('Cache class should implement the PhpCacheInterface interface');
         }
+        $this->configureLanguageCookie($config, $container);
 
         $this->configureClass($config, $container);
+    }
+
+    /**
+     * @param $config
+     * @param ContainerBuilder $container
+     */
+    public function configureLanguageCookie($config, ContainerBuilder $container)
+    {
+        $container->setParameter('networking_init_cms.single_language', $config['single_language']);
+
+        $config['allow_locale_cookie'] = $config['single_language'] ? false : $config['allow_locale_cookie'];
+
+        $container->setParameter('networking_init_cms.allow_locale_cookie', $config['allow_locale_cookie']);
     }
 
     /**
@@ -133,9 +148,6 @@ class NetworkingInitCmsExtension extends Extension
         $container->setParameter('networking_init_cms.manager.page.class', $config['class']['page']);
         $container->setParameter('networking_init_cms.manager.layout_block.class', $config['class']['layout_block']);
         $container->setParameter('networking_init_cms.manager.user.class', $config['class']['user']);
-
-        if ($config['db_driver'] == 'mongodb') {
-        }
 
         switch ($config['db_driver']) {
             case 'orm':
@@ -161,7 +173,7 @@ class NetworkingInitCmsExtension extends Extension
     {
         foreach ($languages as $key => $val) {
             if (!array_key_exists('short_label', $val) || !$val['short_label']) {
-                $languages[$key]['short_label'] = substr(strtoupper($val['label']), 0, 2);
+                $languages[ $key ]['short_label'] = substr(strtoupper($val['label']), 0, 2);
             }
         }
 

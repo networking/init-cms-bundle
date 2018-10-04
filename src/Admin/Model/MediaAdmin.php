@@ -10,7 +10,6 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -19,12 +18,9 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
-use Sonata\DoctrineORMAdminBundle\Filter\ModelAutocompleteFilter;
-use Sonata\DoctrineORMAdminBundle\Filter\ModelFilter;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
@@ -216,9 +212,9 @@ abstract class MediaAdmin extends Admin
      */
     public function buildDatagrid()
     {
-	    if ($this->datagrid) {
-		    return;
-	    }
+        if ($this->datagrid) {
+            return;
+        }
 
         $filterParameters = $this->getFilterParameters();
 
@@ -299,7 +295,6 @@ abstract class MediaAdmin extends Admin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '', $provider = '')
     {
-
         $datagridMapper
             ->add('name', null)
             ->add('authorName', null, ['hidden' => true]);

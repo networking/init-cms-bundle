@@ -59,6 +59,14 @@ class CmsMenuVoter implements VoterInterface
         $withSlash = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo().'/' : $request->getPathInfo();
         $withOutSlash = substr($request->getPathInfo(), -1) == '/' ? substr($request->getPathInfo(), 0, -1) : $request->getPathInfo();
 
-        return [$request->getBaseUrl().$withSlash,  $request->getBaseUrl().$withOutSlash];
+        $withSlashWithLocale = '/'.substr($request->getLocale(), 0, 2).$withSlash;
+        $withOutSlashWithLocale = '/'.substr($request->getLocale(), 0, 2).$withOutSlash;
+
+        return [
+            $request->getBaseUrl().$withSlash,
+            $request->getBaseUrl().$withOutSlash,
+            $request->getBaseUrl().$withSlashWithLocale,
+            $request->getBaseUrl().$withOutSlashWithLocale,
+            ];
     }
 }

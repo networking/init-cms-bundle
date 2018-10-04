@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,7 +119,9 @@ class FrontendPageController extends Controller
             $response = new Response($html);
         }
 
-        $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
+        if ($this->getPageHelper()->isAllowLocaleCookie() && !$this->getPageHelper()->isSingleLanguage()) {
+            $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
+        }
 
         return $response;
     }
@@ -138,7 +141,9 @@ class FrontendPageController extends Controller
                 $alias->getFullPath();
                 $baseUrl = $request->getBaseUrl();
 
-                return new RedirectResponse($baseUrl.$alias->getFullPath());
+                $route = ContentRouteManager::generateRoute($alias->getContentRoute(), $alias->getFullPath(), '');
+
+                return new RedirectResponse($baseUrl.$route->getPath());
             }
         }
 
@@ -266,15 +271,16 @@ class FrontendPageController extends Controller
      * Change language in the front end area.
      *
      * @param Request $request
+     * @param $oldLocale
      * @param $locale
      *
      * @return RedirectResponse
      */
-    public function changeLanguageAction(Request $request, $locale)
+    public function changeLanguageAction(Request $request, $oldLocale, $locale)
     {
         $params = [];
 
-        $translationRoute = $this->getTranslationRoute($request->headers->get('referer'), $locale);
+        $translationRoute = $this->getTranslationRoute($request->headers->get('referer'), $oldLocale, $locale);
 
         $request->setLocale($locale);
 
@@ -301,7 +307,10 @@ class FrontendPageController extends Controller
         $newURL = $this->get('router')->generate($routeName, $params);
 
         $response = new RedirectResponse($newURL);
-        $response->headers->setCookie(new Cookie('_locale', $locale));
+
+        if ($this->getPageHelper()->isAllowLocaleCookie()) {
+            $response->headers->setCookie(new Cookie('_locale', $locale));
+        }
 
         return $response;
     }
@@ -371,18 +380,19 @@ class FrontendPageController extends Controller
      * get the route for the translation of a given page, the referrer page.
      *
      * @param $referrer
+     * @param $oldLocale
      * @param $locale
      *
      * @return array|RouteObjectInterface
      */
-    protected function getTranslationRoute($referrer, $locale)
+    protected function getTranslationRoute($referrer, $oldLocale, $locale)
     {
         /** @var $languageSwitcherHelper LanguageSwitcherHelper */
         $languageSwitcherHelper = $this->get('networking_init_cms.page.helper.language_switcher');
 
         $oldURL = $languageSwitcherHelper->getPathInfo($referrer);
 
-        return $languageSwitcherHelper->getTranslationRoute($oldURL, $locale);
+        return $languageSwitcherHelper->getTranslationRoute($oldURL, $oldLocale, $locale);
     }
 
     /**

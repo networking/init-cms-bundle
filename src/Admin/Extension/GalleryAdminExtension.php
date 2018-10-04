@@ -38,14 +38,14 @@ class GalleryAdminExtension extends AbstractAdminExtension
      */
     public function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-	    $datagridMapper->remove('context');
-	    $datagridMapper->add('context', SimpleStringFilter::class, [
-		    'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
-	    ])
-	                   ->add('providerName', SimpleStringFilter::class, [
-		                   'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
-	                   ])
-	    ;
+        $datagridMapper->remove('context');
+        $datagridMapper->add('context', SimpleStringFilter::class, [
+            'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
+        ])
+                       ->add('providerName', SimpleStringFilter::class, [
+                           'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
+                       ])
+        ;
     }
 
     /**

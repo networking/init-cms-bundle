@@ -6,6 +6,7 @@
 
     <services>
         <service id="Networking\InitCmsBundle\Menu\AdminMenuBuilder" autowire="true">
+            <argument key="$allowLocaleCookie">%networking_init_cms.allow_locale_cookie%</argument>
             <call method="setAdminPool">
                 <argument type="service" id="sonata.admin.pool"/>
             </call>

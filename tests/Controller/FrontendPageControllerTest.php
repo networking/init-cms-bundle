@@ -255,6 +255,14 @@ class FrontendPageControllerTest extends TestCase
             ->method('unserializePageSnapshotData')
             ->will($this->returnValue($mockPage));
 
+        $mockHelper->expects($this->once())
+            ->method('isAllowLocaleCookie')
+            ->will($this->returnValue(true));
+
+        $mockHelper->expects($this->once())
+            ->method('isSingleLanguage')
+            ->will($this->returnValue(false));
+
         //cache class
         $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
             ->disableOriginalConstructor()
@@ -343,6 +351,16 @@ class FrontendPageControllerTest extends TestCase
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTemplating));
+
+	    $mockContainer->expects($this->at(7))
+	                  ->method('get')
+	                  ->with('networking_init_cms.helper.page_helper')
+	                  ->will($this->returnValue($mockHelper));
+
+	    $mockContainer->expects($this->at(8))
+	                  ->method('get')
+	                  ->with('networking_init_cms.helper.page_helper')
+	                  ->will($this->returnValue($mockHelper));
 
         // controller
         $controller = new FrontendPageController();
@@ -462,8 +480,9 @@ class FrontendPageControllerTest extends TestCase
 
         $pageHelper = new \Networking\InitCmsBundle\Helper\PageHelper(
             $mockSerializer, $mockRegistry,  $mockPageManager, $mockPageSnapshotManager, $mockContentRouteManager,
-            $mockDynamicRouter, $mockCacheClass
+            $mockDynamicRouter, $mockCacheClass, true, false
         );
+
 
         $mockContainer->expects($this->at(0))
             ->method('get')
@@ -503,6 +522,17 @@ class FrontendPageControllerTest extends TestCase
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTwig));
+
+
+	    $mockContainer->expects($this->at(8))
+                  ->method('get')
+                  ->with('networking_init_cms.helper.page_helper')
+                  ->will($this->returnValue($pageHelper));
+
+	    $mockContainer->expects($this->at(9))
+                  ->method('get')
+                  ->with('networking_init_cms.helper.page_helper')
+                  ->will($this->returnValue($pageHelper));
 
         $requestAfter = clone $request;
 

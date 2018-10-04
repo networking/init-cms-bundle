@@ -43,8 +43,8 @@ security:
                 default_target_path: /admin/dashboard
             logout:
                 path:           /admin/logout
-                target:         /admin/login
-
+                target:         /
+                invalidate_session: true
             anonymous:    true
             remember_me:
                 secret:      "%secret%"

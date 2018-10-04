@@ -51,7 +51,7 @@ networking_init_change_admin_language:
         locale: .+
 
 networking_init_change_language:
-    path: /change_language/{locale}
+    path: /change_language/{oldLocale}/{locale}
     defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:changeLanguage}
     methods: [GET|POST]
     requirements:

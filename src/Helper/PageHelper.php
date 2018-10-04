@@ -71,6 +71,16 @@ class PageHelper
     protected $phpCache;
 
     /**
+     * @var bool
+     */
+    protected $allowLocaleCookie;
+
+    /**
+     * @var bool
+     */
+    protected $singleLanguage;
+
+    /**
      * PageHelper constructor.
      *
      * @param SerializerInterface          $serializer
@@ -80,6 +90,8 @@ class PageHelper
      * @param ContentRouteManagerInterface $contentRouteManager
      * @param DynamicRouter                $router
      * @param PhpCacheInterface            $phpCache
+     * @param bool                         $allowLocaleCookie
+     * @param bool                         $singleLanguage
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -88,7 +100,9 @@ class PageHelper
         PageSnapshotManagerInterface $pageSnapshotManager,
         ContentRouteManagerInterface $contentRouteManager,
         DynamicRouter $router,
-        PhpCacheInterface $phpCache
+        PhpCacheInterface $phpCache,
+        $allowLocaleCookie = true,
+        $singleLanguage = false
     ) {
         $this->serializer = $serializer;
         $this->registry = $registry;
@@ -98,6 +112,8 @@ class PageHelper
         $this->contentRouteManager = $contentRouteManager;
         $this->router = $router;
         $this->phpCache = $phpCache;
+        $this->allowLocaleCookie = $allowLocaleCookie;
+        $this->singleLanguage = $singleLanguage;
     }
 
     /**
@@ -441,5 +457,45 @@ class PageHelper
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAllowLocaleCookie()
+    {
+        return $this->allowLocaleCookie;
+    }
+
+    /**
+     * @param bool $allowLocaleCookie
+     *
+     * @return PageHelper
+     */
+    public function setAllowLocaleCookie(bool $allowLocaleCookie)
+    {
+        $this->allowLocaleCookie = $allowLocaleCookie;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSingleLanguage()
+    {
+        return $this->singleLanguage;
+    }
+
+    /**
+     * @param bool $singleLanguage
+     *
+     * @return PageHelper
+     */
+    public function setSingleLanguage(bool $singleLanguage)
+    {
+        $this->singleLanguage = $singleLanguage;
+
+        return $this;
     }
 }
