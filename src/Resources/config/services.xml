@@ -76,6 +76,12 @@
             <argument type="string">%sonata.media.thumbnail.format.default%</argument>
         </service>
 
+        <service id="networking_init_cms.security_checker.command" class="Networking\InitCmsBundle\Command\SecurityCheckCommand">
+            <argument type="service" id="sensio_distribution.security_checker" />
+            <argument type="service" id="mailer"/>
+            <tag name="console.command" />
+        </service>
+
         <!-- object manager aliases -->
         <service id="Networking\InitCmsBundle\Model\PageManagerInterface"
                  alias="networking_init_cms.page_manager"
