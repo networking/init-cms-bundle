@@ -46,7 +46,7 @@ class InstallCommand extends Command
     {
         $this->setupData($input, $output);
         $this->createAdminUser($input, $output);
-        $this->dumpAssetic($output);
+//        $this->dumpAssetic($output);
     }
 
     /**
