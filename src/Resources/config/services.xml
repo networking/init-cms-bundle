@@ -76,6 +76,8 @@
             <argument type="string">%sonata.media.thumbnail.format.default%</argument>
         </service>
 
+        <service id="sensio_distribution.security_checker" class="SensioLabs\Security\SecurityChecker" />
+
         <service id="networking_init_cms.security_checker.command" class="Networking\InitCmsBundle\Command\SecurityCheckCommand">
             <argument type="service" id="sensio_distribution.security_checker" />
             <argument type="service" id="mailer"/>
