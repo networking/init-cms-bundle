@@ -24,11 +24,10 @@ class SecurityCheckCommand extends Command {
 
 	private $mailer;
 
-//	private $lockFile = '../billag/composer.lock';
 	private $lockFile = 'composer.lock';
 
-	public function __construct( SecurityChecker $checker, \Swift_Mailer $mailer ) {
-		$this->checker = $checker;
+	public function __construct(\Swift_Mailer $mailer ) {
+		$this->checker = new SecurityChecker();
 		$this->mailer  = $mailer;
 
 		parent::__construct();
