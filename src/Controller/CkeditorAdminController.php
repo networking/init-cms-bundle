@@ -11,9 +11,11 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,64 +89,98 @@ class CkeditorAdminController extends BaseMediaAdminController
             throw new AccessDeniedException();
         }
 
-        $filePath = '';
-        $mediaManager = $this->get('sonata.media.manager.media');
+	    /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
+	    $mediaAdmin = $this->container->get('sonata.media.admin.media');
+
+	    $mediaAdmin->setRequest($request);
 
         $provider = $request->get('provider');
         $file = $request->files->get('upload');
 
-        if (!$request->isMethod('POST') || !$provider || null === $file) {
-            throw $this->createNotFoundException();
+	    $message = $this->admin->trans(
+		    'The file is not readable.',[], 'validators'
+	    );
+	    $response = ['uploaded' => 0, 'error'  => ['message' =>  $message]];
+
+
+        if (!$provider || null === $file) {
+	        return new JsonResponse($response);
         }
+
         if ($file instanceof UploadedFile && $file->isValid()) {
+
             try {
                 $context = $request->get('context', $this->get('sonata.media.pool')->getDefaultContext());
 
-                $media = $mediaManager->create();
+	            /** @var Media $media */
+	            $media = $mediaAdmin->getNewInstance();
+	            $media->setEnabled(true);
+	            $media->setName($file->getClientOriginalName());
                 $media->setBinaryContent($file);
+                $media->setContext($context);
+                $media->setProviderName($provider);
 
-                $mediaManager->save($media, $context, $provider);
-                $this->admin->createObjectSecurity($media);
 
-                switch ($type) {
-                    case 'file':
-                        $filePath = $this->generateUrl(
-                            'networking_init_cms_file_download',
-                            ['id' => $media->getId(), 'name' => $media->getMetadataValue('filename')]
-                        );
-                        break;
-                    default:
-                        $provider = $this->get($provider);
-                        $filePath = $provider->generatePublicUrl($media, 'reference');
-                        break;
-                }
+	            $provider = $mediaAdmin->getPool()->getProvider($provider);
 
-                $message = '';
-                $status = 200;
+	            $provider->transform($media);
+
+	            $validator = $this->container->get('validator');
+
+	            $errors = $validator->validate($media);
+
+	            if ($errors->count() > 0) {
+		            $duplicate = false;
+		            foreach ($errors as $error) {
+			            $errorMessages[] = $error->getMessage();
+
+			            if ($error->getMessage() == 'File is duplicate') {
+				            $duplicate = true;
+			            }
+		            }
+
+		            if ($duplicate) {
+			            $originalMedia = $mediaAdmin->checkForDuplicate($media);
+			            $path = $provider->generatePublicUrl($originalMedia, 'reference');
+			            $response = [
+			            	'uploaded' => 1,
+				            'fileName' => $originalMedia->getMetadataValue('filename'),
+				            'url' => $path,
+				            'error'  => ['message' => 'duplicate media']];
+		            }else{
+			            $response = ['uploaded' => 0, 'error'  => ['message' =>  implode(', ', $errorMessages)]];
+		            }
+
+		            return new JsonResponse($response);
+	            }
+
+	            try {
+		            $mediaAdmin->create($media);
+		            $path = $provider->generatePublicUrl($media, 'reference');
+                    $response = ['uploaded' => 1, 'fileName' => $media->getMetadataValue('filename'), 'url' => $path ];
+	            } catch (\Exception $e) {
+		            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
+	            }
+
             } catch (\Exception $e) {
-                $message = $e->getMessage();
-                $status = 500;
+
+	            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
+            } catch (\Throwable $e) {
+	            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
             }
         } elseif ($file instanceof UploadedFile && !$file->isValid()) {
-            $message = $file->getError();
-            $status = 500;
+
+	        $response = ['uploaded' => 0, 'error'  => ['message' =>  $file->getError()]];
         } else {
             $message = $this->admin->trans(
                 'error.file_upload_size',
-                ['%max_server_size%' => ini_get('upload_max_filesize')]
+                ['%max_server_size%' => ini_get('upload_max_filesize')], 'media'
             );
-            $status = 500;
+
+	        $response = ['uploaded' => 0, 'error'  => ['message' =>  $message]];
         }
 
-        return $this->render(
-                            $this->getTemplate('upload'),
-                            [
-                                'action' => 'list',
-                                'filePath' => $filePath,
-                                'message' => $message,
-                                'status' => $status,
-                            ]
-                        );
+        return new JsonResponse($response);
     }
 
     /**
