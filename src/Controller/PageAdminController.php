@@ -127,6 +127,7 @@ class PageAdminController extends CRUDController
         if ($request->getMethod() == 'POST') {
             $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
+	        $pageCopy = false;
             try {
                 $pageCopy = $pageHelper->makePageCopy($page);
                 $this->admin->createObjectSecurity($pageCopy);
@@ -166,7 +167,10 @@ class PageAdminController extends CRUDController
                 $message
             );
 
-            $request->getSession()->set('Page.last_edited', $pageCopy->getId());
+            if($pageCopy){
+	            $request->getSession()->set('Page.last_edited', $pageCopy->getId());
+            }
+
 
             return $this->redirect($this->admin->generateUrl('list'));
         }

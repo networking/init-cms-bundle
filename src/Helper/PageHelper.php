@@ -325,13 +325,13 @@ class PageHelper
         $pageCopy->setOriginal($page);
 
         $layoutBlocks = $page->getLayoutBlock();
+	    $om = $this->registry->getManager();
 
         foreach ($layoutBlocks as $layoutBlock) {
 
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
 
-            $om = $this->registry->getManagerForClass($newLayoutBlock->getClassType());
 
             $content = $om->getRepository($newLayoutBlock->getClassType())->find(
                 $newLayoutBlock->getObjectId()
@@ -346,6 +346,8 @@ class PageHelper
 
             $om->persist($newLayoutBlock);
         }
+
+	    $om->persist($pageCopy);
 
         $om->flush();
 
@@ -381,12 +383,13 @@ class PageHelper
 
         $layoutBlocks = $page->getLayoutBlock();
 
+        $om = $this->registry->getManager();
+
         foreach ($layoutBlocks as $layoutBlock) {
 
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
 
-            $om = $this->registry->getManagerForClass($newLayoutBlock->getClassType());
 
             $content = $om->getRepository($newLayoutBlock->getClassType())->find(
                 $newLayoutBlock->getObjectId()
@@ -401,6 +404,8 @@ class PageHelper
 
             $om->persist($newLayoutBlock);
         }
+
+        $om->persist($pageCopy);
 
         $om->flush();
 
