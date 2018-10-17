@@ -538,7 +538,7 @@ class FrontendPageController extends Controller
 		$result = $qb->execute();
 
 		$setup = [
-			'pages' => ['select page' => ''],
+			'pages' => [ ],
 			'locales' => []
 		];
 

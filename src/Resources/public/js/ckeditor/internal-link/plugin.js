@@ -34,6 +34,7 @@ CKEDITOR.on('dialogDefinition', function (ev) {
                                 var setup = JSON.parse(CKEDITOR.ajax.load("/cms/pages/internal-url.json?_locale=" + locale));
                                 var intern = this.getDialog().getContentElement("info", "intern");
                                 intern.clear();
+                                intern.add(ev.editor.lang.internal_link.select, '');
                                 $.each(setup.pages, function (name, url) {
                                     intern.add(name, url);
                                 });
@@ -52,7 +53,7 @@ CKEDITOR.on('dialogDefinition', function (ev) {
                             id: 'intern',
                             label: ev.editor.lang.internal_link.internal_link,
                             style: 'width:100%',
-                            items: [['select page', null]],
+                            items: [[ev.editor.lang.internal_link.select, null]],
                             onChange: function () {
                                 var d = CKEDITOR.dialog.getCurrent();
                                 d.setValueOf('info', 'url', this.getValue());
