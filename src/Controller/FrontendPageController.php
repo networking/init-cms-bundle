@@ -524,6 +524,8 @@ class FrontendPageController extends Controller
 	public function getJsonUrlsAction(Request $request)
 	{
 		$locale = $request->get('_locale', false);
+
+		$locale = str_replace('-', '_', $locale);
 		 /** @var PageAdmin $pageAdmin */
 		$pageAdmin = $this->get('networking_init_cms.admin.page');
 
@@ -549,8 +551,9 @@ class FrontendPageController extends Controller
 
 		$languages = $this->getParameter('networking_init_cms.page.languages');
 
+
 		foreach ($languages as $language){
-			$setup['locales'][] = [$language['label'], $language['locale']];
+			$setup['locales'][] = [$language['label'], str_replace('_', '-', $language['locale'])];
 		}
 
 		return new JsonResponse($setup);
