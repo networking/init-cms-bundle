@@ -531,9 +531,11 @@ class FrontendPageController extends Controller
 
 		$pageAdmin->setRequest($request);
 
-		$qb = $pageAdmin->getModelManager()->createQuery($pageAdmin->getClass(), 'p');
+		$qb = $pageAdmin->createQuery();
 
 		$pageAdmin->getByLocale($qb, 'p', 'locale', ['value' => $locale]);
+
+		$qb->setSortBy([], ['fieldName' => 'path']);
 
 		$result = $qb->execute();
 
