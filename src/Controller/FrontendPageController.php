@@ -10,9 +10,12 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Admin\Model\PageAdmin;
 use Networking\InitCmsBundle\Model\ContentRouteManager;
+use Networking\InitCmsBundle\Model\Page;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -510,4 +513,46 @@ class FrontendPageController extends Controller
 
         return new \DateTime($page->active_to);
     }
+
+
+
+	/**
+	 * @param Request $request
+	 *
+	 * @return JsonResponse
+	 */
+	public function getJsonUrlsAction(Request $request)
+	{
+		$locale = $request->get('_locale', false);
+		 /** @var PageAdmin $pageAdmin */
+		$pageAdmin = $this->get('networking_init_cms.admin.page');
+
+		$pageAdmin->setRequest($request);
+
+		$qb = $pageAdmin->getModelManager()->createQuery($pageAdmin->getClass(), 'p');
+
+		$pageAdmin->getByLocale($qb, 'p', 'locale', ['value' => $locale]);
+
+		$result = $qb->execute();
+
+		$setup = [
+			'pages' => ['select page' => ''],
+			'locales' => []
+		];
+
+
+		/** @var Page $page */
+		foreach ($result as $page){
+
+			$setup['pages'][$page->getAdminTitle()] = $page->getRoute()->getPath();
+		}
+
+		$languages = $this->getParameter('networking_init_cms.page.languages');
+
+		foreach ($languages as $language){
+			$setup['locales'][] = [$language['label'], $language['locale']];
+		}
+
+		return new JsonResponse($setup);
+	}
 }

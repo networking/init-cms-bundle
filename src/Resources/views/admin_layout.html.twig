@@ -22,12 +22,10 @@ file that was distributed with this source code.
 {% set _actions = block('actions') is defined ? block('actions')|trim : null %}
 {% set _navbar_title = block('navbar_title') is defined ? block('navbar_title')|trim : null %}
 {% set _list_filters_actions = block('list_filters_actions') is defined ? block('list_filters_actions')|trim : null -%}
-
 {% set isActive      = false %}
 {% if admin is defined %}
     {% set currentAdmin = admin %}
 {% endif %}
-
 <!DOCTYPE html>
 <html class="no-js">
 <head>

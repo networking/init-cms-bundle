@@ -155,6 +155,8 @@ networking_init_cms_admin_login:
     requirements: { trailingSlash : "[/]{1}" }
 
 
-
+networking_init_cms_page_url_json:
+    path: /cms/pages/internal-url.json
+    defaults: { _controller: NetworkingInitCmsBundle:FrontendPage:getJsonUrls }
 
 
