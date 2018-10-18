@@ -9,7 +9,20 @@ file that was distributed with this source code.
 
 #}
 {% extends base_template %}
-{% block confirm_exit %}false{% endblock %}
+ {% block meta_config %}
+     <meta data-sonata-admin='{{ {
+         config: {
+             CONFIRM_EXIT: false,
+             USE_SELECT2:sonata_admin.adminPool.getOption('use_select2'),
+             USE_ICHECK: false,
+             USE_STICKYFORMS: sonata_admin.adminPool.getOption('use_stickyforms'),
+         },
+         translations: {
+             CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
+         },
+     }|json_encode()|raw }}'
+     >
+ {% endblock %}
 {% block title %}
     {% if admin.id(object) %}
         <span class="page_title">{{ admin.toString(object) }} </span> <span class="info-soft font-medium">({{ language }})</span>
