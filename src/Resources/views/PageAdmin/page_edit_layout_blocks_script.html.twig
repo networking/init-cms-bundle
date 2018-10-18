@@ -12,68 +12,14 @@ file that was distributed with this source code.
 <!-- edit one association -->
 <script type="text/javascript">
 
-var tmpListItem = '<li class="temp_item networking-sortable-list networking-sort-zone" id="layoutBlock_0"></li>';
-
-// handle the update bind
-function addLayoutBlock(addLink) {
-    var restrictedTypes = eval(jQuery(addLink).attr('data-value'));
-
-    var selectContentType = jQuery('#selectContentType');
-    var contentTypeModal = jQuery('#contentTypeModal');
-
-    selectContentType.find('option').each(function (i) {
-        if (jQuery.inArray($(this).val(), restrictedTypes) < 0 && restrictedTypes.length > 0) {
-            jQuery(this).attr('disabled', 'disabled');
-        } else {
-            jQuery(this).removeAttr('disabled');
-        }
-    });
-    selectContentType.val(jQuery("#selectContentType option:enabled:first").val());
-
-    contentTypeModal.modal('show');
-
-    contentTypeModal.bind('initcms.create_block', function (event) {
-        jQuery('button', '#contentTypeModal').off('click');
-        jQuery('#contentTypeModal').unbind('initcms.create_block');
-        if (jQuery(this).data('create')) {
-            jQuery('#contentLoading').show();
-            jQuery('#createContentButton').button('loading');
-            var classType = jQuery('#selectContentType').val();
-            var liItem = jQuery(addLink).closest('li');
-            var zone = liItem.find("[id$='_zone']").val();
-            var sortOrder = liItem.find("[id$='_sortOrder']").val();
-            sortOrder++;
-            liItem.parent().find('li.networking-sortable-list input[id$="_sortOrder"]').each(function (index, value) {
-                if (jQuery(value).val() >= sortOrder) {
-                    var newSortOrder = jQuery(value).val() + 1;
-                    jQuery(value).val(newSortOrder);
-                }
-            });
-
-            var data = {zone: zone, sortOrder: sortOrder, classType: classType};
-
-            var url = '{{ url('admin_networking_initcms_layoutblock_create', {
-                              'code':      sonata_admin.admin.root.code,
-                              'elementId': id,
-                              'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
-                              'uniqid':    sonata_admin.admin.root.uniqid
-                          }) }}';
-            createLayoutBlockForm(url, data);
-
-        }
-    });
-    return false;
-}
-
 // handle the add link
-function createLayoutBlockForm(url, data) {
+function getLayoutBlockCreateForm(url, data) {
     jQuery.ajax({
         url: url,
         data: data,
-        success: function (xhr) {
+        success: function (html) {
             var layoutBlockModal = jQuery('#layoutBlockModal');
-            layoutBlockModal.html(xhr);
-            layoutBlockModal.modal('show');
+            layoutBlockModal.html(html).modal('show');
             layoutBlockModal.on('hide.bs.modal', function (e) {
                 if(jQuery(e.target).attr('id') === layoutBlockModal.attr('id'))
                 {
@@ -85,40 +31,9 @@ function createLayoutBlockForm(url, data) {
             jQuery('#contentTypeModal').modal('hide');
             jQuery('#createContentButton').button('reset');
             jQuery('#contentLoading').hide();
-
             jQuery('form', '#layoutBlockModal').bind('submit', submitLayoutCreate);
-
-            jQuery('ul#zone_' + data.zone + ' > li:eq(' + data.sortOrder + ')').after(tmpListItem);
-            saveLayoutBlockSort();
         }
     });
-}
-
-function formToJSON( selector )
-{
-    var form = {};
-
-    selector.find('[name*="[content]"]').each( function() {
-        var self = $(this);
-        var type = this.type || this.tagName.toLowerCase();
-        var name = self.attr('name');
-        if (type === 'checkbox') {
-            var checked = self.is(':checked');
-            if (checked) {
-                form[name] = 1;
-            }
-        } else if(self.val()){
-            if (form[name]) {
-                form[name] = form[name] + ',' + self.val();
-            }
-            else {
-                form[name] = self.val();
-            }
-        }
-
-    });
-
-    return form;
 }
 
 function submitLayoutCreate(event) {
@@ -140,13 +55,19 @@ function submitLayoutCreate(event) {
         type: form.attr('method'),
         url: form.attr('action'),
         dataType: 'json',
+        data: {
+            formFieldId: '{{ id }}',
+            code: '{{ sonata_admin.admin.root.code }}',
+            uniqId: '{{  sonata_admin.admin.root.uniqid }}',
+            pageId:  '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
+        },
         success: function (xhr) {
-            if (xhr.result == 'ok') {
+            if (xhr.result === 'ok') {
                 createInitCmsMessageBox(xhr.status, xhr.message);
+                jQuery('#layoutBlockModal').modal('hide');
                 jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
                 jQuery('input[type=submit]', this).off();
                 jQuery('form', '#layoutBlockModal').unbind('submit');
-                jQuery('#layoutBlockModal').modal('hide');
                 saveLayoutBlockSort();
             }
         },
@@ -160,17 +81,27 @@ function submitLayoutCreate(event) {
     return false;
 }
 
-function updateLayoutBlock(addLink, layoutId) {
-    var liItem = jQuery(addLink).closest('li');
-    var zone = liItem.find("[id$='_zone']").val();
-    var sortOrder = liItem.find("[id$='_sortOrder']").val();
-    var data = {
-        id: layoutId,
-        zone: zone,
-        sortOrder: sortOrder,
-        classType: jQuery(addLink).attr('data-content-type'),
-        content: {}
-    };
+
+function getLayoutBlockEditForm(url){
+    jQuery.ajax({
+        url: url,
+        dataType: 'html',
+        success: function (html) {
+            var layoutBlockModal = jQuery('#layoutBlockModal');
+            layoutBlockModal.html(html).modal('show');
+            layoutBlockModal.on('hide.bs.modal', function (e) {
+                if(jQuery(e.target).attr('id') === layoutBlockModal.attr('id'))
+                {
+                    jQuery('form', '#layoutBlockModal').unbind('submit');
+                }
+            });
+            jQuery('form', '#layoutBlockModal').bind('submit', submitLayoutUpdate);
+        }
+    });
+}
+
+function submitLayoutUpdate(event) {
+    event.preventDefault();
     jQuery.each(CKEDITOR.instances, function () {
         try {
             var editor = this;
@@ -183,69 +114,30 @@ function updateLayoutBlock(addLink, layoutId) {
         }
     });
 
+    var form = jQuery(this);
 
-    data.content = formToJSON(liItem);
-
-    var form = jQuery(addLink).closest('form');
-
-    submitLayoutUpdate(form, data, liItem);
-    return false;
-}
-
-function submitLayoutUpdate(form, data, liItem) {
-    var url = '{{ url('admin_networking_initcms_layoutblock_updateFormFieldElement', {
-                    'code':      sonata_admin.admin.root.code,
-                    'elementId': id,
-                    'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
-                    'uniqid':    sonata_admin.admin.root.uniqid
-                }) }}';
-    // the ajax post
-
-
-    jQuery.ajax({
-        url: url,
-        type: "POST",
-//        dataType: 'html',
-        data: data,
+    jQuery(form).ajaxSubmit({
+        type: form.attr('method'),
+        url: form.attr('action'),
+        data: {
+            formFieldId: '{{ id }}',
+            code: '{{ sonata_admin.admin.root.code }}',
+            uniqId: '{{  sonata_admin.admin.root.uniqid }}',
+            pageId:  '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
+        },
         error: function (xhr) {
-            if(liItem !== undefined){
-                liItem.find('.modal-body').html(xhr.responseText);
-            }
+            form.html(xhr.responseText);
         },
         success: function (html) {
-            if (data.zone !== undefined) {
-                jQuery(form).find('#zone_' + data.zone + ' .layout_block_modal').each(function (i, value) {
-                    jQuery(value).modal('hide');
-                });
-            }
+            jQuery('#layoutBlockModal').modal('hide');
             jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
-            jQuery('.modal-backdrop').remove();
-            jQuery('#contentLoading').hide();
 
             saveLayoutBlockSort();
         }
     });
 }
 
-
-function setLayoutBlockPosition() {
-    // update the input value position
-    jQuery('ul.sortable').each(function (index, value) {
-        var count = 0;
-        var zone = jQuery(this).attr('id').replace('zone_', '');
-        jQuery(value).find("li.networking-sort-zone").each(function (i, v) {
-            if (!jQuery(v).find("input[id$='_delete']").is(':checked')) {
-                jQuery(v).find("[id$='_sortOrder']").val(count);
-
-                jQuery(v).find("[id$='_zone']").val(zone);
-                count++;
-            }
-        });
-    });
-}
-
 function saveLayoutBlockSort(callback) {
-    setLayoutBlockPosition();
     var zones = [];
 
     jQuery('ul.sortable').each(function (index, value) {
@@ -268,11 +160,12 @@ function submitLayoutSort(zones) {
         url: '{{ url('admin_networking_initcms_layoutblock_updateLayoutBlockSort') }}',
         data: {
             zones: zones,
-            objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
+            pageId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
+            code: '{{ sonata_admin.admin.root.code }}'
         },
         type: 'post',
         success: function (xhr) {
-            if (xhr.status != 'error') {
+            if (xhr.status !== 'error') {
                 if (xhr.pageStatusSettings !== undefined) jQuery('#pageStatusSettings').html(xhr.pageStatusSettings);
                 if (xhr.pageStatus !== undefined) {
                     if (xhr.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
@@ -288,14 +181,8 @@ function submitLayoutSort(zones) {
     });
 }
 
-function uploadError(xhr) {
-    alert(xhr.error);
-}
-
 function onAfterLoad() {
 
-    var ckeditorConfig = '';
-    setLayoutBlockPosition();
     jQuery('div#field_container_{{ id }} ul.sortable').sortable({
         handle: 'i.glyphicon-move',
         opacity: 0.6,
@@ -304,15 +191,6 @@ function onAfterLoad() {
         connectWith: ".sortable",
         tolerance: 'pointer',
         start: function (event, ui) {
-            var textareaId = ui.item.find('textarea.ckeditor').attr('id');
-            if (typeof textareaId !== 'undefined') {
-                var editorInstance = CKEDITOR.instances[textareaId];
-                if (editorInstance) {
-                    ckeditorConfig = editorInstance.config;
-                    editorInstance.destroy();
-                    CKEDITOR.remove(textareaId);
-                }
-            }
             jQuery(this).sortable('refreshPositions');
             var listItems = jQuery(this).find('.networking-sortable-list');
             if (listItems.length < 1) {
@@ -325,14 +203,6 @@ function onAfterLoad() {
             saveLayoutBlockSort(function (xhr) {
                 createInitCmsMessageBox(xhr.messageStatus, xhr.message);
             });
-
-            var textareaId = ui.item.find('textarea.ckeditor').attr('id');
-            if (typeof textareaId != 'undefined') {
-                try {
-                    CKEDITOR.replace(textareaId, ckeditorConfig);
-                } catch (err) {
-                }
-            }
         },
         update: function (event, ui) {
             var maxItems = jQuery(this).attr('data-max-items');
@@ -365,10 +235,6 @@ function onAfterLoad() {
                     jQuery(ui.sender).find(".empty_layout_block").hide();
                 }
             } else {
-                var zone = jQuery(this).attr('id').substr(5);
-                var liItem = jQuery(ui.item);
-                liItem.find("[idjQuery='_zone']").val(zone);
-//                setLayoutBlockPosition();
                 jQuery(this).find(".empty_layout_block").hide();
             }
         },
@@ -387,7 +253,6 @@ function onAfterLoad() {
             var contentType = jQuery(ui.item).attr('data-content-type');
             var placeholder = $(ui.placeholder);
 
-
             if (allowedTypes.length > 0 && jQuery.inArray(contentType, allowedTypes) < 0) {
                 placeholder.css('display', 'none');
             } else if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length >= maxItems) {
@@ -397,7 +262,6 @@ function onAfterLoad() {
                 } else {
                     placeholder.css('display', 'none');
                 }
-
                 jQuery(this).find(".empty_layout_block").hide();
             }
             else {
@@ -412,17 +276,60 @@ function onAfterLoad() {
 (function ($) {
     // refresh the sortable option when a new element is added
     onAfterLoad();
-    jQuery('body').on('click', 'i.delete_block', function () {
+    jQuery('body').on('click', '.add-layout', function(ev){
+
+        ev.preventDefault();
+        var link = jQuery(this);
+
+        var restrictedTypes = eval(link.data('value'));
+        var selectContentType = jQuery('#selectContentType');
+        var contentTypeModal = jQuery('#contentTypeModal');
+
+        selectContentType.find('option').each(function (i) {
+            if (jQuery.inArray($(this).val(), restrictedTypes) < 0 && restrictedTypes.length > 0) {
+                jQuery(this).attr('disabled', 'disabled');
+            } else {
+                jQuery(this).removeAttr('disabled');
+            }
+        });
+        selectContentType.val(jQuery("#selectContentType option:enabled:first").val());
+
+        contentTypeModal.modal('show');
+
+        contentTypeModal.bind('initcms.create_block', function (event) {
+            jQuery('button', '#contentTypeModal').off('click');
+            jQuery('#contentTypeModal').unbind('initcms.create_block');
+            if (jQuery(this).data('create')) {
+                jQuery('#contentLoading').show();
+                jQuery('#createContentButton').button('loading');
+                var data = {
+                    zone: link.data('zone'),
+                    sortOrder: link.data('sort-order'),
+                    classType: selectContentType.val(),
+                    code: '{{ sonata_admin.admin.root.code }}',
+                    pageId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
+                    uniqId: '{{ sonata_admin.admin.root.uniqid }}',
+                };
+                var url = '{{ url('admin_networking_initcms_layoutblock_create') }}';
+
+                getLayoutBlockCreateForm(url, data);
+
+            }
+        });
+    }).on('click', '.layout-link', function(event){
+        event.preventDefault();
+        getLayoutBlockEditForm($(this).data('href'))
+    }).on('click', 'i.delete_block', function () {
         if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
-            var blockId = jQuery(this).attr('data-value');
             jQuery.ajax({
                 url: '{{ url('admin_networking_initcms_layoutblock_deleteAjax') }}',
                 method: 'POST',
                 data: {
-                    layoutBlockId: blockId,
-                    objectId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
-                    uniqid: '{{ sonata_admin.admin.root.uniqid }}',
-                    elementId: '{{ id }}',
+                    id: jQuery(this).attr('data-value'),
+                    code: '{{ sonata_admin.admin.root.code }}',
+                    pageId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
+                    uniqId: '{{ sonata_admin.admin.root.uniqid }}',
+                    formFieldId: '{{ id }}',
                     _method: 'DELETE'
                 },
                 success: function (xhr) {
