@@ -1,4 +1,4 @@
-CKEDITOR.plugins.add('internal_link', {lang: ['de', 'en']});
+CKEDITOR.plugins.add('internal_link', {lang: ['de', 'en'], requires: 'ajax'});
 
 CKEDITOR.on('dialogDefinition', function (ev) {
     if (ev.data.name === 'link') {

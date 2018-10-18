@@ -2,7 +2,7 @@ fos_ck_editor:
     default_config: init_cms
     configs:
         init_cms:
-            extraPlugins: ["internal_link", "ajax"]
+            extraPlugins: ["internal_link"]
             filebrowserBrowseRoute: admin_networking_initcms_media_init_ckeditor_browser
             filebrowserBrowseRouteParameters:
                 provider: sonata.media.provider.file
