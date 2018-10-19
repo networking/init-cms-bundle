@@ -31,6 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Valid;
 
 /**
@@ -108,6 +109,7 @@ abstract class PageAdmin extends BaseAdmin
         $collection->add('cancelDraft', 'cancel_draft/{id}', [], ['method' => 'GET']);
         $collection->add('getPath', 'get_path/', [], ['method' => 'GET']);
         $collection->add('batchTranslate', 'batch_translate', []);
+        $collection->add('editPageSettings', 'edit_page_settings/{id}/{no_layout}', ['no_layout' => true]);
         $collection->add(
             'unlink',
             'unlink/{id}/translation_id/{translationId}',
@@ -170,27 +172,29 @@ abstract class PageAdmin extends BaseAdmin
         $this->getRequest()->attributes->add(['page_locale' => $this->pageLocale]);
 
         try {
+        	/** @var Request $request */
             $request = $this->getRequest();
         } catch (\RuntimeException $e) {
             $requestStack = $this->getContainer()->get('request_stack');
             $request = $requestStack->getCurrentRequest();
         }
 
-        if ($this->getSubject()->getId() || $request->isXmlHttpRequest()) {
-            $formMapper
-                ->with('page_content')
-                ->add(
-                    'layoutBlock',
-                    CollectionType::class,
-                    [
-                        'required' => true,
-                        'label' => false,
-                        'label_render' => false,
-                        'error_bubbling' => false,
-                        'type_options' => ['error_bubbling' => false],
-                    ]
-                )
-                ->end();
+        if (($this->getSubject()->getId() || $request->isXmlHttpRequest()) && !$request->get('no_layout')) {
+	        $formMapper
+		        ->with('page_content')
+		        ->add(
+			        'layoutBlock',
+			        CollectionType::class,
+			        [
+				        'required' => true,
+				        'label' => false,
+				        'label_render' => false,
+				        'error_bubbling' => false,
+				        'type_options' => ['error_bubbling' => false],
+			        ]
+		        )
+		        ->end();
+
         }
 
         $formMapper->with('page_settings');

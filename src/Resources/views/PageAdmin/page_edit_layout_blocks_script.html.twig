@@ -137,6 +137,21 @@ function submitLayoutUpdate(event) {
     });
 }
 
+function reloadLayoutBlocks(){
+    jQuery.ajax({
+        type: 'get',
+        url: '{{ url('admin_networking_initcms_layoutblock_reload') }}',
+        data: {
+            formFieldId: '{{ id }}',
+            code: '{{ sonata_admin.admin.root.code }}',
+            uniqId: '{{  sonata_admin.admin.root.uniqid }}',
+            pageId:  '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
+        },success: function (html) {
+            jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
+        }
+    });
+}
+
 function saveLayoutBlockSort(callback) {
     var zones = [];
 

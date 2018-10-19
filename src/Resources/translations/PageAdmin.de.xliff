@@ -538,7 +538,7 @@
             </trans-unit>
             <trans-unit id="link.live">
                 <source>link.live</source>
-                <target>Veröffentlichte Versionen anzeigen</target>
+                <target>Veröffentlichte Version anzeigen</target>
             </trans-unit>
             <trans-unit id="or">
                 <source>or</source>

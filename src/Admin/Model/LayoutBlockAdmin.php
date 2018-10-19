@@ -45,6 +45,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('deleteAjax', 'delete_ajax', [], ['method' => 'POST']);
+        $collection->add('reload', 'reload', [], ['method' => 'GET']);
         $collection->add('updateFormFieldElement', 'update_form_fields', [], ['method' => 'POST']);
         $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', [], ['method' => 'GET']);
     }

@@ -177,6 +177,24 @@ class LayoutBlockController extends CRUDController {
 	}
 
 	/**
+	 * @param Request $request
+	 *
+	 * @return Response
+	 * @throws \Twig_Error_Runtime
+	 */
+	public function reloadAction(Request $request)
+	{
+		$pageId      = $request->get( 'pageId' );
+		$formFieldId = $request->get( 'formFieldId' );
+		$uniqId      = $request->get( 'uniqId' );
+		$code        = $request->get( 'code', 'networking_init_cms.admin.page' );
+		$html   = $this->getLayoutBlockFormWidget( $pageId, $formFieldId, $uniqId, $code );
+		$status = 200;
+
+		return new Response( $html, $status );
+	}
+
+	/**
 	 * @param $pageId
 	 * @param $formFieldId
 	 * @param null $uniqId
