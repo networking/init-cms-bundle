@@ -725,11 +725,15 @@ abstract class Page implements PageInterface
      */
     public function resetLayoutBlock($publishedBlocks)
     {
+
         foreach ($this->layoutBlock as $block) {
-            $block->setNoAutoDraft(true);
-            $this->layoutBlock->removeElement($block);
+
+	        $block->setNoAutoDraft(true);
+	        $this->layoutBlock->removeElement($block);
         }
-        $this->setLayoutBlock($publishedBlocks);
+        foreach ($publishedBlocks as $block){
+        	$this->addLayoutBlock(clone $block);
+        }
     }
 
     /**
