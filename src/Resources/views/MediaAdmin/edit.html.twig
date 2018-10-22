@@ -201,14 +201,20 @@ file that was distributed with this source code.
                             {% endif %}
                             <tr>
                                 <th>
-                                    <a href="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}">{{ 'label.protected_download_url'|trans({}, 'SonataMediaBundle') }}</a>
+                                    <a href="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}">{{ 'label.protected_download_url'|trans({}, admin.translationDomain) }}</a>
                                 </th>
                                 <td>
 
+                                    <div class="input-group">
                                     <input type="text" class="form-control" onClick="this.select();"
-                                           readonly="readonly"
-                                           value="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
+                                           readonly="readonly" id="download"
+                                           value="{{ url('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
+                                        <span class="input-group-addon"><a class="glyphicon glyphicon-copy copy-link"
+                                                                           data-field="#download"></a></span>
+                                    </div>
+                                    {% if 'sonata.media.security.public_strategy' != sonata_media.pool.getContext(object.context).download.strategy %}
                                     <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadSecurity(object).description|raw }}
+                                    {% endif %}
                                 </td>
                             <tr>
                                 {% if object.width is defined and object.width %}
@@ -224,8 +230,8 @@ file that was distributed with this source code.
                                             <input type="text" class="form-control" onClick="this.select();"
                                                    readonly="readonly" id="reference"
                                                    value="{{ app.request.schemeAndHttpHost }}{% path object, 'reference' %}"/>
-                                                <span class="input-group-addon"><i class="glyphicon glyphicon-copy copy-link"
-                                                                                   data-field="#reference"></i></span>
+                                                <span class="input-group-addon"><a class="glyphicon glyphicon-copy copy-link"
+                                                                                   data-field="#reference"></a></span>
                                         </div>
                                 </td>
                             </tr>
@@ -246,8 +252,8 @@ file that was distributed with this source code.
                                                    id="{{ name }}"
                                                    readonly="readonly"
                                                    value="{{ app.request.schemeAndHttpHost }}{% path object, name %}"/>
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-copy copy-link"
-                                                                               data-field="#{{ name }}"></i></span>
+                                            <span class="input-group-addon"><a class="glyphicon glyphicon-copy copy-link"
+                                                                               data-field="#{{ name }}"></a></span>
                                         </div>
 
                                     </td>
@@ -262,10 +268,10 @@ file that was distributed with this source code.
                                     <td>
                                         <div class="input-group">
                                         <input type="text" class="form-control" onClick="this.select();"
-                                               readonly="readonly"
+                                               readonly="readonly" id="reference"
                                                value="{{ app.request.schemeAndHttpHost }}{% path object, 'reference' %}"/>
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-copy copy-link"
-                                                                               data-field="#reference"></i></span>
+                                            <span class="input-group-addon"><a class="glyphicon glyphicon-copy copy-link"
+                                                                               data-field="#reference"></a></span>
                                         </div>
                                     </td>
                                 </tr>
@@ -366,7 +372,6 @@ file that was distributed with this source code.
     {% endif %}
     <script>
         (function ($) {
-            console.log('helo');
             function copyToClipboard(field) {
                 /* Get the text field */
                 var copyText = $(field);
@@ -378,7 +383,7 @@ file that was distributed with this source code.
                 document.execCommand("copy");
 
                 /* Alert the copied text */
-                alert("Copied the text: " + copyText.val());
+                alert('{{ 'copy_to_clipboard'|trans({}, 'MediaAdmin') }}'.replace('%item%', copyText.val()));
             }
 
             $('body').on('click', '.copy-link', function(){

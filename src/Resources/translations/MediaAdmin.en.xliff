@@ -208,7 +208,7 @@
             </trans-unit>
             <trans-unit id="label.protected_download_url">
                 <source>label.protected_download_url</source>
-                <target>Protected URL</target>
+                <target>Download URL</target>
             </trans-unit>
             <trans-unit id="description.roles_download_strategy">
                 <source>description.roles_download_strategy</source>
@@ -512,6 +512,10 @@
             <trans-unit id="tag_not_selected">
                 <source>tag_not_selected</source>
                 <target>Please select a tag to assign to your media</target>
+            </trans-unit>
+            <trans-unit id="copy_to_clipboard">
+                <source>copy_to_clipboard</source>
+                <target>The URL %item% was copied to your clipboard</target>
             </trans-unit>
         </body>
     </file>

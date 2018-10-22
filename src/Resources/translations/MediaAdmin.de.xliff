@@ -208,7 +208,7 @@
             </trans-unit>
             <trans-unit id="label.protected_download_url">
                 <source>label.protected_download_url</source>
-                <target>Geschützte URL</target>
+                <target>Download URL</target>
             </trans-unit>
             <trans-unit id="description.roles_download_strategy">
                 <source>description.roles_download_strategy</source>
@@ -257,7 +257,7 @@
                 <target>
                     <![CDATA[
                                     <strong style="color: white">Advanced Editor</strong> <br />
-                                    Nur für erfahrene Benutzer 
+                                    Nur für erfahrene Benutzer
                                 ]]>
                 </target>
             </trans-unit>
@@ -520,6 +520,10 @@
             <trans-unit id="gallery">
                 <source>gallery</source>
                 <target>Galerien</target>
+            </trans-unit>
+            <trans-unit id="copy_to_clipboard">
+                <source>copy_to_clipboard</source>
+                <target>Die URL %item% wurde in die Zwischenablage kopiert</target>
             </trans-unit>
         </body>
     </file>

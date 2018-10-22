@@ -13,6 +13,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\MediaBundle\CDN\Server;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Sonata\MediaBundle\Provider\ImageProvider as BaseProvider;
+use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ImageProvider extends BaseProvider
@@ -54,5 +55,28 @@ class ImageProvider extends BaseProvider
                 ['inline_block' => true]
             );
         }
+    }
+
+
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function generatePublicUrl(MediaInterface $media, $format)
+	{
+		if (MediaProviderInterface::FORMAT_REFERENCE === $format) {
+			$path = $this->getReferenceImage($media);
+		} else {
+			$path = $this->thumbnail->generatePublicUrl($this, $media, $format);
+		}
+
+		$path = str_replace(' ', '%20', $path);
+
+        // if $path is already an url, no further action is required
+        if (null !== parse_url($path, PHP_URL_SCHEME)) {
+	        return $path;
+        }
+
+        return $this->getCdn()->getPath($path, $media->getCdnIsFlushable());
     }
 }
