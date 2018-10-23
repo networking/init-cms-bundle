@@ -25,182 +25,182 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 abstract class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFormListenerInterface
 {
-    /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
-     */
-    protected $om;
+	/**
+	 * @var \Doctrine\Common\Persistence\ObjectManager
+	 */
+	protected $om;
 
-    /**
-     * @var array
-     */
-    protected $contentTypes;
+	/**
+	 * @var array
+	 */
+	protected $contentTypes;
 
-    /**
-     * @var TraceableValidator
-     */
-    protected $validator;
+	/**
+	 * @var TraceableValidator
+	 */
+	protected $validator;
 
-    /**
-     * @var LayoutBlockAdmin
-     */
-    protected $admin;
+	/**
+	 * @var LayoutBlockAdmin
+	 */
+	protected $admin;
 
-    /**
-     * @var string
-     */
-    protected $contentType;
+	/**
+	 * @var string
+	 */
+	protected $contentType;
 
-    /**
-     * @param ObjectManager $om
-     */
-    public function __construct(
-        ObjectManager $om
-    ) {
-        $this->om = $om;
-    }
+	/**
+	 * @param ObjectManager $om
+	 */
+	public function __construct(
+		ObjectManager $om
+	) {
+		$this->om = $om;
+	}
 
-    /**
-     * @param ValidatorInterface $validator
-     */
-    public function setValidator(ValidatorInterface $validator)
-    {
-        $this->validator = $validator;
-    }
+	/**
+	 * @param ValidatorInterface $validator
+	 */
+	public function setValidator(ValidatorInterface $validator)
+	{
+		$this->validator = $validator;
+	}
 
-    public function setAdmin(LayoutBlockAdmin $admin)
-    {
-        $this->admin = $admin;
-    }
+	public function setAdmin(LayoutBlockAdmin $admin)
+	{
+		$this->admin = $admin;
+	}
 
-    /**
-     * @return array $contentTypes
-     */
-    public function getContentTypes()
-    {
-        return $this->contentTypes;
-    }
+	/**
+	 * @return array $contentTypes
+	 */
+	public function getContentTypes()
+	{
+		return $this->contentTypes;
+	}
 
-    public function setContentTypes($contentTypes)
-    {
-        $this->contentTypes = $contentTypes;
-    }
+	public function setContentTypes($contentTypes)
+	{
+		$this->contentTypes = $contentTypes;
+	}
 
-    /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            FormEvents::PRE_SET_DATA => 'preSetData',
-            FormEvents::POST_SUBMIT => 'postBindData',
-        ];
-    }
+	/**
+	 * @return array
+	 */
+	public static function getSubscribedEvents()
+	{
+		return [
+			FormEvents::PRE_SET_DATA => 'preSetData',
+			FormEvents::POST_SUBMIT => 'postBindData',
+		];
+	}
 
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-    }
+	public function setContentType($contentType)
+	{
+		$this->contentType = $contentType;
+	}
 
-    public function preSetData(FormEvent $event)
-    {
-        $layoutBlock = $event->getData();
+	public function preSetData(FormEvent $event)
+	{
+		$layoutBlock = $event->getData();
 
-        $form = $event->getForm();
-        $form->add(
-            'content',
-            ContentType::class,
-            [
-                'label_render' => false,
-                'label' => false,
-                'class' => $this->getContentType($layoutBlock),
-                'widget_form_group' => false,
-            ]
-        );
-        $form->remove('_delete');
-    }
+		$form = $event->getForm();
+		$form->add(
+			'content',
+			ContentType::class,
+			[
+				'label_render' => false,
+				'label' => false,
+				'class' => $this->getContentType($layoutBlock),
+				'widget_form_group' => false,
+			]
+		);
+		$form->remove('_delete');
+	}
 
-    /**
-     * Bind the content type objects variables from the form.
-     * If needed create an new content type object, or change to a new type deleting the old one.
-     * Set the Content objects contentType and objectId fields accordingly.
-     *
-     * @param FormEvent $event
-     *
-     * @throws \RuntimeException
-     */
-    public function postBindData(FormEvent $event)
-    {
+	/**
+	 * Bind the content type objects variables from the form.
+	 * If needed create an new content type object, or change to a new type deleting the old one.
+	 * Set the Content objects contentType and objectId fields accordingly.
+	 *
+	 * @param FormEvent $event
+	 *
+	 * @throws \RuntimeException
+	 */
+	public function postBindData(FormEvent $event)
+	{
 
-        /** @var $layoutBlock LayoutBlockInterface */
-        $layoutBlock = $event->getForm()->getData();
+		/** @var $layoutBlock LayoutBlockInterface */
+		$layoutBlock = $event->getForm()->getData();
 
-        $contentObject = $layoutBlock->getContent();
+		$contentObject = $layoutBlock->getContent();
 
-        if (!$contentObject instanceof ContentInterface) {
-            throw new \RuntimeException('Content Object must implement the ContentInterface');
-        }
+		if (!$contentObject instanceof ContentInterface) {
+			throw new \RuntimeException('Content Object must implement the ContentInterface');
+		}
 
-        $this->validate($event, $contentObject);
-    }
+		$this->validate($event, $contentObject);
+	}
 
-    public function validate(FormEvent &$event, $contentObject)
-    {
-        /** @var $layoutBlock LayoutBlockInterface */
-        $form = $event->getForm();
+	public function validate(FormEvent &$event, $contentObject)
+	{
+		/** @var $layoutBlock LayoutBlockInterface */
+		$form = $event->getForm();
 
-        /** @var \Symfony\Component\Validator\ConstraintViolationList $errors */
-        $errors = $this->validator->validate($contentObject);
+		/** @var \Symfony\Component\Validator\ConstraintViolationList $errors */
+		$errors = $this->validator->validate($contentObject);
 
-        if (count($errors) > 0) {
-            if ($contentObject->getId()) {
-                $message = $this->admin->getTranslator()->trans(
-                    'message.layout_block_not_edited',
-                    [],
-                    $this->admin->getTranslationDomain()
-                );
-            } else {
-                $message = $this->admin->getTranslator()->trans(
-                    'message.layout_block_not_created',
-                    [],
-                    $this->admin->getTranslationDomain()
-                );
-            }
-            $form->addError(new FormError($message));
+		if (count($errors) > 0) {
+			if ($contentObject->getId()) {
+				$message = $this->admin->getTranslator()->trans(
+					'message.layout_block_not_edited',
+					[],
+					$this->admin->getTranslationDomain()
+				);
+			} else {
+				$message = $this->admin->getTranslator()->trans(
+					'message.layout_block_not_created',
+					[],
+					$this->admin->getTranslationDomain()
+				);
+			}
+			$form->addError(new FormError($message));
 
-            /** @var \Symfony\Component\Validator\ConstraintViolation $error */
-            foreach ($errors->getIterator() as $error) {
-                $fieldName = $error->getPropertyPath();
-                /** @var \Symfony\Component\Form\Form $field */
-                $field = $form->get('content')->get($fieldName);
-                $field->addError(
-                    new FormError($error->getMessage(), $error->getMessageTemplate(), $error->getMessageParameters(
-                    ), $error->getMessagePluralization())
-                );
-            }
-        }
+			/** @var \Symfony\Component\Validator\ConstraintViolation $error */
+			foreach ($errors->getIterator() as $error) {
+				$fieldName = $error->getPropertyPath();
+				/** @var \Symfony\Component\Form\Form $field */
+				$field = $form->get('content')->get($fieldName);
+				$message = $this->admin->getTranslator()->trans($error->getMessage(), $error->getParameters(), 'validators');
+				$field->addError(
+					new FormError($message, $error->getMessageTemplate(), $error->getParameters(), $error->getPlural())
+				);
+			}
+		}
 
-        return $event;
-    }
+		return $event;
+	}
 
-    /**
-     * Get the content type of the content object, if the object is new, use the first available type.
-     *
-     * @param LayoutBlockInterface $layoutBlock
-     *
-     * @return string
-     */
-    public function getContentType(LayoutBlockInterface $layoutBlock = null)
-    {
-        if (is_null($layoutBlock) || !$classType = $layoutBlock->getClassType()) {
-            if ($this->contentType) {
-                return $this->contentType;
-            }
+	/**
+	 * Get the content type of the content object, if the object is new, use the first available type.
+	 *
+	 * @param LayoutBlockInterface $layoutBlock
+	 *
+	 * @return string
+	 */
+	public function getContentType(LayoutBlockInterface $layoutBlock = null)
+	{
+		if (is_null($layoutBlock) || !$classType = $layoutBlock->getClassType()) {
+			if ($this->contentType) {
+				return $this->contentType;
+			}
 
-            $contentTypes = $this->getContentTypes();
+			$contentTypes = $this->getContentTypes();
 
-            $classType = $contentTypes[0]['class'];
-        }
+			$classType = $contentTypes[0]['class'];
+		}
 
-        return $classType;
-    }
+		return $classType;
+	}
 }
