@@ -240,6 +240,12 @@ file that was distributed with this source code.
         </div>
 
         {% block footer %}
+
+
+                    {{ sonata_block_render({ 'type': 'networking_init_cms.block.service.version' }, {}) }}
+
+
+
         {% endblock footer %}
     </div>
 

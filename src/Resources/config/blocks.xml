@@ -45,6 +45,14 @@
             <tag name="sonata.block"/>
         </service>
 
+
+        <service id="networking_init_cms.block.service.version" class="Networking\InitCmsBundle\Block\VersionBlockService" public="true">
+            <argument>networking_init_cms.block.service.version</argument>
+            <argument type="service" id="templating"/>
+            <argument>%kernel.project_dir%</argument>
+            <tag name="sonata.block"/>
+        </service>
+
     </services>
 
 </container>
