@@ -52,7 +52,7 @@ file that was distributed with this source code.
                     </h3>
                 </div>
             {% endif %}
-            <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-body{% else %}row{% endif %}">
+            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}<div class="modal-body">{% endif %}
 
                 {% if form.vars.errors|length > 0 %}
                     <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
@@ -64,7 +64,6 @@ file that was distributed with this source code.
 
                 {% block sonata_tab_content %}
                     {% set has_tab = ((admin.formtabs|length == 1 and admin.formtabs|keys[0] != 'default') or admin.formtabs|length > 1 ) %}
-                    <div class="col-md-12">
                         {% if has_tab %}
                             <div class="nav-tabs-custom">
                                 <ul class="nav nav-tabs" role="tablist">
@@ -93,13 +92,12 @@ file that was distributed with this source code.
                         {% else %}
                             {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab) }}
                         {% endif %}
-                    </div>
                 {% endblock %}
 
                 {% block sonata_post_fieldsets %}{% endblock %}
                 {{ form_rest(form, {'horizontal': app.request.isXmlHttpRequest or app.request.get('_xml_http_request') ? 'true': form.vars.horizontal } ) }}
 
-            </div>
+    {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}</div>{% endif %}
 
             {% block formactions %}
                 {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}

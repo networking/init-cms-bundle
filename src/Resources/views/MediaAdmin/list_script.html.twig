@@ -213,6 +213,14 @@
     $(function(){
         var body = $('body');
 
+        body.on('html-received', function(event, html){
+
+            console.log(html);
+
+            reloadSortTree(html);
+        });
+
+
         var ua = navigator.userAgent, event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
         body.on('click', '.delete_check_box', function(){

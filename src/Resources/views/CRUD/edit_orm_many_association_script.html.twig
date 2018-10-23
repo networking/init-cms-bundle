@@ -61,6 +61,7 @@ var field_dialog_form_add_{{ id }} = function (event) {
                     // make sure we have a clean state
                     field_dialog_{{ id }}.off('click', 'a');
                     field_dialog_{{ id }}.off('submit', 'form');
+                    field_dialog_{{ id }}.remove()
                 }
             });
         }
@@ -131,15 +132,19 @@ var field_dialog_form_action_{{ id }} = function (event) {
             }
             // if the crud action return ok, then the element has been added
             // so the widget container must be refresh with the last option available
-            if (data.result == 'ok') {
+            if (data.result === 'ok') {
                 field_dialog_{{ id }}.modal('hide');
 
+                if(data.html){
+                    $('body').trigger( "html-received", [data.html] );
+                }
+
                 {% if sonata_admin.edit == 'list' %}
-                {#
-                   in this case we update the hidden input, and call the change event to
-                   retrieve the post information
-                #}
-                field_{{ id }}.val(data.objectId).trigger('change');
+                    {#
+                       in this case we update the hidden input, and call the change event to
+                       retrieve the post information
+                    #}
+                    field_{{ id }}.val(data.objectId).trigger('change');
                 {% else %}
 
                 // reload the form element
@@ -156,17 +161,21 @@ var field_dialog_form_action_{{ id }} = function (event) {
                     type: 'POST',
                     success: function (html) {
                         var container = jQuery('#field_container_{{ id }}');
-                        container.replaceWith(html);
+
+
+                        container.html(jQuery(html).filter('#field_container_{{ id }}').html());
                         var newElement = jQuery('#{{ id }} [value="' + data.objectId + '"]');
                         if (newElement.is("input")) {
                             newElement.attr('checked', 'checked');
                         } else {
                             newElement.attr('selected', 'selected');
+
                         }
                         Admin.log('[{{ id }}|field_dialog] trigger append form element');
-                        {% if taggable is defined and taggable %}
+                        {% if select2 is defined and select2 %}
                         container.on('sonata-admin-append-form-element', function () {
                             jQuery("#{{ id }}").select2();
+                            jQuery("#{{ id }}").trigger('change');
                         });
                         {% endif %}
                         container.trigger('sonata-admin-append-form-element');
@@ -328,12 +337,14 @@ var field_dialog_form_list_{{ id }} = function (event) {
             field_dialog_{{ id }}.modal('show');
 
             field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
+
                 if (!jQuery(e.target).hasClass('collapse')) {
                     Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
 
                     // make sure we have a clean state
                     field_dialog_{{ id }}.off('click', 'a');
-                    field_dialog_{{ id }}.off('submit', 'form');
+                    field_dialog_{{ id }}.off('submit', 'form')
+                    field_dialog_{{ id }}.remove();
                 }
             });
         }
