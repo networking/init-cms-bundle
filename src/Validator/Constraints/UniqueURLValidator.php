@@ -56,7 +56,11 @@ class UniqueURLValidator extends ConstraintValidator
             foreach ($pages as $page) {
                 /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
                 if ($page->getId() != $value->getId()) {
-                    $this->context->addViolationAt('url', $constraint->message, ['{{ value }}' => $url]);
+                    $this->context->buildViolation( $constraint->message, ['{{ value }}' => $url])
+                                  ->atPath('url')
+                                  ->addViolation();
+
+
 
                     return false;
                 }

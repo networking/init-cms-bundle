@@ -41,7 +41,11 @@ class UniqueTagValidator extends ConstraintValidator
         if (count($tags) > 0) {
             foreach ($tags as $tag) {
                 if ($tag->getId() != $value->getId()) {
-                    $this->context->addViolationAt('name', $constraint->message, ['{{ value }}' => $value->getName()]);
+                    $this->context
+	                    ->buildViolation( $constraint->message, ['{{ value }}' => $value->getName()])
+	                    ->atPath('name')
+	                    ->addViolation()
+                    ;
 
                     return false;
                 }
