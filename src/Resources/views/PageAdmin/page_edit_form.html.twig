@@ -18,11 +18,7 @@ file that was distributed with this source code.
     {% elseif app.request.isxmlhttprequest %}
         {% include '@NetworkingInitCms/PageAdmin/ajax_page_settings.html.twig' %}
     {% else %}
-        <form class="form-vertical page-form"
-              action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
-                {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
-              method="POST"
-              id="networking_init_cms.page">
+
         {% if form.vars.errors|length > 0 %}
             <div class="sonata-ba-form-error">
                 {{ form_errors(form) }}
@@ -157,7 +153,6 @@ file that was distributed with this source code.
 
         </div>
         <!-- end modal page form -->
-        </form>
         {% jsblock 'addToBottom' %}
         {% include '@NetworkingInitCms/PageAdmin/page_edit_form_script.html.twig' with {'admin': admin, 'id': admin.id(object)} %}
         {% include '@NetworkingInitCms/PageAdmin/page_translation_script.html.twig' with {'admin': admin} %}
