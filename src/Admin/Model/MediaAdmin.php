@@ -471,6 +471,7 @@ abstract class MediaAdmin extends Admin
             ]
 
         );
+        $formMapper->add('providerName', HiddenType::class);
     }
 
     /**

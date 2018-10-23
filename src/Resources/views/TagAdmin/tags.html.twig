@@ -25,8 +25,11 @@
     {% endfor %}
 {% endmacro %}
 
+{% if datagrid is defined  %}
 {% set selected = datagrid.values.tags?datagrid.values.tags.value:0 %}
-
+    {% else %}
+{% set selected = lastItem %}
+{% endif %}
 <div class="sortable menu-tree">
     <ul id="tag-tree" class="table-row-style ui-sortable">
         <li class="table-row-style no-nest no-sort" id="base">
