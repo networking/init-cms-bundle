@@ -726,14 +726,26 @@ abstract class Page implements PageInterface
     public function resetLayoutBlock($publishedBlocks)
     {
 
-        foreach ($this->layoutBlock as $block) {
+	    $blocksToRemove = $this->layoutBlock->filter(function(LayoutBlock $originalBlock) use($publishedBlocks){
+			$toRemove = true;
+	    	foreach ($publishedBlocks as $block){
+	    		if(!$block->getId()){
+				    $toRemove = false;
+			    }
 
-	        $block->setNoAutoDraft(true);
-	        $this->layoutBlock->removeElement($block);
+				if($block->getId() == $originalBlock->getId()){
+					$toRemove = false;
+				}
+			}
+
+			return $toRemove;
+	    });
+
+        foreach ($blocksToRemove as $block) {
+				$block->setNoAutoDraft(true);
+				$this->layoutBlock->removeElement($block);
         }
-        foreach ($publishedBlocks as $block){
-        	$this->addLayoutBlock(clone $block);
-        }
+
     }
 
     /**

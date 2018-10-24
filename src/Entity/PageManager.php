@@ -12,10 +12,12 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Networking\InitCmsBundle\Model\LayoutBlock;
 
 /**
  * Class PageManager.
@@ -174,9 +176,11 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         // merged with the layout blocks from the draft page
         $tmpLayoutBlocks = $publishedPage->getLayoutBlock();
 
-        // tell the entity manager to handle our published page
-        // as if it came from the DB and not a serialized object
-        $publishedPage = $this->_em->merge($publishedPage);
+	    // tell the entity manager to handle our published page
+	    // as if it came from the DB and not a serialized object
+	    $publishedPage = $this->_em->merge($publishedPage);
+
+
 
         $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
         $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
@@ -189,10 +193,125 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
         // Set the layout blocks of the NOW managed entity to
         // exactly that of the published version
-        $publishedPage->resetLayoutBlock($tmpLayoutBlocks);
+	    foreach ($tmpLayoutBlocks as $key => $layoutBlock){
+
+		    try{
+			    $layoutBlock = $this->_em->merge($layoutBlock);
+		    }catch (EntityNotFoundException $e){
+		    	$layoutBlock = clone $layoutBlock;
+		    	$this->_em->persist($layoutBlock);
+		    }
+
+		    $this->resetContent($publishedPage, $layoutBlock, $serializer);
+
+		    $tmpLayoutBlocks->set($key, $layoutBlock);
+	    }
+
+	    $publishedPage->resetLayoutBlock($tmpLayoutBlocks);
+	    $this->_em->persist($publishedPage);
         $this->_em->flush();
 
+        var_dump($publishedPage);
+        die;
+
         return $publishedPage;
+    }
+
+	/**
+	 * @param LayoutBlock $layoutBlock
+	 *
+	 * @return LayoutBlock
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws \ReflectionException
+	 */
+    public function resetContent(PageInterface $page, LayoutBlock $layoutBlock, \JMS\Serializer\SerializerInterface $serializer)
+    {
+	    if ($contentObject = $layoutBlock->getSnapshotContent()) {
+		    $contentObject = $serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
+
+
+
+		    try {
+			    $contentObject = $this->_em->merge($contentObject);
+			    $reflection = new \ReflectionClass($contentObject);
+			    foreach ($reflection->getProperties() as $property) {
+				    $method = sprintf('get%s', ucfirst($property->getName()));
+				    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
+					    if ($var instanceof ArrayCollection) {
+						    foreach ($var as $key =>  $v) {
+							    $v = $this->_em->merge($v);
+
+							    $var->set($key, $v);
+						    }
+						    $method = sprintf('set%s', ucfirst($property->getName()));
+						    $contentObject->{$method}($var);
+					    }
+
+					    if(is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))){
+						    $var = $this->_em->merge($var);
+
+						    $method = sprintf('set%s', ucfirst($property->getName()));
+						    $contentObject->{$method}($var);
+					    }
+				    }
+			    }
+
+			    $this->_em->persist($contentObject);
+			    $this->_em->flush($contentObject);
+
+		    } catch (EntityNotFoundException $e) {
+			    $classType = $layoutBlock->getClassType();
+			    $newContentObject = clone $contentObject;
+			    $reflection = new \ReflectionClass($contentObject);
+			    foreach ($reflection->getProperties() as $property) {
+				    $method = sprintf('get%s', ucfirst($property->getName()));
+				    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
+					    if ($var instanceof ArrayCollection) {
+						    foreach ($var as $key =>  $v) {
+							    $v = $this->_em->merge($v);
+
+							    $var->set($key, $v);
+						    }
+						    $method = sprintf('set%s', ucfirst($property->getName()));
+						    $newContentObject->{$method}($var);
+					    }
+
+					    if(is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))){
+						    $var = $this->_em->merge($var);
+
+						    $method = sprintf('set%s', ucfirst($property->getName()));
+						    $newContentObject->{$method}($var);
+					    }
+
+				    }
+			    }
+			    $this->_em->persist($newContentObject);
+			    $this->_em->flush($newContentObject);
+
+
+			    $layoutBlock->setObjectId($newContentObject->getId());
+		    }
+
+	    }
+
+	    $layoutBlock->setPage($page);
+
+	    $this->_em->persist($layoutBlock);
+
+	    $this->_em->flush($layoutBlock);
+
+	    return $layoutBlock;
+    }
+
+    public function revertObject($object, $var, $property){
+	    if(is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))){
+		    $var = $this->_em->merge($var);
+
+		    $method = sprintf('set%s', ucfirst($property->getName()));
+		    $object->{$method}($var);
+	    }
+	    return $object;
     }
 
     /**

@@ -77,8 +77,6 @@
 
         <service id="networking_init_cms.layout_block_listener"
                  class="Networking\InitCmsBundle\Entity\LayoutBlockListener">
-            <argument type="service" id="jms_serializer"/>
-            <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
             <tag name="doctrine.event_listener" event="postLoad" method="postLoad"/>
         </service>
 
