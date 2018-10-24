@@ -211,9 +211,6 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 	    $this->_em->persist($publishedPage);
         $this->_em->flush();
 
-        var_dump($publishedPage);
-        die;
-
         return $publishedPage;
     }
 
