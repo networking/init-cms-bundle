@@ -483,6 +483,7 @@ abstract class MediaAdmin extends Admin
                 array('inline_block' => true)
             );
         }
+	    $formMapper->add('providerName', 'hidden');
     }
 
     /**
