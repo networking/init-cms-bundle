@@ -375,7 +375,6 @@ file that was distributed with this source code.
     {% endif %}
     {{ parent() }}
     {% if taggable is defined and taggable or select2 is defined and select2 %}
-        {% jsblock 'addToBottom' %}
         <script type="text/javascript">
             jQuery(document).ready(function () {
                 jQuery("#{{ id }}").select2({
@@ -384,7 +383,6 @@ file that was distributed with this source code.
                 });
             });
         </script>
-        {% jsblock 'addToBottomEnd' %}
     {% endif %}
 {% endblock choice_widget %}
 

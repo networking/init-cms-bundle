@@ -213,6 +213,10 @@
     $(function(){
         var body = $('body');
 
+        body.on('html-received', function(event, html){
+            reloadSortTree(html);
+        });
+
         var ua = navigator.userAgent, event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
         body.on('click', '.delete_check_box', function(){
@@ -275,12 +279,12 @@
         body.on('click', 'a.media-pager', function (e) {
             e.preventDefault();
             refreshList({'filter': {
-                '_page':$(this).data('page'),
-                '_sort_order':$(this).data('sort-order'),
-                '_sort_by':$(this).data('sort-by'),
-                'tags':{'value': $(this).data('tags')},
-                'name':{'value': $(this).data('name')},
-            }});
+                    '_page':$(this).data('page'),
+                    '_sort_order':$(this).data('sort-order'),
+                    '_sort_by':$(this).data('sort-by'),
+                    'tags':{'value': $(this).data('tags')},
+                    'name':{'value': $(this).data('name')},
+                }});
         })
 
 
