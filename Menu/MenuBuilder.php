@@ -158,7 +158,7 @@ class MenuBuilder
      */
     public function setViewStatus()
     {
-        $this->viewStatus = $this->request->getSession()->get('_viewStatus')
+        $this->viewStatus = $this->request->hasPreviousSession() && $this->request->getSession()->get('_viewStatus')
             ? $this->request->getSession()->get('_viewStatus')
             : Page::STATUS_PUBLISHED;
     }

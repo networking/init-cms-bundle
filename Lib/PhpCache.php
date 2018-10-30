@@ -103,12 +103,12 @@ class PhpCache implements PhpCacheInterface {
             return false;
         }
 
-        if ($request->getSession()->get('form_sent', false)) {
+        if ($request->hasPreviousSession() && $request->getSession()->get('form_sent', false)) {
             $request->getSession()->remove('form_sent');
             return false;
         }
 
-        if ($request->getSession()->get('no_cache', false)) {
+        if ($request->hasPreviousSession() && $request->getSession()->get('no_cache', false)) {
             $request->getSession()->remove('no_cache');
             return false;
         }

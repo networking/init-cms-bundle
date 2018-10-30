@@ -144,7 +144,7 @@ class ContentRouteManager extends BaseContentRouteManager
 
         foreach ($tempContentRoutes as $key => $contentRoute) {
 
-            $viewStatus = ($request) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
+            $viewStatus = ($request && $request->hasPreviousSession()) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
 
             $test = new \ReflectionClass($contentRoute->getClassType());
 
