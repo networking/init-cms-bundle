@@ -35,14 +35,21 @@ function uploadError(xhr) {
 
     $('.show-tooltip, [data-toggle="tooltip"]').tooltip({placement:'bottom', container: 'body', delay:{ show:800, hide:100 }});
 
-    $(document).on('show.bs.modal', '.modal', function (e) {
+    var openModals = [];
+
+    $(document).on('shown.bs.modal', '.modal', function (e) {
         var modalBody = $(this).find('.modal-body');
         modalBody.css('overflow-y', 'auto');
-        if(modalBody.parents('.modal-full').length > 0){
-            modalBody.css('height', $(window).height() -190);
-            modalBody.css('max-height', '900px');
-        }else{
-            modalBody.css('max-height', $(window).height() * 0.7);
+        modalBody.css('max-height', $(window).height() * 0.7);
+        openModals.push($(this).attr('id'));
+    }).on('hide.bs.modal', '.modal', function(){
+        var index = openModals.indexOf($(this).attr('id'));
+        if (index > -1) {
+            openModals.splice(index, 1);
+        }
+    }).on('hidden.bs.modal', function(){
+        if(openModals.length > 0){
+            $('body').addClass('modal-open');
         }
     });
 
