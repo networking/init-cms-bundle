@@ -57,6 +57,9 @@ function uploadError(xhr) {
     var openModals = [];
     
     $(document).on('shown.bs.modal', '.modal', function (e) {
+        var modalBody = $(this).find('.modal-body');
+        modalBody.css('overflow-y', 'auto');
+        modalBody.css('max-height', 'calc(55vh)');
         if(isChrome){
             var windowHeight = $(window).height();
             if(windowHeight > 860){
