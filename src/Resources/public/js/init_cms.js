@@ -40,7 +40,7 @@ function uploadError(xhr) {
     $(document).on('shown.bs.modal', '.modal', function (e) {
         var modalBody = $(this).find('.modal-body');
         modalBody.css('overflow-y', 'auto');
-        modalBody.css('max-height', $(window).height() * 0.7);
+        modalBody.css('max-height', '55vh');
         openModals.push($(this).attr('id'));
     }).on('hide.bs.modal', '.modal', function(){
         var index = openModals.indexOf($(this).attr('id'));
