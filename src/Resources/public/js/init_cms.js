@@ -21,6 +21,26 @@ function uploadError(xhr) {
 }
 (function ($) {
 
+    // Opera 8.0+
+    var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+    // Firefox 1.0+
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+
+    // Safari 3.0+ "[object HTMLElementConstructor]"
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) {
+        return p.toString() === "[object SafariRemoteNotification]";
+    })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+    // Internet Explorer 6-11
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+    // Edge 20+
+    var isEdge = !isIE && !!window.StyleMedia;
+
+    // Chrome 1+
+    var isChrome = !!window.chrome && !!window.chrome.webstore;
+
     var noticeBlock = $('.notice-block');
 
     noticeBlock.on('DOMNodeInserted', function () {
@@ -40,7 +60,22 @@ function uploadError(xhr) {
     $(document).on('shown.bs.modal', '.modal', function (e) {
         var modalBody = $(this).find('.modal-body');
         modalBody.css('overflow-y', 'auto');
-        modalBody.css('max-height', '55vh');
+        modalBody.css('max-height', 'calc(55vh)');
+        if(isChrome){
+            var windowHeight = $(window).height();
+            if(windowHeight > 860){
+                modalBody.css('max-height', '70vh');
+            }else if(windowHeight > 740){
+                modalBody.css('max-height', '65vh');
+            }else if(windowHeight > 640){
+                modalBody.css('max-height', '60vh');
+            }else{
+                modalBody.css('max-height', '55vh');
+            }
+        }else{
+            modalBody.css('max-height', '70vh');
+        }
+
         openModals.push($(this).attr('id'));
     }).on('hide.bs.modal', '.modal', function(){
         var index = openModals.indexOf($(this).attr('id'));
