@@ -61,7 +61,7 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
             ->where('ps.page = :pageId')
             ->orderBy('ps.version', 'desc')
             ->setMaxResults(1)
-            ->setParameter(':pageId', 2);
+            ->setParameter(':pageId', $pageId);
 
         try {
             return $qb->getQuery()->getSingleResult();
