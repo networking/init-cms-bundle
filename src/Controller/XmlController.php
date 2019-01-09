@@ -41,7 +41,8 @@ class XmlController extends Controller
             }
             $page_filter = ['visibility' => 'public', 'status' => 'status_published', 'locale' => $locale];
             $em = $this->getDoctrine()->getManager();
-            $params['pages'] = $em->getRepository('ApplicationNetworkingInitCmsBundle:Page')->findBy($page_filter);
+            $pageClass = $this->getParameter('networking_init_cms.manager.page.class');
+            $params['pages'] = $em->getRepository($pageClass)->findBy($page_filter);
             $params['additional_links'] = $this->getAdditionalLinks($locale);
             //render xml
             $response = $this->render(
