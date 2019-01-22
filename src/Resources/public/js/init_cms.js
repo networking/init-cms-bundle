@@ -39,7 +39,7 @@ function uploadError(xhr) {
     var isEdge = !isIE && !!window.StyleMedia;
 
     // Chrome 1+
-    var isChrome = !!window.chrome && !!window.chrome.webstore;
+    var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 
     var noticeBlock = $('.notice-block');
 
