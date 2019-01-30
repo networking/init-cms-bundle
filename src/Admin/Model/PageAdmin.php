@@ -316,6 +316,7 @@ abstract class PageAdmin extends BaseAdmin
                 DateTimeType::class,
                 [
                     'widget_form_group_attr' => ['class' => 'form-group form-inline'],
+                    'format' => 'dd.MM.yyyy HH:mm',
                     'required' => false,
                     'widget' => 'single_text',
                     'datetimepicker' => true,
@@ -326,6 +327,7 @@ abstract class PageAdmin extends BaseAdmin
                 DateTimeType::class,
                 [
                     'widget_form_group_attr' => ['class' => 'form-group form-inline'],
+                    'format' => 'dd.MM.yyyy HH:mm',
                     'required' => false,
                     'widget' => 'single_text',
                     'datetimepicker' => true,
