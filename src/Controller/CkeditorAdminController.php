@@ -32,14 +32,13 @@ class CkeditorAdminController extends BaseMediaAdminController
     {
         $this->checkIfMediaBundleIsLoaded();
 
-        if (false === $this->admin->isGranted('LIST')) {
+        if (false === $this->admin->isGranted('list')) {
             throw new AccessDeniedException();
         }
 
         $datagrid = $this->admin->getDatagrid();
         $datagrid->setValue('context', null, $this->getRequest()->get('context'));
-        $datagrid->setValue('provider', null, $this->getRequest()->get('provider'));
-        $datagrid->setValue('_page', null, 1);
+        $datagrid->setValue('providerName', null, $this->getRequest()->get('provider'));
 
         $formats = [];
 
