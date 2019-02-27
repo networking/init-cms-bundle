@@ -141,13 +141,6 @@ class TranslationAdmin extends AbstractAdmin
         return [];
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'fa-globe';
-    }
 
     /**
      * {@inheritdoc}

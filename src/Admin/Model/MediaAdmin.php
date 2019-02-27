@@ -141,13 +141,6 @@ abstract class MediaAdmin extends Admin
         return $this->showTagTree;
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'fa-picture-o';
-    }
 
     /**
      * {@inheritdoc}

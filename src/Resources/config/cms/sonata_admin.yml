@@ -58,7 +58,7 @@ sonata_admin:
                 on_top: true
                 label: "admin.menu.dashboard"
                 label_catalogue: "PageAdmin"
-                icon: '<i class="glyphicon glyphicon-dashboard glyphicon-large"></i>'
+                icon: '<i class="fa fa-dashboard fa-large"></i>'
                 items:
                     - route: sonata_admin_dashboard
                       label: admin.menu.dashboard
@@ -66,18 +66,18 @@ sonata_admin:
                 on_top: true
                 label: "pages.admin_menu_label"
                 label_catalogue: "PageAdmin"
-                icon: '<i class="glyphicon glyphicon-file glyphicon-large"></i>'
+                icon: '<i class="far fa-file fa-large"></i>'
                 items: [networking_init_cms.admin.page]
             menu:
                 on_top: true
                 label: "menu.admin_menu_label"
                 label_catalogue: "MenuItemAdmin"
-                icon: '<i class="glyphicon glyphicon-align-left glyphicon-large"></i>'
+                icon: '<i class="fa fa-align-left fa-large"></i>'
                 items: [ networking_init_cms.admin.menu_item]
             media:
                 label: "sonata_media.admin_menu_label"
                 label_catalogue: "MediaAdmin"
-                icon: '<i class="fa fa-picture-o fa-large"></i>'
+                icon: '<i class="far fa-image fa-large"></i>'
                 items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
             users:
                 label: "sonata_user"
@@ -88,7 +88,7 @@ sonata_admin:
                 on_top: true
                 label: "help_text.admin_menu_label"
                 label_catalogue: "HelpTextAdmin"
-                icon: '<i class="glyphicon glyphicon-question-sign glyphicon-small"></i>'
+                icon: '<i class="fa fa-question-sign fa-small"></i>'
                 items: [networking_init_cms.admin.help_text]
             translation:
                 on_top: true

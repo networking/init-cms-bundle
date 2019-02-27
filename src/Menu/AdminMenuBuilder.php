@@ -356,7 +356,7 @@ class AdminMenuBuilder extends MenuBuilder
         if (isset($icon['inverted']) && $icon['inverted'] === true) {
             $addclass = ' icon-white';
         }
-        $classicon = (isset($icon['glyphicon'])) ? ' class="'.$icon['glyphicon'] : ' class="fa fa-'.$icon['icon'];
+        $classicon = (isset($icon['glyphicon'])) ? ' class="'.$icon['glyphicon'] : ' class="far fa-'.$icon['icon'];
         $myicon = ' <'.$icon['tag'].$classicon.$addclass.'"></'.$icon['tag'].'>';
         if (!isset($icon['append']) || $icon['append'] === true) {
             $label = $item->getLabel().' '.$myicon;

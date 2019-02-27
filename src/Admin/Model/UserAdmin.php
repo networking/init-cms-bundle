@@ -61,13 +61,6 @@ abstract class UserAdmin extends SonataUserAdmin
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'fa-users';
-    }
 
     /**
      * @return array

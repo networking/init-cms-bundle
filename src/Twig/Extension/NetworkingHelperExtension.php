@@ -1216,35 +1216,35 @@ class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwar
         switch ($postfix) {
             case 'doc':
             case 'docx':
-                $icon = 'fa-file-word-o';
+                $icon = 'far fa-file-word';
                 break;
             case 'pdf':
-                $icon = 'fa-file-pdf-o';
+                $icon = 'far fa-file-pdf';
                 break;
             case 'xls':
             case 'xlsx':
-                $icon = 'fa-file-excel-o';
+                $icon = 'far fa-file-excel';
                 break;
             case 'ppt':
             case 'pptx':
-                $icon = 'fa-file-powerpoint-o';
+                $icon = 'far fa-file-powerpoint';
                 break;
             case 'zip':
-                $icon = 'fa-file-archive-o';
+                $icon = 'far fa-file-archive';
                 break;
             case 'txt':
             case 'rtf':
-                $icon = 'fa-file-text-o';
+                $icon = 'far fa-file-alt';
                 break;
             case 'png':
             case 'gif':
             case 'jpeg':
             case 'jpg':
             case 'svg':
-                $icon = 'fa-file-image-o';
+                $icon = 'far fa-file-image';
                 break;
             default:
-                $icon = 'fa-file-o';
+                $icon = 'far fa-file';
                 break;
 
         }
