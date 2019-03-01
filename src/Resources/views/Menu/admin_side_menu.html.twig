@@ -45,16 +45,15 @@
 
 {% block spanElement %}
     {% spaceless %}
-        <div class="pull-left menu_icon">
+        <a href="#">
             {% set icon = item.extra('icon')|default('') %}
             {{ icon|raw }}
-        </div>
-        <a href="#">
+
             {% set translation_domain = item.extra('label_catalogue') %}
 
             {{ parent() }}
             {%- if item.extra('keep_open') is not defined or not item.extra('keep_open') -%}
-                <span class="pull-right-container"><i class="fa pull-right fa-angle-left"></i></span>
+               <i class="fa pull-right fa-angle-left" style="line-height: inherit"></i>
             {%- endif -%}
         </a>
     {% endspaceless %}
