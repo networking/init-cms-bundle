@@ -97,20 +97,26 @@ file that was distributed with this source code.
 
         </span>
 
-        {% if sonata_admin.edit == 'inline' %}
+        {% set display_create_button = sonata_admin.field_description.associationadmin.hasRoute('create')
+            and sonata_admin.field_description.associationadmin.hasAccess('create')
+            and btn_add
+            and (sonata_admin.field_description.options.limit is not defined or form.children|length < sonata_admin.field_description.options.limit) %}
 
-            {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
-                <span id="field_actions_{{ id }}">
-                    <a
-                            href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
-                            onclick="return start_field_retrieve_{{ id }}(this);"
-                            class="btn btn-default sonata-ba-action"
-                            title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
-                            >
-                        <i class="glyphicon glyphicon-plus"></i>
-                        {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
-                    </a>
-                </span>
+        {% if sonata_admin.edit == 'inline' %}
+            {% if display_create_button %}
+                {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
+                    <span id="field_actions_{{ id }}">
+                        <a
+                                href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
+                                onclick="return start_field_retrieve_{{ id }}(this);"
+                                class="btn btn-default sonata-ba-action"
+                                title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
+                                >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
+                        </a>
+                    </span>
+                {% endif %}
             {% endif %}
 
             {# add code for the sortable options #}
@@ -218,10 +224,7 @@ file that was distributed with this source code.
                             jQuery('div#field_container_{{ id }} ul.sortable').sortable('refresh');
                         });
 
-                        jQuery('body').on('click', 'a.__delete', function(e){
-                            jQuery(this).parent('li').hide();
-                            jQuery(this).find('input.__delete_input').prop('checked', true);
-                        });
+
                         {% endif %}
 
                         apply_position_value_{{ id }}();
@@ -236,6 +239,7 @@ file that was distributed with this source code.
             {% jsblock 'addToBottomEnd' %}
         {% else %}
             <span id="field_actions_{{ id }}">
+                {% if display_create_button %}
                 {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
                     <a
                             href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
@@ -246,6 +250,7 @@ file that was distributed with this source code.
                         <i class="glyphicon glyphicon-plus"></i>
                         {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                     </a>
+                {% endif %}
                 {% endif %}
             </span>
 

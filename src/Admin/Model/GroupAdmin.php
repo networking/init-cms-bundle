@@ -8,6 +8,7 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\UserBundle\Admin\Entity\GroupAdmin as SonataGroupAdmin;
@@ -38,6 +39,16 @@ abstract class GroupAdmin extends SonataGroupAdmin
     public function getTrackedActions()
     {
         return $this->trackedActions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    {
+        $datagridMapper
+            ->add('name', null, ['field_options' => ['translation_domain' => $this->translationDomain]])
+        ;
     }
 
     /**
@@ -75,7 +86,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
-            ->add('name')
+            ->add('name', null, [ 'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline'])
             ->add(
                 'roles',
                 SecurityRolesType::class,
@@ -83,6 +94,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
                     'expanded' => true,
                     'multiple' => true,
                     'required' => false,
+                    'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline'
                 ]
             );
     }

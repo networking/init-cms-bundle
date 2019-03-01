@@ -69,6 +69,10 @@ file that was distributed with this source code.
                         <div class="filter_container row">
                             <div class="col-md-12">
                                 {{ filter_main }}
+
+                                {% if admin.hasActiveSubclass %}
+                                    <input type="hidden" name="subclass" id="filter_subclass" value="{{ admin.activeSubclassCode }}"/>
+                                {% endif %}
                                 <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
                                 {% set foo = form.children['_page'].setRendered() %}
                                 <div id="hidden_filters" class="collapse {% if showHiddenFilters == 1 %}in{% endif %}">
@@ -79,7 +83,6 @@ file that was distributed with this source code.
                                         {# add div with hidden / show function #}
                                         {{ filter_hidden }}
                                     {% endif %}
-                                    {% set foo = form.children['_page'].setRendered() %}
                                 </div>
                                 <div>
                                     <input type="submit" class="btn  btn-default btn-sm"

@@ -563,7 +563,7 @@ file that was distributed with this source code.
             {% if datepicker is defined %}
                 {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'calendar' %}
                 <div data-provider="datepicker" class="{{ attr.widget_class|default('') ~ ' input-group date' }}"
-                     data-date="{{ value }}" data-link-field="{{ id }}" data-date-format="dd.mm.yyyy"
+                     data-date="{{ value }}" data-link-field="{{ id }}" data-link-format="dd.mm.yyyy"
                      data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
                     <input {% if widget_form_control_class is not same as(false) %}class="{{ widget_form_control_class }}"
                            {% endif %}type="text" {% if required %} required="required"{% endif %}

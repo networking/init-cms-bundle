@@ -16,7 +16,7 @@ file that was distributed with this source code.
         and admin.isGranted(field_description.options.route.name == 'show' ? 'VIEW' : field_description.options.route.name|upper, object)
         and admin.hasRoute(field_description.options.route.name)
     %}
-        <a href="{{ admin.generateObjectUrl(field_description.options.route.name, object, field_description.options.route.parameters) }}">
+        <a href="{{ admin.generateObjectUrl(field_description.options.route.name, object, field_description.options.route.parameters) }}" data-object-id="{{ object.id }}">
             {%- block field %}{{ value }}{% endblock -%}
         </a>
     {% else %}

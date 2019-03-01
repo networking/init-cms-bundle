@@ -10,9 +10,13 @@ file that was distributed with this source code.
 #}
 {% extends admin.getTemplate('base_list_field') %}
 
-{% block field%}
+{% block field %}
     {%- if value is empty -%}
         &nbsp;
+    {%- elseif field_description.options.format is defined -%}
+        <span class="show-tooltip"
+              data-original-title="{{ value|date(field_description.options.format) }}">{{ value|date(field_description.options.format) }}</span>
+
     {%- else -%}
         <span class="show-tooltip" data-original-title="{{ value|date('F j, Y') }}">{{ value|date('F j, Y') }}</span>
     {%- endif -%}

@@ -144,11 +144,11 @@ abstract class MenuItemAdmin extends BaseAdmin
 
         $formMapper
             ->add('locale', HiddenType::class, ['data' => $locale])
-            ->add('name', null, ['horizontal' => true]);
+            ->add('name', null, ['layout' => 'horizontal']);
 
         if ($this->isRoot) {
             $formMapper
-                ->add('description', null, ['horizontal' => true])
+                ->add('description', null, ['layout' => 'horizontal'])
                 ->add('isRoot', HiddenType::class, ['data' => true])
                 ->end();
         } else {
@@ -159,7 +159,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                     'form.legend_page_or_url',
                     [
                         'collapsed' => false,
-                        'horizontal' => true,
+                        'layout' => 'horizontal',
                     ]
                 );
             $pageAdmin = $this->configurationPool->getAdminByAdminCode('networking_init_cms.admin.page');
@@ -173,7 +173,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'attr' => ['style' => 'width:220px'],
                         'class' => $pageClass,
                         'required' => false,
-                        'horizontal' => true,
+                        'layout' => 'horizontal',
                         'choice_label' => 'AdminTitle',
                         'query_builder' => function (EntityRepository $er) use ($locale) {
                             $qb = $er->createQueryBuilder('p');
@@ -185,8 +185,8 @@ abstract class MenuItemAdmin extends BaseAdmin
                         },
                     ]
                 );
-            $formMapper->add('redirect_url', UrlType::class, ['required' => false, 'help_block' => 'help.redirect_url', 'horizontal' => true]);
-            $formMapper->add('internal_url', TextType::class, ['required' => false, 'help_block' => 'help.internal_url', 'horizontal' => true]);
+            $formMapper->add('redirect_url', UrlType::class, ['required' => false, 'help_block' => 'help.redirect_url', 'layout' => 'horizontal']);
+            $formMapper->add('internal_url', TextType::class, ['required' => false, 'help_block' => 'help.internal_url', 'layout' => 'horizontal']);
             $formMapper->end();
 
             // start group optionals
@@ -195,14 +195,14 @@ abstract class MenuItemAdmin extends BaseAdmin
                     'form.legend_options',
                     [
                         'collapsed' => false,
-                        'horizontal' => true,
+                        'layout' => 'horizontal',
                     ]
                 )
                 ->add(
                     'visibility',
                     ChoiceType::class,
                     [
-                        'horizontal' => true,
+                        'layout' => 'horizontal',
                         'help_block' => 'visibility.helper.text',
                         'choices' => MenuItem::getVisibilityList(),
                         'translation_domain' => $this->translationDomain,
@@ -212,14 +212,14 @@ abstract class MenuItemAdmin extends BaseAdmin
                     'link_target',
                     ChoiceType::class,
                     [
-                        'horizontal' => true,
+                        'layout' => 'horizontal',
                         'choices' => $this->getTranslatedLinkTargets(),
                         'required' => false,
                     ]
                 )
-                ->add('link_class', TextType::class, ['horizontal' => true, 'required' => false])
-                ->add('link_rel', TextType::class, ['horizontal' => true, 'required' => false])
-                ->add('hidden', null, ['horizontal' => true, 'required' => false])
+                ->add('link_class', TextType::class, ['layout' => 'horizontal', 'required' => false])
+                ->add('link_rel', TextType::class, ['layout' => 'horizontal', 'required' => false])
+                ->add('hidden', null, ['layout' => 'horizontal', 'required' => false])
                 ->end();
 
             $transformer = new ModelToIdTransformer($this->getModelManager(), $this->getClass());

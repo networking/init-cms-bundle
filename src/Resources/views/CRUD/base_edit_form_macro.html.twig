@@ -2,9 +2,9 @@
     <div class="row">
         {% for code in groups if admin.formgroups[code] is defined %}
             {% set form_group = admin.formgroups[code] %}
-            <div class="{{ form_group.class|default('col-md-12') }}">
+            <div class="{{ form_group.class|default('col-md-12') }} sonata-ba-collapsed-fields">
                 <fieldset class="{{ form_group.box_class }}">
-                    {% if  form_group.label != admin.label %}
+                    {% if form_group.label and form_group.label != admin.label %}
                     <div class="box-header">
                         <legend class="box-title">
                             {{ form_group.label|trans({}, form_group.translation_domain ?: admin.translationDomain) }}
@@ -12,17 +12,15 @@
                     </div>
                     {% endif %}
                     <div class="box-body">
-                        <div class="sonata-ba-collapsed-fields">
                             {% if form_group.description %}
                                 <p>{{ form_group.description|trans({}, form_group.translation_domain ?: admin.translationDomain) }}</p>
                             {% endif %}
 
                             {% for field_name in form_group.fields if form[field_name] is defined %}
-                                {{ form_row(form[field_name], {'horizontal': app.request.isXmlHttpRequest or app.request.get('_xml_http_request') ? 'true': form[field_name].vars.horizontal }) }}
+                                {{ form_row(form[field_name]) }}
                             {% else %}
                                 <em>{{ 'message_form_group_empty'|trans({}, 'SonataAdminBundle') }}</em>
                             {% endfor %}
-                        </div>
                     </div>
                 </fieldset>
             </div>

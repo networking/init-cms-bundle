@@ -30,7 +30,8 @@ file that was distributed with this source code.
                 'code':      sonata_admin.admin.root.code,
                 'elementId': id,
                 'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
-                'uniqid':    sonata_admin.admin.root.uniqid
+                'uniqid':    sonata_admin.admin.root.uniqid,
+                'subclass': sonata_admin.admin.activeSubclassCode,
             } + sonata_admin.field_description.getOption('link_parameters', {})) }}',
             type: "POST",
             dataType: 'html',
@@ -68,6 +69,10 @@ file that was distributed with this source code.
 
         return false;
     }
+    jQuery('body').on('click', 'a.__delete', function(e){
+        jQuery(this).parent('li').hide();
+        jQuery(this).find('input.__delete_input').prop('checked', true);
+    });
 </script>
 
 <!-- / edit one association -->

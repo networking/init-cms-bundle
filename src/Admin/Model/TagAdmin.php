@@ -82,16 +82,27 @@ abstract class TagAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+
+
         $id = $this->getSubject() ? $this->getSubject()->getId() : null;
         $formMapper
-            ->add('name', null, ['attr' => ['class' => 'tag_name_input']])
-            ->add('parent',
+            ->add(
+                'name',
+                null,
+                [
+                    'attr' => ['class' => 'tag_name_input'],
+                    'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline',
+                ]
+            )
+            ->add(
+                'parent',
                 AutocompleteType::class,
                 [
                     'help_block' => 'parent.helper_text',
                     'attr' => ['style' => 'width:220px'],
                     'choice_label' => 'AdminTitle',
                     'class' => $this->getClass(),
+                    'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline',
                     'required' => false,
                     'query_builder' => function (EntityRepository $er) use ($id) {
                         $qb = $er->createQueryBuilder('t');
