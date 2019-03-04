@@ -29,6 +29,18 @@ gulp.task('less', function () {
         .pipe(gulp.dest(config.projectDir + '/css'));
 });
 
+gulp.task('admin-navbar', function () {
+    return gulp.src([
+        config.projectDir+ '/less/admin-navbar-standalone.less',
+    ])
+        .pipe(sourcemaps.init())
+        .pipe(less())
+        // .pipe(csso())
+        .pipe(concat('admin-navbar.css'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(config.projectDir + '/css'));
+});
+
 gulp.task('jquery', function () {
     return gulp.src([
         config.projectDir + '/vendor/jquery/dist/jquery.min.js',
@@ -74,4 +86,4 @@ gulp.task('app', function () {
 });
 
 
-gulp.task('default', gulp.parallel('less', 'jquery',  'bootstrap', 'app'));
+gulp.task('default', gulp.parallel('less', 'jquery',  'bootstrap', 'app', 'admin-navbar'));

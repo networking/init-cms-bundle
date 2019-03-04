@@ -178,7 +178,7 @@ class AdminMenuBuilder extends MenuBuilder
                         'uri' => $editPath,
                     ]
                 );
-                $this->addIcon($menu['Edit'], ['icon' => 'pencil', 'append' => false]);
+                $this->addIcon($menu['Edit'], ['icon' => 'edit', 'append' => false]);
             }
             if (!$sonataAdmin && $this->request->get('_route') != 'sonata_admin_dashboard') {
                 $menu->addChild('Admin', ['uri' => $lastActionUrl]);
