@@ -126,8 +126,9 @@ class ContentRouteManager extends BaseContentRouteManager
         }
 
         foreach ($tempContentRoutes as $key => $contentRoute) {
-            $viewStatus = ($request) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
-            try {
+            $viewStatus = ($request && $request->hasSession()) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
+
+                try {
                 $test = new \ReflectionClass($contentRoute->getClassType());
             } catch (\ReflectionException $e) {
                 continue;
