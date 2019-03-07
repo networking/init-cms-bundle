@@ -95,6 +95,11 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // do not capture profiler urls
+        if (preg_match('/.*\/_profiler\/.*/', $request->getRequestUri())) {
+            return;
+        }
+
         try {
             if (!$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
                 return;
