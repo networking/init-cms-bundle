@@ -95,21 +95,19 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
             $orx->addMultiple([$conditionA, $conditionB]);
             $qb->addSelect('ps.id AS ps_id')
                 ->addSelect('ps.versionedData AS ps_versionedData')
-                ->leftJoin(
-                    PageSnapshot::class,
+                ->leftJoin(PageSnapshot::class,
                     'ps',
                     Expr\Join::WITH,
                     sprintf('%s.page = ps.page ', $aliases[0])
                 )
                 ->andWhere($orx)
-                ->leftJoin('ps.contentRoute', 'cr')
-                ->addSelect('ps');
+                ->leftJoin('ps.contentRoute', 'cr');
         } else {
             $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p')
-                ->leftJoin('p.contentRoute', 'cr');
+                ->leftJoin('p.contentRoute', 'cr')
+                ->addSelect('p');
         }
         $qb->addSelect('cr.path AS path');
-        $qb->addSelect('p,cr');
         $results = $qb->getQuery()->getResult();
 
         $menuItems = [];

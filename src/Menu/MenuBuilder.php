@@ -107,15 +107,15 @@ class MenuBuilder
     /**
      * MenuBuilder constructor.
      *
-     * @param FactoryInterface              $factory
-     * @param TokenStorageInterface         $tokenStorage
+     * @param FactoryInterface $factory
+     * @param TokenStorageInterface $tokenStorage
      * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param RequestStack                  $requestStack
-     * @param RouterInterface               $router
-     * @param MenuItemManagerInterface      $menuManager
-     * @param TranslatorInterface           $translator
-     * @param MatcherInterface              $matcher
-     * @param bool                          $allowLocaleCookie
+     * @param RequestStack $requestStack
+     * @param RouterInterface $router
+     * @param MenuItemManagerInterface $menuManager
+     * @param TranslatorInterface $translator
+     * @param MatcherInterface $matcher
+     * @param bool $allowLocaleCookie
      */
     public function __construct(
         FactoryInterface $factory,
@@ -232,13 +232,15 @@ class MenuBuilder
      */
     public function createFromMenuItem(MenuItem $menuItem)
     {
-        if ($contentRoute = $menuItem->getContentRoute()) {
-            $route = ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
-            $uri = $this->request->getBaseUrl().$route->getPath();
+        if ($path = $menuItem->getPath()) {
+            $uri = $this->request->getBaseUrl().$path;
         } elseif ($menuItem->getRedirectUrl()) {
             $uri = $menuItem->getRedirectUrl();
         } elseif ($menuItem->getInternalUrl()) {
             $uri = $this->request->getBaseUrl().$menuItem->getInternalUrl();
+        } elseif ($contentRoute = $menuItem->getContentRoute()) {
+            $route = ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
+            $uri = $this->request->getBaseUrl().$route->getPath();
         } else {
             $uri = '#';
         }
@@ -306,7 +308,7 @@ class MenuBuilder
      * Retrieves the sub menu array based on the current url.
      *
      * @param string $menuName
-     * @param int    $level
+     * @param int $level
      *
      * @return array|bool
      */
@@ -347,9 +349,9 @@ class MenuBuilder
     /**
      * Creates a full menu based on the starting point given.
      *
-     * @param Menu  $menu
+     * @param Menu $menu
      * @param array $menuIterator
-     * @param int   $startDepth
+     * @param int $startDepth
      *
      * @return Menu
      */
@@ -365,7 +367,7 @@ class MenuBuilder
     /**
      * Add a menu item node at the correct place in the menu.
      *
-     * @param Menu     $menu
+     * @param Menu $menu
      * @param MenuItem $node
      * @param $startDepth
      *
@@ -424,7 +426,7 @@ class MenuBuilder
      * @alias setRecursiveAttribute
      *
      * @param ItemInterface $menu
-     * @param array         $attr
+     * @param array $attr
      */
     public function setRecursiveChildrenAttribute(ItemInterface $menu, array $attr)
     {
@@ -435,7 +437,7 @@ class MenuBuilder
      * Recursively set attributes on an item and its' children.
      *
      * @param ItemInterface $menu
-     * @param array         $attr
+     * @param array $attr
      */
     public function setRecursiveAttribute(ItemInterface $menu, array $attr)
     {
