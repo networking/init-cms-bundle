@@ -52,9 +52,15 @@ class UserActivityListener
      */
     public function onCoreController(FilterControllerEvent $event)
     {
+        // do not capture admin cms urls
+        if (!preg_match('/.*\/admin\/.*/', $event->getRequest()->getRequestUri())) {
+            return;
+        }
+
         if (!$this->tokenStorage->getToken()) {
             return;
         }
+
         $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof UserInterface) {
 
