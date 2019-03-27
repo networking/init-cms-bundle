@@ -37,7 +37,7 @@ file that was distributed with this source code.
                             <div class="form-inline col-md-9">
                                 {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium advanced-filter' }}
                                 ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label|trans({}, admin.translationDomain) , 'class': 'input-medium'} }) }}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label , 'class': 'input-medium'}, 'translation_domain': admin.translationDomain }) }}
                             </div>
                         </div>
                     {% endset %}
