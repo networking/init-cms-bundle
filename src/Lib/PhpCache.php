@@ -111,7 +111,7 @@ class PhpCache implements PhpCacheInterface
             return false;
         }
 
-        if ($request->getSession()->get('no_cache', false)) {
+        if ($request->hasSession() && $request->getSession()->get('no_cache', false)) {
             $request->getSession()->remove('no_cache');
 
             return false;
