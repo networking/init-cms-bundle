@@ -215,6 +215,7 @@ abstract class PageAdmin extends BaseAdmin
                     ChoiceType::class,
                     [
                         'choices' => $this->getLocaleChoices(),
+                        'choice_translation_domain' => false,
                         'preferred_choices' => [$this->pageLocale],
                         'help_block' => 'locale.helper.text',
                     ]
