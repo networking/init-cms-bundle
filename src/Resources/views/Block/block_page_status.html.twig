@@ -29,7 +29,7 @@
                     {% for lang, drafts in reviewPages %}
                         <h5>{{ lang }}</h5>
                         {% for page in drafts %}
-                            <a href="{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}"
+                            <a href="{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_EDIT') %}{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}{% endif %}"
                                class="link-nounderline">{{ page.pageName }}</a> <span
                                 class="info-soft font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
                             <br/>
@@ -47,7 +47,7 @@
                     {% for lang, drafts in draftPages %}
                         <h5>{{ lang }}</h5>
                         {% for page in drafts %}
-                            <a href="{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}"
+                            <a href="{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_EDIT') %}{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}{% endif %}"
                                class="link-nounderline">{{ page.pageName }}</a> <span
                                 class="info-soft font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
                             <br/>
@@ -59,8 +59,10 @@
         {% endif %}
         <div class="clearfix">&nbsp;</div>
         <div class="pull-right">
+            {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_LIST') %}
             <a href="{{ path('admin_networking_initcms_page_list') }}"
                class="btn btn-sm btn-primary">{{ 'link.see_all'|trans({}, 'PageAdmin') }}  &rarr;</a>
+            {% endif %}
         </div>
         <div class="clearfix"></div>
     </div>
