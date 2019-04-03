@@ -31,8 +31,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     public function browserAction()
     {
         $this->checkIfMediaBundleIsLoaded();
-
-        if (false === $this->admin->isGranted('list')) {
+        if (false === $this->admin->checkAccess('list')) {
             throw new AccessDeniedException();
         }
 
@@ -84,7 +83,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     {
         $this->checkIfMediaBundleIsLoaded();
 
-        if (false === $this->admin->isGranted('CREATE')) {
+        if (false === $this->admin->checkAccess('CREATE')) {
             throw new AccessDeniedException();
         }
 
@@ -191,7 +190,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     {
         $this->checkIfMediaBundleIsLoaded();
 
-        if (false === $this->admin->isGranted('LIST')) {
+        if (false === $this->admin->checkAccess('LIST')) {
             throw new AccessDeniedException();
         }
 
