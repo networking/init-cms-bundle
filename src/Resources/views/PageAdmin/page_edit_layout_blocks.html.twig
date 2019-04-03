@@ -112,12 +112,11 @@ file that was distributed with this source code.
     {% if app.request.isXmlHttpRequest %}
         {% include '@NetworkingInitCms/PageAdmin/page_edit_orm_one_ajax.html.twig' %}
     {% else %}
-        <div class="modal form-horizontal layout_block_modal"
-             id="layoutBlockModal"
-             style="display: none" aria-hidden="true" role="dialog">
-        </div>
+
         {# addToBottom adds the content in the block to the end of the page #}
         {% jsblock 'addToBottom' %}
+        <div id="layoutBlockModal" class="modal" aria-hidden="true" role="dialog" style="display: none">
+        </div>
         {% include '@NetworkingInitCms/Form/content_type_select.html.twig' %}
         {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks_script.html.twig' with {'admin': admin} %}
         {% jsblock 'addToBottomEnd' %}
