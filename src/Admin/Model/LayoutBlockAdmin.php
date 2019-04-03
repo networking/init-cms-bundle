@@ -39,6 +39,8 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      */
     const CUSTOM_FIELD_PREFIX = 'networking_init_cms_content_';
 
+    public $trackedActions = [];
+
     /**
      * {@inheritdoc}
      */
