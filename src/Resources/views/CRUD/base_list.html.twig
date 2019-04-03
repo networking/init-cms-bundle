@@ -308,7 +308,8 @@ file that was distributed with this source code.
         {% block batch_javascript %}
         jQuery(document).ready(function ($) {
             $('#list_batch_checkbox').click(function () {
-                $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
+                    console.log($(this).is(':checked'));
+                $(this).closest('table').find("td input[type='checkbox']").prop('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
             });
         });
         {% endblock %}
