@@ -55,6 +55,10 @@ class AdminTrackerListener
             return;
         }
 
+        if($request->isXmlHttpRequest()){
+            return;
+        }
+
         $adminCode = $request->get('_sonata_admin');
 
         if (!is_null($adminCode)) {
@@ -81,6 +85,7 @@ class AdminTrackerListener
     {
         if (method_exists($object, 'getTrackedActions')) {
             $request = $this->admin->getRequest();
+
             foreach ($object->getTrackedActions() as $trackedAction) {
                 // if an action which is flagged as 'to be tracked' is matching the end of the route: add info to session
                 if (preg_match('#'.$trackedAction.'$#', $request->get('_route'), $matches)) {
