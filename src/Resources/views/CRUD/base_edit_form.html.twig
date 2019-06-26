@@ -82,8 +82,9 @@ file that was distributed with this source code.
                                                             {{ form_tab.description|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
                                                         </p>
                                                     {% endif %}
-
-                                                    {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
+                                                    {% if form_helper is defined %}
+                                                        {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
@@ -91,7 +92,9 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         {% else %}
-                            {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab) }}
+                            {% if form_helper is defined %}
+                                {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab) }}
+                            {% endif %}
                         {% endif %}
                 {% endblock %}
 
