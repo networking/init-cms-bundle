@@ -16,7 +16,7 @@
             </trans-unit>
             <trans-unit id="filter.label_translations_content">
                 <source>filter.label_translations_content</source>
-                <target>Übersetzte Inhalt</target>
+                <target>Übersetzter Inhalt</target>
             </trans-unit>
             <trans-unit id="filter.label_domain">
                 <source>filter.label_domain</source>
@@ -28,7 +28,7 @@
             </trans-unit>
             <trans-unit id="form.label_translations_content">
                 <source>form.label_translations_content</source>
-                <target>Übersetzte Inhalt</target>
+                <target>Übersetzter Inhalt</target>
             </trans-unit>
             <trans-unit id="form.label_domain">
                 <source>form.label_domain</source>
@@ -40,7 +40,7 @@
             </trans-unit>
             <trans-unit id="list.label_translations_content">
                 <source>list.label_translations_content</source>
-                <target>Übersetzte Inhalt</target>
+                <target>Übersetzter Inhalt</target>
             </trans-unit>
             <trans-unit id="list.label_domain">
                 <source>list.label_domain</source>
