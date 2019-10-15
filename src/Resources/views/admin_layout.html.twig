@@ -220,7 +220,7 @@ file that was distributed with this source code.
                                 </div>
                             {% endif %}
 
-                            {% if _list_table is not empty or _list_filters is not empty %}
+                            {% if _list_table is not empty or _list_filters is not empty or (_actions is not empty and _show is not empty)%}
 
                                 {{ _list_filters|raw }}
                                 {% if _actions is not empty %}

@@ -17,85 +17,6 @@ file that was distributed with this source code.
 {% else %}
 
     <div id="field_container_{{ id }}" class="field-container">
-        <span id="field_widget_{{ id }}">
-            {% if sonata_admin.edit == 'inline' %}
-                {% if sonata_admin.inline == 'table' %}
-                    {% if form.children|length > 0 %}
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                {% for field_name, nested_field in form.children[0].children %}
-                                    {% if field_name == '_delete' %}
-                                        <th>{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}</th>
-                                    {% else %}
-                                        <th>{{ nested_field.vars.label|trans({}, nested_field.vars['sonata_admin'].admin.translationDomain) }}</th>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                            </thead>
-                            <tbody class="sonata-ba-tbody">
-                            {% for nested_group_field_name, nested_group_field in form.children %}
-                                <tr>
-                                    {% for field_name, nested_field in nested_group_field.children %}
-                                        <td class="sonata-ba-td-{{ id }}-{{ field_name }}{% if nested_field.vars.errors|length > 0 %} error{% endif %}">
-                                            {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
-                                                {{ form_widget(nested_field) }}
-
-                                                {% set dummy = nested_group_field.setrendered %}
-                                            {% else %}
-                                                {{ form_widget(nested_field) }}
-                                            {% endif %}
-                                            {% if nested_field.vars.errors|length > 0 %}
-                                                <div class="sonata-ba-field-error-messages">
-                                                    {{ form_errors(nested_field) }}
-                                                </div>
-                                            {% endif %}
-                                        </td>
-                                    {% endfor %}
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
-                {% elseif form.children|length > 0 %}
-                    <div class="dropzone ">
-                        <ul class="sortable">
-                            {% for nested_group_field_name, nested_group_field in form.children %}
-                                {% set delete_button = '' %}
-                                <li style="border: 1px solid #f0f0f0; padding: 5px; margin-bottom: 10px;" class="list-item-{{ id }}">
-                                    {% for field_name, nested_field in nested_group_field.children %}
-                                        {% if field_name == '_delete' %}
-                                            {% set delete_button = form_widget(nested_field, {'attr': {'class': '__delete_input'}}) %}
-                                        {% else %}
-                                            <span class="sonata-ba-td-{{ id }}-{{ field_name }}">
-                                            {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
-                                                {{ form_row(nested_field, {
-                                                'inline': 'natural',
-                                                'edit'  : 'inline'
-                                                }) }}
-                                                {% set dummy = nested_group_field.setrendered %}
-                                            {% else %}
-                                                {{ form_widget(nested_field) }}
-                                            {% endif %}
-                                            </span>
-                                        {% endif %}
-                                        {% if loop.last %}
-                                            <a class="pull-right btn btn-danger btn-small __delete"><i class="glyphicon glyphicon-trash"></i><span style="display: none;">{{ delete_button|raw }}</span></a>
-                                        {% endif %}
-
-                                    {% endfor %}
-                                <div class="clearfix">&nbsp;</div>
-
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-            {% else %}
-                {{ form_widget(form) }}
-            {% endif %}
-
-        </span>
 
         {% set display_create_button = sonata_admin.field_description.associationadmin.hasRoute('create')
             and sonata_admin.field_description.associationadmin.hasAccess('create')
@@ -105,7 +26,7 @@ file that was distributed with this source code.
         {% if sonata_admin.edit == 'inline' %}
             {% if display_create_button %}
                 {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
-                    <span id="field_actions_{{ id }}">
+                        <span id="field_actions_{{ id }}" class="row">
                         <a
                                 href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
                                 onclick="return start_field_retrieve_{{ id }}(this);"
@@ -263,5 +184,86 @@ file that was distributed with this source code.
             {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
             {% jsblock 'addToBottomEnd' %}
         {% endif %}
+
+        <span id="field_widget_{{ id }}">
+            {% if sonata_admin.edit == 'inline' %}
+                {% if sonata_admin.inline == 'table' %}
+                    {% if form.children|length > 0 %}
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                {% for field_name, nested_field in form.children[0].children %}
+                                    {% if field_name == '_delete' %}
+                                        <th>{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}</th>
+                                    {% else %}
+                                        <th>{{ nested_field.vars.label|trans({}, nested_field.vars['sonata_admin'].admin.translationDomain) }}</th>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                            <tbody class="sonata-ba-tbody">
+                            {% for nested_group_field_name, nested_group_field in form.children %}
+                                <tr>
+                                    {% for field_name, nested_field in nested_group_field.children %}
+                                        <td class="sonata-ba-td-{{ id }}-{{ field_name }}{% if nested_field.vars.errors|length > 0 %} error{% endif %}">
+                                            {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
+                                                {{ form_widget(nested_field) }}
+
+                                                {% set dummy = nested_group_field.setrendered %}
+                                            {% else %}
+                                                {{ form_widget(nested_field) }}
+                                            {% endif %}
+                                            {% if nested_field.vars.errors|length > 0 %}
+                                                <div class="sonata-ba-field-error-messages">
+                                                    {{ form_errors(nested_field) }}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                {% elseif form.children|length > 0 %}
+                    <div class="dropzone ">
+                        <ul class="sortable">
+                            {% for nested_group_field_name, nested_group_field in form.children %}
+                                {% set delete_button = '' %}
+                                <li style="border: 1px solid #f0f0f0; padding: 5px; margin-bottom: 10px;" class="list-item-{{ id }}">
+                                    {% for field_name, nested_field in nested_group_field.children %}
+                                        {% if field_name == '_delete' %}
+                                            {% set delete_button = form_widget(nested_field, {'attr': {'class': '__delete_input'}}) %}
+                                        {% else %}
+                                            <span class="sonata-ba-td-{{ id }}-{{ field_name }}">
+                                            {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
+                                                {{ form_row(nested_field, {
+                                                    'inline': 'natural',
+                                                    'edit'  : 'inline'
+                                                }) }}
+                                                {% set dummy = nested_group_field.setrendered %}
+                                            {% else %}
+                                                {{ form_widget(nested_field) }}
+                                            {% endif %}
+                                            </span>
+                                        {% endif %}
+                                        {% if loop.last %}
+                                        <a class="pull-right btn btn-danger btn-small __delete"><i class="glyphicon glyphicon-trash"></i><span style="display: none;">{{ delete_button|raw }}</span></a>
+                                    {% endif %}
+
+                                    {% endfor %}
+                                <div class="clearfix">&nbsp;</div>
+
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% else %}
+                {{ form_widget(form) }}
+            {% endif %}
+
+        </span>
+
     </div>
 {% endif %}
