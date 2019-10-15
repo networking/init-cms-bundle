@@ -63,5 +63,8 @@
         "branch-alias": {
             "dev-master": "3.x-dev"
         }
+    },
+    "require-dev": {
+        "dg/bypass-finals": "^1.1"
     }
 }

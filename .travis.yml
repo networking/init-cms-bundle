@@ -2,7 +2,7 @@ language: php
 
 php:
   - 7.1
-  -
+
 before_script:
   - curl -sSfL -o ~/.phpenv/versions/7.1/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
 
