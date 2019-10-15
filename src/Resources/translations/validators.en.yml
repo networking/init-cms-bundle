@@ -12,3 +12,4 @@ init_cms:
         no_slash: The name should not contain a "/"
 
 'Cannot create content, object is invalid': Please check your data, content is invalid or missing
+password_too_short: 'This password is too short. It should have at least {{ limit }} character or more.| This password is too short. It should have at least {{ limit }} character or more.'

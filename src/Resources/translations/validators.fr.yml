@@ -1,9 +1,14 @@
 error:
-    unique_url: A page with the same URL (URL & parent page) "{{ value }}" exists, please select another one
+    unique_url: Une page avec la même URL (URL et page mère) "{{ value }}" existe, veuillez en sélectionner une autre.
 init_cms:
     pagename:
-        blank: The page title should not be empty
+        blank: Le titre de la page ne doit pas être vide
     url:
-        blank: The URL should not be empty
+        blank: L'URL ne doit pas être vide
+    page_copy:
+        duplicate_locale: La langue sélectionnée doit être différente.
+    name:
+        no_slash: Le nom ne doit pas contenir un "/".
 
-'Cannot create content, object is invalid': Please check your data, content is invalid or missing
+'Cannot create content, object is invalid': Veuillez vérifier vos données, le contenu est invalide ou manquant
+password_too_short: 'Ce mot de passe est trop court. Il doit avoir au moins {{ limit }} caractères ou plus.| Ce mot de passe est trop court. Il doit avoir au moins {{ limit }} caractères ou plus.'

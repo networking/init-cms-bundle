@@ -2,8 +2,13 @@ error:
     unique_url: Een pagina met de URL "{{ value }}" en deze bovenliggende pagina bestaat reeds, kies s.v.p. een andere.
 init_cms:
     pagename:
-        blank: The page title should not be empty
+        blank: De paginatitel mag niet leeg zijn.
     url:
-        blank: The URL should not be empty
+        blank: De URL mag niet leeg zijn.
+    page_copy:
+        duplicate_locale: De gekozen taal moet anders zijn dan de gekozen taal.
+    name:
+        no_slash: De naam mag geen "/" bevatten.
 
-'Cannot create content, object is invalid': Please check your data, content is invalid or missing
+'Cannot create content, object is invalid': Controleer uw gegevens, inhoud is ongeldig of ontbreekt.
+password_too_short: 'Dit wachtwoord is te kort. Het moet ten minste een {{ limit }} teken of meer hebben.| Dit wachtwoord is te kort. Het moet ten minste een {{ limit }} teken of meer hebben.'
