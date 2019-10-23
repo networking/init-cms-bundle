@@ -85,7 +85,7 @@
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "branch-alias": {
-            "dev-master": "upgrade_4.x"
+            "dev-master": "4.x"
         },
         "symfony": {
             "allow-contrib": true
