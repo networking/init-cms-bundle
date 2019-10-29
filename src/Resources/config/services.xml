@@ -114,7 +114,7 @@
 
         <service id="Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface"
                  alias="ibrows_sonataadmin.annotation.reader"
-                 public="false"/>
+                 public="true"/>
 
     </services>
 </container>
