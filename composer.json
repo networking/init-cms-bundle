@@ -13,13 +13,15 @@
     ],
     "require": {
         "php": "^7.1",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-fixtures-bundle": "~2.2",
         "friendsofsymfony/ckeditor-bundle": "^1.1",
         "ibrows/sonata-admin-annotation-bundle": "2.*",
         "ibrows/sonata-translation-bundle": "1.*",
-        "incenteev/composer-parameter-handler": "^2.0",
         "jms/serializer-bundle": "^2.0",
         "knplabs/knp-paginator-bundle": "^4.0",
         "oneup/flysystem-bundle": "^3.0",
@@ -27,6 +29,7 @@
         "phpfastcache/phpfastcache": "^3.0",
         "mopa/bootstrap-bundle": "^3.3",
         "sensio/framework-extra-bundle": "^5.1",
+        "sensiolabs/security-checker": "^6.0",
         "sonata-project/admin-bundle": "^3.54",
         "sonata-project/doctrine-orm-admin-bundle": "^3.10",
         "sonata-project/easy-extends-bundle": "^2.5",
@@ -37,6 +40,7 @@
         "sonata-project/user-bundle": "^4.5",
         "stof/doctrine-extensions-bundle": "~1.1",
         "gedmo/doctrine-extensions": "v2.4",
+        "symfony/acl-bundle": "^1.0",
         "symfony/asset": "4.3.*",
         "symfony/console": "4.3.*",
         "symfony/expression-language": "4.3.*",
@@ -55,7 +59,6 @@
         "symfony/web-link": "4.3.*",
         "symfony/webpack-encore-bundle": "^1.5",
         "symfony/yaml": "4.3.*",
-        "symfony/symfony": "4.3.*",
         "symfony/polyfill-apcu": "^1.0",
         "symfony-cmf/routing-bundle": "^2.0",
         "twbs/bootstrap": ">2.0,<4.0-dev",
@@ -76,7 +79,6 @@
     "config": {
         "sort-packages": true
     },
-
     "extra": {
         "symfony-app-dir": "app",
         "symfony-bin-dir": "bin",
