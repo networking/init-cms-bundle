@@ -11,8 +11,12 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Helper\PageHelper;
+use Networking\InitCmsBundle\Lib\PhpCacheInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,6 +35,27 @@ use Gedmo\Sluggable\Util\Urlizer;
  */
 class PageAdminController extends CRUDController
 {
+    /**
+     * @var PageManagerInterface
+     */
+    protected $pageManager;
+
+    /**
+     * @var PageHelper
+     */
+    protected $pageHelper;
+
+    public function __construct(
+        CmsEventDispatcher $dispatcher,
+        PhpCacheInterface $phpCache,
+        PageManagerInterface $pageManager,
+        PageHelper $pageHelper
+    ) {
+        $this->pageManager = $pageManager;
+        $this->pageHelper = $pageHelper;
+        parent::__construct($dispatcher, $phpCache);
+    }
+
     /**
      * Create a copy of a page in the given local and connect the pages.
      *
@@ -53,10 +78,9 @@ class PageAdminController extends CRUDController
         $language = \Locale::getDisplayLanguage($locale);
 
         if ($request->getMethod() == 'POST') {
-            $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
             try {
-                $pageCopy = $pageHelper->makeTranslationCopy($page, $locale);
+                $pageCopy = $this->pageHelper->makeTranslationCopy($page, $locale);
                 $this->admin->createObjectSecurity($pageCopy);
                 $status = 'success';
                 $message = $this->translate(
@@ -127,11 +151,10 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'POST') {
-            $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
-	        $pageCopy = false;
+            $pageCopy = false;
             try {
-                $pageCopy = $pageHelper->makePageCopy($page);
+                $pageCopy = $this->pageHelper->makePageCopy($page);
                 $this->admin->createObjectSecurity($pageCopy);
                 $status = 'success';
                 $message = $this->translate(
@@ -169,8 +192,8 @@ class PageAdminController extends CRUDController
                 $message
             );
 
-            if($pageCopy){
-	            $request->getSession()->set('Page.last_edited', $pageCopy->getId());
+            if ($pageCopy) {
+                $request->getSession()->set('Page.last_edited', $pageCopy->getId());
             }
 
 
@@ -196,9 +219,9 @@ class PageAdminController extends CRUDController
      * @param $id
      * @param $locale
      *
+     * @return RedirectResponse|Response
      * @throws NotFoundHttpException
      *
-     * @return RedirectResponse|Response
      */
     public function linkAction(Request $request, $id, $locale)
     {
@@ -374,14 +397,13 @@ class PageAdminController extends CRUDController
             throw new AccessDeniedException();
         }
 
-        $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
         $selectedModels = $selectedModelQuery->execute();
 
         try {
             foreach ($selectedModels as $selectedModel) {
                 /* @var PageInterface $selectedModel */
-                $pageHelper->makePageCopy($selectedModel);
+                $this->pageHelper->makePageCopy($selectedModel);
             }
         } catch (\Exception $e) {
             $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_copy_error');
@@ -405,18 +427,22 @@ class PageAdminController extends CRUDController
             throw new AccessDeniedException();
         }
 
-        $form = $this->createForm('Networking\InitCmsBundle\Form\Type\PageBatchCopyType', [],
-            ['locales' => $this->getParameter('networking_init_cms.page.languages')]);
+        $form = $this->createForm(
+            'Networking\InitCmsBundle\Form\Type\PageBatchCopyType',
+            [],
+            ['locales' => $this->getParameter('networking_init_cms.page.languages')]
+        );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            /** @var PageHelper $pageHelper */
-            $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
-            $pages = $this->admin->getModelManager()->findBy($this->admin->getClass(), ['locale' => $data['fromLocale']]);
+            $pages = $this->admin->getModelManager()->findBy(
+                $this->admin->getClass(),
+                ['locale' => $data['fromLocale']]
+            );
             /** @var PageInterface $page */
             foreach ($pages as $page) {
                 $translatedLocales = $page->getTranslatedLocales();
@@ -424,13 +450,14 @@ class PageAdminController extends CRUDController
                 if (in_array($data['toLocale'], $translatedLocales)) {
                     continue;
                 }
-                $pageHelper->makeTranslationCopy($page, $data['toLocale']);
+                $this->pageHelper->makeTranslationCopy($page, $data['toLocale']);
             }
 
             $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_copy_success');
         }
 
-        return $this->renderWithExtraParams('@NetworkingInitCms/PageAdmin/batch_page_copy.html.twig',
+        return $this->renderWithExtraParams(
+            '@NetworkingInitCms/PageAdmin/batch_page_copy.html.twig',
             ['action' => 'batchCopy', 'form' => $form->createView()]
         );
     }
@@ -452,12 +479,10 @@ class PageAdminController extends CRUDController
 
         try {
             foreach ($selectedModels as $selectedModel) {
-                /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
-                $phpCache = $this->get('networking_init_cms.lib.php_cache');
-                if ($phpCache->isActive()) {
+                if ($this->phpCache->isActive()) {
                     /** @var PageInterface $selectedModel */
                     $cacheKey = $selectedModel->getLocale().$selectedModel->getFullPath();
-                    $phpCache->delete($cacheKey);
+                    $this->phpCache->delete($cacheKey);
                 }
             }
         } catch (\Exception $e) {
@@ -500,7 +525,7 @@ class PageAdminController extends CRUDController
         $this->admin->setSubject($object);
 
         return $this->renderWithExtraParams(
-            $this->admin->getTemplate('show'),
+            $this->templateRegistry->getTemplate('show'),
             [
                 'action' => 'show',
                 'object' => $object,
@@ -509,18 +534,16 @@ class PageAdminController extends CRUDController
         );
     }
 
-	/**
-	 * @param null $id
-	 *
-	 * @return RedirectResponse|Response
-	 * @throws \Twig_Error_Runtime
-	 */
+    /**
+     * @param null $id
+     *
+     * @return RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
+     */
     public function editAction($id = null)
     {
         /** @var Request $request */
         $request = $this->getRequest();
-        // the key used to lookup the template
-        $templateKey = 'edit';
 
         if ($id === null) {
             $id = $request->get($this->admin->getIdParameter());
@@ -573,7 +596,7 @@ class PageAdminController extends CRUDController
         );
 
         return $this->renderWithExtraParams(
-            $this->admin->getTemplate($templateKey),
+            $this->templateRegistry->getTemplate('edit'),
             [
                 'action' => 'edit',
                 'form' => $view,
@@ -584,65 +607,63 @@ class PageAdminController extends CRUDController
         );
     }
 
-	/**
-	 * @param Request $request
-	 * @param $id
-	 *
-	 * @return Response
-	 * @throws \Twig_Error_Runtime
-	 */
-	public function editPageSettingsAction(Request $request, $id)
-	{
-		/** @var PageInterface $page */
-		$page = $this->admin->getObject($id);
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @return Response
+     * @throws \Twig_Error_Runtime
+     */
+    public function editPageSettingsAction(Request $request, $id)
+    {
+        /** @var PageInterface $page */
+        $page = $this->admin->getObject($id);
 
-		$layoutBlocks = $page->getLayoutBlock();
+        $layoutBlocks = $page->getLayoutBlock();
 
-		$form = $this->admin->getForm();
-		$form->setData($page);
+        $form = $this->admin->getForm();
+        $form->setData($page);
 
-		$form->handleRequest($request);
+        $form->handleRequest($request);
 
-		$response = new Response();
+        $response = new Response();
 
-		if($form->isSubmitted()){
-			if($form->isValid()){
-				$page->setStatus(PageInterface::STATUS_DRAFT);
-				$page->setUpdatedAt();
-				$page->setLayoutBlock($layoutBlocks);
-				$this->admin->update($page);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $page->setStatus(PageInterface::STATUS_DRAFT);
+                $page->setUpdatedAt();
+                $page->setLayoutBlock($layoutBlocks);
+                $this->admin->update($page);
 
-				return $this->getAjaxEditResponse($form, $page);
+                return $this->getAjaxEditResponse($form, $page);
 
-			}
-			$response->setStatusCode(422);
-		}
-		$view = $form->createView();
-		$this->setFormTheme($view, $this->admin->getFormTheme());
+            }
+            $response->setStatusCode(422);
+        }
+        $view = $form->createView();
+        $this->setFormTheme($view, $this->admin->getFormTheme());
 
-		return $this->renderWithExtraParams(
-			'@NetworkingInitCms/PageAdmin/page_settings_edit.html.twig',
-			[
-				'form' => $view,
+        return $this->renderWithExtraParams(
+            '@NetworkingInitCms/PageAdmin/page_settings_edit.html.twig',
+            [
+                'form' => $view,
                 'object' => $page,
-			],
-			$response
-		);
-	}
+            ],
+            $response
+        );
+    }
 
-	/**
-	 * @param null $id
-	 * @param null $uniqid
-	 *
-	 * @return Response
-	 * @throws \Twig_Error_Runtime
-	 */
+    /**
+     * @param null $id
+     * @param null $uniqid
+     *
+     * @return Response
+     * @throws \Twig_Error_Runtime
+     */
     public function pageSettingsAction($id = null, $uniqid = null)
     {
         /** @var Request $request */
         $request = $this->container->get('request_stack')->getCurrentRequest();
-        // the key used to lookup the template
-        $templateKey = 'edit';
 
         if ($id === null) {
             $id = $request->get($this->admin->getIdParameter());
@@ -670,7 +691,7 @@ class PageAdminController extends CRUDController
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
         return $this->renderWithExtraParams(
-            $this->admin->getTemplate($templateKey),
+            $this->templateRegistry->getTemplate('edit'),
             [
                 'action' => 'edit',
                 'form' => $view,
@@ -683,7 +704,7 @@ class PageAdminController extends CRUDController
     /**
      * Return the json response for the ajax edit action.
      *
-     * @param Form          $form
+     * @param Form $form
      * @param PageInterface $page
      *
      * @return Response
@@ -742,9 +763,8 @@ class PageAdminController extends CRUDController
     {
         $locale = $request->get('locale');
         $pages = [];
-        $pageManager = $this->get('networking_init_cms.page_manager');
 
-        if ($result = $pageManager->getParentPagesChoices($locale)) {
+        if ($result = $this->pageManager->getParentPagesChoices($locale)) {
             foreach ($result as $page) {
                 /* @var PageInterface $page */
                 $pages[$page->getId()] = [$page->getAdminTitle()];
@@ -754,12 +774,12 @@ class PageAdminController extends CRUDController
         return $this->renderJson($pages);
     }
 
-	/**
-	 * @param Request $request
-	 *
-	 * @return RedirectResponse|Response
-	 * @throws \Twig_Error_Runtime
-	 */
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
+     */
     public function draftAction(Request $request)
     {
         $id = $request->get($this->admin->getIdParameter());
@@ -767,12 +787,12 @@ class PageAdminController extends CRUDController
         return $this->changePageStatus($id, PageInterface::STATUS_DRAFT);
     }
 
-	/**
-	 * @param Request $request
-	 *
-	 * @return RedirectResponse|Response
-	 * @throws \Twig_Error_Runtime
-	 */
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
+     */
     public function reviewAction(Request $request)
     {
         $id = $request->get($this->admin->getIdParameter());
@@ -780,12 +800,12 @@ class PageAdminController extends CRUDController
         return $this->changePageStatus($id, PageInterface::STATUS_REVIEW);
     }
 
-	/**
-	 * @param Request $request
-	 *
-	 * @return RedirectResponse|Response
-	 * @throws \Twig_Error_Runtime
-	 */
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
+     */
     public function offlineAction(Request $request)
     {
         $id = $request->get($this->admin->getIdParameter());
@@ -821,12 +841,12 @@ class PageAdminController extends CRUDController
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
     }
 
-	/**
-	 * @param $id
-	 * @param $status
-	 *
-	 * @return RedirectResponse
-	 */
+    /**
+     * @param $id
+     * @param $status
+     *
+     * @return RedirectResponse
+     */
     protected function changePageStatus($id, $status)
     {
         $object = $this->admin->getObject($id);
@@ -855,7 +875,7 @@ class PageAdminController extends CRUDController
 
     /**
      * @param Request $request
-     * @param null    $id
+     * @param null $id
      *
      * @return RedirectResponse|Response
      *
@@ -876,17 +896,16 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'POST') {
-            $pageManager = $this->get('networking_init_cms.page_manager');
             $serializer = $this->get('jms_serializer');
 
-            $publishedPage = $pageManager->revertToPublished($draftPage, $serializer);
+            $publishedPage = $this->pageManager->revertToPublished($draftPage, $serializer);
 
             if ($request->isXmlHttpRequest()) {
                 $form = $this->admin->getForm();
                 $form->setData($publishedPage);
 
                 $pageSettingsTemplate = $this->render(
-                    $this->admin->getTemplate('edit'),
+                    $this->templateRegistry->getTemplate('edit'),
                     [
                         'action' => 'edit',
                         'form' => $form->createView(),
@@ -918,12 +937,12 @@ class PageAdminController extends CRUDController
         );
     }
 
-	/**
-	 * @param Request $request
-	 * @param null $id
-	 *
-	 * @return RedirectResponse
-	 */
+    /**
+     * @param Request $request
+     * @param null $id
+     *
+     * @return RedirectResponse
+     */
     public function publishAction(Request $request, $id = null)
     {
         $id = $request->get($this->admin->getIdParameter());
@@ -970,10 +989,8 @@ class PageAdminController extends CRUDController
             return;
         }
 
-        /** @var $pageHelper \Networking\InitCmsBundle\Helper\PageHelper */
-        $pageHelper = $this->get('networking_init_cms.helper.page_helper');
 
-        $pageHelper->makePageSnapshot($page);
+        $this->pageHelper->makePageSnapshot($page);
     }
 
     /**
@@ -981,9 +998,9 @@ class PageAdminController extends CRUDController
      *
      * @param Request $request
      *
+     * @return Response
      * @internal param string $path
      *
-     * @return Response
      */
     public function getPathAction(Request $request)
     {

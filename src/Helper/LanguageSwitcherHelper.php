@@ -12,7 +12,7 @@
 namespace Networking\InitCmsBundle\Helper;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -46,7 +46,7 @@ class LanguageSwitcherHelper
     protected $pageManager;
 
     /**
-     * @var Serializer
+     * @var SerializerInterface
      */
     protected $serializer;
 
@@ -65,41 +65,32 @@ class LanguageSwitcherHelper
      */
     protected $pageHelper;
 
+
     /**
-     * @param RequestStack  $requestStack
+     * LanguageSwitcherHelper constructor.
+     * @param RequestStack $requestStack
      * @param ObjectManager $om
-     * @param $fallbackRoute
      * @param PageHelper $pageHelper
+     * @param PageManagerInterface $pageManager
+     * @param RouterInterface $router
+     * @param SerializerInterface $serializer
+     * @param $fallbackRoute
      */
-    public function __construct(RequestStack $requestStack, ObjectManager $om, $fallbackRoute, PageHelper $pageHelper)
-    {
+    public function __construct(
+        RequestStack $requestStack,
+        ObjectManager $om,
+        PageHelper $pageHelper,
+        PageManagerInterface $pageManager,
+        RouterInterface $router,
+        SerializerInterface $serializer,
+        $fallbackRoute
+    ) {
         $this->requestStack = $requestStack;
         $this->om = $om;
         $this->fallbackRoute = $fallbackRoute;
         $this->pageHelper = $pageHelper;
-    }
-
-    /**
-     * @param RouterInterface $router
-     */
-    public function setRouter(RouterInterface $router)
-    {
-        $this->router = $router;
-    }
-
-    /**
-     * @param PageManagerInterface $pageManager
-     */
-    public function setPageManager(PageManagerInterface $pageManager)
-    {
         $this->pageManager = $pageManager;
-    }
-
-    /**
-     * @param Serializer $serializer
-     */
-    public function setSerializer(Serializer $serializer)
-    {
+        $this->router = $router;
         $this->serializer = $serializer;
     }
 
@@ -117,7 +108,8 @@ class LanguageSwitcherHelper
      */
     public function getTranslationRoute($oldUrl, $oldLocale, $locale)
     {
-        $cookies = $this->requestStack->getCurrentRequest()->cookies ? $this->requestStack->getCurrentRequest()->cookies->all() : [];
+        $cookies = $this->requestStack->getCurrentRequest()->cookies ? $this->requestStack->getCurrentRequest(
+        )->cookies->all() : [];
         $oldRequest = Request::create($oldUrl, 'GET', [], $cookies);
         $oldRequest->setLocale($oldLocale);
 
@@ -139,7 +131,9 @@ class LanguageSwitcherHelper
                 if ($route = $this->router->matchRequest(Request::create('/404'))) {
                     return $route;
                 }
-                throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for this request"', $locale));
+                throw new NotFoundHttpException(
+                    sprintf('Could not find a translation to "%s" for this request"', $locale)
+                );
             }
 
             if (!array_key_exists('_content', $route)) {
@@ -153,10 +147,10 @@ class LanguageSwitcherHelper
 
         if ($content instanceof PageInterface) {
             $translation = $content->getAllTranslations()->get($locale);
-	        if (is_null($translation)) {
-		        //@todo does this make sense, or should we throw an exception
-		        return ['_route' => 'networking_init_cms_home'];
-	        }
+            if (is_null($translation)) {
+                //@todo does this make sense, or should we throw an exception
+                return ['_route' => 'networking_init_cms_home'];
+            }
             if (!is_null($translation)) {
                 //return a contentRoute object
                 $contentRoute = $translation->getContentRoute()->setContent($translation);
@@ -172,7 +166,9 @@ class LanguageSwitcherHelper
 
             if ($translation && $snapshotId = $translation->getId()) {
                 /** @var $snapshot PageSnapshotInterface */
-                $snapshot = $this->om->getRepository($content->getSnapshotClassType())->findOneBy(['resourceId' => $snapshotId]);
+                $snapshot = $this->om->getRepository($content->getSnapshotClassType())->findOneBy(
+                    ['resourceId' => $snapshotId]
+                );
 
                 if ($snapshot) {
                     $contentRoute = $snapshot->getRoute();
@@ -191,7 +187,9 @@ class LanguageSwitcherHelper
         }
 
         //no valid translation found
-        throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for content "%s"', $locale, $content->__toString()));
+        throw new NotFoundHttpException(
+            sprintf('Could not find a translation to "%s" for content "%s"', $locale, $content->__toString())
+        );
     }
 
     /**
@@ -240,7 +238,7 @@ class LanguageSwitcherHelper
             $pathInfo = substr($pathInfo, $pos + strlen($host));
         }
 
-        return (string) $pathInfo;
+        return (string)$pathInfo;
     }
 
     /**
@@ -259,7 +257,9 @@ class LanguageSwitcherHelper
         } elseif (basename($this->requestStack->getCurrentRequest()->server->get('PHP_SELF')) === $filename) {
             $baseUrl = $this->requestStack->getCurrentRequest()->server->get('PHP_SELF');
         } elseif (basename($this->requestStack->getCurrentRequest()->server->get('ORIG_SCRIPT_NAME')) === $filename) {
-            $baseUrl = $this->requestStack->getCurrentRequest()->server->get('ORIG_SCRIPT_NAME'); // 1and1 shared hosting compatibility
+            $baseUrl = $this->requestStack->getCurrentRequest()->server->get(
+                'ORIG_SCRIPT_NAME'
+            ); // 1and1 shared hosting compatibility
         } else {
             // Backtrack up the script_filename to find the portion matching
             // php_self
@@ -305,7 +305,10 @@ class LanguageSwitcherHelper
         // If using mod_rewrite or ISAPI_Rewrite strip the script filename
         // out of baseUrl. $pos !== 0 makes sure it is not matching a value
         // from PATH_INFO or QUERY_STRING
-        if ((strlen($requestUri) >= strlen($baseUrl)) && ((false !== ($pos = strpos($requestUri, $baseUrl))) && ($pos !== 0))) {
+        if ((strlen($requestUri) >= strlen($baseUrl)) && ((false !== ($pos = strpos(
+                        $requestUri,
+                        $baseUrl
+                    ))) && ($pos !== 0))) {
             $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
         }
 

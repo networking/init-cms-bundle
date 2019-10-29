@@ -79,7 +79,10 @@ class PhpCache implements PhpCacheInterface
      */
     protected function createDir($rootDir, $env)
     {
-        $cacheDir = $rootDir.sprintf('../var/cache/%s/php_fast_cache', $env);
+        if(substr($rootDir, -1) === '/'){
+            $rootDir = substr($rootDir, 0, -1);
+        }
+        $cacheDir = sprintf('%s/../var/cache/%s/php_fast_cache',$rootDir, $env);
         if (!file_exists($cacheDir) || !is_writable($cacheDir)) {
             if (!file_exists($cacheDir)) {
                 @mkdir($cacheDir, 0777);

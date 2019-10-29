@@ -11,12 +11,12 @@ file that was distributed with this source code.
 {% extends '@NetworkingInitCms/CRUD/base_list_field.html.twig' %}
 
 {% block field %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if object.level > 1 %}
             {% for i in 1..(object.level-1) %}<i class="fa fa-angle-right level-spacer
             {{ loop.first?'first':'' }} {{ loop.last?'last':'' }}"></i>{% endfor %}
         {% endif %}
         <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}" class="link-page-edit show-tooltip"
            data-page_id="{{ admin.id(object) }}" data-original-title="{{ value }}">{{ value }}</a>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}

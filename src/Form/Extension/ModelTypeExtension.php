@@ -59,4 +59,17 @@ class ModelTypeExtension extends AbstractTypeExtension
     {
         return ModelType::class;
     }
+
+    /**
+     * @return array|iterable
+     */
+    public function getExtendedTypes()
+    {
+        return [ModelType::class];
+    }
+
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement @method iterable getExtendedTypes()
+    }
 }

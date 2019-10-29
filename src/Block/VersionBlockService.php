@@ -10,37 +10,34 @@
 
 namespace Networking\InitCmsBundle\Block;
 
-use Networking\InitCmsBundle\NetworkingInitCmsBundle;
-use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
-use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * Class OnlineUsersBlockService.
  *
  * @author info@networking.ch
  */
-class VersionBlockService extends AbstractAdminBlockService
+class VersionBlockService extends AbstractBlockService
 {
 	/**
 	 * @var string
 	 */
 	protected $projectDir;
 
-	/**
-	 * @param string          $name
-	 * @param EngineInterface $templating
-	 */
-	public function __construct($name, EngineInterface $templating, $projectDir)
+    /**
+     * VersionBlockService constructor.
+     * @param Environment $twig
+     * @param $projectDir
+     */
+	public function __construct(Environment $twig, $projectDir)
 	{
-		parent::__construct($name, $templating);
-
 		$this->projectDir = $projectDir;
+		parent::__construct($twig);
+
 	}
 
     /**
@@ -48,6 +45,7 @@ class VersionBlockService extends AbstractAdminBlockService
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
+        $version = 'master';
 	    $content = file_get_contents($this->projectDir.'/composer.lock');
 	    $content = json_decode($content,true);
 	    foreach ($content['packages'] as $package){
@@ -65,21 +63,6 @@ class VersionBlockService extends AbstractAdminBlockService
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
-    {
-        // TODO: Implement validateBlock() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
-    {
-        // TODO: Implement buildEditForm() method.
-    }
 
     /**
      * {@inheritdoc}

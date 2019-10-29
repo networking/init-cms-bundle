@@ -25,9 +25,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 abstract class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFormListenerInterface
 {
-	/**
-	 * @var \Doctrine\Common\Persistence\ObjectManager
-	 */
+    /**
+     * @var ObjectManager
+     */
 	protected $om;
 
 	/**
@@ -36,7 +36,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 	protected $contentTypes;
 
 	/**
-	 * @var TraceableValidator
+	 * @var ValidatorInterface
 	 */
 	protected $validator;
 
@@ -50,21 +50,17 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 	 */
 	protected $contentType;
 
-	/**
-	 * @param ObjectManager $om
-	 */
-	public function __construct(
-		ObjectManager $om
-	) {
+     /**
+     * LayoutBlockFormListener constructor.
+     * @param ObjectManager $om
+     * @param ValidatorInterface $validator
+     * @param $contentTypes
+     */
+	public function __construct(ObjectManager $om,ValidatorInterface $validator, $contentTypes ) {
 		$this->om = $om;
-	}
 
-	/**
-	 * @param ValidatorInterface $validator
-	 */
-	public function setValidator(ValidatorInterface $validator)
-	{
 		$this->validator = $validator;
+        $this->contentTypes = $contentTypes;
 	}
 
 	public function setAdmin(LayoutBlockAdmin $admin)
@@ -80,10 +76,6 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 		return $this->contentTypes;
 	}
 
-	public function setContentTypes($contentTypes)
-	{
-		$this->contentTypes = $contentTypes;
-	}
 
 	/**
 	 * @return array
@@ -96,11 +88,17 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 		];
 	}
 
+    /**
+     * @param $contentType
+     */
 	public function setContentType($contentType)
 	{
 		$this->contentType = $contentType;
 	}
 
+    /**
+     * @param FormEvent $event
+     */
 	public function preSetData(FormEvent $event)
 	{
 		$layoutBlock = $event->getData();

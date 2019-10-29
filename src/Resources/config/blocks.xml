@@ -21,35 +21,23 @@
             <tag name="sonata.block"/>
         </service>
 
-        <service id="networking_init_cms.block.service.pages" class="Networking\InitCmsBundle\Block\PagesBlockService" public="true">
-            <argument>networking_init_cms.block.service.pages</argument>
-            <argument type="service" id="templating"/>
-            <call method="setPageManager">
-                <argument type="service" id="networking_init_cms.page_manager"/>
-            </call>
+        <service id="networking_init_cms.block.service.pages" class="Networking\InitCmsBundle\Block\PagesBlockService" public="true" autowire="true">
             <tag name="sonata.block"/>
         </service>
 
 
-        <service id="networking_init_cms.block.service.cache" class="Networking\InitCmsBundle\Block\CacheBlockService" public="true">
-            <argument>networking_init_cms.block.service.cache</argument>
-            <argument type="service" id="templating"/>
-            <argument type="service" id="networking_init_cms.lib.php_cache" />
+        <service id="networking_init_cms.block.service.cache" class="Networking\InitCmsBundle\Block\CacheBlockService" public="true" autowire="true">
             <tag name="sonata.block"/>
         </service>
 
 
-        <service id="networking_init_cms.block.service.sitemap" class="Networking\InitCmsBundle\Block\SitemapBlockService" public="true">
-            <argument>networking_init_cms.block.service.sitemap</argument>
-            <argument type="service" id="templating"/>
+        <service id="networking_init_cms.block.service.sitemap" class="Networking\InitCmsBundle\Block\SitemapBlockService" public="true" autowire="true">
             <tag name="sonata.block"/>
         </service>
 
 
-        <service id="networking_init_cms.block.service.version" class="Networking\InitCmsBundle\Block\VersionBlockService" public="true">
-            <argument>networking_init_cms.block.service.version</argument>
-            <argument type="service" id="templating"/>
-            <argument>%kernel.project_dir%</argument>
+        <service id="networking_init_cms.block.service.version" class="Networking\InitCmsBundle\Block\VersionBlockService" public="true" autowire="true">
+            <argument key="$projectDir">%kernel.project_dir%</argument>
             <tag name="sonata.block"/>
         </service>
 

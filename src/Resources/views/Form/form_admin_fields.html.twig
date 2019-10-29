@@ -152,7 +152,7 @@ file that was distributed with this source code.
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
         {% set translation_domain = onata_admin.field_description.translationDomain %}
     {% endif %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if label is empty %}
             {% set label = name|humanize %}
         {% endif %}
@@ -161,7 +161,7 @@ file that was distributed with this source code.
                 {{ mopa_bootstrap_icon(icon, icon_inverted|default(false)) }}
             {% endif %}
             {{ label|trans({}, translation_domain) }}</button>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock button_widget %}
 
 {# Widgets #}
@@ -169,7 +169,7 @@ file that was distributed with this source code.
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
         {% set translation_domain = onata_admin.field_description.translationDomain %}
     {% endif %}
-    {% spaceless %}
+    {% apply spaceless %}
         <ul class="{{ form.vars.attr.class }}">
             {% for tab in form.vars.tabs %}
                 <li{% if tab.active %} class="active"{% endif %}>
@@ -180,7 +180,7 @@ file that was distributed with this source code.
                 </li>
             {% endfor %}
         </ul>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 
@@ -189,7 +189,7 @@ file that was distributed with this source code.
     {% if sonata_admin.admin is not defined or not sonata_admin.admin %}
         {{ parent() }}
     {% elseif 'checkbox' in block_prefixes %}
-        {% spaceless %}
+        {% apply spaceless %}
             {% if app.request.get('provider') and label == 'form.label_binary_content' %}
                 {% set provider = app.request.get('provider')|split('.')[3] %}
                 {% set mylabel = label~'_'~provider %}
@@ -238,9 +238,9 @@ file that was distributed with this source code.
                 {% endif %}
                 </label>
             {% endif %}
-        {% endspaceless %}
+        {% endapply %}
     {% elseif widget_checkbox_label in ['label', 'both'] %}
-        {% spaceless %}
+        {% apply spaceless %}
             {% if app.request.get('provider') and label == 'form.label_binary_content' %}
                 {% set provider = app.request.get('provider')|split('.')[3] %}
                 {% set mylabel = label~'_'~provider %}
@@ -291,7 +291,7 @@ file that was distributed with this source code.
                      &nbsp;{{ block('form_widget_add_btn') }}
                  {% endif %}
             {% endif %}
-        {% endspaceless %}
+        {% endapply %}
     {% endif %}
 {% endblock form_label %}
 
@@ -349,7 +349,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block form_rows_visible %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if form_errors(form) %}
             <div class="symfony-form-errors">
                 {{ form_errors(form) }}
@@ -360,16 +360,16 @@ file that was distributed with this source code.
                 {{ form_row(child) }}
             {% endif %}
         {% endfor %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock form_rows_visible %}
 
 
 {% block widget_container_attributes_choice_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         id="{{ id }}"
         {% for attrname,attrvalue in attr %}{{ attrname }}="{% if attrname == 'class' %}unstyled {% endif %}{{ attrvalue }}" {% endfor %}
         {% if "class" not in attr %}class="unstyled"{% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 
@@ -393,7 +393,7 @@ file that was distributed with this source code.
 
 
 {% block form_row %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if sonata_admin is not defined or not sonata_admin_enabled or not sonata_admin.field_description %}
             {{ parent() }}
         {% else %}
@@ -453,19 +453,19 @@ file that was distributed with this source code.
             {% endif -%}
             {{ block('widget_form_group_end') }}
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock form_row %}
 
 {# Support #}
 {% block form_message %}
-    {% spaceless %}
+    {% apply spaceless %}
         {{ form_errors(form) }}
         {{ block('form_help') }}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock form_message %}
 
 {% block form_widget_remove_btn %}
-    {% spaceless %}
+    {% apply spaceless %}
 
         {% if widget_remove_btn.wrapper_div is not same as(false) %}
             <div class="{{ widget_remove_btn.wrapper_div.class }} col-sm-offset-3">
@@ -479,7 +479,7 @@ file that was distributed with this source code.
             </div>
             <div class="clearfix"></div>
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock form_widget_remove_btn %}
 
 {% block widget_form_group_start %}
@@ -522,7 +522,7 @@ file that was distributed with this source code.
 
 
 {% block sonata_type_immutable_array_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="controls">
             <div {{ block('widget_container_attributes') }}>
                 {{ form_errors(form) }}
@@ -534,11 +534,11 @@ file that was distributed with this source code.
                 {{ form_rest(form) }}
             </div>
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock sonata_type_immutable_array_widget %}
 
 {% block sonata_type_immutable_array_widget_row %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="control-group{% if errors|length > 0 %} error{% endif %}"
              id="sonata-ba-field-container-{{ id }}-{{ key }}">
 
@@ -554,11 +554,11 @@ file that was distributed with this source code.
                 </div>
             {% endif %}
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {% block date_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if widget == 'single_text' %}
             {% if datepicker is defined %}
                 {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'calendar' %}
@@ -602,11 +602,11 @@ file that was distributed with this source code.
                 })|raw }}
             </div>
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock date_widget %}
 
 {% block time_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if widget == 'single_text' %}
             {% if timepicker is defined %}
                 {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'time' %}
@@ -643,7 +643,7 @@ file that was distributed with this source code.
             {% endif %}
         {% else %}
             {% set attr = attr|merge({'class': attr.class|default('form-inline')}) %}
-            {% spaceless %}
+            {% apply spaceless %}
                 <div {{ block('widget_container_attributes') }}>
                     {{ form_widget(form.hour, { 'attr': {  'size': '2'}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
                     {% if with_minutes %}
@@ -653,13 +653,13 @@ file that was distributed with this source code.
                         :{{ form_widget(form.second, { 'attr': { 'size': '2' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2') }) }}
                     {% endif %}
                 </div>
-            {% endspaceless %}
+            {% endapply %}
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock time_widget %}
 
 {% block datetime_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if widget == 'single_text' %}
             {% if datetimepicker is defined %}
                 {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'th' %}
@@ -695,7 +695,7 @@ file that was distributed with this source code.
                 {{ form_widget(form.time, {'attr': {'class': attr.widget_class|default('')}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
             </div>
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock datetime_widget %}
 
 {% block networking_type_mediaprint_widget %}
@@ -716,20 +716,20 @@ file that was distributed with this source code.
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
     {% endif %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if help_block %}
             <span class="help-block">{{ help_block|trans({}, translation_domain)|raw }}</span>{% endif %}
         {% if sonata_admin is defined and sonata_admin.field_description.help is defined %}
             <span class="help-block sonata-ba-field-help">{{ sonata_admin.field_description.help }}</span>
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock form_help %}
 
 {% block networking_type_iconradio_widget %}
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
     {% endif %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if expanded %}
             {% set attr = attr|merge({class: 'row' ~ attr.class} ) %}
             <div {{ block('widget_container_attributes') }}>
@@ -755,17 +755,17 @@ file that was distributed with this source code.
             {# just let the choice widget render the select tag #}
             {{ block('choice_widget') }}
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {% block checkbox_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock checkbox_widget %}
 
 {% block sonata_security_roles_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="editable">
             <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a></p>
 
@@ -797,7 +797,7 @@ file that was distributed with this source code.
                 </ul>
             </div>
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock sonata_security_roles_widget %}
 
 {% block media_entity_type_widget %}
@@ -868,35 +868,69 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block ckeditor_widget %}
-    {% set attr = attr|merge({'class': attr.class|default('ckeditor')}) %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-    {% if enable %}
-        {% if autoload %}
-            <script type="text/javascript">
-                var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
-            </script>
-            <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
-        {% endif %}
-        <script type="text/javascript">
-            {{ ckeditor_destroy(id) }}
 
-            {% for plugin_name, plugin in plugins %}
-            {{ ckeditor_plugin(plugin_name, plugin) }}
-            {% endfor %}
-
-            {% for style_name, style in styles %}
-            {{ ckeditor_styles_set(style_name, style) }}
-            {% endfor %}
-
-            {% for template_name, template in templates %}
-            {{ ckeditor_template(template_name, template) }}
-            {% endfor %}
-
-            {% set config = config|merge({'language': app.request.locale}) %}
-
-            {{ ckeditor_widget(id, config) }}
-        </script>
+    {% if enable and not async %}
+        {{ block('_ckeditor_javascript') }}
     {% endif %}
+{% endblock %}
+
+{% block ckeditor_javascript %}
+    {% if enable and async %}
+        {{ block('_ckeditor_javascript') }}
+    {% endif %}
+{% endblock %}
+
+{% block _ckeditor_javascript %}
+    {% if autoload %}
+        <script type="text/javascript">
+            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
+        </script>
+        <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
+        {% if jquery %}
+            <script type="text/javascript" src="{{ ckeditor_js_path(jquery_path) }}"></script>
+        {% endif %}
+    {% endif %}
+    <script type="text/javascript">
+        {% if jquery %}
+        $(function () {
+            {% endif %}
+
+            {% if require_js %}
+            require(['ckeditor'], function() {
+                {% endif %}
+
+                {{ ckeditor_destroy(id) }}
+
+                {% for plugin_name, plugin in plugins %}
+                {{ ckeditor_plugin(plugin_name, plugin) }}
+                {% endfor %}
+
+                {% for style_name, style in styles %}
+                {{ ckeditor_styles_set(style_name, style) }}
+                {% endfor %}
+
+                {% for template_name, template in templates %}
+                {{ ckeditor_template(template_name, template) }}
+                {% endfor %}
+
+                {% block ckeditor_widget_extra %}{% endblock ckeditor_widget_extra %}
+
+                {{ ckeditor_widget(id, config, {
+                    auto_inline: auto_inline,
+                    inline: inline,
+                    input_sync: input_sync,
+                    filebrowsers: filebrowsers
+                }) }}
+
+                {% if require_js %}
+            });
+            {% endif %}
+
+            {% if jquery %}
+        });
+        {% endif %}
+    </script>
 {% endblock %}
 
 
@@ -904,17 +938,17 @@ file that was distributed with this source code.
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
     {% endif %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% for attrname,attrvalue in help_widget_popover %}
             data-{{ attrname }}="{{ attrvalue|trans({}, domain|default('messages')) }}"
         {% endfor %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock help_widget_popover %}
 
 {% block widget_form_group_end %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if widget_form_group|default(false) or form.parent == null %}
             </div>
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock widget_form_group_end %}

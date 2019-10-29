@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Ibrows\SonataTranslationBundle\Controller\TranslationCRUDController as IbrowsTranslationCRUDController;
+use Networking\InitCmsBundle\Lib\PhpCacheInterface;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -22,6 +23,20 @@ use Symfony\Component\Yaml\Dumper;
  */
 class TranslationCRUDController extends IbrowsTranslationCRUDController
 {
+    /**
+     * @var PhpCacheInterface 
+     */
+    private $phpCache;
+
+    /**
+     * TranslationCRUDController constructor.
+     * @param PhpCacheInterface $phpCache
+     */
+    public function __construct(PhpCacheInterface $phpCache)
+    {
+        $this->phpCache = $phpCache;
+    }
+
     /**
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -36,9 +51,8 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
         $this->get('translator')->removeLocalesCacheFiles($localeChoices);
 
         /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
-        $phpCache = $this->get('networking_init_cms.lib.php_cache');
-        if ($phpCache->isActive()) {
-            $phpCache->clean();
+        if ($this->phpCache->isActive()) {
+            $this->phpCache->clean();
         }
 
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
@@ -49,11 +63,11 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
     }
 
     /**
-     * @param ProxyQueryInterface $queryProxy
+     * @param ProxyQueryInterface $query
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|StreamedResponse
      */
-    public function batchActionDownload(ProxyQueryInterface $queryProxy)
+    public function batchActionDownload(ProxyQueryInterface $query)
     {
         $flashType = 'success';
 
@@ -61,15 +75,15 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
 
         $token = $this->getRequest()->get('downloadToken');
 
-        $cookie = new Cookie('downloadToken', $token,  0,  '/',  null,  false, false);
+        $cookie = new Cookie('downloadToken', $token, 0, '/', null, false, false);
 
         $response = new StreamedResponse(
-            function () use ($queryProxy, &$flashType, $dumper) {
+            function () use ($query, &$flashType, $dumper) {
                 try {
                     /*
                      * @var TransUnit
                      */
-                    foreach ($queryProxy->getQuery()->getResult() as $pos => $transUnit) {
+                    foreach ($query->getQuery()->getResult() as $pos => $transUnit) {
                         $chunkPrefix = $transUnit->getDomain().'__'.$transUnit->getKey().'__'.$transUnit->getId().'__';
                         $chunk = array();
                         /** @var TranslationInterface $translation */

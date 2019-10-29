@@ -145,9 +145,9 @@ class TranslationAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $filter)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-        $filter
+        $datagridMapper
             ->add('key', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
             ->add('translations.content', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
             ->add(
@@ -259,24 +259,6 @@ class TranslationAdmin extends AbstractAdmin
         }
 
         return $choices;
-    }
-
-    /**
-     * @param \Ibrows\SonataTranslationBundle\Admin\unknown $name
-     *
-     * @return \Ibrows\SonataTranslationBundle\Admin\multitype|string
-     */
-    public function getTemplate($name)
-    {
-        if ($name === 'list') {
-            return '@NetworkingInitCms/TranslationAdmin/list.html.twig';
-        }
-
-        if ($name === 'edit') {
-            return '@NetworkingInitCms/TranslationAdmin/edit.html.twig';
-        }
-
-        return $this->getTemplateRegistry()->getTemplate($name);
     }
 
     /**

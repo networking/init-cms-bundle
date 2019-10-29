@@ -33,7 +33,7 @@ file that was distributed with this source code.
                 {% set filter_main = '' %}
                 {% set filter_hidden = '' %}
                 {% set showHiddenFilters = 0 %}
-                {% for filter in datagrid.filters  if (filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is same as(null)) %}
+                {% for filter in datagrid.filters|filter(filter => filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is same as(null)) %}
                     {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                         {% set filter_main %}
                             {{ filter_main }}

@@ -2,7 +2,7 @@
 
 {% macro tag_tree(tags, lastItem, tagAdmin, noSort, selected, level) %}
     {% import _self as macros %}
-    {% for tag in tags if tag.level == level %}
+    {% for tag in tags|filter(tag => tag.level == level) %}
         <li  class="table-row-style sortable-tag mjs-nestedSortable-{{ selected==tag.id or tag.hasChild(selected)?'expanded':'collapsed' }} {% if lastItem and tag.id == lastItem %}last-item{% endif %}" id="tag_{{ tag.id }}" data-tag-name="{{ tag.name }}">
                 <div class="dotted">&nbsp;</div>
                 <div class="handle menu_item tag_item {{ selected==tag.id?'info':'' }} " id="div_{{ tag.id }}" ondrop="dropTag(event, '{{ tag.id }}')"   ondragover="openTag(event, '{{ tag.id }}')" >

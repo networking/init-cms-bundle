@@ -13,29 +13,28 @@ namespace Networking\InitCmsBundle\Block;
 use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
-use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 /**
  * Class PagesBlockService.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class PagesBlockService extends AbstractAdminBlockService
+class PagesBlockService extends AbstractBlockService
 {
     /**
      * @var PageManagerInterface
      */
-    protected $em;
+    protected $pageManager;
 
-    public function setPageManager(PageManagerInterface $em)
+    public function __construct(Environment $twig, PageManagerInterface $pageManager)
     {
-        $this->em = $em;
+        $this->pageManager = $pageManager;
+        parent::__construct($twig);
     }
 
     /**
@@ -43,7 +42,7 @@ class PagesBlockService extends AbstractAdminBlockService
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-        $pages = $this->em->getAllSortBy('updatedAt', 'DESC', Query::HYDRATE_ARRAY);
+        $pages = $this->pageManager->getAllSortBy('updatedAt', 'DESC', Query::HYDRATE_ARRAY);
 
         $draftPageCount = 0;
         $reviewPageCount = 0;
@@ -82,20 +81,6 @@ class PagesBlockService extends AbstractAdminBlockService
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
-    {
-        // TODO: Implement validateBlock() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
-    {
-    }
 
     /**
      * {@inheritdoc}

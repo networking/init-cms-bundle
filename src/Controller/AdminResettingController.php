@@ -13,44 +13,138 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Controller;
 
+use FOS\UserBundle\Form\Factory\FactoryInterface;
 use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Model\UserManagerInterface;
+use FOS\UserBundle\Security\LoginManagerInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
+use Sonata\AdminBundle\Admin\Pool;
+use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 
-class AdminResettingController extends Controller
+class AdminResettingController extends AbstractController
 {
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var Pool
+     */
+    private $pool;
+
+    /**
+     * @var UserManagerInterface
+     */
+    private $userManager;
+
+    /**
+     * @var TemplateRegistryInterface
+     */
+    private $templateRegistry;
+
+    /**
+     * @var TokenGeneratorInterface
+     */
+    private $tokenGenerator;
+
+    private $loginManager;
+    private $resettingFormFactory;
+    private $retryTTL;
+    private $firewallName;
+    private $resettingTokenTTL;
+    private $fromEmail;
+    private $emailTemplate;
+
+    /**
+     * AdminResettingController constructor.
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param RouterInterface $router
+     * @param Pool $pool
+     * @param UserManagerInterface $userManager
+     * @param TemplateRegistryInterface $templateRegistry
+     * @param TokenGeneratorInterface $tokenGenerator
+     * @param LoginManagerInterface $loginManager
+     * @param FactoryInterface $resettingFormFactory
+     * @param $retryTTL
+     * @param $firewallName
+     * @param $resettingTokenTTL
+     * @param $fromEmail
+     * @param $emailTemplate
+     */
+    public function __construct(
+        AuthorizationCheckerInterface $authorizationChecker,
+        RouterInterface $router,
+        Pool $pool,
+        UserManagerInterface $userManager,
+        TemplateRegistryInterface $templateRegistry,
+        TokenGeneratorInterface $tokenGenerator,
+        LoginManagerInterface $loginManager,
+        FactoryInterface $resettingFormFactory,
+        $retryTTL,
+        $firewallName,
+        $resettingTokenTTL,
+        $fromEmail,
+        $emailTemplate
+
+    )
+    {
+
+        $this->authorizationChecker = $authorizationChecker;
+        $this->router = $router;
+        $this->pool = $pool;
+        $this->userManager = $userManager;
+        $this->templateRegistry = $templateRegistry;
+        $this->tokenGenerator = $tokenGenerator;
+        $this->loginManager = $loginManager;
+        $this->resettingFormFactory = $resettingFormFactory;
+        $this->retryTTL = $retryTTL;
+        $this->firewallName = $firewallName;
+        $this->resettingTokenTTL = $resettingTokenTTL;
+        $this->fromEmail = $fromEmail;
+        $this->emailTemplate = $emailTemplate;
+    }
+
     /**
      * @return Response
      */
     public function requestAction()
     {
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return new RedirectResponse($this->get('router')->generate('sonata_admin_dashboard'));
+        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return new RedirectResponse($this->router->generate('sonata_admin_dashboard'));
         }
 
         return $this->render('NetworkingInitCmsBundle:Admin:Security/Resetting/request.html.twig', [
-            'base_template' => $this->get('sonata.admin.pool')->getTemplate('layout'),
-            'admin_pool' => $this->get('sonata.admin.pool'),
+            'base_template' => $this->templateRegistry->getTemplate('layout'),
+            'admin_pool' => $this->pool,
         ]);
     }
 
     /**
      * @param Request $request
-     *
-     * @return Response
+     * @return RedirectResponse
+     * @throws \Exception
      */
     public function sendEmailAction(Request $request)
     {
         $username = $request->request->get('username');
 
-        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
-        $userManager = $this->get('fos_user.user_manager');
+        $userManager = $this->userManager;
 
         $user = $userManager->findUserByUsernameOrEmail($username);
 
@@ -62,9 +156,7 @@ class AdminResettingController extends Controller
             }
 
             if (null === $user->getConfirmationToken()) {
-                /** @var $tokenGenerator TokenGeneratorInterface */
-                $tokenGenerator = $this->get('fos_user.util.token_generator');
-                $user->setConfirmationToken($tokenGenerator->generateToken());
+                $user->setConfirmationToken($this->tokenGenerator->generateToken());
             }
 
             $this->sendResettingEmailMessage($user);
@@ -92,9 +184,9 @@ class AdminResettingController extends Controller
         }
 
         return $this->render('NetworkingInitCmsBundle:Admin:Security/Resetting/checkEmail.html.twig', [
-            'base_template' => $this->get('sonata.admin.pool')->getTemplate('layout'),
-            'admin_pool' => $this->get('sonata.admin.pool'),
-            'tokenLifetime' => ceil($this->container->getParameter('fos_user.resetting.retry_ttl') / 3600),
+            'base_template' => $this->templateRegistry->getTemplate('layout'),
+            'admin_pool' => $this->pool,
+            'tokenLifetime' => ceil($this->retryTTL / 3600),
         ]);
     }
 
@@ -110,14 +202,9 @@ class AdminResettingController extends Controller
             return new RedirectResponse($this->get('router')->generate('sonata_admin_dashboard'));
         }
 
-        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
-        $formFactory = $this->get('fos_user.resetting.form.factory');
-        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
-        $userManager = $this->get('fos_user.user_manager');
-        /** @var $loginManager \FOS\UserBundle\Security\LoginManagerInterface */
-        $loginManager = $this->get('fos_user.security.login_manager');
 
-        $user = $userManager->findUserByConfirmationToken($token);
+
+        $user = $this->userManager->findUserByConfirmationToken($token);
 
         $firewallName = $this->container->getParameter('fos_user.firewall_name');
 
@@ -125,11 +212,11 @@ class AdminResettingController extends Controller
             throw new NotFoundHttpException(sprintf('The user with "confirmation token" does not exist for value "%s"', $token));
         }
 
-        if (!$user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
+        if (!$user->isPasswordRequestNonExpired($this->resettingTokenTTL)) {
             return new RedirectResponse($this->generateUrl('sonata_user_admin_resetting_request'));
         }
 
-        $form = $formFactory->createForm();
+        $form = $this->resettingFormFactory->createForm();
         $form->setData($user);
 
         $form->handleRequest($request);
@@ -144,7 +231,7 @@ class AdminResettingController extends Controller
             $response = new RedirectResponse($this->generateUrl('sonata_admin_dashboard'));
 
             try {
-                $loginManager->logInUser($firewallName, $user, $response);
+                $this->loginManager->logInUser($firewallName, $user, $response);
                 $user->setLastLogin(new \DateTime());
             } catch (AccountStatusException $ex) {
                 // We simply do not authenticate users which do not pass the user
@@ -157,7 +244,7 @@ class AdminResettingController extends Controller
                 }
             }
 
-            $userManager->updateUser($user);
+            $this->userManager->updateUser($user);
 
             return $response;
         }
@@ -165,8 +252,8 @@ class AdminResettingController extends Controller
         return $this->render('NetworkingInitCmsBundle:Admin:Security/Resetting/reset.html.twig', [
             'token' => $token,
             'form' => $form->createView(),
-            'base_template' => $this->get('sonata.admin.pool')->getTemplate('layout'),
-            'admin_pool' => $this->get('sonata.admin.pool'),
+            'base_template' => $this->templateRegistry->getTemplate('layout'),
+            'admin_pool' => $this->pool,
         ]);
     }
 
@@ -181,7 +268,7 @@ class AdminResettingController extends Controller
             'token' => $user->getConfirmationToken(),
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $rendered = $this->renderView($this->container->getParameter('fos_user.resetting.email.template'), [
+        $rendered = $this->renderView($this->emailTemplate, [
             'user' => $user,
             'confirmationUrl' => $url,
         ]);
@@ -192,7 +279,7 @@ class AdminResettingController extends Controller
         $body = implode(PHP_EOL, $renderedLines);
         $message = (new \Swift_Message())
             ->setSubject($subject)
-            ->setFrom($this->container->getParameter('fos_user.resetting.email.from_email'))
+            ->setFrom($this->fromEmail)
             ->setTo((string) $user->getEmail())
             ->setBody($body);
         $this->get('mailer')->send($message);

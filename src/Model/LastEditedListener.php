@@ -10,9 +10,10 @@
 
 namespace Networking\InitCmsBundle\Model;
 
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Networking\InitCmsBundle\Helper\BundleGuesser;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -20,7 +21,7 @@ use Networking\InitCmsBundle\Helper\BundleGuesser;
 abstract class LastEditedListener implements EventSubscriberInterface
 {
     /**
-     * @var Session
+     * @var SessionInterface
      */
     protected $session;
 
@@ -30,9 +31,10 @@ abstract class LastEditedListener implements EventSubscriberInterface
     protected $bundleGuesser;
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Session\Session $session
+     * LastEditedListener constructor.
+     * @param SessionInterface $session
      */
-    public function __construct(Session $session)
+    public function __construct(SessionInterface $session)
     {
         $this->session = $session;
         $this->bundleGuesser = new BundleGuesser();
@@ -47,4 +49,10 @@ abstract class LastEditedListener implements EventSubscriberInterface
             'crud_controller.edit_entity' => 'registerEdited',
         ];
     }
+
+    /**
+     * @param CmsEvent $event
+     * @return mixed
+     */
+    abstract public function registerEdited(CmsEvent $event);
 }

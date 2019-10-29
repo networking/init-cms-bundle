@@ -10,13 +10,11 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Symfony\Bridge\Twig\AppVariable;
-use Symfony\Bridge\Twig\Command\DebugCommand;
+use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController;
 use Networking\InitCmsBundle\Entity\LastEditedListener as ORMLastEditedListener;
-use Networking\InitCmsBundle\Document\LastEditedListener as ODMLastEditedListener;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\FormView;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
@@ -36,10 +34,27 @@ class CRUDController extends SonataCRUDController
      */
     protected $dispatcher;
 
-    public function __construct(CmsEventDispatcher $dispatcher)
+    /**
+     * @var PhpCacheInterface
+     */
+    protected $phpCache;
+
+    /**
+     * @var TemplateRegistryInterface
+     */
+    protected $templateRegistry;
+
+    /**
+     * CRUDController constructor.
+     * @param CmsEventDispatcher $dispatcher
+     * @param PhpCacheInterface $phpCache
+     */
+    public function __construct(CmsEventDispatcher $dispatcher, PhpCacheInterface $phpCache)
     {
         $this->dispatcher = $dispatcher;
+        $this->phpCache = $phpCache;
     }
+
 
     /**
      * Set up the lasted edited dispatcher.
@@ -52,9 +67,6 @@ class CRUDController extends SonataCRUDController
         $session = $this->get('session');
 
         switch (strtolower($this->container->getParameter('networking_init_cms.db_driver'))) {
-            case 'monodb':
-                $lastEditedSubscriber = new ODMLastEditedListener($session);
-                break;
             case 'orm':
                 $lastEditedSubscriber = new ORMLastEditedListener($session);
                 break;
@@ -65,6 +77,16 @@ class CRUDController extends SonataCRUDController
 
         if ($lastEditedSubscriber) {
             $this->dispatcher->addSubscriber($lastEditedSubscriber);
+        }
+
+        $this->templateRegistry = $this->container->get($this->admin->getCode().'.template_registry');
+        if (!$this->templateRegistry instanceof TemplateRegistryInterface) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Unable to find the template registry related to the current admin (%s)',
+                    $this->admin->getCode()
+                )
+            );
         }
     }
 
@@ -101,30 +123,13 @@ class CRUDController extends SonataCRUDController
     }
 
     /**
-     * Sets the admin form theme to form view. Used for compatibility between Symfony versions.
-     *
      * @param FormView $formView
-     * @param string   $theme
-     *
-     * @throws \Twig_Error_Runtime
+     * @param array $theme
+     * @throws \Twig\Error\RuntimeError
      */
     protected function setFormTheme(FormView $formView, $theme)
     {
         $twig = $this->get('twig');
-
-        // BC for Symfony < 3.2 where this runtime does not exists
-        if (!method_exists(AppVariable::class, 'getToken')) {
-            $twig->getExtension(FormExtension::class)->renderer->setTheme($formView, $theme);
-
-            return;
-        }
-
-        // BC for Symfony < 3.4 where runtime should be TwigRenderer
-        if (!method_exists(DebugCommand::class, 'getLoaderPaths')) {
-            $twig->getRuntime(TwigRenderer::class)->setTheme($formView, $theme);
-
-            return;
-        }
 
         $twig->getRuntime(FormRenderer::class)->setTheme($formView, $theme);
     }

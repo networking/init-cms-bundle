@@ -9,6 +9,7 @@
             <argument/>
             <argument>%networking_init_cms.admin.page.class%</argument>
             <argument>NetworkingInitCmsBundle:PageAdmin</argument>
+            <argument type="service" id="networking_init_cms.page_manager"/>
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
             </call>
@@ -18,8 +19,21 @@
             <call method="setlanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
             </call>
-            <call method="setPageManager">
-                <argument type="service" id="networking_init_cms.page_manager"/>
+            <call method="setTemplate">
+                <argument>show</argument>
+                <argument>@NetworkingInitCms/PageAdmin/page_show.html.twig</argument>
+            </call>
+            <call method="setTemplate">
+                <argument>preview</argument>
+                <argument>@NetworkingInitCms/PageAdmin/page_preview.html.twig</argument>
+            </call>
+            <call method="setTemplate">
+                <argument>edit</argument>
+                <argument>@NetworkingInitCms/PageAdmin/base_edit.html.twig</argument>
+            </call>
+            <call method="setTemplate">
+                <argument>list</argument>
+                <argument>@NetworkingInitCms/PageAdmin/page_list.html.twig</argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="pages.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
@@ -30,6 +44,10 @@
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\LayoutBlock</argument>
             <argument>NetworkingInitCmsBundle:LayoutBlock</argument>
+            <argument type="service" id="networking_init_cms.page_manager"/>
+            <argument type="service" id="networking_init_cms.layout_block_form_listener"/>
+            <argument type="service" id="jms_serializer.serializer"/>
+            <argument type="service" id="networking_init_cms.admin.page"/>
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
             </call>
@@ -54,6 +72,16 @@
                     <argument key="menu">Networking\InitCmsBundle\Entity\MenuItem</argument>
                     <argument key="menu item">Networking\InitCmsBundle\Entity\MenuItem</argument>
                 </argument>
+            </call>
+
+            <call method="setTemplate">
+                <argument>list</argument>
+                <argument>@NetworkingInitCms/MenuItemAdmin/menu_list.html.twig</argument>
+            </call>
+
+            <call method="setTemplate">
+                <argument>placement</argument>
+                <argument>@NetworkingInitCms/MenuItemAdmin/placement.html.twig</argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="menus.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"

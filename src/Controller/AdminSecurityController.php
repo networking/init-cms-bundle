@@ -8,16 +8,52 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Sonata\AdminBundle\Admin\Pool;
+use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Sonata\UserBundle\Model\UserInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-class AdminSecurityController extends Controller
+class AdminSecurityController extends AbstractController
 {
+    /**
+     * @var CsrfTokenManagerInterface
+     */
+    private $csrfTokenManager;
+
+    /**
+     * @var Pool
+     */
+    private $pool;
+
+    /**
+     * @var TemplateRegistryInterface
+     */
+    private $templateRegistry;
+
+    /**
+     * AdminSecurityController constructor.
+     * @param CsrfTokenManagerInterface $csrfTokenManager
+     * @param Pool $pool
+     * @param TemplateRegistryInterface $templateRegistry
+     */
+    public function __construct(
+        CsrfTokenManagerInterface $csrfTokenManager,
+        Pool $pool,
+        TemplateRegistryInterface $templateRegistry
+    ) {
+
+        $this->csrfTokenManager = $csrfTokenManager;
+        $this->pool = $pool;
+        $this->templateRegistry = $templateRegistry;
+    }
+
     /**
      * @param Request $request
      *
@@ -53,26 +89,33 @@ class AdminSecurityController extends Controller
         if ($this->isGranted('ROLE_ADMIN')) {
             $refererUri = $request->server->get('HTTP_REFERER');
 
-            return $this->redirect($refererUri && $refererUri != $request->getUri() ? $refererUri : $this->generateUrl('sonata_admin_dashboard'));
+            return $this->redirect(
+                $refererUri && $refererUri != $request->getUri() ? $refererUri : $this->generateUrl(
+                    'sonata_admin_dashboard'
+                )
+            );
         }
 
-        $csrfToken = $this->has('security.csrf.token_manager')
-            ? $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue()
-            : null;
+        $csrfToken = $this->csrfTokenManager->getToken('authenticate')->getValue();
 
-        return $this->render('NetworkingInitCmsBundle:Admin:Security/login.html.twig', [
-            'admin_pool' => $this->get('sonata.admin.pool'),
-            'base_template' => $this->get('sonata.admin.pool')->getTemplate('layout'),
-            'csrf_token' => $csrfToken,
-            'error' => $error,
-            'last_username' => (null === $session) ? '' : $session->get(Security::LAST_USERNAME),
-            'reset_route' => $this->generateUrl('networking_init_cms_admin_resetting_request'),
-        ]);
+        return $this->render(
+            'NetworkingInitCmsBundle:Admin:Security/login.html.twig',
+            [
+                'admin_pool' => $this->pool,
+                'base_template' => $this->templateRegistry->getTemplate('layout'),
+                'csrf_token' => $csrfToken,
+                'error' => $error,
+                'last_username' => (null === $session) ? '' : $session->get(Security::LAST_USERNAME),
+                'reset_route' => $this->generateUrl('networking_init_cms_admin_resetting_request'),
+            ]
+        );
     }
 
     public function checkAction(): void
     {
-        throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
+        throw new \RuntimeException(
+            'You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.'
+        );
     }
 
     public function logoutAction(): void

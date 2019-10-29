@@ -25,7 +25,7 @@ file that was distributed with this source code.
             {% set filter_hidden = '' %}
             {% set showHiddenFilters = 0 %}
             {#{% for filter in admin.datagrid.filters if (filter.options.field_type is not defined or filter.options.field_type != 'hidden' ) %}#}
-            {% for filter in admin.datagrid.filters  if (filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null) %}
+            {% for filter in admin.datagrid.filters|filter(filter => (filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null)) %}
 
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
@@ -80,7 +80,7 @@ file that was distributed with this source code.
                                         <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
                                     {% endfor %}
                                     {% if filter_hidden != '' %}
-                                        {# add div with hidden / show function #}
+                                         add div with hidden / show function
                                         {{ filter_hidden }}
                                     {% endif %}
                                 </div>
@@ -144,7 +144,7 @@ file that was distributed with this source code.
                                 {% set sort_by              = current ? admin.datagrid.values._sort_order : field_description.options._sort_order %}
                             {% endif %}
 
-                            {% spaceless %}
+                            {% apply spaceless %}
                                 <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if loop.index in [1,2] %}nowrap {% endif %} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
                                     {% if sortable %}<a
                                             href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
@@ -163,7 +163,7 @@ file that was distributed with this source code.
                                         {% endif %}
                                      {% if sortable %}</a>{% endif %}
                                 </th>
-                            {% endspaceless %}
+                            {% endapply %}
                         {% endif %}
                     {% endfor %}
                 </tr>

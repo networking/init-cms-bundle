@@ -50,6 +50,7 @@
         "symfony/monolog-bundle": "^3.1",
         "symfony/orm-pack": "*",
         "symfony/process": "4.3.*",
+        "symfony/proxy-manager-bridge": "^4.3",
         "symfony/security-bundle": "4.3.*",
         "symfony/serializer-pack": "*",
         "symfony/swiftmailer-bundle": "^3.1",

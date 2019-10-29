@@ -1,6 +1,6 @@
 {% macro render_groups(admin, form, groups, has_tab) %}
     <div class="row">
-        {% for code in groups if admin.formgroups[code] is defined %}
+        {% for code in groups|filter(code => admin.formgroups[code] is defined) %}
             {% set form_group = admin.formgroups[code] %}
             <div class="{{ form_group.class|default('col-md-12') }} sonata-ba-collapsed-fields">
                 <fieldset class="{{ form_group.box_class }}">

@@ -56,7 +56,7 @@ abstract class TagAdmin extends AbstractAdmin
             'update_tree',
             'update_tree',
             [
-                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:updateTree',
+                '_controller' => 'Networking\InitCmsBundle\Controller\TagAdminController::updateTreeAction',
             ]
         );
 
@@ -64,7 +64,7 @@ abstract class TagAdmin extends AbstractAdmin
             'inline_edit',
             'inline_edit',
             [
-                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:inlineEdit',
+                '_controller' => 'Networking\InitCmsBundle\Controller\TagAdminController::inlineEditAction',
             ]
         );
 
@@ -72,7 +72,7 @@ abstract class TagAdmin extends AbstractAdmin
             'search_tags',
             'search_tags',
             [
-                '_controller' => 'NetworkingInitCmsBundle:TagAdmin:searchTags',
+                '_controller' => 'Networking\InitCmsBundle\Controller\TagAdminController::searchTagsAction',
             ]
         );
     }
