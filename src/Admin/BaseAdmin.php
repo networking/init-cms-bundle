@@ -26,14 +26,6 @@ use Symfony\Component\Intl\Intl;
  */
 abstract class BaseAdmin extends AbstractAdmin
 {
-
-    protected $annotationReader;
-    public function __construct($code, $class, $baseControllerName)
-    {
-//        $this->annotationReader = $annotationReader;
-        parent::__construct($code, $class, $baseControllerName);
-    }
-
     /**
      * @var array
      */
@@ -211,16 +203,6 @@ abstract class BaseAdmin extends AbstractAdmin
      */
     protected function getSonataAnnotationReader()
     {
-        return $this->annotationReader;
-    }
-
-    /**
-     * @param SonataAdminAnnotationReaderInterface $annotationReader
-     * @return $this
-     */
-    public function setSonataAnnotationReader(SonataAdminAnnotationReaderInterface $annotationReader)
-    {
-        $this->annotationReader = $annotationReader;
-        return $this;
+        return $this->getContainer()->get('ibrows_sonataadmin.annotation.reader');
     }
 }

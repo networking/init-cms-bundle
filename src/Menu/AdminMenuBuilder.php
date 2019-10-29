@@ -15,7 +15,7 @@ use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
-use Sonata\AdminBundle\Admin\Pool;
+use Networking\InitCmsBundle\Admin\Pool;
 
 /**
  * Class AdminMenuBuilder.

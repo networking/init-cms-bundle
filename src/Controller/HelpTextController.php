@@ -10,59 +10,17 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Model\HelpTextManagerInterface;
-use Sonata\AdminBundle\Admin\AdminInterface;
-use Sonata\AdminBundle\Admin\Pool;
-use Sonata\AdminBundle\Templating\MutableTemplateRegistryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\Translation\TranslatorInterface;
+
 /**
  * Class HelpTextController.
  *
  * @author net working AG <info@networking.ch>
  */
-class HelpTextController extends AbstractController
+class HelpTextController extends Controller
 {
-    /**
-     * @var HelpTextManagerInterface
-     */
-    private $helpTextManager;
-
-    /**
-     * @var MutableTemplateRegistryInterface
-     */
-    private $templateRegistry;
-
-    /**
-     * @var Pool
-     */
-    private $pool;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * HelpTextController constructor.
-     * @param HelpTextManagerInterface $helpTextManager
-     * @param MutableTemplateRegistryInterface $templateRegistry
-     * @param Pool $pool
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(
-        HelpTextManagerInterface $helpTextManager,
-        MutableTemplateRegistryInterface $templateRegistry,
-        Pool $pool,
-        TranslatorInterface $translator
-    ) {
-        $this->helpTextManager = $helpTextManager;
-        $this->templateRegistry = $templateRegistry;
-        $this->pool = $pool;
-        $this->translator = $translator;
-    }
-
     /**
      * Help text page action.
      *
@@ -83,25 +41,26 @@ class HelpTextController extends AbstractController
             $translationKey = $adminCode.'.'.$action;
         }
 
-        $helpText = $this->helpTextManager->getHelpTextByKeyLocale($translationKey, $request->getLocale());
+        $helpTextManager = $this->get('networking_init_cms.help_text_manager');
+        $helpText = $helpTextManager->getHelpTextByKeyLocale($translationKey, $request->getLocale());
 
         $parameters['help_text'] = $helpText;
         if (!in_array($adminCode, $defaultAdminCode)) {
-            $admin = $this->pool->getAdminByAdminCode($adminCode);
+            $admin = $this->container->get('sonata.admin.pool')->getAdminByAdminCode($adminCode);
             $admin->setRequest($request);
             $parameters['admin'] = $admin;
         }
 
-        $parameters['admin_pool'] = $this->pool;
-        $parameters['base_template'] = isset($admin) ? $this->getBaseTemplate(
-            $request
-        ) : '@NetworkingInitCms/admin_layout.html.twig';
-        $dashBoardGroups = $this->pool->getDashboardGroups();
+        /** @var \Networking\InitCmsBundle\Admin\Pool $pool */
+        $pool = $this->get('sonata.admin.pool');
+        $parameters['admin_pool'] = $pool;
+        $parameters['base_template'] = isset($admin) ? $this->getBaseTemplate($request, $admin) : '@NetworkingInitCms/admin_layout.html.twig';
+        $dashBoardGroups = $pool->getDashboardNavigationGroups();
 
         $parameters['help_nav'] = $this->adminGetHelpTextNavigation(
             $dashBoardGroups,
             $request->getLocale(),
-            $this->helpTextManager
+            $helpTextManager
         );
 
         return $this->render(
@@ -113,17 +72,18 @@ class HelpTextController extends AbstractController
     /**
      * return the base template name.
      *
-     * @param Request $request
+     * @param Request       $request
+     * @param AbstractAdmin $admin
      *
      * @return string the template name
      */
-    protected function getBaseTemplate(Request $request)
+    protected function getBaseTemplate(Request $request, AbstractAdmin $admin)
     {
         if ($request->isXmlHttpRequest()) {
-            return $this->templateRegistry->getTemplate('ajax');
+            return $admin->getTemplate('ajax');
         }
 
-        return $this->templateRegistry->getTemplate('layout');
+        return $admin->getTemplate('layout');
     }
 
     /**
@@ -140,14 +100,14 @@ class HelpTextController extends AbstractController
         $navArray = [];
 
         //add overview & dashboard manually
-        $navArray['overview']['group_name'] = $this->translator->trans(
+        $navArray['overview']['group_name'] = $this->get('translator')->trans(
             'title.help',
             [],
             'HelpTextAdmin'
         );
         $navArray['overview']['group_items']['0']['adminCode'] = 'overview';
         $navArray['overview']['group_items']['0']['action'] = '';
-        $navArray['overview']['group_items']['0']['title'] = $this->translator->trans(
+        $navArray['overview']['group_items']['0']['title'] = $this->get('translator')->trans(
             'overview.title',
             [],
             'HelpTextAdmin'
@@ -156,20 +116,20 @@ class HelpTextController extends AbstractController
         $navArray['dashboard']['group_name'] = 'Dashboard';
         $navArray['dashboard']['group_items']['0']['adminCode'] = 'dashboard';
         $navArray['dashboard']['group_items']['0']['action'] = '';
-        $navArray['dashboard']['group_items']['0']['title'] = $this->translator->trans(
+        $navArray['dashboard']['group_items']['0']['title'] = $this->get('translator')->trans(
             'dashboard.title',
             [],
             'HelpTextAdmin'
         );
 
         foreach ($dashBoardGroups as $key => $group) {
-                $navArray[$group['label']]['group_items'] = [];
+            foreach ($group['sub_group'] as $subGroup) {
+                $navArray[$subGroup['label']]['group_items'] = [];
                 $i = 0;
-                /** @var AdminInterface $admin */
-            foreach ($group['items'] as $admin) {
+                foreach ($subGroup['items'] as $admin) {
                     if (0 == $i++) {
-                        $navArray[$group['label']]['group_name'] = $this->translator->trans(
-                            $admin->getLabel(),
+                        $navArray[$subGroup['label']]['group_name'] = $this->get('translator')->trans(
+                            $subGroup['label'],
                             [],
                             $admin->getTranslationDomain()
                         );
@@ -181,13 +141,14 @@ class HelpTextController extends AbstractController
                             //split Translation Key into adminCode and action
                             $strripos = strripos($row->getTranslationKey(), '.');
                             $action = substr($row->getTranslationKey(), $strripos + 1);
-                            $navArray[$group['label']]['group_items'][$row->getId()]['adminCode'] = $admin->getCode(
+                            $navArray[$subGroup['label']]['group_items'][$row->getId()]['adminCode'] = $admin->getCode(
                             );
-                            $navArray[$group['label']]['group_items'][$row->getId()]['action'] = $action;
-                            $navArray[$group['label']]['group_items'][$row->getId()]['title'] = $row->getTitle();
+                            $navArray[$subGroup['label']]['group_items'][$row->getId()]['action'] = $action;
+                            $navArray[$subGroup['label']]['group_items'][$row->getId()]['title'] = $row->getTitle();
                         }
                     }
                 }
+            }
         }
 
         return $navArray;

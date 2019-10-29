@@ -12,9 +12,6 @@
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
             </call>
-            <call method="setSonataAnnotationReader">
-                <argument type="service" id="ibrows_sonataadmin.annotation.reader"/>
-            </call>
             <call method="setlanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
             </call>

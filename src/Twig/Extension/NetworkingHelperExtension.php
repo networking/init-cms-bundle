@@ -23,10 +23,12 @@ use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Form\Type\ModelHiddenType;
-use Sonata\Form\Type\BooleanType;
+use Sonata\CoreBundle\Form\Type\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -36,19 +38,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig\Environment;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class NetworkingHelperExtension.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class NetworkingHelperExtension extends AbstractExtension
+class NetworkingHelperExtension extends \Twig_Extension implements ContainerAwareInterface
 {
+    /**
+     * Container.
+     *
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * @var bool
@@ -157,6 +161,18 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
+     * Sets the Container.
+     *
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     *
+     * @api
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * Returns the token parser instance to add to the existing list.
      *
      * @return array An array of Twig_TokenParser instances
@@ -175,10 +191,10 @@ class NetworkingHelperExtension extends AbstractExtension
     public function getFilters()
     {
         $filters = [
-            new TwigFilter('truncate', [$this, 'truncate'], ['needs_environment' => true]),
-            new TwigFilter('excerpt', [$this, 'excerpt'], ['needs_environment' => true]),
-            new TwigFilter('highlight', [$this, 'highlight']),
-            new TwigFilter('base64_encode', [$this, 'base64Encode']),
+            new \Twig_SimpleFilter('truncate', [$this, 'truncate'], ['needs_environment' => true]),
+            new \Twig_SimpleFilter('excerpt', [$this, 'excerpt'], ['needs_environment' => true]),
+            new \Twig_SimpleFilter('highlight', [$this, 'highlight']),
+            new \Twig_SimpleFilter('base64_encode', [$this, 'base64Encode']),
         ];
 
         return $filters;
@@ -192,26 +208,27 @@ class NetworkingHelperExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('render_initcms_block', [$this, 'renderInitCmsBlock'], ['is_safe' => ['html']]),
-            new TwigFunction('get_initcms_template_zones', [$this, 'getInitCmsTemplateZones'], ['is_safe' => ['html']]),
-            new TwigFunction('render_initcms_field_as_string', [$this, 'renderInitcmsFieldAsString'], ['is_safe' => ['html']]),
-            new TwigFunction('get_form_field_zone', [$this, 'getFormFieldZone'], ['is_safe' => ['html']]),
-            new TwigFunction('get_sub_form_by_zone', [$this, 'getSubFormsByZone'], ['is_safe' => ['html']]),
-            new TwigFunction('get_content_type_options', [$this, 'getContentTypeOptions'], ['is_safe' => ['html']]),
-            new TwigFunction('get_initcms_admin_icon_path', [$this, 'getInitcmsAdminIconPath'], ['is_safe' => ['html']]),
-            new TwigFunction('get_current_admin_locale', [$this, 'getCurrentAdminLocale'], ['is_safe' => ['html']]),
-            new TwigFunction('render_initcms_admin_block', [$this, 'renderInitcmsAdminBlock'], ['is_safe' => ['html']]),
-            new TwigFunction('render_content_type_name', [$this, 'renderContentTypeName'], ['is_safe' => ['html']]),
-            new TwigFunction('render_admin_subnav', [$this, 'renderAdminSubNav'], ['is_safe' => ['html']]),
-            new TwigFunction('is_admin_active', [$this, 'isAdminActive'], ['is_safe' => ['html']]),
-            new TwigFunction('is_admin_group_active', [$this, 'isAdminGroupActive'], ['is_safe' => ['html']]),
-            new TwigFunction('get_initcms_page_url', [$this, 'getPageUrl'], ['is_safe' => ['html']]),
-            new TwigFunction('get_media_by_id', [$this, 'getMediaById'], ['is_safe' => ['html']]),
-            new TwigFunction('ckeditor_is_rendered', [$this, 'ckeditorIsRendered']),
-            new TwigFunction('content_css', [$this, 'getContentCss']),
-            new TwigFunction('get_file_icon', [$this, 'getFileIcon']),
-            new TwigFunction('crop_middle', [$this, 'cropMiddle']),
-            new TwigFunction('human_readable_filesize', [$this, 'getHumanReadableSize']),
+            new \Twig_SimpleFunction('render_initcms_block', [$this, 'renderInitCmsBlock'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_initcms_template_zones', [$this, 'getInitCmsTemplateZones'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('render_initcms_field_as_string', [$this, 'renderInitcmsFieldAsString'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_form_field_zone', [$this, 'getFormFieldZone'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_sub_form_by_zone', [$this, 'getSubFormsByZone'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_content_type_options', [$this, 'getContentTypeOptions'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_initcms_admin_icon_path', [$this, 'getInitcmsAdminIconPath'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_current_admin_locale', [$this, 'getCurrentAdminLocale'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('render_initcms_admin_block', [$this, 'renderInitcmsAdminBlock'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('render_content_type_name', [$this, 'renderContentTypeName'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('render_admin_subnav', [$this, 'renderAdminSubNav'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('is_admin_active', [$this, 'isAdminActive'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('is_admin_group_active', [$this, 'isAdminGroupActive'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_initcms_page_url', [$this, 'getPageUrl'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_media_by_id', [$this, 'getMediaById'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ckeditor_is_rendered', [$this, 'ckeditorIsRendered']),
+            new \Twig_SimpleFunction('content_css', [$this, 'getContentCss']),
+            new \Twig_SimpleFunction('return_config_value', [$this, 'returnConfigValue']),
+            new \Twig_SimpleFunction('get_file_icon', [$this, 'getFileIcon']),
+            new \Twig_SimpleFunction('crop_middle', [$this, 'cropMiddle']),
+            new \Twig_SimpleFunction('human_readable_filesize', [$this, 'getHumanReadableSize']),
         ];
     }
 
@@ -764,7 +781,9 @@ class NetworkingHelperExtension extends AbstractExtension
         $value = '';
 
         switch ($fieldDescription->getType()) {
-            case CheckboxType::class:
+            case HiddenType::class:
+                $value = $fieldDescription->getValue($object);
+                break;
             case BooleanType::class:
                 if ($fieldDescription->getValue($object)) {
                     $value = 'positive';
@@ -807,10 +826,17 @@ class NetworkingHelperExtension extends AbstractExtension
                     $value = '';
                 }
                 break;
-
-            case TextType::class:
             case ModelHiddenType::class:
-            case HiddenType::class:
+                $value = $fieldDescription->getValue($object);
+                break;
+            case CheckboxType::class:
+                if ($fieldDescription->getValue($object)) {
+                    $value = 'positive';
+                } else {
+                    $value = 'negative';
+                }
+                break;
+            case TextType::class:
             default:
                 $value = $fieldDescription->getValue($object);
                 break;
@@ -880,7 +906,7 @@ class NetworkingHelperExtension extends AbstractExtension
      * Extracts an excerpt from the text surrounding the phrase with a number of characters on each side
      * determined by radius.
      *
-     * @param Environment $env
+     * @param \Twig_Environment $env
      * @param string            $text     String to search the phrase in
      * @param string            $phrase   Phrase that will be searched for
      * @param int               $radius   The amount of characters that will be returned on each side of the founded phrase
@@ -888,7 +914,7 @@ class NetworkingHelperExtension extends AbstractExtension
      *
      * @return string
      */
-    public function excerpt(Environment $env, $text, $phrase, $radius = 100, $ellipsis = '...')
+    public function excerpt(\Twig_Environment $env, $text, $phrase, $radius = 100, $ellipsis = '...')
     {
         if (empty($text) || empty($phrase)) {
             return $this->truncate($env, $text, $radius * 2, $ellipsis);
@@ -1145,6 +1171,14 @@ class NetworkingHelperExtension extends AbstractExtension
 
             return false;
         }
+    }
+
+    /**
+     * Return the config Value.
+     */
+    public function returnConfigValue($name)
+    {
+        return $this->getParameter($name);
     }
 
     /**
