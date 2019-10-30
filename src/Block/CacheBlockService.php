@@ -11,9 +11,7 @@
 namespace Networking\InitCmsBundle\Block;
 
 use Networking\InitCmsBundle\Lib\PhpCacheInterface;
-use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\BlockBundle\Block\Service\AbstractBlockService;
-use Sonata\BlockBundle\Model\BlockInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -49,13 +47,13 @@ class CacheBlockService extends AbstractBlockService
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
         return $this->renderResponse(
-                    $blockContext->getTemplate(),
-                    [
-                        'block' => $blockContext->getBlock(),
-                        'cache' => $this->cache,
-                    ],
-                    $response
-                );
+            $blockContext->getTemplate(),
+            [
+                'block' => $blockContext->getBlock(),
+                'cache' => $this->cache,
+            ],
+            $response
+        );
     }
 
 

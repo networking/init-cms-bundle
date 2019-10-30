@@ -25,8 +25,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('networking_init_cms');
+        $treeBuilder = new TreeBuilder('networking_init_cms');
+        $rootNode = $treeBuilder->getRootNode();
         //mongodb is not yet fully supported but will come (eventually)
         $supportedDrivers = ['orm', 'mongodb'];
 

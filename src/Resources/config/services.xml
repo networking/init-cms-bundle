@@ -31,6 +31,14 @@
             <tag name="controller.service_arguments" />
         </service>
 
+        <service id="Networking\InitCmsBundle\Controller\XmlController" autowire="true"  public="true">
+            <argument key="$pageClass">%networking_init_cms.manager.page.class%</argument>
+            <argument key="$languages">%networking_init_cms.page.languages%</argument>
+            <argument key="$additionalLinks">%networking_init_cms.xml_sitemap.additional_links%</argument>
+            <argument key="$domainName">%networking_init_cms.xml_sitemap.sitemap_url%</argument>
+            <tag name="controller.service_arguments" />
+        </service>
+
         <service id="Networking\InitCmsBundle\Helper\PageHelper" autowire="true"  public="false">
             <argument key="$allowLocaleCookie">%networking_init_cms.allow_locale_cookie%</argument>
             <argument key="$singleLanguage">%networking_init_cms.single_language%</argument>
@@ -101,6 +109,10 @@
         </service>
 
         <!-- object manager aliases -->
+        <service id="Networking\InitCmsBundle\Model\UserManagerInterface"
+                 alias="networking_init_cms.user_manager"
+                 public="false"/>
+
         <service id="Networking\InitCmsBundle\Model\PageManagerInterface"
                  alias="networking_init_cms.page_manager"
                  public="false"/>

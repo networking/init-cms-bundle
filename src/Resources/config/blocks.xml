@@ -4,39 +4,32 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <defaults autowire="true" autoconfigure="true" public="true"/>
 
-        <service id="networking_init_cms.block.service.translatable_text" class="Networking\InitCmsBundle\Block\TranslatableTextBlockService" public="true">
-            <argument>networking_init_cms.block.service.translatable_text</argument>
-            <argument type="service" id="templating"/>
+        <service id="networking_init_cms.block.service.translatable_text" class="Networking\InitCmsBundle\Block\TranslatableTextBlockService">
             <tag name="sonata.block"/>
         </service>
 
-        <service id="networking_init_cms.block.service.online_users" class="Networking\InitCmsBundle\Block\OnlineUsersBlockService" public="true">
-            <argument>networking_init_cms.block.service.online_users</argument>
-            <argument type="service" id="templating"/>
-            <argument type="service" id="networking_init_cms.user_manager"/>
-            <call method="setUserManager">
-                <argument type="service" id="networking_init_cms.user_manager"/>
-            </call>
+        <service id="networking_init_cms.block.service.online_users" class="Networking\InitCmsBundle\Block\OnlineUsersBlockService">
             <tag name="sonata.block"/>
         </service>
 
-        <service id="networking_init_cms.block.service.pages" class="Networking\InitCmsBundle\Block\PagesBlockService" public="true" autowire="true">
+        <service id="networking_init_cms.block.service.pages" class="Networking\InitCmsBundle\Block\PagesBlockService">
             <tag name="sonata.block"/>
         </service>
 
 
-        <service id="networking_init_cms.block.service.cache" class="Networking\InitCmsBundle\Block\CacheBlockService" public="true" autowire="true">
+        <service id="networking_init_cms.block.service.cache" class="Networking\InitCmsBundle\Block\CacheBlockService">
             <tag name="sonata.block"/>
         </service>
 
 
-        <service id="networking_init_cms.block.service.sitemap" class="Networking\InitCmsBundle\Block\SitemapBlockService" public="true" autowire="true">
+        <service id="networking_init_cms.block.service.sitemap" class="Networking\InitCmsBundle\Block\SitemapBlockService">
             <tag name="sonata.block"/>
         </service>
 
 
-        <service id="networking_init_cms.block.service.version" class="Networking\InitCmsBundle\Block\VersionBlockService" public="true" autowire="true">
+        <service id="networking_init_cms.block.service.version" class="Networking\InitCmsBundle\Block\VersionBlockService">
             <argument key="$projectDir">%kernel.project_dir%</argument>
             <tag name="sonata.block"/>
         </service>

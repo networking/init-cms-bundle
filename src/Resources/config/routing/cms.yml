@@ -120,7 +120,7 @@ initcms_404:
 
 xml_sitemap:
     path: /xml_sitemap/{locale}
-    defaults: {_controller: Networking\InitCmsBundle\Controller\XmlController::sitemapAction, locale: ''}
+    defaults: {_controller: Networking\InitCmsBundle\Controller\XmlController::siteMapAction, locale: ''}
     requirements:
     methods: GET
 

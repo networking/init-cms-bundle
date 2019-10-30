@@ -271,7 +271,7 @@ class MenuBuilder
      *
      * @param string $menuName
      *
-     * @return array|bool
+     * @return MenuItem[]|bool
      */
     public function getFullMenu($menuName)
     {

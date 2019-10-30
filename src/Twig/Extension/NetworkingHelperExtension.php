@@ -26,7 +26,6 @@ use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Sonata\Form\Type\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -71,7 +70,7 @@ class NetworkingHelperExtension extends AbstractExtension
     protected $kernel;
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
     protected $templating;
 
@@ -118,7 +117,7 @@ class NetworkingHelperExtension extends AbstractExtension
      * NetworkingHelperExtension constructor.
      *
      * @param KernelInterface      $kernel
-     * @param EngineInterface      $templating
+     * @param Environment      $templating
      * @param RequestStack         $requestStack
      * @param ManagerRegistry      $doctrine
      * @param TranslatorInterface  $translator
@@ -131,7 +130,7 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function __construct(
         KernelInterface $kernel,
-        EngineInterface $templating,
+        Environment $templating,
         RequestStack $requestStack,
         ManagerRegistry $doctrine,
         TranslatorInterface $translator,
@@ -216,13 +215,13 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * Returns an HTML block for output in the frontend.
-     *
      * @param $template
      * @param LayoutBlockInterface $layoutBlock
-     * @param array                $params
-     *
+     * @param array $params
      * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = [])
     {
@@ -252,11 +251,11 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * Returns an HTML block for output in the admin area.
-     *
      * @param LayoutBlockInterface $layoutBlock
-     *
      * @return bool|string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock)
     {

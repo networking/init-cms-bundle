@@ -10,51 +10,41 @@
 
 namespace Networking\InitCmsBundle\Block;
 
-use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
-use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 /**
  * Class TranslatableTextBlockService.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class TranslatableTextBlockService extends AbstractAdminBlockService
+class TranslatableTextBlockService extends AbstractBlockService
 {
+    /**
+     * SitemapBlockService constructor.
+     * @param Environment $twig
+     */
+    public function __construct(Environment $twig)
+    {
+        parent::__construct($twig);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-        return $this->renderResponse('@NetworkingInitCms/Block/block_translatable_text.html.twig', [
-                    'block' => $blockContext->getBlock(),
-                    'settings' => $blockContext->getSettings(),
-        ], $response);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
-    {
-        // TODO: Implement validateBlock() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
-    {
-        $formMapper->add('settings', 'sonata_type_immutable_array', [
-            'keys' => [
-                ['translation_key', 'text', []],
-                ['translation_domain', 'text', []],
+        return $this->renderResponse(
+            '@NetworkingInitCms/Block/block_translatable_text.html.twig',
+            [
+                'block' => $blockContext->getBlock(),
+                'settings' => $blockContext->getSettings(),
             ],
-        ]);
+            $response
+        );
     }
 
     /**
@@ -70,9 +60,11 @@ class TranslatableTextBlockService extends AbstractAdminBlockService
      */
     public function configureSettings(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'translation_key' => 'Insert your translation key',
-            'translation_domain' => 'Insert the name of the translation domain',
-        ]);
+        $resolver->setDefaults(
+            [
+                'translation_key' => 'Insert your translation key',
+                'translation_domain' => 'Insert the name of the translation domain',
+            ]
+        );
     }
 }
