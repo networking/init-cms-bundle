@@ -10,12 +10,19 @@
 
 namespace Networking\InitCmsBundle\Menu;
 
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\Matcher\MatcherInterface;
 use Networking\InitCmsBundle\Model\ContentRoute;
 use Networking\InitCmsBundle\Model\ContentRouteManager;
-use Sonata\AdminBundle\Admin\AdminInterface;
+use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Sonata\AdminBundle\Admin\Pool;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class AdminMenuBuilder.
@@ -27,27 +34,45 @@ class AdminMenuBuilder extends MenuBuilder
     /**
      * @var Pool
      */
-    protected $adminPool;
+    protected $pool;
 
     /**
-     * @var array
+     * AdminMenuBuilder constructor.
+     * @param FactoryInterface $factory
+     * @param TokenStorageInterface $tokenStorage
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param RequestStack $requestStack
+     * @param RouterInterface $router
+     * @param MenuItemManagerInterface $menuManager
+     * @param TranslatorInterface $translator
+     * @param MatcherInterface $matcher
+     * @param Pool $pool
+     * @param bool $allowLocaleCookie
      */
-    protected $menuGroups;
-
-    /**
-     * @param $adminPool
-     */
-    public function setAdminPool($adminPool)
-    {
-        $this->adminPool = $adminPool;
-    }
-
-    /**
-     * @param array $menuGroups
-     */
-    public function setMenuGroups($menuGroups = [])
-    {
-        $this->menuGroups = $menuGroups;
+    public function __construct(
+        FactoryInterface $factory,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorizationChecker,
+        RequestStack $requestStack,
+        RouterInterface $router,
+        MenuItemManagerInterface $menuManager,
+        TranslatorInterface $translator,
+        MatcherInterface $matcher,
+        Pool $pool,
+        $allowLocaleCookie = true
+    ) {
+        $this->pool = $pool;
+        parent::__construct(
+            $factory,
+            $tokenStorage,
+            $authorizationChecker,
+            $requestStack,
+            $router,
+            $menuManager,
+            $translator,
+            $matcher,
+            $allowLocaleCookie
+        );
     }
 
     /**
@@ -90,7 +115,7 @@ class AdminMenuBuilder extends MenuBuilder
 
                 foreach ($possibleAdmins as $adminCode) {
                     // we are in the admin area
-                    $sonataAdmin = $this->adminPool->getAdminByAdminCode($adminCode);
+                    $sonataAdmin = $this->pool->getAdminByAdminCode($adminCode);
                     if ($id = $this->request->get('id')) {
                         $entity = $sonataAdmin->getObject($id);
                     }
@@ -106,7 +131,7 @@ class AdminMenuBuilder extends MenuBuilder
                 }
 
                 $draftRoute = $this->router->generate($entity->getRoute());
-                $pageAdmin = $this->adminPool->getAdminByAdminCode('networking_init_cms.admin.page');
+                $pageAdmin = $this->pool->getAdminByAdminCode('networking_init_cms.admin.page');
                 $editPath = $pageAdmin->generateObjectUrl('edit', $entity);
 
                 $language = $entity->getRoute()->getLocale();
@@ -114,7 +139,7 @@ class AdminMenuBuilder extends MenuBuilder
                 $liveRoute = $this->router->generate($this->getRoute($entity->getRoute()));
                 $draftRoute = $this->router->generate($this->getRoute($entity->getPage()->getRoute()));
 
-                $pageAdmin = $this->adminPool->getAdminByAdminCode('networking_init_cms.admin.page');
+                $pageAdmin = $this->pool->getAdminByAdminCode('networking_init_cms.admin.page');
                 $editPath = $pageAdmin->generateObjectUrl('edit', $entity->getPage());
 
                 $language = $entity->getRoute()->getLocale();
@@ -228,120 +253,7 @@ class AdminMenuBuilder extends MenuBuilder
         return $menu;
     }
 
-    /**
-     * Use service to create main admin navigation.
-     *
-     * @param array $menuGroups
-     *
-     * @return \Knp\Menu\ItemInterface
-     */
-    public function createAdminSideMenu()
-    {
-        $groups = $this->adminPool->getDashboardGroups();
-        $adminMenu = $this->factory->createItem('admin_side_menu');
 
-        if (!$this->authorizationChecker->isGranted('ROLE_SONATA_ADMIN')) {
-            return $adminMenu;
-        }
-
-        $iconSize = 'large';
-        $firstLevelClass = 'first-level';
-
-        $largeMenu = $adminMenu->addChild(
-            'large',
-            [
-                'attributes' => ['class' => 'nav-custom'], ]
-        );
-        $smallMenu = $adminMenu->addChild(
-            'small',
-            [
-                'attributes' => ['class' => 'nav-custom nav-custom-small', 'style' => 'margin-top: 50px;'], ]
-        );
-
-        $largeMenu->addChild(
-            $this->translator->trans('admin.menu.dashboard', [], 'PageAdmin'),
-            [
-                'uri' => $this->router->generate('sonata_admin_dashboard'),
-                'current' => $this->request->get('_sonata_admin') ? false : true,
-                'attributes' => ['class' => $firstLevelClass, 'icon' => 'glyphicon glyphicon-dashboard', 'icon_size' => 'glyphicon-'.$iconSize],
-                'linkAttributes' => ['class' => 'pull-left first-level-text'],
-            ]
-        );
-
-        $menu = $largeMenu;
-        foreach ($this->menuGroups as $key => $item) {
-            foreach ($item['items'] as $mainMenu) {
-                if (array_key_exists($mainMenu, $groups)) {
-                    $group = $groups[$mainMenu];
-                    if (count($group['items']) > 0) {
-                        $first = reset($group['items']);
-                        if ($first instanceof AdminInterface && $first->hasRoute('list')) {
-                            $current = false;
-                            $icon = 'glyphicon-unchecked';
-                            $iconType = 'glyphicon';
-
-                            if ($this->request->get('_sonata_admin') == $first->getCode()) {
-                                $current = true;
-                            }
-
-                            if (method_exists($first, 'getIcon')) {
-                                $icon = $first->getIcon();
-                            }
-
-                            if ($first->getExtensions()) {
-                                foreach ($first->getExtensions() as $extension) {
-                                    if (method_exists($extension, 'getIcon')) {
-                                        $icon = $extension->getIcon();
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (substr($icon, 0, '2') == 'fa') {
-                                $iconType = 'fa';
-                            }
-
-                            $mainItem = $menu->addChild(
-                                $this->translator->trans($group['label'], [], $group['label_catalogue'] != 'SonataAdminBundle' ? $group['label_catalogue'] : $first->getTranslationDomain()),
-                                [
-                                    'uri' => $first->generateUrl('list'),
-                                    'current' => $current,
-                                    'attributes' => ['class' => $firstLevelClass, 'icon' => sprintf('%s %s', $iconType, $icon), 'icon_size' => sprintf('%s-%s', $iconType, $iconSize)],
-                                    'linkAttributes' => ['class' => 'pull-left first-level-text'],
-                                ]
-                            );
-
-                            if (count($group['items']) > 1) {
-                                foreach ($group['items'] as $subItem) {
-                                    $current = false;
-                                    if ($this->request->get('_sonata_admin') == $subItem->getCode()) {
-                                        $current = true;
-                                    }
-                                    if ($subItem instanceof AdminInterface && $subItem->hasRoute('list')) {
-                                        $mainItem->addChild(
-                                            $this->translator->trans($subItem->getLabel(), [], $subItem->getTranslationDomain()),
-                                            [
-                                                'uri' => $subItem->generateUrl('list'),
-                                                'current' => $current,
-                                                'attributes' => ['class' => 'second-level', 'icon' => $icon, 'icon_size' => $iconSize],
-                                            ]
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $iconSize = 'small';
-            $firstLevelClass = 'first-level-small';
-            $this->showOnlyCurrentChildren($menu);
-            $menu = $smallMenu;
-        }
-
-        return $adminMenu;
-    }
 
     /**
      * @param $item

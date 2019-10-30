@@ -10,22 +10,22 @@
 
 namespace Networking\InitCmsBundle\Menu;
 
+use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Iterator\RecursiveItemIterator;
 use Knp\Menu\Matcher\MatcherInterface;
+use Knp\Menu\Matcher\Matcher;
+use Knp\Menu\MenuItem as Menu;
 use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
+use Networking\InitCmsBundle\Model\MenuItem;
+use Networking\InitCmsBundle\Model\Page;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Knp\Menu\FactoryInterface;
-use Knp\Menu\MenuItem as Menu;
-use Networking\InitCmsBundle\Entity\MenuItem;
-use Networking\InitCmsBundle\Entity\BasePage as Page;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Knp\Menu\Matcher\Matcher;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class MenuBuilder.
@@ -179,10 +179,10 @@ class MenuBuilder
      *
      * @param string $classes
      *
-     * @internal param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Knp\Menu\ItemInterface
      * @internal param $languages
      *
-     * @return \Knp\Menu\ItemInterface
+     * @internal param \Symfony\Component\HttpFoundation\Request $request
      */
     public function createLoginMenu($classes = 'nav pull-right')
     {
@@ -422,11 +422,11 @@ class MenuBuilder
     /**
      * Recursively set attributes on all children of a given menu.
      *
+     * @param ItemInterface $menu
+     * @param array $attr
      * @deprecated please use setRecursiveAttribute
      * @alias setRecursiveAttribute
      *
-     * @param ItemInterface $menu
-     * @param array $attr
      */
     public function setRecursiveChildrenAttribute(ItemInterface $menu, array $attr)
     {

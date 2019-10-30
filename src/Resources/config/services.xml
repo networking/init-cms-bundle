@@ -7,6 +7,9 @@
 
         <defaults autowire="true" autoconfigure="true" public="false" />
 
+        <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*" />
+
+
         <prototype namespace="Networking\InitCmsBundle\Controller\"
                    resource="../../Controller"
                    exclude="../../Controller/OneUploader"
@@ -100,12 +103,6 @@
 
         <service id="networking_init_cms.media.thumbnail.format" class="Networking\InitCmsBundle\Thumbnail\FormatThumbnail">
             <argument type="string">%sonata.media.thumbnail.format.default%</argument>
-        </service>
-
-
-        <service id="networking_init_cms.security_checker.command" class="Networking\InitCmsBundle\Command\SecurityCheckCommand">
-            <argument type="service" id="mailer"/>
-            <tag name="console.command" />
         </service>
 
         <!-- object manager aliases -->

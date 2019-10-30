@@ -6,7 +6,6 @@ imports:
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/jms_serializer.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/lexik_translation.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/mopa_bootstrap.yaml" }
-    - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/networking_init_cms.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/oneup_flysystem.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/oneup_uploader.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/security.yaml" }

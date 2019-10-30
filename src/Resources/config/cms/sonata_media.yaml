@@ -27,7 +27,7 @@ sonata_media:
 
     filesystem:
         local:
-            directory:  "%kernel.project_dir%/public/uploads/media"
+            directory:  "%kernel.project_dir%/public/upload/media"
             create:     false
 
     providers:

@@ -1,50 +1,20 @@
 services:
-    sandbox_init_cms.menu.frontend_menu_builder:
-        class: Networking\InitCmsBundle\Menu\FrontendMenuBuilder
+    Networking\InitCmsBundle\Menu\FrontendMenuBuilder:
+        autowire: true
         arguments:
-            - "@knp_menu.factory"
-            - "@security.token_storage"
-            - "@security.authorization_checker"
-            - "@request_stack"
-            - "@router"
-            - "@networking_init_cms.menu_item_manager"
-            - "@translator"
-            - "@knp_menu.matcher"
-
+            $allowLocaleCookie: '%networking_init_cms.allow_locale_cookie%'
 
     # Create the left main menu and right main menu for the frontend
-    sandbox_init_cms.menu.frontend_main_menu_left:
+    app.menu.main:
         class: Knp\Menu\MenuItem
-        factory: ['@sandbox_init_cms.menu.frontend_menu_builder', 'createMainMenu']
-        arguments: [menu_name: "Main menu", "nav nav-tabs nav-main" ]
-        scope: request
+        factory: 'Networking\InitCmsBundle\Menu\FrontendMenuBuilder:createMainMenu'
+        arguments: [menu_name: 'Main menu', 'nav nav-tabs' ]
         tags:
             - { name: knp_menu.menu, alias: mainMenu }
 
-    sandbox_init_cms.menu.frontend_main_menu_language:
+    app.menu.lang:
         class: Knp\Menu\MenuItem
-        factory: ['@sandbox_init_cms.menu.frontend_menu_builder', 'createFrontendLangMenu']
-        arguments: [ '@request_stack', %networking_init_cms.page.languages%, "nav nav-pills pull-right" ]
-        scope: request
+        factory: 'Networking\InitCmsBundle\Menu\FrontendMenuBuilder:createFrontendLangMenu'
+        arguments: [ '@request_stack', '%networking_init_cms.page.languages%', 'nav nav-pills' ]
         tags:
             - { name: knp_menu.menu, alias: langMenu }
-
-
-    # Create the side menu for the frontend
-    sandbox_init_cms.menu.frontend_sub_menu:
-        class: Knp\Menu\MenuItem
-        factory: ['@sandbox_init_cms.menu.frontend_menu_builder', 'createSubnavMenu']
-        arguments: [ "Main menu", 'nav nav-pills']
-        scope: request
-        tags:
-            - { name: knp_menu.menu, alias: subMenu }
-
-
-
-    sandbox_init_cms.menu.frontend_footer_menu:
-        class: Knp\Menu\MenuItem
-        factory: ['@sandbox_init_cms.menu.frontend_menu_builder', 'createFooterMenu']
-        arguments: ['Footer menu', 'nav nav-pills']
-        scope: request
-        tags:
-            - { name: knp_menu.menu, alias: footerMenu }

@@ -9,7 +9,7 @@
 namespace Networking\InitCmsBundle\Command;
 
 
-use SensioLabs\Security\Formatters\SimpleFormatter;
+use SensioLabs\Security\Result;
 use SensioLabs\Security\SecurityChecker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,8 +26,8 @@ class SecurityCheckCommand extends Command {
 
 	private $lockFile = 'composer.lock';
 
-	public function __construct(\Swift_Mailer $mailer ) {
-		$this->checker = new SecurityChecker();
+	public function __construct(SecurityChecker $checker, \Swift_Mailer $mailer ) {
+		$this->checker = $checker;
 		$this->mailer  = $mailer;
 
 		parent::__construct();
@@ -43,23 +43,21 @@ class SecurityCheckCommand extends Command {
 	}
 
 	public function execute( InputInterface $input, OutputInterface $output ) {
-		$vulnerabilities = $this->checker->check( $this->lockFile );
+	    /** @var Result $vulnerabilities */
+		$vulnerabilities = $this->checker->check( $this->lockFile, 'json');
 
-		$formatter = new SimpleFormatter( $this->getHelperSet()->get( 'formatter' ) );
-
-		if ( ! is_array( $vulnerabilities ) ) {
+		if (!$vulnerabilities instanceof Result) {
 			$output->writeln( $this->getHelperSet()->get( 'formatter' )->formatBlock( 'Security Checker Server returned garbage.', 'error', true ) );
 
 			return 127;
 		}
 
-		$formatter->displayResults( $output, $this->lockFile, $vulnerabilities );
+
+//		if ( $vulnerabilities->count() > 0 ) {
 
 
-		if ( $this->checker->getLastVulnerabilityCount() > 0 ) {
-
-			/** @var \Swift_message $message */
-			$message = \Swift_Message::newInstance()
+			$message = new \Swift_Message();
+		    $message
 			                         ->setSubject('Security Check')
 			                         ->setFrom('log@initcms.com')
 			                         ->setTo($input->getArgument('email'))
@@ -70,7 +68,7 @@ class SecurityCheckCommand extends Command {
 			$this->mailer->send($message);
 
 			return 1;
-		}
+//		}
 
 	}
 
@@ -80,11 +78,10 @@ class SecurityCheckCommand extends Command {
 	 *
 	 * @return string
 	 */
-	public function writeEmail( array $vulnerabilities ) {
+	public function writeEmail(  $vulnerabilities ) {
 		$message = "Symfony Security Check Report\n";
 		$message .= sprintf( "Checked file: %s\n", realpath( $this->lockFile ) );
 		$message .= "\n";
-
 		foreach ( $vulnerabilities as $dependency => $issues ) {
 			$message .= sprintf( "%s (%s)\n", $dependency, $issues['version'] );
 			$message .= "----------------------------\n";
