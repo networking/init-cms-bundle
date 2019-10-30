@@ -1,8 +1,3 @@
-sonata_core:
-    form:
-        mapping:
-            enabled: false
-
 sonata_admin:
     persist_filters: true
     options:
@@ -12,11 +7,11 @@ sonata_admin:
         handler: sonata.admin.security.handler.acl
         # acl security information
         information:
-           GUEST:    [VIEW, LIST]
-           STAFF:    [EDIT, LIST, CREATE]
-           EDITOR:   [OPERATOR, EXPORT]
-           ADMIN:    [MASTER, PUBLISH]
-           PUBLISHER: [PUBLISH, EDIT, LIST, CREATE]
+            GUEST:    [VIEW, LIST]
+            STAFF:    [EDIT, LIST, CREATE]
+            EDITOR:   [OPERATOR, EXPORT]
+            ADMIN:    [MASTER, PUBLISH]
+            PUBLISHER: [PUBLISH, EDIT, LIST, CREATE]
 
         # permissions not related to an object instance and also to be available when objects do not exist
         # the DELETE admin permission means the user is allowed to batch delete objects
@@ -58,7 +53,7 @@ sonata_admin:
                 on_top: true
                 label: "admin.menu.dashboard"
                 label_catalogue: "PageAdmin"
-                icon: '<i class="fa fa-dashboard fa-large"></i>'
+                icon: '<i class="fa fa-tachometer-alt fa-large"></i>'
                 items:
                     - route: sonata_admin_dashboard
                       label: admin.menu.dashboard
@@ -79,6 +74,11 @@ sonata_admin:
                 label_catalogue: "MediaAdmin"
                 icon: '<i class="far fa-image fa-large"></i>'
                 items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
+            form_generator:
+                on_top:               true
+                label: "form.admin.menu_label"
+                label_catalogue: "formGenerator"
+                items: ['Networking\FormGeneratorBundle\Admin\FormAdmin']
             users:
                 label: "sonata_user"
                 label_catalogue: "SonataUserBundle"
@@ -88,7 +88,7 @@ sonata_admin:
                 on_top: true
                 label: "help_text.admin_menu_label"
                 label_catalogue: "HelpTextAdmin"
-                icon: '<i class="fa fa-question-sign fa-small"></i>'
+                icon: '<i class="fa fa-question fa-small"></i>'
                 items: [networking_init_cms.admin.help_text]
             translation:
                 on_top: true
@@ -96,5 +96,3 @@ sonata_admin:
                 label_catalogue: "IbrowsSonataTranslationBundle"
                 icon: '<i class="fa fa-globe fa-small"></i>'
                 items: [ibrows_sonata_translation.admin.orm]
-
-

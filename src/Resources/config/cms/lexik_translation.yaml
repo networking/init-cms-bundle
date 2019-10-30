@@ -1,0 +1,3 @@
+lexik_translation:
+  fallback_locale: de      # (required) default locale to use
+  managed_locales: [de]

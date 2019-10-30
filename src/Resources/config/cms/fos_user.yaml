@@ -1,0 +1,9 @@
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb'
+    firewall_name:  main
+    user_class:     "App\\Entity\\User"
+    group:
+        group_class: "Networking\\InitCmsBundle\\Entity\\Group"
+    from_email:
+            address:        "webmaster@example.com"
+            sender_name:    "web project"

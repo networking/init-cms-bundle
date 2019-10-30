@@ -1,3 +1,0 @@
-lexik_translation:
-    fallback_locale: en      # (required) default locale to use
-    managed_locales: [en]    # (required) locales that the bundle have to manage

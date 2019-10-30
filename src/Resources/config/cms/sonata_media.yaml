@@ -23,11 +23,11 @@ sonata_media:
 
     cdn:
         server:
-            path: /uploads/media # http://media.sonata-project.org/
+            path: /uploads/media
 
     filesystem:
         local:
-            directory:  "%kernel.root_dir%/../web/uploads/media"
+            directory:  "%kernel.project_dir%/public/uploads/media"
             create:     false
 
     providers:
