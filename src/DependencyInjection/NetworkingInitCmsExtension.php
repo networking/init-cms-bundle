@@ -39,15 +39,7 @@ class NetworkingInitCmsExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
-        $defaults = Yaml::parseFile(__DIR__.'/../Resources/config/cms/config.yml');
-
-        foreach ($configs as $config) {
-            foreach ($config as $key => $value) {
-                $defaults['networking_init_cms'][ $key ] = $value;
-            }
-        }
-
-        $config = $this->processConfiguration($configuration, $defaults);
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('blocks.xml');
