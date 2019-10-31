@@ -13,18 +13,23 @@ namespace Networking\InitCmsBundle\tests\Controller;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Entity\PageManager;
+use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Entity\PageSnapshotManager;
+use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
+use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Lib\PhpCache;
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Controller\FrontendPageController;
 use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Twig\Environment;
 
 /** @author sonja brodersen s.brodersen@networking.ch */
 class FrontendPageControllerTest extends TestCase
@@ -72,17 +77,46 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockAuthorizationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationChecker')
+        $mockAuthorisationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationChecker')
             ->disableOriginalConstructor()
             ->getMock();
 
         $property = new \ReflectionProperty('Symfony\Component\Security\Core\Authorization\AuthorizationChecker', 'tokenStorage');
         $property->setAccessible(true);
-        $property->setValue($mockAuthorizationChecker, $mockTokenStorage);
+        $property->setValue($mockAuthorisationChecker, $mockTokenStorage);
 
         $property = new \ReflectionProperty('Symfony\Component\Security\Core\Authorization\AuthorizationChecker', 'accessDecisionManager');
         $property->setAccessible(true);
-        $property->setValue($mockAuthorizationChecker, $mockAccessDecisionManager);
+        $property->setValue($mockAuthorisationChecker, $mockAccessDecisionManager);
+
+
+
+        $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        //cache class
+        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPool = $this->getMockBuilder(Pool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockLanguageSwitcher= $this->getMockBuilder(LanguageSwitcherHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageHelper = $this->getMockBuilder(PageHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
 
         $mockTokenStorage->expects($this->any())
             ->method('getToken')
@@ -92,42 +126,32 @@ class FrontendPageControllerTest extends TestCase
             ->method('decide')
             ->willReturn(false);
 
-        $mockAuthorizationChecker->expects($this->any())
+        $mockAuthorisationChecker->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(false));
 
-        $mockContainer = $this->getMockBuilder('Symfony\Component\DependencyInjection\Container')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        //cache class
-        $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockContainer->expects($this->at(0))
-            ->method('get')
-            ->with('networking_init_cms.lib.php_cache')
-            ->will($this->returnValue($mockCacheClass));
-
-        $mockContainer->expects($this->at(1))
+        $mockContainer->expects($this->any(0))
             ->method('has')
             ->with('security.token_storage')
             ->will($this->returnValue(true));
 
-        $mockContainer->expects($this->at(2))
+        $mockContainer->expects($this->at(1))
             ->method('get')
             ->with('security.token_storage')
             ->will($this->returnValue($mockTokenStorage));
 
-        $mockContainer->expects($this->at(3))
-            ->method('get')
-            ->with('security.authorization_checker')
-            ->will($this->returnValue($mockAuthorizationChecker));
 
         // Controller
-        $controller = new FrontendPageController();
+        $controller = new FrontendPageController(
+            $mockCacheClass,
+            $mockTokenStorage,
+            $mockAuthorisationChecker,
+            $mockPool,
+            $mockLanguageSwitcher,
+            $mockPageManager,
+            $mockPageHelper
+        );
         $controller->setContainer($mockContainer);
         $this->assertInstanceOf(
             'Networking\InitCmsBundle\Controller\FrontendPageController',
@@ -176,18 +200,18 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockAuthorizationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationChecker')
+        $mockAuthorisationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationChecker')
             ->disableOriginalConstructor()
             ->getMock();
         $property = new \ReflectionProperty('Symfony\Component\Security\Core\Authorization\AuthorizationChecker', 'tokenStorage');
         $property->setAccessible(true);
-        $property->setValue($mockAuthorizationChecker, $mockTokenStorage);
+        $property->setValue($mockAuthorisationChecker, $mockTokenStorage);
 
         $mockTokenStorage->expects($this->any())
             ->method('getToken')
             ->will($this->returnValue(null));
 
-        $mockAuthorizationChecker->expects($this->any())
+        $mockAuthorisationChecker->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_SONATA_ADMIN')
             ->will($this->returnValue(false));
@@ -196,32 +220,47 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         //cache class
-        $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
+        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockContainer->expects($this->at(0))
-            ->method('get')
-            ->with('networking_init_cms.lib.php_cache')
-            ->will($this->returnValue($mockCacheClass));
+        $mockPool = $this->getMockBuilder(Pool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $mockContainer->expects($this->at(1))
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockLanguageSwitcher= $this->getMockBuilder(LanguageSwitcherHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageHelper = $this->getMockBuilder(PageHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $mockContainer->expects($this->at(0))
             ->method('has')
             ->with('security.token_storage')
             ->will($this->returnValue(true));
 
-        $mockContainer->expects($this->at(2))
-            ->method('get')
-            ->with('security.token_storage')
-            ->will($this->returnValue($mockTokenStorage));
-
-        $mockContainer->expects($this->at(3))
+        $mockContainer->expects($this->at(1))
             ->method('get')
             ->with('security.token_storage')
             ->will($this->returnValue($mockTokenStorage));
 
         // Controller
-        $controller = new FrontendPageController();
+        $controller = new FrontendPageController(
+            $mockCacheClass,
+            $mockTokenStorage,
+            $mockAuthorisationChecker,
+            $mockPool,
+            $mockLanguageSwitcher,
+            $mockPageManager,
+            $mockPageHelper
+        );
         $controller->setContainer($mockContainer);
         $this->assertInstanceOf(
             'Networking\InitCmsBundle\Controller\FrontendPageController',
@@ -244,36 +283,51 @@ class FrontendPageControllerTest extends TestCase
             ->method('isActive')
             ->will($this->returnValue(true));
 
-        $mockSnapshot = $this->getMockBuilder('Networking\InitCmsBundle\Entity\PageSnapshot')
+        $mockSnapshot = $this->getMockBuilder(PageSnapshot::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockHelper = $this->getMockBuilder('Networking\InitCmsBundle\Helper\PageHelper')
+        $mockPageHelper = $this->getMockBuilder(PageHelper::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mockHelper->expects($this->once())
+
+        $mockPageHelper->expects($this->once())
             ->method('unserializePageSnapshotData')
             ->will($this->returnValue($mockPage));
 
-        $mockHelper->expects($this->once())
+        $mockPageHelper->expects($this->once())
             ->method('isAllowLocaleCookie')
             ->will($this->returnValue(true));
 
-        $mockHelper->expects($this->once())
+        $mockPageHelper->expects($this->once())
             ->method('isSingleLanguage')
             ->will($this->returnValue(false));
 
         //cache class
-        $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
+        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+
+        $mockPool = $this->getMockBuilder(Pool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockLanguageSwitcher= $this->getMockBuilder(LanguageSwitcherHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
 
         //security context
-        $mockAuthorizationChecker = $this->getMockBuilder(AuthorizationChecker::class)
+        $mockAuthorisationChecker = $this->getMockBuilder(AuthorizationChecker::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockAuthorizationChecker->expects($this->any())
+        $mockAuthorisationChecker->expects($this->any())
             ->method('isGranted')
             ->with('ROLE_USER')
             ->will($this->returnValue(true));
@@ -283,7 +337,7 @@ class FrontendPageControllerTest extends TestCase
             ->getMock();
 
         //templating
-        $mockTemplating = $this->getMockBuilder(TwigEngine::class)
+        $mockTemplating = $this->getMockBuilder(Environment::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -305,7 +359,8 @@ class FrontendPageControllerTest extends TestCase
 
         $mockRequest->expects($this->at(1))
             ->method('get')
-            ->with('_template');
+            ->with('_template')
+            ->will($this->returnValue('@DemoInitCms/Default/one_column.html.twig'));
 
         $mockRequest->expects($this->at(2))
             ->method('get')
@@ -317,53 +372,45 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockContainer->expects($this->at(0))
-            ->method('get')
-            ->with('networking_init_cms.lib.php_cache')
-            ->will($this->returnValue($mockCacheClass));
 
-        $mockContainer->expects($this->at(1))
+        $mockContainer->expects($this->at(0))
             ->method('has')
             ->with('security.token_storage')
             ->will($this->returnValue(true));
 
-        $mockContainer->expects($this->at(2))
+        $mockContainer->expects($this->at(1))
             ->method('get')
             ->with('security.token_storage')
             ->will($this->returnValue($mockTokenStorage));
 
+
+        $mockContainer->expects($this->at(2))
+            ->method('has')
+            ->with('templating')
+            ->will($this->returnValue(false));
+
         $mockContainer->expects($this->at(3))
-            ->method('get')
-            ->with('networking_init_cms.helper.page_helper')
-            ->will($this->returnValue($mockHelper));
+            ->method('has')
+            ->with('twig')
+            ->will($this->returnValue(true));
 
         $mockContainer->expects($this->at(4))
             ->method('get')
-            ->with('security.token_storage')
-            ->will($this->returnValue($mockTokenStorage));
-
-        $mockContainer->expects($this->at(5))
-            ->method('has')
-            ->with('templating')
-            ->will($this->returnValue(true));
-
-        $mockContainer->expects($this->at(6))
-            ->method('get')
-            ->with('templating')
+            ->with('twig')
             ->will($this->returnValue($mockTemplating));
 
-	    $mockContainer->expects($this->at(7))
-	                  ->method('get')
-	                  ->with('networking_init_cms.helper.page_helper')
-	                  ->will($this->returnValue($mockHelper));
 
-	    $mockContainer->expects($this->at(8))
-	                  ->method('get')
-	                  ->with('networking_init_cms.helper.page_helper')
-	                  ->will($this->returnValue($mockHelper));
 
         // controller
-        $controller = new FrontendPageController();
+        $controller = new FrontendPageController(
+            $mockCacheClass,
+            $mockTokenStorage,
+            $mockAuthorisationChecker,
+            $mockPool,
+            $mockLanguageSwitcher,
+            $mockPageManager,
+            $mockPageHelper
+        );
         $controller->setContainer($mockContainer);
         $response = $controller->indexAction($mockRequest);
 
@@ -388,6 +435,14 @@ class FrontendPageControllerTest extends TestCase
             '\Networking\InitCmsBundle\Model\PageSnapshot',
             [$mockPage]
         );
+
+        $mockSnapshot->expects($this->once())
+            ->method('getVersionedData')
+            ->will($this->returnValue(json_encode($mockPage)));
+
+        $mockSnapshot->expects($this->once())
+            ->method('getResourceName')
+            ->will($this->returnValue(Page::class));
 
         $mockPage->expects($this->once())
             ->method('getVisibility')
@@ -428,6 +483,14 @@ class FrontendPageControllerTest extends TestCase
         $mockContentRouteManager = $this->getMockBuilder(ContentRouteManager::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $mockPool = $this->getMockBuilder(Pool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        
+
+        $mockLanguageSwitcher= $this->getMockBuilder(LanguageSwitcherHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $_SERVER = [
             'PATH_INFO' => '/',
@@ -444,7 +507,7 @@ class FrontendPageControllerTest extends TestCase
             '_template' => $template,
         ];
         //templating
-        $mockTwig = $this->getMockBuilder(TwigEngine::class)
+        $mockTwig = $this->getMockBuilder(Environment::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -484,55 +547,33 @@ class FrontendPageControllerTest extends TestCase
         );
 
 
+
         $mockContainer->expects($this->at(0))
-            ->method('get')
-            ->with('networking_init_cms.helper.page_helper')
-            ->will($this->returnValue($pageHelper));
+            ->method('has')
+            ->with('security.token_storage')
+            ->will($this->returnValue(true));
 
         $mockContainer->expects($this->at(1))
             ->method('get')
-            ->with('networking_init_cms.lib.php_cache')
-            ->will($this->returnValue($mockCacheClass));
+            ->with('security.token_storage')
+            ->will($this->returnValue($mockTokenStorage));
+
 
         $mockContainer->expects($this->at(2))
             ->method('has')
-            ->with('security.token_storage')
-            ->will($this->returnValue(true));
+            ->with('templating')
+            ->will($this->returnValue(false));
 
         $mockContainer->expects($this->at(3))
-            ->method('get')
-            ->with('security.token_storage')
-            ->will($this->returnValue($mockTokenStorage));
-        $mockContainer->expects($this->at(4))
-            ->method('get')
-            ->with('networking_init_cms.helper.page_helper')
-            ->will($this->returnValue($pageHelper));
-
-        $mockContainer->expects($this->at(5))
-            ->method('get')
-            ->with('security.token_storage')
-            ->will($this->returnValue($mockTokenStorage));
-
-        $mockContainer->expects($this->at(6))
             ->method('has')
-            ->with('templating')
+            ->with('twig')
             ->will($this->returnValue(true));
 
-        $mockContainer->expects($this->at(7))
+        $mockContainer->expects($this->at(4))
             ->method('get')
-            ->with('templating')
+            ->with('twig')
             ->will($this->returnValue($mockTwig));
 
-
-	    $mockContainer->expects($this->at(8))
-                  ->method('get')
-                  ->with('networking_init_cms.helper.page_helper')
-                  ->will($this->returnValue($pageHelper));
-
-	    $mockContainer->expects($this->at(9))
-                  ->method('get')
-                  ->with('networking_init_cms.helper.page_helper')
-                  ->will($this->returnValue($pageHelper));
 
         $requestAfter = clone $request;
 
@@ -546,7 +587,16 @@ class FrontendPageControllerTest extends TestCase
         $requestAfter->attributes->set('_template_vars', $configuration->getVars());
         $requestAfter->attributes->set('_template_streamable', $configuration->isStreamable());
 
-        $controller = new FrontendPageController();
+        // controller
+        $controller = new FrontendPageController(
+            $mockCacheClass,
+            $mockTokenStorage,
+            $mockAuthorisationChecker,
+            $mockPool,
+            $mockLanguageSwitcher,
+            $mockPageManager,
+            $pageHelper
+        );
         $controller->setContainer($mockContainer);
         $response = $controller->homeAction($request);
 
@@ -579,8 +629,43 @@ class FrontendPageControllerTest extends TestCase
             ->will($this->returnValue('/test/'))
             ->with($this->equalTo('referer'));
         $request->headers = $headers;
+        //cache class
+        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        //security context
+        $mockAuthorisationChecker = $this->getMockBuilder(AuthorizationChecker::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockTokenStorage = $this->getMockBuilder(TokenStorage::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockPageManager = $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPool = $this->getMockBuilder(Pool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageHelper = $this->getMockBuilder(PageHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockLanguageSwitcher= $this->getMockBuilder(LanguageSwitcherHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         // controller test
-        $controller = new FrontendPageController();
+        // controller
+        $controller = new FrontendPageController(
+            $mockCacheClass,
+            $mockTokenStorage,
+            $mockAuthorisationChecker,
+            $mockPool,
+            $mockLanguageSwitcher,
+            $mockPageManager,
+            $mockPageHelper
+        );
         $response = $controller->changeAdminLanguageAction($request, 'xy');
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response, 'Redirect returned');
     }

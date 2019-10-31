@@ -44,7 +44,6 @@
         "symfony/asset": "4.3.*",
         "symfony/console": "4.3.*",
         "symfony/expression-language": "4.3.*",
-        "symfony/flex": "^1.4",
         "symfony/form": "4.3.*",
         "symfony/framework-bundle": "^4.3",
         "symfony/monolog-bundle": "^3.1",
@@ -89,9 +88,6 @@
         "symfony-assets-install": "relative",
         "branch-alias": {
             "dev-master": "4.x-dev"
-        },
-        "symfony": {
-            "allow-contrib": true
         }
     },
     "require-dev": {
