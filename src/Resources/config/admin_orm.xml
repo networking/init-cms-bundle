@@ -5,28 +5,51 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!-- Page Admin-->
-        <service id="networking_init_cms.admin.page" class="Networking\InitCmsBundle\Admin\Entity\PageAdmin" public="true">
+        <service id="networking_init_cms.admin.page" class="Networking\InitCmsBundle\Admin\Entity\PageAdmin"
+                 public="true">
             <argument/>
             <argument>%networking_init_cms.admin.page.class%</argument>
             <argument>NetworkingInitCmsBundle:PageAdmin</argument>
+            <argument type="service" id="networking_init_cms.page_manager"/>
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
+            </call>
+            <call method="setSonataAnnotationReader">
+                <argument type="service" id="networking_init_cms.annotation.reader"/>
             </call>
             <call method="setlanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
             </call>
-            <call method="setPageManager">
-                <argument type="service" id="networking_init_cms.page_manager"/>
+            <call method="setTemplate">
+                <argument>show</argument>
+                <argument>@NetworkingInitCms/PageAdmin/page_show.html.twig</argument>
+            </call>
+            <call method="setTemplate">
+                <argument>preview</argument>
+                <argument>@NetworkingInitCms/PageAdmin/page_preview.html.twig</argument>
+            </call>
+            <call method="setTemplate">
+                <argument>edit</argument>
+                <argument>@NetworkingInitCms/PageAdmin/base_edit.html.twig</argument>
+            </call>
+            <call method="setTemplate">
+                <argument>list</argument>
+                <argument>@NetworkingInitCms/PageAdmin/page_list.html.twig</argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="pages.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
         </service>
 
         <!-- Layout Block Admin-->
-        <service id="networking_init_cms.admin.layout_block" class="Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin" public="true">
+        <service id="networking_init_cms.admin.layout_block"
+                 class="Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin" public="true">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\LayoutBlock</argument>
             <argument>NetworkingInitCmsBundle:LayoutBlock</argument>
+            <argument type="service" id="networking_init_cms.page_manager"/>
+            <argument type="service" id="networking_init_cms.layout_block_form_listener"/>
+            <argument type="service" id="jms_serializer.serializer"/>
+            <argument type="service" id="networking_init_cms.admin.page"/>
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
             </call>
@@ -36,7 +59,8 @@
         </service>
 
         <!-- Menu Item Admin -->
-        <service id="networking_init_cms.admin.menu_item" class="Networking\InitCmsBundle\Admin\Entity\MenuItemAdmin" public="true">
+        <service id="networking_init_cms.admin.menu_item" class="Networking\InitCmsBundle\Admin\Entity\MenuItemAdmin"
+                 public="true">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\MenuItem</argument>
             <argument>NetworkingInitCmsBundle:MenuItemAdmin</argument>
@@ -52,13 +76,24 @@
                     <argument key="menu item">Networking\InitCmsBundle\Entity\MenuItem</argument>
                 </argument>
             </call>
+
+            <call method="setTemplate">
+                <argument>list</argument>
+                <argument>@NetworkingInitCms/MenuItemAdmin/menu_list.html.twig</argument>
+            </call>
+
+            <call method="setTemplate">
+                <argument>placement</argument>
+                <argument>@NetworkingInitCms/MenuItemAdmin/placement.html.twig</argument>
+            </call>
             <tag name="sonata.admin" manager_type="orm" label="menus.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>
 
         <!-- Help Text Admin-->
-        <service id="networking_init_cms.admin.help_text" class="Networking\InitCmsBundle\Admin\Entity\HelpTextAdmin" public="true">
+        <service id="networking_init_cms.admin.help_text" class="Networking\InitCmsBundle\Admin\Entity\HelpTextAdmin"
+                 public="true">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\HelpText</argument>
             <argument>SonataAdminBundle:CRUD</argument>
@@ -74,7 +109,8 @@
         </service>
 
         <!-- Layout Block Admin-->
-        <service id="networking_init_cms.admin.tag" class="Networking\InitCmsBundle\Admin\Entity\TagAdmin" public="true">
+        <service id="networking_init_cms.admin.tag" class="Networking\InitCmsBundle\Admin\Entity\TagAdmin"
+                 public="true">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\Tag</argument>
             <argument>NetworkingInitCmsBundle:TagAdmin</argument>
@@ -82,6 +118,42 @@
                 <argument>TagAdmin</argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="tags.title"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 persist_filters="true"/>
+        </service>
+
+        <service id="networking_init_cms.admin_entity.translation_admin"
+                 class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
+            <argument/>
+            <argument>Lexik\Bundle\TranslationBundle\Entity\TransUnit</argument>
+            <argument>NetworkingInitCmsBundle:TranslationCRUD</argument>
+            <call method="setEditableOptions">
+                <argument>%networking_init_cms.editable%</argument>
+            </call>
+            <call method="setTranslationDomain">
+                <argument>TranslationAdmin</argument>
+            </call>
+            <call method="setTransUnitManager">
+                <argument type="service" id="lexik_translation.trans_unit.manager"/>
+            </call>
+            <call method="setManagedLocales">
+                <argument>%lexik_translation.managed_locales%</argument>
+            </call>
+            <call method="setDefaultSelections">
+                <argument>%networking_init_cms.defaultSelections%</argument>
+            </call>
+            <call method="setEmptyPrefixes">
+                <argument>%networking_init_cms.emptyPrefixes%</argument>
+            </call>
+            <call method="setTemplate">
+                <argument>list</argument>
+                <argument>@NetworkingInitCms/TranslationAdmin/list.html.twig</argument>
+            </call>
+            <call method="setTemplate">
+                <argument>edit</argument>
+                <argument>@NetworkingInitCms/TranslationAdmin/edit.html.twig</argument>
+            </call>
+            <tag name="sonata.admin" manager_type="orm" label="translation.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>

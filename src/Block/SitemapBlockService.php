@@ -10,21 +10,28 @@
 
 namespace Networking\InitCmsBundle\Block;
 
-use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
-use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 /**
  * Class OnlineUsersBlockService.
  *
  * @author info@networking.ch
  */
-class SitemapBlockService extends AbstractAdminBlockService
+class SitemapBlockService extends AbstractBlockService
 {
+    /**
+     * SitemapBlockService constructor.
+     * @param Environment $twig
+     */
+    public function __construct(Environment $twig)
+    {
+        parent::__construct($twig);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -37,22 +44,6 @@ class SitemapBlockService extends AbstractAdminBlockService
             ],
             $response
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
-    {
-        // TODO: Implement validateBlock() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
-    {
-        // TODO: Implement buildEditForm() method.
     }
 
     /**

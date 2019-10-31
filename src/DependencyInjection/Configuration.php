@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -25,14 +26,15 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('networking_init_cms');
+        $treeBuilder = new TreeBuilder('networking_init_cms');
+        $rootNode = $treeBuilder->getRootNode();
         //mongodb is not yet fully supported but will come (eventually)
         $supportedDrivers = ['orm', 'mongodb'];
 
         $rootNode
             ->children()
                 ->arrayNode('admin_toolbar')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('toolbar')->defaultTrue()->end()
                         ->scalarNode('position')
@@ -40,11 +42,10 @@ class Configuration implements ConfigurationInterface
                             ->validate()
                                 ->ifNotInArray(['bottom', 'top'])
                                 ->thenInvalid('The CSS position %s is not supported')
-                            ->end()
                         ->end()
                     ->end()
-                ->end();
-
+                ->end()
+            ->end();
         $rootNode
             ->children()
                 ->scalarNode('db_driver')
@@ -57,36 +58,45 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('class')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('page')->defaultValue('Application\\Networking\\InitCmsBundle\\Entity\\Page')->end()
+                        ->scalarNode('page')->defaultValue('App\\Entity\\Page')->end()
                         ->scalarNode('layout_block')->defaultValue('Networking\\InitCmsBundle\\Entity\\LayoutBlock')->end()
-                        ->scalarNode('user')->defaultValue('Application\\Networking\\InitCmsBundle\\Entity\\User')->end()
+                        ->scalarNode('user')->defaultValue('App\\Entity\\User')->end()
                     ->end()
                 ->end()
                 ->scalarNode('allow_locale_cookie')->defaultTrue()->end()
                 ->scalarNode('single_language')->defaultFalse()->end()
                 ->scalarNode('translation_fallback_route')->defaultValue('initcms_404')->end()
-                ->scalarNode('404_template')->isRequired()->end()
-                ->scalarNode('no_translation_template')->isRequired()->end()
+                ->scalarNode('404_template')->defaultValue('@NetworkingInitCmsBundle/error_404.html.twig')->end()
+                ->scalarNode('no_translation_template')->defaultValue('@NetworkingInitCms/no_translation_found.html.twig')->end()
                 ->scalarNode('multiple_media_tags')->defaultValue(true)->end()
                 ->scalarNode('show_tag_tree')->defaultValue(true)->end()
                 ->arrayNode('languages')
                     ->requiresAtLeastOneElement()
                     ->prototype('array')
+                        ->addDefaultsIfNotSet()
                         ->children()
                             ->scalarNode('label')->isRequired()->end()
                             ->scalarNode('short_label')->end()
                             ->scalarNode('locale')->isRequired()->end()
                         ->end()
                     ->end()
+                    ->defaultValue([['label' => 'english', 'locale' => 'en']])
                 ->end()
                 ->arrayNode('content_types')
                     ->requiresAtLeastOneElement()
                     ->prototype('array')
+                        ->addDefaultsIfNotSet()
                         ->children()
                             ->scalarNode('name')->isRequired()->end()
                             ->scalarNode('class')->isRequired()->end()
                         ->end()
                     ->end()
+                    ->defaultValue(
+                        [
+                            ['name' => 'Text' , 'class' =>  'Networking\InitCmsBundle\Entity\Text'],
+                            ['name' => 'Gallery' , 'class' =>  'Networking\InitCmsBundle\Entity\GalleryView'],
+                        ]
+                    )
                 ->end()
                 ->arrayNode('templates')
                     ->requiresAtLeastOneElement()
@@ -108,15 +118,6 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                 ->end()
                             ->end()
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('admin_menu_groups')->requiresAtLeastOneElement()
-                    ->useAttributeAsKey('key')
-                    ->prototype('array')
-                        ->children()
-                            ->arrayNode('items')->requiresAtLeastOneElement()
-                                ->prototype('scalar')->end()->end()
                         ->end()
                     ->end()
                 ->end()
@@ -143,6 +144,40 @@ class Configuration implements ConfigurationInterface
                     ->end()
             ->end();
 
+        $this->addEditableSection($rootNode);
         return $treeBuilder;
+    }
+
+    protected function addEditableSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('translation_admin')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('defaultDomain')->defaultValue('messages')->end()
+                        ->arrayNode('defaultSelections')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->booleanNode('nonTranslatedOnly')->defaultFalse()->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('emptyPrefixes')
+                            ->defaultValue(array('__', 'new_', ''))
+                            ->prototype('array')->end()
+                        ->end()
+                        ->arrayNode('editable')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('mode')->defaultValue('popup')->end()
+                                ->scalarNode('type')->defaultValue('textarea')->end()
+                                ->scalarNode('emptytext')->defaultValue('Empty')->end()
+                                ->scalarNode('placement')->defaultValue('top')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }

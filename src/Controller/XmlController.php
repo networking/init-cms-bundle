@@ -10,7 +10,8 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,78 +20,106 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author net working AG <info@networking.ch>
  */
-class XmlController extends Controller
+class XmlController extends AbstractController
 {
     /**
-     * Render the xml Sitemap.
-     *
+     * @var ObjectManager
+     */
+    public $objectManager;
+
+    /**
+     * @var string
+     */
+    public $pageClass;
+
+    /**
+     * @var array
+     */
+    public $languages;
+
+    /**
+     * @var array
+     */
+    public $additionalLinks;
+
+    /**
+     * @var string
+     */
+    public $domainName;
+
+    /**
+     * XmlController constructor.
+     * @param ObjectManager $objectManager
+     * @param $pageClass
+     * @param array $languages
+     * @param array $additionalLinks
+     * @param string $domainName
+     */
+    public function __construct(
+        ObjectManager $objectManager,
+        $pageClass,
+        $languages = [],
+        $additionalLinks = [],
+        $domainName = ''
+    ) {
+        $this->objectManager = $objectManager;
+        $this->pageClass = $pageClass;
+        $this->languages = $languages;
+        $this->additionalLinks = $additionalLinks;
+        $this->domainName = $domainName;
+    }
+
+    /**
      * @param Request $request
-     *
+     * @param $locale
      * @return Response
      */
-    public function sitemapAction(Request $request, $locale)
+    public function siteMapAction(Request $request, $locale)
     {
-        $params = [];
-        $params['domain'] = $this->getDomainName($request);
-        $params['languages'] = $this->container->getParameter('networking_init_cms.page.languages');
+        $params = [
+            'domain' => $this->getDomainName($request),
+            'languages' => $this->languages
+        ];
 
-        if ($locale != '' or count($params['languages']) == 1) {
-            //sitemap ausgeben
-            if ($locale == '') {  //use locale as default value
-                $locale = $params['languages']['locale'];
-            }
+        $template = 'NetworkingInitCmsBundle:Sitemap:multilingual_sitemap.xml.twig';
+
+        if ($locale || count($this->languages) === 1) {
+            $locale = $locale?:$params['languages']['locale'];
             $page_filter = ['visibility' => 'public', 'status' => 'status_published', 'locale' => $locale];
-            $em = $this->getDoctrine()->getManager();
-            $pageClass = $this->getParameter('networking_init_cms.manager.page.class');
-            $params['pages'] = $em->getRepository($pageClass)->findBy($page_filter);
-            $params['additional_links'] = $this->getAdditionalLinks($locale);
-            //render xml
-            $response = $this->render(
-                'NetworkingInitCmsBundle:Sitemap:sitemap.xml.twig',
-                $params
-            );
-        } else {
-            //multilanguage site, return language overview sitemap
 
-            /* TODO , check if / how "last modified" is possible */
-            $response = $this->render(
-                'NetworkingInitCmsBundle:Sitemap:multilingual_sitemap.xml.twig',
-                $params
-            );
+            $params['pages'] = $this->objectManager->getRepository($this->pageClass)->findBy($page_filter);
+            $params['additional_links'] = $this->getAdditionalLinks($locale);
+
+            $template = 'NetworkingInitCmsBundle:Sitemap:sitemap.xml.twig';
         }
 
+        $response = $this->render($template,$params);
         $response->headers->set('Content-Type', 'application/xml');
 
         return $response;
     }
 
-    /*
-     * get list of additional links from the config
-     * */
+    /**
+     * @param $locale
+     * @return array
+     */
     private function getAdditionalLinks($locale)
     {
-        $return = [];
-        $additional_links = $this->container->getParameter('networking_init_cms.xml_sitemap.additional_links');
-        foreach ($additional_links as $links) {
+        foreach ($this->additionalLinks as $links) {
             if ($links['locale'] == $locale) {
                 return $links['links'];
             }
         }
 
-        return $return;
+        return [];
     }
 
     /**
-     * check config for domain name, otherwise returns scheme & host.
+     * @param Request $request
+     * @return string
      */
     private function getDomainName(Request $request)
     {
-        $domain = $this->container->getParameter('networking_init_cms.xml_sitemap.sitemap_url');
-        if ($domain == '') {
-            //domain is not set in config.yml
-            $domain = $request->getScheme().'://'.$request->getHost();
-        }
-
-        return $domain;
+      return $this->domainName?:$request->getScheme().'://'.$request->getHost();
     }
 }

@@ -16,7 +16,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
 use Symfony\Component\Intl\Intl;
 
 /**
@@ -26,6 +26,14 @@ use Symfony\Component\Intl\Intl;
  */
 abstract class BaseAdmin extends AbstractAdmin
 {
+
+    protected $annotationReader;
+    public function __construct($code, $class, $baseControllerName)
+    {
+//        $this->annotationReader = $annotationReader;
+        parent::__construct($code, $class, $baseControllerName);
+    }
+
     /**
      * @var array
      */
@@ -38,7 +46,7 @@ abstract class BaseAdmin extends AbstractAdmin
 
     /**
      * Set the language paramenter to contain a list of languages most likely
-     * passed from the config.yml file.
+     * passed from the config.yaml file.
      *
      * @param array $languages
      */
@@ -203,6 +211,16 @@ abstract class BaseAdmin extends AbstractAdmin
      */
     protected function getSonataAnnotationReader()
     {
-        return $this->getContainer()->get('ibrows_sonataadmin.annotation.reader');
+        return $this->annotationReader;
+    }
+
+    /**
+     * @param SonataAdminAnnotationReaderInterface $annotationReader
+     * @return $this
+     */
+    public function setSonataAnnotationReader(SonataAdminAnnotationReaderInterface $annotationReader)
+    {
+        $this->annotationReader = $annotationReader;
+        return $this;
     }
 }

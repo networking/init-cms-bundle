@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Form\Type;
 
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -22,7 +22,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ContentType extends AbstractType
 {
     /**
-     * @var \Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface
+     * @var \Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface
      */
     protected $annotationReader;
 

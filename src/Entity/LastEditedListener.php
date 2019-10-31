@@ -23,9 +23,7 @@ use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener
 class LastEditedListener extends ModelLastEditedListener
 {
     /**
-     * On Menu Create.
-     *
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     * @param LifecycleEventArgs $args
      */
     public function postPersist(LifecycleEventArgs $args)
     {
@@ -33,9 +31,7 @@ class LastEditedListener extends ModelLastEditedListener
     }
 
     /**
-     * On Menu Update.
-     *
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+     * @param LifecycleEventArgs $args
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
@@ -43,7 +39,8 @@ class LastEditedListener extends ModelLastEditedListener
     }
 
     /**
-     * @param \Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent $event
+     * @param CmsEvent $event
+     * @return mixed|void
      */
     public function registerEdited(CmsEvent $event)
     {

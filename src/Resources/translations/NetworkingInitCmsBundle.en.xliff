@@ -260,7 +260,7 @@
             <trans-unit id="cache.inactiveMoreInformation">
                  <source>cache.inactiveMoreInformation</source>
                  <target><![CDATA[
-                     to activate, please add the following configurations to the app/config/config.yml File<br />
+                     to activate, please add the following configurations to the app/config/config.yaml File<br />
                      <code>
                      networking_init_cms:<br />
                      &nbsp;&nbsp;cache:<br />

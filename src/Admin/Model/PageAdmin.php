@@ -72,7 +72,7 @@ abstract class PageAdmin extends BaseAdmin
     protected $repository = '';
 
     /**
-     * @var \Networking\InitCmsBundle\Model\PageManagerInterface
+     * @var PageManagerInterface
      */
     protected $pageManager;
 
@@ -84,12 +84,10 @@ abstract class PageAdmin extends BaseAdmin
         return 'glyphicon-file';
     }
 
-    /**
-     * @param \Networking\InitCmsBundle\Model\PageManagerInterface $pageManager
-     */
-    public function setPageManager(PageManagerInterface $pageManager)
+    public function __construct($code, $class, $baseControllerName, PageManagerInterface $pageManager)
     {
         $this->pageManager = $pageManager;
+        parent::__construct($code, $class, $baseControllerName);
     }
 
     /**
@@ -135,8 +133,6 @@ abstract class PageAdmin extends BaseAdmin
             throw new InvalidArgumentException('Cannot create a page without a language');
         }
 
-        /** @var $pageManager PageManagerInterface */
-        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
 
         if ($this->getSubject()->getId()) {
             $this->pageLocale = $this->getSubject()->getLocale();
@@ -144,7 +140,7 @@ abstract class PageAdmin extends BaseAdmin
 
         $validationGroups = ['default'];
 
-        $homePage = $pageManager->findOneBy(['isHome' => true, 'locale' => $this->pageLocale]);
+        $homePage = $this->pageManager->findOneBy(['isHome' => true, 'locale' => $this->pageLocale]);
 
         $this->canCreateHomepage = (!$homePage) ? true : false;
 
@@ -166,8 +162,6 @@ abstract class PageAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        /** @var $pageManager PageManagerInterface */
-        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
 
         $this->getRequest()->attributes->add(['page_locale' => $this->pageLocale]);
 
@@ -240,7 +234,7 @@ abstract class PageAdmin extends BaseAdmin
                             'choice_label' => 'AdminTitle',
                             'class' => $this->getClass(),
                             'required' => false,
-                            'query_builder' => $pageManager->getParentPagesQuery(
+                            'query_builder' => $this->pageManager->getParentPagesQuery(
                                     $this->pageLocale,
                                     $this->getSubject()->getId(),
                                     false,
@@ -261,7 +255,7 @@ abstract class PageAdmin extends BaseAdmin
                             'property' => 'AdminTitle',
                             'class' => $this->getClass(),
                             'required' => false,
-                            'query_builder' => $pageManager->getParentPagesQuery(
+                            'query_builder' => $this->pageManager->getParentPagesQuery(
                                     $this->pageLocale,
                                     $this->getSubject()->getId(),
                                     true,
@@ -357,34 +351,6 @@ abstract class PageAdmin extends BaseAdmin
 
         foreach ($this->getExtensions() as $extension) {
             $extension->configureFormFields($formMapper);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate($name)
-    {
-        switch ($name) {
-            case 'show':
-                return '@NetworkingInitCms/PageAdmin/page_show.html.twig';
-                break;
-            case 'preview':
-                return '@NetworkingInitCms/PageAdmin/page_preview.html.twig';
-                break;
-            case 'edit':
-                if ($this->getSubject()->getId()) {
-                    return '@NetworkingInitCms/PageAdmin/page_edit.html.twig';
-                } else {
-                    return '@NetworkingInitCms/PageAdmin/page_create.html.twig';
-                }
-                break;
-            case 'list':
-                return '@NetworkingInitCms/PageAdmin/page_list.html.twig';
-                break;
-            default:
-                return $this->getTemplateRegistry()->getTemplate($name);
-                break;
         }
     }
 
@@ -601,11 +567,9 @@ abstract class PageAdmin extends BaseAdmin
             return $translationLanguages;
         }
 
-        /** @var $pageManager PageManagerInterface */
-        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
 
         /** @var $page PageInterface */
-        $page = $pageManager->findById($id);
+        $page = $this->pageManager->findById($id);
 
         $translatedLocales = $page->getAllTranslations();
 

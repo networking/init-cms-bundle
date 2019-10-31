@@ -42,4 +42,12 @@ class Select2Extension extends AbstractTypeExtension
     {
         return 'Symfony\Component\Form\Extension\Core\Type\ChoiceType';
     }
+
+    /**
+     * @return array|iterable
+     */
+    public static function getExtendedTypes()
+    {
+        return ['Symfony\Component\Form\Extension\Core\Type\ChoiceType'];
+    }
 }

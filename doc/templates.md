@@ -61,7 +61,7 @@ There are currently three methods available in the FrontendMenuBuilder that can 
 2. creastSubnavMenu - which builds a sub navigation based on the menu given and the current url
 3. createFrontendLangMenu - which builds a simple language navigation with the current language active
 
-The navigation setup involves three parts, to be configured in your bundles services.yml (xml) file
+The navigation setup involves three parts, to be configured in your bundles services.yaml (xml) file
 
 Step 1. Setup the Networking FrontendMenuBuilder as your menu factory or extend it:
 

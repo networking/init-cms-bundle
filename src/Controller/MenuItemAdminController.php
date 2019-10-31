@@ -11,7 +11,11 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\MenuItem;
+use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
+use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,12 +32,36 @@ use Networking\InitCmsBundle\Entity\MenuItemManager;
  */
 class MenuItemAdminController extends CRUDController
 {
+    /**
+     * @var MenuItemManagerInterface
+     */
+    protected $menuItemManager;
+
+    /**
+     * @var bool
+     */
     protected $isNewMenuItem = false;
 
     /**
      * @var string
      */
     protected $currentMenuLanguage = '';
+
+
+    /**
+     * MenuItemAdminController constructor.
+     * @param MenuItemManagerInterface $menuItemManager
+     * @param CmsEventDispatcher $dispatcher
+     * @param PhpCacheInterface $phpCache
+     */
+    public function __construct(
+        MenuItemManagerInterface $menuItemManager,
+        CmsEventDispatcher $dispatcher,
+        PhpCacheInterface $phpCache
+    ) {
+        $this->menuItemManager = $menuItemManager;
+        parent::__construct($dispatcher, $phpCache);
+    }
 
     /**
      * {@inheritdoc}
@@ -58,7 +86,7 @@ class MenuItemAdminController extends CRUDController
             }
         }
 
-        $this->get('session')->set('admin/last_page_id', $pageId);
+        $request->getSession()->set('admin/last_page_id', $pageId);
 
         if ($request->get('show_now_confirm_dialog')) {
             $user = $this->getUser();
@@ -72,9 +100,6 @@ class MenuItemAdminController extends CRUDController
 
         $menus = [];
 
-        /** @var MenuItemManager $menuItemManager */
-        $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
-
         /*
          * if the list was filtered or a new menu entry was posted,
          * use the submitted locale for list, else set the locale
@@ -82,7 +107,7 @@ class MenuItemAdminController extends CRUDController
          */
 
         if ($menuId) {
-            $menu = $menuItemManager->find($menuId);
+            $menu = $this->menuItemManager->find($menuId);
 
             if ($menu) {
                 $this->currentMenuLanguage = $menu->getLocale();
@@ -108,11 +133,13 @@ class MenuItemAdminController extends CRUDController
         }
 
         if (!$this->currentMenuLanguage) {
-            throw new \Sonata\AdminBundle\Exception\NoValueException('No locale has been provided to generate a menu list');
+            throw new \Sonata\AdminBundle\Exception\NoValueException(
+                'No locale has been provided to generate a menu list'
+            );
         }
 
         //use one of the locale to filter the list of menu entries (see above
-        $rootNodes = $menuItemManager->getRootNodesByLocale($this->currentMenuLanguage, 'id');
+        $rootNodes = $this->menuItemManager->getRootNodesByLocale($this->currentMenuLanguage, 'id');
 
         $childOpen = function ($node) {
             return sprintf('<li class="table-row-style" id="listItem_%s">', $node['id']);
@@ -120,13 +147,16 @@ class MenuItemAdminController extends CRUDController
         $admin = $this->admin;
         $controller = $this;
         /** @var ArrayCollection $menuAllItems */
-        $menuAllItems = new ArrayCollection($menuItemManager->findAllJoinPage());
-        $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager,  $menuAllItems) {
-            $items = $menuAllItems->filter(function ($menuItem) use ($node) {
-                if ($menuItem->getId() == $node['id']) {
-                    return $menuItem;
+        $menuAllItems = new ArrayCollection($this->menuItemManager->findAllJoinPage());
+
+        $nodeDecorator = function ($node) use ($admin, $controller, $menuAllItems) {
+            $items = $menuAllItems->filter(
+                function ($menuItem) use ($node) {
+                    if ($menuItem->getId() == $node['id']) {
+                        return $menuItem;
+                    }
                 }
-            });
+            );
             $node = $items->first();
 
             return $controller->renderView(
@@ -140,17 +170,12 @@ class MenuItemAdminController extends CRUDController
                 if ($rootMenuId == $rootNode->getId()) {
                     $menus = [
                         'rootNode' => $rootNode,
-                        'navigation' => $this->createPlacementNavigation(
-                                $rootNode,
-                                $admin,
-                                $controller,
-                                $menuItemManager
-                            ),
+                        'navigation' => $this->createPlacementNavigation($rootNode, $admin, $controller),
                     ];
                     break;
                 }
             } else {
-                $navigation = $menuItemManager->childrenHierarchy(
+                $navigation = $this->menuItemManager->childrenHierarchy(
                     $rootNode,
                     null,
                     [
@@ -172,7 +197,7 @@ class MenuItemAdminController extends CRUDController
         $datagrid = $this->admin->getDatagrid();
 
         if ($menuId) {
-            $menu = $menuItemManager->find($menuId);
+            $menu = $this->menuItemManager->find($menuId);
 
             if ($menu) {
                 $locale = $menu->getLocale();
@@ -188,7 +213,7 @@ class MenuItemAdminController extends CRUDController
 
         if ($this->isXmlHttpRequest()) {
             if ($request->get('render')) {
-                return $this->render(
+                return $this->renderWithExtraParams(
                     'NetworkingInitCmsBundle:MenuItemAdmin:'.$ajaxTemplate.'.html.twig',
                     [
                         'menus' => $menus,
@@ -210,7 +235,7 @@ class MenuItemAdminController extends CRUDController
 
         $lastEdited = $this->get('session')->get('MenuItem.last_edited');
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             $this->admin->getTemplate('list'),
             [
                 'action' => 'navigation',
@@ -339,9 +364,9 @@ class MenuItemAdminController extends CRUDController
      * @param $rootId
      * @param $pageId
      *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createFromPageAction(Request $request, $rootId, $pageId)
     {
@@ -518,14 +543,13 @@ class MenuItemAdminController extends CRUDController
      * @param $rootNode
      * @param $admin
      * @param $controller
-     * @param $menuItemManager
      *
      * @return mixed
      */
-    public function createPlacementNavigation($rootNode, $admin, $controller, $menuItemManager)
+    public function createPlacementNavigation($rootNode, $admin, $controller)
     {
         $lastEdited = $this->get('session')->get('MenuItem.last_edited');
-
+        $menuItemManager = $this->menuItemManager;
         $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited) {
             if ($lastEdited == $node['id']) {
                 return;
@@ -571,7 +595,7 @@ class MenuItemAdminController extends CRUDController
             return sprintf('<ul class="%s">', $class);
         };
 
-        $navigation = $menuItemManager->childrenHierarchy(
+        $navigation = $this->menuItemManager->childrenHierarchy(
             $rootNode,
             null,
             [
@@ -598,10 +622,8 @@ class MenuItemAdminController extends CRUDController
     {
         $sibling = $request->get('sibling');
 
-        /** @var MenuItemManager $menuItemManager */
-        $menuItemManager = $this->get('networking_init_cms.menu_item_manager');
-        $newMenuItem = $menuItemManager->find($newMenuItemId);
-        $menuItem = $menuItemManager->find($menuItemId);
+        $newMenuItem = $this->menuItemManager->find($newMenuItemId);
+        $menuItem = $this->menuItemManager->find($menuItemId);
 
         if (!$newMenuItem || !$menuItem) {
             throw new NotFoundHttpException();
@@ -610,9 +632,9 @@ class MenuItemAdminController extends CRUDController
         $data = [];
         try {
             if ($sibling) {
-                $menuItemManager->persistAsNextSiblingOf($newMenuItem, $menuItem);
+                $this->menuItemManager->persistAsNextSiblingOf($newMenuItem, $menuItem);
             } else {
-                $menuItemManager->persistAsFirstChildOf($newMenuItem, $menuItem);
+                $this->menuItemManager->persistAsFirstChildOf($newMenuItem, $menuItem);
             }
             $this->getDoctrine()->getManager()->flush();
             $data = [

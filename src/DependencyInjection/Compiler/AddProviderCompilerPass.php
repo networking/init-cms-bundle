@@ -32,8 +32,10 @@ class AddProviderCompilerPass implements CompilerPassInterface
                 $definition->addMethodCall('addFormat', ['admin', [
                     'quality' => 100,
                     'width' => 190,
-                    'height' => false,
+                    'height' => null,
                     'constraint' => true,
+                    'resizer' => false,
+
                 ]]);
             }
 
@@ -46,7 +48,7 @@ class AddProviderCompilerPass implements CompilerPassInterface
                 $definition->addMethodCall('addFormat', ['admin', [
                     'quality' => 100,
                     'width' => 190,
-                    'height' => false,
+                    'height' => null,
                     'constraint' => true,
                 ]]);
             }
@@ -56,7 +58,7 @@ class AddProviderCompilerPass implements CompilerPassInterface
                 $definition->addMethodCall('addFormat', ['admin', [
                     'quality' => 100,
                     'width' => 190,
-                    'height' => false,
+                    'height' => null,
                     'constraint' => true,
                 ]]);
             }
@@ -65,7 +67,7 @@ class AddProviderCompilerPass implements CompilerPassInterface
                 $definition->addMethodCall('addFormat', ['admin', [
                     'quality' => 100,
                     'width' => 190,
-                    'height' => false,
+                    'height' => null,
                     'constraint' => true,
                 ]]);
             }

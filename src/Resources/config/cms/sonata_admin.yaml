@@ -1,0 +1,98 @@
+sonata_admin:
+    persist_filters: true
+    options:
+        use_select2: false
+        pager_links: 10
+    security:
+        handler: sonata.admin.security.handler.acl
+        # acl security information
+        information:
+            GUEST:    [VIEW, LIST]
+            STAFF:    [EDIT, LIST, CREATE]
+            EDITOR:   [OPERATOR, EXPORT]
+            ADMIN:    [MASTER, PUBLISH]
+            PUBLISHER: [PUBLISH, EDIT, LIST, CREATE]
+
+        # permissions not related to an object instance and also to be available when objects do not exist
+        # the DELETE admin permission means the user is allowed to batch delete objects
+        admin_permissions: [CREATE, LIST, DELETE, UNDELETE, EXPORT, OPERATOR, MASTER, PUBLISH]
+        # permission related to the objects
+        object_permissions: [VIEW, EDIT, DELETE, UNDELETE, OPERATOR, MASTER, OWNER, PUBLISH]
+    title:      Networking CMS
+    title_logo: /bundles/networkinginitcms/img/logo_initcms.png
+    templates:
+        knp_menu_template: "@NetworkingInitCms/Menu/initcms_knp_menu.html.twig"
+        user_block: '@NetworkingInitCms/Admin/user_block.html.twig'
+        layout:     '@NetworkingInitCms/admin_layout.html.twig'
+        ajax:       '@NetworkingInitCms/ajax_layout.html.twig'
+        list:       '@NetworkingInitCms/CRUD/list.html.twig'
+        show:       '@NetworkingInitCms/CRUD/show.html.twig'
+        edit:       '@NetworkingInitCms/CRUD/edit.html.twig'
+        preview:    '@NetworkingInitCms/CRUD/preview.html.twig'
+        delete:     '@NetworkingInitCms/CRUD/delete.html.twig'
+        action:     '@NetworkingInitCms/CRUD/action.html.twig'
+        select:     '@NetworkingInitCms/CRUD/list__select.html.twig'
+        dashboard:  '@NetworkingInitCms/Core/dashboard.html.twig'
+        batch_confirmation: '@NetworkingInitCms/CRUD/batch_confirmation.html.twig'
+        base_list_field: '@NetworkingInitCms/CRUD/base_list_field.html.twig'
+        inner_list_row: '@NetworkingInitCms/CRUD/list_inner_row.html.twig'
+        # default values of helper templates
+        short_object_description: '@NetworkingInitCms/Helper/short-object-description.html.twig'
+        # default values of block templates, they should extend the base_block template
+        list_block: '@NetworkingInitCms/Block/block_admin_list.html.twig'
+    dashboard:
+        blocks:
+            - { position: top, type: networking_init_cms.block.service.translatable_text, settings: { translation_key: "info.welcome_text", translation_domain: 'NetworkingInitCmsBundle'} }
+            - { position: left, type: networking_init_cms.block.service.pages}
+            - { position: right, type: networking_init_cms.block.service.online_users}
+            - { position: right, type: networking_init_cms.block.service.cache}
+            - { position: right, type: networking_init_cms.block.service.sitemap}
+
+        groups:
+            dashboard:
+                on_top: true
+                label: "admin.menu.dashboard"
+                label_catalogue: "PageAdmin"
+                icon: '<i class="fa fa-tachometer-alt fa-large"></i>'
+                items:
+                    - route: sonata_admin_dashboard
+                      label: admin.menu.dashboard
+            pages:
+                on_top: true
+                label: "pages.admin_menu_label"
+                label_catalogue: "PageAdmin"
+                icon: '<i class="far fa-file fa-large"></i>'
+                items: [networking_init_cms.admin.page]
+            menu:
+                on_top: true
+                label: "menu.admin_menu_label"
+                label_catalogue: "MenuItemAdmin"
+                icon: '<i class="fa fa-align-left fa-large"></i>'
+                items: [ networking_init_cms.admin.menu_item]
+            media:
+                label: "sonata_media.admin_menu_label"
+                label_catalogue: "MediaAdmin"
+                icon: '<i class="far fa-image fa-large"></i>'
+                items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
+            form_generator:
+                on_top:               true
+                label: "form.admin.menu_label"
+                label_catalogue: "formGenerator"
+                items: ['Networking\FormGeneratorBundle\Admin\FormAdmin']
+            users:
+                label: "sonata_user"
+                label_catalogue: "SonataUserBundle"
+                icon: '<i class="fa fa-users fa-small"></i>'
+                items: [sonata.user.admin.user, sonata.user.admin.group]
+            help_text:
+                on_top: true
+                label: "help_text.admin_menu_label"
+                label_catalogue: "HelpTextAdmin"
+                icon: '<i class="fa fa-question fa-small"></i>'
+                items: [networking_init_cms.admin.help_text]
+            translation:
+                on_top: true
+                label: "translation.admin_menu_label"
+                label_catalogue: "TranslationAdmin"
+                icon: '<i class="fa fa-globe fa-small"></i>'
+                items: [networking_init_cms.admin_entity.translation_admin]

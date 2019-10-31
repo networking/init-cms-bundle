@@ -1,0 +1,20 @@
+services:
+    Networking\InitCmsBundle\Menu\FrontendMenuBuilder:
+        autowire: true
+        arguments:
+            $allowLocaleCookie: '%networking_init_cms.allow_locale_cookie%'
+
+    # Create the left main menu and right main menu for the frontend
+    app.menu.main:
+        class: Knp\Menu\MenuItem
+        factory: 'Networking\InitCmsBundle\Menu\FrontendMenuBuilder:createMainMenu'
+        arguments: [menu_name: 'Main menu', 'nav nav-tabs' ]
+        tags:
+            - { name: knp_menu.menu, alias: mainMenu }
+
+    app.menu.lang:
+        class: Knp\Menu\MenuItem
+        factory: 'Networking\InitCmsBundle\Menu\FrontendMenuBuilder:createFrontendLangMenu'
+        arguments: [ '@request_stack', '%networking_init_cms.page.languages%', 'nav nav-pills' ]
+        tags:
+            - { name: knp_menu.menu, alias: langMenu }

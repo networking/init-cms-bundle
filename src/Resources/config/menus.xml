@@ -7,12 +7,6 @@
     <services>
         <service id="Networking\InitCmsBundle\Menu\AdminMenuBuilder" autowire="true">
             <argument key="$allowLocaleCookie">%networking_init_cms.allow_locale_cookie%</argument>
-            <call method="setAdminPool">
-                <argument type="service" id="sonata.admin.pool"/>
-            </call>
-            <call method="setMenuGroups">
-                <argument>%networking_init_cms.admin_menu_groups%</argument>
-            </call>
             <tag name="knp_menu.menu_builder" method="createAdminMenu" alias="AdminMenu" />
         </service>
 

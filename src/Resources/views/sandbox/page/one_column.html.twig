@@ -1,0 +1,36 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% extends '@NetworkingInitCms/sandbox/base.html.twig' %}
+
+{% block title %}{{ page.metaTitle }}{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col">
+			<div class="jumbotron">
+				{% for layoutBlock in page.layoutBlock('header') %}
+					{{ render_initcms_block('content/cms_block.html.twig', layoutBlock)}}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="middle">
+				{% for layoutBlock in page.layoutBlock('main_content')  %}
+					{{ render_initcms_block('content/cms_block.html.twig', layoutBlock)}}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock content %}
+
+

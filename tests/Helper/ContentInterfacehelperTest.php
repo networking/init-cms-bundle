@@ -19,7 +19,7 @@ class ContentInterfacehelperTest extends TestCase
     public $object;
     public $text;
 
-    public function setup()
+    public function setup(): void
     {
         $this->object = new ContentInterfaceHelper();
         $this->text = new Text();

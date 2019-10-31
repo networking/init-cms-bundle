@@ -10,7 +10,8 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\UserBundle\Model\UserManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,19 +21,15 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author net working AG <info@networking.ch>
  */
-class CmsHelperController extends Controller
+class CmsHelperController extends AbstractController
 {
-    /**
-     * @return Response
-     */
-    public function initCmsJsAction()
+    private $userManager;
+
+    public function __construct(UserManagerInterface $userManager)
     {
-        $response = $this->render('NetworkingInitCmsBundle:Core:init_cms.js.twig');
-
-        $response->headers->add(['content-type' => 'text/javascript']);
-
-        return $response;
+        $this->userManager = $userManager;
     }
+
 
     /**
      * Set user Admin preferred width.
@@ -45,16 +42,13 @@ class CmsHelperController extends Controller
     {
         $size = $request->get('size', 'full');
 
-        /** @var \Networking\InitCmsBundle\Model\UserInterface $user */
         $user = $this->getUser();
         $status = 200;
         $message = 'OK';
         try {
             $user->setLastActivity(new \DateTime());
             $user->setAdminSetting('admin_portal_width', $size);
-            /** @var \FOS\UserBundle\Doctrine\UserManager $userManager */
-            $userManager = $this->get('fos_user.user_manager');
-            $userManager->updateUser($user);
+            $this->userManager->updateUser($user);
         } catch (\Exception $e) {
             $status = 500;
             $message = $e->getMessage();

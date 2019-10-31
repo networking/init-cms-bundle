@@ -66,20 +66,17 @@ Add the following lines (plus your own bundles) to your application kernel
                     new \Sonata\IntlBundle\SonataIntlBundle(),
                     new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
                     new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
-                    new Ibrows\Bundle\SonataAdminAnnotationBundle\IbrowsSonataAdminAnnotationBundle(),
                     new Lexik\Bundle\TranslationBundle\LexikTranslationBundle(),
-                    new Ibrows\SonataTranslationBundle\IbrowsSonataTranslationBundle(),
                     new Oneup\UploaderBundle\OneupUploaderBundle(),
                     new Networking\InitCmsBundle\NetworkingInitCmsBundle(),
                     new FOS\RestBundle\FOSRestBundle(),
-                    new Application\Networking\InitCmsBundle\ApplicationNetworkingInitCmsBundle(),
                 );
 	}
 ```
 
 ### Configure the dependent user bundles
 You will need to provide configuration for the SonataAdminBundle, LexikTranslationBundle, FOSUserBundle and the SonataUserBundle
-in your app/config/config.yml file.
+in your app/config/config.yaml file.
 
 A simple configuration should look something like the following, with special attention paid to the sonata_user configuration
 as this will create the admin interface for administering users in the cms.
@@ -154,7 +151,6 @@ Then you can add your new bundle to the AppKernel.php
             return array(
                 //..
                 new Sonata\BlockBundle\SonataBlockBundle(),
-                new Application\Networking\InitCmsBundle\ApplicationNetworkingInitCmsBundle(),
                 //..
              );
          }
@@ -162,29 +158,29 @@ Then you can add your new bundle to the AppKernel.php
 2) Configure the init CMS
 -------------------------
 
-### Configure CMS config.yml
+### Configure CMS config.yaml
 
 The CMS uses many different bundles which all require specific configurations. You can easily import our main
-cms_config.ym file into your projects config.yml which will overwrite many of your projects configurations and
+cms_config.ym file into your projects config.yaml which will overwrite many of your projects configurations and
 insert the necessary configuration to get the project running (with exception to assetic which must be manually
 entered).
 
 Just replace the following line
 ```	imports:
 	 ....
-	 - { resource: security.yml }
+	 - { resource: security.yaml }
 	 ...
 ```
 with
 ```
-	- { resource: @NetworkingInitCmsBundle/Resources/config/cms/cms_config.yml }
+	- { resource: @NetworkingInitCmsBundle/Resources/config/cms/config.yaml }
 ```
 
 Alternatively you can view all the individual config files and manually insert the configuration into your project.
 
 ### Configure Doctrine
 
-Now we need copy the contents of the @NetworkingInitCmsBundle/Resources/config/cms/doctrine.yml file into your config.yml
+Now we need copy the contents of the @NetworkingInitCmsBundle/Resources/config/cms/doctrine.yaml file into your config.yaml
 file, this is important as it contains information about entity mappings and behaviours
 
 ### Configure Assetic (See [MopaBootstrapBundle][3])
@@ -195,7 +191,7 @@ and make sure you have node installed.
 Yui CSS and CSS Embed are very nice and recommended.
 To make full use of bootstraps capabilites they are not needed, neither is less but its up to you
 
-Here is an example configuration for your config.yml:
+Here is an example configuration for your config.yaml:
 Make sure you have java installed
 
 ``` yaml
@@ -236,24 +232,24 @@ assetic:
     ....
 ```
 
-**IMPORTANT** change the assetic "use_controller" parameter from "true" to "false" in your config_dev.yml
+**IMPORTANT** change the assetic "use_controller" parameter from "true" to "false" in your config_dev.yaml
 
 
 ### Configure Routing
 
-Insert the following config into your routing.yml to include the init CMS routes.
+Insert the following config into your routing.yaml to include the init CMS routes.
 
 	NetworkingInitCmsBundle:
-        resource: "@NetworkingInitCmsBundle/Resources/config/routing.yml"
+        resource: "@NetworkingInitCmsBundle/Resources/config/routing.yaml"
         prefix:   /
 
 ### Enable translations
 
 In order for the translations to work it is important to activate the translations in the framework configuration.
 
-Comment in the translator parameter in your config.yml file:
+Comment in the translator parameter in your config.yaml file:
 
-	#config.yml
+	#config.yaml
 	framework:
         #esi:             ~
         translator:      { fallback: %locale% }

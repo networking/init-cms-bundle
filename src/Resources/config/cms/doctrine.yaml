@@ -1,0 +1,71 @@
+doctrine:
+    dbal:
+        types:
+#            phone_number: "Misd\\PhoneNumberBundle\\Doctrine\\DBAL\\Types\\PhoneNumberType"
+#            json: "Doctrine\\DBAL\\Types\\JsonType"
+        default_connection: default
+        connections:
+            default:
+                driver: '%env(DATABASE_DRIVER)%'
+                server_version: '5.7'
+                host:     '%env(DATABASE_HOST)%'
+                port:     '%env(DATABASE_PORT)%'
+                dbname:   '%env(DATABASE_NAME)%'
+                user:     '%env(DATABASE_USER)%'
+                password: '%env(DATABASE_PASSWORD)%'
+                charset: utf8mb4
+                mapping_types:
+                    enum: string
+                default_table_options:
+                    charset: utf8mb4
+                    collate: utf8mb4_unicode_ci
+    orm:
+        auto_generate_proxy_classes: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                auto_mapping:     true
+                connection:       default
+                filters:
+                    softdeleteable:
+                        class: "Gedmo\\SoftDeleteable\\Filter\\SoftDeleteableFilter"
+                        enabled: true
+                mappings:
+                    App:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity'
+                        prefix: 'App\Entity'
+                        alias: App
+                    gedmo_translatable:
+                        type: annotation
+                        prefix: "Gedmo\\Translatable\\Entity"
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
+                        alias: GedmoTranslatable # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    gedmo_translator:
+                        type: annotation
+                        prefix: "Gedmo\\Translator\\Entity"
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translator/Entity"
+                        alias: GedmoTranslator # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    gedmo_loggable:
+                        type: annotation
+                        prefix: "Gedmo\\Loggable\\Entity"
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
+                        alias: GedmoLoggable # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    gedmo_tree:
+                        type: annotation
+                        prefix: "Gedmo\\Tree\\Entity"
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                        alias: GedmoTree # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    gedmo_sortable:
+                        type: annotation
+                        prefix: "Gedmo\\Sortable\\Entity"
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Sortable/Entity"
+                        alias: GedmoSortable # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                    FOSUserBundle: ~
+

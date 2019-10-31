@@ -4,7 +4,7 @@ namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Entity\Gallery as MediaGallery;
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
+use Networking\InitCmsBundle\Annotation as Sonata;
 
 /**
  * Networking\InitCmsBundle\Model\GalleryView.

@@ -11,8 +11,6 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -20,12 +18,9 @@ use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class PageListener implements EventSubscriberInterface, PageListenerInterface, ContainerAwareInterface
+abstract class PageListener implements EventSubscriberInterface, PageListenerInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+
 
     /**
      * @var PageManagerInterface
@@ -33,33 +28,19 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
     protected $pageManager;
 
     /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     * @var PageSnapshotManagerInterface
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
+    protected $pageSnapshotManager;
 
     /**
-     * @return PageManagerInterface|object
+     * PageListener constructor.
+     * @param PageManagerInterface $pageManager
+     * @param PageSnapshotManagerInterface $pageSnapshotManager
      */
-    public function getPageManager()
+    public function __construct(PageManagerInterface $pageManager, PageSnapshotManagerInterface $pageSnapshotManager)
     {
-        if (!$this->pageManager) {
-            $this->pageManager = $this->container->get('networking_init_cms.page_manager');
-        }
-
-        return $this->pageManager;
-    }
-
-    /**
-     * @return PageSnapshotManagerInterface
-     */
-    public function getPageSnapshotManager()
-    {
-        return $this->container->get('networking_init_cms.page_snapshot_manager');
+        $this->pageManager = $pageManager;
+        $this->pageSnapshotManager = $pageSnapshotManager;
     }
 
     /**
@@ -87,20 +68,19 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
         if ($page instanceof PageInterface) {
             $context = $event->getContext();
 
-            $er = $this->getPageManager();
             if (!$page->getId()) {
                 return;
             }
 
             if ($parent = $page->getParent()) {
-                $parent = $er->find($page->getParent());
+                $parent = $this->pageManager->find($page->getParent());
                 $page->setParent($parent);
             } else {
                 $page->setParent(null);
             }
 
             if ($alias = $page->getAlias()) {
-                $alias = $er->find($page->getAlias());
+                $alias = $this->pageManager->find($page->getAlias());
                 $page->setAlias($alias);
             } else {
                 $page->setAlias(null);
@@ -111,7 +91,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
                     if (is_array($parent) && array_key_exists('id', $parent)) {
                         $parent = $parent['id'];
                     }
-                    $parents[$key] = $er->find($parent);
+                    $parents[$key] = $this->pageManager->find($parent);
                 }
 
                 $page->setParents($parents);
@@ -121,7 +101,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
 
             if ($children = $page->getChildren()) {
                 foreach ($children as $key => $child) {
-                    $children[$key] = $er->find($child);
+                    $children[$key] = $this->pageManager->find($child);
                 }
 
                 $page->setChildren($children);
@@ -131,7 +111,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
 
             if ($originals = $page->getOriginals()) {
                 foreach ($originals as $key => $original) {
-                    $originals[$key] = $er->find($original);
+                    $originals[$key] = $this->pageManager->find($original);
                 }
 
                 $page->setOriginals($originals);
@@ -141,19 +121,18 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
             if ($context instanceof PageSnapshotDeserializationContext && $context->deserializeTranslations()) {
                 if ($translations = $page->getTranslations()) {
                     foreach ($translations as $key => $translation) {
-                        $translations[$key] = $er->find($translation);
+                        $translations[$key] = $this->pageManager->find($translation);
                     }
                     $page->setTranslations($translations);
                 } else {
                     $originalPageId = $page->getId();
-                    $originalPage = $er->find($originalPageId);
+                    $originalPage = $this->pageManager->find($originalPageId);
                     $page->setTranslations($originalPage->getAllTranslations()->toArray());
                 }
             }
 
             if (!$contentRoute = $page->getContentRoute()->getId()) {
-                $pageSnapshotManager = $this->getPageSnapshotManager();
-                $lastPageSnapshot = $pageSnapshotManager->findLastPageSnapshot($page->getId());
+                $lastPageSnapshot = $this->pageSnapshotManager->findLastPageSnapshot($page->getId());
 
                 if ($lastPageSnapshot) {
                     $page->setContentRoute($lastPageSnapshot->getContentRoute());

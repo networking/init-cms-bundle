@@ -153,7 +153,6 @@ abstract class UserAdmin extends SonataUserAdmin
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
-                'choices_as_values' => true,
                 'translation_domain' => false,
             ])
             ->end()

@@ -16,6 +16,7 @@ use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
+use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,6 +32,26 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class MediaAdminController extends SonataMediaAdminController
 {
+    /**
+     * @var TemplateRegistryInterface
+     */
+    private $templateRegistry;
+
+
+    public function configure()
+    {
+        parent::configure();
+
+        $this->templateRegistry = $this->container->get($this->admin->getCode().'.template_registry');
+        if (!$this->templateRegistry instanceof TemplateRegistryInterface) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Unable to find the template registry related to the current admin (%s)',
+                    $this->admin->getCode()
+                )
+            );
+        }
+    }
     /**
      * @param null $id
      *
@@ -165,7 +186,7 @@ class MediaAdminController extends SonataMediaAdminController
         }
 
         return $this->render(
-            $this->admin->getTemplate('delete'),
+            $this->templateRegistry->getTemplate('delete'),
             [
                 'object' => $object,
                 'action' => 'delete',
@@ -314,7 +335,7 @@ class MediaAdminController extends SonataMediaAdminController
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
         return $this->render(
-            $this->admin->getTemplate('list'),
+            $this->templateRegistry->getTemplate('list'),
             [
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])

@@ -28,8 +28,8 @@ class PageListener extends ModelPageListener
 {
     /**
      * @param LifecycleEventArgs $args
-     *
      * @return mixed|void
+     * @throws \Doctrine\ORM\ORMException
      */
     public function postPersist(LifecycleEventArgs $args)
     {
@@ -51,8 +51,8 @@ class PageListener extends ModelPageListener
 
     /**
      * @param OnFlushEventArgs $args
-     *
      * @return mixed|void
+     * @throws \Doctrine\ORM\ORMException
      */
     public function onFlush(OnFlushEventArgs $args)
     {

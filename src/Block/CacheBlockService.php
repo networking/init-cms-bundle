@@ -11,21 +11,18 @@
 namespace Networking\InitCmsBundle\Block;
 
 use Networking\InitCmsBundle\Lib\PhpCacheInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
-use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\CoreBundle\Validator\ErrorElement;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 /**
  * Class OnlineUsersBlockService.
  *
  * @author info@networking.ch
  */
-class CacheBlockService extends AbstractAdminBlockService
+class CacheBlockService extends AbstractBlockService
 {
     /**
      * @var PhpCacheInterface
@@ -34,16 +31,14 @@ class CacheBlockService extends AbstractAdminBlockService
 
     /**
      * CacheBlockService constructor.
-     *
-     * @param string            $name
-     * @param EngineInterface   $templating
+     * @param Environment $twig
      * @param PhpCacheInterface $cache
      */
-    public function __construct(string $name, EngineInterface $templating, PhpCacheInterface $cache)
+    public function __construct(Environment $twig, PhpCacheInterface $cache)
     {
         $this->cache = $cache;
 
-        parent::__construct($name, $templating);
+        parent::__construct($twig);
     }
 
     /**
@@ -52,30 +47,15 @@ class CacheBlockService extends AbstractAdminBlockService
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
         return $this->renderResponse(
-                    $blockContext->getTemplate(),
-                    [
-                        'block' => $blockContext->getBlock(),
-                        'cache' => $this->cache,
-                    ],
-                    $response
-                );
+            $blockContext->getTemplate(),
+            [
+                'block' => $blockContext->getBlock(),
+                'cache' => $this->cache,
+            ],
+            $response
+        );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
-    {
-        // TODO: Implement validateBlock() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
-    {
-        // TODO: Implement buildEditForm() method.
-    }
 
     /**
      * {@inheritdoc}

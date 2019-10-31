@@ -1,0 +1,53 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% extends '@NetworkingInitCms/layout.html.twig' %}
+
+{% block title %}{{ page.metaTitle }}{% endblock %}
+
+{% block content %}
+    {% if page.layoutBlock('header') is not empty %}
+        <div class="row">
+            <div class="col">
+                <div class="jumbotron">
+                    {% set headerBlockCount = page.layoutBlock('header')|length %}
+
+                    {% for layoutBlock in page.layoutBlock('header') %}
+                        <div class="span{{ 12/headerBlockCount }}">
+                            {{ render_initcms_block('content/hero_block.html.twig', layoutBlock) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="middle">
+                {% for layoutBlock in page.layoutBlock('left') %}
+                    {{ render_initcms_block('conent/cms_block.html.twig', layoutBlock) }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            {% block content_sidebar %}
+                <div class="middle">
+                    {% for layoutBlock in page.layoutBlock('right') %}
+                        {{ render_initcms_block('content/cms_block.html.twig', layoutBlock) }}
+                    {% endfor %}
+                </div>
+            {% endblock content_sidebar %}
+        </div>
+
+    </div>
+
+{% endblock content %}

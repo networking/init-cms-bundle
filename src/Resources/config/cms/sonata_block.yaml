@@ -1,0 +1,10 @@
+# app/config/config.yaml
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        networking_init_cms.block.service.translatable_text:
+        networking_init_cms.block.service.online_users:
+        networking_init_cms.block.service.pages:
+        networking_init_cms.block.service.cache:
+        networking_init_cms.block.service.sitemap:
+        networking_init_cms.block.service.version:

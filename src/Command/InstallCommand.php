@@ -32,6 +32,8 @@ class InstallCommand extends Command
             ->setDescription(
                 'Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources'
             )
+            ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
+            ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
             ->addOption('username', '', InputOption::VALUE_REQUIRED, 'username of the to be created super user')
             ->addOption('email', '', InputOption::VALUE_REQUIRED, 'the email address of the to be created super user')
             ->addOption('password', '', InputOption::VALUE_REQUIRED, 'password of the to be created super user')
@@ -46,20 +48,21 @@ class InstallCommand extends Command
     {
         $this->setupData($input, $output);
         $this->createAdminUser($input, $output);
-//        $this->dumpAssetic($output);
     }
 
     /**
+     * @param $input
      * @param $output
-     *
      * @return int
+     * @throws \Exception
      */
-    private function setupData($input, $output)
+    private function setupData(InputInterface $input, OutputInterface $output)
     {
         $command = $this->getApplication()->find('networking:initcms:data-setup');
         $arguments = [
             'command' => 'networking:initcms:data-setup',
-            '--drop' => true,
+            '--drop' => $input->getOption('drop'),
+            '--no-fixtures' => $input->getOption('no-fixtures'),
             '--use-acl' => $input->getOption('use-acl'),
         ];
 
@@ -69,30 +72,10 @@ class InstallCommand extends Command
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return int|string
-     */
-    private function dumpAssetic(OutputInterface $output)
-    {
-        $command = $this->getApplication()->find('assetic:dump');
-
-        $arguments = [
-            'command' => 'assetic:dump',
-            '--env' => 'prod',
-            '--no-debug' => true,
-        ];
-
-        $input = new ArrayInput($arguments);
-
-        return $command->run($input, $output);
-    }
-
-    /**
-     * @param \Symfony\Component\Console\Input\InputInterface   $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return mixed
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     * @throws \Exception
      */
     private function createAdminUser(InputInterface $input, OutputInterface $output)
     {

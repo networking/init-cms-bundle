@@ -10,6 +10,9 @@
 
 namespace Networking\InitCmsBundle\tests\Entity;
 
+use Networking\InitCmsBundle\Entity\PageManager;
+use Networking\InitCmsBundle\Entity\PageSnapshotManager;
+use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use Networking\InitCmsBundle\Model\ContentRoute;
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Entity\PageListener;
@@ -34,7 +37,16 @@ class PageListenerTest extends TestCase
      */
     public function testPostPersist_WithTag()
     {
-        $pageListener = new PageListener();
+
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageSnapshotManager= $this->getMockBuilder(PageSnapshotManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pageListener = new PageListener($mockPageManager, $mockPageSnapshotManager);
 
         // entity
         $entity = $this->getMockBuilder('\StdClass')->setMethods(['getContentRoute'])->getMock();
@@ -71,7 +83,15 @@ class PageListenerTest extends TestCase
      */
     public function testPostPersist_WithPage()
     {
-        $pageListener = new PageListener();
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageSnapshotManager= $this->getMockBuilder(PageSnapshotManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pageListener = new PageListener($mockPageManager, $mockPageSnapshotManager);
         $contentRoute = $this->createMock(ContentRoute::class);
         $contentRoute->expects($this->once())
             ->method('setPath')
@@ -141,7 +161,15 @@ class PageListenerTest extends TestCase
      */
     public function testPostUpdate_WithStdClass()
     {
-        $pageListener = new PageListener();
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageSnapshotManager= $this->getMockBuilder(PageSnapshotManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pageListener = new PageListener($mockPageManager, $mockPageSnapshotManager);
 
         // entity
         $entity = $this->getMockBuilder('\StdClass')->setMethods(['getContentRoute'])->getMock();
@@ -188,7 +216,15 @@ class PageListenerTest extends TestCase
      */
     public function testPostUpdate_WithPage()
     {
-        $pageListener = new PageListener();
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageSnapshotManager= $this->getMockBuilder(PageSnapshotManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pageListener = new PageListener($mockPageManager, $mockPageSnapshotManager);
 
         // contentRoute
         $contentRoute = $this->createMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath']);
@@ -257,7 +293,15 @@ class PageListenerTest extends TestCase
      */
     public function testPostUpdate_WithPageAndTenChildren()
     {
-        $pageListener = new PageListener();
+        $mockPageManager= $this->getMockBuilder(PageManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPageSnapshotManager= $this->getMockBuilder(PageSnapshotManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pageListener = new PageListener($mockPageManager, $mockPageSnapshotManager);
 
         // contentRoute
         $contentRoute = $this->createMock('\Networking\InitCmsBundle\Model\ContentRoute', ['setPath']);

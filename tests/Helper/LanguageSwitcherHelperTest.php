@@ -11,7 +11,9 @@
 namespace Networking\InitCmsBundle\tests\Helper;
 
 use Doctrine\ORM\EntityManager;
+use Networking\InitCmsBundle\Entity\PageListener;
 use Networking\InitCmsBundle\Entity\PageManager;
+use Networking\InitCmsBundle\Entity\PageSnapshotManager;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
@@ -172,10 +174,8 @@ class LanguageSwitcherHelperTest extends TestCase
                 ->disableOriginalConstructor()
                 ->getMock();
         }
-        $helper = new LanguageSwitcherHelper($requestStack, $em, '', $pageHelper);
-        $helper->setRouter($router);
-        $helper->setPageManager($pageManager);
-        $helper->setSerializer($serializer);
+
+        $helper = new LanguageSwitcherHelper($requestStack, $em,  $pageHelper, $pageManager, $router, $serializer, '' );
 
         return $helper;
     }

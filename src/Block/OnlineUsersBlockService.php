@@ -11,40 +11,33 @@
 namespace Networking\InitCmsBundle\Block;
 
 use Networking\InitCmsBundle\Model\UserManagerInterface;
-use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
-use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 /**
  * Class OnlineUsersBlockService.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class OnlineUsersBlockService extends AbstractAdminBlockService
+class OnlineUsersBlockService extends AbstractBlockService
 {
     /**
-     * @var \Networking\InitCmsBundle\Model\UserManagerInterface
+     * @var
      */
-    protected $um;
+    protected $userManager;
 
     /**
-     * @param string          $name
-     * @param EngineInterface $templating
+     * OnlineUsersBlockService constructor.
+     * @param Environment $twig
+     * @param UserManagerInterface $userManager
      */
-    public function __construct($name, EngineInterface $templating)
+    public function __construct(Environment $twig, UserManagerInterface $userManager)
     {
-        $this->name = $name;
-        $this->templating = $templating;
-    }
-
-    public function setUserManager(UserManagerInterface $um)
-    {
-        $this->um = $um;
+        $this->userManager = $userManager;
+        parent::__construct($twig);
     }
 
     /**
@@ -52,7 +45,7 @@ class OnlineUsersBlockService extends AbstractAdminBlockService
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-        $users = $this->um->getLatestActivity();
+        $users = $this->userManager->getLatestActivity();
 
         return $this->renderResponse(
             $blockContext->getTemplate(),
@@ -62,22 +55,6 @@ class OnlineUsersBlockService extends AbstractAdminBlockService
             ],
             $response
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
-    {
-        // TODO: Implement validateBlock() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
-    {
-        // TODO: Implement buildEditForm() method.
     }
 
     /**

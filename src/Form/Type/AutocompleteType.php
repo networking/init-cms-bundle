@@ -78,12 +78,8 @@ class AutocompleteType extends DoctrineType
     public function configureOptions(OptionsResolver $resolver)
     {
         $registry = $this->registry;
-        $choiceListFactory = $this->choiceListFactory;
-        $idReaders = &$this->idReaders;
-        $choiceLoaders = &$this->choiceLoaders;
-        $type = $this;
 
-        $choiceLoader = function (Options $options) use ($choiceListFactory, &$choiceLoaders, $type) {
+        $choiceLoader = function (Options $options)  {
 
             // Unless the choices are given explicitly, load them on demand
             if (null === $options['choices']) {
@@ -93,7 +89,7 @@ class AutocompleteType extends DoctrineType
                 // If there is no QueryBuilder we can safely cache DoctrineChoiceLoader,
                 // also if concrete Type can return important QueryBuilder parts to generate
                 // hash key we go for it as well
-                if (!$options['query_builder'] || false !== ($qbParts = $type->getQueryBuilderForCachingHash($options['query_builder']))) {
+                if (!$options['query_builder'] || false !== ($qbParts = $this->getQueryBuilderForCachingHash($options['query_builder']))) {
                     $hash = self::generateHash([
                         $options['em'],
                         $options['class'],
@@ -101,24 +97,23 @@ class AutocompleteType extends DoctrineType
                         $options['loader'],
                     ]);
 
-                    if (isset($choiceLoaders[$hash])) {
-                        return $choiceLoaders[$hash];
+                    if (isset($this->choiceLoaders[$hash])) {
+                        return $this->choiceLoaders[$hash];
                     }
                 }
 
                 if ($options['loader']) {
                     $entityLoader = $options['loader'];
                 } elseif (null !== $options['query_builder']) {
-                    $entityLoader = $type->getLoader($options['em'], $options['query_builder'], $options['class'],
+                    $entityLoader = $this->getLoader($options['em'], $options['query_builder'], $options['class'],
                         $options['query_hints']);
                 } else {
                     $queryBuilder = $options['em']->getRepository($options['class'])->createQueryBuilder('e');
-                    $entityLoader = $type->getLoader($options['em'], $queryBuilder, $options['class'],
+                    $entityLoader = $this->getLoader($options['em'], $queryBuilder, $options['class'],
                         $options['query_hints']);
                 }
 
                 $doctrineChoiceLoader = new DoctrineChoiceLoader(
-                    $choiceListFactory,
                     $options['em'],
                     $options['class'],
                     $options['id_reader'],
@@ -126,7 +121,7 @@ class AutocompleteType extends DoctrineType
                 );
 
                 if ($hash !== null) {
-                    $choiceLoaders[$hash] = $doctrineChoiceLoader;
+                    $this->choiceLoaders[$hash] = $doctrineChoiceLoader;
                 }
 
                 return $doctrineChoiceLoader;
@@ -230,7 +225,7 @@ class AutocompleteType extends DoctrineType
 
         // Set the "id_reader" option via the normalizer. This option is not
         // supposed to be set by the user.
-        $idReaderNormalizer = function (Options $options) use (&$idReaders) {
+        $idReaderNormalizer = function (Options $options) {
             $hash = CachingFactoryDecorator::generateHash([
                 $options['em'],
                 $options['class'],
@@ -242,12 +237,12 @@ class AutocompleteType extends DoctrineType
             // of the field, so we store that information in the reader.
             // The reader is cached so that two choice lists for the same class
             // (and hence with the same reader) can successfully be cached.
-            if (!isset($idReaders[$hash])) {
+            if (!isset($this->idReaders[$hash])) {
                 $classMetadata = $options['em']->getClassMetadata($options['class']);
-                $idReaders[$hash] = new IdReader($options['em'], $classMetadata);
+                $this->idReaders[$hash] = new IdReader($options['em'], $classMetadata);
             }
 
-            return $idReaders[$hash];
+            return $this->idReaders[$hash];
         };
 
         $resolver->setDefaults([

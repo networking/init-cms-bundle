@@ -10,8 +10,8 @@
 
 namespace Networking\InitCmsBundle\Form\Type;
 
-use Networking\InitCmsBundle\Admin\Pool;
 use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
+use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -43,7 +43,7 @@ class MediaEntityType extends AbstractType
     /**
      * @param Pool $pool
      */
-    public function setPool(Pool $pool)
+    public function __construct(Pool $pool)
     {
         $this->pool = $pool;
     }

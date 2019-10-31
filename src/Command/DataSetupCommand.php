@@ -10,7 +10,11 @@
 
 namespace Networking\InitCmsBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Networking\InitCmsBundle\Helper\PageHelper;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,19 +26,47 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class DataSetupCommand extends ContainerAwareCommand
+class DataSetupCommand extends Command
 {
+    /**
+     * @var string
+     */
+    protected static $defaultName = 'networking:initcms:data-setup';
+    /**
+     * @var RegistryInterface
+     */
+    protected $registry;
+    protected $pageManager;
+    protected $pageHelper;
+
+    /**
+     * DataSetupCommand constructor.
+     * @param RegistryInterface $registry
+     * @param PageManagerInterface $pageManager
+     * @param PageHelper $pageHelper
+     * @param string|null $name
+     */
+    public function __construct(
+        RegistryInterface $registry,
+        PageManagerInterface $pageManager,
+        PageHelper $pageHelper,
+        string $name = null
+    ) {
+        $this->registry = $registry;
+        $this->pageManager = $pageManager;
+        $this->pageHelper = $pageHelper;
+        parent::__construct($name);
+    }
+
     /**
      * configuration for the command.
      */
     protected function configure()
     {
-        $this->setName('networking:initcms:data-setup')
-            ->setDescription('create and update db schema and append fixtures')
+        $this->setDescription('create and update db schema and append fixtures')
             ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
             ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
-            ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl')
-        ;
+            ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl');
     }
 
     /**
@@ -137,7 +169,7 @@ class DataSetupCommand extends ContainerAwareCommand
      * interact
      * unused at the moment.
      *
-     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      *
      * @throws \Exception
@@ -168,20 +200,15 @@ class DataSetupCommand extends ContainerAwareCommand
 
     public function publishPages(OutputInterface $output)
     {
-        /** @var \Networking\InitCmsBundle\Entity\PageManager $modelManager */
-        $doctrine = $this->getContainer()->get('doctrine');
-        $doctrine->resetManager();
-
-        $modelManager = $this->getContainer()->get('networking_init_cms.page_manager');
-        $modelManager->resetEntityManager($doctrine->getManager());
+        $this->registry->resetManager();
+        $this->pageManager->resetEntityManager($this->registry->getManager());
 
         try {
-            $pages = $modelManager->findAll();
+            $pages = $this->pageManager->findAll();
             foreach ($pages as $page) {
                 /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
-                $pageHelper = $this->getContainer()->get('networking_init_cms.helper.page_helper');
-                $pageHelper->makePageSnapshot($page);
-                $modelManager->save($page);
+                $this->pageHelper->makePageSnapshot($page);
+                $this->pageManager->save($page);
             }
 
             return 0;

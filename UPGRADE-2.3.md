@@ -23,7 +23,7 @@ networking_init_cms:
         page: "Application\\Networking\\InitCmsBundle\\Entity\\Page" # Default value
         user: "Application\\Networking\\InitCmsBundle\\Entity\\User" # Default value
 
-All the services are now defined in separate xml files, all the models are defined in *.orm.yml files
+All the services are now defined in separate xml files, all the models are defined in *.orm.yaml files
 
 
 ### Preparation for alternative db drivers

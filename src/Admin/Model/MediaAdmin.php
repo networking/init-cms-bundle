@@ -80,7 +80,7 @@ abstract class MediaAdmin extends Admin
 
     /**
      * Set the language paramenter to contain a list of languages most likely
-     * passed from the config.yml file.
+     * passed from the config.yaml file.
      *
      * @param array $languages
      */
@@ -458,7 +458,6 @@ abstract class MediaAdmin extends Admin
                 'property' => 'adminTitle',
                 'help_label' => 'help.media_tag',
                 'taggable' => $this->hasMultipleMediaTags,
-                'choices_as_values' => true,
                 'attr' => ['style' => 'width:220px'],
                 'transformer' => $transformer,
             ]

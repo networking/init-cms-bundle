@@ -12,7 +12,7 @@ file that was distributed with this source code.
 {% extends '@NetworkingInitCms/CRUD/base_show_field.html.twig' %}
 
 {% block field %}
-{% spaceless %}
+{% apply spaceless %}
     {% if value %}
         <i class="glyphicon glyphicon-ok-circle"></i>
         {%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}
@@ -20,5 +20,5 @@ file that was distributed with this source code.
         <i class="glyphicon glyphicon-ban-circle"></i>
         {%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}
     {% endif %}
-{% endspaceless %}
+{% endapply %}
 {% endblock %}

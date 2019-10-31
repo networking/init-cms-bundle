@@ -45,7 +45,5 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
             }
         }
 
-        $definition = $container->getDefinition('sonata.admin.pool');
-        $definition->setClass(Pool::class);
     }
 }

@@ -1,0 +1,69 @@
+sonata_media:
+    class:
+        media:              Networking\InitCmsBundle\Entity\Media
+        gallery:            Networking\InitCmsBundle\Entity\Gallery
+        gallery_has_media:  Networking\InitCmsBundle\Entity\GalleryHasMedia
+    default_context: default
+    db_driver: doctrine_orm # or doctrine_mongodb
+    contexts:
+        default:
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.youtube
+                - sonata.media.provider.vimeo
+
+            formats:
+                small: { width: 100 , quality: 70}
+                medium: { width: 400, height: 300 , quality: 70}
+                big:   { width: 800, quality: 70}
+
+    cdn:
+        server:
+            path: /uploads/media
+
+    filesystem:
+        local:
+            directory:  "%kernel.project_dir%/public/upload/media"
+            create:     false
+
+    providers:
+        image:
+            generator:  networking_init_cms.media.generator.media_path
+            thumbnail:  networking_init_cms.media.thumbnail.format
+        file:
+            generator:  networking_init_cms.media.generator.media_path
+            allowed_mime_types:
+                - 'application/pdf'
+                - 'application/x-pdf'
+                - 'application/rtf'
+                - 'text/html'
+                - 'text/rtf'
+                - 'text/plain'
+                - 'application/excel'
+                - 'application/msword'
+                - 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                - 'application/vnd.ms-excel'
+                - 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                - 'application/vnd.ms-powerpoint'
+                - 'application/vnd.ms-powerpoint'
+                - 'application/vnd.oasis.opendocument.text'
+                - 'application/vnd.oasis.opendocument.graphics'
+                - 'application/vnd.oasis.opendocument.presentation'
+                - 'application/vnd.oasis.opendocument.spreadsheet'
+                - 'application/vnd.oasis.opendocument.chart'
+                - 'application/vnd.oasis.opendocument.formula'
+                - 'application/vnd.oasis.opendocument.database'
+                - 'application/vnd.oasis.opendocument.image'
+                - 'text/comma-separated-values'
+                - 'text/xml'
+                - 'application/xml'
+        youtube:
+            generator:  networking_init_cms.media.generator.media_path
+            thumbnail:  networking_init_cms.media.thumbnail.format
+        vimeo:
+            generator:  networking_init_cms.media.generator.media_path
+            thumbnail:  networking_init_cms.media.thumbnail.format

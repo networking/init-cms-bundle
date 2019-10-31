@@ -70,6 +70,8 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     protected $trackedActions = ['list'];
 
+    protected $formOptions =['layout' => 'horizontal'];
+
     /**
      * @return string
      */
@@ -87,20 +89,42 @@ abstract class MenuItemAdmin extends BaseAdmin
             'createFromPage',
             'create_from_page/root_id/{rootId}/page_id/{pageId}',
             [],
-            ['_method' => 'GET|POST', 'rootId', 'pageId']
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\MenuItemAdminController::createFromPageAction',
+                '_method' => 'GET|POST',
+                'rootId',
+                'pageId',
+            ]
         );
-        $collection->add('ajaxController', 'ajax_navigation', [], ['_method' => 'GET|POST']);
+        $collection->add(
+            'ajaxController',
+            'ajax_navigation',
+            [],
+            [
+
+                '_controller' => 'Networking\InitCmsBundle\Controller\MenuItemAdminController::ajaxControllerAction',
+                '_method' => 'GET|POST',
+            ]
+        );
         $collection->add(
             'newPlacement',
             'new_placement/{newMenuItemId}/{menuItemId}',
             [],
-            ['_method' => 'GET|POST', 'newMenuItemId', 'menuItemId']
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\MenuItemAdminController::newPlacementAction',
+                '_method' => 'GET|POST',
+                'newMenuItemId',
+                'menuItemId',
+            ]
         );
         $collection->add(
             'placement',
             'placement',
             [],
-            ['_method' => 'GET|POST']
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\MenuItemAdminController::placementAction',
+                '_method' => 'GET|POST',
+            ]
         );
     }
 
@@ -178,15 +202,23 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'query_builder' => function (EntityRepository $er) use ($locale) {
                             $qb = $er->createQueryBuilder('p');
                             $qb->where('p.locale = :locale')
-                                    ->orderBy('p.path', 'asc')
-                                    ->setParameter(':locale', $locale);
+                                ->orderBy('p.path', 'asc')
+                                ->setParameter(':locale', $locale);
 
                             return $qb;
                         },
                     ]
                 );
-            $formMapper->add('redirect_url', UrlType::class, ['required' => false, 'help_block' => 'help.redirect_url', 'layout' => 'horizontal']);
-            $formMapper->add('internal_url', TextType::class, ['required' => false, 'help_block' => 'help.internal_url', 'layout' => 'horizontal']);
+            $formMapper->add(
+                'redirect_url',
+                UrlType::class,
+                ['required' => false, 'help_block' => 'help.redirect_url', 'layout' => 'horizontal']
+            );
+            $formMapper->add(
+                'internal_url',
+                TextType::class,
+                ['required' => false, 'help_block' => 'help.internal_url', 'layout' => 'horizontal']
+            );
             $formMapper->end();
 
             // start group optionals
@@ -229,8 +261,9 @@ abstract class MenuItemAdmin extends BaseAdmin
                 HiddenType::class,
                 ['data' => $root, 'data_class' => null]
             )->addModelTransformer($transformer);
-            $formMapper
-                ->add($menuField, HiddenType::class);
+            $formMapper->add($menuField, HiddenType::class);
+
+
         }
     }
 
@@ -245,10 +278,13 @@ abstract class MenuItemAdmin extends BaseAdmin
                 CallbackFilter::class,
                 ['callback' => [$this, 'getByLocale']],
                 LanguageType::class,
-                ['placeholder' => false,
-                    'choice_loader' => new CallbackChoiceLoader(function () {
-                        return $this->getLocaleChoices();
-                    }),
+                [
+                    'placeholder' => false,
+                    'choice_loader' => new CallbackChoiceLoader(
+                        function () {
+                            return $this->getLocaleChoices();
+                        }
+                    ),
                     'preferred_choices' => [$this->getDefaultLocale()],
                     'translation_domain' => $this->translationDomain,
                 ]
@@ -339,22 +375,7 @@ abstract class MenuItemAdmin extends BaseAdmin
         $this->isRoot = $isRoot;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate($name)
-    {
-        switch ($name) {
-            case 'list':
-                return '@NetworkingInitCms/MenuItemAdmin/menu_list.html.twig';
-                break;
-            case 'placement':
-                return '@NetworkingInitCms/MenuItemAdmin/placement.html.twig';
-                break;
-            default:
-                return $this->getTemplateRegistry()->getTemplate($name);
-        }
-    }
+
 
     /**
      * returns all translated link targets.

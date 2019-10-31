@@ -17,9 +17,11 @@
     {%- if item.displayed %}
         {#- check role of the group #}
         {%- set display = (item.extra('roles') is empty or is_granted(sonata_admin.adminPool.getOption('role_super_admin')) ) %}
-        {%- for role in item.extra('roles') if not display %}
-            {%- set display = is_granted(role) %}
-        {%- endfor %}
+        {%  if not display  %}
+            {%- for role in item.extra('roles')%}
+                {%- set display = is_granted(role) %}
+            {%- endfor %}
+        {%- endif %}
     {%- endif %}
 
     {%- if item.displayed and display|default %}
@@ -31,7 +33,7 @@
 {% endblock %}
 
 {% block linkElement %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% set translation_domain = item.extra('label_catalogue', 'messages') %}
         {% if item.extra('on_top') is defined and not item.extra('on_top') %}
             {% set icon = item.extra('icon')|default(item.level > 1 ? '<i class="fa fa-angle-double-right" aria-hidden="true"></i>' : '') %}
@@ -40,11 +42,11 @@
         {% endif %}
         {% set is_link = true %}
         {{ parent() }}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {% block spanElement %}
-    {% spaceless %}
+    {% apply spaceless %}
         <a href="#">
             {% set icon = item.extra('icon')|default('') %}
             {{ icon|raw }}
@@ -56,7 +58,7 @@
                <i class="fa pull-right fa-angle-left" style="line-height: inherit"></i>
             {%- endif -%}
         </a>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {% block label %}

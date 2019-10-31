@@ -12,7 +12,7 @@ namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\EventArgs;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class ModelChangedListener.
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 abstract class ModelChangedListener implements ModelChangedListenerInterface
 {
     /**
-     * @var TokenStorage
+     * @var TokenStorageInterface
      */
     protected $tokenStorage;
 
@@ -32,20 +32,18 @@ abstract class ModelChangedListener implements ModelChangedListenerInterface
     protected $logger;
 
     /**
+     * ModelChangedListener constructor.
      * @param Logger $logger
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(Logger $logger)
+    public function __construct(Logger $logger, TokenStorageInterface $tokenStorage)
     {
         $this->logger = $logger;
-    }
-
-    public function setTokenStorage(TokenStorage $tokenStorage)
-    {
         $this->tokenStorage = $tokenStorage;
     }
 
     /**
-     * @return TokenStorage
+     * @return TokenStorageInterface
      */
     public function getTokenStorage()
     {

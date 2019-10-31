@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
+use Networking\InitCmsBundle\Annotation as Sonata;
 
 /**
  * Class Text.

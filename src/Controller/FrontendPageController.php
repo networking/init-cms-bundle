@@ -11,14 +11,21 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
+use Networking\InitCmsBundle\Helper\PageHelper;
+use Networking\InitCmsBundle\Lib\PhpCacheInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\Page;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Sonata\AdminBundle\Admin\Pool;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -32,18 +39,54 @@ use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
  *
  * @author net working AG <info@networking.ch>
  */
-class FrontendPageController extends Controller
+class FrontendPageController extends AbstractController
 {
+    /**
+     * @var PhpCacheInterface
+     */
+    protected $phpCache;
+
+    protected $tokenStorage;
+
+    protected $authorizationChecker;
+
+    protected $pool;
+
+    protected $languageSwitcherHelper;
+
+    protected $pageManager;
+
+    protected $pageHelper;
+
+    public function __construct(
+        PhpCacheInterface $phpCache,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorizationChecker,
+        Pool $pool,
+        LanguageSwitcherHelper $languageSwitcherHelper,
+        PageManagerInterface $pageManager,
+        PageHelper $pageHelper
+    ) {
+        $this->phpCache = $phpCache;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->pool = $pool;
+        $this->languageSwitcherHelper = $languageSwitcherHelper;
+        $this->pageManager = $pageManager;
+        $this->pageHelper = $pageHelper;
+
+    }
+
     /**
      * @return bool|\Sonata\AdminBundle\Admin\Pool
      */
     protected function getAdminPool()
     {
-        if ($this->get('security.token_storage')->getToken() && $this->get('security.authorization_checker')->isGranted(
+        if ($this->tokenStorage->getToken() && $this->authorizationChecker->isGranted(
                 'ROLE_SONATA_ADMIN'
             )
         ) {
-            return $this->get('sonata.admin.pool');
+            return $this->pool;
         }
 
         return false;
@@ -59,8 +102,6 @@ class FrontendPageController extends Controller
     public function indexAction(Request $request)
     {
 
-        /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
-        $phpCache = $this->get('networking_init_cms.lib.php_cache');
 
         /** @var PageSnapshotInterface $page */
         $page = $request->get('_content');
@@ -71,25 +112,25 @@ class FrontendPageController extends Controller
         }
         $user = $this->getUser();
 
-        if ($phpCache->isCacheable($request, $user) && $page instanceof PageSnapshotInterface) {
+        if ($this->phpCache->isCacheable($request, $user) && $page instanceof PageSnapshotInterface) {
             if (!$this->isSnapshotActive($page)) {
                 throw new NotFoundHttpException();
             }
 
             if ($this->getSnapshotVisibility($page) != PageInterface::VISIBILITY_PUBLIC) {
-                if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+                if (false === $this->authorizationChecker->isGranted('ROLE_USER')) {
                     throw new AccessDeniedException();
                 }
             }
 
-            $updatedAt = $phpCache->get(sprintf('page_%s_created_at', $page->getId()));
+            $updatedAt = $this->phpCache->get(sprintf('page_%s_created_at', $page->getId()));
             $cacheKey = $request->getLocale().$request->getPathInfo();
 
             if ($updatedAt != $page->getSnapshotDate()) {
-                $phpCache->delete($cacheKey);
+                $this->phpCache->delete($cacheKey);
             }
 
-            $response = $phpCache->get($request->getLocale().$request->getPathInfo());
+            $response = $this->phpCache->get($request->getLocale().$request->getPathInfo());
 
             if (!$response || !$response instanceof Response) {
                 $params = $this->getPageParameters($request);
@@ -103,11 +144,11 @@ class FrontendPageController extends Controller
                 );
                 $response = new Response($html);
 
-                $phpCache->set($cacheKey, $response);
-                $phpCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate());
+                $this->phpCache->set($cacheKey, $response);
+                $this->phpCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate());
             } else {
-                $phpCache->touch($cacheKey);
-                $phpCache->touch(sprintf('page_%s_created_at', $page->getId()));
+                $this->phpCache->touch($cacheKey);
+                $this->phpCache->touch(sprintf('page_%s_created_at', $page->getId()));
             }
         } else {
             $params = $this->getPageParameters($request);
@@ -132,7 +173,7 @@ class FrontendPageController extends Controller
     /**
      * Check if page is an alias for another page.
      *
-     * @param Request       $request
+     * @param Request $request
      * @param PageInterface $page
      *
      * @return bool|RedirectResponse
@@ -160,7 +201,6 @@ class FrontendPageController extends Controller
      */
     public function getPageParameters(Request $request)
     {
-        /** @var $page \Networking\InitCmsBundle\Model\PageInterface */
         $page = $request->get('_content', null);
 
         if (is_null($page)) {
@@ -175,7 +215,7 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @param Request       $request
+     * @param Request $request
      * @param PageInterface $page
      *
      * @return array|bool|RedirectResponse
@@ -187,13 +227,13 @@ class FrontendPageController extends Controller
         }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
-            if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            if (false === $this->authorizationChecker->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
             }
         }
 
         if ($page->getStatus() != PageInterface::STATUS_PUBLISHED) {
-            if (!$this->get('security.token_storage')->getToken() || false === $this->get('security.authorization_checker')->isGranted(
+            if (!$this->tokenStorage->getToken() || false === $this->authorizationChecker->isGranted(
                     'ROLE_SONATA_ADMIN'
                 )
             ) {
@@ -321,8 +361,8 @@ class FrontendPageController extends Controller
     /**
      * View the website in Draft mode.
      *
-     * @param Request      $request
-     * @param string       $locale
+     * @param Request $request
+     * @param string $locale
      * @param string /null $path
      *
      * @return RedirectResponse
@@ -337,8 +377,8 @@ class FrontendPageController extends Controller
     /**
      * View the website in Live mode.
      *
-     * @param Request      $request
-     * @param string       $locale
+     * @param Request $request
+     * @param string $locale
      * @param string /null $path
      *
      * @return RedirectResponse
@@ -363,7 +403,7 @@ class FrontendPageController extends Controller
      */
     protected function changeViewMode(Request $request, $status, $path)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SONATA_ADMIN')) {
+        if (false === $this->authorizationChecker->isGranted('ROLE_SONATA_ADMIN')) {
             $message = 'Please login to carry out this action';
             throw new AccessDeniedException($message);
         }
@@ -390,15 +430,14 @@ class FrontendPageController extends Controller
      */
     protected function getTranslationRoute($referrer, $oldLocale, $locale)
     {
-        /** @var $languageSwitcherHelper LanguageSwitcherHelper */
-        $languageSwitcherHelper = $this->get('networking_init_cms.page.helper.language_switcher');
 
-        $oldURL = $languageSwitcherHelper->getPathInfo($referrer);
+        $oldURL = $this->languageSwitcherHelper->getPathInfo($referrer);
 
-        return $languageSwitcherHelper->getTranslationRoute($oldURL, $oldLocale, $locale);
+        return $this->languageSwitcherHelper->getTranslationRoute($oldURL, $oldLocale, $locale);
     }
 
     /**
+     * @param Request $request
      * @return Response
      */
     public function translationNotFoundAction(Request $request)
@@ -422,19 +461,15 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * Deliver the admin navigation bar via ajax.
-     *
+     * @param Request $request
      * @param null $page_id
-     *
      * @return Response
      */
     public function adminNavbarAction(Request $request, $page_id = null)
     {
         if ($page_id) {
 
-            /** @var \Networking\InitCmsBundle\Entity\PageManager $pageManager */
-            $pageManager = $this->container->get('networking_init_cms.page_manager');
-            $page = $pageManager->find($page_id);
+            $page = $this->pageManager->find($page_id);
             $request->attributes->set('_content', $page);
         }
         $response = $this->render(
@@ -449,11 +484,11 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @return \Networking\InitCmsBundle\Helper\PageHelper
+     * @return PageHelper
      */
     public function getPageHelper()
     {
-        return $this->container->get('networking_init_cms.helper.page_helper');
+        return $this->pageHelper;
     }
 
     /**
@@ -470,8 +505,8 @@ class FrontendPageController extends Controller
 
     /**
      * @param PageSnapshotInterface $page
-     *
      * @return bool
+     * @throws \Exception
      */
     public function isSnapshotActive(PageSnapshotInterface $page)
     {
@@ -489,9 +524,9 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * Get activeFrom.
-     *
+     * @param $page
      * @return \DateTime
+     * @throws \Exception
      */
     public function getActiveStart($page)
     {
@@ -503,7 +538,9 @@ class FrontendPageController extends Controller
     }
 
     /**
-     * @return \Datetime
+     * @param $page
+     * @return \DateTime
+     * @throws \Exception
      */
     public function getActiveEnd($page)
     {
@@ -515,49 +552,48 @@ class FrontendPageController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getJsonUrlsAction(Request $request)
+    {
+        $locale = $request->get('_locale', false);
 
-	/**
-	 * @param Request $request
-	 *
-	 * @return JsonResponse
-	 */
-	public function getJsonUrlsAction(Request $request)
-	{
-		$locale = $request->get('_locale', false);
+        $locale = str_replace('-', '_', $locale);
+        /** @var PageAdmin $pageAdmin */
+        $pageAdmin = $this->pool->getAdminByAdminCode('networking_init_cms.admin.page');
 
-		$locale = str_replace('-', '_', $locale);
-		 /** @var PageAdmin $pageAdmin */
-		$pageAdmin = $this->get('networking_init_cms.admin.page');
+        $pageAdmin->setRequest($request);
 
-		$pageAdmin->setRequest($request);
+        $qb = $pageAdmin->createQuery();
 
-		$qb = $pageAdmin->createQuery();
+        $pageAdmin->getByLocale($qb, 'p', 'locale', ['value' => $locale]);
 
-		$pageAdmin->getByLocale($qb, 'p', 'locale', ['value' => $locale]);
+        $qb->setSortBy([], ['fieldName' => 'path']);
 
-		$qb->setSortBy([], ['fieldName' => 'path']);
+        $result = $qb->execute();
 
-		$result = $qb->execute();
-
-		$setup = [
-			'pages' => [ ],
-			'locales' => []
-		];
-
-
-		/** @var Page $page */
-		foreach ($result as $page){
-
-			$setup['pages'][$page->getAdminTitle()] = $page->getRoute()->getPath();
-		}
-
-		$languages = $this->getParameter('networking_init_cms.page.languages');
+        $setup = [
+            'pages' => [],
+            'locales' => [],
+        ];
 
 
-		foreach ($languages as $language){
-			$setup['locales'][] = [$language['label'], str_replace('_', '-', $language['locale'])];
-		}
+        /** @var Page $page */
+        foreach ($result as $page) {
 
-		return new JsonResponse($setup);
-	}
+            $setup['pages'][$page->getAdminTitle()] = $page->getRoute()->getPath();
+        }
+
+        $languages = $this->getParameter('networking_init_cms.page.languages');
+
+
+        foreach ($languages as $language) {
+            $setup['locales'][] = [$language['label'], str_replace('_', '-', $language['locale'])];
+        }
+
+        return new JsonResponse($setup);
+    }
 }

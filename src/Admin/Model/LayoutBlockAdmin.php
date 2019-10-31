@@ -11,8 +11,11 @@
 namespace Networking\InitCmsBundle\Admin\Model;
 
 use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerInterface;
+use Networking\InitCmsBundle\Entity\LayoutBlockFormListener;
 use Networking\InitCmsBundle\Model\LayoutBlock;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Exception\ModelManagerException;
@@ -41,6 +44,30 @@ abstract class LayoutBlockAdmin extends BaseAdmin
 
     public $trackedActions = [];
 
+    protected $pageManager;
+
+    protected $layoutBlockFormListener;
+    protected $serializer;
+    protected $pageAdmin;
+
+    public function __construct(
+        $code,
+        $class,
+        $baseControllerName,
+        PageManagerInterface $pageManager,
+        LayoutBlockFormListener $layoutBlockFormListener,
+        SerializerInterface $serializer,
+        PageAdmin $pageAdmin
+    ) {
+
+        $this->pageManager = $pageManager;
+        $this->layoutBlockFormListener = $layoutBlockFormListener;
+        $this->serializer = $serializer;
+        $this->pageAdmin = $pageAdmin;
+
+        parent::__construct($code, $class, $baseControllerName);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -62,14 +89,11 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         } else {
             $classType = $this->getRequest()->get('classType');
         }
-        /** @var \Networking\InitCmsBundle\Model\LayoutBlockFormListener $listener */
-        $listener = $this->getContainer()->get('networking_init_cms.layout_block_form_listener');
-        $listener->setAdmin($this);
-        $listener->setContentType($classType);
-        $formMapper->getFormBuilder()->addEventSubscriber($listener);
+        $this->layoutBlockFormListener->setAdmin($this);
+        $this->layoutBlockFormListener->setContentType($classType);
+        $formMapper->getFormBuilder()->addEventSubscriber($this->layoutBlockFormListener);
 
-        $pageManager = $this->getContainer()->get('networking_init_cms.page_manager');
-        $transformer = new PageToIdTransformer($pageManager);
+        $transformer = new PageToIdTransformer($this->pageManager);
 
         $formMapper
             ->add(
@@ -137,15 +161,16 @@ abstract class LayoutBlockAdmin extends BaseAdmin
                 $object->setObjectId($contentObject->getId());
                 $this->autoPageDraft($object->getPage());
             } catch (ModelManagerException $e) {
-                throw new ModelManagerException($this->trans('Cannot create content, object is invalid', [], 'validators'));
+                throw new ModelManagerException(
+                    $this->trans('Cannot create content, object is invalid', [], 'validators')
+                );
             }
         }
     }
 
     /**
-     * @param LayoutBlock $object
-     *
-     * @return mixed|void
+     * @param $object
+     * @throws ModelManagerException
      */
     public function preUpdate($object)
     {
@@ -156,9 +181,8 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     }
 
     /**
-     * @param LayoutBlock $object
-     *
-     * @return mixed|void
+     * @param $object
+     * @throws ModelManagerException
      */
     public function preRemove($object)
     {
@@ -173,22 +197,21 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     }
 
     /**
-     * @return Serializer
+     * @return SerializerInterface
      */
     protected function getSerializer()
     {
-        return $this->getContainer()->get('jms_serializer');
+        return $this->serializer;
     }
 
     /**
      * @param PageInterface $page
+     * @throws \Exception
      */
     public function autoPageDraft(PageInterface $page)
     {
         $page->setStatus(PageInterface::STATUS_DRAFT);
         $page->setUpdatedAt(new \DateTime());
-        /** @var PageAdmin $pageAdmin */
-        $pageAdmin = $this->getContainer()->get('networking_init_cms.admin.page');
-        $pageAdmin->update($page);
+        $this->pageAdmin->update($page);
     }
 }

@@ -39,15 +39,7 @@ class NetworkingInitCmsExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
-        $defaults = Yaml::parseFile(__DIR__.'/../Resources/config/cms/config.yml');
-
-        foreach ($configs as $config) {
-            foreach ($config as $key => $value) {
-                $defaults['networking_init_cms'][ $key ] = $value;
-            }
-        }
-
-        $config = $this->processConfiguration($configuration, $defaults);
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('blocks.xml');
@@ -93,7 +85,6 @@ class NetworkingInitCmsExtension extends Extension
 
         $container->setParameter('networking_init_cms.404_template', $config['404_template']);
         $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
-        $container->setParameter('networking_init_cms.admin_menu_groups', $config['admin_menu_groups']);
         $container->setParameter('networking_init_cms.db_driver', $config['db_driver']);
 
         if ($config['db_driver'] == 'orm') {
@@ -111,11 +102,35 @@ class NetworkingInitCmsExtension extends Extension
         if (in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())) {
             $container->setParameter('networking_init_cms.lib.php_cache.class', $config['cache']['cache_service_class']);
         } else {
-            throw new InvalidParameterException('Cache class should implement the PhpCacheInterface interface');
+            throw new \RuntimeException('Cache class should implement the PhpCacheInterface interface');
         }
         $this->configureLanguageCookie($config, $container);
 
         $this->configureClass($config, $container);
+
+        $this->registerContainerParametersRecursive($container, $this->getAlias(), $config['translation_admin']);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param String $alias
+     * @param array $config
+     */
+    protected function registerContainerParametersRecursive(ContainerBuilder $container, $alias, $config)
+    {
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveArrayIterator($config),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $value) {
+            $path = array();
+            for ($i = 0; $i <= $iterator->getDepth(); $i++) {
+                $path[] = $iterator->getSubIterator($i)->key();
+            }
+            $key = $alias.'.'.implode(".", $path);
+            $container->setParameter($key, $value);
+        }
     }
 
     /**

@@ -10,22 +10,26 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\UserBundle\Model\UserManagerInterface;
+use Networking\InitCmsBundle\Helper\PageHelper;
+use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Networking\InitCmsBundle\Entity\BasePage as Page;
+use Networking\InitCmsBundle\Form\Type\InstallUserType as UserType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Input\ArrayInput;
-use Networking\InitCmsBundle\Entity\BasePage as Page;
-use Networking\InitCmsBundle\Form\Type\InstallUserType as UserType;
 
 /**
  * Class InitCmsInstallController.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class InitCmsInstallController extends Controller
+class InitCmsInstallController extends AbstractController
 {
     /**
      * @var \Symfony\Bundle\FrameworkBundle\Console\Application
@@ -36,6 +40,19 @@ class InitCmsInstallController extends Controller
      * @var array
      */
     private $consoleOutput = [];
+
+    private $pageManager;
+
+    private $userManager;
+
+    private $pageHelper;
+
+    public function __construct(PageManagerInterface $pageManager, PageHelper $pageHelper, UserManagerInterface $userManager)
+    {
+        $this->pageManager = $pageManager;
+        $this->userManager = $userManager;
+        $this->pageHelper = $pageHelper;
+    }
 
     /**
      * @param Request $request
@@ -49,8 +66,7 @@ class InitCmsInstallController extends Controller
         $installed = false;
         try {
             /** @var $page Page */
-            $pageManager = $this->get('networking_init_cms.page_manager');
-            $page = $pageManager->findOneBy(
+            $page = $this->pageManager->findOneBy(
                 ['isHome' => 1, 'locale' => $request->getLocale()]
             );
             if (!$page) {
@@ -88,16 +104,14 @@ class InitCmsInstallController extends Controller
     /**
      * @param Request $request
      * @param $complete
-     *
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
     public function installDbAction(Request $request, $complete)
     {
         $installFailed = false;
         try {
-            /** @var \FOS\UserBundle\Doctrine\UserManager $userManager */
-            $userManager = $this->get('fos_user.user_manager');
-            $users = $userManager->findUsers();
+            $users = $this->userManager->findUsers();
             if (count($users) < 1) {
                 throw new \Exception('Users not loaded');
             }
@@ -182,8 +196,8 @@ class InitCmsInstallController extends Controller
 
     /**
      * @param OutputInterface $output
-     *
      * @return int
+     * @throws \Exception
      */
     private function createDB(OutputInterface $output)
     {
@@ -201,8 +215,8 @@ class InitCmsInstallController extends Controller
 
     /**
      * @param OutputInterface $output
-     *
      * @return int
+     * @throws \Exception
      */
     private function initACL(OutputInterface $output)
     {
@@ -218,8 +232,8 @@ class InitCmsInstallController extends Controller
 
     /**
      * @param OutputInterface $output
-     *
      * @return int
+     * @throws \Exception
      */
     private function sonataSetupACL(OutputInterface $output)
     {
@@ -238,8 +252,8 @@ class InitCmsInstallController extends Controller
      * @param $username
      * @param $email
      * @param $password
-     *
-     * @return int|string
+     * @return int
+     * @throws \Exception
      */
     private function createAdminUser(OutputInterface $output, $username, $email, $password)
     {
@@ -259,8 +273,8 @@ class InitCmsInstallController extends Controller
 
     /**
      * @param OutputInterface $output
-     *
-     * @return int|string
+     * @return int
+     * @throws \Exception
      */
     private function loadFixtures(OutputInterface $output)
     {
@@ -283,18 +297,14 @@ class InitCmsInstallController extends Controller
      */
     public function publishPages(OutputInterface $output)
     {
-        /** @var \Networking\InitCmsBundle\Entity\PageManager $modelManager */
-        $modelManager = $this->get('networking_init_cms.page_manager');
-        $selectedModels = $modelManager->findAll();
+        /** @var PageInterface[] $selectedModels */
+        $selectedModels = $this->pageManager->findAll();
 
         try {
             foreach ($selectedModels as $selectedModel) {
-                /* @var \Networking\InitCmsBundle\Model\PageInterface $selectedModel */
-                $selectedModel->setStatus(\Networking\InitCmsBundle\Model\PageInterface::STATUS_PUBLISHED);
-                $modelManager->save($selectedModel);
-                /** @var $pageHelper \Networking\InitCmsBundle\Helper\PageHelper */
-                $pageHelper = $this->get('networking_init_cms.helper.page_helper');
-                $pageHelper->makePageSnapshot($selectedModel);
+                $selectedModel->setStatus(PageInterface::STATUS_PUBLISHED);
+                $this->pageManager->save($selectedModel);
+                $this->pageHelper->makePageSnapshot($selectedModel);
             }
 
             return 0;
