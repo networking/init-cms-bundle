@@ -4,67 +4,83 @@
         <body>
             <trans-unit id="breadcrumb.link_trans_unit_list">
                 <source>breadcrumb.link_trans_unit_list</source>
-                <target><![CDATA[<small>Organise your </small> ]]> Translations</target>
+                <target><![CDATA[<small>Organisieren Sie Ihre </small> ]]> Übersetzungen</target>
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
-                <target>Create new translation</target>
+                <target>Neue Übersetzung hinzufügen</target>
             </trans-unit>
             <trans-unit id="filter.label_key">
                 <source>filter.label_key</source>
-                <target>Key</target>
+                <target>Kennzeichnung</target>
             </trans-unit>
             <trans-unit id="filter.label_translations_content">
                 <source>filter.label_translations_content</source>
-                <target>Translated content</target>
+                <target>Übersetzter Inhalt</target>
             </trans-unit>
             <trans-unit id="filter.label_domain">
                 <source>filter.label_domain</source>
-                <target>Translation area</target>
+                <target>Übersetzungsgebiet</target>
             </trans-unit>
             <trans-unit id="form.label_key">
                 <source>form.label_key</source>
-                <target>Key</target>
+                <target>Kennzeichnung</target>
             </trans-unit>
             <trans-unit id="form.label_translations_content">
                 <source>form.label_translations_content</source>
-                <target>Translated content</target>
+                <target>Übersetzter Inhalt</target>
             </trans-unit>
             <trans-unit id="form.label_domain">
                 <source>form.label_domain</source>
-                <target>Translation area</target>
+                <target>Übersetzungsgebiet</target>
             </trans-unit>
             <trans-unit id="list.label_key">
                 <source>list.label_key</source>
-                <target>Key</target>
+                <target>Kennzeichnung</target>
             </trans-unit>
             <trans-unit id="list.label_translations_content">
                 <source>list.label_translations_content</source>
-                <target>Translated content</target>
+                <target>Übersetzter Inhalt</target>
             </trans-unit>
             <trans-unit id="list.label_domain">
                 <source>list.label_domain</source>
-                <target>Translation area</target>
+                <target>Übersetzungsgebiet</target>
             </trans-unit>
             <trans-unit id="translation.domain.all_choices">
                 <source>translation.domain.all_choices</source>
-                <target>All areas</target>
+                <target>Alle Gebiete</target>
             </trans-unit>
             <trans-unit id="translation.title">
                 <source>translation.title</source>
-                <target>Translations</target>
+                <target>Übersetzungen</target>
             </trans-unit>
             <trans-unit id="translation.admin_menu_label">
                 <source>translation.admin_menu_label</source>
-                <target>Translations</target>
+                <target>Übersetzungen</target>
             </trans-unit>
             <trans-unit id="action._publish">
                 <source>action._publish</source>
-                <target>Publish</target>
+                <target>Veröffentlichen</target>
             </trans-unit>
             <trans-unit id="action._delete">
                 <source>action._delete</source>
-                <target>Delete</target>
+                <target>Löschen</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Neuer Bergriff erstellen</target>
+            </trans-unit>
+            <trans-unit id="filter.label_show_non_translated_only">
+                <source>filter.label_show_non_translated_only</source>
+                <target>Nur noch nicht übersetzte Felder anzeigen</target>
+            </trans-unit>
+            <trans-unit id="action.clear_cache">
+                <source>action.clear_cache</source>
+                <target>Cache löschen</target>
+            </trans-unit>
+            <trans-unit id="batch.download">
+                <source>batch.download</source>
+                <target>Herunterladen</target>
             </trans-unit>
         </body>
     </file>

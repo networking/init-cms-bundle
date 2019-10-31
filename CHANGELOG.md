@@ -12,6 +12,6 @@ CHANGELOG
     to be used with a specific template.
 
 * Fixed the validation of duplicate full Page URL
-* Added setting "error_type" to the config/cms/mopa_boostrap.yml
+* Added setting "error_type" to the config/cms/mopa_boostrap.yaml
 * Fixed bug: LayoutBlockListener was listening for the wrong gallery object
 * Fixed bug: infinite loop caused by flushing persisted page when calling autoPageDraft() method

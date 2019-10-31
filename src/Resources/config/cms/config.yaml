@@ -2,7 +2,6 @@ imports:
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/doctrine.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/fos_ck_editor.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/fos_user.yaml" }
-    - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/ibrows_sonata_translation.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/jms_serializer.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/lexik_translation.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/mopa_bootstrap.yaml" }

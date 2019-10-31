@@ -258,7 +258,7 @@
             <trans-unit id="cache.inactiveMoreInformation">
                  <source>cache.inactiveMoreInformation</source>
                  <target><![CDATA[
-                     zum aktivieren, bitte folgende Konfigurationen in der  app/config/config.yml Datei eintragen:<br />
+                     zum aktivieren, bitte folgende Konfigurationen in der  app/config/config.yaml Datei eintragen:<br />
                      <code>
                       networking_init_cms:<br />
                       &nbsp;&nbsp;cache:<br />

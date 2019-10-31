@@ -6,7 +6,7 @@
             {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
         {% endif %}
     <a class="btn btn-default btn-sm sonata-action-element" href="{{ admin.generateUrl('clear_cache') }}">
-        <i class="glyphicon glyphicon-refresh"></i> {{ 'action.clear_cache'|trans({}, 'IbrowsSonataTranslationBundle') }}
+        <i class="glyphicon glyphicon-refresh"></i> {{ 'action.clear_cache'|trans({}, 'TranslationAdmin') }}
     </a>
         {% if admin.subClasses is empty %}
                 <a class="btn btn-primary btn-sm" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin) }) }}">

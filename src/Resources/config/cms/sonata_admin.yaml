@@ -93,6 +93,6 @@ sonata_admin:
             translation:
                 on_top: true
                 label: "translation.admin_menu_label"
-                label_catalogue: "IbrowsSonataTranslationBundle"
+                label_catalogue: "TranslationAdmin"
                 icon: '<i class="fa fa-globe fa-small"></i>'
-                items: [ibrows_sonata_translation.admin.orm]
+                items: [networking_init_cms.admin_entity.translation_admin]

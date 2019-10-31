@@ -46,13 +46,17 @@ class VersionBlockService extends AbstractBlockService
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
         $version = 'master';
-	    $content = file_get_contents($this->projectDir.'/composer.lock');
-	    $content = json_decode($content,true);
-	    foreach ($content['packages'] as $package){
-	    	if('networking/init-cms-bundle' === $package['name']){
-	    		$version = $package['version'];
-		    }
-	    }
+
+        if(file_exists($this->projectDir.'/composer.lock')){
+            $content = file_get_contents($this->projectDir.'/composer.lock');
+            $content = json_decode($content,true);
+            foreach ($content['packages'] as $package){
+                if('networking/init-cms-bundle' === $package['name']){
+                    $version = $package['version'];
+                }
+            }
+        }
+
         return $this->renderResponse(
             $blockContext->getTemplate(),
             [

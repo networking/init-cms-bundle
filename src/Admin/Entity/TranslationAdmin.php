@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Admin\Entity;
 
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -20,6 +22,7 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\StringFilter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Intl\Intl;
@@ -147,7 +150,56 @@ class TranslationAdmin extends AbstractAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
+
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $this->getContainer()->get('doctrine')->getManagerForClass('Lexik\Bundle\TranslationBundle\Entity\File');
+
+        $domains = array();
+        $domainsQueryResult = $em->createQueryBuilder()
+            ->select('DISTINCT t.domain')->from('\Lexik\Bundle\TranslationBundle\Entity\File', 't')
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+
+        array_walk_recursive(
+            $domainsQueryResult,
+            function ($domain) use (&$domains) {
+                $domains[$domain] = $domain;
+            }
+        );
+        ksort($domains);
+
         $datagridMapper
+            ->add(
+                'show_non_translated_only',
+                'doctrine_orm_callback',
+                array
+                (
+                    'callback'      => function (ProxyQuery $queryBuilder, $alias, $field, $options) {
+                        /* @var $queryBuilder \Doctrine\ORM\QueryBuilder */
+                        if (!isset($options['value']) || empty($options['value']) || false === $options['value']) {
+                            return;
+                        }
+                        $this->joinTranslations($queryBuilder, $alias);
+
+                        foreach ($this->getEmptyFieldPrefixes() as $prefix) {
+                            if (empty($prefix)) {
+                                $queryBuilder->orWhere('translations.content IS NULL');
+                            } else {
+                                $queryBuilder->orWhere('translations.content LIKE :content')->setParameter(
+                                    'content',
+                                    $prefix . '%'
+                                );
+                            }
+
+                        }
+                    },
+                    'field_options' => array(
+                        'required' => true,
+                        'value'    => $this->getNonTranslatedOnly(),
+                    ),
+                    'field_type'    => CheckboxType::class,
+                )
+            )
             ->add('key', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
             ->add('translations.content', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
             ->add(
@@ -331,9 +383,52 @@ class TranslationAdmin extends AbstractAdmin
         $actions['download'] = [
             'label' => 'batch.download',
             'ask_confirmation' => false,
-            'translation_domain' => 'IbrowsSonataTranslationBundle',
+            'translation_domain' => 'TranslationAdmin',
         ];
 
         return $actions;
+    }
+
+    /**
+     * @param ProxyQuery $queryBuilder
+     * @param String     $alias
+     */
+    private function joinTranslations(ProxyQuery $queryBuilder, $alias, array $locales = null)
+    {
+        $alreadyJoined = false;
+        $joins = $queryBuilder->getDQLPart('join');
+        if (array_key_exists($alias, $joins)) {
+            $joins = $joins[$alias];
+            foreach ($joins as $join) {
+                if (strpos($join->__toString(), "$alias.translations ")) {
+                    $alreadyJoined = true;
+                }
+            }
+        }
+        if (!$alreadyJoined) {
+            /** @var QueryBuilder $queryBuilder */
+            if ($locales) {
+                $queryBuilder->leftJoin(sprintf('%s.translations', $alias), 'translations', 'WITH', 'translations.locale = :locales');
+                $queryBuilder->setParameter('locales', $locales);
+            } else {
+                $queryBuilder->leftJoin(sprintf('%s.translations', $alias), 'translations');
+            }
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function formatLocales(array $locales)
+    {
+        $formattedLocales = array();
+        array_walk_recursive(
+            $locales,
+            function ($language) use (&$formattedLocales) {
+                $formattedLocales[$language] = $language;
+            }
+        );
+
+        return $formattedLocales;
     }
 }

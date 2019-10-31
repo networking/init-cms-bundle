@@ -17,38 +17,6 @@
             <tag name="sonata.admin.extension" target="sonata.media.admin.gallery"/>
         </service>
 
-
-        <service id="ibrows_sonata_translation.admin.orm"
-                 class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
-            <argument/>
-            <argument>Lexik\Bundle\TranslationBundle\Entity\TransUnit</argument>
-            <argument>NetworkingInitCmsBundle:TranslationCRUD</argument>
-            <call method="setEditableOptions">
-                <argument>%ibrows_sonata_translation.editable%</argument>
-            </call>
-            <call method="setTranslationDomain">
-                <argument>IbrowsSonataTranslationBundle</argument>
-            </call>
-            <call method="setTransUnitManager">
-                <argument type="service" id="lexik_translation.trans_unit.manager"/>
-            </call>
-            <call method="setManagedLocales">
-                <argument>%lexik_translation.managed_locales%</argument>
-            </call>
-            <call method="setTemplate">
-                <argument>list</argument>
-                <argument>@NetworkingInitCms/TranslationAdmin/list.html.twig</argument>
-            </call>
-            <call method="setTemplate">
-                <argument>edit</argument>
-                <argument>@NetworkingInitCms/TranslationAdmin/edit.html.twig</argument>
-            </call>
-            <tag name="sonata.admin" manager_type="orm" label="translation.title"
-                 label_catalogue="IbrowsSonataTranslationBundle"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"
-                 persist_filters="true"/>
-        </service>
-
         <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%" public="true">
             <argument/>
             <argument>%sonata.media.admin.media.entity%</argument>

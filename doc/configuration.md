@@ -4,7 +4,7 @@ The NetworkingInitCmsBundle relies on a few other bundles which need to be confi
 up and running.
 
 You will need to provide configuration for the SonataAdminBundle, LexikTranslationBundle, FOSUserBundle and the SonataUserBundle
-in your app/config/config.yml file.
+in your app/config/config.yaml file.
 
 A simple configuration should look something like the following, with special attention paid to the sonata_user configuration
 as this will create the admin interface for administering users in the cms.

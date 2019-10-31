@@ -72,7 +72,7 @@ public function getAdminContent()
 
 The last very important part is the serializing mechanism. This can be a bit tricky depending on how complex your content type is. The more DB associations that an entity has the more mapping you will need to do.
 
-You will first need to create a folder in your **Resources/config** folder called **Serializer** and then create a config file with the name **Enity.YourContentName.yml**, or you can use annotations directly in the Entity class.
+You will first need to create a folder in your **Resources/config** folder called **Serializer** and then create a config file with the name **Enity.YourContentName.yaml**, or you can use annotations directly in the Entity class.
 
 Here is a simple example of serializer configuration for the Text content type:
 

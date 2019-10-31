@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -41,11 +42,10 @@ class Configuration implements ConfigurationInterface
                             ->validate()
                                 ->ifNotInArray(['bottom', 'top'])
                                 ->thenInvalid('The CSS position %s is not supported')
-                            ->end()
                         ->end()
                     ->end()
-                ->end();
-
+                ->end()
+            ->end();
         $rootNode
             ->children()
                 ->scalarNode('db_driver')
@@ -144,6 +144,40 @@ class Configuration implements ConfigurationInterface
                     ->end()
             ->end();
 
+        $this->addEditableSection($rootNode);
         return $treeBuilder;
+    }
+
+    protected function addEditableSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('translation_admin')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('defaultDomain')->defaultValue('messages')->end()
+                        ->arrayNode('defaultSelections')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->booleanNode('nonTranslatedOnly')->defaultFalse()->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('emptyPrefixes')
+                            ->defaultValue(array('__', 'new_', ''))
+                            ->prototype('array')->end()
+                        ->end()
+                        ->arrayNode('editable')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('mode')->defaultValue('popup')->end()
+                                ->scalarNode('type')->defaultValue('textarea')->end()
+                                ->scalarNode('emptytext')->defaultValue('Empty')->end()
+                                ->scalarNode('placement')->defaultValue('top')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }

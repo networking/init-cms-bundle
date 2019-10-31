@@ -16,7 +16,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
 use Symfony\Component\Intl\Intl;
 
 /**
@@ -46,7 +46,7 @@ abstract class BaseAdmin extends AbstractAdmin
 
     /**
      * Set the language paramenter to contain a list of languages most likely
-     * passed from the config.yml file.
+     * passed from the config.yaml file.
      *
      * @param array $languages
      */

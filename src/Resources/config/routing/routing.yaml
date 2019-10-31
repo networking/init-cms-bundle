@@ -1,5 +1,5 @@
 NetworkingInitCmsBundle:
-    resource: "@NetworkingInitCmsBundle/Resources/config/routing/cms.yml"
+    resource: "@NetworkingInitCmsBundle/Resources/config/routing/cms.yaml"
     prefix:   /
 
 # Lexik Translation bundle

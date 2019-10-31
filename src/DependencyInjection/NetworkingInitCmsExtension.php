@@ -102,11 +102,35 @@ class NetworkingInitCmsExtension extends Extension
         if (in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())) {
             $container->setParameter('networking_init_cms.lib.php_cache.class', $config['cache']['cache_service_class']);
         } else {
-            throw new InvalidParameterException('Cache class should implement the PhpCacheInterface interface');
+            throw new \RuntimeException('Cache class should implement the PhpCacheInterface interface');
         }
         $this->configureLanguageCookie($config, $container);
 
         $this->configureClass($config, $container);
+
+        $this->registerContainerParametersRecursive($container, $this->getAlias(), $config['translation_admin']);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param String $alias
+     * @param array $config
+     */
+    protected function registerContainerParametersRecursive(ContainerBuilder $container, $alias, $config)
+    {
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveArrayIterator($config),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $value) {
+            $path = array();
+            for ($i = 0; $i <= $iterator->getDepth(); $i++) {
+                $path[] = $iterator->getSubIterator($i)->key();
+            }
+            $key = $alias.'.'.implode(".", $path);
+            $container->setParameter($key, $value);
+        }
     }
 
     /**

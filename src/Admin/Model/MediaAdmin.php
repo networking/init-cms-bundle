@@ -80,7 +80,7 @@ abstract class MediaAdmin extends Admin
 
     /**
      * Set the language paramenter to contain a list of languages most likely
-     * passed from the config.yml file.
+     * passed from the config.yaml file.
      *
      * @param array $languages
      */

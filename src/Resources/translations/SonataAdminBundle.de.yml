@@ -1,0 +1,4 @@
+translations:
+  cache_removed: Cache wurde erfolgreich gelöscht.
+  flash_batch_download_error: Download konnte nicht erstellt werden.
+  flash_batch_download_success: Download erfolgreich.
