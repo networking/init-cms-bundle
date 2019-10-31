@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends '@NetworkingInitCms/layout.html.twig' %}
+{% extends '@NetworkingInitCms/sandbox/base.html.twig' %}
 
 {% block title %}{{ page.metaTitle }}{% endblock %}
 
@@ -17,30 +17,19 @@ file that was distributed with this source code.
 <div class="col-md-10">
 	<div class="top">
 		{% for layoutBlock in page.layoutBlock('top') %}
-		{{ render_initcms_block('@NetworkingInitCms/Content/cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('@NetworkingInitCms/sandbox/content/cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
 	</div>
 	<div class="middle">
 		{% for layoutBlock in page.layoutBlock('middle')  %}
-		{{ render_initcms_block('@NetworkingInitCms/Content/cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('@NetworkingInitCms/sandbox/content/cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
 	</div>
 	<div class="bottom">
 		{% for layoutBlock in page.layoutBlock('bottom') %}
-		{{ render_initcms_block('@NetworkingInitCms/Content/cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('@NetworkingInitCms/sandbox/content/cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
 	</div>
 </div>
 {% endblock content %}
 
-
-{% block foot_script %}
- {{ parent() }}
-
- <script type="text/javascript">
- 	(function ($) {
- 		$('.carousel').carousel();
- 		$("a[rel^='prettyPhoto']").prettyPhoto();
- 	})(jQuery);
- </script>
- {% endblock %}

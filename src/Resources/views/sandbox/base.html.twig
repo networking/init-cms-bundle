@@ -1,0 +1,101 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+
+<!DOCTYPE html>
+
+{% block html_tag %}
+<html lang="{{ app.request.locale|slice(0,2) }}">
+{% endblock html_tag %}
+
+{% block head %}
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% block head_style %}
+            {{ asset('bundles/networkinginitcms/css/sandbox.css') }}
+        {% endblock head_style %}
+
+
+
+        {% block head_script %}
+            {# Overwrite this block to add your own js here, to get them generated into final files #}
+        {% endblock head_script %}
+
+        <title>{% block title %}{% endblock title %}</title>
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+        {% block head_bottom %}
+        {% endblock head_bottom %}
+    </head>
+{% endblock head %}
+
+{% block body_tag %}
+<body >
+{% endblock body_tag %}
+
+{# From here the body starts #}
+{% block body_start %}
+{% endblock body_start %}
+
+{% block body %}
+
+{% block container %}
+    <div class="container {% block container_class %}container-fluid{% endblock container_class %}">
+        {% block search %}
+        {% endblock %}
+        {% block navbar %}{% include '@NetworkingInitCms/sandbox/menu/navbar.html.twig' %}{% endblock navbar %}
+
+        {% block header %}
+        {% endblock header %}
+
+        <div class="content">
+            {% block page_header %}
+            {% endblock page_header %}
+
+            {% block flashes %}
+                {% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+                {{ session_flash(null,true) }}
+                {% if app.session.flashbag.peekAll|length > 0 %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ session_flash() }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock flashes %}
+
+            {% block content_row %}
+                    {% block content %}
+                        {% block content_sidebar %}
+                        {% endblock content_sidebar %}
+                    {% endblock content %}
+                    {% block fos_user_content %}
+                    {% endblock fos_user_content %}
+            {% endblock content_row %}
+        </div>
+        <footer>
+            {% block footer %}
+                <hr />
+                <div class="footer">
+                    {{ knp_menu_render(knp_menu_get('footerMenu')) }}
+                </div>
+            {% endblock footer %}
+        </footer>
+    </div> <!-- /container -->
+{% endblock container %}
+{% block foot_script %}
+    <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/sandbox.js') }}"></script>
+{% endblock foot_script %}
+{% endblock body %}
+</body>
+</html>
+

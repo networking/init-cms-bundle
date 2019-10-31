@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -22,7 +22,7 @@
         "friendsofsymfony/ckeditor-bundle": "^1.1",
         "ibrows/sonata-admin-annotation-bundle": "2.*",
         "ibrows/sonata-translation-bundle": "1.*",
-        "jms/serializer-bundle": "^2.0",
+        "jms/serializer-bundle": "^3.4",
         "knplabs/knp-paginator-bundle": "^4.0",
         "oneup/flysystem-bundle": "^3.0",
         "oneup/uploader-bundle": "^2.1",

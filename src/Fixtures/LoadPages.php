@@ -44,18 +44,26 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
     {
         $languages = $this->container->getParameter('networking_init_cms.page.languages');
 
+        $defaultTemplate = $this->getFirstTemplate();
+
+        if(!$defaultTemplate){
+            $defaultTemplate = '@NetworkingInitCms/sandbox/page/one_column.html.twig';
+        }
+
         foreach ($languages as $key => $lang) {
-            $this->createHomePages($manager, $lang['locale'], $key, $languages);
+            $this->createHomePages($manager, $defaultTemplate, $lang['locale'], $key, $languages);
         }
     }
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
-     * @param string                                     $locale
-     * @param int                                        $key
-     * @param array                                      $languages
+     * @param ObjectManager $manager
+     * @param $template
+     * @param $locale
+     * @param $key
+     * @param $languages
+     * @throws \Exception
      */
-    public function createHomePages(ObjectManager $manager, $locale, $key, $languages)
+    public function createHomePages(ObjectManager $manager, $template, $locale, $key, $languages)
     {
         $pageClass = $this->container->getParameter('networking_init_cms.admin.page.class');
         /** @var PageInterface $homePage */
@@ -68,7 +76,7 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         $homePage->setMetaDescription('This is the homepage');
         $homePage->setStatus(PageInterface::STATUS_PUBLISHED);
         $homePage->setIsHome(true);
-        $homePage->setTemplateName($this->getFirstTemplate());
+        $homePage->setTemplateName($template);
         $homePage->setActiveFrom(new \DateTime('now'));
 
         // set original for translations
