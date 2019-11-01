@@ -24,7 +24,6 @@ use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sonata\AdminBundle\Admin\Pool;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;

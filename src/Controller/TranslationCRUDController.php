@@ -200,7 +200,7 @@ class TranslationCRUDController extends CRUDController
 
         $token = $this->getRequest()->get('downloadToken');
 
-        $cookie = new Cookie('downloadToken', $token, 0, '/', null, false, false);
+        $cookie = Cookie::create('downloadToken', $token, 0, '/', null, false, false);
 
         $response = new StreamedResponse(
             function () use ($query, &$flashType, $dumper) {

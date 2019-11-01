@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Security\Acl\Permission;
 
-use Sonata\AdminBundle\Security\Acl\Permission\MaskBuilder as SonataBaseMaskBuilder;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder as BaseMaskBuilder;
 
 /**
  * {@inheritdoc}
@@ -18,8 +18,12 @@ use Sonata\AdminBundle\Security\Acl\Permission\MaskBuilder as SonataBaseMaskBuil
  *
  * @author net working AG <info@networking.ch>
  */
-class MaskBuilder extends SonataBaseMaskBuilder
+class MaskBuilder extends BaseMaskBuilder
 {
+    public const MASK_LIST = 4096;       // 1 << 12
+    public const MASK_EXPORT = 8192;       // 1 << 13
+
+
     /**
      * @const string
      */
@@ -29,4 +33,6 @@ class MaskBuilder extends SonataBaseMaskBuilder
      * @const string
      */
     const CODE_PUBLISH = 'P';
+    public const CODE_LIST = 'L';
+    public const CODE_EXPORT = 'E';
 }
