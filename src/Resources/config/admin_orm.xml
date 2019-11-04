@@ -158,6 +158,8 @@
                  persist_filters="true"/>
         </service>
 
+        <service id="sonata.admin.manipulator.acl.object.orm" class="Sonata\DoctrineORMAdminBundle\Util\ObjectAclManipulator" public="true"/>
+
     </services>
 
 </container>
