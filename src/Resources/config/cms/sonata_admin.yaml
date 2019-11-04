@@ -74,11 +74,6 @@ sonata_admin:
                 label_catalogue: "MediaAdmin"
                 icon: '<i class="far fa-image fa-large"></i>'
                 items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
-            form_generator:
-                on_top:               true
-                label: "form.admin.menu_label"
-                label_catalogue: "formGenerator"
-                items: ['Networking\FormGeneratorBundle\Admin\FormAdmin']
             users:
                 label: "sonata_user"
                 label_catalogue: "SonataUserBundle"
