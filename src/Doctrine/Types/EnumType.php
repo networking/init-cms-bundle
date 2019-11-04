@@ -14,36 +14,40 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
- * Class EnumType
- * @package Networking\InitCmsBundle\Doctrine\Types
+ * Class EnumType.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class EnumType extends Type
 {
     /**
-     * @var string $name
+     * @var string
      */
     protected $name;
     /**
-     * @var array $values
+     * @var array
      */
     protected $values = [];
 
     /**
-     * @param array $fieldDeclaration
+     * @param array                                     $fieldDeclaration
      * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     *
      * @return string
      */
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $values = array_map(function($val) { return "'".$val."'"; }, $this->values);
+        $values = array_map(function ($val) {
+            return "'".$val."'";
+        }, $this->values);
 
-        return "ENUM(".implode(", ", $values).") COMMENT '(DC2Type:".$this->name.")'";
+        return 'ENUM('.implode(', ', $values).") COMMENT '(DC2Type:".$this->name.")'";
     }
 
     /**
-     * @param mixed $value
+     * @param mixed                                     $value
      * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     *
      * @return mixed
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -52,9 +56,11 @@ abstract class EnumType extends Type
     }
 
     /**
-     * @param mixed $value
+     * @param mixed                                     $value
      * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     *
      * @return mixed
+     *
      * @throws \InvalidArgumentException
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
@@ -62,6 +68,7 @@ abstract class EnumType extends Type
         if (!in_array($value, $this->values)) {
             throw new \InvalidArgumentException("Invalid '".$this->name."' value.");
         }
+
         return $value;
     }
 

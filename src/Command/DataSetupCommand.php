@@ -10,7 +10,6 @@
 
 namespace Networking\InitCmsBundle\Command;
 
-use Networking\InitCmsBundle\Helper\PageHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,22 +18,23 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class DataSetupCommand
- * @package Networking\InitCmsBundle\Command
+ * Class DataSetupCommand.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class DataSetupCommand extends ContainerAwareCommand
 {
     /**
-     * configuration for the command
+     * configuration for the command.
      */
     protected function configure()
     {
         $this->setName('networking:initcms:data-setup')
             ->setDescription('create and update db schema and append fixtures')
             ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
-            ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures');
-
+            ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
+            ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl')
+        ;
     }
 
     /**
@@ -47,8 +47,11 @@ class DataSetupCommand extends ContainerAwareCommand
         }
 
         $this->updateSchema($output);
-        $this->initACL($output);
-        $this->sonataSetupACL($output);
+
+        if ($input->getOption('use-acl')) {
+            $this->initACL($output);
+            $this->sonataSetupACL($output);
+        }
 
         if (!$input->getOption('no-fixtures')) {
             $this->loadFixtures($output);
@@ -58,6 +61,7 @@ class DataSetupCommand extends ContainerAwareCommand
 
     /**
      * @param OutputInterface $output
+     *
      * @return int
      */
     public function dropSchema(OutputInterface $output)
@@ -75,7 +79,8 @@ class DataSetupCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return int|string
      */
     private function updateSchema(OutputInterface $output)
@@ -94,14 +99,15 @@ class DataSetupCommand extends ContainerAwareCommand
 
     /**
      * @param $output
+     *
      * @return int
      */
     private function initACL($output)
     {
-        $command = $this->getApplication()->find('init:acl');
+        $command = $this->getApplication()->find('acl:init');
 
         $arguments = [
-            'command' => 'init:acl'
+            'command' => 'acl:init',
         ];
 
         $input = new ArrayInput($arguments);
@@ -111,6 +117,7 @@ class DataSetupCommand extends ContainerAwareCommand
 
     /**
      * @param $output
+     *
      * @return int
      */
     private function sonataSetupACL($output)
@@ -118,7 +125,7 @@ class DataSetupCommand extends ContainerAwareCommand
         $command = $this->getApplication()->find('sonata:admin:setup-acl');
 
         $arguments = [
-            'command' => 'sonata:admin:setup-acl'
+            'command' => 'sonata:admin:setup-acl',
         ];
 
         $input = new ArrayInput($arguments);
@@ -126,21 +133,22 @@ class DataSetupCommand extends ContainerAwareCommand
         return $command->run($input, $output);
     }
 
-
     /**
      * interact
-     * unused at the moment
-     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * unused at the moment.
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @throws \Exception
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
     }
 
-
     /**
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return int|string
      */
     private function loadFixtures(OutputInterface $output)
@@ -149,8 +157,8 @@ class DataSetupCommand extends ContainerAwareCommand
 
         $arguments = [
             'command' => 'doctrine:fixtures:load',
-            '--fixtures' => __DIR__ . '/../Fixtures',
-            '--append' => true
+            '--fixtures' => __DIR__.'/../Fixtures',
+            '--append' => true,
         ];
 
         $input = new ArrayInput($arguments);
@@ -161,20 +169,26 @@ class DataSetupCommand extends ContainerAwareCommand
     public function publishPages(OutputInterface $output)
     {
         /** @var \Networking\InitCmsBundle\Entity\PageManager $modelManager */
+        $doctrine = $this->getContainer()->get('doctrine');
+        $doctrine->resetManager();
+
         $modelManager = $this->getContainer()->get('networking_init_cms.page_manager');
-        $selectedModels = $modelManager->findAll();
+        $modelManager->resetEntityManager($doctrine->getManager());
 
         try {
-            foreach ($selectedModels as $selectedModel) {
-                /** @var \Networking\InitCmsBundle\Model\PageInterface $selectedModel */
-                $selectedModel->setStatus(\Networking\InitCmsBundle\Model\PageInterface::STATUS_PUBLISHED);
-                $modelManager->save($selectedModel);
-                $pageHelper = $this->getContainer()->get(PageHelper::class);
-                $pageHelper->makePageSnapshot($selectedModel);
+            $pages = $modelManager->findAll();
+            foreach ($pages as $page) {
+                /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
+                $pageHelper = $this->getContainer()->get('networking_init_cms.helper.page_helper');
+                $pageHelper->makePageSnapshot($page);
+                $modelManager->save($page);
             }
+
             return 0;
-        }catch (\Exception $e){
-            $output->writeln($e->getMessage());
+        } catch (\Exception $e) {
+            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            die;
+
             return 1;
         }
     }

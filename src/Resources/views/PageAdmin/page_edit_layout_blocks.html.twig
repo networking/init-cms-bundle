@@ -26,112 +26,73 @@ file that was distributed with this source code.
                 <div class="dropzone well well-small">
                     <h6>{{ zone.name|trans() }} </h6>
                     {% if zone.max_content_items is not same as(-1) %}
-                    <ul id="zone_{{ zone.name }}" class="sortable" data-content-types="{{ zone.restricted_types }}"
-                        data-max-items="{{ zone.max_content_items }}">
+                        <ul id="zone_{{ zone.name }}" class="sortable" data-content-types="{{ zone.restricted_types }}"
+                            data-max-items="{{ zone.max_content_items }}">
+                            {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow#}
+                            <li class="networking-sort-zone">
+                                <div class="plus_button"
+                                     {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
+                                    <a class="add-layout"
+                                       href="{{ url('admin_networking_initcms_layoutblock_create') }}"
+                                       data-zone="{{ zone.name }}"
+                                       data-sort-order="0"
+                                       data-value="{{ zone.restricted_types }}"
+                                       title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="empty_layout_block" {% if get_sub_form_by_zone(form.children, zone.name)|length > 0 %} style="display: none;"{% endif %}>
+                                <p class="info-soft ">
+                                    {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
+                                </p>
+                            </li>
+                            {# loop through layout blocks #}
+                            {% for layout_block_field_name, layout_block_field in get_sub_form_by_zone(form.children, zone.name) %}
+                                {% set layoutBlockContent = render_initcms_admin_block(layout_block_field.vars.value) %}
+                                {% if layoutBlockContent %}
 
-                        {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow#}
+                                    <li class="networking-sortable-list networking-sort-zone"
+                                        id="layoutBlock_{{ layout_block_field.vars.value.id }}"
+                                        data-content-type="{{ layout_block_field.vars.value.classType }}">
+                                        {# preview of layout block of content #}
 
-
-                        <li class="networking-sort-zone">
-                            <input type="hidden" id="{{ loop.index }}_zone" value="{{ zone.name }}">
-                            <input type="hidden" id="{{ loop.index }}_sortOrder" value="0">
-
-                            <div class="plus_button"
-                                 {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
-                                <a
-                                        href="{{ url('admin_networking_initcms_layoutblock_create') }}"
-                                        onclick="return addLayoutBlock(this);"
-                                        class="sonata-ba-action"
-                                        data-value="{{ zone.restricted_types }}"
-                                        title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                </a>
-                            </div>
-                        </li>
-                        <li class="empty_layout_block" {% if get_sub_form_by_zone(form.children, zone.name)|length > 0 %} style="display: none;"{% endif %}>
-                            <p class="info-soft ">
-                                {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
-                            </p>
-                        </li>
-
-
-                        {# loop through layout blocks #}
-                        {% for layout_block_field_name, layout_block_field in get_sub_form_by_zone(form.children, zone.name) %}
-                            {% set layoutBlockContent = render_initcms_admin_block(layout_block_field.vars.value) %}
-                            {% if layoutBlockContent %}
-
-                                <li class="networking-sortable-list networking-sort-zone"
-                                    id="layoutBlock_{{ layout_block_field.vars.value.id }}"
-                                    data-content-type="{{ layout_block_field.vars.value.classType }}">
-                                    {# preview of layout block of content #}
-                                    <div class="content_preview">
-                                        <div class="layout_controls">
-                                            <i class="glyphicon glyphicon-move soft-background"></i>
-                                            <i class="glyphicon glyphicon-trash soft-background delete_block"
-                                               data-value="{{ layout_block_field.vars.value.id }}"></i>
-                                            <i class="glyphicon glyphicon-pencil soft-background"
-                                               data-target="#expandableForm{{ increment }}" data-toggle="modal"></i>
-                                        </div>
-                                        <div data-target="#expandableForm{{ increment }}" data-toggle="modal">
-                                            {{ layoutBlockContent|raw }}
-                                        </div>
-                                    </div>
-
-                                    {# modal window hidden content #}
-                                    <div class="modal form-horizontal layout_block_modal"
-                                         id="expandableForm{{ increment }}"
-                                         style="display: none" aria-hidden="true" role="dialog">
-                                        <div class="modal-dialog  modal-full">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-hidden="true">&times;</button>
-                                                    <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}
-                                                        - {{ render_content_type_name(layout_block_field.vars.value) }}</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    {% if layout_block_field.vars.errors|length > 0 %}
-                                                        <div class="sonata-ba-form-error control-group error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
-                                                            {{ form_errors(layout_block_field) }}
-                                                        </div>
-                                                    {% endif %}
-
-                                                    {{ form_widget(layout_block_field['content']) }}
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    {{ form_rest(layout_block_field) }}
-                                                    <button class="btn btn-default" data-dismiss="modal"
-                                                            aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
-                                                        <a onclick="return updateLayoutBlock(this, {{ layout_block_field.vars.value.id }});"
-                                                       data-content-type="{{ layout_block_field.vars.value.classType }}"
-                                                       class="btn btn-primary">
-                                                            {{ 'btn_update'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                                                </div>
+                                        <div class="content_preview">
+                                            <div class="layout_controls">
+                                                <i class="glyphicon glyphicon-move soft-background"></i>
+                                                <i class="glyphicon glyphicon-trash soft-background delete_block"
+                                                   data-value="{{ layout_block_field.vars.value.id }}"></i>
+                                                <i class="glyphicon glyphicon-pencil soft-background layout-link"
+                                                   data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block_field.vars.value.id}) }}"></i>
+                                            </div>
+                                            <div class="layout-link"
+                                                 data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block_field.vars.value.id}) }}">
+                                                {{ layoutBlockContent|raw }}
                                             </div>
                                         </div>
-                                    </div>
+
+                                        {# modal window hidden content #}
 
 
-                                    {# start the block for the plus button #}
-                                    <div class="plus_button"
-                                         {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
-                                        <a
-                                                href="{{ url('admin_networking_initcms_layoutblock_create') }}"
-                                                onclick="return addLayoutBlock(this);"
-                                                class="sonata-ba-action"
-                                                data-value="{{ zone.restricted_types }}"
-                                                title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                            <i class="glyphicon glyphicon-plus"></i>
-                                        </a>
-                                    </div>
-                                </li>
-                                {% set increment = increment + 1 %}
-                            {% endif %}
-                        {% endfor %}
 
-                    </ul>
+                                        {# start the block for the plus button #}
+                                        <div class="plus_button"
+                                             {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
+                                            <a class="add-layout"
+                                               href="{{ url('admin_networking_initcms_layoutblock_create') }}"
+                                               data-zone="{{ zone.name }}"
+                                               data-sort-order="{{ layout_block_field.vars.value.sortOrder + 1 }}"
+                                               data-value="{{ zone.restricted_types }}"
+                                               title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    {% set increment = increment + 1 %}
+                                {% endif %}
+                            {% endfor %}
+
+                        </ul>
                     {% endif %}
                 </div>
             </div>
@@ -149,12 +110,15 @@ file that was distributed with this source code.
     {% endif %}
     {# add dependent javascript based on if the request is ajax or not #}
     {% if app.request.isXmlHttpRequest %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_orm_one_ajax.html.twig' %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_orm_one_ajax.html.twig' %}
     {% else %}
+
         {# addToBottom adds the content in the block to the end of the page #}
         {% jsblock 'addToBottom' %}
-        {% include 'NetworkingInitCmsBundle:Form:content_type_select.html.twig' %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks_script.html.twig' with {'admin': admin} %}
+        <div id="layoutBlockModal" class="modal" aria-hidden="true" role="dialog" style="display: none">
+        </div>
+        {% include '@NetworkingInitCms/Form/content_type_select.html.twig' %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks_script.html.twig' with {'admin': admin} %}
         {% jsblock 'addToBottomEnd' %}
     {% endif %}
 </div>

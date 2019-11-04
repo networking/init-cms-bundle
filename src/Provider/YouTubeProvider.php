@@ -1,8 +1,13 @@
 <?php
+
 namespace Networking\InitCmsBundle\Provider;
 
+use Networking\InitCmsBundle\Form\Type\MediaPreviewType;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\MediaBundle\CDN\Server;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Sonata\MediaBundle\Provider\YouTubeProvider as BaseProvider;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * This file is part of the init-cms-sandbox  package.
@@ -14,7 +19,6 @@ use Sonata\MediaBundle\Provider\YouTubeProvider as BaseProvider;
  */
 class YouTubeProvider extends BaseProvider
 {
-
     /**
      * {@inheritdoc}
      */
@@ -26,28 +30,40 @@ class YouTubeProvider extends BaseProvider
 
         $file = $this->getReferenceFile($oldMedia);
 
-
         if ($this->getFilesystem()->has($file->getKey())) {
             $this->getFilesystem()->delete($file->getKey());
         }
 
         $this->postPersist($media);
-
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function fixBinaryContent(MediaInterface $media)
+    public function buildEditForm(FormMapper $formMapper)
     {
-        if (!$media->getBinaryContent()) {
-            return;
-        }
-        if (strlen($media->getBinaryContent()) === 11) {
-            return;
-        }
-        if (preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\#\?&\"'>]+)/", $media->getBinaryContent(), $matches)) {
-            $media->setBinaryContent($matches[1]);
+        $formMapper->add('name');
+        $formMapper->add('authorName');
+        $formMapper->add('description');
+        $formMapper->add('copyright');
+        $formMapper->add(
+            'self',
+            MediaPreviewType::class,
+            ['required' => false, 'label' => 'form.label_current_video', 'provider' => 'sonata.media.provider.youtube']
+        );
+        $formMapper->add('binaryContent',
+            TextType::class,
+            ['label' => 'form.label_binary_content_youtube_new', 'required' => false]
+        );
+
+        $formMapper->add('enabled', null, ['required' => false], ['inline_block' => true]);
+        if (!$this->getCdn() instanceof Server) {
+            $formMapper->add(
+                'cdnIsFlushable',
+                null,
+                ['required' => false],
+                ['inline_block' => true]
+            );
         }
     }
 }

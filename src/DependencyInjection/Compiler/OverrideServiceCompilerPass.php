@@ -7,14 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
+use Networking\InitCmsBundle\Admin\Pool;
+use Networking\InitCmsBundle\Builder\ListBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Class OverrideServiceCompilerPass
- * @package Networking\InitCmsBundle\DependencyInjection\Compiler
+ * Class OverrideServiceCompilerPass.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class OverrideServiceCompilerPass implements CompilerPassInterface
@@ -26,42 +29,23 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
     {
         if ($container->hasDefinition('sonata.admin.builder.orm_list')) {
             $definition = $container->getDefinition('sonata.admin.builder.orm_list');
-
-            $definition->setClass('Networking\InitCmsBundle\Builder\ListBuilder');
+            $definition->setClass(ListBuilder::class);
         }
 
-        if ($container->hasDefinition('sonata.user.editable_role_builder')) {
-            $definition = $container->getDefinition('sonata.user.editable_role_builder');
-
-            $definition->setClass('Networking\InitCmsBundle\Security\EditableRolesBuilder');
-        }
-
-        if ($container->hasDefinition('sonata.admin.builder.mongodb_list')) {
-            $definition = $container->getDefinition('sonata.admin.builder.mongodb_list');
-
-            $definition->setClass('Networking\InitCmsBundle\Builder\MongoDBListBuilder');
-        }
-
-        if ($container->hasDefinition('sonata.media.provider.youtube')) {
-            $definition = $container->getDefinition('sonata.media.provider.youtube');
-
-            $definition->setClass('Networking\InitCmsBundle\Provider\YouTubeProvider');
-        }
-
-        if ($container->has('sonata.media.admin.gallery')){
+        if ($container->has('sonata.media.admin.gallery')) {
             $galleryAdmin = $container->getDefinition('sonata.media.admin.gallery');
             $templates = [
-                'list' => 'NetworkingInitCmsBundle:GalleryAdmin:list.html.twig',
-                'edit' => 'NetworkingInitCmsBundle:GalleryAdmin:edit.html.twig',
-                'show' => 'NetworkingInitCmsBundle:CRUD:show.html.twig',
-                'ajax' => 'NetworkingInitCmsBundle::ajax_layout.html.twig'
+                'list' => '@NetworkingInitCms/GalleryAdmin/list.html.twig',
+                'edit' => '@NetworkingInitCms/GalleryAdmin/edit.html.twig',
+                'show' => '@NetworkingInitCms/CRUD/show.html.twig',
+                'ajax' => '@NetworkingInitCms/ajax_layout.html.twig',
             ];
-            foreach ($templates as $key =>  $template){
+            foreach ($templates as $key => $template) {
                 $galleryAdmin->addMethodCall('setTemplate', [$key, $template]);
             }
         }
 
         $definition = $container->getDefinition('sonata.admin.pool');
-        $definition->setClass('Networking\InitCmsBundle\Admin\Pool');
+        $definition->setClass(Pool::class);
     }
 }

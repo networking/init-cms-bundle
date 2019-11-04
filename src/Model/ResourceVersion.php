@@ -7,22 +7,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 
-
 /**
- * Class ResourceVersion
- * @package Networking\InitCmsBundle\Model
+ * Class ResourceVersion.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class ResourceVersion implements ResourceVersionInterface
 {
     /**
-     * @var integer $id
-     *
+     * @var int
      */
     protected $id;
 
@@ -60,7 +59,7 @@ abstract class ResourceVersion implements ResourceVersionInterface
         $this->resourceId = $resource->getResourceId();
         $this->versionedData = $resource->getVersionedData();
         $this->version = $resource->getCurrentVersion();
-        $this->snapshotDate = new \DateTime("now");
+        $this->snapshotDate = new \DateTime('now');
     }
 
     /**
@@ -158,6 +157,4 @@ abstract class ResourceVersion implements ResourceVersionInterface
     {
         return $this->versionedData;
     }
-
-
 }

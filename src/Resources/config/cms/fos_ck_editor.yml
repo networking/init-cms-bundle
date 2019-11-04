@@ -1,0 +1,70 @@
+fos_ck_editor:
+    default_config: init_cms
+    configs:
+        init_cms:
+            extraPlugins: ["internal_link"]
+            filebrowserBrowseRoute: admin_networking_initcms_media_init_ckeditor_browser
+            filebrowserBrowseRouteParameters:
+                provider: sonata.media.provider.file
+                context: default
+            filebrowserImageBrowseRoute: admin_networking_initcms_media_init_ckeditor_browser
+            # Display images by default when clicking the image dialog browse button
+            filebrowserImageBrowseRouteParameters:
+                provider: sonata.media.provider.image
+                context: default
+            filebrowserUploadRoute: admin_networking_initcms_media_init_ckeditor_upload_file
+            filebrowserUploadRouteParameters:
+                provider: sonata.media.provider.file
+            # Upload file as image when sending a file from the image dialog
+            filebrowserImageUploadRoute: admin_networking_initcms_media_init_ckeditor_upload_image
+            filebrowserImageUploadRouteParameters:
+                provider: sonata.media.provider.image
+                context: default # Optional, to upload in a custom context
+            removeButtons: 'NewPage,Underline,Subscript,Superscript,Styles,PageBreak,Flash,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Print,Preview'
+            toolbar: "init_cms"
+            bodyClass: row
+            emailProtection: encode
+            templates_replaceContent: false
+            height: "400px"
+
+            # path to css for the ckeditor css so that you can display content as it is in the page
+            # contentsCss: '/bundles/applicationnetworkinginitcms/css/page_content.css'
+
+            # path to the ckeditor template file, if you want to have ready made html snipets
+            # templates_files: ['/bundles/applicationnetworkinginitcms/js/ckeditor_templates.js']
+
+            # path to file to allow the user to add styles to html content
+            # stylesSet: 'init_cms:/bundles/applicationnetworkinginitcms/js/styles.js'
+    plugins:
+        wordcount:
+            path:     "/bundles/networkinginitcms/js/ckeditor/wordcount/" # with trailing slash
+            filename: "plugin.js"
+        ajax:
+            path:     "/bundles/networkinginitcms/js/ckeditor/ajax/" # with trailing slash
+            filename: "plugin.js"
+
+        xml:
+            path:     "/bundles/networkinginitcms/js/ckeditor/xml/" # with trailing slash
+            filename: "plugin.js"
+
+        internal_link:
+            path:     "/bundles/networkinginitcms/js/ckeditor/internal-link/" # with trailing slash
+            filename: "plugin.js"
+
+    toolbars:
+        configs:
+            init_cms: [ "@clipboard", "@editing", "@document", "/", "@paragraph", "@basicstyles", "@links", "@insert", "@styles", "@colors", "@tools" ]
+        items:
+            document: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ]
+            clipboard: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ]
+            editing: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ]
+            forms: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ]
+            basicstyles: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]
+            paragraph: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl' ]
+            links: [ 'Link', 'Unlink', 'Anchor' ]
+            insert: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ]
+            styles: [ 'Styles', 'Format', 'Font', 'FontSize' ]
+            colors: [ 'TextColor', 'BGColor' ]
+            tools: [ 'Maximize', 'ShowBlocks' ]
+            others: [ '-' ]
+            about: [ 'About' ]

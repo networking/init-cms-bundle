@@ -8,17 +8,12 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
-
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
-use Symfony\Component\HttpFoundation\Request;
-
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface ContentRouteManagerInterface extends RouteProviderInterface
+interface ContentRouteManagerInterface
 {
     const ROUTE_GENERATE_DUMMY_NAME = 'networking_init_dynamic_route';
 
@@ -32,29 +27,29 @@ interface ContentRouteManagerInterface extends RouteProviderInterface
      */
     public function getClassName();
 
-
     /**
      * @param ContentRouteInterface $contentRoute
      */
     public function initializeContentRoute(ContentRouteInterface &$contentRoute);
 
     /**
-     * @param  ContentRouteInterface $contentRoute
+     * @param ContentRouteInterface $contentRoute
+     *
      * @return object
      */
     public function getRouteContent(ContentRouteInterface $contentRoute);
 
-
     /**
      * @param $criteria
+     *
      * @return mixed
      */
     public function findContentRouteBy(array $criteria);
 
     /**
      * @param $contentRoute
+     *
      * @return mixed
      */
     public function findContentByContentRoute(ContentRouteInterface $contentRoute);
-
 }

@@ -14,6 +14,7 @@
             <tag name="twig.extension"/>
         </service>
 
+        <service alias="fos_ck_editor.config_manager" id="FOS\CKEditorBundle\Model\ConfigManager" />
     </services>
 
 </container>

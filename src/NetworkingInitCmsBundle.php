@@ -16,8 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Networking\InitCmsBundle\DependencyInjection\Compiler\OverrideServiceCompilerPass;
 
 /**
- * Class NetworkingInitCmsBundle
- * @package Networking\InitCmsBundle
+ * Class NetworkingInitCmsBundle.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class NetworkingInitCmsBundle extends Bundle
@@ -32,5 +32,4 @@ class NetworkingInitCmsBundle extends Bundle
         $container->addCompilerPass(new OverrideServiceCompilerPass());
         $container->addCompilerPass(new AddProviderCompilerPass());
     }
-
 }

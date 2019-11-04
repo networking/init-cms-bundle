@@ -3,7 +3,6 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
     <services>
 
         <defaults autowire="true" autoconfigure="true" public="false" />
@@ -15,9 +14,12 @@
             <tag name="controller.service_arguments" />
         </prototype>
 
-        <service id="networking_init_cms.helper.page_helper" class="Networking\InitCmsBundle\Helper\PageHelper" autowire="true" public="true" />
+        <service id="Networking\InitCmsBundle\Helper\PageHelper" autowire="true"  public="false">
+            <argument key="$allowLocaleCookie">%networking_init_cms.allow_locale_cookie%</argument>
+            <argument key="$singleLanguage">%networking_init_cms.single_language%</argument>
+        </service>
 
-        <service id="Networking\InitCmsBundle\Helper\PageHelper" alias="networking_init_cms.helper.page_helper" />
+        <service id="networking_init_cms.helper.page_helper" alias="Networking\InitCmsBundle\Helper\PageHelper" public="true"/>
 
         <service id="networking_init_cms.logger" class="Symfony\Bridge\Monolog\Logger">
             <argument>newo</argument>
@@ -44,10 +46,12 @@
             <argument>%networking_init_cms.cache.activate%</argument>
             <argument>%networking_init_cms.cache.cache_time%</argument>
         </service>
-
         <service id="Networking\InitCmsBundle\Lib\PhpCacheInterface" alias="networking_init_cms.lib.php_cache" />
 
-        <service id="networking_init_cms.cms_router" class="Networking\InitCmsBundle\Component\Routing\DynamicRouter" autowire="true"  public="true">
+        <service id="networking_init_cms.cms_router" class="Symfony\Cmf\Component\Routing\DynamicRouter" public="true">
+            <argument type="service" id="router.request_context"/>
+            <argument type="service" id="cmf_routing.nested_matcher"/>
+            <argument type="service" id="cmf_routing.generator"/>
             <call method="addRouteEnhancer">
                 <argument type="service" id="cmf_routing.enhancer.route_content"/>
             </call>
@@ -55,6 +59,62 @@
                 <argument type="service" id="cmf_routing.enhancer.controllers_by_class"/>
             </call>
         </service>
-    </services>
 
+        <!--<service id="Networking\InitCmsBundle\EventListener\MenuBuilderListener">-->
+            <!--<tag name="kernel.event_listener" event="sonata.admin.event.configure.menu.sidebar" method="addMenuItems" />-->
+        <!--</service>-->
+
+        <service id="Symfony\Cmf\Component\Routing\DynamicRouter"
+                 alias="networking_init_cms.cms_router"
+                 public="false"/>
+
+
+
+        <service id="networking_init_cms.media.generator.media_path" class="Networking\InitCmsBundle\Generator\MediaPathGenerator"/>
+
+        <service id="networking_init_cms.media.thumbnail.format" class="Networking\InitCmsBundle\Thumbnail\FormatThumbnail">
+            <argument type="string">%sonata.media.thumbnail.format.default%</argument>
+        </service>
+
+
+        <service id="networking_init_cms.security_checker.command" class="Networking\InitCmsBundle\Command\SecurityCheckCommand">
+            <argument type="service" id="mailer"/>
+            <tag name="console.command" />
+        </service>
+
+        <!-- object manager aliases -->
+        <service id="Networking\InitCmsBundle\Model\PageManagerInterface"
+                 alias="networking_init_cms.page_manager"
+                 public="false"/>
+
+        <service id="Networking\InitCmsBundle\Model\PageSnapshotManagerInterface"
+                 alias="networking_init_cms.page_snapshot_manager"
+                 public="false" />
+
+        <service id="Networking\InitCmsBundle\Model\MenuItemManagerInterface"
+                 alias="networking_init_cms.menu_item_manager"
+                 public="false"/>
+
+        <service id="Networking\InitCmsBundle\Model\HelpTextManagerInterface"
+                 alias="networking_init_cms.help_text_manager"
+                 public="false"/>
+
+        <service id="Networking\InitCmsBundle\Model\ContentRouteManagerInterface"
+                 alias="networking_init_cms.content_route_manager"
+                 public="false"/>
+
+        <!-- admin aliases -->
+        <service id="Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin"
+                 alias="networking_init_cms.admin.layout_block"
+                 public="false"/>
+
+        <service id="Sonata\AdminBundle\Admin\Pool"
+                 alias="sonata.admin.pool"
+                 public="false"/>
+
+        <service id="Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface"
+                 alias="ibrows_sonataadmin.annotation.reader"
+                 public="false"/>
+
+    </services>
 </container>

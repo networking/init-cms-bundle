@@ -7,16 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Tests\EventListener;
+
+namespace Networking\InitCmsBundle\tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\EventListener\LocaleListener;
-use Symfony\Component\Security\Core\SecurityContext;
-
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class LocaleListenerTest extends TestCase
 {
-
     public function testOnKernelRequest()
     {
         $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\SessionInterface')
@@ -27,7 +26,8 @@ class LocaleListenerTest extends TestCase
             ->method('set');
 
         $server = $this->createMock('\Symfony\Component\HttpFoundation\ServerBag');
-                $server->expects($this->exactly(2))
+
+        $server->expects($this->exactly(2))
                     ->method('get')
                     ->with('HTTP_ACCEPT_LANGUAGE')
                     ->will($this->returnValue('de-DE,de;q=0.8,jp'));
@@ -41,7 +41,7 @@ class LocaleListenerTest extends TestCase
         $request->attributes = $parameterBag;
         $request->cookies = $parameterBag;
         $request->server = $server;
-
+        $request->query = $parameterBag;
 
         $request
             ->expects($this->never())
@@ -51,7 +51,6 @@ class LocaleListenerTest extends TestCase
             ->expects($this->once())
             ->method('getLocale');
 
-
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
             ->getMock();
@@ -59,6 +58,9 @@ class LocaleListenerTest extends TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
+        $event->expects($this->once())
+            ->method('getRequestType')
+            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
         $accessMapStub = $this->createMock('\Symfony\Component\Security\Http\AccessMap');
         $accessMapStub
@@ -79,14 +81,12 @@ class LocaleListenerTest extends TestCase
         $router->expects($this->once())
             ->method('getContext')
             ->will($this->returnValue($context));
-        $listener = new LocaleListener($accessMapStub, [['locale' => 'de']], 'en', $router);
+        $listener = new LocaleListener($accessMapStub, [['locale' => 'de']], true, false, 'en', $router);
         $listener->onKernelRequest($event);
     }
 
-
     public function testOnKernelRequest_WithNoRequest_ShouldDoNothing()
     {
-
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
             ->getMock();
@@ -94,13 +94,12 @@ class LocaleListenerTest extends TestCase
             ->method('getRequest')
             ->will($this->returnValue(null));
 
-
         $accessMapStub = $this->createMock('\Symfony\Component\Security\Http\AccessMap');
         $accessMapStub
             ->expects($this->never())
             ->method('getPatterns')
             ->will($this->returnValue([['hallo']]));
-        $listener = new LocaleListener($accessMapStub, [['locale' => 'de']], 'en');
+        $listener = new LocaleListener($accessMapStub, [['locale' => 'de']], true, false,'en');
         $voidResult = $listener->onKernelRequest($event);
         $this->assertNull($voidResult);
     }
@@ -115,13 +114,13 @@ class LocaleListenerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $server = $this->createMock('\Symfony\Component\HttpFoundation\ServerBag');
-                        $server->expects($this->exactly(2))
+        $server->expects($this->exactly(2))
                             ->method('get')
                             ->with('HTTP_ACCEPT_LANGUAGE')
                             ->will($this->returnValue('de-DE,de;q=0.8,jp'));
         $request->cookies = $parameterBag;
         $request->server = $server;
-
+        $request->query = $parameterBag;
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
@@ -130,21 +129,22 @@ class LocaleListenerTest extends TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
+        $event->expects($this->once())
+              ->method('getRequestType')
+              ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
         $accessMapStub = $this->createMock('\Symfony\Component\Security\Http\AccessMap');
         $accessMapStub
             ->expects($this->once())
             ->method('getPatterns')
             ->will($this->returnValue([['hallo']]));
-        $listener = new LocaleListener($accessMapStub, [['locale' => 'de']], 'en');
+        $listener = new LocaleListener($accessMapStub, [['locale' => 'de']],true, false, 'en');
         $voidResult = $listener->onKernelRequest($event);
         $this->assertNull($voidResult);
     }
 
     public function testOnKernelRequest_WithoutPreviousSession()
     {
-
-
         $server = $this->createMock('\Symfony\Component\HttpFoundation\ServerBag');
         $server->expects($this->exactly(2))
             ->method('get')
@@ -161,16 +161,15 @@ class LocaleListenerTest extends TestCase
         $request->attributes = $parameterBag;
         $request->server = $server;
         $request->cookies = $parameterBag;
+	    $request->query = $parameterBag;
 
         $request
             ->expects($this->never())
             ->method('setDefaultLocale');
 
-
         $request
             ->expects($this->once())
             ->method('getLocale');
-
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
@@ -179,6 +178,9 @@ class LocaleListenerTest extends TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
+        $event->expects($this->once())
+              ->method('getRequestType')
+              ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
         $accessMapStub = $this->createMock('\Symfony\Component\Security\Http\AccessMap');
         $accessMapStub
@@ -199,7 +201,7 @@ class LocaleListenerTest extends TestCase
         $router->expects($this->once())
             ->method('getContext')
             ->will($this->returnValue($context));
-        $listener = new LocaleListener($accessMapStub, [['locale' => 'de']], 'en', $router);
+        $listener = new LocaleListener($accessMapStub, [['locale' => 'de']],true, false, 'en', $router);
         $listener->onKernelRequest($event);
     }
 
@@ -210,7 +212,7 @@ class LocaleListenerTest extends TestCase
             ->expects($this->never())
             ->method('getPatterns')
             ->will($this->returnValue([['hallo']]));
-        $listener = new LocaleListener($accessMapStub, [['locale' => 'en']], 'en');
+        $listener = new LocaleListener($accessMapStub, [['locale' => 'en']],true, false, 'en');
     }
 
     public function testGetPreferredLocale_Available_ShouldReturnTheFirstBrowserLanguageThatMatchesAnAvailableLanguage()
@@ -237,12 +239,11 @@ class LocaleListenerTest extends TestCase
             ->will($this->returnValue([['hallo']]));
         $listener = new LocaleListener($accessMapStub, [
             ['locale' => 'jp'],
-            ['locale' => 'de']
-        ], 'en');
+            ['locale' => 'de'],
+        ],true, false, 'en');
         $preferredLocale = $listener->getPreferredLocale($request);
         $this->assertEquals('de', $preferredLocale); // its the first matched browser lang
     }
-
 
     public function testGetPreferredLocale_NotAvailable_ShouldReturnDefault()
     {
@@ -268,8 +269,8 @@ class LocaleListenerTest extends TestCase
             ->will($this->returnValue([['hallo']]));
         $listener = new LocaleListener($accessMapStub, [
             ['locale' => 'it'],
-            ['locale' => 'fr']
-        ], 'en');
+            ['locale' => 'fr'],
+        ],true, false, 'en');
         $preferredLocale = $listener->getPreferredLocale($request);
         $this->assertEquals('en', $preferredLocale); // its the default
     }

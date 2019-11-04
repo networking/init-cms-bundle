@@ -9,7 +9,7 @@ file that was distributed with this source code.
 
 #}
 
-{% extends 'NetworkingInitCmsBundle:CRUD:action.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/action.html.twig' %}
 
 {% block title %}{{ 'title_select_provider'|trans({}, 'MediaAdmin') }}{% endblock %}
 
@@ -31,7 +31,25 @@ file that was distributed with this source code.
            data-placement="top"
            title="{{ provider.providerMetadata.description|trans({}, 'MediaAdmin') }}"
                 >
-                <i class="{{ provider.providerMetadata.option('class') }}"></i>
+
+            {% set icon = provider.providerMetadata.option('class') %}
+            {% if provider.name == 'sonata.media.provider.vimeo' %}
+                {% set icon = 'fab fa-vimeo-square' %}
+            {% endif %}
+
+            {% if provider.name == 'sonata.media.provider.youtube' %}
+                {% set icon = 'fab fa-youtube' %}
+            {% endif %}
+
+            {% if provider.name == 'sonata.media.provider.file' %}
+                {% set icon = 'far fa-file' %}
+            {% endif %}
+
+            {% if provider.name == 'sonata.media.provider.image' %}
+                {% set icon = 'far fa-image' %}
+            {% endif %}
+
+                <i class="{{ icon }}"></i>
             {{ provider.providerMetadata.title|trans({}, 'MediaAdmin') }}
 
         </a>

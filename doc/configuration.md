@@ -62,7 +62,7 @@ networking_init_cms:
         - {label: Deutsch, locale: de_CH}
     templates:
         'sandbox_one_column':
-            template; "ApplicationNetworkingInitCmsBundle:Default:one_column.html.twig"
+            template; "@ApplicationNetworkingInitCms/Default/one_column.html.twig"
             name: "Single Column"
             icon: "bundles/applicationnetworkinginitcms/img/template_header_one_column.png"
             controller: MyBundle::index
@@ -70,7 +70,7 @@ networking_init_cms:
                 - { name: header, class: 'col-md-12' }
                 - { name: main_content, class: 'col-md-12'}
         'sandbox_two_column':
-            template: "ApplicationNetworkingInitCmsBundle:Default:two_column.html.twig"
+            template: "@ApplicationNetworkingInitCms/Default/two_column.html.twig"
             name: "Two Column"
             icon: "bundles/applicationnetworkinginitcms/img/template_header_two_column.png"
             zones:
@@ -118,7 +118,7 @@ The parameters fo the template include:
 ```
 templates:
     'sandbox_one_column':
-        template: "ApplicationNetworkingInitCmsBundle:Default:one_column.html.twig"
+        template: "@ApplicationNetworkingInitCms/Default/one_column.html.twig"
         name: "Single Column"
         icon: "bundles/applicationnetworkinginitcms/img/template_header_one_column.png"
         controller: MyBundle::index # default NetworkingInitCmsBundle:FrontendPage:index
@@ -126,7 +126,7 @@ templates:
             - { name: header, class: 'col-md-12', max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery }
             - { name: main_content, class: 'col-md-12'}
     'sandbox_two_column':
-        template: "ApplicationNetworkingInitCmsBundle:Default:two_column.html.twig"
+        template: "@ApplicationNetworkingInitCms/Default/two_column.html.twig"
         name: "Two Column"
         icon: "bundles/applicationnetworkinginitcms/img/template_header_two_column.png"
         zones:

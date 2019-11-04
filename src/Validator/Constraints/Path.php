@@ -13,11 +13,10 @@ namespace Networking\InitCmsBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class Path
+ * Class Path.
  *
  * @Annotation
  *
- * @package Networking\InitCmsBundle\Validator\Constraints
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Path extends Constraint

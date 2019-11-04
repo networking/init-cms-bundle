@@ -7,12 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,7 +21,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class PageAutocompleteType extends EntityType
 {
-
     /**
      * @var null
      */
@@ -39,8 +38,9 @@ class PageAutocompleteType extends EntityType
 
     /**
      * PageAutocompleteType constructor.
+     *
      * @param ManagerRegistry $registry
-     * @param RequestStack $requestStack
+     * @param RequestStack    $requestStack
      */
     public function __construct(ManagerRegistry $registry, RequestStack $requestStack)
     {
@@ -58,6 +58,7 @@ class PageAutocompleteType extends EntityType
 
         if ($locale = $this->requestStack->getCurrentRequest()->get('page_locale')) {
             $this->locale = $locale;
+
             return;
         }
 
@@ -76,6 +77,7 @@ class PageAutocompleteType extends EntityType
 
     /**
      * @param $locale
+     *
      * @return callable
      */
     public function getClosureByLocale($locale)
@@ -91,6 +93,7 @@ class PageAutocompleteType extends EntityType
 
     /**
      * @param $pageId
+     *
      * @return callable
      */
     public function getClosureByPageId($pageId)

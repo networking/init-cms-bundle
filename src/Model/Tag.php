@@ -9,43 +9,40 @@
  */
 
 namespace Networking\InitCmsBundle\Model;
+
 use Doctrine\Common\Collections\ArrayCollection;
-use Networking\InitCmsBundle\Helper\PageHelper;
 
 /**
- * Class Tag
- * @package Networking\InitCmsBundle\Model
+ * Class Tag.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class Tag
 {
     /**
-     * @var integer $id
-     *
+     * @var int
      */
     protected $id;
 
     /**
-     * @var string $name
-     *
+     * @var string
      */
     protected $name;
 
     /**
-     * @var string $path
+     * @var string
      */
     protected $path;
 
     /**
-     * @var integer $level
+     * @var int
      */
     protected $level;
 
     /**
-     * @var string $slug
+     * @var string
      */
     protected $slug;
-
 
     /**
      * @var ArrayCollection
@@ -63,9 +60,9 @@ abstract class Tag
     protected $parentNames;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -73,9 +70,10 @@ abstract class Tag
     }
 
     /**
-     * Set name
+     * Set name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return Tag
      */
     public function setName($name)
@@ -86,7 +84,7 @@ abstract class Tag
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -96,21 +94,24 @@ abstract class Tag
     }
 
     /**
-     * Set slug
+     * Set slug.
      *
-     * @param  string $slug
+     * @param string $slug
+     *
      * @return Tag|false
      */
     public function setSlug($slug)
     {
-        if (!empty($this->slug)) return false;
+        if (!empty($this->slug)) {
+            return false;
+        }
         $this->slug = $slug;
 
         return $this;
     }
 
     /**
-     * Get slug
+     * Get slug.
      *
      * @return string
      */
@@ -154,24 +155,26 @@ abstract class Tag
     /**
      * @param Tag $parent
      */
-    public function setParent(Tag $parent = null){
+    public function setParent(Tag $parent = null)
+    {
         $this->parent = $parent;
     }
 
     /**
      * @return Tag
      */
-    public function getParent(){
+    public function getParent()
+    {
         return $this->parent;
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getChildren(){
+    public function getChildren()
+    {
         return $this->children;
     }
-
 
     /**
      * @return string
@@ -182,7 +185,8 @@ abstract class Tag
     }
 
     /**
-     * @param  array $parentNames
+     * @param array $parentNames
+     *
      * @return $this
      */
     public function setParentNames(array $parentNames)
@@ -198,7 +202,6 @@ abstract class Tag
     public function getParentNames()
     {
         if (!$this->parentNames) {
-
             $page = $this;
             $parentNames = [$page->getName()];
 
@@ -213,6 +216,23 @@ abstract class Tag
         return $this->parentNames;
     }
 
+    /**
+     * @param $id
+     *
+     * @return bool
+     */
+    public function hasChild($id)
+    {
+        foreach ($this->children as $child) {
+            if ($child->getId() == $id) {
+                return true;
+            }
+
+            return $child->hasChild($id);
+        }
+
+        return false;
+    }
 
     /**
      * @return string

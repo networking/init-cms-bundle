@@ -11,8 +11,8 @@
 namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 
 /**
- * Class VersionableInterface
- * @package Networking\InitCmsBundle\Doctrine\Extensions\Versionable
+ * Class VersionableInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface VersionableInterface
@@ -61,5 +61,4 @@ interface VersionableInterface
      * @return array
      */
     public function hasListener();
-
 }

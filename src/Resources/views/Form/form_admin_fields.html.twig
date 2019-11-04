@@ -8,26 +8,26 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'MopaBootstrapBundle:Form:fields.html.twig' %}
+{% extends '@MopaBootstrap/Form/fields.html.twig' %}
 
 {# Custom Sonata Admin Extension, template override#}
 {% block sonata_admin_orm_one_to_one_widget %}
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_to_one.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_one.html.twig' %}
 {% endblock %}
 
 {% block sonata_admin_orm_many_to_many_widget %}
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_to_many.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_many_to_many.html.twig' %}
 {% endblock %}
 
 {% block sonata_admin_orm_many_to_one_widget %}
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_to_one.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_many_to_one.html.twig' %}
 {% endblock %}
 
 {% block sonata_admin_orm_one_to_many_widget %}
     {% if sonata_admin.field_description.name == 'layoutBlock' %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks.html.twig' %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
     {% else %}
-        {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_one_to_many.html.twig' %}
+        {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_many.html.twig' %}
     {% endif %}
 {% endblock %}
 
@@ -121,7 +121,7 @@ file that was distributed with this source code.
 
     </div>
 
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
 {% endblock %}
 
 {% block sonata_type_admin_widget %}
@@ -193,7 +193,7 @@ file that was distributed with this source code.
             {% if app.request.get('provider') and label == 'form.label_binary_content' %}
                 {% set provider = app.request.get('provider')|split('.')[3] %}
                 {% set mylabel = label~'_'~provider %}
-                {% set test = sonata_admin.admin.trans(mylabel, {}, sonata_admin.field_description.translationDomain) %}
+                {% set test = mylabel|trans({}, sonata_admin.field_description.translationDomain)%}
                 {% if test != mylabel %}
                     {% set label = mylabel %}
                 {% endif %}
@@ -244,7 +244,7 @@ file that was distributed with this source code.
             {% if app.request.get('provider') and label == 'form.label_binary_content' %}
                 {% set provider = app.request.get('provider')|split('.')[3] %}
                 {% set mylabel = label~'_'~provider %}
-                {% set test = sonata_admin.admin.trans(mylabel, {}, sonata_admin.field_description.translationDomain) %}
+                {% set test = mylabel|trans( {}, sonata_admin.field_description.translationDomain) %}
                 {% if test != mylabel %}
                     {% set label = mylabel %}
                 {% endif %}
@@ -381,9 +381,10 @@ file that was distributed with this source code.
     {% if taggable is defined and taggable or select2 is defined and select2 %}
     <script type="text/javascript">
         jQuery(document).ready(function () {
+            {% set allowClear = (multiple or not required?'true':'false') %}
             jQuery("#{{ id }}").select2({
-                placeholder: "{{ 'Select'|trans() }}",
-                allowClear: {{ multiple|default('false') }}
+                placeholder: "{{ 'Select'|trans({}) }}",
+                allowClear: {{ allowClear }}
             });
         });
     </script>
@@ -414,7 +415,6 @@ file that was distributed with this source code.
                 {% set label_render = true %}
             {% endif %}
 
-
             {% set widget_form_group_attr = widget_form_group_attr|merge({id: 'sonata-ba-field-container-'~id}) %}
 
             {{ block('widget_form_group_start') }}
@@ -430,10 +430,11 @@ file that was distributed with this source code.
             {% endif %}
             {% if sonata_admin.edit or sonata_admin.inline %}
             <div class="sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }}">
-        {% endif %}
+            {% endif %}
 
-
-            {{ widget_prefix|trans({}, translation_domain)|raw }}  {{ form_widget(form) }} {{ widget_suffix|trans({}, translation_domain)|raw }}
+                {% if widget_prefix %}{{ widget_prefix|trans({}, translation_domain)|raw }}{% endif %}
+                    {{ form_widget(form) }}
+                {% if widget_suffix %}{{ widget_suffix|trans({}, translation_domain)|raw }}{% endif %}
 
             {% set type = type|default('text') %}
             {% if type != 'hidden' %}
@@ -441,20 +442,16 @@ file that was distributed with this source code.
             {% endif %}
 
             {% if sonata_admin.edit or sonata_admin.inline %}
-            </div>
-        {% endif %}
+                </div>
+            {% endif %}
 
             {% if show_horizontal_wrapper %}
                 </div>
             {% endif %}
-
-
-
             {% if form.parent is not null and 'collection' in form.parent.vars.block_prefixes and widget_remove_btn|default(null) and form.parent.vars.allow_delete|default(false) %}
                 {{ block('form_widget_remove_btn') }}
             {% endif -%}
             {{ block('widget_form_group_end') }}
-
         {% endif %}
     {% endspaceless %}
 {% endblock form_row %}
@@ -566,7 +563,7 @@ file that was distributed with this source code.
             {% if datepicker is defined %}
                 {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'calendar' %}
                 <div data-provider="datepicker" class="{{ attr.widget_class|default('') ~ ' input-group date' }}"
-                     data-date="{{ value }}" data-link-field="{{ id }}" data-date-format="dd.mm.yyyy"
+                     data-date="{{ value }}" data-link-field="{{ id }}" data-link-format="dd.mm.yyyy"
                      data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
                     <input {% if widget_form_control_class is not same as(false) %}class="{{ widget_form_control_class }}"
                            {% endif %}type="text" {% if required %} required="required"{% endif %}
@@ -741,7 +738,7 @@ file that was distributed with this source code.
                         <label class="radio-inline">
                             {{ form_widget(child, {'horizontal_label_class': horizontal_label_class, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class, 'attr': {'class': attr.widget_class|default('') }}
                             ) }}
-                            {{ child.vars.label|trans({}, translation_domain) }}
+                            {{ child.vars.label|trans({}, choice_translation_domain) }}
                         </label>
 
                         <div class="clearfix"></div>
@@ -867,13 +864,12 @@ file that was distributed with this source code.
 
     </div>
 
-    {% include 'NetworkingInitCmsBundle:CRUD:edit_media_entity_script.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/edit_media_entity_script.html.twig' %}
 {% endblock %}
 
 {% block ckeditor_widget %}
     {% set attr = attr|merge({'class': attr.class|default('ckeditor')}) %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-
     {% if enable %}
         {% if autoload %}
             <script type="text/javascript">

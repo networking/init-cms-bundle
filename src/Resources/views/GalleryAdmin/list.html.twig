@@ -9,12 +9,120 @@ file that was distributed with this source code.
 
 #}
 
-{% extends 'NetworkingInitCmsBundle:CRUD:list.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
 {% set active_tab = app.request.get('context') %}
 
 {% block preview %}
 {% endblock %}
 {% block actions %}
+{% endblock %}
+
+{% block list_filters %}
+    {% if not app.request.isxmlhttprequest %}
+        {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
+        {% if datagrid.filters %}
+            <form action="{{ admin.generateUrl('list') }}" method="GET"
+                  class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
+
+                <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
+                {% if persistent_parameters.provider is defined %}
+                    <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
+                {% endif %}
+                <input type="hidden" name="active_tab" value="{{ name }}"/>
+
+                {% set filter_main = '' %}
+                {% set filter_hidden = '' %}
+                {% set showHiddenFilters = 0 %}
+                {% for filter in datagrid.filters  if (filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is same as(null)) %}
+                    {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
+                        {% set filter_main %}
+                            {{ filter_main }}
+                            <div class="form-group">
+
+                                {% if filter.label %}
+                                    <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
+                                {% endif %}
+                                <div class="form-inline col-md-9 {% if not filter.label %}col-md-offset-3{% endif %}">
+                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium  advanced-filter' }}
+                                    ) }}
+                                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
+                                    ) }}
+                                </div>
+                            </div>
+                        {% endset %}
+                    {% else %}
+                        {% if filter.isActive %}
+                            {% set showHiddenFilters = 1 %}
+                        {% endif %}
+                        {% set filter_hidden %}
+                            {{ filter_hidden }}
+                            <div class="form-group">
+                                {% if filter.label %}
+                                    <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
+                                {% endif %}
+                                <div class="form-inline col-md-9 {% if not filter.label %}col-md-offset-3{% endif %}">
+                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium  advanced-filter' }}
+                                    ) }}
+                                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
+                                    ) }}
+                                </div>
+                            </div>
+                        {% endset %}
+                    {% endif %}
+                {% endfor %}
+
+                {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
+                {% set label = admin.label|trans({}, admin.translationDomain) %}
+                <div>
+                    <div>
+                        <fieldset>
+                            <h4 class="filter_legend"><small data-toggle="advanced-filter">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</small></h4>
+
+                            <div class="filter_container row">
+                                <div class="col-md-12">
+                                    {{ filter_main }}
+                                    <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                                    {% set foo = form.children['_page'].setRendered() %}
+                                    <div id="hidden_filters" class="collapse">
+                                        {% for paramKey, paramValue in admin.persistentParameters %}
+                                            <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
+                                        {% endfor %}
+                                        {% if filter_hidden != '' %}
+                                            {# add div with hidden / show function #}
+                                            {{ filter_hidden }}
+                                        {% endif %}
+                                        {% set foo = form.children['_page'].setRendered() %}
+                                    </div>
+                                    <div>
+                                        <input type="submit" class="btn btn-default btn-sm"
+                                               value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                                           class="link-underlined">
+                                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                        {{ form_rest(form) }}
+                                        {% if filter_hidden %}
+                                            <a data-toggle="collapse" data-target="#hidden_filters" id="filter_toggle"
+                                               class="filter-close cursor-pointer">
+                                                {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="clearfix">&nbsp;</div>
+                </div>
+            </form>
+        {% endif %}
+        <ul class="nav menu-tabs nav-tabs">
+            {% for name, context in media_pool.contexts %}
+                <li {% if name == persistent_parameters.context %}class="active"{% endif %}>
+                    <a href="{{ admin.generateUrl('list', {'context' : name}) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}
 
 {% block list_table %}
@@ -63,7 +171,7 @@ file that was distributed with this source code.
                                                     <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
                                                         {% if sortable %}<a
                                                                 href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
-                                                            {{ admin.trans(field_description.label) }}
+                                                            {{ field_description.label|trans({}, admin.translationDomain) }}
                                                             {% if sortable %}</a>{% endif %}
                                                     </th>
                                                 {% endspaceless %}
@@ -148,7 +256,7 @@ file that was distributed with this source code.
                                             {% endif %}
 
                                             {# Set the number of pages to display in the pager #}
-                                            {% for page in datagrid.pager.getLinks() %}
+                                            {% for page in datagrid.pager.getLinks(admin_pool.getOption('pager_links')) %}
                                                 {% if page == datagrid.pager.page %}
                                                     <li class="active"><a
                                                                 href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>
@@ -208,117 +316,3 @@ file that was distributed with this source code.
         </div>
     {% endif %}
 {% endblock %}
-
-{% block list_filters %}
-    {% if not app.request.isxmlhttprequest %}
-        {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
-        {% if datagrid.filters %}
-            <form action="{{ admin.generateUrl('list') }}" method="GET"
-                  class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
-
-                <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
-                {% if persistent_parameters.provider is defined %}
-                    <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
-                {% endif %}
-                <input type="hidden" name="active_tab" value="{{ name }}"/>
-
-                {% set filter_main = '' %}
-                {% set filter_hidden = '' %}
-                {% for filter in datagrid.filters if (filter.options.field_type != 'hidden' ) %}
-                    {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
-                        {% set filter_main %}
-                        <div class="form-group">
-                            <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-
-                            <div class="form-inline col-md-9">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
-                                ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                                ) }}
-                            </div>
-                        </div>
-                        {% endset %}
-                    {% else %}
-                        {% set filter_hidden %}
-                        {{ filter_hidden }}
-                        <div class="form-group">
-                            <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ admin.trans(filter.label) }}</label>
-
-                            <div class="form-inline col-md-9">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
-                                ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                                ) }}
-                            </div>
-                        </div>
-                        {% endset %}
-                    {% endif %}
-                {% endfor %}
-
-                {#<strong>{{ 'label_filters'|trans({}, admin.translationDomain) }}</strong>#}
-                {% set label = admin.label|trans({}, admin.translationDomain) %}
-                <div>
-                    <div>
-                        <fieldset>
-                            <h4 class="filter_legend"><small>{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</small></h4>
-
-                            <div class="filter_container row">
-                                <div class="col-md-12">
-                                    {{ filter_main }}
-                                    <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
-                                    {% set foo = form.children['_page'].setRendered() %}
-                                    <div id="hidden_filters" class="collapse">
-                                        {% for paramKey, paramValue in admin.persistentParameters %}
-                                            <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
-                                        {% endfor %}
-                                        {% if filter_hidden != '' %}
-                                            {# add div with hidden / show function #}
-                                            {{ filter_hidden }}
-                                        {% endif %}
-                                        {% set foo = form.children['_page'].setRendered() %}
-                                    </div>
-                                    <div>
-                                        <input type="submit" class="btn btn-default btn-sm"
-                                               value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
-                                           class="link-underlined">
-                                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                                        {{ form_rest(form) }}
-                                        {% if filter_hidden %}
-                                            <a data-toggle="collapse" data-target="#hidden_filters" id="filter_toggle"
-                                               class="filter-close cursor-pointer">
-                                                {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="clearfix">&nbsp;</div>
-                </div>
-            </form>
-        {% endif %}
-        <ul class="nav menu-tabs nav-tabs">
-            {% for name, context in media_pool.contexts %}
-
-                {% if context.providers|length == 0 %}
-                    {% set urlParams = {'context' : name} %}
-                {% else %}
-                    {% set urlParams = {'context' : name, 'provider' : context.providers[0]} %}
-                {% endif %}
-
-                {% if name == persistent_parameters.context %}
-                    <li class="active"><a
-                                href="{{ admin.generateUrl('list', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
-                    </li>
-                {% else %}
-                    <li>
-                        <a href="{{ admin.generateUrl('list', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endblock %}
-

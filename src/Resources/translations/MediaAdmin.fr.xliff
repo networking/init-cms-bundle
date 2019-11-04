@@ -216,7 +216,7 @@
             </trans-unit>
             <trans-unit id="label.protected_download_url">
                 <source>label.protected_download_url</source>
-                <target>URL protégée</target>
+                <target>URL de téléchargement</target>
             </trans-unit>
             <trans-unit id="description.roles_download_strategy">
                 <source>description.roles_download_strategy</source>
@@ -416,6 +416,10 @@
                 <source>form.label_binary_content_youtube_new</source>
                 <target>Nouveau Lien Youtube</target>
             </trans-unit>
+            <trans-unit id="form.label_binary_content_vimeo_new">
+                <source>form.label_binary_content_vimeo_new</source>
+                <target>Neuer Lien Vimeo</target>
+            </trans-unit>
             <trans-unit id="form.label_current_video">
                 <source>form.label_current_video</source>
                 <target>Vidéo actuel</target>
@@ -427,6 +431,10 @@
             <trans-unit id="form.label_binary_content_youtube">
                 <source>form.label_binary_content_youtube</source>
                 <target>Lien Youtube</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_vimeo">
+                <source>form.label_binary_content_vimeo</source>
+                <target>Lien Vimeo</target>
             </trans-unit>
             <trans-unit id="button.create.media_item">
                 <source>button.create.media_item</source>
@@ -467,6 +475,10 @@
             <trans-unit id="sonata.media.provider.file.description">
                 <source>sonata.media.provider.file.description</source>
                 <target>Add any type of file</target>
+            </trans-unit>
+            <trans-unit id="copy_to_clipboard">
+                <source>copy_to_clipboard</source>
+                <target>Le URL %item% a été copié dans le presse-papier</target>
             </trans-unit>
         </body>
     </file>

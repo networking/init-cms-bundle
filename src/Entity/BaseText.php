@@ -13,28 +13,25 @@ namespace Networking\InitCmsBundle\Entity;
 use Networking\InitCmsBundle\Model\Text as ModelText;
 
 /**
- * Class BaseText
- * @package Networking\InitCmsBundle\Entity
+ * Class BaseText.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class BaseText extends ModelText
 {
-
     /**
-     * Hook on pre-persist operations
+     * Hook on pre-persist operations.
      */
     public function prePersist()
     {
-
         $this->createdAt = $this->updatedAt = new \DateTime();
     }
 
     /**
-     * Hook on pre-update operations
+     * Hook on pre-update operations.
      */
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime();
     }
-
 }

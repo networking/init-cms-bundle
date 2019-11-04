@@ -22,14 +22,16 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Doctrine\ORM\EntityRepository;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 
 /**
- * Class MenuItemAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class MenuItemAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class MenuItemAdmin extends BaseAdmin
@@ -40,16 +42,16 @@ abstract class MenuItemAdmin extends BaseAdmin
     protected $baseRoutePattern = 'cms/menu';
 
     /**
-     * The number of result to display in the list
+     * The number of result to display in the list.
      *
-     * @var integer
+     * @var int
      */
     protected $maxPerPage = 10000;
 
     /**
-     * The maximum number of page numbers to display in the list
+     * The maximum number of page numbers to display in the list.
      *
-     * @var integer
+     * @var int
      */
     protected $maxPageLinks = 10000;
 
@@ -59,7 +61,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     protected $isRoot = false;
 
     /**
-     * @var array $linkTargets
+     * @var array
      */
     protected $linkTargets = ['_blank' => '_blank', '_self' => '_self', '_parent' => '_parent', '_top' => '_top'];
 
@@ -75,7 +77,6 @@ abstract class MenuItemAdmin extends BaseAdmin
     {
         return 'glyphicon-align-left';
     }
-
 
     /**
      * {@inheritdoc}
@@ -108,7 +109,6 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-
         if (!$locale = $this->getRequest()->get('locale')) {
             $locale = $this->getRequest()->getLocale();
         }
@@ -144,12 +144,11 @@ abstract class MenuItemAdmin extends BaseAdmin
 
         $formMapper
             ->add('locale', HiddenType::class, ['data' => $locale])
-            ->add('name', null, ['horizontal' => true]);
-
+            ->add('name', null, ['layout' => 'horizontal']);
 
         if ($this->isRoot) {
             $formMapper
-                ->add('description', null, ['horizontal' => true])
+                ->add('description', null, ['layout' => 'horizontal'])
                 ->add('isRoot', HiddenType::class, ['data' => true])
                 ->end();
         } else {
@@ -160,7 +159,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                     'form.legend_page_or_url',
                     [
                         'collapsed' => false,
-                        'horizontal' => true
+                        'layout' => 'horizontal',
                     ]
                 );
             $pageAdmin = $this->configurationPool->getAdminByAdminCode('networking_init_cms.admin.page');
@@ -171,23 +170,23 @@ abstract class MenuItemAdmin extends BaseAdmin
                     'page',
                     AutocompleteType::class,
                     [
-                        'attr' => ['style' => "width:220px"],
+                        'attr' => ['style' => 'width:220px'],
                         'class' => $pageClass,
                         'required' => false,
-                        'horizontal' => true,
-                        'property' => 'AdminTitle',
+                        'layout' => 'horizontal',
+                        'choice_label' => 'AdminTitle',
                         'query_builder' => function (EntityRepository $er) use ($locale) {
-                                $qb = $er->createQueryBuilder('p');
-                                $qb->where('p.locale = :locale')
+                            $qb = $er->createQueryBuilder('p');
+                            $qb->where('p.locale = :locale')
                                     ->orderBy('p.path', 'asc')
                                     ->setParameter(':locale', $locale);
 
-                                return $qb;
-                            },
+                            return $qb;
+                        },
                     ]
                 );
-            $formMapper->add('redirect_url', UrlType::class, ['required' => false, 'help_block' => 'help.redirect_url', 'horizontal' => true]);
-            $formMapper->add('internal_url', TextType::class, ['required' => false, 'help_block' => 'help.internal_url', 'horizontal' => true]);
+            $formMapper->add('redirect_url', UrlType::class, ['required' => false, 'help_block' => 'help.redirect_url', 'layout' => 'horizontal']);
+            $formMapper->add('internal_url', TextType::class, ['required' => false, 'help_block' => 'help.internal_url', 'layout' => 'horizontal']);
             $formMapper->end();
 
             // start group optionals
@@ -196,33 +195,32 @@ abstract class MenuItemAdmin extends BaseAdmin
                     'form.legend_options',
                     [
                         'collapsed' => false,
-                        'horizontal' => true
+                        'layout' => 'horizontal',
                     ]
                 )
                 ->add(
                     'visibility',
                     ChoiceType::class,
                     [
-                        'horizontal' => true,
+                        'layout' => 'horizontal',
                         'help_block' => 'visibility.helper.text',
                         'choices' => MenuItem::getVisibilityList(),
-                        'translation_domain' => $this->translationDomain
+                        'translation_domain' => $this->translationDomain,
                     ]
                 )
                 ->add(
                     'link_target',
                     ChoiceType::class,
                     [
-                        'horizontal' => true,
+                        'layout' => 'horizontal',
                         'choices' => $this->getTranslatedLinkTargets(),
-                        'required' => false
+                        'required' => false,
                     ]
                 )
-                ->add('link_class', TextType::class, ['horizontal' => true,'required' => false])
-                ->add('link_rel', TextType::class, ['horizontal' => true, 'required' => false])
-                ->add('hidden', null, ['horizontal' => true, 'required' => false])
+                ->add('link_class', TextType::class, ['layout' => 'horizontal', 'required' => false])
+                ->add('link_rel', TextType::class, ['layout' => 'horizontal', 'required' => false])
+                ->add('hidden', null, ['layout' => 'horizontal', 'required' => false])
                 ->end();
-
 
             $transformer = new ModelToIdTransformer($this->getModelManager(), $this->getClass());
 
@@ -241,16 +239,18 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-
         $datagridMapper
             ->add(
                 'locale',
                 CallbackFilter::class,
                 ['callback' => [$this, 'getByLocale']],
-                ChoiceType::class,
-                [ 'placeholder' => false,
-                    'choices' => $this->getLocaleChoices(),
-                    'preferred_choices' => [$this->getDefaultLocale()]
+                LanguageType::class,
+                ['placeholder' => false,
+                    'choice_loader' => new CallbackChoiceLoader(function () {
+                        return $this->getLocaleChoices();
+                    }),
+                    'preferred_choices' => [$this->getDefaultLocale()],
+                    'translation_domain' => $this->translationDomain,
                 ]
             );
     }
@@ -266,7 +266,7 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->add(
                 'page',
                 'many_to_one',
-                ['template' => 'NetworkingInitCmsBundle:PageAdmin:page_list_field.html.twig']
+                ['template' => '@NetworkingInitCms/PageAdmin/page_list_field.html.twig']
             )
             ->add('redirect_url')
             ->add('link_target')
@@ -282,7 +282,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     public function configureDefaultFilterValues(array &$filterValues)
     {
         $filterValues['locale'] = [
-            'type'  => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
             'value' => $this->getDefaultLocale(),
         ];
     }
@@ -292,6 +292,7 @@ abstract class MenuItemAdmin extends BaseAdmin
      * @param $alias
      * @param $field
      * @param $value
+     *
      * @return bool
      */
     public function getByLocale(
@@ -300,7 +301,6 @@ abstract class MenuItemAdmin extends BaseAdmin
         $field,
         $value
     ) {
-
         if (!$locale = $value['value']) {
             $locale = $this->getDefaultLocale();
         }
@@ -322,18 +322,17 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->end();
 
         if (!$object->getIsRoot()) {
-            if (!$object->getRedirectUrl() AND !$object->getPage() AND !$object->getInternalUrl()) {
+            if (!$object->getRedirectUrl() and !$object->getPage() and !$object->getInternalUrl()) {
                 $errorElement
                     ->with('menu_page_or_url_required')
                     ->addViolation('menu.page_or_url.required')
                     ->end();
             }
-
         }
     }
 
     /**
-     * @param boolean $isRoot
+     * @param bool $isRoot
      */
     public function setIsRoot($isRoot)
     {
@@ -347,18 +346,19 @@ abstract class MenuItemAdmin extends BaseAdmin
     {
         switch ($name) {
             case 'list':
-                return 'NetworkingInitCmsBundle:MenuItemAdmin:menu_list.html.twig';
+                return '@NetworkingInitCms/MenuItemAdmin/menu_list.html.twig';
                 break;
             case 'placement':
-                return 'NetworkingInitCmsBundle:MenuItemAdmin:placement.html.twig';
+                return '@NetworkingInitCms/MenuItemAdmin/placement.html.twig';
                 break;
             default:
-                return parent::getTemplate($name);
+                return $this->getTemplateRegistry()->getTemplate($name);
         }
     }
 
     /**
-     * returns all translated link targets
+     * returns all translated link targets.
+     *
      * @return array
      */
     public function getTranslatedLinkTargets()

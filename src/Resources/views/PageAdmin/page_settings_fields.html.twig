@@ -11,6 +11,6 @@ file that was distributed with this source code.
 {% set form_group = admin.formgroups.page_settings %}
 {% for field_name in form_group.fields %}
     {% if admin.formfielddescriptions[field_name] is defined %}
-        {{ render_initcms_field_as_string('NetworkingInitCmsBundle:Form:page_edit_object_to_text.html.twig', form.vars.value, form[field_name], admin.translationDomain) }}
+        {{ render_initcms_field_as_string('@NetworkingInitCms/Form/page_edit_object_to_text.html.twig', form.vars.value, form[field_name], admin.translationDomain) }}
     {% endif %}
 {% endfor %}

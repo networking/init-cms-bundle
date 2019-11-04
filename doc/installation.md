@@ -27,45 +27,53 @@ vendor folder, and add the bundle to the list of requirements in your composer.j
 
 ### Add to AppKernel
 
-Add the following lines to your application kernel
+Add the following lines (plus your own bundles) to your application kernel
 
 ```
 	<?php
 	// app/AppKernel.php
 	public function registerbundles()
 	{
-	    return array(
-	        // ...
-            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new JMS\AopBundle\JMSAopBundle(),
-            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
-            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-            new JMS\SerializerBundle\JMSSerializerBundle($this),
-            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
-            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
-            new FOS\UserBundle\FOSUserBundle(),
-            new Sonata\AdminBundle\SonataAdminBundle(),
-            new Sonata\UserBundle\SonataUserBundle('FOSUserBundle'),
-            new Sonata\jQueryBundle\SonatajQueryBundle(),
-            new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
-            new Sonata\BlockBundle\SonataBlockBundle(),
-            new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
-            new Sonata\MediaBundle\SonataMediaBundle(),
-            new Sonata\MarkItUpBundle\SonataMarkItUpBundle(),
-            new Sonata\CoreBundle\SonataCoreBundle(),
-            new Sonata\FormatterBundle\SonataFormatterBundle(),
-            new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
-            new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
-            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
-            new Ibrows\Bundle\SonataAdminAnnotationBundle\IbrowsSonataAdminAnnotationBundle(),
-            new Lexik\Bundle\TranslationBundle\LexikTranslationBundle(),
-            new Ibrows\SonataTranslationBundle\IbrowsSonataTranslationBundle(),
-            new Networking\InitCmsBundle\NetworkingInitCmsBundle(),
-            new Application\Networking\InitCmsBundle\ApplicationNetworkingInitCmsBundle(),
-	        // ...
-	    );
+	    $bundles = array(
+                    new Symfony\Bundle\AclBundle\AclBundle(),
+                    new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+                    new Symfony\Bundle\SecurityBundle\SecurityBundle(),
+                    new Symfony\Bundle\TwigBundle\TwigBundle(),
+                    new Symfony\Bundle\MonologBundle\MonologBundle(),
+                    new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
+                    new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+                    new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+                    new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+                    // these are the bundles for the CMS
+        
+                    new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+                    new JMS\SerializerBundle\JMSSerializerBundle(),
+                    new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+                    new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+                    new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+                    new FOS\UserBundle\FOSUserBundle(),
+                    new Sonata\AdminBundle\SonataAdminBundle(),
+                    new JMS\AopBundle\JMSAopBundle(),
+                    new Sonata\UserBundle\SonataUserBundle(),
+                    new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
+                    new Sonata\BlockBundle\SonataBlockBundle(),
+                    new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
+                    new Sonata\MediaBundle\SonataMediaBundle(),
+                    new Sonata\CoreBundle\SonataCoreBundle(),
+                    new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
+                    new FOS\CKEditorBundle\FOSCKEditorBundle(),
+                    new Sonata\FormatterBundle\SonataFormatterBundle(),
+                    new \Sonata\IntlBundle\SonataIntlBundle(),
+                    new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+                    new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
+                    new Ibrows\Bundle\SonataAdminAnnotationBundle\IbrowsSonataAdminAnnotationBundle(),
+                    new Lexik\Bundle\TranslationBundle\LexikTranslationBundle(),
+                    new Ibrows\SonataTranslationBundle\IbrowsSonataTranslationBundle(),
+                    new Oneup\UploaderBundle\OneupUploaderBundle(),
+                    new Networking\InitCmsBundle\NetworkingInitCmsBundle(),
+                    new FOS\RestBundle\FOSRestBundle(),
+                    new Application\Networking\InitCmsBundle\ApplicationNetworkingInitCmsBundle(),
+                );
 	}
 ```
 
@@ -214,7 +222,7 @@ yui compressor jar: https://github.com/yui/yuicompressor/releases
 If you encounter the following Error:
 
 ```
-An exception has been thrown during the compilation of a template ("You must add MopaBootstrapBundle to the assetic.bundle config to use the {% stylesheets %} tag in MopaBootstrapBundle::base.html.twig.") in "/YourProject/vendor/mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/views/base.html.twig".
+An exception has been thrown during the compilation of a template ("You must add MopaBootstrapBundle to the assetic.bundle config to use the {% stylesheets %} tag in @MopaBootstrap/base.html.twig.") in "/YourProject/vendor/mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/views/base.html.twig".
 ```
 
 It's because the Bundle is not added to the bundles: [ ] config option in the assetic config.
@@ -263,7 +271,7 @@ If they are not already created, you need to add specific folder to allow upload
 3) Install assets
 -----------------
 ```bash
-   php app/console mopa:bootstrap:symlink:less
+   php bin/console mopa:bootstrap:symlink:less
 ```
 
 4) Create DB schema, insert admin user and insert fixtures
@@ -282,7 +290,7 @@ There is an install wizard which will get this done for you, just go to the foll
 Alternatively you can run the install process on the command line,
 you will be prompted to enter a username, email address and password, these will get you into the backend.
 
-	php app/console networking:initcms:install
+	php bin/console networking:initcms:install
 
 Now you should be up and running.
 
@@ -306,7 +314,7 @@ So add this to your existing scripts section in your composer json:
 There is also a console command to check and / or install this symlink:
 
    ```bash
-   php app/console mopa:bootstrap:symlink:less
+   php bin/console mopa:bootstrap:symlink:less
    ```
 
 With these steps taken, bootstrap should be install into vendor/twitter/bootstrap/ and a symlink

@@ -16,7 +16,7 @@ Translate "{{ object.getTitle() }}"
 
 
 {% block form %}
-{% form_theme form 'SonataAdminBundle:Form:form_admin_fields.html.twig' %}
+{% form_theme form '@SonataAdmin/Form/form_admin_fields.html.twig' %}
 {% if form.vars.errors|length > 0 %}
                 <div class="sonata-ba-form-error">
                     {{ form_errors(form) }}

@@ -16,11 +16,10 @@ use Sonata\AdminBundle\Admin\AdminInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Admin\Pool;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class AdminMenuBuilder
- * @package Networking\InitCmsBundle\Component\Menu
+ * Class AdminMenuBuilder.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class AdminMenuBuilder extends MenuBuilder
@@ -34,7 +33,6 @@ class AdminMenuBuilder extends MenuBuilder
      * @var array
      */
     protected $menuGroups;
-
 
     /**
      * @param $adminPool
@@ -82,14 +80,12 @@ class AdminMenuBuilder extends MenuBuilder
         }
 
         if ($this->isLoggedIn) {
-
             $editPath = false;
-            $menu->setChildrenAttribute('class', $class . ' pull-right');
+            $menu->setChildrenAttribute('class', $class.' pull-right');
 
             $dashboardUrl = $this->router->generate('sonata_admin_dashboard');
 
             if ($sonataAdminParam = $this->request->get('_sonata_admin')) {
-
                 $possibleAdmins = explode('|', $sonataAdminParam);
 
                 foreach ($possibleAdmins as $adminCode) {
@@ -99,7 +95,6 @@ class AdminMenuBuilder extends MenuBuilder
                         $entity = $sonataAdmin->getObject($id);
                     }
                 }
-
             } else {
                 // we are in the frontend
                 $entity = $this->request->get('_content');
@@ -129,14 +124,12 @@ class AdminMenuBuilder extends MenuBuilder
                 $language = $this->request->getLocale();
             }
 
-
             if ($draftRoute) {
                 $draftPath = $this->router->generate(
                     'networking_init_view_draft',
                     ['locale' => $language, 'path' => base64_encode($draftRoute)]
                 );
             } else {
-
                 $draftPath = $this->router->generate(
                     'networking_init_view_draft',
                     ['locale' => $language, 'path' => base64_encode($this->request->getBaseUrl())]
@@ -152,14 +145,11 @@ class AdminMenuBuilder extends MenuBuilder
                     'networking_init_view_live',
                     ['locale' => $language, 'path' => base64_encode($this->request->getBaseUrl())]
                 );
-
             }
-
 
             $session = $this->request->getSession();
             $lastActionUrl = $dashboardUrl;
             $lastActions = $session->get('_networking_initcms_admin_tracker');
-
 
             if ($lastActions) {
                 $lastActionArray = json_decode($lastActions);
@@ -176,7 +166,6 @@ class AdminMenuBuilder extends MenuBuilder
             }
 
             if ($editPath && !$sonataAdmin) {
-
                 $menu->addChild(
                     'Edit',
                     [
@@ -186,33 +175,20 @@ class AdminMenuBuilder extends MenuBuilder
                             'SonataAdminBundle',
                             $adminLocale
                         ),
-                        'uri' => $editPath
+                        'uri' => $editPath,
                     ]
                 );
-                $this->addIcon($menu['Edit'], ['icon' => 'pencil', 'append' => false]);
+                $this->addIcon($menu['Edit'], ['icon' => 'edit', 'append' => false]);
             }
             if (!$sonataAdmin && $this->request->get('_route') != 'sonata_admin_dashboard') {
                 $menu->addChild('Admin', ['uri' => $lastActionUrl]);
             }
 
-
             $viewStatus = $this->request->getSession()->get('_viewStatus');
-            $translator = $this->translator;
-            $webLink = $translator->trans(
-                'link.website_' . $viewStatus,
-                [],
-                'NetworkingInitCmsBundle',
-                $adminLocale
-            );
+            $webLink = 'link.website_'.$viewStatus;
 
             if ($editPath && !$sonataAdmin) {
-                $webLink = $translator->trans(
-                    'link.website_' . $viewStatus,
-                    [],
-                    'NetworkingInitCmsBundle',
-                    $adminLocale
-                );
-
+                $webLink = 'link.website_'.$viewStatus;
             }
 
             $dropdown = $menu->addChild(
@@ -220,52 +196,43 @@ class AdminMenuBuilder extends MenuBuilder
                 [
                     'dropdown' => true,
                     'caret' => true,
+                    'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                 ]
             );
 
             if ($draftPath) {
                 $dropdown->addChild(
-                    $translator->trans('view_website.status_draft', [], 'NetworkingInitCmsBundle', $adminLocale),
-                    ['uri' => $draftPath, 'linkAttributes' => ['class' => 'color-draft']]
+                    'view_website.status_draft',
+                    ['uri' => $draftPath, 'linkAttributes' => ['class' => 'color-draft'], 'extras' => ['translation_domain' => 'NetworkingInitCmsBundle']]
                 );
             }
             if ($livePath) {
                 $dropdown->addChild(
-                    $translator->trans(
-                        'view_website.status_published',
-                        [],
-                        'NetworkingInitCmsBundle',
-                        $adminLocale
-                    ),
-                    ['uri' => $livePath, 'linkAttributes' => ['class' => 'color-published']]
+                    'view_website.status_published',
+                    ['uri' => $livePath, 'linkAttributes' => ['class' => 'color-published'], 'extras' => ['translation_domain' => 'NetworkingInitCmsBundle']]
                 );
             }
 
             if (!$draftPath && !$livePath) {
                 $dropdown->addChild(
-                    $translator->trans('view_website.status_draft', [], 'NetworkingInitCmsBundle', $adminLocale),
-                    ['uri' => $defaultHome, 'linkAttributes' => ['class' => 'color-draft']]
+                    'view_website.status_draft',
+                    ['uri' => $defaultHome, 'linkAttributes' => ['class' => 'color-draft'], 'extras' => ['translation_domain' => 'NetworkingInitCmsBundle']]
                 );
                 $dropdown->addChild(
-                    $translator->trans(
-                        'view_website.status_published',
-                        [],
-                        'NetworkingInitCmsBundle',
-                        $adminLocale
-                    ),
-                    ['uri' => $defaultHome]
+                    'view_website.status_published',
+                    ['uri' => $defaultHome, 'extras' => ['translation_domain' => 'NetworkingInitCmsBundle']]
                 );
             }
-
         }
 
         return $menu;
     }
 
     /**
-     * Use service to create main admin navigation
+     * Use service to create main admin navigation.
      *
      * @param array $menuGroups
+     *
      * @return \Knp\Menu\ItemInterface
      */
     public function createAdminSideMenu()
@@ -283,12 +250,12 @@ class AdminMenuBuilder extends MenuBuilder
         $largeMenu = $adminMenu->addChild(
             'large',
             [
-                'attributes' => ['class' => 'nav-custom']]
+                'attributes' => ['class' => 'nav-custom'], ]
         );
         $smallMenu = $adminMenu->addChild(
             'small',
             [
-                'attributes' => ['class' => 'nav-custom nav-custom-small', 'style' => 'margin-top: 50px;']]
+                'attributes' => ['class' => 'nav-custom nav-custom-small', 'style' => 'margin-top: 50px;'], ]
         );
 
         $largeMenu->addChild(
@@ -297,7 +264,7 @@ class AdminMenuBuilder extends MenuBuilder
                 'uri' => $this->router->generate('sonata_admin_dashboard'),
                 'current' => $this->request->get('_sonata_admin') ? false : true,
                 'attributes' => ['class' => $firstLevelClass, 'icon' => 'glyphicon glyphicon-dashboard', 'icon_size' => 'glyphicon-'.$iconSize],
-                'linkAttributes' => ['class' => 'pull-left first-level-text']
+                'linkAttributes' => ['class' => 'pull-left first-level-text'],
             ]
         );
 
@@ -309,7 +276,6 @@ class AdminMenuBuilder extends MenuBuilder
                     if (count($group['items']) > 0) {
                         $first = reset($group['items']);
                         if ($first instanceof AdminInterface && $first->hasRoute('list')) {
-
                             $current = false;
                             $icon = 'glyphicon-unchecked';
                             $iconType = 'glyphicon';
@@ -322,20 +288,18 @@ class AdminMenuBuilder extends MenuBuilder
                                 $icon = $first->getIcon();
                             }
 
-                            if($first->getExtensions()){
-                                 foreach ($first->getExtensions() as $extension){
-                                     if (method_exists($extension, 'getIcon')) {
-                                         $icon = $extension->getIcon();
-                                         break;
-                                     }
-                                 }
+                            if ($first->getExtensions()) {
+                                foreach ($first->getExtensions() as $extension) {
+                                    if (method_exists($extension, 'getIcon')) {
+                                        $icon = $extension->getIcon();
+                                        break;
+                                    }
+                                }
                             }
 
-
-                            if(substr($icon, 0, '2') == 'fa'){
+                            if (substr($icon, 0, '2') == 'fa') {
                                 $iconType = 'fa';
                             }
-
 
                             $mainItem = $menu->addChild(
                                 $this->translator->trans($group['label'], [], $group['label_catalogue'] != 'SonataAdminBundle' ? $group['label_catalogue'] : $first->getTranslationDomain()),
@@ -343,7 +307,7 @@ class AdminMenuBuilder extends MenuBuilder
                                     'uri' => $first->generateUrl('list'),
                                     'current' => $current,
                                     'attributes' => ['class' => $firstLevelClass, 'icon' => sprintf('%s %s', $iconType, $icon), 'icon_size' => sprintf('%s-%s', $iconType, $iconSize)],
-                                    'linkAttributes' => ['class' => 'pull-left first-level-text']
+                                    'linkAttributes' => ['class' => 'pull-left first-level-text'],
                                 ]
                             );
 
@@ -359,7 +323,7 @@ class AdminMenuBuilder extends MenuBuilder
                                             [
                                                 'uri' => $subItem->generateUrl('list'),
                                                 'current' => $current,
-                                                'attributes' => ['class' => 'second-level', 'icon' => $icon, 'icon_size' => $iconSize]
+                                                'attributes' => ['class' => 'second-level', 'icon' => $icon, 'icon_size' => $iconSize],
                                             ]
                                         );
                                     }
@@ -370,13 +334,11 @@ class AdminMenuBuilder extends MenuBuilder
                 }
             }
 
-            //
             $iconSize = 'small';
             $firstLevelClass = 'first-level-small';
             $this->showOnlyCurrentChildren($menu);
             $menu = $smallMenu;
         }
-
 
         return $adminMenu;
     }
@@ -384,36 +346,36 @@ class AdminMenuBuilder extends MenuBuilder
     /**
      * @param $item
      * @param $icon
+     *
      * @return mixed
      */
     protected function addIcon($item, $icon)
     {
-
         $icon = array_merge(['tag' => (isset($icon['glyphicon'])) ? 'span' : 'i'], $icon);
-        $addclass = "";
+        $addclass = '';
         if (isset($icon['inverted']) && $icon['inverted'] === true) {
-            $addclass = " icon-white";
+            $addclass = ' icon-white';
         }
-        $classicon = (isset($icon['glyphicon'])) ? ' class="' . $icon['glyphicon'] : ' class="fa fa-' . $icon['icon'];
-        $myicon = ' <' . $icon['tag'] . $classicon . $addclass . '"></' . $icon['tag'] . '>';
+        $classicon = (isset($icon['glyphicon'])) ? ' class="'.$icon['glyphicon'] : ' class="far fa-'.$icon['icon'];
+        $myicon = ' <'.$icon['tag'].$classicon.$addclass.'"></'.$icon['tag'].'>';
         if (!isset($icon['append']) || $icon['append'] === true) {
-            $label = $item->getLabel() . " " . $myicon;
+            $label = $item->getLabel().' '.$myicon;
         } else {
-            $label = $myicon . " " . $item->getLabel();
+            $label = $myicon.' '.$item->getLabel();
         }
         $item->setLabel($label)
             ->setExtra('safe_label', true);
+
         return $item;
     }
 
     /**
      * @param ContentRoute $contentRoute
+     *
      * @return \Networking\InitCmsBundle\Component\Routing\Route
      */
     protected function getRoute(ContentRoute $contentRoute)
     {
         return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
     }
-
-
 }

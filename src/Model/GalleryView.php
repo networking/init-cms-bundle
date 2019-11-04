@@ -7,7 +7,7 @@ use Networking\InitCmsBundle\Entity\Gallery as MediaGallery;
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 
 /**
- * Networking\InitCmsBundle\Model\GalleryView
+ * Networking\InitCmsBundle\Model\GalleryView.
  *
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="gallery_view")
@@ -16,7 +16,7 @@ use Ibrows\Bundle\SonataAdminAnnotationBundle\Annotation as Sonata;
 class GalleryView implements GalleryViewInterface
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -25,7 +25,7 @@ class GalleryView implements GalleryViewInterface
     protected $id;
 
     /**
-     * @var MediaGallery $mediaGallery
+     * @var MediaGallery
      *
      * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Gallery", cascade={"merge"})
      * @ORM\JoinColumn( name="media_gallery_id", onDelete="CASCADE" )
@@ -44,7 +44,7 @@ class GalleryView implements GalleryViewInterface
     protected $mediaGallery;
 
     /**
-     * @var string $galleryType
+     * @var string
      *
      * @ORM\Column(name="gallery_type", type="string", length=50)
      * @Sonata\FormMapper(
@@ -60,37 +60,31 @@ class GalleryView implements GalleryViewInterface
     protected $galleryType = 'lightbox';
 
     /**
-     * @var \DateTime $createdAt
+     * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
      */
     protected $createdAt;
 
     /**
-     * @var \DateTime $updatedAt
+     * @var \DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime")
      */
     protected $updatedAt;
 
-    /**
-     *
-     */
     public function __clone()
     {
         $this->id = null;
     }
 
-    /**
-     */
     public function prePersist()
     {
-
-        $this->createdAt = $this->updatedAt = new \DateTime("now");
+        $this->createdAt = $this->updatedAt = new \DateTime('now');
     }
 
     /**
-     * Hook on pre-update operations
+     * Hook on pre-update operations.
      */
     public function preUpdate()
     {
@@ -98,9 +92,9 @@ class GalleryView implements GalleryViewInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -108,7 +102,8 @@ class GalleryView implements GalleryViewInterface
     }
 
     /**
-     * @param  \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
+     * @param \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
+     *
      * @return $this
      */
     public function setMediaGallery($mediaGallery)
@@ -127,7 +122,7 @@ class GalleryView implements GalleryViewInterface
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @return $this
      */
@@ -139,7 +134,7 @@ class GalleryView implements GalleryViewInterface
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -149,9 +144,10 @@ class GalleryView implements GalleryViewInterface
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
-     * @param  \DateTime $updatedAt
+     * @param \DateTime $updatedAt
+     *
      * @return $this
      */
     public function setUpdatedAt($updatedAt)
@@ -162,7 +158,7 @@ class GalleryView implements GalleryViewInterface
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -173,7 +169,9 @@ class GalleryView implements GalleryViewInterface
 
     /**
      * @param $galleryType
+     *
      * @return $this
+     *
      * @throws \InvalidArgumentException
      */
     public function setGalleryType($galleryType)
@@ -194,9 +192,9 @@ class GalleryView implements GalleryViewInterface
         return $this->galleryType;
     }
 
-
     /**
      * @param array $params
+     *
      * @return array
      */
     public function getTemplateOptions($params = [])
@@ -204,7 +202,7 @@ class GalleryView implements GalleryViewInterface
         return [
             'mediaItems' => $this->getMediaGallery()->getGalleryHasMedias(),
             'gallery' => $this->getMediaGallery(),
-            'galleryView' => $this
+            'galleryView' => $this,
         ];
     }
 
@@ -215,7 +213,7 @@ class GalleryView implements GalleryViewInterface
     {
         return [
             'content' => ['galleryView' => $this],
-            'template' => 'NetworkingInitCmsBundle:GalleryAdmin:gallery_view_block.html.twig'
+            'template' => '@NetworkingInitCms/GalleryAdmin/gallery_view_block.html.twig',
         ];
     }
 

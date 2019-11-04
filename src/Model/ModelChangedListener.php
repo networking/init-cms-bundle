@@ -15,13 +15,12 @@ use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
- * Class ModelChangedListener
- * @package Networking\InitCmsBundle\Model
+ * Class ModelChangedListener.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class ModelChangedListener implements ModelChangedListenerInterface
 {
-
     /**
      * @var TokenStorage
      */
@@ -76,6 +75,4 @@ abstract class ModelChangedListener implements ModelChangedListenerInterface
     {
         $this->getLoggingInfo($args, 'removed');
     }
-
 }
- 

@@ -17,23 +17,24 @@ use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Exception\NoValueException;
 
 /**
- * Overrides the SonataAdminHelper to be used in networking_init_cms admin controllers
+ * Overrides the SonataAdminHelper to be used in networking_init_cms admin controllers.
  *
  * Class PageAdminHelper
- * @package Networking\InitCmsBundle\Admin
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageAdminHelper extends SonataAdminHelper
 {
     /**
-     * @var array $newLayoutBlockParameters
+     * @var array
      */
     protected $newLayoutBlockParameters;
 
     /**
      * @param AdminInterface $admin
-     * @param object $subject
-     * @param string $elementId
+     * @param object         $subject
+     * @param string         $elementId
+     *
      * @return array
      */
     public function appendFormFieldElement(AdminInterface $admin, $subject, $elementId)
@@ -79,7 +80,7 @@ class PageAdminHelper extends SonataAdminHelper
         while ($objectCount <= $postCount) {
             // append a new instance into the object
             $this->addNewInstance($form->getData(), $fieldDescription);
-            $objectCount++;
+            ++$objectCount;
         }
 
         $subject->orderLayoutBlocks();
@@ -98,7 +99,6 @@ class PageAdminHelper extends SonataAdminHelper
      */
     public function addNewInstance($object, FieldDescriptionInterface $fieldDescription)
     {
-
         $instance = $fieldDescription->getAssociationAdmin()->getNewInstance();
 
         foreach ($this->newLayoutBlockParameters as $attr => $value) {

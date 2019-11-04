@@ -16,8 +16,8 @@ use Networking\InitCmsBundle\Model\UserInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Class UserActivityListener
- * @package Networking\InitCmsBundle\EventListener
+ * Class UserActivityListener.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UserActivityListener
@@ -43,33 +43,36 @@ class UserActivityListener
     public function setTokenStorage(TokenStorage $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
-
     }
 
     /**
-     * On each request we want to update the user's last activity datetime
+     * On each request we want to update the user's last activity datetime.
      *
      * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
-     * @return void
      */
     public function onCoreController(FilterControllerEvent $event)
     {
+        // do not capture admin cms urls
+        if (!preg_match('/.*\/admin\/.*/', $event->getRequest()->getRequestUri())) {
+            return;
+        }
+
         if (!$this->tokenStorage->getToken()) {
             return;
         }
+
         $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof UserInterface) {
 
             //here we can update the user as necessary
             if (method_exists($user, 'setLastActivity')) {
-                try{
+                try {
                     $user->setLastActivity(new \DateTime('now'));
                     $this->em->persist($user);
                     $this->em->flush($user);
-                }catch(\Doctrine\ORM\ORMException $e){
+                } catch (\Doctrine\ORM\ORMException $e) {
                     //do nothing, entity manager is closed
                 }
-
             }
         }
     }

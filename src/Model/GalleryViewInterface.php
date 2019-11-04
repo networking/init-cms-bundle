@@ -2,15 +2,14 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-
 /**
- * Networking\InitCmsBundle\Model\GalleryViewInterface
- *
+ * Networking\InitCmsBundle\Model\GalleryViewInterface.
  */
 interface GalleryViewInterface extends ContentInterface
 {
     /**
-     * @param  \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
+     * @param \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
+     *
      * @return $this
      */
     public function setMediaGallery($mediaGallery);
@@ -21,29 +20,30 @@ interface GalleryViewInterface extends ContentInterface
     public function getMediaGallery();
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @return $this
      */
     public function setCreatedAt();
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
     public function getCreatedAt();
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
-     * @param  \DateTime $updatedAt
+     * @param \DateTime $updatedAt
+     *
      * @return $this
      */
     public function setUpdatedAt($updatedAt);
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -51,7 +51,9 @@ interface GalleryViewInterface extends ContentInterface
 
     /**
      * @param $galleryType
+     *
      * @return $this
+     *
      * @throws \InvalidArgumentException
      */
     public function setGalleryType($galleryType);

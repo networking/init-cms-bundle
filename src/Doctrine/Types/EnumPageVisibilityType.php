@@ -8,21 +8,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Doctrine\Types;
 
 /**
- * Class EnumPageVisibilityType
- * @package Networking\InitCmsBundle\Doctrine\Types
+ * Class EnumPageVisibilityType.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class EnumPageVisibilityType extends EnumType
 {
     /**
-     * @var string $name
+     * @var string
      */
     protected $name = 'enumpagevisibility';
     /**
-     * @var array $values
+     * @var array
      */
     protected $values = ['public', 'protected'];
 }

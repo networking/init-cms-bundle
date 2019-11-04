@@ -15,7 +15,7 @@
 {% block actions %}
     <div class="sonata-actions">
 
-        {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
+        {% include '@SonataAdmin/Core/create_button.html.twig' %}
         {% if admin.hasroute('list') and admin.isGranted('LIST') %}
             <a class="btn sonata-action-element"
                href="{{ admin.generateUrl('list') }}">{{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
@@ -25,7 +25,7 @@
 {% endblock %}
 
 
-{% use 'NetworkingInitCmsBundle:PageAdmin:page_create_form.html.twig' with form as parentForm %}
+{% use '@NetworkingInitCms/PageAdmin/page_create_form.html.twig' with form as parentForm %}
 
 {% block form %}
     {{ block('parentForm') }}

@@ -3,6 +3,7 @@
 {% set random = date().timestamp %}
 
 {% for object in datagrid.results %}
+    {% set previewLink = false %}
     {% if object.width is defined and object.width %}
         {% if object.providerName == 'sonata.media.provider.youtube' %}
             {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
@@ -19,14 +20,16 @@
             {% set previewType = 'image' %}
         {% endif %}
     {% else %}
-        {% set media_link %}{% path object, 'reference' %}{% endset %}
-        {% set previewLink %}//docs.google.com/gview?url={% if 'http://' not in media_link.__toString and 'https://' not in media_link.__toString %}{{ app.request.getSchemeAndHttpHost() }}{% endif %}{{ media_link }}&embedded=true{% endset %}
+        {% if object.contentType == 'application/pdf' %}
+            {% set previewLink %}{{ admin.generateUrl('pdf_preview', {'id': object.id}) }}{% endset %}
+        {% endif %}
         {% set previewType = 'iframe' %}
-        {% set iframeWidth = '400px' %}
-        {% set iframeHeight = '560px' %}
+        {% set iframeWidth = '700px' %}
+        {% set iframeHeight = '989px' %}
     {% endif %}
-    <div class="media-box {% for tag in object.tags %}tag_{{ tag.id }} {% endfor %}" draggable="true" ondragstart="event.dataTransfer.setData('Text', '{{ object.id }}')">
+    <div class="media-box" draggable="true" ondragstart="event.dataTransfer.setData('Text', '{{ object.id }}')">
         <div class="zero-clipboard">
+                {% if previewLink %}
             <div class="btn-clipboard btn-clipboard-left">
                 <a href="{{ previewLink }}"
                         {% if previewType == 'iframe' %}
@@ -39,6 +42,7 @@
                     <i class="fa fa-search-plus"></i>
                 </a>
             </div>
+                {% endif %}
             {% if not galleryListMode %}
                 <div class="btn-clipboard btn-clipboard-right">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -102,3 +106,108 @@
     </div>
 {% endfor %}
 <div class="clearfix">&nbsp;</div>
+{% if datagrid.pager.haveToPaginate() %}
+    <div class="col-md-3 col-xs-12 text-right pull-right">
+        <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
+                    list_results_count{% endtranschoice %}</strong></label>
+        {% block max_per_page %}
+            <br>
+            <label class="control-label"
+                   for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
+                    label_per_page{% endtrans %}</label>
+            <select class="per-page small" id="{{ admin.uniqid }}_per_page"
+                    style="width: auto; height: auto">
+                {% for per_page in admin.getperpageoptions %}
+                    <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                            value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
+                        {{ per_page }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endblock %}
+    </div>
+    <div class="pagination col-md-3 hidden-sm hidden-xs text-left">
+        <p>{{ datagrid.pager.page }} / {{ datagrid.pager.lastpage }}</p>
+    </div>
+    <div class="col-md-6 col-xs-12 text-center">
+        <ul class="pagination pagination-xs">
+
+            {% if datagrid.pager.page != 1 %}
+                <li>
+                    <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, 1)) }}"
+                       data-page="1" class="media-pager"
+                       data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                       data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                       data-sort-order="{{ datagrid.values._sort_order }}"
+                       data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+                       title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
+                </li>
+            {% endif %}
+
+            {% if datagrid.pager.page != datagrid.pager.previouspage %}
+                <li>
+                    <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.previouspage)) }}"
+                       data-page="{{ datagrid.pager.previouspage }}" class="media-pager"
+                       data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                       data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                       data-sort-order="{{ datagrid.values._sort_order }}"
+                       data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+                       title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
+                </li>
+            {% endif %}
+
+            {# Set the number of pages to display in the pager #}
+            {% for page in datagrid.pager.getLinks(admin_pool.getOption('pager_links')) %}
+                {% if page == datagrid.pager.page %}
+                    <li class="active"><a
+                                href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}"
+                                data-page="{{ page }}" class="media-pager"
+                                data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                                data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                                data-sort-order="{{ datagrid.values._sort_order }}"
+                                data-sort-by="{{ datagrid.values._sort_by.fieldName}}">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}"
+                           data-page="{{ page }}" class="media-pager"
+                           data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                           data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                           data-sort-order="{{ datagrid.values._sort_order }}"
+                           data-sort-by="{{ datagrid.values._sort_by.fieldName}}">{{ page }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if datagrid.pager.page != datagrid.pager.nextpage %}
+                <li>
+                    <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.nextpage)) }}"
+                       data-page="{{ datagrid.pager.nextpage }}" class="media-pager"
+                       data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                       data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                       data-sort-order="{{ datagrid.values._sort_order }}"
+                       data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+                       title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
+                </li>
+            {% endif %}
+
+            {% if datagrid.pager.page != datagrid.pager.lastpage %}
+                <li>
+                    <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, datagrid.pager.lastpage)) }}"
+                       data-page="{{ datagrid.pager.lastpage }}" class="media-pager"
+                       data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                       data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                       data-sort-order="{{ datagrid.values._sort_order }}"
+                       data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+                       title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+
+    </div>
+{% endif %}
+{% if datagrid.results|length < 1 %}
+    <p class="notice">
+        {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+    </p>
+{% endif %}

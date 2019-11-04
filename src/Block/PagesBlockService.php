@@ -18,22 +18,20 @@ use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class PagesBlockService
- * @package Networking\InitCmsBundle\Block
+ * Class PagesBlockService.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PagesBlockService extends AbstractAdminBlockService
 {
     /**
-     * @var PageManagerInterface $em
+     * @var PageManagerInterface
      */
     protected $em;
-
 
     public function setPageManager(PageManagerInterface $em)
     {
@@ -53,22 +51,22 @@ class PagesBlockService extends AbstractAdminBlockService
         $reviewPages = [];
         $draftPages = [];
 
-
         foreach ($pages as $page) {
             if (array_key_exists('snapshots', $page) && count($page['snapshots']) > 0) {
-                $publishedPageCount++;
+                ++$publishedPageCount;
             }
             if ($page['status'] == PageInterface::STATUS_REVIEW) {
-                $reviewPageCount++;
-                $draftPageCount++;
+                ++$reviewPageCount;
+                ++$draftPageCount;
                 $reviewPages[\Locale::getDisplayLanguage($page['locale'])][] = $page;
             }
 
             if ($page['status'] == PageInterface::STATUS_DRAFT) {
-                $draftPageCount++;
+                ++$draftPageCount;
                 $draftPages[\Locale::getDisplayLanguage($page['locale'])][] = $page;
             }
         }
+
         return $this->renderResponse(
             $blockContext->getTemplate(),
             [
@@ -78,7 +76,7 @@ class PagesBlockService extends AbstractAdminBlockService
                 'published_pages' => $publishedPageCount,
                 'pages' => $pages,
                 'reviewPages' => $reviewPages,
-                'draftPages' => $draftPages
+                'draftPages' => $draftPages,
             ],
             $response
         );
@@ -97,7 +95,6 @@ class PagesBlockService extends AbstractAdminBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-
     }
 
     /**
@@ -111,8 +108,8 @@ class PagesBlockService extends AbstractAdminBlockService
     /**
      * {@inheritdoc}
      */
-    public function configureSettings(OptionsResolver$resolver)
+    public function configureSettings(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['template' => 'NetworkingInitCmsBundle:Block:block_page_status.html.twig']);
+        $resolver->setDefaults(['template' => '@NetworkingInitCms/Block/block_page_status.html.twig']);
     }
 }

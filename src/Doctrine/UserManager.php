@@ -14,12 +14,10 @@ use FOS\UserBundle\Doctrine\UserManager as FOSDoctrineUserManager;
 use Networking\InitCmsBundle\Model\UserManagerInterface;
 
 /**
- * Class UserManager
- * @package Networking\InitCmsBundle\Doctrine
+ * Class UserManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class UserManager extends FOSDoctrineUserManager implements UserManagerInterface
 {
-
-
 }

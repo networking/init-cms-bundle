@@ -11,8 +11,8 @@
 namespace Networking\InitCmsBundle\Model;
 
 /**
- * Class UserManagerInterface
- * @package Networking\InitCmsBundle\Model
+ * Class UserManagerInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface UserManagerInterface

@@ -10,70 +10,89 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class LocaleListener
- * @package Networking\InitCmsBundle\EventListener
+ * Class LocaleListener.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LocaleListener implements EventSubscriberInterface
+class LocaleListener
 {
     /**
-     * @var string $router
+     * @var string
      */
     protected $router;
 
     /**
-     * @var string $defaultLocale
+     * @var string
      */
     protected $defaultLocale;
 
     /**
-     * @var \Symfony\Component\Security\Http\AccessMapInterface $accessMap
+     * @var \Symfony\Component\Security\Http\AccessMapInterface
      */
     protected $accessMap;
 
     /**
-     * @var array $availableLanguages;
+     * @var array;
      */
     protected $availableLanguages;
 
+    /**
+     * @var bool
+     */
+    protected $allowLocaleCookie;
 
     /**
-     * @param \Symfony\Component\Security\Http\AccessMapInterface $accessMap
-     * @param array $availableLanguages
-     * @param string $defaultLocale
-     * @param \Symfony\Component\Routing\RouterInterface $router
+     * @var bool
+     */
+    protected $singleLanguage;
+
+    /**
+     * LocaleListener constructor.
+     *
+     * @param AccessMapInterface   $accessMap
+     * @param array                $availableLanguages
+     * @param string               $defaultLocale
+     * @param RouterInterface|null $router
+     * @param bool                 $allowLocaleCookie
+     * @param bool                 $singleLanguage
      */
     public function __construct(
         AccessMapInterface $accessMap,
         array $availableLanguages,
+        $allowLocaleCookie,
+        $singleLanguage,
         $defaultLocale = 'en',
         RouterInterface $router = null
-    ){
+
+    ) {
         $this->accessMap = $accessMap;
         $this->availableLanguages = $availableLanguages;
         $this->defaultLocale = $defaultLocale;
         $this->router = $router;
-    }
+        $this->allowLocaleCookie = $allowLocaleCookie;
+        $this->singleLanguage = $singleLanguage;
 
-    /**
-     * @static
-     * @return array
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            // must be registered after the Router to have access to the _locale
-            KernelEvents::REQUEST => [['onKernelRequest', 16]],
-        ];
+        $env = [];
+
+        if(false === getenv('ALLOW_LOCALE_COOKIE')){
+	        $env['ALLOW_LOCALE_COOKIE'] = $this->allowLocaleCookie;
+        }
+
+	    if(false === getenv('SINGLE_LANGUAGE')){
+		    $env['SINGLE_LANGUAGE'] = $this->singleLanguage;
+	    }
+	    if(count($env)){
+		    (new Dotenv())->populate($env);
+	    }
     }
 
     /**
@@ -83,18 +102,31 @@ class LocaleListener implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
+        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+            return;
+        }
+
         if (!$request) {
             return;
         }
 
-
         $patterns = $this->accessMap->getPatterns($request);
         //@todo find a better solution to know if we are in the admin area or not
         $localeType = (in_array('ROLE_ADMIN', $patterns[0])) ? 'admin/_locale' : '_locale';
-        if($localeType == 'admin/_locale'){
+        if ($localeType == 'admin/_locale') {
             $locale = $request->getSession()->get($localeType);
-        }else{
-            $locale = $request->cookies->get($localeType);;
+        } else {
+            if ($this->singleLanguage) {
+                $locale = $this->defaultLocale;
+            } elseif ($this->allowLocaleCookie) {
+                $locale = $request->cookies->get($localeType);
+            } else {
+                $locale = $this->getLocaleFromUrl($request->getPathInfo());
+            }
+        }
+
+        if (!$locale && $request->query->get('_locale')) {
+            $locale = $request->query->get('_locale');
         }
 
         /*
@@ -102,7 +134,7 @@ class LocaleListener implements EventSubscriberInterface
          * 1. priority: defined in cookie: set request attribute as symfony will set request->setLocale
          * 2. priority: defined in browser or default: set request attribute as symfony will set request->setLocale
          */
-        if($locale) {
+        if ($locale) {
             // there is a session -> use that
             $request->setLocale($locale);
         } else {
@@ -112,11 +144,28 @@ class LocaleListener implements EventSubscriberInterface
         }
 
         if (null !== $this->router) {
-
             $this->router->getContext()->setParameter($localeType, $request->getLocale());
         }
     }
 
+    /**
+     * @param $url
+     *
+     * @return bool|mixed
+     */
+    protected function getLocaleFromUrl($url)
+    {
+        $parts = explode('/', $url);
+        $locale = $parts[1];
+
+        foreach ($this->availableLanguages as $language) {
+            if ($locale === substr($language['locale'], 0, 2)) {
+                return $language['locale'];
+            }
+        }
+
+        return false;
+    }
 
     /**
      * @param \Symfony\Component\Security\Http\Event\InteractiveLoginEvent $event
@@ -136,17 +185,18 @@ class LocaleListener implements EventSubscriberInterface
         // If user language does not exist in frontend website, get next best
         $frontendLocale = $this->guessFrontendLocale($locale);
 
-        if(in_array('ROLE_ADMIN', $patterns[0])){
+        if (in_array('ROLE_ADMIN', $patterns[0])) {
             $request->setLocale($locale);
-        }else {
+        } else {
             $request->setLocale($frontendLocale);
         }
-
     }
 
     /**
-     * guess frontend locale
+     * guess frontend locale.
+     *
      * @param mixed $locales
+     *
      * @return string
      */
     protected function guessFrontendLocale($locales)
@@ -171,8 +221,10 @@ class LocaleListener implements EventSubscriberInterface
     }
 
     /**
-     * try to match browser language with available languages
+     * try to match browser language with available languages.
+     *
      * @param $locale
+     *
      * @return string
      */
     protected function matchLocaleInAvailableLanguages($locale)
@@ -191,10 +243,11 @@ class LocaleListener implements EventSubscriberInterface
         return false;
     }
 
-
     /**
-     * get preferred locale
+     * get preferred locale.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return string
      */
     public function getPreferredLocale(Request $request)
@@ -208,8 +261,10 @@ class LocaleListener implements EventSubscriberInterface
     }
 
     /**
-     * get browser accept languages
+     * get browser accept languages.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return array
      */
     public function getBrowserAcceptLanguages(Request $request)
@@ -234,11 +289,11 @@ class LocaleListener implements EventSubscriberInterface
                         $lang = $codes[1];
                     }
                 } else {
-                    for ($i = 0, $max = count($codes); $i < $max; $i++) {
+                    for ($i = 0, $max = count($codes); $i < $max; ++$i) {
                         if ($i == 0) {
                             $lang = strtolower($codes[0]);
                         } else {
-                            $lang .= '_' . strtoupper($codes[$i]);
+                            $lang .= '_'.strtoupper($codes[$i]);
                         }
                     }
                 }
@@ -251,8 +306,10 @@ class LocaleListener implements EventSubscriberInterface
     }
 
     /**
-     * split http accept header
+     * split http accept header.
+     *
      * @param string $header
+     *
      * @return array
      */
     public function splitHttpAcceptHeader($header)
@@ -261,7 +318,7 @@ class LocaleListener implements EventSubscriberInterface
         foreach (array_filter(explode(',', $header)) as $value) {
             // Cut off any q-value that might come after a semi-colon
             if ($pos = strpos($value, ';')) {
-                $q = (float)trim(substr($value, strpos($value, '=') + 1));
+                $q = (float) trim(substr($value, strpos($value, '=') + 1));
                 $value = substr($value, 0, $pos);
             } else {
                 $q = 1;

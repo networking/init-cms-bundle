@@ -19,21 +19,24 @@ use Networking\InitCmsBundle\Model\Page;
 use Doctrine\ORM\Query\Expr;
 
 /**
- * Class MenuItemManager
- * @package Networking\InitCmsBundle\Entity
+ * Class MenuItemManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInterface
 {
-
-
     /**
      * @var PageHelper
      */
     protected $pageHelper;
 
     /**
-     * @param EntityManager $em
+     * @var bool
+     */
+    protected $latestSnapshotIds = false;
+
+    /**
+     * @param EntityManager                       $em
      * @param \Doctrine\ORM\Mapping\ClassMetadata $class
      */
     public function __construct(EntityManager $em, $class)
@@ -50,8 +53,9 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
 
     /**
      * @param $locale
-     * @param  null $sortByField
-     * @param  string $direction
+     * @param null   $sortByField
+     * @param string $direction
+     *
      * @return array
      */
     public function getRootNodesByLocale($locale, $sortByField = null, $direction = 'asc')
@@ -65,12 +69,13 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
     }
 
     /**
-     * @param null $node
-     * @param bool $direct
-     * @param null $sortByField
+     * @param null   $node
+     * @param bool   $direct
+     * @param null   $sortByField
      * @param string $direction
-     * @param bool $includeNode
+     * @param bool   $includeNode
      * @param string $viewStatus
+     *
      * @return array
      */
     public function getChildrenByStatus(
@@ -81,23 +86,26 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $includeNode = false,
         $viewStatus = Page::STATUS_PUBLISHED
     ) {
-
         $qb = $this->childrenQueryBuilder($node, $direct, $sortByField, $direction, $includeNode);
         $aliases = $qb->getRootAliases();
         if ($viewStatus == Page::STATUS_PUBLISHED) {
-            $qb->addSelect('ps.id AS ps_id');
-            $qb->addSelect('ps.versionedData AS ps_versionedData');
-            $qb->leftJoin(
-                '\Networking\InitCmsBundle\Entity\PageSnapshot',
-                'ps',
-                Expr\Join::WITH,
-                sprintf('%s.page = ps.page ', $aliases[0])
-            );
-            $qb->leftJoin('ps.contentRoute', 'cr');
-
+            $orx = $qb->expr()->orX();
+            $conditionA = $qb->expr()->in('ps.id', $this->getLatestSnapshotIds());
+            $conditionB = $qb->expr()->isNull('ps.id');
+            $orx->addMultiple([$conditionA, $conditionB]);
+            $qb->addSelect('ps.id AS ps_id')
+                ->addSelect('ps.versionedData AS ps_versionedData')
+                ->leftJoin(PageSnapshot::class,
+                    'ps',
+                    Expr\Join::WITH,
+                    sprintf('%s.page = ps.page ', $aliases[0])
+                )
+                ->andWhere($orx)
+                ->leftJoin('ps.contentRoute', 'cr');
         } else {
-            $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p');
-            $qb->leftJoin('p.contentRoute', 'cr');
+            $qb->leftJoin(sprintf('%s.page', $aliases[0]), 'p')
+                ->leftJoin('p.contentRoute', 'cr')
+                ->addSelect('p');
         }
         $qb->addSelect('cr.path AS path');
         $results = $qb->getQuery()->getResult();
@@ -115,7 +123,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
                         }
                         $menuItem->setPath($item['path']);
                     }
-                }else{
+                } else {
                     if (!$item['path']) {
                         continue;
                     } else {
@@ -129,20 +137,35 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         return $menuItems;
     }
 
-
     /**
-     * Get all menu items and their pages if available
+     * Get all menu items and their pages if available.
      *
      * @return mixed
      */
     public function findAllJoinPage()
     {
-        $qb =$this->createQueryBuilder('m');
+        $qb = $this->createQueryBuilder('m');
         $qb->select('m,p');
         $qb->leftJoin('m.page', 'p');
 
         return $qb->getQuery()->execute();
     }
 
+    /**
+     * @return array
+     */
+    protected function getLatestSnapshotIds()
+    {
+        if (!$this->latestSnapshotIds) {
+            $em = $this->getEntityManager();
+            $metadata = $em->getClassMetadata(PageSnapshot::class);
+            $rsm = new Query\ResultSetMapping();
+            $rsm->addScalarResult('ps_id', 'ps_id');
+            $qb = $em->createNativeQuery(sprintf('SELECT MAX(id) AS ps_id FROM %s GROUP BY page_id', $metadata->getTableName()), $rsm);
+            $result = $qb->getScalarResult();
+            $this->latestSnapshotIds = array_map('current', $result);
+        }
 
-} 
+        return $this->latestSnapshotIds;
+    }
+}

@@ -3,11 +3,12 @@
  * Created by PhpStorm.
  * User: yorkie
  * Date: 20.12.17
- * Time: 16:38
+ * Time: 16:38.
  */
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\UserBundle\Admin\Entity\GroupAdmin as SonataGroupAdmin;
@@ -15,16 +16,14 @@ use Sonata\UserBundle\Form\Type\SecurityRolesType;
 
 abstract class GroupAdmin extends SonataGroupAdmin
 {
-
-
     /**
      * @var array
      */
     protected $trackedActions = ['list'];
 
-
     /**
      * @param $trackedActions
+     *
      * @return $this
      */
     public function setTrackedActions($trackedActions)
@@ -45,6 +44,16 @@ abstract class GroupAdmin extends SonataGroupAdmin
     /**
      * {@inheritdoc}
      */
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    {
+        $datagridMapper
+            ->add('name', null, ['field_options' => ['translation_domain' => $this->translationDomain]])
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
@@ -57,8 +66,8 @@ abstract class GroupAdmin extends SonataGroupAdmin
                 'label' => ' ',
                 'actions' => [
                     'edit' => [],
-                    'delete' => []
-                ]
+                    'delete' => [],
+                ],
             ]
         );
     }
@@ -77,14 +86,15 @@ abstract class GroupAdmin extends SonataGroupAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
-            ->add('name')
+            ->add('name', null, [ 'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline'])
             ->add(
                 'roles',
                 SecurityRolesType::class,
                 [
                     'expanded' => true,
                     'multiple' => true,
-                    'required' => false
+                    'required' => false,
+                    'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline'
                 ]
             );
     }

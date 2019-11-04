@@ -1,4 +1,5 @@
 <?php
+
 namespace Networking\InitCmsBundle\Form\ChoiceList;
 
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
@@ -6,6 +7,7 @@ use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\Common\Persistence\ObjectManager;
+
 /**
  * This file is part of the schuler-shop  package.
  *
@@ -16,7 +18,6 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class ORMQueryBuilderLoader implements EntityLoaderInterface
 {
-
     /**
      * Contains the query builder that builds the query for fetching the
      * entities.
@@ -40,9 +41,9 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
      *                                            Passing a closure is
      *                                            deprecated and will not be
      *                                            supported anymore as of
-     *                                            Symfony 3.0.
-     * @param ObjectManager         $manager      Deprecated.
-     * @param string                $class        Deprecated.
+     *                                            Symfony 3.0
+     * @param ObjectManager         $manager      Deprecated
+     * @param string                $class        Deprecated
      *
      * @throws UnexpectedTypeException
      */
@@ -79,11 +80,9 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
      */
     public function getEntities()
     {
-
         $query = $this->queryBuilder->getQuery();
 
-        foreach ($this->hints as $name => $value)
-        {
+        foreach ($this->hints as $name => $value) {
             $query->setHint($name, $value);
         }
 

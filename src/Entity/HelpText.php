@@ -13,7 +13,7 @@ namespace Networking\InitCmsBundle\Entity;
 use Networking\InitCmsBundle\Model\HelpText as ModelHelpText;
 
 /**
- * HelpText
+ * HelpText.
  */
 class HelpText extends ModelHelpText
 {

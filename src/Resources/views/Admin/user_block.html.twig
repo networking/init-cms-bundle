@@ -3,7 +3,7 @@
         {% set locale = app.request.session.get('admin/_locale') %}
         <ul class="{% if app.request.isXmlHttpRequest %}init{% endif %}nav navbar-nav pull-right">
             <li class="dropdown">
-                <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ app.user }} <b class="caret"></b></a>
+                <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ app.user }} </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                     <li><a tabindex="-1"
                            href="{{ url('admin_networking_initcms_user_edit', {id: app.user.id}) }}">{{ 'label.account_settings'|trans({}, 'PageAdmin', locale) }}</a>

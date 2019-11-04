@@ -1,11 +1,12 @@
-jms_security_extra:
-    secure_all_services: false
-    expressions: true
+services:
+    security.acl.permission.map:
+        class: Networking\InitCmsBundle\Security\Acl\Permission\AdminPermissionMap
 
 parameters:
-    # ... other parameters
-    security.acl.permission.map.class: Networking\InitCmsBundle\Security\Acl\Permission\AdminPermissionMap
     sonata.admin.security.mask.builder.class: Networking\InitCmsBundle\Security\Acl\Permission\MaskBuilder
+
+acl:
+    connection: default
 
 security:
     access_decision_manager:
@@ -23,8 +24,6 @@ security:
 
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
-    acl:
-        connection: default
 
     firewalls:
         # -> custom firewall for the admin area of the URL
@@ -44,8 +43,8 @@ security:
                 default_target_path: /admin/dashboard
             logout:
                 path:           /admin/logout
-                target:         /admin/login
-
+                target:         /
+                invalidate_session: true
             anonymous:    true
             remember_me:
                 secret:      "%secret%"

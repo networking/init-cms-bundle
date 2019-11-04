@@ -101,8 +101,7 @@
             $('#filter_toggle').toggleClass('filter-open');
         });
         $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
-        $('body').on('click', '.dialog-link', createAjaxDialog);
-        $('body').on('click', '.batch-dialog-link', createBatchDialog);
+        $('body').on('click', '.dialog-link', createAjaxDialog).on('click', '.batch-dialog-link', createBatchDialog).on('click', '.modal-close', function(){listDialog.modal('hide')});
         initializeDialog();
 
 

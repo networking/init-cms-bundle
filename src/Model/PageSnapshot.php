@@ -13,24 +13,24 @@ namespace Networking\InitCmsBundle\Model;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 
 /**
- * Class PageSnapshot
- * @package Networking\InitCmsBundle\Model
+ * Class PageSnapshot.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class PageSnapshot implements PageSnapshotInterface{
+abstract class PageSnapshot implements PageSnapshotInterface
+{
     /**
-     * @var integer $id
-     *
+     * @var int
      */
     protected $id;
 
     /**
-     * @var Page $page
+     * @var Page
      */
     protected $page;
 
     /**
-     * @var ContentRoute $contentRoute
+     * @var ContentRoute
      */
     protected $contentRoute;
 
@@ -72,7 +72,7 @@ abstract class PageSnapshot implements PageSnapshotInterface{
         $this->resourceName = get_class($resource);
         $this->resourceId = $resource->getResourceId();
         $this->version = $resource->getCurrentVersion();
-        $this->snapshotDate = new \DateTime("now");
+        $this->snapshotDate = new \DateTime('now');
     }
 
     /**
@@ -195,11 +195,10 @@ abstract class PageSnapshot implements PageSnapshotInterface{
         return $this->id;
     }
 
-
     /**
-     * Set page
+     * Set page.
      *
-     * @param  PageInterface $page
+     * @param PageInterface $page
      *
      * @return PageSnapshot
      */
@@ -211,7 +210,7 @@ abstract class PageSnapshot implements PageSnapshotInterface{
     }
 
     /**
-     * Get conversation
+     * Get conversation.
      *
      * @return Page
      */
@@ -221,7 +220,8 @@ abstract class PageSnapshot implements PageSnapshotInterface{
     }
 
     /**
-     * @param  ContentRouteInterface $contentRoute
+     * @param ContentRouteInterface $contentRoute
+     *
      * @return PageSnapshot
      */
     public function setContentRoute(ContentRouteInterface $contentRoute)
@@ -252,7 +252,7 @@ abstract class PageSnapshot implements PageSnapshotInterface{
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoute()
     {
@@ -260,7 +260,7 @@ abstract class PageSnapshot implements PageSnapshotInterface{
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoutes()
     {
@@ -282,5 +282,4 @@ abstract class PageSnapshot implements PageSnapshotInterface{
     {
         return $this->path;
     }
-
 }

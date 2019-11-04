@@ -28,7 +28,7 @@ file that was distributed with this source code.
 
 {% block form %}
     <div class="sonata-preview-form-container">
-        {% use 'SonataAdminBundle:CRUD:base_edit_form.html.twig' with form as parentForm %}
+        {% use '@SonataAdmin/CRUD/base_edit_form.html.twig' with form as parentForm %}
         {{ block('parentForm') }}
     </div>
 {% endblock %}

@@ -57,7 +57,7 @@ file that was distributed with this source code.
             <div class="clearfix"></div>
 
             <h1>
-                <span class="info-soft">{{ menu.rootNode.name }}</span>{% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' with {'root_id': menu.rootNode.id} %}
+                <span class="info-soft">{{ menu.rootNode.name }}</span>{% include '@NetworkingInitCms/MenuItemAdmin/menu_create_button.html.twig' with {'root_id': menu.rootNode.id} %}
             </h1>
 
             {% if  menu.navigation %}
@@ -74,7 +74,7 @@ file that was distributed with this source code.
                 {{ menu.navigation|raw }}
 
                 <p>&nbsp;</p>
-                {#{% include 'NetworkingInitCmsBundle:MenuItemAdmin:menu_create_button.html.twig' with {'root_id': menu.rootNode.id} %}#}
+                {#{% include '@NetworkingInitCms/MenuItemAdmin/menu_create_button.html.twig' with {'root_id': menu.rootNode.id} %}#}
             {% endif %}
 
         </div>

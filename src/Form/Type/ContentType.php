@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface;
@@ -17,13 +16,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class ContentType extends AbstractType
 {
-
     /**
      * @var \Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReaderInterface
      */
@@ -35,26 +32,21 @@ class ContentType extends AbstractType
     public function __construct(
         SonataAdminAnnotationReaderInterface $annotationReader
     ) {
-
         $this->annotationReader = $annotationReader;
-
     }
 
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $annotations = $this->annotationReader->getFormMapperAnnotations($options['class']);
-
 
         $defaultValue = null;
 
         foreach ($annotations as $propertyName => $annotation) {
-
-            $fieldName = $annotation->getName() ? : $propertyName;
+            $fieldName = $annotation->getName() ?: $propertyName;
             $builder->add(
                 $fieldName,
                 $annotation->getType(),
@@ -64,7 +56,6 @@ class ContentType extends AbstractType
         $this->invokeCallbacks($options['class'], $this->annotationReader->getFormMapperCallbacks($options['class']), [$builder]);
         $options['data_class'] = $options['class'];
     }
-
 
     /**
      * @param array $options
@@ -89,7 +80,7 @@ class ContentType extends AbstractType
     {
         parent::configureOptions($resolver);
 
-        $dataClass = function (Options $options)  {
+        $dataClass = function (Options $options) {
             return $options['class'];
         };
 
@@ -103,19 +94,18 @@ class ContentType extends AbstractType
                 'horizontal_label_offset_class' => '',
             ]
         );
-
     }
 
     /**
      * @param string $entity
-     * @param array $callbacks
-     * @param array $args
+     * @param array  $callbacks
+     * @param array  $args
      */
     protected function invokeCallbacks($entity, array $callbacks, array $args)
     {
-        if(count($callbacks) > 0){
+        if (count($callbacks) > 0) {
             $classReflection = new \ReflectionClass($entity);
-            foreach($callbacks as $methodName => $annotation){
+            foreach ($callbacks as $methodName => $annotation) {
                 $method = $classReflection->getMethod($methodName);
                 $method->invokeArgs(null, $args);
             }
@@ -129,6 +119,4 @@ class ContentType extends AbstractType
     {
         return 'networking_type_content_block';
     }
-
 }
- 

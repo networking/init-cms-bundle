@@ -12,7 +12,6 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager as BaseContentRouteManager;
@@ -20,8 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class ContentRouteManager
- * @package Networking\InitCmsBundle\Entity
+ * Class ContentRouteManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class ContentRouteManager extends BaseContentRouteManager
@@ -41,6 +40,7 @@ class ContentRouteManager extends BaseContentRouteManager
 
     /**
      * ContentRouteManager constructor.
+     *
      * @param ObjectManager $om
      * @param $class
      */
@@ -51,9 +51,9 @@ class ContentRouteManager extends BaseContentRouteManager
         $this->setClassName($class);
     }
 
-
     /**
      * @param $criteria
+     *
      * @return mixed
      */
     public function findContentRouteBy(array $criteria)
@@ -63,6 +63,7 @@ class ContentRouteManager extends BaseContentRouteManager
 
     /**
      * @param ContentRouteInterface $contentRoute
+     *
      * @return object
      */
     public function findContentByContentRoute(ContentRouteInterface $contentRoute)
@@ -73,7 +74,7 @@ class ContentRouteManager extends BaseContentRouteManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRouteCollectionForRequest(Request $request)
     {
@@ -94,26 +95,23 @@ class ContentRouteManager extends BaseContentRouteManager
             return $collection;
         }
 
-        $searchUrl = (substr($url, -1) != '/') ? $url . '/' : $url;
+        $searchUrl = (substr($url, -1) != '/') ? $url.'/' : $url;
 
+        $searchUrl = self::stripLocale($searchUrl, $request->getLocale());
 
         $params = ['path' => $searchUrl];
 
-
         try {
             $contentRoutes = $this->repository->findBy($params);
-        } catch (\Doctrine\DBAL\DBALException $e) {
-
+        } catch (\UnexpectedValueException $e) {
             return $collection;
         }
-
 
         if (empty($contentRoutes)) {
             return $collection;
         }
 
-        $filterByLocale = function (ContentRouteInterface $var) use ($request)
-        {
+        $filterByLocale = function (ContentRouteInterface $var) use ($request) {
             if ($request) {
                 return $var->getLocale() == $request->getLocale();
             } else {
@@ -123,16 +121,18 @@ class ContentRouteManager extends BaseContentRouteManager
 
         $tempContentRoutes = array_filter($contentRoutes, $filterByLocale);
 
-
         if (empty($tempContentRoutes)) {
             $tempContentRoutes = $contentRoutes;
         }
 
         foreach ($tempContentRoutes as $key => $contentRoute) {
+            $viewStatus = ($request && $request->hasSession()) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
 
-            $viewStatus = ($request) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
-
-            $test = new \ReflectionClass($contentRoute->getClassType());
+                try {
+                $test = new \ReflectionClass($contentRoute->getClassType());
+            } catch (\ReflectionException $e) {
+                continue;
+            }
 
             if ($viewStatus == VersionableInterface::STATUS_DRAFT
                 && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface'))
@@ -147,9 +147,15 @@ class ContentRouteManager extends BaseContentRouteManager
             /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $contentRoute */
             $content = $this->getRouteContent($contentRoute);
 
-            $collection->add(
-                sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
-                static::generateRoute($contentRoute, $url, $content));
+            if ($searchUrl === '/') {
+                $collection->add(
+                    sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
+                    static::generateRoute($contentRoute, $url, $content, false));
+            } else {
+                $collection->add(
+                    sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
+                    static::generateRoute($contentRoute, $url, $content));
+            }
         }
 
         return $collection;

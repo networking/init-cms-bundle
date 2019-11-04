@@ -13,8 +13,8 @@ namespace Networking\InitCmsBundle\Security\Acl\Permission;
 use Sonata\AdminBundle\Security\Acl\Permission\MaskBuilder as SonataBaseMaskBuilder;
 
 /**
- * {@inheritDoc}
- * - LIST: the SID is allowed to view a list of the domain objects / fields
+ * {@inheritdoc}
+ * - LIST: the SID is allowed to view a list of the domain objects / fields.
  *
  * @author net working AG <info@networking.ch>
  */
@@ -23,10 +23,10 @@ class MaskBuilder extends SonataBaseMaskBuilder
     /**
      * @const string
      */
-    const MASK_PUBLISH       = 16384;       // 1 << 14
+    const MASK_PUBLISH = 16384;       // 1 << 14
 
     /**
      * @const string
      */
-    const CODE_PUBLISH      = 'P';
+    const CODE_PUBLISH = 'P';
 }

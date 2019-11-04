@@ -208,7 +208,7 @@
             </trans-unit>
             <trans-unit id="label.protected_download_url">
                 <source>label.protected_download_url</source>
-                <target>Protected URL</target>
+                <target>Download URL</target>
             </trans-unit>
             <trans-unit id="description.roles_download_strategy">
                 <source>description.roles_download_strategy</source>
@@ -405,6 +405,10 @@
                 <source>form.label_binary_content_youtube_new</source>
                 <target>Replace Youtube Link</target>
             </trans-unit>
+            <trans-unit id="form.label_binary_content_vimeo_new">
+                <source>form.label_binary_content_vimeo_new</source>
+                <target>Replace Vimeo Link</target>
+            </trans-unit>
             <trans-unit id="form.label_current_video">
                 <source>form.label_current_video</source>
                 <target>Current Video</target>
@@ -416,6 +420,10 @@
             <trans-unit id="form.label_binary_content_youtube">
                 <source>form.label_binary_content_youtube</source>
                 <target>Youtube Link</target>
+            </trans-unit>
+            <trans-unit id="form.label_binary_content_vimeo">
+                <source>form.label_binary_content_vimeo</source>
+                <target>Vimeo Link</target>
             </trans-unit>
             <trans-unit id="button.create.media_item">
                 <source>button.create.media_item</source>
@@ -504,6 +512,10 @@
             <trans-unit id="tag_not_selected">
                 <source>tag_not_selected</source>
                 <target>Please select a tag to assign to your media</target>
+            </trans-unit>
+            <trans-unit id="copy_to_clipboard">
+                <source>copy_to_clipboard</source>
+                <target>The URL %item% was copied to your clipboard</target>
             </trans-unit>
         </body>
     </file>

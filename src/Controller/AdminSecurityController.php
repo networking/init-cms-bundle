@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: yorkie
  * Date: 21.12.17
- * Time: 16:41
+ * Time: 16:41.
  */
 
 namespace Networking\InitCmsBundle\Controller;
-
 
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

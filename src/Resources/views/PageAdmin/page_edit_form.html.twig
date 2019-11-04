@@ -16,13 +16,9 @@ file that was distributed with this source code.
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% elseif app.request.isxmlhttprequest %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:ajax_page_settings.html.twig' %}
+        {% include '@NetworkingInitCms/PageAdmin/ajax_page_settings.html.twig' %}
     {% else %}
-        <form class="form-vertical page-form"
-              action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
-                {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
-              method="POST"
-              id="networking_init_cms.page">
+
         {% if form.vars.errors|length > 0 %}
             <div class="sonata-ba-form-error">
                 {{ form_errors(form) }}
@@ -83,7 +79,7 @@ file that was distributed with this source code.
         <div class="col-md-4 right-bar">
             {# page status panel #}
             <div id="pageStatusSettings">
-                {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_settings.html.twig' %}
+                {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
             </div>
 
             <div id="accordion">
@@ -100,7 +96,7 @@ file that was distributed with this source code.
                             <div id="collapseOne" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <div id="translationSettings">
-                                        <p class="info-soft">{% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig' %}</p>
+                                        <p class="info-soft">{% include '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig' %}</p>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +114,7 @@ file that was distributed with this source code.
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse">
                             <div class="panel-body">
-                                {% include 'NetworkingInitCmsBundle:PageAdmin:page_menu_settings.html.twig' %}
+                                {% include '@NetworkingInitCms/PageAdmin/page_menu_settings.html.twig' %}
                             </div>
                         </div>
                     </div>
@@ -134,11 +130,12 @@ file that was distributed with this source code.
                         </div>
                         <div id="collapseThree" class="panel-collapse collapse in">
                             <div class="panel-body" style="min-height:70px;">
-                                <i data-target="#pageSettingFields" data-toggle="modal"
+                                <i id="editPageSettings"
+                                   data-url="{{ admin.generateUrl('editPageSettings', {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
                                    class="pull-right btn btn-default btn-sm glyphicon glyphicon-pencil"></i>
 
                                 <div id="pageSettings">
-                                    {% include 'NetworkingInitCmsBundle:PageAdmin:page_settings_fields.html.twig' %}
+                                    {% include '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig' %}
                                 </div>
                             </div>
                         </div>
@@ -150,97 +147,16 @@ file that was distributed with this source code.
         {% block sonata_post_fieldsets %}{% endblock %}
 
         <!-- start modal page form -->
-        <div class="modal form-horizontal" id="pageSettingFields"
+        <div class="modal form-horizontal" id="pageSettingsModal"
              role="dialog" aria-labelledby="{{ "legend.page_settings"|trans({}, admin.translationDomain) }}"
              aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>{{ 'legend.page_settings'|trans({}, admin.translationDomain) }}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id="pageSettingsFieldsModal">
-                            {% if form.vars.errors|length > 0 %}
-                                <div class="sonata-ba-form-error">
-                                    {{ form_errors(form) }}
-                                </div>
-                            {% endif %}
-
-                            {% set form_group = admin.formgroups.page_settings %}
-                            {% for field_name in form_group.fields %}
-                                {% if admin.formfielddescriptions[field_name] is defined %}
-                                    {{ form_row(form[field_name], {'horizontal': true}) }}
-                                {% endif %}
-                            {% endfor %}
-                            {% set form_group = admin.formgroups.meta_settings %}
-                            <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
-                                <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
-                                    {% if form_group.collapsed %}
-                                        <a class="sonata-ba-collapsed" data-toggle="collapse"
-                                           data-target="#nav-collapse-meta"
-                                           title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ 'meta_settings'|trans({}, admin.translationDomain) }}</a>
-                                    {% else %}
-                                        {{ 'meta_settings'|trans({}, admin.translationDomain) }}
-                                    {% endif %}
-                                </legend>
-
-                                <div {% if form_group.collapsed %}class="collapse in" id="nav-collapse-meta"{% endif %}>
-
-                                    {% for field_name in form_group.fields %}
-                                        {% if admin.formfielddescriptions[field_name] is defined %}
-                                            {{ form_row(form[field_name], {'horizontal': true}) }}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </fieldset>
-                        </div>
-                        {{ form_rest(form) }}
-                    </div>
-                    <div class="modal-footer">
-                        {% if app.request.isxmlhttprequest %}
-                            {% if admin.id(object) %}
-                                <button class="btn btn-default " data-dismiss="modal"
-                                        aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
-                                <button type="submit" class="btn btn-primary" name="btn_update"
-                                        data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}">{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}</button>
-                            {% else %}
-                                <button type="submit" class="btn btn-default" name="btn_create"
-                                        data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}">{{ 'btn_create'|trans({}, 'SonataAdminBundle') }}
-                                    }
-                                </button>
-                            {% endif %}
-                        {% else %}
-                            {% if admin.supportsPreviewMode %}
-                                <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
-                                       value="{{ 'btn_preview'|trans({}, 'SonataAdminBundle') }}"/>
-                            {% endif %}
-                            {% if admin.id(object) %}
-                                <button class="btn btn-default" data-dismiss="modal"
-                                        aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
-                                <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
-                                       onclick="return start_save_page_settings(this);"
-                                       data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}"
-                                       value="{{ 'btn_update_and_edit_again'|trans({}, 'SonataAdminBundle') }}"/>
-                            {% else %}
-                                <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
-                                       value="{{ 'btn_create_and_edit_again'|trans({}, 'SonataAdminBundle') }}"/>
-                                <input class="btn btn-default" type="submit" name="btn_create_and_create"
-                                       data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}"
-                                       value="{{ 'btn_create_and_create_a_new_one'|trans({}, 'SonataAdminBundle') }}"/>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
 
         </div>
         <!-- end modal page form -->
-        </form>
         {% jsblock 'addToBottom' %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_form_script.html.twig' with {'admin': admin, 'id': admin.id(object)} %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_translation_script.html.twig' with {'admin': admin} %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_status_script.html.twig' with {'admin': admin} %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_form_script.html.twig' with {'admin': admin, 'id': admin.id(object)} %}
+        {% include '@NetworkingInitCms/PageAdmin/page_translation_script.html.twig' with {'admin': admin} %}
+        {% include '@NetworkingInitCms/PageAdmin/page_status_script.html.twig' with {'admin': admin} %}
         {% jsblock 'addToBottomEnd' %}
 
 

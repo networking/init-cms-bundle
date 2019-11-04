@@ -8,10 +8,10 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'NetworkingInitCmsBundle:CRUD:base_list.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/base_list.html.twig' %}
 
 {% block actions %}
-    {% include 'NetworkingInitCmsBundle:Core:create_button.html.twig' %}
+    {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
 {% endblock %}
 
 {% block list_table %}
@@ -29,5 +29,5 @@ file that was distributed with this source code.
 {% endblock %}
 {% block before_body_end %}
     {{ parent() }}
-    {% include 'NetworkingInitCmsBundle:CRUD:list_script.html.twig' %}
+    {% include '@NetworkingInitCms/CRUD/list_script.html.twig' %}
 {% endblock %}

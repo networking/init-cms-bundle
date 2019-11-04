@@ -11,7 +11,7 @@ file that was distributed with this source code.
 {% set last_edited = app.session.get('MenuItem.last_edited') %}
 {% set pageAdmin = admin.getConfigurationPool.getAdminByAdminCode('networking_init_cms.admin.page') %}
 <div class="dotted" >&nbsp;</div>
-<div class="menu_item {% if last_edited == node.id %}info{% endif %}">
+<div class="menu_item {% if node.hidden %}danger{% endif %} {% if last_edited == node.id %}info{% endif %}">
     <div class="pull-left text"><i class="glyphicon glyphicon-move cursor-pointer"></i> <a
                 class="menu-dialog-link show-tooltip"
                 data-original-title="{{ 'action_edit'|trans({}, admin.translationDomain) }}"

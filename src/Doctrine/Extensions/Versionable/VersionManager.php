@@ -13,14 +13,14 @@ namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Class VersionManager
- * @package Networking\InitCmsBundle\Doctrine\Extensions\Versionable
+ * Class VersionManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class VersionManager
 {
     /**
-     * @var \Doctrine\ORM\EntityManager $em
+     * @var \Doctrine\ORM\EntityManager
      */
     private $_em;
 
@@ -37,13 +37,14 @@ class VersionManager
 
     /**
      * @param VersionableInterface $resource
+     *
      * @return array
      */
     public function getVersions(VersionableInterface $resource)
     {
         $query = $this->_em->createQuery(
-            "SELECT v FROM ResourceVersion v INDEX BY v.version ".
-            "WHERE v.resourceName = ?1 AND v.resourceId = ?2 ORDER BY v.version DESC");
+            'SELECT v FROM ResourceVersion v INDEX BY v.version '.
+            'WHERE v.resourceName = ?1 AND v.resourceId = ?2 ORDER BY v.version DESC');
         $query->setParameter(1, get_class($resource));
         $query->setParameter(2, $resource->getResourceId());
 

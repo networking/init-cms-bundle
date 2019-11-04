@@ -12,16 +12,16 @@ namespace Networking\InitCmsBundle\Component\Routing;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route as SymfonyRoute;
+
 /**
- * Dummy Route Class for creating routes on the run. Used when building navigation items
+ * Dummy Route Class for creating routes on the run. Used when building navigation items.
  *
  * Class CMSRoute
- * @package Networking\InitCmsBundle\Component\Routing
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Route extends SymfonyRoute implements RouteObjectInterface
 {
-
     const LOCALE = '_locale';
 
     /**
@@ -30,7 +30,7 @@ class Route extends SymfonyRoute implements RouteObjectInterface
     private $defaults = [];
 
     /**
-     * @var $content
+     * @var
      */
     protected $content;
 
@@ -40,7 +40,6 @@ class Route extends SymfonyRoute implements RouteObjectInterface
      */
     public function __construct($pattern, array $defaults = [])
     {
-
         $this->setPath($pattern);
         $this->setDefaults($defaults);
     }
@@ -52,7 +51,6 @@ class Route extends SymfonyRoute implements RouteObjectInterface
     {
         return $this->getPath();
     }
-
 
     /**
      * Sets the defaults.
@@ -84,14 +82,15 @@ class Route extends SymfonyRoute implements RouteObjectInterface
         foreach ($defaults as $name => $default) {
             $this->defaults[$name] = $default;
         }
+
         return $this;
     }
 
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * Handling the missing default 'compiler_class'
+     *
      * @see setOptions
      */
     public function getOption($name)
@@ -105,9 +104,10 @@ class Route extends SymfonyRoute implements RouteObjectInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * Handling the missing default 'compiler_class'
+     *
      * @see setOptions
      */
     public function getOptions()
@@ -127,7 +127,6 @@ class Route extends SymfonyRoute implements RouteObjectInterface
     {
         return $this->defaults;
     }
-
 
     /**
      * Get the content document this route entry stands for. If non-null,

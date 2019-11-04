@@ -11,8 +11,8 @@
 namespace Networking\InitCmsBundle\Model;
 
 /**
- * Class UserInterface
- * @package Networking\InitCmsBundle\Model
+ * Class UserInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface UserInterface extends \Sonata\UserBundle\Model\UserInterface
@@ -24,6 +24,7 @@ interface UserInterface extends \Sonata\UserBundle\Model\UserInterface
 
     /**
      * @param $key
+     *
      * @return mixed
      */
     public function getAdminSetting($key);

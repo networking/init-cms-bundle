@@ -1,4 +1,4 @@
-{% extends 'NetworkingInitCmsBundle:CRUD:action.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/action.html.twig' %}
 
 {% block title %}
     {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
@@ -49,6 +49,7 @@
     <div>
         <form>
         {{ form_row(form.tags) }}
+        {{ form_row(form.providerName) }}
             <input type="hidden" name="with_js" value="0">
         </form>
     </div>
@@ -81,7 +82,7 @@
         </div>
     </div>
     {% if app.request.isXmlHttpRequest %}
-        <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/dropzone.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/vendor/dropzone/dropzone.js') }}"></script>
         <script>
             // Get the template HTML and remove it from the document
             var previewNode = document.querySelector("#template");

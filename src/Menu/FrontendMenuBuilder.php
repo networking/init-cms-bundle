@@ -14,17 +14,18 @@ use Networking\InitCmsBundle\Entity\MenuItem as Menu;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class FrontendMenuBuilder
- * @package Networking\InitCmsBundle\Component\Menu
+ * Class FrontendMenuBuilder.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class FrontendMenuBuilder extends MenuBuilder
 {
     /**
-     * Creates the main page navigation for the left side of the top frontend navigation
+     * Creates the main page navigation for the left side of the top frontend navigation.
      *
      * @param $menuName
      * @param string $classes
+     *
      * @return \Knp\Menu\ItemInterface|\Knp\Menu\MenuItem
      */
     public function createMainMenu($menuName, $classes = 'nav nav-tabs nav-stacked')
@@ -48,12 +49,12 @@ class FrontendMenuBuilder extends MenuBuilder
         return $menu;
     }
 
-
     /**
-     * Create frontend sub navigation on the left hand side of the screen
+     * Create frontend sub navigation on the left hand side of the screen.
      *
-     * @param  string $menuName
+     * @param string $menuName
      * @param string $classes
+     *
      * @return bool|\Knp\Menu\ItemInterface
      */
     public function createSubnavMenu($menuName, $classes = 'nav nav-tabs nav-stacked')
@@ -81,12 +82,13 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     /**
-     * Creates the login and change language navigation for the right side of the top frontend navigation
+     * Creates the login and change language navigation for the right side of the top frontend navigation.
      *
      * @param RequestStack $requestStack
      * @param $languages
      * @param string $classes
-     * @param bool $dropDownMenu
+     * @param bool   $dropDownMenu
+     *
      * @return \Knp\Menu\ItemInterface
      */
     public function createFrontendLangMenu(
@@ -94,8 +96,7 @@ class FrontendMenuBuilder extends MenuBuilder
         $languages,
         $classes = 'nav pull-right',
         $dropDownMenu = false
-    )
-    {
+    ) {
         $menu = $this->factory->createItem('root');
         if ($classes) {
             $menu->setChildrenAttribute('class', $classes);
@@ -111,10 +112,11 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     /**
-     * Used to create a simple navigation for the footer
+     * Used to create a simple navigation for the footer.
      *
      * @param $menuName
      * @param string $classes
+     *
      * @return \Knp\Menu\ItemInterface
      */
     public function createFooterMenu($menuName, $classes = '')
@@ -138,10 +140,10 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     /**
-     * Used to create nodes for the language navigation in the front- and backend
+     * Used to create nodes for the language navigation in the front- and backend.
      *
      * @param \Knp\Menu\ItemInterface $menu
-     * @param array $languages
+     * @param array                   $languages
      * @param $currentLanguage
      * @param string $route
      */
@@ -150,9 +152,7 @@ class FrontendMenuBuilder extends MenuBuilder
         array $languages,
         $currentLanguage,
         $route = 'networking_init_change_language'
-    )
-    {
-
+    ) {
         $dropdown = $menu->addChild(
             $this->translator->trans('Change Language'),
             ['dropdown' => true, 'icon' => 'caret']
@@ -161,7 +161,7 @@ class FrontendMenuBuilder extends MenuBuilder
         foreach ($languages as $language) {
             $node = $dropdown->addChild(
                 $language['label'],
-                ['uri' => $this->router->generate($route, ['locale' => $language['locale']])]
+                ['uri' => $this->router->generate($route, ['oldLocale' => $this->request->getLocale(), 'locale' => $language['locale']])]
             );
 
             if ($language['locale'] == $currentLanguage) {
@@ -173,7 +173,7 @@ class FrontendMenuBuilder extends MenuBuilder
 
     /**
      * @param \Knp\Menu\ItemInterface $menu
-     * @param array $languages
+     * @param array                   $languages
      * @param $currentLanguage
      * @param string $route
      */
@@ -182,14 +182,13 @@ class FrontendMenuBuilder extends MenuBuilder
         array $languages,
         $currentLanguage,
         $route = 'networking_init_change_language'
-    )
-    {
+    ) {
         foreach ($languages as $language) {
             $node = $menu->addChild(
                 $language['label'],
                 [
-                    'uri' => $this->router->generate($route, ['locale' => $language['locale']]),
-                    'linkAttributes' => ['class' => 'language']
+                    'uri' => $this->router->generate($route, ['oldLocale' => $this->request->getLocale(), 'locale' => $language['locale']]),
+                    'linkAttributes' => ['class' => 'language'],
                 ]
             );
             if ($language['locale'] == $currentLanguage) {

@@ -8,11 +8,9 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
 
 use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
-
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -20,14 +18,17 @@ use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 interface ContentRouteInterface
 {
     /**
-     * Set the content of a route
+     * Set the content of a route.
+     *
      * @param RouteReferrersReadInterface $content
+     *
      * @return ContentRoute
      */
     public function setContent(RouteReferrersReadInterface $content);
 
     /**
-     * @param  string $controller
+     * @param string $controller
+     *
      * @return $this
      */
     public function setController($controller);
@@ -38,7 +39,8 @@ interface ContentRouteInterface
     public function getController();
 
     /**
-     * @param  int $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id);
@@ -49,7 +51,8 @@ interface ContentRouteInterface
     public function getId();
 
     /**
-     * @param  string $locale
+     * @param string $locale
+     *
      * @return $this
      */
     public function setLocale($locale);
@@ -60,7 +63,8 @@ interface ContentRouteInterface
     public function getLocale();
 
     /**
-     * @param  string $classType
+     * @param string $classType
+     *
      * @return $this
      */
     public function setClassType($classType);
@@ -71,7 +75,8 @@ interface ContentRouteInterface
     public function getClassType();
 
     /**
-     * @param  int $objectId
+     * @param int $objectId
+     *
      * @return $this
      */
     public function setObjectId($objectId);
@@ -83,6 +88,7 @@ interface ContentRouteInterface
 
     /**
      * @param $path
+     *
      * @return $this
      */
     public function setPath($path);
@@ -93,7 +99,8 @@ interface ContentRouteInterface
     public function getPath();
 
     /**
-     * @param  string $template
+     * @param string $template
+     *
      * @return $this
      */
     public function setTemplate($template);

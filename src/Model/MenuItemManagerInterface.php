@@ -3,34 +3,35 @@
  * Created by PhpStorm.
  * User: marcbissegger
  * Date: 10/24/13
- * Time: 3:24 PM
+ * Time: 3:24 PM.
  */
 
 namespace Networking\InitCmsBundle\Model;
 
 /**
- * Class MenuItemManagerInterface
- * @package Networking\InitCmsBundle\Model
+ * Class MenuItemManagerInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface MenuItemManagerInterface
 {
-
     /**
      * @param $locale
-     * @param  null $sortByField
-     * @param  string $direction
+     * @param null   $sortByField
+     * @param string $direction
+     *
      * @return array
      */
     public function getRootNodesByLocale($locale, $sortByField = null, $direction = 'asc');
 
     /**
-     * @param null $node
-     * @param bool $direct
-     * @param null $sortByField
+     * @param null   $node
+     * @param bool   $direct
+     * @param null   $sortByField
      * @param string $direction
-     * @param bool $includeNode
+     * @param bool   $includeNode
      * @param $viewStatus
+     *
      * @return mixed
      */
     public function getChildrenByStatus(
@@ -45,10 +46,9 @@ interface MenuItemManagerInterface
     /**
      * Finds a single object by a set of criteria.
      *
-     * @param array $criteria The criteria.
+     * @param array $criteria The criteria
      *
-     * @return object The object.
+     * @return object The object
      */
     public function findOneBy(array $criteria);
-
-} 
+}

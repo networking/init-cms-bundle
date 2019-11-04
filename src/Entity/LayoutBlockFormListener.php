@@ -11,17 +11,13 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Symfony\Component\Form\FormEvent;
-use Networking\InitCmsBundle\Model\LayoutBlockInterface;
-use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Model\LayoutBlockFormListener as ModelLayoutBlockFormListener;
 
 /**
- * Class LayoutBlockFormListener
- * @package Networking\InitCmsBundle\Entity
+ * Class LayoutBlockFormListener.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LayoutBlockFormListener extends ModelLayoutBlockFormListener
 {
-
 }

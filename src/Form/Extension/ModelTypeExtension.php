@@ -18,13 +18,12 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class TagExtension
- * @package Application\Networking\InitCmsBundle\Form\Extension
+ * Class TagExtension.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class ModelTypeExtension extends AbstractTypeExtension {
-
-
+class ModelTypeExtension extends AbstractTypeExtension
+{
     /**
      * {@inheritdoc}
      */
@@ -35,13 +34,10 @@ class ModelTypeExtension extends AbstractTypeExtension {
         }
     }
 
-
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        if($options['transformer']){
-            $builder->addViewTransformer($options['transformer'], true) ;
+        if ($options['transformer']) {
+            $builder->addViewTransformer($options['transformer'], true);
         }
     }
 
@@ -53,7 +49,6 @@ class ModelTypeExtension extends AbstractTypeExtension {
         $resolver->setDefaults(['taggable' => false, 'transformer' => false]);
         $resolver->setDefined(['taggable', 'transformer']);
     }
-
 
     /**
      * Returns the name of the type being extended.

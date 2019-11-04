@@ -11,18 +11,15 @@
 namespace Networking\InitCmsBundle\Model;
 
 /**
- * Class MenuItemInterface
- * @package Networking\InitCmsBundle\Model
+ * Class MenuItemInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface MenuItemInterface
 {
-
     const PATH_SEPARATOR = '/';
 
-
     const VISIBILITY_PUBLIC = 'public';
-
 
     const VISIBILITY_PROTECTED = 'protected';
 
@@ -32,18 +29,19 @@ interface MenuItemInterface
     public function __toString();
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId();
 
     /**
-     * @param  PageInterface $page
+     * @param PageInterface $page
+     *
      * @return $this
      */
     public function setPage(PageInterface $page = null);
 
     /**
-     * Get conversation
+     * Get conversation.
      *
      * @return PageInterface
      */
@@ -64,12 +62,12 @@ interface MenuItemInterface
      */
     public function setHidden($hidden);
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHidden();
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isHidden();
 
@@ -85,12 +83,13 @@ interface MenuItemInterface
 
     /**
      * @param $name
+     *
      * @return MenuItemInterface
      */
     public function setName($name);
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -98,6 +97,7 @@ interface MenuItemInterface
 
     /**
      * @param MenuItemInterface $parent
+     *
      * @return $this
      */
     public function setParent(MenuItemInterface $parent = null);
@@ -109,6 +109,7 @@ interface MenuItemInterface
 
     /**
      * @param $lft
+     *
      * @return $this
      */
     public function setLft($lft);
@@ -130,6 +131,7 @@ interface MenuItemInterface
 
     /**
      * @param $rgt
+     *
      * @return $this
      */
     public function setRgt($rgt);
@@ -141,6 +143,7 @@ interface MenuItemInterface
 
     /**
      * @param $root
+     *
      * @return $this
      */
     public function setRoot($root);
@@ -156,29 +159,32 @@ interface MenuItemInterface
     public function getMenu();
 
     /**
-     * @param boolean $isRoot
+     * @param bool $isRoot
      */
     public function setIsRoot($isRoot);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsRoot();
 
     /**
-     * @param  MenuItemInterface $menuItem
+     * @param MenuItemInterface $menuItem
+     *
      * @return MenuItemInterface
      */
     public function getRootParent(MenuItemInterface $menuItem);
 
     /**
-     * @param  int $level
+     * @param int $level
+     *
      * @return bool|MenuItem
      */
     public function getParentByLevel($level = 1);
 
     /**
-     * @param  MenuItemInterface $menuItem
+     * @param MenuItemInterface $menuItem
+     *
      * @return $this
      */
     public function setMenu(MenuItemInterface $menuItem = null);
@@ -195,13 +201,14 @@ interface MenuItemInterface
 
     /**
      * @param $status
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getChildrenByStatus($status);
 
-
     /**
      * @param $path
+     *
      * @return $this
      */
     public function setPath($path);
@@ -217,7 +224,8 @@ interface MenuItemInterface
     public function getRouteId();
 
     /**
-     * @param  null $locale
+     * @param null $locale
+     *
      * @return $this
      */
     public function setLocale($locale = null);
@@ -229,6 +237,7 @@ interface MenuItemInterface
 
     /**
      * @param \Networking\InitCmsBundle\Entity\text $description
+     *
      * @return $this
      */
     public function setDescription($description);
@@ -238,50 +247,53 @@ interface MenuItemInterface
      */
     public function getDescription();
 
-
     /**
      * @param $linkClass
+     *
      * @return MenuItem
      */
     public function setLinkClass($linkClass);
 
     /**
-     * @return String
+     * @return string
      */
     public function getLinkClass();
 
     /**
      * @param $linkRel
+     *
      * @return $this
      */
     public function setLinkRel($linkRel);
 
     /**
-     * @return String
+     * @return string
      */
     public function getLinkRel();
 
     /**
      * @param $linkTarget
+     *
      * @return $this
      */
     public function setLinkTarget($linkTarget);
 
     /**
-     * @return String
+     * @return string
      */
     public function getLinkTarget();
 
     /**
-     * Set page visibility
+     * Set page visibility.
      *
      * @param string $visibility
+     *
      * @return $this
      */
     public function setVisibility($visibility);
 
     /**
-     * Get page visibility
+     * Get page visibility.
      *
      * @return string
      */
@@ -301,5 +313,4 @@ interface MenuItemInterface
      * @return int
      */
     public function hasChildren();
-
 }

@@ -15,27 +15,25 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FOS\UserBundle\Util\CanonicalFieldsUpdater;
 use FOS\UserBundle\Util\PasswordUpdaterInterface;
 
-
 /**
- * Class UserManager
- * @package Networking\InitCmsBundle\Entity
+ * Class UserManager.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class UserManager extends DoctrineUserManager
 {
-
     /**
      * UserManager constructor.
+     *
      * @param PasswordUpdaterInterface $passwordUpdater
-     * @param CanonicalFieldsUpdater $canonicalFieldsUpdater
-     * @param ObjectManager $om
+     * @param CanonicalFieldsUpdater   $canonicalFieldsUpdater
+     * @param ObjectManager            $om
      * @param $class
      */
-    public function __construct(PasswordUpdaterInterface $passwordUpdater, CanonicalFieldsUpdater $canonicalFieldsUpdater, ObjectManager $om,$class)
+    public function __construct(PasswordUpdaterInterface $passwordUpdater, CanonicalFieldsUpdater $canonicalFieldsUpdater, ObjectManager $om, $class)
     {
-        if(class_exists($class)){
-            parent::__construct($passwordUpdater, $canonicalFieldsUpdater, $om,$class);
-
+        if (class_exists($class)) {
+            parent::__construct($passwordUpdater, $canonicalFieldsUpdater, $om, $class);
         }
     }
 

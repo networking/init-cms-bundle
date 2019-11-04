@@ -13,8 +13,8 @@ file that was distributed with this source code.
 
 {% block actions %}
     <div class="sonata-actions btn-group">
-        {% include 'SonataAdminBundle:Button:list_button.html.twig' %}
-        {% include 'SonataAdminBundle:Button:create_button.html.twig' %}
+        {% include '@SonataAdmin/Button/list_button.html.twig' %}
+        {% include '@SonataAdmin/Button/create_button.html.twig' %}
     </div>
 {% endblock %}
 
@@ -22,6 +22,9 @@ file that was distributed with this source code.
 
 {% block content %}
     <div class="sonata-ba-delete">
+        {% if batch_translation_domain is not same as(false) %}
+            {% set action_label = action_label|trans({}, batch_translation_domain) %}
+        {% endif %}
         <h1>{% trans with {'%action%': action_label} from 'SonataAdminBundle' %}title_batch_confirmation{% endtrans %}</h1>
 
         {% if data.all_elements %}
@@ -41,9 +44,9 @@ file that was distributed with this source code.
                 </div>
 
                 {% if data.action == 'delete' %}
-                    <button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-trash glyphicon glyphicon-white"></i> {{ 'btn_execute_batch_action'|trans({}, 'SonataAdminBundle') }}</button>
+                    <button type="submit" class="btn btn-danger modal-close"><i class="glyphicon glyphicon-trash glyphicon glyphicon-white"></i> {{ 'btn_execute_batch_action'|trans({}, 'SonataAdminBundle') }}</button>
                 {% else %}
-                <input type="submit" class="btn btn-warning" value="{{ 'btn_execute_batch_action'|trans({}, 'SonataAdminBundle') }}" />
+                <input type="submit" class="btn btn-warning modal-close"  value="{{ 'btn_execute_batch_action'|trans({}, 'SonataAdminBundle') }}" />
                 {% endif %}
                 {% if admin.hasRoute('list') and admin.isGranted('LIST') %}
                     {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}

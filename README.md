@@ -45,5 +45,5 @@ This bundle is under the MIT license. See the complete license in the bundle:
 [License](LICENSE).
     
 
-[1]:  http://web.networking.ch
+[1]:  http://www.networking.ch
 [2]:  https://github.com/networking/init-cms-sandbox/

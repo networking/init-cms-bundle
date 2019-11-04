@@ -1,0 +1,9 @@
+{% extends sonata_block.templates.block_base %}
+
+{% block block %}
+<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse version-footer">
+    <div class="container">
+        <p class="text-center version-number"><a href="https://github.com/networking/init-cms-bundle/releases/tag/{{ version }}" target="_blank">Init CMS Version {{ version }}</a> </p>
+    </div>
+</nav>
+{% endblock %}

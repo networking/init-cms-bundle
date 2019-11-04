@@ -13,14 +13,14 @@ namespace Networking\InitCmsBundle\Entity;
 use Networking\InitCmsBundle\Model\Tag as ModelTag;
 
 /**
- * Class Tag
- * @package Networking\InitCmsBundle\Entity
+ * Class Tag.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class Tag extends ModelTag
 {
     /**
-     * @var integer $id
+     * @var int
      */
     protected $id;
 }

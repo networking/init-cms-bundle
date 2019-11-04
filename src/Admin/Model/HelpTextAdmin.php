@@ -7,20 +7,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Admin\Model;
 
-use Ivory\CKEditorBundle\Form\Type\CKEditorType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
- * Class HelpTextAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class HelpTextAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class HelpTextAdmin extends BaseAdmin
@@ -43,7 +45,6 @@ abstract class HelpTextAdmin extends BaseAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
-
         $listMapper
             ->addIdentifier('title')
             ->addIdentifier('translationKey')
@@ -52,11 +53,11 @@ abstract class HelpTextAdmin extends BaseAdmin
                 '_action',
                 'actions',
                 [
-                    'label' => ' ',
+                    'label' => false,
                     'actions' => [
                         'edit' => [],
-                        'delete' => []
-                    ]
+                        'delete' => [],
+                    ],
                 ]
             );
     }
@@ -66,21 +67,16 @@ abstract class HelpTextAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        try {
-            $request = $this->getRequest();
-        } catch (\RuntimeException $e) {
-            $request = $this->getContainer()->get('request');
-        }
-
-        $locale = $request->get('locale') ? $request->get('locale') : $request->getLocale();
-
         $formMapper
             ->add(
                 'locale',
                 ChoiceType::class,
                 [
-                    'choices' => $this->getLocaleChoices(),
-                    'preferred_choices' => [$locale]
+                    'choice_loader' => new CallbackChoiceLoader(function () {
+                        return $this->getLocaleChoices();
+                    }),
+                    'preferred_choices' => [$this->getDefaultLocale()],
+                    'translation_domain' => false,
                 ]
             )
             ->add('translationKey')
@@ -90,7 +86,6 @@ abstract class HelpTextAdmin extends BaseAdmin
                 CKEditorType::class,
                 ['config' => ['toolbar' => 'standard', 'contentsCss' => null]]
             );
-
     }
 
     /**
@@ -105,20 +100,21 @@ abstract class HelpTextAdmin extends BaseAdmin
                 [
                     'callback' => [
                         $this,
-                        'getByLocale'
+                        'getByLocale',
                     ],
-                    'hidden' => false
+                    'hidden' => false,
                 ],
                 ChoiceType::class,
                 [
                     'placeholder' => false,
-                    'choices' => $this->getLocaleChoices(),
+                    'choice_loader' => new CallbackChoiceLoader(function () {
+                        return $this->getLocaleChoices();
+                    }),
                     'preferred_choices' => [$this->getDefaultLocale()],
-                    'required' => true
+                    'translation_domain' => false,
                 ]
 
             );
-
     }
 
     /**
@@ -127,64 +123,33 @@ abstract class HelpTextAdmin extends BaseAdmin
     public function configureDefaultFilterValues(array &$filterValues)
     {
         $filterValues['locale'] = [
-            'type'  => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
             'value' => $this->getDefaultLocale(),
         ];
     }
 
     /**
-     * @param \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder
+     * @param ProxyQuery $ProxyQuery
      * @param $alias
      * @param $field
      * @param $data
+     *
      * @return bool
      */
-    public function getByLocale($queryBuilder, $alias, $field, $data)
+    public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
         $active = true;
         if (!$locale = $data['value']) {
             $locale = $this->getDefaultLocale();
             $active = false;
         }
-        $queryBuilder->andWhere(sprintf('%s.locale = :locale', $alias));
-        $queryBuilder->orderBy(sprintf('%s.translationKey', $alias), 'asc');
-        $queryBuilder->setParameter(':locale', $locale);
+
+        $qb = $ProxyQuery->getQueryBuilder();
+
+        $qb->andWhere(sprintf('%s.%s = :locale', $alias, $field));
+        $qb->orderBy(sprintf('%s.translationKey', $alias), 'asc');
+        $qb->setParameter(':locale', $locale);
 
         return $active;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validate(ErrorElement $errorElement, $object)
-    {
-        $errorElement
-            ->with('locale')
-            ->assertNotNull([])
-            ->assertNotBlank()
-            ->end();
-        $errorElement
-            ->with('translationKey')
-            ->assertNotNull([])
-            ->assertNotBlank()
-            ->assertLength(['max' => 255])
-            ->end();
-        $errorElement
-            ->with('title')
-            ->assertNotNull([])
-            ->assertNotBlank()
-            ->end();
-        $errorElement
-            ->with('text')
-            ->assertNotNull([])
-            ->assertNotBlank()
-            ->end();
-        if (strlen(strip_tags($object->getText())) <= 5) {
-            $errorElement
-                ->with('textMinLength')
-                ->addViolation($this->translator->trans('helptext.text.minlength', [], $this->translationDomain))
-                ->end();
-        }
-    }
-
 }

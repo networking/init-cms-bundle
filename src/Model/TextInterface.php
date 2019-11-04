@@ -11,59 +11,60 @@
 namespace Networking\InitCmsBundle\Model;
 
 /**
- * Class TextInterface
- * @package Networking\InitCmsBundle\Model
+ * Class TextInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface TextInterface
 {
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId();
 
     /**
-     * Set content
+     * Set content.
      *
-     * @param  string $text
+     * @param string $text
+     *
      * @return $this
      */
     public function setText($text);
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
     public function getText();
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @return $this
      */
     public function setCreatedAt();
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
     public function getCreatedAt();
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
-     * @param  \DateTime $updatedAt
+     * @param \DateTime $updatedAt
+     *
      * @return $this
      */
     public function setUpdatedAt($updatedAt);
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -71,6 +72,7 @@ interface TextInterface
 
     /**
      * @param array $params
+     *
      * @return array
      */
     public function getTemplateOptions($params = []);

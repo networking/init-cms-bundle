@@ -10,90 +10,91 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-
 /**
- * HelpText
- *
+ * HelpText.
  */
 interface HelpTextInterface
 {
-
     /**
      * @return string
      */
     public function __toString();
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return $this
      */
     public function setLocale($locale);
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
     public function getLocale();
 
     /**
-     * Set translationKey
+     * Set translationKey.
      *
      * @param string $translationKey
+     *
      * @return $this
      */
     public function setTranslationKey($translationKey);
 
     /**
-     * Get translationKey
+     * Get translationKey.
      *
      * @return string
      */
     public function getTranslationKey();
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
+     *
      * @return $this
      */
     public function setText($text);
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
     public function getText();
 
     /**
-     * Set translationDomain
+     * Set translationDomain.
      *
      * @param string $translationDomain
+     *
      * @return $this
      */
     public function setTitle($translationDomain);
 
     /**
-     * Get translationDomain
+     * Get translationDomain.
      *
      * @return string
      */
     public function getTitle();
 
-
     /**
-     * Set isDeletable
+     * Set isDeletable.
      *
      * @param string $isDeletable
+     *
      * @return $this
      */
     public function setIsDeletable($isDeletable);
 
     /**
-     * Get isDeletable
+     * Get isDeletable.
      *
      * @return string
      */

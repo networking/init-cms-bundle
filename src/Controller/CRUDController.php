@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Symfony\Bridge\Twig\AppVariable;
@@ -22,17 +23,16 @@ use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
 
 /**
- * Class CRUDController
- * @package Networking\InitCmsBundle\Controller
+ * Class CRUDController.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class CRUDController extends SonataCRUDController
 {
-    CONST EDIT_ENTITY = 'crud_controller.edit_entity';
+    const EDIT_ENTITY = 'crud_controller.edit_entity';
 
     /**
-     * @var CmsEventDispatcher $dispatcher
+     * @var CmsEventDispatcher
      */
     protected $dispatcher;
 
@@ -42,17 +42,16 @@ class CRUDController extends SonataCRUDController
     }
 
     /**
-     * Set up the lasted edited dispatcher
+     * Set up the lasted edited dispatcher.
      */
     public function configure()
     {
         parent::configure();
 
-
         /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
         $session = $this->get('session');
 
-        switch(strtolower($this->container->getParameter('networking_init_cms.db_driver'))){
+        switch (strtolower($this->container->getParameter('networking_init_cms.db_driver'))) {
             case 'monodb':
                 $lastEditedSubscriber = new ODMLastEditedListener($session);
                 break;
@@ -64,32 +63,34 @@ class CRUDController extends SonataCRUDController
                 break;
         }
 
-        if($lastEditedSubscriber){
+        if ($lastEditedSubscriber) {
             $this->dispatcher->addSubscriber($lastEditedSubscriber);
         }
     }
 
     /**
-     * @param string $view
-     * @param array $parameters
+     * @param string   $view
+     * @param array    $parameters
      * @param Response $response
+     *
      * @return Response
      */
-    public function render($view, array $parameters = [], Response $response = null)
+    public function renderWithExtraParams($view, array $parameters = [], Response $response = null)
     {
         if (array_key_exists('action', $parameters) && $parameters['action'] == 'edit') {
-
             $event = new CmsEvent($parameters['object']);
 
-            $this->dispatcher->dispatch(CRUDController::EDIT_ENTITY, $event);
+            $this->dispatcher->dispatch(self::EDIT_ENTITY, $event);
         }
+
         return parent::renderWithExtraParams($view, $parameters, $response);
     }
 
     /**
      * @param $string
      * @param array $params
-     * @param null $domain
+     * @param null  $domain
+     *
      * @return mixed
      */
     public function translate($string, $params = [], $domain = null)
@@ -99,13 +100,12 @@ class CRUDController extends SonataCRUDController
         return $this->get('translator')->trans($string, $params, $translationDomain);
     }
 
-
-
     /**
      * Sets the admin form theme to form view. Used for compatibility between Symfony versions.
      *
      * @param FormView $formView
-     * @param string $theme
+     * @param string   $theme
+     *
      * @throws \Twig_Error_Runtime
      */
     protected function setFormTheme(FormView $formView, $theme)

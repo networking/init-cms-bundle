@@ -10,9 +10,7 @@
 
 namespace Networking\InitCmsBundle\Helper;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use JMS\Serializer\SerializerInterface;
-use Networking\InitCmsBundle\Component\Routing\DynamicRouter;
 use Networking\InitCmsBundle\Lib\PhpCacheInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManagerInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -21,11 +19,13 @@ use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use Sonata\AdminBundle\Exception\NoValueException;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * Class PageHelper
- * @package Networking\InitCmsBundle\Helper
+ * Class PageHelper.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageHelper
@@ -36,7 +36,7 @@ class PageHelper
     protected $serializer;
 
     /**
-     * @var Registry
+     * @var ManagerRegistry
      */
     protected $registry;
 
@@ -71,25 +71,39 @@ class PageHelper
     protected $phpCache;
 
     /**
+     * @var bool
+     */
+    protected $allowLocaleCookie;
+
+    /**
+     * @var bool
+     */
+    protected $singleLanguage;
+
+    /**
      * PageHelper constructor.
-     * @param SerializerInterface $serializer
-     * @param Registry $registry
-     * @param PageManagerInterface $pageManager
+     *
+     * @param SerializerInterface          $serializer
+     * @param ManagerRegistry              $registry
+     * @param PageManagerInterface         $pageManager
      * @param PageSnapshotManagerInterface $pageSnapshotManager
      * @param ContentRouteManagerInterface $contentRouteManager
-     * @param DynamicRouter $router
-     * @param PhpCacheInterface $phpCache
+     * @param DynamicRouter                $router
+     * @param PhpCacheInterface            $phpCache
+     * @param bool                         $allowLocaleCookie
+     * @param bool                         $singleLanguage
      */
     public function __construct(
         SerializerInterface $serializer,
-        Registry $registry,
+        ManagerRegistry $registry,
         PageManagerInterface $pageManager,
         PageSnapshotManagerInterface $pageSnapshotManager,
         ContentRouteManagerInterface $contentRouteManager,
         DynamicRouter $router,
-        PhpCacheInterface $phpCache
-    )
-    {
+        PhpCacheInterface $phpCache,
+        $allowLocaleCookie = true,
+        $singleLanguage = false
+    ) {
         $this->serializer = $serializer;
         $this->registry = $registry;
         $this->objectManager = $registry->getManager();
@@ -98,11 +112,13 @@ class PageHelper
         $this->contentRouteManager = $contentRouteManager;
         $this->router = $router;
         $this->phpCache = $phpCache;
+        $this->allowLocaleCookie = $allowLocaleCookie;
+        $this->singleLanguage = $singleLanguage;
     }
-
 
     /**
      * @param $path
+     *
      * @return string
      */
     public static function getPageRoutePath($path)
@@ -116,20 +132,22 @@ class PageHelper
 
         //add first slash
         if (substr($path, 0, 1) != PageInterface::PATH_SEPARATOR) {
-            $path = PageInterface::PATH_SEPARATOR . $path;
+            $path = PageInterface::PATH_SEPARATOR.$path;
         }
 
         return $path;
     }
 
     /**
-     * Set the variables to the given content type object
+     * Set the variables to the given content type object.
      *
      * @param PageInterface $object
      * @param $fieldName
      * @param $value
-     * @param  null $method
+     * @param null $method
+     *
      * @return mixed
+     *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public static function setFieldValue(PageInterface $object, $fieldName, $value, $method = null)
@@ -142,7 +160,7 @@ class PageHelper
         }
 
         $camelizedFieldName = self::camelize($fieldName);
-        $setters[] = 'set' . $camelizedFieldName;
+        $setters[] = 'set'.$camelizedFieldName;
 
         foreach ($setters as $setter) {
             if (method_exists($object, $setter)) {
@@ -160,17 +178,18 @@ class PageHelper
     }
 
     /**
-     * Fetch the variables from the given content type object
+     * Fetch the variables from the given content type object.
      *
      * @param PageInterface $object
      * @param $fieldName
-     * @param  null $method
+     * @param null $method
+     *
      * @return mixed
+     *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public static function getFieldValue(PageInterface $object, $fieldName, $method = null)
     {
-
         $getters = [];
         // prefer method name given in the code option
         if ($method) {
@@ -178,8 +197,8 @@ class PageHelper
         }
 
         $camelizedFieldName = self::camelize($fieldName);
-        $getters[] = 'get' . $camelizedFieldName;
-        $getters[] = 'is' . $camelizedFieldName;
+        $getters[] = 'get'.$camelizedFieldName;
+        $getters[] = 'is'.$camelizedFieldName;
 
         foreach ($getters as $getter) {
             if (method_exists($object, $getter)) {
@@ -191,10 +210,12 @@ class PageHelper
     }
 
     /**
-     * Camelize a string
+     * Camelize a string.
      *
      * @static
-     * @param  string $property
+     *
+     * @param string $property
+     *
      * @return string
      */
     public static function camelize($property)
@@ -206,12 +227,12 @@ class PageHelper
      * @param $path
      * @param $id
      * @param $slug
+     *
      * @return mixed
      */
     public static function replaceSlugInPath($path, $id, $slug)
     {
-
-        return preg_replace('#(.+/)?.*(-' . $id . '/)#', '$1' . $slug . '$2', $path);
+        return preg_replace('#(.+/)?.*(-'.$id.'/)#', '$1'.$slug.'$2', $path);
     }
 
     /**
@@ -221,8 +242,7 @@ class PageHelper
      */
     public function makePageSnapshot(PageInterface $page)
     {
-        foreach ($page->getLayoutBlock() as $layoutBlock)
-        {
+        foreach ($page->getLayoutBlock() as $layoutBlock) {
             $layoutBlockContent = $this->registry->getManagerForClass($layoutBlock->getClassType())->getRepository($layoutBlock->getClassType())->find(
                 $layoutBlock->getObjectId()
             );
@@ -231,7 +251,7 @@ class PageHelper
 
         $pageSnapshotClass = $this->pageSnapshotManager->getClassName();
 
-        /** @var  \Networking\InitCmsBundle\Model\PageSnapshotInterface $pageSnapshot */
+        /** @var \Networking\InitCmsBundle\Model\PageSnapshotInterface $pageSnapshot */
         $pageSnapshot = new $pageSnapshotClass($page);
         $pageSnapshot->setVersionedData($this->serializer->serialize($page, 'json'))
             ->setPage($page);
@@ -239,9 +259,8 @@ class PageHelper
         if ($oldPageSnapshot = $page->getSnapshot()) {
             $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
         } else {
-
             $contentRouteClass = $this->contentRouteManager->getClassName();
-            /** @var  \Networking\InitCmsBundle\Model\ContentRouteInterface $snapshotContentRoute */
+            /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $snapshotContentRoute */
             $snapshotContentRoute = new $contentRouteClass();
         }
 
@@ -255,7 +274,6 @@ class PageHelper
         $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
         $snapshotContentRoute->setObjectId($pageSnapshot->getId());
 
-
         if ($oldPageSnapshot && ($oldPageSnapshot->getPath() != self::getPageRoutePath($page->getPath()))) {
             $this->phpCache->clean();
         }
@@ -266,10 +284,11 @@ class PageHelper
     }
 
     /**
-     * Unserialize the PageSnapshot data into a page object
+     * Unserialize the PageSnapshot data into a page object.
      *
      * @param PageSnapshotInterface $pageSnapshot
-     * @param bool $unserializeTranslations
+     * @param bool                  $unserializeTranslations
+     *
      * @return array|\JMS\Serializer\scalar|object
      */
     public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $unserializeTranslations = true)
@@ -281,18 +300,18 @@ class PageHelper
     }
 
     /**
-     * create a copy of a given page object in a given locale
+     * create a copy of a given page object in a given locale.
      *
      * @param PageInterface $page
      * @param $locale
+     *
      * @return PageInterface
      */
     public function makeTranslationCopy(PageInterface $page, $locale)
     {
-
         $pageClass = $this->pageManager->getClassName();
         /** @var PageInterface $pageCopy */
-        $pageCopy = new $pageClass;
+        $pageCopy = new $pageClass();
 
         $pageCopy->setPageName($page->getPageName());
         $pageCopy->setMetaTitle($page->getMetaTitle());
@@ -306,13 +325,13 @@ class PageHelper
         $pageCopy->setOriginal($page);
 
         $layoutBlocks = $page->getLayoutBlock();
+	    $om = $this->registry->getManager();
 
         foreach ($layoutBlocks as $layoutBlock) {
 
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
 
-            $om = $this->registry->getManagerForClass($newLayoutBlock->getClassType());
 
             $content = $om->getRepository($newLayoutBlock->getClassType())->find(
                 $newLayoutBlock->getObjectId()
@@ -328,33 +347,33 @@ class PageHelper
             $om->persist($newLayoutBlock);
         }
 
-        $this->pageManager->save($pageCopy);
+	    $om->persist($pageCopy);
+
+        $om->flush();
 
         return $pageCopy;
-
     }
 
     /**
-     * create a copy of a given page object
+     * create a copy of a given page object.
      *
      * @param PageInterface $page
+     *
      * @return PageInterface
      */
     public function makePageCopy(PageInterface $page)
     {
-
-
         $pageClass = $this->pageManager->getClassName();
         /** @var PageInterface $pageCopy */
-        $pageCopy = new $pageClass;
+        $pageCopy = new $pageClass();
 
         $now = new \DateTime();
 
         $postfix = sprintf(' copy %s', $now->format('d.m.Y H:i:s'));
 
-        $pageCopy->setPageName($page->getPageName() . $postfix);
+        $pageCopy->setPageName($page->getPageName().$postfix);
         $pageCopy->setMetaTitle($page->getMetaTitle());
-        $pageCopy->setUrl($page->getUrl() . $postfix);
+        $pageCopy->setUrl($page->getUrl().$postfix);
         $pageCopy->setMetaKeyword($page->getMetaKeyword());
         $pageCopy->setMetaDescription($page->getMetaDescription());
         $pageCopy->setActiveFrom($page->getActiveFrom());
@@ -364,12 +383,13 @@ class PageHelper
 
         $layoutBlocks = $page->getLayoutBlock();
 
+        $om = $this->registry->getManager();
+
         foreach ($layoutBlocks as $layoutBlock) {
 
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
 
-            $om = $this->registry->getManagerForClass($newLayoutBlock->getClassType());
 
             $content = $om->getRepository($newLayoutBlock->getClassType())->find(
                 $newLayoutBlock->getObjectId()
@@ -385,21 +405,22 @@ class PageHelper
             $om->persist($newLayoutBlock);
         }
 
-        $this->pageManager->save($pageCopy);
+        $om->persist($pageCopy);
+
+        $om->flush();
 
         return $pageCopy;
-
     }
 
     /**
-     * Fills the request object with the content route parameters if found
+     * Fills the request object with the content route parameters if found.
      *
      * @param Request $request
+     *
      * @return Request
      */
     public function matchContentRouteRequest(Request $request)
     {
-
         $requestParams = $this->router->matchRequest($request);
 
         if (is_array($requestParams) && !empty($requestParams)) {
@@ -419,9 +440,10 @@ class PageHelper
     }
 
     /**
-     * Returns if a page is active or inactive based on json string from page snapshot
+     * Returns if a page is active or inactive based on json string from page snapshot.
      *
      * @param $jsonString
+     *
      * @return bool
      */
     public function jsonPageIsActive($jsonString)
@@ -430,15 +452,55 @@ class PageHelper
 
         $now = new \DateTime();
 
-        $activeStart = array_key_exists('active_from', $page) ? new \DateTime($page['active_from']) : new \DateTime;
-        $activeEnd = array_key_exists('active_to', $page) ? new \DateTime($page['active_to']) : new \DateTime;
+        $activeStart = array_key_exists('active_from', $page) ? new \DateTime($page['active_from']) : new \DateTime();
+        $activeEnd = array_key_exists('active_to', $page) ? new \DateTime($page['active_to']) : new \DateTime();
 
         if ($now->getTimestamp() >= $activeStart->getTimestamp() &&
             $now->getTimestamp() <= $activeEnd->getTimestamp()
         ) {
-            return ($page['status'] == PageInterface::STATUS_PUBLISHED);
+            return $page['status'] == PageInterface::STATUS_PUBLISHED;
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAllowLocaleCookie()
+    {
+        return $this->allowLocaleCookie;
+    }
+
+    /**
+     * @param bool $allowLocaleCookie
+     *
+     * @return PageHelper
+     */
+    public function setAllowLocaleCookie(bool $allowLocaleCookie)
+    {
+        $this->allowLocaleCookie = $allowLocaleCookie;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSingleLanguage()
+    {
+        return $this->singleLanguage;
+    }
+
+    /**
+     * @param bool $singleLanguage
+     *
+     * @return PageHelper
+     */
+    public function setSingleLanguage(bool $singleLanguage)
+    {
+        $this->singleLanguage = $singleLanguage;
+
+        return $this;
     }
 }

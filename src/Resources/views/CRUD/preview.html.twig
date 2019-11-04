@@ -9,7 +9,7 @@ file that was distributed with this source code.
 
 #}
 
-{% extends 'SonataAdminBundle:CRUD:edit.html.twig' %}
+{% extends '@SonataAdmin/CRUD/edit.html.twig' %}
 
 {% block actions %}
 {% endblock %}
@@ -29,7 +29,7 @@ file that was distributed with this source code.
                 {% if name %}
                     <tr class="sonata-ba-view-title">
                         <td colspan="2">
-                            {{ admin.trans(name) }}
+                            {{ name|trans({}, admin.translationDomain) }}
                         </td>
                     </tr>
                 {% endif %}

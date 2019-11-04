@@ -13,7 +13,9 @@ file that was distributed with this source code.
 {% block field %}
     {%- if value is empty -%}
         &nbsp;
+    {%- elseif field_description.options.format is defined -%}
+        <span class="show-tooltip" data-original-title="{{ value|date(field_description.options.format|default(null), field_description.options.timezone|default(null)) }}"> {{ value|date(field_description.options.format|default(null), field_description.options.timezone|default(null)) }}</span>
     {%- else -%}
-        <span class="show-tooltip" data-original-title="{{value|date}}">{{ value|date }}</span>
+        <span class="show-tooltip" data-original-title="{{ value|date('F j, Y H:i') }}">{{ value|date('F j, Y H:i') }}</span>
     {%- endif -%}
 {% endblock %}

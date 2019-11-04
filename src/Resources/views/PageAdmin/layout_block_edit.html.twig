@@ -8,7 +8,7 @@
         <div class="modal-dialog modal-full">
             <div class="modal-content">
                 <form class="form-horizontal"
-                      action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': uniqid, 'classType': classType, 'elementId': elementId, 'code': code, 'objectId': objectId}) }}"
+                      action="{{ admin.generateUrl(url, {'id': admin.id(object), 'classType': object.classType}) }}"
                         {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
                       method="POST">
                     <div class="modal-header">

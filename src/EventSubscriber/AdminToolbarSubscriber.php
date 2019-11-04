@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundE
 class AdminToolbarSubscriber implements EventSubscriberInterface
 {
     const DISABLED = 1;
-    const ENABLED  = 2;
+    const ENABLED = 2;
 
     /**
      * @var \Twig_Environment
@@ -60,7 +60,7 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
     {
         $this->twig = $twig;
         $this->authorizationChecker = $securityContext;
-        $this->mode = (integer) $mode;
+        $this->mode = (int) $mode;
         $this->position = $position;
     }
 
@@ -71,6 +71,7 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
 
     /**
      * @param FilterResponseEvent $event
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -90,18 +91,22 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         }
 
         // do not capture admin cms urls
-        if(preg_match('/.*\/admin\/.*/', $request->getRequestUri())){
+        if (preg_match('/.*\/admin\/.*/', $request->getRequestUri())) {
             return;
         }
 
-        try{
-            if(!$this->authorizationChecker->isGranted('ROLE_ADMIN')){
+        // do not capture profiler urls
+        if (preg_match('/.*\/_profiler\/.*/', $request->getRequestUri())) {
+            return;
+        }
+
+        try {
+            if (!$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
                 return;
-            };
-        }catch (AuthenticationCredentialsNotFoundException $e){
+            }
+        } catch (AuthenticationCredentialsNotFoundException $e) {
             return;
         }
-
 
         if (self::DISABLED === $this->mode
             || $response->isRedirection()
@@ -118,7 +123,8 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
      * Injects the admin toolbar into the given Response.
      *
      * @param Response $response
-     * @param Request $request
+     * @param Request  $request
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -126,10 +132,10 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
     protected function injectToolbar(Response $response, Request $request)
     {
         if (function_exists('mb_stripos')) {
-            $posrFunction   = 'mb_strripos';
+            $posrFunction = 'mb_strripos';
             $substrFunction = 'mb_substr';
         } else {
-            $posrFunction   = 'strripos';
+            $posrFunction = 'strripos';
             $substrFunction = 'substr';
         }
 
@@ -139,18 +145,18 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         $page = $request->get('_content', false);
 
         $page_id = null;
-        if($page instanceof \Networking\InitCmsBundle\Model\PageSnapshot){
+        if ($page instanceof \Networking\InitCmsBundle\Model\PageSnapshot) {
             $page_id = $page->getPage()->getId();
-        }elseif($page instanceof \Networking\InitCmsBundle\Model\Page){
-            $page_id =  $page->getId();
+        } elseif ($page instanceof \Networking\InitCmsBundle\Model\Page) {
+            $page_id = $page->getId();
         }
 
         if (false !== $pos) {
             $toolbar = "\n".str_replace("\n", '', $this->twig->render(
-                'NetworkingInitCmsBundle:Admin:toolbar_js.html.twig',
+                '@NetworkingInitCms/Admin/toolbar_js.html.twig',
                 [
                     'position' => $this->position,
-                    'page_id' => $page_id
+                    'page_id' => $page_id,
                 ]
             ))."\n";
             $content = $substrFunction($content, 0, $pos).$toolbar.$substrFunction($content, $pos);

@@ -14,22 +14,23 @@ use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
 /**
- * Class PageListenerInterface
- * @package Networking\InitCmsBundle\Model
+ * Class PageListenerInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageListenerInterface {
-
+interface PageListenerInterface
+{
     /**
      * @param LifecycleEventArgs $args
+     *
      * @return mixed
      */
     public function postPersist(LifecycleEventArgs $args);
 
     /**
      * @param OnFlushEventArgs $args
+     *
      * @return mixed
      */
     public function onFlush(OnFlushEventArgs $args);
 }
- 

@@ -280,7 +280,7 @@
             </trans-unit>
             <trans-unit id="list.label_get_menu_item">
                 <source>list.label_get_menu_item</source>
-                <target>In Menu verknüpft</target>
+                <target>Menu Verknüpfungen</target>
             </trans-unit>
             <trans-unit id="filter.label_locale">
                 <source>filter.label_locale</source>
@@ -446,6 +446,10 @@
                 <source>label.action_copy</source>
                 <target>Gewählte Seiten kopieren</target>
             </trans-unit>
+            <trans-unit id="label.action_delete">
+                <source>label.action_delete</source>
+                <target>Gewählte Seiten löschen</target>
+            </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
                 <target>Dieser Teil Ihrer Seite ist leer. Klicken Sie auf das + darüber, um Ihre ersten Inhalte
@@ -534,7 +538,7 @@
             </trans-unit>
             <trans-unit id="link.live">
                 <source>link.live</source>
-                <target>Veröffentlichte Versionen anzeigen</target>
+                <target>Veröffentlichte Version anzeigen</target>
             </trans-unit>
             <trans-unit id="or">
                 <source>or</source>
@@ -562,6 +566,15 @@
                 <source>message.translation_not_saved</source>
                 <target>Eine Kopie dieser Seite in %language% konnte nicht erstellt werden. Prüfen Sie, ob es bereits
                     eine Seite mit der URL "%url%" in %language% gibt.
+                </target>
+            </trans-unit>
+            <trans-unit id="message.copy_saved">
+                <source>message.copy_saved</source>
+                <target>Eine Kopie dieser Seite wurde erfolgreich in erstellt</target>
+            </trans-unit>
+            <trans-unit id="message.copy_not_saved">
+                <source>message.copy_not_saved</source>
+                <target>Eine Kopie dieser Seite in konnte nicht erstellt werden.
                 </target>
             </trans-unit>
             <trans-unit id="title.copy_page">
@@ -615,7 +628,7 @@
             </trans-unit>
             <trans-unit id="templateName">
                 <source>templateName</source>
-                <target>Template Name</target>
+                <target>Seitenlayout</target>
             </trans-unit>
             <trans-unit id="action._publish">
                 <source>action._publish</source>
@@ -656,6 +669,14 @@
             <trans-unit id="action._copy">
                 <source>action._copy</source>
                 <target>Seite kopieren</target>
+            </trans-unit>
+            <trans-unit id="empty_option">
+                <source>empty_option</source>
+                <target>-</target>
+            </trans-unit>
+            <trans-unit id="">
+                <source></source>
+                <target>blah blah blah</target>
             </trans-unit>
         </body>
     </file>

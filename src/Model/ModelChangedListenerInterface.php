@@ -13,16 +13,17 @@ namespace Networking\InitCmsBundle\Model;
 use Doctrine\Common\EventArgs;
 
 /**
- * Class ModelChangedListenerInterface
- * @package Networking\InitCmsBundle\Model
+ * Class ModelChangedListenerInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface ModelChangedListenerInterface {
-
+interface ModelChangedListenerInterface
+{
     /**
      * @param EventArgs $args
-     * @param string $method
+     * @param string    $method
+     *
      * @return mixed
      */
     public function getLoggingInfo(EventArgs $args, $method = '');
-} 
+}

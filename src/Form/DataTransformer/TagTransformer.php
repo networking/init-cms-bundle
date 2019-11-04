@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: yorkie
  * Date: 09.01.18
- * Time: 14:03
+ * Time: 14:03.
  */
 
 namespace Networking\InitCmsBundle\Form\DataTransformer;
-
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -16,7 +15,6 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class TagTransformer implements DataTransformerInterface
 {
     protected $hasMultipleTags;
-
 
     public function __construct($hasMultipleTags)
     {
@@ -52,14 +50,11 @@ class TagTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        if(!$this->hasMultipleTags){
-            if($value){
+        if (!$this->hasMultipleTags) {
+            if ($value) {
                 return $value->first();
             }
-
         }
-
-
 
         return $value;
     }
@@ -90,9 +85,10 @@ class TagTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        if(!$this->hasMultipleTags && $value){
+        if (!$this->hasMultipleTags && $value) {
             return new ArrayCollection([$value]);
         }
+
         return $value;
     }
 }

@@ -16,15 +16,16 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
+
 /**
- * Class LoadPages
- * @package Networking\InitCmsBundle\Fixtures
+ * Class LoadPages.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LoadPages extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     private $container;
 
@@ -50,19 +51,19 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
 
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
-     * @param string $locale
-     * @param integer $key
-     * @param array $languages
+     * @param string                                     $locale
+     * @param int                                        $key
+     * @param array                                      $languages
      */
     public function createHomePages(ObjectManager $manager, $locale, $key, $languages)
     {
         $pageClass = $this->container->getParameter('networking_init_cms.admin.page.class');
         /** @var PageInterface $homePage */
-        $homePage = new $pageClass;
+        $homePage = new $pageClass();
 
         $homePage->setLocale($locale);
-        $homePage->setPageName('Homepage ' . $locale);
-        $homePage->setMetaTitle('Homepage ' . $locale);
+        $homePage->setPageName('Homepage '.$locale);
+        $homePage->setMetaTitle('Homepage '.$locale);
         $homePage->setMetaKeyword('homepage');
         $homePage->setMetaDescription('This is the homepage');
         $homePage->setStatus(PageInterface::STATUS_PUBLISHED);
@@ -72,14 +73,14 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
 
         // set original for translations
         if ($key > 0) {
-            $firstPage = $this->getReference('homepage_' . $languages['0']['locale']);
+            $firstPage = $this->getReference('homepage_'.$languages['0']['locale']);
             $homePage->setOriginal($firstPage);
         }
 
         $manager->persist($homePage);
         $manager->flush();
 
-        $this->addReference('homepage_' . $locale, $homePage);
+        $this->addReference('homepage_'.$locale, $homePage);
     }
 
     /**

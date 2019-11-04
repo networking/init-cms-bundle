@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Model;
-
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -23,59 +21,63 @@ interface LayoutBlockInterface extends ContentInterface
     public function __toString();
 
     /**
-     * Set name
+     * Set name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return $this
      */
     public function setName($name);
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Set zone
+     * Set zone.
      *
-     * @param  string $zone
+     * @param string $zone
+     *
      * @return $this
      */
     public function setZone($zone);
 
     /**
-     * Get zone
+     * Get zone.
      *
      * @return string
      */
     public function getZone();
 
     /**
-     * Set page
+     * Set page.
      *
-     * @param  PageInterface $page
+     * @param PageInterface $page
+     *
      * @return $this
      */
     public function setPage(PageInterface $page);
 
     /**
-     * Get conversation
+     * Get conversation.
      *
      * @return Page
      */
     public function getPage();
 
     /**
-     * Get conversation
+     * Get conversation.
      *
      * @return Page
      */
     public function getPageId();
 
     /**
-     * @param  string $classType
+     * @param string $classType
+     *
      * @return $this
      */
     public function setClassType($classType);
@@ -91,7 +93,8 @@ interface LayoutBlockInterface extends ContentInterface
     public function getOrigClassType();
 
     /**
-     * @param  int $objectId
+     * @param int $objectId
+     *
      * @return $this
      */
     public function setObjectId($objectId);
@@ -102,58 +105,61 @@ interface LayoutBlockInterface extends ContentInterface
     public function getObjectId();
 
     /**
-     * Set isActive
+     * Set isActive.
      *
-     * @param  boolean $active
+     * @param bool $active
+     *
      * @return $this
      */
     public function setIsActive($active);
 
     /**
-     * Get isActive
+     * Get isActive.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsActive();
 
     /**
-     * Alias for getIsActive
+     * Alias for getIsActive.
      *
      * @return bool
      */
     public function isActive();
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @return $this
      */
     public function setCreatedAt();
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
     public function getCreatedAt();
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
-     * @param  \DateTime $updatedAt
+     * @param \DateTime $updatedAt
+     *
      * @return $this
      */
     public function setUpdatedAt($updatedAt);
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
     public function getUpdatedAt();
 
     /**
-     * @param  int $sortOrder
+     * @param int $sortOrder
+     *
      * @return $this
      */
     public function setSortOrder($sortOrder);
@@ -170,34 +176,38 @@ interface LayoutBlockInterface extends ContentInterface
 
     /**
      * @param ContentInterface $content
+     *
      * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
      */
     public function setContent($content);
 
     /**
-     * @param boolean $isSnapshot
+     * @param bool $isSnapshot
+     *
      * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
      */
     public function setIsSnapshot($isSnapshot);
 
     /**
-     * @param boolean $isSnapshot
+     * @param bool $isSnapshot
+     *
      * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
      */
     public function setNoAutoDraft($isSnapshot);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsSnapshot();
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getSetNoAutoDraft();
 
     /**
      * @param array $snapshotContent
+     *
      * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
      */
     public function setSnapshotContent($snapshotContent);
@@ -209,7 +219,7 @@ interface LayoutBlockInterface extends ContentInterface
 
     /**
      * @param $snapshotContent
-     * @return void
+     *
      * @internal param $content
      */
     public function takeSnapshot($snapshotContent);
@@ -221,6 +231,7 @@ interface LayoutBlockInterface extends ContentInterface
 
     /**
      * @param LayoutBlockInterface $object
+     *
      * @return mixed
      */
     public function import(LayoutBlockInterface $object);

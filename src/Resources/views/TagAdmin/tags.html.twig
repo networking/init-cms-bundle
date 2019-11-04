@@ -1,13 +1,14 @@
 {% import _self as macros %}
 
-{% macro tag_tree(tags, lastItem, tagAdmin, noSort) %}
-{% import _self as macros %}
-    {% for tag in tags %}
-        <li  class="table-row-style sortable-tag {% if noSort %}mjs-nestedSortable-collapsed{% endif %} {% if lastItem and tag.id == lastItem %}last-item{% endif %}" id="tag_{{ tag.id }}" data-tag-name="{{ tag.name }}">
+{% macro tag_tree(tags, lastItem, tagAdmin, noSort, selected, level) %}
+    {% import _self as macros %}
+    {% for tag in tags if tag.level == level %}
+        <li  class="table-row-style sortable-tag mjs-nestedSortable-{{ selected==tag.id or tag.hasChild(selected)?'expanded':'collapsed' }} {% if lastItem and tag.id == lastItem %}last-item{% endif %}" id="tag_{{ tag.id }}" data-tag-name="{{ tag.name }}">
                 <div class="dotted">&nbsp;</div>
-                <div class="handle menu_item tag_item" id="div_{{ tag.id }}" ondrop="dropTag(event, '{{ tag.id }}')"   ondragover="openTag(event, '{{ tag.id }}')" >
-                    <i class="tag_folder glyphicon glyphicon-folder-close cursor-pointer"></i>&nbsp;
-                    <a class="tag_link" data-pk="{{ tag.id }}" href="#" >{{ tag.name }}</a>
+                <div class="handle menu_item tag_item {{ selected==tag.id?'info':'' }} " id="div_{{ tag.id }}" ondrop="dropTag(event, '{{ tag.id }}')"   ondragover="openTag(event, '{{ tag.id }}')" >
+                    <i class="tag_folder glyphicon glyphicon-folder-{{ selected==tag.id or tag.hasChild(selected)?'open':'close' }} cursor-pointer"></i>&nbsp;
+                    <a class="tag_link" id="tag_link_{{ tag.id }}" data-pk="{{ tag.id }}" href="#" >{{ tag.name }}</a>
+
                     {% if not noSort and tagAdmin.isGranted('DELETE', tag) and tagAdmin.hasRoute('delete') %}
                         <a href="{{ tagAdmin.generateObjectUrl('delete', tag, {'returnToMedia': true}) }}" class="pull-right dialog-link delete-tag" style="display: none"
                            id="{{ tagAdmin.getClassnameLabel() }}_{{ tag.id }}" data-original-title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}" title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
@@ -15,19 +16,26 @@
                         </a>
                     {% endif %}
                 </div>
+                {% if tag.children %}
                 <ul class="table-row-style">
-                    {{ macros.tag_tree(tag.children, lastItem, tagAdmin, noSort) }}
+                    {{ macros.tag_tree(tag.children, lastItem, tagAdmin, noSort, selected, tag.level+1) }}
                 </ul>
+                {% endif %}
         </li>
     {% endfor %}
 {% endmacro %}
 
+{% if datagrid is defined  %}
+{% set selected = datagrid.values.tags?datagrid.values.tags.value:0 %}
+    {% else %}
+{% set selected = lastItem %}
+{% endif %}
 <div class="sortable menu-tree">
     <ul id="tag-tree" class="table-row-style ui-sortable">
-        <li class="table-row-style no-nest ">
+        <li class="table-row-style no-nest no-sort" id="base">
             <div class="dotted">&nbsp;</div>
-            <div class="handle menu_item tag_item info"><a class="show_all_media"  href="#">{{ 'show_all_media'|trans({}, tagAdmin.translationDomain) }}</a></div>
+            <div class="handle menu_item tag_item  {{ selected==0?'info':'' }}"><a class="show_all_media"  href="#">{{ 'show_all_media'|trans({}, tagAdmin.translationDomain) }}</a></div>
         </li>
-        {{ macros.tag_tree(tags, lastItem, tagAdmin, noSort) }}
+        {{ macros.tag_tree(tags, lastItem, tagAdmin, noSort, selected, 1) }}
     </ul>
 </div>

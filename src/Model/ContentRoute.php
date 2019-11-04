@@ -8,26 +8,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Networking\InitCmsBundle\Component\Routing\AbstractRoute;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Networking\InitCmsBundle\Entity\ContentRoute
+ * Networking\InitCmsBundle\Entity\ContentRoute.
  *
  *
  * @author net working AG <info@networking.ch>
  */
 class ContentRoute implements ContentRouteInterface
 {
-
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -43,59 +41,58 @@ class ContentRoute implements ContentRouteInterface
     protected $name;
 
     /**
-     * @var string $classType
+     * @var string
      *
      * @ORM\Column(name="class_type", type="string", length=255)
      */
     protected $classType;
 
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="object_id", type="integer", nullable=true)
      */
     protected $objectId;
 
     /**
-     * $var object $content
+     * $var object $content.
      */
     protected $content;
 
     /**
-     * @var string $path
+     * @var string
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     protected $path = null;
 
     /**
-     * @var string $controller
+     * @var string
      *
      * @ORM\Column(name="controller", type="string", length=255, nullable=true)
      */
     protected $controller;
 
     /**
-     * @var string $template
+     * @var string
      *
      * @ORM\Column(name="template", type="string", length=255, nullable=true)
      */
     protected $template;
 
     /**
-     * @var string $templateName
+     * @var string
      *
      * @ORM\Column(name="template_name", type="string", length=255, nullable=true)
      */
     protected $templateName;
 
     /**
-     * @var string $locale
+     * @var string
      *
      * @ORM\Column(name="locale", type="string", length=255)
      */
     protected $locale;
-
 
     /**
      * @return string
@@ -115,6 +112,7 @@ class ContentRoute implements ContentRouteInterface
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName(string $name)
@@ -124,21 +122,23 @@ class ContentRoute implements ContentRouteInterface
         return $this;
     }
 
-
     /**
-     * Initializes the object to function as a route
+     * Initializes the object to function as a route.
+     *
      * @param RouteReferrersReadInterface $content
+     *
      * @return $this
      */
     public function setContent(RouteReferrersReadInterface $content)
     {
         $this->content = $content;
+
         return $this;
     }
 
-
     /**
-     * @param  string $controller
+     * @param string $controller
+     *
      * @return $this
      */
     public function setController($controller)
@@ -157,7 +157,8 @@ class ContentRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  int $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -176,7 +177,8 @@ class ContentRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  string $locale
+     * @param string $locale
+     *
      * @return $this
      */
     public function setLocale($locale)
@@ -195,7 +197,8 @@ class ContentRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  string $classType
+     * @param string $classType
+     *
      * @return $this
      */
     public function setClassType($classType)
@@ -214,7 +217,8 @@ class ContentRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  int $objectId
+     * @param int $objectId
+     *
      * @return $this
      */
     public function setObjectId($objectId)
@@ -234,6 +238,7 @@ class ContentRoute implements ContentRouteInterface
 
     /**
      * @param $path
+     *
      * @return $this
      */
     public function setPath($path)
@@ -252,7 +257,8 @@ class ContentRoute implements ContentRouteInterface
     }
 
     /**
-     * @param  string $template
+     * @param string $template
+     *
      * @return $this
      */
     public function setTemplate($template)
@@ -286,10 +292,8 @@ class ContentRoute implements ContentRouteInterface
         return $this->templateName;
     }
 
-
     public function getContent()
     {
         return $this->content;
     }
-
 }

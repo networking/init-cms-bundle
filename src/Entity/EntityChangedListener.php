@@ -7,7 +7,6 @@ use Networking\InitCmsBundle\Model\ModelChangedListener;
 
 class EntityChangedListener extends ModelChangedListener
 {
-
     /**
      * @param EventArgs $args
      */
@@ -23,27 +22,23 @@ class EntityChangedListener extends ModelChangedListener
 
     /**
      * @param EventArgs $args
-     * @param string $method
+     * @param string    $method
+     *
      * @return mixed|void
      */
     public function getLoggingInfo(EventArgs $args, $method = '')
     {
         $entity = $args->getEntity();
 
-
         if ($this->getTokenStorage()->getToken() && $this->getTokenStorage()->getToken()->getUser() != 'anon.') {
-
             $username = $this->getTokenStorage()->getToken()->getUser()->getUsername();
-
         } else {
             $username = 'doctrine:fixtures:load!';
         }
-        $id = method_exists($entity, 'getId') ?  $entity->getId() : null;
+        $id = method_exists($entity, 'getId') ? $entity->getId() : null;
         $this->logger->info(
             sprintf('entity %s', $method),
             ['username' => $username, 'class' => get_class($entity), 'id' => $id]
         );
-
     }
-
 }

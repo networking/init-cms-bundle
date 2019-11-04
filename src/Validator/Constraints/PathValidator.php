@@ -15,8 +15,8 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Class PathValidator
- * @package Networking\InitCmsBundle\Validator\Constraints
+ * Class PathValidator.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PathValidator extends ConstraintValidator
@@ -24,10 +24,10 @@ class PathValidator extends ConstraintValidator
     /**
      * @const string
      */
-    const PATTERN= '~^(/?|/\S+)$~ixu';
+    const PATTERN = '~^(/?|/\S+)$~ixu';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {

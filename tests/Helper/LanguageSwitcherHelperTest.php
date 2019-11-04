@@ -7,15 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Tests\Helper;
+
+namespace Networking\InitCmsBundle\tests\Helper;
 
 use Doctrine\ORM\EntityManager;
 use Networking\InitCmsBundle\Entity\PageManager;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use PHPUnit\Framework\TestCase;
-use \Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
+use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use \Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Entity\ContentRoute;
@@ -39,9 +40,8 @@ class LanguageSwitcherHelperTest extends TestCase
             ->with($request2)
             ->will($this->returnValue(['_content' => new Tag()]));
 
-
         $helper = $this->getLanguageHelper($request, $router, $request2);
-        $helper->getTranslationRoute('/foo', 'de');
+        $helper->getTranslationRoute('/foo', 'en', 'de');
     }
 
     public function testGetTranslationRoute_WithNoTranslation_ShouldReturnArray()
@@ -55,17 +55,15 @@ class LanguageSwitcherHelperTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-
         $router->expects($this->once())
             ->method('matchRequest')
             ->with($request2)
             ->will($this->returnValue(['_content' => $page]));
 
         $helper = $this->getLanguageHelper($request, $router, $request2);
-        $result = $helper->getTranslationRoute('/foo', 'de');
+        $result = $helper->getTranslationRoute('/foo', 'en','de');
 
-
-        $this->assertEquals(["_route" => "networking_init_cms_home"], $result);
+        $this->assertEquals(['_route' => 'networking_init_cms_home'], $result);
     }
 
     public function testGetTranslationRoute_PageWithTranslation_ShouldReturnContentRoute()
@@ -84,13 +82,14 @@ class LanguageSwitcherHelperTest extends TestCase
         $enPage->setContentRoute($contentRouteEn);
         $dePage->setTranslations([$enPage]);
 
-
         $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         $request2 = Request::create('/foo');
 
         $router = $this->getMockBuilder('Symfony\Cmf\Component\Routing\DynamicRouter')
             ->disableOriginalConstructor()
+	        ->setMethods(['setAllowLocaleCookie', 'matchRequest'])
             ->getMock();
+	    $router->setAllowLocaleCookie(true);
 
         $router->expects($this->at(0))
             ->method('matchRequest')
@@ -99,12 +98,10 @@ class LanguageSwitcherHelperTest extends TestCase
 
         $helper = $this->getLanguageHelper($request, $router, $request2);
 
-        $result = $helper->getTranslationRoute('/foo', 'en');
+        $result = $helper->getTranslationRoute('/foo','en', 'en');
 
         $this->assertInstanceOf('Networking\InitCmsBundle\Component\Routing\Route', $result);
-
     }
-
 
     public function testGetQueryString()
     {
@@ -114,7 +111,6 @@ class LanguageSwitcherHelperTest extends TestCase
         $qs = $helper->getQueryString();
         $this->assertNull($qs);
     }
-
 
     public function testPrepareBaseUrl()
     {
@@ -172,7 +168,6 @@ class LanguageSwitcherHelperTest extends TestCase
             ->willReturn($request2);
 
         if ($router === null) {
-
             $router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
                 ->disableOriginalConstructor()
                 ->getMock();

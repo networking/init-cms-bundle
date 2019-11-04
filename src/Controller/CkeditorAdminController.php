@@ -11,8 +11,11 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Entity\Media;
+use Networking\InitCmsBundle\Entity\Tag;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,17 +24,173 @@ use Sonata\MediaBundle\Controller\MediaAdminController as BaseMediaAdminControll
 class CkeditorAdminController extends BaseMediaAdminController
 {
     /**
-     * Returns the response object associated with the browser action
-     *
      * @return Response
      *
-     * @throws AccessDeniedException
+     * @throws \Twig_Error_Runtime
      */
     public function browserAction()
     {
         $this->checkIfMediaBundleIsLoaded();
+        if (false === $this->admin->checkAccess('list')) {
+            throw new AccessDeniedException();
+        }
 
-        if (false === $this->admin->isGranted('LIST')) {
+        $datagrid = $this->admin->getDatagrid();
+        $datagrid->setValue('context', null, $this->getRequest()->get('context'));
+        $datagrid->setValue('providerName', null, $this->getRequest()->get('provider'));
+
+        $formats = [];
+
+        foreach ($datagrid->getResults() as $media) {
+            $formats[$media->getId()] = $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
+        }
+
+        $formView = $datagrid->getForm()->createView();
+
+        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
+
+        $tags = $this->getDoctrine()
+            ->getRepository(Tag::class)
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
+
+        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+
+        return $this->render(
+            $this->getTemplate('browser'),
+            [
+                'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'lastItem' => 0,
+                'action' => 'browser',
+                'form' => $formView,
+                'datagrid' => $datagrid,
+                'formats' => $formats,
+            ]
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $type
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function uploadAction(Request $request, $type = 'image')
+    {
+        $this->checkIfMediaBundleIsLoaded();
+
+        if (false === $this->admin->checkAccess('CREATE')) {
+            throw new AccessDeniedException();
+        }
+
+	    /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
+	    $mediaAdmin = $this->container->get('sonata.media.admin.media');
+
+	    $mediaAdmin->setRequest($request);
+
+        $provider = $request->get('provider');
+        $file = $request->files->get('upload');
+
+	    $message = $this->admin->trans(
+		    'The file is not readable.',[], 'validators'
+	    );
+	    $response = ['uploaded' => 0, 'error'  => ['message' =>  $message]];
+
+
+        if (!$provider || null === $file) {
+	        return new JsonResponse($response);
+        }
+
+        if ($file instanceof UploadedFile && $file->isValid()) {
+
+            try {
+                $context = $request->get('context', $this->get('sonata.media.pool')->getDefaultContext());
+
+	            /** @var Media $media */
+	            $media = $mediaAdmin->getNewInstance();
+	            $media->setEnabled(true);
+	            $media->setName($file->getClientOriginalName());
+                $media->setBinaryContent($file);
+                $media->setContext($context);
+                $media->setProviderName($provider);
+
+
+	            $provider = $mediaAdmin->getPool()->getProvider($provider);
+
+	            $provider->transform($media);
+
+	            $validator = $this->container->get('validator');
+
+	            $errors = $validator->validate($media);
+
+	            if ($errors->count() > 0) {
+		            $duplicate = false;
+		            foreach ($errors as $error) {
+			            $errorMessages[] = $error->getMessage();
+
+			            if ($error->getMessage() == 'File is duplicate') {
+				            $duplicate = true;
+			            }
+		            }
+
+		            if ($duplicate) {
+			            $originalMedia = $mediaAdmin->checkForDuplicate($media);
+			            $path = $provider->generatePublicUrl($originalMedia, 'reference');
+			            $response = [
+			            	'uploaded' => 1,
+				            'fileName' => $originalMedia->getMetadataValue('filename'),
+				            'url' => $path,
+				            'error'  => ['message' => 'duplicate media']];
+		            }else{
+			            $response = ['uploaded' => 0, 'error'  => ['message' =>  implode(', ', $errorMessages)]];
+		            }
+
+		            return new JsonResponse($response);
+	            }
+
+	            try {
+		            $mediaAdmin->create($media);
+		            $path = $provider->generatePublicUrl($media, 'reference');
+                    $response = ['uploaded' => 1, 'fileName' => $media->getMetadataValue('filename'), 'url' => $path ];
+	            } catch (\Exception $e) {
+		            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
+	            }
+
+            } catch (\Exception $e) {
+
+	            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
+            } catch (\Throwable $e) {
+	            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
+            }
+        } elseif ($file instanceof UploadedFile && !$file->isValid()) {
+
+	        $response = ['uploaded' => 0, 'error'  => ['message' =>  $file->getError()]];
+        } else {
+            $message = $this->admin->trans(
+                'error.file_upload_size',
+                ['%max_server_size%' => ini_get('upload_max_filesize')], 'media'
+            );
+
+	        $response = ['uploaded' => 0, 'error'  => ['message' =>  $message]];
+        }
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * @return Response
+     *
+     * @throws \Twig_Error_Runtime
+     */
+    public function browserRefreshAction()
+    {
+        $this->checkIfMediaBundleIsLoaded();
+
+        if (false === $this->admin->checkAccess('LIST')) {
             throw new AccessDeniedException();
         }
 
@@ -47,16 +206,20 @@ class CkeditorAdminController extends BaseMediaAdminController
 
         $formView = $datagrid->getForm()->createView();
 
-            $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
+        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
         $tags = $this->getDoctrine()
-            ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(['level' => 1], ['path' => 'ASC']);
+            ->getRepository(Tag::class)
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
         return $this->render(
-            $this->getTemplate('browser'),
+            '@NetworkingInitCms/Ckeditor/browser_list_items.html.twig',
             [
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
@@ -64,93 +227,13 @@ class CkeditorAdminController extends BaseMediaAdminController
                 'action' => 'browser',
                 'form' => $formView,
                 'datagrid' => $datagrid,
-                'formats' => $formats
+                'formats' => $formats,
             ]
         );
     }
 
-
     /**
-     * @param Request $request
-     * @param string $type
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function uploadAction(Request $request, $type = 'image')
-    {
-        $this->checkIfMediaBundleIsLoaded();
-
-        if (false === $this->admin->isGranted('CREATE')) {
-            throw new AccessDeniedException();
-        }
-
-        $filePath = '';
-        $mediaManager = $this->get('sonata.media.manager.media');
-
-        $provider = $request->get('provider');
-        $file = $request->files->get('upload');
-
-        if (!$request->isMethod('POST') || !$provider || null === $file) {
-            throw $this->createNotFoundException();
-        }
-        if ($file instanceof UploadedFile && $file->isValid()) {
-
-            try {
-                $context = $request->get('context', $this->get('sonata.media.pool')->getDefaultContext());
-
-                $media = $mediaManager->create();
-                $media->setBinaryContent($file);
-
-                $mediaManager->save($media, $context, $provider);
-                $this->admin->createObjectSecurity($media);
-
-                switch ($type) {
-                    case 'file':
-                        $filePath = $this->generateUrl(
-                            'networking_init_cms_file_download',
-                            ['id' => $media->getId(), 'name' => $media->getMetadataValue('filename')]
-                        );
-                        break;
-                    default:
-                        $provider = $this->get($provider);
-                        $filePath = $provider->generatePublicUrl($media, 'reference');
-                        break;
-                }
-
-
-
-                $message = '';
-                $status = 200;
-            } catch (\Exception $e) {
-
-                $message = $e->getMessage();
-                $status = 500;
-            }
-
-        } elseif ($file instanceof UploadedFile && !$file->isValid()) {
-            $message = $file->getError();
-            $status = 500;
-        } else {
-            $message = $this->admin->trans(
-                'error.file_upload_size',
-                ['%max_server_size%' => ini_get('upload_max_filesize')]
-            );
-            $status = 500;
-        }
-
-        return $this->render(
-                            $this->getTemplate('upload'),
-                            [
-                                'action' => 'list',
-                                'filePath' => $filePath,
-                                'message' => $message,
-                                'status' => $status
-                            ]
-                        );
-
-    }
-
-    /**
-     * Returns a template
+     * Returns a template.
      *
      * @param string $name
      *
@@ -168,7 +251,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     }
 
     /**
-     * Checks if SonataMediaBundle is loaded otherwise throws an exception
+     * Checks if SonataMediaBundle is loaded otherwise throws an exception.
      *
      * @throws \RuntimeException
      */

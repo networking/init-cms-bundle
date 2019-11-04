@@ -20,13 +20,12 @@ use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class UserAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class UserAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class UserAdmin extends SonataUserAdmin
 {
-
     /**
      * @var string
      */
@@ -52,6 +51,7 @@ abstract class UserAdmin extends SonataUserAdmin
 
     /**
      * @param $trackedActions
+     *
      * @return $this
      */
     public function setTrackedActions($trackedActions)
@@ -61,13 +61,6 @@ abstract class UserAdmin extends SonataUserAdmin
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'fa-users';
-    }
 
     /**
      * @return array
@@ -79,7 +72,7 @@ abstract class UserAdmin extends SonataUserAdmin
 
         $links = [
             $this->trans($this->getLabel()) => $this,
-            $groupAdmin->trans($groupAdmin->getLabel()) => $groupAdmin
+            $groupAdmin->trans($groupAdmin->getLabel()) => $groupAdmin,
 
         ];
 
@@ -105,7 +98,7 @@ abstract class UserAdmin extends SonataUserAdmin
         $listMapper
             ->addIdentifier('username')
             ->add('email')
-            ->add('groups', null, ['template' => 'NetworkingInitCmsBundle:CRUD:list_orm_many_to_many.html.twig'])
+            ->add('groups', null, ['template' => '@NetworkingInitCms/CRUD/list_orm_many_to_many.html.twig'])
             ->add(
                 'enabled',
                 null,
@@ -124,11 +117,11 @@ abstract class UserAdmin extends SonataUserAdmin
             '_action',
             'actions',
             [
-                'label' => ' ',
+                'label' => false,
                 'actions' => [
                     'edit' => [],
-                    'delete' => []
-                ]
+                    'delete' => [],
+                ],
             ]
         );
     }
@@ -139,7 +132,7 @@ abstract class UserAdmin extends SonataUserAdmin
     protected function configureDatagridFilters(DatagridMapper $filterMapper): void
     {
         $filterMapper
-            ->add('username')
+            ->add('username', null, ['field_options' => ['translation_domain' => $this->translationDomain]])
             ->add('email', null, ['hidden' => true])
             ->add('groups', null, ['hidden' => true]);
     }
@@ -149,7 +142,6 @@ abstract class UserAdmin extends SonataUserAdmin
      */
     protected function configureFormFields(FormMapper $formMapper): void
     {
-
         $formMapper
             ->with('General')
             ->add('username')
@@ -161,7 +153,8 @@ abstract class UserAdmin extends SonataUserAdmin
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
-                'choices_as_values' => true
+                'choices_as_values' => true,
+                'translation_domain' => false,
             ])
             ->end()
             ->with('Profile')
@@ -170,9 +163,7 @@ abstract class UserAdmin extends SonataUserAdmin
             ->add('locale', LocaleType::class, ['required' => false])
             ->end();
 
-
         if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
-
             $formMapper
                 ->with('Management')
                 ->add(
@@ -186,11 +177,8 @@ abstract class UserAdmin extends SonataUserAdmin
                         'label' => false,
                     ]
                 )
-                ->add('expired', null, ['required' => false], ['inline_block' => true])
                 ->add('enabled', null, ['required' => false], ['inline_block' => true])
-                ->add('credentialsExpired', null, ['required' => false], ['inline_block' => true])
                 ->end();
         }
-
     }
 }

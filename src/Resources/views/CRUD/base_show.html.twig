@@ -23,7 +23,7 @@ file that was distributed with this source code.
                 <i class="glyphicon glyphicon-book"></i>
                 {{ 'link_action_history'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
-        {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
+        {% include '@SonataAdmin/Core/create_button.html.twig' %}
         {% if admin.hasroute('list') and admin.isGranted('LIST')%}
             <a class="btn btn-default sonata-action-element" href="{{ admin.generateUrl('list') }}">
                 <i class="glyphicon glyphicon-list"></i>
@@ -41,7 +41,7 @@ file that was distributed with this source code.
                 {% if name %}
                     <tr class="sonata-ba-view-title">
                         <td colspan="2">
-                            {{ admin.trans(name) }}
+                            {{ name|trans({}, admin.translationDomain)  }}
                         </td>
                     </tr>
                 {% endif %}

@@ -8,8 +8,8 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Entity;
+
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Model\ContentRoute;
 use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteListener;
@@ -21,6 +21,7 @@ class ContentRouteListener extends ModelContentRouteListener
 {
     /**
      * @param LifecycleEventArgs $args
+     *
      * @return mixed|void
      */
     public function prePersist(LifecycleEventArgs $args)
@@ -28,8 +29,6 @@ class ContentRouteListener extends ModelContentRouteListener
         $entity = $args->getObject();
 
         if ($entity instanceof ContentRoute) {
-
-
             $template = $this->templates[$entity->getTemplateName()];
 
             $entity->setTemplate($template['template']);
@@ -39,6 +38,7 @@ class ContentRouteListener extends ModelContentRouteListener
 
     /**
      * @param LifecycleEventArgs $args
+     *
      * @return mixed|void
      */
     public function preUpdate(LifecycleEventArgs $args)
@@ -48,7 +48,6 @@ class ContentRouteListener extends ModelContentRouteListener
         $uow = $em->getUnitOfWork();
 
         if ($entity instanceof ContentRoute) {
-
             $template = $this->templates[$entity->getTemplateName()];
             $changeset = $uow->getEntityChangeSet($entity);
             if (isset($changeset['templateName']) && $args->hasChangedField('templateName')) {
@@ -56,12 +55,10 @@ class ContentRouteListener extends ModelContentRouteListener
                 $entity->setController($template['controller']);
 
                 $uow->recomputeSingleEntityChangeSet(
-                    $em->getClassMetadata("NetworkingInitCmsBundle:ContentRoute"),
+                    $em->getClassMetadata('NetworkingInitCmsBundle:ContentRoute'),
                     $entity
                 );
             }
-
         }
     }
-
 }

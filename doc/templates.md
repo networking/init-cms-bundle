@@ -16,7 +16,7 @@ So lets have a look at getting out some of our saved content:
 ```
    <div class="hero-unit">
         {% for layoutBlock in page.layoutBlock('header') %}
-		{{ render_initcms_block('ApplicationNetworkingInitCmsBundle:Content:cms_block.html.twig', layoutBlock)}}
+		{{ render_initcms_block('@ApplicationNetworkingInitCms/Content/cms_block.html.twig', layoutBlock)}}
 		{% endfor %}
     </div>
 ```
@@ -66,17 +66,8 @@ The navigation setup involves three parts, to be configured in your bundles serv
 Step 1. Setup the Networking FrontendMenuBuilder as your menu factory or extend it:
 
 ```
-     sandbox_init_cms.menu.frontend_menu_builder:
-        class: Networking\InitCmsBundle\Menu\FrontendMenuBuilder
-        scope: request
-        arguments:
-            - @knp_menu.factory
-            - @security.context
-            - @request
-            - @router
-            - @networking_init_cms.menu_item_manager
-            - @translator
-            - @knp_menu.matcher
+    Networking\InitCmsBundle\Menu\FrontendMenuBuilder
+        autowire: true
 ```
 
 Step 2. Configure the Knp menu to use your factory supplying it with the name of the menu and css classes to add the ```<ul>``` element
@@ -85,8 +76,7 @@ Step 2. Configure the Knp menu to use your factory supplying it with the name of
 
     sandbox_init_cms.menu.frontend_main_menu_left:
         class: Knp\Menu\MenuItem
-        factory_service: sandbox_init_cms.menu.frontend_menu_builder
-        factory_method: createMainMenu
+        factory: 'Networking\InitCmsBundle\Component\Menu\FrontendMenuBuilder:createMainMenu'
         arguments: [menu_name: "Main menu", "nav nav-tabs nav-main" ]
         scope: request
         tags:
@@ -94,8 +84,7 @@ Step 2. Configure the Knp menu to use your factory supplying it with the name of
 
     sandbox_init_cms.menu.frontend_main_menu_language:
         class: Knp\Menu\MenuItem
-        factory_service: sandbox_init_cms.menu.frontend_menu_builder
-        factory_method: createFrontendLangMenu
+        factory: 'Networking\InitCmsBundle\Component\Menu\FrontendMenuBuilder:createFrontendLangMenu'
         arguments: [ '@request', %networking_init_cms.page.languages%, "nav nav-pills pull-right" ]
         scope: request
         tags:

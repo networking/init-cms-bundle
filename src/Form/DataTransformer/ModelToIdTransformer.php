@@ -12,11 +12,9 @@
 namespace Networking\InitCmsBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
-
 use Sonata\AdminBundle\Model\ModelManagerInterface;
 
 /**
- *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
 class ModelToIdTransformer implements DataTransformerInterface
@@ -32,15 +30,15 @@ class ModelToIdTransformer implements DataTransformerInterface
     public function __construct(ModelManagerInterface $modelManager, $className)
     {
         $this->modelManager = $modelManager;
-        $this->className    = $className;
+        $this->className = $className;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function reverseTransform($newId)
     {
-        if (empty($newId) && !in_array($newId, ["0", 0], true)) {
+        if (empty($newId) && !in_array($newId, ['0', 0], true)) {
             return null;
         }
 
@@ -48,13 +46,14 @@ class ModelToIdTransformer implements DataTransformerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function transform($entity)
     {
         if (empty($entity)) {
             return null;
         }
+
         return $entity->getId();
     }
 }

@@ -21,14 +21,14 @@ use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Form\Type\InstallUserType as UserType;
 
 /**
- * Class InitCmsInstallController
- * @package Networking\InitCmsBundle\Controller
+ * Class InitCmsInstallController.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class InitCmsInstallController extends Controller
 {
     /**
-     * @var \Symfony\Bundle\FrameworkBundle\Console\Application $application
+     * @var \Symfony\Bundle\FrameworkBundle\Console\Application
      */
     private $application;
 
@@ -60,7 +60,6 @@ class InitCmsInstallController extends Controller
             $label = 'Go to the homepage';
             $hasDB = true;
             $installed = true;
-
         } catch (\Exception $e) {
             $connection = $this->getDoctrine()->getConnection();
             try {
@@ -75,13 +74,13 @@ class InitCmsInstallController extends Controller
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:InitCmsInstall:index.html.twig',
+            '@NetworkingInitCms/InitCmsInstall/index.html.twig',
             [
                 'action' => ['url' => $url, 'label' => $label],
                 'title' => 'Welcome to the init cms',
                 'has_DB' => $hasDB,
                 'error_message' => $errorMessage,
-                'installed' => $installed
+                'installed' => $installed,
             ]
         );
     }
@@ -89,6 +88,7 @@ class InitCmsInstallController extends Controller
     /**
      * @param Request $request
      * @param $complete
+     *
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function installDbAction(Request $request, $complete)
@@ -113,13 +113,12 @@ class InitCmsInstallController extends Controller
         }
 
         /** @var \Symfony\Component\Form\Form $form */
-        $form =  $this->createForm(new UserType());
+        $form = $this->createForm(new UserType());
 
         if ('POST' == $request->getMethod()) {
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-
                 $kernel = $this->get('kernel');
                 $application = new Application($kernel);
                 $application->setAutoExit(false);
@@ -130,16 +129,14 @@ class InitCmsInstallController extends Controller
                 $email = $formData['email'];
                 $password = $formData['password']['first'];
 
-
                 $output = $this->getStreamOutput();
-
 
                 if ($complete == 0) {
                     $this->initACL($output);
                     $this->createDB($output);
                     $returnCode = $this->sonataSetupACL($output);
                     if (!$returnCode) {
-                        $complete++;
+                        ++$complete;
                     }
                 }
 
@@ -149,7 +146,7 @@ class InitCmsInstallController extends Controller
                     $this->publishPages($output);
 
                     if (!$returnCode) {
-                        $complete++;
+                        ++$complete;
                     }
                 }
 
@@ -157,13 +154,12 @@ class InitCmsInstallController extends Controller
                     $output = $this->getStreamOutput($output);
                     $returnCode = $this->createAdminUser($output, $username, $email, $password);
                     if (!$returnCode) {
-                        $complete++;
+                        ++$complete;
                     }
                 }
 
-
                 if ($complete == 3) {
-                    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+                    /* @var \Symfony\Component\HttpFoundation\Session\Session $session */
                     $this->get('session')->getFlashBag()->add('success', 'Init CMS was successfully installed');
 
                     return new RedirectResponse($this->generateUrl('_configure_cms'));
@@ -174,18 +170,19 @@ class InitCmsInstallController extends Controller
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:InitCmsInstall:index.html.twig',
+            '@NetworkingInitCms/InitCmsInstall/index.html.twig',
             [
                 'form' => $form->createView(),
                 'title' => 'Install the init cms',
                 'complete' => $complete,
-                'install_failed' => $installFailed
+                'install_failed' => $installFailed,
             ]
         );
     }
 
     /**
      * @param OutputInterface $output
+     *
      * @return int
      */
     private function createDB(OutputInterface $output)
@@ -204,13 +201,14 @@ class InitCmsInstallController extends Controller
 
     /**
      * @param OutputInterface $output
+     *
      * @return int
      */
     private function initACL(OutputInterface $output)
     {
         $output->write('> Initializing the ACL tables', true);
         $arguments = [
-            'command' => 'init:acl'
+            'command' => 'init:acl',
         ];
 
         $input = new ArrayInput($arguments);
@@ -220,13 +218,14 @@ class InitCmsInstallController extends Controller
 
     /**
      * @param OutputInterface $output
+     *
      * @return int
      */
     private function sonataSetupACL(OutputInterface $output)
     {
         $output->write('> Inserting sonata ACL entries', true);
         $arguments = [
-            'command' => 'sonata:admin:setup-acl'
+            'command' => 'sonata:admin:setup-acl',
         ];
 
         $input = new ArrayInput($arguments);
@@ -234,12 +233,12 @@ class InitCmsInstallController extends Controller
         return $this->getApplication()->run($input, $output);
     }
 
-
     /**
      * @param OutputInterface $output
      * @param $username
      * @param $email
      * @param $password
+     *
      * @return int|string
      */
     private function createAdminUser(OutputInterface $output, $username, $email, $password)
@@ -259,7 +258,8 @@ class InitCmsInstallController extends Controller
     }
 
     /**
-     * @param  OutputInterface $output
+     * @param OutputInterface $output
+     *
      * @return int|string
      */
     private function loadFixtures(OutputInterface $output)
@@ -267,8 +267,8 @@ class InitCmsInstallController extends Controller
         $output->write('> Load dummy cms data', true);
         $arguments = [
             'command' => 'doctrine:fixtures:load',
-            '--fixtures' => __DIR__ . '/../Fixtures',
-            '--no-interaction' => true
+            '--fixtures' => __DIR__.'/../Fixtures',
+            '--no-interaction' => true,
         ];
 
         $input = new ArrayInput($arguments);
@@ -278,6 +278,7 @@ class InitCmsInstallController extends Controller
 
     /**
      * @param OutputInterface $output
+     *
      * @return int
      */
     public function publishPages(OutputInterface $output)
@@ -288,16 +289,18 @@ class InitCmsInstallController extends Controller
 
         try {
             foreach ($selectedModels as $selectedModel) {
-                /** @var \Networking\InitCmsBundle\Model\PageInterface $selectedModel */
+                /* @var \Networking\InitCmsBundle\Model\PageInterface $selectedModel */
                 $selectedModel->setStatus(\Networking\InitCmsBundle\Model\PageInterface::STATUS_PUBLISHED);
                 $modelManager->save($selectedModel);
                 /** @var $pageHelper \Networking\InitCmsBundle\Helper\PageHelper */
                 $pageHelper = $this->get('networking_init_cms.helper.page_helper');
                 $pageHelper->makePageSnapshot($selectedModel);
             }
+
             return 0;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $output->writeln($e->getMessage());
+
             return 1;
         }
     }
@@ -320,6 +323,7 @@ class InitCmsInstallController extends Controller
 
     /**
      * @param StreamOutput $output
+     *
      * @return string
      */
     private function getConsoleDisplay(StreamOutput $output)
@@ -327,21 +331,20 @@ class InitCmsInstallController extends Controller
         rewind($output->getStream());
         $errors = [
             'The following errors occured during setup:',
-            trim(stream_get_contents($output->getStream()))
+            trim(stream_get_contents($output->getStream())),
         ];
         fclose($output->getStream());
-
 
         return nl2br(implode("\n", $errors));
     }
 
     /**
      * @param StreamOutput $output
+     *
      * @return StreamOutput
      */
     private function getStreamOutput(StreamOutput $output = null)
     {
-
         if ($output) {
             rewind($output->getStream());
             $this->consoleOutput[] = trim(stream_get_contents($output->getStream()));

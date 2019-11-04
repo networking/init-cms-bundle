@@ -7,10 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Networking\InitCmsBundle\Tests\Controller;
+
+namespace Networking\InitCmsBundle\tests\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Networking\InitCmsBundle\Component\Routing\DynamicRouter;
 use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Entity\PageManager;
 use Networking\InitCmsBundle\Entity\PageSnapshotManager;
@@ -29,9 +29,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 /** @author sonja brodersen s.brodersen@networking.ch */
 class FrontendPageControllerTest extends TestCase
 {
-    /**
-     *
-     */
     public function testIndexActionWithAccessDeniedException()
     {
 
@@ -45,8 +42,6 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-
-
         $mockPage->expects($this->once())
             ->method('getVisibility')
             ->will($this->returnValue(PageInterface::VISIBILITY_PROTECTED));
@@ -54,9 +49,6 @@ class FrontendPageControllerTest extends TestCase
         $mockRequest = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
-
-
-
 
         $mockRequest->expects($this->at(0))
             ->method('get')
@@ -67,13 +59,10 @@ class FrontendPageControllerTest extends TestCase
             ->method('get')
             ->with('_template');
 
-
         $mockRequest->expects($this->at(2))
             ->method('get')
             ->with('_content')
             ->will($this->returnValue($mockPage));
-
-
 
         $mockTokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
             ->disableOriginalConstructor()
@@ -82,7 +71,6 @@ class FrontendPageControllerTest extends TestCase
         $mockAccessDecisionManager = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AccessDecisionManager')
             ->disableOriginalConstructor()
             ->getMock();
-
 
         $mockAuthorizationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationChecker')
             ->disableOriginalConstructor()
@@ -95,7 +83,6 @@ class FrontendPageControllerTest extends TestCase
         $property = new \ReflectionProperty('Symfony\Component\Security\Core\Authorization\AuthorizationChecker', 'accessDecisionManager');
         $property->setAccessible(true);
         $property->setValue($mockAuthorizationChecker, $mockAccessDecisionManager);
-
 
         $mockTokenStorage->expects($this->any())
             ->method('getToken')
@@ -151,8 +138,6 @@ class FrontendPageControllerTest extends TestCase
         $controller->indexAction($mockRequest);
     }
 
-    /**
-     */
     public function testIndexActionWithNotFoundHttpException()
     {
         $this->expectException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
@@ -182,7 +167,6 @@ class FrontendPageControllerTest extends TestCase
             ->method('get')
             ->with('_template');
 
-
         $mockRequest->expects($this->at(2))
             ->method('get')
             ->with('_content')
@@ -198,7 +182,6 @@ class FrontendPageControllerTest extends TestCase
         $property = new \ReflectionProperty('Symfony\Component\Security\Core\Authorization\AuthorizationChecker', 'tokenStorage');
         $property->setAccessible(true);
         $property->setValue($mockAuthorizationChecker, $mockTokenStorage);
-
 
         $mockTokenStorage->expects($this->any())
             ->method('getToken')
@@ -249,10 +232,6 @@ class FrontendPageControllerTest extends TestCase
         $controller->indexAction($mockRequest);
     }
 
-
-    /**
-     *
-     */
     public function testLiveAction()
     {
 
@@ -269,16 +248,20 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSnapshot->expects($this->once())
-            ->method('getPage')
-            ->will($this->returnValue($mockPage));
-
         $mockHelper = $this->getMockBuilder('Networking\InitCmsBundle\Helper\PageHelper')
             ->disableOriginalConstructor()
             ->getMock();
         $mockHelper->expects($this->once())
             ->method('unserializePageSnapshotData')
             ->will($this->returnValue($mockPage));
+
+        $mockHelper->expects($this->once())
+            ->method('isAllowLocaleCookie')
+            ->will($this->returnValue(true));
+
+        $mockHelper->expects($this->once())
+            ->method('isSingleLanguage')
+            ->will($this->returnValue(false));
 
         //cache class
         $mockCacheClass = $this->getMockBuilder('Networking\InitCmsBundle\Lib\PhpCache')
@@ -295,11 +278,9 @@ class FrontendPageControllerTest extends TestCase
             ->with('ROLE_USER')
             ->will($this->returnValue(true));
 
-
         $mockTokenStorage = $this->getMockBuilder(TokenStorage::class)
             ->disableOriginalConstructor()
             ->getMock();
-
 
         //templating
         $mockTemplating = $this->getMockBuilder(TwigEngine::class)
@@ -336,7 +317,6 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-
         $mockContainer->expects($this->at(0))
             ->method('get')
             ->with('networking_init_cms.lib.php_cache')
@@ -367,12 +347,20 @@ class FrontendPageControllerTest extends TestCase
             ->with('templating')
             ->will($this->returnValue(true));
 
-
         $mockContainer->expects($this->at(6))
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTemplating));
 
+	    $mockContainer->expects($this->at(7))
+	                  ->method('get')
+	                  ->with('networking_init_cms.helper.page_helper')
+	                  ->will($this->returnValue($mockHelper));
+
+	    $mockContainer->expects($this->at(8))
+	                  ->method('get')
+	                  ->with('networking_init_cms.helper.page_helper')
+	                  ->will($this->returnValue($mockHelper));
 
         // controller
         $controller = new FrontendPageController();
@@ -380,12 +368,8 @@ class FrontendPageControllerTest extends TestCase
         $response = $controller->indexAction($mockRequest);
 
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response, 'response object returned');
-
     }
 
-    /**
-     *
-     */
     public function testRequest()
     {
         $request = new Request();
@@ -395,7 +379,7 @@ class FrontendPageControllerTest extends TestCase
     }
 
     /**
-     * home
+     * home.
      */
     public function testHomeAction()
     {
@@ -412,12 +396,6 @@ class FrontendPageControllerTest extends TestCase
         $mockPage->expects($this->once())
             ->method('isActive')
             ->will($this->returnValue(true));
-
-        $mockSnapshot->expects($this->once())
-            ->method('getPage')
-            ->will($this->returnValue($mockPage));
-
-
 
         $mockSerializer = $this->getMockBuilder('\JMS\Serializer\SerializerInterface')
             ->disableOriginalConstructor()
@@ -438,32 +416,32 @@ class FrontendPageControllerTest extends TestCase
         $mockTokenStorage = $this->getMockBuilder(TokenStorage::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mockRegistry= $this->getMockBuilder(Registry::class)
+        $mockRegistry = $this->getMockBuilder(Registry::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mockPageManager= $this->getMockBuilder(PageManager::class)
+        $mockPageManager = $this->getMockBuilder(PageManager::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mockPageSnapshotManager= $this->getMockBuilder(PageSnapshotManager::class)
+        $mockPageSnapshotManager = $this->getMockBuilder(PageSnapshotManager::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mockContentRouteManager= $this->getMockBuilder(ContentRouteManager::class)
+        $mockContentRouteManager = $this->getMockBuilder(ContentRouteManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $_SERVER = [
             'PATH_INFO' => '/',
-            'SCRIPT_NAME' => 'app.php'
+            'SCRIPT_NAME' => 'app.php',
         ];
         $templateParams = [
-            'template' => 'DemoInitCmsBundle:Default:one_column.html.twig',
+            'template' => '@DemoInitCms/Default/one_column.html.twig',
             'vars' => [],
-            'isStreamable' => false
+            'isStreamable' => false,
         ];
         $template = new Template($templateParams);
         $requestParams = [
             '_content' => $mockSnapshot,
-            '_template' => $template
+            '_template' => $template,
         ];
         //templating
         $mockTwig = $this->getMockBuilder(TwigEngine::class)
@@ -482,7 +460,7 @@ class FrontendPageControllerTest extends TestCase
         $request->attributes->set('_locale', 'en');
 
         //dynamic router
-        $mockDynamicRouter = $this->getMockBuilder(DynamicRouter::class)
+        $mockDynamicRouter = $this->getMockBuilder('\Symfony\Cmf\Component\Routing\DynamicRouter')
             ->disableOriginalConstructor()
             ->getMock();
         $mockDynamicRouter->expects($this->once())
@@ -502,14 +480,14 @@ class FrontendPageControllerTest extends TestCase
 
         $pageHelper = new \Networking\InitCmsBundle\Helper\PageHelper(
             $mockSerializer, $mockRegistry,  $mockPageManager, $mockPageSnapshotManager, $mockContentRouteManager,
-            $mockDynamicRouter, $mockCacheClass
+            $mockDynamicRouter, $mockCacheClass, true, false
         );
+
 
         $mockContainer->expects($this->at(0))
             ->method('get')
             ->with('networking_init_cms.helper.page_helper')
             ->will($this->returnValue($pageHelper));
-
 
         $mockContainer->expects($this->at(1))
             ->method('get')
@@ -535,17 +513,26 @@ class FrontendPageControllerTest extends TestCase
             ->with('security.token_storage')
             ->will($this->returnValue($mockTokenStorage));
 
-
         $mockContainer->expects($this->at(6))
             ->method('has')
             ->with('templating')
             ->will($this->returnValue(true));
 
-
         $mockContainer->expects($this->at(7))
             ->method('get')
             ->with('templating')
             ->will($this->returnValue($mockTwig));
+
+
+	    $mockContainer->expects($this->at(8))
+                  ->method('get')
+                  ->with('networking_init_cms.helper.page_helper')
+                  ->will($this->returnValue($pageHelper));
+
+	    $mockContainer->expects($this->at(9))
+                  ->method('get')
+                  ->with('networking_init_cms.helper.page_helper')
+                  ->will($this->returnValue($pageHelper));
 
         $requestAfter = clone $request;
 
@@ -559,7 +546,6 @@ class FrontendPageControllerTest extends TestCase
         $requestAfter->attributes->set('_template_vars', $configuration->getVars());
         $requestAfter->attributes->set('_template_streamable', $configuration->isStreamable());
 
-
         $controller = new FrontendPageController();
         $controller->setContainer($mockContainer);
         $response = $controller->homeAction($request);
@@ -567,10 +553,6 @@ class FrontendPageControllerTest extends TestCase
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $response, 'response object returned');
     }
 
-
-    /**
-     *
-     */
     public function testChangeAdminLanguageAction()
     {
         // session
@@ -602,5 +584,4 @@ class FrontendPageControllerTest extends TestCase
         $response = $controller->changeAdminLanguageAction($request, 'xy');
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response, 'Redirect returned');
     }
-
 }

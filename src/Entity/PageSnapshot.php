@@ -13,12 +13,10 @@ namespace Networking\InitCmsBundle\Entity;
 use Networking\InitCmsBundle\Model\PageSnapshot as ModelPageSnapshot;
 
 /**
- * Class PageSnapshot
- * @package Networking\InitCmsBundle\Entity
+ * Class PageSnapshot.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageSnapshot extends ModelPageSnapshot
 {
-
-
 }

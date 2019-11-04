@@ -14,8 +14,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class MultiuploadType
- * @package Networking\InitCmsBundle\Form\Type
+ * Class MultiuploadType.
+ *
  * @author Marc Bissegger <m.bissegger@networking.ch>
  */
 class MultiuploadType extends AbstractType
@@ -39,12 +39,12 @@ class MultiuploadType extends AbstractType
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver){
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults([
             'error_mapping' => [
                 'validate' => 'binaryContent',
             ],
         ]);
-
     }
 }

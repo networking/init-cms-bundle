@@ -10,24 +10,23 @@
 
 namespace Networking\InitCmsBundle\Admin\Entity;
 
-
 use Networking\InitCmsBundle\Admin\Model\PageAdmin as ModelPageAdmin;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 
 /**
- * Class PageAdmin
- * @package Networking\InitCmsBundle\Admin\Entity
+ * Class PageAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageAdmin extends ModelPageAdmin
 {
-
     /**
      * @param LayoutBlock $layoutBlock
+     *
      * @return \Networking\InitCmsBundle\Model\PageInterface
      */
-    public function getPageByLayoutBlock(LayoutBlock $layoutBlock){
-
+    public function getPageByLayoutBlock(LayoutBlock $layoutBlock)
+    {
         return $layoutBlock->getPage();
     }
 
@@ -37,11 +36,10 @@ class PageAdmin extends ModelPageAdmin
     public function getLastEditedBy()
     {
         $loggableClass = 'Gedmo\\Loggable\\Entity\\LogEntry';
-        /** @var \Gedmo\Loggable\Entity\Repository\LogEntryRepository  $repo */
+        /** @var \Gedmo\Loggable\Entity\Repository\LogEntryRepository $repo */
         $repo = $this->getModelManager()->getEntityManager($this->getClass())->getRepository($loggableClass);
         $logEntries = $repo->getLogEntries($this->subject);
 
         return array_shift($logEntries);
-
     }
 }

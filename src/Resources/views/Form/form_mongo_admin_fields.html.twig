@@ -11,12 +11,12 @@ file that was distributed with this source code.
 
 {# Custom Sonata Admin Extension, template override#}
 
-{% extends  'SonataDoctrineMongoDBAdminBundle:Form:form_admin_fields.html.twig' %}
+{% extends  '@SonataDoctrineMongoDBAdmin/Form/form_admin_fields.html.twig' %}
 
 {% block sonata_admin_mongo_collection %}
     {% if sonata_admin.field_description.name == 'layoutBlock' %}
-        {% include 'NetworkingInitCmsBundle:PageAdmin:page_edit_layout_blocks.html.twig' %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
     {% else %}
-        {% include 'SonataDoctrineMongoDBAdminBundle:CRUD:edit_mongo_collection.html.twig' %}
+        {% include '@SonataDoctrineMongoDBAdmin/CRUD/edit_mongo_collection.html.twig' %}
     {% endif %}
 {% endblock %}

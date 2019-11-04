@@ -20,25 +20,25 @@ use Ibrows\Bundle\SonataAdminAnnotationBundle\Reader\SonataAdminAnnotationReader
 use Symfony\Component\Intl\Intl;
 
 /**
- * Class BaseAdmin
- * @package Networking\InitCmsBundle\Admin
+ * Class BaseAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 abstract class BaseAdmin extends AbstractAdmin
 {
     /**
-     * @var array $languages
+     * @var array
      */
     protected $languages;
 
     /**
-     * @var array $trackedActions
+     * @var array
      */
     protected $trackedActions = ['list', 'edit'];
 
     /**
      * Set the language paramenter to contain a list of languages most likely
-     * passed from the config.yml file
+     * passed from the config.yml file.
      *
      * @param array $languages
      */
@@ -48,7 +48,7 @@ abstract class BaseAdmin extends AbstractAdmin
     }
 
     /**
-     * Set up listner to make sure the correct locale is used
+     * Set up listner to make sure the correct locale is used.
      */
     public function setUpTranslatableLocale()
     {
@@ -62,7 +62,7 @@ abstract class BaseAdmin extends AbstractAdmin
     /**
      * Provide an array of locales where the locale is the key and the label is
      * the value for easy display in a dropdown select for example
-     * example: array('de_CH' => 'Deutsch', 'en_GB' => 'English')
+     * example: array('de_CH' => 'Deutsch', 'en_GB' => 'English').
      *
      * @return array
      */
@@ -87,7 +87,7 @@ abstract class BaseAdmin extends AbstractAdmin
         $localeList = Intl::getLocaleBundle()->getLocaleNames(substr($locale, 0, 2));
 
         foreach ($this->languages as $language) {
-            $localeChoices[$localeList[$language['locale']]] =  $language['locale'];
+            $localeChoices[$localeList[$language['locale']]] = $language['locale'];
         }
 
         return $localeChoices;
@@ -114,34 +114,33 @@ abstract class BaseAdmin extends AbstractAdmin
             }
         }
 
-        if (!array_key_exists($locale, $this->getLocaleChoices())) {
+        $localeChoices = array_flip($this->getLocaleChoices());
+        if (!array_key_exists($locale, $localeChoices)) {
             if (strlen($locale) > 2) {
                 $shortLocale = substr($locale, 0, 2);
             } else {
                 $shortLocale = $locale;
             }
 
-            foreach ($this->getLocaleChoices() as $key => $locale) {
+            foreach ($localeChoices as $key => $locale) {
                 if (strpos($key, $shortLocale) !== false) {
                     return $key;
                 }
             }
 
-
-            foreach ($this->getLocaleChoices() as $key => $locale) {
+            foreach ($localeChoices as $key => $locale) {
                 if (strpos($key, $this->getContainer()->getParameter('locale')) !== false) {
                     return $key;
                 }
             }
-
         }
 
         return $locale;
-
     }
 
     /**
      * @param array $trackedActions
+     *
      * @return BaseAdmin
      */
     public function setTrackedActions(array $trackedActions)

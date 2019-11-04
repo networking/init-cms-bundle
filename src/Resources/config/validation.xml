@@ -48,4 +48,35 @@
             <option name="message">File is duplicate</option>
         </constraint>
     </class>
+
+    <class name="Networking\InitCmsBundle\Entity\HelpText">
+        <property name="locale">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="translationKey">
+            <constraint name="NotBlank"/>
+            <constraint name="Length">
+                <option name="max">255</option>
+            </constraint>
+        </property>
+        <property name="title">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="text">
+            <constraint name="NotBlank"/>
+        </property>
+    </class>
+
+    <class name="Networking\InitCmsBundle\Entity\BaseUser">
+        <property name="plainPassword">
+            <constraint name="Length">
+                <option name="groups">
+                    <value>default</value>
+                    <value>Profile</value>
+                </option>
+                <option name="min">8</option>
+                <option name="minMessage">password_too_short</option>
+            </constraint>
+        </property>
+    </class>
 </constraint-mapping>

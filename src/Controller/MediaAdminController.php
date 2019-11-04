@@ -7,12 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
 use Networking\InitCmsBundle\Entity\Media;
-use Networking\InitCmsBundle\Model\Tag;
+use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
@@ -22,17 +23,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
- * Class MediaAdminController
- * @package Networking\InitCmsBundle\Controller
+ * Class MediaAdminController.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MediaAdminController extends SonataMediaAdminController
 {
     /**
      * @param null $id
+     *
      * @return Response
      */
     public function showAction($id = null)
@@ -48,7 +49,7 @@ class MediaAdminController extends SonataMediaAdminController
         }
 
         return $this->renderWithExtraParams(
-            'NetworkingInitCmsBundle:MediaAdmin:show.html.twig',
+            '@NetworkingInitCms/MediaAdmin/show.html.twig',
             [
                 'media' => $media,
                 'formats' => $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext()),
@@ -66,6 +67,7 @@ class MediaAdminController extends SonataMediaAdminController
 
     /**
      * @param Request|null $request
+     *
      * @return Response
      */
     public function createAction(Request $request = null)
@@ -76,27 +78,25 @@ class MediaAdminController extends SonataMediaAdminController
 
         $parameters = $this->admin->getPersistentParameters();
 
-
         if (!array_key_exists('provider', $parameters) || !$parameters['provider']) {
             return $this->render(
-                'NetworkingInitCmsBundle:MediaAdmin:select_provider.html.twig',
+                '@NetworkingInitCms/MediaAdmin/select_provider.html.twig',
                 [
                     'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                         $request->get('context', $this->get('sonata.media.pool')->getDefaultContext())
                     ),
                     'base_template' => $this->getBaseTemplate(),
                     'admin' => $this->admin,
-                    'action' => 'create'
+                    'action' => 'create',
                 ]
             );
         }
-
 
         return parent::createAction($request);
     }
 
     /**
-     * redirect the user depend on this choice
+     * redirect the user depend on this choice.
      *
      * @param object $object
      *
@@ -112,7 +112,6 @@ class MediaAdminController extends SonataMediaAdminController
         if ($this->getRequest()->get('btn_create_and_list')) {
             $url = $this->admin->generateUrl('list', ['active_tab' => $this->getRequest()->get('context')]);
         }
-
 
         if ($this->getRequest()->get('btn_create_and_create')) {
             $params = [];
@@ -130,11 +129,11 @@ class MediaAdminController extends SonataMediaAdminController
     }
 
     /**
-     *
      * @param mixed $id
      *
      * @throws NotFoundHttpException
      * @throws AccessDeniedException
+     *
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response|RedirectResponse
      */
     public function deleteAction($id)
@@ -169,13 +168,13 @@ class MediaAdminController extends SonataMediaAdminController
             $this->admin->getTemplate('delete'),
             [
                 'object' => $object,
-                'action' => 'delete'
+                'action' => 'delete',
             ]
         );
     }
 
     /**
-     * execute a batch delete
+     * execute a batch delete.
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      *
@@ -185,10 +184,9 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function batchActionDelete(ProxyQueryInterface $query)
     {
-        if (false === $this->admin->checkAccess('DELETE')) {
+        if (false === $this->admin->checkAccess('batchDelete')) {
             throw new AccessDeniedException();
         }
-
 
         try {
             $this->doBatchDelete($query);
@@ -216,21 +214,19 @@ class MediaAdminController extends SonataMediaAdminController
         /** @var Tag $tag */
         $tag = $modelManager->find($tagAdmin->getClass(), $this->get('request_stack')->getCurrentRequest()->get('tags'));
 
-
         $data = [
             'result' => 'ok',
             'status' => 'warning',
-            'message' => $this->admin->trans('tag_not_selected')
+            'message' => $this->admin->trans('tag_not_selected'),
         ];
 
         if ($tag !== null) {
-
             $selectedModels = $selectedModelQuery->execute();
 
             try {
                 /** @var Media $selectedModel */
                 foreach ($selectedModels as $selectedModel) {
-                    if(!$this->getParameter('networking_init_cms.multiple_media_tags')){
+                    if (!$this->getParameter('networking_init_cms.multiple_media_tags')) {
                         $selectedModel->setTags(new ArrayCollection());
                     }
                     $selectedModel->addTags($tag);
@@ -239,7 +235,6 @@ class MediaAdminController extends SonataMediaAdminController
 
                 $status = 'success';
                 $message = 'tag_added';
-
             } catch (\Exception $e) {
                 $status = 'error';
                 $message = 'tag_not_added';
@@ -248,17 +243,15 @@ class MediaAdminController extends SonataMediaAdminController
             $data = [
                 'result' => 'ok',
                 'status' => $status,
-                'message' => $this->admin->trans($message, ['%tag%' => $tag->getPath()])];
+                'message' => $this->admin->trans($message, ['%tag%' => $tag->getPath()]), ];
         }
 
-
-
         return $this->renderJson($data);
-
     }
 
     /**
      * @param ProxyQueryInterface $queryProxy
+     *
      * @throws ModelManagerException
      */
     protected function doBatchDelete(ProxyQueryInterface $queryProxy)
@@ -266,7 +259,7 @@ class MediaAdminController extends SonataMediaAdminController
         $modelManager = $this->admin->getModelManager();
         $class = $this->admin->getClass();
 
-        $queryProxy->select('DISTINCT ' . $queryProxy->getRootAlias());
+        $queryProxy->select('DISTINCT '.$queryProxy->getRootAlias());
 
         try {
             $entityManager = $modelManager->getEntityManager($class);
@@ -290,9 +283,9 @@ class MediaAdminController extends SonataMediaAdminController
         }
     }
 
-
     /**
      * @param Request|null $request
+     *
      * @return Response
      */
     public function listAction(Request $request = null)
@@ -308,12 +301,15 @@ class MediaAdminController extends SonataMediaAdminController
 
         $formView = $datagrid->getForm()->createView();
 
-
         $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
         $tags = $this->getDoctrine()
-            ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(['level' => 1], ['path' => 'ASC']);
+            ->getRepository(Tag::class)
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
@@ -331,13 +327,14 @@ class MediaAdminController extends SonataMediaAdminController
                 'datagrid' => $datagrid,
                 'galleryListMode' => $galleryListMode,
                 'csrf_token' => $this->getCsrfToken('sonata.batch'),
-                'show_actions' => true
+                'show_actions' => true,
             ]
         );
     }
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
     public function refreshListAction(Request $request)
@@ -351,13 +348,17 @@ class MediaAdminController extends SonataMediaAdminController
         $persistentParameters = $this->admin->getPersistentParameters();
 
         $tags = $this->getDoctrine()
-            ->getRepository('NetworkingInitCmsBundle:Tag')
-            ->findBy(['level' => 1], ['path' => 'ASC']);
+            ->getRepository(Tag::class)
+            ->createQueryBuilder('t')
+            ->select('t', 'c')
+            ->leftJoin('t.children', 'c') // preload
+            ->orderBy('t.path', 'ASC')
+            ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
         return $this->render(
-            'NetworkingInitCmsBundle:MediaAdmin:list_items.html.twig',
+            '@NetworkingInitCms/MediaAdmin/list_items.html.twig',
             [
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
@@ -368,9 +369,20 @@ class MediaAdminController extends SonataMediaAdminController
                 'action' => 'list',
                 'datagrid' => $datagrid,
                 'galleryListMode' => $galleryListMode,
-                'show_actions' => true
+                'show_actions' => true,
             ]
         );
     }
 
+    /**
+     * @param $id
+     *
+     * @return Response
+     */
+    public function previewPdfAction($id)
+    {
+        $object = $this->admin->getObject($id);
+
+        return $this->render('NetworkingInitCmsBundle:MediaAdmin:preview.html.twig', ['object' => $object]);
+    }
 }

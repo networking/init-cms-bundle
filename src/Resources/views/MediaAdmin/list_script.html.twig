@@ -1,16 +1,16 @@
 {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
-<script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
+{% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
+<script src="{{ asset('bundles/networkinginitcms/vendor/nestedSortable/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
 <script>
     var tagDialog;
-    var lastLink;
+    var lastLink = $('{{ selected }}');
     function initializeTagDialog() {
         if (!tagDialog) {
             tagDialog = jQuery('#tag_dialog');
             tagDialog.modal({
                 height: 'auto',
                 width: 650,
-                show: false,
-                title: '{{ 'tag.title'|trans({}, tagAdmin.translationDomain) }}'
+                show: false
             });
 
             tagDialog.on('hide.bs.modal', function (e) {
@@ -30,7 +30,7 @@
 
         var form = jQuery(this).closest('form');
 
-        if (jQuery('[name^="idx[]"]:checked', form).length == 0 && jQuery('[name^="all_elements"]:checked', form).length == 0) {
+        if (jQuery('[name^="idx[]"]:checked', form).length === 0 && jQuery('[name^="all_elements"]:checked', form).length === 0) {
             createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
             return;
         }
@@ -40,7 +40,7 @@
             url: form.attr('action'),
             dataType: 'json',
             success: function (xhr) {
-                if (xhr.result == 'ok') {
+                if (xhr.result === 'ok') {
                     createInitCmsMessageBox(xhr.status, xhr.message);
                     $('.batch-actions').hide();
                     refreshList();
@@ -122,6 +122,8 @@
             forceHelperSize: true,
             startCollapsed: true,
             expandOnHover: 100,
+            excludeRoot:true,
+            disabledClass: 'no-sort',
             isAllowed: function(placeholder, placeholderParent, currentItem) {
                 var allowed = true;
                 var currentId = $(currentItem).attr('id');
@@ -130,13 +132,13 @@
                 if(placeholderParent){
                     $(placeholderParent[0]).find(' > ul > li.sortable-tag').each(function(i, e){
                         if(currentId != $(e).attr('id')){
-                            if($(e).find('> div.handle > a.tag_link').text().toLowerCase() == currentText.toLowerCase() ){allowed = false;}
+                            if($(e).find('> div.handle > a.tag_link').text().toLowerCase() === currentText.toLowerCase() ){allowed = false;}
                         }
                     });
                 }else{
                     $('#tag-tree').find(' > li.sortable-tag').each(function(i, e){
                         if(currentId != $(e).attr('id')){
-                            if($(e).find('> div > a.tag_link').text().toLowerCase() == currentText.toLowerCase() ){ allowed = false; }
+                            if($(e).find('> div > a.tag_link').text().toLowerCase() === currentText.toLowerCase() ){ allowed = false; }
                         }
                     });
                 }
@@ -164,7 +166,7 @@
         }).on('save', function(e, params){
             $(this).parent().closest('li').data('tag-name', params.newValue);
         }).on('hidden', function(e, r){
-            if(r == 'save'){
+            if(r === 'save'){
                 var list = $(this).parent().closest('ul');
                 sortList(list);
                 history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
@@ -191,10 +193,17 @@
         );
     }
 
-    function refreshList(){
-        $('#item_list').load(
-                "{{ admin.generateUrl('refresh_list')|raw }}",
-                function(){$('.info > a.tag_link').trigger('click');}
+    function refreshList(filters){
+        if(!filters){
+            filters = {}
+        }
+        $.get(
+            "{{ admin.generateUrl('refresh_list')|raw }}",
+            filters,
+            function(xhr){
+                $('#item_list').html(xhr);
+                $("html, body").animate({ scrollTop: $('#item_list').scrollTop() }, "slow");
+            }
         );
 
         history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
@@ -203,6 +212,14 @@
 
     $(function(){
         var body = $('body');
+
+        body.on('html-received', function(event, html){
+
+            console.log(html);
+
+            reloadSortTree(html);
+        });
+
 
         var ua = navigator.userAgent, event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
@@ -227,9 +244,7 @@
             $("input[name='action']").val(this.value);
         });
 
-        lastLink = $('.show_all_media');
-
-        body.on('click', '.tag_link', function(e){
+        body.on('click', '.tag_link', function(e, noLoad){
             e.preventDefault();
             if(lastLink){
                 lastLink.parent().removeClass('info');
@@ -247,9 +262,9 @@
             }
 
             lastLink = link;
-            $('.media-box').each(function(){
-                if($(this).hasClass('tag_'+tagId)){$(this).show()}else{$(this).hide()};
-            });
+            if(noLoad == undefined){
+                refreshList({'filter': {'tags':{'value':tagId}}});
+            }
         });
 
         body.on('click', '.show_all_media', function (e) {
@@ -258,11 +273,23 @@
                 lastLink.parent().removeClass('info');
                 lastLink.siblings('a.dialog-link').hide();
             }
-            $('.media-box').show();
+            // $('.media-box').show();
+            refreshList({'filter': {'_page':1}});
             var link = $(e.target);
             link.parent().addClass('info');
             lastLink = link;
         });
+
+        body.on('click', 'a.media-pager', function (e) {
+            e.preventDefault();
+            refreshList({'filter': {
+                '_page':$(this).data('page'),
+                '_sort_order':$(this).data('sort-order'),
+                '_sort_by':$(this).data('sort-by'),
+                'tags':{'value': $(this).data('tags')},
+                'name':{'value': $(this).data('name')},
+            }});
+        })
 
 
         body.on('click', 'i.tag_folder', function(e) {

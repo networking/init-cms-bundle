@@ -15,21 +15,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class HelpTextController
- * @package Networking\InitCmsBundle\Controller
+ * Class HelpTextController.
  *
  * @author net working AG <info@networking.ch>
  */
 class HelpTextController extends Controller
 {
-
-
     /**
-     * Help text page action
+     * Help text page action.
      *
      * @param Request $request
      * @param $adminCode
      * @param string $action
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function adminHelpAction(Request $request, $adminCode, $action = '')
@@ -40,7 +38,7 @@ class HelpTextController extends Controller
         if ($action == '') {
             $translationKey = $adminCode;
         } else {
-            $translationKey = $adminCode . '.' . $action;
+            $translationKey = $adminCode.'.'.$action;
         }
 
         $helpTextManager = $this->get('networking_init_cms.help_text_manager');
@@ -48,19 +46,16 @@ class HelpTextController extends Controller
 
         $parameters['help_text'] = $helpText;
         if (!in_array($adminCode, $defaultAdminCode)) {
-
             $admin = $this->container->get('sonata.admin.pool')->getAdminByAdminCode($adminCode);
             $admin->setRequest($request);
             $parameters['admin'] = $admin;
-
         }
 
         /** @var \Networking\InitCmsBundle\Admin\Pool $pool */
         $pool = $this->get('sonata.admin.pool');
         $parameters['admin_pool'] = $pool;
-        $parameters['base_template'] = isset($admin) ?  $this->getBaseTemplate($request, $admin): 'NetworkingInitCmsBundle::admin_layout.html.twig';
+        $parameters['base_template'] = isset($admin) ? $this->getBaseTemplate($request, $admin) : '@NetworkingInitCms/admin_layout.html.twig';
         $dashBoardGroups = $pool->getDashboardNavigationGroups();
-
 
         $parameters['help_nav'] = $this->adminGetHelpTextNavigation(
             $dashBoardGroups,
@@ -69,16 +64,17 @@ class HelpTextController extends Controller
         );
 
         return $this->render(
-            'NetworkingInitCmsBundle:HelpText:adminHelp.html.twig',
+            '@NetworkingInitCms/HelpText/adminHelp.html.twig',
             $parameters
         );
     }
 
     /**
-     * return the base template name
+     * return the base template name.
      *
-     * @param Request $request
+     * @param Request       $request
      * @param AbstractAdmin $admin
+     *
      * @return string the template name
      */
     protected function getBaseTemplate(Request $request, AbstractAdmin $admin)
@@ -91,11 +87,12 @@ class HelpTextController extends Controller
     }
 
     /**
-     * Create the navigation for the help text view
+     * Create the navigation for the help text view.
      *
      * @param array $dashBoardGroups
      * @param $locale
      * @param $helpTextManager
+     *
      * @return array
      */
     protected function adminGetHelpTextNavigation(array $dashBoardGroups, $locale, $helpTextManager)
@@ -107,7 +104,7 @@ class HelpTextController extends Controller
             'title.help',
             [],
             'HelpTextAdmin'
-        );;
+        );
         $navArray['overview']['group_items']['0']['adminCode'] = 'overview';
         $navArray['overview']['group_items']['0']['action'] = '';
         $navArray['overview']['group_items']['0']['title'] = $this->get('translator')->trans(
@@ -127,8 +124,6 @@ class HelpTextController extends Controller
 
         foreach ($dashBoardGroups as $key => $group) {
             foreach ($group['sub_group'] as $subGroup) {
-
-
                 $navArray[$subGroup['label']]['group_items'] = [];
                 $i = 0;
                 foreach ($subGroup['items'] as $admin) {
@@ -142,7 +137,6 @@ class HelpTextController extends Controller
 
                     $help_text_result = $helpTextManager->searchHelpTextByKeyLocale($admin->getCode(), $locale);
                     if (count($help_text_result) > 0) {
-
                         foreach ($help_text_result as $row) {
                             //split Translation Key into adminCode and action
                             $strripos = strripos($row->getTranslationKey(), '.');

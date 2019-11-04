@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit backupGlobals="false"
+<phpunit backupGlobals="true"
          backupStaticAttributes="false"
          colors="true"
          convertErrorsToExceptions="true"
@@ -8,8 +8,8 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="true"
-         syntaxCheck="true"
-         bootstrap="./vendor/autoload.php">
+
+         bootstrap="./tests/bootstrap.php">
 
     <!--
         <php>
@@ -17,6 +17,11 @@
             <server name="KERNEL_DIR" value="/path/to/your/app/" />
         </php>
     -->
+
+    <php>
+        <env name="ALLOW_LOCALE_COOKIE" value="true" force="true" />
+        <env name="SINGLE_LANGUAGE" value="false" force="true" />
+    </php>
 
     <testsuites>
         <testsuite name="init CMS bundle">

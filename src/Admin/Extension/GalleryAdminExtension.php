@@ -10,25 +10,61 @@
 
 namespace Networking\InitCmsBundle\Admin\Extension;
 
+use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Sonata\AdminBundle\Admin\AbstractAdminExtension;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
- * Class GalleryAdmin
- * @package Networking\InitCmsBundle\Admin\Model
+ * Class GalleryAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class GalleryAdminExtension extends AbstractAdminExtension
 {
-
     /**
      * {@inheritdoc}
      */
     public function configureFormFields(FormMapper $formMapper)
     {
-       $formMapper->remove('context')->add('context', HiddenType::class);
+        $formMapper->remove('context')
+                  ->add('context', HiddenType::class);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
+        $datagridMapper->remove('context');
+        $datagridMapper->add('context', SimpleStringFilter::class, [
+            'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
+        ])
+                       ->add('providerName', SimpleStringFilter::class, [
+                           'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
+                       ])
+        ;
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function configureListFields(ListMapper $listMapper)
+    {
+        $listMapper->remove('defaultFormat')
+                   ->remove('context')
+            ->add(
+                '_action',
+                'actions',
+                [
+                    'actions' => [
+                        'show' => [],
+                        'edit' => [],
+                        'delete' => [],
+                    ],
+                ])
+        ;
+    }
 }

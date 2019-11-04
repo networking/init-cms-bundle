@@ -13,10 +13,10 @@ namespace Networking\InitCmsBundle\Admin\Entity;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin as ModelLayoutBlockAdmin;
 
 /**
- * Class LayoutBlockAdmin
- * @package Networking\InitCmsBundle\Admin\Entity
+ * Class LayoutBlockAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LayoutBlockAdmin extends ModelLayoutBlockAdmin{
-
-} 
+class LayoutBlockAdmin extends ModelLayoutBlockAdmin
+{
+}

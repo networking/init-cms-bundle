@@ -13,10 +13,10 @@ namespace Networking\InitCmsBundle\Admin\Entity;
 use Networking\InitCmsBundle\Admin\Model\MenuItemAdmin as ModelMenuItemAdmin;
 
 /**
- * Class MenuItemAdmin
- * @package Networking\InitCmsBundle\Admin\Entity
+ * Class MenuItemAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MenuItemAdmin extends ModelMenuItemAdmin{
-
+class MenuItemAdmin extends ModelMenuItemAdmin
+{
 }

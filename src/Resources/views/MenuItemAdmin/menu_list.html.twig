@@ -8,11 +8,11 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends 'NetworkingInitCmsBundle:CRUD:base_list.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/base_list.html.twig' %}
 
 {% block list_table %}
     <div id="menuTabs">
-        {% include "NetworkingInitCmsBundle:MenuItemAdmin:menu_tabs.html.twig" %}
+        {% include "@NetworkingInitCms/MenuItemAdmin/menu_tabs.html.twig" %}
     </div>
 {% endblock %}
 {% block actions %}
@@ -36,12 +36,12 @@ file that was distributed with this source code.
                     {% set filter_main %}
                     <div class="form-group">
                         <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                               class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
+                               class="control-label col-md-3 filter">{{ filter.label|trans({}, admin.translationDomain) }}</label>
 
                         <div class="form-inline col-md-9">
                             {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
                             ) }}
-                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label, 'class': 'input-medium'} }) }}
                         </div>
                     </div>
                     {% endset %}
@@ -50,12 +50,12 @@ file that was distributed with this source code.
                     {{ filter_hidden }}
                     <div class="form-group">
                         <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                               class="control-label col-md-3 filter">{{ admin.trans(filter.label) }}</label>
+                               class="control-label col-md-3 filter">{{ filter.label|trans({}, admin.translationDomain) }}</label>
 
                         <div class="form-inline col-md-9">
                             {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium sonata-filter-option' }}
                             ) }}
-                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': admin.trans(filter.label), 'class': 'input-medium'} }) }}
+                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label, 'class': 'input-medium'} }) }}
                         </div>
                     </div>
                     {% endset %}
@@ -104,7 +104,7 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-    <script src="{{ asset('bundles/networkinginitcms/js/jquery.mjs.nestedSortable.js') }}"
+    <script src="{{ asset('bundles/networkinginitcms/vendor/nestedSortable/jquery.mjs.nestedSortable.js') }}"
             type="text/javascript"></script>
-    {% include "NetworkingInitCmsBundle:MenuItemAdmin:menu_list_script.html.twig" %}
+    {% include "@NetworkingInitCms/MenuItemAdmin/menu_list_script.html.twig" %}
 {% endblock %}

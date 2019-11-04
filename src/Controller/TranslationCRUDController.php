@@ -8,13 +8,11 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Ibrows\SonataTranslationBundle\Controller\TranslationCRUDController as IbrowsTranslationCRUDController;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Yaml\Dumper;
@@ -52,6 +50,7 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
 
     /**
      * @param ProxyQueryInterface $queryProxy
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|StreamedResponse
      */
     public function batchActionDownload(ProxyQueryInterface $queryProxy)
@@ -67,12 +66,11 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
         $response = new StreamedResponse(
             function () use ($queryProxy, &$flashType, $dumper) {
                 try {
-                    /**
-                     * @var TransUnit $transUnit
+                    /*
+                     * @var TransUnit
                      */
-                    foreach ( $queryProxy->getQuery()->getResult() as $pos => $transUnit) {
-
-                        $chunkPrefix = $transUnit->getDomain() . '__' . $transUnit->getKey() . '__' . $transUnit->getId() . '__';
+                    foreach ($queryProxy->getQuery()->getResult() as $pos => $transUnit) {
+                        $chunkPrefix = $transUnit->getDomain().'__'.$transUnit->getKey().'__'.$transUnit->getId().'__';
                         $chunk = array();
                         /** @var TranslationInterface $translation */
                         foreach ($transUnit->getTranslations() as $translation) {
@@ -107,7 +105,4 @@ class TranslationCRUDController extends IbrowsTranslationCRUDController
 
         return $response;
     }
-
-
 }
- 

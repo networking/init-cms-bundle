@@ -58,12 +58,15 @@
             <call method="setMultipleMediaTags">
                 <argument>%networking_init_cms.multiple_media_tags%</argument>
             </call>
+            <call method="setShowTagTree">
+                <argument>%networking_init_cms.show_tag_tree%</argument>
+            </call>
             <call method="setTemplates">
                 <argument type="collection">
-                    <argument key="list">NetworkingInitCmsBundle:MediaAdmin:list.html.twig</argument>
-                    <argument key="edit">NetworkingInitCmsBundle:MediaAdmin:edit.html.twig</argument>
-                    <argument key="show">NetworkingInitCmsBundle:CRUD:show.html.twig</argument>
-                    <argument key="ajax">NetworkingInitCmsBundle::ajax_layout.html.twig</argument>
+                    <argument key="list">@NetworkingInitCms/MediaAdmin/list.html.twig</argument>
+                    <argument key="edit">@NetworkingInitCms/MediaAdmin/edit.html.twig</argument>
+                    <argument key="show">@NetworkingInitCms/CRUD/show.html.twig</argument>
+                    <argument key="ajax">@NetworkingInitCms/ajax_layout.html.twig</argument>
                 </argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="admin_label_media"

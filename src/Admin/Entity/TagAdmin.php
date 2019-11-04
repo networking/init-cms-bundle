@@ -13,11 +13,10 @@ namespace Networking\InitCmsBundle\Admin\Entity;
 use Networking\InitCmsBundle\Admin\Model\TagAdmin as ModelTagAdmin;
 
 /**
- * Class TagAdmin
- * @package Networking\InitCmsBundle\Admin\Entity
+ * Class TagAdmin.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class TagAdmin extends ModelTagAdmin
 {
-
 }

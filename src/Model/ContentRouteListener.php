@@ -7,16 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
 
 namespace Networking\InitCmsBundle\Model;
-
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class ContentRouteListener implements ContentRouteListenerInterface {
-
+abstract class ContentRouteListener implements ContentRouteListenerInterface
+{
     /**
      * @var array
      */
@@ -30,4 +28,3 @@ abstract class ContentRouteListener implements ContentRouteListenerInterface {
         $this->templates = $templates;
     }
 }
- 

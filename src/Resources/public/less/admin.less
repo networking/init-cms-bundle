@@ -642,11 +642,11 @@ body.modal-open {
   }
 
   .nav-main {
-    background: url('../img/bg_nav_left_800.jpg') no-repeat right;
     border-right: 1px solid #efefef;
     width: 100%;
     min-height: 600px;
     padding-top: 40px;
+    padding-right: 5px;
   }
 
   .nav-custom ul {
@@ -751,9 +751,7 @@ body.modal-open {
   }
 
   .nav-custom li.second-level {
-    height: 16px;
-    padding-left: 30px;
-    padding-bottom: 0px;
+    padding-left: 15px;
     font-size: 13px;
     display: block;
   }
@@ -1011,6 +1009,10 @@ body.modal-open {
     }
     div.menu_item.info{
       background-color: #D9EDF7;
+    }
+
+    div.menu_item.danger{
+      background-color: @alert-danger-bg;
     }
 
     .placeholder {
@@ -1303,6 +1305,7 @@ th.sonata-ba-list-field-header-order-asc.sonata-ba-list-field-order-active a:hov
 .btn-clipboard {
   position: absolute;
   top: 0;
+  z-index: 10;
   display: block;
   padding: 5px 8px;
   font-size: 12px;
@@ -1321,4 +1324,22 @@ th.sonata-ba-list-field-header-order-asc.sonata-ba-list-field-order-active a:hov
 .btn-clipboard.btn-clipboard-bottom {
   top: 110px;
   left: 0;
+}
+.btn-clipboard-right.open{
+  z-index: 1000;
+}
+.sidebar-menu .treeview-menu {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-left: 5px;
+}
+.sidebar-menu li.keep-open > .treeview-menu {
+  display: block !important;
+  height: auto !important;
+}
+
+.sidebar-menu li.active>.treeview-menu {
+  display: block;
 }

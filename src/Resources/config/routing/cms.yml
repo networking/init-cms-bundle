@@ -51,7 +51,7 @@ networking_init_change_admin_language:
         locale: .+
 
 networking_init_change_language:
-    path: /change_language/{locale}
+    path: /change_language/{oldLocale}/{locale}
     defaults: {_controller: NetworkingInitCmsBundle:FrontendPage:changeLanguage}
     methods: [GET|POST]
     requirements:
@@ -100,7 +100,7 @@ networking_init_cms_file_download:
         format: (.*)?
 
 networking_init_cms_image_view:
-    path: /image/view/{id}/{name}
+    path: /image/view/{id}/{format}/{name}
     defaults: { _controller: NetworkingInitCmsBundle:Media:viewImage, format: 'reference' }
     requirements:
         name: (.*)?
@@ -155,6 +155,8 @@ networking_init_cms_admin_login:
     requirements: { trailingSlash : "[/]{1}" }
 
 
-
+networking_init_cms_page_url_json:
+    path: /cms/pages/internal-url.json
+    defaults: { _controller: NetworkingInitCmsBundle:FrontendPage:getJsonUrls }
 
 

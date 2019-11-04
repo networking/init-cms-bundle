@@ -17,8 +17,8 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 
 /**
- * Class PageToNumberTransformer
- * @package Networking\InitCmsBundle\Form\DataTransformer
+ * Class PageToNumberTransformer.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class PageToIdTransformer implements DataTransformerInterface
@@ -40,12 +40,13 @@ class PageToIdTransformer implements DataTransformerInterface
      * Transforms an object (page) to a string (number).
      *
      * @param PageInterface $page
+     *
      * @return mixed|string
      */
     public function transform($page)
     {
         if (null === $page) {
-            return "";
+            return '';
         }
 
         return $page->getId();
@@ -54,9 +55,11 @@ class PageToIdTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object (issue).
      *
-     * @param  string $id
+     * @param string $id
+     *
      * @return PageInterface|null
-     * @throws TransformationFailedException if object (issue) is not found.
+     *
+     * @throws TransformationFailedException if object (issue) is not found
      */
     public function reverseTransform($id)
     {

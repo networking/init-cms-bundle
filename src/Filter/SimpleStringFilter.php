@@ -16,8 +16,8 @@ use Sonata\DoctrineORMAdminBundle\Filter\Filter;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class SimpleStringFilter
- * @package Networking\InitCmsBundle\Filter
+ * Class SimpleStringFilter.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class SimpleStringFilter extends Filter
@@ -45,7 +45,6 @@ class SimpleStringFilter extends Filter
         $queryBuilder->setParameter($parameterName, sprintf($this->getOption('format'), $data['value']));
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -55,7 +54,7 @@ class SimpleStringFilter extends Filter
             'format' => '%%%s%%',
             'field_type' => TextType::class,
             'label_render' => true,
-            'widget_form_group' => true
+            'widget_form_group' => true,
         ];
     }
 
@@ -69,9 +68,10 @@ class SimpleStringFilter extends Filter
 
     public function getWidgetControlGroup()
     {
-        if($this->getFieldType() == 'hidden'){
+        if ($this->getFieldType() == 'hidden') {
             return false;
         }
+
         return $this->getOption('widget_form_group');
     }
 
@@ -87,8 +87,8 @@ class SimpleStringFilter extends Filter
                 'field_options' => $this->getFieldOptions(),
                 'label' => $this->getLabel(),
                 'label_render' => $this->getLabelRender(),
-                'widget_form_group' => $this->getWidgetControlGroup()
-            ]
+                'widget_form_group' => $this->getWidgetControlGroup(),
+            ],
         ];
     }
 }

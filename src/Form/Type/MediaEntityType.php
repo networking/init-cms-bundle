@@ -19,13 +19,12 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class MediaEntityType
- * @package Networking\InitCmsBundle\Form\Type
+ * Class MediaEntityType.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class MediaEntityType extends AbstractType
 {
-
     /**
      * @var null
      */
@@ -77,7 +76,6 @@ class MediaEntityType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-
         $pool = $this->pool;
 
         $adminCode = $options['admin_code'];
@@ -98,7 +96,6 @@ class MediaEntityType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-
         $resolver->setDefaults(
             [
                 'model_manager' => null,
@@ -115,9 +112,7 @@ class MediaEntityType extends AbstractType
 
         $resolver->setRequired(['class']);
         $resolver->addAllowedValues('required', [false]);
-
     }
-
 
     /**
      * {@inheritdoc}

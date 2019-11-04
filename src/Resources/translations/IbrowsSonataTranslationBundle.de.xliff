@@ -66,6 +66,10 @@
                 <source>action._delete</source>
                 <target>Löschen</target>
             </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Neuer Bergriff erstellen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

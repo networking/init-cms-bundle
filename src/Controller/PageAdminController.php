@@ -15,32 +15,31 @@ use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Gedmo\Sluggable\Util\Urlizer;
 
 /**
- * Class PageAdminController
- * @package Networking\InitCmsBundle\Controller
+ * Class PageAdminController.
  *
  * @author net working AG <info@networking.ch>
  */
 class PageAdminController extends CRUDController
 {
-
     /**
-     * Create a copy of a page in the given local and connect the pages
+     * Create a copy of a page in the given local and connect the pages.
      *
      * @param Request $request
      * @param $id
      * @param $locale
      *
      * @return RedirectResponse|Response
+     *
      * @throws NotFoundHttpException
      */
     public function translateAction(Request $request, $id, $locale)
@@ -54,11 +53,9 @@ class PageAdminController extends CRUDController
         $language = \Locale::getDisplayLanguage($locale);
 
         if ($request->getMethod() == 'POST') {
-
             $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
             try {
-
                 $pageCopy = $pageHelper->makeTranslationCopy($page, $locale);
                 $this->admin->createObjectSecurity($pageCopy);
                 $status = 'success';
@@ -68,7 +65,7 @@ class PageAdminController extends CRUDController
                 );
                 $result = 'ok';
                 $html = $this->renderView(
-                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                    '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
             } catch (\Exception $e) {
@@ -87,13 +84,13 @@ class PageAdminController extends CRUDController
                         'result' => $result,
                         'status' => $status,
                         'html' => $html,
-                        'message' => $message
+                        'message' => $message,
                     ]
                 );
             }
 
             $this->get('session')->getFlashBag()->add(
-                'sonata_flash_' . $status,
+                'sonata_flash_'.$status,
                 $message
             );
 
@@ -101,21 +98,23 @@ class PageAdminController extends CRUDController
         }
 
         return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_translation_copy.html.twig',
+            '@NetworkingInitCms/PageAdmin/page_translation_copy.html.twig',
             [
                 'action' => 'copy',
                 'page' => $page,
                 'id' => $id,
                 'locale' => $locale,
                 'language' => $language,
-                'admin' => $this->admin
+                'admin' => $this->admin,
             ]
         );
     }
 
+
     /**
      * @param Request $request
      * @param $id
+     *
      * @return RedirectResponse|Response
      */
     public function copyAction(Request $request, $id)
@@ -128,11 +127,10 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'POST') {
-
             $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
+	        $pageCopy = false;
             try {
-
                 $pageCopy = $pageHelper->makePageCopy($page);
                 $this->admin->createObjectSecurity($pageCopy);
                 $status = 'success';
@@ -142,7 +140,7 @@ class PageAdminController extends CRUDController
                 );
                 $result = 'ok';
                 $html = $this->renderView(
-                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                    '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
             } catch (\Exception $e) {
@@ -161,41 +159,45 @@ class PageAdminController extends CRUDController
                         'result' => $result,
                         'status' => $status,
                         'html' => $html,
-                        'message' => $message
+                        'message' => $message,
                     ]
                 );
             }
 
             $this->get('session')->getFlashBag()->add(
-                'sonata_flash_' . $status,
+                'sonata_flash_'.$status,
                 $message
             );
 
-            $request->getSession()->set('Page.last_edited', $pageCopy->getId());
+            if($pageCopy){
+	            $request->getSession()->set('Page.last_edited', $pageCopy->getId());
+            }
+
 
             return $this->redirect($this->admin->generateUrl('list'));
         }
 
-        return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_copy.html.twig',
+        return $this->renderWithExtraParams(
+            '@NetworkingInitCms/PageAdmin/page_copy.html.twig',
             [
                 'language' => \Locale::getDisplayLanguage($page->getLocale()),
                 'action' => 'copy',
                 'page' => $page,
                 'id' => $id,
-                'admin' => $this->admin
+                'admin' => $this->admin,
             ]
         );
     }
 
-
     /**
-     * Link pages as translations of each other
+     * Link pages as translations of each other.
      *
      * @param Request $request
      * @param $id
      * @param $locale
+     *
      * @throws NotFoundHttpException
+     *
      * @return RedirectResponse|Response
      */
     public function linkAction(Request $request, $id, $locale)
@@ -208,7 +210,6 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'POST') {
-
             $linkPageId = $request->get('page');
             if (!$linkPageId) {
                 $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_link_error');
@@ -221,16 +222,15 @@ class PageAdminController extends CRUDController
                 $this->admin->update($page);
 
                 if ($this->isXmlHttpRequest()) {
-
                     $html = $this->renderView(
-                        'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                        '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                         ['object' => $page, 'admin' => $this->admin]
                     );
 
                     return $this->renderJson(
                         [
                             'result' => 'ok',
-                            'html' => $html
+                            'html' => $html,
                         ]
                     );
                 }
@@ -249,20 +249,19 @@ class PageAdminController extends CRUDController
             $pages = $pages->filter(
                 function (PageInterface $linkPage) use ($originalLocale) {
                     return !in_array($originalLocale, $linkPage->getTranslatedLocales());
-
                 }
             );
         }
 
-        return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_translation_link_list.html.twig',
+        return $this->renderWithExtraParams(
+            '@NetworkingInitCms/PageAdmin/page_translation_link_list.html.twig',
             [
                 'page' => $page,
                 'pages' => $pages,
                 'locale' => $locale,
                 'original_language' => \Locale::getDisplayLanguage($page->getLocale()),
                 'language' => \Locale::getDisplayLanguage($locale),
-                'admin' => $this->admin
+                'admin' => $this->admin,
             ]
         );
     }
@@ -271,7 +270,9 @@ class PageAdminController extends CRUDController
      * @param Request $request
      * @param $id
      * @param $translationId
+     *
      * @return RedirectResponse|Response
+     *
      * @throws NotFoundHttpException
      */
     public function unlinkAction(Request $request, $id, $translationId)
@@ -286,52 +287,48 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'DELETE') {
-
             $page->removeTranslation($translatedPage);
             $translatedPage->removeTranslation($page);
 
             $this->admin->update($page);
             $this->admin->update($translatedPage);
 
-
             if ($this->isXmlHttpRequest()) {
-
                 $html = $this->renderView(
-                    'NetworkingInitCmsBundle:PageAdmin:page_translation_settings.html.twig',
+                    '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
 
                 return $this->renderJson(
                     [
                         'result' => 'ok',
-                        'html' => $html
+                        'html' => $html,
                     ]
                 );
             }
-
 
             $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_link_success');
 
             return new RedirectResponse($this->admin->generateUrl('edit', ['id' => $page->getId()]));
         }
 
-        return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_translation_unlink.html.twig',
+        return $this->renderWithExtraParams(
+            '@NetworkingInitCms/PageAdmin/page_translation_unlink.html.twig',
             [
                 'action' => 'unlink',
                 'page' => $page,
                 'translationId' => $translationId,
                 'admin' => $this->admin,
-                'translatedPage' => $translatedPage
+                'translatedPage' => $translatedPage,
             ]
         );
-
-
     }
 
     /**
      * @param ProxyQueryInterface $selectedModelQuery
+     *
      * @return RedirectResponse
+     *
      * @throws AccessDeniedException
      */
     public function batchActionPublish(ProxyQueryInterface $selectedModelQuery)
@@ -344,17 +341,15 @@ class PageAdminController extends CRUDController
 
         $selectedModels = $selectedModelQuery->execute();
 
-
         // do the merge work here
 
         try {
             foreach ($selectedModels as $selectedModel) {
-                /** @var PageInterface $selectedModel */
+                /* @var PageInterface $selectedModel */
                 $selectedModel->setStatus(PageInterface::STATUS_PUBLISHED);
                 $modelManager->update($selectedModel);
                 $this->makeSnapshot($selectedModel);
             }
-
         } catch (\Exception $e) {
             $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_publish_error');
 
@@ -368,7 +363,9 @@ class PageAdminController extends CRUDController
 
     /**
      * @param ProxyQueryInterface $selectedModelQuery
+     *
      * @return RedirectResponse
+     *
      * @throws AccessDeniedException
      */
     public function batchActionCopy(ProxyQueryInterface $selectedModelQuery)
@@ -382,14 +379,11 @@ class PageAdminController extends CRUDController
         $selectedModels = $selectedModelQuery->execute();
 
         try {
-
             foreach ($selectedModels as $selectedModel) {
-                /** @var PageInterface $selectedModel */
+                /* @var PageInterface $selectedModel */
                 $pageHelper->makePageCopy($selectedModel);
             }
-
         } catch (\Exception $e) {
-
             $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_copy_error');
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
@@ -402,10 +396,11 @@ class PageAdminController extends CRUDController
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
-    public function batchTranslateAction(Request $request){
-
+    public function batchTranslateAction(Request $request)
+    {
         if ($this->admin->isGranted('ROLE_SUPER_ADMIN') === false) {
             throw new AccessDeniedException();
         }
@@ -415,20 +410,18 @@ class PageAdminController extends CRUDController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             /** @var PageHelper $pageHelper */
             $pageHelper = $this->container->get('networking_init_cms.helper.page_helper');
 
-            $pages = $this->admin->getModelManager()->findBy($this->admin->getClass(), ['locale' =>
-                $data['fromLocale']]);
+            $pages = $this->admin->getModelManager()->findBy($this->admin->getClass(), ['locale' => $data['fromLocale']]);
             /** @var PageInterface $page */
-            foreach ($pages as $page){
+            foreach ($pages as $page) {
                 $translatedLocales = $page->getTranslatedLocales();
 
-                if(in_array($data['toLocale'], $translatedLocales)){
+                if (in_array($data['toLocale'], $translatedLocales)) {
                     continue;
                 }
                 $pageHelper->makeTranslationCopy($page, $data['toLocale']);
@@ -437,14 +430,16 @@ class PageAdminController extends CRUDController
             $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_copy_success');
         }
 
-        return $this->render('NetworkingInitCmsBundle:PageAdmin:batch_page_copy.html.twig',
+        return $this->renderWithExtraParams('@NetworkingInitCms/PageAdmin/batch_page_copy.html.twig',
             ['action' => 'batchCopy', 'form' => $form->createView()]
         );
     }
 
     /**
      * @param ProxyQueryInterface $selectedModelQuery
+     *
      * @return RedirectResponse
+     *
      * @throws AccessDeniedException
      */
     public function batchActionCacheClear(ProxyQueryInterface $selectedModelQuery)
@@ -459,13 +454,12 @@ class PageAdminController extends CRUDController
             foreach ($selectedModels as $selectedModel) {
                 /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
                 $phpCache = $this->get('networking_init_cms.lib.php_cache');
-                if($phpCache->isActive()){
+                if ($phpCache->isActive()) {
                     /** @var PageInterface $selectedModel */
                     $cacheKey = $selectedModel->getLocale().$selectedModel->getFullPath();
                     $phpCache->delete($cacheKey);
                 }
             }
-
         } catch (\Exception $e) {
             $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_cache_clear_error');
 
@@ -479,7 +473,9 @@ class PageAdminController extends CRUDController
 
     /**
      * @param null $id
+     *
      * @return Response
+     *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -503,7 +499,7 @@ class PageAdminController extends CRUDController
 
         $this->admin->setSubject($object);
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             $this->admin->getTemplate('show'),
             [
                 'action' => 'show',
@@ -513,12 +509,12 @@ class PageAdminController extends CRUDController
         );
     }
 
-    /**
-     * @param null $id
-     * @return Response
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
+	/**
+	 * @param null $id
+	 *
+	 * @return RedirectResponse|Response
+	 * @throws \Twig_Error_Runtime
+	 */
     public function editAction($id = null)
     {
         /** @var Request $request */
@@ -547,7 +543,7 @@ class PageAdminController extends CRUDController
         $form->setData($object);
 
         if ($request->getMethod() == 'POST') {
-            if(!$this->isXmlHttpRequest()){
+            if (!$this->isXmlHttpRequest()) {
                 throw new NotFoundHttpException('Should only submit over ajax');
             }
 
@@ -561,7 +557,6 @@ class PageAdminController extends CRUDController
                 $this->admin->update($object);
 
                 return $this->getAjaxEditResponse($form, $object);
-
             } else {
                 $form->addError(new FormError($this->translate('flash_edit_error', [], 'NetworkingInitCmsBundle')));
             }
@@ -572,24 +567,76 @@ class PageAdminController extends CRUDController
         // set the theme for the current Admin Form
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
-
         $rootMenus = $this->admin->getModelManager()->findBy(
             'NetworkingInitCmsBundle:MenuItem',
             ['isRoot' => 1, 'locale' => $object->getLocale()]
         );
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             $this->admin->getTemplate($templateKey),
             [
                 'action' => 'edit',
                 'form' => $view,
                 'object' => $object,
                 'rootMenus' => $rootMenus,
-                'language' => \Locale::getDisplayLanguage($object->getLocale())
+                'language' => \Locale::getDisplayLanguage($object->getLocale()),
             ]
         );
     }
 
+	/**
+	 * @param Request $request
+	 * @param $id
+	 *
+	 * @return Response
+	 * @throws \Twig_Error_Runtime
+	 */
+	public function editPageSettingsAction(Request $request, $id)
+	{
+		/** @var PageInterface $page */
+		$page = $this->admin->getObject($id);
+
+		$layoutBlocks = $page->getLayoutBlock();
+
+		$form = $this->admin->getForm();
+		$form->setData($page);
+
+		$form->handleRequest($request);
+
+		$response = new Response();
+
+		if($form->isSubmitted()){
+			if($form->isValid()){
+				$page->setStatus(PageInterface::STATUS_DRAFT);
+				$page->setUpdatedAt();
+				$page->setLayoutBlock($layoutBlocks);
+				$this->admin->update($page);
+
+				return $this->getAjaxEditResponse($form, $page);
+
+			}
+			$response->setStatusCode(422);
+		}
+		$view = $form->createView();
+		$this->setFormTheme($view, $this->admin->getFormTheme());
+
+		return $this->renderWithExtraParams(
+			'@NetworkingInitCms/PageAdmin/page_settings_edit.html.twig',
+			[
+				'form' => $view,
+                'object' => $page,
+			],
+			$response
+		);
+	}
+
+	/**
+	 * @param null $id
+	 * @param null $uniqid
+	 *
+	 * @return Response
+	 * @throws \Twig_Error_Runtime
+	 */
     public function pageSettingsAction($id = null, $uniqid = null)
     {
         /** @var Request $request */
@@ -622,39 +669,53 @@ class PageAdminController extends CRUDController
         // set the theme for the current Admin Form
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             $this->admin->getTemplate($templateKey),
             [
                 'action' => 'edit',
                 'form' => $view,
                 'object' => $object,
-                'language' => \Locale::getDisplayLanguage($object->getLocale())
+                'language' => \Locale::getDisplayLanguage($object->getLocale()),
             ]
         );
     }
 
     /**
-     * Return the json response for the ajax edit action
+     * Return the json response for the ajax edit action.
      *
-     * @param Form $form
+     * @param Form          $form
      * @param PageInterface $page
+     *
      * @return Response
+     *
      * @throws \Twig_Error_Runtime
      */
-    protected function getAjaxEditResponse(Form $form, PageInterface $page){
+    protected function getAjaxEditResponse(Form $form, PageInterface $page)
+    {
         $view = $form->createView();
 
         // set the theme for the current Admin Form
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
         $pageSettingsHtml = $this->renderView(
-            'NetworkingInitCmsBundle:PageAdmin:ajax_page_settings.html.twig',
+            '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig',
             [
                 'action' => 'edit',
                 'form' => $view,
                 'object' => $page,
                 'admin' => $this->admin,
-                'admin_pool' => $this->get('sonata.admin.pool')
+                'admin_pool' => $this->get('sonata.admin.pool'),
+            ]
+        );
+
+        $pageStatusSettingsHtml = $this->renderView(
+            '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig',
+            [
+                'action' => 'edit',
+                'form' => $view,
+                'object' => $page,
+                'admin' => $this->admin,
+                'admin_pool' => $this->get('sonata.admin.pool'),
             ]
         );
 
@@ -666,13 +727,15 @@ class PageAdminController extends CRUDController
                 'messageStatus' => 'success',
                 'message' => $this->translate('info.page_settings_updated'),
                 'pageStatus' => $this->translate($page->getStatus()),
-                'pageSettings' => $pageSettingsHtml
+                'pageStatusSettings' => $pageStatusSettingsHtml,
+                'pageSettings' => $pageSettingsHtml,
             ]
         );
     }
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
     public function parentPageListAction(Request $request)
@@ -683,7 +746,7 @@ class PageAdminController extends CRUDController
 
         if ($result = $pageManager->getParentPagesChoices($locale)) {
             foreach ($result as $page) {
-                /** @var PageInterface $page */
+                /* @var PageInterface $page */
                 $pages[$page->getId()] = [$page->getAdminTitle()];
             }
         }
@@ -691,10 +754,12 @@ class PageAdminController extends CRUDController
         return $this->renderJson($pages);
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse|Response
-     */
+	/**
+	 * @param Request $request
+	 *
+	 * @return RedirectResponse|Response
+	 * @throws \Twig_Error_Runtime
+	 */
     public function draftAction(Request $request)
     {
         $id = $request->get($this->admin->getIdParameter());
@@ -702,10 +767,12 @@ class PageAdminController extends CRUDController
         return $this->changePageStatus($id, PageInterface::STATUS_DRAFT);
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse|Response
-     */
+	/**
+	 * @param Request $request
+	 *
+	 * @return RedirectResponse|Response
+	 * @throws \Twig_Error_Runtime
+	 */
     public function reviewAction(Request $request)
     {
         $id = $request->get($this->admin->getIdParameter());
@@ -713,10 +780,12 @@ class PageAdminController extends CRUDController
         return $this->changePageStatus($id, PageInterface::STATUS_REVIEW);
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse|Response
-     */
+	/**
+	 * @param Request $request
+	 *
+	 * @return RedirectResponse|Response
+	 * @throws \Twig_Error_Runtime
+	 */
     public function offlineAction(Request $request)
     {
         $id = $request->get($this->admin->getIdParameter());
@@ -735,7 +804,6 @@ class PageAdminController extends CRUDController
 
         $form = $this->admin->getForm();
 
-
         $object->setStatus(PageInterface::STATUS_OFFLINE);
 
         // persist if the form was valid and if in preview mode the preview was approved
@@ -743,33 +811,6 @@ class PageAdminController extends CRUDController
 
         if ($object->getStatus() == PageInterface::STATUS_OFFLINE) {
             $this->makeSnapshot($object);
-        }
-
-        if ($this->isXmlHttpRequest()) {
-
-            $view = $form->createView();
-
-            // set the theme for the current Admin Form
-            $this->setFormTheme($view, $this->admin->getFormTheme());
-
-            $pageSettingsTemplate = $this->render(
-                $this->admin->getTemplate('edit'),
-                [
-                    'action' => 'edit',
-                    'form' => $view,
-                    'object' => $object,
-                ]
-            );
-
-            return $this->renderJson(
-                [
-                    'result' => 'ok',
-                    'objectId' => $this->admin->getNormalizedIdentifier($object),
-                    'title' => $object->__toString(),
-                    'pageStatus' => $this->translate($object->getStatus()),
-                    'pageSettings' => $pageSettingsTemplate
-                ]
-            );
         }
 
         $request->getSession()->getFlashBag()->add(
@@ -780,16 +821,14 @@ class PageAdminController extends CRUDController
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
     }
 
-    /**
-     * @param $id
-     * @param $status
-     * @return RedirectResponse|Response
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
+	/**
+	 * @param $id
+	 * @param $status
+	 *
+	 * @return RedirectResponse
+	 */
     protected function changePageStatus($id, $status)
     {
-
         $object = $this->admin->getObject($id);
 
         if (!$object) {
@@ -804,40 +843,10 @@ class PageAdminController extends CRUDController
 
         $form = $this->admin->getForm();
 
-
         $object->setStatus($status);
-
 
         // persist if the form was valid and if in preview mode the preview was approved
         $this->admin->update($object);
-
-
-        if ($this->isXmlHttpRequest()) {
-
-            $view = $form->createView();
-
-            // set the theme for the current Admin Form
-            $this->setFormTheme($view, $this->admin->getFormTheme());
-
-            $pageSettingsTemplate = $this->render(
-                $this->admin->getTemplate('edit'),
-                [
-                    'action' => 'edit',
-                    'form' => $view,
-                    'object' => $object,
-                ]
-            );
-
-            return $this->renderJson(
-                [
-                    'result' => 'ok',
-                    'objectId' => $this->admin->getNormalizedIdentifier($object),
-                    'title' => $object->__toString(),
-                    'pageStatus' => $this->translate($object->getStatus()),
-                    'pageSettings' => $pageSettingsTemplate
-                ]
-            );
-        }
 
         $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->translate('flash_status_success'));
 
@@ -846,8 +855,10 @@ class PageAdminController extends CRUDController
 
     /**
      * @param Request $request
-     * @param null $id
+     * @param null    $id
+     *
      * @return RedirectResponse|Response
+     *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -855,7 +866,6 @@ class PageAdminController extends CRUDController
     {
         /** @var $draftPage PageInterface */
         $draftPage = $this->admin->getObject($id);
-
 
         if (!$draftPage) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
@@ -866,8 +876,6 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'POST') {
-
-
             $pageManager = $this->get('networking_init_cms.page_manager');
             $serializer = $this->get('jms_serializer');
 
@@ -892,33 +900,30 @@ class PageAdminController extends CRUDController
                         'objectId' => $this->admin->getNormalizedIdentifier($publishedPage),
                         'title' => $publishedPage->__toString(),
                         'pageStatus' => $this->translate($publishedPage->getStatus()),
-                        'pageSettings' => $pageSettingsTemplate->getContent()
+                        'pageSettings' => $pageSettingsTemplate->getContent(),
                     ]
                 );
             }
 
-
             return $this->redirect($this->admin->generateObjectUrl('edit', $publishedPage));
-
         }
 
-        return $this->render(
-            'NetworkingInitCmsBundle:PageAdmin:page_cancel_draft.html.twig',
+        return $this->renderWithExtraParams(
+            '@NetworkingInitCms/PageAdmin/page_cancel_draft.html.twig',
             [
                 'action' => 'cancelDraft',
                 'page' => $draftPage,
-                'admin' => $this->admin
+                'admin' => $this->admin,
             ]
         );
     }
 
-    /**
-     * @param Request $request
-     * @param null $id
-     * @return RedirectResponse|Response
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
+	/**
+	 * @param Request $request
+	 * @param null $id
+	 *
+	 * @return RedirectResponse
+	 */
     public function publishAction(Request $request, $id = null)
     {
         $id = $request->get($this->admin->getIdParameter());
@@ -937,42 +942,13 @@ class PageAdminController extends CRUDController
 
         $form = $this->admin->getForm();
 
-
         $object->setStatus(PageInterface::STATUS_PUBLISHED);
-
 
         // persist if the form was valid and if in preview mode the preview was approved
         $this->admin->update($object);
 
         if ($object->getStatus() == PageInterface::STATUS_PUBLISHED) {
             $this->makeSnapshot($object);
-        }
-
-        if ($this->isXmlHttpRequest()) {
-
-            $view = $form->createView();
-
-            // set the theme for the current Admin Form
-            $this->setFormTheme($view, $this->admin->getFormTheme());
-
-            $pageSettingsTemplate = $this->render(
-                $this->admin->getTemplate('edit'),
-                [
-                    'action' => 'edit',
-                    'form' => $view,
-                    'object' => $object,
-                ]
-            );
-
-            return $this->renderJson(
-                [
-                    'result' => 'ok',
-                    'objectId' => $this->admin->getNormalizedIdentifier($object),
-                    'title' => $object->__toString(),
-                    'pageStatus' => $this->translate($object->getStatus()),
-                    'pageSettings' => $pageSettingsTemplate
-                ]
-            );
         }
 
         $request->getSession()->getFlashBag()->add(
@@ -983,9 +959,8 @@ class PageAdminController extends CRUDController
         return $this->redirect($this->admin->generateObjectUrl('edit', $object));
     }
 
-
     /**
-     * Create a snapshot of a published page
+     * Create a snapshot of a published page.
      *
      * @param PageInterface $page
      */
@@ -1002,10 +977,12 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * Return a json array with the calculated path for a page object
+     * Return a json array with the calculated path for a page object.
      *
      * @param Request $request
+     *
      * @internal param string $path
+     *
      * @return Response
      */
     public function getPathAction(Request $request)
@@ -1023,6 +1000,6 @@ class PageAdminController extends CRUDController
 
         $getPath = Urlizer::urlize($getPath);
 
-        return $this->renderJson(['path' => $path . $getPath]);
+        return $this->renderJson(['path' => $path.$getPath]);
     }
 }

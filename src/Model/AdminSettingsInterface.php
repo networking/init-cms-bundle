@@ -7,16 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
 
 /**
- * Class AdminSettingsInterface
- * @package Networking\InitCmsBundle\Model
+ * Class AdminSettingsInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface AdminSettingsInterface
 {
-
     /**
      * @param $settings
      */
@@ -35,6 +35,7 @@ interface AdminSettingsInterface
 
     /**
      * @param $key
+     *
      * @return bool
      */
     public function getSetting($key);

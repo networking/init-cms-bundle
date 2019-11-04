@@ -9,7 +9,20 @@ file that was distributed with this source code.
 
 #}
 {% extends base_template %}
-{% block confirm_exit %}false{% endblock %}
+ {% block meta_config %}
+     <meta data-sonata-admin='{{ {
+         config: {
+             CONFIRM_EXIT: false,
+             USE_SELECT2:sonata_admin.adminPool.getOption('use_select2'),
+             USE_ICHECK: false,
+             USE_STICKYFORMS: sonata_admin.adminPool.getOption('use_stickyforms'),
+         },
+         translations: {
+             CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
+         },
+     }|json_encode()|raw }}'
+     >
+ {% endblock %}
 {% block title %}
     {% if admin.id(object) %}
         <span class="page_title">{{ admin.toString(object) }} </span> <span class="info-soft font-medium">({{ language }})</span>
@@ -22,7 +35,7 @@ file that was distributed with this source code.
 {% block actions %}{% endblock %}
 {% block help_text %}{% endblock help_text %}
 
-{% use 'NetworkingInitCmsBundle:PageAdmin:page_edit_form.html.twig' with form as parentForm %}
+{% use '@NetworkingInitCms/PageAdmin/page_edit_form.html.twig' with form as parentForm %}
 
 {% block form %}
     {{ block('parentForm') }}
@@ -30,13 +43,13 @@ file that was distributed with this source code.
     <!-- start modal menu form -->
     <div class="modal form-horizontal" id="confirmMenuCreation"
          style="display: none"
-         role="dialog" aria-labelledby="{{ "legend.create_menu_item"|trans({}, admin.translationDomain) }}"
+         role="dialog" aria-labelledby="{{ "legend.create_menu"|trans({}, admin.translationDomain) }}"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>{{ 'legend.create_menu_item'|trans({}, admin.translationDomain) }}</h4>
+                    <h4>{{ 'legend.create_menu'|trans({}, admin.translationDomain) }}</h4>
                 </div>
                 <div class="modal-body">
                     <div id="menu_info_text"></div>
@@ -67,8 +80,8 @@ file that was distributed with this source code.
 {% block before_body_end %}
     {{ parent() }}
         <script type="text/javascript">
-            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/ivoryckeditor/') }}";
+            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/fosckeditor/') }}";
         </script>
-        <script type="text/javascript" src="{{ ckeditor_js_path('bundles/ivoryckeditor/ckeditor.js') }}"></script>
+        <script type="text/javascript" src="{{ ckeditor_js_path('bundles/fosckeditor/ckeditor.js') }}"></script>
 {% endblock %}
 

@@ -17,25 +17,26 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class InstallCommand
- * @package Networking\InitCmsBundle\Command
+ * Class InstallCommand.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class InstallCommand extends Command
 {
     /**
-     * configuration for the command
+     * configuration for the command.
      */
     protected function configure()
     {
         $this->setName('networking:initcms:install')
             ->setDescription(
-                "Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources"
+                'Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources'
             )
             ->addOption('username', '', InputOption::VALUE_REQUIRED, 'username of the to be created super user')
             ->addOption('email', '', InputOption::VALUE_REQUIRED, 'the email address of the to be created super user')
-            ->addOption('password', '', InputOption::VALUE_REQUIRED, 'password of the to be created super user');
-
+            ->addOption('password', '', InputOption::VALUE_REQUIRED, 'password of the to be created super user')
+            ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl')
+        ;
     }
 
     /**
@@ -43,22 +44,23 @@ class InstallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->setupData($output);
+        $this->setupData($input, $output);
         $this->createAdminUser($input, $output);
-        $this->dumpAssetic($output);
+//        $this->dumpAssetic($output);
     }
 
     /**
      * @param $output
+     *
      * @return int
      */
-    private function setupData($output)
+    private function setupData($input, $output)
     {
         $command = $this->getApplication()->find('networking:initcms:data-setup');
-
         $arguments = [
             'command' => 'networking:initcms:data-setup',
             '--drop' => true,
+            '--use-acl' => $input->getOption('use-acl'),
         ];
 
         $input = new ArrayInput($arguments);
@@ -66,20 +68,19 @@ class InstallCommand extends Command
         return $command->run($input, $output);
     }
 
-
     /**
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return int|string
      */
     private function dumpAssetic(OutputInterface $output)
     {
-
         $command = $this->getApplication()->find('assetic:dump');
 
         $arguments = [
             'command' => 'assetic:dump',
             '--env' => 'prod',
-            '--no-debug' => true
+            '--no-debug' => true,
         ];
 
         $input = new ArrayInput($arguments);
@@ -88,8 +89,9 @@ class InstallCommand extends Command
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return mixed
      */
     private function createAdminUser(InputInterface $input, OutputInterface $output)
@@ -111,11 +113,8 @@ class InstallCommand extends Command
 
         $arguments['--super-admin'] = true;
 
-
         $input = new ArrayInput($arguments);
 
         return $command->run($input, $output);
     }
-
-
 }

@@ -189,7 +189,7 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
         success: function (html) {
             Admin.log('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
 
-            field_dialog_{{ id }}.html('<div class="modal-dialog modal-full"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
+            field_dialog_{{ id }}.html('<div class="modal-dialog modal-full"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationDomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
         }
     });
 
@@ -220,7 +220,7 @@ var field_dialog_form_list_{{ id }} = function (event) {
             Admin.log('[{{ id }}|field_dialog_form_list] retrieving the list content');
 
             // populate the popup container
-            field_dialog_{{ id }}.html('<div class="modal-dialog modal-full"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
+            field_dialog_{{ id }}.html('<div class="modal-dialog modal-full"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationDomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
 
             Admin.add_filters(field_dialog_{{ id }});
 
@@ -236,7 +236,7 @@ var field_dialog_form_list_{{ id }} = function (event) {
                     dataType: 'html',
                     data: {_xml_http_request: true},
                     success: function (html) {
-                        field_dialog_{{ id }}.html('<div class="modal-dialog modal-full"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
+                        field_dialog_{{ id }}.html('<div class="modal-dialog modal-full"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ admin.label|trans({}, admin.translationDomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
                     }
                 });
             });

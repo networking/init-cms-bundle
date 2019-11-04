@@ -10,25 +10,22 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use  Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
-use  Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
-
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 
 /**
- * Class PageSnapshotInterface
- * @package Networking\InitCmsBundle\Model
+ * Class PageSnapshotInterface.
+ *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVersionInterface
 {
-
     /**
      * @param $resourceId
      *
      * @return $this
      */
     public function setResourceId($resourceId);
-
 
     /**
      * @return int
@@ -42,12 +39,10 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
      */
     public function setResourceName($resourceName);
 
-
     /**
      * @return string
      */
     public function getResourceName();
-
 
     /**
      * @param $snapshotDate
@@ -60,7 +55,6 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
      * @return \DateTime
      */
     public function getSnapshotDate();
-
 
     /**
      * @param $version
@@ -98,30 +92,28 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
      */
     public function getId();
 
-
     /**
-     * Set page
+     * Set page.
      *
-     * @param  PageInterface $page
+     * @param PageInterface $page
      *
      * @return $this
      */
     public function setPage(PageInterface $page);
 
     /**
-     * Get conversation
+     * Get conversation.
      *
      * @return PageInterface
      */
     public function getPage();
 
-
     /**
-     * @param  ContentRouteInterface $contentRoute
+     * @param ContentRouteInterface $contentRoute
+     *
      * @return $this
      */
     public function setContentRoute(ContentRouteInterface $contentRoute);
-
 
     /**
      * @return ContentRoute
@@ -133,17 +125,13 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
      */
     public function getOriginal();
 
-
     /**
      * @param $path
      */
     public function setPath($path);
 
-
     /**
      * @return mixed
      */
     public function getPath();
-
-
 }
