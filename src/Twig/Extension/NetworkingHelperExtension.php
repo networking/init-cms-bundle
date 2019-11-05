@@ -1161,7 +1161,11 @@ class NetworkingHelperExtension extends AbstractExtension
 
         $configs = $this->ckEditorConfigManager->getConfigs();
         if (array_key_exists('contentsCss', $configs[$configName])) {
-            return $configs[$configName]['contentsCss'];
+            $contentCss = $configs[$configName]['contentsCss'];
+            if(!is_array($contentCss)){
+                $contentCss = [$contentCss];
+            }
+            return $contentCss;
         }
 
         return false;

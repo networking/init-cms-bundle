@@ -18,7 +18,9 @@ file that was distributed with this source code.
     {% block stylesheets %}
         <link href="{{ asset('bundles/networkinginitcms/css/networking_initcms.css') }}" type="text/css" rel="stylesheet" media="screen"/>
         {% block content_css %}
-        {% if content_css() %}<link href="{{ asset(content_css()) }}" type="text/css" rel="stylesheet" media="screen"/>{% endif %}
+            {% for css in content_css() %}
+                <link href="{{ asset(css) }}" type="text/css" rel="stylesheet" media="screen"/>
+            {% endfor %}
         {% endblock content_css %}
     {% endblock %}
     <title>
