@@ -27,7 +27,13 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('networking_init_cms');
-        $rootNode = $treeBuilder->getRootNode();
+
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->root('networking_init_cms');
+        } else {
+            $rootNode = $treeBuilder->getRootNode();
+        }
         //mongodb is not yet fully supported but will come (eventually)
         $supportedDrivers = ['orm', 'mongodb'];
 
