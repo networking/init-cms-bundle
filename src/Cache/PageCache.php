@@ -5,15 +5,12 @@ namespace Networking\InitCmsBundle\Cache;
 
 
 use Psr\Cache\CacheItemInterface;
-use Psr\Cache\InvalidArgumentException;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
-use Symfony\Component\Cache\Adapter\TraceableAdapter;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * Class PageCache
@@ -22,7 +19,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 class PageCache implements PageCacheInterface, AdapterInterface, PruneableInterface, ResettableInterface
 {
     /**
-     * @var TraceableAdapter
+     * @var CacheItemPoolInterface
      */
     private $pageCache;
 
@@ -38,11 +35,11 @@ class PageCache implements PageCacheInterface, AdapterInterface, PruneableInterf
 
     /**
      * PageCache constructor.
-     * @param CacheInterface $pageCache
+     * @param CacheItemPoolInterface $pageCache
      * @param int $expiresAfter
      * @param bool $activated
      */
-    public function __construct(CacheInterface $pageCache, $expiresAfter = 86400, $activated = true)
+    public function __construct(CacheItemPoolInterface $pageCache, $expiresAfter = 86400, $activated = true)
     {
         $this->pageCache = $pageCache;
         $this->expiresAfter = $expiresAfter;
@@ -97,7 +94,6 @@ class PageCache implements PageCacheInterface, AdapterInterface, PruneableInterf
      */
     public function set($keyword, $value = '', $time = null)
     {
-        /** @var ItemInterface $item */
         $item = $this->getItem(md5($keyword));
 
         $item->set($value);
@@ -122,7 +118,7 @@ class PageCache implements PageCacheInterface, AdapterInterface, PruneableInterf
     /**
      * {@inheritdoc}
      *
-     * @return CacheItem
+     * @return CacheItemInterface
      */
     public function getItem($key){
         return $this->pageCache->getItem($key);
