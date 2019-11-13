@@ -22,13 +22,6 @@ interface PhpCacheInterface extends PageCacheInterface
 {
 
     /**
-     * @param array $option
-     *
-     * @return mixed
-     */
-    public function clean($option = []);
-
-    /**
      * @param $keyword
      * @param int   $time
      * @param array $option

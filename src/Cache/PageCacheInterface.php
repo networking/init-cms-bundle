@@ -21,6 +21,13 @@ interface PageCacheInterface
     public function isCacheable(Request $request, $user);
 
     /**
+     * @param array $option
+     *
+     * @return mixed
+     */
+    public function clean($option = []);
+
+    /**
      * @param $keyword
      * @return mixed|string|null
      * @throws \Psr\Cache\InvalidArgumentException
