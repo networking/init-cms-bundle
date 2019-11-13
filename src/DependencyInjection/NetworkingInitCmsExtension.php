@@ -130,7 +130,7 @@ class NetworkingInitCmsExtension extends Extension
                 $container->setParameter('networking_init_cms.page_cache_service', $cacheService);
                 
                 if (in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())) {
-                    @trigger_error(sprintf('The "%s" interface is deprecated since InitCms 4.0.2, use "%s"  instead.', PhpCacheInterface::class,  PhpCacheInterface::class), E_USER_DEPRECATED);
+                    @trigger_error(sprintf('The "%s" interface is deprecated since InitCms 4.0.2, use "%s"  instead.', PhpCacheInterface::class,  PageCacheInterface::class), E_USER_DEPRECATED);
                 }
             } else {
                 throw new \RuntimeException(sprintf('Cache class should implement %s interface', PageCacheInterface::class));
