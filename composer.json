@@ -44,7 +44,7 @@
         "symfony/console": "^3.4 || ^4.0",
         "symfony/expression-language": "^3.4 || ^4.0",
         "symfony/form": "^3.4 || ^4.0",
-        "symfony/framework-bundle": "^3.4 || ^4.1,>=4.1.12",
+        "symfony/framework-bundle": "^3.4.26 || ^4.1.12",
         "symfony/monolog-bundle": "^3.1",
         "symfony/orm-pack": "*",
         "symfony/proxy-manager-bridge": "^3.4 || ^4.0",
