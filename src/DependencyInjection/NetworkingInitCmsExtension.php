@@ -11,7 +11,9 @@
 
 namespace Networking\InitCmsBundle\DependencyInjection;
 
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
+use Networking\InitCmsBundle\Lib\PhpCacheInterface;
 use Sonata\CoreBundle\Exception\InvalidParameterException;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,7 +33,7 @@ use Symfony\Component\Yaml\Yaml;
 class NetworkingInitCmsExtension extends Extension
 {
     /**
-     * @param array            $configs
+     * @param array $configs
      * @param ContainerBuilder $container
      *
      * @throws \ReflectionException|\Exception
@@ -91,24 +93,51 @@ class NetworkingInitCmsExtension extends Extension
             $this->registerDoctrineORMMapping($config);
         }
 
-        $container->setParameter('networking_init_cms.cache.activate', $config['cache']['activate']);
-        $container->setParameter('networking_init_cms.cache.cache_time', $config['cache']['cache_time']);
-        $cacheClass = $config['cache']['cache_service_class'];
-        $reflectionClass = new \ReflectionClass($cacheClass);
-
         $container->setParameter('networking_init_cms.xml_sitemap.sitemap_url', $config['xml_sitemap']['sitemap_url']);
-        $container->setParameter('networking_init_cms.xml_sitemap.additional_links', $config['xml_sitemap']['additional_links']);
+        $container->setParameter(
+            'networking_init_cms.xml_sitemap.additional_links',
+            $config['xml_sitemap']['additional_links']
+        );
 
-        if (in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())) {
-            $container->setParameter('networking_init_cms.lib.php_cache.class', $config['cache']['cache_service_class']);
-        } else {
-            throw new \RuntimeException('Cache class should implement the PhpCacheInterface interface');
-        }
+        $this->configureCache($config['cache'], $container);
+
         $this->configureLanguageCookie($config, $container);
 
         $this->configureClass($config, $container);
 
         $this->registerContainerParametersRecursive($container, $this->getAlias(), $config['translation_admin']);
+    }
+
+    public function configureCache($config, ContainerBuilder $container)
+    {
+        $container->setParameter('networking_init_cms.cache.activate', $config['activate']);
+        $container->setParameter('networking_init_cms.cache.cache_time', $config['cache_time']);
+
+        $cacheService = false;
+
+        if (array_key_exists('cache_service_class', $config)) {
+            $cacheService = $config['cache_service_class'];
+        }
+
+        if (array_key_exists('cache_service', $config)) {
+            $cacheService = $config['cache_service'];
+        }
+
+        if ($cacheService) {
+            $reflectionClass = new \ReflectionClass($cacheService);
+
+            if (in_array('Networking\InitCmsBundle\Cache\PageCacheInterface', $reflectionClass->getInterfaceNames())) {
+                $container->setParameter('networking_init_cms.page_cache_service', $cacheService);
+                
+                if (in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())) {
+                    @trigger_error(sprintf('The "%s" interface is deprecated since InitCms 4.0.2, use "%s"  instead.', PhpCacheInterface::class,  PhpCacheInterface::class), E_USER_DEPRECATED);
+                }
+            } else {
+                throw new \RuntimeException(sprintf('Cache class should implement %s interface', PageCacheInterface::class));
+            }
+        }
+
+
     }
 
     /**
@@ -166,10 +195,16 @@ class NetworkingInitCmsExtension extends Extension
 
         switch ($config['db_driver']) {
             case 'orm':
-                $container->setParameter('networking_init_cms.admin.layout_block.class', 'Networking\InitCmsBundle\Entity\LayoutBlock');
+                $container->setParameter(
+                    'networking_init_cms.admin.layout_block.class',
+                    'Networking\InitCmsBundle\Entity\LayoutBlock'
+                );
                 break;
             case 'mongodb':
-                $container->setParameter('networking_init_cms.admin.layout_block.class', 'Networking\InitCmsBundle\Docment\LayoutBlock');
+                $container->setParameter(
+                    'networking_init_cms.admin.layout_block.class',
+                    'Networking\InitCmsBundle\Docment\LayoutBlock'
+                );
                 break;
             default:
                 throw new \InvalidArgumentException('db driver must be either orm or mongodb');
@@ -188,7 +223,7 @@ class NetworkingInitCmsExtension extends Extension
     {
         foreach ($languages as $key => $val) {
             if (!array_key_exists('short_label', $val) || !$val['short_label']) {
-                $languages[ $key ]['short_label'] = substr(strtoupper($val['label']), 0, 2);
+                $languages[$key]['short_label'] = substr(strtoupper($val['label']), 0, 2);
             }
         }
 

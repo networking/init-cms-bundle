@@ -13,7 +13,7 @@ namespace Networking\InitCmsBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\MenuItem;
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,15 +52,15 @@ class MenuItemAdminController extends CRUDController
      * MenuItemAdminController constructor.
      * @param MenuItemManagerInterface $menuItemManager
      * @param CmsEventDispatcher $dispatcher
-     * @param PhpCacheInterface $phpCache
+     * @param PageCacheInterface $pageCache
      */
     public function __construct(
         MenuItemManagerInterface $menuItemManager,
         CmsEventDispatcher $dispatcher,
-        PhpCacheInterface $phpCache
+        PageCacheInterface $pageCache
     ) {
         $this->menuItemManager = $menuItemManager;
-        parent::__construct($dispatcher, $phpCache);
+        parent::__construct($dispatcher, $pageCache);
     }
 
     /**

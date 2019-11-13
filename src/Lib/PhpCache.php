@@ -12,9 +12,18 @@ namespace Networking\InitCmsBundle\Lib;
 
 umask(0002);
 
+use Networking\InitCmsBundle\Cache\PageCache;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use phpFastCache;
 use Symfony\Component\HttpFoundation\Request;
 
+@trigger_error(sprintf('The "%s" class is deprecated since InitCms 4.1, use "%s" and type-hint for "%s" instead.', PhpCache::class, PageCache::class, PageCacheInterface::class), E_USER_DEPRECATED);
+
+/**
+ * Class PhpCache
+ * @deprecated Will be removed in InitCMS 4.2. Using Symfony Cache basis instead for a more configurable app aligned caching experience.
+ * @package Networking\InitCmsBundle\Lib
+ */
 class PhpCache implements PhpCacheInterface
 {
     /**
@@ -120,9 +129,6 @@ class PhpCache implements PhpCacheInterface
             return false;
         }
 
-        if ($this->env != 'prod') {
-            return false;
-        }
 
         if ($request->getMethod() != 'GET') {
             return false;

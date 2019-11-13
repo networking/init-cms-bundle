@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController;
@@ -35,9 +35,9 @@ class CRUDController extends SonataCRUDController
     protected $dispatcher;
 
     /**
-     * @var PhpCacheInterface
+     * @var PageCacheInterface
      */
-    protected $phpCache;
+    protected $pageCache;
 
     /**
      * @var TemplateRegistryInterface
@@ -47,12 +47,12 @@ class CRUDController extends SonataCRUDController
     /**
      * CRUDController constructor.
      * @param CmsEventDispatcher $dispatcher
-     * @param PhpCacheInterface $phpCache
+     * @param PageCacheInterface $pageCache
      */
-    public function __construct(CmsEventDispatcher $dispatcher, PhpCacheInterface $phpCache)
+    public function __construct(CmsEventDispatcher $dispatcher, PageCacheInterface $pageCache)
     {
         $this->dispatcher = $dispatcher;
-        $this->phpCache = $phpCache;
+        $this->pageCache = $pageCache;
     }
 
 

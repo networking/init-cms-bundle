@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -29,17 +29,17 @@ use Symfony\Component\Yaml\Dumper;
 class TranslationCRUDController extends CRUDController
 {
     /**
-     * @var PhpCacheInterface 
+     * @var pageCacheInterface 
      */
-    private $phpCache;
+    private $pageCache;
 
     /**
      * TranslationCRUDController constructor.
-     * @param PhpCacheInterface $phpCache
+     * @param PageCacheInterface $pageCache
      */
-    public function __construct(PhpCacheInterface $phpCache)
+    public function __construct(PageCacheInterface $pageCache)
     {
-        $this->phpCache = $phpCache;
+        $this->pageCache = $pageCache;
     }
 
     /**
@@ -175,9 +175,9 @@ class TranslationCRUDController extends CRUDController
 
         $this->get('translator')->removeLocalesCacheFiles($localeChoices);
 
-        /** @var \Networking\InitCmsBundle\Lib\PhpCacheInterface $phpCache */
-        if ($this->phpCache->isActive()) {
-            $this->phpCache->clean();
+        /** @var \Networking\InitCmsBundle\Lib\pageCacheInterface $pageCache */
+        if ($this->pageCache->isActive()) {
+            $this->pageCache->clean();
         }
 
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */

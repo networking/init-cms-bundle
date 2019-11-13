@@ -13,7 +13,7 @@ namespace Networking\InitCmsBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Helper\PageHelper;
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
@@ -47,13 +47,13 @@ class PageAdminController extends CRUDController
 
     public function __construct(
         CmsEventDispatcher $dispatcher,
-        PhpCacheInterface $phpCache,
+        PageCacheInterface $pageCache,
         PageManagerInterface $pageManager,
         PageHelper $pageHelper
     ) {
         $this->pageManager = $pageManager;
         $this->pageHelper = $pageHelper;
-        parent::__construct($dispatcher, $phpCache);
+        parent::__construct($dispatcher, $pageCache);
     }
 
     /**
@@ -479,10 +479,10 @@ class PageAdminController extends CRUDController
 
         try {
             foreach ($selectedModels as $selectedModel) {
-                if ($this->phpCache->isActive()) {
+                if ($this->pageCache->isActive()) {
                     /** @var PageInterface $selectedModel */
                     $cacheKey = $selectedModel->getLocale().$selectedModel->getFullPath();
-                    $this->phpCache->delete($cacheKey);
+                    $this->pageCache->delete($cacheKey);
                 }
             }
         } catch (\Exception $e) {

@@ -11,8 +11,8 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -42,24 +42,52 @@ use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 class FrontendPageController extends AbstractController
 {
     /**
-     * @var PhpCacheInterface
+     * @var PageCacheInterface
      */
-    protected $phpCache;
+    protected $pageCache;
 
+    /**
+     * @var TokenStorageInterface
+     */
     protected $tokenStorage;
 
+    /**
+     * @var AuthorizationCheckerInterface
+     */
     protected $authorizationChecker;
 
+    /**
+     * @var Pool
+     */
     protected $pool;
 
+    /**
+     * @var LanguageSwitcherHelper
+     */
     protected $languageSwitcherHelper;
 
+    /**
+     * @var PageManagerInterface
+     */
     protected $pageManager;
 
+    /**
+     * @var PageHelper
+     */
     protected $pageHelper;
 
+    /**
+     * FrontendPageController constructor.
+     * @param PageCacheInterface $pageCache
+     * @param TokenStorageInterface $tokenStorage
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param Pool $pool
+     * @param LanguageSwitcherHelper $languageSwitcherHelper
+     * @param PageManagerInterface $pageManager
+     * @param PageHelper $pageHelper
+     */
     public function __construct(
-        PhpCacheInterface $phpCache,
+        PageCacheInterface $pageCache,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorizationChecker,
         Pool $pool,
@@ -67,7 +95,7 @@ class FrontendPageController extends AbstractController
         PageManagerInterface $pageManager,
         PageHelper $pageHelper
     ) {
-        $this->phpCache = $phpCache;
+        $this->pageCache = $pageCache;
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
         $this->pool = $pool;
@@ -93,16 +121,12 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * Render the page.
-     *
      * @param Request $request
-     *
-     * @return Response
+     * @return array|bool|mixed|string|RedirectResponse|Response|null
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function indexAction(Request $request)
     {
-
-
         /** @var PageSnapshotInterface $page */
         $page = $request->get('_content');
 
@@ -112,7 +136,7 @@ class FrontendPageController extends AbstractController
         }
         $user = $this->getUser();
 
-        if ($this->phpCache->isCacheable($request, $user) && $page instanceof PageSnapshotInterface) {
+        if ($this->pageCache->isCacheable($request, $user) && $page instanceof PageSnapshotInterface) {
             if (!$this->isSnapshotActive($page)) {
                 throw new NotFoundHttpException();
             }
@@ -123,14 +147,14 @@ class FrontendPageController extends AbstractController
                 }
             }
 
-            $updatedAt = $this->phpCache->get(sprintf('page_%s_created_at', $page->getId()));
+            $updatedAt = $this->pageCache->get(sprintf('page_%s_created_at', $page->getId()));
             $cacheKey = $request->getLocale().$request->getPathInfo();
 
             if ($updatedAt != $page->getSnapshotDate()) {
-                $this->phpCache->delete($cacheKey);
+                $this->pageCache->delete($cacheKey);
             }
 
-            $response = $this->phpCache->get($request->getLocale().$request->getPathInfo());
+            $response = $this->pageCache->get($request->getLocale().$request->getPathInfo());
 
             if (!$response || !$response instanceof Response) {
                 $params = $this->getPageParameters($request);
@@ -144,11 +168,8 @@ class FrontendPageController extends AbstractController
                 );
                 $response = new Response($html);
 
-                $this->phpCache->set($cacheKey, $response);
-                $this->phpCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate());
-            } else {
-                $this->phpCache->touch($cacheKey);
-                $this->phpCache->touch(sprintf('page_%s_created_at', $page->getId()));
+                $this->pageCache->set($cacheKey, $response);
+                $this->pageCache->set(sprintf('page_%s_created_at', $page->getId()), $page->getSnapshotDate());
             }
         } else {
             $params = $this->getPageParameters($request);

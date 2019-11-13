@@ -12,7 +12,7 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\Form\FormError;
@@ -42,14 +42,20 @@ class LayoutBlockController extends CRUDController
      */
     protected $pageManager;
 
+    /**
+     * LayoutBlockController constructor.
+     * @param CmsEventDispatcher $dispatcher
+     * @param PageCacheInterface $pageCache
+     * @param PageManagerInterface $pageManager
+     */
     public function __construct(
         CmsEventDispatcher $dispatcher,
-        PhpCacheInterface $phpCache,
+        PageCacheInterface $pageCache,
         PageManagerInterface $pageManager
     ) {
         $this->pageManager = $pageManager;
         
-        parent::__construct($dispatcher, $phpCache);
+        parent::__construct($dispatcher, $pageCache);
     }
 
     /**

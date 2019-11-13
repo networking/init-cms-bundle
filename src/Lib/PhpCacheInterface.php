@@ -8,43 +8,18 @@
 
 namespace Networking\InitCmsBundle\Lib;
 
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-interface PhpCacheInterface
+@trigger_error(sprintf('The "%s" interface is deprecated since InitCms 4.1, use "%s"  instead.', PhpCacheInterface::class,  PhpCacheInterface::class), E_USER_DEPRECATED);
+
+/**
+ * Interface PhpCacheInterface
+ * @deprecated
+ * @package Networking\InitCmsBundle\Lib
+ */
+interface PhpCacheInterface extends PageCacheInterface
 {
-    /**
-     * @param Request $request
-     * @param $user
-     *
-     * @return bool
-     */
-    public function isCacheable(Request $request, $user);
-
-    /**
-     * @param $keyword
-     * @param array $option
-     *
-     * @return mixed|null|string
-     */
-    public function get($keyword, $option = []);
-
-    /**
-     * @param $keyword
-     * @param string $value
-     * @param int    $time
-     * @param array  $option
-     *
-     * @return array|bool|string
-     */
-    public function set($keyword, $value = '', $time = 300, $option = []);
-
-    /**
-     * @param $keyword
-     * @param array $options
-     *
-     * @return bool|\string[]
-     */
-    public function delete($keyword, $options = []);
 
     /**
      * @param array $option
@@ -68,15 +43,5 @@ interface PhpCacheInterface
      */
     public function getInfo($keyword, $option = []);
 
-    /**
-     * Is Cache active.
-     *
-     * @return bool
-     */
-    public function isActive();
 
-    /**
-     * @return string
-     */
-    public function getCacheTime();
 }

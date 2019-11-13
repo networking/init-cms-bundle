@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Block;
 
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
@@ -25,16 +25,16 @@ use Twig\Environment;
 class CacheBlockService extends AbstractBlockService
 {
     /**
-     * @var PhpCacheInterface
+     * @var PageCacheInterface
      */
     protected $cache;
 
     /**
      * CacheBlockService constructor.
      * @param Environment $twig
-     * @param PhpCacheInterface $cache
+     * @param PageCacheInterface $cache
      */
-    public function __construct(Environment $twig, PhpCacheInterface $cache)
+    public function __construct(Environment $twig, PageCacheInterface $cache)
     {
         $this->cache = $cache;
 

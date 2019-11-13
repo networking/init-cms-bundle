@@ -11,8 +11,7 @@
 namespace Networking\InitCmsBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Networking\InitCmsBundle\Lib\PhpCache;
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\MenuItem;
 
 class CacheCleaner
@@ -22,13 +21,13 @@ class CacheCleaner
      */
     protected $cleanCount = 0;
     /**
-     * @var PhpCache
+     * @var PageCacheInterface
      */
-    protected $phpCache;
+    protected $pageCache;
 
-    public function __construct(PhpCacheInterface $phpCache)
+    public function __construct(PageCacheInterface $pageCache)
     {
-        $this->phpCache = $phpCache;
+        $this->pageCache = $pageCache;
     }
 
     /**
@@ -74,8 +73,8 @@ class CacheCleaner
     {
         if ($this->cleanCount < 1) {
             ++$this->cleanCount;
-            if (is_object($this->phpCache)) {
-                $this->phpCache->clean();
+            if (is_object($this->pageCache)) {
+                $this->pageCache->clean();
             }
         }
     }

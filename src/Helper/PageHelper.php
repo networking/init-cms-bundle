@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Helper;
 
 use JMS\Serializer\SerializerInterface;
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManagerInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
@@ -66,9 +66,9 @@ class PageHelper
     protected $router;
 
     /**
-     * @var PhpCacheInterface
+     * @var PageCacheInterface
      */
-    protected $phpCache;
+    protected $pageCache;
 
     /**
      * @var bool
@@ -89,7 +89,7 @@ class PageHelper
      * @param PageSnapshotManagerInterface $pageSnapshotManager
      * @param ContentRouteManagerInterface $contentRouteManager
      * @param DynamicRouter                $router
-     * @param PhpCacheInterface            $phpCache
+     * @param PageCacheInterface            $pageCache
      * @param bool                         $allowLocaleCookie
      * @param bool                         $singleLanguage
      */
@@ -100,7 +100,7 @@ class PageHelper
         PageSnapshotManagerInterface $pageSnapshotManager,
         ContentRouteManagerInterface $contentRouteManager,
         DynamicRouter $router,
-        PhpCacheInterface $phpCache,
+        PageCacheInterface $pageCache,
         $allowLocaleCookie = true,
         $singleLanguage = false
     ) {
@@ -111,7 +111,7 @@ class PageHelper
         $this->pageSnapshotManager = $pageSnapshotManager;
         $this->contentRouteManager = $contentRouteManager;
         $this->router = $router;
-        $this->phpCache = $phpCache;
+        $this->pageCache = $pageCache;
         $this->allowLocaleCookie = $allowLocaleCookie;
         $this->singleLanguage = $singleLanguage;
     }
@@ -275,7 +275,7 @@ class PageHelper
         $snapshotContentRoute->setObjectId($pageSnapshot->getId());
 
         if ($oldPageSnapshot && ($oldPageSnapshot->getPath() != self::getPageRoutePath($page->getPath()))) {
-            $this->phpCache->clean();
+            $this->pageCache->clean();
         }
 
         $om = $this->registry->getManagerForClass(get_class($snapshotContentRoute));

@@ -17,7 +17,7 @@ use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Entity\PageSnapshotManager;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use Networking\InitCmsBundle\Helper\PageHelper;
-use Networking\InitCmsBundle\Lib\PhpCache;
+use Networking\InitCmsBundle\Cache\PageCache;
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Controller\FrontendPageController;
 use Networking\InitCmsBundle\Model\Page;
@@ -95,7 +95,7 @@ class FrontendPageControllerTest extends TestCase
             ->getMock();
 
         //cache class
-        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
+        $mockCacheClass = $this->getMockBuilder(PageCache::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -219,7 +219,7 @@ class FrontendPageControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         //cache class
-        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
+        $mockCacheClass = $this->getMockBuilder(PageCache::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -303,7 +303,7 @@ class FrontendPageControllerTest extends TestCase
             ->will($this->returnValue(false));
 
         //cache class
-        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
+        $mockCacheClass = $this->getMockBuilder(PageCache::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -536,7 +536,7 @@ class FrontendPageControllerTest extends TestCase
             ->getMock();
 
         //cache class
-        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
+        $mockCacheClass = $this->getMockBuilder(PageCache::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -629,7 +629,7 @@ class FrontendPageControllerTest extends TestCase
             ->with($this->equalTo('referer'));
         $request->headers = $headers;
         //cache class
-        $mockCacheClass = $this->getMockBuilder(PhpCache::class)
+        $mockCacheClass = $this->getMockBuilder(PageCache::class)
             ->disableOriginalConstructor()
             ->getMock();
         //security context

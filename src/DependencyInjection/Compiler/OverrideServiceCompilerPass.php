@@ -45,5 +45,11 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
             }
         }
 
+        if($container->hasParameter('networking_init_cms.page_cache_service')){
+            $service = $container->getParameter('networking_init_cms.page_cache_service');
+            $definition = $container->getDefinition($service);
+            $container->setDefinition('Networking\InitCmsBundle\Cache\PageCacheInterface', $definition);
+        }
+
     }
 }

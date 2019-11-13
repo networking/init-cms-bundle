@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Lib\PhpCacheInterface;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -28,17 +28,17 @@ class CacheController extends AbstractController
      */
     protected $authorizationChecker;
 
-    protected $phpCache;
+    protected $pageCache;
 
     /**
      * CacheController constructor.
      * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param PhpCacheInterface $phpCache
+     * @param PageCacheInterface $pageCache
      */
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker, PhpCacheInterface $phpCache)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker, PageCacheInterface $pageCache)
     {
         $this->authorizationChecker = $authorizationChecker;
-        $this->phpCache = $phpCache;
+        $this->pageCache = $pageCache;
     }
 
     /**
@@ -53,7 +53,7 @@ class CacheController extends AbstractController
          * to do: check if logged in user is sysadmin
          * */
         if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->phpCache->clean();
+            $this->pageCache->clean();
 
             /*clean function does not return status, therefore set success to true */
             $success = true;
