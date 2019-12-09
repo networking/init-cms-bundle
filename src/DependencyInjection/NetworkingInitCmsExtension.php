@@ -67,15 +67,24 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
         if(isset($bundles['FrameworkBundle'])){
             $configs = $container->getExtensionConfig('framework');
-            $templatingSet =  false;
+            $templatingEnginesSet =  false;
             foreach ($configs as $config){
                 if(isset($configs['templating'])){
-                    $templatingSet = true;
+                    if(isset($configs['templating']['engines'])){
+                        $templatingEnginesSet = true;
+                    }
                 }
             }
 
-            if(!$templatingSet){
-                $config = ['templating' => ['engines' => ['twig']]];
+            if(!$templatingEnginesSet){
+                $engines = [];
+                if(class_exists('Symfony\Bundle\TwigBundle\TwigEngine')){
+                    $engines[] = 'twig';
+                }elseif(class_exists('Symfony\Component\Templating\PhpEngine')){
+                    $engines[] = 'php';
+                }
+
+                $config = ['templating' => ['engines' => $engines]];
                 $container->prependExtensionConfig('framework', $config);
             }
 
