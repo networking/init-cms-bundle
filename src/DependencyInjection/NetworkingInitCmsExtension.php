@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Yaml\Yaml;
 
@@ -30,8 +31,57 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @author net working AG <info@networking.ch>
  */
-class NetworkingInitCmsExtension extends Extension
+class NetworkingInitCmsExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if(isset($bundles['LexikTranslationBundle'])){
+            $configs = $container->getExtensionConfig('lexik_translation');
+            $fallbackLocaleSet = $managedLocalesSet = false;
+            foreach ($configs as $config){
+                if(isset($configs['fallback_locale'])){
+                    $fallbackLocaleSet = true;
+                }
+                if(isset($configs['managed_locales'])){
+                    $managedLocalesSet = true;
+                }
+            }
+
+            if(!$fallbackLocaleSet){
+                $config = ['fallback_locale' => '%env(LOCALE)%'];
+                $container->prependExtensionConfig('lexik_translation', $config);
+            }
+
+            if(!$managedLocalesSet){
+                $config = ['managed_locales' => ['%env(LOCALE)%']];
+                $container->prependExtensionConfig('lexik_translation', $config);
+            }
+
+
+        }
+
+        if(isset($bundles['FrameworkBundle'])){
+            $configs = $container->getExtensionConfig('framework');
+            $templatingSet =  false;
+            foreach ($configs as $config){
+                if(isset($configs['templating'])){
+                    $templatingSet = true;
+                }
+            }
+
+            if(!$templatingSet){
+                $config = ['templating' => ['engines' => ['twig']]];
+                $container->prependExtensionConfig('framework', $config);
+            }
+
+        }
+    }
+
     /**
      * @param array $configs
      * @param ContainerBuilder $container
