@@ -86,7 +86,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('locale')->isRequired()->end()
                         ->end()
                     ->end()
-                    ->defaultValue([['label' => 'english', 'locale' => 'en']])
+                    ->defaultValue([['label' => 'English', 'short_label' => 'en', 'locale' => 'en']])
                 ->end()
                 ->arrayNode('content_types')
                     ->requiresAtLeastOneElement()

@@ -40,6 +40,26 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
     {
         $bundles = $container->getParameter('kernel.bundles');
 
+        $isCacheActive = false;
+
+        $configs = $container->getExtensionConfig($this->getAlias());
+
+        foreach ($configs as $config){
+            $isLanguageSet = false;
+            $isCacheActive = false;
+            if(isset($config['languages'])){
+                $isLanguageSet = true;
+            }
+            if(isset($config['cache']) && $config['cache']['activate'] === true){
+                $isCacheActive = true;
+            }
+
+            if(!$isLanguageSet){
+                $config = ['languages' => [['label' => 'English', 'short_label' => '%env(LOCALE)%', 'locale' => '%env(LOCALE)%']]];
+                $container->prependExtensionConfig($this->getAlias(), $config);
+            }
+        }
+
         if(isset($bundles['LexikTranslationBundle'])){
             $configs = $container->getExtensionConfig('lexik_translation');
             $fallbackLocaleSet = $managedLocalesSet = false;
@@ -62,17 +82,29 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 $container->prependExtensionConfig('lexik_translation', $config);
             }
 
-
         }
 
         if(isset($bundles['FrameworkBundle'])){
             $configs = $container->getExtensionConfig('framework');
             $templatingEnginesSet =  false;
+            $pageCacheSet = false;
+            $pools = [];
             foreach ($configs as $config){
-                if(isset($configs['templating'])){
-                    if(isset($configs['templating']['engines'])){
+                if(isset($config['templating'])){
+                    if(isset($config['templating']['engines'])){
                         $templatingEnginesSet = true;
                     }
+                }
+
+                if(isset($config['cache'])){
+
+                    if(isset($config['cache']['pools'])){
+                        $pools = array_merge($pools, $config['cache']['pools']);
+                    }
+                    if(isset($pools['page.cache'] )){
+                        $pageCacheSet = true;
+                    }
+
                 }
             }
 
@@ -88,7 +120,14 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 $container->prependExtensionConfig('framework', $config);
             }
 
+            if($isCacheActive && !$pageCacheSet){
+                $pools['page.cache'] = ['adapter' => 'cache.app'];
+                $config = ['cache' => ['pools' => $pools]];
+                $container->prependExtensionConfig('framework', $config);
+            }
+
         }
+
     }
 
     /**
@@ -187,7 +226,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
             if (in_array('Networking\InitCmsBundle\Cache\PageCacheInterface', $reflectionClass->getInterfaceNames())) {
                 $container->setParameter('networking_init_cms.page_cache_service', $cacheService);
-                
+
                 if (in_array('Networking\InitCmsBundle\Lib\PhpCacheInterface', $reflectionClass->getInterfaceNames())) {
                     @trigger_error(sprintf('The "%s" interface is deprecated since InitCms 4.0.2, use "%s"  instead.', PhpCacheInterface::class,  PageCacheInterface::class), E_USER_DEPRECATED);
                 }
