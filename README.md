@@ -3,7 +3,7 @@ NetworkingInitCmsBundle [![Build Status](https://travis-ci.org/networking/init-c
 Welcome to the networking init cms bundle
 
 The InitCmsBundle is a small flexible cms core based on symfony 2 which can be used as a standalone CMS or integrated into
-any existing symfony 2 project.
+any existing symfony 3 or symfony 4 project.
 
 The main features are:
 - Page manager with draft and published states, as well as public or protected (login only) pages, and customised URLs
