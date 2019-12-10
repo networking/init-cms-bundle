@@ -64,10 +64,10 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             $configs = $container->getExtensionConfig('lexik_translation');
             $fallbackLocaleSet = $managedLocalesSet = false;
             foreach ($configs as $config){
-                if(isset($configs['fallback_locale'])){
+                if(isset($config['fallback_locale'])){
                     $fallbackLocaleSet = true;
                 }
-                if(isset($configs['managed_locales'])){
+                if(isset($config['managed_locales'])){
                     $managedLocalesSet = true;
                 }
             }
@@ -78,7 +78,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             }
 
             if(!$managedLocalesSet){
-                $config = ['managed_locales' => ['%env(LOCALE)%']];
+                $config = ['managed_locales' => [$_ENV['LOCALE']]];
                 $container->prependExtensionConfig('lexik_translation', $config);
             }
 
