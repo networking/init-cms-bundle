@@ -27,15 +27,15 @@ The following links should get you started with a running cms. We are working ha
 
 Installation
 ------------
-- [InitCmsBundle installation](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/installation.md)
+- [InitCmsBundle installation](https://github.com/networking/init-cms-bundle/blob/master/doc/installation.md)
 
 Documentation
 -------------
-- [Configuring your cms](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/configuration.md)
-- [Creating templates](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/templates.md)
-- [Creating custom content types](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/content_types.md)
-- [Creating an Admin user interface](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/admin_ui.md)
-- [Creating custom admin settings](https://github.com/networking/init-cms-bundle/blob/master/Resources/doc/custom_admin_settings.md)
+- [Configuring your cms](https://github.com/networking/init-cms-bundle/blob/master/doc/configuration.md)
+- [Creating templates](https://github.com/networking/init-cms-bundle/blob/master/doc/templates.md)
+- [Creating custom content types](https://github.com/networking/init-cms-bundle/blob/master/doc/content_types.md)
+- [Creating an Admin user interface](https://github.com/networking/init-cms-bundle/blob/master/doc/admin_ui.md)
+- [Creating custom admin settings](https://github.com/networking/init-cms-bundle/blob/master/doc/custom_admin_settings.md)
 
 License
 -------

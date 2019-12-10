@@ -4,7 +4,8 @@ The NetworkingInitCmsBundle relies on a few other bundles which need to be confi
 up and running.
 
 You will need to provide configuration for the SonataAdminBundle, LexikTranslationBundle, FOSUserBundle and the SonataUserBundle
-in your app/config/config.yaml file.
+either in your on existing configuration files, or add them to the networking_init_cms.ymal file created by the recipe if 
+installed using flex.
 
 A simple configuration should look something like the following, with special attention paid to the sonata_user configuration
 as this will create the admin interface for administering users in the cms.
@@ -23,7 +24,7 @@ lexik_translation:
 fos_user:
     db_driver: orm
     firewall_name:  main
-    user_class:     Application\Networking\InitCmsBundle\Entity\User
+    user_class: "App\\Entity\\User" #Replace with your user entity
     group:
         group_class: Networking\InitCmsBundle\Entity\Group
     from_email:
@@ -62,17 +63,17 @@ networking_init_cms:
         - {label: Deutsch, locale: de_CH}
     templates:
         'sandbox_one_column':
-            template; "@ApplicationNetworkingInitCms/Default/one_column.html.twig"
+            template; "@NetworkingInitCms/Default/one_column.html.twig"
             name: "Single Column"
-            icon: "bundles/applicationnetworkinginitcms/img/template_header_one_column.png"
+            icon: "bundles/networkinginitcms/img/template_header_one_column.png"
             controller: MyBundle::index
             zones:
                 - { name: header, class: 'col-md-12' }
                 - { name: main_content, class: 'col-md-12'}
         'sandbox_two_column':
-            template: "@ApplicationNetworkingInitCms/Default/two_column.html.twig"
+            template: "@NetworkingInitCms/Default/two_column.html.twig"
             name: "Two Column"
-            icon: "bundles/applicationnetworkinginitcms/img/template_header_two_column.png"
+            icon: "bundles/networkinginitcms/img/template_header_two_column.png"
             zones:
                 - { name: header , class: 'col-md-12', max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery}
                 - { name: left , class: 'col-md-3'}
@@ -118,17 +119,17 @@ The parameters fo the template include:
 ```
 templates:
     'sandbox_one_column':
-        template: "@ApplicationNetworkingInitCms/Default/one_column.html.twig"
+        template: "@NetworkingInitCms/Default/one_column.html.twig"
         name: "Single Column"
-        icon: "bundles/applicationnetworkinginitcms/img/template_header_one_column.png"
+        icon: "bundles/networkinginitcms/img/template_header_one_column.png"
         controller: MyBundle::index # default NetworkingInitCmsBundle:FrontendPage:index
         zones:
             - { name: header, class: 'col-md-12', max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery }
             - { name: main_content, class: 'col-md-12'}
     'sandbox_two_column':
-        template: "@ApplicationNetworkingInitCms/Default/two_column.html.twig"
+        template: "@NetworkingInitCms/Default/two_column.html.twig"
         name: "Two Column"
-        icon: "bundles/applicationnetworkinginitcms/img/template_header_two_column.png"
+        icon: "bundles/networkinginitcms/img/template_header_two_column.png"
         zones:
             - { name: header , class: 'col-md-12'}
             - { name: left , class: 'col-md-3'}

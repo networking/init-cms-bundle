@@ -10,6 +10,11 @@ or download and install the [networking init CMS sandbox][2]. If you are new to 
 
 1) Installing the networking init CMS bundle
 --------------------------------------------
+### Install using flex
+
+This bundle comes with a flex recipe. To allow easy installation and initial configuration, please run:
+    
+    composer config extra.symfony.allow-contrib true
 
 ### Use Composer to install dependencies
 
@@ -25,10 +30,11 @@ You will be prompted to specify a version constraint,
 This will install the init cms bundle and all its dependencies in your
 vendor folder, and add the bundle to the list of requirements in your composer.json
 
-### Add to AppKernel
+### Load Bundle
 
-Add the following lines (plus your own bundles) to your application kernel
+If you are not using flex, you will need to add the bundle to your app/AppKernel.php (symfony 3) or config/Bundles.php (symfony 4)
 
+#### Symfony 3
 ```
 	<?php
 	// app/AppKernel.php
@@ -74,6 +80,50 @@ Add the following lines (plus your own bundles) to your application kernel
 	}
 ```
 
+#### Symfony 4 
+```
+    <?php
+    
+    return [
+        Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
+        Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle::class => ['all' => true],
+        Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
+        Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+        Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
+        Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
+        Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class => ['all' => true],
+        Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
+        Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
+        Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
+        Symfony\Bundle\AclBundle\AclBundle::class => ['all' => true],
+        Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
+        Sonata\EasyExtendsBundle\SonataEasyExtendsBundle::class => ['all' => true],
+        Sonata\DatagridBundle\SonataDatagridBundle::class => ['all' => true],
+        Sonata\CoreBundle\SonataCoreBundle::class => ['all' => true],
+        Sonata\BlockBundle\SonataBlockBundle::class => ['all' => true],
+        Knp\Bundle\MenuBundle\KnpMenuBundle::class => ['all' => true],
+        Sonata\AdminBundle\SonataAdminBundle::class => ['all' => true],
+        FOS\UserBundle\FOSUserBundle::class => ['all' => true],
+        Sonata\UserBundle\SonataUserBundle::class => ['all' => true],
+        Sonata\NotificationBundle\SonataNotificationBundle::class => ['all' => true],
+        JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
+        Sonata\MediaBundle\SonataMediaBundle::class => ['all' => true],
+        Sonata\IntlBundle\SonataIntlBundle::class => ['all' => true],
+        Knp\Bundle\MarkdownBundle\KnpMarkdownBundle::class => ['all' => true],
+        FOS\CKEditorBundle\FOSCKEditorBundle::class => ['all' => true],
+        Sonata\FormatterBundle\SonataFormatterBundle::class => ['all' => true],
+        Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle::class => ['all' => true],
+        Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
+        Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle::class => ['all' => true],
+        Oneup\UploaderBundle\OneupUploaderBundle::class => ['all' => true],
+        Oneup\FlysystemBundle\OneupFlysystemBundle::class => ['all' => true],
+        Lexik\Bundle\TranslationBundle\LexikTranslationBundle::class => ['all' => true],
+        Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
+        Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['all' => true],
+        Networking\InitCmsBundle\NetworkingInitCmsBundle::class => ['all' => true],
+    ];
+```
+
 ### Configure the dependent user bundles
 You will need to provide configuration for the SonataAdminBundle, LexikTranslationBundle, FOSUserBundle and the SonataUserBundle
 in your app/config/config.yaml file.
@@ -95,7 +145,7 @@ lexik_translation:
 fos_user:
     db_driver: orm
     firewall_name:  main
-    user_class:     Application\Networking\InitCmsBundle\Entity\User
+    user_class:     App\Entity\User
     group:
         group_class: Networking\InitCmsBundle\Entity\Group
     from_email:
@@ -130,30 +180,9 @@ sonata_media:
 
     filesystem:
         local:
-            directory:  %kernel.root_dir%/../web/uploads/media
+            directory:  "%kernel.project_dir%/public/uploads/media 
             create:     false
 ```
-
-### Extend the bundle
-Now you need to extend the bundle. This will create a bundle in your src folder which inherits the NetworkingInitCmsBundle.
-The bundle extending process is based on the sonata easy extend bundle
-
-
-    php app/console networking:initcms:generate
-
-
-Then you can add your new bundle to the AppKernel.php
-
-        <?php
-        // app/AppKernel.php
-        public function registerbundles()
-        {
-            return array(
-                //..
-                new Sonata\BlockBundle\SonataBlockBundle(),
-                //..
-             );
-         }
 
 2) Configure the init CMS
 -------------------------
@@ -183,57 +212,6 @@ Alternatively you can view all the individual config files and manually insert t
 Now we need copy the contents of the @NetworkingInitCmsBundle/Resources/config/cms/doctrine.yaml file into your config.yaml
 file, this is important as it contains information about entity mappings and behaviours
 
-### Configure Assetic (See [MopaBootstrapBundle][3])
-
-If you are not using [symfony-bootstrap](http://github.com/phiamo/symfony-bootstrap) you must configure assetic to use less,
-and make sure you have node installed.
-
-Yui CSS and CSS Embed are very nice and recommended.
-To make full use of bootstraps capabilites they are not needed, neither is less but its up to you
-
-Here is an example configuration for your config.yaml:
-Make sure you have java installed
-
-``` yaml
-assetic:
-    filters:
-        less:
-            node: /usr/local/bin/node
-            node_paths: [/usr/local/lib/node_modules/]
-            apply_to: "\.less$"
-        cssrewrite: ~
-        cssembed:
-            jar: %kernel.root_dir%/Resources/java/cssembed-0.3.6.jar
-        yui_css:
-            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
-            apply_to: "\.css$"
-        yui_js:
-            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
-```
-
-Do not forget to add the jars to your app.
-css embed jar: https://github.com/nzakas/cssembed/downloads
-yui compressor jar: https://github.com/yui/yuicompressor/releases
-
-If you encounter the following Error:
-
-```
-An exception has been thrown during the compilation of a template ("You must add MopaBootstrapBundle to the assetic.bundle config to use the {% stylesheets %} tag in @MopaBootstrap/base.html.twig.") in "/YourProject/vendor/mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/views/base.html.twig".
-```
-
-It's because the Bundle is not added to the bundles: [ ] config option in the assetic config.
-
-``` yaml
-assetic:
-    debug:          %kernel.debug%
-    use_controller: false
-    bundles:        [ ] # <-
-    filters:
-    ....
-```
-
-**IMPORTANT** change the assetic "use_controller" parameter from "true" to "false" in your config_dev.yaml
-
 
 ### Configure Routing
 
@@ -252,7 +230,7 @@ Comment in the translator parameter in your config.yaml file:
 	#config.yaml
 	framework:
         #esi:             ~
-        translator:      { fallback: %locale% }
+        translator:      { fallback: "%env(LOCALE)%" }
 
 
 
@@ -260,9 +238,9 @@ If they are not already created, you need to add specific folder to allow upload
 
 .. code-block:: sh
 
-    mkdir web/uploads
-    mkdir web/uploads/media
-    chmod -R 0777 web/uploads
+    mkdir public/uploads
+    mkdir public/uploads/media
+    chmod -R 0777 public/uploads
 
 3) Install assets
 -----------------

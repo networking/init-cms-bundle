@@ -13,7 +13,9 @@ Luckily it is all very simple, there are only three methods to implement so here
 
 #### Field Definition for the content type form ####
 
-We use the [IbrowsSonataAdminAnnotationBundle](https://github.com/ibrows/IbrowsSonataAdminAnnotationBundle) to help us configure our admin fields for our content type.
+We integrated the no longer existing IbrowsSonataAdminAnnotationBundle to help us configure our admin fields for our content type.
+Check out [annotations](https://github.com/networking/init-cms-bundle/blob/master/doc/annotations.md) form a more detailed 
+information about usage.
 
 Here is an example from the Text entity
 
