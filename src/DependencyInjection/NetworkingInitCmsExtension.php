@@ -40,24 +40,21 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
     {
         $bundles = $container->getParameter('kernel.bundles');
 
-        $isCacheActive = false;
-
         $configs = $container->getExtensionConfig($this->getAlias());
-
+        $isLanguageSet = false;
+        $isCacheActive = false;
         foreach ($configs as $config){
-            $isLanguageSet = false;
-            $isCacheActive = false;
             if(isset($config['languages'])){
                 $isLanguageSet = true;
             }
             if(isset($config['cache']) && $config['cache']['activate'] === true){
                 $isCacheActive = true;
             }
+        }
 
-            if(!$isLanguageSet){
-                $config = ['languages' => [['label' => 'English', 'short_label' => '%env(LOCALE)%', 'locale' => '%env(LOCALE)%']]];
-                $container->prependExtensionConfig($this->getAlias(), $config);
-            }
+        if(!$isLanguageSet){
+            $config = ['languages' => [['label' => 'English', 'short_label' => '%env(LOCALE)%', 'locale' => '%env(LOCALE)%']]];
+            $container->prependExtensionConfig($this->getAlias(), $config);
         }
 
         if(isset($bundles['LexikTranslationBundle'])){
