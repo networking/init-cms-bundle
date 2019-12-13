@@ -8,6 +8,7 @@
         <defaults autowire="true" autoconfigure="true" public="false"/>
 
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
+        <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
 
         <service id="Networking\InitCmsBundle\Command\ClearCacheCommand" autowire="true" public="true">
             <argument key="$managedLocales">%lexik_translation.managed_locales%</argument>
