@@ -154,6 +154,9 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
         }
 
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('event_listeners.yaml');
+
         $config['languages'] = $this->addShortLabels($config['languages']);
 
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
