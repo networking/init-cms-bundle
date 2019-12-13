@@ -10,10 +10,10 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Networking\InitCmsBundle\Model\UserInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class UserActivityListener.
@@ -38,9 +38,9 @@ class UserActivityListener
     }
 
     /**
-     * @param TokenStorage $tokenStorage
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function setTokenStorage(TokenStorage $tokenStorage)
+    public function setTokenStorage(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
