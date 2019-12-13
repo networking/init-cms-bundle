@@ -18,3 +18,10 @@ services:
         arguments: [ '@request_stack', '%networking_init_cms.page.languages%', 'nav nav-pills' ]
         tags:
             - { name: knp_menu.menu, alias: langMenu }
+
+    app.menu.footer_menu:
+        class: Knp\Menu\MenuItem
+        factory: 'Networking\InitCmsBundle\Menu\FrontendMenuBuilder:createMainMenu'
+        arguments: [ 'Footer-Navigation', '']
+        tags:
+            - { name: knp_menu.menu, alias: footerMenu }

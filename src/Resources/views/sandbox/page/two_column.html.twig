@@ -21,7 +21,7 @@ file that was distributed with this source code.
 
                     {% for layoutBlock in page.layoutBlock('header') %}
                         <div class="span{{ 12/headerBlockCount }}">
-                            {{ render_initcms_block('content/hero_block.html.twig', layoutBlock) }}
+                            {{ render_initcms_block('@NetworkingInitCms/sandbox/content/hero_block.html.twig', layoutBlock) }}
                         </div>
                     {% endfor %}
                 </div>
@@ -33,7 +33,7 @@ file that was distributed with this source code.
         <div class="col-md-6">
             <div class="middle">
                 {% for layoutBlock in page.layoutBlock('left') %}
-                    {{ render_initcms_block('conent/cms_block.html.twig', layoutBlock) }}
+                    {{ render_initcms_block('@NetworkingInitCms/sandbox/conent/cms_block.html.twig', layoutBlock) }}
                 {% endfor %}
             </div>
         </div>
@@ -42,7 +42,7 @@ file that was distributed with this source code.
             {% block content_sidebar %}
                 <div class="middle">
                     {% for layoutBlock in page.layoutBlock('right') %}
-                        {{ render_initcms_block('content/cms_block.html.twig', layoutBlock) }}
+                        {{ render_initcms_block('@NetworkingInitCms/sandbox/content/cms_block.html.twig', layoutBlock) }}
                     {% endfor %}
                 </div>
             {% endblock content_sidebar %}
