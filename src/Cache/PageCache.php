@@ -144,7 +144,7 @@ class PageCache implements PageCacheInterface, AdapterInterface, PruneableInterf
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(/*string $prefix = ''*/)
     {
         return $this->pageCache->clear();
     }
