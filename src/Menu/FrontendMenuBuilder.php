@@ -12,6 +12,9 @@ namespace Networking\InitCmsBundle\Menu;
 
 use Networking\InitCmsBundle\Entity\MenuItem as Menu;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Knp\Menu\ItemInterface;
+use Networking\InitCmsBundle\Model\MenuItem;
+use Knp\Menu\MenuItem as KnpMenuItem;
 
 /**
  * Class FrontendMenuBuilder.
@@ -20,31 +23,30 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class FrontendMenuBuilder extends MenuBuilder
 {
-    /**
-     * Creates the main page navigation for the left side of the top frontend navigation.
-     *
-     * @param $menuName
-     * @param string $classes
-     *
-     * @return \Knp\Menu\ItemInterface|\Knp\Menu\MenuItem
-     */
-    public function createMainMenu($menuName, $classes = 'nav nav-tabs nav-stacked')
-    {
-        $menu = $this->factory->createItem('root');
 
-        if ($classes) {
-            $menu->setChildrenAttribute('class', $classes);
+    /**
+     * @param $menuName
+     * @param int $startDepth
+     * @param bool $showOnlyCurrentChildren
+     * @return ItemInterface|KnpMenuItem
+     */
+    public function buildMenu($menuName, $rootClass = false, $startDepth = 1, $showOnlyCurrentChildren = false)
+    {
+        $menu = $this->factory->createItem('main');
+
+        if($rootClass){
+            $menu->setChildrenAttribute('class', $rootClass);
         }
 
-        /** @var $mainMenu Menu */
         $menuIterator = $this->getFullMenu($menuName);
-
         if (!$menuIterator) {
             return $menu;
         }
-
-        $startDepth = 1;
         $menu = $this->createMenu($menu, $menuIterator, $startDepth);
+        if($showOnlyCurrentChildren){
+            $this->showOnlyCurrentChildren($menu);
+        }
+        $this->setRecursiveAttribute($menu, ['class' => 'nav nav-list']);
 
         return $menu;
     }
@@ -81,120 +83,71 @@ class FrontendMenuBuilder extends MenuBuilder
         return $menu;
     }
 
+
+
     /**
      * Creates the login and change language navigation for the right side of the top frontend navigation.
      *
      * @param RequestStack $requestStack
      * @param $languages
      * @param string $classes
-     * @param bool   $dropDownMenu
+     * @param bool $dropDownMenu
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function createFrontendLangMenu(
+    public function createLangMenu(
         RequestStack $requestStack,
         $languages,
-        $classes = 'nav pull-right',
-        $dropDownMenu = false
+        $classes = 'nav pull-right'
     ) {
         $menu = $this->factory->createItem('root');
         if ($classes) {
             $menu->setChildrenAttribute('class', $classes);
         }
 
-        if ($dropDownMenu) {
-            $this->createDropdownLangMenu($menu, $languages, $requestStack->getCurrentRequest()->getLocale());
-        } else {
-            $this->createInlineLangMenu($menu, $languages, $requestStack->getCurrentRequest()->getLocale());
+        foreach ($languages as $language) {
+            $route = $this->router->generate('networking_init_change_language',['oldLocale' => $this->request->getLocale(), 'locale' => $language['locale']]);
+            $node = $menu->addChild( $language['label'],['uri' => $route]);
+            if ($language['locale'] == $requestStack->getCurrentRequest()->getLocale()) {
+                $node->setCurrent(true);
+            }
+            $node->setLinkAttribute('class', 'nav-link');
+            $node->setExtra('translation_domain', false);
         }
 
         return $menu;
     }
 
     /**
-     * Used to create a simple navigation for the footer.
-     *
-     * @param $menuName
-     * @param string $classes
-     *
-     * @return \Knp\Menu\ItemInterface
+     * @param KnpMenuItem $menu
+     * @param MenuItem $node
+     * @param $startDepth
+     * @return bool|ItemInterface
      */
-    public function createFooterMenu($menuName, $classes = '')
+    public function addNodeToMenu(KnpMenuItem $menu, MenuItem $node, $startDepth)
     {
-        $menu = $this->factory->createItem($menuName);
-        if ($classes) {
-            $menu->setChildrenAttribute('class', $classes);
+        if ($node->getLvl() < $startDepth) {
+            return false;
         }
 
-        /** @var $mainMenu Menu */
-        $menuIterator = $this->getFullMenu($menuName);
-
-        if (!$menuIterator) {
-            return $menu;
+        if ($node->getLvl() > $startDepth) {
+            $menu = $this->getParentMenu($menu, $node);
         }
 
-        $startDepth = 1;
-        $menu = $this->createMenu($menu, $menuIterator, $startDepth);
+        if (is_object($menu)) {
+            $knpMenuNode = $this->createFromMenuItem($node);
+            if (!is_null($knpMenuNode)) {
+                $menu->addChild($knpMenuNode);
+                $knpMenuNode->setLinkAttribute('class', $node->getLinkClass().' nav-link');
+                $knpMenuNode->setExtra('translation_domain', false);
+                if ($node->getVisibility() != MenuItem::VISIBILITY_PUBLIC && !$this->isLoggedIn) {
+                    $knpMenuNode->setDisplay(false);
+                }
 
-        return $menu;
-    }
-
-    /**
-     * Used to create nodes for the language navigation in the front- and backend.
-     *
-     * @param \Knp\Menu\ItemInterface $menu
-     * @param array                   $languages
-     * @param $currentLanguage
-     * @param string $route
-     */
-    public function createDropdownLangMenu(
-        \Knp\Menu\ItemInterface &$menu,
-        array $languages,
-        $currentLanguage,
-        $route = 'networking_init_change_language'
-    ) {
-        $dropdown = $menu->addChild(
-            $this->translator->trans('Change Language'),
-            ['dropdown' => true, 'icon' => 'caret']
-        );
-
-        foreach ($languages as $language) {
-            $node = $dropdown->addChild(
-                $language['label'],
-                ['uri' => $this->router->generate($route, ['oldLocale' => $this->request->getLocale(), 'locale' => $language['locale']])]
-            );
-
-            if ($language['locale'] == $currentLanguage) {
-                $node->setCurrent(true);
+                return $knpMenuNode;
             }
-            $node->setExtra('translation_domain', false);
         }
-    }
 
-    /**
-     * @param \Knp\Menu\ItemInterface $menu
-     * @param array                   $languages
-     * @param $currentLanguage
-     * @param string $route
-     */
-    public function createInlineLangMenu(
-        \Knp\Menu\ItemInterface &$menu,
-        array $languages,
-        $currentLanguage,
-        $route = 'networking_init_change_language'
-    ) {
-        foreach ($languages as $language) {
-            $node = $menu->addChild(
-                $language['label'],
-                [
-                    'uri' => $this->router->generate($route, ['oldLocale' => $this->request->getLocale(), 'locale' => $language['locale']]),
-                    'linkAttributes' => ['class' => 'language'],
-                ]
-            );
-            if ($language['locale'] == $currentLanguage) {
-                $node->setCurrent(true);
-            }
-            $node->setExtra('translation_domain', false);
-        }
+        return false;
     }
 }

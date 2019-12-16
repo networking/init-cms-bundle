@@ -11,19 +11,27 @@ file that was distributed with this source code.
 {% block menu %}
     <div class="header">
 
-            <div class="mr-2 float-left"><img src="{{ asset('/bundles/networkinginitcms/img/logo_initcms.png') }}" /></div>
-            <div class="float-left">
-                <h3>Demo Sailing Club</h3>
-            </div>
-            <div class="float-right">
-                {{ knp_menu_render(knp_menu_get('langMenu'), {'currentClass': 'active', 'ancestorClass': '', 'allow_safe_labels': 'true', 'leaf_class': 'nav-item'}) }}
-            </div>
+        <div class="mr-2 float-left"><img src="{{ asset('/bundles/networkinginitcms/img/logo_initcms.png') }}"/>
+        </div>
+        <div class="float-left">
+            <h3>Demo Sailing Club</h3>
+        </div>
+        <div class="float-right">
+            {{ knp_menu_render(knp_menu_get('langMenu'), {'template':'@NetworkingInitCms/sandbox/menu/menu.html.twig','currentClass': 'active', 'ancestorClass': '', 'allow_safe_labels': 'true', 'leaf_class': 'nav-item'}) }}
+        </div>
         <div class="clearfix"></div>
     </div>
     <div class="row nav-main-container">
-        {{ knp_menu_render(knp_menu_get('mainMenu'),{'depth':1, 'currentClass': 'active', 'ancestorClass': 'active', 'allow_safe_labels': 'true', 'leaf_class': 'nav-item'} ) }}
+       <div class="col-12">
+
+        {{ knp_menu_render(knp_menu_get('mainMenu'),{'template':'@NetworkingInitCms/sandbox/menu/menu.html.twig', 'depth':1, 'currentClass': 'active', 'ancestorClass': 'active', 'allow_safe_labels': 'true', 'leaf_class': 'nav-item'} ) }}
+       </div>
+        <div class="col-12">
+        {{ knp_menu_render(knp_menu_get('subMenu'), {'template':'@NetworkingInitCms/sandbox/menu/menu.html.twig','currentClass': 'active'}) }}
+        </div>
     </div>
 {% endblock menu %}
+
 
 
 
