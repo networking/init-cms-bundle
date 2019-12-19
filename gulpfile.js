@@ -4,22 +4,25 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     csso = require('gulp-csso'),
     watch = require('gulp-watch'),
-    less = require('gulp-less');
+    less = require('gulp-less'),
+    webpack = require('webpack-stream');
+
 
 var config = {
-    projectDir: __dirname+'/src/Resources/public',
-    mopa: __dirname+'/../../mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/public',
-    sonata: __dirname+'/../../sonata-project/admin-bundle/src/Resources/public'
+    projectDir: __dirname + '/src/Resources/public',
+    mopa: __dirname + '/../../mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/public',
+    sonata: __dirname + '/../../sonata-project/admin-bundle/src/Resources/public',
+    nodeDir: __dirname + '/node_modules'
 };
 
 gulp.task('less', function () {
     return gulp.src([
-        config.projectDir+ '/vendor/select2/css/select2.min.css',
-        config.projectDir+ '/vendor/select2/css/select2-bootstrap.min.css',
-        config.projectDir+ '/vendor/jqueryui/themes/base/jquery-ui.css',
-        config.projectDir+ '/vendor/smalot-bootstrap-datetimepicker/build/build_standalone.less',
-        config.projectDir+ '/less/initcms_bootstrap.less',
-        config.projectDir+ '/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
+        config.projectDir + '/vendor/select2/css/select2.min.css',
+        config.projectDir + '/vendor/select2/css/select2-bootstrap.min.css',
+        config.projectDir + '/vendor/jqueryui/themes/base/jquery-ui.css',
+        config.projectDir + '/vendor/smalot-bootstrap-datetimepicker/build/build_standalone.less',
+        config.projectDir + '/less/initcms_bootstrap.less',
+        config.projectDir + '/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
     ])
         .pipe(sourcemaps.init())
         .pipe(less())
@@ -31,7 +34,7 @@ gulp.task('less', function () {
 
 gulp.task('admin-navbar', function () {
     return gulp.src([
-        config.projectDir+ '/less/admin-navbar-standalone.less',
+        config.projectDir + '/less/admin-navbar-standalone.less',
     ])
         .pipe(sourcemaps.init())
         .pipe(less())
@@ -85,5 +88,14 @@ gulp.task('app', function () {
         .pipe(gulp.dest(config.projectDir + '/js'));
 });
 
+gulp.task('imageEditors', function () {
+    return gulp.src([
+        config.projectDir + '/js/filebot.js'
 
-gulp.task('default', gulp.parallel('less', 'jquery',  'bootstrap', 'app', 'admin-navbar'));
+    ])
+        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(gulp.dest(config.projectDir + '/js'));
+})
+
+
+gulp.task('default', gulp.parallel('less', 'jquery', 'bootstrap', 'app', 'admin-navbar', 'imageEditors'));

@@ -37,11 +37,11 @@ class ImageProvider extends BaseProvider
         $formMapper->add('authorName');
         $formMapper->add('description');
         $formMapper->add('copyright');
-        $formMapper->add(
-            'self',
-            MediaPreviewType::class,
-            ['required' => false, 'label' => 'form.label_image', 'provider' => 'sonata.media.provider.image']
-        );
+//        $formMapper->add(
+//            'self',
+//            MediaPreviewType::class,
+//            ['required' => false, 'label' => 'form.label_image', 'provider' => 'sonata.media.provider.image']
+//        );
         $formMapper->add('binaryContent',
             FileType::class,
             ['label' => 'form.label_binary_content_image_new', 'required' => false]

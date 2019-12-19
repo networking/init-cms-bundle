@@ -14,11 +14,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
+use Networking\InitCmsBundle\Exception\DuplicateMediaException;
+use Networking\InitCmsBundle\Lib\UploadedBase64File;
+use Networking\InitCmsBundle\Provider\ImageProvider;
+use Oneup\UploaderBundle\Uploader\ErrorHandler\ErrorHandlerInterface;
+use Oneup\UploaderBundle\Uploader\File\FileInterface;
+use Oneup\UploaderBundle\Uploader\File\FilesystemFile;
+use Oneup\UploaderBundle\Uploader\Response\FineUploaderResponse;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
 use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -405,5 +414,139 @@ class MediaAdminController extends SonataMediaAdminController
         $object = $this->admin->getObject($id);
 
         return $this->render('NetworkingInitCmsBundle:MediaAdmin:preview.html.twig', ['object' => $object]);
+    }
+
+    public function cloneAction(Request $request){
+
+        $response = new FineUploaderResponse();
+
+
+        try {
+            $this->handleUpload($response, $request);
+        } catch (UploadException $e) {
+            $response->setSuccess(false);
+            $response->setError($e->getMessage());
+            if ($e instanceof DuplicateMediaException) {
+                $response->offsetSet('duplicate', true);
+            }
+            $response['error'] = $e->getMessage();
+        }
+
+        $request = $this->getRequest();
+        $response = new JsonResponse($response->assemble(), 200);
+        $response->headers->set('Vary', 'Accept');
+
+        if (!in_array('application/json', $request->getAcceptableContentTypes(), true)) {
+            $response->headers->set('Content-type', 'text/plain');
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param string $base64Content
+     * @return mixed
+     */
+    public function extractBase64String(string $base64Content)
+    {
+        $data = explode( ';base64,', $base64Content);
+        return $data[1];
+
+    }
+
+    /**
+     * @param $filename
+     * @param $newExtension
+     * @return string
+     */
+    private function fixExtension($filename, $newExtension) {
+        $info = pathinfo($filename);
+        return $info['filename'] . '.' . $newExtension;
+    }
+
+    public function handleUpload($response, $request){
+        $request->query->set('oneuploader', true);
+        $fileData = $request->request->get('file');
+        $clone = $request->request->get('clone');
+        $id = $request->request->get('id');
+
+        $this->admin->setRequest($request);
+
+        /** @var Media $baseMedia */
+        $baseMedia = $this->admin->getObject($id);
+
+
+        /** @var ImageProvider $provider */
+        $provider = $this->admin->getPool()->getProvider($baseMedia->getProviderName());
+
+        $image = $provider->getReferenceImage($baseMedia);
+
+        $fileName = $this->fixExtension($image, 'png');
+
+        if($clone){
+            /** @var Media $media */
+            $media = $this->admin->getNewInstance();
+            $media->setEnabled(true);
+            $media->setName('Copy_'.$baseMedia->getName());
+            foreach ($baseMedia->getTags() as $tag){
+                $media->addTags($tag);
+            }
+        }else{
+            $media = $baseMedia;
+        }
+
+        $data = $this->extractBase64String($fileData);
+
+        $file = new UploadedBase64File($data, $fileName, 'image/png');
+
+        if (!($file instanceof FileInterface)) {
+            $file = new FilesystemFile($file);
+        }
+
+        $media->setBinaryContent($file);
+
+        $provider = $this->admin->getPool()->getProvider($media->getProviderName());
+
+        $provider->transform($media);
+
+        $validator = $this->container->get('validator');
+
+        $errors = $validator->validate($media);
+
+        $errorMessages = [];
+        if ($errors->count() > 0) {
+            $duplicate = false;
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+
+                if ($error->getMessage() == 'File is duplicate') {
+                    $duplicate = true;
+                }
+            }
+
+            if ($duplicate) {
+                $originalMedia = $this->admin->checkForDuplicate($media);
+                $path = $this->admin->generateObjectUrl('edit', $originalMedia);
+                $response->offsetSet('url', $path);
+                $response->offsetSet('id', $originalMedia->getId());
+
+                throw new DuplicateMediaException('File is duplicate');
+            }
+
+            throw new UploadException(implode(', ', $errorMessages));
+        }
+
+        try {
+            if($clone){
+                $this->admin->create($media);
+            }else{
+                $this->admin->update($media);
+            }
+            $path = $this->admin->generateObjectUrl('edit', $media);
+            $response->offsetSet('url', $path);
+            $response->offsetSet('id', $media->getId());
+        } catch (\Exception $e) {
+            throw new UploadException($e->getMessage());
+        }
     }
 }
