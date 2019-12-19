@@ -6,3 +6,5 @@ composer.lock
 php-cs-fixer.phar
 
 /node_modules
+/package-lock.json
+/yarn.lock
