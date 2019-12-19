@@ -31,6 +31,7 @@ file that was distributed with this source code.
         </div>
         <div class="modal" id="field_dialog_{{ id }}" style="display: none" role="dialog" aria-hidden="true">
         </div>
+        <div class="clearfix"></div>
     </div>
     {% if app.request.isxmlhttprequest and app.request.get('with_js')|default(true) %}
         {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
