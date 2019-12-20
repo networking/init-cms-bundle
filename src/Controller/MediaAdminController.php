@@ -183,9 +183,9 @@ class MediaAdminController extends SonataMediaAdminController
         if ($request->getMethod() == 'DELETE') {
             try {
                 $this->admin->delete($object);
-                $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_delete_success');
+                $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->trans('flash_delete_success', [], 'SonataAdminBundle')));
             } catch (ModelManagerException $e) {
-                $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_delete_error');
+                $this->get('session')->getFlashBag()->add('sonata_flash_error', $this->trans('flash_delete_error', [], 'SonataAdminBundle')));
             }
 
             return new RedirectResponse($this->admin->generateUrl(
@@ -221,9 +221,9 @@ class MediaAdminController extends SonataMediaAdminController
         try {
             $this->doBatchDelete($query);
 
-            $this->addFlash('sonata_flash_success', 'flash_batch_delete_success');
+            $this->addFlash('sonata_flash_success', $this->trans('flash_batch_delete_success', [], 'SonataAdminBundle'));
         } catch (ModelManagerException $e) {
-            $this->addFlash('sonata_flash_error', 'flash_batch_delete_error');
+            $this->addFlash('sonata_flash_error', $this->trans('flash_batch_delete_error', [], 'SonataAdminBundle'));
         }
 
         return new RedirectResponse($this->admin->generateUrl(
