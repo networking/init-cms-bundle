@@ -11,7 +11,7 @@ namespace Networking\InitCmsBundle\Lib;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-@trigger_error(sprintf('The "%s" interface is deprecated since InitCms 4.1, use "%s"  instead.', PhpCacheInterface::class,  PhpCacheInterface::class), E_USER_DEPRECATED);
+@trigger_error(sprintf('The "%s" interface is deprecated since InitCms 4.1, use "%s"  instead.', PhpCacheInterface::class,  PageCacheInterface::class), E_USER_DEPRECATED);
 
 /**
  * Interface PhpCacheInterface
