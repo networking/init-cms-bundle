@@ -183,9 +183,9 @@ class MediaAdminController extends SonataMediaAdminController
         if ($request->getMethod() == 'DELETE') {
             try {
                 $this->admin->delete($object);
-                $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->trans('flash_delete_success', [], 'SonataAdminBundle')));
+                $this->addFlash('sonata_flash_success', $this->trans('flash_delete_success', [], 'SonataAdminBundle'));
             } catch (ModelManagerException $e) {
-                $this->get('session')->getFlashBag()->add('sonata_flash_error', $this->trans('flash_delete_error', [], 'SonataAdminBundle')));
+                $this->addFlash('sonata_flash_error', $this->trans('flash_delete_error', [], 'SonataAdminBundle'));
             }
 
             return new RedirectResponse($this->admin->generateUrl(
