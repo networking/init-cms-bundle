@@ -10,9 +10,9 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Networking\InitCmsBundle\Model\UserInterface;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -23,16 +23,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UserActivityListener
 {
     /**
-     * @var TokenStorage
+     * @var TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     protected $em;
 
-    public function __construct(ObjectManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
@@ -46,11 +46,10 @@ class UserActivityListener
     }
 
     /**
-     * On each request we want to update the user's last activity datetime.
-     *
-     * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
+     * @param ControllerEvent $event
+     * @throws \Exception
      */
-    public function onCoreController(FilterControllerEvent $event)
+    public function onCoreController(ControllerEvent $event)
     {
         // do not capture admin cms urls
         if (!preg_match('/.*\/admin\/.*/', $event->getRequest()->getRequestUri())) {

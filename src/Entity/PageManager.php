@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
@@ -28,10 +28,10 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 {
     /**
      * PageManager constructor.
-     * @param ObjectManager $om
+     * @param EntityManagerInterface $om
      * @param $class
      */
-    public function __construct(ObjectManager $om, $class)
+    public function __construct(EntityManagerInterface $om, $class)
     {
         if (class_exists($class)) {
             $classMetaData = $om->getClassMetadata($class);

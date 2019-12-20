@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Networking\InitCmsBundle\Form\Type\ContentType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 abstract class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFormListenerInterface
 {
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
 	protected $om;
 
@@ -52,11 +52,11 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 
      /**
      * LayoutBlockFormListener constructor.
-     * @param ObjectManager $om
+     * @param EntityManagerInterface $om
      * @param ValidatorInterface $validator
      * @param $contentTypes
      */
-	public function __construct(ObjectManager $om,ValidatorInterface $validator, $contentTypes ) {
+	public function __construct(EntityManagerInterface $om,ValidatorInterface $validator, $contentTypes ) {
 		$this->om = $om;
 
 		$this->validator = $validator;

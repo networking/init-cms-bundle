@@ -41,7 +41,7 @@ class PageHelper
     protected $registry;
 
     /**
-     * @var \Doctrine\Persistence\ObjectManager|object
+     * @var \Doctrine\ORM\EntityManagerInterface|object
      */
     protected $objectManager;
 

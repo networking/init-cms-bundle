@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\DoctrineChoiceLoader;
 use Doctrine\ORM\Query\Parameter;
@@ -171,7 +172,7 @@ class AutocompleteType extends DoctrineType
         $emNormalizer = function (Options $options, $em) use ($registry) {
             /* @var ManagerRegistry $registry */
             if (null !== $em) {
-                if ($em instanceof ObjectManager) {
+                if ($em instanceof EntityManagerInterface) {
                     return $em;
                 }
 

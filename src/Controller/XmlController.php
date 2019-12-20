@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 class XmlController extends AbstractController
 {
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     public $objectManager;
 
@@ -49,14 +49,14 @@ class XmlController extends AbstractController
 
     /**
      * XmlController constructor.
-     * @param ObjectManager $objectManager
+     * @param EntityManagerInterface $objectManager
      * @param $pageClass
      * @param array $languages
      * @param array $additionalLinks
      * @param string $domainName
      */
     public function __construct(
-        ObjectManager $objectManager,
+        EntityManagerInterface $objectManager,
         $pageClass,
         $languages = [],
         $additionalLinks = [],

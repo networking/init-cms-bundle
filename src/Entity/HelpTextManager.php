@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Networking\InitCmsBundle\Model\HelpTextManagerInterface;
@@ -22,7 +22,7 @@ use Networking\InitCmsBundle\Model\HelpTextManagerInterface;
  */
 class HelpTextManager extends EntityRepository implements HelpTextManagerInterface
 {
-    public function __construct(ObjectManager $om, $class)
+    public function __construct(EntityManagerInterface $om, $class)
     {
         $classMetaData = $om->getClassMetadata($class);
 

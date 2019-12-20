@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Helper;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -69,7 +69,7 @@ class LanguageSwitcherHelper
     /**
      * LanguageSwitcherHelper constructor.
      * @param RequestStack $requestStack
-     * @param ObjectManager $om
+     * @param EntityManagerInterface $om
      * @param PageHelper $pageHelper
      * @param PageManagerInterface $pageManager
      * @param RouterInterface $router
@@ -78,7 +78,7 @@ class LanguageSwitcherHelper
      */
     public function __construct(
         RequestStack $requestStack,
-        ObjectManager $om,
+        EntityManagerInterface $om,
         PageHelper $pageHelper,
         PageManagerInterface $pageManager,
         RouterInterface $router,

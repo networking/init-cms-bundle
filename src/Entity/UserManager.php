@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Networking\InitCmsBundle\Doctrine\UserManager as DoctrineUserManager;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Util\CanonicalFieldsUpdater;
 use FOS\UserBundle\Util\PasswordUpdaterInterface;
 
@@ -26,12 +26,16 @@ class UserManager extends DoctrineUserManager
      * UserManager constructor.
      *
      * @param PasswordUpdaterInterface $passwordUpdater
-     * @param CanonicalFieldsUpdater   $canonicalFieldsUpdater
-     * @param ObjectManager            $om
+     * @param CanonicalFieldsUpdater $canonicalFieldsUpdater
+     * @param EntityManagerInterface $om
      * @param $class
      */
-    public function __construct(PasswordUpdaterInterface $passwordUpdater, CanonicalFieldsUpdater $canonicalFieldsUpdater, ObjectManager $om, $class)
-    {
+    public function __construct(
+        PasswordUpdaterInterface $passwordUpdater,
+        CanonicalFieldsUpdater $canonicalFieldsUpdater,
+        EntityManagerInterface $om,
+        $class
+    ) {
         if (class_exists($class)) {
             parent::__construct($passwordUpdater, $canonicalFieldsUpdater, $om, $class);
         }

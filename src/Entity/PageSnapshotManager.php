@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -25,10 +25,10 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
 {
     /**
      * PageSnapshotManager constructor.
-     * @param ObjectManager $om
+     * @param EntityManagerInterface $om
      * @param $class
      */
-    public function __construct(ObjectManager $om, $class)
+    public function __construct(EntityManagerInterface $om, $class)
     {
         $classMetaData = $om->getClassMetadata($class);
 

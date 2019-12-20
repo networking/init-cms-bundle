@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Networking\InitCmsBundle\Helper\PageHelper;
@@ -37,11 +37,11 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
 
     /**
      * MenuItemManager constructor.
-     * @param ObjectManager $om
+     * @param EntityManagerInterface $om
      * @param PageHelper $pageHelper
      * @param $class
      */
-    public function __construct(ObjectManager $om, PageHelper $pageHelper , $class)
+    public function __construct(EntityManagerInterface $om, PageHelper $pageHelper , $class)
     {
         $this->pageHelper = $pageHelper;
         $classMetaData = $om->getClassMetadata($class);

@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Routing\RouteCollection;
 class ContentRouteManager extends BaseContentRouteManager
 {
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var EntityManagerInterface
      */
     protected $objectManager;
     /**
@@ -41,10 +41,10 @@ class ContentRouteManager extends BaseContentRouteManager
     /**
      * ContentRouteManager constructor.
      *
-     * @param ObjectManager $om
+     * @param EntityManagerInterface $om
      * @param $class
      */
-    public function __construct(ObjectManager $om, $class)
+    public function __construct(EntityManagerInterface $om, $class)
     {
         $this->objectManager = $om;
         $this->repository = $om->getRepository($class);
