@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Networking\InitCmsBundle\Form\Type\ContentType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

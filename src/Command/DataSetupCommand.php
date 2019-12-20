@@ -10,11 +10,10 @@
 
 namespace Networking\InitCmsBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,7 +32,7 @@ class DataSetupCommand extends Command
      */
     protected static $defaultName = 'networking:initcms:data-setup';
     /**
-     * @var RegistryInterface
+     * @var ManagerRegistry
      */
     protected $registry;
     protected $pageManager;
@@ -41,13 +40,13 @@ class DataSetupCommand extends Command
 
     /**
      * DataSetupCommand constructor.
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      * @param PageManagerInterface $pageManager
      * @param PageHelper $pageHelper
      * @param string|null $name
      */
     public function __construct(
-        RegistryInterface $registry,
+        ManagerRegistry $registry,
         PageManagerInterface $pageManager,
         PageHelper $pageHelper,
         string $name = null

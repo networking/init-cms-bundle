@@ -10,8 +10,8 @@
 
 namespace Networking\InitCmsBundle\Form\Type;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\DoctrineChoiceLoader;
 use Doctrine\ORM\Query\Parameter;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\IdReader;

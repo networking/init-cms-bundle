@@ -10,12 +10,11 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
-use Doctrine\ORM\EntityManager;
 use Networking\InitCmsBundle\Model\Page;
 use Doctrine\ORM\Query\Expr;
 

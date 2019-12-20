@@ -21,7 +21,7 @@ use Sonata\AdminBundle\Exception\NoValueException;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Class PageHelper.
@@ -41,7 +41,7 @@ class PageHelper
     protected $registry;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager|object
+     * @var \Doctrine\Persistence\ObjectManager|object
      */
     protected $objectManager;
 

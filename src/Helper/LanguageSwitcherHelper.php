@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Helper;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\PageInterface;

@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Networking\InitCmsBundle\Doctrine\UserManager as DoctrineUserManager;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use FOS\UserBundle\Util\CanonicalFieldsUpdater;
 use FOS\UserBundle\Util\PasswordUpdaterInterface;
 
