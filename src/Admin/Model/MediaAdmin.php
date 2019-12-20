@@ -184,6 +184,14 @@ abstract class MediaAdmin extends Admin
         );
 
         $collection->add(
+            'init_clone',
+            'clone',
+            [
+                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:clone',
+            ]
+        );
+
+        $collection->add(
             'refresh_list',
             'refresh_list',
             [
