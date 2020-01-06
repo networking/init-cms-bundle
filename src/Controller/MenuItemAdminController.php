@@ -326,11 +326,11 @@ class MenuItemAdminController extends CRUDController
                             'result' => 'ok',
                             'objectId' => $this->admin->getNormalizedIdentifier($object),
                             'status' => 'success',
-                            'message' => $this->admin->trans('flash_delete_success'),
+                            'message' => $this->admin->trans('flash_delete_success', [], 'NetworkingInitCmsBundle'),
                         ]
                     );
                 } else {
-                    $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_delete_success');
+                    $this->addFlash('sonata_flash_success', $this->trans('flash_delete_success', [], 'NetworkingInitCmsBundle'));
                 }
             } catch (ModelManagerException $e) {
                 if ($this->isXmlHttpRequest()) {
@@ -343,7 +343,7 @@ class MenuItemAdminController extends CRUDController
                         ]
                     );
                 } else {
-                    $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_delete_error');
+                    $this->addFlash('sonata_flash_error', $this->trans('flash_delete_error', [], 'NetworkingInitCmsBundle'));
                 }
             }
 

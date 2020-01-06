@@ -674,6 +674,14 @@
                 <source>empty_option</source>
                 <target>-</target>
             </trans-unit>
+            <trans-unit id="flash_link_success">
+                <source>flash_link_success</source>
+                <target>Verknüpfung erstellt</target>
+            </trans-unit>
+            <trans-unit id="flash_unlink_success">
+                <source>flash_unlink_success</source>
+                <target>Verknüpfung entfernt</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

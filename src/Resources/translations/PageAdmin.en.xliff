@@ -671,6 +671,14 @@
                 <source>empty_option</source>
                 <target>-</target>
             </trans-unit>
+            <trans-unit id="flash_link_success">
+                <source>flash_link_success</source>
+                <target>Translation link created</target>
+            </trans-unit>
+            <trans-unit id="flash_unlink_success">
+                <source>flash_unlink_success</source>
+                <target>Translation link removed</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
