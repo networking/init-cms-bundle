@@ -1044,6 +1044,9 @@ abstract class Page implements PageInterface
      */
     public function getTranslations()
     {
+        if(!$this->translations){
+            $this->translations = new ArrayCollection();
+        }
         return $this->translations;
     }
 
@@ -1133,6 +1136,9 @@ abstract class Page implements PageInterface
      */
     public function getSnapshots()
     {
+        if(!$this->snapshots){
+            return new ArrayCollection();
+        }
         return $this->snapshots;
     }
 

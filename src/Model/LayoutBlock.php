@@ -212,6 +212,9 @@ class LayoutBlock implements LayoutBlockInterface
      */
     public function getPageId()
     {
+        if(!$this->page){
+            return null;
+        }
         return $this->page->getId();
     }
 
@@ -434,10 +437,10 @@ class LayoutBlock implements LayoutBlockInterface
      */
     public function setSnapshotContent($snapshotContent)
     {
-        if (!is_array($snapshotContent)) {
-            $snapshotContent = [$snapshotContent];
-        }
-        $this->snapshotContent = new ArrayCollection($snapshotContent);
+//        if (!is_array($snapshotContent)) {
+//            $snapshotContent = [$snapshotContent];
+//        }
+        $this->snapshotContent = $snapshotContent;//new ArrayCollection($snapshotContent);
 
         return $this;
     }
@@ -447,7 +450,7 @@ class LayoutBlock implements LayoutBlockInterface
      */
     public function getSnapshotContent()
     {
-        return $this->snapshotContent[0];
+        return $this->snapshotContent;
     }
 
     /**

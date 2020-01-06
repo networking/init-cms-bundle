@@ -15,6 +15,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
+use Networking\InitCmsBundle\Model\Page;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -127,25 +128,25 @@ abstract class PageAdmin extends BaseAdmin
             $request = $this->getContainer()->get('request_stack')->getCurrentRequest();
         }
 
-        $this->pageLocale = $request->get('locale') ? $request->get('locale') : $this->getSubject()->getLocale();
+        if($this->hasSubject()){
+            $this->pageLocale =  $this->getSubject()->getLocale();
+        }else{
+            $this->pageLocale = $request->get('locale') ? $request->get('locale') : $request->getLocale();
+        }
+
 
         if (!$this->pageLocale) {
             throw new InvalidArgumentException('Cannot create a page without a language');
         }
-
-
-        if ($this->getSubject()->getId()) {
-            $this->pageLocale = $this->getSubject()->getLocale();
-        }
-
         $validationGroups = ['default'];
 
         $homePage = $this->pageManager->findOneBy(['isHome' => true, 'locale' => $this->pageLocale]);
 
         $this->canCreateHomepage = (!$homePage) ? true : false;
 
-        if (!$this->canCreateHomepage) {
-            if (!$this->getSubject()->getId() || !$this->getSubject()->isHome()) {
+        if (!$this->canCreateHomepage ) {
+
+            if (!$this->hasSubject() || !$this->getSubject()->isHome()) {
                 $validationGroups[] = 'not_home';
             }
         }
@@ -173,7 +174,7 @@ abstract class PageAdmin extends BaseAdmin
             $request = $requestStack->getCurrentRequest();
         }
 
-        if (($this->getSubject()->getId() || $request->isXmlHttpRequest()) && !$request->get('no_layout')) {
+        if (($this->hasSubject() || $request->isXmlHttpRequest()) && !$request->get('no_layout')) {
 	        $formMapper
 		        ->with('page_content')
 		        ->add(
@@ -193,7 +194,7 @@ abstract class PageAdmin extends BaseAdmin
 
         $formMapper->with('page_settings');
 
-        if ($this->canCreateHomepage && !$this->getSubject()->getId()) {
+        if ($this->canCreateHomepage && !$this->hasSubject()) {
             $formMapper->add(
                 'isHome',
                 CheckboxType::class,
@@ -202,7 +203,7 @@ abstract class PageAdmin extends BaseAdmin
             );
         }
 
-        if (!$this->getSubject()->getId()) {
+        if (!$this->hasSubject()) {
             $formMapper
                 ->add(
                     'locale',
@@ -223,7 +224,7 @@ abstract class PageAdmin extends BaseAdmin
         );
 
         if (!$this->canCreateHomepage) {
-            if (!$this->getSubject()->getId() || !$this->getSubject()->isHome()) {
+            if (!$this->hasSubject() || !$this->getSubject()->isHome()) {
                 $formMapper
                     ->add(
                         'parent',
@@ -236,7 +237,7 @@ abstract class PageAdmin extends BaseAdmin
                             'required' => false,
                             'query_builder' => $this->pageManager->getParentPagesQuery(
                                     $this->pageLocale,
-                                    $this->getSubject()->getId(),
+                                    $this->hasSubject()?$this->getSubject()->getId():null,
                                     false,
                                     false
                                 ),
@@ -244,7 +245,7 @@ abstract class PageAdmin extends BaseAdmin
                     );
             }
 
-            if (!$this->getSubject()->getId() || !$this->getSubject()->isHome()) {
+            if (!$this->hasSubject() || !$this->getSubject()->isHome()) {
                 $formMapper
                     ->add(
                         'alias',
@@ -257,7 +258,7 @@ abstract class PageAdmin extends BaseAdmin
                             'required' => false,
                             'query_builder' => $this->pageManager->getParentPagesQuery(
                                     $this->pageLocale,
-                                    $this->getSubject()->getId(),
+                                $this->hasSubject()?$this->getSubject()->getId():null,
                                     true,
                                     true
                                 ),
@@ -269,7 +270,7 @@ abstract class PageAdmin extends BaseAdmin
 
         $requireUrl = $this->canCreateHomepage ? false : true;
 
-        if ($this->getSubject()->getId()) {
+        if ($this->hasSubject()) {
             $attr = $this->getSubject()->isHome() ? ['readonly' => 'readonly'] : [];
             $formMapper
                 ->add(
@@ -282,7 +283,7 @@ abstract class PageAdmin extends BaseAdmin
                     ],
                     ['display_method' => 'getFullPath', 'attr' => $attr]
                 );
-        } elseif (!$this->getSubject()->getId()) {
+        } else{
             $formMapper
                 ->add(
                     'url',
@@ -296,14 +297,13 @@ abstract class PageAdmin extends BaseAdmin
                 );
         }
 
-        $subject = $this->subject;
         $formMapper
             ->add(
                 'visibility',
                 ChoiceType::class,
                 [
                     'help_block' => 'visibility.helper.text',
-                    'choices' => $subject::getVisibilityList(),
+                    'choices' => Page::getVisibilityList(),
                     'translation_domain' => $this->translationDomain,
                 ]
             )
@@ -629,7 +629,7 @@ abstract class PageAdmin extends BaseAdmin
      */
     protected function getDefaultTemplate()
     {
-        if ($this->getSubject()->getId()) {
+        if ($this->hasSubject()) {
             return $this->getSubject()->getTemplateName();
         }
         $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');

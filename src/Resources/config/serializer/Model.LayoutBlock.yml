@@ -23,7 +23,7 @@ Networking\InitCmsBundle\Model\LayoutBlock:
         isSnapshot:
             type: boolean
         snapshotContent:
-            type: ArrayCollection
+            type: string
         createdAt:
             type: DateTime
         updatedAt:

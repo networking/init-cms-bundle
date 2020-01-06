@@ -349,44 +349,44 @@ class MenuBuilder
     /**
      * Creates a full menu based on the starting point given.
      *
-     * @param Menu $menu
+     * @param ItemInterface $item
      * @param array $menuIterator
      * @param int $startDepth
      *
-     * @return Menu
+     * @return ItemInterface
      */
-    public function createMenu(Menu $menu, $menuIterator, $startDepth)
+    public function createMenu(ItemInterface $item, $menuIterator, $startDepth)
     {
         foreach ($menuIterator as $childNode) {
-            $this->addNodeToMenu($menu, $childNode, $startDepth);
+            $this->addNodeToMenu($item, $childNode, $startDepth);
         }
 
-        return $menu;
+        return $item;
     }
 
     /**
      * Add a menu item node at the correct place in the menu.
      *
-     * @param Menu $menu
+     * @param ItemInterface $item
      * @param MenuItem $node
      * @param $startDepth
      *
      * @return bool|\Knp\Menu\ItemInterface
      */
-    public function addNodeToMenu(Menu $menu, MenuItem $node, $startDepth)
+    public function addNodeToMenu(ItemInterface $item, MenuItem $node, $startDepth)
     {
         if ($node->getLvl() < $startDepth) {
             return false;
         }
 
         if ($node->getLvl() > $startDepth) {
-            $menu = $this->getParentMenu($menu, $node);
+            $item = $this->getParentMenu($item, $node);
         }
 
-        if (is_object($menu)) {
+        if (is_object($item)) {
             $knpMenuNode = $this->createFromMenuItem($node);
             if (!is_null($knpMenuNode)) {
-                $menu->addChild($knpMenuNode);
+                $item->addChild($knpMenuNode);
                 $knpMenuNode->setAttribute('class', $node->getLinkClass());
                 $knpMenuNode->setExtra('translation_domain', false);
                 if ($node->getVisibility() != MenuItem::VISIBILITY_PUBLIC && !$this->isLoggedIn) {
@@ -404,11 +404,11 @@ class MenuBuilder
      * Set the children menu item nodes to be shown only if the node
      * is current or the parent is a current ancestor.
      *
-     * @param ItemInterface $menu
+     * @param ItemInterface $item
      */
-    public function showOnlyCurrentChildren(ItemInterface $menu)
+    public function showOnlyCurrentChildren(ItemInterface $item)
     {
-        $itemIterator = new RecursiveItemIterator($menu->getIterator());
+        $itemIterator = new RecursiveItemIterator($item->getIterator());
 
         $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $menuItem) {
@@ -422,26 +422,26 @@ class MenuBuilder
     /**
      * Recursively set attributes on all children of a given menu.
      *
-     * @param ItemInterface $menu
+     * @param ItemInterface $item
      * @param array $attr
      * @deprecated please use setRecursiveAttribute
      * @alias setRecursiveAttribute
      *
      */
-    public function setRecursiveChildrenAttribute(ItemInterface $menu, array $attr)
+    public function setRecursiveChildrenAttribute(ItemInterface $item, array $attr)
     {
-        $this->setRecursiveAttribute($menu, $attr);
+        $this->setRecursiveAttribute($item, $attr);
     }
 
     /**
      * Recursively set attributes on an item and its' children.
      *
-     * @param ItemInterface $menu
+     * @param ItemInterface $item
      * @param array $attr
      */
-    public function setRecursiveAttribute(ItemInterface $menu, array $attr)
+    public function setRecursiveAttribute(ItemInterface $item, array $attr)
     {
-        $itemIterator = new RecursiveItemIterator($menu->getIterator());
+        $itemIterator = new RecursiveItemIterator($item->getIterator());
 
         $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $menuItem) {
