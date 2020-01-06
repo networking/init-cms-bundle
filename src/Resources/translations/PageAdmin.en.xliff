@@ -448,6 +448,10 @@
                 <source>label.action_copy</source>
                 <target>Copy selected</target>
             </trans-unit>
+            <trans-unit id="label.action_delete">
+                <source>label.action_delete</source>
+                <target>Gewählte Seiten löschen</target>
+            </trans-unit>
             <trans-unit id="info.layout_block_empty">
                 <source>info.layout_block_empty</source>
                 <target>This part of your page is empty. Click on the + icon above to enter your first piece of
@@ -662,6 +666,10 @@
             <trans-unit id="action._copy">
                 <source>action._copy</source>
                 <target>Copy page</target>
+            </trans-unit>
+            <trans-unit id="empty_option">
+                <source>empty_option</source>
+                <target>-</target>
             </trans-unit>
         </body>
     </file>

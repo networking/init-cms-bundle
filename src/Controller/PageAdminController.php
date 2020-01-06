@@ -374,12 +374,11 @@ class PageAdminController extends CRUDController
                 $this->makeSnapshot($selectedModel);
             }
         } catch (\Exception $e) {
-            $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_publish_error');
+            $this->get('session')->getFlashBag()->add('sonata_flash_error', $this->trans('flash_batch_publish_error', [], 'NetworkingInitCmsBundle'));
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
-
-        $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_publish_success');
+        $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->trans('flash_batch_publish_success', [], 'NetworkingInitCmsBundle'));
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -406,12 +405,12 @@ class PageAdminController extends CRUDController
                 $this->pageHelper->makePageCopy($selectedModel);
             }
         } catch (\Exception $e) {
-            $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_copy_error');
+            $this->get('session')->getFlashBag()->add('sonata_flash_error', $this->trans('flash_batch_copy_error', [], 'NetworkingInitCmsBundle'));
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
 
-        $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_copy_success');
+        $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->trans('flash_batch_copy_success', [], 'NetworkingInitCmsBundle'));
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -453,7 +452,7 @@ class PageAdminController extends CRUDController
                 $this->pageHelper->makeTranslationCopy($page, $data['toLocale']);
             }
 
-            $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_copy_success');
+            $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->trans('flash_batch_copy_success', [], 'NetworkingInitCmsBundle'));
         }
 
         return $this->renderWithExtraParams(
@@ -486,12 +485,12 @@ class PageAdminController extends CRUDController
                 }
             }
         } catch (\Exception $e) {
-            $this->get('session')->getFlashBag()->add('sonata_flash_error', 'flash_batch_cache_clear_error');
+            $this->get('session')->getFlashBag()->add('sonata_flash_error', $this->trans('flash_batch_cache_clear_error', [], 'NetworkingInitCmsBundle'));
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
 
-        $this->get('session')->getFlashBag()->add('sonata_flash_success', 'flash_batch_cache_clear_success');
+        $this->get('session')->getFlashBag()->add('sonata_flash_success', $this->trans('flash_batch_cache_clear_success', [], 'NetworkingInitCmsBundle'));
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }

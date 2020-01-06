@@ -674,10 +674,6 @@
                 <source>empty_option</source>
                 <target>-</target>
             </trans-unit>
-            <trans-unit id="">
-                <source></source>
-                <target>blah blah blah</target>
-            </trans-unit>
         </body>
     </file>
 </xliff>
