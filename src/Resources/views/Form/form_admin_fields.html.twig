@@ -857,35 +857,70 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block ckeditor_widget %}
-    {% set attr = attr|merge({'class': attr.class|default('ckeditor')}) %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-    {% if enable %}
-        {% if autoload %}
-            <script type="text/javascript">
-                var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
-            </script>
-            <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
-        {% endif %}
-        <script type="text/javascript">
-            {{ ckeditor_destroy(id) }}
 
-            {% for plugin_name, plugin in plugins %}
-            {{ ckeditor_plugin(plugin_name, plugin) }}
-            {% endfor %}
-
-            {% for style_name, style in styles %}
-            {{ ckeditor_styles_set(style_name, style) }}
-            {% endfor %}
-
-            {% for template_name, template in templates %}
-            {{ ckeditor_template(template_name, template) }}
-            {% endfor %}
-
-            {% set config = config|merge({'language': app.request.locale}) %}
-
-            {{ ckeditor_widget(id, config) }}
-        </script>
+    {% if enable and not async %}
+        {{ block('_ckeditor_javascript') }}
     {% endif %}
+{% endblock %}
+
+{% block ckeditor_javascript %}
+    {% if enable and async %}
+        {{ block('_ckeditor_javascript') }}
+    {% endif %}
+{% endblock %}
+
+{% block _ckeditor_javascript %}
+    {% if autoload %}
+        <script type="text/javascript">
+            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
+        </script>
+        <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
+        {% if jquery %}
+            <script type="text/javascript" src="{{ ckeditor_js_path(jquery_path) }}"></script>
+        {% endif %}
+    {% endif %}
+    <script type="text/javascript">
+        {% if jquery %}
+        $(function () {
+            {% endif %}
+
+            {% if require_js %}
+            require(['ckeditor'], function() {
+                {% endif %}
+
+                {{ ckeditor_destroy(id) }}
+
+                {% for plugin_name, plugin in plugins %}
+                {{ ckeditor_plugin(plugin_name, plugin) }}
+                {% endfor %}
+
+                {% for style_name, style in styles %}
+                {{ ckeditor_styles_set(style_name, style) }}
+                {% endfor %}
+
+                {% for template_name, template in templates %}
+                {{ ckeditor_template(template_name, template) }}
+                {% endfor %}
+
+                {% block ckeditor_widget_extra %}{% endblock ckeditor_widget_extra %}
+
+                {% set config = config|merge({'language': app.request.locale}) %}
+                {{ ckeditor_widget(id, config, {
+                    auto_inline: auto_inline,
+                    inline: inline,
+                    input_sync: input_sync,
+                    filebrowsers: filebrowsers
+                }) }}
+
+                {% if require_js %}
+            });
+            {% endif %}
+
+            {% if jquery %}
+        });
+        {% endif %}
+    </script>
 {% endblock %}
 
 
