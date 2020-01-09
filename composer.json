@@ -17,8 +17,9 @@
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-fixtures-bundle": "~2.2",
         "friendsofsymfony/ckeditor-bundle": "^1.1",
-        "ibrows/sonata-admin-annotation-bundle": "2.*",
-        "ibrows/sonata-translation-bundle": "1.*",
+        "ibrows/sonata-admin-annotation-bundle": "dev-master as 2.4.2",
+        "ibrows/sonata-translation-bundle": "dev-master as 1.1.1",
+        "ibrows/annotation-reader": "dev-master as 1.0.5",
         "incenteev/composer-parameter-handler": "^2.0",
         "jms/serializer-bundle": "^2.0",
         "knplabs/knp-paginator-bundle": "^2.7",
@@ -46,6 +47,20 @@
         "twbs/bootstrap": ">2.0,<4.0-dev",
         "twig/twig": "^1.0||^2.0"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:networking/annotation-reader.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:networking/sonata-admin-annotation-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:networking/sonata-translation-bundle.git"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Networking\\InitCmsBundle\\": "src"
