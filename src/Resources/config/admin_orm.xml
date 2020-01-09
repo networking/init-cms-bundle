@@ -50,6 +50,9 @@
             <argument type="service" id="networking_init_cms.layout_block_form_listener"/>
             <argument type="service" id="jms_serializer.serializer"/>
             <argument type="service" id="networking_init_cms.admin.page"/>
+            <call method="setSonataAnnotationReader">
+                <argument type="service" id="networking_init_cms.annotation.reader"/>
+            </call>
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
             </call>
@@ -64,6 +67,9 @@
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\MenuItem</argument>
             <argument>NetworkingInitCmsBundle:MenuItemAdmin</argument>
+            <call method="setSonataAnnotationReader">
+                <argument type="service" id="networking_init_cms.annotation.reader"/>
+            </call>
             <call method="setTranslationDomain">
                 <argument>MenuItemAdmin</argument>
             </call>
@@ -97,6 +103,9 @@
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\HelpText</argument>
             <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setSonataAnnotationReader">
+                <argument type="service" id="networking_init_cms.annotation.reader"/>
+            </call>
             <call method="setTranslationDomain">
                 <argument>HelpTextAdmin</argument>
             </call>
@@ -108,7 +117,7 @@
                  persist_filters="true"/>
         </service>
 
-        <!-- Layout Block Admin-->
+        <!-- Tag Admin-->
         <service id="networking_init_cms.admin.tag" class="Networking\InitCmsBundle\Admin\Entity\TagAdmin"
                  public="true">
             <argument/>
