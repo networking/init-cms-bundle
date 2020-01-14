@@ -15,6 +15,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
+use Networking\InitCmsBundle\Form\Type\MediaEntityType;
 use Networking\InitCmsBundle\Model\Page;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -128,11 +129,13 @@ abstract class PageAdmin extends BaseAdmin
             $request = $this->getContainer()->get('request_stack')->getCurrentRequest();
         }
 
-        if($this->hasSubject()){
+
+        if($this->hasObject()){
             $this->pageLocale =  $this->getSubject()->getLocale();
         }else{
             $this->pageLocale = $request->get('locale') ? $request->get('locale') : $request->getLocale();
         }
+
 
 
         if (!$this->pageLocale) {
@@ -146,7 +149,7 @@ abstract class PageAdmin extends BaseAdmin
 
         if (!$this->canCreateHomepage ) {
 
-            if (!$this->hasSubject() || !$this->getSubject()->isHome()) {
+            if (!$this->hasObject() || !$this->getSubject()->isHome()) {
                 $validationGroups[] = 'not_home';
             }
         }
@@ -174,7 +177,7 @@ abstract class PageAdmin extends BaseAdmin
             $request = $requestStack->getCurrentRequest();
         }
 
-        if (($this->hasSubject() || $request->isXmlHttpRequest()) && !$request->get('no_layout')) {
+        if (($this->hasObject() || $request->isXmlHttpRequest()) && !$request->get('no_layout')) {
 	        $formMapper
 		        ->with('page_content')
 		        ->add(
@@ -194,7 +197,7 @@ abstract class PageAdmin extends BaseAdmin
 
         $formMapper->with('page_settings');
 
-        if ($this->canCreateHomepage && !$this->hasSubject()) {
+        if ($this->canCreateHomepage && !$this->hasObject()) {
             $formMapper->add(
                 'isHome',
                 CheckboxType::class,
@@ -203,7 +206,7 @@ abstract class PageAdmin extends BaseAdmin
             );
         }
 
-        if (!$this->hasSubject()) {
+        if (!$this->hasObject()) {
             $formMapper
                 ->add(
                     'locale',
@@ -224,7 +227,7 @@ abstract class PageAdmin extends BaseAdmin
         );
 
         if (!$this->canCreateHomepage) {
-            if (!$this->hasSubject() || !$this->getSubject()->isHome()) {
+            if (!$this->hasObject() || !$this->getSubject()->isHome()) {
                 $formMapper
                     ->add(
                         'parent',
@@ -245,7 +248,7 @@ abstract class PageAdmin extends BaseAdmin
                     );
             }
 
-            if (!$this->hasSubject() || !$this->getSubject()->isHome()) {
+            if (!$this->hasObject() || !$this->getSubject()->isHome()) {
                 $formMapper
                     ->add(
                         'alias',
@@ -258,7 +261,7 @@ abstract class PageAdmin extends BaseAdmin
                             'required' => false,
                             'query_builder' => $this->pageManager->getParentPagesQuery(
                                     $this->pageLocale,
-                                $this->hasSubject()?$this->getSubject()->getId():null,
+                                $this->hasObject()?$this->getSubject()->getId():null,
                                     true,
                                     true
                                 ),
@@ -270,7 +273,7 @@ abstract class PageAdmin extends BaseAdmin
 
         $requireUrl = $this->canCreateHomepage ? false : true;
 
-        if ($this->hasSubject()) {
+        if ($this->hasObject()) {
             $attr = $this->getSubject()->isHome() ? ['readonly' => 'readonly'] : [];
             $formMapper
                 ->add(
@@ -347,6 +350,13 @@ abstract class PageAdmin extends BaseAdmin
             ->add('metaTitle', null, ['help_block' => 'meta_title.helper.text'])
             ->add('metaKeyword')
             ->add('metaDescription')
+            ->add('socialMediaImage',
+                MediaEntityType::class,
+                [
+                    'provider_name' => 'sonata.media.provider.image',
+                    'widget_form_group_attr' => ['class' => 'form-group form-inline'],
+                    'required' => false,
+                ])
             ->end();
 
         foreach ($this->getExtensions() as $extension) {
@@ -629,7 +639,7 @@ abstract class PageAdmin extends BaseAdmin
      */
     protected function getDefaultTemplate()
     {
-        if ($this->hasSubject()) {
+        if ($this->hasObject()) {
             return $this->getSubject()->getTemplateName();
         }
         $templates = $this->getContainer()->getParameter('networking_init_cms.page.templates');
@@ -716,5 +726,9 @@ abstract class PageAdmin extends BaseAdmin
             var_dump($e);
             die;
         }
+    }
+
+    public function hasObject(){
+        return $this->hasSubject() && $this->getSubject()->getId();
     }
 }

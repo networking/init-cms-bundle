@@ -14,6 +14,7 @@ namespace Networking\InitCmsBundle\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Sluggable\Util\Urlizer;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Sonata\MediaBundle\Model\MediaInterface;
 
 /**
  * Class Page.
@@ -166,6 +167,11 @@ abstract class Page implements PageInterface
      * @var string
      */
     protected $oldTitle;
+
+    /**
+     * @var MediaInterface|null
+     */
+    protected $socialMediaImage;
 
     public function __construct()
     {
@@ -1479,4 +1485,24 @@ abstract class Page implements PageInterface
 
         return self::STATUS_DRAFT;
     }
+
+    /**
+     * @return MediaInterface|null
+     */
+    public function getSocialMediaImage(): ?MediaInterface
+    {
+        return $this->socialMediaImage;
+    }
+
+    /**
+     * @param MediaInterface|null $socialMediaImage
+     * @return Page
+     */
+    public function setSocialMediaImage(?MediaInterface $socialMediaImage): Page
+    {
+        $this->socialMediaImage = $socialMediaImage;
+
+        return $this;
+    }
+
 }

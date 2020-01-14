@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Model;
 
+use Sonata\MediaBundle\Model\MediaInterface;
+
 /**
  * Class PageInterface.
  *
@@ -616,4 +618,9 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      * @return string
      */
     public function getStatusLabel();
+
+    /**
+     * @return MediaInterface|null
+     */
+    public function getSocialMediaImage();
 }

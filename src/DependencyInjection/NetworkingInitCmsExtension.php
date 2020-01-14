@@ -188,6 +188,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.db_driver', $config['db_driver']);
 
         if ($config['db_driver'] == 'orm') {
+            $config['class']['media'] = $container->getParameter('sonata.media.admin.media.entity');
             $this->registerDoctrineORMMapping($config);
         }
 
@@ -434,6 +435,24 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 'inversedBy' => 'snapshots',
                 'cascade' => ['persist'],
 
+            ]
+        );
+
+        //PageSnapshot
+        $collector->addAssociation(
+            $config['class']['page'],
+            'mapManyToOne',
+            [
+                'fieldName' => 'socialMediaImage',
+                'targetEntity' => $config['class']['media'],
+                'joinColumns' => [
+                    [
+                        'name' => 'social_media_image_id',
+                        'referencedColumnName' => 'id',
+                        'onDelete' => 'SET NULL',
+                        'nullable' => 'true',
+                    ],
+                ],
             ]
         );
     }
