@@ -90,6 +90,10 @@
                 <source>form.label_active_to</source>
                 <target>Online till</target>
             </trans-unit>
+            <trans-unit id="form.label_social_media_image">
+                <source>form.label_social_media_image</source>
+                <target>Social Media Bild (optional)</target>
+            </trans-unit>
             <trans-unit id="legend.translate_page">
                 <source>legend.translate_page</source>
                 <target>Page Translations</target>
