@@ -37,6 +37,8 @@ abstract class TagAdmin extends AbstractAdmin
         '_sort_order' => 'ASC',
     ];
 
+    protected $formOptions =['layout' => 'horizontal'];
+
     /**
      * @return string
      */
