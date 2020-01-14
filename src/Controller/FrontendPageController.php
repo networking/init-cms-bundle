@@ -439,7 +439,14 @@ class FrontendPageController extends AbstractController
             $url = $this->get('router')->generate('networking_init_cms_default');
         }
 
-        return $this->redirect($url);
+        $response = $this->redirect($url);
+        if ($this->getPageHelper()->isAllowLocaleCookie()) {
+            $locale = $request->getLocale();
+            $cookie = Cookie::create('_locale', $locale);
+            $response->headers->setCookie($cookie);
+        }
+
+        return $response;
     }
 
     /**
