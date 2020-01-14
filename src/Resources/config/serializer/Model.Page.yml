@@ -75,3 +75,5 @@ Networking\InitCmsBundle\Model\Page:
             exclude: true
         contentRoute:
             exclude: true
+        socialMediaImage:
+            type: Networking\InitCmsBundle\Entity\Media
