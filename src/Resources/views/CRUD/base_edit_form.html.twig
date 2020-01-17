@@ -9,7 +9,7 @@ file that was distributed with this source code.
 
 #}
 {% block form %}
-    {% import "@NetworkingInitCms/CRUD/base_edit_form_macro.html.twig" as form_helper %}
+
     {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
 
     {% set url = objectId|default(admin.id(object)) is not null ? 'edit' : 'create' %}
@@ -64,38 +64,37 @@ file that was distributed with this source code.
                 {% block sonata_pre_fieldsets %}{% endblock %}
 
                 {% block sonata_tab_content %}
+                    {% import "@NetworkingInitCms/CRUD/base_edit_form_macro.html.twig" as form_helper %}
+
                     {% set has_tab = ((admin.formtabs|length == 1 and admin.formtabs|keys[0] != 'default') or admin.formtabs|length > 1 ) %}
-                        {% if has_tab %}
-                            <div class="nav-tabs-custom">
-                                <ul class="nav nav-tabs" role="tablist">
-                                    {% for name, form_tab in admin.formtabs %}
-                                        <li{% if loop.index == 1 %} class="active"{% endif %}><a href="#tab_{{ admin.uniqid }}_{{ loop.index }}" data-toggle="tab"><i class="fa fa-exclamation-circle has-errors hide" aria-hidden="true"></i> {{ form_tab.label|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                                <div class="tab-content">
-                                    {% for code, form_tab in admin.formtabs %}
-                                        <div class="tab-pane fade{% if loop.first %} in active{% endif %}" id="tab_{{ admin.uniqid }}_{{ loop.index }}">
-                                            <div class="box-body  container-fluid">
-                                                <div class="sonata-ba-collapsed-fields">
-                                                    {% if form_tab.description != false %}
-                                                        <p>
-                                                            {{ form_tab.description|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
-                                                        </p>
-                                                    {% endif %}
-                                                    {% if form_helper is defined %}
-                                                        {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
-                                                    {% endif %}
-                                                </div>
+
+                    {% if has_tab %}
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs" role="tablist">
+                                {% for name, form_tab in admin.formtabs %}
+                                    <li{% if loop.index == 1 %} class="active"{% endif %}><a href="#tab_{{ admin.uniqid }}_{{ loop.index }}" data-toggle="tab"><i class="fa fa-exclamation-circle has-errors hide" aria-hidden="true"></i> {{ form_tab.label|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}</a></li>
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content">
+                                {% for code, form_tab in admin.formtabs %}
+                                    <div class="tab-pane fade{% if loop.first %} in active{% endif %}" id="tab_{{ admin.uniqid }}_{{ loop.index }}">
+                                        <div class="box-body  container-fluid">
+                                            <div class="sonata-ba-collapsed-fields">
+                                                {% if form_tab.description != false %}
+                                                    <p>
+                                                        {{ form_tab.description|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
+                                                    </p>
+                                                {% endif %}
+                                                {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
                                             </div>
                                         </div>
-                                    {% endfor %}
-                                </div>
+                                    </div>
+                                {% endfor %}
                             </div>
-                        {% else %}
-                            {% if form_helper is defined %}
-                                {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab) }}
-                            {% endif %}
-                        {% endif %}
+                        </div>
+                    {% else %}
+                        {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab) }}
+                    {% endif %}
                 {% endblock %}
 
                 {% block sonata_post_fieldsets %}{% endblock %}
