@@ -82,7 +82,7 @@ file that was distributed with this source code.
                                                             {{ form_tab.description|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
                                                         </p>
                                                     {% endif %}
-                                                    {% if form_helper is defined %}
+                                                    {% if form_helper.render_groups is defined %}
                                                         {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
                                                     {% endif %}
                                                 </div>
