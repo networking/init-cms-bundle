@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Model\ConfigManager;
+use FOS\CKEditorBundle\Config\CKEditorConfiguration;
 use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
@@ -124,7 +125,7 @@ class NetworkingHelperExtension extends AbstractExtension
      * @param LayoutBlockAdmin     $layoutBlockAdmin
      * @param SerializerInterface  $serializer
      * @param PageManagerInterface $pageManager
-     * @param ConfigManager        $ckEditorConfigManager
+     * @param CKEditorConfiguration        $ckEditorConfigManager
      * @param array                $templates
      * @param array                $contentTypes
      */
@@ -137,7 +138,7 @@ class NetworkingHelperExtension extends AbstractExtension
         LayoutBlockAdmin $layoutBlockAdmin,
         SerializerInterface $serializer,
         PageManagerInterface $pageManager,
-        ConfigManager $ckEditorConfigManager,
+        CKEditorConfiguration $ckEditorConfigManager,
         $templates = [],
         $contentTypes = []
 

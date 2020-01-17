@@ -241,7 +241,10 @@ class CkeditorAdminController extends BaseMediaAdminController
      */
     private function getTemplate($name)
     {
-        $templates = $this->container->getParameter('sonata.formatter.ckeditor.configuration.templates');
+        $templates = [
+            'browser' => '@NetworkingInitCms/Ckeditor/browser.html.twig',
+            'upload' => '@NetworkingInitCms/Ckeditor/upload.html.twig'
+        ];
 
         if (isset($templates[$name])) {
             return $templates[$name];
