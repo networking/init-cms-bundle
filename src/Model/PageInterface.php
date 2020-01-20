@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sonata\MediaBundle\Model\MediaInterface;
 
 /**
@@ -448,14 +449,14 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function removeTranslation(PageInterface $page);
 
     /**
-     * @param array $translations
+     * @param array|ArrayCollection  $translations
      *
      * @return $this
      */
-    public function setTranslations(array $translations);
+    public function setTranslations($translations);
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTranslations();
 

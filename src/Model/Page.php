@@ -1030,11 +1030,11 @@ abstract class Page implements PageInterface
     }
 
     /**
-     * @param array $translations
+     * @param array|ArrayCollection $translations
      *
      * @return $this
      */
-    public function setTranslations(array $translations)
+    public function setTranslations($translations)
     {
         if (gettype($translations) == 'array') {
             $translations = new ArrayCollection($translations);

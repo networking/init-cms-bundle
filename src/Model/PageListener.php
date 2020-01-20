@@ -127,7 +127,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
                 } else {
                     $originalPageId = $page->getId();
                     $originalPage = $this->pageManager->find($originalPageId);
-                    $page->setTranslations($originalPage->getAllTranslations()->toArray());
+                    $page->setTranslations($originalPage->getAllTranslations());
                 }
             }
 
