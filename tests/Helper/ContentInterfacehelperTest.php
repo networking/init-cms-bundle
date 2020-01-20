@@ -13,6 +13,7 @@ namespace Networking\InitCmsBundle\tests\Helper;
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Helper\ContentInterfaceHelper;
 use Networking\InitCmsBundle\Entity\Text;
+use Sonata\AdminBundle\Exception\NoValueException;
 
 class ContentInterfacehelperTest extends TestCase
 {
@@ -58,11 +59,10 @@ class ContentInterfacehelperTest extends TestCase
         $this->assertEquals('foo', $x);
     }
 
-    /**
-     * @expectedException \Sonata\AdminBundle\Exception\NoValueException
-     */
+
     public function testGetFieldValue_ShouldThrowException()
     {
+        $this->expectException(NoValueException::class);
         $this->object->getFieldValue($this->text, 'bar');
     }
 }

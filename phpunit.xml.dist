@@ -12,9 +12,10 @@
          bootstrap="./tests/bootstrap.php">
 
     <php>
+        <ini name="error_reporting" value="-1" />
         <env name="ALLOW_LOCALE_COOKIE" value="true" force="true" />
         <env name="SINGLE_LANGUAGE" value="false" force="true" />
-
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
     </php>
 
     <testsuites>

@@ -2,6 +2,7 @@ language: php
 
 php:
   - 7.2
+  - 7.3
 
 before_script:
   - curl -sSfL -o ~/.phpenv/versions/7.2/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
@@ -13,7 +14,19 @@ before_install:
   - php -i | grep memory_limit
   - composer self-update
 
+env:
+  global:
+    - PHPUNIT_FLAGS="-v"
+    - SYMFONY_PHPUNIT_DIR="$HOME/symfony-bridge/.phpunit"
+    - STABILITY="dev"
+    - SYMFONY_DEPRECATIONS_HELPER="weak"
+
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:
-  - composer install
+  - composer update --prefer-dist --no-interaction
+  - ./vendor/bin/simple-phpunit install
+
+script:
+  - composer validate --strict --no-check-lock
+  - ./vendor/bin/simple-phpunit $PHPUNIT_FLAGS
