@@ -74,7 +74,7 @@
                 {% if object.width is defined and object.width %}
                     <img src="{% path object, 'admin' %}" class="img-responsive  center-block"/>
                 {% else %}
-                    <i class="{{ get_file_icon(object.getMetadataValue('filename')) }}"></i>
+                    <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fa-4x center-block"></i>
                 {% endif %}
             </div>
             <div class="media-title small" data-toggle="context" data-target="#context-menu-{{ object.id }}">
