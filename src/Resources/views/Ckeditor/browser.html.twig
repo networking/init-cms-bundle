@@ -48,11 +48,14 @@ file that was distributed with this source code.
             {% set filter_main = '' %}
             {% set filter_hidden = '' %}
             {% set showHiddenFilters = 0 %}
-            {% for filter in datagrid.filters|filter(filter => filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is same as(null) ) %}
+            {% for filter in datagrid.filters %}
+
+                {% set filterVisible = filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null %}
+
                 {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
                     {% set filter_main %}
                         {{ filter_main }}
-                        <div class="form-group">
+                        <div class="form-group" {{ filterVisible ? '': 'style="display:none"'  }}>
 
                             {% if filter.label %}
                                 <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
@@ -71,7 +74,7 @@ file that was distributed with this source code.
                     {% endif %}
                     {% set filter_hidden %}
                         {{ filter_hidden }}
-                        <div class="form-group">
+                        <div class="form-group" {{ filterVisible ? '': 'style="display:none"'  }}>
                             {% if filter.label %}
                                 <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
                             {% endif %}

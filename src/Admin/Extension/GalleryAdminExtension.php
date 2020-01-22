@@ -15,6 +15,7 @@ use Sonata\AdminBundle\Admin\AbstractAdminExtension;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
@@ -30,7 +31,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
     public function configureFormFields(FormMapper $formMapper)
     {
         $formMapper->remove('context')
-                  ->add('context', HiddenType::class);
+            ->add('context', HiddenType::class);
     }
 
     /**
@@ -39,13 +40,24 @@ class GalleryAdminExtension extends AbstractAdminExtension
     public function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper->remove('context');
-        $datagridMapper->add('context', SimpleStringFilter::class, [
-            'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
-        ])
-                       ->add('providerName', SimpleStringFilter::class, [
-                           'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
-                       ])
-        ;
+        $datagridMapper->add(
+            'context',
+            SimpleStringFilter::class,
+            [
+                'show_filter' => false,
+                'operator_type' => ContainsOperatorType::TYPE_EQUAL,
+                'case_sensitive' => true
+            ]
+        )
+            ->add(
+                'providerName',
+                SimpleStringFilter::class,
+                [
+                    'show_filter' => false,
+                    'operator_type' => ContainsOperatorType::TYPE_EQUAL,
+                    'case_sensitive' => true
+                ]
+            );
     }
 
     /**
@@ -54,7 +66,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
     public function configureListFields(ListMapper $listMapper)
     {
         $listMapper->remove('defaultFormat')
-                   ->remove('context')
+            ->remove('context')
             ->add(
                 '_action',
                 'actions',
@@ -64,7 +76,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
                         'edit' => [],
                         'delete' => [],
                     ],
-                ])
-        ;
+                ]
+            );
     }
 }

@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Filter;
 
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Form\Type\Filter\DefaultType;
+use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\DoctrineORMAdminBundle\Filter\Filter;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -22,6 +23,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 class SimpleStringFilter extends Filter
 {
+
+    public const CHOICES = [
+        ContainsOperatorType::TYPE_CONTAINS => 'LIKE',
+        ContainsOperatorType::TYPE_NOT_CONTAINS => 'NOT LIKE',
+        ContainsOperatorType::TYPE_EQUAL => '=',
+    ];
     /**
      * {@inheritdoc}
      */
@@ -37,12 +44,40 @@ class SimpleStringFilter extends Filter
             return;
         }
 
-        $operator = 'LIKE';
+        $operator = $this->getOperator((int) $this->getOption('operator_type'));
+
+        if (!$operator) {
+            $operator = 'LIKE';
+        }
 
         // c.name > '1' => c.name OPERATOR :FIELDNAME
         $parameterName = $this->getNewParameterName($queryBuilder);
-        $this->applyWhere($queryBuilder, sprintf('%s.%s %s :%s', $alias, $field, $operator, $parameterName));
-        $queryBuilder->setParameter($parameterName, sprintf($this->getOption('format'), $data['value']));
+
+        $or = $queryBuilder->expr()->orX();
+
+        if ($this->getOption('case_sensitive')) {
+            $or->add(sprintf('%s.%s %s :%s', $alias, $field, $operator, $parameterName));
+        } else {
+            $or->add(sprintf('LOWER(%s.%s) %s :%s', $alias, $field, $operator, $parameterName));
+        }
+
+        if (ContainsOperatorType::TYPE_NOT_CONTAINS === $operator) {
+            $or->add($queryBuilder->expr()->isNull(sprintf('%s.%s', $alias, $field)));
+        }
+
+        $this->applyWhere($queryBuilder, $or);
+
+
+        if (ContainsOperatorType::TYPE_EQUAL === $this->getOption('operator_type')) {
+            $queryBuilder->setParameter($parameterName, $data['value']);
+        } else {
+            $queryBuilder->setParameter($parameterName,
+                sprintf(
+                    $this->getOption('format'),
+                    $this->getOption('case_sensitive') ? $data['value'] : mb_strtolower($data['value'])
+                )
+            );
+        }
     }
 
     /**
@@ -53,8 +88,10 @@ class SimpleStringFilter extends Filter
         return [
             'format' => '%%%s%%',
             'field_type' => TextType::class,
+            'operator_type' => ContainsOperatorType::TYPE_CONTAINS,
             'label_render' => true,
             'widget_form_group' => true,
+            'case_sensitive' => false,
         ];
     }
 
@@ -90,5 +127,16 @@ class SimpleStringFilter extends Filter
                 'widget_form_group' => $this->getWidgetControlGroup(),
             ],
         ];
+    }
+
+
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    private function getOperator($type)
+    {
+        return self::CHOICES[$type] ?? false;
     }
 }

@@ -15,9 +15,12 @@ use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\Filter\DefaultType;
 use Sonata\AdminBundle\Form\Type\ModelType;
+use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
+use Sonata\Form\Type\EqualType;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
@@ -316,13 +319,25 @@ abstract class MediaAdmin extends Admin
             $datagridMapper->add('tags');
         }
 
-        $datagridMapper->add('context', SimpleStringFilter::class, [
-                'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
-            ])
-            ->add('providerName', SimpleStringFilter::class, [
-                'show_filter' => false, 'field_type' => HiddenType::class, 'label_render' => false,
-            ])
-        ;
+        $datagridMapper->add(
+            'context',
+            SimpleStringFilter::class,
+            [
+                'show_filter' => false,
+                'operator_type' => ContainsOperatorType::TYPE_EQUAL,
+                'case_sensitive' => true
+
+            ]
+        )
+            ->add(
+                'providerName',
+                SimpleStringFilter::class,
+                [
+                    'show_filter' => false,
+                    'operator_type' => ContainsOperatorType::TYPE_EQUAL,
+                    'case_sensitive' => true
+                ]
+            );
     }
 
     /**
