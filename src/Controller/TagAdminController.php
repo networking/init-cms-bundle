@@ -35,7 +35,7 @@ class TagAdminController extends CRUDController
             $jsonArray = json_decode($content, true);
 
 
-            if ($jsonArray['result'] == 'ok') {
+            if ($jsonArray && $jsonArray['result'] == 'ok') {
                 $object = $this->admin->getObject($jsonArray['objectId']);
                 $jsonArray['status'] =  'success';
                 $jsonArray['message'] =  $this->translate('flash_create_success', ['%name%' =>  $this->escapeHtml($this->admin->toString($object))], 'SonataAdminBundle');
