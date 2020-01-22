@@ -543,7 +543,10 @@ abstract class MediaAdmin extends Admin
      */
     public function getNewInstance()
     {
-        $media = parent::getNewInstance();
+        $media = $this->getModelManager()->getModelInstance($this->getClass());
+        foreach ($this->getExtensions() as $extension) {
+            $extension->alterNewInstance($this, $media);
+        }
 
         if ($this->hasRequest()) {
             if ($this->getRequest()->isMethod('POST') && !$this->getRequest()->get('oneuploader')) {
