@@ -123,7 +123,20 @@ class FrontendPageController extends Controller
         }
 
         if ($this->getPageHelper()->isAllowLocaleCookie() && !$this->getPageHelper()->isSingleLanguage()) {
-            $response->headers->setCookie(new Cookie('_locale', $request->getLocale()));
+
+            $response->headers->setCookie(
+                new Cookie(
+                    '_locale',
+                    $request->getLocale(),
+                    ini_get('session.cookie_lifetime'),
+                    ini_get('session.cookie_path'),
+                    ini_get('session.cookie_domain'),
+                    ini_get('session.cookie_secure'),
+                    ini_get('session.cookie_httponly'),
+                    false,
+                    Cookie::SAMESITE_LAX
+                )
+            );
         }
 
         return $response;
@@ -312,7 +325,19 @@ class FrontendPageController extends Controller
         $response = new RedirectResponse($newURL);
 
         if ($this->getPageHelper()->isAllowLocaleCookie()) {
-            $response->headers->setCookie(new Cookie('_locale', $locale));
+            $response->headers->setCookie(
+                new Cookie(
+                    '_locale',
+                    $request->getLocale(),
+                    ini_get('session.cookie_lifetime'),
+                    ini_get('session.cookie_path'),
+                    ini_get('session.cookie_domain'),
+                    ini_get('session.cookie_secure'),
+                    ini_get('session.cookie_httponly'),
+                    false,
+                    Cookie::SAMESITE_LAX
+                )
+            );
         }
 
         return $response;
