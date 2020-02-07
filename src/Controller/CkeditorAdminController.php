@@ -190,7 +190,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     {
         $this->checkIfMediaBundleIsLoaded();
 
-        if (false === $this->admin->checkAccess('LIST')) {
+        if (false === $this->admin->checkAccess('list')) {
             throw new AccessDeniedException();
         }
 
