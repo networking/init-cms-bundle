@@ -24,7 +24,7 @@
         "knplabs/knp-paginator-bundle": "^4.0",
         "lexik/translation-bundle": "*",
         "oneup/flysystem-bundle": "^3.0",
-        "oneup/uploader-bundle": "^2.1",
+        "oneup/uploader-bundle": "^2.1.6",
         "phpfastcache/phpfastcache": "^3.0",
         "mopa/bootstrap-bundle": "^3.3",
         "sensio/framework-extra-bundle": "^5.1",
