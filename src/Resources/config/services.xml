@@ -77,14 +77,6 @@
             <argument key="$activated">%networking_init_cms.cache.activate%</argument>
         </service>
 
-        <service id="Networking\InitCmsBundle\Lib\PhpCache" public="false">
-            <argument>files</argument>
-            <argument>%kernel.root_dir%/</argument>
-            <argument>%kernel.environment%</argument>
-            <argument>%networking_init_cms.cache.activate%</argument>
-            <argument>%networking_init_cms.cache.cache_time%</argument>
-        </service>
-
         <service id="networking_init_cms.cms_router" class="Symfony\Cmf\Component\Routing\DynamicRouter" public="false">
             <argument type="service" id="router.request_context"/>
             <argument type="service" id="cmf_routing.nested_matcher"/>
