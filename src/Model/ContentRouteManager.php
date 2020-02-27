@@ -119,10 +119,13 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
         $defaults = [
             'route_params' => '',
             Route::LOCALE => $contentRoute->getLocale(),
-            RouteObjectInterface::CONTROLLER_NAME => $contentRoute->getController(),
             RouteObjectInterface::TEMPLATE_NAME => $template,
             RouteObjectInterface::CONTENT_OBJECT => $content,
         ];
+
+        if($controller = $contentRoute->getController()){
+            $defaults[RouteObjectInterface::CONTROLLER_NAME] = $controller;
+        }
 
         if (self::hasLocaleUrl()  && $addLocale) {
             $locale = substr($contentRoute->getLocale(), 0, 2);

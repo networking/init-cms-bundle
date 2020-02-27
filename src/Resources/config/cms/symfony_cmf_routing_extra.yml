@@ -7,5 +7,5 @@ cmf_routing:
          route_provider_service_id: networking_init_cms.content_route_manager
          controllers_by_class:
             Networking\InitCmsBundle\Model\Page: NetworkingInitCmsBundle:FrontendPage:index
-            Networking\InitCmsBundle\Model\PageSnapshot: NetworkingInitCmsBundle:FrontendPage:live
+            Networking\InitCmsBundle\Model\PageSnapshot: NetworkingInitCmsBundle:FrontendPage:index
          content_repository_service_id: networking_init_cms.page_manager
