@@ -512,7 +512,7 @@ class PageHelper
     public function setLocaleCookies($locale){
 
         $params = session_get_cookie_params();
-        $samesite = $params['samesite']?:Cookie::SAMESITE_LAX;
+        $samesite = array_key_exists('samesite', $params)?$params['samesite']:Cookie::SAMESITE_LAX;
         $secure = $samesite ==='none'?true:$params['secure'];
 
         $cookies = [];

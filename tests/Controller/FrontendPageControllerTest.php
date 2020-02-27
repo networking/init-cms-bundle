@@ -302,6 +302,10 @@ class FrontendPageControllerTest extends TestCase
             ->method('isSingleLanguage')
             ->will($this->returnValue(false));
 
+        $mockPageHelper->expects($this->once())
+            ->method('setLocaleCookies')
+            ->will($this->returnValue([]));
+
         //cache class
         $mockCacheClass = $this->getMockBuilder(PageCache::class)
             ->disableOriginalConstructor()
