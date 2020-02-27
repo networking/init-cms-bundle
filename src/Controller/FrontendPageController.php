@@ -185,8 +185,11 @@ class FrontendPageController extends AbstractController
         }
 
         if ($this->getPageHelper()->isAllowLocaleCookie() && !$this->getPageHelper()->isSingleLanguage()) {
-            $cookie = Cookie::create('_locale', $request->getLocale());
-            $response->headers->setCookie($cookie);
+
+            $cookies = $this->pageHelper->setLocaleCookies($request->getLocale());
+            foreach ($cookies as $cookie){
+                $response->headers->setCookie($cookie);
+            }
         }
 
         return $response;
@@ -374,8 +377,11 @@ class FrontendPageController extends AbstractController
         $response = new RedirectResponse($newURL);
 
         if ($this->getPageHelper()->isAllowLocaleCookie()) {
-            $cookie = Cookie::create('_locale', $locale);
-            $response->headers->setCookie($cookie);
+
+            $cookies = $this->pageHelper->setLocaleCookies($locale);
+            foreach ($cookies as $cookie){
+                $response->headers->setCookie($cookie);
+            }
         }
 
         return $response;
@@ -441,9 +447,10 @@ class FrontendPageController extends AbstractController
 
         $response = $this->redirect($url);
         if ($this->getPageHelper()->isAllowLocaleCookie()) {
-            $locale = $request->getLocale();
-            $cookie = Cookie::create('_locale', $locale);
-            $response->headers->setCookie($cookie);
+            $cookies = $this->pageHelper->setLocaleCookies($request->getLocale());
+            foreach ($cookies as $cookie){
+                $response->headers->setCookie($cookie);
+            }
         }
 
         return $response;

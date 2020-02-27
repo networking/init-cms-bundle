@@ -119,7 +119,12 @@ class LocaleListener
             if ($this->singleLanguage) {
                 $locale = $this->defaultLocale;
             } elseif ($this->allowLocaleCookie) {
-                $locale = $request->cookies->get($localeType);
+                $locale = $request->cookies->get($localeType, false);
+
+                //fallback if browser does not support samesite=none
+                if(!$locale){
+                    $locale = $request->cookies->get($localeType.'_legacy', false);
+                }
             } else {
                 $locale = $this->getLocaleFromUrl($request->getPathInfo());
             }

@@ -20,6 +20,7 @@ use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use Sonata\AdminBundle\Exception\NoValueException;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -502,5 +503,48 @@ class PageHelper
         $this->singleLanguage = $singleLanguage;
 
         return $this;
+    }
+
+    /**
+     * @param $locale
+     * @return Cookie[]
+     */
+    public function setLocaleCookies($locale){
+
+        $params = session_get_cookie_params();
+        $samesite = $params['samesite']?:Cookie::SAMESITE_LAX;
+        $secure = $samesite ==='none'?true:$params['secure'];
+
+        $cookies = [];
+
+        $cookies[] = Cookie::create(
+            '_locale',
+            $locale,
+            $params['lifetime'],
+            $params['path'],
+            $params['domain'],
+            $secure,
+            $params['httponly'],
+            false,
+            $samesite
+        );
+
+        //fallback if browser does not support samesite=none
+        if($samesite === 'none'){
+            $cookies[] = Cookie::create(
+                '_locale_legacy',
+                $locale,
+                $params['lifetime'],
+                $params['path'],
+                $params['domain'],
+                $secure,
+                $params['httponly'],
+                false
+            );
+
+
+        }
+
+        return $cookies;
     }
 }
