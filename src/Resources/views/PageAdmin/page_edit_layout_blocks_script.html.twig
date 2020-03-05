@@ -73,7 +73,7 @@ file that was distributed with this source code.
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     jQuery('#layoutBlockModal').html(xhr.responseText);
-                    jQuery('.modal').trigger('show.bs.modal');
+                    jQuery('.modal').trigger('shown.bs.modal');
                     jQuery('form', '#layoutBlockModal').on('submit', submitLayoutCreate);
                 }
             });
@@ -126,7 +126,9 @@ file that was distributed with this source code.
                     pageId:  '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
                 },
                 error: function (xhr) {
-                    form.html(xhr.responseText);
+                    jQuery('#layoutBlockModal').html(xhr.responseText);
+                    jQuery('.modal').trigger('shown.bs.modal');
+                    jQuery('form', '#layoutBlockModal').on('submit', submitLayoutUpdate);
                 },
                 success: function (html) {
                     jQuery('#layoutBlockModal').modal('hide');
