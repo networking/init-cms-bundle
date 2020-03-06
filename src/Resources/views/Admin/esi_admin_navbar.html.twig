@@ -1,6 +1,6 @@
 {% if app.user is defined %}
     {% if is_granted('ROLE_SONATA_ADMIN') %}
-        {% include 'NetworkingInitCmsBundle:Admin:toolbar_css.html.twig' %}
+        {% include '@NetworkingInitCms/Admin/toolbar_css.html.twig' %}
         <div class="navbar-initcms">
             <div class="initnavbar initnavbar-fixed-top navbar-initcms initnavbar-inverse">
                 <div class="initnavbar-inner">
