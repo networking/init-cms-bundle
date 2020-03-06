@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+{% from '@MopaBootstrap/flash.html.twig' import session_flash %}
 
 <!DOCTYPE html>
 
@@ -62,7 +62,7 @@ file that was distributed with this source code.
             {% endblock page_header %}
 
             {% block flashes %}
-                {% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+                {% from '@MopaBootstrap/flash.html.twig' import session_flash %}
                 {{ session_flash(null,true) }}
                 {% if app.session.flashbag.peekAll|length > 0 %}
                     <div class="row">
