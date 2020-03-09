@@ -29,9 +29,6 @@ Networking\InitCmsBundle\Entity\LayoutBlock:
       type: integer
       column: sort_order
       nullable: true
-      gedmo:
-        sortable:
-          groups: [zone, page]
     createdAt:
       type: datetime
       column: created_at
