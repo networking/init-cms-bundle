@@ -50,7 +50,7 @@ abstract class Tag
     protected $children;
 
     /**
-     * @var
+     * @var Tag
      */
     protected $parent;
 
