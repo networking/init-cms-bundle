@@ -79,6 +79,16 @@ abstract class PageAdmin extends BaseAdmin
     protected $pageManager;
 
     /**
+     * @var array
+     */
+    protected $datagridValues = [
+
+        '_page' => 1,
+        '_sort_order' => 'ASC',
+        '_sort_by' => 'path',
+    ];
+
+    /**
      * @return string
      */
     public function getIcon()
