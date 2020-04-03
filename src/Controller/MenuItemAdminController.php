@@ -47,6 +47,8 @@ class MenuItemAdminController extends CRUDController
      */
     protected $currentMenuLanguage = '';
 
+    protected $caller;
+
 
     /**
      * MenuItemAdminController constructor.
@@ -68,6 +70,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function listAction($pageId = false, $menuId = false, $ajaxTemplate = 'menu_tabs', $rootMenuId = null)
     {
+        $this->caller = __FUNCTION__;
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
@@ -254,6 +257,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function createAction()
     {
+        $this->caller = __FUNCTION__;
         /** @var Request $request */
         $request = $this->getRequest();
 
@@ -278,6 +282,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function editAction($id = null)
     {
+        $this->caller = __FUNCTION__;
         /** @var Request $request */
         $request = $this->getRequest();
 
@@ -295,6 +300,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function deleteAction($id)
     {
+        $this->caller = __FUNCTION__;
         /** @var Request $request */
         $request = $this->getRequest();
 
@@ -533,10 +539,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function getCaller()
     {
-        $trace = debug_backtrace();
-        $name = $trace[3]['function'];
-
-        return empty($name) ? 'global' : $name;
+        return $this->caller ?:'global';
     }
 
     /**
@@ -548,6 +551,8 @@ class MenuItemAdminController extends CRUDController
      */
     public function createPlacementNavigation($rootNode, $admin, $controller)
     {
+
+
         $lastEdited = $this->get('session')->get('MenuItem.last_edited');
         $menuItemManager = $this->menuItemManager;
         $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited) {
@@ -620,6 +625,8 @@ class MenuItemAdminController extends CRUDController
      */
     public function newPlacementAction(Request $request, $newMenuItemId, $menuItemId)
     {
+        $this->caller = 'createAction';
+
         $sibling = $request->get('sibling');
 
         $newMenuItem = $this->menuItemManager->find($newMenuItemId);
@@ -641,7 +648,6 @@ class MenuItemAdminController extends CRUDController
                 'result' => 'ok',
                 'objectId' => $this->admin->getNormalizedIdentifier($newMenuItem),
             ];
-
             return $this->renderJson($data);
         } catch (\Exception $e) {
             return $this->renderJson($data);
