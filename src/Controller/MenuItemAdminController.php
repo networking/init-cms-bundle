@@ -534,7 +534,7 @@ class MenuItemAdminController extends CRUDController
     public function getCaller()
     {
         $trace = debug_backtrace();
-        $name = $trace[2]['function'];
+        $name = $trace[3]['function'];
 
         return empty($name) ? 'global' : $name;
     }
