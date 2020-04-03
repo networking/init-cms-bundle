@@ -135,7 +135,7 @@ file that was distributed with this source code.
                                 {% endif %}
 
                                 {% if object.width is defined and object.width %}
-                                        {% if object.width is defined and object.width %}
+                                    {% if object.providerName == 'sonata.media.provider.image'  %}
                                             <script id="image-container"
                                                     data-image-src="{{ app.request.getSchemeAndHttpHost()  }}{% path object, 'reference' %}"
                                                     data-image-id="{{ object.id }}"
@@ -144,8 +144,9 @@ file that was distributed with this source code.
                                                     data-lang="{{ app.request.locale|slice(0,2) }}"
                                             ></script>
                                             <div id="image-editor" > </div>
-                                        {% endif %}
-
+                                    {% else %}
+                                        <img src="{% path object, 'reference' %}">
+                                    {% endif %}
                                 {% else %}
                                     {% if previewLink %}
                                             <iframe src="{{ previewLink }}" width="100%" height="760px"></iframe>
