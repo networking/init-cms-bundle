@@ -78,8 +78,8 @@
             </call>
             <call method="setSubClasses">
                 <argument type="collection">
-                    <argument key="menu">Networking\InitCmsBundle\Entity\MenuItem</argument>
-                    <argument key="menu item">Networking\InitCmsBundle\Entity\MenuItem</argument>
+                    <argument key="menu">%networking_init_cms.admin.menu_item.class%</argument>
+                    <argument key="menu item">%networking_init_cms.admin.menu_item.class%</argument>
                 </argument>
             </call>
 
