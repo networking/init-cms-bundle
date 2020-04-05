@@ -467,30 +467,22 @@ class MenuItemAdminController extends CRUDController
 
         $data = json_decode($response->getContent(), true);
 
+
         if (!array_key_exists('message', $data)) {
 
             /** @var Request $request */
             $request = $this->getRequest();
 
-            //getFlashBag()->get('notice'
-            if ($message = $this->get('session')->getFlashBag()->get('sonata_flash_success')) {
-                $data['is_new_menu_item'] = $this->isNewMenuItem;
-                $data['status'] = 'success';
-            } elseif ($message = $this->get('session')->getFlashBag()->get('sonata_flash_error')) {
-                $data['status'] = 'error';
-            } elseif ($data['result'] == 'ok') {
-                $request->request->all();
+            if ($data['result'] == 'ok') {
                 $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_success';
                 $data['is_new_menu_item'] = $this->isNewMenuItem;
-
                 if ($this->isNewMenuItem) {
                     $data['html'] = $this->placementAction();
                 }
                 $data['status'] = 'success';
-            } else {
-                $request->request->all();
-                $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_error';
+            } elseif ($data['result'] == 'error') {
                 $data['status'] = 'error';
+                $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_error';
             }
 
             if ($message) {
@@ -554,6 +546,7 @@ class MenuItemAdminController extends CRUDController
 
 
         $lastEdited = $this->get('session')->get('MenuItem.last_edited');
+
         $menuItemManager = $this->menuItemManager;
         $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited) {
             if ($lastEdited == $node['id']) {
@@ -629,9 +622,9 @@ class MenuItemAdminController extends CRUDController
 
         $sibling = $request->get('sibling');
 
+
         $newMenuItem = $this->menuItemManager->find($newMenuItemId);
         $menuItem = $this->menuItemManager->find($menuItemId);
-
         if (!$newMenuItem || !$menuItem) {
             throw new NotFoundHttpException();
         }

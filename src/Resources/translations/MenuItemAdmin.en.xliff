@@ -170,6 +170,10 @@
                 <source>flash_create_success</source>
                 <target>Menu successfully created</target>
             </trans-unit>
+             <trans-unit id="flash_create_error">
+                <source>flash_create_error</source>
+                <target>An error has occurred, the item could not be created at present</target>
+            </trans-unit>
             <trans-unit id="flash_delete_success">
                 <source>flash_delete_success</source>
                 <target>Menu item successfully deleted</target>

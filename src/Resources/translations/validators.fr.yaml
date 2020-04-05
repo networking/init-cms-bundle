@@ -12,3 +12,6 @@ init_cms:
 
 'Cannot create content, object is invalid': Veuillez vérifier vos données, le contenu est invalide ou manquant
 password_too_short: 'Ce mot de passe est trop court. Il doit avoir au moins {{ limit }} caractères ou plus.| Ce mot de passe est trop court. Il doit avoir au moins {{ limit }} caractères ou plus.'
+menu:
+    page_or_url:
+        required: Une page ou une URL de redirection doit être définie.

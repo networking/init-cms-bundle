@@ -12,3 +12,6 @@ init_cms:
 
 'Cannot create content, object is invalid': Controleer uw gegevens, inhoud is ongeldig of ontbreekt.
 password_too_short: 'Dit wachtwoord is te kort. Het moet ten minste een {{ limit }} teken of meer hebben.| Dit wachtwoord is te kort. Het moet ten minste een {{ limit }} teken of meer hebben.'
+menu:
+    page_or_url:
+        required: Ofwel een pagina ofwel een URL moet worden opgegeven.

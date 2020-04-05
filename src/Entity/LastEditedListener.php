@@ -14,6 +14,8 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener;
+use Networking\InitCmsBundle\Model\MenuItemInterface;
+use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
  * Class LastEditedListener.
@@ -52,12 +54,18 @@ class LastEditedListener extends ModelLastEditedListener
      */
     protected function setSessionVariable($entity)
     {
-        if ($entity instanceof MenuItem || $entity instanceof Page) {
-            $this->bundleGuesser->initialize($entity);
+        $this->bundleGuesser->initialize($entity);
 
-            $name = $this->bundleGuesser->getShortName();
+        $name = $this->bundleGuesser->getShortName();
 
-            $this->session->set($name.'.last_edited', $entity->getId());
+        if ($entity instanceof MenuItemInterface) {
+            $name = 'MenuItem';
         }
+
+        if($entity instanceof PageInterface){
+            $name = 'Page';
+        }
+        
+        $this->session->set($name.'.last_edited', $entity->getId());
     }
 }

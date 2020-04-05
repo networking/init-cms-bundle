@@ -10,17 +10,17 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
-use Doctrine\ORM\EntityRepository;
-use Sonata\AdminBundle\Exception\ModelManagerException;
+use Sonata\CoreBundle\Validator\ErrorElement;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -77,6 +77,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     protected $trackedActions = ['list'];
 
     protected $formOptions =['layout' => 'horizontal'];
+
 
     /**
      * @return string
@@ -173,9 +174,10 @@ abstract class MenuItemAdmin extends BaseAdmin
         }
 
         $formMapper
-            ->with('general',['label' => false])
+            ->with('general', ['label' => false])
             ->add('locale', HiddenType::class, ['data' => $locale])
-            ->add('name', null, ['layout' => 'horizontal']);
+            ->add('name', null, ['layout' => 'horizontal'])
+        ;
 
         if ($this->isRoot) {
             $formMapper

@@ -170,6 +170,10 @@
                 <source>flash_create_success</source>
                 <target>Menu is succesvol aangemaakt.</target>
             </trans-unit>
+             <trans-unit id="flash_create_error">
+                <source>flash_create_error</source>
+                <target>Er is een fout opgetreden: het item nog niet worden aangemaakt.</target>
+            </trans-unit>
             <trans-unit id="flash_delete_success">
                 <source>flash_delete_success</source>
                 <target>Menu-item is succesvol verwijderd.</target>

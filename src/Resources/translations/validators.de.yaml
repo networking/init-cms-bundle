@@ -13,3 +13,6 @@ init_cms:
 
 'Cannot create content, object is invalid': Bitte überprüfen sie Ihren Angaben
 password_too_short: 'Dieses Passwort ist zu kurz. Es sollte mindestens {{ limit }} Charakter oder mehr haben.| Dieses Passwort ist zu kurz. Es sollte mindestens {{ limit }} Charakter oder mehr haben.'
+menu:
+    page_or_url:
+        required: Eine Seite oder eine Umleitungs-URL muss eingestellt werden.

@@ -172,6 +172,10 @@
                 <source>flash_create_success</source>
                 <target>Menü erfolgreich erstellt</target>
             </trans-unit>
+            <trans-unit id="flash_create_error">
+                <source>flash_create_error</source>
+                <target>Es ist ein Fehler aufgetreten. Der Eintrag kann im Augenblick nicht erstellt werden</target>
+            </trans-unit>
             <trans-unit id="flash_delete_success">
                 <source>flash_delete_success</source>
                 <target>Menüpunkt erfolgreich gelöscht</target>

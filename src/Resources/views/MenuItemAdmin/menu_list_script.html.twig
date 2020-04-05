@@ -93,7 +93,12 @@ function submitAjaxForm(event) {
             }
         },
         error: function (xhr, textStatus, errorThrown) {
-            menuDialog.html(xhr.responseText);
+            if(xhr.hasOwnProperty('responseJSON')){
+                var messageHtml = '<div class="alert alert-danger">' + xhr.responseJSON.message + ' <br>'+xhr.responseJSON.errors.join('<br>')+'</div>';
+                jQuery('.modal-body').prepend(messageHtml);
+            }else{
+                menuDialog.html(xhr.responseText);
+            }
         }
     });
 }
