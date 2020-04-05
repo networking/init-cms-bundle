@@ -173,6 +173,7 @@ abstract class MenuItemAdmin extends BaseAdmin
         }
 
         $formMapper
+            ->with('general',['label' => false])
             ->add('locale', HiddenType::class, ['data' => $locale])
             ->add('name', null, ['layout' => 'horizontal']);
 
