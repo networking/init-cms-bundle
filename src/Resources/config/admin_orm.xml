@@ -65,7 +65,7 @@
         <service id="networking_init_cms.admin.menu_item" class="Networking\InitCmsBundle\Admin\Entity\MenuItemAdmin"
                  public="true">
             <argument/>
-            <argument>Networking\InitCmsBundle\Entity\MenuItem</argument>
+            <argument>%networking_init_cms.admin.menu_item.class%</argument>
             <argument>NetworkingInitCmsBundle:MenuItemAdmin</argument>
             <call method="setSonataAnnotationReader">
                 <argument type="service" id="networking_init_cms.annotation.reader"/>

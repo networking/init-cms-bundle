@@ -12,7 +12,7 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
-use Networking\InitCmsBundle\Entity\MenuItem;
+use Networking\InitCmsBundle\Entity\BaseMenuItem;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
@@ -388,7 +388,7 @@ class MenuItemAdminController extends CRUDController
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $pageId));
         }
 
-        $menuItem = new MenuItem();
+        $menuItem = $this->admin->getNewInstance();
 
         $menuItem->setPage($page);
         $menuItem->setRoot($rootNode);
@@ -435,7 +435,7 @@ class MenuItemAdminController extends CRUDController
 
         try {
             foreach ($nodes as $node) {
-                /** @var $menuItem MenuItem */
+                /** @var $menuItem BaseMenuItem */
                 $menuItem = $this->admin->getObject($node['item_id']);
                 if ($node['parent_id']) {
                     $parent = $this->admin->getObject($node['parent_id']);

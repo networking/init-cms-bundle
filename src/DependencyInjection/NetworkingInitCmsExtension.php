@@ -281,11 +281,13 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.admin.page.class', $config['class']['page']);
         $container->setParameter('networking_init_cms.admin.layout_block.class', $config['class']['layout_block']);
         $container->setParameter('networking_init_cms.admin.user.class', $config['class']['user']);
+        $container->setParameter('networking_init_cms.admin.menu_item.class', $config['class']['menu_item']);
 
         // manager configuration
         $container->setParameter('networking_init_cms.manager.page.class', $config['class']['page']);
         $container->setParameter('networking_init_cms.manager.layout_block.class', $config['class']['layout_block']);
         $container->setParameter('networking_init_cms.manager.user.class', $config['class']['user']);
+        $container->setParameter('networking_init_cms.manager.menu_item.class', $config['class']['menu_item']);
 
         switch ($config['db_driver']) {
             case 'orm':
@@ -401,7 +403,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
         //MenuItem
         $collector->addAssociation(
-            $baseNameSpace.'\\MenuItem',
+            $config['class']['menu_item'],
             'mapManyToOne',
             [
                 'fieldName' => 'page',

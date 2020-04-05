@@ -67,6 +67,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('page')->defaultValue('App\\Entity\\Page')->end()
                         ->scalarNode('layout_block')->defaultValue('Networking\\InitCmsBundle\\Entity\\LayoutBlock')->end()
                         ->scalarNode('user')->defaultValue('App\\Entity\\User')->end()
+                        ->scalarNode('menu_item')->defaultValue('Networking\\InitCmsBundle\\Entity\\MenuItem')->end()
                     ->end()
                 ->end()
                 ->scalarNode('allow_locale_cookie')->defaultTrue()->end()

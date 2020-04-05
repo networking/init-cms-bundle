@@ -10,22 +10,13 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Networking\InitCmsBundle\Model\MenuItem as ModelMenuItem;
 
 /**
  * Class MenuItem.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MenuItem extends ModelMenuItem
+class MenuItem extends BaseMenuItem
 {
-    /**
-     * Hook on pre-persist operations.
-     */
-    public function prePersist()
-    {
-        if ($this->getParent()) {
-            $this->setLocale();
-        }
-    }
+
 }

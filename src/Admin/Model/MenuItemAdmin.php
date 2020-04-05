@@ -42,11 +42,17 @@ abstract class MenuItemAdmin extends BaseAdmin
     protected $baseRoutePattern = 'cms/menu';
 
     /**
+     * @var string
+     */
+    protected $baseRouteName = 'admin_networking_initcms_menuitem';
+
+    /**
      * The number of result to display in the list.
      *
      * @var int
      */
     protected $maxPerPage = 10000;
+
 
     /**
      * The maximum number of page numbers to display in the list.

@@ -33,7 +33,7 @@
 
         <service id="networking_init_cms.menu_item_manager"
                  class="Networking\InitCmsBundle\Entity\MenuItemManager">
-            <argument key="$class">Networking\InitCmsBundle\Entity\MenuItem</argument>
+            <argument key="$class">%networking_init_cms.admin.menu_item.class%</argument>
         </service>
 
         <service id="networking_init_cms.help_text_manager"

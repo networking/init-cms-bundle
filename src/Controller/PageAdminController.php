@@ -590,7 +590,7 @@ class PageAdminController extends CRUDController
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
         $rootMenus = $this->admin->getModelManager()->findBy(
-            'NetworkingInitCmsBundle:MenuItem',
+            $this->container->getParameter('networking_init_cms.admin.menu_item.class'),
             ['isRoot' => 1, 'locale' => $object->getLocale()]
         );
 
