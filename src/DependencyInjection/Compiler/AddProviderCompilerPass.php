@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Networking\InitCmsBundle\Provider\FileProvider;
 use Networking\InitCmsBundle\Provider\ImageProvider;
 use Networking\InitCmsBundle\Provider\YouTubeProvider;
+use Symfony\Component\DependencyInjection\Reference;
 
 class AddProviderCompilerPass implements CompilerPassInterface
 {
@@ -24,6 +25,29 @@ class AddProviderCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition('networking_init_cms.media.thumbnail.format')) {
+            return;
+        }
+
+        $definition = $container->getDefinition(
+            'networking_init_cms.media.thumbnail.format'
+        );
+
+        if (!\is_callable([$container->getParameterBag()->resolveValue($definition->getClass()), 'addResizer'])) {
+            return;
+        }
+
+        $taggedServices = $container->findTaggedServiceIds(
+            'sonata.media.resizer'
+        );
+
+        foreach ($taggedServices as $id => $tags) {
+            $definition->addMethodCall(
+                'addResizer',
+                [$id, new Reference($id)]
+            );
+        }
+
         foreach ($container->findTaggedServiceIds('sonata.media.provider') as $id => $attributes) {
             $definition = $container->getDefinition($id);
 
