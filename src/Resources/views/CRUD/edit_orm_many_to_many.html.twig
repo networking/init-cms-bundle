@@ -14,7 +14,7 @@ file that was distributed with this source code.
 {% if sonata_admin.field_description.associationadmin %}
     <div id="field_container_{{ id }}" class="field-container">
         <div id="field_widget_{{ id }}" class=" pull-left">
-            {{ form_widget(form) }}&nbsp;
+            {{ form_widget(form) }}
         </div>
         <div id="field_actions_{{ id }}" class="form-group">
             {% if sonata_admin.field_description.associationadmin.hasRoute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
