@@ -15,6 +15,7 @@ use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\BaseMenuItem;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,6 +39,11 @@ class MenuItemAdminController extends CRUDController
     protected $menuItemManager;
 
     /**
+     * @var PageManagerInterface
+     */
+    protected $pageManager;
+
+    /**
      * @var bool
      */
     protected $isNewMenuItem = false;
@@ -55,13 +61,16 @@ class MenuItemAdminController extends CRUDController
      * @param MenuItemManagerInterface $menuItemManager
      * @param CmsEventDispatcher $dispatcher
      * @param PageCacheInterface $pageCache
+     * @param PageManagerInterface $pageManager
      */
     public function __construct(
         MenuItemManagerInterface $menuItemManager,
         CmsEventDispatcher $dispatcher,
-        PageCacheInterface $pageCache
+        PageCacheInterface $pageCache,
+        PageManagerInterface $pageManager
     ) {
         $this->menuItemManager = $menuItemManager;
+        $this->pageManager = $pageManager;
         parent::__construct($dispatcher, $pageCache);
     }
 
@@ -382,7 +391,7 @@ class MenuItemAdminController extends CRUDController
             throw new NotFoundHttpException(sprintf('unable to find the Menu with id : %s', $rootId));
         }
 
-        $page = $this->get('networking_init_cms.page_manager')->find($pageId);
+        $page = $this->pageManager->find($pageId);
 
         if (!$page) {
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $pageId));
