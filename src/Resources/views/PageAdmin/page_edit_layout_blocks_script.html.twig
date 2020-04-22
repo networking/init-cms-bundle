@@ -157,10 +157,15 @@ file that was distributed with this source code.
         function saveLayoutBlockSort(callback) {
             var zones = [];
 
-            jQuery('ul.sortable').each(function (index, value) {
-                var zone = jQuery(value).attr('id').substr(5);
-                var layoutBlocks = jQuery(value).sortable("toArray", {key: "layoutBlock"});
-                zones.push({'zone': zone, 'layoutBlocks': layoutBlocks});
+            jQuery('ul.sortable').each(function (index, el) {
+                var list = jQuery(el);
+                list.find('a.add-layout').each(function (index, el) {
+                    jQuery(el).data('sort-order', index);
+                })
+                zones.push({
+                    'zone': list.attr('id').substr(5),
+                    'layoutBlocks': list.sortable("toArray", {key: "layoutBlock"})
+                });
             });
 
             jQuery.when(submitLayoutSort(zones)).done(function (xhr) {
@@ -168,8 +173,8 @@ file that was distributed with this source code.
                     callback(xhr)
                 }
             });
-
         }
+        
         function submitLayoutSort(zones) {
             var dfd = jQuery.Deferred();
             var pageStatus = jQuery('.page_status');
