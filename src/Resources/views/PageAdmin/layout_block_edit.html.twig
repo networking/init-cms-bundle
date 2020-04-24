@@ -24,7 +24,7 @@
                         {% for name, form_group in admin.formgroups %}
                             {% for field_name in form_group.fields %}
                                 {% if admin.formfielddescriptions[field_name] is defined %}
-                                    {{ form_widget(form[field_name]) }}
+                                    {{ form_row(form[field_name]) }}
                                 {% endif %}
                             {% endfor %}
                         {% endfor %}

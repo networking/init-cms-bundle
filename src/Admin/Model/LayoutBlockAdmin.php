@@ -24,6 +24,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Networking\InitCmsBundle\Form\DataTransformer\PageToIdTransformer;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Model\ContentInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
@@ -74,6 +75,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('deleteAjax', 'delete_ajax', [], ['method' => 'POST']);
+        $collection->add('toggleActive', 'toggle_active', [], ['method' => 'POST']);
         $collection->add('reload', 'reload', [], ['method' => 'GET']);
         $collection->add('updateFormFieldElement', 'update_form_fields', [], ['method' => 'POST']);
         $collection->add('updateLayoutBlockSort', 'update_layout_block_sort', [], ['method' => 'GET']);
@@ -96,6 +98,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         $transformer = new PageToIdTransformer($this->pageManager);
 
         $formMapper
+//            ->add('isActive', CheckboxType::class, ['layout' => 'horizontal', 'required' => false])
             ->add(
                 'zone',
                 HiddenType::class
@@ -106,7 +109,8 @@ abstract class LayoutBlockAdmin extends BaseAdmin
                 HiddenType::class
             )
             ->add('classType', HiddenType::class)
-            ->add('sortOrder', HiddenType::class);
+            ->add('sortOrder', HiddenType::class)
+        ;
     }
 
     /**

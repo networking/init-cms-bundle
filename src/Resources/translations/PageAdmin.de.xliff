@@ -394,6 +394,14 @@
                 <source>message.layout_blocks_sorted</source>
                 <target>Die Blöcke sind jetzt sortiert.</target>
             </trans-unit>
+            <trans-unit id="message.layout_block_activated">
+                <source>message.layout_block_activated</source>
+                <target>Der Block ist jetzt Online.</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_deactivated">
+                <source>message.layout_block_deactivated</source>
+                <target>Der Block ist jetzt Offline.</target>
+            </trans-unit>
             <trans-unit id="info.page_settings_updated">
                 <source>info.page_settings_updated</source>
                 <target>Die Seiteneinstellungen wurden erfolgreich aktualisiert</target>

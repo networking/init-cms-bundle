@@ -361,7 +361,28 @@ file that was distributed with this source code.
                         }
                     });
                 }
-            });
+            }).on('click', 'i.toggle-active', function () {
+                if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
+                    jQuery.ajax({
+                        url: '{{ url('admin_networking_initcms_layoutblock_toggleActive') }}',
+                        method: 'POST',
+                        data: {
+                            id: jQuery(this).attr('data-value'),
+                            code: '{{ sonata_admin.admin.root.code }}',
+                            pageId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
+                            uniqId: '{{ sonata_admin.admin.root.uniqid }}',
+                            formFieldId: '{{ id }}',
+                            _method: 'PUT'
+                        },
+                        success: function (xhr) {
+                            createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                            jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
+                            saveLayoutBlockSort();
+                        }
+                    });
+                }
+            })
+            ;
         })(jQuery);
     </script>
 

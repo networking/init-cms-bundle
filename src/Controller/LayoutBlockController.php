@@ -11,21 +11,21 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
-use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
+use Networking\InitCmsBundle\Model\LayoutBlock;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
- * Class PageAdminController.
+ * Class LayoutBlockController.
  *
  * @author net working AG <info@networking.ch>
  */
@@ -54,7 +54,7 @@ class LayoutBlockController extends CRUDController
         PageManagerInterface $pageManager
     ) {
         $this->pageManager = $pageManager;
-        
+
         parent::__construct($dispatcher, $pageCache);
     }
 
@@ -85,7 +85,7 @@ class LayoutBlockController extends CRUDController
         $uniqId = $request->get('uniqId');
         $classType = $request->get('classType');
 
-
+        /** @var PageAdmin $pageAdmin */
         $pageAdmin = $this->container->get($code);
         $pageAdmin->setRequest($request);
 
@@ -373,6 +373,38 @@ class LayoutBlockController extends CRUDController
             [
                 'messageStatus' => 'success',
                 'message' => $this->translate('message.layout_block_deleted'),
+                'html' => $html,
+            ]
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws \Twig_Error_Runtime
+     */
+    public function toggleActiveAction(Request $request)
+    {
+        $id = $request->get('id');
+        $pageId = $request->get('pageId');
+        $uniqId = $request->get('uniqId');
+        $code = $request->get('code');
+        $formFieldId = $request->get('formFieldId');
+
+        if ($id) {
+            /** @var LayoutBlock $layoutBlock */
+            $layoutBlock = $this->admin->getObject($id);
+            $layoutBlock->setIsActive(!$layoutBlock->getIsActive());
+            $this->admin->update($layoutBlock);
+        }
+        $html = $this->getLayoutBlockFormWidget($pageId, $formFieldId, $uniqId, $code);
+        $status = $layoutBlock->getIsActive()?'activated':'deactivated';
+        return new JsonResponse(
+            [
+                'messageStatus' => 'success',
+                'message' => $this->translate(sprintf('message.layout_block_%s', $status)),
                 'html' => $html,
             ]
         );
