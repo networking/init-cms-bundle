@@ -31,9 +31,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     public function browserAction()
     {
         $this->checkIfMediaBundleIsLoaded();
-        if (false === $this->admin->checkAccess('list')) {
-            throw new AccessDeniedException();
-        }
+        $this->admin->checkAccess('list');
 
         $datagrid = $this->admin->getDatagrid();
         $datagrid->setValue('context', null, $this->getRequest()->get('context'));
@@ -83,9 +81,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     {
         $this->checkIfMediaBundleIsLoaded();
 
-        if (false === $this->admin->checkAccess('create')) {
-            throw new AccessDeniedException();
-        }
+        $this->admin->checkAccess('create');
 
 	    /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
 	    $mediaAdmin = $this->container->get('sonata.media.admin.media');
@@ -190,9 +186,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     {
         $this->checkIfMediaBundleIsLoaded();
 
-        if (false === $this->admin->checkAccess('list')) {
-            throw new AccessDeniedException();
-        }
+        $this->admin->checkAccess('list');
 
         $datagrid = $this->admin->getDatagrid($this->admin->getPersistentParameter('context'), $this->admin->getPersistentParameter('provider'));
         $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));

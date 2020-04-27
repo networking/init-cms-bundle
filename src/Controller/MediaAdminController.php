@@ -68,11 +68,10 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function showAction($id = null)
     {
-        if (false === $this->admin->checkAccess('VIEW')) {
-            throw new AccessDeniedException();
-        }
 
         $media = $this->admin->getObject($id);
+
+        $this->admin->checkAccess('show', $media);
 
         if (!$media) {
             throw new NotFoundHttpException('unable to find the media with the id');
@@ -102,9 +101,7 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function createAction(Request $request = null)
     {
-        if (false === $this->admin->checkAccess('create')) {
-            throw new AccessDeniedException();
-        }
+        $this->admin->checkAccess('create');
 
         $parameters = $this->admin->getPersistentParameters();
 
@@ -214,9 +211,7 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function batchActionDelete(ProxyQueryInterface $query)
     {
-        if (false === $this->admin->checkAccess('batchDelete')) {
-            throw new AccessDeniedException();
-        }
+        $this->admin->checkAccess('batchDelete');
 
         try {
             $this->doBatchDelete($query);
@@ -320,9 +315,8 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function listAction(Request $request = null)
     {
-        if (false === $this->admin->checkAccess('list')) {
-            throw new AccessDeniedException();
-        }
+        $this->admin->checkAccess('list');
+
         $galleryListMode = $request->get('pcode') ? true : false;
 
         $datagrid = $this->admin->getDatagrid();
@@ -369,9 +363,8 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function refreshListAction(Request $request)
     {
-        if (false === $this->admin->checkAccess('list')) {
-            throw new AccessDeniedException();
-        }
+        $this->admin->checkAccess('list');
+        
         $galleryListMode = $request->get('pcode') ? true : false;
         $datagrid = $this->admin->getDatagrid();
         $datagrid->getForm()->createView();
