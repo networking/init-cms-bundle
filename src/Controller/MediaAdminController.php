@@ -38,7 +38,7 @@ class MediaAdminController extends SonataMediaAdminController
      */
     public function showAction($id = null)
     {
-        if (false === $this->admin->checkAccess('VIEW')) {
+        if (false === $this->admin->checkAccess('show')) {
             throw new AccessDeniedException();
         }
 
