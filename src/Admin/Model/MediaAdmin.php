@@ -544,18 +544,21 @@ abstract class MediaAdmin extends Admin
     public function getNewInstance()
     {
         $media = $this->getModelManager()->getModelInstance($this->getClass());
+
         foreach ($this->getExtensions() as $extension) {
             $extension->alterNewInstance($this, $media);
         }
 
         if ($this->hasRequest()) {
+
+            $providerName = $this->getRequest()->get('provider');
             if ($this->getRequest()->isMethod('POST') && !$this->getRequest()->get('oneuploader')) {
                 $uniqid = $this->getUniqid();
-
-                $media->setProviderName($this->getRequest()->get($uniqid)['providerName']);
-            } else {
-                $media->setProviderName($this->getRequest()->get('provider'));
+                if(array_key_exists($this->getRequest()->get($uniqid, []), 'providerName')){
+                    $media->setProviderName($this->getRequest()->get($uniqid)['providerName']);
+                }
             }
+            $media->setProviderName($providerName);
 
             $media->setContext($context = $this->getRequest()->get('context'));
         }
