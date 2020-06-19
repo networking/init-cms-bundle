@@ -159,11 +159,13 @@ file that was distributed with this source code.
 
             jQuery('ul.sortable').each(function (index, el) {
                 var list = jQuery(el);
+                var zone_name = list.attr('id').substr(5);
                 list.find('a.add-layout').each(function (index, el) {
                     jQuery(el).data('sort-order', index);
+                    jQuery(el).data('zone', zone_name);
                 })
                 zones.push({
-                    'zone': list.attr('id').substr(5),
+                    'zone': zone_name,
                     'layoutBlocks': list.sortable("toArray", {key: "layoutBlock"})
                 });
             });
@@ -172,6 +174,8 @@ file that was distributed with this source code.
                 if (callback !== undefined) {
                     callback(xhr)
                 }
+
+                jQuery('body').trigger('layout:sorted', [xhr]);
             });
         }
         
