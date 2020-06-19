@@ -115,6 +115,11 @@ class NetworkingHelperExtension extends AbstractExtension
     protected $contentTypes;
 
     /**
+     * @var string
+     */
+    protected $currentTemplate;
+
+    /**
      * NetworkingHelperExtension constructor.
      *
      * @param KernelInterface      $kernel
@@ -413,28 +418,29 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @return array|mixed
+     * @return int|string|null
      */
     public function getCurrentTemplate()
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $pageId = (!$request->get('objectId')) ? $request->get('id') : $request->get('objectId');
+        if(!$this->currentTemplate){
+            $request = $this->requestStack->getCurrentRequest();
+            $pageId = (!$request->get('objectId')) ? $request->get('id') : $request->get('objectId');
 
-        $template = null;
+            if ($pageId) {
+                /** @var PageInterface $page */
+                $page = $this->pageManager->findById($pageId);
+                $this->currentTemplate = $page->getTemplateName();
+            } else {
+                $this->currentTemplate = array_key_first($this->templates);
+            }
 
-        if ($pageId) {
-            $page = $this->pageManager->findById($pageId);
-            $template = $page->getTemplateName();
-        } else {
-            $firstTemplate = reset($this->templates);
-            $template = key($firstTemplate);
+            if (is_null($this->currentTemplate)) {
+                return 'Please Select Template first';
+            }
         }
 
-        if (is_null($template)) {
-            return ['Please Select Template first'];
-        }
 
-        return $template;
+        return $this->currentTemplate;
     }
 
     /**
