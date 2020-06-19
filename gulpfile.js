@@ -3,7 +3,6 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
     csso = require('gulp-csso'),
-    watch = require('gulp-watch'),
     less = require('gulp-less'),
     webpack = require('webpack-stream');
 

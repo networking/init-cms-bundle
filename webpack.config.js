@@ -1,7 +1,7 @@
 const {VueLoaderPlugin} = require('vue-loader')
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     resolve: {alias: {vue: 'vue/dist/vue.esm.js'}},
     externals: {
         jquery: 'jQuery',

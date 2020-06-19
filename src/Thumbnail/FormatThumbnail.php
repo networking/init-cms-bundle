@@ -8,6 +8,7 @@
 
 namespace Networking\InitCmsBundle\Thumbnail;
 
+use Networking\InitCmsBundle\Provider\ImageProvider;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Sonata\MediaBundle\Resizer\ResizerInterface;
@@ -64,7 +65,7 @@ class FormatThumbnail implements ThumbnailInterface
      */
     public function generatePublicUrl(MediaProviderInterface $provider, MediaInterface $media, $format)
     {
-        if (MediaProviderInterface::FORMAT_REFERENCE === $format) {
+        if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)) {
             return $provider->getReferenceImage($media);
         }
 
@@ -81,7 +82,7 @@ class FormatThumbnail implements ThumbnailInterface
      */
     public function generatePrivateUrl(MediaProviderInterface $provider, MediaInterface $media, $format)
     {
-        if (MediaProviderInterface::FORMAT_REFERENCE === $format) {
+        if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)) {
             return $provider->getReferenceImage($media);
         }
 
@@ -106,6 +107,10 @@ class FormatThumbnail implements ThumbnailInterface
         $referenceFile = $provider->getReferenceFile($media);
 
         if (!$referenceFile->exists()) {
+            return;
+        }
+
+        if(in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)){
             return;
         }
         foreach ($provider->getFormats() as $format => $settings) {

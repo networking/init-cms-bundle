@@ -45,10 +45,10 @@ file that was distributed with this source code.
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-    {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-        <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-    {% endif %}
+        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+        {% endif %}
         <form class="form-vertical" novalidate="novalidate" method="POST"
               action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
                 {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}>
@@ -117,7 +117,7 @@ file that was distributed with this source code.
                     </div>
                     {% if object.id %}
                         {% block sonata_media_show_reference %}
-                           <div class="col-md-6" id="media-preview">
+                            <div class="col-md-6" id="media-preview">
                                 {% set previewLink = false %}
 
                                 {% if object.width is defined and object.width %}
@@ -135,71 +135,72 @@ file that was distributed with this source code.
                                 {% endif %}
 
                                 {% if object.width is defined and object.width %}
-                                    {% if object.providerName == 'sonata.media.provider.image'  %}
-                                            <script id="image-container"
-                                                    data-image-src="{{ app.request.getSchemeAndHttpHost()  }}{% path object, 'reference' %}"
-                                                    data-image-id="{{ object.id }}"
-                                                    data-image-context="{{ object.context }}"
-                                                    data-image-provider="{{ object.providerName }}"
-                                                    data-lang="{{ app.request.locale|slice(0,2) }}"
-                                            ></script>
-                                            <div id="image-editor" > </div>
-                                    {% else %}
-                                        <img src="{% path object, 'reference' %}">
-                                    {% endif %}
+                                {% if object.providerName == 'sonata.media.provider.image' %}
+                                    <script id="image-container"
+                                            data-image-src="{{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}"
+                                            data-image-id="{{ object.id }}"
+                                            data-image-context="{{ object.context }}"
+                                            data-image-provider="{{ object.providerName }}"
+                                            data-lang="{{ app.request.locale|slice(0,2) }}"
+                                    ></script>
+                                    <div id="image-editor"></div>
                                 {% else %}
-                                    {% if previewLink %}
-                                            <iframe src="{{ previewLink }}" width="100%" height="760px"></iframe>
-                                    {% endif %}
+                                <img src="{% path object, 'reference' %}">
                                 {% endif %}
-                                    <table class="table">
-                                        <tr>
-                                            <th>{{ 'label.size'|trans({}, 'SonataMediaBundle') }}</th>
-                                            <td>
-                                                {% if object.width is defined and object.width %}{{ object.width|number_format_decimal }}px
-                                                    x {{ object.height|number_format_decimal }}px
-                                                    {% if object.size > 0 %}({{ object.size|number_format_decimal }} Bytes){% endif %}
-                                                {% else %}
-                                                    {% if object.size > 0 %}{{ object.size|number_format_decimal }} Bytes{% endif %}
-                                                {% endif %}
-                                            </td>
-                                        <tr>
-                                        <tr>
-                                            <th>{{ 'label.content_type'|trans({}, 'SonataMediaBundle') }}</th>
-                                            <td>{{ object.contenttype }}</td>
-                                        <tr>
-                                            {% if form.cdnIsFlushable  is defined %}
-                                        <tr>
-                                            <th>{{ 'label.cdn'|trans({}, 'SonataMediaBundle') }}</th>
-                                            <td>
-                                                {% if object.cdnisflushable %}
-                                                    {{ 'label.to_be_flushed'|trans({}, 'SonataMediaBundle') }}
-                                                {% else %}
-                                                    {{ 'label.flushed_at'|trans({}, 'SonataMediaBundle') }}
-                                                    {{ object.cdnflushat|date }}
-                                                {% endif %}
-                                            </td>
-                                        <tr>
+                                {% else %}
+                                {% if previewLink %}
+                                    <iframe src="{{ previewLink }}" width="100%" height="760px"></iframe>
+                                {% endif %}
+                                {% endif %}
+                                <table class="table">
+                                    <tr>
+                                        <th>{{ 'label.size'|trans({}, 'SonataMediaBundle') }}</th>
+                                        <td>
+                                            {% if object.width is defined and object.width %}{{ object.width|number_format_decimal }}px
+                                                x {{ object.height|number_format_decimal }}px
+                                                {% if object.size > 0 %}({{ object.size|number_format_decimal }} Bytes){% endif %}
+                                            {% else %}
+                                                {% if object.size > 0 %}{{ object.size|number_format_decimal }} Bytes{% endif %}
                                             {% endif %}
-                                        <tr>
-                                            <th>
-                                                <a href="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}">{{ 'label.protected_download_url'|trans({}, admin.translationDomain) }}</a>
-                                            </th>
-                                            <td>
+                                        </td>
+                                    <tr>
+                                    <tr>
+                                        <th>{{ 'label.content_type'|trans({}, 'SonataMediaBundle') }}</th>
+                                        <td>{{ object.contenttype }}</td>
+                                    <tr>
+                                        {% if form.cdnIsFlushable  is defined %}
+                                    <tr>
+                                        <th>{{ 'label.cdn'|trans({}, 'SonataMediaBundle') }}</th>
+                                        <td>
+                                            {% if object.cdnisflushable %}
+                                                {{ 'label.to_be_flushed'|trans({}, 'SonataMediaBundle') }}
+                                            {% else %}
+                                                {{ 'label.flushed_at'|trans({}, 'SonataMediaBundle') }}
+                                                {{ object.cdnflushat|date }}
+                                            {% endif %}
+                                        </td>
+                                    <tr>
+                                        {% endif %}
+                                    <tr>
+                                        <th>
+                                            <a href="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}">{{ 'label.protected_download_url'|trans({}, admin.translationDomain) }}</a>
+                                        </th>
+                                        <td>
 
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" onClick="this.select();"
-                                                           readonly="readonly" id="download"
-                                                           value="{{ url('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
-                                                    <span class="input-group-addon"><a class="glyphicon glyphicon-copy copy-link"
-                                                                                       data-field="#download"></a></span>
-                                                </div>
-                                                {% if 'sonata.media.security.public_strategy' != sonata_media.pool.getContext(object.context).download.strategy %}
-                                                    <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadSecurity(object).description|raw }}
-                                                {% endif %}
-                                            </td>
-                                        <tr>
-                                            {% if object.width is defined and object.width %}
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" onClick="this.select();"
+                                                       readonly="readonly" id="download"
+                                                       value="{{ url('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
+                                                <span class="input-group-addon"><a
+                                                            class="glyphicon glyphicon-copy copy-link"
+                                                            data-field="#download"></a></span>
+                                            </div>
+                                            {% if 'sonata.media.security.public_strategy' != sonata_media.pool.getContext(object.context).download.strategy %}
+                                                <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadSecurity(object).description|raw }}
+                                            {% endif %}
+                                        </td>
+                                    <tr>
+                                        {% if object.width is defined and object.width %}
                                         <tr>
                                             <th>
                                                 <a href="{% path object, 'reference' %}"
@@ -212,8 +213,9 @@ file that was distributed with this source code.
                                                     <input type="text" class="form-control" onClick="this.select();"
                                                            readonly="readonly" id="reference"
                                                            value="{{ app.request.schemeAndHttpHost }}{% path object, 'reference' %}"/>
-                                                    <span class="input-group-addon"><a class="glyphicon glyphicon-copy copy-link"
-                                                                                       data-field="#reference"></a></span>
+                                                    <span class="input-group-addon"><a
+                                                                class="glyphicon glyphicon-copy copy-link"
+                                                                data-field="#reference"></a></span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -234,31 +236,33 @@ file that was distributed with this source code.
                                                                id="{{ name }}"
                                                                readonly="readonly"
                                                                value="{{ app.request.schemeAndHttpHost }}{% path object, name %}"/>
-                                                        <span class="input-group-addon"><a class="glyphicon glyphicon-copy copy-link"
-                                                                                           data-field="#{{ name }}"></a></span>
+                                                        <span class="input-group-addon"><a
+                                                                    class="glyphicon glyphicon-copy copy-link"
+                                                                    data-field="#{{ name }}"></a></span>
                                                     </div>
 
                                                 </td>
                                             </tr>
                                         {% endfor %}
-                                        {% else %}
-                                            <tr>
-                                                <th>
-                                                    <a href="{% path object, 'reference' %}"
-                                                       target="_blank">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
-                                                </th>
-                                                <td>
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" onClick="this.select();"
-                                                               readonly="readonly" id="reference"
-                                                               value="{{ app.request.schemeAndHttpHost }}{% path object, 'reference' %}"/>
-                                                        <span class="input-group-addon"><a class="glyphicon glyphicon-copy copy-link"
-                                                                                           data-field="#reference"></a></span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-                                    </table>
+                                    {% else %}
+                                        <tr>
+                                            <th>
+                                                <a href="{% path object, 'reference' %}"
+                                                   target="_blank">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
+                                            </th>
+                                            <td>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" onClick="this.select();"
+                                                           readonly="readonly" id="reference"
+                                                           value="{{ app.request.schemeAndHttpHost }}{% path object, 'reference' %}"/>
+                                                    <span class="input-group-addon"><a
+                                                                class="glyphicon glyphicon-copy copy-link"
+                                                                data-field="#reference"></a></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </table>
                             </div>
                         {% endblock sonata_media_show_reference %}
                     {% endif %}
@@ -321,7 +325,8 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-    <script src="{{ asset('bundles/networkinginitcms/vendor/filerobot-image-editor/index.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/networkinginitcms/vendor/filerobot-image-editor/index.js') }}"
+            type="text/javascript"></script>
     <script src="{{ asset('bundles/networkinginitcms/js/imageEditor.js') }}" type="text/javascript"></script>
     <script>
         (function ($) {
@@ -339,7 +344,7 @@ file that was distributed with this source code.
                 alert('{{ 'copy_to_clipboard'|trans({}, 'MediaAdmin') }}'.replace('%item%', copyText.val()));
             }
 
-            $('body').on('click', '.copy-link', function(){
+            $('body').on('click', '.copy-link', function () {
                 var field = $(this).data('field');
                 copyToClipboard(field);
             })

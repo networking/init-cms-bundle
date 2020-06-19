@@ -59,6 +59,7 @@
 <i18n>
 {
     "en": {
+        "not_allowed_extension": "Unfortunately the image cannot be edited",
         "created_image":"Created Image",
         "create_new_image":"Create a new image",
         "replace_image":"Replace current image",
@@ -74,6 +75,7 @@
         }
     },
     "de": {
+        "not_allowed_extension": "Bild kann leider nicht bearbeitet werden",
         "created_image":"Erstelltes Bild",
         "create_new_image":"Ein neues Bild erstellen",
         "replace_image":"Aktuelles Bild ersetzen",
@@ -128,9 +130,14 @@
     import $ from 'jquery';
     import FilerobotImageEditor from './imageEditor'
 
+    const ALLOWED_FILE_EXTENTIONS = ['gif', 'jpg', 'jpeg', 'png'];
+    const LANGUAGES = ['de', 'en'];
     let imageContainer = document.getElementById('image-container');
     let axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
-    let langauge = imageContainer.getAttribute('data-lang')
+    let langauge = imageContainer.getAttribute('data-lang');
+    if(!LANGUAGES.includes(langauge)){
+        langauge = 'en';
+    }
 
     export default {
         name: 'Editor',
@@ -192,6 +199,7 @@
             this.id = imageContainer.getAttribute('data-image-id');
             this.context = imageContainer.getAttribute('data-image-context');
             this.provider = imageContainer.getAttribute('data-image-provider');
+            this.fileExtension = this.imageURL.slice((this.imageURL.lastIndexOf(".") - 1 >>> 0) + 2);
         },
         data() {
             this.$i18n.locale = langauge;
@@ -206,7 +214,7 @@
                 alert: false,
                 alertMessage: false,
                 alertType: false,
-
+                fileExtension: '',
             }
         },
         watch: {
@@ -216,6 +224,14 @@
         },
         methods: {
             editImage(){
+                this.alertMessage = false;
+                if(!ALLOWED_FILE_EXTENTIONS.includes(this.fileExtension)){
+                    this.alert = true;
+                    this.alertType = 'error';
+                    this.alertMessage = this.$i18n.t('not_allowed_extension');
+                    return;
+                }
+
                 this.alert = false;
                 this.alertType = false;
                 this.alertMessage = false;
