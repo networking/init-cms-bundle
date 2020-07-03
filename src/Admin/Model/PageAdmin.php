@@ -233,7 +233,7 @@ abstract class PageAdmin extends BaseAdmin
         $formMapper->add(
             'pageName',
             TextType::class,
-            ['help_block' => 'page_name.helper.text']
+            ['help_block' => 'page_name.helper.text', 'attr' => ['class' => 'input-xxlarge']]
         );
 
         if (!$this->canCreateHomepage) {
@@ -244,7 +244,7 @@ abstract class PageAdmin extends BaseAdmin
                         AutocompleteType::class,
                         [
                             'help_block' => 'parent.helper.text',
-                            'attr' => ['style' => 'width:220px'],
+                            'attr' => ['class' => 'input-xxlarge'],
                             'choice_label' => 'AdminTitle',
                             'class' => $this->getClass(),
                             'required' => false,
@@ -265,7 +265,7 @@ abstract class PageAdmin extends BaseAdmin
                         AutocompleteType::class,
                         [
                             'help_block' => 'alias.helper.text',
-                            'attr' => ['style' => 'width:220px'],
+                            'attr' => ['class' => 'input-xxlarge'],
                             'property' => 'AdminTitle',
                             'class' => $this->getClass(),
                             'required' => false,
@@ -293,6 +293,7 @@ abstract class PageAdmin extends BaseAdmin
                         'required' => $requireUrl,
                         'help_label' => $this->getSubject()->getFullPath(),
                         'help_block' => 'url.helper.text',
+                        'attr' => ['class' => 'input-xxlarge']
                     ],
                     ['display_method' => 'getFullPath', 'attr' => $attr]
                 );
@@ -305,6 +306,7 @@ abstract class PageAdmin extends BaseAdmin
                         'required' => $requireUrl,
                         'help_label' => '/',
                         'help_block' => 'url.helper.text',
+                        'attr' => ['class' => 'input-xxlarge']
                     ],
                     ['display_method' => 'getFullPath']
                 );
@@ -357,9 +359,9 @@ abstract class PageAdmin extends BaseAdmin
         // end of group: page_settings
         $formMapper
             ->with('meta_settings')
-            ->add('metaTitle', null, ['help_block' => 'meta_title.helper.text'])
-            ->add('metaKeyword')
-            ->add('metaDescription')
+            ->add('metaTitle', null, ['help_block' => 'meta_title.helper.text', 'attr' => ['class' => 'input-xxlarge'] ])
+            ->add('metaKeyword', null, ['attr' => ['class' => 'input-xxlarge'] ])
+            ->add('metaDescription', null, [ 'attr' => ['class' => 'input-xxlarge', 'rows' => 5]])
             ->add('socialMediaImage',
                 MediaEntityType::class,
                 [
