@@ -233,7 +233,7 @@
             </trans-unit>
             <trans-unit id="button.offline">
                 <source>button.offline</source>
-                <target>Offline setzten</target>
+                <target>Set offline</target>
             </trans-unit>
             <trans-unit id="title.cancel_draft">
                 <source>title.cancel_draft</source>
