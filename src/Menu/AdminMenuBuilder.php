@@ -209,21 +209,16 @@ class AdminMenuBuilder extends MenuBuilder
                 $menu->addChild('Admin', ['uri' => $lastActionUrl]);
             }
 
-            $viewStatus = $this->request->getSession()->get('_viewStatus');
-            $webLink = 'link.website_'.$viewStatus;
-
-            if ($editPath && !$sonataAdmin) {
-                $webLink = 'link.website_'.$viewStatus;
-            }
-
+            $firstItemStatus = !$sonataAdmin?$this->request->getSession()->get('_viewStatus'):'';
             $dropdown = $menu->addChild(
-                $webLink,
+                'link.website_'.$firstItemStatus,
                 [
                     'dropdown' => true,
                     'caret' => true,
                     'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                 ]
             );
+
 
             if ($draftPath) {
                 $dropdown->addChild(
