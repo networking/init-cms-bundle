@@ -554,7 +554,7 @@ abstract class MediaAdmin extends Admin
             $providerName = $this->getRequest()->get('provider');
             if ($this->getRequest()->isMethod('POST') && !$this->getRequest()->get('oneuploader')) {
                 $uniqid = $this->getUniqid();
-                if(array_key_exists($this->getRequest()->get($uniqid, []), 'providerName')){
+                if(array_key_exists('providerName', $this->getRequest()->get($uniqid, []))){
                     $media->setProviderName($this->getRequest()->get($uniqid)['providerName']);
                 }
             }
