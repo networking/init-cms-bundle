@@ -5,18 +5,14 @@
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        <div class="modal-dialog modal-full">
-            <div class="modal-content">
                 <form class="form-horizontal"
-                      action="{{ admin.generateUrl(url, {'id': admin.id(object),'uniqid': admin.uniqid, 'classType': object.classType}) }}"
+                      action="{{ admin.generateUrl(url, {'id': admin.id(object),'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
                         {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
                       method="POST">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}
                             - {{ render_content_type_name(object) }}</h4>
                     </div>
-                    <div class="modal-body">
                         {% if form.vars.errors|length > 0 %}
                                 {{ form_errors(form) }}
                         {% endif %}
@@ -29,11 +25,9 @@
                             {% endfor %}
                         {% endfor %}
                         {{ form_rest(form) }}
-                    </div>
                     {% block formactions %}
                         {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal"
+                            <button class="btn btn-light cancel"
                                     aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
                             {% if admin.id(object) %}
                                 <button class="btn btn-primary"
@@ -42,10 +36,7 @@
                                 <button class="btn btn-primary"
                                         name="btn_update">{{ 'button.save'|trans({}, 'PageAdmin') }}</button>
                             {% endif %}
-                        </div>
                     {% endblock formactions %}
                 </form>
-            </div>
-        </div>
     {% endif %}
 {% endblock %}

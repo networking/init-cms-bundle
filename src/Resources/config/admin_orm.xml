@@ -47,7 +47,6 @@
             <argument>Networking\InitCmsBundle\Entity\LayoutBlock</argument>
             <argument>NetworkingInitCmsBundle:LayoutBlock</argument>
             <argument type="service" id="networking_init_cms.page_manager"/>
-            <argument type="service" id="networking_init_cms.layout_block_form_listener"/>
             <argument type="service" id="jms_serializer.serializer"/>
             <argument type="service" id="networking_init_cms.admin.page"/>
             <call method="setSonataAnnotationReader">
@@ -56,8 +55,7 @@
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="content.title"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+            <tag name="sonata.admin" manager_type="orm" label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>
 

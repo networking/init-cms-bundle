@@ -10,8 +10,10 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use App\Entity\Page;
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
+use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -547,7 +549,7 @@ class PageAdminController extends CRUDController
         if ($id === null) {
             $id = $request->get($this->admin->getIdParameter());
         }
-
+        /** @var Page $object */
         $object = $this->admin->getObject($id);
 
         if (!$object) {
@@ -619,15 +621,14 @@ class PageAdminController extends CRUDController
         $page = $this->admin->getObject($id);
 
         $layoutBlocks = $page->getLayoutBlock();
-
+        $this->admin->setSubject($page);
         $form = $this->admin->getForm();
         $form->setData($page);
-
-        $form->handleRequest($request);
-
+        $form->submit($request->get($form->getName()), false);
         $response = new Response();
 
         if ($form->isSubmitted()) {
+
             if ($form->isValid()) {
                 $page->setStatus(PageInterface::STATUS_DRAFT);
                 $page->setUpdatedAt();
@@ -643,7 +644,7 @@ class PageAdminController extends CRUDController
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
         return $this->renderWithExtraParams(
-            '@NetworkingInitCms/PageAdmin/page_settings_edit.html.twig',
+            '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig',
             [
                 'form' => $view,
                 'object' => $page,
@@ -712,27 +713,11 @@ class PageAdminController extends CRUDController
      */
     protected function getAjaxEditResponse(Form $form, PageInterface $page)
     {
-        $view = $form->createView();
-
-        // set the theme for the current Admin Form
-        $this->setFormTheme($view, $this->admin->getFormTheme());
-
-        $pageSettingsHtml = $this->renderView(
-            '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig',
-            [
-                'action' => 'edit',
-                'form' => $view,
-                'object' => $page,
-                'admin' => $this->admin,
-                'admin_pool' => $this->get('sonata.admin.pool'),
-            ]
-        );
 
         $pageStatusSettingsHtml = $this->renderView(
             '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig',
             [
                 'action' => 'edit',
-                'form' => $view,
                 'object' => $page,
                 'admin' => $this->admin,
                 'admin_pool' => $this->get('sonata.admin.pool'),
@@ -748,7 +733,6 @@ class PageAdminController extends CRUDController
                 'message' => $this->translate('info.page_settings_updated'),
                 'pageStatus' => $this->translate($page->getStatus()),
                 'pageStatusSettings' => $pageStatusSettingsHtml,
-                'pageSettings' => $pageSettingsHtml,
             ]
         );
     }

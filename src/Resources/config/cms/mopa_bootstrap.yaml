@@ -11,6 +11,7 @@ mopa_bootstrap:
             widget_add_btn:
                 icon: plus-sign
     icons:
+        icon_set: 'fontawesome4'
         # Icon set to use: ['glyphicons','fontawesome','fontawesome4']
         #show_legend: false # default is true
         #show_child_legend: false # default is true

@@ -10,51 +10,16 @@ file that was distributed with this source code.
 #}
 {% autoescape false %}
     <script type="text/javascript">
-
-
-        function start_save_page_settings(link) {
-            link.onclick = null;
-
-            // add the $ event to the a element
-            $(link)
-                .click(update_page_settings)
-                .trigger('click')
-            ;
-            return false;
-        }
-
-        function getPageSettingsEditForm(url) {
-            $.ajax({
-                url: url,
-                dataType: 'html',
-                success: function (html) {
-                    var pageSettingModal = $('#pageSettingsModal');
-                    pageSettingModal.html(html).modal('show');
-                    pageSettingModal.on('hide.bs.modal', function (e) {
-                        if ($(e.target).attr('id') === pageSettingModal.attr('id')) {
-                            $('form', '#pageSettingsModal').unbind('submit');
-                        }
-                    });
-                    $('form', '#pageSettingsModal').bind('submit', updatePageSettings);
-
-                }
-            })
-
-        }
-
         function  updatePageSettings(event) {
             event.preventDefault();
             event.stopPropagation();
             var form = $(this);
-            var btn = $('#pageSettingsSubmit');
-            btn.button('loading');
             $(form).ajaxSubmit({
                 url: form.action,
                 type: "POST",
                 dataType: 'json',
                 data: {_xml_http_request: true},
                 success: function (xhr) {
-                    btn.button('reset');
                     var pageStatus = $('.page_status');
                     if (xhr.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
                         pageStatus.addClass('color-draft');
@@ -65,19 +30,44 @@ file that was distributed with this source code.
 
                     pageStatus.html(xhr.pageStatus);
                     $('.page_title').html(xhr.title);
-                    $('#pageSettings').html(xhr.pageSettings);
                     $('#pageStatusSettings').html(xhr.pageStatusSettings);
-                    $('#pageSettingsModal').html('');
-                    $('#pageSettingsModal').modal('hide');
-
                     reloadLayoutBlocks();
-
                     createInitCmsMessageBox(xhr.messageStatus, xhr.message);
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    btn.button('reset');
-                    $('#pageSettingsModal').html(xhr.responseText);
-                    $('form', '#pageSettingsModal').bind('submit', updatePageSettings);
+                    $('#page_settings').html(xhr.responseText);
+                    $('form', '#page_settings').bind('submit', updatePageSettings);
+                }
+            });
+        };
+
+        function  updateMetaSettings(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var form = $(this);
+            $(form).ajaxSubmit({
+                url: form.action,
+                type: "POST",
+                dataType: 'json',
+                data: {_xml_http_request: true},
+                success: function (xhr) {
+                    var pageStatus = $('.page_status');
+                    if (xhr.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
+                        pageStatus.addClass('color-draft');
+                    } else {
+                        pageStatus.removeClass('color-draft');
+                    }
+
+
+                    pageStatus.html(xhr.pageStatus);
+                    $('.page_title').html(xhr.title);
+                    $('#pageStatusSettings').html(xhr.pageStatusSettings);
+                    reloadLayoutBlocks();
+                    createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    $('#meta_settings').html(xhr.responseText);
+                    $('form', '#meta_settings').bind('submit', updateMetaSettings);
                 }
             });
         };
@@ -99,6 +89,10 @@ file that was distributed with this source code.
         }
 
         (function ($) {
+
+            $('form', '#page_settings').bind('submit', updatePageSettings);
+            $('form', '#meta_settings').bind('submit', updateMetaSettings);
+
             $('body').on('change', '#{{ admin.uniqid }}_locale', function () {
                 var locale = $(this).val();
                 $.getJSON(
@@ -140,11 +134,7 @@ file that was distributed with this source code.
                 } else {
                     window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
                 }
-            }).on('click', '#editPageSettings', function (event) {
-                event.preventDefault();
-                getPageSettingsEditForm($(this).data('url'));
             });
-
 
 
             {% if not app.user.getAdminSetting('menuAdmin.show_now_confirm_dialog') %}

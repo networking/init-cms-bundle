@@ -47,7 +47,6 @@ abstract class LayoutBlockAdmin extends BaseAdmin
 
     protected $pageManager;
 
-    protected $layoutBlockFormListener;
     protected $serializer;
     protected $pageAdmin;
 
@@ -56,13 +55,11 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         $class,
         $baseControllerName,
         PageManagerInterface $pageManager,
-        LayoutBlockFormListener $layoutBlockFormListener,
         SerializerInterface $serializer,
         PageAdmin $pageAdmin
     ) {
 
         $this->pageManager = $pageManager;
-        $this->layoutBlockFormListener = $layoutBlockFormListener;
         $this->serializer = $serializer;
         $this->pageAdmin = $pageAdmin;
 
@@ -86,19 +83,9 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        if ($this->getSubject()) {
-            $classType = $this->getSubject()->getClassType();
-        } else {
-            $classType = $this->getRequest()->get('classType');
-        }
-        $this->layoutBlockFormListener->setAdmin($this);
-        $this->layoutBlockFormListener->setContentType($classType);
-        $formMapper->getFormBuilder()->addEventSubscriber($this->layoutBlockFormListener);
-
         $transformer = new PageToIdTransformer($this->pageManager);
-
+        parent::configureFormFields($formMapper);
         $formMapper
-//            ->add('isActive', CheckboxType::class, ['layout' => 'horizontal', 'required' => false])
             ->add(
                 'zone',
                 HiddenType::class
@@ -108,7 +95,6 @@ abstract class LayoutBlockAdmin extends BaseAdmin
                     ->addModelTransformer($transformer),
                 HiddenType::class
             )
-            ->add('classType', HiddenType::class)
             ->add('sortOrder', HiddenType::class)
         ;
     }

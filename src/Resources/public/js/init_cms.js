@@ -1,8 +1,21 @@
+
+
 function createInitCmsMessageBox(status, message) {
     status = status == 'error'?'danger':status;
-    var messageHtml = '<div class="alert alert-' + status + '"><a class="close" data-dismiss="alert" href="#">×</a>' + message + '</div>';
 
-    jQuery('.notice-block').html(messageHtml);
+    var messageHtml = '<div class="toast" role="alert" aria-live="polite" aria-atomic="true" data-delay="3000" style="position: absolute; top: 0; right: 0; width: 300px">\n' +
+        '    <div class="toast-header">\n' +
+        '      <button type="button" class="ml-auto mb-1 close" data-dismiss="toast" aria-label="Close">\n' +
+        '        <span aria-hidden="true">&times;</span>\n' +
+        '      </button>\n' +
+        '    </div>\n' +
+        '    <div class="toast-body bg-lighter-'+status+'  text-'+status+'">\n' +
+            message +
+        '    </div>\n' +
+        '  </div>';
+
+    jQuery('#toaster-panel').html(messageHtml);
+    $('.toast').toast('show');
 }
 
 function trim(str) {
@@ -41,18 +54,6 @@ function uploadError(xhr) {
     // Chrome 1+
     var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 
-    var noticeBlock = $('.notice-block');
-
-    noticeBlock.on('DOMNodeInserted', function () {
-        $(this).fadeIn().delay('3000').fadeOut(500);
-    });
-
-    noticeBlock.each(function (k, e) {
-        if (trim($(e).html()) != '') {
-            $(e).fadeIn().delay('3000').fadeOut(500);
-        }
-    });
-
     $('.show-tooltip, [data-toggle="tooltip"]').tooltip({placement:'bottom', container: 'body', delay:{ show:800, hide:100 }});
 
     var openModals = [];
@@ -89,50 +90,39 @@ function uploadError(xhr) {
     });
 
     // handle the #toggle click event
-    $("#toggleNav").on("click", function () {
-        // apply/remove the active class to the row-offcanvas element
-        $(".row-offcanvas").toggleClass("active");
-        return false;
-    });
-    var toggleWidthBtn = $('#toggleWidth');
-    var resizeIcon = toggleWidthBtn.find('i.glyphicon');
-    var initialSizeSmall = resizeIcon.hasClass('glyphicon-resize-full');
+    $('#body-row .collapse').collapse('hide');
 
-
-    toggleWidthBtn.on('click', function(){
-        if(resizeIcon.hasClass('glyphicon-resize-full')){
-            resizeWindowFull();
-            $.ajax('/admin/set_admin_portal_width', {data: {'size': 'full'}});
-        }else{
-            resizeWindowSmall();
-            $.ajax('/admin/set_admin_portal_width', {data: {'size': 'small'}});
-        }
-        return false;
+// Collapse click
+    $('[data-toggle=sidebar-colapse]').click(function() {
+        SidebarCollapse();
     });
 
+    function SidebarCollapse () {
+        $('.menu-collapsed').toggleClass('d-none');
+        $('.sidebar-submenu').toggleClass('d-none');
+        $('.submenu-icon').toggleClass('d-none');
+        $('.cms-brand').toggleClass('d-none');
+        $('#sidebar-container').toggleClass('sidebar-expanded sidebar-collapsed');
 
-
-    $( window ).resize(function() {
-        if($( window ).width() < 993 && initialSizeSmall){
-            resizeWindowFull();
+        // Treating d-flex/d-none on separators with title
+        var SeparatorTitle = $('.sidebar-separator-title');
+        if (SeparatorTitle.hasClass('d-flex')) {
+            SeparatorTitle.removeClass('d-flex');
+        } else {
+            SeparatorTitle.addClass('d-flex');
         }
-
-        if($( window ).width() > 994 && initialSizeSmall){
-            resizeWindowSmall();
-        }
-    });
-
-    function resizeWindowFull(){
-        $(".container").switchClass('container', "container-fluid", 500, "easeOutSine");
-        resizeIcon.removeClass('glyphicon-resize-full').addClass('glyphicon-resize-small');
     }
 
-    function resizeWindowSmall(){
-        $(".container-fluid").switchClass('container-fluid', "container", 500, "easeOutSine");
-        resizeIcon.removeClass('glyphicon-resize-small').addClass('glyphicon-resize-full');
-    }
 
-    $(window).trigger('resize');
+
+    // $('body').on('mouseenter', '#sidebar-container.sidebar-collapsed li', function (){
+    //     $('#sidebar-container').addClass('sidebar-hover');
+    //     SidebarCollapse();
+    // }).on('mouseleave', '#sidebar-container.sidebar-hover li', function (){
+    //     $('#sidebar-container').removeClass('sidebar-hover');
+    //     SidebarCollapse();
+    // })
+
 })(jQuery);
 
 $.fn.select2.defaults.set( "theme", "bootstrap" );

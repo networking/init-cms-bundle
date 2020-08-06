@@ -32,8 +32,8 @@ file that was distributed with this source code.
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4>{{ 'title.delete_translation_link'|trans({}, admin.translationDomain) }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
                 {% else %}
                     <h1>{{ 'title.delete_translation_link'|trans({}, admin.translationDomain) }}</h1>
@@ -48,7 +48,7 @@ file that was distributed with this source code.
                           action="{{ admin.generateUrl('unlink', {id: page.id, translationId: translationId}) }}">
                         <input type="hidden" value="DELETE" name="_method"/>
                         {% if app.request.isxmlhttprequest %}
-                            <button class="btn btn-default " data-dismiss="modal"
+                            <button class="btn btn-light " data-dismiss="modal"
                                     aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                             <input type="submit" class="btn btn-danger"
                                    value="{{ 'link.unlink'|trans({}, admin.translationDomain) }}"/>

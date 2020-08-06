@@ -24,11 +24,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block sonata_admin_orm_one_to_many_widget %}
-    {% if sonata_admin.field_description.name == 'layoutBlock' %}
-        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
-    {% else %}
-        {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_many.html.twig' %}
-    {% endif %}
+    {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_many.html.twig' %}
 {% endblock %}
 
 {% block sonata_type_model_widget %}
@@ -82,7 +78,7 @@ file that was distributed with this source code.
                 &nbsp;
                 <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('list') }}"
                    onclick="return start_field_dialog_form_list_{{ id }}(this);"
-                   class="btn btn-default btn-sm sonata-ba-action"
+                   class="btn btn-light btn-sm sonata-ba-action"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
                         >
                     <i class="glyphicon glyphicon-list"></i>
@@ -560,6 +556,19 @@ file that was distributed with this source code.
 {% block date_widget %}
     {% apply spaceless %}
         {% if widget == 'single_text' %}
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                <div class="input-group-append">
+                    <span class="input-group-text">.00</span>
+                </div>
+            </div>
+
+
+
             {% if datepicker is defined %}
                 {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'calendar' %}
                 <div data-provider="datepicker" class="{{ attr.widget_class|default('') ~ ' input-group date' }}"
@@ -569,9 +578,13 @@ file that was distributed with this source code.
                            {% endif %}type="text" {% if required %} required="required"{% endif %}
                             {{ block('widget_attributes') }} value="{{ value }}"
                     >
-                    <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    <span class="input-group-append">
+                        <span class="input-group-text">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    </span>
                     {% if widget_reset_icon is defined %}
-                        <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                        <span class="input-group-append">
+                            <span class="input-group-text">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                        </span>
                     {%  endif %}
                 </div>
                 <script type="text/javascript">
@@ -580,7 +593,8 @@ file that was distributed with this source code.
                             autoclose: true,
                             minView: 'month',
                             startView: 'month',
-                            todayBtn: true
+                            todayBtn: true,
+                            fontAwesome: true
                         });
                     });
                 </script>
@@ -611,9 +625,13 @@ file that was distributed with this source code.
                            type="text" {% if required %} required="required"{% endif %}
                             {{ block('widget_attributes') }} value="{{ value }}"
                     >
-                    <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    <span class="input-group-append">
+                        <span class="input-group-text">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    </span>
                     {% if widget_reset_icon is defined %}
-                        <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                        <span class="input-group-append">
+                            <span class="input-group-text">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                        </span>
                     {%  endif %}
                 </div>
                 <script type="text/javascript">
@@ -623,7 +641,8 @@ file that was distributed with this source code.
                             formatViewType: 'time',
                             maxView: 'day',
                             minView: 'hour',
-                            startView: 'day'
+                            startView: 'day',
+                            fontAwesome: true
                         });
                     });
                 </script>
@@ -651,7 +670,7 @@ file that was distributed with this source code.
     {% apply spaceless %}
         {% if widget == 'single_text' %}
             {% if datetimepicker is defined %}
-                {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'th' %}
+                {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'calendar' %}
                 <div data-provider="datetimepicker" class="input-group date"
                      data-link-field="{{ id }}"  data-date-format="dd.mm.yyyy hh:ii"
                      data-link-format="dd.mm.yyyy hh:ii" data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
@@ -659,16 +678,21 @@ file that was distributed with this source code.
                            type="text" {% if required %} required="required"{% endif %} {{ block('widget_attributes') }}
                            value="{% if value %}{{ value }}{% endif %}"
                     >
-                    <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    <span class="input-group-append">
+                        <span class="input-group-text">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
+                    </span>
                     {% if widget_reset_icon is defined %}
-                        <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                        <span class="input-group-append">
+                            <span class="input-group-text">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
+                        </span>
                     {%  endif %}
                 </div>
                 <script type="text/javascript">
                     jQuery(document).ready(function () {
                         jQuery('[data-link-field="{{ id }}"]').datetimepicker({
                             autoclose: true,
-                            todayBtn: true
+                            todayBtn: true,
+                            fontAwesome: true
                         });
                     });
                 </script>
@@ -723,7 +747,7 @@ file that was distributed with this source code.
             {% set attr = attr|merge({class: 'row' ~ attr.class} ) %}
             <div {{ block('widget_container_attributes') }}>
                 {% for key, child in form %}
-                    <div class="col-sm-3">
+                    <div class="col-4">
                         <label class="radio-inline">
                             {{ form_widget(child, {'horizontal_label_class': horizontal_label_class, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class, 'attr': {'class': attr.widget_class|default('') }}
                             ) }}
@@ -815,7 +839,7 @@ file that was distributed with this source code.
         <span id="field_actions_{{ id }}" class="field-actions">
                 <a href="{{ admin.generateUrl('list', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
                    onclick="return open_media_list_{{ id }}(this);"
-                   class="btn btn-default btn-sm sonata-ba-action"
+                   class="btn btn-light btn-sm sonata-ba-action"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
                         >
                     <i class="glyphicon glyphicon-list"></i>

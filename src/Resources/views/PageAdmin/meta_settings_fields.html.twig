@@ -1,0 +1,16 @@
+<form method="post" novalidate
+      action="{{ admin.generateUrl('editPageSettings', {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}">
+    {% if form.vars.errors|length > 0 %}
+        <div class="sonata-ba-form-error">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+    {% set form_group = admin.formgroups.meta_settings %}
+    {% for field_name in form_group.fields %}
+        {% if admin.formfielddescriptions[field_name] is defined %}
+            {{ form_row(form[field_name], {'horizontal': true}) }}
+        {% endif %}
+    {% endfor %}
+    <input name="{{ form['_token'].vars.full_name }}" type="hidden" value="{{ form['_token'].vars.data }}" />
+    <input type="submit" class="btn btn-primary" name="btn-meta-settings" id="metaSettingsSubmit" value="{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}" />
+</form>

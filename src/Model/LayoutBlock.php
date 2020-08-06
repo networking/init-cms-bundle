@@ -238,7 +238,7 @@ class LayoutBlock implements LayoutBlockInterface
      */
     public function getClassType()
     {
-        return $this->classType;
+        return get_called_class();
     }
 
     /**

@@ -4,13 +4,5 @@ Networking\InitCmsBundle\Entity\BaseText:
     text:
       type: text
       nullable: true
-    createdAt:
-      type: datetime
-      column: created_at
-    updatedAt:
-      type: datetime
-      column: updated_at
-  lifecycleCallbacks:
-    prePersist: [ prePersist ]
-    preUpdate: [ preUpdate ]
+
 

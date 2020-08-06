@@ -11,8 +11,11 @@
 
 namespace Networking\InitCmsBundle\DependencyInjection;
 
+use App\Entity\GalleryView;
+use Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
+use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Sonata\CoreBundle\Exception\InvalidParameterException;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -40,26 +43,27 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $bundles = $container->getParameter('kernel.bundles');
 
         $configs = $container->getExtensionConfig($this->getAlias());
+        $initCMSConfig = $this->processConfiguration(new Configuration(), $configs);
+
         $isLanguageSet = false;
         $isCacheActive = false;
-        foreach ($configs as $config){
-            if(isset($config['languages'])){
-                $isLanguageSet = true;
-            }
-            if(isset($config['cache']) && $config['cache']['activate'] === true){
-                $isCacheActive = true;
-            }
+        if(isset($initCMSConfig['languages'])){
+            $isLanguageSet = true;
         }
 
+        if(isset($initCMSConfig['cache']) && $initCMSConfig['cache']['activate'] === true){
+            $isCacheActive = true;
+        }
         if(!$isLanguageSet){
             $config = ['languages' => [['label' => 'English', 'short_label' => '%env(LOCALE)%', 'locale' => '%env(LOCALE)%']]];
             $container->prependExtensionConfig($this->getAlias(), $config);
         }
 
+
         if(isset($bundles['LexikTranslationBundle'])){
-            $configs = $container->getExtensionConfig('lexik_translation');
+            $lexikConfig = $container->getExtensionConfig('lexik_translation');
             $fallbackLocaleSet = $managedLocalesSet = false;
-            foreach ($configs as $config){
+            foreach ($lexikConfig as $config){
                 if(isset($config['fallback_locale'])){
                     $fallbackLocaleSet = true;
                 }
@@ -81,11 +85,11 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         }
 
         if(isset($bundles['FrameworkBundle'])){
-            $configs = $container->getExtensionConfig('framework');
+            $frameworkConfig = $container->getExtensionConfig('framework');
             $templatingEnginesSet =  false;
             $pageCacheSet = false;
             $pools = [];
-            foreach ($configs as $config){
+            foreach ($frameworkConfig as $config){
                 if(isset($config['templating'])){
                     if(isset($config['templating']['engines'])){
                         $templatingEnginesSet = true;
@@ -161,6 +165,15 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
+
+        $layoutBlockAdmin = $container->getDefinition('networking_init_cms.admin.layout_block');
+        $subClasses = [];
+        foreach ($config['content_types'] as $contentType)
+        {
+            $subClasses[$contentType['class']] = $contentType['class'];
+        }
+        $layoutBlockAdmin->addMethodCall('setSubClasses', [$subClasses] );
+
         $container->setParameter(
             'networking_init_cms.translation_fallback_route',
             $config['translation_fallback_route']
@@ -282,6 +295,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.admin.layout_block.class', $config['class']['layout_block']);
         $container->setParameter('networking_init_cms.admin.user.class', $config['class']['user']);
         $container->setParameter('networking_init_cms.admin.menu_item.class', $config['class']['menu_item']);
+        $container->setParameter('networking_init_cms.admin.layout_block.class', $config['class']['layout_block']);
 
         // manager configuration
         $container->setParameter('networking_init_cms.manager.page.class', $config['class']['page']);
@@ -289,23 +303,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.manager.user.class', $config['class']['user']);
         $container->setParameter('networking_init_cms.manager.menu_item.class', $config['class']['menu_item']);
 
-        switch ($config['db_driver']) {
-            case 'orm':
-                $container->setParameter(
-                    'networking_init_cms.admin.layout_block.class',
-                    'Networking\InitCmsBundle\Entity\LayoutBlock'
-                );
-                break;
-            case 'mongodb':
-                $container->setParameter(
-                    'networking_init_cms.admin.layout_block.class',
-                    'Networking\InitCmsBundle\Docment\LayoutBlock'
-                );
-                break;
-            default:
-                throw new \InvalidArgumentException('db driver must be either orm or mongodb');
-                break;
-        }
     }
 
     /**
@@ -344,6 +341,8 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $baseNameSpace = 'Networking\\InitCmsBundle\\Entity';
 
         $collector = DoctrineCollector::getInstance();
+
+        $collector->addDiscriminator(GalleryView::class, 'gallery', LayoutBlock::class);
 
         $collector->addAssociation(
             $config['class']['page'],
@@ -434,6 +433,9 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
             ]
         );
+
+
+
 
         //PageSnapshot
         $collector->addAssociation(

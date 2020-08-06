@@ -28,8 +28,8 @@ file that was distributed with this source code.
         <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4>{{ 'title.translation_link'|trans({'%object%': page, '%language%': language}, admin.translationDomain) }}</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
     {% else %}
         <h1>{{ 'title.translation_link'|trans({'%object%': page, '%language%': language}, admin.translationDomain) }}</h1>
@@ -80,7 +80,7 @@ file that was distributed with this source code.
                 {#<input type="hidden" value="DELETE" name="_method" />#}
 
                 {% if app.request.isxmlhttprequest %}
-                    <button class="btn btn-default " data-dismiss="modal"
+                    <button class="btn btn-light " data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                 {% else %}
                     <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">

@@ -1,0 +1,15 @@
+@import "variables";
+@import "../vendor/bootstrap/scss/bootstrap";
+@import "../vendor/fontawesome/scss/fontawesome";
+@import "../vendor/fontawesome/scss/solid";
+@import "../vendor/fontawesome/scss/regular";
+@import "../vendor/fontawesome/scss/brands";
+@import "initcms_variables";
+@import "admin";
+@import "forms";
+.initcms{
+  @import "admin-navbar";
+}
+input.cke_dialog_ui_input_text{
+  height:24px;
+}

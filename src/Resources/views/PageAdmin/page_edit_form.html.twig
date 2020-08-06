@@ -1,164 +1,86 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 {% block form %}
-    {% set url = admin.id(object) ? 'edit' : 'create' %}
-
-    {% if not admin.hasRoute(url) %}
-        <div>
-            {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
-        </div>
-    {% elseif app.request.isxmlhttprequest %}
-        {% include '@NetworkingInitCms/PageAdmin/ajax_page_settings.html.twig' %}
-    {% else %}
-
-        {% if form.vars.errors|length > 0 %}
-            <div class="sonata-ba-form-error">
-                {{ form_errors(form) }}
+<div class="row">
+    <div class="col-5">
+        <div class="row">
+            <div class="col-10">
+                <h1 class="break-word">
+                    <span class="page_title">{{ admin.toString(object) }} </span> <span class="info-soft font-medium">({{ language }})</span>
+                    <a class="link-underlined font-small font-light"
+                       href="{{ admin.generateUrl('list', {'locale': object.locale}) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                </h1>
             </div>
-        {% endif %}
-
-        {% block sonata_pre_fieldsets %}{% endblock %}
-
-        <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-10">
-                    <h1 class="break-word">
-                        {% if block('title') is not empty %}
-                            {{ block('title')|raw }}
-                        {% elseif action is defined %}
-                            {% for label, uri in admin.breadcrumbs(action) %}
-                                {% if loop.last %}
-                                    {{ label|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                        {% if action is defined and action == 'edit' %}
-                            {% set settings = {} %}
-                            {% if object.locale %}
-                                {% set settings = {'locale': object.locale} %}
-                            {% endif %}
-
-                            <a class="link-underlined font-small font-light"
-                               href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                        {% endif %}
-                    </h1>
+            <div class="col-2">
+                <div class="float-right">
+                    <a href="{{ url('networking_init_cms_help', {'adminCode':admin.code,'action':action}) }}"
+                       target="_blank">
+                        <div class="info_button_medium"></div>
+                    </a>
                 </div>
-                <div class="col-md-2">
-                    {% if block('help_text') is empty %}
-                        {% if admin is not defined %}
-                            {% set adminCode = 'dashboard' %}
-                            {% set actionHelp = '' %}
-                        {% else %}
-                            {% set adminCode = admin.code %}
-                            {% set actionHelp = action %}
-                        {% endif %}
-                        <div class="level-headline-icon pull-right"><a
-                                    href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
-                                    target="_blank">
-                                <div class="info_button_medium"></div>
-                            </a></div>
+            </div>
+            <div class="col-12">
+                <div id="pageStatusSettings" class="col">
+                    {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
+                </div>
+            </div>
+            <div class="col-12">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#page_content">Page Content</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#meta_settings">SEO and Meta settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#page_settings">Page settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#translations">Translations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#menu">Menus</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="page_content" role="tabpanel">
+                        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
+                    </div>
+                    <div class="tab-pane" id="meta_settings" role="tabpanel">
+                        {% include '@NetworkingInitCms/PageAdmin/meta_settings_fields.html.twig' %}
+                    </div>
+                    <div class="tab-pane" id="page_settings" role="tabpanel">
+                        {% include '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig' %}
+                    </div>
+                    {% if admin.translationLanguages.count() %}
+                        <div class="tab-pane" id="translations" role="tabpanel">
+                            {% include '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig' %}
+                        </div>
                     {% endif %}
-                </div>
-            </div>
-
-            {% set form_group = admin.formgroups.page_content %}
-            {% for field_name in form_group.fields %}
-                {% if admin.formfielddescriptions[field_name] is defined %}
-                    {{ form_row(form[field_name]) }}
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="col-md-4 right-bar">
-            {# page status panel #}
-            <div id="pageStatusSettings">
-                {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
-            </div>
-
-            <div id="accordion">
-                {% if admin.translationLanguages.count() %}
-                    {# translation panel #}
-                    <div class="panel-group" id="accordion1">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <a data-parent="#accordion1" data-toggle="collapse" href="#collapseOne">
-                                    <div class="accordion-caret"><b class="caret"></b></div>
-                                    {{ 'legend.translations'|trans({}, admin.translationDomain) }}
-                                </a>
-                            </div>
-                            <div id="collapseOne" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <div id="translationSettings">
-                                        <p class="info-soft">{% include '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig' %}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="tab-pane" id="menu" role="tabpanel">
+                        {% include '@NetworkingInitCms/PageAdmin/page_menu_settings.html.twig' %}
                     </div>
-                {% endif %}
-                {# menu panel #}
-                <div class="panel-group" id="accordion2">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a data-parent="#accordion2" data-toggle="collapse" href="#collapseTwo">
-                                <div class="accordion-caret"><b class="caret"></b></div>
-                                {{ 'legend.menu_connections'|trans({}, admin.translationDomain) }}
-                            </a>
-                        </div>
-                        <div id="collapseTwo" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                {% include '@NetworkingInitCms/PageAdmin/page_menu_settings.html.twig' %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {# page settings panel #}
-                <div class="panel-group" id="accordion3">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a data-parent="#accordion3" data-toggle="collapse" href="#collapseThree">
-                                <div class="accordion-caret"><b class="caret"></b></div>
-                                {{ 'legend.page_settings'|trans({}, admin.translationDomain) }}
-                            </a>
-                        </div>
-                        <div id="collapseThree" class="panel-collapse collapse in">
-                            <div class="panel-body" style="min-height:70px;">
-                                <i id="editPageSettings"
-                                   data-url="{{ admin.generateUrl('editPageSettings', {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
-                                   class="pull-right btn btn-default btn-sm glyphicon glyphicon-pencil"></i>
 
-                                <div id="pageSettings">
-                                    {% include '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig' %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        {% block sonata_post_fieldsets %}{% endblock %}
-
-        <!-- start modal page form -->
-        <div class="modal form-horizontal" id="pageSettingsModal"
-             role="dialog" aria-labelledby="{{ "legend.page_settings"|trans({}, admin.translationDomain) }}"
-             aria-hidden="true">
-
-        </div>
-        <!-- end modal page form -->
-        {% jsblock 'addToBottom' %}
-        {% include '@NetworkingInitCms/PageAdmin/page_edit_form_script.html.twig' with {'admin': admin, 'id': admin.id(object)} %}
-        {% include '@NetworkingInitCms/PageAdmin/page_translation_script.html.twig' with {'admin': admin} %}
-        {% include '@NetworkingInitCms/PageAdmin/page_status_script.html.twig' with {'admin': admin} %}
-        {% jsblock 'addToBottomEnd' %}
-
-
-    {% endif %}
+    <div class="col-7" style="min-height: 100vh">
+        <iframe id="pagePreview" width="100%" height="100%"
+                src="{{ path('networking_init_cms_page_preview', {'page': object.id}) }}"></iframe>
+    </div>
+</div>
+    <!-- end modal page form -->
+    {% jsblock 'addToBottom' %}
+    {% include '@NetworkingInitCms/PageAdmin/page_edit_form_script.html.twig' with {'admin': admin, 'id': admin.id(object)} %}
+    {% include '@NetworkingInitCms/PageAdmin/page_translation_script.html.twig' with {'admin': admin} %}
+    {% include '@NetworkingInitCms/PageAdmin/page_status_script.html.twig' with {'admin': admin} %}
+    {% jsblock 'addToBottomEnd' %}
 {% endblock %}

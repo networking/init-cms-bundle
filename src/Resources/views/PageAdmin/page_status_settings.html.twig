@@ -8,70 +8,85 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-<h4 class="pull-left">{{ 'legend.page_status'|trans({}, admin.translationDomain) }} -
-<span class="color-{{ object.isPublished()?'published':'draft' }} page_status"> {{ object.statusLabel|trans({}, admin.translationDomain) }}</span>
-</h4>
-<div class="clearfix"><br/></div>
 
-{% if not object.isPublished %}
-    <label class="checkbox checkbox-inline">
-        <input type="checkbox" id="review_status" name="review_status"
-               {% if object.isReview %}checked="checked"{% endif %}/>
-        {{ 'button.review'|trans({}, admin.translationDomain) }}</label>
 
-{% endif %}
-<hr/>
-{% if object.isPublished or object.isOffline %}
-    <a href="{{ admin.generateUrl('draft', {id: object.id}) }}"
-       class="btn btn-warning btn-sm {% if object.isDraft() %}disabled{% endif %}"
-       {% if object.isDraft() %}onclick="return false"{% endif %}>
-        {{ 'button.draft'|trans({}, admin.translationDomain) }}
-    </a>
-{% endif %}
+<div class="row">
+    <div class="col">
+        <h4 class="pull-left">{{ 'legend.page_status'|trans({}, admin.translationDomain) }} -
+            <span class="color-{{ object.isPublished()?'published':'draft' }} page_status"> {{ object.statusLabel|trans({}, admin.translationDomain) }}</span>
+        </h4>
+        <div class="clearfix"><br/></div>
+        {% if not object.isPublished %}
+            <label class="checkbox checkbox-inline">
+                <input type="checkbox" id="review_status" name="review_status"
+                       {% if object.isReview %}checked="checked"{% endif %}/>
+                {{ 'button.review'|trans({}, admin.translationDomain) }}</label>
 
-{% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
-    <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
-       class="btn btn-default btn-sm {% if object.isPublished() %}disabled{% endif %}"
-       {% if object.isPublished() %}onclick="return false"{% endif %}>
-        {{ 'button.publish'|trans({}, admin.translationDomain) }}
-    </a>
-{% endif %}
+        {% endif %}
+    </div>
+    <div class="col">
+        {% if object.isPublished or object.isOffline %}
+            <a href="{{ admin.generateUrl('draft', {id: object.id}) }}"
+               class="btn btn-warning btn-sm {% if object.isDraft() %}disabled{% endif %}"
+               {% if object.isDraft() %}onclick="return false"{% endif %}>
+                {{ 'button.draft'|trans({}, admin.translationDomain) }}
+            </a>
+        {% endif %}
 
-{% if not object.isPublished %}
-    {{ 'or'|trans({}, admin.translationDomain) }}
-    {% set path = path(object.route()) %}
-    <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode}) }}"
-       class="link-underlined">
-        {{ 'link.preview'|trans({}, admin.translationDomain) }}</a>
-{% endif %}
+        {% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
+            <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
+               class="btn btn-light btn-sm {% if object.isPublished() %}disabled{% endif %}"
+               {% if object.isPublished() %}onclick="return false"{% endif %}>
+                {{ 'button.publish'|trans({}, admin.translationDomain) }}
+            </a>
+        {% endif %}
 
-{% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
-    <br>
-    {{ 'or'|trans({}, admin.translationDomain) }}
-    <br>
-    <a href="{{ admin.generateUrl('offline', {id: object.id}) }}"
-       class="btn btn-default btn-sm {% if object.isPublished() %}disabled{% endif %}"
-       {% if object.isPublished() %}onclick="return false"{% endif %}>
-        {{ 'button.offline'|trans({}, admin.translationDomain) }}
-    </a>
-{% endif %}
+        {% if not object.isPublished %}
+            {{ 'or'|trans({}, admin.translationDomain) }}
+            {% set path = path(object.route()) %}
+            <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode}) }}"
+               class="link-underlined">
+                {{ 'link.preview'|trans({}, admin.translationDomain) }}</a>
+        {% endif %}
 
-{% if admin.lastEditedBy() %}
-<hr/>
-<p class="font-mini">{{ 'info.last_changed_by'|trans([], admin.translationDomain) }} {{ admin.lastEditedBy().username }} <span class="info-soft">{{ admin.lastEditedBy().loggedAt|date('H:i:s d.m.Y') }}</span></p>
-{% endif %}
+        {% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
+            <br>
+            {{ 'or'|trans({}, admin.translationDomain) }}
+            <br>
+            <a href="{{ admin.generateUrl('offline', {id: object.id}) }}"
+               class="btn btn-light btn-sm {% if object.isPublished() %}disabled{% endif %}"
+               {% if object.isPublished() %}onclick="return false"{% endif %}>
+                {{ 'button.offline'|trans({}, admin.translationDomain) }}
+            </a>
+        {% endif %}
+    </div>
+    <div class="col">
+        {% if admin.lastEditedBy() %}
+            <p class="font-mini">{{ 'info.last_changed_by'|trans([], admin.translationDomain) }} {{ admin.lastEditedBy().username }} <span class="info-soft">{{ admin.lastEditedBy().loggedAt|date('H:i:s d.m.Y') }}</span></p>
+        {% endif %}
 
-{% if not object.isPublished() and object.getSnapshot() %}
-    <hr/>
-    <p class="font-mini">
-    {{ 'info.last_published_version'|trans({'%date%':object.getSnapshot().snapshotDate|date("d.m.Y")}, admin.translationDomain)|raw }}<br/>
+        {% if not object.isPublished() and object.getSnapshot() %}
+            <hr/>
+            <p class="font-mini">
+                {{ 'info.last_published_version'|trans({'%date%':object.getSnapshot().snapshotDate|date("d.m.Y")}, admin.translationDomain)|raw }}<br/>
 
-        <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}" class="status-dialog-link link-nounderline">
-        {{ 'link.revert_to_publish'|trans({}, admin.translationDomain) }}</a> <span class="info-soft">({{ 'info.revert_to_publish'|trans({}, admin.translationDomain) }})</span><br/>
-        <a href="{{ path('networking_init_view_live', {'locale': object.locale, 'path': path | base64_encode}) }}"
-               class="link-nounderline">
-                {{ 'link.live'|trans({}, admin.translationDomain) }}</a>
-        </p>
-{% endif %}
-<div class="modal fade" tabindex="-1" role="dialog" id="status_dialog">
+                <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}" class="status-dialog-link link-nounderline">
+                    {{ 'link.revert_to_publish'|trans({}, admin.translationDomain) }}</a> <span class="info-soft">({{ 'info.revert_to_publish'|trans({}, admin.translationDomain) }})</span><br/>
+                <a href="{{ path('networking_init_view_live', {'locale': object.locale, 'path': path | base64_encode}) }}"
+                   class="link-nounderline">
+                    {{ 'link.live'|trans({}, admin.translationDomain) }}</a>
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="modal hide fade" tabindex="-1" role="dialog" id="status_dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    </div>
 </div>

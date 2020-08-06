@@ -159,4 +159,8 @@ networking_init_cms_page_url_json:
     path: /cms/pages/internal-url.json
     defaults: { _controller: Networking\InitCmsBundle\Controller\FrontendPageController::getJsonUrlsAction}
 
+networking_init_cms_page_preview:
+    path: /admin/page/preview/{page}
+    defaults: { _controller: Networking\InitCmsBundle\Controller\FrontendPageController::previewAction}
+
 

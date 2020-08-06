@@ -243,13 +243,6 @@ class PageHelper
      */
     public function makePageSnapshot(PageInterface $page)
     {
-        foreach ($page->getLayoutBlock() as $layoutBlock) {
-            $layoutBlockContent = $this->registry->getManagerForClass($layoutBlock->getClassType())->getRepository($layoutBlock->getClassType())->find(
-                $layoutBlock->getObjectId()
-            );
-            $layoutBlock->takeSnapshot($this->serializer->serialize($layoutBlockContent, 'json'));
-        }
-
         $pageSnapshotClass = $this->pageSnapshotManager->getClassName();
 
         /** @var \Networking\InitCmsBundle\Model\PageSnapshotInterface $pageSnapshot */
@@ -332,17 +325,6 @@ class PageHelper
 
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
-
-
-            $content = $om->getRepository($newLayoutBlock->getClassType())->find(
-                $newLayoutBlock->getObjectId()
-            );
-            $newContent = clone $content;
-
-            $om->persist($newContent);
-            $om->flush();
-
-            $newLayoutBlock->setObjectId($newContent->getId());
             $newLayoutBlock->setPage($pageCopy);
 
             $om->persist($newLayoutBlock);
@@ -390,17 +372,6 @@ class PageHelper
 
             /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
-
-
-            $content = $om->getRepository($newLayoutBlock->getClassType())->find(
-                $newLayoutBlock->getObjectId()
-            );
-            $newContent = clone $content;
-
-            $om->persist($newContent);
-            $om->flush();
-
-            $newLayoutBlock->setObjectId($newContent->getId());
             $newLayoutBlock->setPage($pageCopy);
 
             $om->persist($newLayoutBlock);

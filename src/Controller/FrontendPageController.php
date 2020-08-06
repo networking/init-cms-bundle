@@ -127,6 +127,7 @@ class FrontendPageController extends AbstractController
      */
     public function indexAction(Request $request)
     {
+
         /** @var PageSnapshotInterface $page */
         $page = $request->get('_content');
 
@@ -183,6 +184,38 @@ class FrontendPageController extends AbstractController
             );
             $response = new Response($html);
         }
+
+        if ($this->getPageHelper()->isAllowLocaleCookie() && !$this->getPageHelper()->isSingleLanguage()) {
+
+            $cookies = $this->pageHelper->setLocaleCookies($request->getLocale());
+            foreach ($cookies as $cookie){
+                $response->headers->setCookie($cookie);
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return array|bool|mixed|string|RedirectResponse|Response|null
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function previewAction(Request $request, $page)
+    {
+        /** @var Page $page */
+        $page = $this->pageManager->find($page);
+
+        $params = $this->getDraftParameters($request, $page);
+
+        $template = $page->getContentRoute()->getTemplate();
+
+        if ($params instanceof RedirectResponse) {
+            return $params;
+        }
+
+        $html = $this->renderView($template, $params);
+        $response = new Response($html);
 
         if ($this->getPageHelper()->isAllowLocaleCookie() && !$this->getPageHelper()->isSingleLanguage()) {
 

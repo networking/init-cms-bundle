@@ -88,14 +88,6 @@ abstract class PageAdmin extends BaseAdmin
         '_sort_by' => 'path',
     ];
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'glyphicon-file';
-    }
-
     public function __construct($code, $class, $baseControllerName, PageManagerInterface $pageManager)
     {
         $this->pageManager = $pageManager;
@@ -187,25 +179,7 @@ abstract class PageAdmin extends BaseAdmin
             $request = $requestStack->getCurrentRequest();
         }
 
-        if (($this->hasObject() || $request->isXmlHttpRequest()) && !$request->get('no_layout')) {
-	        $formMapper
-		        ->with('page_content')
-		        ->add(
-			        'layoutBlock',
-			        CollectionType::class,
-			        [
-				        'required' => true,
-				        'label' => false,
-				        'label_render' => false,
-				        'error_bubbling' => false,
-				        'type_options' => ['error_bubbling' => false],
-			        ]
-		        )
-		        ->end();
-
-        }
-
-        $formMapper->with('page_settings');
+        $formMapper->with('meta_settings');
 
         if ($this->canCreateHomepage && !$this->hasObject()) {
             $formMapper->add(
@@ -313,6 +287,20 @@ abstract class PageAdmin extends BaseAdmin
         }
 
         $formMapper
+            ->add('metaTitle', null, ['help_block' => 'meta_title.helper.text', 'attr' => ['class' => 'input-xxlarge'] ])
+            ->add('metaKeyword', null, ['attr' => ['class' => 'input-xxlarge'] ])
+            ->add('metaDescription', null, [ 'attr' => ['class' => 'input-xxlarge', 'rows' => 5]])
+            ->add('socialMediaImage',
+                MediaEntityType::class,
+                [
+                    'provider_name' => 'sonata.media.provider.image',
+                    'widget_form_group_attr' => ['class' => 'form-group form-inline'],
+                    'required' => false,
+                ])
+            ->end();
+
+        $formMapper
+            ->with('page_settings')
             ->add(
                 'visibility',
                 ChoiceType::class,
@@ -325,23 +313,23 @@ abstract class PageAdmin extends BaseAdmin
             ->add('activeFrom',
                 DateTimeType::class,
                 [
-                    'widget_form_group_attr' => ['class' => 'form-group form-inline'],
+                    'widget_form_group_attr' => ['class' => 'form-group'],
                     'format' => 'dd.MM.yyyy HH:mm',
                     'required' => false,
                     'widget' => 'single_text',
                     'datetimepicker' => true,
-                    'widget_reset_icon' => 'remove',
+                    'widget_reset_icon' => 'times',
                 ]
             )
             ->add('activeTo',
                 DateTimeType::class,
                 [
-                    'widget_form_group_attr' => ['class' => 'form-group form-inline'],
+                    'widget_form_group_attr' => ['class' => 'form-group'],
                     'format' => 'dd.MM.yyyy HH:mm',
                     'required' => false,
                     'widget' => 'single_text',
                     'datetimepicker' => true,
-                    'widget_reset_icon' => 'remove',
+                    'widget_reset_icon' => 'times',
                 ])
             ->add(
                 'templateName',
@@ -357,19 +345,7 @@ abstract class PageAdmin extends BaseAdmin
             );
         $formMapper->end();
         // end of group: page_settings
-        $formMapper
-            ->with('meta_settings')
-            ->add('metaTitle', null, ['help_block' => 'meta_title.helper.text', 'attr' => ['class' => 'input-xxlarge'] ])
-            ->add('metaKeyword', null, ['attr' => ['class' => 'input-xxlarge'] ])
-            ->add('metaDescription', null, [ 'attr' => ['class' => 'input-xxlarge', 'rows' => 5]])
-            ->add('socialMediaImage',
-                MediaEntityType::class,
-                [
-                    'provider_name' => 'sonata.media.provider.image',
-                    'widget_form_group_attr' => ['class' => 'form-group form-inline'],
-                    'required' => false,
-                ])
-            ->end();
+
 
         foreach ($this->getExtensions() as $extension) {
             $extension->configureFormFields($formMapper);

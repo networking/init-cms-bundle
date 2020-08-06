@@ -1,39 +1,40 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
+{% set id =  admin.uniqid ~'_layout_blocks' %}
 {% autoescape false %}
     <!-- edit one association -->
     <script type="text/javascript">
+        var tempHtml = {};
+        var tempElements = {};
 
         // handle the add link
-        function getLayoutBlockCreateForm(url, data) {
+        function getLayoutBlockCreateForm(url, data, tempElement) {
             jQuery.ajax({
                 url: url,
                 data: data,
                 success: function (html) {
-                    var layoutBlockModal = jQuery('#layoutBlockModal');
-                    layoutBlockModal.html(html).modal('show');
-                    layoutBlockModal.on('hide.bs.modal', function (e) {
-                        if(jQuery(e.target).attr('id') === layoutBlockModal.attr('id'))
-                        {
-                            jQuery('#contentTypeModal').off('initcms.create_block');
-                            jQuery('li.temp_item').remove();
-                            jQuery('form', '#layoutBlockModal').off('submit');
-                        }
-                    });
+                    var element = jQuery('#' + tempElement)
+                    element.html(html);
                     jQuery('#contentTypeModal').modal('hide');
                     jQuery('#createContentButton').button('reset');
                     jQuery('#contentLoading').hide();
-                    jQuery('form', '#layoutBlockModal').on('submit', submitLayoutCreate);
+                    jQuery('form', element).on('submit', submitLayoutCreate);
+                    jQuery('.cancel', element).on('click', function (e) {
+                        element.remove();
+                    });
                 }
             });
+        }
+
+        function reloadPagePreview() {
+            // document.getElementById('pagePreview').location.reload();
+            document.getElementById('pagePreview').src += '';
         }
 
         function submitLayoutCreate(event) {
@@ -50,31 +51,30 @@ file that was distributed with this source code.
                 }
             });
             var form = jQuery(this);
-
+            var container = form.parent();
             jQuery(form).ajaxSubmit({
                 type: form.attr('method'),
                 url: form.attr('action'),
                 dataType: 'json',
                 data: {
-                    formFieldId: '{{ id }}',
-                    code: '{{ sonata_admin.admin.root.code }}',
-                    uniqId: '{{  sonata_admin.admin.root.uniqid }}',
-                    pageId:  '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
+                    code: '{{ admin.code }}',
+                    uniqId: '{{ admin.uniqid }}',
+                    pageId: '{{ admin.id(admin.subject) }}'
                 },
                 success: function (xhr) {
                     if (xhr.result === 'ok') {
                         createInitCmsMessageBox(xhr.status, xhr.message);
-                        jQuery('#layoutBlockModal').modal('hide');
                         jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
-                        jQuery('input[type=submit]', this).off();
-                        jQuery('form', '#layoutBlockModal').unbind('submit');
                         saveLayoutBlockSort();
+                        reloadPagePreview();
                     }
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    jQuery('#layoutBlockModal').html(xhr.responseText);
-                    jQuery('.modal').trigger('shown.bs.modal');
-                    jQuery('form', '#layoutBlockModal').on('submit', submitLayoutCreate);
+                    container.html(xhr.responseText);
+                    jQuery('form', container).on('submit', submitLayoutCreate);
+                    jQuery('.cancel', container).on('click', function (e) {
+                        container.remove();
+                    });
                 }
             });
 
@@ -82,20 +82,24 @@ file that was distributed with this source code.
         }
 
 
-        function getLayoutBlockEditForm(url){
+        function getLayoutBlockEditForm(containerHash, url) {
+            var container = jQuery(containerHash);
+
+            if (tempHtml[container.attr('id')]) {
+                return;
+            }
             jQuery.ajax({
                 url: url,
                 dataType: 'html',
                 success: function (html) {
-                    var layoutBlockModal = jQuery('#layoutBlockModal');
-                    layoutBlockModal.html(html).modal('show');
-                    layoutBlockModal.on('hide.bs.modal', function (e) {
-                        if(jQuery(e.target).attr('id') === layoutBlockModal.attr('id'))
-                        {
-                            jQuery('form', '#layoutBlockModal').off('submit');
-                        }
-                    });
-                    jQuery('form', '#layoutBlockModal').on('submit', submitLayoutUpdate);
+
+                    tempHtml[container.attr('id')] = container.html();
+                    container.html(html);
+                    jQuery('form', container).on('submit', submitLayoutUpdate);
+                    jQuery('.cancel', container).on('click', function () {
+                        container.html(tempHtml[container.attr('id')]);
+                        delete tempHtml[container.attr('id')];
+                    })
                 }
             });
         }
@@ -109,46 +113,49 @@ file that was distributed with this source code.
                     if (editor) {
                         jQuery('#' + editor.name).val(text);
                     }
-
                 } catch (err) {
                 }
             });
 
             var form = jQuery(this);
-
+            var container = form.parent();
             jQuery(form).ajaxSubmit({
                 type: form.attr('method'),
                 url: form.attr('action'),
                 data: {
                     formFieldId: '{{ id }}',
-                    code: '{{ sonata_admin.admin.root.code }}',
-                    uniqId: '{{  sonata_admin.admin.root.uniqid }}',
-                    pageId:  '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
-                },
-                error: function (xhr) {
-                    jQuery('#layoutBlockModal').html(xhr.responseText);
-                    jQuery('.modal').trigger('shown.bs.modal');
-                    jQuery('form', '#layoutBlockModal').on('submit', submitLayoutUpdate);
+                    code: '{{ admin.code }}',
+                    uniqId: '{{ admin.uniqid }}',
+                    pageId: '{{ admin.id(admin.subject) }}'
                 },
                 success: function (html) {
-                    jQuery('#layoutBlockModal').modal('hide');
+                    delete tempHtml[container.attr('id')];
                     jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
-
                     saveLayoutBlockSort();
-                }
+                    reloadPagePreview();
+                },
+                error: function (xhr) {
+                    container.html(xhr.responseText);
+                    jQuery('form', container).on('submit', submitLayoutUpdate);
+                    jQuery('.cancel', container).on('click', function (e) {
+                        container.html(tempHtml[container.attr('id')]);
+                        delete tempHtml[container.attr('id')];
+                    });
+
+                },
             });
         }
 
-        function reloadLayoutBlocks(){
+        function reloadLayoutBlocks() {
             jQuery.ajax({
                 type: 'get',
                 url: '{{ url('admin_networking_initcms_layoutblock_reload') }}',
                 data: {
                     formFieldId: '{{ id }}',
-                    code: '{{ sonata_admin.admin.root.code }}',
-                    uniqId: '{{  sonata_admin.admin.root.uniqid }}',
-                    pageId:  '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}'
-                },success: function (html) {
+                    code: '{{ admin.code }}',
+                    uniqId: '{{ admin.uniqid }}',
+                    pageId: '{{ admin.id(admin.subject) }}'
+                }, success: function (html) {
                     jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
                 }
             });
@@ -178,7 +185,7 @@ file that was distributed with this source code.
                 jQuery('body').trigger('layout:sorted', [xhr]);
             });
         }
-        
+
         function submitLayoutSort(zones) {
             var dfd = jQuery.Deferred();
             var pageStatus = jQuery('.page_status');
@@ -186,8 +193,8 @@ file that was distributed with this source code.
                 url: '{{ url('admin_networking_initcms_layoutblock_updateLayoutBlockSort') }}',
                 data: {
                     zones: zones,
-                    pageId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
-                    code: '{{ sonata_admin.admin.root.code }}'
+                    code: '{{ admin.code }}',
+                    pageId: '{{ admin.id(admin.subject) }}'
                 },
                 type: 'post',
                 success: function (xhr) {
@@ -203,6 +210,7 @@ file that was distributed with this source code.
                         }
                     }
                     dfd.resolve(xhr);
+                    reloadPagePreview();
                 }
             });
         }
@@ -210,25 +218,28 @@ file that was distributed with this source code.
         function onAfterLoad() {
 
             jQuery('div#field_container_{{ id }} ul.sortable').sortable({
-                handle: 'i.glyphicon-move',
+                handle: 'i.fa-arrows-alt',
                 opacity: 0.6,
                 placeholder: "ui-state-highlight",
                 items: 'li.networking-sortable-list',
                 connectWith: ".sortable",
-                tolerance: 'pointer',
+                tolerance: 'intersect',
+                forcePlaceholderSize: true,
+                forceHelperSize: true,
                 start: function (event, ui) {
                     jQuery(this).sortable('refreshPositions');
+
+                },
+                stop: function (event, ui) {
+                    saveLayoutBlockSort(function (xhr) {
+                        createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                    });
                     var listItems = jQuery(this).find('.networking-sortable-list');
                     if (listItems.length < 1) {
                         jQuery(this).find(".empty_layout_block").show();
                     } else {
                         jQuery(this).find(".empty_layout_block").hide();
                     }
-                },
-                stop: function (event, ui) {
-                    saveLayoutBlockSort(function (xhr) {
-                        createInitCmsMessageBox(xhr.messageStatus, xhr.message);
-                    });
                 },
                 update: function (event, ui) {
                     var maxItems = jQuery(this).attr('data-max-items');
@@ -237,9 +248,14 @@ file that was distributed with this source code.
                     } else {
                         jQuery(this).find(".plus_button").show();
                     }
+                    var listItems = jQuery(this).find('.networking-sortable-list');
+                    if (listItems.length < 1) {
+                        jQuery(this).find(".empty_layout_block").show();
+                    } else {
+                        jQuery(this).find(".empty_layout_block").hide();
+                    }
                 },
                 receive: function (event, ui) {
-
                     var allowedTypes = eval(jQuery(this).attr('data-content-types'));
                     var maxItems = jQuery(this).attr('data-max-items');
                     var contentType = jQuery(ui.item).attr('data-content-type');
@@ -265,15 +281,17 @@ file that was distributed with this source code.
                     }
                 },
                 change: function (event, ui) {
-                    var listItems = jQuery(ui.sender).find('.networking-sortable-list');
-                    if (listItems.length <= 1) {
-                        jQuery(ui.sender).find(".empty_layout_block").show();
-                    } else {
-                        jQuery(ui.sender).find(".empty_layout_block").hide();
-                    }
+                    jQuery('ul.sortable').each(function (i, e) {
+                        var list = jQuery(e);
+                        var listItems = list.find('.networking-sortable-list').not('.ui-sortable-helper');
+                        console.log(list.attr('id'))
+                        console.log(listItems.length)
+                        if (listItems.length < 1) {
+                            list.find(".empty_layout_block").show();
+                        }
+                    });
                 },
                 over: function (event, ui) {
-
                     var allowedTypes = eval(jQuery(this).attr('data-content-types'));
                     var maxItems = jQuery(this).attr('data-max-items');
                     var contentType = jQuery(ui.item).attr('data-content-type');
@@ -289,9 +307,10 @@ file that was distributed with this source code.
                             placeholder.css('display', 'none');
                         }
                         jQuery(this).find(".empty_layout_block").hide();
-                    }
-                    else {
+                    } else {
+                        var height = jQuery(this).find(".empty_layout_block").height();
                         placeholder.css('display', 'block');
+                        placeholder.css('height', height + 'px');
                         jQuery(this).find(".empty_layout_block").hide();
                     }
                 }
@@ -302,7 +321,7 @@ file that was distributed with this source code.
         (function ($) {
             // refresh the sortable option when a new element is added
             onAfterLoad();
-            jQuery('body').on('click', '.add-layout', function(ev){
+            jQuery('body').on('click', '.add-layout', function (ev) {
 
                 ev.preventDefault();
                 var link = jQuery(this);
@@ -331,20 +350,22 @@ file that was distributed with this source code.
                         var data = {
                             zone: link.data('zone'),
                             sortOrder: link.data('sort-order'),
-                            classType: selectContentType.val(),
-                            code: '{{ sonata_admin.admin.root.code }}',
-                            pageId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
-                            uniqId: '{{ sonata_admin.admin.root.uniqid }}',
+                            subclass: selectContentType.val(),
+                            code: '{{ admin.code }}',
+                            uniqId: '{{ admin.uniqid }}',
+                            pageId: '{{ admin.id(admin.subject) }}'
                         };
                         var url = '{{ url('admin_networking_initcms_layoutblock_create') }}';
+                        var tempelement = 'temp' + Date.now();
+                        var element = link.closest('.networking-sort-zone').parent().append('<li id="' + tempelement + '" class="empty_layout_block"></li>');
+                        getLayoutBlockCreateForm(url, data, tempelement);
 
-                        getLayoutBlockCreateForm(url, data);
 
                     }
                 });
-            }).on('click', '.layout-link', function(event){
+            }).on('click', '.layout-link', function (event) {
                 event.preventDefault();
-                getLayoutBlockEditForm($(this).data('href'))
+                getLayoutBlockEditForm($(this).data('container'), $(this).data('href'))
             }).on('click', 'i.delete_block', function () {
                 if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
                     jQuery.ajax({
@@ -352,9 +373,9 @@ file that was distributed with this source code.
                         method: 'POST',
                         data: {
                             id: jQuery(this).attr('data-value'),
-                            code: '{{ sonata_admin.admin.root.code }}',
-                            pageId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
-                            uniqId: '{{ sonata_admin.admin.root.uniqid }}',
+                            code: '{{ admin.code }}',
+                            uniqId: '{{ admin.uniqid }}',
+                            pageId: '{{ admin.id(admin.subject) }}',
                             formFieldId: '{{ id }}',
                             _method: 'DELETE'
                         },
@@ -372,9 +393,9 @@ file that was distributed with this source code.
                         method: 'POST',
                         data: {
                             id: jQuery(this).attr('data-value'),
-                            code: '{{ sonata_admin.admin.root.code }}',
-                            pageId: '{{ sonata_admin.admin.root.id(sonata_admin.admin.root.subject) }}',
-                            uniqId: '{{ sonata_admin.admin.root.uniqid }}',
+                            code: '{{ admin.code }}',
+                            uniqId: '{{ admin.uniqid }}',
+                            pageId: '{{ admin.id(admin.subject) }}',
                             formFieldId: '{{ id }}',
                             _method: 'PUT'
                         },

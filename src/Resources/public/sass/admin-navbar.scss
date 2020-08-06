@@ -1,0 +1,48 @@
+.navbar-initcms {
+  line-height: 20px;
+  top: 0px !important;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px; // Gradient is applied to its own element because overflow visible is not honored by IE when filter is present
+  z-index: 2000; // Dropdowns
+  color: $gray-500;
+
+  a.brand,
+  .nav > li > a {
+    color: $gray-500;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+    &:hover {
+      color: $gray-300;
+    }
+  }
+
+  @media screen and (min-width: map-get($grid-breakpoints, 'lg'))  {
+    .dropdown-menu {
+        // Links within the dropdown menu
+        a {
+          color: $dropdown-link-color !important;
+        }
+        a:focus, a:hover {
+          color: $dropdown-link-hover-color !important;
+        }
+        a.color-draft {
+          color: $color-draft !important;
+        }
+        a.color-published {
+          color: $color-published !important;
+        }
+      }
+  }
+
+}
+
+.version-footer{
+  line-height: 20px;
+  min-height: 20px;
+  p.version-number{
+    margin: 5px 0;
+    a{
+      color: $gray-500;
+    }
+  }
+}
+

@@ -16,11 +16,11 @@ file that was distributed with this source code.
 {% block actions %}
     <div class="sonata-actions">
         {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}
-            <a class="btn btn-default sonata-action-element"
+            <a class="btn btn-light sonata-action-element"
                href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
         {% if admin.hasRoute('create') and admin.isGranted('CREATE') %}
-            <a class="btn btn-default sonata-action-element"
+            <a class="btn btn-light sonata-action-element"
                href="{{ admin.generateUrl('create') }}">{{ 'link_action_create'|trans({}, admin.translationDomain) }}</a>
         {% endif %}
     </div>
@@ -34,8 +34,8 @@ file that was distributed with this source code.
         <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h3>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
     {% else %}
         <div class="sonata-ba-delete">
@@ -53,13 +53,13 @@ file that was distributed with this source code.
                 <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
             {% endif %}
             {% if app.request.isxmlhttprequest %}
-                <button class="btn btn-default" data-dismiss="modal"
+                <button class="btn btn-light" data-dismiss="modal"
                         aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</button>
                 <input type="submit" class="btn btn-danger"
                        value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
             {% else %}
                 <a href="{{ admin.generateObjectUrl('list', object) }}"
-                   class="btn btn-default">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                   class="btn btn-light">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
                 <input type="submit" class="btn btn-danger"
                        value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
 

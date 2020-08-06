@@ -111,7 +111,7 @@ file that was distributed with this source code.
                                     {% set foo = form.children['_page'].setRendered() %}
                                 </div>
                                 <div>
-                                    <input type="submit" class="btn btn-default btn-sm"
+                                    <input type="submit" class="btn btn-light btn-sm"
                                            value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
                                     {% if not app.request.isXmlHttpRequest %}
                                         <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
@@ -170,7 +170,7 @@ file that was distributed with this source code.
                         {% endif %}
                         {% for code, provider in providers %}
                             <a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}"
-                               class="btn btn-default dialog-link"
+                               class="btn btn-light dialog-link"
                                data-toggle="tooltip"
                                data-placement="top"
                                title="{{ provider.providerMetadata.description|trans({}, 'MediaAdmin') }}">

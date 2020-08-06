@@ -22,13 +22,13 @@ file that was distributed with this source code.
     {% endif %}
     <div class="sonata-actions">
         {% if admin.hasRoute('create') and admin.isGranted('CREATE') %}
-            <a class="btn btn-default sonata-action-element" href="{{ admin.generateUrl('create') }}">
-                <i class="glyphicon glyphicon-plus"></i>
+            <a class="btn btn-light sonata-action-element" href="{{ admin.generateUrl('create') }}">
+                <i class="fa fa-plus"></i>
                 {{ create_text }}</a>
         {% endif %}
         {% if admin.hasRoute('list') and  admin.isGranted('LIST') %}
-            <a class="btn btn-default sonata-action-element" href="{{ admin.generateUrl('list') }}">
-                <i class="glyphicon glyphicon-list"></i>
+            <a class="btn btn-light sonata-action-element" href="{{ admin.generateUrl('list') }}">
+                <i class="fa fa-list"></i>
                 {{ list_text }}</a>
         {% endif %}
     </div>

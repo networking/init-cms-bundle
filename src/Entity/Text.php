@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
+
+
 /**
  * Class Text.
  *
@@ -17,4 +19,5 @@ namespace Networking\InitCmsBundle\Entity;
  */
 class Text extends BaseText
 {
+
 }

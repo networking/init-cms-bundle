@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Twig\Extension;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Model\ConfigManager;
 use FOS\CKEditorBundle\Config\CKEditorConfiguration;
@@ -18,6 +19,7 @@ use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
 use Networking\InitCmsBundle\Helper\BundleGuesser;
+use Networking\InitCmsBundle\Model\LayoutBlock;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -202,6 +204,7 @@ class NetworkingHelperExtension extends AbstractExtension
             new TwigFunction('render_initcms_field_as_string', [$this, 'renderInitcmsFieldAsString'], ['is_safe' => ['html']]),
             new TwigFunction('get_form_field_zone', [$this, 'getFormFieldZone'], ['is_safe' => ['html']]),
             new TwigFunction('get_sub_form_by_zone', [$this, 'getSubFormsByZone'], ['is_safe' => ['html']]),
+            new TwigFunction('get_layout_blocks_for_zone', [$this, 'getLayoutBlocksForZone']),
             new TwigFunction('get_content_type_options', [$this, 'getContentTypeOptions'], ['is_safe' => ['html']]),
             new TwigFunction('get_initcms_admin_icon_path', [$this, 'getInitcmsAdminIconPath'], ['is_safe' => ['html']]),
             new TwigFunction('get_current_admin_locale', [$this, 'getCurrentAdminLocale'], ['is_safe' => ['html']]),
@@ -231,25 +234,7 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = [])
     {
-        if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
-            // Draft View
-            $contentItem = $layoutBlock->getContent();
-        } else {
-            // Live View
-            $contentItem = $this->serializer->deserialize(
-                $serializedContent,
-                $layoutBlock->getClassType(),
-                'json'
-            );
-        }
-
-        if (!is_object($contentItem)) {
-            $this->layoutBlockAdmin->delete($layoutBlock);
-
-            return '---';
-        }
-
-        $options = $contentItem->getTemplateOptions($params);
+        $options = $layoutBlock->getTemplateOptions($params);
 
         $options = array_merge($options, $params);
 
@@ -265,9 +250,9 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock)
     {
-        if ($layoutBlock->getObjectId()) {
+        if ($layoutBlock->getId()) {
             // Draft View
-            $contentItem = $layoutBlock->getContent();
+            $contentItem = $layoutBlock;
         } else {
             $classType = $layoutBlock->getClassType();
             $contentItem = new $classType();
@@ -279,7 +264,7 @@ class NetworkingHelperExtension extends AbstractExtension
             return false;
         }
 
-        $adminContent = $contentItem->getAdminContent();
+        $adminContent = $layoutBlock->getAdminContent();
 
         return $this->templating->render($adminContent['template'], $adminContent['content']);
     }
@@ -291,18 +276,10 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
     {
-        if ($layoutBlock->getObjectId()) {
-            $contentItem = $layoutBlock->getContent();
+        if (method_exists($layoutBlock, 'getContentTypeName')) {
+            $name = $layoutBlock->getContentTypeName();
         } else {
-            $classType = $layoutBlock->getClassType();
-
-            $contentItem = new $classType();
-        }
-
-        if (method_exists($contentItem, 'getContentTypeName')) {
-            $name = $contentItem->getContentTypeName();
-        } else {
-            $name = get_class($contentItem);
+            $name = get_class($layoutBlock);
         }
 
         return $this->translator->trans($name);
@@ -720,6 +697,21 @@ class NetworkingHelperExtension extends AbstractExtension
         }
 
         return current($zones);
+    }
+
+    /**
+     * @param LayoutBlockInterface[] $layoutBlocks
+     * @param $zoneName
+     */
+    public function getLayoutBlocksForZone($layoutBlocks, $zoneName)
+    {
+        if (gettype($layoutBlocks) == 'array') {
+            $layoutBlocks = new ArrayCollection($layoutBlocks);
+        }
+
+        return $layoutBlocks->filter(function (LayoutBlockInterface  $layoutBlock) use( $zoneName ){
+            return $layoutBlock->getZone() === $zoneName;
+        });
     }
 
     /**

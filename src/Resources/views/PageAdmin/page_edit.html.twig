@@ -23,13 +23,6 @@ file that was distributed with this source code.
      }|json_encode()|raw }}'
      >
  {% endblock %}
-{% block title %}
-    {% if admin.id(object) %}
-        <span class="page_title">{{ admin.toString(object) }} </span> <span class="info-soft font-medium">({{ language }})</span>
-    {% else %}
-        {{ "title_create"|trans({}, 'SonataAdminBundle') }}
-    {% endif %}
-{% endblock %}
 {% block page_title %}{% endblock %}
 
 {% block actions %}{% endblock %}
@@ -48,8 +41,8 @@ file that was distributed with this source code.
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4>{{ 'legend.create_menu'|trans({}, admin.translationDomain) }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div id="menu_info_text"></div>
@@ -63,7 +56,7 @@ file that was distributed with this source code.
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal"
+                    <button class="btn btn-light" data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                     <button type="submit" class="btn btn-primary" id="btn_create_menu"
                             data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}"
@@ -74,6 +67,7 @@ file that was distributed with this source code.
         </div>
     </div>
         <!-- end modal menu form -->
+        <div class="mt-5"></div>
     {% endif %}
 {% endblock %}
 

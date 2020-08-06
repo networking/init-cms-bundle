@@ -562,6 +562,10 @@ abstract class Page implements PageInterface
      */
     public function setVisibility($visibility)
     {
+
+        if(!$visibility){
+            return $this;
+        }
         if (!in_array($visibility, [self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC])) {
             throw new \InvalidArgumentException('Invalid visibility');
         }
@@ -803,12 +807,12 @@ abstract class Page implements PageInterface
      *
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
      */
-    public function getLayoutBlock($zone = null)
+    public function getLayoutBlock($zone = null, $all = false)
     {
         if (!is_null($zone)) {
             $layoutBlocks = $this->layoutBlock->filter(
-                function ($layoutBlock) use ($zone) {
-                    return $layoutBlock->getZone() == $zone && $layoutBlock->isActive();
+                function ($layoutBlock) use ($zone, $all) {
+                    return $layoutBlock->getZone() == $zone && ($layoutBlock->isActive() || $all);
                 }
             );
 

@@ -1,111 +1,103 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% if admin is not defined %}
     {% set admin = sonata_admin.admin %}
 {% endif %}
+{% set id =  admin.uniqid ~'_layout_blocks' %}
 <div id="field_container_{{ id }}">
     <p></p>
     {% set increment = 0 %}
     {% if not admin.subject.alias %}
         {% for key, zone in get_initcms_template_zones() %}
-            {% if (loop.first) %}
-                <div class="row">
-            {% endif %}
-
-
-            <div class="{{ zone.class }}">
-                <div class="dropzone well well-small">
-                    <h6>{{ zone.name|trans() }} </h6>
-                    {% if zone.max_content_items is not same as(-1) %}
-                        <ul id="zone_{{ zone.name }}" class="sortable" data-content-types="{{ zone.restricted_types }}"
-                            data-max-items="{{ zone.max_content_items }}">
-                            {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow#}
-                            <li class="networking-sort-zone">
-                                <div class="plus_button"
-                                     {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
-                                    <a class="add-layout"
-                                       href="{{ url('admin_networking_initcms_layoutblock_create') }}"
-                                       data-zone="{{ zone.name }}"
-                                       data-sort-order="0"
-                                       data-value="{{ zone.restricted_types }}"
-                                       title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                        <i class="glyphicon glyphicon-plus"></i>
-                                    </a>
-                                </div>
-                            </li>
-                            <li class="empty_layout_block" {% if get_sub_form_by_zone(form.children, zone.name)|length > 0 %} style="display: none;"{% endif %}>
-                                <p class="info-soft ">
-                                    {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
-                                </p>
-                            </li>
-                            {# loop through layout blocks #}
-                            {% for layout_block_field_name, layout_block_field in get_sub_form_by_zone(form.children, zone.name) %}
-                                {% set layoutBlockContent = render_initcms_admin_block(layout_block_field.vars.value) %}
-                                {% if layoutBlockContent %}
-
+            <div class="row">
+                <div class="col-12">
+                    <div class="dropzone jumbotron">
+                        <h6>{{ zone.name|trans() }} </h6>
+                        {% if zone.max_content_items is not same as(-1) %}
+                            <ul id="zone_{{ zone.name }}" class="sortable"
+                                data-content-types="{{ zone.restricted_types }}"
+                                data-max-items="{{ zone.max_content_items }}">
+                                {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow #}
+                                <li class="networking-sort-zone">
+                                    <div class="plus_button"
+                                         {% if zone.max_content_items > 0 and admin.subject.layoutBlock(zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
+                                        <a class="add-layout"
+                                           href="{{ url('admin_networking_initcms_layoutblock_create') }}"
+                                           data-zone="{{ zone.name }}"
+                                           data-sort-order="0"
+                                           data-value="{{ zone.restricted_types }}"
+                                           title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="empty_layout_block" {% if admin.subject.layoutBlock(zone.name)|length > 0 %} style="display: none;"{% endif %}>
+                                    <p class="info-soft ">
+                                        {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
+                                    </p>
+                                </li>
+                                {# loop through layout blocks #}
+                                {% for layout_block in admin.subject.layoutBlock(zone.name, true) %}
                                     <li class="networking-sortable-list networking-sort-zone"
-                                        id="layoutBlock_{{ layout_block_field.vars.value.id }}"
-                                        data-content-type="{{ layout_block_field.vars.value.classType }}">
+                                        id="layoutBlock_{{ layout_block.id }}"
+                                        data-content-type="{{ layout_block.classType }}">
                                         {# preview of layout block of content #}
 
                                         <div class="content_preview">
                                             <div class="layout_controls">
-                                                <div class="pull-left">
-                                                    <i class="glyphicon glyphicon-move soft-background"></i>
-                                                    <i class="glyphicon glyphicon-trash soft-background delete_block"
-                                                       data-value="{{ layout_block_field.vars.value.id }}"></i>
-                                                    <i class="glyphicon glyphicon-pencil soft-background layout-link"
-                                                       data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block_field.vars.value.id}) }}"></i>
+                                                <div class="float-left">
+                                                    <i class="fa fa-arrows-alt soft-background"></i>
+                                                    <i class="fa fa-trash soft-background delete_block"
+                                                       data-value="{{ layout_block.id }}"></i>
+                                                    <i class="fa fa-edit soft-background layout-link"
+                                                       data-container="#layoutBlockHtml{{ layout_block.id }}"
+                                                       data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block.id, 'subclass': layout_block.classType}) }}"></i>
                                                 </div>
-                                                <div class="pull-right text-{{ layout_block_field.vars.value.isActive?'success':'danger' }}">
-                                                    {{ layout_block_field.vars.value.isActive?'Online':'Offline' }}
-                                                    <i class="glyphicon glyphicon-{{ layout_block_field.vars.value.isActive?'ok':'minus' }}-sign
-                                                    btn btn-xs btn-{{ layout_block_field.vars.value.isActive?'success':'danger' }} toggle-active"
-                                                    data-value="{{ layout_block_field.vars.value.id }}"> </i>
+                                                <div class="float-right text-{{ layout_block.isActive?'success':'danger' }}">
+                                                    {{ layout_block.isActive?'Online':'Offline' }}
+                                                    <i class="fa fa-{{ layout_block.isActive?'check':'minus' }}-circle
+                                                    btn btn-xs btn-{{ layout_block.isActive?'success':'danger' }} toggle-active"
+                                                       data-value="{{ layout_block.id }}"> </i>
                                                 </div>
                                                 <div class="clear"></div>
                                                 <br>
                                             </div>
 
-                                            <div class="layout-link" {% if not layout_block_field.vars.value.isActive %} style="opacity:0.3"{% endif %}
-                                                 data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block_field.vars.value.id}) }}">
-                                                {{ layoutBlockContent|raw }}
+                                            <div id="layoutBlockHtml{{ layout_block.id }}"
+                                                 data-container="#layoutBlockHtml{{ layout_block.id }}"
+                                                 {% if not layout_block.isActive %}style="opacity:0.3"{% endif %}
+                                                 data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block.id, 'subclass': layout_block.classType}) }}">
+                                                {{ layout_block }}
                                             </div>
                                         </div>
                                         {# start the block for the plus button #}
                                         <div class="plus_button"
-                                             {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
+                                             {% if zone.max_content_items > 0 and admin.subject.layoutBlock(zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
                                             <a class="add-layout"
                                                href="{{ url('admin_networking_initcms_layoutblock_create') }}"
                                                data-zone="{{ zone.name }}"
                                                data-sort-order="{{ loop.index }}"
                                                data-value="{{ zone.restricted_types }}"
                                                title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                                <i class="glyphicon glyphicon-plus"></i>
+                                                <i class="fa fa-plus"></i>
                                             </a>
                                         </div>
                                     </li>
                                     {% set increment = increment + 1 %}
-                                {% endif %}
-                            {% endfor %}
+                                {% endfor %}
 
-                        </ul>
-                    {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-
-            {% if (loop.last) %}
-                </div>
-            {% endif %}
         {% endfor %}
     {% else %}
         <div class="alert alert-info"><a
