@@ -1,7 +1,7 @@
 {% extends 'knp_menu.html.twig' %}
 
 {% block root %}
-    {%- set listAttributes = item.childrenAttributes|merge({'class': 'list-group'}) %}
+    {%- set listAttributes = item.childrenAttributes|merge({'class': 'menu-nav'}) %}
     {%- set request        = item.extra('request') ?: app.request %}
     {{ block('list') -}}
 {% endblock %}
@@ -11,7 +11,10 @@
         {% import _self as knp_menu %}
         {% if item.level is same as(1) %}
             <div{{ knp_menu.attributes(listAttributes) }}>
-                {{ block('children') }}
+                <i class="menu-arrow"></i>
+                <ul class="menu-subnav">
+                    {{ block('children') }}
+                </ul>
             </div>
         {% else %}
             <ul{{ knp_menu.attributes(listAttributes) }}>
@@ -23,10 +26,21 @@
 
 
 {% block item %}
-    {% if item.level is same as(2) %}
-    {%- do item.setAttribute('class', (item.attribute('class')~' bg-dark text-white')|trim) %}
+    {%- do item.setAttribute('class', (item.attribute('class')~' menu-item')|trim) %}
+    {%- do item.setLinkAttribute('class', ' menu-link'|trim) %}
+    {% if item.hasChildren %}
+        {%- do item.setAttribute('class', (item.attribute('class')~' menu-item-submenu')|trim) %}
+        {%- do item.setAttribute('aria-haspopup', 'true') %}
+        {%- do item.setAttribute('data-menu-toggle', 'hover') %}
     {% endif %}
-    {%- do item.setLinkAttribute('class', ' bg-dark list-group-item list-group-item-action'|trim) %}
+
+    {%- if matcher.isCurrent(item) %}
+        {%- do item.setAttribute('class', (item.attribute('class')~' menu-item-active') ) %}
+    {%- elseif matcher.isAncestor(item, options.matchingDepth) %}
+        {%- do item.setAttribute('class', (item.attribute('class')~' menu-item-open menu-item-here')) %}
+    {%- endif %}
+
+
     {%- if item.displayed %}
         {#- check role of the group #}
         {%- set display = (item.extra('roles') is empty or is_granted(sonata_admin.adminPool.getOption('role_super_admin')) ) %}
@@ -43,53 +57,10 @@
             {% else %}
                 {%- do item.setChildrenAttribute('class', (item.childrenAttribute('class')~' show')|trim) %}
          {% endif %}
-        {%- do item.setChildrenAttribute('class', (item.childrenAttribute('class')~'   sidebar-submenu')|trim) %}
+        {%- do item.setChildrenAttribute('class', (item.childrenAttribute('class')~'   menu-submenu')|trim) %}
         {%- do item.setChildrenAttribute('id', 'submenu' ~item.name|sonata_slugify|trim) %}
-        {% if item.level is same as(1) %}
             {{ parent() }}
-            {% else %}
-            {{ block('item_div') }}
-            {% endif %}
     {% endif %}
-{% endblock %}
-
-{% block item_div %}
-        {# building the class of the item #}
-        {%- set classes = item.attribute('class') is not empty ? [item.attribute('class')] : [] %}
-        {%- if matcher.isCurrent(item) %}
-            {%- set classes = classes|merge([options.currentClass]) %}
-        {%- elseif matcher.isAncestor(item, options.matchingDepth) %}
-            {%- set classes = classes|merge([options.ancestorClass]) %}
-        {%- endif %}
-        {%- if item.actsLikeFirst %}
-            {%- set classes = classes|merge([options.firstClass]) %}
-        {%- endif %}
-        {%- if item.actsLikeLast %}
-            {%- set classes = classes|merge([options.lastClass]) %}
-        {%- endif %}
-
-        {# Mark item as "leaf" (no children) or as "branch" (has children that are displayed) #}
-        {% if item.hasChildren and options.depth is not same as(0) %}
-            {% if options.branch_class is not empty and item.displayChildren %}
-                {%- set classes = classes|merge([options.branch_class]) %}
-            {% endif %}
-        {% elseif options.leaf_class is not empty %}
-            {%- set classes = classes|merge([options.leaf_class]) %}
-        {%- endif %}
-
-        {%- set attributes = item.attributes %}
-        {%- if classes is not empty %}
-            {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
-        {%- endif %}
-        {# displaying the item #}
-        {% import _self as knp_menu %}
-        <div{{ knp_menu.attributes(attributes) }}>
-            {%- if item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
-                {{ block('linkElement') }}
-            {%- else %}
-                {{ block('spanElement') }}
-            {%- endif %}
-        </div>
 {% endblock %}
 
 {% block linkElement %}
@@ -106,9 +77,9 @@
         {%- set attributes = item.linkAttributes %}
 
         {%- if matcher.isCurrent(item) %}
-            {%- set classes = classes|merge([options.currentClass]) %}
+            {%- set classes = classes|merge(['menu-item-active']) %}
         {%- elseif matcher.isAncestor(item, options.matchingDepth) %}
-            {%- set classes = classes|merge([options.ancestorClass]) %}
+            {%- set classes = classes|merge(['menu-item-open menu-item-here']) %}
         {%- endif %}
         {%- if item.actsLikeFirst %}
             {%- set classes = classes|merge([options.firstClass]) %}
@@ -123,40 +94,42 @@
         {%- endif %}
 
         <a href="{{ item.uri }}"{{ knp_menu.attributes(attributes) }}>
-            <div class="d-flex w-100 justify-content-start align-items-center">
                 {{ block('label') }}
-            </div>
         </a>
     {% endapply %}
 {% endblock %}
 
 {% block spanElement %}
     {% apply spaceless %}
-        <a href="#submenu{{ item.name|sonata_slugify }}" data-toggle="collapse"
-           aria-expanded="{% if  matcher.isAncestor(item, options.matchingDepth) %}true{% else %}false{% endif %}"
-           class="bg-dark list-group-item list-group-item-action" >
-            <div class="d-flex w-100 justify-content-start align-items-center">
-                {% set icon = item.extra('icon')|default('') %}
-                {{ icon|raw }}
+        <a href="javascript:;" class="menu-link menu-toggle"
+           aria-expanded="{% if  matcher.isAncestor(item, options.matchingDepth) %}true{% else %}false{% endif %}">
+            <i class="menu-icon {{ item.extra('icon')|default('') }}"></i>
                 {% set translation_domain = item.extra('label_catalogue') %}
-                {{ parent() }}
-                {%- if item.extra('keep_open') is not defined or not item.extra('keep_open') -%}
-                    <span class="fa submenu-icon ml-auto"></span>
-                {%- endif -%}
-            </div>
+            {{ block('label') }}
+
+            {%- if item.extra('keep_open') is not defined or not item.extra('keep_open') -%}
+            <i class="menu-arrow"></i>
+            {%- endif -%}
         </a>
     {% endapply %}
 {% endblock %}
 
 {% block label %}
     {% if is_link is defined and is_link %}
-        {{ icon|default|raw }}
-    {% endif %}
-    <span class="menu-collapsed">
-        {% if options.allow_safe_labels and item.extra('safe_label', false) %}
-            {{ item.label|raw }}
-        {% else %}
-            {{ item.label|trans({}, translation_domain|default('messages')) }}
+        {% if icon is defined %}
+            <i class="menu-icon {{ icon|default|raw }}"></i>
+            {% else %}
+            <i class="menu-bullet menu-bullet-dot">
+                <span></span>
+            </i>
         {% endif %}
+    {% endif %}
+
+<span class="menu-text">
+    {% if options.allow_safe_labels and item.extra('safe_label', false) %}
+        {{ item.label|raw }}
+    {% else %}
+        {{ item.label|trans({}, translation_domain|default('messages')) }}
+    {% endif %}
     </span>
 {% endblock %}

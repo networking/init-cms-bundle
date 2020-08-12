@@ -21,6 +21,7 @@ use Networking\InitCmsBundle\Form\Type\IconradioType;
 use Networking\InitCmsBundle\Helper\BundleGuesser;
 use Networking\InitCmsBundle\Model\LayoutBlock;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
+use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
@@ -385,10 +386,8 @@ class NetworkingHelperExtension extends AbstractExtension
         $zones = $this->templates[$template]['zones'];
 
         foreach ($zones as $key => $zone) {
-            $temp = array_map([$this, 'jsString'], $zone['restricted_types']);
-            $zones[$key]['restricted_types'] = '['.implode(',', $temp).']';
-
-            $zones[$key]['restricted_types'] = json_encode($zone['restricted_types']);
+            $contentTypes = $this->getZoneContentTypes($zone);
+            $zones[$key]['restricted_types'] = array_map([$this, 'mapContentType'], $contentTypes);
         }
 
         return $zones;
@@ -402,31 +401,68 @@ class NetworkingHelperExtension extends AbstractExtension
         if(!$this->currentTemplate){
             $request = $this->requestStack->getCurrentRequest();
             $pageId = (!$request->get('objectId')) ? $request->get('id') : $request->get('objectId');
-
+            $page = null;
             if ($pageId) {
                 /** @var PageInterface $page */
                 $page = $this->pageManager->findById($pageId);
-                $this->currentTemplate = $page->getTemplateName();
-            } else {
-                $this->currentTemplate = array_key_first($this->templates);
             }
+
+            $this->currentTemplate = $this->getPageTemplate($page);
 
             if (is_null($this->currentTemplate)) {
                 return 'Please Select Template first';
             }
         }
 
-
         return $this->currentTemplate;
+    }
+
+    /**
+     * @param Page $page
+     * @return int|string|null
+     *
+     */
+    public function getPageTemplate(?Page $page){
+        if ($page) {
+            return  $page->getTemplateName();
+        }
+        return array_key_first($this->templates);
     }
 
     /**
      * @return mixed
      */
-    public function getContentTypeOptions()
+    public function getContentTypeOptions(LayoutBlockInterface $layoutBlock)
     {
+        $template = $this->getPageTemplate($layoutBlock->getPage());
+        $zones = $this->templates[$template]['zones'];
+
+        foreach ($zones as $zone){
+            if($zone['name'] === $layoutBlock->getZone()){
+                return $this->getZoneContentTypes($zone);
+            }
+        }
+
         return $this->contentTypes;
     }
+
+    protected function getZoneContentTypes(array $zone){
+        if(count($zone['restricted_types'])){
+            $contentTypes = [];
+
+            $restrictedContentTypes = $zone['restricted_types'];
+
+            $contentTypes = array_filter($this->contentTypes, function ($contentType) use ($restrictedContentTypes){
+                return in_array($contentType['class'], $restrictedContentTypes);
+            });
+
+            return $contentTypes;
+
+        }
+
+        return $this->contentTypes;
+    }
+
 
     /**
      * Guess which icon should represent an entity admin.
@@ -1270,6 +1306,17 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     protected function jsString($s)
     {
+        if(is_array($s)){
+            $s = $s['class'];
+        }
         return '"'.addcslashes($s, "\0..\37\"\\").'"';
+    }
+
+    protected function mapContentType($s)
+    {
+        if(is_array($s)){
+            $s = $s['class'];
+        }
+        return $s;
     }
 }

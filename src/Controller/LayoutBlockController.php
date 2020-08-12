@@ -65,9 +65,9 @@ class LayoutBlockController extends CRUDController
      */
     public function createAction()
     {
-//        if (!$this->isXmlHttpRequest()) {
-//            return new Response('cannot load external of page module', 403);
-//        }
+        if (!$this->isXmlHttpRequest()) {
+            return new Response('cannot load external of page module', 403);
+        }
 
         if (false === $this->admin->isGranted('CREATE')) {
             throw new AccessDeniedException();
@@ -109,6 +109,7 @@ class LayoutBlockController extends CRUDController
         $form = $this->admin->getForm();
         $form->setData($layoutBlock);
         $form->handleRequest($this->getRequest());
+        $response = new Response('', 200);
         if ($this->getRestMethod() == 'POST') {
             try {
                 // persist if the form was valid and if in preview mode the preview was approved
@@ -117,7 +118,6 @@ class LayoutBlockController extends CRUDController
                     if ($this->isXmlHttpRequest()) {
                         return $this->renderJson(
                             [
-                                'result' => 'ok',
                                 'status' => 'success',
                                 'message' => $this->translate('message.layout_block_created'),
                                 'layoutBlockId' => $this->admin->getNormalizedIdentifier($layoutBlock),
@@ -128,6 +128,7 @@ class LayoutBlockController extends CRUDController
                         );
                     }
                 }
+                $response->setStatusCode(422);
 
             } catch (ModelManagerException $e) {
                 $formError = new FormError($e->getMessage());
@@ -146,7 +147,8 @@ class LayoutBlockController extends CRUDController
                 'action' => 'create',
                 'form' => $view,
                 'object' => $layoutBlock,
-            ]
+            ],
+            $response
         );
     }
 

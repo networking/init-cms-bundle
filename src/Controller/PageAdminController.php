@@ -12,23 +12,20 @@ namespace Networking\InitCmsBundle\Controller;
 
 use App\Entity\Page;
 use Doctrine\Common\Collections\ArrayCollection;
-use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
-use Networking\InitCmsBundle\Entity\LayoutBlock;
-use Networking\InitCmsBundle\Helper\PageHelper;
+use Gedmo\Sluggable\Util\Urlizer;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
+use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
-use Gedmo\Sluggable\Util\Urlizer;
 
 /**
  * Class PageAdminController.
@@ -376,11 +373,17 @@ class PageAdminController extends CRUDController
                 $this->makeSnapshot($selectedModel);
             }
         } catch (\Exception $e) {
-            $this->addFlash('sonata_flash_error', $this->translate('flash_batch_publish_error', [], 'NetworkingInitCmsBundle'));
+            $this->addFlash(
+                'sonata_flash_error',
+                $this->translate('flash_batch_publish_error', [], 'NetworkingInitCmsBundle')
+            );
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
-        $this->addFlash('sonata_flash_success', $this->translate('flash_batch_publish_success', [], 'NetworkingInitCmsBundle'));
+        $this->addFlash(
+            'sonata_flash_success',
+            $this->translate('flash_batch_publish_success', [], 'NetworkingInitCmsBundle')
+        );
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -407,12 +410,18 @@ class PageAdminController extends CRUDController
                 $this->pageHelper->makePageCopy($selectedModel);
             }
         } catch (\Exception $e) {
-            $this->addFlash('sonata_flash_error', $this->translate('flash_batch_copy_error', [], 'NetworkingInitCmsBundle'));
+            $this->addFlash(
+                'sonata_flash_error',
+                $this->translate('flash_batch_copy_error', [], 'NetworkingInitCmsBundle')
+            );
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
 
-        $this->addFlash('sonata_flash_success', $this->translate('flash_batch_copy_success', [], 'NetworkingInitCmsBundle'));
+        $this->addFlash(
+            'sonata_flash_success',
+            $this->translate('flash_batch_copy_success', [], 'NetworkingInitCmsBundle')
+        );
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -454,7 +463,10 @@ class PageAdminController extends CRUDController
                 $this->pageHelper->makeTranslationCopy($page, $data['toLocale']);
             }
 
-            $this->addFlash('sonata_flash_success', $this->translate('flash_batch_copy_success', [], 'NetworkingInitCmsBundle'));
+            $this->addFlash(
+                'sonata_flash_success',
+                $this->translate('flash_batch_copy_success', [], 'NetworkingInitCmsBundle')
+            );
         }
 
         return $this->renderWithExtraParams(
@@ -487,12 +499,18 @@ class PageAdminController extends CRUDController
                 }
             }
         } catch (\Exception $e) {
-            $this->addFlash('sonata_flash_error', $this->translate('flash_batch_cache_clear_error', [], 'NetworkingInitCmsBundle'));
+            $this->addFlash(
+                'sonata_flash_error',
+                $this->translate('flash_batch_cache_clear_error', [], 'NetworkingInitCmsBundle')
+            );
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
 
-        $this->addFlash('sonata_flash_success', $this->translate('flash_batch_cache_clear_success', [], 'NetworkingInitCmsBundle'));
+        $this->addFlash(
+            'sonata_flash_success',
+            $this->translate('flash_batch_cache_clear_success', [], 'NetworkingInitCmsBundle')
+        );
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -643,8 +661,13 @@ class PageAdminController extends CRUDController
         $view = $form->createView();
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
+        $template = '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig';
+        if ($request->get('is_meta', false)) {
+            $template = '@NetworkingInitCms/PageAdmin/meta_settings_fields.html.twig';
+        }
+
         return $this->renderWithExtraParams(
-            '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig',
+            $template,
             [
                 'form' => $view,
                 'object' => $page,

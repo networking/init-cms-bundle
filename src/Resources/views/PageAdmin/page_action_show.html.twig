@@ -1,9 +1,13 @@
 {% if admin.hasRoute('show') %}
     {% set path = path(object.route()) %}
     <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode})}}"
-       data-original-title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}"
-       target="_blank"  class="btn btn-light  show-tooltip btn-sm button-in-row"
+       class="{% if isSubNav is defined %}nav-link{% else %}btn btn-sm btn-clean btn-icon{% endif %}  show-tooltip "
+       target="_blank"
        title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}">
-        <i class="fa fa-search-plus"></i>
+        <i class="nav-icon la la-search"></i>
+        {% if isSubNav is defined  %}
+            <span class="nav-text">{{ 'action_show'|trans({}, 'SonataAdminBundle') }}</span>
+        {% endif %}
     </a>
+
 {% endif %}

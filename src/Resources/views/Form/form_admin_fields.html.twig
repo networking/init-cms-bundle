@@ -78,10 +78,10 @@ file that was distributed with this source code.
                 &nbsp;
                 <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('list') }}"
                    onclick="return start_field_dialog_form_list_{{ id }}(this);"
-                   class="btn btn-light btn-sm sonata-ba-action"
+                   class="btn btn-light btn-sm"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
                         >
-                    <i class="glyphicon glyphicon-list"></i>
+                    <i class="la la-list"></i>
                     {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -90,10 +90,10 @@ file that was distributed with this source code.
                 &nbsp;
                 <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
                    onclick="return start_field_dialog_form_add_{{ id }}(this);"
-                   class="btn btn-primary btn-sm sonata-ba-action"
+                   class="btn btn-primary btn-sm"
                    title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                         >
-                    <i class="glyphicon glyphicon-plus"></i>
+                    <i class="la la-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -102,10 +102,10 @@ file that was distributed with this source code.
                 &nbsp;
                 <a href=""
                    onclick="return remove_selected_element_{{ id }}(this);"
-                   class="btn btn-danger btn-sm sonata-ba-action"
+                   class="btn btn-danger btn-sm"
                    title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
                         >
-                    <i class="glyphicon glyphicon-trash "></i>
+                    <i class="la la-trash "></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -486,10 +486,6 @@ file that was distributed with this source code.
         	{% set widget_form_group_attr = widget_form_group_attr|merge({class: 'collection-item ' ~ widget_form_group_attr.class|default('')}) %}
         {% endif %}
     {% endif %}
-    {% if errors|length > 0 %}
-	    {# Add Error Class to Widget Wrapper#}
-	    {% set widget_form_group_attr = widget_form_group_attr|merge({'class': widget_form_group_attr.class|default('') ~ ' has-error'}) %}
-    {% endif %}
     {% if help_widget_popover.selector is same as(null) %}
         {% set help_widget_popover = help_widget_popover|merge({'selector': '#' ~ id }) %}
     {% endif %}
@@ -545,7 +541,7 @@ file that was distributed with this source code.
             </div>
 
             {% if errors|length > 0 %}
-                <div class="help-inline sonata-ba-field-error-messages">
+                <div class="invalid-feedback">
                     {{ form_errors(child) }}
                 </div>
             {% endif %}
@@ -839,10 +835,10 @@ file that was distributed with this source code.
         <span id="field_actions_{{ id }}" class="field-actions">
                 <a href="{{ admin.generateUrl('list', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
                    onclick="return open_media_list_{{ id }}(this);"
-                   class="btn btn-light btn-sm sonata-ba-action"
+                   class="btn btn-light btn-sm"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
                         >
-                    <i class="glyphicon glyphicon-list"></i>
+                    <i class="la la-list"></i>
                     {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
                 </a>
 
@@ -850,10 +846,10 @@ file that was distributed with this source code.
                 &nbsp;
                 <a href="{{ admin.generateUrl('create', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
                    onclick="return start_field_dialog_form_add_{{ id }}(this);"
-                   class="btn btn-primary btn-sm sonata-ba-action"
+                   class="btn btn-primary btn-sm"
                    title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                         >
-                    <i class="glyphicon glyphicon-plus"></i>
+                    <i class="la la-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -862,10 +858,10 @@ file that was distributed with this source code.
                 &nbsp;
                 <a href=""
                    onclick="return remove_selected_element_{{ id }}(this);"
-                   class="btn btn-danger btn-sm sonata-ba-action"
+                   class="btn btn-danger btn-sm"
                    title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
                         >
-                    <i class="glyphicon glyphicon-trash"></i>
+                    <i class="la la-trash"></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -965,3 +961,72 @@ file that was distributed with this source code.
         {% endif %}
     {% endapply %}
 {% endblock widget_form_group_end %}
+
+
+{% block form_widget_simple %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        {% if type != 'hidden' and ( widget_addon_prepend|default(null) is not null or widget_addon_append|default(null) is not null or widget_btn_prepend|default(null) is not null or widget_btn_append|default(null) is not null ) %}
+            <div class="input-group">
+            {% if widget_btn_prepend|default(null) is not null %}
+                {% set widget_btns = widget_btn_prepend %}
+                {{ block('widget_btns') }}
+            {% endif %}
+            {% if widget_addon_prepend|default(null) is not null %}
+                {% set widget_addon = widget_addon_prepend %}
+                {{ block('widget_addon') }}
+            {% endif %}
+        {% endif %}
+        {% if not widget_remove_btn|default(null) %}
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' not-removable'}) %}
+        {% endif %}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' ' ~ widget_form_control_class)|trim}) %}
+
+        {% if errors|length > 0 %}
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' is-invalid'}) %}
+        {% endif %}
+        {% if static_text is same as(true) %}
+            <p class="form-control-static">{{ value }}</p>
+        {% else %}
+            {{ parent() }}
+        {% endif %}
+        {% if type != 'hidden' and ( widget_addon_prepend|default(null) is not null or widget_addon_append|default(null) is not null or widget_btn_prepend|default(null) is not null or widget_btn_append|default(null) is not null ) %}
+            {% if widget_addon_append|default(null) is not null %}
+                {% set widget_addon = widget_addon_append %}
+                {{ block('widget_addon') }}
+            {% endif %}
+            {% if widget_btn_append|default(null) is not null %}
+                {% set widget_btns = widget_btn_append %}
+                {{ block('widget_btns') }}
+            {% endif %}
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% if error_delay %}
+            {% for child in form %}
+                {% if loop.index == 1 %}
+                    {% if child.set('errors', errors) %}{% endif %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% if errors|length > 0 %}
+                {% if form.parent == null %}
+                    {% from '@MopaBootstrap/flash.html.twig' import flash %}
+                    {% for error in errors %}
+                        {{ flash('danger', error.message) }}
+                    {% endfor %}
+                {% else %}
+                    <span class="help-{{ block('error_type') }} invalid-feedback">
+            {% for error in errors %}
+                {{ error.message }} <br>
+            {% endfor %}
+            </span>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}

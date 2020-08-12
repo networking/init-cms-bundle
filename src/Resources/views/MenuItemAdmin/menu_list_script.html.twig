@@ -76,13 +76,10 @@ function submitAjaxForm(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    var form = jQuery(this);
 
-    jQuery(form).ajaxSubmit({
-        type: form.attr('method'),
-        url: form.attr('action'),
-        dataType: 'json',
-        success: function (xhr) {
+    axios.post(this.action, new FormData(this), axiosConfig)
+        .then(function (response){
+            var data = response.data;
             if (xhr.result == 'ok') {
                 if (xhr.is_new_menu_item && xhr.html) {
                     menuDialog.html(xhr.html);
@@ -91,16 +88,17 @@ function submitAjaxForm(event) {
                     createInitCmsMessageBox(xhr.status, xhr.message);
                 }
             }
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            if(xhr.hasOwnProperty('responseJSON')){
-                var messageHtml = '<div class="alert alert-danger">' + xhr.responseJSON.message + ' <br>'+xhr.responseJSON.errors.join('<br>')+'</div>';
-                jQuery('.modal-body').prepend(messageHtml);
+        })
+        .catch(function (error){
+            var data = error.response.data;
+            if(typeof data === 'object'){
+                jQuery('.modal-body').prepend('<div class="alert alert-danger">' + data.message + ' <br>'+data.errors.join('<br>')+'</div>');
             }else{
-                menuDialog.html(xhr.responseText);
+                menuDialog.html(data);
             }
-        }
-    });
+        })
+
+
 }
 
 function updateMenu(e) {
@@ -115,7 +113,7 @@ function setUpSortTree() {
             disableNestingClass: 'no-nest',
             forcePlaceholderSize: true,
             forceHelperSize: true,
-            handle: 'i.glyphicon-move',
+            handle: 'i.fa-arrows-alt',
             tolerance: 'pointer',
             items: 'li',
             listType: 'ul',
@@ -129,7 +127,6 @@ function setUpSortTree() {
             }
         });
     });
-
 }
 
 function saveSibling(url) {

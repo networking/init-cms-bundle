@@ -1,9 +1,11 @@
 {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
 {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
-<script src="{{ asset('bundles/networkinginitcms/vendor/nestedSortable/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/networkinginitcms/vendor/nestedSortable/jquery.mjs.nestedSortable.js') }}"
+        type="text/javascript"></script>
 <script>
     var tagDialog;
     var lastLink = $('{{ selected }}');
+
     function initializeTagDialog() {
         if (!tagDialog) {
             tagDialog = jQuery('#tag_dialog');
@@ -16,11 +18,11 @@
             tagDialog.on('hide.bs.modal', function (e) {
                 jQuery('input[type=submit]', this).off();
             });
-            tagDialog.on('shown.bs.modal', function(){
+            tagDialog.on('shown.bs.modal', function () {
                 jQuery('input.tag_name_input').focus();
             });
             jQuery(document.body).append(tagDialog);
-            jQuery(tagDialog).on('submit', 'form',  submitAjaxTagForm);
+            jQuery(tagDialog).on('submit', 'form', submitAjaxTagForm);
         }
     }
 
@@ -35,18 +37,20 @@
             return;
         }
 
-        jQuery(form).ajaxSubmit({
-            type: form.attr('method'),
+        axios({
+            method: form.attr('method'),
             url: form.attr('action'),
-            dataType: 'json',
-            success: function (xhr) {
-                if (xhr.result === 'ok') {
-                    createInitCmsMessageBox(xhr.status, xhr.message);
-                    $('.batch-actions').hide();
-                    refreshList();
-                }
+            data: new FormData(form[0]),
+            ...axiosConfig
+        }).then(function (response) {
+            var data = response.data;
+            if (data.result === 'ok') {
+                createInitCmsMessageBox(data.status, data.message);
+                $('.batch-actions').hide();
+                refreshList();
             }
-        });
+        })
+
 
     }
 
@@ -62,41 +66,34 @@
             url = a.attr('ref');
         }
 
-        jQuery.ajax({
-            url: url,
-            dataType: 'html',
-            success: function (html) {
-                // populate the popup container
-                tagDialog.html(html);
+        axios.get(url, axiosConfig)
+            .then(function (response) {
+                tagDialog.html(response.data);
                 tagDialog.modal('show');
-            }
-        });
+            })
+
     }
 
     function submitAjaxTagForm(event) {
         event.preventDefault();
         event.stopPropagation();
 
-        var form = jQuery(this);
 
-        jQuery(form).ajaxSubmit({
-            type: form.attr('method'),
-            url: form.attr('action'),
-            dataType: 'json',
-            success: function (xhr) {
-                if (xhr.result == 'ok') {
-                    tagDialog.modal('hide');
-                    createInitCmsMessageBox(xhr.status, xhr.message);
-                    reloadSortTree(xhr.html);
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                tagDialog.html(xhr.responseText);
+        axios.post(this.action, new FormData(this), axiosConfig)
+        .then( function (response) {
+            var data = response.data;
+            if (data.result == 'ok') {
+                tagDialog.modal('hide');
+                createInitCmsMessageBox(data.status, data.message);
+                reloadSortTree(data.html);
             }
-        });
+        })
+        .catch(function(error){
+            tagDialog.html(error.response.data);
+        })
     }
 
-    function reloadSortTree(html){
+    function reloadSortTree(html) {
         jQuery('#tagsContainer').html(html);
         setUpSortTree();
         lastLink = $('.show_all_media');
@@ -105,7 +102,7 @@
         lastItem.find('> div > a.tag_link').trigger('click');
     }
 
-    function setUpSortTree(){
+    function setUpSortTree() {
 
         $('.ui-sortable').nestedSortable({
             disableNestingClass: 'no-nest',
@@ -122,23 +119,27 @@
             forceHelperSize: true,
             startCollapsed: true,
             expandOnHover: 100,
-            excludeRoot:true,
+            excludeRoot: true,
             disabledClass: 'no-sort',
-            isAllowed: function(placeholder, placeholderParent, currentItem) {
+            isAllowed: function (placeholder, placeholderParent, currentItem) {
                 var allowed = true;
                 var currentId = $(currentItem).attr('id');
                 var currentText = $(currentItem).find('> div.handle > a.tag_link').text();
 
-                if(placeholderParent){
-                    $(placeholderParent[0]).find(' > ul > li.sortable-tag').each(function(i, e){
-                        if(currentId != $(e).attr('id')){
-                            if($(e).find('> div.handle > a.tag_link').text().toLowerCase() === currentText.toLowerCase() ){allowed = false;}
+                if (placeholderParent) {
+                    $(placeholderParent[0]).find(' > ul > li.sortable-tag').each(function (i, e) {
+                        if (currentId != $(e).attr('id')) {
+                            if ($(e).find('> div.handle > a.tag_link').text().toLowerCase() === currentText.toLowerCase()) {
+                                allowed = false;
+                            }
                         }
                     });
-                }else{
-                    $('#tag-tree').find(' > li.sortable-tag').each(function(i, e){
-                        if(currentId != $(e).attr('id')){
-                            if($(e).find('> div > a.tag_link').text().toLowerCase() === currentText.toLowerCase() ){ allowed = false; }
+                } else {
+                    $('#tag-tree').find(' > li.sortable-tag').each(function (i, e) {
+                        if (currentId != $(e).attr('id')) {
+                            if ($(e).find('> div > a.tag_link').text().toLowerCase() === currentText.toLowerCase()) {
+                                allowed = false;
+                            }
                         }
                     });
                 }
@@ -147,11 +148,11 @@
             update: function () {
                 updateTree(this)
             },
-            stop: function(e, ui) {
+            stop: function (e, ui) {
                 var list = ui.item.context.parentElement;
                 sortList(list);
             },
-            expand: function(){
+            expand: function () {
                 $('li.mjs-nestedSortable-hovering > div > i.glyphicon-folder-close').toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open')
             }
         });
@@ -160,26 +161,26 @@
             'toggle': 'manual',
             'url': '{{ tagAdmin.generateUrl('inline_edit') }}',
             'name': 'name'
-        }).on('contextmenu', function(e){
+        }).on('contextmenu', function (e) {
             $(this).editable('show');
             e.preventDefault();
-        }).on('save', function(e, params){
+        }).on('save', function (e, params) {
             $(this).parent().closest('li').data('tag-name', params.newValue);
-        }).on('hidden', function(e, r){
-            if(r === 'save'){
+        }).on('hidden', function (e, r) {
+            if (r === 'save') {
                 var list = $(this).parent().closest('ul');
                 sortList(list);
-                history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
+                history.replaceState({time: jQuery.now()}, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time=' + jQuery.now());
             }
         });
     }
 
-    function sortList(list){
-        $(list).find(' > li.sortable-tag').sort(function(a,b){
+    function sortList(list) {
+        $(list).find(' > li.sortable-tag').sort(function (a, b) {
             var keyA = $(a).data('tag-name').toString().toLowerCase();
             var keyB = $(b).data('tag-name').toString().toLowerCase();
             return (keyA < keyB ? -1 : (keyA > keyB ? +1 : 0));
-        }).appendTo( $(list) );
+        }).appendTo($(list));
     }
 
     function updateTree(e) {
@@ -188,32 +189,32 @@
             {"nodes": jQuery(e).nestedSortable('toArray')},
             function (xhr) {
                 createInitCmsMessageBox(xhr.status, xhr.message);
-                history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
+                history.replaceState({time: jQuery.now()}, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time=' + jQuery.now());
             }
         );
     }
 
-    function refreshList(filters){
-        if(!filters){
+    function refreshList(filters) {
+        if (!filters) {
             filters = {}
         }
         $.get(
             "{{ admin.generateUrl('refresh_list')|raw }}",
             filters,
-            function(xhr){
+            function (xhr) {
                 $('#item_list').html(xhr);
-                $("html, body").animate({ scrollTop: $('#item_list').scrollTop() }, "slow");
+                $("html, body").animate({scrollTop: $('#item_list').scrollTop()}, "slow");
             }
         );
 
-        history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
+        history.replaceState({time: jQuery.now()}, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time=' + jQuery.now());
     }
 
 
-    $(function(){
+    $(function () {
         var body = $('body');
 
-        body.on('html-received', function(event, html){
+        body.on('html-received', function (event, html) {
 
             console.log(html);
 
@@ -223,58 +224,58 @@
 
         var ua = navigator.userAgent, event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
-        body.on('click', '.delete_check_box', function(){
+        body.on('click', '.delete_check_box', function () {
             var active = false;
-            $('.delete_check_box').each(function(i, item){
-                if(item.checked){
+            $('.delete_check_box').each(function (i, item) {
+                if (item.checked) {
                     $(item).addClass('ui-selected');
                     active = true;
-                }else{
+                } else {
                     $(item).removeClass('ui-selected');
                 }
             });
-            if(active){
+            if (active) {
                 $('.batch-actions').fadeIn();
-            }else{
+            } else {
                 $('.batch-actions').fadeOut();
             }
         });
 
-        $('.content-main').on('click', "button[type='submit']", function(e){
+        $('.content-main').on('click', "button[type='submit']", function (e) {
             $("input[name='action']").val(this.value);
         });
 
-        body.on('click', '.tag_link', function(e, noLoad){
+        body.on('click', '.tag_link', function (e, noLoad) {
             e.preventDefault();
-            if(lastLink){
+            if (lastLink) {
                 lastLink.parent().removeClass('info');
                 lastLink.siblings('a.dialog-link').hide();
             }
             var link = $(e.target);
             var tagId = link.data('pk');
             link.parent().addClass('info');
-            if(link.parent().siblings('ul').children().length < 1){
+            if (link.parent().siblings('ul').children().length < 1) {
                 link.siblings('a.dialog-link').show();
             }
             var listItem = link.closest('li');
-            if($(listItem).hasClass('mjs-nestedSortable-collapsed')){
+            if ($(listItem).hasClass('mjs-nestedSortable-collapsed')) {
                 link.siblings('i').trigger('click');
             }
 
             lastLink = link;
-            if(noLoad == undefined){
-                refreshList({'filter': {'tags':{'value':tagId}}});
+            if (noLoad == undefined) {
+                refreshList({'filter': {'tags': {'value': tagId}}});
             }
         });
 
         body.on('click', '.show_all_media', function (e) {
             e.preventDefault();
-            if(lastLink){
+            if (lastLink) {
                 lastLink.parent().removeClass('info');
                 lastLink.siblings('a.dialog-link').hide();
             }
             // $('.media-box').show();
-            refreshList({'filter': {'_page':1}});
+            refreshList({'filter': {'_page': 1}});
             var link = $(e.target);
             link.parent().addClass('info');
             lastLink = link;
@@ -282,17 +283,19 @@
 
         body.on('click', 'a.media-pager', function (e) {
             e.preventDefault();
-            refreshList({'filter': {
-                '_page':$(this).data('page'),
-                '_sort_order':$(this).data('sort-order'),
-                '_sort_by':$(this).data('sort-by'),
-                'tags':{'value': $(this).data('tags')},
-                'name':{'value': $(this).data('name')},
-            }});
+            refreshList({
+                'filter': {
+                    '_page': $(this).data('page'),
+                    '_sort_order': $(this).data('sort-order'),
+                    '_sort_by': $(this).data('sort-by'),
+                    'tags': {'value': $(this).data('tags')},
+                    'name': {'value': $(this).data('name')},
+                }
+            });
         })
 
 
-        body.on('click', 'i.tag_folder', function(e) {
+        body.on('click', 'i.tag_folder', function (e) {
             var target = $(e.target);
             target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
             target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');

@@ -1,110 +1,98 @@
 {% apply spaceless %}
-<script type="text/javascript">/*<![CDATA[*/
-    var listDialog;
-    var linkClicked;
+    <script type="text/javascript">/*<![CDATA[*/
+        var listDialog;
+        var linkClicked;
+        var axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
 
-    function initializeDialog() {
-        if (!listDialog) {
-            listDialog = jQuery('#list_dialog');
-            listDialog.modal({ height:'auto', width:650, show:false});
-            listDialog.on('hide.bs.modal', function () {
-                jQuery('input[type=submit]', this).off();
+        function initializeDialog() {
+            if (!listDialog) {
+                listDialog = jQuery('#list_dialog');
+                listDialog.modal({height: 'auto', width: 650, show: false});
+                listDialog.on('hide.bs.modal', function () {
+                    jQuery('input[type=submit]', this).off();
+                });
+                jQuery(document.body).append(listDialog);
+            }
+        }
+
+        function createAjaxDialog(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            initializeDialog();
+            linkClicked = jQuery(this);
+            var url = linkClicked.attr('href');
+            if (!url) {
+                url = linkClicked.attr('ref');
+            }
+            axios.get(url,{ ...axiosConfig}).then(function (response) {
+                    listDialog.html(response.data);
+                    listDialog.modal('show');
             });
-            jQuery(document.body).append(listDialog);
         }
-    }
 
-    function createAjaxDialog(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        initializeDialog();
-        linkClicked = jQuery(this);
-        var url = linkClicked.attr('href');
-        if (!url) {
-            url = linkClicked.attr('ref');
-        }
-        jQuery.ajax({
-            url:url,
-            dataType:'html',
-            success:function (html) {
+        function createBatchDialog(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            initializeDialog();
+
+            var form = jQuery(this).closest('form');
+
+            if (jQuery('[name^="idx[]"]:checked', form).length == 0 && jQuery('[name^="all_elements"]:checked', form).length == 0) {
+                createInitCmsMessageBox('warning', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
+                return;
+            }
+            var data = form.serialize();
+            axios.post(form.attr('action'), data, axiosConfig).then(function (repsonse) {
+                var html = repsonse.data;
                 listDialog.html(html);
                 listDialog.modal('show');
-            }
-        });
-    }
+            }).catch(function (error) {
 
-    function createBatchDialog(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        initializeDialog();
-
-        var form = jQuery(this).closest('form');
-
-        if (jQuery('[name^="idx[]"]:checked', form).length == 0 && jQuery('[name^="all_elements"]:checked', form).length == 0) {
-            createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
-            return;
+            });
         }
 
-        jQuery(form).ajaxSubmit({
-            type:form.attr('method'),
-            url:form.attr('action'),
-            success:function (html) {
-                // populate the popup container
-                jQuery('.modal-content', listDialog).html(html);
-                var container = jQuery(".sonata-ba-delete", listDialog);
-                var text = container.clone().children().remove().end().text();
-                var containerHtml = container.html();
-                var re = new RegExp(addSlashes(trim(text)));
-                containerHtml = containerHtml.replace(re, '');
+        function addSlashes(string) {
+            return string.replace(/\\/g, '\\\\').replace(/\u0008/g, '\\b').replace(/\t/g, '\\t').replace(/\n/g, '\\n').replace(/\f/g, '\\f').replace(/\r/g, '\\r').replace(/'/g, '\\\'').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\?/g, '\\?').replace(/"/g, '\\"');
+        }
 
-                jQuery(".sonata-ba-delete").html(containerHtml);
-                var header = jQuery('h1', listDialog);
-                var headerText = header.html();
-                header.replaceWith(jQuery('<h3>' + headerText + '</h3>'));
-                jQuery('h3', listDialog).wrap('<div class="modal-header" />');
-                jQuery('.modal-header').after(jQuery('<div class="modal-body">' + text + '</div>'));
-                jQuery('.form-actions', listDialog).removeClass('well');
-                jQuery('.form-actions', listDialog).addClass('modal-footer');
-                listDialog.modal('show');
-            }
-        });
-    }
-
-    function addSlashes(string) {
-        return string.replace(/\\/g, '\\\\').
-            replace(/\u0008/g, '\\b').
-            replace(/\t/g, '\\t').
-            replace(/\n/g, '\\n').
-            replace(/\f/g, '\\f').
-            replace(/\r/g, '\\r').
-            replace(/'/g, '\\\'').
-            replace(/\(/g, '\\(').
-            replace(/\)/g, '\\)').
-            replace(/\?/g, '\\?').
-            replace(/"/g, '\\"');
-    }
-
-    (function ($) {
-        var ua = navigator.userAgent,
+        (function ($) {
+            var ua = navigator.userAgent,
                 event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
-        $(".actions-toggle").on(event, function () {
-            $('.row-actions').hide();
-            $(this).parent().children('.row-actions').fadeToggle('fast');
-        });
-        $(".actions-toggle-close").on(event, function () {
-            $(this).parent().fadeToggle('fast');
-        });
-        $('#hidden_filters').on('show hide', function () {
-            $('#filter_toggle').toggleClass('filter-close');
-            $('#filter_toggle').toggleClass('filter-open');
-        });
-        $('.show-tooltip').tooltip({placement:'bottom', delay:{ show:800, hide:100 }});
-        $('body').on('click', '.dialog-link', createAjaxDialog).on('click', '.batch-dialog-link', createBatchDialog).on('click', '.modal-close', function(){listDialog.modal('hide')});
-        initializeDialog();
+            $('.show-tooltip').tooltip({placement: 'bottom', delay: {show: 800, hide: 100}});
+            $('body')
+                .on('click', '.dialog-link', createAjaxDialog)
+                .on('click', '.batch-dialog-link', createBatchDialog)
+                .on('click', '.modal-close', function () {listDialog.modal('hide')});
+            initializeDialog();
 
+            var table = $('#intiCMSDatatable').DataTable({
+                order: [],
+                select: {
+                    style: 'multi',
+                    selector: 'td:first-child .checkable',
+                },
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.21/i18n/German.json'
+                }
+            });
 
-    })(jQuery);
-/*]]>*/</script>
+            table.on('change', '.group-checkable', function () {
+                var set = $(this).closest('table').find('td:first-child .checkable');
+                var checked = $(this).is(':checked');
+
+                $(set).each(function () {
+                    if (checked) {
+                        $(this).prop('checked', true);
+                        table.rows($(this).closest('tr')).select();
+                    } else {
+                        $(this).prop('checked', false);
+                        table.rows($(this).closest('tr')).deselect();
+                    }
+                });
+            });
+
+        })(jQuery);
+        /*]]>*/</script>
 {% endapply %}

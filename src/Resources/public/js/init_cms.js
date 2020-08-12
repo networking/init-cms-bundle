@@ -1,21 +1,30 @@
-
-
 function createInitCmsMessageBox(status, message) {
-    status = status == 'error'?'danger':status;
-
-    var messageHtml = '<div class="toast" role="alert" aria-live="polite" aria-atomic="true" data-delay="3000" style="position: absolute; top: 0; right: 0; width: 300px">\n' +
-        '    <div class="toast-header">\n' +
-        '      <button type="button" class="ml-auto mb-1 close" data-dismiss="toast" aria-label="Close">\n' +
-        '        <span aria-hidden="true">&times;</span>\n' +
-        '      </button>\n' +
-        '    </div>\n' +
-        '    <div class="toast-body bg-lighter-'+status+'  text-'+status+'">\n' +
-            message +
-        '    </div>\n' +
-        '  </div>';
-
-    jQuery('#toaster-panel').html(messageHtml);
-    $('.toast').toast('show');
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "2000",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "linear",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    if (status === 'success') {
+        toastr.success(message);
+    } else if (status === 'warning') {
+        toastr.warning(message);
+    } else if (status === 'error' || status === 'danger') {
+        toastr.error(message);
+    } else {
+        toastr.info(message);
+    }
 }
 
 function trim(str) {
@@ -32,8 +41,24 @@ function trim(str) {
 function uploadError(xhr) {
     alert(xhr.error);
 }
-(function ($) {
 
+
+$.fn.select2.defaults.set("theme", "bootstrap");
+$.fn.modal.Constructor.prototype.enforceFocus = function () {
+    $(document)
+        .off('focusin.bs.modal') // guard against infinite focus loop
+        .on('focusin.bs.modal', $.proxy(function (e) {
+            if (this.$element[0] !== e.target && !this.$element.has(e.target).length
+                // add whatever conditions you need here:
+                && !$(e.target).hasClass('select2-input')
+                && !$(e.target.parentNode).hasClass('cke')
+            ) {
+                this.$element.blur(); //fix for IE (focus to blur for IE 11)
+            }
+        }, this))
+};
+
+$(function () {
     // Opera 8.0+
     var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 
@@ -54,7 +79,11 @@ function uploadError(xhr) {
     // Chrome 1+
     var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 
-    $('.show-tooltip, [data-toggle="tooltip"]').tooltip({placement:'bottom', container: 'body', delay:{ show:800, hide:100 }});
+    $('.show-tooltip, [data-toggle="tooltip"]').tooltip({
+        placement: 'bottom',
+        container: 'body',
+        delay: {show: 800, hide: 100}
+    });
 
     var openModals = [];
 
@@ -62,80 +91,76 @@ function uploadError(xhr) {
         var modalBody = $(this).find('.modal-body');
         modalBody.css('overflow-y', 'auto');
         modalBody.css('max-height', 'calc(55vh)');
-        if(isChrome){
+        if (isChrome) {
             var windowHeight = $(window).height();
-            if(windowHeight > 860){
+            if (windowHeight > 860) {
                 modalBody.css('max-height', '70vh');
-            }else if(windowHeight > 740){
+            } else if (windowHeight > 740) {
                 modalBody.css('max-height', '65vh');
-            }else if(windowHeight > 640){
+            } else if (windowHeight > 640) {
                 modalBody.css('max-height', '60vh');
-            }else{
+            } else {
                 modalBody.css('max-height', '55vh');
             }
-        }else{
+        } else {
             modalBody.css('max-height', '70vh');
         }
 
         openModals.push($(this).attr('id'));
-    }).on('hide.bs.modal', '.modal', function(){
+    }).on('hide.bs.modal', '.modal', function () {
         var index = openModals.indexOf($(this).attr('id'));
         if (index > -1) {
             openModals.splice(index, 1);
         }
-    }).on('hidden.bs.modal', function(){
-        if(openModals.length > 0){
+    }).on('hidden.bs.modal', function () {
+        if (openModals.length > 0) {
             $('body').addClass('modal-open');
         }
     });
 
-    // handle the #toggle click event
-    $('#body-row .collapse').collapse('hide');
-
-// Collapse click
-    $('[data-toggle=sidebar-colapse]').click(function() {
-        SidebarCollapse();
-    });
-
-    function SidebarCollapse () {
-        $('.menu-collapsed').toggleClass('d-none');
-        $('.sidebar-submenu').toggleClass('d-none');
-        $('.submenu-icon').toggleClass('d-none');
-        $('.cms-brand').toggleClass('d-none');
-        $('#sidebar-container').toggleClass('sidebar-expanded sidebar-collapsed');
-
-        // Treating d-flex/d-none on separators with title
-        var SeparatorTitle = $('.sidebar-separator-title');
-        if (SeparatorTitle.hasClass('d-flex')) {
-            SeparatorTitle.removeClass('d-flex');
-        } else {
-            SeparatorTitle.addClass('d-flex');
-        }
-    }
-
-
-
-    // $('body').on('mouseenter', '#sidebar-container.sidebar-collapsed li', function (){
-    //     $('#sidebar-container').addClass('sidebar-hover');
-    //     SidebarCollapse();
-    // }).on('mouseleave', '#sidebar-container.sidebar-hover li', function (){
-    //     $('#sidebar-container').removeClass('sidebar-hover');
-    //     SidebarCollapse();
-    // })
-
-})(jQuery);
-
-$.fn.select2.defaults.set( "theme", "bootstrap" );
-$.fn.modal.Constructor.prototype.enforceFocus = function() {
-    $(document)
-        .off('focusin.bs.modal') // guard against infinite focus loop
-        .on('focusin.bs.modal', $.proxy(function (e) {
-            if (this.$element[0] !== e.target && !this.$element.has(e.target).length
-                    // add whatever conditions you need here:
-                && !$(e.target).hasClass('select2-input')
-                && !$(e.target.parentNode).hasClass('cke')
-            ) {
-                this.$element.blur(); //fix for IE (focus to blur for IE 11)
+    $('.editable-click').each(function (i, e) {
+        var link = $(e);
+        var url = link.data('url');
+        var locale = link.data('locale');
+        var name = link.data('name');
+        var value = link.data('value');
+        var pk = link.data('pk');
+        link.editable({
+            url: url,
+            name: name,
+            value: value,
+            params: function (params) {
+                // make sure pk is always loaded from element
+                params.pk = pk;
+                params.locale = locale;
+                return params;
+            },
+            error: function (response) {
+                response = JSON.parse(response.responseText);
+                return response ? response.message : response;
+            },
+            success: function (response, newValue) {
+                link.data('pk', response.pk);
+                return response;
             }
-        }, this))
-};
+        });
+    })
+});
+
+var Admin = {
+    /**
+     * render log message
+     * @param mixed
+     */
+    log: function() {
+
+        var msg = '[InitCms Log] ' + Array.prototype.join.call(arguments,', ');
+        if (window.console && window.console.log) {
+            window.console.log(msg);
+        } else if (window.opera && window.opera.postError) {
+            window.opera.postError(msg);
+        }
+    },
+}
+
+var axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}

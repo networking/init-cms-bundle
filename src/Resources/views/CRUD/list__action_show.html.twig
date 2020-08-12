@@ -1,5 +1,10 @@
 {% if admin.hasRoute('show') %}
-    <a href="{{ admin.generateObjectUrl('show', object) }}" class="btn btn-light btn-sm button-in-row" title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}">
-        <i class="fa fa-search-plus"></i>
+    <a href="{{ admin.generateObjectUrl('show', object) }}"
+       class="{% if isSubNav is defined %}nav-link{% else %}btn btn-sm btn-clean btn-icon{% endif %}  show-tooltip "
+       title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}">
+        <i class="nav-icon la la-search"></i>
+        {% if isSubNav is defined  %}
+            <span class="nav-text">{{ 'action_show'|trans({}, 'SonataAdminBundle') }}</span>
+        {% endif %}
     </a>
 {% endif %}

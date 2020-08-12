@@ -13,7 +13,7 @@ file that was distributed with this source code.
 
 {% if sonata_admin.field_description.associationadmin %}
     <div id="field_container_{{ id }}" class="field-container">
-        <div id="field_widget_{{ id }}" class=" pull-left">
+        <div id="field_widget_{{ id }}" class=" float-left">
             {{ form_widget(form) }}
         </div>
         <div id="field_actions_{{ id }}" class="form-group">
@@ -21,10 +21,10 @@ file that was distributed with this source code.
                 &nbsp;<a
                         href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
                         onclick="return start_field_dialog_form_add_{{ id }}(this);"
-                        class="btn btn-light sonata-ba-action"
+                        class="btn btn-light"
                         title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                         >
-                    <i class="glyphicon glyphicon-plus"></i>
+                    <i class="la la-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}

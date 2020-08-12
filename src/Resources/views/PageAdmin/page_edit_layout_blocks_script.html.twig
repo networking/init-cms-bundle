@@ -13,27 +13,36 @@ file that was distributed with this source code.
         var tempHtml = {};
         var tempElements = {};
 
+
         // handle the add link
         function getLayoutBlockCreateForm(url, data, tempElement) {
-            jQuery.ajax({
-                url: url,
-                data: data,
-                success: function (html) {
-                    var element = jQuery('#' + tempElement)
-                    element.html(html);
-                    jQuery('#contentTypeModal').modal('hide');
-                    jQuery('#createContentButton').button('reset');
-                    jQuery('#contentLoading').hide();
-                    jQuery('form', element).on('submit', submitLayoutCreate);
-                    jQuery('.cancel', element).on('click', function (e) {
-                        element.remove();
-                    });
-                }
-            });
+            var element = jQuery('#' + tempElement)
+            var list = element.parent();
+
+            axios.get(url, {params: data, ...axiosConfig})
+                .then(function (response) {
+                        element.html(response.data);
+                        jQuery('form', element).on('submit', submitLayoutCreate);
+                        jQuery('.cancel', element).on('click', function (e) {
+                            element.detach().promise().done(() => {
+                                if (list.find('.networking-sortable-list').length < 1) {
+                                    list.find(".empty_layout_block").show();
+                                }
+                            });
+                            element.removeData();
+                        });
+                        jQuery('.select-content-type', element).on('change', function () {
+                            data.subclass = jQuery(this).val();
+                            getLayoutBlockCreateForm(url, data, tempElement);
+                        })
+                    }
+                )
+                .catch((error) => {
+                    console.log(error.response);
+                })
         }
 
         function reloadPagePreview() {
-            // document.getElementById('pagePreview').location.reload();
             document.getElementById('pagePreview').src += '';
         }
 
@@ -41,44 +50,38 @@ file that was distributed with this source code.
             event.preventDefault();
             jQuery.each(CKEDITOR.instances, function () {
                 try {
-                    var editor = this;
-                    var text = editor.getData();
-                    if (editor) {
-                        jQuery('#' + editor.name).val(text);
-                    }
-
+                    jQuery('#' + this.name).val(this.getData());
                 } catch (err) {
                 }
             });
             var form = jQuery(this);
-            var container = form.parent();
-            jQuery(form).ajaxSubmit({
-                type: form.attr('method'),
-                url: form.attr('action'),
-                dataType: 'json',
-                data: {
+            var element = form.parent();
+            var list = element.parent();
+            var data = form.formSerialize();
+            axios.post(form.attr('action'), data, {
+                params: {
                     code: '{{ admin.code }}',
                     uniqId: '{{ admin.uniqid }}',
                     pageId: '{{ admin.id(admin.subject) }}'
                 },
-                success: function (xhr) {
-                    if (xhr.result === 'ok') {
-                        createInitCmsMessageBox(xhr.status, xhr.message);
-                        jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
-                        saveLayoutBlockSort();
-                        reloadPagePreview();
-                    }
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    container.html(xhr.responseText);
-                    jQuery('form', container).on('submit', submitLayoutCreate);
-                    jQuery('.cancel', container).on('click', function (e) {
-                        container.remove();
+                ...axiosConfig
+            }).then(function (repsonse) {
+                createInitCmsMessageBox(repsonse.data.status, repsonse.data.message);
+                jQuery('#field_container_{{ id }}').replaceWith(repsonse.data.html);
+                saveLayoutBlockSort();
+                reloadPagePreview();
+            }).catch(function (error) {
+                element.html(error.response.data);
+                jQuery('form', element).on('submit', submitLayoutCreate);
+                jQuery('.cancel', element).on('click', function (e) {
+                    element.detach().promise().done(() => {
+                        if (list.find('.networking-sortable-list').length < 1) {
+                            list.find(".empty_layout_block").show();
+                        }
                     });
-                }
+                    element.removeData();
+                });
             });
-
-            return false;
         }
 
 
@@ -88,20 +91,16 @@ file that was distributed with this source code.
             if (tempHtml[container.attr('id')]) {
                 return;
             }
-            jQuery.ajax({
-                url: url,
-                dataType: 'html',
-                success: function (html) {
-
+            axios.get(url, axiosConfig)
+                .then(function (response) {
                     tempHtml[container.attr('id')] = container.html();
-                    container.html(html);
+                    container.html(response.data);
                     jQuery('form', container).on('submit', submitLayoutUpdate);
                     jQuery('.cancel', container).on('click', function () {
                         container.html(tempHtml[container.attr('id')]);
                         delete tempHtml[container.attr('id')];
                     })
-                }
-            });
+                });
         }
 
         function submitLayoutUpdate(event) {
@@ -119,31 +118,26 @@ file that was distributed with this source code.
 
             var form = jQuery(this);
             var container = form.parent();
-            jQuery(form).ajaxSubmit({
-                type: form.attr('method'),
-                url: form.attr('action'),
-                data: {
-                    formFieldId: '{{ id }}',
+            axios.post(form.attr('action'), form.formSerialize(), {
+                params: {
                     code: '{{ admin.code }}',
                     uniqId: '{{ admin.uniqid }}',
                     pageId: '{{ admin.id(admin.subject) }}'
                 },
-                success: function (html) {
+                ...axiosConfig
+            }).then(function(response){
+                delete tempHtml[container.attr('id')];
+                jQuery('#field_container_{{ id }}').replaceWith(response.data); // replace the html
+                saveLayoutBlockSort();
+                reloadPagePreview();
+            }).catch(function(error){
+                container.html(error.response.data);
+                jQuery('form', container).on('submit', submitLayoutUpdate);
+                jQuery('.cancel', container).on('click', function (e) {
+                    container.html(tempHtml[container.attr('id')]);
                     delete tempHtml[container.attr('id')];
-                    jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
-                    saveLayoutBlockSort();
-                    reloadPagePreview();
-                },
-                error: function (xhr) {
-                    container.html(xhr.responseText);
-                    jQuery('form', container).on('submit', submitLayoutUpdate);
-                    jQuery('.cancel', container).on('click', function (e) {
-                        container.html(tempHtml[container.attr('id')]);
-                        delete tempHtml[container.attr('id')];
-                    });
-
-                },
-            });
+                });
+            })
         }
 
         function reloadLayoutBlocks() {
@@ -161,7 +155,7 @@ file that was distributed with this source code.
             });
         }
 
-        function saveLayoutBlockSort(callback) {
+        function saveLayoutBlockSort(e, callback) {
             var zones = [];
 
             jQuery('ul.sortable').each(function (index, el) {
@@ -181,7 +175,6 @@ file that was distributed with this source code.
                 if (callback !== undefined) {
                     callback(xhr)
                 }
-
                 jQuery('body').trigger('layout:sorted', [xhr]);
             });
         }
@@ -189,6 +182,7 @@ file that was distributed with this source code.
         function submitLayoutSort(zones) {
             var dfd = jQuery.Deferred();
             var pageStatus = jQuery('.page_status');
+
             return jQuery.ajax({
                 url: '{{ url('admin_networking_initcms_layoutblock_updateLayoutBlockSort') }}',
                 data: {
@@ -213,6 +207,21 @@ file that was distributed with this source code.
                     reloadPagePreview();
                 }
             });
+        }
+
+        function canZoneAccept(zone, item){
+            var allowedTypes = zone.data('content-types');
+            var maxItems = zone.data('max-items');
+            var contentType = item.data('content-type');
+
+            if(allowedTypes.length > 0 && jQuery.inArray(contentType, allowedTypes) < 0){
+                return false;
+            }
+
+            if(maxItems > 0 && zone.find('li.networking-sortable-list').length > maxItems){
+                return false;
+            }
+            return true;
         }
 
         function onAfterLoad() {
@@ -255,64 +264,44 @@ file that was distributed with this source code.
                         jQuery(this).find(".empty_layout_block").hide();
                     }
                 },
-                receive: function (event, ui) {
-                    var allowedTypes = eval(jQuery(this).attr('data-content-types'));
-                    var maxItems = jQuery(this).attr('data-max-items');
-                    var contentType = jQuery(ui.item).attr('data-content-type');
-
-                    if (allowedTypes.length > 0 && jQuery.inArray(contentType, allowedTypes) < 0) {
-                        jQuery(ui.placeholder).addClass('ui-state-error');
-                        jQuery(ui.sender).sortable('cancel');
-
-                        if (!jQuery(ui.sender).find('.networking-sortable-list').length < 2) {
-                            jQuery(ui.sender).find(".empty_layout_block").hide();
-                        }
+                over: function (event, ui) {
+                    var placeholder = jQuery(ui.placeholder);
+                    var zone = jQuery(event.target);
+                    if(canZoneAccept(zone, jQuery(ui.item))){
+                        var emptyBlock = zone.find(".empty_layout_block");
+                        var height = emptyBlock.height();
+                        placeholder.css('display', 'block');
+                        placeholder.css('height', height + 'px');
+                        emptyBlock.hide();
                         return;
                     }
+                    var display = jQuery(ui.sender).attr('id') === zone.attr('id')?'block':'none';
+                    placeholder.css('display', display)
 
-                    if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length > maxItems) {
-                        jQuery(ui.placeholder).addClass('ui-state-error');
-                        jQuery(ui.sender).sortable('cancel');
-                        if (!jQuery(ui.sender).find('.networking-sortable-list').length < 2) {
-                            jQuery(ui.sender).find(".empty_layout_block").hide();
-                        }
-                    } else {
-                        jQuery(this).find(".empty_layout_block").hide();
+                },
+                receive: function (event, ui) {
+                    var zone = jQuery(event.target);
+                    if(canZoneAccept(zone, jQuery(ui.item))){
+                        zone.find(".empty_layout_block").hide();
+                        return;
                     }
+                    jQuery(ui.placeholder).addClass('ui-state-error');
+                    jQuery(ui.sender).sortable('cancel');
+                    if (!jQuery(ui.sender).find('.networking-sortable-list').length < 2) {
+                        jQuery(ui.sender).find(".empty_layout_block").hide();
+                    }
+
+                    return;
+
                 },
                 change: function (event, ui) {
                     jQuery('ul.sortable').each(function (i, e) {
                         var list = jQuery(e);
                         var listItems = list.find('.networking-sortable-list').not('.ui-sortable-helper');
-                        console.log(list.attr('id'))
-                        console.log(listItems.length)
                         if (listItems.length < 1) {
                             list.find(".empty_layout_block").show();
                         }
                     });
-                },
-                over: function (event, ui) {
-                    var allowedTypes = eval(jQuery(this).attr('data-content-types'));
-                    var maxItems = jQuery(this).attr('data-max-items');
-                    var contentType = jQuery(ui.item).attr('data-content-type');
-                    var placeholder = $(ui.placeholder);
-
-                    if (allowedTypes.length > 0 && jQuery.inArray(contentType, allowedTypes) < 0) {
-                        placeholder.css('display', 'none');
-                    } else if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length >= maxItems) {
-
-                        if (jQuery(ui.sender).attr('id') === jQuery(this).attr('id')) {
-                            placeholder.css('display', 'block');
-                        } else {
-                            placeholder.css('display', 'none');
-                        }
-                        jQuery(this).find(".empty_layout_block").hide();
-                    } else {
-                        var height = jQuery(this).find(".empty_layout_block").height();
-                        placeholder.css('display', 'block');
-                        placeholder.css('height', height + 'px');
-                        jQuery(this).find(".empty_layout_block").hide();
-                    }
                 }
 
             });
@@ -325,44 +314,26 @@ file that was distributed with this source code.
 
                 ev.preventDefault();
                 var link = jQuery(this);
+                var restrictedTypes = link.data('value');
 
-                var restrictedTypes = eval(link.data('value'));
-                var selectContentType = jQuery('#selectContentType');
-                var contentTypeModal = jQuery('#contentTypeModal');
+                var tempElement = 'temp' + Date.now();
+                var zone = link.data('zone');
+                var list = jQuery('#zone_' + zone);
+                var element = jQuery('<li id="' + tempElement + '" class="networking-sortable-list"></li>');
+                list.find(".empty_layout_block").hide();
+                list.append(element);
+                var data = {
+                    zone: link.data('zone'),
+                    sortOrder: link.data('sort-order'),
+                    subclass: restrictedTypes[0],
+                    code: '{{ admin.code }}',
+                    uniqId: '{{ admin.uniqid }}',
+                    pageId: '{{ admin.id(admin.subject) }}'
+                };
+                var url = '{{ url('admin_networking_initcms_layoutblock_create') }}';
 
-                selectContentType.find('option').each(function (i) {
-                    if (jQuery.inArray($(this).val(), restrictedTypes) < 0 && restrictedTypes.length > 0) {
-                        jQuery(this).attr('disabled', 'disabled');
-                    } else {
-                        jQuery(this).removeAttr('disabled');
-                    }
-                });
-                selectContentType.val(jQuery("#selectContentType option:enabled:first").val());
+                getLayoutBlockCreateForm(url, data, tempElement);
 
-                contentTypeModal.modal('show');
-
-                contentTypeModal.on('initcms.create_block', function (event) {
-                    jQuery('button', '#contentTypeModal').off('click');
-                    jQuery('#contentTypeModal').off('initcms.create_block');
-                    if (jQuery(this).data('create')) {
-                        jQuery('#contentLoading').show();
-                        jQuery('#createContentButton').button('loading');
-                        var data = {
-                            zone: link.data('zone'),
-                            sortOrder: link.data('sort-order'),
-                            subclass: selectContentType.val(),
-                            code: '{{ admin.code }}',
-                            uniqId: '{{ admin.uniqid }}',
-                            pageId: '{{ admin.id(admin.subject) }}'
-                        };
-                        var url = '{{ url('admin_networking_initcms_layoutblock_create') }}';
-                        var tempelement = 'temp' + Date.now();
-                        var element = link.closest('.networking-sort-zone').parent().append('<li id="' + tempelement + '" class="empty_layout_block"></li>');
-                        getLayoutBlockCreateForm(url, data, tempelement);
-
-
-                    }
-                });
             }).on('click', '.layout-link', function (event) {
                 event.preventDefault();
                 getLayoutBlockEditForm($(this).data('container'), $(this).data('href'))

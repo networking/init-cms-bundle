@@ -8,32 +8,11 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends '@NetworkingInitCms/CRUD/base_list.html.twig' %}
+{% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
 
 
 
 {% block actions %}
-    <div class="sonata-actions">
-        {% include '@NetworkingInitCms/Core/clear_cache_button.html.twig' %}
-    </div>
-{% endblock %}
-
-{% block footer %}
-    {{ parent() }}
-    <div class="modal fade" tabindex="-1" role="dialog" id="list_dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-            </div>
-        </div>
-    </div>
-{% endblock %}
-{% block before_body_end %}
-    {{ parent() }}
-    {% include '@NetworkingInitCms/TranslationAdmin/list_script.html.twig' %}
-{% endblock %}
-
-{% block batch_actions %}
-    {{ parent() }}
-    <input type="hidden" id="downloadToken" name="downloadToken">
+    {% include '@NetworkingInitCms/Core/clear_cache_button.html.twig' %}&nbsp;
+    {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
 {% endblock %}

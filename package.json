@@ -25,7 +25,7 @@
   "homepage": "https://github.com/networking/init-cms-bundle#readme",
   "dependencies": {
     "@kazupon/vue-i18n-loader": "^0.4.1",
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "csso": "^3.1.1",
     "file-loader": "^5.0.2",
@@ -40,6 +40,8 @@
     "jquery": "^3.5.1",
     "package-lock.json": "^1.0.0",
     "popper.js": "^1.16.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "select2": "^4.0.13",

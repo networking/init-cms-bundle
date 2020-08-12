@@ -1,30 +1,6 @@
 
 {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
-    <div class="clearfix">&nbsp;</div>
-        {% set create_text =  'link_action_create'|trans({}, admin.translationDomain) %}
-        {% if create_text == 'link_action_create' %}
-            {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
-        {% endif %}
-    <a class="btn btn-light btn-sm sonata-action-element" href="{{ admin.generateUrl('clear_cache') }}">
-        <i class="glyphicon glyphicon-refresh"></i> {{ 'action.clear_cache'|trans({}, 'TranslationAdmin') }}
+    <a class="btn btn-light-primary font-weight-bolder" href="{{ admin.generateUrl('clear_cache') }}">
+        <i class="la la-refresh"></i> {{ 'action.clear_cache'|trans({}, 'TranslationAdmin') }}
     </a>
-        {% if admin.subClasses is empty %}
-                <a class="btn btn-primary btn-sm" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin) }) }}">
-                    <i class="glyphicon glyphicon-white glyphicon-plus"></i> {{ create_text }}</a>
-            {% else %}
-                <span class="btn-group  btn-sm sonata-action-element">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        {{ create_text }}
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% for subclass in admin.subclasses|keys %}
-                            <li>
-                                <a href="{{ admin.generateUrl('create', {'subclass': subclass}) }}">{{ subclass }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </span>
-            {% endif %}
-    <div class="clearfix">&nbsp;</div>
 {% endif %}

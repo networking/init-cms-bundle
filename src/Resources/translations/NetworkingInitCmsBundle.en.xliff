@@ -299,7 +299,7 @@
                  <target><![CDATA[
                 <p>
                 The CMS generates a XML Sitemap with all published, public pages. Additional pages (e.g. from a module) can be added manually through the configuration.<br />
-                The URL to the Sitemap is <a href="/xml_sitemap">/xml_sitemap</a><br />
+                The URL to the Sitemap is <a href="/xml_sitemap" target="_blank">/xml_sitemap</a><br />
                 Please add the URL to the robots.txt file.</p>
 
                 <p><strong>Configuration:</strong><br />

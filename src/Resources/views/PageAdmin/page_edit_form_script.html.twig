@@ -1,76 +1,160 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 {% autoescape false %}
     <script type="text/javascript">
-        function  updatePageSettings(event) {
+        var statusDialog;
+        var translationDialog;
+
+        function initializeTranslationDialog() {
+            if (!translationDialog) {
+                translationDialog = jQuery('#translation_dialog');
+                translationDialog.modal({
+                    height: 'auto',
+                    width: 650,
+                    show: false
+                });
+                translationDialog.on('hide.bs.modal', function () {
+                    jQuery('input[type=submit]', this).off();
+                });
+                jQuery(document.body).append(translationDialog);
+                jQuery('form', translationDialog).on('submit', submitTranslationAjaxForm);
+            }
+        }
+
+        function createTranslationAjaxDialog(event) {
             event.preventDefault();
             event.stopPropagation();
-            var form = $(this);
-            $(form).ajaxSubmit({
-                url: form.action,
-                type: "POST",
-                dataType: 'json',
-                data: {_xml_http_request: true},
-                success: function (xhr) {
+
+            initializeTranslationDialog();
+
+            var a = jQuery(this);
+            var url = a.attr('href');
+            if (!url) {
+                url = a.attr('ref');
+            }
+
+            jQuery.ajax({
+                url: url,
+                dataType: 'html',
+                success: function (html) {
+                    // populate the popup container
+                    translationDialog.html(html);
+                    translationDialog.modal('show');
+                }
+            });
+        }
+
+        function submitTranslationAjaxForm(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            axios.post(this.action, new FormData(this), axiosConfig)
+                .then(function (response) {
+                    var data = response.data;
+                    if (data.result == 'ok') {
+                        jQuery('#translationSettings').html(data.html);
+                        if (data.message) {
+                            createInitCmsMessageBox(data.status, data.message);
+                        }
+                    } else {
+                        createInitCmsMessageBox(data.status, data.message);
+                    }
+                    translationDialog.modal('hide');
+                })
+        }
+        function initializeStatusDialog() {
+            if (!statusDialog) {
+                statusDialog = jQuery('#status_dialog');
+                statusDialog.modal({
+                    height: 'auto',
+                    width: 650,
+                    show: false
+                });
+                statusDialog.on('hide.bs.modal', function () {
+                    jQuery('input[type=submit]', this).off();
+                });
+                jQuery(document.body).append(statusDialog);
+            }
+        }
+
+        function createStatusAjaxDialog(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            initializeStatusDialog();
+
+            var a = jQuery(this);
+            var url = a.attr('href');
+            if (!url) {
+                url = a.attr('ref');
+            }
+
+            jQuery.ajax({
+                url: url,
+                dataType: 'html',
+                success: function (html) {
+                    // populate the popup container
+                    statusDialog.html(html);
+                    statusDialog.modal('show');
+                }
+            });
+        }
+
+        function updatePageSettings(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            axios.post(this.action, new FormData(this), axiosConfig)
+                .then(function (response) {
+                    var data = response.data;
                     var pageStatus = $('.page_status');
-                    if (xhr.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
+                    if (data.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
                         pageStatus.addClass('color-draft');
                     } else {
                         pageStatus.removeClass('color-draft');
                     }
-
-
-                    pageStatus.html(xhr.pageStatus);
-                    $('.page_title').html(xhr.title);
-                    $('#pageStatusSettings').html(xhr.pageStatusSettings);
+                    pageStatus.html(data.pageStatus);
+                    $('.page_title').html(data.title);
+                    $('#pageStatusSettings').html(data.pageStatusSettings);
                     reloadLayoutBlocks();
-                    createInitCmsMessageBox(xhr.messageStatus, xhr.message);
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    $('#page_settings').html(xhr.responseText);
+                    createInitCmsMessageBox(data.messageStatus, data.message);
+                })
+                .catch(function (error) {
+                    $('#page_settings').html(error.response.data);
                     $('form', '#page_settings').bind('submit', updatePageSettings);
-                }
-            });
+                    createInitCmsMessageBox('error', 'settings not saved');
+                })
         };
 
-        function  updateMetaSettings(event) {
+        function updateMetaSettings(event) {
             event.preventDefault();
             event.stopPropagation();
-            var form = $(this);
-            $(form).ajaxSubmit({
-                url: form.action,
-                type: "POST",
-                dataType: 'json',
-                data: {_xml_http_request: true},
-                success: function (xhr) {
+            axios.post(this.action, new FormData(this), {params: {'is_meta': true}, ...axiosConfig})
+                .then(function (response) {
+                    var data = response.data;
                     var pageStatus = $('.page_status');
-                    if (xhr.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
+                    if (data.pageStatus !== "{{ 'status_published'|trans({}, admin.translationDomain) }}") {
                         pageStatus.addClass('color-draft');
                     } else {
                         pageStatus.removeClass('color-draft');
                     }
-
-
-                    pageStatus.html(xhr.pageStatus);
-                    $('.page_title').html(xhr.title);
-                    $('#pageStatusSettings').html(xhr.pageStatusSettings);
+                    pageStatus.html(data.pageStatus);
+                    $('.page_title').html(data.title);
+                    $('#pageStatusSettings').html(data.pageStatusSettings);
                     reloadLayoutBlocks();
-                    createInitCmsMessageBox(xhr.messageStatus, xhr.message);
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    $('#meta_settings').html(xhr.responseText);
+                    createInitCmsMessageBox(data.messageStatus, data.message);
+                })
+                .catch(function (error) {
+                    $('#meta_settings').html(error.response.data);
                     $('form', '#meta_settings').bind('submit', updateMetaSettings);
-                }
-            });
-        };
+                    createInitCmsMessageBox('error', 'settings not saved');
+                })
+        }
 
         function openMenuDialog(event, ui) {
             event.preventDefault();
@@ -88,53 +172,51 @@ file that was distributed with this source code.
             });
         }
 
-        (function ($) {
-
+        $(function () {
             $('form', '#page_settings').bind('submit', updatePageSettings);
             $('form', '#meta_settings').bind('submit', updateMetaSettings);
 
-            $('body').on('change', '#{{ admin.uniqid }}_locale', function () {
-                var locale = $(this).val();
-                $.getJSON(
-                    '{{ admin.generateUrl('parentPageList') }}',
-                    {locale: locale},
-                    function (data) {
-                        var parentPages = $('#{{ admin.getUniqid }}_parent');
-                        parentPages.empty();
-                        parentPages.append($('<option></option>'));
-                        $.each(data, function (k, v) {
-                            if (v) {
-                                parentPages.append($('<option></option>').val(k).html(v));
-                            }
-                        });
-                    }
-                );
-            }).on('change', '#{{ admin.uniqid }}_parent', function (e) {
-                var path = $('#{{ admin.uniqid }}_url').val();
-                var pageId = e.val;
-                if (pageId === '') {
-                    $('#help_{{ admin.uniqid }}_url').html('/' + path);
-                } else {
-                    if (pageId === undefined) {
-                        pageId = $("#{{ admin.uniqid }}_parent").val();
-                    }
+            $('body')
+                .on('change', '#{{ admin.uniqid }}_locale', function () {
+                    var locale = $(this).val();
                     $.getJSON(
-                        '{{ admin.generateUrl('getPath') }}',
-                        {'page_id': pageId, 'path': path},
-                        function (xhr) {
-                            $('#help_{{ admin.uniqid }}_url').html(xhr.path);
+                        '{{ admin.generateUrl('parentPageList') }}',
+                        {locale: locale},
+                        function (data) {
+                            var parentPages = $('#{{ admin.getUniqid }}_parent');
+                            parentPages.empty();
+                            parentPages.append($('<option></option>'));
+                            $.each(data, function (k, v) {
+                                if (v) {
+                                    parentPages.append($('<option></option>').val(k).html(v));
+                                }
+                            });
                         }
                     );
-                }
-            }).on('change', '#{{ admin.uniqid }}_url', function () {
-                $("#{{ admin.uniqid }}_parent").trigger('change');
-            }).on('click', '#review_status', function () {
-                if ($('#review_status').is(":checked")) {
-                    window.location = '{{ admin.generateUrl('review', {id: object.id}) }}';
-                } else {
-                    window.location = '{{ admin.generateUrl('draft', {id: object.id}) }}';
-                }
-            });
+                })
+                .on('change', '#{{ admin.uniqid }}_parent', function (e) {
+                    var path = $('#{{ admin.uniqid }}_url').val();
+                    var pageId = e.val;
+                    if (pageId === '') {
+                        $('#help_{{ admin.uniqid }}_url').html('/' + path);
+                    } else {
+                        if (pageId === undefined) {
+                            pageId = $("#{{ admin.uniqid }}_parent").val();
+                        }
+                        $.getJSON(
+                            '{{ admin.generateUrl('getPath') }}',
+                            {'page_id': pageId, 'path': path},
+                            function (xhr) {
+                                $('#help_{{ admin.uniqid }}_url').html(xhr.path);
+                            }
+                        );
+                    }
+                })
+                .on('change', '#{{ admin.uniqid }}_url', function () {
+                    $("#{{ admin.uniqid }}_parent").trigger('change');
+                })
+                .on('click', '.status-dialog-link', createStatusAjaxDialog)
+                .on('click', '.translation-dialog-link', createTranslationAjaxDialog)
 
 
             {% if not app.user.getAdminSetting('menuAdmin.show_now_confirm_dialog') %}
@@ -152,6 +234,6 @@ file that was distributed with this source code.
 
             });
             {% endif %}
-        })(jQuery);
+        });
     </script>
 {% endautoescape %}

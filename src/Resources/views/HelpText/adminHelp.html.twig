@@ -43,7 +43,7 @@ file that was distributed with this source code.
         <div class="navbar-inner">
             <div class="container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %} ">
 
-                <div class="navbar-header pull-left">
+                <div class="navbar-header float-left">
                     {% block toggle %}
                         <button type="button" class="navbar-toggle" id="toggleNav">
                             <span class="sr-only">Toggle navigation</span>
@@ -52,7 +52,7 @@ file that was distributed with this source code.
                             <span class="icon-bar"></span>
                         </button>
                     {% endblock %}
-                    <a href="{{ url('sonata_admin_dashboard') }}" class="hidden-sm hidden-xs pull-left">
+                    <a href="{{ url('sonata_admin_dashboard') }}" class="hidden-sm hidden-xs float-left">
                         <img  id="initcms-logo" src="{{ admin_pool.titlelogo ? admin_pool.titlelogo : asset('bundles/networkinginitcms/img/logo_initcms.png') }}" alt="{{ admin_pool.title }}" width="77">
                     </a>
                     {% if admin_pool is defined %}

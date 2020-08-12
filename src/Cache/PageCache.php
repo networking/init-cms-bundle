@@ -225,6 +225,6 @@ class PageCache implements PageCacheInterface, AdapterInterface, PruneableInterf
      */
     public function getCacheTime()
     {
-        $this->expiresAfter;
+        return $this->expiresAfter;
     }
 }

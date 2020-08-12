@@ -9,12 +9,20 @@ file that was distributed with this source code.
 
 #}
 {% extends '@NetworkingInitCms/CRUD/base_list.html.twig' %}
-
+{% block page_stylesheets %}
+    <link href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
 {% block actions %}
     {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
 {% endblock %}
 
+{% block list_filters %}
+    {{ parent() }}
+{% endblock %}
 {% block list_table %}
+    {{ parent() }}
+{% endblock %}
+{% block list_toolbar %}
     {{ parent() }}
 {% endblock %}
 {% block footer %}
@@ -22,10 +30,12 @@ file that was distributed with this source code.
     <div class="modal fade" tabindex="-1" role="dialog" id="list_dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-
             </div>
         </div>
     </div>
+{% endblock %}
+{% block page_scripts %}
+    <script src="{{ asset('bundles/networkinginitcms/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 {% endblock %}
 {% block before_body_end %}
     {{ parent() }}

@@ -1,37 +1,45 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
-{% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
-    <div class="clearfix">&nbsp;</div>
+{% if admin.hasRoute('create') and admin.isGranted('CREATE') %}
     {% set create_text =  'link_action_create'|trans({}, admin.translationDomain) %}
     {% if create_text == 'link_action_create' %}
         {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
     {% endif %}
     {% if admin.subClasses is empty %}
-        <a class="btn btn-primary btn-sm" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin) }) }}">
-            <i class="glyphicon glyphicon-white glyphicon-plus"></i> {{ create_text }}</a>
+        <a class="btn btn-primary font-weight-bolder "
+           href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin) }) }}">
+            <i class="la la-plus"></i> {{ create_text }}
+        </a>
     {% else %}
-        <span class="btn-group  btn-sm sonata-action-element">
-                    <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                       <i class="glyphicon glyphicon-white glyphicon-plus"></i>  {{ create_text }}
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% for subclass in admin.subclasses|keys %}
-                            <li>
-                                <a href="{{ admin.generateUrl('create', {'subclass': subclass}) }}">{{ subclass|trans({}, admin.translationDomain) }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </span>
+        <!--begin::Dropdown-->
+        <div class="dropdown dropdown-inline mr-2">
+            <button type="button" class="btn btn-light-primary font-weight-bolder dropdown-toggle"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="la la-plus"></i>{{ create_text }}
+            </button>
+            <!--begin::Dropdown Menu-->
+            <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <!--begin::Navigation-->
+                <ul class="navi flex-column navi-hover py-2">
+                    {% for subclass in admin.subclasses|keys %}
+                        <li class="navi-item">
+                            <a href="{{ admin.generateUrl('create', {'subclass': subclass}) }}" class="navi-link">
+                                <span class="navi-text">{{ subclass|trans({}, admin.translationDomain) }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <!--end::Navigation-->
+            </div>
+            <!--end::Dropdown Menu-->
+        </div>
+        <!--end::Dropdown-->
     {% endif %}
-    <div class="clearfix">&nbsp;</div>
 {% endif %}

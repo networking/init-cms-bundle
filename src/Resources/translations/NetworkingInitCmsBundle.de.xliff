@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="info.filter">
                 <source>info.filter</source>
-                <target>Suchen:</target>
+                <target>%admin_label% Suchen</target>
             </trans-unit>
             <trans-unit id="link.website_">
                 <source>link.website_</source>
@@ -305,7 +305,7 @@
                  <target><![CDATA[
                 <p>
                 Das CMS generiert eine XML Sitemap mit allen published, public Seiten. Zusätzliche Seiten (z.B. von einem Modul) können manuell über die Konfiguration dazugefügt werden.<br />
-                Die URL zur Sitemap ist <a href="/xml_sitemap">/xml_sitemap</a><br />
+                Die URL zur Sitemap ist <a href="/xml_sitemap" target="_blank">/xml_sitemap</a><br />
                 Bitte diese URL bei der robots.txt hinzufügen-.</p>
 
                 <p><strong>Konfiguration:</strong><br />

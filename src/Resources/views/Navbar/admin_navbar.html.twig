@@ -1,17 +1,27 @@
-<div class="navbar navbar-expand-lg navbar-initcms navbar-dark bg-dark col">
-    {% block toggle %}
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    {% endblock %}
-    <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarText">
-        {% if admin_pool is defined %}
-            {{ knp_menu_render('AdminMenu') }}
-        {% endif %}
+<div id="kt_header" class="header header-fixed">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-stretch justify-content-between">
 
-        {% if admin_pool is defined %}
-            {% include admin_pool.getTemplate('user_block') %}
-        {% endif %}
+        <!--begin::Header Menu Wrapper-->
+        <div class="header-menu-wrapper header-menu-wrapper-left" id="kt_header_menu_wrapper">
+            <!--begin::Header Menu-->
+            <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+                <ul class="menu-nav">
+                    <li class="menu-item">
+                        <h5 class="text-dark font-weight-bold my-1 mr-5">{{ admin_pool.title }}</h5></li>
+                </ul>
+            </div>
+        </div>
+        <div class="topbar">
+            <div class="topbar-item">
+                {% if admin_pool is defined %}
+                    {{ knp_menu_render('AdminMenu') }}
+                {% endif %}
+
+                {% if admin_pool is defined %}
+                    {% include admin_pool.getTemplate('user_block') %}
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>

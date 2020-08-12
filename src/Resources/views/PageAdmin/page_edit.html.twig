@@ -1,71 +1,127 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 {% extends base_template %}
- {% block meta_config %}
-     <meta data-sonata-admin='{{ {
-         config: {
-             CONFIRM_EXIT: false,
-             USE_SELECT2:sonata_admin.adminPool.getOption('use_select2'),
-             USE_ICHECK: false,
-             USE_STICKYFORMS: sonata_admin.adminPool.getOption('use_stickyforms'),
-         },
-         translations: {
-             CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
-         },
-     }|json_encode()|raw }}'
-     >
- {% endblock %}
-{% block page_title %}{% endblock %}
+
+{% block title %}
+    <h1 class="break-word">
+        <span class="page_title">{{ admin.toString(object) }} </span> <span
+                class="info-soft font-medium">({{ language }})</span>
+        <a class="link-underlined font-small font-light"
+           href="{{ admin.generateUrl('list', {'locale': object.locale}) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+    </h1>
+{% endblock %}
 
 {% block actions %}{% endblock %}
 {% block help_text %}{% endblock help_text %}
 
-{% use '@NetworkingInitCms/PageAdmin/page_edit_form.html.twig' with form as parentForm %}
-
 {% block form %}
-    {{ block('parentForm') }}
-    {% if not app.request.isxmlhttprequest %}
-    <!-- start modal menu form -->
-    <div class="modal form-horizontal" id="confirmMenuCreation"
-         style="display: none"
-         role="dialog" aria-labelledby="{{ "legend.create_menu"|trans({}, admin.translationDomain) }}"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>{{ 'legend.create_menu'|trans({}, admin.translationDomain) }}</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div id="menu_info_text"></div>
-                    <p>&nbsp;</p>
-
-                    <div>
-                        <label class="checkbox checkbox-inline" for="show_now_confirm_dialog">
-                            <input type="checkbox" id="show_now_confirm_dialog" name="show_now_confirm_dialog"/>
-                            {{ 'label.show_no_more'|trans({}, admin.translationDomain) }}
-                        </label>
+    <div class="row">
+        <div class="col-5">
+            <div class="card card-custom">
+                <div class="card-header card-header-tabs-line">
+                    <div class="card-toolbar">
+                        <ul class="nav nav-tabs nav-bold nav-tabs-line">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#page_content">
+                                    <span class="nav-text">Page Content</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#meta_settings">
+                                    <span class="nav-text">SEO & Meta</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#page_settings">
+                                    <span class="nav-text">Settings</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#translations">
+                                    <span class="nav-text">Translations</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#menu">
+                                    <span class="nav-text">Menus</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-toolbar" id="pageStatusSettings">
+                                {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-light" data-dismiss="modal"
-                            aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
-                    <button type="submit" class="btn btn-primary" id="btn_create_menu"
-                            data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}"
-                            name="btn_create_menu">
-                        {{ 'button.continue'|trans({}, admin.translationDomain) }} &rarr;</button>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="page_content" role="tabpanel">
+                            {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
+                        </div>
+                        <div class="tab-pane" id="meta_settings" role="tabpanel">
+                            {% include '@NetworkingInitCms/PageAdmin/meta_settings_fields.html.twig' %}
+                        </div>
+                        <div class="tab-pane" id="page_settings" role="tabpanel">
+                            {% include '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig' %}
+                        </div>
+                        {% if admin.translationLanguages.count() %}
+                            <div class="tab-pane" id="translations" role="tabpanel">
+                                {% include '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig' %}
+                            </div>
+                        {% endif %}
+                        <div class="tab-pane" id="menu" role="tabpanel">
+                            {% include '@NetworkingInitCms/PageAdmin/page_menu_settings.html.twig' %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-7" style="min-height: 100vh">
+            <iframe id="pagePreview" width="100%" height="100%"
+                    src="{{ path('networking_init_cms_page_preview', {'page': object.id}) }}"></iframe>
+        </div>
     </div>
+    {% if not app.request.isxmlhttprequest %}
+        <!-- start modal menu form -->
+        <div class="modal form-horizontal" id="confirmMenuCreation"
+             style="display: none"
+             role="dialog" aria-labelledby="{{ "legend.create_menu"|trans({}, admin.translationDomain) }}"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>{{ 'legend.create_menu'|trans({}, admin.translationDomain) }}</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="menu_info_text"></div>
+                        <p>&nbsp;</p>
+
+                        <div>
+                            <label class="checkbox checkbox-inline" for="show_now_confirm_dialog">
+                                <input type="checkbox" id="show_now_confirm_dialog" name="show_now_confirm_dialog"/>
+                                {{ 'label.show_no_more'|trans({}, admin.translationDomain) }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-light" data-dismiss="modal"
+                                aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+                        <button type="submit" class="btn btn-primary" id="btn_create_menu"
+                                data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}"
+                                name="btn_create_menu">
+                            {{ 'button.continue'|trans({}, admin.translationDomain) }} &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end modal menu form -->
         <div class="mt-5"></div>
     {% endif %}
@@ -73,9 +129,17 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-        <script type="text/javascript">
-            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/fosckeditor/') }}";
-        </script>
-        <script type="text/javascript" src="{{ ckeditor_js_path('bundles/fosckeditor/ckeditor.js') }}"></script>
+    <script type="text/javascript">
+        var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/fosckeditor/') }}";
+    </script>
+    {% include '@NetworkingInitCms/PageAdmin/page_edit_form_script.html.twig' with {'admin': admin, 'id': admin.id(object)} %}
+    <div class="modal hide fade" tabindex="-1" role="dialog" id="status_dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="translation_dialog">
+        <div class="modal-dialog" role="document">
+        </div>
+    </div>
 {% endblock %}
 

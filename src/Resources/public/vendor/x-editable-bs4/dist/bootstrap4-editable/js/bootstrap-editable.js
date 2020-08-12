@@ -1057,7 +1057,7 @@ Applied as jQuery method.
                     }
                 }, this), //re-position container every time form is shown (occurs each time after loading state)
                 rendering: $.proxy(this.setPosition, this), //this allows to place container correctly when loading shown
-                resize: $.proxy(this.setPosition, this), //this allows to re-position container when form size is changed 
+                resize: $.proxy(this.setPosition, this), //this allows to re-position container when form size is changed
                 rendered: $.proxy(function(){
                     /**        
                     Fired when container is shown and form is rendered (for select will wait for loading dropdown options).  
@@ -1074,8 +1074,8 @@ Applied as jQuery method.
                     /*
                      TODO: added second param mainly to distinguish from bootstrap's shown event. It's a hotfix that will be solved in future versions via namespaced events.  
                     */
-                    this.$element.triggerHandler('shown', $(this.options.scope).data('editable')); 
-                }, this) 
+                    this.$element.triggerHandler('shown', $(this.options.scope).data('editable'));
+                }, this)
             })
             .editableform('render');
         },        
@@ -1194,7 +1194,6 @@ Applied as jQuery method.
         @method setPosition()
         */       
         setPosition: function() {
-            //tbd in child class
         },
 
         save: function(e, params) {
@@ -4822,7 +4821,19 @@ Editableform based on Twitter Bootstrap 3
         },
         
         setPosition: function () {
-            (function() {}).call(this.container());
+            (function() {
+                var tip = this.getTipElement();
+
+                var placement = typeof this.config.placement === 'function' ? this.config.placement.call(this, tip, this.element) : this.config.placement;
+
+                var attachment = this._getAttachment(placement);
+
+                this.addAttachmentClass(attachment);
+
+                var container = this._getContainer();
+
+                this._popper = new Popper(this.element, tip, this._getPopperConfig(attachment));
+            }).call(this.container());
         },
         
         tip: function() {

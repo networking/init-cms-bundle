@@ -1,156 +1,247 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 {% block form %}
-    {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
-
     {% set url = objectId|default(admin.id(object)) is not null ? 'edit' : 'create' %}
-
     {% if not admin.hasRoute(url) %}
         <div>
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
         {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-            <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-        {% endif %}
-
-        <form class="{% if form.vars.horizontal %}form-horizontal{% endif %}  "
-               role="form"
-              action="{% block sonata_form_action_url %}{{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}{% endblock %}"
-                {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
-                {% if not sonata_admin.adminPool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
-              method="POST">
-            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-                <div class="modal-header">
-                    <h3>
-                        {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                        {% if admin.id(object) is not null %}
-                            {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
-                            {% if  title ==  "title_edit" %}
-                                {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
-                            {% else %}
-                                {{ title }}
-                            {% endif %}
-                        {% else %}
-                            {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
-                            {% if title == 'title_create' %}
-                                {{ "title_create"|trans({}, 'SonataAdminBundle') }}
-                            {% else %}
-                                {{ title }}
-                            {% endif %}
-                        {% endif %}
-                    </h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-            {% endif %}
-            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}<div class="modal-body">{% endif %}
-
-                {% if form.vars.errors|length > 0 %}
-                    <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
-                        {{ form_errors(form) }}
-                    </div>
-                {% endif %}
-
-                {% block sonata_pre_fieldsets %}{% endblock %}
-
-                {% block sonata_tab_content %}
-                    {% import "@NetworkingInitCms/CRUD/base_edit_form_macro.html.twig" as form_helper %}
-                    {% set has_tab = ((admin.formtabs|length == 1 and admin.formtabs|keys[0] != 'default') or admin.formtabs|length > 1 ) %}
-                    {% if has_tab %}
-                        <div class="nav-tabs-custom">
-                            <ul class="nav nav-tabs" role="tablist">
-                                {% for name, form_tab in admin.formtabs %}
-                                    <li{% if loop.index == 1 %} class="active"{% endif %}><a href="#tab_{{ admin.uniqid }}_{{ loop.index }}" data-toggle="tab"><i class="fa fa-exclamation-circle has-errors hide" aria-hidden="true"></i> {{ form_tab.label|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}</a></li>
-                                {% endfor %}
-                            </ul>
-                            <div class="tab-content">
-                                {% for code, form_tab in admin.formtabs %}
-                                    <div class="tab-pane fade{% if loop.first %} in active{% endif %}" id="tab_{{ admin.uniqid }}_{{ loop.index }}">
-                                        <div class="box-body  container-fluid">
-                                            <div class="sonata-ba-collapsed-fields">
-                                                {% if form_tab.description != false %}
-                                                    <p>
-                                                        {{ form_tab.description|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
-                                                    </p>
-                                                {% endif %}
-                                                {% if form_helper.render_groups is defined %}
-                                                    {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% else %}
-                        {% if form_helper.render_groups is defined %}
-                            {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab) }}
-                        {% endif %}
-                    {% endif %}
-                {% endblock %}
-
-                {% block sonata_post_fieldsets %}{% endblock %}
-                {{ form_rest(form ) }}
-
-    {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}</div>{% endif %}
-
-            {% block formactions %}
-                {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
-                    {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-                        <button class="btn btn-light" data-dismiss="modal"
-                                aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
-                        {% if admin.id(object) %}
-                            <input type="submit" class="btn btn-primary" name="btn_update"
-                                   value="{{ 'btn_update'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                        {% else %}
-                            <input type="submit" class="btn btn-primary" name="btn_create"
-                                   value="{{ 'btn_create'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                        {% endif %}
-                    {% else %}
-                        <a class="btn btn-light"
-                           href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                        {% if admin.supportsPreviewMode %}
-                            <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
-                                   value="{{ 'btn_preview'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                        {% endif %}
-                        {% if admin.id(object) %}
-                            <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
-                                   value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                            <input type="submit" class="btn btn-light" name="btn_update_and_list"
-                                   value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-
-                            {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
-                                {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
-                                <a class="btn btn-danger"
-                                   href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                            {% endif %}
-                        {% else %}
-                            <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
-                                   value="{{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                            <input type="submit" class="btn btn-light" name="btn_create_and_list"
-                                   value="{{ 'btn_create_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                            <input class="btn btn-light" type="submit" name="btn_create_and_create"
-                                   value="{{ 'btn_create_and_create_a_new_one'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            {% endblock formactions %}
-        </form>
-        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-            </div>
-            </div>
+            {{ block('modalform') }}
+        {% else %}
+            {{ block('fullpageForm') }}
         {% endif %}
     {% endif %}
+{% endblock %}
+
+{% block fullpageForm %}
+    {{ block('formstart') }}
+    <div class="card card-custom card-sticky" id="kt_page_sticky_card">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="card-label">
+                    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                    {% if admin.id(object) is not null%}
+                        {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
+                        {% if  title ==  "title_edit" %}
+                            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+                        {% endif %}
+                    {% else %}
+                        {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
+                        {% if title == 'title_create' %}
+                            {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+                        {% else %}
+                            {{ title }}
+                        {% endif %}
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card-toolbar">
+                {{ block('formactions') }}
+            </div>
+        </div>
+        <div class="card-body">
+            <!--begin::Form-->
+            {{ block('formfields') }}
+            <!--end::Form-->
+        </div>
+    </div>
+    {{ block('formend') }}
+{% endblock %}
+
+{% block modalform %}
+    <div class="modal-dialog modal-xl">
+        {{ block('formstart') }}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                    {% if admin.id(object) is not null %}
+                        {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
+                        {% if  title ==  "title_edit" %}
+                            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+                        {% else %}
+                            {{ title }}
+                        {% endif %}
+                    {% else %}
+                        {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
+                        {% if title == 'title_create' %}
+                            {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+                        {% else %}
+                            {{ title }}
+                        {% endif %}
+                    {% endif %}
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                {{ block('formfields') }}
+            </div>
+            <div class="modal-footer">
+                {{ block('formactions') }}
+            </div>
+        </div>
+        {{ block('formend') }}
+    </div>
+{% endblock %}
+
+{% block formstart %}
+    <form class="{% if form.vars.horizontal %}form-horizontal{% endif %}  "
+          role="form"
+          action="{% block sonata_form_action_url %}{{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}{% endblock %}"
+            {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
+            {% if not sonata_admin.adminPool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+          method="POST">
+{% endblock %}
+
+{% block formend %}
+    </form>
+{% endblock %}
+
+
+{% block formfields %}
+    {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
+        {% if form.vars.errors|length > 0 %}
+            <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+        {% block sonata_pre_fieldsets %}{% endblock %}
+        {% block sonata_tab_content %}
+            {% import "@NetworkingInitCms/CRUD/base_edit_form_macro.html.twig" as form_helper %}
+            {% set has_tab = ((admin.formtabs|length == 1 and admin.formtabs|keys[0] != 'default') or admin.formtabs|length > 1 ) %}
+            {% if has_tab %}
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs" role="tablist">
+                        {% for name, form_tab in admin.formtabs %}
+                            <li{% if loop.index == 1 %} class="active"{% endif %}><a
+                                        href="#tab_{{ admin.uniqid }}_{{ loop.index }}" data-toggle="tab"><i
+                                            class="fa fa-exclamation-circle has-errors hide"
+                                            aria-hidden="true"></i> {{ form_tab.label|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
+                                </a></li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                        {% for code, form_tab in admin.formtabs %}
+                            <div class="tab-pane fade{% if loop.first %} in active{% endif %}"
+                                 id="tab_{{ admin.uniqid }}_{{ loop.index }}">
+                                <div class="box-body  container-fluid">
+                                    <div class="sonata-ba-collapsed-fields">
+                                        {% if form_tab.description != false %}
+                                            <p>
+                                                {{ form_tab.description|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
+                                            </p>
+                                        {% endif %}
+                                        {% if form_helper.render_groups is defined %}
+                                            {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                {% if form_helper.render_groups is defined %}
+                    {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab) }}
+                {% endif %}
+            {% endif %}
+        {% endblock %}
+
+        {% block sonata_post_fieldsets %}{% endblock %}
+        {{ form_rest(form ) }}
+
 
     {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
 {% endblock %}
+
+{% block formactions %}
+    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+            <button class="btn btn-light" data-dismiss="modal"
+                    aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
+            {% if admin.id(object) %}
+                <input type="submit" class="btn btn-primary" name="btn_update"
+                       value="{{ 'btn_update'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+            {% else %}
+                <input type="submit" class="btn btn-primary" name="btn_create"
+                       value="{{ 'btn_create'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+            {% endif %}
+        {% else %}
+            <a href="{{ admin.generateUrl('list') }}" class="btn btn-light-primary font-weight-bolder mr-2">
+                <i class="las la-arrow-left"></i>
+                {{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}
+            </a>
+            {% if admin.id(object) %}
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary font-weight-bolder" name="btn_update_and_edit">
+                        <i class="nav-icon las la-sync-alt"></i>
+                        {{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}
+                    </button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                        <ul class="nav nav-hover flex-column">
+                            <li class="nav-item">
+                                <button type="submit" class="nav-link btn  btn-link" name="btn_update_and_list">
+                                    <i class="nav-icon las la-arrow-left"></i>
+                                    <span class="nav-text">{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</span>
+                                </button>
+                            </li>
+                            {% if admin.supportsPreviewMode %}
+                                <li class="nav-item">
+                                    <button type="submit" class="nav-link btn btn-link" name="btn_preview">
+                                        <i class="nav-icon"></i>
+                                        <span class="nav-text">{{ 'btn_preview'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</span>
+                                    </button>
+                                </li>
+                            {% endif %}
+                            {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
+                                <li class="nav-item">
+                                    <a href="{{ admin.generateObjectUrl('delete', object) }}" class="nav-link">
+                                        <i class="nav-icon las la-trash"></i>
+                                        <span class="nav-text">{{ 'link_delete'|trans({}, 'NetworkingInitCmsBundle') }}</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary font-weight-bolder" name="btn_create_and_edit">
+                        <i class="ki ki-check icon-sm"></i>
+                        {{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}
+                    </button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                        <ul class="nav nav-hover flex-column">
+                            <li class="nav-item">
+                                <button type="submit" class="nav-link btn  btn-link" name="btn_create_and_list">
+                                    <i class="nav-icon las la-arrow-left"></i>
+                                    <span class="nav-text">{{ 'btn_create_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</span>
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="submit" class="nav-link btn  btn-link" name="btn_create_and_create">
+                                    <i class="nav-icon las la-plus"></i>
+                                    <span class="nav-text">{{ 'btn_create_and_create_a_new_one'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}</span>
+                                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+{% endblock formactions %}

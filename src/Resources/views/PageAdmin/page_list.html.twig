@@ -9,20 +9,4 @@ file that was distributed with this source code.
 
 #}
 {% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
-{% block stylesheets %}
-    {{ parent() }}
-<style>
-    i.level-spacer{
-        margin: 0 0 0 5px;
-        width: 10px;
-    }
-    i.level-spacer.first{
-        margin-left: 10px;
-    }
-    i.level-spacer.last{
-        margin-right: 5px;
-    }
-
-</style>
-{% endblock %}
 {% set last_edited = app.session.get('Page.last_edited') %}

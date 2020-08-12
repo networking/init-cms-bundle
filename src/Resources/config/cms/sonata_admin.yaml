@@ -32,6 +32,7 @@ sonata_admin:
         delete:     '@NetworkingInitCms/CRUD/delete.html.twig'
         action:     '@NetworkingInitCms/CRUD/action.html.twig'
         select:     '@NetworkingInitCms/CRUD/list__select.html.twig'
+        batch:      '@NetworkingInitCms/CRUD/list__batch.html.twig'
         dashboard:  '@NetworkingInitCms/Core/dashboard.html.twig'
         batch_confirmation: '@NetworkingInitCms/CRUD/batch_confirmation.html.twig'
         base_list_field: '@NetworkingInitCms/CRUD/base_list_field.html.twig'

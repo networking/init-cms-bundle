@@ -444,7 +444,7 @@ abstract class MediaAdmin extends Admin
             $media = $this->getNewInstance();
         }
 
-        if (!$media || !$media->getProviderName()) {
+        if (!$media->getProviderName()) {
             return;
         }
 
@@ -469,6 +469,7 @@ abstract class MediaAdmin extends Admin
         }
 
         $transformer = new TagTransformer($this->hasMultipleMediaTags);
+
 
         $formMapper->add(
             'tags',
@@ -555,9 +556,10 @@ abstract class MediaAdmin extends Admin
             if ($this->getRequest()->isMethod('POST') && !$this->getRequest()->get('oneuploader')) {
                 $uniqid = $this->getUniqid();
                 if(array_key_exists('providerName', $this->getRequest()->get($uniqid, []))){
-                    $media->setProviderName($this->getRequest()->get($uniqid)['providerName']);
+                    $providerName = $this->getRequest()->get($uniqid)['providerName'];
                 }
             }
+
             $media->setProviderName($providerName);
 
             $media->setContext($context = $this->getRequest()->get('context'));

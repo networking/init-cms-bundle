@@ -4,41 +4,54 @@
 
     {# only visible for superadmin #}
     {% if is_granted("ROLE_SUPER_ADMIN") %}
-
-        <div class="well well-small">
-            <h4>{{ 'title.cache'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
-
-            <div id="ajaxResponseDiv"></div>
-            <div class="row">
-                {# check ob cache aktiviert ist#}
+        <div class="card card-custom gutter-b">
+            <div class="card-header">
+                <div class="card-title">
+                    <span class="card-icon">
+				        <i class="la la-database icon-lg text-primary"></i>
+				    </span>
+                    <h3 class="card-label">{{ 'title.cache'|trans({}, 'NetworkingInitCmsBundle') }}</h3>
+                </div>
+                <div class="card-toolbar">
+                    <a href="#" class="btn btn-sm btn-warning font-weight-bold" id="clear-cache" >
+                        <i class="flaticon2-cube"></i>{{ 'cache.delete'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                </div>
+            </div>
+            <div class="card-body">
                 {% if cache.isActive %}
-
+                    <div id="ajaxResponseDiv"></div>
                     <div class="col-md-12">
                         <span class="color-published">{{ 'cache.active'|trans({}, 'NetworkingInitCmsBundle') }}</span><br/>
                         <span class="color-published">{{ 'cache.time'|trans({}, 'NetworkingInitCmsBundle') }}:  {{ cache.cacheTime }}</span>
                     </div>
-
-                    <div class="clearfix"></div>
-
-                    <div class="pull-right">
-                        <button class="btn btn-light" data-dismiss="modal" type="button"  id="clear-cache" name="button"
-                                aria-hidden="true">{{ 'cache.delete'|trans({}, 'NetworkingInitCmsBundle') }}</button>
-
-                    </div>
-                    <div class="clearfix"></div>
                     <script>
                         $(document).ready(function () {
+                            toastr.options = {
+                                "closeButton": false,
+                                "debug": false,
+                                "newestOnTop": true,
+                                "progressBar": false,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": true,
+                                "onclick": null,
+                                "showDuration": "2000",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "linear",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            };
                             $('#clear-cache').on('click', function () {
                                 $.get('{{path('networking_init_cms_clear_cache')}}',
-                                function (response) {
-                                    if (response.success) {//cache wurde geleert
-                                        $('#ajaxResponseDiv').html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ 'cache.delete.answer'|trans({}, 'NetworkingInitCmsBundle') }}</div>');
-
-                                    } else {
-                                        $('#ajaxResponseDiv').html('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ 'cache.delete.erroranswer'|trans({}, 'NetworkingInitCmsBundle') }}</div>');
-                                    }
-
-                                }, "json");
+                                    function (response) {
+                                        if (response.success) {//cache wurde geleert
+                                            toastr.success("{{ 'cache.delete.answer'|trans({}, 'NetworkingInitCmsBundle') }}");
+                                        } else {
+                                            toastr.warning("{{ 'cache.delete.erroranswer'|trans({}, 'NetworkingInitCmsBundle') }}");
+                                        }
+                                    }, "json");
                                 return false;
                             });
                         });
@@ -51,7 +64,6 @@
                     <div class="col-md-12">{{ 'cache.inactiveMoreInformation'|trans({}, 'NetworkingInitCmsBundle') | raw }}</div>
                 {% endif %}
             </div>
-
         </div>
     {% endif %}
 {% endblock %}
