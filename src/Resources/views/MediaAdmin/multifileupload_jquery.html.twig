@@ -22,7 +22,7 @@
 
 {% block content %}
     {% if app.request.isXmlHttpRequest %}
-        <div class="modal-dialog modal-lg" id="dropzone-area">
+        <div class="modal-dialog modal-xl" id="dropzone-area">
         <div class="modal-content">
         <div class="modal-header">
             <h3>{{ "title_create"|trans({}, admin.translationDomain) }}</h3>
@@ -30,8 +30,15 @@
         </div>
         <div class="modal-body">
     {% endif %}
-    <div id="actions" class="row">
-        <div class="col-md-9">
+    <div>
+        <form>
+            {{ form_row(form.tags) }}
+            {{ form_row(form.providerName) }}
+            <input type="hidden" name="with_js" value="0">
+        </form>
+    </div>
+    <div id="actions" class="row mb-10">
+        <div class="col-9">
             <!-- The global file processing state -->
             <span class="fileupload-process">
               <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0"
@@ -40,45 +47,39 @@
               </div>
             </span>
         </div>
-        <div class="col-md-3">
-            <a href="#" class="cancel pull-right">
+        <div class="col-3">
+            <a href="#" class="cancel btn btn-danger float-right">
                 <span>{{ 'upload_btn_cancel_all'|trans({}, 'MediaAdmin') }}</span>
             </a>
         </div>
     </div>
-    <div>
-        <form>
-        {{ form_row(form.tags) }}
-        {{ form_row(form.providerName) }}
-            <input type="hidden" name="with_js" value="0">
-        </form>
-    </div>
-    <div class="well">
-        <p class="fileinput-zone lead text-center" data-dz-clickable><a href="#" title="{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}">{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}</a></p>
-        <div class="table table-striped" class="files" id="previews">
 
-            <div id="template" >
-                <div class="row">
+    <div class="dropzone dropzone-default mb-10">
+        <p class="fileinput-zone lead text-center" data-dz-clickable><a href="#" title="{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}">{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}</a></p>
+    </div>
+    <div class="table" id="previews">
+
+        <div id="template" >
+            <div class="row">
                 <!-- This is used as the file preview template -->
                 <div class="col-md-3">
                     <span class="preview"><img data-dz-thumbnail/></span>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <p class="name" data-dz-name></p>
 
                     <p class="size" data-dz-size></p>
                     <strong class="error text-danger" data-dz-errormessage></strong>
-                </div>
-                <div class="col-md-4">
                     <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"
                          aria-valuenow="0">
                         <div class="progress-bar progress-bar-info" style="width:0%;" data-dz-uploadprogress></div>
                     </div>
-                    <a class="hidden btn btn-primary " data-dz-url><i class="fa fa-pencil"></i> Edit</a>
                 </div>
+                <div class="col-md-3">
+                    <a class="d-none btn btn-primary float-right" data-dz-url><i class="la la-edit"></i> Edit</a>
                 </div>
-                <hr>
             </div>
+            <hr>
         </div>
     </div>
     {% if app.request.isXmlHttpRequest %}
@@ -93,7 +94,7 @@
             function changeButtonRow(file, response) {
                 var editButton = $(file.previewElement.querySelectorAll("[data-dz-url]"));
                 editButton.attr('href', response.url);
-                editButton.removeClass('hidden');
+                editButton.removeClass('d-none');
                 $(file.previewElement.querySelector(".progress")).hide();
             }
 
@@ -107,6 +108,7 @@
                         if (response.duplicate) {
                             changeButtonRow(file, response);
                         }
+                        $(file.previewElement.querySelector(".progress")).hide();
                     });
                 },
                 url: "{{ oneup_uploader_endpoint('media_admin') }}", // Set the url

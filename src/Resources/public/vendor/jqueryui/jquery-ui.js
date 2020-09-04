@@ -18287,7 +18287,6 @@ $.widget( "ui.tooltip", {
 
 		// IDs of parent tooltips where we removed the title attribute
 		this.parents = {};
-
 		// Append the aria-live region so tooltips announce correctly
 		this.liveRegion = $( "<div>" )
 			.attr( {

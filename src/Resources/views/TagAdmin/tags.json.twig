@@ -1,0 +1,54 @@
+{% import _self as macros %}
+
+{% macro tag_tree(tags, lastItem, tagAdmin, noSort, selected, level) %}
+    {% import _self as macros %}
+    {% for tag in tags|filter(tag => tag.level == level) %}
+    {
+        text : "{{ tag.name }}",
+        state: {selected: {{ selected==tag.id?'true':'false' }}, opened: {{ selected==tag.id or tag.hasChild(selected)?'true':'false' }} },
+        "li_attr": {
+            "id": 'li_tag_{{ tag.id }}',
+            "class": 'sortable-tag {{ tag.children|length?'has-children':'' }}',
+            "data-tag-name": "{{ tag.name }}",
+            "ondrop": "dropTag(event, '{{ tag.id }}')",
+            "ondragover": "overList(event, '{{ tag.id }}')",
+            "ondragleave": "exitList(event, '{{ tag.id }}')",
+        },
+        "a_attr": {
+            "class": "tag_link",
+            "id": "tag_link_{{ tag.id }}",
+            "data-pk": "{{ tag.id }}"
+        },
+        "data": {
+            "id": "{{ tag.id }}",
+            "delete_link": "{{ tagAdmin.generateObjectUrl('delete', tag, {'returnToMedia': true}) }}",
+        },
+        {% if tag.children %}
+        "children" : [
+            {{ macros.tag_tree(tag.children, lastItem, tagAdmin, noSort, selected, tag.level+1) }}
+        ],
+        {% endif %}
+    },
+    {% endfor %}
+
+{% endmacro %}
+
+{% if datagrid is defined  %}
+{% set selected = datagrid.values.tags?datagrid.values.tags.value:0 %}
+    {% else %}
+{% set selected = lastItem %}
+{% endif %}
+
+[
+    {
+        "text" : "{{ 'show_all_media'|trans({}, tagAdmin.translationDomain) }}",
+        "a_attr": {
+            "class": "show_all_media",
+        },
+        "data": {'show_first':true, 'id':0},
+        "children": [],
+        "state": {selected: {{ selected==0?'true':'false' }} }
+    },
+    {{ macros.tag_tree(tags, lastItem, tagAdmin, noSort, selected, 1) }}
+]
+

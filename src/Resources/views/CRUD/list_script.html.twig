@@ -35,8 +35,7 @@
             event.stopPropagation();
 
             initializeDialog();
-
-            var form = jQuery(this).closest('form');
+            var form = jQuery(event.target).closest('form');
 
             if (jQuery('[name^="idx[]"]:checked', form).length == 0 && jQuery('[name^="all_elements"]:checked', form).length == 0) {
                 createInitCmsMessageBox('warning', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
@@ -60,7 +59,7 @@
             var ua = navigator.userAgent,
                 event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
-            $('.show-tooltip').tooltip({placement: 'bottom', delay: {show: 800, hide: 100}});
+            $('.show-tooltip, [data-toggle="tooltip"]').tooltip({placement: 'bottom', delay: {show: 800, hide: 100}});
             $('body')
                 .on('click', '.dialog-link', createAjaxDialog)
                 .on('click', '.batch-dialog-link', createBatchDialog)
@@ -68,13 +67,36 @@
             initializeDialog();
 
             var table = $('#intiCMSDatatable').DataTable({
+                responsive: true,
+                dom: `
+                <'row' <'col-sm-12' B>>
+                <'row py-3'<'col-sm-12'tr>>
+                <'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>
+                `,
                 order: [],
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "{{ 'all'|trans({}, 'NetworkingInitCmsBundle') }}"]],
+                "pagingType": "full_numbers",
                 select: {
                     style: 'multi',
                     selector: 'td:first-child .checkable',
                 },
                 language: {
-                    url: '//cdn.datatables.net/plug-ins/1.10.21/i18n/German.json'
+                    url: '{{ asset('bundles/networkinginitcms/js/lang/datables/'~(app.request.locale|slice(0,2))~'.json') }}'
+                },
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        columns: ':not(.sonata-ba-list-field-header-batch, .sonata-ba-list-field-header-actions)'
+                    },
+                    'excel',
+                    'print'
+                ],
+                "bStateSave": true,
+                "fnStateSave": function (oSettings, oData) {
+                    localStorage.setItem( 'DataTables_'+window.location.pathname, JSON.stringify(oData) );
+                },
+                "fnStateLoad": function (oSettings) {
+                    return JSON.parse( localStorage.getItem('DataTables_'+window.location.pathname) );
                 }
             });
 
@@ -91,6 +113,35 @@
                         table.rows($(this).closest('tr')).deselect();
                     }
                 });
+            }).on( 'draw', function () {
+
+                $('.editable-click').each(function (i, e) {
+                    var link = $(e);
+                    var url = link.data('url');
+                    var locale = link.data('locale');
+                    var name = link.data('name');
+                    var value = link.data('value');
+                    var pk = link.data('pk');
+                    link.editable({
+                        url: url,
+                        name: name,
+                        value: value,
+                        params: function (params) {
+                            // make sure pk is always loaded from element
+                            params.pk = pk;
+                            params.locale = locale;
+                            return params;
+                        },
+                        error: function (response) {
+                            response = JSON.parse(response.responseText);
+                            return response ? response.message : response;
+                        },
+                        success: function (response, newValue) {
+                            link.data('pk', response.pk);
+                            return response;
+                        }
+                    });
+                })
             });
 
         })(jQuery);

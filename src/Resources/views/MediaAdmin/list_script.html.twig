@@ -1,10 +1,45 @@
 {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
 {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
-<script src="{{ asset('bundles/networkinginitcms/vendor/nestedSortable/jquery.mjs.nestedSortable.js') }}"
+<script src="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.js') }}"
+        type="text/javascript"></script>
+<script src="{{ asset('bundles/networkinginitcms/vendor/featherlight/src/featherlight.js') }}"
         type="text/javascript"></script>
 <script>
     var tagDialog;
     var lastLink = $('{{ selected }}');
+    (function ($, undefined) {
+        "use strict";
+        var link = document.createElement('a');
+        link.className = "delete-tag dialog-link float-right ";
+        link.innerHTML = '<i class="la la-trash icon-lg"></i>';
+
+        $.jstree.defaults.delete = $.noop;
+        $.jstree.plugins.delete = function (options, parent) {
+            this.teardown = function () {
+                if(this.settings.delete) {
+                    this.element.find(".delete-tag").remove();
+                }
+                parent.teardown.call(this);
+            };
+            this.redraw_node = function(obj, deep, callback, force_draw) {
+
+                obj = parent.redraw_node.call(this, obj, deep, callback, force_draw);
+
+                if(this.get_node(obj).children && this.get_node(obj).children.length){
+                    return obj;
+                }
+
+                if(obj && $(obj).hasClass('sortable-tag')) {
+
+                    var tmp = link.cloneNode(true);
+                    var node = this.get_node(obj);
+                    tmp.href = node.data.delete_link;
+                    obj.insertBefore(tmp, obj.childNodes[2]);
+                }
+                return obj;
+            };
+        };
+    })(jQuery);
 
     function initializeTagDialog() {
         if (!tagDialog) {
@@ -80,118 +115,179 @@
 
 
         axios.post(this.action, new FormData(this), axiosConfig)
-        .then( function (response) {
-            var data = response.data;
-            if (data.result == 'ok') {
-                tagDialog.modal('hide');
-                createInitCmsMessageBox(data.status, data.message);
-                reloadSortTree(data.html);
-            }
-        })
-        .catch(function(error){
-            tagDialog.html(error.response.data);
-        })
-    }
-
-    function reloadSortTree(html) {
-        jQuery('#tagsContainer').html(html);
-        setUpSortTree();
-        lastLink = $('.show_all_media');
-        var lastItem = $('li.last-item');
-        lastItem.parents('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
-        lastItem.find('> div > a.tag_link').trigger('click');
-    }
-
-    function setUpSortTree() {
-
-        $('.ui-sortable').nestedSortable({
-            disableNestingClass: 'no-nest',
-            handle: 'i.glyphicon',
-            listType: 'ul',
-            items: 'li',
-            opacity: .6,
-            placeholder: 'placeholder',
-            revert: 250,
-            tabSize: 10,
-            toleranceElement: 'div.menu_item',
-            isTree: true,
-            forcePlaceholderSize: true,
-            forceHelperSize: true,
-            startCollapsed: true,
-            expandOnHover: 100,
-            excludeRoot: true,
-            disabledClass: 'no-sort',
-            isAllowed: function (placeholder, placeholderParent, currentItem) {
-                var allowed = true;
-                var currentId = $(currentItem).attr('id');
-                var currentText = $(currentItem).find('> div.handle > a.tag_link').text();
-
-                if (placeholderParent) {
-                    $(placeholderParent[0]).find(' > ul > li.sortable-tag').each(function (i, e) {
-                        if (currentId != $(e).attr('id')) {
-                            if ($(e).find('> div.handle > a.tag_link').text().toLowerCase() === currentText.toLowerCase()) {
-                                allowed = false;
-                            }
-                        }
-                    });
-                } else {
-                    $('#tag-tree').find(' > li.sortable-tag').each(function (i, e) {
-                        if (currentId != $(e).attr('id')) {
-                            if ($(e).find('> div > a.tag_link').text().toLowerCase() === currentText.toLowerCase()) {
-                                allowed = false;
-                            }
-                        }
-                    });
+            .then(function (response) {
+                var data = response.data;
+                if (data.result == 'ok') {
+                    tagDialog.modal('hide');
+                    createInitCmsMessageBox(data.status, data.message);
+                    reloadSortTree(data.json, data.objectId);
+                }else{
+                    tagDialog.html(response.data);
                 }
-                return allowed;
+            })
+            .catch(function (error) {
+                tagDialog.html(error.response.data);
+            })
+    }
+
+
+    var treeData = {% include "@NetworkingInitCms/TagAdmin/tags.json.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %};
+    function reloadSortTree(data, id) {
+        treeData = data;
+        $('#tagsContainer').jstree(true).refresh();
+    }
+    function setUpSortTree() {
+        $('#tagsContainer')
+            .on('refresh.jstree', function (){setUpEditable(); })
+            .on('move_node.jstree', function (node){setUpEditable();})
+            .on('after_open.jstree', function (){setUpEditable();})
+            .on('redraw.jstree', function (){setUpEditable();})
+            .jstree({
+            "types": {
+                "default": {
+                    "icon": "fa fa-folder text-primary icon-2x"
+                },
+                "file": {
+                    "icon": "fa fa-file text-primary icon-2x"
+                }
             },
-            update: function () {
-                updateTree(this)
+            "plugins": [
+                "dnd",
+                {% if (noSort is not defined or not noSort) and tagAdmin.hasRoute('delete') %}"delete",{% endif %}
+                "sort",
+                "types",
+                "unique"
+            ],
+            "dnd": {
+                "check_while_dragging": true,
+                "is_draggable": function (node) {
+                    return node[0].a_attr.class !== "show_all_media"
+                },
             },
-            stop: function (e, ui) {
-                var list = ui.item.context.parentElement;
-                sortList(list);
+            "delete": function (node){
+                axios.get(node.data.delete_link,{ ...axiosConfig}).then(function (response) {
+                    listDialog.html(response.data);
+                    listDialog.modal('show');
+                });
             },
-            expand: function () {
-                $('li.mjs-nestedSortable-hovering > div > i.glyphicon-folder-close').toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open')
+            "sort": function(a, b) {
+                a1 = this.get_node(a);
+                b1 = this.get_node(b);
+                if(a1.data['show_first']){
+                    return -1;
+                }
+
+                if(b1.data['show_first']){
+                    return 1;
+                }
+                return (a1.text.toLowerCase() > b1.text.toLowerCase() ) ? 1 : -1;
+            },
+            'core': {
+                "themes" : {
+                    "variant" : "large"
+                },
+                "check_callback": function (operation, node, node_parent, node_position, more) {
+                    // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
+                    // in case of 'rename_node' node_position is filled with the new node name
+
+                    if (operation === "move_node") {
+                        if (node_parent.a_attr) {
+                            return node_parent.a_attr.class !== "show_all_media"; //only allow dropping inside nodes of type 'Parent'
+                        }
+                    }
+                    return true;
+                },
+                data: function(node, cb){
+                    cb(treeData)
+                }
             }
         });
 
+        $(document).on("dnd_stop.vakata", function (data, e) {
+            var nodes = $('#tagsContainer').jstree(true).get_json();
+            var flatTree = getFlatTree(nodes, 0, 0, nodes.length-1, [])
+            updateTree(flatTree)
+        });
+
+
+
+    }
+
+    function updateTreeData(value, id){
+        var data = $('#tagsContainer').jstree(true).get_json();
+        replaceDataName(data, value, id, data.length -1);
+        treeData = data;
+        $('#tagsContainer').jstree(true).refresh();
+
+    }
+
+    function replaceDataName(nodes, name, id, n, flatArray){
+        if(n < 0){
+            return nodes;
+        }
+        var node = nodes[n];
+
+        if(typeof node.data !== "undefined" && node.data['id'] === id){
+            node.text = name;
+            node.li_attr['data-tag-name'] = name;
+        }
+        if(node.children.length > 0){
+            replaceDataName(node.children, name, id, node.children.length-1);
+        }
+
+        return replaceDataName(nodes, name, id, n-1);
+    }
+
+
+
+    function setUpEditable(){
+        $('.tag_link').unbind();
         $('.tag_link').editable({
             'toggle': 'manual',
             'url': '{{ tagAdmin.generateUrl('inline_edit') }}',
-            'name': 'name'
+            'name': 'name',
+            'display': function (value, response){
+                if(typeof response !== "undefined"){
+                    var icon = $('.jstree-icon', this);
+                    $(this).html(icon).append(value);
+                }
+            }
         }).on('contextmenu', function (e) {
             $(this).editable('show');
             e.preventDefault();
-        }).on('save', function (e, params) {
-            $(this).parent().closest('li').data('tag-name', params.newValue);
+        }).on('save', function (event, params) {
+            updateTreeData(params.newValue, params.response.objectId);
         }).on('hidden', function (e, r) {
             if (r === 'save') {
                 var list = $(this).parent().closest('ul');
-                sortList(list);
+                // sortList(list);
                 history.replaceState({time: jQuery.now()}, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time=' + jQuery.now());
             }
         });
     }
+    function getFlatTree(nodes, parentId, depth, n, flatArray){
+        if(n < 0){
+            return flatArray;
+        }
+        var node = nodes[n];
 
-    function sortList(list) {
-        $(list).find(' > li.sortable-tag').sort(function (a, b) {
-            var keyA = $(a).data('tag-name').toString().toLowerCase();
-            var keyB = $(b).data('tag-name').toString().toLowerCase();
-            return (keyA < keyB ? -1 : (keyA > keyB ? +1 : 0));
-        }).appendTo($(list));
+        if(node.children.length > 0){
+            flatArray.push.apply(getFlatTree(node.children, node.data['id'], depth+1, node.children.length-1, flatArray))
+        }
+        flatArray.push({id: node.data['id'], parent_id: parentId, name: node.text, depth: depth});
+
+        return getFlatTree(nodes, parentId, depth, n-1, flatArray);
     }
 
-    function updateTree(e) {
-        jQuery.post(
-            "{{ tagAdmin.generateUrl('update_tree') }}",
-            {"nodes": jQuery(e).nestedSortable('toArray')},
-            function (xhr) {
-                createInitCmsMessageBox(xhr.status, xhr.message);
+    function updateTree(tagTree) {
+
+        axios.post("{{ tagAdmin.generateUrl('update_tree') }}", {"nodes": tagTree}, axiosConfig)
+            .then(function (response) {
+                var data = response.data;
+                createInitCmsMessageBox(data.status, data.message);
                 history.replaceState({time: jQuery.now()}, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time=' + jQuery.now());
-            }
-        );
+            });
+
     }
 
     function refreshList(filters) {
@@ -214,13 +310,6 @@
     $(function () {
         var body = $('body');
 
-        body.on('html-received', function (event, html) {
-
-            console.log(html);
-
-            reloadSortTree(html);
-        });
-
 
         var ua = navigator.userAgent, event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
@@ -241,28 +330,17 @@
             }
         });
 
-        $('.content-main').on('click', "button[type='submit']", function (e) {
-            $("input[name='action']").val(this.value);
+        $('body').on('click', "a.batch", function (e) {
+            e.preventDefault();
+            $("input[name='action']").val($(this).data('value'));
+            createBatchDialog(e);
+
         });
 
         body.on('click', '.tag_link', function (e, noLoad) {
             e.preventDefault();
-            if (lastLink) {
-                lastLink.parent().removeClass('info');
-                lastLink.siblings('a.dialog-link').hide();
-            }
             var link = $(e.target);
             var tagId = link.data('pk');
-            link.parent().addClass('info');
-            if (link.parent().siblings('ul').children().length < 1) {
-                link.siblings('a.dialog-link').show();
-            }
-            var listItem = link.closest('li');
-            if ($(listItem).hasClass('mjs-nestedSortable-collapsed')) {
-                link.siblings('i').trigger('click');
-            }
-
-            lastLink = link;
             if (noLoad == undefined) {
                 refreshList({'filter': {'tags': {'value': tagId}}});
             }
@@ -270,15 +348,9 @@
 
         body.on('click', '.show_all_media', function (e) {
             e.preventDefault();
-            if (lastLink) {
-                lastLink.parent().removeClass('info');
-                lastLink.siblings('a.dialog-link').hide();
-            }
-            // $('.media-box').show();
+
             refreshList({'filter': {'_page': 1}});
-            var link = $(e.target);
-            link.parent().addClass('info');
-            lastLink = link;
+
         });
 
         body.on('click', 'a.media-pager', function (e) {

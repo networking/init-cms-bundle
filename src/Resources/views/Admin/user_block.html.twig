@@ -4,7 +4,7 @@
         <ul class="{% if app.request.isXmlHttpRequest %}init{% endif %}nav navbar-nav ml-2">
             <li class="nav-item dropdown">
                 <a id="userDropDown" href="#" role="button" class="nav-link dropdown-toggle"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-user"></i> {{ app.user }} </a>
+                    <i class="la la-user"></i> {{ app.user }} </a>
                 <div class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="userDropDown">
                     <a class="dropdown-item" tabindex="-1"
                            href="{{ url('admin_networking_initcms_user_edit', {id: app.user.id}) }}">{{ 'label.account_settings'|trans({}, 'PageAdmin', locale) }}</a>

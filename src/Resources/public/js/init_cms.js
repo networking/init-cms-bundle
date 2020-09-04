@@ -43,7 +43,6 @@ function uploadError(xhr) {
 }
 
 
-$.fn.select2.defaults.set("theme", "bootstrap");
 $.fn.modal.Constructor.prototype.enforceFocus = function () {
     $(document)
         .off('focusin.bs.modal') // guard against infinite focus loop
@@ -116,9 +115,25 @@ $(function () {
         if (openModals.length > 0) {
             $('body').addClass('modal-open');
         }
+    }).on('click', 'a.init-cms-ajax-link', function (e) {
+        console.log('hello')
+        e.preventDefault();
+        var that = this;
+        axios.post(KTUtil.attr(that, 'href'), [], axiosConfig)
+            .then(function (response) {
+                var elm = that.closest('td');
+                KTUtil.setHTML(elm,'');
+                KTUtil.setHTML(elm,$(response.data.replace(/<!--[\s\S]*?-->/g, "")).html());
+                KTUtil.animateClass(elm, 'animate__animated animate__pulse bg-success-o-50')
+            })
+            .catch(function (error) {
+                KTUtil.animateClass(elm, 'animate__animated  animate__pulse bg-danger')
+            })
+
     });
 
     $('.editable-click').each(function (i, e) {
+
         var link = $(e);
         var url = link.data('url');
         var locale = link.data('locale');
@@ -145,6 +160,7 @@ $(function () {
             }
         });
     })
+
 });
 
 var Admin = {
@@ -152,9 +168,9 @@ var Admin = {
      * render log message
      * @param mixed
      */
-    log: function() {
+    log: function () {
 
-        var msg = '[InitCms Log] ' + Array.prototype.join.call(arguments,', ');
+        var msg = '[InitCms Log] ' + Array.prototype.join.call(arguments, ', ');
         if (window.console && window.console.log) {
             window.console.log(msg);
         } else if (window.opera && window.opera.postError) {

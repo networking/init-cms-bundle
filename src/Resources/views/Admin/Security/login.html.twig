@@ -1,62 +1,88 @@
 {% extends base_template %}
-{% block sidebar_left %}{% endblock %}
-{% block content %}
-    <div class="row">
-        <div id="login" class="connection modal" >
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <form action="{{ path("networking_init_cms_admin_security_check") }}" method="post" role="form"
-                          class="form-vertical">
-                        <div class="modal-body">
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+{% block page_stylesheets %}
+<link href="{{ asset('bundles/networkinginitcms/assets/css/pages/login/classic/login-4.css')}}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block main %}
+    <div class="login login-4 login-signin-on d-flex flex-row-fluid" id="kt_login">
+        <div class="d-flex flex-center flex-row-fluid bgi-size-cover bgi-position-top bgi-no-repeat" style="background-image: url('{{ asset('bundles/networkinginitcms/assets/media/bg/bg-3.jpg')}}')">
+            <div class="login-form text-center p-7 position-relative overflow-hidden">
+                <!--begin::Login Header-->
+                <div class="d-flex flex-center mb-15">
+                    <a href="#">
+                        <img src="{{ asset('bundles/networkinginitcms/img/initcms-396x100.png') }}" class="max-h-75px" alt=""/>
+                    </a>
+                </div>
+                <!--end::Login Header-->
 
-                            {% block sonata_user_login_error %}
-                                {% if error %}
-                                    <div class="alert alert-danger alert-error">
-                                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                <!--begin::Login Sign in form-->
+                <div class="login-signin">
+                    <div class="mb-10">
+                        <h3>{{ 'sign_in_title'|trans({}, 'NetworkingInitCmsBundle') }}</h3>
+                    </div>
+                    {% block sonata_user_login_error %}
+                        {% if error %}
+                                <div class="alert alert-custom alert-outline-danger fade show mb-5" role="alert">
+                                    <div class="alert-icon">
+                                        <i class="flaticon-warning"></i>
                                     </div>
-                                {% endif %}
-                            {% endblock %}
-
-                            <div class="form-group">
-                                <label class=" control-label"
-                                       for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
-
-                                <div class="">
-                                    <input type="text" id="username" name="_username" value="{{ last_username }}"
-                                           class="form-control" autofocus/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class=" control-label"
-                                       for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
-
-                                <div class="">
-                                    <input type="password" id="password" name="_password" class="form-control"
-                                           placeholder="Password"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                    <div class="checkbox">
-                                        <label class="checkbox-inline"><input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
-                                            {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
+                                    <div class="alert-text">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                    <div class="alert-close">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+																	<span aria-hidden="true">
+																		<i class="ki ki-close"></i>
+																	</span>
+                                        </button>
                                     </div>
-                            </div>
+                                </div>
+                        {% endif %}
+                    {% endblock %}
+                    <form class="form" id="kt_login_signin_form" action="{{ path("networking_init_cms_admin_security_check") }}" method="post" role="form">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                        <div class="form-group mb-5">
+                            <input class="form-control h-auto form-control-solid py-4 px-8" type="text" name="_username" placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}"
+                                   value="{{ last_username }}" autofocus autocomplete="off" />
                         </div>
-                        <div class="modal-footer">
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-10">
-                                    <input type="submit" class="btn btn-primary" id="_submit" name="_submit"
-                                           value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}"/>
-                                </div>
+                        <div class="form-group mb-5">
+                            <input class="form-control h-auto form-control-solid py-4 px-8" type="password" placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}" name="_password" />
+                        </div>
+                        <div class="form-group d-flex flex-wrap justify-content-between align-items-center">
+                            <div class="checkbox-inline">
+                                <label class="checkbox m-0 text-muted">
+                                    <input type="checkbox" name="_remember_me" />
+                                    <span></span>
+                                    {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
+                                </label>
                             </div>
+                            <a href="javascript:;" id="kt_login_forgot" class="text-muted text-hover-primary">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
+                        </div>
+                        <button id="kt_login_signin_submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
+                    </form>
+                </div>
+                <!--end::Login Sign in form-->
+
+
+                <!--begin::Login forgot password form-->
+                <div class="login-forgot">
+                    <div class="mb-10">
+                        <h3>{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</h3>
+                        <div class="text-muted font-weight-bold">{{ 'reset_password_text'|trans({}, 'NetworkingInitCmsBundle') }}</div>
+                    </div>
+                    <form class="form" id="kt_login_forgot_form" action="{{ path('networking_init_cms_admin_resetting_send_email') }}" method="post">
+                        <div class="form-group mb-10">
+                            <input class="form-control form-control-solid h-auto py-4 px-8" type="text" placeholder="{{ 'resetting.request.username'|trans({}, 'FOSUserBundle')|replace({':': ''}) }}" name="username" autocomplete="off"/>
+                        </div>
+                        <div class="form-group d-flex flex-wrap flex-center mt-10">
+                            <button id="kt_login_forgot_submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-2">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</button>
+                            <button id="kt_login_forgot_cancel" class="btn btn-light-primary font-weight-bold px-9 py-4 my-3 mx-2">{{ 'title_user_authentication'|trans({}, 'SonataUserBundle') }}</button>
                         </div>
                     </form>
                 </div>
-                <!-- /.modal-content -->
+                <!--end::Login forgot password form-->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!-- /.modal -->
     </div>
-{% endblock content %}
+{% endblock main %}
+
+{% block page_scripts %}
+<script src="{{ asset('bundles/networkinginitcms/assets/js/pages/custom/login/login-general.js') }}"></script>
+{% endblock %}

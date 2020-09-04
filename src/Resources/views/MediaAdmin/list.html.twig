@@ -14,8 +14,13 @@ file that was distributed with this source code.
     {{ parent() }}
     <link rel="stylesheet"
           href="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/default.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('bundles/networkinginitcms/vendor/featherlight/src/featherlight.css') }}">
 {% endblock %}
 
+{% block filter_title %}{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}{% endblock %}
 
 {% form_theme form '@NetworkingInitCms/Form/form_admin_fields.html.twig' %}
 {% set active_tab = app.request.get('context') %}
@@ -28,13 +33,51 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block actions %}
+    {# create button #}
+    {% if galleryListMode is defined and not galleryListMode %}
+            {% set create_text =  'link_action_create'|trans({}, admin.translationDomain) %}
+            {% if create_text == 'link_action_create' %}
+                {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
+            {% endif %}
+            {% for code, provider in providers %}
+                <a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}"
+                   class="btn btn-primary dialog-link"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="{{ provider.providerMetadata.description|trans({}, 'MediaAdmin') }}">
+
+                    {% set icon = provider.providerMetadata.option('class') %}
+                    {% if provider.name == 'sonata.media.provider.vimeo' %}
+                        {% set icon = 'fab fa-vimeo-square' %}
+                    {% endif %}
+
+                    {% if provider.name == 'sonata.media.provider.youtube' %}
+                        {% set icon = 'fab fa-youtube' %}
+                    {% endif %}
+
+                    {% if provider.name == 'sonata.media.provider.file' %}
+                        {% set icon = 'far fa-file' %}
+                    {% endif %}
+
+                    {% if provider.name == 'sonata.media.provider.image' %}
+                        {% set icon = 'far fa-image' %}
+                    {% endif %}
+
+                    <i class="fa fa-plus"></i> <i class="{{ icon }}"></i>
+                    {{ provider.providerMetadata.title|trans({}, 'MediaAdmin') }}
+
+                </a>
+            {% else %}
+                <span class="alert alert-info">{{ 'no_provider_available'|trans({}, 'SonataMediaBundle') }}</span>
+            {% endfor %}
+    {% endif %}
 {% endblock %}
 
 {% block list_filters %}
     {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
     {% if datagrid.filters %}
         <form action="{{ admin.generateUrl('list') }}" method="GET"
-              class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters">
+              class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}">
 
             <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
             {% if persistent_parameters.provider is defined %}
@@ -135,15 +178,16 @@ file that was distributed with this source code.
             </div>
         </form>
     {% endif %}
-    <ul class="nav menu-tabs nav-tabs">
+
+    <ul class="nav nav-tabs nav-tabs-line">
         {% if galleryListMode and persistent_parameters.context %}
-            <li class="active">
-                <a href="{{ admin.generateUrl('list', {'context' : persistent_parameters.context}) }}">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
+            <li class="nav-item">
+                <a href="{{ admin.generateUrl('list', {'context' : persistent_parameters.context}) }}"  class="nav-link {% if name == persistent_parameters.context %}active{% endif %}">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
             </li>
         {% else %}
             {% for name, context in media_pool.contexts %}
-                <li {% if name == persistent_parameters.context %}class="active"{% endif %}>
-                    <a href="{{ admin.generateUrl('list', {'context' : name, 'provider' : null} ) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                <li class="nav-item">
+                    <a href="{{ admin.generateUrl('list', {'context' : name, 'provider' : null} ) }}" class="nav-link {% if name == persistent_parameters.context %}active{% endif %}">{{ ('media_context.' ~ name)|trans({}) }}</a>
                 </li>
             {% endfor %}
         {% endif %}
@@ -159,54 +203,10 @@ file that was distributed with this source code.
 
                 {# provider #}
                 <div class="clearfix">&nbsp;</div>
-
-                {# create button #}
-                {% if galleryListMode is defined and not galleryListMode %}
-                    <h1>
-                        <span class="info-soft">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</span>
-                        {% set create_text =  'link_action_create'|trans({}, admin.translationDomain) %}
-                        {% if create_text == 'link_action_create' %}
-                            {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
-                        {% endif %}
-                        {% for code, provider in providers %}
-                            <a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}"
-                               class="btn btn-light dialog-link"
-                               data-toggle="tooltip"
-                               data-placement="top"
-                               title="{{ provider.providerMetadata.description|trans({}, 'MediaAdmin') }}">
-
-                                {% set icon = provider.providerMetadata.option('class') %}
-                                {% if provider.name == 'sonata.media.provider.vimeo' %}
-                                    {% set icon = 'fab fa-vimeo-square' %}
-                                {% endif %}
-
-                                {% if provider.name == 'sonata.media.provider.youtube' %}
-                                    {% set icon = 'fab fa-youtube' %}
-                                {% endif %}
-
-                                {% if provider.name == 'sonata.media.provider.file' %}
-                                    {% set icon = 'far fa-file' %}
-                                {% endif %}
-
-                                {% if provider.name == 'sonata.media.provider.image' %}
-                                    {% set icon = 'far fa-image' %}
-                                {% endif %}
-
-                                <i class="fa fa-plus"></i> <i class="{{ icon }}"></i>
-                                {{ provider.providerMetadata.title|trans({}, 'MediaAdmin') }}
-
-                            </a>
-                        {% else %}
-                            <span class="alert alert-info">{{ 'no_provider_available'|trans({}, 'SonataMediaBundle') }}</span>
-                        {% endfor %}
-                    </h1>
-                    <hr>
-                {% endif %}
-
                 {% set filterParameters = admin.filterParameters %}
                 {% set batchactions = admin.batchactions %}
                 {% if admin.hasRoute('batch') %}
-                <form action="{{ admin.generateUrl('batch', {'filter': filterParameters}) }}" method="POST">
+                <form action="{{ admin.generateUrl('batch', {'filter': filterParameters}) }}" id="batchForm" method="POST">
                     <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
                     {% endif %}
                     <div class="row">
@@ -227,13 +227,13 @@ file that was distributed with this source code.
                             {% if not app.request.isxmlhttprequest %}
                                 <input type="hidden" name="action">
                                 <span class="batch-actions" style="display: none;">
-                            <button type="submit" class="btn btn-danger btn-sm batch-dialog-link batch" value="delete">
+                            <a href="#" class="btn btn-danger batch btn-sm batch" data-value="delete">
                                 <i class="fa fa-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
-                            </button>
+                            </a>
                         </span>
                             {% endif %}
                         </div>
-                        <div class="col-sm-6 sort-buttons">
+                        <div class="col-sm-6 sort-buttons align-right">
                             <strong>{{ 'label.sort_by'|trans({}, 'MediaAdmin') }}:</strong>
 
                             <div class="btn-group btn-group-sm">
@@ -266,7 +266,7 @@ file that was distributed with this source code.
                         {% if admin.showTagTree %}
                             <div class="col-md-3 col-xs-12">
                                 <div id="tagsContainer">
-                                    {% include "@NetworkingInitCms/TagAdmin/tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
+{#                                    {% include "@NetworkingInitCms/TagAdmin/tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}#}
                                 </div>
                                 {% if not app.request.isXmlHttpRequest and tagAdmin.isGranted('CREATE') %}
                                     <hr>
@@ -276,12 +276,12 @@ file that was distributed with this source code.
                                     {% endif %}
                                     <a class="btn btn-primary btn-sm tag-dialog-link"
                                        href="{{ tagAdmin.generateUrl('create') }}">
-                                        <i class="glyphicon glyphicon-plus icon-white"></i> {{ create_text }}
+                                        <i class="la la-plus"></i> {{ create_text }}
                                     </a>
                                 {% endif %}
                             </div>
                         {% endif %}
-                        <div id="item_list" class="col-md-{{ admin.showTagTree?'9':'12' }} col-xs-12 text-center">
+                        <div id="item_list" class="col-md-{{ admin.showTagTree?'9':'12' }} col-xs-12">
                             {% if datagrid.results|length > 0 %}
                                 {% include "@NetworkingInitCms/MediaAdmin/list_items.html.twig" %}
                             {% else %}
@@ -311,7 +311,9 @@ file that was distributed with this source code.
             </div>
         </div>
         {% if not app.request.isXmlHttpRequest %}
-        <div class="modal fade" tabindex="-1" role="dialog" id="tag_dialog"></div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="tag_dialog">
+            <div class="modal-dialog"></div>
+        </div>
     </div>
     {% else %}
         <script type="text/javascript">

@@ -3,30 +3,52 @@
 <script src="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/index.min.js') }}"></script>
 <script src="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/scroll-behaviour.min.js') }}"></script>
 <script>
-
     MobileDragDrop.polyfill({
         // use this to make use of the scroll behaviour
         dragImageTranslateOverride: MobileDragDrop.scrollBehaviourDragImageTranslateOverride
     });
 
-    function openTag(ev, id) {
+
+    function dragstart_handler(ev) {
+
+        ev.dataTransfer.setData("Text", ev.target.dataset.objectId);
+        ev.dataTransfer.effectAllowed = "copy";
+        ev.target.style.opacity = '0.5';
+        $( ev.target).find('.overlay-layer').addClass('d-none')
+
+    }
+
+    function overList(ev, id) {
         ev.preventDefault();
-        $('#div_'+id+' > a.tag_link').trigger('click', true);
+       $('#li_tag_'+id).addClass('bg-light-info');
+        ev.dataTransfer.dropEffect = "copy"
     }
 
     function dropTag(ev, id) {
         ev.preventDefault();
+        $('#li_tag_'+id).removeClass('bg-light-info');
         var media = ev.dataTransfer.getData('Text');
+
         $.post(
             "{{ admin.generateUrl('batch', {'filter':  admin.filterParameters}) }}",
             {action: "add_tags", tags: id, idx: [media], _sonata_csrf_token :"{{ csrf_token }}"},
             function(xhr){
                 if (xhr.result === 'ok') {
                     createInitCmsMessageBox(xhr.status, xhr.message);
-                    $('.info > a.tag_link').trigger('click');
+                    $('#li_tag_'+id+' > a.tag_link').trigger('click');
                     history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
                 }
             }
         );
+    }
+
+    function dragEnd(ev){
+        ev.target.style.opacity = '1';
+        $( ev.target).find('.overlay-layer').removeClass('d-none')
+        $('.jstree-leaf').removeClass('bg-light-info');
+    }
+
+    function exitList(ev, id){
+        $('#li_tag_'+id).removeClass('bg-light-info');
     }
 </script>

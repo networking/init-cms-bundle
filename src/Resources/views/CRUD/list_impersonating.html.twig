@@ -1,22 +1,20 @@
 {#
-
 This file is part of the Sonata package.
 
 (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% extends admin.getTemplate('base_list_field') %}
 
 {% block field %}
-    {% if app.user and object.username != app.user.username and sonata_user.impersonating %}
-        <a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters | merge({'_switch_user': object.username})) }}" title="{{ 'switch_user'|trans({}, 'SonataUserBundle')}}">
-            <img src="{{ asset('bundles/sonataadmin/famfamfam/group_go.png') }}"  alt="{{ 'switch_user'|trans({}, 'SonataUserBundle')}}" />
+    {% if app.user and object.username != app.user.username and sonata_user.impersonating and admin.isGranted('EDIT', object) %}
+        <a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters | merge({'_switch_user': object.username})) }}"
+           title="{{ 'switch_user'|trans({}, 'SonataUserBundle') }}"
+            class="nav-link">
+            <i class="la la-user icon-lg"></i>
         </a>
-    {% else %}
-        -
     {% endif %}
 {% endblock %}

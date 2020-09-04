@@ -109,7 +109,7 @@ abstract class UserAdmin extends SonataUserAdmin
                 ->add(
                     'impersonating',
                     'string',
-                    ['template' => 'NetworkingInitCmsBundle:Admin:Field/impersonating.html.twig']
+                    ['template' => '@NetworkingInitCms/CRUD/list_impersonating.html.twig']
                 );
         }
 

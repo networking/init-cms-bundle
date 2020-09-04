@@ -336,7 +336,6 @@ abstract class PageAdmin extends BaseAdmin
                 IconradioType::class,
                 [
                     'label' => 'form.label_template',
-                    'horizontal_input_wrapper_class' => 'col-md-12',
                     'expanded' => true,
                     'choices' => $this->getPageTemplates(),
                     'data' => $this->getDefaultTemplate(),
@@ -510,7 +509,7 @@ abstract class PageAdmin extends BaseAdmin
                 'status',
                 null,
                 [
-                    'label' => false,
+                    'label' => 'form.label_status',
                     'sortable' => false,
                     'template' => '@NetworkingInitCms/PageAdmin/page_status_list_field.html.twig',
                 ]
@@ -519,7 +518,7 @@ abstract class PageAdmin extends BaseAdmin
                 'fullPath',
                 null,
                 [
-                    'sortable' => false,
+                    'sortable' => true,
                     'template' => '@NetworkingInitCms/PageAdmin/page_list_show_field.html.twig',
                 ]
             )

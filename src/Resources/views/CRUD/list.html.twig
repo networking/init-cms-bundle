@@ -12,19 +12,7 @@ file that was distributed with this source code.
 {% block page_stylesheets %}
     <link href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 {% endblock %}
-{% block actions %}
-    {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
-{% endblock %}
 
-{% block list_filters %}
-    {{ parent() }}
-{% endblock %}
-{% block list_table %}
-    {{ parent() }}
-{% endblock %}
-{% block list_toolbar %}
-    {{ parent() }}
-{% endblock %}
 {% block footer %}
     {{ parent() }}
     <div class="modal fade" tabindex="-1" role="dialog" id="list_dialog">

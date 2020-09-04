@@ -11,12 +11,6 @@ file that was distributed with this source code.
 
 
 {% block actions %}
-    {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
-{% endblock %}
-
-{% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
-
-{% block list_toolbar %}
     {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
         <!--begin::Dropdown-->
         <div class="dropdown dropdown-inline mr-2">
@@ -29,9 +23,6 @@ file that was distributed with this source code.
             <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
                 <!--begin::Navigation-->
                 <ul class="navi flex-column navi-hover py-2">
-                    <li class="navi-header font-weight-bolder text-uppercase font-size-sm text-primary pb-2">
-                        {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}:
-                    </li>
                     {% for format in admin.getExportFormats() %}
                         {% set icon = 'alt' %}
                         {% if format is same as('json') %}
@@ -66,7 +57,11 @@ file that was distributed with this source code.
         </div>
         <!--end::Dropdown-->
     {% endif %}
+    {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
 {% endblock %}
+
+{% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
+
 {% block filter_title %}{{ 'info.filter'|trans({'%admin_label%':admin.label|trans({}, admin.translationDomain) }, 'NetworkingInitCmsBundle') }}{% endblock %}
 {% block list_filters %}
     {% if admin.datagrid.filters %}
@@ -121,7 +116,7 @@ file that was distributed with this source code.
             <form action="{{ admin.generateUrl('batch', {'filter': admin.filterParameters}) }}" method="POST" >
         {% endif %}
         <table id="intiCMSDatatable"
-               class="table table-separate table-head-custom table-checkable dataTable no-footer"
+               class="table table-bordered table-hover table-head-custom table-checkable dataTable "
                style="width:100%">
             {% block table_header %}
                 <thead>

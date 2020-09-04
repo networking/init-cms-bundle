@@ -53,18 +53,18 @@ function getFiles() {
             form: [forms+'editable-form-bootstrap4.js'],
             container: [containers+'editable-popover4.js'],
             inputs: [
-                inputs+'date/bootstrap-datepicker/js/bootstrap-datepicker.js',
-                inputs+'date/date.js', 
-                inputs+'date/datefield.js', 
-                inputs+'datetime/datetime.js', 
-                inputs+'datetime/datetimefield.js'
+                // inputs+'date/bootstrap-datepicker/js/bootstrap-datepicker.js',
+                // inputs+'date/date.js',
+                // inputs+'date/datefield.js',
+                // inputs+'datetime/datetime.js',
+                // inputs+'datetime/datetimefield.js'
                 //don't build datetime lib, should be included manually 
                 //inputs+'datetime/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
                 //no typeahead in bs4
                 //inputs+'typeahead.js'
                 ], 
             css: [
-                inputs+'date/bootstrap-datepicker/css/datepicker.css'
+                // inputs+'date/bootstrap-datepicker/css/datepicker.css'
                //don't build datetime lib, should be included manually
                //inputs+'datetime/bootstrap-datetimepicker/css/datetimepicker.css'
                 ]
@@ -156,7 +156,7 @@ module.exports = function(grunt) {
  grunt.loadNpmTasks('grunt-contrib-connect');
  grunt.loadNpmTasks('grunt-contrib-jshint');
  grunt.loadNpmTasks('grunt-contrib-copy');
- //grunt.loadNpmTasks('grunt-contrib-requirejs');
+ grunt.loadNpmTasks('grunt-contrib-requirejs');
 
  //version of jquery-ui datepicker to be copied into dist
  //note: if change here => don't forget to change in gh-pages demo-plain.hbs !!!

@@ -52,9 +52,6 @@ file that was distributed with this source code.
 
 
         <!--begin::Global Theme Styles(used by all pages)-->
-        <link href="{{ asset('bundles/networkinginitcms/vendor/x-editable-bs4/dist/bootstrap4-editable/css/bootstrap-editable.css') }}"
-              rel="stylesheet"
-              type="text/css"/>
         <link href="{{ asset('bundles/networkinginitcms/assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet"
               type="text/css"/>
         <link href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/prismjs/prismjs.bundle.css') }}"
@@ -69,9 +66,9 @@ file that was distributed with this source code.
               rel="stylesheet" type="text/css"/>
         <link href="{{ asset('bundles/networkinginitcms/assets/css/themes/layout/header/menu/light.css') }}"
               rel="stylesheet" type="text/css"/>
-        <link href="{{ asset('bundles/networkinginitcms/assets/css/themes/layout/brand/dark.css') }}" rel="stylesheet"
+        <link href="{{ asset('bundles/networkinginitcms/assets/css/themes/layout/brand/light.css') }}" rel="stylesheet"
               type="text/css"/>
-        <link href="{{ asset('bundles/networkinginitcms/assets/css/themes/layout/aside/dark.css') }}" rel="stylesheet"
+        <link href="{{ asset('bundles/networkinginitcms/assets/css/themes/layout/aside/light.css') }}" rel="stylesheet"
               type="text/css"/>
 
     {% endblock %}
@@ -110,7 +107,7 @@ file that was distributed with this source code.
 </head>
 {% block body_tag %}
 <body id="kt_body"
-      class="page-loading-enabled page-loading header-fixed header-mobile-fixed subheader-enabled aside-enabled aside-fixed aside-minimize-hoverable page-loading">
+      class="page-loading-enabled page-loading header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
 {% endblock body_tag %}
 
 {% block body_start %}
@@ -124,34 +121,35 @@ file that was distributed with this source code.
 {% block body %}
 
 
-<!--begin::Main-->
+    <!--begin::Main-->
 
 
-<!--begin::Header Mobile-->
-<div id="kt_header_mobile" class="header-mobile align-items-center header-mobile-fixed">
-    <!--begin::Logo-->
-    <a href="{{ url('sonata_admin_dashboard') }}">
-        <img alt="Logo"
-             src="{{ admin_pool.titlelogo ? admin_pool.titlelogo : asset('bundles/networkinginitcms/img/logo_initcms.png') }}"/>
-    </a>
+{% block mobile_header %}
+    <!--begin::Header Mobile-->
+    <div id="kt_header_mobile" class="header-mobile align-items-center header-mobile-fixed">
+        <!--begin::Logo-->
+        <a href="{{ url('sonata_admin_dashboard') }}">
+            <img alt="Logo" class="max-h-25px"
+                 src="{{ admin_pool.titlelogo ? admin_pool.titlelogo : asset('bundles/networkinginitcms/img/initcms-396x100.png') }}"/>
+        </a>
 
-    <!--end::Logo-->
-    <!--begin::Toolbar-->
-    <div class="d-flex align-items-center">
-        <!--begin::Aside Mobile Toggle-->
-        <button class="btn p-0 burger-icon burger-icon-left" id="kt_aside_mobile_toggle">
-            <span></span>
-        </button>
-        <!--end::Aside Mobile Toggle-->
+        <!--end::Logo-->
+        <!--begin::Toolbar-->
+        <div class="d-flex align-items-center">
+            <!--begin::Aside Mobile Toggle-->
+            <button class="btn p-0 burger-icon burger-icon-left" id="kt_aside_mobile_toggle">
+                <span></span>
+            </button>
+            <!--end::Aside Mobile Toggle-->
 
-        <!--begin::Header Menu Mobile Toggle-->
-        <button class="btn p-0 burger-icon ml-4" id="kt_header_mobile_toggle">
-            <span></span>
-        </button>
-        <!--end::Header Menu Mobile Toggle-->
+{#            <!--begin::Header Menu Mobile Toggle-->#}
+{#            <button class="btn p-0 burger-icon ml-4" id="kt_header_mobile_toggle">#}
+{#                <span></span>#}
+{#            </button>#}
+{#            <!--end::Header Menu Mobile Toggle-->#}
 
-        <!--begin::Topbar Mobile Toggle-->
-        <button class="btn btn-hover-text-primary p-0 ml-2" id="kt_header_mobile_topbar_toggle">
+            <!--begin::Topbar Mobile Toggle-->
+            <button class="btn btn-hover-text-primary p-0 ml-2" id="kt_header_mobile_topbar_toggle">
 					<span class="svg-icon svg-icon-xl">
 
 						<!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
@@ -168,37 +166,37 @@ file that was distributed with this source code.
 
                         <!--end::Svg Icon-->
 					</span>
-        </button>
-        <!--end::Topbar Mobile Toggle-->
+            </button>
+            <!--end::Topbar Mobile Toggle-->
+        </div>
+        <!--end::Toolbar-->
     </div>
-    <!--end::Toolbar-->
-</div>
+    <!--end::Header Mobile-->
+{% endblock mobile_header %}
+        <!--begin::Main-->
+    <div class="d-flex flex-column flex-root">
+        {% block main %}
+        <!--begin::Page-->
+        <div class="d-flex flex-row flex-column-fluid page">
 
-<!--end::Header Mobile-->
-<div class="d-flex flex-column flex-root">
+            <!--[html-partial:include:{"file":"partials/_aside.html"}]/-->
+            {% block sidebar_left %}
+                <!--begin::Aside-->
+                <div class="aside aside-left aside-fixed d-flex flex-column flex-row-auto" id="kt_aside">
 
-    <!--begin::Page-->
-    <div class="d-flex flex-row flex-column-fluid page">
+                    <!--begin::Brand-->
+                    <div class="brand flex-column-auto" id="kt_brand">
 
-        <!--[html-partial:include:{"file":"partials/_aside.html"}]/-->
-        {% block sidebar_left %}
+                        <!--begin::Logo-->
+                        <a href="{{ url('sonata_admin_dashboard') }}" class="brand-logo">
+                            <img alt="Logo" class="max-h-25px"
+                                 src="{{ admin_pool.titlelogo ? admin_pool.titlelogo : asset('bundles/networkinginitcms/img/initcms-396x100.png') }}"/>
+                        </a>
 
-            <!--begin::Aside-->
-            <div class="aside aside-left aside-fixed d-flex flex-column flex-row-auto" id="kt_aside">
+                        <!--end::Logo-->
 
-                <!--begin::Brand-->
-                <div class="brand flex-column-auto" id="kt_brand">
-
-                    <!--begin::Logo-->
-                    <a href="{{ url('sonata_admin_dashboard') }}" class="brand-logo">
-                        <img alt="Logo"
-                             src="{{ admin_pool.titlelogo ? admin_pool.titlelogo : asset('bundles/networkinginitcms/img/logo_initcms.png') }}"/>
-                    </a>
-
-                    <!--end::Logo-->
-
-                    <!--begin::Toggle-->
-                    <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle">
+                        <!--begin::Toggle-->
+                        <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle">
 							<span class="svg-icon svg-icon svg-icon-xl">
 
 								<!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-left.svg-->
@@ -217,273 +215,269 @@ file that was distributed with this source code.
 
                                 <!--end::Svg Icon-->
 							</span>
-                    </button>
+                        </button>
 
-                    <!--end::Toolbar-->
-                </div>
-                <!--begin::Aside Menu-->
-                <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
-                    <!--begin::Menu Container-->
-                    <div id="kt_aside_menu" class="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1"
-                         data-menu-dropdown-timeout="500">
-                        {% block side_bar_nav %}
-                            {{ knp_menu_render('sonata_admin_sidebar', {template: '@NetworkingInitCms/Menu/admin_side_menu.html.twig', }) }}
-                        {% endblock %}
+                        <!--end::Toolbar-->
+                    </div>
+                    <!--begin::Aside Menu-->
+                    <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
+                        <!--begin::Menu Container-->
+                        <div id="kt_aside_menu" class="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1"
+                             data-menu-dropdown-timeout="500">
+                            {% block side_bar_nav %}
+                                {{ knp_menu_render('sonata_admin_sidebar', {template: '@NetworkingInitCms/Menu/admin_side_menu.html.twig', }) }}
+                            {% endblock %}
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
 
 
-        {% endblock sidebar_left %}
+            {% endblock sidebar_left %}
 
-        <!--begin::Wrapper-->
-        <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
 
-            {% block init_cms_top_nav %}
-                {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}
-            {% endblock init_cms_top_nav %}
+                {% block init_cms_top_nav %}
+                    {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}
+                {% endblock init_cms_top_nav %}
 
-            <!--begin::Content-->
-            <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                <!--begin::Content-->
+                <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                    {% block formstart %}{% endblock %}
+                    {% block page_title %}
+                        <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
+                            <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
 
-                {% block page_title %}
-                    <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
-                        <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+                                <!--begin::Info-->
+                                <div class="d-flex align-items-center flex-wrap mr-1">
 
-                            <!--begin::Info-->
-                            <div class="d-flex align-items-center flex-wrap mr-1">
+                                    <!--begin::Page Heading-->
+                                    <div class="d-flex align-items-baseline flex-wrap mr-5">
 
-                                <!--begin::Page Heading-->
-                                <div class="d-flex align-items-baseline flex-wrap mr-5">
-
-                                    <!--begin::Page Title-->
-                                    <h5 class="text-dark font-weight-bold my-1 mr-5">
-                                        {% if _title is not empty or action is defined %}
-                                            {% if _title is not empty %}
-                                                {{ _title|raw }}
-                                            {% else %}
-                                                {% if action is defined %}
-                                                    {% for menu in breadcrumbs_builder.breadcrumbs(admin, action) %}
-                                                        {% if loop.last %}
-                                                            {%- set translation_domain = menu.extra('translation_domain', 'messages') -%}
-                                                            {%- set label = menu.label -%}
-                                                            {%- if translation_domain is not same as(false) -%}
-                                                                {%- set label = label|trans(menu.extra('translation_params', {}), translation_domain) -%}
-                                                            {%- endif -%}
-                                                            {{ label|raw }}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% endif %}
-                                                {% if action == 'edit' %}
-                                                    {% set settings = {} %}
-                                                    {% if object.locale is defined %}
-                                                        {% set settings = {'locale': object.locale} %}
+                                        <!--begin::Page Title-->
+                                        <h5 class="text-dark font-weight-bold my-1 mr-5">
+                                            {% if _title is not empty or action is defined %}
+                                                {% if _title is not empty %}
+                                                    {{ _title|raw }}
+                                                {% else %}
+                                                    {% if action is defined %}
+                                                        {% for menu in breadcrumbs_builder.breadcrumbs(admin, action) %}
+                                                            {% if loop.last %}
+                                                                {%- set translation_domain = menu.extra('translation_domain', 'messages') -%}
+                                                                {%- set label = menu.label -%}
+                                                                {%- if translation_domain is not same as(false) -%}
+                                                                    {%- set label = label|trans(menu.extra('translation_params', {}), translation_domain) -%}
+                                                                {%- endif -%}
+                                                                {{ label|raw }}
+                                                            {% endif %}
+                                                        {% endfor %}
                                                     {% endif %}
+                                                    {% if action == 'edit' %}
+                                                        {% set settings = {} %}
+                                                        {% if object.locale is defined %}
+                                                            {% set settings = {'locale': object.locale} %}
+                                                        {% endif %}
 
-                                                    <a class="link-underlined font-small font-light"
-                                                       href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                                        <a class="link-underlined font-small font-light"
+                                                           href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                                    {% endif %}
                                                 {% endif %}
+
                                             {% endif %}
+                                        </h5>
 
-                                        {% endif %}
-                                    </h5>
+                                        <!--end::Page Title-->
+                                    </div>
 
-                                    <!--end::Page Title-->
+                                    <!--end::Page Heading-->
                                 </div>
 
-                                <!--end::Page Heading-->
+                                <!--end::Info-->
+                                {% block center_sub_title %}{% endblock %}
+                                <!--begin::Toolbar-->
+                                <div class="d-flex align-items-center">
+
+                                    <!--begin::Actions-->
+                                    <!--end::Actions-->
+
+                                        {% block top_actions %}{{ _actions|raw }}{% endblock %}
+                                    <div class="ml-6">
+                                        {% if app.user  and is_granted('ROLE_SONATA_ADMIN') %}
+                                            {% if _help_text is empty %}
+                                                {% if admin is not defined %}
+                                                    {% set adminCode = 'dashboard' %}
+                                                    {% set actionHelp = '' %}
+                                                {% else %}
+                                                    {% set adminCode = admin.code %}
+                                                    {% set actionHelp = action %}
+                                                {% endif %}
+                                                <a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
+                                                   target="_blank">
+                                                    <i class="icon-2x flaticon-info"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                    <!--end::Dropdown-->
+                                </div>
+
+                                <!--end::Toolbar-->
+
                             </div>
 
-                            <!--end::Info-->
+                        </div>
+                    {% endblock %}
 
-                            <!--begin::Toolbar-->
-                            <div class="d-flex align-items-center">
+                    <!--[html-partial:include:{"file":"partials/_content.html"}]/-->
+                    {% block sonata_admin_content %}
+                        <div class="d-flex flex-column-fluid">
+                            <div class="container-fluid">
 
-                                <!--begin::Actions-->
-                                <!--end::Actions-->
-
-                                {% block top_actions %}{% endblock %}
-                                {% if app.user  and is_granted('ROLE_SONATA_ADMIN') %}
-                                    {% if _help_text is empty %}
-                                        {% if admin is not defined %}
-                                            {% set adminCode = 'dashboard' %}
-                                            {% set actionHelp = '' %}
-                                        {% else %}
-                                            {% set adminCode = admin.code %}
-                                            {% set actionHelp = action %}
-                                        {% endif %}
-                                        <a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
-                                           target="_blank">
-                                            <div class="info_button_medium"></div>
-                                        </a>
-                                    {% endif %}
+                                {% if _preview is not empty %}
+                                    {{ _preview|raw }}
                                 {% endif %}
 
-                                <!--end::Dropdown-->
+                                {% if _content is not empty %}
+                                    {{ _content|raw }}
+                                {% endif %}
+
+                                {% if _help_text is not empty %}
+                                    {{ _help_text|raw }}
+                                {% endif %}
+
+                                {% if _show is not empty %}
+                                    {{ _show|raw }}
+                                {% endif %}
+
+                                {% if _form is not empty %}
+                                    {{ _form|raw }}
+                                {% endif %}
+
+                                {% if _list_table is not empty or _list_filters is not empty or (_actions is not empty and _show is not empty) %}
+                                    <div class="card card-custom">
+                                        <div class="card-body">
+                                            {{ _list_filters|raw }}
+                                            {{ _list_table|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if _side_menu is not empty %}
+                                    <div class="sidebar col-md-2">
+                                        <div class="sonata-ba-side-menu">{{ _side_menu|raw }}</div>
+                                    </div>
+                                {% endif %}
                             </div>
-
-                            <!--end::Toolbar-->
-
                         </div>
+                    {% endblock %}
 
-                    </div>
-                {% endblock %}
-
-                <!--[html-partial:include:{"file":"partials/_content.html"}]/-->
-                {% block sonata_admin_content %}
-                    <div class="d-flex flex-column-fluid">
-                        <div class="container-fluid">
-
-                            {% if _preview is not empty %}
-                                {{ _preview|raw }}
-                            {% endif %}
-
-                            {% if _content is not empty %}
-                                {{ _content|raw }}
-                            {% endif %}
-
-                            {% if _help_text is not empty %}
-                                {{ _help_text|raw }}
-                            {% endif %}
-
-                            {% if _show is not empty %}
-                                {{ _show|raw }}
-                            {% endif %}
-
-                            {% if _form is not empty %}
-                                {{ _form|raw }}
-                            {% endif %}
-
-                            {% if _list_table is not empty or _list_filters is not empty or (_actions is not empty and _show is not empty) %}
-                                <div class="card card-custom">
-                                    <div class="card-header">
-                                        <div class="card-title">
-                                            <span class="card-icon"><i
-                                                        class="la la-filter icon-lg text-primary"></i></span>
-                                            <h3 class="card-label">{% block filter_title %}{% endblock %}</h3>
-                                        </div>
-                                        <div class="card-toolbar">
-                                            {% if _list_toolbar is not empty %}
-                                                {{ _list_toolbar|raw }}
-                                            {% endif %}
-                                            {% if _actions is not empty %}
-                                                &nbsp;{{ _actions|raw }}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        {{ _list_filters|raw }}
-                                        {{ _list_table|raw }}
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if _side_menu is not empty %}
-                                <div class="sidebar col-md-2">
-                                    <div class="sonata-ba-side-menu">{{ _side_menu|raw }}</div>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endblock %}
-
-                <!--end::Content-->
-
+                    <!--end::Content-->
+                    {% block formend %}{% endblock %}
+                </div>
+                <!--[html-partial:include:{"file":"partials/_footer.html"}]/-->
+                {% block footer %}
+                    {{ sonata_block_render({ 'type': 'networking_init_cms.block.service.version' }, {}) }}
+                {% endblock footer %}
+                <!--end::Wrapper-->
             </div>
-            <!--[html-partial:include:{"file":"partials/_footer.html"}]/-->
-            {% block footer %}
-                {{ sonata_block_render({ 'type': 'networking_init_cms.block.service.version' }, {}) }}
-            {% endblock footer %}
-            <!--end::Wrapper-->
         </div>
         <!--end::Page-->
+        {% endblock main %}
     </div>
+    <!--begin::Scrolltop-->
+    <div id="kt_scrolltop" class="scrolltop">
+	<span class="svg-icon"><!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Up-2.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon points="0 0 24 0 24 24 0 24"/>
+        <rect fill="#000000" opacity="0.3" x="11" y="10" width="2" height="10" rx="1"/>
+        <path d="M6.70710678,12.7071068 C6.31658249,13.0976311 5.68341751,13.0976311 5.29289322,12.7071068 C4.90236893,12.3165825 4.90236893,11.6834175 5.29289322,11.2928932 L11.2928932,5.29289322 C11.6714722,4.91431428 12.2810586,4.90106866 12.6757246,5.26284586 L18.6757246,10.7628459 C19.0828436,11.1360383 19.1103465,11.7686056 18.7371541,12.1757246 C18.3639617,12.5828436 17.7313944,12.6103465 17.3242754,12.2371541 L12.0300757,7.38413782 L6.70710678,12.7071068 Z" fill="#000000" fill-rule="nonzero"/>
+    </g>
+</svg><!--end::Svg Icon--></span></div>
+    <!--end::Scrolltop-->
     <!--end::Main-->
-</div>
-    {% block before_body_end %}
-        <script>
-            var HOST_URL = "https://preview.keenthemes.com/metronic/theme/html/tools/preview";
-        </script>
+{% block before_body_end %}
+    <script>
+        var HOST_URL = "https://preview.keenthemes.com/metronic/theme/html/tools/preview";
+    </script>
 
-        <!--begin::Global Config(global config for global JS scripts)-->
-        <script>
-            var KTAppSettings = {
-                "breakpoints": {"sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1400},
-                "colors": {
-                    "theme": {
-                        "base": {
-                            "white": "#ffffff",
-                            "primary": "#3699FF",
-                            "secondary": "#E5EAEE",
-                            "success": "#1BC5BD",
-                            "info": "#8950FC",
-                            "warning": "#FFA800",
-                            "danger": "#F64E60",
-                            "light": "#E4E6EF",
-                            "dark": "#181C32"
-                        },
-                        "light": {
-                            "white": "#ffffff",
-                            "primary": "#E1F0FF",
-                            "secondary": "#EBEDF3",
-                            "success": "#C9F7F5",
-                            "info": "#EEE5FF",
-                            "warning": "#FFF4DE",
-                            "danger": "#FFE2E5",
-                            "light": "#F3F6F9",
-                            "dark": "#D6D6E0"
-                        },
-                        "inverse": {
-                            "white": "#ffffff",
-                            "primary": "#ffffff",
-                            "secondary": "#3F4254",
-                            "success": "#ffffff",
-                            "info": "#ffffff",
-                            "warning": "#ffffff",
-                            "danger": "#ffffff",
-                            "light": "#464E5F",
-                            "dark": "#ffffff"
-                        }
+    <!--begin::Global Config(global config for global JS scripts)-->
+    <script>
+        var KTAppSettings = {
+            "breakpoints": {"sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1400},
+            "colors": {
+                "theme": {
+                    "base": {
+                        "white": "#ffffff",
+                        "primary": "#3699FF",
+                        "secondary": "#E5EAEE",
+                        "success": "#1BC5BD",
+                        "info": "#8950FC",
+                        "warning": "#FFA800",
+                        "danger": "#F64E60",
+                        "light": "#E4E6EF",
+                        "dark": "#181C32"
                     },
-                    "gray": {
-                        "gray-100": "#F3F6F9",
-                        "gray-200": "#EBEDF3",
-                        "gray-300": "#E4E6EF",
-                        "gray-400": "#D1D3E0",
-                        "gray-500": "#B5B5C3",
-                        "gray-600": "#7E8299",
-                        "gray-700": "#5E6278",
-                        "gray-800": "#3F4254",
-                        "gray-900": "#181C32"
+                    "light": {
+                        "white": "#ffffff",
+                        "primary": "#E1F0FF",
+                        "secondary": "#EBEDF3",
+                        "success": "#C9F7F5",
+                        "info": "#EEE5FF",
+                        "warning": "#FFF4DE",
+                        "danger": "#FFE2E5",
+                        "light": "#F3F6F9",
+                        "dark": "#D6D6E0"
+                    },
+                    "inverse": {
+                        "white": "#ffffff",
+                        "primary": "#ffffff",
+                        "secondary": "#3F4254",
+                        "success": "#ffffff",
+                        "info": "#ffffff",
+                        "warning": "#ffffff",
+                        "danger": "#ffffff",
+                        "light": "#464E5F",
+                        "dark": "#ffffff"
                     }
                 },
-                "font-family": "Poppins"
-            };
-        </script>
-        <script src="{{ asset('bundles/networkinginitcms/vendor/jqueryui/jquery-ui.min.js')}}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/app.js') }}"></script>
-        <!--begin::Page Vendors(used by this page)-->
-        {% block page_scripts %}
-        {% endblock %}
-        <!--end::Page Vendors-->
+                "gray": {
+                    "gray-100": "#F3F6F9",
+                    "gray-200": "#EBEDF3",
+                    "gray-300": "#E4E6EF",
+                    "gray-400": "#D1D3E0",
+                    "gray-500": "#B5B5C3",
+                    "gray-600": "#7E8299",
+                    "gray-700": "#5E6278",
+                    "gray-800": "#3F4254",
+                    "gray-900": "#181C32"
+                }
+            },
+            "font-family": "Poppins"
+        };
+    </script>
+    <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/app.js') }}"></script>
+    <!--begin::Page Vendors(used by this page)-->
+    {% block page_scripts %}
+    {% endblock %}
+    <!--end::Page Vendors-->
 
-        <!--begin::Page Scripts(used by this page)-->
-        <script src="{{ asset('bundles/networkinginitcms/assets/js/pages/widgets.js') }}"></script>
-        <!--end::Page Scripts-->
-    {% endblock before_body_end %}
+    <!--begin::Page Scripts(used by this page)-->
+    <script src="{{ asset('bundles/networkinginitcms/assets/js/pages/widgets.js') }}"></script>
+    <!--end::Page Scripts-->
+{% endblock before_body_end %}
     {# Render any javascript which was given usin the jsblock twig nodes #}
     {% jsblock 'render' %}
-    {% endblock body %}
-    {% autoescape false %}
-        <script type="text/javascript">
-            {% for notice_level in ['success','error','info', 'warning'] %}
-            {% set session_var = 'sonata_flash_' ~ notice_level %}
-            {% for flash in app.session.flashbag.get(session_var) %}
-            createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
-            {% endfor %}
-            {% endfor %}
-        </script>
-    {% endautoescape %}
+{% endblock body %}
+{% autoescape false %}
+    <script type="text/javascript">
+        {% for notice_level in ['success','error','info', 'warning'] %}
+        {% set session_var = 'sonata_flash_' ~ notice_level %}
+        {% for flash in app.session.flashbag.get(session_var) %}
+        createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+        {% endfor %}
+        {% endfor %}
+    </script>
+{% endautoescape %}
 </body>
 </html>

@@ -2,7 +2,7 @@
     <div class="imageEditorApp">
         <div class="imageContainer">
 <!--            <img :src="imageURL" class="img-responsive image" @contextmenu.prevent="$refs.menu.open">-->
-            <img :src="imageURL" class="img-responsive center-block image">
+            <img :src="imageURL" class="img-fluid mx-auto d-block image">
             <div class="middle">
                 <div class="text"><a href="" class="btn btn-default" @click.prevent="editImage"><i class="fa fa-magic fa-small"></i> {{ $t('edit_image')}}</a></div>
             </div>
@@ -21,10 +21,10 @@
                         <div class="row">
                             <div class="col-md-6 align-center">
                                 <h3>{{ $t('original_image') }}</h3>
-                                <p><img :src="imageURL" class="img-responsive center-block"/></p></div>
+                                <p><img :src="imageURL" class="img-fluid mx-auto d-block image"/></p></div>
                             <div class="col-md-6 align-center">
                                 <h3>{{ $t('new_image') }}</h3>
-                                <p><img :src="newImage" class="img-responsive center-block"/></p></div>
+                                <p><img :src="newImage" class="img-fluid mx-auto d-block image"/></p></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -138,6 +138,7 @@
     if(!LANGUAGES.includes(langauge)){
         langauge = 'en';
     }
+
 
     export default {
         name: 'Editor',

@@ -5,7 +5,6 @@
 */
 (function ($) {
     "use strict";
-    
     //extend methods
     $.extend($.fn.editableContainer.Popup.prototype, {
         containerName: 'popover',
@@ -56,7 +55,19 @@
         },
         
         setPosition: function () {
-            (function() {}).call(this.container());
+            (function() {
+                var tip = this.getTipElement();
+
+                var placement = typeof this.config.placement === 'function' ? this.config.placement.call(this, tip, this.element) : this.config.placement;
+
+                var attachment = this._getAttachment(placement);
+
+                this.addAttachmentClass(attachment);
+
+                var container = this._getContainer();
+
+                this._popper = new window.Popper(this.element, tip, this._getPopperConfig(attachment));
+            }).call(this.container());
         },
         
         tip: function() {

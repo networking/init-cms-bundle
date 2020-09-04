@@ -15,22 +15,18 @@ var config = {
     nodeDir: __dirname + '/node_modules'
 };
 
-// gulp.task('sass', function () {
-//     return gulp.src([
-//         config.projectDir + '/vendor/select2/dist/css/select2.min.css',
-//         config.projectDir + '/vendor/select2/dist/css/select2-bootstrap.min.css',
-//         config.projectDir + '/vendor/jqueryui/themes/base/jquery-ui.css',
-//         config.projectDir + '/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
-//         config.projectDir + '/sass/initcms_bootstrap.scss',
-//         config.projectDir + '/vendor/x-editable-bs4/dist/bootstrap4-editable/css/bootstrap-editable.css'
-//     ])
-//         .pipe(sourcemaps.init())
-//         .pipe(sass())
-//         // .pipe(csso())
-//         .pipe(concat('networking_initcms.css'))
-//         .pipe(sourcemaps.write('.'))
-//         .pipe(gulp.dest(config.projectDir + '/css'));
-// });
+gulp.task('sass', function () {
+    return gulp.src([
+        config.projectDir + '/sass/initcms_bootstrap.scss',
+        config.projectDir + '/vendor/x-editable-bs4/dist/bootstrap4-editable/css/bootstrap-editable.css'
+    ])
+        .pipe(sourcemaps.init())
+        .pipe(sass())
+        // .pipe(csso())
+        .pipe(concat('networking_initcms.css'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(config.projectDir + '/css'));
+});
 
 // gulp.task('admin-navbar', function () {
 //     return gulp.src([
@@ -98,4 +94,4 @@ gulp.task('imageEditors', function () {
 
 
 // gulp.task('default', gulp.parallel('sass', 'jquery', 'bootstrap', 'app', 'admin-navbar', 'imageEditors'));
-gulp.task('default', gulp.parallel('app','imageEditors'));
+gulp.task('default', gulp.parallel('app', 'sass','imageEditors'));

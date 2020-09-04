@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Controller;
 
 use FOS\UserBundle\Form\Factory\FactoryInterface;
+use FOS\UserBundle\Mailer\MailerInterface;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Security\LoginManagerInterface;
@@ -22,6 +23,7 @@ use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +32,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdminResettingController extends AbstractController
 {
@@ -63,6 +66,16 @@ class AdminResettingController extends AbstractController
      */
     private $tokenGenerator;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var MailerInterface
+     */
+    private $mailer;
+
     private $loginManager;
     private $resettingFormFactory;
     private $retryTTL;
@@ -81,6 +94,8 @@ class AdminResettingController extends AbstractController
      * @param TokenGeneratorInterface $tokenGenerator
      * @param LoginManagerInterface $loginManager
      * @param FactoryInterface $resettingFormFactory
+     * @param TranslatorInterface $translator
+     * @param MailerInterface $mailer
      * @param $retryTTL
      * @param $firewallName
      * @param $resettingTokenTTL
@@ -96,6 +111,8 @@ class AdminResettingController extends AbstractController
         TokenGeneratorInterface $tokenGenerator,
         LoginManagerInterface $loginManager,
         FactoryInterface $resettingFormFactory,
+        TranslatorInterface $translator,
+        MailerInterface $mailer,
         $retryTTL,
         $firewallName,
         $resettingTokenTTL,
@@ -113,6 +130,8 @@ class AdminResettingController extends AbstractController
         $this->tokenGenerator = $tokenGenerator;
         $this->loginManager = $loginManager;
         $this->resettingFormFactory = $resettingFormFactory;
+        $this->translator = $translator;
+        $this->mailer = $mailer;
         $this->retryTTL = $retryTTL;
         $this->firewallName = $firewallName;
         $this->resettingTokenTTL = $resettingTokenTTL;
@@ -148,9 +167,7 @@ class AdminResettingController extends AbstractController
 
         $user = $userManager->findUserByUsernameOrEmail($username);
 
-        $ttl = $this->container->getParameter('fos_user.resetting.retry_ttl');
-
-        if (null !== $user && !$user->isPasswordRequestNonExpired($ttl)) {
+        if (null !== $user && !$user->isPasswordRequestNonExpired($this->retryTTL)) {
             if (!$user->isAccountNonLocked()) {
                 return new RedirectResponse($this->get('router')->generate('networking_init_cms_admin_resetting_request'));
             }
@@ -159,10 +176,31 @@ class AdminResettingController extends AbstractController
                 $user->setConfirmationToken($this->tokenGenerator->generateToken());
             }
 
-            $this->sendResettingEmailMessage($user);
+//            $this->sendResettingEmailMessage($user);
+            $this->mailer->sendResettingEmailMessage($user);
             $user->setPasswordRequestedAt(new \DateTime());
             $userManager->updateUser($user);
         }
+
+        if($request->isXmlHttpRequest()){
+
+//            if($user){
+                $data = [
+                    'message' => nl2br($this->translator->trans('resetting.check_email', ['%tokenLifetime%' => $this->retryTTL / 3600], 'FOSUserBundle')),
+                    'link' => $this->generateUrl('networking_init_cms_admin_security_login')
+                ];
+                $status = 200;
+//            }else{
+//                $data = [
+//                    'message' => nl2br($this->translator->trans('resetting.check_email', ['%tokenLifetime%' => $this->retryTTL / 3600], 'FOSUserBundle')),
+//                    'link' => $this->generateUrl('networking_init_cms_admin_security_login')
+//                ];
+//                $status = 422;
+//            }
+            return new JsonResponse($data, $status);
+        }
+
+
 
         return new RedirectResponse($this->generateUrl('networking_init_cms_admin_resetting_check_email', [
             'username' => $username,

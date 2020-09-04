@@ -57,8 +57,7 @@ file that was distributed with this source code.
             var form = jQuery(this);
             var element = form.parent();
             var list = element.parent();
-            var data = form.formSerialize();
-            axios.post(form.attr('action'), data, {
+            axios.post(form.attr('action'), new FormData(this), {
                 params: {
                     code: '{{ admin.code }}',
                     uniqId: '{{ admin.uniqid }}',
@@ -118,7 +117,7 @@ file that was distributed with this source code.
 
             var form = jQuery(this);
             var container = form.parent();
-            axios.post(form.attr('action'), form.formSerialize(), {
+            axios.post(form.attr('action'), new FormData(this), {
                 params: {
                     code: '{{ admin.code }}',
                     uniqId: '{{ admin.uniqid }}',

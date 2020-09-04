@@ -25,6 +25,7 @@
             <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>
             <argument key="$loginManager" type="service" id="fos_user.security.login_manager"/>
             <argument key="$resettingFormFactory" type="service" id="fos_user.resetting.form.factory"/>
+            <argument key="$mailer" type="service" id="fos_user.mailer.twig_swift"/>
             <argument key="$retryTTL">%fos_user.resetting.retry_ttl%</argument>
             <argument key="$firewallName">%fos_user.firewall_name%</argument>
             <argument key="$resettingTokenTTL">%fos_user.resetting.token_ttl%</argument>

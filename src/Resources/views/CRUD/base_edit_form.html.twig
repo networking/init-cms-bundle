@@ -22,38 +22,13 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block fullpageForm %}
-    {{ block('formstart') }}
-    <div class="card card-custom card-sticky" id="kt_page_sticky_card">
-        <div class="card-header">
-            <div class="card-title">
-                <h3 class="card-label">
-                    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                    {% if admin.id(object) is not null%}
-                        {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
-                        {% if  title ==  "title_edit" %}
-                            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
-                        {% endif %}
-                    {% else %}
-                        {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
-                        {% if title == 'title_create' %}
-                            {{ "title_create"|trans({}, 'SonataAdminBundle') }}
-                        {% else %}
-                            {{ title }}
-                        {% endif %}
-                    {% endif %}
-                </h3>
-            </div>
-            <div class="card-toolbar">
-                {{ block('formactions') }}
-            </div>
-        </div>
+    <div class="card card-custom" >
         <div class="card-body">
             <!--begin::Form-->
             {{ block('formfields') }}
             <!--end::Form-->
         </div>
     </div>
-    {{ block('formend') }}
 {% endblock %}
 
 {% block modalform %}
@@ -93,6 +68,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block formstart %}
+{% set url = objectId|default(admin.id(object)) is not null ? 'edit' : 'create' %}
     <form class="{% if form.vars.horizontal %}form-horizontal{% endif %}  "
           role="form"
           action="{% block sonata_form_action_url %}{{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}{% endblock %}"
@@ -109,9 +85,8 @@ file that was distributed with this source code.
 {% block formfields %}
     {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
         {% if form.vars.errors|length > 0 %}
-            <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
-                {{ form_errors(form) }}
-            </div>
+        {{ form_errors(form) }}
+
         {% endif %}
         {% block sonata_pre_fieldsets %}{% endblock %}
         {% block sonata_tab_content %}
@@ -119,7 +94,7 @@ file that was distributed with this source code.
             {% set has_tab = ((admin.formtabs|length == 1 and admin.formtabs|keys[0] != 'default') or admin.formtabs|length > 1 ) %}
             {% if has_tab %}
                 <div class="nav-tabs-custom">
-                    <ul class="nav nav-tabs" role="tablist">
+                    <ul class="nav nav-tabs nav-line" role="tablist">
                         {% for name, form_tab in admin.formtabs %}
                             <li{% if loop.index == 1 %} class="active"{% endif %}><a
                                         href="#tab_{{ admin.uniqid }}_{{ loop.index }}" data-toggle="tab"><i
@@ -130,10 +105,9 @@ file that was distributed with this source code.
                     </ul>
                     <div class="tab-content">
                         {% for code, form_tab in admin.formtabs %}
-                            <div class="tab-pane fade{% if loop.first %} in active{% endif %}"
+                            <div class="tab-pane fade{% if loop.first %} active{% endif %}"
                                  id="tab_{{ admin.uniqid }}_{{ loop.index }}">
                                 <div class="box-body  container-fluid">
-                                    <div class="sonata-ba-collapsed-fields">
                                         {% if form_tab.description != false %}
                                             <p>
                                                 {{ form_tab.description|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
@@ -142,7 +116,6 @@ file that was distributed with this source code.
                                         {% if form_helper.render_groups is defined %}
                                             {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
                                         {% endif %}
-                                    </div>
                                 </div>
                             </div>
                         {% endfor %}

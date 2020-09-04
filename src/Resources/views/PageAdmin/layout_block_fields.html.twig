@@ -1,9 +1,7 @@
 {% block form %}
 
 {% if form.vars.errors|length > 0 %}
-    <div class="sonata-ba-form-error control-group error {% if app.request.isxmlhttprequest %}alert alert-error{% endif %}">
         {{ form_errors(form) }}
-    </div>
 {% endif %}
 
 {% block sonata_pre_fieldsets %}{% endblock %}

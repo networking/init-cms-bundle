@@ -26,10 +26,10 @@
   "dependencies": {
     "@kazupon/vue-i18n-loader": "^0.4.1",
     "axios": "^0.19.2",
-    "bootstrap": "^4.5.0",
+    "bootstrap": "^4.5.2",
     "csso": "^3.1.1",
     "file-loader": "^5.0.2",
-    "filerobot-image-editor": "^3.4.1",
+    "filerobot-image-editor": "^3.10.1",
     "gulp": "^4.0.0",
     "gulp-concat": "2.6.1",
     "gulp-csso": "^3.0.1",
@@ -47,20 +47,20 @@
     "select2": "^4.0.13",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "style-loader": "^1.0.2",
-    "uglify-js": "^3.0.13",
-    "vue": "^2.6.10",
+    "uglify-js": "^3.10.3",
+    "vue": "^2.6.12",
     "vue-context": "^5.0.0",
-    "vue-i18n": "^8.15.0",
+    "vue-i18n": "^8.21.0",
     "webpack-stream": "^5.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
+    "@babel/core": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
     "css-loader": "^3.2.0",
     "gulp-babel": "^8.0.0",
     "svg-inline-loader": "^0.8.0",
     "vue-loader": "^15.6.2",
     "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.6.6"
+    "vue-template-compiler": "^2.6.12"
   }
 }

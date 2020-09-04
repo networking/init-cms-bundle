@@ -112,6 +112,7 @@ file that was distributed with this source code.
 
         {# addToBottom adds the content in the block to the end of the page #}
         {% jsblock 'addToBottom' %}
+        <script src="{{ asset('bundles/networkinginitcms/vendor/jqueryui/jquery-ui.min.js')}}"></script>
         {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks_script.html.twig' with {'admin': admin} %}
         {% jsblock 'addToBottomEnd' %}
     {% endif %}

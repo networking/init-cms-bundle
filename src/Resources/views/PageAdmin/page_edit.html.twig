@@ -7,22 +7,35 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 {% extends base_template %}
-
+ {% set path = path(object.route()) %}
 {% block title %}
     <h1 class="break-word">
         <span class="page_title">{{ admin.toString(object) }} </span> <span
-                class="info-soft font-medium">({{ language }})</span>
-        <a class="link-underlined font-small font-light"
+                class="text-muted font-size-lg font-weight-light">({{ language }})</span>
+        <a class="font-size-sm font-weight-light"
            href="{{ admin.generateUrl('list', {'locale': object.locale}) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
     </h1>
+
 {% endblock %}
 
-{% block actions %}{% endblock %}
-{% block help_text %}{% endblock help_text %}
+{% block top_actions %}
+        <div class="align-middle ">
+            {% if admin.lastEditedBy() %}
+                {{ 'info.last_changed_by'|trans([], admin.translationDomain) }} {{ admin.lastEditedBy().username }}
+                <span class="text-muted font-size-sm">{{ admin.lastEditedBy().loggedAt|date('H:i:s d.m.Y') }}</span>
+            {% endif %}
+            {% if not object.isPublished() and object.getSnapshot() %}
+                <br/>{{ 'info.last_published_version'|trans({'%date%':object.getSnapshot().snapshotDate|date("d.m.Y")}, admin.translationDomain)|raw }}
+            {% endif %}
+        </div>
+        <div class="card-toolbar ml-6" id="pageStatusSettings">
+            {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
+        </div>
+{% endblock %}
 
 {% block form %}
     <div class="row">
-        <div class="col-5">
+        <div class="col-6">
             <div class="card card-custom">
                 <div class="card-header card-header-tabs-line">
                     <div class="card-toolbar">
@@ -54,16 +67,13 @@ file that was distributed with this source code.
                             </li>
                         </ul>
                     </div>
-                    <div class="card-toolbar" id="pageStatusSettings">
-                                {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
-                    </div>
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
                         <div class="tab-pane active" id="page_content" role="tabpanel">
                             {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
                         </div>
-                        <div class="tab-pane" id="meta_settings" role="tabpanel">
+                        <div class="tab-pane " id="meta_settings" role="tabpanel">
                             {% include '@NetworkingInitCms/PageAdmin/meta_settings_fields.html.twig' %}
                         </div>
                         <div class="tab-pane" id="page_settings" role="tabpanel">
@@ -82,7 +92,7 @@ file that was distributed with this source code.
             </div>
         </div>
 
-        <div class="col-7" style="min-height: 100vh">
+        <div class="col-6" style="min-height: 100vh">
             <iframe id="pagePreview" width="100%" height="100%"
                     src="{{ path('networking_init_cms_page_preview', {'page': object.id}) }}"></iframe>
         </div>
@@ -103,9 +113,10 @@ file that was distributed with this source code.
                         <div id="menu_info_text"></div>
                         <p>&nbsp;</p>
 
-                        <div>
+                        <div class="checkbox-inline">
                             <label class="checkbox checkbox-inline" for="show_now_confirm_dialog">
                                 <input type="checkbox" id="show_now_confirm_dialog" name="show_now_confirm_dialog"/>
+                                <span></span>
                                 {{ 'label.show_no_more'|trans({}, admin.translationDomain) }}
                             </label>
                         </div>

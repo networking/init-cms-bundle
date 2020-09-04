@@ -1,51 +1,48 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 {% extends base_template %}
 
 {% block title %}
-Translate "{{ object.getTitle() }}"
-{% endblock%}
+    Translate "{{ object.getTitle() }}"
+{% endblock %}
 
 
 {% block form %}
-{% form_theme form '@SonataAdmin/Form/form_admin_fields.html.twig' %}
-{% if form.vars.errors|length > 0 %}
-                <div class="sonata-ba-form-error">
-                    {{ form_errors(form) }}
+    {% form_theme form '@SonataAdmin/Form/form_admin_fields.html.twig' %}
+    {% if form.vars.errors|length > 0 %}
+        {{ form_errors(form) }}
+    {% endif %}
+    <form class="form-horizontal" action="{{ admin.generateUrl('translate', {'id': object.id}) }}" method="post"
+            {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}>
+        <fieldset>
+            <div class="sonata-ba-collapsed-fields">
+                <div class="control-group" id="sonata-ba-field-container">
+                    {{ form_label(form.locale) }}
+
+                    <div class="controls sonata-ba-field sonata-ba-field-standard-natural ">
+                        {{ form_widget(form.locale) }}
+                    </div>
                 </div>
-            {% endif %}
-<form class="form-horizontal" action="{{ admin.generateUrl('translate', {'id': object.id}) }}" method="post"
-        {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}>
-	<fieldset>
-		<div class="sonata-ba-collapsed-fields">
-			<div class="control-group" id="sonata-ba-field-container">
-				{{ form_label(form.locale)}}
+            </div>
+        </fieldset>
 
-				<div class="controls sonata-ba-field sonata-ba-field-standard-natural ">
-					{{ form_widget(form.locale) }}
-				</div>
-			</div>
-		</div>
-	</fieldset>
+        {{ form_rest(form) }}
 
-	{{ form_rest(form) }}
+        {% block formactions %}
+            <div class="well form-actions">
 
-	{% block formactions %}
-	<div class="well form-actions">
+                <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
+                       value="{% trans from 'SonataAdminBundle' %}btn_update_and_edit_again{% endtrans %}"/>
+                <a href="{{ admin.generateUrl('edit', {'id': object.id}) }}" class="btn btn-danger"
+                   name="btn_update_and_list">{% trans from 'SonataAdminBundle' %}link_action_edit{% endtrans %}</a>
 
-		<input type="submit" class="btn btn-primary" name="btn_update_and_edit"
-		       value="{% trans from 'SonataAdminBundle' %}btn_update_and_edit_again{% endtrans %}"/>
-		<a href="{{ admin.generateUrl('edit', {'id': object.id})}}" class="btn btn-danger" name="btn_update_and_list">{% trans from 'SonataAdminBundle' %}link_action_edit{% endtrans %}</a>
-
-	</div>
-	{% endblock formactions %}
-</form>
+            </div>
+        {% endblock formactions %}
+    </form>
 {% endblock %}

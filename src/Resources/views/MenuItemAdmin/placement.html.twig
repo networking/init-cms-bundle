@@ -7,35 +7,35 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
-            <div id="existingMenu" class="sortable menu-tree">
-                {{ menus.navigation|raw }}
-            </div>
+            <div class="menu_tree" id="placement_menu" ></div>
             <script>
                 (function ($) {
-
-                    $('#existingMenu').mousemove(function (event) {
-                        var newEvent = event;
-
-                        $('.stop').each(function (i, el) {
-                            var li = $(el);
-                            if (isNear($(el), 5, newEvent)) {
-                                li.find('ul').show();
-                            } else {
-                                li.find('ul').hide();
+                    var tree = $('#placement_menu');
+                    tree.jstree({
+                            "types": {
+                                "default": {
+                                    "icon": "la la-file text-primary icon-2x"
+                                },
+                                "file": {
+                                    "icon": "la la-file text-primary icon-2x"
+                                }
+                            },
+                            "plugins": [
+                                "dnd",
+                                "types",
+                            ],
+                            'core': {
+                                "themes" : {
+                                    "variant" : "large"
+                                },
+                                "check_callback": function (operation, node, node_parent, node_position, more) {
+                                    return true;
+                                },
+                                data: function(node, cb){
+                                    cb(JSON.parse('{{ menu.navigation|json_encode|raw }}'))
+                                }
                             }
                         });
-                    });
-
-                    function isNear(element, distance, event) {
-
-                        var left = element.offset().left - distance,
-                                top = element.offset().top - distance,
-                                right = left + element.width() + 2 * distance,
-                                bottom = top + element.height() + 2 * distance,
-                                x = event.pageX,
-                                y = event.pageY;
-                        return ( x > left && x < right && y > top && y < bottom );
-                    }
                 })(jQuery);
             </script>
         </div>

@@ -24,7 +24,6 @@ This code manage the many-to-[one|many] association field popup
         // handle the add link
         var field_dialog_form_add_{{ id }} = function (event) {
 
-
             Admin.log('[{{ id }}|field_dialog_form_add] add link action');
 
             event.preventDefault();
@@ -65,13 +64,17 @@ This code manage the many-to-[one|many] association field popup
 
         // handle the post data
         var field_dialog_form_action_{{ id }} = function (event) {
-
+            Admin.log('[{{ id }}|field_dialog_form_action] action catch', this);
             var element = jQuery(this);
             var url, type = '';
             var data = {_xml_http_request: true};
 
             // return if the link is an anchor inside the same page
-            if (this.nodeName == 'A' && (element.hasClass('image-preview-link') || element.attr('href').length == 0 || element.attr('href')[0] == '#' || element.attr('href').substring(0, 10) == 'javascript')) {
+            if (this.nodeName == 'A'
+                && (
+                    element.attr('href').length == 0 ||
+                    element.attr('href')[0] == '#' ||
+                    element.attr('href').substring(0, 11) == 'javascript:')) {
                 return true;
             }
 
@@ -79,7 +82,7 @@ This code manage the many-to-[one|many] association field popup
             event.stopPropagation();
             initialize_popup_{{ id }}();
 
-            Admin.log('[{{ id }}|field_dialog_form_action] action catch', this);
+
             var url = '', methodType = '';
             var headers = axiosConfig.headers
             if (this.nodeName == 'FORM') {
@@ -95,7 +98,7 @@ This code manage the many-to-[one|many] association field popup
                 return;
             }
 
-            if (element.hasClass('sonata-ba-action')) {
+            if (element.hasClass('has-action')) {
                 Admin.log('[{{ id }}|field_dialog_form_action] reserved action stop catch all events');
                 return false;
             }
@@ -198,7 +201,7 @@ This code manage the many-to-[one|many] association field popup
             //trigger javascript actions
             if (link.hasClass('filter-close') ||
                 link.hasClass('dropdown-toggle') ||
-                link.hasClass('image-preview-link') ||
+                link.hasClass('has-action') ||
                 link.hasClass('tag_link') ||
                 link.hasClass('show_all_media')
             ) {

@@ -173,6 +173,9 @@ abstract class Tag
      */
     public function getChildren()
     {
+        if(!$this->children){
+            return [];
+        }
         return $this->children;
     }
 
@@ -223,7 +226,7 @@ abstract class Tag
      */
     public function hasChild($id)
     {
-        foreach ($this->children as $child) {
+        foreach ($this->getChildren() as $child) {
             if ($child->getId() == $id) {
                 return true;
             }

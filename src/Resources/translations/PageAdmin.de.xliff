@@ -559,7 +559,7 @@
             <trans-unit id="info.last_published_version">
                 <source>info.last_published_version</source>
                 <target>Die letzte veröffentlichte Version ist:
-                    <![CDATA[<span class="info-soft">%date%</span>]]></target>
+                    <![CDATA[<span class="text-muted font-size-sm">%date%</span>]]></target>
             </trans-unit>
             <trans-unit id="info.last_changed_by">
                 <source>info.last_changed_by</source>

@@ -19,7 +19,7 @@ This code manage the many-to-[one|many] Media association field popup
 
         //Show Create form
         var field_dialog_form_add_{{ id }} = function (event) {
-            Admin.log('[{{ id }}|field_dialog_form_add] add link action');
+            Admin.log('[{{ id }}|field_dialog_form_add] add media form');
 
             event.preventDefault();
             event.stopPropagation();
@@ -40,7 +40,6 @@ This code manage the many-to-[one|many] Media association field popup
 
                     // capture the submit event to make an ajax call, ie : POST data to the
                     // related create admin
-                    field_dialog_{{ id }}.on('click', 'a', field_dialog_form_action_{{ id }});
                     field_dialog_{{ id }}.on('submit', 'form', field_dialog_form_action_{{ id }});
 
                     // open the dialog in modal mode
@@ -67,7 +66,11 @@ This code manage the many-to-[one|many] Media association field popup
             var url, methodType = '';
 
             // return if the link is an anchor inside the same page
-            if (this.nodeName == 'A' && (element.attr('href').length == 0 || element.attr('href')[0] == '#' || element.hasClass('image-preview-link'))) {
+            if (this.nodeName == 'A'
+                && (
+                    element.attr('href').length == 0 ||
+                    element.attr('href')[0] == '#' ||
+                    element.attr('href').substring(0, 11) == 'javascript:')) {
                 return true;
             }
 
@@ -88,7 +91,7 @@ This code manage the many-to-[one|many] Media association field popup
                 return false;
             }
 
-            if (element.hasClass('sonata-ba-action')) {
+            if (element.hasClass('has-action')) {
                 Admin.log('[{{ id }}|field_dialog_form_action] reserved action stop catch all events');
                 return false;
             }
@@ -151,14 +154,13 @@ This code manage the many-to-[one|many] Media association field popup
             //trigger javascript actions
             if (link.hasClass('filter-close') ||
                 link.hasClass('dropdown-toggle') ||
-                link.hasClass('image-preview-link') ||
+                link.hasClass('has-action') ||
                 link.hasClass('tag_link') ||
                 link.hasClass('show_all_media')
             ) {
                 Admin.log('[{{ id }}|field_dialog_form_list_link] handle default javascript action');
                 return;
             }
-
 
             Admin.log('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
 
@@ -222,7 +224,7 @@ This code manage the many-to-[one|many] Media association field popup
 
                     // capture the submit event to make an ajax call, ie : POST data to the
                     // related create admin
-                    field_dialog_{{ id }}.on('click', 'a', field_dialog_form_list_link_{{ id }});
+                    {#field_dialog_{{ id }}.on('click', 'a', field_dialog_form_list_link_{{ id }});#}
                     field_dialog_{{ id }}.on('submit', 'form', function (event) {
                         event.preventDefault();
                         var form = jQuery(this);

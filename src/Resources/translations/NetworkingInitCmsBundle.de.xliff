@@ -322,7 +322,15 @@
                  </target>
              </trans-unit>
 
+            <trans-unit id="sign_in_title">
+                <source>sign_in_title</source>
+                <target>Anmeldung zum Administrationsbereich</target>
+            </trans-unit>
 
+            <trans-unit id="reset_password_text">
+                <source>reset_password_text</source>
+                <target>Geben Sie Ihre E-Mail-Adresse ein, um Ihr Passwort zurückzusetzen</target>
+            </trans-unit>
 
 
         </body>
