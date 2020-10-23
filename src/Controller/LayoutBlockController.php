@@ -107,6 +107,7 @@ class LayoutBlockController extends CRUDController
         $layoutBlock->setSortOrder($request->get('sortOrder'));
         $layoutBlock->setClassType($classType);
         $layoutBlock->setPage($page);
+        $layoutBlock->setContent(new $classType);
 
         /** @var $form \Symfony\Component\Form\Form */
         $form = $this->admin->getForm();
