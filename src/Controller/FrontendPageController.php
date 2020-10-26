@@ -148,7 +148,7 @@ class FrontendPageController extends AbstractController
             }
 
             $updatedAt = $this->pageCache->get(sprintf('page_%s_created_at', $page->getId()));
-            $cacheKey = 'page_'.$request->getLocale().$request->getPathInfo();
+            $cacheKey = 'page_'.$request->getLocale().str_replace('/', '', $request->getPathInfo());
 
             if ($updatedAt != $page->getSnapshotDate()) {
                 $this->pageCache->delete($cacheKey);
