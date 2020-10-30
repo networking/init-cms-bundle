@@ -192,6 +192,8 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
         $publishedPage->setContentRoute($contentRoute);
 
+        $this->_em->flush();
+
         // Set the layout blocks of the NOW managed entity to
         // exactly that of the published version
 	    foreach ($tmpLayoutBlocks as $key => $layoutBlock){
@@ -200,6 +202,8 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 			    $layoutBlock = $this->_em->merge($layoutBlock);
 		    }catch (EntityNotFoundException $e){
 		    	$layoutBlock = clone $layoutBlock;
+
+		    	$layoutBlock->setPage($publishedPage);
 		    	$this->_em->persist($layoutBlock);
 		    }
 
@@ -207,8 +211,8 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
 		    $tmpLayoutBlocks->set($key, $layoutBlock);
 	    }
+        $publishedPage->resetLayoutBlock($tmpLayoutBlocks);
 
-	    $publishedPage->resetLayoutBlock($tmpLayoutBlocks);
 	    $this->_em->persist($publishedPage);
         $this->_em->flush();
 
@@ -227,8 +231,6 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     {
 	    if ($contentObject = $layoutBlock->getSnapshotContent()) {
 		    $contentObject = $serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
-
-
 
 		    try {
 			    $contentObject = $this->_em->merge($contentObject);
@@ -267,9 +269,13 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 				    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
 					    if ($var instanceof ArrayCollection) {
 						    foreach ($var as $key =>  $v) {
-							    $v = $this->_em->merge($v);
-
-							    $var->set($key, $v);
+							    try{
+                                    $v = $this->_em->merge($v);
+                                    $var->set($key, $v);
+                                }catch(EntityNotFoundException $e){
+							        $this->_em->persist($v);
+                                    $var->set($key, $v);
+                                }
 						    }
 						    $method = sprintf('set%s', ucfirst($property->getName()));
 						    $newContentObject->{$method}($var);
