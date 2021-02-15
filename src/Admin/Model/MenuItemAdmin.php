@@ -357,26 +357,6 @@ abstract class MenuItemAdmin extends BaseAdmin
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function validate(ErrorElement $errorElement, $object)
-    {
-        $errorElement
-            ->with('name')
-            ->assertNotBlank()
-            ->end();
-
-        if (!$object->getIsRoot()) {
-            if (!$object->getRedirectUrl() and !$object->getPage() and !$object->getInternalUrl()) {
-                $errorElement
-                    ->with('menu_page_or_url_required')
-                    ->addViolation('menu.page_or_url.required')
-                    ->end();
-            }
-        }
-    }
-
-    /**
      * @param bool $isRoot
      */
     public function setIsRoot($isRoot)

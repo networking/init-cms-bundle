@@ -12,6 +12,7 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @author net working AG <info@networking.ch>
@@ -722,5 +723,14 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     public function hasPage()
     {
         return !is_null($this->page);
+    }
+
+    public function validate(ExecutionContextInterface $context, $payload){
+        if (!$this->getIsRoot()) {
+            if (!$this->getRedirectUrl() and !$this->getPage() and !$this->getInternalUrl()) {
+                $context->buildViolation('menu.page_or_url.required')
+                    ->addViolation();
+            }
+        }
     }
 }
