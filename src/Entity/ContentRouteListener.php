@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\UnitOfWork;
 use Networking\InitCmsBundle\Model\ContentRoute;
 use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteListener;
 
@@ -43,21 +44,17 @@ class ContentRouteListener extends ModelContentRouteListener
      */
     public function preUpdate(LifecycleEventArgs $args)
     {
+
         $entity = $args->getObject();
         $em = $args->getObjectManager();
         $uow = $em->getUnitOfWork();
 
         if ($entity instanceof ContentRoute) {
-            $template = $this->templates[$entity->getTemplateName()];
             $changeset = $uow->getEntityChangeSet($entity);
             if (isset($changeset['templateName']) && $args->hasChangedField('templateName')) {
+                $template = $this->templates[$changeset['templateName'][1]];
                 $entity->setTemplate($template['template']);
                 $entity->setController($template['controller']);
-
-                $uow->recomputeSingleEntityChangeSet(
-                    $em->getClassMetadata('NetworkingInitCmsBundle:ContentRoute'),
-                    $entity
-                );
             }
         }
     }
