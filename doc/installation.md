@@ -290,7 +290,7 @@ There is also a console command to check and / or install this symlink:
    ```
 
 With these steps taken, bootstrap should be install into vendor/twitter/bootstrap/ and a symlink
-been created into vendor/mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/bootstrap.
+been created into vendor/mopa/bootstrap-bundle/Resources/bootstrap.
 
 6) You have installed the init CMS bundle
 -----------------------------------------

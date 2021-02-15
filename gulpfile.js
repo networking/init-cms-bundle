@@ -9,7 +9,7 @@ var gulp = require('gulp'),
 
 var config = {
     projectDir: __dirname + '/src/Resources/public',
-    mopa: __dirname + '/../../mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/public',
+    mopa: __dirname + '/../../mopa/bootstrap-bundle/Resources/public',
     sonata: __dirname + '/../../sonata-project/admin-bundle/src/Resources/public',
     nodeDir: __dirname + '/node_modules'
 };
