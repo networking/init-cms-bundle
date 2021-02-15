@@ -21,7 +21,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\CoreBundle\Form\Type\CollectionType;
+use Sonata\Form\Type\CollectionType;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;

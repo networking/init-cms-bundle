@@ -34,7 +34,7 @@ class CmsMenuVoter implements VoterInterface
      *
      * @return bool|null
      */
-    public function matchItem(ItemInterface $item)
+    public function matchItem(ItemInterface $item): ?bool
     {
         foreach ($this->currentUriWithAndWithoutSlash() as $path) {
             if (null === $path || null === $item->getUri()) {

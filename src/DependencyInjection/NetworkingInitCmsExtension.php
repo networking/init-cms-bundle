@@ -13,7 +13,6 @@ namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
-use Sonata\CoreBundle\Exception\InvalidParameterException;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
