@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Doctrine\ORM\UnitOfWork;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Networking\InitCmsBundle\Model\ContentRoute;
 use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteListener;
 
@@ -38,23 +38,24 @@ class ContentRouteListener extends ModelContentRouteListener
     }
 
     /**
-     * @param LifecycleEventArgs $args
+     * @param PreUpdateEventArgs $args
      *
      * @return mixed|void
      */
-    public function preUpdate(LifecycleEventArgs $args)
+    public function preUpdate(PreUpdateEventArgs $args)
     {
 
         $entity = $args->getObject();
-        $em = $args->getObjectManager();
-        $uow = $em->getUnitOfWork();
 
         if ($entity instanceof ContentRoute) {
-            $changeset = $uow->getEntityChangeSet($entity);
-            if (isset($changeset['templateName']) && $args->hasChangedField('templateName')) {
-                $template = $this->templates[$changeset['templateName'][1]];
-                $entity->setTemplate($template['template']);
-                $entity->setController($template['controller']);
+            if ($args->hasChangedField('templateName')) {
+                $templateName = $args->getNewValue('templateName');
+                if (array_key_exists($templateName, $this->templates)) {
+                    $template = $this->templates[$templateName];
+                    $entity->setTemplate($template['template']);
+                    $entity->setTemplateName($templateName);
+                    $entity->setController($template['controller']);
+                }
             }
         }
     }

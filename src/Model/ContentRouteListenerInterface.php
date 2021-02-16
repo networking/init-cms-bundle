@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -25,9 +26,9 @@ interface ContentRouteListenerInterface
     public function prePersist(LifecycleEventArgs $args);
 
     /**
-     * @param LifecycleEventArgs $args
+     * @param PreUpdateEventArgs $args
      *
      * @return mixed
      */
-    public function preUpdate(LifecycleEventArgs $args);
+    public function preUpdate(PreUpdateEventArgs $args);
 }

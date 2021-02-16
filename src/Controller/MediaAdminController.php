@@ -200,32 +200,6 @@ class MediaAdminController extends SonataMediaAdminController
         );
     }
 
-    /**
-     * execute a batch delete.
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     *
-     * @param \Sonata\AdminBundle\Datagrid\ProxyQueryInterface $query
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function batchActionDelete(ProxyQueryInterface $query)
-    {
-        $this->admin->checkAccess('batchDelete');
-
-        try {
-            $this->doBatchDelete($query);
-
-            $this->addFlash('sonata_flash_success', $this->trans('flash_batch_delete_success', [], 'SonataAdminBundle'));
-        } catch (ModelManagerException $e) {
-            $this->addFlash('sonata_flash_error', $this->trans('flash_batch_delete_error', [], 'SonataAdminBundle'));
-        }
-
-        return new RedirectResponse($this->admin->generateUrl(
-            'list',
-            ['filter' => $this->admin->getFilterParameters()]
-        ));
-    }
 
     public function batchActionAddTags(ProxyQueryInterface $selectedModelQuery)
     {
@@ -274,39 +248,6 @@ class MediaAdminController extends SonataMediaAdminController
         return $this->renderJson($data);
     }
 
-    /**
-     * @param ProxyQueryInterface $queryProxy
-     *
-     * @throws ModelManagerException
-     */
-    protected function doBatchDelete(ProxyQueryInterface $queryProxy)
-    {
-        $modelManager = $this->admin->getModelManager();
-        $class = $this->admin->getClass();
-
-        $queryProxy->select('DISTINCT '.$queryProxy->getRootAlias());
-
-        try {
-            $entityManager = $modelManager->getEntityManager($class);
-
-            $i = 0;
-            foreach ($queryProxy->getQuery()->iterate() as $pos => $object) {
-                $entityManager->remove($object[0]);
-
-                if ((++$i % 20) == 0) {
-                    $entityManager->flush();
-                    $entityManager->clear();
-                }
-            }
-
-            $entityManager->flush();
-            $entityManager->clear();
-        } catch (\PDOException $e) {
-            throw new ModelManagerException('', 0, $e);
-        } catch (DBALException $e) {
-            throw new ModelManagerException('', 0, $e);
-        }
-    }
 
     /**
      * @param Request|null $request
@@ -413,7 +354,6 @@ class MediaAdminController extends SonataMediaAdminController
 
         $response = new FineUploaderResponse();
 
-
         try {
             $this->handleUpload($response, $request);
         } catch (UploadException $e) {
@@ -457,11 +397,14 @@ class MediaAdminController extends SonataMediaAdminController
         return $info['filename'] . '.' . $newExtension;
     }
 
-    public function handleUpload($response, $request){
+    public function handleUpload($response, Request $request){
         $request->query->set('oneuploader', true);
-        $fileData = $request->request->get('file');
-        $clone = $request->request->get('clone');
-        $id = $request->request->get('id');
+
+        $content = $request->getContent();
+        $content = json_decode($content);
+        $fileData = $content->file;
+        $clone = $content->clone;
+        $id = $content->id;
 
         $this->admin->setRequest($request);
 
@@ -471,6 +414,7 @@ class MediaAdminController extends SonataMediaAdminController
 
         /** @var ImageProvider $provider */
         $provider = $this->admin->getPool()->getProvider($baseMedia->getProviderName());
+
 
         $image = $provider->getReferenceImage($baseMedia);
 
@@ -484,6 +428,8 @@ class MediaAdminController extends SonataMediaAdminController
             foreach ($baseMedia->getTags() as $tag){
                 $media->addTags($tag);
             }
+            $media->setProviderName($baseMedia->getProviderName());
+            $media->setContext($baseMedia->getContext());
         }else{
             $media = $baseMedia;
         }
@@ -497,8 +443,6 @@ class MediaAdminController extends SonataMediaAdminController
         }
 
         $media->setBinaryContent($file);
-
-        $provider = $this->admin->getPool()->getProvider($media->getProviderName());
 
         $provider->transform($media);
 

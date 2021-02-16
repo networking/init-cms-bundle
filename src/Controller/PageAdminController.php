@@ -632,7 +632,9 @@ class PageAdminController extends CRUDController
                 $page->setStatus(PageInterface::STATUS_DRAFT);
                 $page->setUpdatedAt();
                 $page->setLayoutBlock($layoutBlocks);
-                $this->admin->update($page);
+                $page = $this->admin->update($page);
+
+
 
                 return $this->getAjaxEditResponse($form, $page);
 
