@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
+use JMS\Serializer\EventDispatcher\Events;
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 
@@ -50,7 +51,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
     {
         return [
             [
-                'event' => 'serializer.post_deserialize',
+                'event' => Events::POST_DESERIALIZE,
                 'method' => 'onPostDeserialize',
                 'format' => 'json',
             ],
