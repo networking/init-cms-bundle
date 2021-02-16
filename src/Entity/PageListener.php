@@ -12,6 +12,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -33,6 +34,21 @@ class PageListener extends ModelPageListener
     public function postPersist(LifecycleEventArgs $args)
     {
         /** Do not need to set content route properties here as done in onFlush event */
+        $entity = $args->getObject();
+
+        /** @var EntityManager $em */
+        $em = $args->getObjectManager();
+
+        if ($entity instanceof PageInterface) {
+
+            if ($contentRoute = $entity->getContentRoute()) {
+                $contentRoute->setObjectId($entity->getId());
+                $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
+
+                $em->persist($contentRoute);
+                $em->getUnitOfWork()->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
+            }
+        }
     }
 
     /**
@@ -46,12 +62,15 @@ class PageListener extends ModelPageListener
 
         $unitOfWork = $em->getUnitOfWork();
 
+
         foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
             if ($entity instanceof PageInterface) {
+
                 if ($contentRoute = $entity->getContentRoute()) {
                     $em->refresh($contentRoute);
                     $contentRoute->setObjectId($entity->getId());
                     $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
+
                     $em->persist($contentRoute);
                     $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
                     foreach ($entity->getAllChildren() as $child) {
