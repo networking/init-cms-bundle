@@ -235,4 +235,10 @@ interface LayoutBlockInterface extends ContentInterface
      * @return mixed
      */
     public function import(LayoutBlockInterface $object);
+
+    /**
+     * @param LayoutBlock $published
+     * @return mixed
+     */
+    public function restoreFormPublished(LayoutBlock $published);
 }

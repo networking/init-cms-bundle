@@ -310,14 +310,6 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
     public function removeLayoutBlock(LayoutBlockInterface $layoutBlock);
 
     /**
-     * Remove all layout blocks and replace with those in the
-     * serialized page snapshot.
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publishedBlocks
-     */
-    public function resetLayoutBlock($publishedBlocks);
-
-    /**
      * @param $layoutBlocks
      *
      * @return $this
@@ -624,4 +616,9 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      * @return MediaInterface|null
      */
     public function getSocialMediaImage();
+
+    /**
+     * @param PageInterface $publishedPage
+     */
+    public function restoreFromPublished(PageInterface $publishedPage);
 }

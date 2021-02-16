@@ -12,8 +12,9 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Sluggable\Util\Urlizer;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Sluggable\Util\Urlizer;
+use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Sonata\MediaBundle\Model\MediaInterface;
 
 /**
@@ -533,7 +534,10 @@ abstract class Page implements PageInterface
      */
     public function setStatus($status)
     {
-        if (!in_array($status, [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_REVIEW, self::STATUS_OFFLINE])) {
+        if (!in_array(
+            $status,
+            [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_REVIEW, self::STATUS_OFFLINE]
+        )) {
             throw new \InvalidArgumentException('Invalid status');
         }
         $this->status = $status;
@@ -723,36 +727,6 @@ abstract class Page implements PageInterface
         return $this;
     }
 
-    /**
-     * Remove all layout blocks and replace with those in the
-     * serialized page snapshot.
-     *
-     * @param ArrayCollection $publishedBlocks
-     */
-    public function resetLayoutBlock($publishedBlocks)
-    {
-
-	    $blocksToRemove = $this->layoutBlock->filter(function(LayoutBlock $originalBlock) use($publishedBlocks){
-			$toRemove = true;
-	    	foreach ($publishedBlocks as $block){
-	    		if(!$block->getId()){
-				    $toRemove = false;
-			    }
-
-				if($block->getId() == $originalBlock->getId()){
-					$toRemove = false;
-				}
-			}
-
-			return $toRemove;
-	    });
-
-        foreach ($blocksToRemove as $block) {
-				$block->setNoAutoDraft(true);
-				$this->layoutBlock->removeElement($block);
-        }
-
-    }
 
     /**
      * @param $layoutBlocks
@@ -812,7 +786,7 @@ abstract class Page implements PageInterface
                 }
             );
 
-            return array_merge($layoutBlocks->toArray());
+            return $layoutBlocks;
         }
 
         return $this->layoutBlock;
@@ -1050,9 +1024,10 @@ abstract class Page implements PageInterface
      */
     public function getTranslations()
     {
-        if(!$this->translations){
+        if (!$this->translations) {
             $this->translations = new ArrayCollection();
         }
+
         return $this->translations;
     }
 
@@ -1142,9 +1117,10 @@ abstract class Page implements PageInterface
      */
     public function getSnapshots()
     {
-        if(!$this->snapshots){
+        if (!$this->snapshots) {
             return new ArrayCollection();
         }
+
         return $this->snapshots;
     }
 
@@ -1503,6 +1479,19 @@ abstract class Page implements PageInterface
         $this->socialMediaImage = $socialMediaImage;
 
         return $this;
+    }
+
+    public function restoreFromPublished(PageInterface $publishedPage){
+        $this->id = $publishedPage->getId();
+        $this->createdAt = $publishedPage->getCreatedAt();
+        $this->updatedAt = $publishedPage->getUpdatedAt();
+        $this->pageName = $publishedPage->getPageName();
+        $this->metaTitle = $publishedPage->getMetaTitle();
+        $this->url = $publishedPage->getUrl();
+        $this->status = $publishedPage->getStatus();
+        $this->visibility = $publishedPage->getVisibility();
+        $this->activeFrom = $publishedPage->getActiveFrom();
+        $this->activeTo= $publishedPage->getActiveTo();
     }
 
 }

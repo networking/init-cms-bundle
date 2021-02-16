@@ -13,11 +13,12 @@ namespace Networking\InitCmsBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
+use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Networking\InitCmsBundle\Model\LayoutBlock;
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 
 /**
@@ -107,7 +108,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     /**
      * @param $sort
      * @param string $order
-     * @param int    $hydrationMode
+     * @param int $hydrationMode
      *
      * @return mixed
      */
@@ -130,14 +131,16 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         $qb2 = $this->getEntityManager()->getRepository(PageSnapshot::class)->createQueryBuilder('pp');
         $qb->select('p', 'ps')
             ->leftJoin('p.snapshots', 'ps')
-            ->where($qb->expr()->eq(
-                'ps.id',
-                '('.$qb2->select('MAX(pp.id)')
-                    ->where('p.id = pp.page')
-                    ->getDQL().')'
-            ))
+            ->where(
+                $qb->expr()->eq(
+                    'ps.id',
+                    '('.$qb2->select('MAX(pp.id)')
+                        ->where('p.id = pp.page')
+                        ->getDQL().')'
+                )
+            )
             ->orWhere('ps.id IS NULL')
-            ->orderBy('p.'.$sort,  $order);
+            ->orderBy('p.'.$sort, $order);
 
         return $qb->getQuery();
     }
@@ -156,13 +159,14 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
     }
 
     /**
-     * @param PageInterface              $draftPage
+     * @param PageInterface $draftPage
      * @param \JMS\Serializer\Serializer $serializer
      *
      * @return PageInterface
      */
     public function revertToPublished(PageInterface $draftPage, \JMS\Serializer\SerializerInterface $serializer)
     {
+        $currentLayoutBlocks = $draftPage->getLayoutBlock();
         $pageSnapshot = $draftPage->getSnapshot();
         $contentRoute = $draftPage->getContentRoute();
 
@@ -177,150 +181,159 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             $context
         );
 
-        // Save the layout blocks in a temp variable so that we can
-        // assure the correct layout blocks will be saved and not
-        // merged with the layout blocks from the draft page
-        $tmpLayoutBlocks = $publishedPage->getLayoutBlock();
-
-	    // tell the entity manager to handle our published page
-	    // as if it came from the DB and not a serialized object
-	    $publishedPage = $this->_em->merge($publishedPage);
-
-
-
         $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
         $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
         $contentRoute->setController($pageSnapshot->getContentRoute()->getController());
         $contentRoute->setPath($pageSnapshot->getContentRoute()->getPath());
+        $draftPage->restoreFromPublished($publishedPage);
 
-        $this->_em->merge($contentRoute);
 
-        $publishedPage->setContentRoute($contentRoute);
-
-        $this->_em->flush();
+        $layoutBlockIds = [];
 
         // Set the layout blocks of the NOW managed entity to
         // exactly that of the published version
-	    foreach ($tmpLayoutBlocks as $key => $layoutBlock){
+        foreach ($publishedPage->getLayoutBlock() as $publishedlayoutBlock) {
 
-		    try{
-			    $layoutBlock = $this->_em->merge($layoutBlock);
-		    }catch (EntityNotFoundException $e){
-		    	$layoutBlock = clone $layoutBlock;
+            $layoutBlock = $this->_em->getRepository(LayoutBlock::class)->find($publishedlayoutBlock->getId());
 
-		    	$layoutBlock->setPage($publishedPage);
-		    	$this->_em->persist($layoutBlock);
-		    }
+            $matches = $currentLayoutBlocks->filter(
+                function (LayoutBlock $layoutBlock) use ($publishedlayoutBlock){
+                    return $publishedlayoutBlock->getId() === $layoutBlock->getId();
+                }
+            );
+            $layoutBlock = $matches->first();
 
-		    $this->resetContent($publishedPage, $layoutBlock, $serializer);
+            if (!$layoutBlock) {
+                $layoutBlock = new LayoutBlock();
+                $layoutBlock->setPage($draftPage);
+                $currentLayoutBlocks->add($layoutBlock);
+            }
 
-		    $tmpLayoutBlocks->set($key, $layoutBlock);
-	    }
-        $publishedPage->resetLayoutBlock($tmpLayoutBlocks);
+            $layoutBlock->restoreFormPublished($publishedlayoutBlock);
 
-	    $this->_em->persist($publishedPage);
+            $layoutBlock = $this->resetContent($layoutBlock, $serializer);
+
+            $layoutBlockIds[] = $layoutBlock->getId()?:null;
+        }
+
+        $currentLayoutBlocks = $this->cleanLayoutBlocks($currentLayoutBlocks, $layoutBlockIds);
+        $draftPage->setLayoutBlock($currentLayoutBlocks);
+        $this->_em->persist($draftPage);
         $this->_em->flush();
 
-        return $publishedPage;
+        return $draftPage;
     }
 
-	/**
-	 * @param LayoutBlock $layoutBlock
-	 *
-	 * @return LayoutBlock
-	 * @throws \Doctrine\ORM\ORMException
-	 * @throws \Doctrine\ORM\OptimisticLockException
-	 * @throws \ReflectionException
-	 */
-    public function resetContent(PageInterface $page, LayoutBlock $layoutBlock, \JMS\Serializer\SerializerInterface $serializer)
+    public function cleanLayoutBlocks(PersistentCollection $currentLayoutBlocks, array $layoutBlockIds){
+
+        $blocksToRemove = $currentLayoutBlocks->filter(
+            function (LayoutBlock $oldBlock) use ($layoutBlockIds) {
+                return !in_array($oldBlock->getId(), $layoutBlockIds);
+            }
+        );
+
+        foreach ($blocksToRemove as $deadBlock) {
+            $currentLayoutBlocks->removeElement($deadBlock);
+        }
+
+        return $currentLayoutBlocks;
+
+    }
+
+    /**
+     * @param LayoutBlock $layoutBlock
+     *
+     * @return LayoutBlock
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \ReflectionException
+     */
+    public function resetContent(LayoutBlock $layoutBlock, \JMS\Serializer\SerializerInterface $serializer)
     {
-	    if ($contentObject = $layoutBlock->getSnapshotContent()) {
-		    $contentObject = $serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
+        if ($contentObject = $layoutBlock->getSnapshotContent()) {
+            $contentObject = $serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
 
-		    try {
-			    $contentObject = $this->_em->merge($contentObject);
-			    $reflection = new \ReflectionClass($contentObject);
-			    foreach ($reflection->getProperties() as $property) {
-				    $method = sprintf('get%s', ucfirst($property->getName()));
-				    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
-					    if ($var instanceof ArrayCollection) {
-						    foreach ($var as $key =>  $v) {
-							    $v = $this->_em->merge($v);
+            try {
+                $contentObject = $this->_em->find(get_class($contentObject), $contentObject->getId());
+                $reflection = new \ReflectionClass($contentObject);
+                foreach ($reflection->getProperties() as $property) {
+                    $method = sprintf('get%s', ucfirst($property->getName()));
+                    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
+                        if ($var instanceof ArrayCollection) {
+                            foreach ($var as $key => $v) {
+                                $v = $this->_em->find(get_class($v), $v->getId());
 
-							    $var->set($key, $v);
-						    }
-						    $method = sprintf('set%s', ucfirst($property->getName()));
-						    $contentObject->{$method}($var);
-					    }
+                                $var->set($key, $v);
+                            }
+                            $method = sprintf('set%s', ucfirst($property->getName()));
+                            $contentObject->{$method}($var);
+                        }
 
-					    if(is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))){
-						    $var = $this->_em->merge($var);
+                        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
+                            $var = $this->_em->find(get_class($var), $var->getId());
 
-						    $method = sprintf('set%s', ucfirst($property->getName()));
-						    $contentObject->{$method}($var);
-					    }
-				    }
-			    }
+                            $method = sprintf('set%s', ucfirst($property->getName()));
+                            $contentObject->{$method}($var);
+                        }
+                    }
+                }
 
-			    $this->_em->persist($contentObject);
-			    $this->_em->flush($contentObject);
+                $this->_em->persist($contentObject);
+                $this->_em->flush($contentObject);
 
-		    } catch (EntityNotFoundException $e) {
-			    $classType = $layoutBlock->getClassType();
-			    $newContentObject = clone $contentObject;
-			    $reflection = new \ReflectionClass($contentObject);
-			    foreach ($reflection->getProperties() as $property) {
-				    $method = sprintf('get%s', ucfirst($property->getName()));
-				    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
-					    if ($var instanceof ArrayCollection) {
-						    foreach ($var as $key =>  $v) {
-							    try{
-                                    $v = $this->_em->merge($v);
-                                    $var->set($key, $v);
-                                }catch(EntityNotFoundException $e){
-							        $this->_em->persist($v);
-                                    $var->set($key, $v);
+            } catch (EntityNotFoundException $e) {
+                $classType = $layoutBlock->getClassType();
+                $newContentObject = clone $contentObject;
+                $reflection = new \ReflectionClass($contentObject);
+                foreach ($reflection->getProperties() as $property) {
+                    $method = sprintf('get%s', ucfirst($property->getName()));
+                    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
+                        if ($var instanceof ArrayCollection) {
+                            foreach ($var as $key => $v) {
+
+                                $newV = $this->_em->find(get_class($v), $v->getId());
+                                if (!$newV) {
+                                    $this->_em->persist($v);
+                                    $newV = $v;
                                 }
-						    }
-						    $method = sprintf('set%s', ucfirst($property->getName()));
-						    $newContentObject->{$method}($var);
-					    }
 
-					    if(is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))){
-						    $var = $this->_em->merge($var);
+                                $var->set($key, $newV);
+                            }
+                            $method = sprintf('set%s', ucfirst($property->getName()));
+                            $newContentObject->{$method}($var);
+                        }
 
-						    $method = sprintf('set%s', ucfirst($property->getName()));
-						    $newContentObject->{$method}($var);
-					    }
+                        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
+                            $var = $this->_em->find(get_class($var), $var->getId());
 
-				    }
-			    }
-			    $this->_em->persist($newContentObject);
-			    $this->_em->flush($newContentObject);
+                            $method = sprintf('set%s', ucfirst($property->getName()));
+                            $newContentObject->{$method}($var);
+                        }
+
+                    }
+                }
+                $this->_em->persist($newContentObject);
+                $this->_em->flush($newContentObject);
 
 
-			    $layoutBlock->setObjectId($newContentObject->getId());
-		    }
+                $layoutBlock->setObjectId($newContentObject->getId());
+            }
 
-	    }
+        }
 
-	    $layoutBlock->setPage($page);
-
-	    $this->_em->persist($layoutBlock);
-
-	    $this->_em->flush($layoutBlock);
-
-	    return $layoutBlock;
+        return $layoutBlock;
     }
 
-    public function revertObject($object, $var, $property){
-	    if(is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))){
-		    $var = $this->_em->merge($var);
+    public function revertObject($object, $var, $property)
+    {
+        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
+            $var = $this->_em->merge($var);
 
-		    $method = sprintf('set%s', ucfirst($property->getName()));
-		    $object->{$method}($var);
-	    }
-	    return $object;
+            $method = sprintf('set%s', ucfirst($property->getName()));
+            $object->{$method}($var);
+        }
+
+        return $object;
     }
 
     /**
@@ -334,6 +347,8 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             $page->setContentRoute(new ContentRoute());
         }
         $this->_em->persist($page);
+
+        return true;
     }
 
     public function resetEntityManager($em)

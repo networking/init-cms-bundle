@@ -506,4 +506,17 @@ class LayoutBlock implements LayoutBlockInterface
             }
         }
     }
+
+    public function restoreFormPublished(LayoutBlock $published){
+        $this->name = $published->getName();
+        $this->zone = $published->getZone();
+        $this->classType = $published->getClassType();
+        $this->objectId = $published->getObjectId();
+        $this->isActive = $published->isActive();
+        $this->sortOrder = $published->getSortOrder();
+        $this->createdAt = $published->getCreatedAt();
+        $this->updatedAt = $published->getUpdatedAt();
+        $this->content = $published->getContent();
+        $this->snapshotContent = $published->getSnapshotContent();
+    }
 }
