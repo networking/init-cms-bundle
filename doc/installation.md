@@ -296,7 +296,7 @@ been created into vendor/mopa/bootstrap-bundle/Resources/bootstrap.
 -----------------------------------------
 Then you can visit your admin dashboard on http://my-server/admin/dashboard
 
-[1]:  http://web.networking.ch
+[1]:  http://www.networking.ch
 [2]:  https://github.com/networking/init-cms-sandbox/
 [3]:  https://github.com/phiamo/MopaBootstrapBundle
 [4]:  http://sonata-project.org/bundles/user/master/doc/reference/installation.html#configuration
