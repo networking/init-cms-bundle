@@ -1,9 +1,15 @@
 services:
     # Doctrine Extension listeners to handle behaviors
-    gedmo.listener.tree:
-        class: Gedmo\Tree\TreeListener
+    Gedmo\Tree\TreeListener:
         tags:
-            - { name: doctrine.event_subscriber, connection: default }
+            - { name: doctrine.event_listener, event: prePersist, connection: default, priority: 100 }
+            - { name: doctrine.event_listener, event: preRemove, connection: default, priority: 100 }
+            - { name: doctrine.event_listener, event: preUpdate, connection: default, priority: 100 }
+            - { name: doctrine.event_listener, event: onFlush, connection: default, priority: 100 }
+            - { name: doctrine.event_listener, event: loadClassMetadata, connection: default, priority: 100 }
+            - { name: doctrine.event_listener, event: postPersist, connection: default, priority: 100 }
+            - { name: doctrine.event_listener, event: postUpdate, connection: default, priority: 100 }
+            - { name: doctrine.event_listener, event: postRemove, connection: default, priority: 100 }
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 

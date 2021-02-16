@@ -86,8 +86,8 @@
 
         <service id="Networking\InitCmsBundle\Entity\PageListener" lazy="true">
             <tag name="jms_serializer.event_subscriber"/>
-            <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
-            <tag name="doctrine.event_listener" event="onFlush" method="onFlush"/>
+            <tag name="doctrine.event_listener" event="postPersist" method="postPersist" priority="-100"/>
+            <tag name="doctrine.event_listener" event="onFlush" method="onFlush" priority="-100"/>
         </service>
 
         <!-- Form Types -->
