@@ -18,6 +18,7 @@ use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\LayoutBlock;
+use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 
 /**
  * Class PageManager.
@@ -165,11 +166,15 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         $pageSnapshot = $draftPage->getSnapshot();
         $contentRoute = $draftPage->getContentRoute();
 
+        $context = new PageSnapshotDeserializationContext();
+        $context->setDeserializeTranslations(true);
+
         /** @var $publishedPage PageInterface */
         $publishedPage = $serializer->deserialize(
             $pageSnapshot->getVersionedData(),
             $this->getClassName(),
-            'json'
+            'json',
+            $context
         );
 
         // Save the layout blocks in a temp variable so that we can
