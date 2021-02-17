@@ -13,15 +13,18 @@ namespace Networking\InitCmsBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
-use Doctrine\ORM\PersistentCollection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\TransactionRequiredException;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
+use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
-use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class PageManager.
@@ -166,7 +169,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      *
      * @return PageInterface
      */
-    public function revertToPublished(PageInterface $draftPage, \JMS\Serializer\SerializerInterface $serializer)
+    public function revertToPublished(PageInterface $draftPage, SerializerInterface $serializer)
     {
         $currentLayoutBlocks = $draftPage->getLayoutBlock();
         $pageSnapshot = $draftPage->getSnapshot();
@@ -197,10 +200,9 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         // exactly that of the published version
         foreach ($publishedPage->getLayoutBlock() as $publishedlayoutBlock) {
 
-            $layoutBlock = $this->_em->getRepository(LayoutBlock::class)->find($publishedlayoutBlock->getId());
 
             $matches = $currentLayoutBlocks->filter(
-                function (LayoutBlock $layoutBlock) use ($publishedlayoutBlock){
+                function (LayoutBlock $layoutBlock) use ($publishedlayoutBlock) {
                     return $publishedlayoutBlock->getId() === $layoutBlock->getId();
                 }
             );
@@ -216,7 +218,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
             $layoutBlock = $this->resetContent($layoutBlock, $serializer);
 
-            $layoutBlockIds[] = $layoutBlock->getId()?:null;
+            $layoutBlockIds[] = $layoutBlock->getId() ?: null;
         }
 
         $currentLayoutBlocks = $this->cleanLayoutBlocks($currentLayoutBlocks, $layoutBlockIds);
@@ -232,21 +234,19 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      * @param LayoutBlock $layoutBlock
      *
      * @return LayoutBlock
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \ReflectionException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ReflectionException
      */
-    public function resetContent(LayoutBlock $layoutBlock, \JMS\Serializer\SerializerInterface $serializer)
+    public function resetContent(LayoutBlock $layoutBlock, SerializerInterface $serializer)
     {
 
         if ($snapshotContent = $layoutBlock->getSnapshotContent()) {
 
-            $contentObject = $this->_em->find( $layoutBlock->getClassType(), $layoutBlock->getObjectId());
-
             $publishedContent = $serializer->deserialize($snapshotContent, $layoutBlock->getClassType(), 'json');
-            $reflection = new \ReflectionClass($contentObject);
-            foreach ($reflection->getProperties() as $property) {
 
+            $reflection = new ReflectionClass($publishedContent);
+            foreach ($reflection->getProperties() as $property) {
                 $this->revertObject($publishedContent, $property);
             }
 
@@ -265,16 +265,17 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      * @param $var
      * @param $property
      * @return mixed
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
-     * @throws \ReflectionException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TransactionRequiredException
+     * @throws ReflectionException
      */
     public function revertObject($object, $property)
     {
-        $reflection = new \ReflectionClass($object);
+        $reflection = new ReflectionClass($object);
 
-        if($reflection->implementsInterface(IgnoreRevertInterface::class)){
+        if ($reflection->implementsInterface(IgnoreRevertInterface::class)) {
+            dump($object);
             return $object;
         }
 
@@ -288,7 +289,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
         if ($var instanceof Collection) {
 
-            if($var->count() < 1){
+            if ($var->count() < 1) {
                 return $object;
             }
 
@@ -301,8 +302,8 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
             $var->clear();
             $method = sprintf('set%s', ucfirst($property->getName()));
-            $reflection = new \ReflectionClass($object);
-            if($reflection->hasMethod($method) ) {
+            $reflection = new ReflectionClass($object);
+            if ($reflection->hasMethod($method)) {
                 $object->{$method}($newCollection);
             }
 
@@ -316,7 +317,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             $this->_em->persist($newVar);
 
             $method = sprintf('set%s', ucfirst($property->getName()));
-            if($reflection->hasMethod($method) ) {
+            if ($reflection->hasMethod($method)) {
                 $object->{$method}($newVar);
             }
 
@@ -325,7 +326,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         }
 
         $method = sprintf('set%s', ucfirst($property->getName()));
-        if($reflection->hasMethod($method) ){
+        if ($reflection->hasMethod($method)) {
             $object->{$method}($var);
         }
 
@@ -336,40 +337,41 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      * @param $parent
      * @param $oldObject
      * @return object|null
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
-     * @throws \ReflectionException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TransactionRequiredException
+     * @throws ReflectionException
      */
-    public function revertObjectVars($parent, $oldObject){
-//        $object = $this->_em->find(get_class($oldObject), $oldObject->getId());
-//        if (!$object) {
+    public function revertObjectVars($parent, $oldObject)
+    {
+        $reflection = new ReflectionClass($oldObject);
 
-            $object = clone $oldObject;
-//        }
+        if ($reflection->implementsInterface(IgnoreRevertInterface::class)) {
+            return $oldObject;
+        }
+        $object = clone $oldObject;
 
-        $reflection = new \ReflectionClass($object);
         foreach ($reflection->getProperties() as $reflectionProperty) {
             $method = sprintf('get%s', ucfirst($reflectionProperty->getName()));
-            if($reflection->hasMethod($method)){
+            if ($reflection->hasMethod($method)) {
                 $val = $object->{$method}();
                 /** Prevent Recursive loop */
-                if($val !== $parent){
+                if ($val !== $parent) {
                     $this->revertObject($object, $reflectionProperty);
                 }
             }
-
         }
 
         return $object;
     }
 
     /**
-     * @param PersistentCollection $currentLayoutBlocks
+     * @param Collection $currentLayoutBlocks
      * @param array $layoutBlockIds
-     * @return PersistentCollection
+     * @return Collection
      */
-    public function cleanLayoutBlocks(PersistentCollection $currentLayoutBlocks, array $layoutBlockIds){
+    public function cleanLayoutBlocks(Collection $currentLayoutBlocks, array $layoutBlockIds)
+    {
 
         $blocksToRemove = $currentLayoutBlocks->filter(
             function (LayoutBlock $oldBlock) use ($layoutBlockIds) {
