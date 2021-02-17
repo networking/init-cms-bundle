@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\PersistentCollection;
@@ -224,6 +225,133 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         return $draftPage;
     }
 
+    /**
+     * @param LayoutBlock $layoutBlock
+     *
+     * @return LayoutBlock
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \ReflectionException
+     */
+    public function resetContent(LayoutBlock $layoutBlock, \JMS\Serializer\SerializerInterface $serializer)
+    {
+
+        if ($snapshotContent = $layoutBlock->getSnapshotContent()) {
+
+            $contentObject = $this->_em->find( $layoutBlock->getClassType(), $layoutBlock->getObjectId());
+
+            $publishedContent = $serializer->deserialize($snapshotContent, $layoutBlock->getClassType(), 'json');
+            $reflection = new \ReflectionClass($contentObject);
+            foreach ($reflection->getProperties() as $property) {
+
+                $method = sprintf('get%s', ucfirst($property->getName()));
+                $var = $publishedContent->{$method}();
+
+                if ($reflection->hasMethod($method) && $var) {
+                    $this->revertObject($publishedContent, $var, $property);
+                }
+            }
+
+            $this->_em->persist($publishedContent);
+            $this->_em->flush($publishedContent);
+
+            $layoutBlock->setObjectId($publishedContent->getId());
+
+        }
+
+        return $layoutBlock;
+    }
+
+    /**
+     * @param $object
+     * @param $var
+     * @param $property
+     * @return mixed
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     * @throws \ReflectionException
+     */
+    public function revertObject($object, $var, $property)
+    {
+
+        if ($var instanceof Collection) {
+
+
+            $newCollection = new ArrayCollection();
+
+            foreach ($var as $v) {
+
+
+                $newVar = $this->_em->find(get_class($v), $v->getId());
+                if (!$newVar) {
+                    $newVar = clone $v;
+                }
+
+                $newVar = clone $v;
+                $reflection = new \ReflectionClass($newVar);
+                foreach ($reflection->getProperties() as $reflectionProperty) {
+                    $method = sprintf('get%s', ucfirst($reflectionProperty->getName()));
+                    $val = $newVar->{$method}();
+                    /** Prevent Recursive loop */
+                    if($val !== $object){
+                        if ($reflection->hasMethod($method) && $val) {
+                            $this->revertObject($newVar, $val, $reflectionProperty);
+                        }
+                    }
+                }
+                $newCollection->add($newVar);
+            }
+
+            $var->clear();
+            $method = sprintf('set%s', ucfirst($property->getName()));
+            $object->{$method}($newCollection);
+
+            return $object;
+
+        }
+
+        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
+
+            $newVar = $this->_em->find(get_class($var), $var->getId());
+            if (!$newVar) {
+                $newVar = clone $var;
+            }
+
+            $reflection = new \ReflectionClass($newVar);
+            foreach ($reflection->getProperties() as $reflectionProperty) {
+                $method = sprintf('get%s', ucfirst($reflectionProperty->getName()));
+                $val = $var->{$method}();
+                /** Prevent Recursive loop */
+                if($val !== $object){
+                    if ($reflection->hasMethod($method) && $val) {
+                        $this->revertObject($newVar, $val, $reflectionProperty);
+                    }
+                }
+            }
+            $this->_em->persist($newVar);
+
+            $method = sprintf('set%s', ucfirst($property->getName()));
+            $object->{$method}($newVar);
+
+            return $object;
+
+        }
+
+        $method = sprintf('set%s', ucfirst($property->getName()));
+        $reflection = new \ReflectionClass($object);
+        if($reflection->hasMethod($method) ){
+            $object->{$method}($var);
+        }
+
+        return $object;
+    }
+
+    /**
+     * @param PersistentCollection $currentLayoutBlocks
+     * @param array $layoutBlockIds
+     * @return PersistentCollection
+     */
     public function cleanLayoutBlocks(PersistentCollection $currentLayoutBlocks, array $layoutBlockIds){
 
         $blocksToRemove = $currentLayoutBlocks->filter(
@@ -238,77 +366,6 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
         return $currentLayoutBlocks;
 
-    }
-
-    /**
-     * @param LayoutBlock $layoutBlock
-     *
-     * @return LayoutBlock
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \ReflectionException
-     */
-    public function resetContent(LayoutBlock $layoutBlock, \JMS\Serializer\SerializerInterface $serializer)
-    {
-        if ($snapshotContent = $layoutBlock->getSnapshotContent()) {
-
-            $publishedContent = $serializer->deserialize($snapshotContent, $layoutBlock->getClassType(), 'json');
-
-            $contentObject = $this->_em->find( $layoutBlock->getClassType(), $layoutBlock->getObjectId());
-
-            $classType = $layoutBlock->getClassType();
-            if(!$contentObject){
-                $contentObject = clone $publishedContent;
-            }
-            $reflection = new \ReflectionClass($publishedContent);
-            foreach ($reflection->getProperties() as $property) {
-                $method = sprintf('get%s', ucfirst($property->getName()));
-                if ($reflection->hasMethod($method) && $var = $publishedContent->{$method}()) {
-                    $this->revertObject($contentObject, $var, $property);
-                }
-            }
-            $this->_em->persist($contentObject);
-            $this->_em->flush($contentObject);
-
-            $layoutBlock->setObjectId($contentObject->getId());
-
-        }
-
-        return $layoutBlock;
-    }
-
-    public function revertObject($object, $var, $property)
-    {
-
-        if ($var instanceof ArrayCollection) {
-            foreach ($var as $key => $v) {
-
-                $newV = $this->_em->find(get_class($v), $v->getId());
-                if (!$newV) {
-                    $this->_em->persist($v);
-                    $newV = $v;
-                }
-
-                $var->set($key, $newV);
-            }
-            $method = sprintf('set%s', ucfirst($property->getName()));
-            $object->{$method}($var);
-        }
-
-        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
-
-            $newVar = $this->_em->find(get_class($var), $var->getId());
-
-            if(!$newVar){
-                $class = get_class($var);
-                $newVar = new $class;
-            }
-
-            $method = sprintf('set%s', ucfirst($property->getName()));
-            $object->{$method}($newVar);
-        }
-
-        return $object;
     }
 
     /**
