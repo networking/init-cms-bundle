@@ -250,74 +250,27 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      */
     public function resetContent(LayoutBlock $layoutBlock, \JMS\Serializer\SerializerInterface $serializer)
     {
-        if ($contentObject = $layoutBlock->getSnapshotContent()) {
-            $contentObject = $serializer->deserialize($contentObject, $layoutBlock->getClassType(), 'json');
+        if ($snapshotContent = $layoutBlock->getSnapshotContent()) {
 
-            try {
-                $contentObject = $this->_em->find(get_class($contentObject), $contentObject->getId());
-                $reflection = new \ReflectionClass($contentObject);
-                foreach ($reflection->getProperties() as $property) {
-                    $method = sprintf('get%s', ucfirst($property->getName()));
-                    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
-                        if ($var instanceof ArrayCollection) {
-                            foreach ($var as $key => $v) {
-                                $v = $this->_em->find(get_class($v), $v->getId());
+            $publishedContent = $serializer->deserialize($snapshotContent, $layoutBlock->getClassType(), 'json');
 
-                                $var->set($key, $v);
-                            }
-                            $method = sprintf('set%s', ucfirst($property->getName()));
-                            $contentObject->{$method}($var);
-                        }
+            $contentObject = $this->_em->find( $layoutBlock->getClassType(), $layoutBlock->getObjectId());
 
-                        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
-                            $var = $this->_em->find(get_class($var), $var->getId());
-
-                            $method = sprintf('set%s', ucfirst($property->getName()));
-                            $contentObject->{$method}($var);
-                        }
-                    }
-                }
-
-                $this->_em->persist($contentObject);
-                $this->_em->flush($contentObject);
-
-            } catch (EntityNotFoundException $e) {
-                $classType = $layoutBlock->getClassType();
-                $newContentObject = clone $contentObject;
-                $reflection = new \ReflectionClass($contentObject);
-                foreach ($reflection->getProperties() as $property) {
-                    $method = sprintf('get%s', ucfirst($property->getName()));
-                    if ($reflection->hasMethod($method) && $var = $contentObject->{$method}()) {
-                        if ($var instanceof ArrayCollection) {
-                            foreach ($var as $key => $v) {
-
-                                $newV = $this->_em->find(get_class($v), $v->getId());
-                                if (!$newV) {
-                                    $this->_em->persist($v);
-                                    $newV = $v;
-                                }
-
-                                $var->set($key, $newV);
-                            }
-                            $method = sprintf('set%s', ucfirst($property->getName()));
-                            $newContentObject->{$method}($var);
-                        }
-
-                        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
-                            $var = $this->_em->find(get_class($var), $var->getId());
-
-                            $method = sprintf('set%s', ucfirst($property->getName()));
-                            $newContentObject->{$method}($var);
-                        }
-
-                    }
-                }
-                $this->_em->persist($newContentObject);
-                $this->_em->flush($newContentObject);
-
-
-                $layoutBlock->setObjectId($newContentObject->getId());
+            $classType = $layoutBlock->getClassType();
+            if(!$contentObject){
+                $contentObject = clone $publishedContent;
             }
+            $reflection = new \ReflectionClass($publishedContent);
+            foreach ($reflection->getProperties() as $property) {
+                $method = sprintf('get%s', ucfirst($property->getName()));
+                if ($reflection->hasMethod($method) && $var = $publishedContent->{$method}()) {
+                    $this->revertObject($contentObject, $var, $property);
+                }
+            }
+            $this->_em->persist($contentObject);
+            $this->_em->flush($contentObject);
+
+            $layoutBlock->setObjectId($contentObject->getId());
 
         }
 
@@ -326,11 +279,32 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
     public function revertObject($object, $var, $property)
     {
-        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
-            $var = $this->_em->merge($var);
 
+        if ($var instanceof ArrayCollection) {
+            foreach ($var as $key => $v) {
+
+                $newV = $this->_em->find(get_class($v), $v->getId());
+                if (!$newV) {
+                    $this->_em->persist($v);
+                    $newV = $v;
+                }
+
+                $var->set($key, $newV);
+            }
             $method = sprintf('set%s', ucfirst($property->getName()));
             $object->{$method}($var);
+        }
+
+        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
+
+            $newVar = $this->_em->find(get_class($var), $var->getId());
+
+            if(!$newVar){
+                $newVar = new get_class($var);
+            }
+
+            $method = sprintf('set%s', ucfirst($property->getName()));
+            $object->{$method}($newVar);
         }
 
         return $object;
