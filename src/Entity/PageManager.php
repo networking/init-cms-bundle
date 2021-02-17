@@ -300,7 +300,8 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             $newVar = $this->_em->find(get_class($var), $var->getId());
 
             if(!$newVar){
-                $newVar = new get_class($var);
+                $class = get_class($var);
+                $newVar = new $class;
             }
 
             $method = sprintf('set%s', ucfirst($property->getName()));
