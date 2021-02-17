@@ -187,6 +187,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
         $contentRoute->setController($pageSnapshot->getContentRoute()->getController());
         $contentRoute->setPath($pageSnapshot->getContentRoute()->getPath());
+
         $draftPage->restoreFromPublished($publishedPage);
 
 
@@ -220,6 +221,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
         $currentLayoutBlocks = $this->cleanLayoutBlocks($currentLayoutBlocks, $layoutBlockIds);
         $draftPage->setLayoutBlock($currentLayoutBlocks);
+        $this->_em->persist($contentRoute);
         $this->_em->persist($draftPage);
         $this->_em->flush();
 
@@ -245,12 +247,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             $reflection = new \ReflectionClass($contentObject);
             foreach ($reflection->getProperties() as $property) {
 
-                $method = sprintf('get%s', ucfirst($property->getName()));
-                $var = $publishedContent->{$method}();
-
-                if ($reflection->hasMethod($method) && $var) {
-                    $this->revertObject($publishedContent, $var, $property);
-                }
+                $this->revertObject($publishedContent, $property);
             }
 
             $this->_em->persist($publishedContent);
@@ -273,7 +270,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      * @throws \Doctrine\ORM\TransactionRequiredException
      * @throws \ReflectionException
      */
-    public function revertObject($object, $var, $property)
+    public function revertObject($object, $property)
     {
         $reflection = new \ReflectionClass($object);
 
@@ -281,36 +278,24 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             return $object;
         }
 
+        $method = sprintf('get%s', ucfirst($property->getName()));
+
+        if (!$reflection->hasMethod($method)) {
+            return $object;
+        }
+
+        $var = $object->{$method}();
+
         if ($var instanceof Collection) {
 
             if($var->count() < 1){
-
                 return $object;
             }
-
 
             $newCollection = new ArrayCollection();
 
             foreach ($var as $v) {
-
-
-                $newVar = $this->_em->find(get_class($v), $v->getId());
-                if (!$newVar) {
-                    $newVar = clone $v;
-                }
-
-                $newVar = clone $v;
-                $reflection = new \ReflectionClass($newVar);
-                foreach ($reflection->getProperties() as $reflectionProperty) {
-                    $method = sprintf('get%s', ucfirst($reflectionProperty->getName()));
-                    $val = $newVar->{$method}();
-                    /** Prevent Recursive loop */
-                    if($val !== $object){
-                        if ($reflection->hasMethod($method) && $val) {
-                            $this->revertObject($newVar, $val, $reflectionProperty);
-                        }
-                    }
-                }
+                $newVar = $this->revertObjectVars($object, $v);
                 $newCollection->add($newVar);
             }
 
@@ -327,22 +312,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
         if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
 
-            $newVar = $this->_em->find(get_class($var), $var->getId());
-            if (!$newVar) {
-                $newVar = clone $var;
-            }
-
-            $reflection = new \ReflectionClass($newVar);
-            foreach ($reflection->getProperties() as $reflectionProperty) {
-                $method = sprintf('get%s', ucfirst($reflectionProperty->getName()));
-                $val = $var->{$method}();
-                /** Prevent Recursive loop */
-                if($val !== $object){
-                    if ($reflection->hasMethod($method) && $val) {
-                        $this->revertObject($newVar, $val, $reflectionProperty);
-                    }
-                }
-            }
+            $newVar = $this->revertObjectVars($object, $var);
             $this->_em->persist($newVar);
 
             $method = sprintf('set%s', ucfirst($property->getName()));
@@ -357,6 +327,37 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
         $method = sprintf('set%s', ucfirst($property->getName()));
         if($reflection->hasMethod($method) ){
             $object->{$method}($var);
+        }
+
+        return $object;
+    }
+
+    /**
+     * @param $parent
+     * @param object $oldObject
+     * @return object|null
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     * @throws \ReflectionException
+     */
+    public function revertObjectVars($parent, $oldObject){
+        $object = $this->_em->find(get_class($oldObject), $oldObject->getId());
+        if (!$object) {
+            $object = clone $oldObject;
+        }
+
+        $reflection = new \ReflectionClass($object);
+        foreach ($reflection->getProperties() as $reflectionProperty) {
+            $method = sprintf('get%s', ucfirst($reflectionProperty->getName()));
+            if($reflection->hasMethod($method)){
+                $val = $object->{$method}();
+                /** Prevent Recursive loop */
+                if($val !== $parent){
+                    $this->revertObject($object, $reflectionProperty);
+                }
+            }
+
         }
 
         return $object;
