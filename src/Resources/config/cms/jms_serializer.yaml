@@ -2,6 +2,9 @@ jms_serializer:
     object_constructors:
         doctrine:
             fallback_strategy: fallback
+    default_context:
+        serialization:
+            serialize_null: true
     metadata:
         directories:
             NetworkingSonataMediaBundle:
