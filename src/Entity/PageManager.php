@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
+use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -274,8 +275,18 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      */
     public function revertObject($object, $var, $property)
     {
+        $reflection = new \ReflectionClass($object);
+
+        if($reflection->implementsInterface(IgnoreRevertInterface::class)){
+            return $object;
+        }
 
         if ($var instanceof Collection) {
+
+            if($var->count() < 1){
+
+                return $object;
+            }
 
 
             $newCollection = new ArrayCollection();
@@ -305,7 +316,10 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
             $var->clear();
             $method = sprintf('set%s', ucfirst($property->getName()));
-            $object->{$method}($newCollection);
+            $reflection = new \ReflectionClass($object);
+            if($reflection->hasMethod($method) ) {
+                $object->{$method}($newCollection);
+            }
 
             return $object;
 
@@ -332,14 +346,15 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             $this->_em->persist($newVar);
 
             $method = sprintf('set%s', ucfirst($property->getName()));
-            $object->{$method}($newVar);
+            if($reflection->hasMethod($method) ) {
+                $object->{$method}($newVar);
+            }
 
             return $object;
 
         }
 
         $method = sprintf('set%s', ucfirst($property->getName()));
-        $reflection = new \ReflectionClass($object);
         if($reflection->hasMethod($method) ){
             $object->{$method}($var);
         }

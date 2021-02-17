@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Gaufrette\Util;
+use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -20,8 +21,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class Media extends BaseMedia
+class Media extends BaseMedia implements IgnoreRevertInterface
 {
+    
     /**
      * @var int
      */
