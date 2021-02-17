@@ -42,3 +42,11 @@ Sonata\MediaBundle\Model\Media:
             type: integer
         galleryHasMedias:
             exclude: true
+        cdnFlushIdentifier:
+            exclude: true
+        binaryContent:
+            exclude: true
+        previousProviderReference:
+            exclude: true
+        category:
+            exclude: true
