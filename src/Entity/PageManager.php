@@ -334,7 +334,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
 
     /**
      * @param $parent
-     * @param object $oldObject
+     * @param $oldObject
      * @return object|null
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -342,10 +342,11 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      * @throws \ReflectionException
      */
     public function revertObjectVars($parent, $oldObject){
-        $object = $this->_em->find(get_class($oldObject), $oldObject->getId());
-        if (!$object) {
+//        $object = $this->_em->find(get_class($oldObject), $oldObject->getId());
+//        if (!$object) {
+
             $object = clone $oldObject;
-        }
+//        }
 
         $reflection = new \ReflectionClass($object);
         foreach ($reflection->getProperties() as $reflectionProperty) {
