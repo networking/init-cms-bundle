@@ -371,7 +371,7 @@ class TranslationAdmin extends AbstractAdmin
      */
     protected function getDefaultDomain()
     {
-        return $this->getContainer()->getParameter('ibrows_sonata_translation.defaultDomain');
+        return $this->getContainer()->getParameter('networking_init_cms.defaultDomain');
     }
 
     /**
