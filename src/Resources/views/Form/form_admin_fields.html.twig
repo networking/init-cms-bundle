@@ -720,22 +720,27 @@ file that was distributed with this source code.
     {% endif %}
     {% apply spaceless %}
         {% if expanded %}
-            {% set attr = attr|merge({class: 'row' ~ attr.class} ) %}
             <div {{ block('widget_container_attributes') }}>
-                {% for key, child in form %}
-                    <div class="col-sm-3">
-                        <label class="radio-inline">
-                            {{ form_widget(child, {'horizontal_label_class': horizontal_label_class, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class, 'attr': {'class': attr.widget_class|default('') }}
-                            ) }}
-                            {{ child.vars.label|trans({}, choice_translation_domain) }}
-                        </label>
+                {% for row in form|batch(3, '-') %}
+                    <div class="row">
+                        {% for key, child in row %}
+                            <div class="col-sm-4">
+                                {% if child != '-' %}
+                                    <label class="radio-inline">
+                                        {{ form_widget(child, {'horizontal_label_class': horizontal_label_class, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class, 'attr': {'class': attr.widget_class|default('') }}
+                                        ) }}
+                                        {{ child.vars.label|trans({}, choice_translation_domain) }}
+                                    </label>
 
-                        <div class="clearfix"></div>
-                        <br>
-                        {% if icons[choices[key].value] %}
-                            <img src="{{ asset(icons[choices[key].value]) }}" width="175px"/>
-                        {% endif %}
-                        <p>&nbsp;</p>
+                                    <div class="clearfix"></div>
+                                    <br>
+                                    {% if icons[choices[key].value] %}
+                                        <img src="{{ asset(icons[choices[key].value]) }}" width="175px"/>
+                                    {% endif %}
+                                    <p>&nbsp;</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
                     </div>
                 {% endfor %}
             </div>
