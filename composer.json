@@ -31,7 +31,6 @@
         "sensiolabs/security-checker": "^6.0",
         "sonata-project/admin-bundle": "^3.54",
         "sonata-project/doctrine-orm-admin-bundle": "^3.10",
-        "sonata-project/easy-extends-bundle": "^2.5",
         "sonata-project/intl-bundle": "^2.7",
         "sonata-project/media-bundle": "^3.21",
         "sonata-project/notification-bundle": "^3.6",

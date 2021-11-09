@@ -14,14 +14,13 @@ namespace Networking\InitCmsBundle\DependencyInjection;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
 use Sonata\CoreBundle\Exception\InvalidParameterException;
-use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Sonata\Doctrine\Mapper\Builder\OptionsBuilder;
+use Sonata\Doctrine\Mapper\DoctrineCollector;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -42,73 +41,81 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $configs = $container->getExtensionConfig($this->getAlias());
         $isLanguageSet = false;
         $isCacheActive = false;
-        foreach ($configs as $config){
-            if(isset($config['languages'])){
+        foreach ($configs as $config) {
+            if (isset($config['languages'])) {
                 $isLanguageSet = true;
             }
-            if(isset($config['cache']) && $config['cache']['activate'] === true){
+            if (isset($config['cache']) && $config['cache']['activate'] === true) {
                 $isCacheActive = true;
             }
         }
 
-        if(!$isLanguageSet){
-            $config = ['languages' => [['label' => 'English', 'short_label' => '%env(LOCALE)%', 'locale' => '%env(LOCALE)%']]];
+        if (!$isLanguageSet) {
+            $config = [
+                'languages' => [
+                    [
+                        'label' => 'English',
+                        'short_label' => '%env(LOCALE)%',
+                        'locale' => '%env(LOCALE)%',
+                    ],
+                ],
+            ];
             $container->prependExtensionConfig($this->getAlias(), $config);
         }
 
-        if(isset($bundles['LexikTranslationBundle'])){
+        if (isset($bundles['LexikTranslationBundle'])) {
             $configs = $container->getExtensionConfig('lexik_translation');
             $fallbackLocaleSet = $managedLocalesSet = false;
-            foreach ($configs as $config){
-                if(isset($config['fallback_locale'])){
+            foreach ($configs as $config) {
+                if (isset($config['fallback_locale'])) {
                     $fallbackLocaleSet = true;
                 }
-                if(isset($config['managed_locales'])){
+                if (isset($config['managed_locales'])) {
                     $managedLocalesSet = true;
                 }
             }
 
-            if(!$fallbackLocaleSet){
+            if (!$fallbackLocaleSet) {
                 $config = ['fallback_locale' => '%env(LOCALE)%'];
                 $container->prependExtensionConfig('lexik_translation', $config);
             }
 
-            if(!$managedLocalesSet){
+            if (!$managedLocalesSet) {
                 $config = ['managed_locales' => [$_ENV['LOCALE']]];
                 $container->prependExtensionConfig('lexik_translation', $config);
             }
 
         }
 
-        if(isset($bundles['FrameworkBundle'])){
+        if (isset($bundles['FrameworkBundle'])) {
             $configs = $container->getExtensionConfig('framework');
-            $templatingEnginesSet =  false;
+            $templatingEnginesSet = false;
             $pageCacheSet = false;
             $pools = [];
-            foreach ($configs as $config){
-                if(isset($config['templating'])){
-                    if(isset($config['templating']['engines'])){
+            foreach ($configs as $config) {
+                if (isset($config['templating'])) {
+                    if (isset($config['templating']['engines'])) {
                         $templatingEnginesSet = true;
                     }
                 }
 
-                if(isset($config['cache'])){
+                if (isset($config['cache'])) {
 
-                    if(isset($config['cache']['pools'])){
+                    if (isset($config['cache']['pools'])) {
                         $pools = array_merge($pools, $config['cache']['pools']);
                     }
-                    if(isset($pools['page.cache'] )){
+                    if (isset($pools['page.cache'])) {
                         $pageCacheSet = true;
                     }
 
                 }
             }
 
-            if(!$templatingEnginesSet){
+            if (!$templatingEnginesSet) {
                 $engines = [];
-                if(class_exists('\Twig\Environment')){
+                if (class_exists('\Twig\Environment')) {
                     $engines[] = 'twig';
-                }elseif(class_exists('Symfony\Component\Templating\PhpEngine')){
+                } elseif (class_exists('Symfony\Component\Templating\PhpEngine')) {
                     $engines[] = 'php';
                 }
 
@@ -116,7 +123,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 $container->prependExtensionConfig('framework', $config);
             }
 
-            if($isCacheActive && !$pageCacheSet){
+            if ($isCacheActive && !$pageCacheSet) {
                 $pools['page.cache'] = ['adapter' => 'cache.app'];
                 $config = ['cache' => ['pools' => $pools]];
                 $container->prependExtensionConfig('framework', $config);
@@ -227,7 +234,9 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             if (in_array('Networking\InitCmsBundle\Cache\PageCacheInterface', $reflectionClass->getInterfaceNames())) {
                 $container->setParameter('networking_init_cms.page_cache_service', $cacheService);
             } else {
-                throw new \RuntimeException(sprintf('Cache class should implement %s interface', PageCacheInterface::class));
+                throw new \RuntimeException(
+                    sprintf('Cache class should implement %s interface', PageCacheInterface::class)
+                );
             }
         }
 
@@ -348,109 +357,75 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $collector->addAssociation(
             $config['class']['page'],
             'mapManyToMany',
-            [
-                'fieldName' => 'translations',
-                'targetEntity' => $config['class']['page'],
-                'mappedBy' => 'originals',
-            ]
+            OptionsBuilder::createManyToMany('translations', $config['class']['page'])
+                ->mappedBy('originals')
         );
+
 
         $collector->addAssociation(
             $config['class']['page'],
             'mapManyToMany',
-            [
-                'fieldName' => 'originals',
-                'targetEntity' => $config['class']['page'],
-                'inversedBy' => 'translations',
-                'cascade' => ['persist'],
-                'joinTable' => [
-                    'name' => 'page_translation',
-                    'joinColumns' => [
-                        [
-                            'name' => 'translation_id',
-                            'referencedColumnName' => 'id',
-                        ],
-                    ],
-                    'inverseJoinColumns' => [
-                        [
-                            'name' => 'original_id',
-                            'referencedColumnName' => 'id',
-                        ],
-                    ],
-                ],
-            ]
+            OptionsBuilder::createManyToMany('originals', $config['class']['page'])
+                ->inversedBy('translations')
+                ->cascade(['persist'])
+                ->addJoinTable(
+                    'page_translation',
+                    ['name' => 'translation_id', 'referencedColumnName' => 'id',],
+                    ['name' => 'original_id', 'referencedColumnName' => 'id',]
+                )
         );
 
         //LayoutBlock
+
         $collector->addAssociation(
             $baseNameSpace.'\\LayoutBlock',
             'mapManyToOne',
-            [
-                'fieldName' => 'page',
-                'targetEntity' => $config['class']['page'],
-                'inversedBy' => 'layoutBlock',
-                'cascade' => ['persist', 'detach'],
-                'joinColumns' => [
-                    [
-                        'name' => 'page_id',
-                        'referencedColumnName' => 'id',
-                        'onDelete' => 'CASCADE',
-                    ],
-                ],
+            OptionsBuilder::createManyToOne('page', $config['class']['page'])
+                ->inversedBy('layoutBlock')
+                ->cascade(['persist', 'detach'])
+                ->addJoin([
+                    'name' => 'page_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete' => 'CASCADE',
+                ])
 
-            ]
         );
 
         //MenuItem
         $collector->addAssociation(
             $config['class']['menu_item'],
             'mapManyToOne',
-            [
-                'fieldName' => 'page',
-                'targetEntity' => $config['class']['page'],
-                'inversedBy' => 'menuItem',
-                'cascade' => ['persist'],
-                'joinColumns' => [
-                    [
-                        'name' => 'page_id',
-                        'referencedColumnName' => 'id',
-                        'onDelete' => 'SET NULL',
-                        'nullable' => 'true',
-                    ],
-                ],
-
-            ]
+            OptionsBuilder::createManyToOne('page', $config['class']['page'])
+                ->inversedBy('menuItem')
+                ->cascade(['persist'])
+                ->addJoin([
+                    'name' => 'page_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete' => 'SET NULL',
+                    'nullable' => 'true',
+                ])
         );
 
         //PageSnapshot
         $collector->addAssociation(
             $baseNameSpace.'\\PageSnapshot',
             'mapManyToOne',
-            [
-                'fieldName' => 'page',
-                'targetEntity' => $config['class']['page'],
-                'inversedBy' => 'snapshots',
-                'cascade' => ['persist'],
-
-            ]
+            OptionsBuilder::createManyToOne('page', $config['class']['page'])
+                ->inversedBy('snapshots')
+                ->cascade(['persist'])
         );
 
-        //PageSnapshot
+        //Social media Media item
         $collector->addAssociation(
             $config['class']['page'],
             'mapManyToOne',
-            [
-                'fieldName' => 'socialMediaImage',
-                'targetEntity' => $config['class']['media'],
-                'joinColumns' => [
-                    [
-                        'name' => 'social_media_image_id',
-                        'referencedColumnName' => 'id',
-                        'onDelete' => 'SET NULL',
-                        'nullable' => 'true',
-                    ],
-                ],
-            ]
+            OptionsBuilder::createManyToOne('socialMediaImage', $config['class']['media'])
+                ->addJoin([
+                    'name' => 'social_media_image_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete' => 'SET NULL',
+                    'nullable' => 'true',
+                ])
         );
     }
 }

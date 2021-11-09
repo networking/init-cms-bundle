@@ -26,6 +26,7 @@ fos_ck_editor:
             emailProtection: encode
             templates_replaceContent: false
             height: "400px"
+            removePlugins: 'exportpdf'
 
             # path to css for the ckeditor css so that you can display content as it is in the page
             # contentsCss: '/bundles/applicationnetworkinginitcms/css/page_content.css'

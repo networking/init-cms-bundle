@@ -24,26 +24,25 @@
   },
   "homepage": "https://github.com/networking/init-cms-bundle#readme",
   "dependencies": {
-    "@kazupon/vue-i18n-loader": "^0.4.1",
-    "axios": "^0.19.0",
+    "axios": "^0.24.0",
     "csso": "^3.1.1",
     "file-loader": "^5.0.2",
     "filerobot-image-editor": "^3.4.1",
-    "gulp": "^4.0.0",
+    "gulp": "^4.0.2",
     "gulp-concat": "2.6.1",
-    "gulp-csso": "^3.0.1",
-    "gulp-less": "^4.0.1",
-    "gulp-sourcemaps": "^2.6.0",
+    "gulp-csso": "^4.0.1 ",
+    "gulp-less": "^5.0.0",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.0",
     "package-lock.json": "^1.0.0",
     "sass": "^1.23.7",
-    "sass-loader": "^8.0.0",
-    "style-loader": "^1.0.2",
+    "sass-loader": "^12.3.0 ",
+    "style-loader": "^3.3.1 ",
     "uglify-js": "^3.0.13",
     "vue": "^2.6.10",
-    "vue-context": "^5.0.0",
+    "vue-context": "^6.0.0",
     "vue-i18n": "^8.15.0",
-    "webpack-stream": "^5.2.1"
+    "webpack-stream": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
@@ -53,6 +52,7 @@
     "svg-inline-loader": "^0.8.0",
     "vue-loader": "^15.6.2",
     "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.6.6"
+    "vue-template-compiler": "^2.6.6",
+    "webpack": "^5.21.2"
   }
 }

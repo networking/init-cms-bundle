@@ -169,14 +169,14 @@ file that was distributed with this source code.
                                                     {% set sort_by              = current ? datagrid.values._sort_order : field_description.options._sort_order %}
                                                 {% endif %}
 
-                                                {% spaceless %}
+                                        {% apply spaceless %}
                                                     <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
                                                         {% if sortable %}<a
                                                                 href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
                                                             {{ field_description.label|trans({}, admin.translationDomain) }}
                                                             {% if sortable %}</a>{% endif %}
                                                     </th>
-                                                {% endspaceless %}
+                                                {% endapply %}
                                             {% endif %}
                                         {% endfor %}
                                     </tr>
@@ -212,8 +212,8 @@ file that was distributed with this source code.
                                             <div class="form-inline">
                                                 {% if not app.request.isxmlhttprequest %}{{ block('batch') }}{% endif %}
                                                 <div class="pull-right">
-                                                    <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
-                                                            list_results_count{% endtranschoice %}</strong></label>
+                                                    <label class="control-label"><strong>{% trans  with {'%count%': attribute(admin.datagrid.pager, 'countResults') is defined ? admin.datagrid.pager.countResults : admin.datagrid.pager.nbResults} from 'SonataAdminBundle' %}
+                                                            list_results_count{% endtrans %}</strong></label>
                                                     {% block max_per_page %}
                                                         <label class="control-label"
                                                                for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
