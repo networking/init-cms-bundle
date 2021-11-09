@@ -63,6 +63,7 @@ class PageListener extends ModelPageListener
         foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
             if ($entity instanceof PageInterface) {
                 if ($contentRoute = $entity->getContentRoute()) {
+                    $em->refresh($contentRoute);
                     $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
                     $em->persist($contentRoute);
                     $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
