@@ -484,7 +484,7 @@ class FrontendPageController extends AbstractController
             'admin_pool' => $this->getAdminPool(),
         ];
 
-        return $this->render($this->container->getParameter('networking_init_cms.no_translation_template'), $params);
+        return $this->render($this->getParameter('networking_init_cms.no_translation_template'), $params);
     }
 
     /**
@@ -494,7 +494,7 @@ class FrontendPageController extends AbstractController
     {
         $params = ['admin_pool' => $this->getAdminPool()];
 
-        return $this->render($this->container->getParameter('networking_init_cms.404_template'), $params);
+        return $this->render($this->getParameter('networking_init_cms.404_template'), $params);
     }
 
     /**
