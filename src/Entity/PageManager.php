@@ -251,7 +251,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
             }
 
             $this->_em->persist($publishedContent);
-            $this->_em->flush($publishedContent);
+            $this->_em->flush();
 
             $layoutBlock->setObjectId($publishedContent->getId());
 

@@ -68,7 +68,7 @@ class UserActivityListener
                 try {
                     $user->setLastActivity(new \DateTime('now'));
                     $this->em->persist($user);
-                    $this->em->flush($user);
+                    $this->em->flush();
                 } catch (\Doctrine\ORM\ORMException $e) {
                     //do nothing, entity manager is closed
                 }

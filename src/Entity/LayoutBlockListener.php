@@ -43,7 +43,7 @@ class LayoutBlockListener
                     }
                 } else {
                     $em->remove($layoutBlock);
-                    $em->flush($layoutBlock);
+                    $em->flush();
                 }
             }
         }
