@@ -9,7 +9,7 @@
                  public="true">
             <argument/>
             <argument>%networking_init_cms.admin.page.class%</argument>
-            <argument>NetworkingInitCmsBundle:PageAdmin</argument>
+            <argument>Networking\InitCmsBundle\Controller\PageAdminController</argument>
             <argument type="service" id="networking_init_cms.page_manager"/>
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
@@ -45,7 +45,7 @@
                  class="Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin" public="true">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\LayoutBlock</argument>
-            <argument>NetworkingInitCmsBundle:LayoutBlock</argument>
+            <argument>Networking\InitCmsBundle\Controller\LayoutBlockController</argument>
             <argument type="service" id="networking_init_cms.page_manager"/>
             <argument type="service" id="networking_init_cms.layout_block_form_listener"/>
             <argument type="service" id="jms_serializer.serializer"/>
@@ -66,7 +66,7 @@
                  public="true">
             <argument/>
             <argument>%networking_init_cms.admin.menu_item.class%</argument>
-            <argument>NetworkingInitCmsBundle:MenuItemAdmin</argument>
+            <argument>Networking\InitCmsBundle\Controller\MenuItemAdminController</argument>
             <call method="setSonataAnnotationReader">
                 <argument type="service" id="networking_init_cms.annotation.reader"/>
             </call>
@@ -102,7 +102,7 @@
                  public="true">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\HelpText</argument>
-            <argument>SonataAdminBundle:CRUD</argument>
+            <argument></argument>
             <call method="setSonataAnnotationReader">
                 <argument type="service" id="networking_init_cms.annotation.reader"/>
             </call>
@@ -122,7 +122,7 @@
                  public="true">
             <argument/>
             <argument>Networking\InitCmsBundle\Entity\Tag</argument>
-            <argument>NetworkingInitCmsBundle:TagAdmin</argument>
+            <argument>Networking\InitCmsBundle\Controller\TagAdminController</argument>
             <call method="setTranslationDomain">
                 <argument>TagAdmin</argument>
             </call>
@@ -135,7 +135,7 @@
                  class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
             <argument/>
             <argument>Lexik\Bundle\TranslationBundle\Entity\TransUnit</argument>
-            <argument>NetworkingInitCmsBundle:TranslationCRUD</argument>
+            <argument>Networking\InitCmsBundle\Controller\TranslationCRUDController</argument>
             <call method="setEditableOptions">
                 <argument>%networking_init_cms.editable%</argument>
             </call>
