@@ -285,9 +285,10 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->add(
                 'locale',
                 CallbackFilter::class,
-                ['callback' => [$this, 'getByLocale']],
+                ['callback' => [$this, 'getByLocale'],'advanced_filter' => false,],
                 LanguageType::class,
                 [
+
                     'placeholder' => false,
                     'choice_loader' => new CallbackChoiceLoader(
                         function () {

@@ -12,7 +12,7 @@ file that was distributed with this source code.
     <script type="text/javascript">
         var tempHtml = {};
         var tempElements = {};
-
+        var drake{{ id }} = {};
 
         // handle the add link
         function getLayoutBlockCreateForm(url, data, tempElement) {
@@ -157,16 +157,21 @@ file that was distributed with this source code.
         function saveLayoutBlockSort(e, callback) {
             var zones = [];
 
-            jQuery('ul.sortable').each(function (index, el) {
+            jQuery('div.draggable-zone').each(function (index, el) {
                 var list = jQuery(el);
                 var zone_name = list.attr('id').substr(5);
                 list.find('a.add-layout').each(function (index, el) {
                     jQuery(el).data('sort-order', index);
                     jQuery(el).data('zone', zone_name);
                 })
+                var layoutBlocks = [];
+                list.find('.draggable').each( function (i,e){
+                    layoutBlocks.push($(e).attr('id'));
+                });
+
                 zones.push({
                     'zone': zone_name,
-                    'layoutBlocks': list.sortable("toArray", {key: "layoutBlock"})
+                    'layoutBlocks': layoutBlocks
                 });
             });
 
@@ -225,85 +230,156 @@ file that was distributed with this source code.
 
         function onAfterLoad() {
 
-            jQuery('div#field_container_{{ id }} ul.sortable').sortable({
-                handle: 'i.fa-arrows-alt',
-                opacity: 0.6,
-                placeholder: "ui-state-highlight",
-                items: 'li.networking-sortable-list',
-                connectWith: ".sortable",
-                tolerance: 'intersect',
-                forcePlaceholderSize: true,
-                forceHelperSize: true,
-                start: function (event, ui) {
-                    jQuery(this).sortable('refreshPositions');
-
+            drake{{ id }} = dragula({
+                isContainer: function (el) {
+                    return el.classList.contains('draggable-zone');
                 },
-                stop: function (event, ui) {
-                    saveLayoutBlockSort(function (xhr) {
-                        createInitCmsMessageBox(xhr.messageStatus, xhr.message);
-                    });
-                    var listItems = jQuery(this).find('.networking-sortable-list');
-                    if (listItems.length < 1) {
-                        jQuery(this).find(".empty_layout_block").show();
-                    } else {
-                        jQuery(this).find(".empty_layout_block").hide();
-                    }
+                moves: function (el, container, handle) {
+                    return handle.classList.contains('draggable-handle');
                 },
-                update: function (event, ui) {
-                    var maxItems = jQuery(this).attr('data-max-items');
-                    if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length >= maxItems) {
-                        jQuery(this).find(".plus_button").hide();
-                    } else {
-                        jQuery(this).find(".plus_button").show();
-                    }
-                    var listItems = jQuery(this).find('.networking-sortable-list');
-                    if (listItems.length < 1) {
-                        jQuery(this).find(".empty_layout_block").show();
-                    } else {
-                        jQuery(this).find(".empty_layout_block").hide();
-                    }
-                },
-                over: function (event, ui) {
-                    var placeholder = jQuery(ui.placeholder);
-                    var zone = jQuery(event.target);
-                    if(canZoneAccept(zone, jQuery(ui.item))){
-                        var emptyBlock = zone.find(".empty_layout_block");
-                        var height = emptyBlock.height();
-                        placeholder.css('display', 'block');
-                        placeholder.css('height', height + 'px');
-                        emptyBlock.hide();
-                        return;
-                    }
-                    var display = jQuery(ui.sender).attr('id') === zone.attr('id')?'block':'none';
-                    placeholder.css('display', display)
-
-                },
-                receive: function (event, ui) {
-                    var zone = jQuery(event.target);
-                    if(canZoneAccept(zone, jQuery(ui.item))){
+                accepts: function (el, target, source, sibling) {
+                    var zone = $(target);
+                    var maxItems = zone.attr('data-max-items');
+                    if(canZoneAccept(zone, jQuery(el))){
                         zone.find(".empty_layout_block").hide();
-                        return;
+                        return true;
                     }
-                    jQuery(ui.placeholder).addClass('ui-state-error');
-                    jQuery(ui.sender).sortable('cancel');
-                    if (!jQuery(ui.sender).find('.networking-sortable-list').length < 2) {
-                        jQuery(ui.sender).find(".empty_layout_block").hide();
-                    }
-
-                    return;
-
-                },
-                change: function (event, ui) {
-                    jQuery('ul.sortable').each(function (i, e) {
-                        var list = jQuery(e);
-                        var listItems = list.find('.networking-sortable-list').not('.ui-sortable-helper');
-                        if (listItems.length < 1) {
-                            list.find(".empty_layout_block").show();
-                        }
-                    });
+                    return false
+                }
+            }).on('drop', function (el, container, source) {
+                saveLayoutBlockSort(function (xhr) {
+                    createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                });
+                var container = $(container);
+                var source = $(source);
+                if (container.find('div.draggable').length < 1) {
+                    container.find(".empty_layout_block").show();
+                    source.find(".plus_button").show();
+                } else {
+                    container.find(".empty_layout_block").hide();
                 }
 
+                if (source.find('div.draggable').length < 1) {
+                    source.find(".empty_layout_block").show();
+                    source.find(".plus_button").show();
+                } else {
+                    source.find(".empty_layout_block").hide();
+                }
+            }).on('over', function (el, container, source){
+                var zone = jQuery(container);
+                if(canZoneAccept(zone, jQuery(el))){
+                    zone.find(".empty_layout_block").hide();
+                    var maxItems = zone.attr('data-max-items');
+                    var length = zone.find('div.draggable').not('.gu-transit').length;
+                    if (maxItems > 0 && length >= maxItems) {
+                        zone.find(".plus_button").hide();
+                    } else {
+                        zone.find(".plus_button").show();
+                    }
+                }
+
+                zone.find(".empty_layout_block").hide();
+            }).on('out', function (el, container, source){
+                var zone = $(container);
+                var maxItems = zone.attr('data-max-items');
+                var length = zone.find('div.draggable').not('.gu-transit').length;
+
+                if(source === container){
+                    console.log(length);
+                    return;
+                }
+
+                if (maxItems > 0 && length >= maxItems) {
+                    zone.find(".plus_button").hide();
+                } else {
+                    zone.find(".plus_button").show();
+                }
+                if (length < 1) {
+                    zone.find(".empty_layout_block").show();
+                } else {
+                    zone.find(".empty_layout_block").hide();
+                }
             });
+
+            {#jQuery('div#field_container_{{ id }} ul.sortable').sortable({#}
+            {#    handle: 'i.la-arrows-alt',#}
+            {#    opacity: 0.6,#}
+            {#    placeholder: "ui-state-highlight",#}
+            {#    items: 'li.networking-sortable-list',#}
+            {#    connectWith: ".sortable",#}
+            {#    tolerance: 'intersect',#}
+            {#    forcePlaceholderSize: true,#}
+            {#    forceHelperSize: true,#}
+            {#    start: function (event, ui) {#}
+            {#        jQuery(this).sortable('refreshPositions');#}
+
+            {#    },#}
+            {#    stop: function (event, ui){#}
+            {#        saveLayoutBlockSort(function (xhr) {#}
+            {#            createInitCmsMessageBox(xhr.messageStatus, xhr.message);#}
+            {#        });#}
+            {#        var listItems = jQuery(this).find('.networking-sortable-list');#}
+            {#        if (listItems.length < 1) {#}
+            {#            jQuery(this).find(".empty_layout_block").show();#}
+            {#        } else {#}
+            {#            jQuery(this).find(".empty_layout_block").hide();#}
+            {#        }#}
+            {#    },#}
+            {#    update: function (event, ui) {#}
+            {#        var maxItems = jQuery(this).attr('data-max-items');#}
+            {#        if (maxItems > 0 && jQuery(this).find('li.networking-sortable-list').length >= maxItems) {#}
+            {#            jQuery(this).find(".plus_button").hide();#}
+            {#        } else {#}
+            {#            jQuery(this).find(".plus_button").show();#}
+            {#        }#}
+            {#        var listItems = jQuery(this).find('.networking-sortable-list');#}
+            {#        if (listItems.length < 1) {#}
+            {#            jQuery(this).find(".empty_layout_block").show();#}
+            {#        } else {#}
+            {#            jQuery(this).find(".empty_layout_block").hide();#}
+            {#        }#}
+            {#    },#}
+            {#    over: function (event, ui) {#}
+            {#        var placeholder = jQuery(ui.placeholder);#}
+            {#        var zone = jQuery(event.target);#}
+            {#        if(canZoneAccept(zone, jQuery(ui.item))){#}
+            {#            var emptyBlock = zone.find(".empty_layout_block");#}
+            {#            var height = emptyBlock.height();#}
+            {#            placeholder.css('display', 'block');#}
+            {#            placeholder.css('height', height + 'px');#}
+            {#            emptyBlock.hide();#}
+            {#            return;#}
+            {#        }#}
+            {#        var display = jQuery(ui.sender).attr('id') === zone.attr('id')?'block':'none';#}
+            {#        placeholder.css('display', display)#}
+
+            {#    },#}
+            {#    receive: function (event, ui) {#}
+            {#        var zone = jQuery(event.target);#}
+            {#        if(canZoneAccept(zone, jQuery(ui.item))){#}
+            {#            zone.find(".empty_layout_block").hide();#}
+            {#            return;#}
+            {#        }#}
+            {#        jQuery(ui.placeholder).addClass('ui-state-error');#}
+            {#        jQuery(ui.sender).sortable('cancel');#}
+            {#        if (!jQuery(ui.sender).find('.networking-sortable-list').length < 2) {#}
+            {#            jQuery(ui.sender).find(".empty_layout_block").hide();#}
+            {#        }#}
+
+            {#        return;#}
+
+            {#    },#}
+            {#    change: function (event, ui) {#}
+            {#        jQuery('ul.sortable').each(function (i, e) {#}
+            {#            var list = jQuery(e);#}
+            {#            var listItems = list.find('.networking-sortable-list').not('.ui-sortable-helper');#}
+            {#            if (listItems.length < 1){#}
+            {#                list.find(".empty_layout_block").show();#}
+            {#            }#}
+            {#        });#}
+            {#    }#}
+
+            {#});#}
         }
 
         (function ($) {
@@ -318,7 +394,7 @@ file that was distributed with this source code.
                 var tempElement = 'temp' + Date.now();
                 var zone = link.data('zone');
                 var list = jQuery('#zone_' + zone);
-                var element = jQuery('<li id="' + tempElement + '" class="networking-sortable-list"></li>');
+                var element = jQuery('<div id="' + tempElement + '" class="networking-sortable-list"></div>');
                 list.find(".empty_layout_block").hide();
                 list.append(element);
                 var data = {
@@ -356,26 +432,24 @@ file that was distributed with this source code.
                         }
                     });
                 }
-            }).on('click', 'i.toggle-active', function () {
-                if (confirm('{{ "page_admin.confirm"|trans({}, admin.translationDomain) }}')) {
-                    jQuery.ajax({
-                        url: '{{ url('admin_networking_initcms_layoutblock_toggleActive') }}',
-                        method: 'POST',
-                        data: {
-                            id: jQuery(this).attr('data-value'),
-                            code: '{{ admin.code }}',
-                            uniqId: '{{ admin.uniqid }}',
-                            pageId: '{{ admin.id(admin.subject) }}',
-                            formFieldId: '{{ id }}',
-                            _method: 'PUT'
-                        },
-                        success: function (xhr) {
-                            createInitCmsMessageBox(xhr.messageStatus, xhr.message);
-                            jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
-                            saveLayoutBlockSort();
-                        }
-                    });
-                }
+            }).on('click', 'a.toggle-active', function () {
+                jQuery.ajax({
+                    url: '{{ url('admin_networking_initcms_layoutblock_toggleActive') }}',
+                    method: 'POST',
+                    data: {
+                        id: jQuery(this).attr('data-value'),
+                        code: '{{ admin.code }}',
+                        uniqId: '{{ admin.uniqid }}',
+                        pageId: '{{ admin.id(admin.subject) }}',
+                        formFieldId: '{{ id }}',
+                        _method: 'PUT'
+                    },
+                    success: function (xhr) {
+                        createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                        jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
+                        saveLayoutBlockSort();
+                    }
+                });
             })
             ;
         })(jQuery);

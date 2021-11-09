@@ -316,7 +316,7 @@ abstract class MediaAdmin extends Admin
                     return true;
                 }, 'field_type' => HiddenType::class, 'label_render' => false, 'label' => false, ]);
         } else {
-            $datagridMapper->add('tags');
+            $datagridMapper->add('tags', ['show_filter' => false]);
         }
 
         $datagridMapper->add(

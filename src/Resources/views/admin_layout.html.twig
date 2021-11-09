@@ -19,7 +19,7 @@ file that was distributed with this source code.
 {% set _breadcrumb = block('breadcrumb') is defined ? block('breadcrumb')|trim : null %}
 {% set _actions = block('actions') is defined ? block('actions')|trim : null %}
 {% set _navbar_title = block('navbar_title') is defined ? block('navbar_title')|trim : null %}
-{% set _list_filters_actions = block('list_filters_actions') is defined ? block('list_filters_actions')|trim : null -%}
+{% set _list_filters_title = block('list_filters_title') is defined ? block('list_filters_title')|trim : null -%}
 {% set _list_toolbar = block('list_toolbar') is defined ? block('list_toolbar')|trim : null -%}
 {% set isActive      = false %}
 {% if admin is defined %}
@@ -52,6 +52,10 @@ file that was distributed with this source code.
 
 
         <!--begin::Global Theme Styles(used by all pages)-->
+        <link rel="stylesheet"
+              href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.css') }}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css" rel="stylesheet"
+              type="text/css"/>
         <link href="{{ asset('bundles/networkinginitcms/assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet"
               type="text/css"/>
         <link href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/prismjs/prismjs.bundle.css') }}"
@@ -80,6 +84,8 @@ file that was distributed with this source code.
         <script src="{{ asset('bundles/networkinginitcms/assets/plugins/custom/prismjs/prismjs.bundle.js') }}"></script>
         <script src="{{ asset('bundles/networkinginitcms/assets/js/scripts.bundle.js') }}"></script>
         <script src="{{ asset('bundles/networkinginitcms/js/init_cms.js') }}"></script>
+        <script src="{{ asset('bundles/networkinginitcms/js/one_many_association.js') }}"></script>
+        <script src="{{ asset('bundles/networkinginitcms/js/media_select.js') }}"></script>
         <!--end::Global Theme Bundle-->
         {% block meta_config %}
         {% endblock %}
@@ -178,8 +184,6 @@ file that was distributed with this source code.
         {% block main %}
         <!--begin::Page-->
         <div class="d-flex flex-row flex-column-fluid page">
-
-            <!--[html-partial:include:{"file":"partials/_aside.html"}]/-->
             {% block sidebar_left %}
                 <!--begin::Aside-->
                 <div class="aside aside-left aside-fixed d-flex flex-column flex-row-auto" id="kt_aside">
@@ -365,7 +369,7 @@ file that was distributed with this source code.
                                 {% endif %}
                                 {% if _side_menu is not empty %}
                                     <div class="sidebar col-md-2">
-                                        <div class="sonata-ba-side-menu">{{ _side_menu|raw }}</div>
+                                        <div>{{ _side_menu|raw }}</div>
                                     </div>
                                 {% endif %}
                             </div>
@@ -456,7 +460,8 @@ file that was distributed with this source code.
             "font-family": "Poppins"
         };
     </script>
-    <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/app.js') }}"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
+    <script src="{{ asset('bundles/networkinginitcms/js/app.js') }}"></script>
     <!--begin::Page Vendors(used by this page)-->
     {% block page_scripts %}
     {% endblock %}
@@ -464,6 +469,7 @@ file that was distributed with this source code.
 
     <!--begin::Page Scripts(used by this page)-->
     <script src="{{ asset('bundles/networkinginitcms/assets/js/pages/widgets.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.js') }}"></script>
     <!--end::Page Scripts-->
 {% endblock before_body_end %}
     {# Render any javascript which was given usin the jsblock twig nodes #}

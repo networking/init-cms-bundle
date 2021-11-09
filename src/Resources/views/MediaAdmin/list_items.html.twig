@@ -32,7 +32,9 @@
                 <div class="overlay-wrapper d-flex flex-center h-100">
                     {% if object.width is defined and object.width %}
                         <img src="{% path object, 'admin' %}?{{ date().timestamp }}"
-                             class="{% if object.width > 250 %}w-100{% endif%} rounded"/>
+                             class="{% if object.width > 250 and object.width > object.height%}w-100 rounded{% endif %}
+                              {% if object.height > 154 and object.height > object.width %}h-100{% endif %}
+                              "/>
                     {% else %}
                         <div class="d-flex flex-column flex-center my-auto">
                             <div>

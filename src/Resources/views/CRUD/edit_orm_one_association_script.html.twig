@@ -65,8 +65,9 @@ file that was distributed with this source code.
         return false;
     }
     jQuery('body').on('click', 'a.__delete', function(e){
-        jQuery(this).parent('li').hide();
-        jQuery(this).find('input.__delete_input').prop('checked', true);
+        var deleted = $(this);
+        $(deleted.data('delete-item')).hide();
+        deleted.find('input.__delete_input').prop('checked', true);
     });
 </script>
 

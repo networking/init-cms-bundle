@@ -1,12 +1,8 @@
 {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
-{% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
-<script src="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.js') }}"
-        type="text/javascript"></script>
 <script src="{{ asset('bundles/networkinginitcms/vendor/featherlight/src/featherlight.js') }}"
         type="text/javascript"></script>
 <script>
     var tagDialog;
-    var lastLink = $('{{ selected }}');
     (function ($, undefined) {
         "use strict";
         var link = document.createElement('a');
@@ -129,15 +125,18 @@
                 tagDialog.html(error.response.data);
             })
     }
+    var tagsContainer =  $('#tagsContainer');
+    var treeData = tagsContainer.data('tags-json');
+    var canSort = tagsContainer.data('can-sort');
+    var canDelete = tagsContainer.data('can-delete');
 
-
-    var treeData = {% include "@NetworkingInitCms/TagAdmin/tags.json.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %};
     function reloadSortTree(data, id) {
         treeData = data;
-        $('#tagsContainer').jstree(true).refresh();
+        tagsContainer.jstree(true).refresh();
     }
+
     function setUpSortTree() {
-        $('#tagsContainer')
+        tagsContainer
             .on('refresh.jstree', function (){setUpEditable(); })
             .on('move_node.jstree', function (node){setUpEditable();})
             .on('after_open.jstree', function (){setUpEditable();})
@@ -154,7 +153,7 @@
             "plugins": [
                 "dnd",
                 {% if (noSort is not defined or not noSort) and tagAdmin.hasRoute('delete') %}"delete",{% endif %}
-                "sort",
+                {% if (noSort is not defined or not noSort)%}"sort",{% endif %}
                 "types",
                 "unique"
             ],
@@ -204,7 +203,7 @@
         });
 
         $(document).on("dnd_stop.vakata", function (data, e) {
-            var nodes = $('#tagsContainer').jstree(true).get_json();
+            var nodes = tagsContainer.jstree(true).get_json();
             var flatTree = getFlatTree(nodes, 0, 0, nodes.length-1, [])
             updateTree(flatTree)
         });
@@ -214,10 +213,10 @@
     }
 
     function updateTreeData(value, id){
-        var data = $('#tagsContainer').jstree(true).get_json();
+        var data = tagsContainer.jstree(true).get_json();
         replaceDataName(data, value, id, data.length -1);
         treeData = data;
-        $('#tagsContainer').jstree(true).refresh();
+        tagsContainer.jstree(true).refresh();
 
     }
 
@@ -302,15 +301,11 @@
                 $("html, body").animate({scrollTop: $('#item_list').scrollTop()}, "slow");
             }
         );
-
-        history.replaceState({time: jQuery.now()}, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time=' + jQuery.now());
     }
 
 
     $(function () {
         var body = $('body');
-
-
         var ua = navigator.userAgent, event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
         body.on('click', '.delete_check_box', function () {

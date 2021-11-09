@@ -16,326 +16,24 @@ This code manage the many-to-[one|many] association field popup
     {% set associationadmin = sonata_admin.field_description.associationadmin %}
 
     <!-- edit many association -->
-
     <script type="text/javascript">
-        var field_dialog_{{ id }} = false;
-        var field_{{ id }} = jQuery('#{{ id }}');
-
-        // handle the add link
-        var field_dialog_form_add_{{ id }} = function (event) {
-
-            Admin.log('[{{ id }}|field_dialog_form_add] add link action');
-
-            event.preventDefault();
-            event.stopPropagation();
-            initialize_popup_{{ id }}();
-
-            var link = jQuery(this);
-
-            field_dialog_{{ id }}.html('');
-
-            axios.get(link.attr('href'), axiosConfig)
-                .then(function (response) {
-                    Admin.log('[{{ id }}|field_dialog_form_add] ajax success', field_dialog_{{ id }});
-
-                    // populate the popup container
-                    field_dialog_{{ id }}.html(response.data);
-
-                    // capture the submit event to make an ajax call, ie : POST data to the
-                    // related create admin
-                    field_dialog_{{ id }}.on('click', 'a', field_dialog_form_action_{{ id }});
-                    field_dialog_{{ id }}.on('submit', 'form', field_dialog_form_action_{{ id }});
-
-                    // open the dialog in modal mode
-                    field_dialog_{{ id }}.modal('show');
-
-                    field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
-
-                        if (!jQuery(e.target).hasClass('collapse')) {
-                            Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
-                            // make sure we have a clean state
-                            field_dialog_{{ id }}.off('click', 'a');
-                            field_dialog_{{ id }}.off('submit', 'form');
-                            field_dialog_{{ id }}.remove()
-                        }
-                    });
-                })
-        };
-
-        // handle the post data
-        var field_dialog_form_action_{{ id }} = function (event) {
-            Admin.log('[{{ id }}|field_dialog_form_action] action catch', this);
-            var element = jQuery(this);
-            var url, type = '';
-            var data = {_xml_http_request: true};
-
-            // return if the link is an anchor inside the same page
-            if (this.nodeName == 'A'
-                && (
-                    element.attr('href').length == 0 ||
-                    element.attr('href')[0] == '#' ||
-                    element.attr('href').substring(0, 11) == 'javascript:')) {
-                return true;
-            }
-
-            event.preventDefault();
-            event.stopPropagation();
-            initialize_popup_{{ id }}();
-
-
-            var url = '', methodType = '';
-            var headers = axiosConfig.headers
-            if (this.nodeName == 'FORM') {
-                url = element.attr('action');
-                methodType = element.attr('method');
-                var formData = new FormData(this);
-            } else if (this.nodeName == 'A') {
-                url = element.attr('href');
-                methodType = 'get'
-                var formData = element.serialize();
-            } else {
-                alert('unexpected element : @' + this.nodeName + '@');
-                return;
-            }
-
-            if (element.hasClass('has-action')) {
-                Admin.log('[{{ id }}|field_dialog_form_action] reserved action stop catch all events');
-                return false;
-            }
-
-
-            Admin.log('[{{ id }}|field_dialog_form_action] execute ajax call');
-
-            axios({
-                method: methodType,
-                url: url,
-                data: formData,
-                ...axiosConfig
-            }).then(function (response) {
-
-                var data = response.data;
-                if (typeof data !== 'object') {
-                    var IS_JSON = true;
-                    try {
-                        data = jQuery.parseJSON(data);
-                    } catch (err) {
-                        IS_JSON = false;
-                    }
-
-                    if (IS_JSON === false && typeof data == 'string') {
-                        field_dialog_{{ id }}.html(data);
-                        return;
-                    }
-                }
-                // if the crud action return ok, then the element has been added
-                // so the widget container must be refresh with the last option available
-                if (data.result === 'ok') {
-                    field_dialog_{{ id }}.modal('hide');
-
-                    if (data.html) {
-                        $('body').trigger("html-received", [data.html]);
-                    }
-
-
-                    {% if sonata_admin.edit == 'list' %}
-                    field_{{ id }}.val(data.objectId).trigger('change');
-                    {% else %}
-                    var parentForm = jQuery('#field_widget_{{ id }}').closest('form');
-                    var url = "{{ url('sonata_admin_retrieve_form_element', {
-                        'elementId': id,
-                        'subclass':  sonata_admin.admin.hasActiveSubClass()?sonata_admin.admin.getActiveSubclassCode():'',
-                        'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
-                        'uniqid':    sonata_admin.admin.root.uniqid,
-                        'code':      sonata_admin.admin.root.code,
-                        'locale':    app.request.locale
-                    }) }}";
-
-                    var formData = new FormData(parentForm[0]);
-                    axios.post(url, formData, axiosConfig)
-                        .then(function (response) {
-                            var container = jQuery('#field_container_{{ id }}');
-
-
-                            container.html(jQuery(response.data).filter('#field_container_{{ id }}').html());
-                            var newElement = jQuery('#{{ id }} [value="' + data.objectId + '"]');
-                            if (newElement.is("input")) {
-                                newElement.attr('checked', 'checked');
-                            } else {
-                                newElement.attr('selected', 'selected');
-
-                            }
-                            Admin.log('[{{ id }}|field_dialog] trigger append form element');
-                            {% if select2 is defined and select2 %}
-                            container.on('sonata-admin-append-form-element', function () {
-                                jQuery("#{{ id }}").select2();
-                                jQuery("#{{ id }}").trigger('change');
-                            });
-                            {% endif %}
-                            container.trigger('sonata-admin-append-form-element');
-                        });
-                    {% endif %}
-                    return;
-                }
-
-                // otherwise, display form error
-                field_dialog_{{ id }}.html(data);
-
-                Admin.add_pretty_errors(field_dialog_{{ id }});
-
-                // reattach the event
-                jQuery('form', field_dialog_{{ id }}).submit(field_dialog_form_action_{{ id }});
-            })
-
-            return false;
-        };
-
-        {#
-        handle link click in a list :
-          - if the parent has an objectId defined then the related input get updated
-          - if the parent has NO object then an ajax request is made to refresh the popup
-        #}
-        var field_dialog_form_list_link_{{ id }} = function (event) {
-
-            var link = jQuery(this);
-
-            //trigger javascript actions
-            if (link.hasClass('filter-close') ||
-                link.hasClass('dropdown-toggle') ||
-                link.hasClass('has-action') ||
-                link.hasClass('tag_link') ||
-                link.hasClass('show_all_media')
-            ) {
-                Admin.log('[{{ id }}|field_dialog_form_list_link] handle default javascript action');
-                return;
-            }
-
-            initialize_popup_{{ id }}();
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            Admin.log('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
-            var element = link.parents('#field_dialog_{{ id }} .sonata-ba-list-field');
-
-            //select media
-            if (link.hasClass('select-media') || element.length > 0) {
-                field_value_{{ id }} = link.data('object-id');
-                field_{{ id }}.val(field_value_{{ id }}).trigger('change');
-                field_dialog_{{ id }}.modal('hide');
-                return true;
-            }
-
-            axios.get(jQuery(this).attr('href'))
-                .them(function (response) {
-                    Admin.log('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
-
-                    $('#field_dialog_{{ id }}').html('<div class="modal-dialog modal-xl"><div class="modal-content">' +
-                        '<div class="modal-header"> <h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3>' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div><div class="modal-body">' +
-                        response.data + '</div> <div class="modal-footer"></div></div></div>');
-                    field_dialog_form_list_handle_action_{{ id }}();
-                })
-
-            return true;
-        };
-
-        // this function handle action on the modal list when inside a selected list
-        var field_dialog_form_list_handle_action_{{ id }} = function () {
-
-            Admin.log('[{{ id }}|field_dialog_form_list_handle_action] attaching valid js event');
-
-            field_dialog_{{ id }}.off('click', 'a');
-            field_dialog_{{ id }}.off('submit', 'form');
-
-            // capture the submit event to make an ajax call, ie : POST data to the
-            // related create admin
-            field_dialog_{{ id }}.on('click', 'a', field_dialog_form_list_link_{{ id }});
-            field_dialog_{{ id }}.on('submit', 'form', function (event) {
-                event.preventDefault();
-
-                var form = jQuery(this);
-
-                Admin.log('[{{ id }}|field_dialog_form_list_handle_action] catching submit event, sending ajax request');
-
-
-                var formData = new FormData(this);
-                axios.post(url, formData, axiosConfig)
-                    .then(function (html) {
-
-                        Admin.log('[{{ id }}|field_dialog_form_list_handle_action] form submit success, restoring event');
-
-                        field_dialog_{{ id }}.html('<div class="modal-dialog modal-xl"><div class="modal-content"><div class="modal-header"> <h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
-                        field_dialog_form_list_handle_action_{{ id }}();
-                    });
-            });
-        };
-
-        // handle the list link
-        var field_dialog_form_list_{{ id }} = function (event) {
-
-            initialize_popup_{{ id }}();
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            Admin.log('[{{ id }}|field_dialog_form_list] open the list modal');
-
-            var a = jQuery(this);
-
-            field_dialog_{{ id }}.html('');
-
-            axios.get(a.attr('href'), axiosConfig)
-                .then(function (response) {
-                    Admin.log('[{{ id }}|field_dialog_form_list] retrieving the list content');
-
-                    // populate the popup container
-                    field_dialog_{{ id }}.html('<div class="modal-dialog modal-xl"><div class="modal-content"><div class="modal-header"> <h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div><div class="modal-body">' + response.data + '</div> <div class="modal-footer"></div></div></div>');
-
-                    // capture the submit event to make an ajax call, ie : POST data to the
-                    // related create admin
-                    field_dialog_{{ id }}.on('click', 'a', field_dialog_form_list_link_{{ id }});
-                    field_dialog_{{ id }}.on('submit', 'form', function (event) {
-                        event.preventDefault();
-                        var formData = new FormData(this);
-                        axios.post(form.attr('action'), formData, axiosConfig)
-                            .then(function (response) {
-                                field_dialog_{{ id }}.html('<div class="modal-dialog modal-xl"><div class="modal-content"><div class="modal-header"> <h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div><div class="modal-body">' + response.data + '</div> <div class="modal-footer"></div> </div></div>');
-                            });
-                    });
-
-                    field_dialog_{{ id }}.modal('show');
-
-                    field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
-
-                        if (!jQuery(e.target).hasClass('collapse')) {
-                            Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
-
-                            // make sure we have a clean state
-                            field_dialog_{{ id }}.off('click', 'a');
-                            field_dialog_{{ id }}.off('submit', 'form')
-                            field_dialog_{{ id }}.remove();
-                        }
-                    });
-                })
-
-            return false;
-        };
-
-        function initialize_popup_{{ id }}() {
-            // initialize component
-            if (!field_dialog_{{ id }}) {
-                field_dialog_{{ id }} = jQuery("#field_dialog_{{ id }}");
-
-                // move the dialog as a child of the root element, nested form breaks html ...
-                jQuery(document.body).append(field_dialog_{{ id }});
-
-                Admin.log('[{{ id }}|field_dialog] move dialog container as a document child');
-            }
-        }
-
-        {#
-        This code is used to defined the "add" popup
-        #}
+        var dialogTitle = '{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}';
+        var updateUrl = '{{ url('sonata_admin_short_object_information', {
+            'objectId': 'OBJECT_ID',
+            'uniqid': associationadmin.uniqid,
+            'code': associationadmin.code
+        }) }}'
+        var formElementUrl = "{{ url('sonata_admin_retrieve_form_element', {
+            'elementId': id,
+            'subclass':  sonata_admin.admin.hasActiveSubClass()?sonata_admin.admin.getActiveSubclassCode():'',
+            'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
+            'uniqid':    sonata_admin.admin.root.uniqid,
+            'code':      sonata_admin.admin.root.code,
+            'locale':    app.request.locale
+        }) }}"
+        var oneMany_{{ id }} = new OneManyAssociation('{{ id }}', dialogTitle,{{ sonata_admin.edit == 'list'?'true':'false' }} , updateUrl, formElementUrl);
+
+        {# This code is used to defined the "add" popup #}
         // this function initialize the popup
         // this can be only done this way has popup can be cascaded
         function start_field_dialog_form_add_{{ id }}(link) {
@@ -343,28 +41,28 @@ This code manage the many-to-[one|many] association field popup
             // remove the html event
             link.onclick = null;
 
-            initialize_popup_{{ id }}();
-
             // add the jQuery event to the a element
-            jQuery(link).on('click', field_dialog_form_add_{{ id }}).trigger('click');
+            jQuery(link).on('click', function (event) {
+                event.preventDefault();
+                oneMany_{{ id }}.field_dialog_form_add(this);
+            }).trigger('click');
 
             return false;
         }
 
-
         {% if sonata_admin.edit == 'list' %}
 
-        {#
-        This code is used to defined the "list" popup
-        #}
+        {# This code is used to defined the "list" popup #}
         // this function initialize the popup
         // this can be only done this way has popup can be cascaded
         function start_field_dialog_form_list_{{ id }}(link) {
 
             link.onclick = null;
-            initialize_popup_{{ id }}();
             // add the jQuery event to the a element
-            jQuery(link).on('click', field_dialog_form_list_{{ id }}).trigger('click');
+            jQuery(link).on('click', function (event) {
+                event.preventDefault();
+                oneMany_{{ id }}.field_dialog_form_list(this)
+            }).trigger('click');
             return false;
         }
 
@@ -373,40 +71,12 @@ This code manage the many-to-[one|many] association field popup
             // remove the html event
             link.onclick = null;
             // add the jQuery event to the a element
-            jQuery(link).on('click', field_remove_element_{{ id }}).trigger('click');
+            jQuery(link).on('click', function (event) {
+                event.preventDefault();
+                oneMany_{{ id }}.field_remove_element(this)
+            }).trigger('click');
             return false;
         }
-
-        //remove the image
-        function field_remove_element_{{ id }}(event) {
-            event.preventDefault();
-            if (jQuery('#{{ id }} option').get(0)) {
-                field_{{ id }}.attr('selectedIndex', '-1').children("option:selected").attr("selected", false);
-            }
-            field_{{ id }}.val('');
-            field_{{ id }}.trigger('change');
-            return false;
-        }
-
-        // update the label
-        field_{{ id }}.on('change', function (event) {
-
-            Admin.log('[{{ id }}] update the label');
-
-            jQuery('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/sonataadmin/ajax-loader.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
-
-            var url = '{{ url('sonata_admin_short_object_information', {
-                'objectId': 'OBJECT_ID',
-                'uniqid': associationadmin.uniqid,
-                'code': associationadmin.code
-            }) }}'.replace('OBJECT_ID', jQuery(this).val());
-
-            axios.get(url, axiosConfig).then(function (response) {
-                jQuery('#field_widget_{{ id }}').html(response.data);
-            })
-
-        });
-
         {% endif %}
 
 

@@ -1,5 +1,4 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
@@ -7,7 +6,6 @@ moved all relation fields to the networking crud folder
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% if not sonata_admin.field_description.hasassociationadmin %}
@@ -26,17 +24,17 @@ file that was distributed with this source code.
         {% if sonata_admin.edit == 'inline' %}
             {% if display_create_button %}
                 {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
-                        <span id="field_actions_{{ id }}" class="row">
-                        <a
-                                href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
-                                onclick="return start_field_retrieve_{{ id }}(this);"
-                                class="btn btn-light"
-                                title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
+                    <span id="field_actions_{{ id }}" class="row">
+                                <a
+                                        href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
+                                        onclick="return start_field_retrieve_{{ id }}(this);"
+                                        class="btn btn-light"
+                                        title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                                 >
-                            <i class="la la-plus"></i>
-                            {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
-                        </a>
-                    </span>
+                                    <i class="la la-plus"></i>
+                                    {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
+                                </a>
+                            </span>
                 {% endif %}
             {% endif %}
 
@@ -45,53 +43,51 @@ file that was distributed with this source code.
                 <script type="text/javascript">
                     jQuery(function () {
                         var ckeditorConfig = '';
+                        var widths = [];
 
-                        {% if sonata_admin.inline == 'table' %}
-                        jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody').sortable({
-                            axis: 'y',
-                            opacity: 0.6,
-                            items: 'tr',
-                            helper: function(e, ui) {
-                                ui.children().each(function() {
-                                    $(this).width($(this).width());
-                                });
-                                return ui;
+                        var drake{{ id }} = dragula({
+                            isContainer: function (el) {
+                                return el.classList.contains('draggable-zone');
                             },
-                            stop: function(event, ui){
-
-                                var textareaId = ui.item.find('textarea.ckeditor').attr('id');
-                                if (typeof textareaId != 'undefined') {
-                                    try {
-                                        CKEDITOR.replace(textareaId, ckeditorConfig);
-                                    } catch (err) {
-                                    }
-                                }
-                                apply_position_value_{{ id }}();
-                            },
-                            start: function(event, ui){
-                                var textareaId = ui.item.find('textarea.ckeditor').attr('id');
-                                if (typeof textareaId != 'undefined') {
-                                    var editorInstance = CKEDITOR.instances[textareaId];
-                                    if (editorInstance) {
-                                        ckeditorConfig = editorInstance.config;
-                                        editorInstance.destroy();
-                                        CKEDITOR.remove(textareaId);
-                                    }
+                            moves: function (el, container, handle) {
+                                return handle.classList.contains('draggable-handle');
+                            }
+                        }).on('drag', function (el) {
+                            var textareaId = $(el).find('textarea.ckeditor').attr('id');
+                            if (typeof textareaId != 'undefined') {
+                                var editorInstance = CKEDITOR.instances[textareaId];
+                                if (editorInstance) {
+                                    ckeditorConfig = editorInstance.config;
+                                    editorInstance.destroy();
+                                    CKEDITOR.remove(textareaId);
                                 }
                             }
+                        }).on('drop', function (el) {
+                            var textareaId = $(el).find('textarea.ckeditor').attr('id');
+                            if (typeof textareaId != 'undefined') {
+                                try {
+                                    CKEDITOR.replace(textareaId, ckeditorConfig);
+                                } catch (err) {
+                                }
+                            }
+                            apply_position_value_{{ id }}();
+                        }).on('cloned', function (clone, original, type){
+                            {% if sonata_admin.inline == 'table' %}
+                            $('td', clone).each(function (i, e){
+                               $(e).css('width', widths[i]);
+                            });
+                            {% endif %}
                         });
 
+
                         function apply_position_value_{{ id }}() {
+                            {% if sonata_admin.inline == 'table' %}
+                            $('th', 'thead').each(function (i, e){
+                                widths[i] = e.offsetWidth;
+                            })
+                            {% endif %}
 
-                            // update the input value position
-                            jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody td.sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }}').each(function (index, element) {
-                                // remove the sortable handler and put it back
-                                jQuery('span.sonata-ba-sortable-handler', element).remove();
-                                jQuery(element).append('<span class="sonata-ba-sortable-handler"><i class="las la-arrows-alt cursor-pointer"></i></span>');
-                                jQuery('input', element).hide();
-                            });
-
-                            jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody td.sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }} input').each(function (index, value) {
+                            jQuery('#field_container_{{ id }} .draggable .sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }} input').each(function (index, value) {
                                 jQuery(value).val(index + 1);
                             });
                         }
@@ -99,66 +95,14 @@ file that was distributed with this source code.
                         // refresh the sortable option when a new element is added
                         jQuery('#sonata-ba-field-container-{{ id }}').bind('sonata.add_element', function () {
                             apply_position_value_{{ id }}();
-                            jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody').sortable('refresh');
-                        });
-                        {% elseif sonata_admin.inline == 'natural' %}
-                        jQuery('div#field_container_{{ id }} ul.sortable').sortable({
-                            axis: 'y',
-                            opacity: 0.6,
-                            items: 'li',
-                            stop: function(event, ui){
-                                var textareaId = ui.item.find('textarea.ckeditor').attr('id');
-                                if (typeof textareaId != 'undefined') {
-                                    try {
-                                        CKEDITOR.replace(textareaId, ckeditorConfig);
-                                    } catch (err) {
-                                    }
-                                }
-                                apply_position_value_{{ id }}();
-                            },
-                            start: function(event, ui){
-                                var textareaId = ui.item.find('textarea.ckeditor').attr('id');
-                                if (typeof textareaId != 'undefined') {
-                                    var editorInstance = CKEDITOR.instances[textareaId];
-                                    if (editorInstance) {
-                                        ckeditorConfig = editorInstance.config;
-                                        editorInstance.destroy();
-                                        CKEDITOR.remove(textareaId);
-                                    }
-                                }
-                            }
-                        });
-                        function apply_position_value_{{ id }}() {
-                            // update the input value position
-                            jQuery('div#field_container_{{ id }} ul span.sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }}').each(function (index, element) {
-
-                                element = jQuery(element).find('div.sonata-ba-field.sonata-ba-field-standard-natural');
-                                // remove the sortable handler and put it back
-                                jQuery('span.sonata-ba-sortable-handler', element).remove();
-                                jQuery(element).append('<span class="sonata-ba-sortable-handler"><i class="las la-arrows-alt cursor-pointer"></i></span>');
-                                jQuery('input', element).hide();
-                            });
-
-                            jQuery('div#field_container_{{ id }} ul span.sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }} input').each(function (index, value) {
-                                jQuery(value).val(index + 1);
-                            });
-                        }
-
-                        // refresh the sortable option when a new element is added
-                        jQuery('#sonata-ba-field-container-{{ id }}').bind('sonata.add_element', function () {
-                            apply_position_value_{{ id }}();
-                            jQuery('div#field_container_{{ id }} ul.sortable').sortable('refresh');
                         });
 
-
-                        {% endif %}
 
                         apply_position_value_{{ id }}();
                     });
 
                 </script>
             {% endif %}
-
             {# include association code #}
             {% jsblock 'addToBottom' %}
             {% include '@NetworkingInitCms/CRUD/edit_orm_one_association_script.html.twig' %}
@@ -166,25 +110,21 @@ file that was distributed with this source code.
         {% else %}
             <span id="field_actions_{{ id }}">
                 {% if display_create_button %}
-                {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
-                    <a
-                            href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
-                            onclick="return start_field_dialog_form_add_{{ id }}(this);"
-                            class="btn btn-light"
-                            title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
-                            >
+                    {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
+                        <a
+                                href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
+                                onclick="return start_field_dialog_form_add_{{ id }}(this);"
+                                class="btn btn-light"
+                                title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
+                        >
                         <i class="la la-plus"></i>
                         {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                     </a>
-                {% endif %}
+                    {% endif %}
                 {% endif %}
             </span>
 
-
-            <div class="modal" id="field_dialog_{{ id }}" style="display: none" role="dialog"
-                 aria-hidden="true">
-
-            </div>
+            <div class="modal" id="field_dialog_{{ id }}" style="display: none" role="dialog" aria-hidden="true"></div>
             {% jsblock 'addToBottom' %}
             {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
             {% jsblock 'addToBottomEnd' %}
@@ -193,8 +133,7 @@ file that was distributed with this source code.
         <span id="field_widget_{{ id }}">
             {% if sonata_admin.edit == 'inline' %}
                 {% if sonata_admin.inline == 'table' %}
-                    {% if form.children|length > 0 %}
-                        <table class="table table-bordered">
+                    <table class="table table-bordered ">
                             <thead>
                             <tr>
                                 {% for field_name, nested_field in form.children[0].children %}
@@ -206,63 +145,78 @@ file that was distributed with this source code.
                                 {% endfor %}
                             </tr>
                             </thead>
-                            <tbody class="sonata-ba-tbody">
+                            <tbody class="sonata-ba-tbody draggable-zone sortable">
                             {% for nested_group_field_name, nested_group_field in form.children %}
-                                <tr>
+                                <tr class="draggable list-item-{{ nested_group_field.vars.id }}">
+                                    {% set delete_button = '' %}
                                     {% for field_name, nested_field in nested_group_field.children %}
-                                        <td class="sonata-ba-td-{{ id }}-{{ field_name }}{% if nested_field.vars.errors|length > 0 %} error{% endif %}">
-                                            {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
-                                                {{ form_widget(nested_field) }}
-
-                                                {% set dummy = nested_group_field.setrendered %}
-                                            {% else %}
-                                                {{ form_widget(nested_field) }}
-                                            {% endif %}
-                                            {% if nested_field.vars.errors|length > 0 %}
-                                                <div class="sonata-ba-field-error-messages">
-                                                    {{ form_errors(nested_field) }}
-                                                </div>
+                                        {% if field_name == '_delete' %}
+                                        {% set delete_button = form_widget(nested_field, {'attr': {'class': '__delete_input'}}) %}
+                                        <td class="align-center">
+                                             <a class=" btn btn-danger btn-small __delete" data-delete-item=".list-item-{{ nested_group_field.vars.id }}">
+                                                <i class="la la-trash"></i>
+                                                <span style="display: none;">{{ delete_button|raw }}</span>
+                                            </a>
+                                        </td>
+                                        {% else %}
+                                            <td class="align-center sonata-ba-td-{{ id }}-{{ field_name }}{% if nested_field.vars.errors|length > 0 %} error{% endif %}">
+                                                {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
+                                                    {{ form_widget(nested_field) }}
+                                                    {% set dummy = nested_group_field.setrendered %}
+                                                {% else %}
+                                                    {{ form_widget(nested_field) }}
+                                                {% endif %}
+                                                {% if nested_field.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-field-error-messages">
+                                                        {{ form_errors(nested_field) }}
+                                                    </div>
+                                                {% endif %}
+                                                {% if field_name == 'position' %}<i class="las la-arrows-alt draggable-handle"></i>{% endif %}
                                             {% endif %}
                                         </td>
                                     {% endfor %}
+
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
-                    {% endif %}
                 {% elseif form.children|length > 0 %}
-                    <div class="dropzone ">
-                        <ul class="sortable">
+                        <div class="draggable-zone sortable" id="">
                             {% for nested_group_field_name, nested_group_field in form.children %}
                                 {% set delete_button = '' %}
-                                <li style="border: 1px solid #f0f0f0; padding: 5px; margin-bottom: 10px;" class="list-item-{{ id }}">
-                                    {% for field_name, nested_field in nested_group_field.children %}
-                                        {% if field_name == '_delete' %}
-                                            {% set delete_button = form_widget(nested_field, {'attr': {'class': '__delete_input'}}) %}
-                                        {% else %}
-                                            <span class="sonata-ba-td-{{ id }}-{{ field_name }}">
+                                <div class="card card-custom gutter-b draggable list-item-{{ nested_group_field.vars.id }}">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                        </div>
+                                        <div class="card-toolbar">
+                                                <i class="las la-arrows-alt draggable-handle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        {% for field_name, nested_field in nested_group_field.children %}
+                                            {% if field_name == '_delete' %}
+                                                {% set delete_button = form_widget(nested_field, {'attr': {'class': '__delete_input'}}) %}
+                                            {% else %}
+                                                <span class="sonata-ba-td-{{ id }}-{{ field_name }}">
                                             {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
-                                                {{ form_row(nested_field, {
-                                                    'inline': 'natural',
-                                                    'edit'  : 'inline'
-                                                }) }}
+                                                {{ form_row(nested_field, {'inline': 'natural','edit'  : 'inline'}) }}
                                                 {% set dummy = nested_group_field.setrendered %}
                                             {% else %}
                                                 {{ form_widget(nested_field) }}
                                             {% endif %}
                                             </span>
-                                        {% endif %}
-                                        {% if loop.last %}
-                                        <a class="pull-right btn btn-danger btn-small __delete"><i class="glyphicon glyphicon-trash"></i><span style="display: none;">{{ delete_button|raw }}</span></a>
-                                    {% endif %}
-
-                                    {% endfor %}
-                                <div class="clearfix">&nbsp;</div>
-
-                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="card-footer">
+                                        <a class="float-right btn btn-danger btn-small __delete" data-delete-item=".list-item-{{ nested_group_field.vars.id }}">
+                                            <i class="la la-trash"></i>
+                                            <span style="display: none;">{{ delete_button|raw }}</span>
+                                        </a>
+                                    </div>
+                                </div>
                             {% endfor %}
-                        </ul>
-                    </div>
+                        </div>
                 {% endif %}
             {% else %}
                 {{ form_widget(form) }}

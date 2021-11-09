@@ -9,12 +9,7 @@ file that was distributed with this source code.
 
 #}
 {% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
-{% block stylesheets %}
-    <link rel="stylesheet"
-          href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.css') }}">
-    {{ parent() }}
 
-{% endblock %}
 
 {% block actions %}
     {% if page_id is defined and page_id %}
@@ -28,14 +23,34 @@ file that was distributed with this source code.
         <form action="{{ admin.generateUrl('list') }}" method="GET"
               class="kt-form kt-form--fit mb-15">
             <div class="d-flex justify-content-xl-between">
+                {% set withAdvancedFilter = false %}
                 {% for filter in admin.datagrid.filters %}
-                    <div class="mb-lg-0 mb-6">
-                        <label for="{{ form.children[filter.formName].children['value'].vars.id }}">{{ filter.label|trans({}, admin.translationDomain) }}</label>
+                    {% set filterActive = ((filter.isActive() and filter.options['show_filter'] is null) or (filter.options['show_filter'] is same as(true))) and not admin.isDefaultFilter(filter.formName) %}
+                    {% set filterVisible = filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null %}
+                    <div class="mb-lg-0 mb-6" sonata-filter="{{ filterVisible ? 'true' : 'false' }}" style="display: {% if filterActive or filterVisible %}block{% else %}none{% endif %}">
+                        {% if filter.label is not same as(false) %}
+                            <label for="{{ form[filter.formName].children['value'].vars.id }}" class="control-label">{{ filter.label|trans({}, filter.translationDomain ?: admin.translationDomain) }}</label>
+                        {% endif %}
+                        {% set attr = form[filter.formName].children['type'].vars.attr|default({}) %}
 
-                        {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium advanced-filter' }}
-                        ) }}
-                        {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label , 'class': 'input-medium'}, 'translation_domain': admin.translationDomain }) }}
+                        <div class="advanced-filter">
+                            {{ form_widget(form[filter.formName].children['type'], {'attr':  attr}) }}
+                        </div>
+
+                        <div >
+                            {{ form_widget(form[filter.formName].children['value']) }}
+                        </div>
+                        {#                        <div class="col-sm-1">#}
+                        {#                            <label class="control-label">#}
+                        {#                                <a href="#" class="sonata-toggle-filter sonata-ba-action" filter-target="filter-{{ admin.uniqid }}-{{ filter.name }}" filter-container="filter-container-{{ admin.uniqid() }}">#}
+                        {#                                    <i class="fa fa-minus-circle" aria-hidden="true"></i>#}
+                        {#                                </a>#}
+                        {#                            </label>#}
+                        {#                        </div>#}
                     </div>
+                    {% if filter.options['advanced_filter'] %}
+                        {% set withAdvancedFilter = true %}
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="row mt-8">
@@ -63,6 +78,12 @@ file that was distributed with this source code.
                              </span>
                     </a>
                     {{ form_rest(form) }}
+                    {% if withAdvancedFilter %}
+                        <a href="#" data-toggle="advanced-filter">
+                            <i class="la la-cogs" aria-hidden="true"></i>
+                            {{ 'btn_advanced_filters'|trans({}, 'SonataAdminBundle') }}
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </form>
@@ -84,7 +105,6 @@ file that was distributed with this source code.
         </div>
     </div>
     {{ parent() }}
-    <script src="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.js') }}"></script>
     <script src="{{ asset('bundles/networkinginitcms/js/menuitems.js') }}"></script>
 {% endblock %}
 

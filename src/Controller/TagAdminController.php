@@ -37,77 +37,12 @@ class TagAdminController extends CRUDController
                 $object = $this->admin->getObject($jsonArray['objectId']);
                 $jsonArray['status'] =  'success';
                 $jsonArray['message'] =  $this->translate('flash_create_success', ['%name%' =>  $this->escapeHtml($this->admin->toString($object))], 'SonataAdminBundle');
-                $jsonArray['json'] = $this->getTagTree($object->getId());
+                $jsonArray['json'] = $this->admin->getTagTree($object->getId());
                 $response = $this->renderJson($jsonArray, 200);
             }
         }
 
         return $response;
-    }
-
-    /**
-     * @param $objectId
-     *
-     * @return string
-     */
-    public function getTagTree($objectId)
-    {
-        $tagRepo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Tag');
-        $tags = $tagRepo->findBy(['level' => 1], ['path' => 'ASC']);
-
-        $tagArray = [
-            [
-                'text' =>  $this->trans('show_all_media', [], $this->admin->getTranslationDomain()),
-                'a_attr' => ['class' => 'show_all_media'],
-                'data' => ['show_first' => true, 'id' => 0],
-                'children' =>  [],
-                'state' => ['selected' => false],
-            ],
-        ];
-
-        return $this->addTags($tags, $objectId, $tagArray);
-
-    }
-
-    /**
-     * @param Tag[] $tags
-     * @param $selected
-     * @param $tagArray
-     */
-    private function addTags($tags, $selected, $tagArray){
-        foreach ( $tags as $tag){
-            $item = [
-                'text' =>  $tag->getName(),
-                'li_attr' => [
-                    'id' => 'li_tag_'.$tag->getId(),
-                    'class' => 'sortable-tag',
-                    'data-tag-name' => $tag->getName(),
-                    'ondrop' => sprintf("dropTag(event, '%d')", $tag->getId()),
-                    "ondragover"=> sprintf("overList(event, '%d')", $tag->getId()),
-                    "ondragleave"=> sprintf("exitList(event, '%d')", $tag->getId()),
-                ],
-                'a_attr' => [
-                    'class' => 'tag_link',
-                    'id' => 'tag_link_'.$tag->getId(),
-                    'data-pk' => $tag->getId()
-                ],
-                'data' => [
-                    'id' => $tag->getId(),
-                    'delete_link' => $this->admin->generateObjectUrl('delete', $tag, ['returnToMedia' => true])
-                ],
-                'state' => [
-                    'selected' => $selected === $tag->getId(),
-                    'opened' => $tag->hasChild($selected)
-                ],
-            ];
-            if($tag->getChildren()){
-                $item['children'] = $this->addTags($tag->getChildren(), $selected, []);
-            }
-
-            $tagArray[] = $item;
-        }
-
-        return $tagArray;
     }
 
     /**

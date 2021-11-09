@@ -781,25 +781,22 @@ file that was distributed with this source code.
     {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
     {% if not label_render %}{% set widget_controls = false %}{% endif %}
     {# {{ block('widget_form_group_start') }} #}
-    <div id="field_container_{{ id }}" class="field-container">
-            <span id="field_widget_{{ id }}">
+    {{ block('hidden_widget') }}
+    <div id="field_container_{{ id }}" class="d-flex justify-content-start align-items-center">
+        <div id="field_widget_{{ id }}" class="mr-10">
 
-                {% if form.vars.data %}
-                    {{ render(path('sonata_admin_short_object_information', {
-                        'code':     admin.code,
-                        'objectId': admin.id(form.vars.data),
-                        'uniqid':   admin.uniqid
-                    })) }}
-                    &nbsp;
-                {% else %}
-                    <span class="inner-field-short-description">
-                    </span>
-                {% endif %}
-            </span>
-
-        {{ block('hidden_widget') }}
-
-        <span id="field_actions_{{ id }}" class="field-actions">
+            {% if form.vars.data %}
+                {{ render(path('sonata_admin_short_object_information', {
+                    'code':     admin.code,
+                    'objectId': admin.id(form.vars.data),
+                    'uniqid':   admin.uniqid
+                })) }}
+                &nbsp;
+            {% else %}
+                    <i class="la la-image icon-3x"></i>
+            {% endif %}
+        </div>
+        <div id="field_actions_{{ id }}" >
                 <a href="{{ admin.generateUrl('list', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
                    onclick="return open_media_list_{{ id }}(this);"
                    class="btn btn-light btn-sm"
@@ -832,7 +829,7 @@ file that was distributed with this source code.
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
-            </span>
+            </div>
 
         <div class="modal" id="field_dialog_{{ id }}" style="display: none" role="dialog"
              aria-hidden="true">
@@ -1002,17 +999,11 @@ file that was distributed with this source code.
 {% block file_widget %}
     {% spaceless %}
         {% set type = type|default('file') %}
-        {% if widget_addon_prepend|default(null) is not null %}
-            {% set widget_addon = widget_addon_prepend %}
-            {{ block('widget_addon') }}
-        {% endif %}
         {% set attr = attr|merge({'class': (attr.class|default('')~' form-control-file')}) %}
-        <input type="{{ type }}" {{ block('widget_attributes') }}/>
-        {% if type != 'hidden' and widget_addon.type|default(null) is not null %}
-            {% if widget_addon_append|default(null) is not null %}
-                {% set widget_addon = widget_addon_append %}
-                {{ block('widget_addon') }}
-            {% endif %}
+        {% if errors|length > 0 %}
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' is-invalid'}) %}
         {% endif %}
+        <input type="{{ type }}" {{ block('widget_attributes') }}/>
+
     {% endspaceless %}
 {% endblock file_widget %}

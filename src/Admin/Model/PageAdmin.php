@@ -21,7 +21,6 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\CoreBundle\Form\Type\CollectionType;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -294,8 +293,8 @@ abstract class PageAdmin extends BaseAdmin
                 MediaEntityType::class,
                 [
                     'provider_name' => 'sonata.media.provider.image',
-                    'widget_form_group_attr' => ['class' => 'form-group form-inline'],
                     'required' => false,
+                    'layout' => 'horizontal'
                 ])
             ->end();
 
@@ -365,6 +364,7 @@ abstract class PageAdmin extends BaseAdmin
                         $this,
                         'getByLocale',
                     ],
+                    'advanced_filter' => false,
                 ],
                 LanguageType::class,
                 [
@@ -376,16 +376,16 @@ abstract class PageAdmin extends BaseAdmin
                     'translation_domain' => $this->translationDomain,
                 ]
             )
-            ->add('pageName', SimpleStringFilter::class, [], null, ['translation_domain' => $this->translationDomain])
+            ->add('pageName', SimpleStringFilter::class, ['advanced_filter' => false,], null, ['translation_domain' => $this->translationDomain])
             ->add(
                 'path',
                 CallbackFilter::class,
-                ['callback' => [$this, 'matchPath'], 'hidden' => true]
+                ['callback' => [$this, 'matchPath'], 'advanced_filter' => false,]
             )
             ->add(
                 'status',
                 SimpleStringFilter::class,
-                ['hidden' => true],
+                [ 'advanced_filter' => false],
                 ChoiceType::class,
                 [
                     'placeholder' => 'empty_option',

@@ -11,13 +11,11 @@ file that was distributed with this source code.
 
 {% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
 {% block stylesheets %}
-    {{ parent() }}
     <link rel="stylesheet"
           href="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/default.css') }}">
     <link rel="stylesheet"
-          href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.css') }}">
-    <link rel="stylesheet"
           href="{{ asset('bundles/networkinginitcms/vendor/featherlight/src/featherlight.css') }}">
+    {{ parent() }}
 {% endblock %}
 
 {% block filter_title %}{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}{% endblock %}
@@ -48,25 +46,25 @@ file that was distributed with this source code.
 
                     {% set icon = provider.providerMetadata.option('class') %}
                     {% if provider.name == 'sonata.media.provider.vimeo' %}
-                        {% set icon = 'fab fa-vimeo-square' %}
+                        {% set icon = 'la la-vimeo-square' %}
                     {% endif %}
 
                     {% if provider.name == 'sonata.media.provider.youtube' %}
-                        {% set icon = 'fab fa-youtube' %}
+                        {% set icon = 'la la-youtube' %}
                     {% endif %}
 
                     {% if provider.name == 'sonata.media.provider.file' %}
-                        {% set icon = 'far fa-file' %}
+                        {% set icon = 'la la-file' %}
                     {% endif %}
 
                     {% if provider.name == 'sonata.media.provider.image' %}
-                        {% set icon = 'far fa-image' %}
+                        {% set icon = 'la la-image' %}
                     {% endif %}
 
-                    <i class="fa fa-plus"></i> <i class="{{ icon }}"></i>
+                    <i class="la la-plus"></i> <i class="{{ icon }}"></i>
                     {{ provider.providerMetadata.title|trans({}, 'MediaAdmin') }}
 
-                </a>
+                </a>&nbsp;
             {% else %}
                 <span class="alert alert-info">{{ 'no_provider_available'|trans({}, 'SonataMediaBundle') }}</span>
             {% endfor %}
@@ -76,8 +74,7 @@ file that was distributed with this source code.
 {% block list_filters %}
     {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
     {% if datagrid.filters %}
-        <form action="{{ admin.generateUrl('list') }}" method="GET"
-              class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}">
+        <form action="{{ admin.generateUrl('list') }}" method="GET" id="filter-form" class="kt-form kt-form--fit mb-15">
 
             <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
             {% if persistent_parameters.provider is defined %}
@@ -85,96 +82,70 @@ file that was distributed with this source code.
             {% endif %}
             <input type="hidden" name="active_tab" value="{{ name }}"/>
 
-            {% set filter_main = '' %}
-            {% set filter_hidden = '' %}
-            {% set showHiddenFilters = 0 %}
-            {% for filter in datagrid.filters %}
+            <div class="d-flex justify-content-xl-between">
+                {% set withAdvancedFilter = false %}
+                {% for filter in admin.datagrid.filters %}
+                    {% set filterActive = ((filter.isActive() and filter.options['show_filter'] is null) or (filter.options['show_filter'] is same as(true))) and not admin.isDefaultFilter(filter.formName) %}
+                    {% set filterVisible = filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null %}
+                    <div class="mb-lg-0 mb-6" sonata-filter="{{ filterVisible ? 'true' : 'false' }}" style="display: {% if filterActive or filterVisible %}block{% else %}none{% endif %}">
+                        {% if filter.label is not same as(false) %}
+                            <label for="{{ form[filter.formName].children['value'].vars.id }}" class="control-label">{{ filter.label|trans({}, filter.translationDomain ?: admin.translationDomain) }}</label>
+                        {% endif %}
+                        {% set attr = form[filter.formName].children['type'].vars.attr|default({}) %}
 
-                {% set filterVisible = filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null %}
-
-                {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
-                    {% set filter_main %}
-                        {{ filter_main }}
-                        <div class="form-group" {{ filterVisible ? '': 'style="display:none"'  }}>
-
-                            {% if filter.label %}
-                                <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
-                            {% endif %}
-                            <div class="form-inline col-md-9 {% if not filter.label %}col-md-offset-3{% endif %}">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium  advanced-filter' }}
-                                ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                                ) }}
-                            </div>
+                        <div class="advanced-filter">
+                            {{ form_widget(form[filter.formName].children['type'], {'attr':  attr}) }}
                         </div>
-                    {% endset %}
-                {% else %}
-                    {% if filter.isActive %}
-                        {% set showHiddenFilters = 1 %}
+
+                        <div >
+                            {{ form_widget(form[filter.formName].children['value']) }}
+                        </div>
+{#                        <div class="col-sm-1">#}
+{#                            <label class="control-label">#}
+{#                                <a href="#" class="sonata-toggle-filter sonata-ba-action" filter-target="filter-{{ admin.uniqid }}-{{ filter.name }}" filter-container="filter-container-{{ admin.uniqid() }}">#}
+{#                                    <i class="fa fa-minus-circle" aria-hidden="true"></i>#}
+{#                                </a>#}
+{#                            </label>#}
+{#                        </div>#}
+                    </div>
+                    {% if filter.options['advanced_filter'] %}
+                        {% set withAdvancedFilter = true %}
                     {% endif %}
-                    {% set filter_hidden %}
-                        {{ filter_hidden }}
-                        <div class="form-group"  {{ filterVisible ? '':'style="display:none"' }}>
-                            {% if filter.label %}
-                                <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
-                            {% endif %}
-                            <div class="form-inline col-md-9 {% if not filter.label %}col-md-offset-3{% endif %}">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium  advanced-filter' }}
-                                ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                                ) }}
-                            </div>
-                        </div>
-                    {% endset %}
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
+            </div>
+            <div class="row mt-8">
+                <div class="col-lg-12">
+                    {% if admin.hasActiveSubclass %}
+                        <input type="hidden" name="subclass" id="filter_subclass"
+                               value="{{ admin.activeSubclassCode }}"/>
+                    {% endif %}
+                    <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                    {% set foo = form['_page'].setRendered() %}
+                    {{ form_rest(form) }}
+                    {% for paramKey, paramValue in admin.persistentParameters %}
+                        <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-primary--icon" id="kt_search">
+                            <span>
+                                <i class="la la-search"></i>
+                                <span>{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}</span>
+                             </span>
+                    </button>
+                    <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                       class="btn btn-secondary btn-secondary--icon">
+                            <span>
+                                <i class="la la-close"></i>
+                                <span>{{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</span>
+                             </span>
+                    </a>
 
-            {% set label = admin.label|trans({}, admin.translationDomain) %}
-            <div>
-                <div>
-                    <fieldset>
-                        <h4 class="filter_legend">
-                            <small data-toggle="advanced-filter">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</small>
-                        </h4>
-
-                        <div class="filter_container row">
-                            <div class="col-md-{{ galleryListMode ? '10':'12' }}">
-                                {{ filter_main }}
-                                <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
-                                {% set foo = form.children['_page'].setRendered() %}
-                                <div id="hidden_filters"
-                                     class="collapse  {% if showHiddenFilters == 1 %}in{% endif %}">
-                                    {% for paramKey, paramValue in admin.persistentParameters %}
-                                        <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
-                                    {% endfor %}
-                                    {% if filter_hidden != '' %}
-                                        {# add div with hidden / show function #}
-                                        {{ filter_hidden }}
-                                    {% endif %}
-                                    {% set foo = form.children['_page'].setRendered() %}
-                                </div>
-                                <div>
-                                    <input type="submit" class="btn btn-light btn-sm"
-                                           value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                    {% if not app.request.isXmlHttpRequest %}
-                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
-                                           class="link-underlined">
-                                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                                    {% endif %}
-                                    {% if filter_hidden %}
-                                        <a data-toggle="collapse" data-target="#hidden_filters"
-                                           id="filter_toggle"
-                                           class="filter-close cursor-pointer">
-                                            {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
-                                        </a>
-                                    {% endif %}
-                                    {{ form_rest(form) }}
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
+                    {% if withAdvancedFilter %}
+                            <a href="#" class="has-action" data-toggle="advanced-filter">
+                                <i class="la la-cogs" aria-hidden="true"></i>
+                                {{ 'btn_advanced_filters'|trans({}, 'SonataAdminBundle') }}
+                            </a>
+                    {% endif %}
                 </div>
-                <div class="clearfix">&nbsp;</div>
             </div>
         </form>
     {% endif %}
@@ -228,7 +199,7 @@ file that was distributed with this source code.
                                 <input type="hidden" name="action">
                                 <span class="batch-actions" style="display: none;">
                             <a href="#" class="btn btn-danger batch btn-sm batch" data-value="delete">
-                                <i class="fa fa-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                                <i class="la la-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
                             </a>
                         </span>
                             {% endif %}
@@ -250,7 +221,7 @@ file that was distributed with this source code.
                                         {% if sortable %}
                                             <a href="{{ admin.generateUrl('list', sort_parameters) }}" class="btn btn-sm btn-{{ sort_active_class ? 'primary':'default' }}">{% endif %}
                                         {% if sort_active_class %}
-                                            <i class="glyphicon glyphicon-chevron-{{ sort_by|lower == 'desc'? 'up':'down' }}"></i>
+                                            <i class="la la-chevron-{{ sort_by|lower == 'desc'? 'up':'down' }}"></i>
                                         {% endif %}
                                         {{ field_description.label|trans({}, admin.translationDomain) }}
                                         </a>
@@ -263,9 +234,9 @@ file that was distributed with this source code.
 
 
                     <div class="row">
-                        {% if admin.showTagTree %}
+                        {% if admin.showTagTree  %}
                             <div class="col-md-3 col-xs-12">
-                                <div id="tagsContainer">
+                                <div id="tagsContainer" data-tags-json="{{ tagJson|json_encode }}">
 {#                                    {% include "@NetworkingInitCms/TagAdmin/tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}#}
                                 </div>
                                 {% if not app.request.isXmlHttpRequest and tagAdmin.isGranted('CREATE') %}
@@ -317,6 +288,7 @@ file that was distributed with this source code.
     </div>
     {% else %}
         <script type="text/javascript">
+            console.log('hello')
             function refreshList(filters) {
                 if (!filters) {
                     filters = {}
@@ -330,53 +302,61 @@ file that was distributed with this source code.
                     }
                 );
             }
+            $(function (){
+                var lastLink = '';
+                var tagsContainer = $('#tagsContainer');
+                var treeData = tagsContainer.data('tags-json');
+                Admin.add_filters();
+                tagsContainer
+                    .on('destroy.jstree', function (){
+                    })
+                    .jstree({
+                        "types": {
+                            "default": {
+                                "icon": "fa fa-folder text-primary icon-2x"
+                            },
+                            "file": {
+                                "icon": "fa fa-file text-primary icon-2x"
+                            }
+                        },
+                        "plugins": [
+                            "types",
+                            "sort"
+                        ],
+                        'core': {
+                            "themes" : {
+                                "variant" : "large"
+                            },
+                            data: function(node, cb){
+                                cb(treeData)
+                            }
+                        },
+                        "sort": function(a, b) {
+                            a1 = this.get_node(a);
+                            b1 = this.get_node(b);
+                            if(a1.data['show_first']){
+                                return -1;
+                            }
 
+                            if(b1.data['show_first']){
+                                return 1;
+                            }
+                            return (a1.text.toLowerCase() > b1.text.toLowerCase() ) ? 1 : -1;
+                        }
+                    });
 
-                var tagContainer = $('#tagsContainer');
-                {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
-                var tagDialog;
-                var lastLink = $('{{ selected }}');
-
-                tagContainer.on('click', '.tag_link', function (e) {
+                tagsContainer.on('click', '.tag_link', function (e) {
                     e.preventDefault();
-                    if (lastLink) {
-                        lastLink.parent().removeClass('info');
-                        lastLink.siblings('a.dialog-link').hide();
-                    }
-                    var link = $(e.target);
-                    var tagId = link.data('pk');
-                    link.parent().addClass('info');
-                    if (link.parent().siblings('ul').children().length < 1) {
-                        link.siblings('a.dialog-link').show();
-                    }
-                    var listItem = link.closest('li');
-                    if ($(listItem).hasClass('mjs-nestedSortable-collapsed')) {
-                        link.siblings('i').trigger('click');
-                    }
-
-                    lastLink = link;
+                    var tagId = $(e.target).data('pk');
                     refreshList({'filter': {'tags': {'value': tagId}}});
                 });
 
-                tagContainer.on('click', '.show_all_media', function (e) {
+                tagsContainer.on('click', '.show_all_media', function (e) {
                     e.preventDefault();
-                    if (lastLink) {
-                        lastLink.parent().removeClass('info');
-                        lastLink.siblings('a.dialog-link').hide();
-                    }
-                    // $('.media-box').show();
                     refreshList({'filter': {'_page': 1}});
-                    var link = $(e.target);
-                    link.parent().addClass('info');
-                    lastLink = link;
                 });
 
-                tagContainer.on('click', 'i.tag_folder', function (e) {
-                    var target = $(e.target);
-                    target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
-                    target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
-                });
-
+            })
         </script>
     {% endif %}
 {% endblock %}

@@ -55,10 +55,9 @@ class AddProviderCompilerPass implements CompilerPassInterface
                 $definition->setClass(ImageProvider::class);
                 $definition->addMethodCall('addFormat', ['admin', [
                     'quality' => 100,
-                    'width' => 190,
-                    'height' => null,
+                    'height' => 154,
+                    'width' => 250,
                     'constraint' => true,
-                    'resizer' => false,
 
                 ]]);
             }
@@ -71,8 +70,8 @@ class AddProviderCompilerPass implements CompilerPassInterface
                 $definition->setClass(YouTubeProvider::class);
                 $definition->addMethodCall('addFormat', ['admin', [
                     'quality' => 100,
-                    'width' => 190,
-                    'height' => null,
+                    'height' => 154,
+                    'width' => 250,
                     'constraint' => true,
                 ]]);
             }
@@ -81,20 +80,12 @@ class AddProviderCompilerPass implements CompilerPassInterface
                 $definition->setClass(VimeoProvider::class);
                 $definition->addMethodCall('addFormat', ['admin', [
                     'quality' => 100,
-                    'width' => 190,
-                    'height' => null,
+                    'height' => 154,
+                    'width' => 250,
                     'constraint' => true,
                 ]]);
             }
 
-            if ('sonata.media.provider.vimeo' == $id) {
-                $definition->addMethodCall('addFormat', ['admin', [
-                    'quality' => 100,
-                    'width' => 190,
-                    'height' => null,
-                    'constraint' => true,
-                ]]);
-            }
         }
     }
 }

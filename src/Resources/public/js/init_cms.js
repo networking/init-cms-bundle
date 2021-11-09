@@ -159,7 +159,9 @@ $(function () {
                 return response;
             }
         });
-    })
+    });
+
+
 
 });
 
@@ -177,6 +179,55 @@ var Admin = {
             window.opera.postError(msg);
         }
     },
-}
+    add_filters: function (){
+        /* Advanced filters */
+        if ($('.advanced-filter :input:visible').filter(function () { return $(this).val(); }).length === 0) {
+            $('.advanced-filter').hide();
+        };
 
-var axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
+        $('body').on('click', '[data-toggle="advanced-filter"]', function() {
+            $('.advanced-filter').toggle();
+        });
+    }
+};
+
+window.Admin = Admin;
+window.axiosConfig = axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
+
+function getAxiosRequestConfig(htmlElement){
+    var that = $(htmlElement);
+    var method  = 'GET';
+    var url = '';
+    var formData = false;
+
+    if (htmlElement.nodeName === 'FORM') {
+        url = that.attr('action')
+        method = that.attr('method');
+        formData = new FormData(htmlElement);
+    } else if (htmlElement.nodeName === 'A') {
+        url = that.attr('href');
+    } else {
+        throw 'unexpected element : @' + htmlElement.nodeName + '@';
+    }
+
+    var config = {
+        method: method,
+        url: url,
+        headers: axiosConfig.headers
+    };
+
+    if(formData){
+        if(method.toUpperCase() === 'GET'){
+            var params = {};
+            formData.forEach(function(value,key){
+                params[key] = value;
+            });
+            config['params'] = params;
+        }else{
+            config['data'] = formData;
+        }
+    }
+
+    return config;
+
+}

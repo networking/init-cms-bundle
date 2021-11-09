@@ -20,31 +20,30 @@ file that was distributed with this source code.
                     <div class="dropzone jumbotron">
                         <h6>{{ zone.name|trans() }} </h6>
                         {% if zone.max_content_items is not same as(-1) %}
-                            <ul id="zone_{{ zone.name }}" class="sortable draggable-zone"
+                            <div class="plus_button"
+                                 {% if zone.max_content_items > 0 and admin.subject.layoutBlock(zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
+                                <a class="add-layout"
+                                   href="{{ url('admin_networking_initcms_layoutblock_create') }}"
+                                   data-zone="{{ zone.name }}"
+                                   data-sort-order="0"
+                                   data-value="{{ zone.restricted_types|json_encode }}"
+                                   title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
+                                    <i class="la la-plus"></i>
+                                </a>
+                            </div>
+                            <div id="zone_{{ zone.name }}" class="sortable draggable-zone"
                                 data-content-types="{{ zone.restricted_types|json_encode }}"
                                 data-max-items="{{ zone.max_content_items }}">
                                 {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow #}
-                                <li class="networking-sort-zone">
-                                    <div class="plus_button"
-                                         {% if zone.max_content_items > 0 and admin.subject.layoutBlock(zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
-                                        <a class="add-layout"
-                                           href="{{ url('admin_networking_initcms_layoutblock_create') }}"
-                                           data-zone="{{ zone.name }}"
-                                           data-sort-order="0"
-                                           data-value="{{ zone.restricted_types|json_encode }}"
-                                           title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li class="empty_layout_block" {% if admin.subject.layoutBlock(zone.name)|length > 0 %} style="display: none;"{% endif %}>
+
+                                <div class="empty_layout_block" {% if admin.subject.layoutBlock(zone.name)|length > 0 %} style="display: none;"{% endif %}>
                                     <p class="info-soft ">
                                         {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
                                     </p>
-                                </li>
+                                </div>
                                 {# loop through layout blocks #}
                                 {% for layout_block in admin.subject.layoutBlock(zone.name, true) %}
-                                    <li class="networking-sortable-list networking-sort-zone draggable"
+                                    <div class="networking-sortable-list networking-sort-zone draggable"
                                         id="layoutBlock_{{ layout_block.id }}"
                                         data-content-type="{{ layout_block.classType }}">
                                         {# preview of layout block of content #}
@@ -52,18 +51,18 @@ file that was distributed with this source code.
                                         <div class="content_preview">
                                             <div class="layout_controls">
                                                 <div class="float-left">
-                                                    <i class="fa fa-arrows-alt draggable-handle soft-background"></i>
-                                                    <i class="fa fa-trash soft-background delete_block"
+                                                    <i class="la la-arrows-alt draggable-handle soft-background"></i>
+                                                    <i class="la la-trash soft-background delete_block"
                                                        data-value="{{ layout_block.id }}"></i>
-                                                    <i class="fa fa-edit soft-background layout-link"
+                                                    <i class="la la-edit soft-background layout-link"
                                                        data-container="#layoutBlockHtml{{ layout_block.id }}"
                                                        data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block.id, 'subclass': layout_block.classType}) }}"></i>
                                                 </div>
                                                 <div class="float-right text-{{ layout_block.isActive?'success':'danger' }}">
                                                     {{ layout_block.isActive?'Online':'Offline' }}
-                                                    <i class="fa fa-{{ layout_block.isActive?'check':'minus' }}-circle
-                                                    btn btn-xs btn-{{ layout_block.isActive?'success':'danger' }} toggle-active"
-                                                       data-value="{{ layout_block.id }}"> </i>
+                                                    <a href="#" class="btn btn-icon btn-xs btn-{{ layout_block.isActive?'success':'danger' }} toggle-active"  data-value="{{ layout_block.id }}">
+                                                    <i class="la la-{{ layout_block.isActive?'check':'minus' }}-circle"> </i>
+                                                    </a>
                                                 </div>
                                                 <div class="clearfix"></div>
                                                 <br>
@@ -85,14 +84,14 @@ file that was distributed with this source code.
                                                data-sort-order="{{ loop.index }}"
                                                data-value="{{ zone.restricted_types|json_encode }}"
                                                title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                                <i class="fa fa-plus"></i>
+                                                <i class="la la-plus"></i>
                                             </a>
                                         </div>
-                                    </li>
+                                    </div>
                                     {% set increment = increment + 1 %}
                                 {% endfor %}
 
-                            </ul>
+                            </div>
                         {% endif %}
                     </div>
                 </div>

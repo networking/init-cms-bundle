@@ -12,267 +12,33 @@ This code manage the many-to-[one|many] Media association field popup
 {% autoescape false %}
     <!-- media edit many association -->
     <script type="text/javascript">
-
-        var field_dialog_{{ id }} = false;
-        var field_value_{{ id }} = false;
-        var field_{{ id }} = jQuery('#{{ id }}');
-
-        //Show Create form
-        var field_dialog_form_add_{{ id }} = function (event) {
-            Admin.log('[{{ id }}|field_dialog_form_add] add media form');
-
-            event.preventDefault();
-            event.stopPropagation();
-            initialize_popup_{{ id }}();
-
-            var link = jQuery(this);
-
-            field_dialog_{{ id }}.html('');
-
-            // retrieve the form element from the related admin generator
-            jQuery.ajax({
-                url: link.attr('href'),
-                success: function (html) {
-                    Admin.log('[{{ id }}|field_dialog_form_add] ajax success', field_dialog_{{ id }});
-
-                    // populate the popup container
-                    field_dialog_{{ id }}.html(html);
-
-                    // capture the submit event to make an ajax call, ie : POST data to the
-                    // related create admin
-                    field_dialog_{{ id }}.on('submit', 'form', field_dialog_form_action_{{ id }});
-
-                    // open the dialog in modal mode
-                    field_dialog_{{ id }}.modal('show');
-
-                    //listent to modal closing
-                    field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
-                        if (!jQuery(e.target).hasClass('collapse')) {
-                            Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
-                            // make sure we have a clean state
-                            field_dialog_{{ id }}.off('click', 'a');
-                            field_dialog_{{ id }}.off('submit', 'form');
-                        }
-                    });
-                }
-            });
-            return false;
-        };
-        //submit create form
-        var field_dialog_form_action_{{ id }} = function (event) {
-            Admin.log('[{{ id }}|field_dialog_form_action] action catch', this);
-
-            var element = jQuery(this);
-            var url, methodType = '';
-
-            // return if the link is an anchor inside the same page
-            if (this.nodeName == 'A'
-                && (
-                    element.attr('href').length == 0 ||
-                    element.attr('href')[0] == '#' ||
-                    element.attr('href').substring(0, 11) == 'javascript:')) {
-                return true;
-            }
-
-            event.preventDefault();
-            event.stopPropagation();
-            initialize_popup_{{ id }}();
-
-            if (this.nodeName == 'FORM') {
-                url = element.attr('action');
-                methodType = element.attr('method');
-                var formData = new FormData(this);
-            } else if (this.nodeName == 'A') {
-                url = element.attr('href');
-                methodType = 'GET';
-                var formData = element.serialize();
-            } else {
-                alert('unexpected element : @' + this.nodeName + '@');
-                return false;
-            }
-
-            if (element.hasClass('has-action')) {
-                Admin.log('[{{ id }}|field_dialog_form_action] reserved action stop catch all events');
-                return false;
-            }
-
-            Admin.log('[{{ id }}|field_dialog_form_action] execute ajax call');
-
-            axios({
-                method: methodType,
-                url: url,
-                data: formData,
-                ...axiosConfig
-            }).then(function (response) {
-
-                var data = response.data;
-                if (typeof data !== 'object') {
-                    var IS_JSON = true;
-                    try {
-                        data = jQuery.parseJSON(data);
-                    } catch (err) {
-                        IS_JSON = false;
-                    }
-
-                    if (IS_JSON === false && typeof data == 'string') {
-                        field_dialog_{{ id }}.html(data);
-                        return false;
-                    }
-                }
-
-                // if the crud action return ok, then the element has been added
-                // so the widget container must be refresh with the last option available
-                if (data.result == 'ok') {
-
-                    field_value_{{ id }} = data.objectId;
-
-                    field_{{ id }}.val(data.objectId);
-                    field_{{ id }}.change();
-
-                    field_dialog_{{ id }}.modal('hide');
-                    return false;
-                }
-
-                // otherwise, display form error
-                field_dialog_{{ id }}.html(data);
-
-                Admin.add_pretty_errors(field_dialog_{{ id }});
-
-                // reattach the event
-                jQuery('form', field_dialog_{{ id }}).submit(field_dialog_form_action_{{ id }});
-            })
-
-
-
-            return false;
-        };
-        //handle a click in the list view
-        var field_dialog_form_list_link_{{ id }} = function (event) {
-
-            var link = jQuery(this);
-
-            //trigger javascript actions
-            if (link.hasClass('filter-close') ||
-                link.hasClass('dropdown-toggle') ||
-                link.hasClass('has-action') ||
-                link.hasClass('tag_link') ||
-                link.hasClass('show_all_media')
-            ) {
-                Admin.log('[{{ id }}|field_dialog_form_list_link] handle default javascript action');
-                return;
-            }
-
-            Admin.log('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            initialize_popup_{{ id }}();
-
-
-            var element = link.parents('#field_dialog_{{ id }} .sonata-ba-list-field');
-
-            //select media
-            if (link.hasClass('select-media') || element.length > 0) {
-                field_value_{{ id }} = link.data('object-id');
-                field_{{ id }}.val(field_value_{{ id }}).trigger('change');
-                field_dialog_{{ id }}.modal('hide');
-                return true;
-            }
-            axios.get(jQuery(this).attr('href'), axiosConfig)
-                .then(function (response) {
-                    Admin.log('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
-                    field_dialog_{{ id }}.html('<div class="modal-dialog modal-xl"><div class="modal-content">' +
-                        '<div class="modal-header"><h3>{{ admin.label|trans({}, admin.translationDomain) }}</h3>' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div><div class="modal-body">' + response.data + '</div> ' +
-                        '<div class="modal-footer"></div></div></div>');
-                });
-
-            return false;
-
-        };
-
-        //create the list view
-        var field_dialog_form_list_{{ id }} = function (event) {
-
-            initialize_popup_{{ id }}();
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            Admin.log('[{{ id }}|field_dialog_form_list] open the list modal');
-
-            var a = jQuery(this);
-
-            field_dialog_{{ id }}.html('');
-
-            // retrieve the form element from the related admin generator
-
-            axios.get(jQuery(this).attr('href'), axiosConfig)
-                .then(function (response) {
-
-                    Admin.log('[{{ id }}|field_dialog_form_list] retrieving the list content');
-
-                    // populate the popup container
-                    field_dialog_{{ id }}.html('<div class="modal-dialog modal-xl">' +
-                        '<div class="modal-content"><div class="modal-header"> ' +
-                        '<h3>{{ admin.label|trans({}, admin.translationDomain) }}</h3>' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div><div class="modal-body">' +
-                        response.data +
-                        '</div> <div class="modal-footer"></div></div></div>');
-
-
-                    // capture the submit event to make an ajax call, ie : POST data to the
-                    // related create admin
-                    {#field_dialog_{{ id }}.on('click', 'a', field_dialog_form_list_link_{{ id }});#}
-                    field_dialog_{{ id }}.on('submit', 'form', function (event) {
-                        event.preventDefault();
-                        var form = jQuery(this);
-                        var formData = new FormData(this);
-                        axios.post(form.attr('action'), formData, axiosConfig)
-                            .then(function (response) {
-                                field_dialog_{{ id }}.html('<div class="modal-dialog modal-xl"><div class="modal-content">' +
-                                    '<div class="modal-header"> <h3>{{ admin.label|trans({}, admin.translationDomain) }}</h3>' +
-                                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                    '</div><div class="modal-body">' + response.data + '</div> <div class="modal-footer"></div></div></div>');
-                            });
-                    });
-
-                    // open the dialog in modal mode
-                    field_dialog_{{ id }}.modal('show');
-
-                    field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
-
-                        if (!jQuery(e.target).hasClass('collapse')) {
-                            Admin.log('[{{ id }}|field_dialog_form_list] close callback, removing js event');
-                            // make sure we have a clean state
-                            field_dialog_{{ id }}.off('click', 'a');
-                            field_dialog_{{ id }}.off('submit', 'form');
-                        }
-                    });
-                });
-            return false;
-        };
-
-        function initialize_popup_{{ id }}() {
-            // initialize component
-            if (!field_dialog_{{ id }}) {
-                field_dialog_{{ id }} = jQuery("#field_dialog_{{ id }}");
-
-                // move the dialog as a child of the root element, nested form breaks html ...
-                jQuery(document.body).append(field_dialog_{{ id }});
-
-                Admin.log('[{{ id }}|field_dialog] move dialog container as a document child');
-            }
-        }
+        var dialogTitle = '{{ admin.label|trans({}, admin.translationDomain) }}';
+        var updateUrl = '{{ url('sonata_admin_short_object_information', {
+            'objectId': 'OBJECT_ID',
+            'uniqid': admin.uniqid,
+            'code': admin.code
+        }) }}'
+        var formElementUrl = "{{ url('sonata_admin_retrieve_form_element', {
+            'elementId': id,
+            'subclass':  sonata_admin.admin.hasActiveSubClass()?sonata_admin.admin.getActiveSubclassCode():'',
+            'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
+            'uniqid':    sonata_admin.admin.root.uniqid,
+            'code':      sonata_admin.admin.root.code,
+            'locale':    app.request.locale
+        }) }}"
+        var mediaSelect_{{ id }} = new MediaSelect('{{ id }}', dialogTitle, updateUrl, formElementUrl);
 
         //set up event handlers for opening list view
         function open_media_list_{{ id }}(link) {
             // remove the html event
             link.onclick = null;
-            initialize_popup_{{ id }}();
+
             // add the jQuery event to the a element
-            jQuery(link).on('click', field_dialog_form_list_{{ id }}).trigger('click');
+            jQuery(link).on('click', function (event) {
+                event.preventDefault();
+                mediaSelect_{{ id }}.field_dialog_form_list(this);
+            }).trigger('click');
+
             return false;
         }
 
@@ -280,9 +46,11 @@ This code manage the many-to-[one|many] Media association field popup
         function start_field_dialog_form_add_{{ id }}(link) {
             // remove the html event
             link.onclick = null;
-            initialize_popup_{{ id }}();
             // add the jQuery event to the a element
-            jQuery(link).on('click', field_dialog_form_add_{{ id }}).trigger('click');
+            jQuery(link).on('click', function (event) {
+                event.preventDefault();
+                mediaSelect_{{ id }}.field_dialog_form_add(this)
+            }).trigger('click');
             return false;
         }
 
@@ -291,39 +59,14 @@ This code manage the many-to-[one|many] Media association field popup
             // remove the html event
             link.onclick = null;
             // add the jQuery event to the a element
-            jQuery(link).on('click', field_remove_element_{{ id }}).trigger('click');
+            jQuery(link).on('click', function (event) {
+                event.preventDefault();
+                mediaSelect_{{ id }}.field_remove_element(this)
+            }).trigger('click');
+            return false;
             return false;
         }
 
-        //remove the image
-        function field_remove_element_{{ id }}(event) {
-            event.preventDefault();
-            if (jQuery('#{{ id }} option').get(0)) {
-                field_{{ id }}.attr('selectedIndex', '-1').children("option:selected").attr("selected", false);
-            }
-            field_{{ id }}.val('');
-            field_{{ id }}.trigger('change');
-            return false;
-        }
-
-        field_{{ id }}.on('change', function (event) {
-            Admin.log('[{{ id }}] update the label');
-            jQuery('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/sonataadmin/ajax-loader.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
-            if (field_{{ id }}.val()) {
-                var url = '{{ url('sonata_admin_short_object_information', {
-                    'objectId': 'OBJECT_ID',
-                    'uniqid': admin.uniqid,
-                    'code': admin.code
-                }) }}'.replace('OBJECT_ID', field_value_{{ id }})
-                axios.get(url, axiosConfig)
-                    .then(function (respsonse) {
-                        jQuery('#field_widget_{{ id }}').html(respsonse.data);
-                    });
-            } else {
-                jQuery('#field_widget_{{ id }}').html('');
-            }
-
-        });
     </script>
     <!-- / edit media association -->
 {% endautoescape %}

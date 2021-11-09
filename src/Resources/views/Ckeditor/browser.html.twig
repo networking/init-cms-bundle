@@ -11,6 +11,14 @@ file that was distributed with this source code.
 
 {% extends '@NetworkingInitCms/empty_layout.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('bundles/networkinginitcms/vendor/featherlight/src/featherlight.css') }}">
+{% endblock %}
+
 {% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
 {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
 
@@ -29,113 +37,84 @@ file that was distributed with this source code.
 {% block container_class %}container-fluid{% endblock %}
 {% block preview %}{% endblock %}
 {% block page_title %}
-    <h1>{{ 'title.select_media'|trans({}, 'MediaAdmin')|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}</h1>
+
 {% endblock %}
 
-
+{% block list_filters_title %}
+    <h1>{{ 'title.select_media'|trans({}, 'MediaAdmin')|replace({'%span%': '<span class="info-soft">', '%span/%': "</span>"})|raw }}</h1>
+{% endblock %}
 {% block list_filters %}
     {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
     {% if datagrid.filters %}
         <form action="{{ admin.generateUrl('init_ckeditor_browser') }}" method="GET"
-              class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
+              class="kt-form kt-form--fit mb-15">
 
             <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
-            {% if persistent_parameters.providerName is defined %}
-                <input type="hidden" name="provider" value="{{ persistent_parameters.providerName }}"/>
+            {% if persistent_parameters.provider is defined %}
+                <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
             {% endif %}
             <input type="hidden" name="active_tab" value="{{ name }}"/>
 
-            {% set filter_main = '' %}
-            {% set filter_hidden = '' %}
-            {% set showHiddenFilters = 0 %}
-            {% for filter in datagrid.filters %}
+            <div class="d-flex justify-content-xl-between">
+                {% set withAdvancedFilter = false %}
+                {% for filter in admin.datagrid.filters %}
+                    {% set filterActive = ((filter.isActive() and filter.options['show_filter'] is null) or (filter.options['show_filter'] is same as(true))) and not admin.isDefaultFilter(filter.formName) %}
+                    {% set filterVisible = filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null %}
+                    <div class="mb-lg-0 mb-6 d-{% if filterActive or filterVisible %}block{% else %}none{% endif %}" sonata-filter="{{ filterVisible ? 'true' : 'false' }}">
+                        {% if filter.label is not same as(false) %}
+                            <label for="{{ form[filter.formName].children['value'].vars.id }}" class="control-label">{{ filter.label|trans({}, filter.translationDomain ?: admin.translationDomain) }}</label>
+                        {% endif %}
+                        {% set attr = form[filter.formName].children['type'].vars.attr|default({}) %}
 
-                {% set filterVisible = filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null %}
-
-                {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
-                    {% set filter_main %}
-                        {{ filter_main }}
-                        <div class="form-group" {{ filterVisible ? '': 'style="display:none"'  }}>
-
-                            {% if filter.label %}
-                                <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
-                            {% endif %}
-                            <div class="form-inline col-md-9 {% if not filter.label %}col-md-offset-3{% endif %}">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium  advanced-filter' }}
-                                ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                                ) }}
-                            </div>
+                        <div class="advanced-filter">
+                            {{ form_widget(form[filter.formName].children['type'], {'attr':  attr}) }}
                         </div>
-                    {% endset %}
-                {% else %}
-                    {% if filter.isActive %}
-                        {% set showHiddenFilters = 1 %}
+                        <div >
+                            {{ form_widget(form[filter.formName].children['value']) }}
+                        </div>
+                    </div>
+                    {% if filter.options['advanced_filter'] %}
+                        {% set withAdvancedFilter = true %}
                     {% endif %}
-                    {% set filter_hidden %}
-                        {{ filter_hidden }}
-                        <div class="form-group" {{ filterVisible ? '': 'style="display:none"'  }}>
-                            {% if filter.label %}
-                                <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
-                            {% endif %}
-                            <div class="form-inline col-md-9 {% if not filter.label %}col-md-offset-3{% endif %}">
-                               {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium  advanced-filter' }}
-                                ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                                ) }}
-                            </div>
-                        </div>
-                    {% endset %}
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
+            </div>
+            <div class="row mt-8">
+                <div class="col-lg-12">
+                    {% if admin.hasActiveSubclass %}
+                        <input type="hidden" name="subclass" id="filter_subclass"
+                               value="{{ admin.activeSubclassCode }}"/>
+                    {% endif %}
+                    <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                    {% set foo = form['_page'].setRendered() %}
+                    {{ form_rest(form) }}
+                    {% for paramKey, paramValue in admin.persistentParameters|merge(ckParameters) %}
+                        <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-primary--icon" id="kt_search">
+                            <span>
+                                <i class="la la-search"></i>
+                                <span>{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}</span>
+                             </span>
+                    </button>
+                    <a href="{{admin.generateUrl('init_ckeditor_browser', {filters: 'reset'}|merge(urlParams)) }}"
+                       class="btn btn-secondary btn-secondary--icon">
+                            <span>
+                                <i class="la la-close"></i>
+                                <span>{{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</span>
+                             </span>
+                    </a>
 
-            {% set label = admin.label|trans({}, admin.translationDomain) %}
-            <div>
-                <div class="float-left ">
-                    <fieldset>
-                        <h4 class="filter_legend"><small>{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</small></h4>
-
-                        <div class="filter_container row">
-                            <div class="col-md-12">
-                                {{ filter_main }}
-                                <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
-                                {% set foo = form.children['_page'].setRendered() %}
-                                <div id="hidden_filters" class="collapse">
-                                    {% for paramKey, paramValue in admin.persistentParameters %}
-                                        <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
-                                    {% endfor %}
-                                    {% if filter_hidden != '' %}
-                                         {#add div with hidden / show function#}
-                                        {{ filter_hidden }}
-                                    {% endif %}
-                                    {% set foo = form.children['_page'].setRendered() %}
-                                </div>
-                                <div>
-                                    <input type="submit" class="btn btn-sm"
-                                           value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                    <a href="{{ admin.generateUrl('init_ckeditor_browser', {filters: 'reset'}|merge(ckParameters)) }}"
-                                       class="link-underlined">
-                                        {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                                    {% if filter_hidden %}
-                                        <span data-toggle="collapse" data-target="#hidden_filters" id="filter_toggle"
-                                              class="filter-close cursor-pointer">
-                                                {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
-                                            </span>
-                                    {% endif %}
-                                    {{ form_rest(form) }}
-                                </div>
-                            </div>
-                        </div>
-                        {% for paramKey, paramValue in admin.persistentParameters|merge(ckParameters) %}
-                            <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
-                        {% endfor %}
-                    </fieldset>
+                    {% if withAdvancedFilter %}
+                        <a href="#" class="has-action" data-toggle="advanced-filter">
+                            <i class="la la-cogs" aria-hidden="true"></i>
+                            {{ 'btn_advanced_filters'|trans({}, 'SonataAdminBundle') }}
+                        </a>
+                    {% endif %}
                 </div>
-                <div class="clearfix">&nbsp;</div>
             </div>
         </form>
     {% endif %}
-    <ul class="nav menu-tabs nav-tabs">
+    <ul class="nav nav-tabs nav-tabs-line">
         {% for name, context in media_pool.contexts %}
 
             {% if context.providers|length == 0 %}
@@ -143,16 +122,9 @@ file that was distributed with this source code.
             {% else %}
                 {% set urlParams = {'context' : name, 'provider' : context.providers[0], 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
             {% endif %}
-
-            {% if name == persistent_parameters.context %}
-                <li class="active"><a
-                            href="{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                <li class="nav-item">
+                    <a href="{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}" class="nav-link {% if name == persistent_parameters.context %}active{% endif %}">{{ ('media_context.' ~ name)|trans({}) }}</a>
                 </li>
-            {% else %}
-                <li>
-                    <a href="{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
-                </li>
-            {% endif %}
         {% endfor %}
     </ul>
 {% endblock %}
@@ -178,7 +150,7 @@ file that was distributed with this source code.
                     </div>
                     {% endif %}
                 </div>
-                <div class="col-sm-6 col-xs-12 sort-buttons">
+                <div class="col-sm-6 sort-buttons align-right">
                     <strong>{{ 'label.sort_by'|trans({}, 'MediaAdmin') }}:</strong>
                     <div class="btn-group btn-group-sm">
 
@@ -237,6 +209,10 @@ file that was distributed with this source code.
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('bundles/networkinginitcms/assets/plugins/custom/jstree/jstree.bundle.js') }}"
+            type="text/javascript"></script>
+    <script src="{{ asset('bundles/networkinginitcms/vendor/featherlight/src/featherlight.js') }}"
+            type="text/javascript"></script>
     <script>
 
 
@@ -244,30 +220,33 @@ file that was distributed with this source code.
             var body = $('body');
             var tagDialog;
             var lastLink = $('{{ selected }}');
+            Admin.add_filters();
 
+            {% if  app.request.get('CKEditorFuncNum')|escape('js')  %}
             body.on('click', '.select', function (e) {
                 e.preventDefault();
                 window.opener.CKEDITOR.tools.callFunction({{ app.request.get('CKEditorFuncNum')|escape('js') }}, $(this).attr("href"));
                 window.close();
             });
+            {% endif %}
 
             function refreshList(filters){
                 if(!filters){
                     filters = {}
                 }
                 $.get(
-                    "{{ admin.generateUrl('init_ckeditor_browser_refresh')|raw }}",
+                    "{{ admin.generateUrl('init_ckeditor_browser_refresh', ckParameters)|raw }}",
                     filters,
                     function(xhr){
                         $('#item_list').html(xhr);
                         $("html, body").animate({ scrollTop: $('#item_list').scrollTop() }, "slow");
                     }
                 );
-
-                history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}');
             }
 
-            body.on('click', '.tag_link', function(e){
+            var tagContainer = $('#tagsContainer');
+
+            tagContainer.on('click', '.tag_link', function(e){
                 e.preventDefault();
                 if(lastLink){
                     lastLink.parent().removeClass('info');
@@ -288,7 +267,7 @@ file that was distributed with this source code.
                 refreshList({'filter': {'tags':{'value':tagId}}});
             });
 
-            body.on('click', '.show_all_media', function (e) {
+            tagContainer.on('click', '.show_all_media', function (e) {
                 e.preventDefault();
                 if(lastLink){
                     lastLink.parent().removeClass('info');
@@ -301,12 +280,6 @@ file that was distributed with this source code.
                 lastLink = link;
             });
 
-            body.on('click', 'i.tag_folder', function(e) {
-                var target = $(e.target);
-                target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
-                target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
-            });
-
             body.on('click', 'a.media-pager', function (e) {
                 e.preventDefault();
                 refreshList({'filter': {
@@ -317,7 +290,26 @@ file that was distributed with this source code.
                         'name':{'value': $(this).data('name')},
                     }});
             })
-
+            var treeData = {% include "@NetworkingInitCms/TagAdmin/tags.json.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %};
+            $('#tagsContainer')
+                .jstree({
+                    "types": {
+                        "default": {
+                            "icon": "fa fa-folder text-primary icon-2x"
+                        }
+                    },
+                    "plugins": [
+                        "types"
+                    ],
+                    'core': {
+                        "themes" : {
+                            "variant" : "large"
+                        },
+                        data: function(node, cb){
+                            cb(treeData)
+                        }
+                    }
+                });
         });
     </script>
 {% endblock %}

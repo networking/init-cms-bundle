@@ -336,7 +336,12 @@ class MediaAdminController extends SonataMediaAdminController
             ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
-
+        $tagFilter = $datagrid->getFilter('tags');
+        $selectedTag = false;
+        if($tagFilter->isActive()){
+            $values = $datagrid->getValues();
+            $selectedTag = (int)$values['tags']['value'];
+        }
         return $this->render(
             $this->templateRegistry->getTemplate('list'),
             [
@@ -344,6 +349,7 @@ class MediaAdminController extends SonataMediaAdminController
                     $request->get('context', $persistentParameters['context'])
                 ),
                 'tags' => $tags,
+                'tagJson' => $tagAdmin->getTagTree($selectedTag),
                 'tagAdmin' => $tagAdmin,
                 'lastItem' => 0,
                 'action' => 'list',

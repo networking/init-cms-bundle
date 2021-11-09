@@ -24,9 +24,9 @@
             if (!url) {
                 url = linkClicked.attr('ref');
             }
-            axios.get(url,{ ...axiosConfig}).then(function (response) {
-                    listDialog.html(response.data);
-                    listDialog.modal('show');
+            axios.get(url, {...axiosConfig}).then(function (response) {
+                listDialog.html(response.data);
+                listDialog.modal('show');
             });
         }
 
@@ -55,7 +55,7 @@
             return string.replace(/\\/g, '\\\\').replace(/\u0008/g, '\\b').replace(/\t/g, '\\t').replace(/\n/g, '\\n').replace(/\f/g, '\\f').replace(/\r/g, '\\r').replace(/'/g, '\\\'').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\?/g, '\\?').replace(/"/g, '\\"');
         }
 
-        (function ($) {
+        $(function () {
             var ua = navigator.userAgent,
                 event = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
@@ -63,7 +63,9 @@
             $('body')
                 .on('click', '.dialog-link', createAjaxDialog)
                 .on('click', '.batch-dialog-link', createBatchDialog)
-                .on('click', '.modal-close', function () {listDialog.modal('hide')});
+                .on('click', '.modal-close', function () {
+                    listDialog.modal('hide')
+                });
             initializeDialog();
 
             var table = $('#intiCMSDatatable').DataTable({
@@ -93,10 +95,10 @@
                 ],
                 "bStateSave": true,
                 "fnStateSave": function (oSettings, oData) {
-                    localStorage.setItem( 'DataTables_'+window.location.pathname, JSON.stringify(oData) );
+                    localStorage.setItem('DataTables_' + window.location.pathname, JSON.stringify(oData));
                 },
                 "fnStateLoad": function (oSettings) {
-                    return JSON.parse( localStorage.getItem('DataTables_'+window.location.pathname) );
+                    return JSON.parse(localStorage.getItem('DataTables_' + window.location.pathname));
                 }
             });
 
@@ -113,7 +115,7 @@
                         table.rows($(this).closest('tr')).deselect();
                     }
                 });
-            }).on( 'draw', function () {
+            }).on('draw', function () {
 
                 $('.editable-click').each(function (i, e) {
                     var link = $(e);
@@ -143,7 +145,7 @@
                     });
                 })
             });
-
-        })(jQuery);
+            Admin.add_filters();
+        });
         /*]]>*/</script>
 {% endapply %}
