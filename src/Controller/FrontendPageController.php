@@ -148,13 +148,13 @@ class FrontendPageController extends AbstractController
             }
 
             $updatedAt = $this->pageCache->get(sprintf('page_%s_created_at', $page->getId()));
-            $cacheKey = $request->getLocale().$request->getPathInfo();
+            $cacheKey = 'page_'.$request->getLocale().$request->getPathInfo();
 
             if ($updatedAt != $page->getSnapshotDate()) {
                 $this->pageCache->delete($cacheKey);
             }
 
-            $response = $this->pageCache->get($request->getLocale().$request->getPathInfo());
+            $response = $this->pageCache->get($cacheKey);
 
             if (!$response || !$response instanceof Response) {
                 $params = $this->getPageParameters($request);
