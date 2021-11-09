@@ -199,8 +199,9 @@ file that was distributed with this source code.
                         <div class="form-inline">
                             {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}{{ block('batch') }}{% endif %}
                             <div class="pull-right">
-                                <label class="control-label"><strong>{% transchoice datagrid.pager.nbresults with {'%count%': datagrid.pager.nbresults} from 'SonataAdminBundle' %}
-                                        list_results_count{% endtranschoice %}</strong></label>
+                                <label class="control-label"><strong>
+                                        {% trans with {'%count%': attribute(admin.datagrid.pager, 'countResults') is defined ? admin.datagrid.pager.countResults() : admin.datagrid.pager.getNbResults()} from 'SonataAdminBundle' %}list_results_count{% endtrans %}
+                                    </strong></label>
                                 {% block max_per_page %}
                                     <label class="control-label"
                                            for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}

@@ -12,6 +12,7 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
@@ -30,6 +31,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     protected $id;
 
     /**
+     * @Assert\NotBlank
      * @var string
      */
     protected $name;
@@ -725,12 +727,17 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
         return !is_null($this->page);
     }
 
+    /**
+     * @Assert\Callback()
+     */
     public function validate(ExecutionContextInterface $context, $payload){
-        if (!$this->getIsRoot()) {
-            if (!$this->getRedirectUrl() and !$this->getPage() and !$this->getInternalUrl()) {
-                $context->buildViolation('menu.page_or_url.required')
-                    ->addViolation();
-            }
+        if($this->getIsRoot() ){
+            return;
+        }
+        if(!$this->getRedirectUrl() && !$this->getPage() && !$this->getInternalUrl()){
+            $context->buildViolation('menu.page_or_url.required')
+                ->atPath('menu_page_or_url_required')
+                ->addViolation();;
         }
     }
 }

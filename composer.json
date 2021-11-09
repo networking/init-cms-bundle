@@ -7,7 +7,7 @@
     "authors": [
         {
             "name": "Yorkie Chadwick",
-            "homepage": "http://www.networking.ch",
+            "homepage": "https://www.networking.ch",
             "email": "y.chadwick@networking.ch"
         }
     ],
@@ -25,7 +25,6 @@
         "lexik/translation-bundle": "^4.0",
         "oneup/flysystem-bundle": "^3.0",
         "oneup/uploader-bundle": "^2.1.6",
-        "phpfastcache/phpfastcache": "^3.0",
         "mopa/bootstrap-bundle": "dev-master as v3.4.0",
         "sensio/framework-extra-bundle": "^5.1",
         "sonata-project/admin-bundle": "^3.71.1",
