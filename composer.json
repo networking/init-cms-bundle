@@ -63,7 +63,7 @@
         "symfony/polyfill-apcu": "^1.0",
         "symfony-cmf/routing-bundle": "^2.0",
         "twbs/bootstrap": ">2.0,<4.0-dev",
-        "twig/twig": "^1.0||^2.0"
+        "twig/twig": "^1.0||^2.0||^3.0"
     },
     "scripts": {
     },
