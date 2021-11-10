@@ -7,7 +7,7 @@
     "authors": [
         {
             "name": "Yorkie Chadwick",
-            "homepage": "https://www.networking.ch",
+            "homepage": "http://web.networking.ch",
             "email": "y.chadwick@networking.ch"
         }
     ],
@@ -16,7 +16,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/doctrine-bundle": "^1.8 || ^2.0",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-fixtures-bundle": "~2.2",
         "friendsofsymfony/ckeditor-bundle": "^2.2",
