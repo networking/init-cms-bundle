@@ -25,7 +25,7 @@
         "lexik/translation-bundle": "^4.0",
         "oneup/flysystem-bundle": "^3.0",
         "oneup/uploader-bundle": "^2.1.6",
-        "mopa/bootstrap-bundle": "dev-master as v3.4.0",
+        "mopa/bootstrap-bundle": "^3.4",
         "sensio/framework-extra-bundle": "^5.1",
         "sonata-project/admin-bundle": "^3.71.1",
         "sonata-project/doctrine-orm-admin-bundle": "^3.19",
