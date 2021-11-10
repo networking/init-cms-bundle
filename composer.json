@@ -42,7 +42,6 @@
         "sonata-project/form-extensions": "^1.5",
         "sonata-project/formatter-bundle": "^4.2",
         "sonata-project/google-authenticator": "^2.0",
-        "sonata-project/twig-extensions": "^1.4.1",
         "gedmo/doctrine-extensions": "^2.4",
         "symfony/acl-bundle": "^1.0",
         "symfony/asset": "^3.4 || ^4.3",
