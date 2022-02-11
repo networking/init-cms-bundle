@@ -12,10 +12,11 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
-
 /**
  * Class PageSnapshotManager.
  *
