@@ -30,7 +30,7 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
      */
     public function __construct(EntityManagerInterface $om, $class)
     {
-        $classMetaData = $om->getClassMetadata($class);
+        $classMetaData = new ClassMetadata($class, new UnderscoreNamingStrategy());
 
         parent::__construct($om, $classMetaData);
     }
