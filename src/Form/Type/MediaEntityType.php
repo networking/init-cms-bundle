@@ -106,12 +106,13 @@ class MediaEntityType extends AbstractType
                 'admin_code' => 'sonata.media.admin.media',
                 'error_bubbling' => false,
                 'compound' => false,
+                'data_class' => null
 
             ]
         );
 
         $resolver->setRequired(['class']);
-        $resolver->addAllowedValues('required', [false]);
+        $resolver->addAllowedValues('required', [false, true]);
     }
 
     /**
