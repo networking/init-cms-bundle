@@ -171,7 +171,7 @@ class TranslationAdmin extends AbstractAdmin
         $datagridMapper
             ->add(
                 'show_non_translated_only',
-                'doctrine_orm_callback',
+                CallbackFilter::class,
                 array
                 (
                     'callback'      => function (ProxyQuery $queryBuilder, $alias, $field, $options) {
