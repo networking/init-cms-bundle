@@ -70,8 +70,7 @@ file that was distributed with this source code.
         return false;
     }
     jQuery('body').on('click', 'a.__delete', function(e){
-        jQuery(this).parent('li').hide();
-        jQuery(this).find('input.__delete_input').prop('checked', true);
+        jQuery(this).parent('li').remove();
     });
 </script>
 
