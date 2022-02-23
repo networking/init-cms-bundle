@@ -66,9 +66,17 @@ class UserActivityListener
             //here we can update the user as necessary
             if (method_exists($user, 'setLastActivity')) {
                 try {
-                    $user->setLastActivity(new \DateTime('now'));
-                    $this->em->persist($user);
-                    $this->em->flush();
+                    $classMetaData = $this->em->getClassMetadata(get_class($user));
+                    $table = $classMetaData->getTableName();
+                    $identifier = $classMetaData->getSingleIdentifierColumnName();
+                    $updatedAtCol = $classMetaData->getColumnName('updatedAt');
+
+                    $conn = $this->em->getConnection();
+                    $sql = "UPDATE ${table} SET ${updatedAtCol} = :date WHERE ${identifier} = :id";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindValue('date', (new \DateTime('now'))->format( 'Y-m-d H:i:s'));
+                    $stmt->bindValue('id', $user->getId());
+                    $stmt->execute();
                 } catch (\Doctrine\ORM\ORMException $e) {
                     //do nothing, entity manager is closed
                 }
