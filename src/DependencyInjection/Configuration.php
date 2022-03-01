@@ -73,7 +73,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('allow_locale_cookie')->defaultTrue()->end()
                 ->scalarNode('single_language')->defaultFalse()->end()
                 ->scalarNode('translation_fallback_route')->defaultValue('initcms_404')->end()
-                ->scalarNode('404_template')->defaultValue('@NetworkingInitCmsBundle/error_404.html.twig')->end()
+                ->scalarNode('404_template')->defaultValue('@NetworkingInitCms/error_404.html.twig')->end()
                 ->scalarNode('no_translation_template')->defaultValue('@NetworkingInitCms/no_translation_found.html.twig')->end()
                 ->scalarNode('multiple_media_tags')->defaultValue(true)->end()
                 ->scalarNode('show_tag_tree')->defaultValue(true)->end()
