@@ -52,13 +52,13 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
             $container->setDefinition('Networking\InitCmsBundle\Cache\PageCacheInterface', $definition);
         }
 
-        if($container->has('sonata.user.admin.user')){
-            /** @var Definition $definition */
+        if($container->hasDefinition('sonata.user.admin.user')){
             $definition = $container->getDefinition('sonata.user.admin.user');
             $definition->addMethodCall('setTokenStorage', [$container->getDefinition('security.token_storage')]);
-            $definition->addMethodCall('setGoogleAuthEnabled', [$container->getParameter('sonata.user.google.authenticator.enabled')]);
-            $definition->addMethodCall('setGoogleAuthenticatorHelper', [$container->getDefinition('sonata.user.google.authenticator.provider')]);
-
+            if($container->getParameter('sonata.user.google.authenticator.enabled') && $container->hasDefinition('sonata.user.google.authenticator.provider') ){
+                $definition->addMethodCall('setGoogleAuthEnabled', [$container->getParameter('sonata.user.google.authenticator.enabled')]);
+                $definition->addMethodCall('setGoogleAuthenticatorHelper', [$container->getDefinition('sonata.user.google.authenticator.provider')]);
+            }
         }
 
     }
