@@ -948,3 +948,8 @@ file that was distributed with this source code.
         {% endif %}
     {% endapply %}
 {% endblock widget_form_group_end %}
+
+{% block qr_code_widget %}
+    <img src="{{ qrCodeUrl }}">
+{% endblock %}
+

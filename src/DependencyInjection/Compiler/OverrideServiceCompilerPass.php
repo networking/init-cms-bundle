@@ -14,6 +14,7 @@ use Networking\InitCmsBundle\Admin\Pool;
 use Networking\InitCmsBundle\Builder\ListBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Class OverrideServiceCompilerPass.
@@ -49,6 +50,15 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
             $service = $container->getParameter('networking_init_cms.page_cache_service');
             $definition = $container->getDefinition($service);
             $container->setDefinition('Networking\InitCmsBundle\Cache\PageCacheInterface', $definition);
+        }
+
+        if($container->has('sonata.user.admin.user')){
+            /** @var Definition $definition */
+            $definition = $container->getDefinition('sonata.user.admin.user');
+            $definition->addMethodCall('setTokenStorage', [$container->getDefinition('security.token_storage')]);
+            $definition->addMethodCall('setGoogleAuthEnabled', [$container->getParameter('sonata.user.google.authenticator.enabled')]);
+            $definition->addMethodCall('setGoogleAuthenticatorHelper', [$container->getDefinition('sonata.user.google.authenticator.provider')]);
+
         }
 
     }

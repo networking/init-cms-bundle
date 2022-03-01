@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Networking\InitCmsBundle\Form\Type\QrCodeType;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -18,6 +19,7 @@ use Sonata\UserBundle\Admin\Entity\UserAdmin as SonataUserAdmin;
 use Sonata\UserBundle\Form\Type\SecurityRolesType;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class UserAdmin.
@@ -40,6 +42,43 @@ abstract class UserAdmin extends SonataUserAdmin
      * @var array
      */
     protected $trackedActions = ['list'];
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var bool
+     */
+    private $googleAuthEnabled = false;
+
+    /**
+     * @var \Sonata\UserBundle\GoogleAuthenticator\Helper
+     */
+    private $googleAuthenticatorHelper;
+
+
+    /**
+     * @param TokenStorageInterface $container
+     * @return void
+     */
+    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    public function setGoogleAuthEnabled(bool $googleAuthEnabled)
+    {
+        $this->googleAuthEnabled = $googleAuthEnabled;
+    }
+
+
+    public function setGoogleAuthenticatorHelper(\Sonata\UserBundle\GoogleAuthenticator\Helper $helper)
+    {
+        $this->googleAuthenticatorHelper = $helper;
+    }
+
 
     /**
      * @return array
@@ -178,6 +217,23 @@ abstract class UserAdmin extends SonataUserAdmin
                 )
                 ->add('enabled', null, ['required' => false], ['inline_block' => true])
                 ->end();
+        }
+
+        if($this->googleAuthEnabled){
+            $formMapper->with('Keys')
+                ->add('twoStepVerificationCode', null, ['required' => false, 'disabled' => true])
+                ->end();
+
+
+            if ($this->getSubject() == $this->tokenStorage->getToken()->getUser()) {
+
+                $user = $this->tokenStorage->getToken()->getUser();
+                $qrCodeUrl = $this->googleAuthenticatorHelper->getUrl($user);
+
+                $formMapper->with('Keys')
+                    ->add('qrCode', QrCodeType::class, ['required' => false, 'mapped' => false, 'qrCodeUrl' => $qrCodeUrl])
+                    ->end();
+            }
         }
     }
 }
