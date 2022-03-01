@@ -2,7 +2,7 @@ fos_ck_editor:
     default_config: init_cms
     configs:
         init_cms:
-            extraPlugins: ["internal_link"]
+            extraPlugins: [ "internal_link","autoembed","autolink","textmatch","embed","embedsemantic","embedbase" ]
             filebrowserBrowseRoute: admin_networking_initcms_media_init_ckeditor_browser
             filebrowserBrowseRouteParameters:
                 provider: sonata.media.provider.file
@@ -63,7 +63,7 @@ fos_ck_editor:
             basicstyles: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]
             paragraph: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl' ]
             links: [ 'Link', 'Unlink', 'Anchor' ]
-            insert: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ]
+            insert: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe', 'Embed', 'Autoembed' ]
             styles: [ 'Styles', 'Format', 'Font', 'FontSize' ]
             colors: [ 'TextColor', 'BGColor' ]
             tools: [ 'Maximize', 'ShowBlocks' ]
