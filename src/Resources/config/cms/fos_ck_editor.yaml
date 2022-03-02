@@ -52,6 +52,30 @@ fos_ck_editor:
             path:     "/bundles/networkinginitcms/js/ckeditor/internal-link/" # with trailing slash
             filename: "plugin.js"
 
+        autoembed:
+            path:      "/bundles/networkinginitcms/js/ckeditor/autoembed/" # with trailing slash
+            filename: "plugin.js"
+
+        autolink:
+            path:     "/bundles/networkinginitcms/js/ckeditor/autolink/" # with trailing slash
+            filename: "plugin.js"
+
+        textmatch:
+            path:     "/bundles/networkinginitcms/js/ckeditor/textmatch/" # with trailing slash
+            filename: "plugin.js"
+
+        embedbase:
+            path:     "/bundles/networkinginitcms/js/ckeditor/embedbase/" # with trailing slash
+            filename: "plugin.js"
+
+        embed:
+            path:     "/bundles/networkinginitcms/js/ckeditor/embed/" # with trailing slash
+            filename: "plugin.js"
+
+        embedsemantic:
+            path:     "/bundles/networkinginitcms/js/ckeditor/embedsemantic/" # with trailing slash
+            filename: "plugin.js"
+
     toolbars:
         configs:
             init_cms: [ "@clipboard", "@editing", "@document", "/", "@paragraph", "@basicstyles", "@links", "@insert", "@styles", "@colors", "@tools" ]
