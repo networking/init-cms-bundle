@@ -709,7 +709,14 @@ file that was distributed with this source code.
     {% endif %}
     {% apply spaceless %}
         {% if help_block %}
-            <span class="help-block">{{ help_block|trans({}, translation_domain)|raw }}</span>{% endif %}
+            <span class="help-block">
+                {%- if help_html is same as(false) -%}
+                    {{- help_block|trans(help_translation_parameters, translation_domain) -}}
+                {%- else -%}
+                    {{- help_block|trans(help_translation_parameters, translation_domain)|raw -}}
+                {%- endif -%}
+            </span>
+        {% endif %}
         {% if sonata_admin is defined and sonata_admin.field_description.help is defined %}
             <span class="help-block sonata-ba-field-help">{{ sonata_admin.field_description.help }}</span>
         {% endif %}
