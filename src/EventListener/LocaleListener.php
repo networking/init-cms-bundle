@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\EventListener;
 
 use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\AccessMapInterface;
@@ -96,9 +96,10 @@ class LocaleListener
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+     * @param RequestEvent $event
+     * @return void
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
 
