@@ -180,6 +180,8 @@ abstract class Page implements PageInterface
         $this->originals = new ArrayCollection();
         $this->layoutBlock = new ArrayCollection();
         $this->menuItem = new ArrayCollection();
+
+
     }
 
     /**
@@ -916,7 +918,7 @@ abstract class Page implements PageInterface
      *
      * @return $this
      */
-    public function setOriginals(array $originals)
+    public function setOriginals($originals)
     {
         if (gettype($originals) == 'array') {
             $originals = new ArrayCollection($originals);
@@ -1241,7 +1243,7 @@ abstract class Page implements PageInterface
     public function getRecursiveTranslations(&$translationsArray)
     {
         // find all possible translations
-        if (!$this->getTranslations()->isEmpty()) {
+        if ($this->getTranslations() && !$this->getTranslations()->isEmpty()) {
             foreach ($this->getTranslations() as $translation) {
                 if ($translation) {
                     // if we already meet you stop and go on with the next
@@ -1252,7 +1254,7 @@ abstract class Page implements PageInterface
         }
 
         // find all possible originals
-        if (!$this->getOriginals()->isEmpty()) {
+        if ($this->getOriginals() && !$this->getOriginals()->isEmpty()) {
             foreach ($this->getOriginals() as $translation) {
                 // if we already meet you stop and go on with the next
                 if (array_key_exists($translation->getLocale(), $translationsArray)) {
