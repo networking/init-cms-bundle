@@ -520,7 +520,7 @@ class PageHelper
         $cookies[] = Cookie::create(
             '_locale',
             $locale,
-            $params['lifetime'],
+            time()+$params['lifetime'],
             $params['path'],
             $params['domain'],
             $secure,
@@ -534,7 +534,7 @@ class PageHelper
             $cookies[] = Cookie::create(
                 '_locale_legacy',
                 $locale,
-                $params['lifetime'],
+                time()+$params['lifetime'],
                 $params['path'],
                 $params['domain'],
                 $secure,
