@@ -18,6 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -167,18 +168,37 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 
 			/** @var \Symfony\Component\Validator\ConstraintViolation $error */
 			foreach ($errors->getIterator() as $error) {
-				$fieldName = $error->getPropertyPath();
-				/** @var \Symfony\Component\Form\Form $field */
-				$field = $form->get('content')->get($fieldName);
-				$message = $this->admin->getTranslator()->trans($error->getMessage(), $error->getParameters(), 'validators');
-				$field->addError(
-					new FormError($message, $error->getMessageTemplate(), $error->getParameters(), $error->getPlural())
-				);
+                $fieldName = $error->getPropertyPath();
+
+                $path = preg_replace('/([a-zA-Z]*)\[([0-9]*)\]/', '$1.$2', $fieldName, 1);
+
+                try{
+                    /** @var \Symfony\Component\Form\Form $field */
+                    $field = $this->getFieldFromArray($form->get('content'), $path);
+                }catch (\Exception $e){
+                    continue;
+                }
+
+                $message = $this->admin->getTranslator()->trans($error->getMessage(), $error->getParameters(), 'validators');
+                $field->addError(
+                    new FormError($message, $error->getMessageTemplate(), $error->getParameters(), $error->getPlural())
+                );
 			}
 		}
 
 		return $event;
 	}
+
+    private function getFieldFromArray(FormInterface $field, $path, $index = 0){
+        $pathArr = explode('.', $path);
+        $child =  $field->get($pathArr[$index]);
+        $index++;
+        if(count($pathArr) > $index){
+            return $this->getFieldFromArray($child, $path, $index);
+        }
+
+        return $child;
+    }
 
 	/**
 	 * Get the content type of the content object, if the object is new, use the first available type.
