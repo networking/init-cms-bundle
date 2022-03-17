@@ -219,7 +219,15 @@ file that was distributed with this source code.
                 {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " " ~ label_attr_class ~ (required ? ' required' : ' optional') }) %}
                 <label{% for attrname,attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
 
-                {{ label|trans({}, sonata_admin.field_description.translationDomain) }}
+                {%- if translation_domain is same as(false) -%}
+                    {{- label -}}
+                {%- elseif not sonata_admin.admin -%}
+                    {{- label|trans(label_translation_parameters, translation_domain) -}}
+                {%- else -%}
+                    {# NEXT_MAJOR: Remove "admin.translationDomain" #}
+                    {{- label|trans(label_translation_parameters, sonata_admin.field_description.translationDomain|default(admin.translationDomain|default(sonata_admin.admin.translationDomain))) -}}
+                {%- endif -%}
+
                 {{- block('label_asterisk') }}
 
                 {% if widget_checkbox_label in ['label', 'both'] %}

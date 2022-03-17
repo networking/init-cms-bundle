@@ -7,7 +7,10 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
   },
   "repository": {
     "type": "git",
@@ -24,35 +27,31 @@
   },
   "homepage": "https://github.com/networking/init-cms-bundle#readme",
   "dependencies": {
+    "acorn": "^8.7.0",
     "axios": "^0.24.0",
     "csso": "^3.1.1",
-    "file-loader": "^5.0.2",
-    "filerobot-image-editor": "^3.4.1",
-    "gulp": "^4.0.2",
-    "gulp-concat": "2.6.1",
-    "gulp-csso": "^4.0.1 ",
-    "gulp-less": "^5.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-uglify": "^3.0.0",
-    "package-lock.json": "^1.0.0",
+    "file-loader": "^6.0.0",
+    "postcss": "^8.4.12",
     "sass": "^1.23.7",
-    "sass-loader": "^12.3.0 ",
+    "sass-loader": "^12.4.0 ",
     "style-loader": "^3.3.1 ",
     "uglify-js": "^3.0.13",
     "vue": "^2.6.10",
-    "vue-context": "^6.0.0",
+    "vue-context-menu": "^2.0.6",
     "vue-i18n": "^8.15.0",
+    "webpack-concat-files-plugin": "^0.5.2",
     "webpack-stream": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
+    "@symfony/webpack-encore": "^1.7.0",
     "css-loader": "^3.2.0",
-    "gulp-babel": "^8.0.0",
     "svg-inline-loader": "^0.8.0",
     "vue-loader": "^15.6.2",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.6",
-    "webpack": "^5.21.2"
+    "webpack-cli": "^3.2.3",
+    "webpack-notifier": "^1.6.0"
   }
 }

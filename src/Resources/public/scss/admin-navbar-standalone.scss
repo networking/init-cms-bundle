@@ -1,0 +1,10 @@
+.navbar-initcms{
+  @import "../vendor/fontawesome/scss/fontawesome";
+  @import "../vendor/fontawesome/scss/solid";
+  @import "../vendor/fontawesome/scss/regular";
+  @import "../vendor/fontawesome/scss/brands";
+
+}
+@import "initcms_variables";
+@import "variables";
+@import "admin-navbar";

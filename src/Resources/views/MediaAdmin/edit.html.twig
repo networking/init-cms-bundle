@@ -33,6 +33,7 @@ file that was distributed with this source code.
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('imageEditor', 'init_cms', 'init_cms') }}
     <link href="{{ asset('bundles/networkinginitcms/css/tui-image-editor.css') }}" type="text/css"
           rel="stylesheet" media="screen"/>
 {% endblock %}
@@ -325,9 +326,9 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-    <script src="{{ asset('bundles/networkinginitcms/vendor/filerobot-image-editor/index.js') }}"
-            type="text/javascript"></script>
-    <script src="{{ asset('bundles/networkinginitcms/js/imageEditor.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/networkinginitcms/vendor/filerobot-image-editor/index_old.js') }}" type="text/javascript"></script>
+{#    <script src="{{ asset('bundles/networkinginitcms/vendor/filerobot-image-editor/index.js') }}" type="text/javascript"></script>#}
+    {{ encore_entry_script_tags('imageEditor', 'init_cms', 'init_cms') }}
     <script>
         (function ($) {
             function copyToClipboard(field) {

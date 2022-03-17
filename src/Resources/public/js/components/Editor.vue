@@ -1,3 +1,34 @@
+<style>
+.imageContainer {
+    position: relative;
+}
+
+.image {
+    opacity: 1;
+    display: block;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.imageContainer:hover .image {
+    opacity: 0.3;
+}
+
+.imageContainer:hover .middle {
+    opacity: 1;
+}
+</style>
 <template>
     <div class="imageEditorApp">
         <div class="imageContainer">
@@ -56,42 +87,10 @@
     </div><!-- /.modal -->
     </div>
 </template>
-<style>
-    .imageContainer {
-        position: relative;
-    }
-
-    .image {
-        opacity: 1;
-        display: block;
-        transition: .5s ease;
-        backface-visibility: hidden;
-    }
-
-    .middle {
-        transition: .5s ease;
-        opacity: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        text-align: center;
-    }
-
-    .imageContainer:hover .image {
-        opacity: 0.3;
-    }
-
-    .imageContainer:hover .middle {
-        opacity: 1;
-    }
-</style>
 <script>
-    import Vue from 'vue';
-    import axios from "axios";
-    import $ from 'jquery';
-    import FilerobotImageEditor from './imageEditor'
+    import Vue from '../../../../../node_modules/vue';
+    import axios from '../../../../../node_modules/axios';
+    import FilerobotImageEditor from './imageEditor';
 
     const ALLOWED_FILE_EXTENTIONS = ['gif', 'jpg', 'jpeg', 'png'];
     const LANGUAGES = ['de', 'en'];
@@ -200,12 +199,13 @@
                 this.alertMessage = false;
                 this.imageEditor.open(this.imageURL);
             },
-            download(newImage){
-                this.newImage = newImage.canvas.toDataURL();
+            download({ status,  imageName, imageMime, canvas }){
+                this.newImage = canvas.toDataURL();
                 this.alert = false;
                 this.alertType = false;
                 this.alertMessage = false;
                 $('#imageModal').modal('show');
+                return false;
             },
             cloneImage(){
                 $('#imageModal').modal('hide');

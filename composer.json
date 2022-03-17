@@ -56,7 +56,7 @@
         "symfony/yaml": "^3.4 || ^4.4",
         "symfony/polyfill-apcu": "^1.0",
         "symfony-cmf/routing-bundle": "^2.0",
-        "twbs/bootstrap": ">2.0,<4.0-dev",
+        "twbs/bootstrap-sass": "^3.4",
         "twig/twig": "^1.0||^2.0||^3.0"
     },
     "scripts": {
