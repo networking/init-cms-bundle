@@ -1,0 +1,1 @@
+.imageContainer{position:relative}.image{backface-visibility:hidden;display:block;opacity:1}.image,.middle{transition:.5s ease}.middle{left:50%;opacity:0;position:absolute;text-align:center;top:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)}.imageContainer:hover .image{opacity:.3}.imageContainer:hover .middle{opacity:1}

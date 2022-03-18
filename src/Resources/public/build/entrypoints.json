@@ -2,29 +2,29 @@
   "entrypoints": {
     "imageEditor": {
       "js": [
-        "/bundles/networkinginitcms/build/vendors-node_modules_core-js_modules_es_array_includes_js-node_modules_core-js_modules_es_arr-c2de70.js",
-        "/bundles/networkinginitcms/build/imageEditor.js"
+        "/bundles/networkinginitcms/build/224.7fa6c388.js",
+        "/bundles/networkinginitcms/build/imageEditor.93b05617.js"
       ],
       "css": [
-        "/bundles/networkinginitcms/build/imageEditor.css"
+        "/bundles/networkinginitcms/build/imageEditor.13b6ff05.css"
       ]
     },
     "networking_initcms": {
       "css": [
-        "/bundles/networkinginitcms/build/networking_initcms.css"
+        "/bundles/networkinginitcms/build/networking_initcms.8960dce8.css"
       ]
     },
     "admin-navbar": {
       "css": [
-        "/bundles/networkinginitcms/build/admin-navbar.css"
+        "/bundles/networkinginitcms/build/admin-navbar.c7d9d236.css"
       ]
     }
   },
   "integrity": {
-    "/bundles/networkinginitcms/build/vendors-node_modules_core-js_modules_es_array_includes_js-node_modules_core-js_modules_es_arr-c2de70.js": "sha384-W5Opn2A/S07gVMKHx8/3lM/1NvLlNtutQ0l2EwDi+WHYbp10Opt6lmBBROAhIhD8",
-    "/bundles/networkinginitcms/build/imageEditor.js": "sha384-Sl85EICpaMebsa86MEU682gRXJGxXbc0jJR39wG5ybOFBlyQguT/lbsCMEM751ke",
-    "/bundles/networkinginitcms/build/imageEditor.css": "sha384-Wl6cJ/qlAM1/JRbn5WxUx+SVA6uUhFKbhl+itmNRLlKmWKb7LSJ1aMsar8k8MjCL",
-    "/bundles/networkinginitcms/build/networking_initcms.css": "sha384-H9IAiLAnRXALTFdrZJFy4BeiAV393tWl8YGV66Wqr5882/LdaIQVWyV3IqGcdAqU",
-    "/bundles/networkinginitcms/build/admin-navbar.css": "sha384-faAuZpQlWhM4h+S/kXghtO5CJ9BTqgGhJKTiApUbQrzvvIdKOWNttGzZdCcqp3KX"
+    "/bundles/networkinginitcms/build/224.7fa6c388.js": "sha384-xqdzPolwUbbthkfpAqxQhcCjRlHuwIFD0dB1JZbQua1jrB/8s/nREZu6plR8Btq1",
+    "/bundles/networkinginitcms/build/imageEditor.93b05617.js": "sha384-AcjpWSnyRqN7wqBGJR2P9jMoiXGQ6AehUXldqj8qgucqhHkNPMKmzLjLMgY7rwrA",
+    "/bundles/networkinginitcms/build/imageEditor.13b6ff05.css": "sha384-1MRs1en7xpBfejziK6hAPPACrLTTT9rVvRXn/Ci2JgO1SYWdiYp0ZmODsoIu9fIh",
+    "/bundles/networkinginitcms/build/networking_initcms.8960dce8.css": "sha384-LDsobhz8IdarRam4k4cM1Er0sTk/Hd4wWh9/GkZGyH0C2VYVjvbNbNspOGZMNT6d",
+    "/bundles/networkinginitcms/build/admin-navbar.c7d9d236.css": "sha384-eF9HWgETGKx5e42ZT7ceJs2ZmWpe5wizX/1JV1g3FUtSSLk/Wcr+UQCBQLP/E3/X"
   }
 }
