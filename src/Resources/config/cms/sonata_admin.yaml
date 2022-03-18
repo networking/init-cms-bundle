@@ -53,7 +53,7 @@ sonata_admin:
                 on_top: true
                 label: "admin.menu.dashboard"
                 label_catalogue: "PageAdmin"
-                icon: '<i class="fa fa-tachometer-alt fa-large"></i>'
+                icon: '<i class="fa fa-tachometer-alt"></i>'
                 items:
                     - route: sonata_admin_dashboard
                       label: admin.menu.dashboard
@@ -61,33 +61,33 @@ sonata_admin:
                 on_top: true
                 label: "pages.admin_menu_label"
                 label_catalogue: "PageAdmin"
-                icon: '<i class="far fa-file fa-large"></i>'
+                icon: '<i class="far fa-file"></i>'
                 items: [networking_init_cms.admin.page]
             menu:
                 on_top: true
                 label: "menu.admin_menu_label"
                 label_catalogue: "MenuItemAdmin"
-                icon: '<i class="fa fa-align-left fa-large"></i>'
+                icon: '<i class="fa fa-align-left"></i>'
                 items: [ networking_init_cms.admin.menu_item]
             media:
                 label: "sonata_media.admin_menu_label"
                 label_catalogue: "MediaAdmin"
-                icon: '<i class="far fa-image fa-large"></i>'
+                icon: '<i class="far fa-image"></i>'
                 items: [sonata.media.admin.media, sonata.media.admin.gallery, networking_init_cms.admin.tag]
             users:
                 label: "sonata_user"
                 label_catalogue: "SonataUserBundle"
-                icon: '<i class="fa fa-users fa-small"></i>'
+                icon: '<i class="fa fa-users"></i>'
                 items: [sonata.user.admin.user, sonata.user.admin.group]
             help_text:
                 on_top: true
                 label: "help_text.admin_menu_label"
                 label_catalogue: "HelpTextAdmin"
-                icon: '<i class="fa fa-question fa-small"></i>'
+                icon: '<i class="fa fa-question"></i>'
                 items: [networking_init_cms.admin.help_text]
             translation:
                 on_top: true
                 label: "translation.admin_menu_label"
                 label_catalogue: "TranslationAdmin"
-                icon: '<i class="fa fa-globe fa-small"></i>'
+                icon: '<i class="fa fa-globe"></i>'
                 items: [networking_init_cms.admin_entity.translation_admin]
