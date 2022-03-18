@@ -16,7 +16,7 @@ file that was distributed with this source code.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% block stylesheets %}
-        <link href="{{ asset('bundles/networkinginitcms/css/networking_initcms.css') }}" type="text/css" rel="stylesheet" media="screen"/>
+        <link href="{{ asset('networking_initcms.css', 'init_cms') }}" type="text/css" rel="stylesheet" media="screen"/>
         {% block content_css %}
             {% for css in content_css() %}
                 <link href="{{ asset(css) }}" type="text/css" rel="stylesheet" media="screen"/>

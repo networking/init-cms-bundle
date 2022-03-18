@@ -1,6 +1,6 @@
 
 // variables
-$icon-font-path: "../../fonts/bootstrap/" !default;
+$icon-font-path: "../../../../../../mopa/bootstrap-bundle/Resources/public/fonts/bootstrap/" !default;
 
 // Bootstrap overrides, such as the asset-url(..) function.
 @import "../../../../../../mopa/bootstrap-bundle/Resources/public/sass/bootstrap_and_overrides";
@@ -12,11 +12,21 @@ $icon-font-path: "../../fonts/bootstrap/" !default;
 @import "../../../../../../mopa/bootstrap-bundle/Resources/public/sass/paginator.scss";
 
 // Collection support for MopaBootstrapBundle
-@import "../../../../../../mopa/bootstrap-bundle/Resources/public/sass/collections.scss";
-
+/*!
+ * MopaBootstrapBundle collection support
+ */
+.row, .form-group {
+  .collection-item {
+    margin-bottom: 9px;
+    padding-left: calc($grid-gutter-width / 2);
+    padding-right: calc($grid-gutter-width / 2);
+    @include clearfix();
+  }
+}
 // FormFlow support for MopaBootstrapBundle
 @import "../../../../../../mopa/bootstrap-bundle/Resources/public/sass/form_flow.scss";
 @import "../vendor/fontawesome/scss/fontawesome";
+$fa-font-path: "../vendor/fontawesome/webfonts";
 @import "../vendor/fontawesome/scss/solid";
 @import "../vendor/fontawesome/scss/regular";
 @import "../vendor/fontawesome/scss/brands";
