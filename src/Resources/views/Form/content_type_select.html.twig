@@ -17,8 +17,8 @@ file that was distributed with this source code.
                     {% for option in get_content_type_options() %}
                         <option value="{{ option.class }}">{{ option.name|trans }}</option>
                     {% endfor %}
-                </select> <span id="contentLoading" style="display: none;"><img
-                            src="{{ asset('bundles/networkinginitcms/img/loader.gif') }}"/></span>
+                </select> <span id="contentLoading" style="display: none; margin: 5px"><img
+                            src="{{ asset('bundles/networkinginitcms/img/loading.gif') }}"/></span>
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" aria-hidden="true"

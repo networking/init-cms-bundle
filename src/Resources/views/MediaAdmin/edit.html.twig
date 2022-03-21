@@ -325,8 +325,6 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-    <script src="{{ asset('bundles/networkinginitcms/vendor/filerobot-image-editor/index_old.js') }}" type="text/javascript"></script>
-{#    <script src="{{ asset('bundles/networkinginitcms/vendor/filerobot-image-editor/index.js') }}" type="text/javascript"></script>#}
     <script type="text/javascript" src="{{ asset('imageEditor.js', 'init_cms') }}"></script>
     <script>
         (function ($) {

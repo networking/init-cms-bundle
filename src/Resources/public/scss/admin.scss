@@ -714,38 +714,6 @@ body.modal-open {
     //    color: $linkColor;
   }
 
-  .active-corner-top {
-    position: absolute;
-    left: -12px;
-    width: 13px;
-    height: 13px;
-    background: url('../img/nav_active_corner_top_13.png');
-  }
-
-  .active-corner-bottom {
-    position: absolute;
-    left: -12px;
-    width: 13px;
-    height: 13px;
-    background: url('../img/nav_active_corner_bottom_13.png');
-  }
-
-  .nav-custom .active-corner-top {
-    top: -19px;
-  }
-
-  .nav-custom .active-corner-bottom {
-    top: 6px;
-  }
-
-  .nav-custom-small .active-corner-top {
-    top: -17px;
-  }
-
-  .nav-custom-small .active-corner-bottom {
-    top: 4px;
-  }
-
   .nav-custom .first-level-text {
     padding-left: 4px;
   }
