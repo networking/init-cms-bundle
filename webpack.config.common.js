@@ -137,6 +137,10 @@ module.exports = {
                 {
                     dest: './src/Resources/public/build/pdf-viewer.js',
                     src: './src/Resources/public/js/pdf-viewer.js',
+                },
+                {
+                    dest: './src/Resources/public/build/bootstrap.js',
+                    src: './../../mopa/bootstrap-bundle/Resources/public/bootstrap-sass/assets/javascripts/bootstrap.js',
                 }
             ],
         })
