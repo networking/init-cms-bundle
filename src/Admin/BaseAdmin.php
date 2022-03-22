@@ -28,11 +28,6 @@ abstract class BaseAdmin extends AbstractAdmin
 {
 
     protected $annotationReader;
-    public function __construct($code, $class, $baseControllerName)
-    {
-//        $this->annotationReader = $annotationReader;
-        parent::__construct($code, $class, $baseControllerName);
-    }
 
     /**
      * @var array
@@ -43,6 +38,12 @@ abstract class BaseAdmin extends AbstractAdmin
      * @var array
      */
     protected $trackedActions = ['list', 'edit'];
+
+    public function configure()
+    {
+        $this->annotationReader = $this->getContainer()->get('networking_init_cms.annotation.reader');
+    }
+
 
     /**
      * Set the language paramenter to contain a list of languages most likely
