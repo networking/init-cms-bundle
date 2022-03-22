@@ -17,6 +17,7 @@
   "bootstrap-plugins.js": "/bundles/networkinginitcms/build/bootstrap-plugins.js",
   "/fonts/fa-brands-400.woff2": "/bundles/networkinginitcms/build//fonts/fa-brands-400.woff2",
   "app.js": "/bundles/networkinginitcms/build/app.js",
+  "bootstrap.js": "/bundles/networkinginitcms/build/bootstrap.js",
   "/img/glyphicons-halflings-regular.svg": "/bundles/networkinginitcms/build//img/glyphicons-halflings-regular.864c2bdf.svg",
   "/fonts/fa-regular-400.ttf": "/bundles/networkinginitcms/build//fonts/fa-regular-400.ttf",
   "/fonts/glyphicons-halflings-regular.ttf": "/bundles/networkinginitcms/build//fonts/glyphicons-halflings-regular.ttf",
