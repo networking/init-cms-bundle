@@ -694,6 +694,10 @@
                 <source>flash_unlink_success</source>
                 <target>Verknüpfung entfernt</target>
             </trans-unit>
+            <trans-unit id="content.title">
+                <source>content.title</source>
+                <target>Inhaltselement</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

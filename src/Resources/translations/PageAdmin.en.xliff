@@ -691,6 +691,10 @@
                 <source>flash_unlink_success</source>
                 <target>Translation link removed</target>
             </trans-unit>
+            <trans-unit id="content.title">
+                <source>content.title</source>
+                <target>Inhaltselement</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
