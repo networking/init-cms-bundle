@@ -23,7 +23,7 @@ file that was distributed with this source code.
             <div class="modal-content">
         {% endif %}
 
-        <form class="{% if form.vars.horizontal %}form-horizontal{% endif %}  "
+        <form class="{% if form.vars.horizontal %}form-horizontal{% endif %}"
                role="form"
               action="{% block sonata_form_action_url %}{{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}{% endblock %}"
                 {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
