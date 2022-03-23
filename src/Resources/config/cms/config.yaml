@@ -17,6 +17,6 @@ imports:
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/stof_doctrine_extensions.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/symfony_cmf_routing_extra.yaml" }
     - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/webpack_encore.yaml" }
-    - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/assets.yamll" }
+    - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/assets.yaml" }
 
 
