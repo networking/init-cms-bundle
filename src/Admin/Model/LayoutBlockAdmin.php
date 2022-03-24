@@ -98,17 +98,10 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         $transformer = new PageToIdTransformer($this->pageManager);
 
         $formMapper
-//            ->add('isActive', CheckboxType::class, ['layout' => 'horizontal', 'required' => false])
             ->add(
                 'zone',
                 HiddenType::class
             )
-            ->add(
-                $formMapper->getFormBuilder()->create('page', HiddenType::class)
-                    ->addModelTransformer($transformer),
-                HiddenType::class
-            )
-            ->add('classType', HiddenType::class)
             ->add('sortOrder', HiddenType::class)
         ;
     }

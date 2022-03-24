@@ -102,9 +102,12 @@ class LayoutBlockController extends CRUDController
         $request->attributes->add(['page_locale' => $page->getLocale()]);
 
         $pageAdmin->setSubject($page);
-
-        $layoutBlock->setZone($request->get('zone'));
-        $layoutBlock->setSortOrder($request->get('sortOrder'));
+        if($request->get('zone')){
+            $layoutBlock->setZone($request->get('zone'));
+        }
+        if($request->get('sortOrder')){
+            $layoutBlock->setSortOrder($request->get('sortOrder'));
+        }
         $layoutBlock->setClassType($classType);
         $layoutBlock->setPage($page);
         $layoutBlock->setContent(new $classType);
@@ -275,15 +278,19 @@ class LayoutBlockController extends CRUDController
         /** @var \Symfony\Component\Form\Form $form */
         $form = $formBuilder->getForm();
         $form->setData($page);
-
-        /** @var \Sonata\AdminBundle\Admin\AdminHelper $helper */
-        $helper = $this->get('sonata.admin.helper');
-        $view = $helper->getChildFormView($form->createView(), $formFieldId);
-
+        $view = $form->get('layoutBlock')->createView();
+        $id = $form->get('layoutBlock')->getViewData()['id'];
         $twig = $this->get('twig');
         $twig->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
 
-        return $twig->getRuntime(FormRenderer::class)->searchAndRenderBlock($view, 'widget');
+        return $this->renderView(
+            '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig',
+            [
+                'admin' => $pageAdmin,
+                'form' => $view,
+                'id' => $view->vars['id']
+            ]
+        );
     }
 
     /**
