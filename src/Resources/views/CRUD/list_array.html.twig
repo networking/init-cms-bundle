@@ -1,18 +1,21 @@
 {#
 
-This file is part of the Networking package.
+This file is part of the Sonata package.
 
-(c) net working AG <info@networking.ch>
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
+{% import '@SonataAdmin/CRUD/base_array_macro.html.twig' as list %}
 
-{% extends admin.getTemplate('base_list_field') %}
+{% extends get_admin_template('base_list_field', admin.code) %}
 
-{% block field%}
-    {% for key, val in value %}
-        [{{ key }} => {{ val }}]
-    {% endfor %}
+{% block field %}
+    {{ list.render_array(
+        value,
+        field_description.option('inline', true),
+        { default_translation_domain : admin.translationDomain }|merge(field_description.options)
+    ) }}
 {% endblock %}

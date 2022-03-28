@@ -1,18 +1,19 @@
 {#
 
-This file is part of the Networking package.
+This file is part of the Sonata package.
 
-(c) net working AG <info@networking.ch>
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
 
-{% extends admin.getTemplate('base_list_field') %}
+{% extends get_admin_template('base_list_field', admin.code) %}
 
 {% block field %}
-    {% if value is not null %}
-        <span class="show-tooltip" data-original-title="{{value}}">{{ field_description.options.currency }} {{ value }}</span>
-    {% endif %}
+    {%- include '@SonataAdmin/CRUD/display_currency.html.twig' with {
+        value: value,
+        currency: field_description.option('currency'),
+    } only -%}
 {% endblock %}

@@ -12,9 +12,10 @@ file that was distributed with this source code.
 {% extends get_admin_template('base_list_field', admin.code) %}
 
 {% block field %}
-    {%- include '@SonataAdmin/CRUD/display_date.html.twig' with {
+    {% include '@SonataAdmin/CRUD/display_email.html.twig' with {
         value: value,
-        format: field_description.option('format'),
-        timezone: field_description.option('timezone'),
-    } only -%}
+        as_string: field_description.option('as_string'),
+        subject: field_description.option('subject'),
+        body: field_description.option('body'),
+    } only %}
 {% endblock %}

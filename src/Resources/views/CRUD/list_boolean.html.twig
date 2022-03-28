@@ -8,30 +8,23 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends admin.getTemplate('base_list_field') %}
+{% extends get_admin_template('base_list_field', admin.code) %}
+
+{% set is_editable = field_description.option('editable', false) and admin.hasAccess('edit', object) %}
+{% set x_editable_type = field_description.type|sonata_xeditable_type %}
+
+{% block field_span_attributes %}
+    {% if is_editable and x_editable_type %}
+        {% apply spaceless %}
+            {{ parent() }}
+            data-source="[{value: 0, text: '{%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}'},{value: 1, text: '{%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}'}]"
+        {% endapply %}
+    {% endif %}
+{% endblock %}
 
 {% block field %}
-{% apply spaceless %}
-{% if field_description.options.editable is defined and field_description.options.editable and admin.isGranted('EDIT', object) %}
-    {% if value %}
-        <a href="{{ url('sonata_admin_set_object_field_value', { 'context': 'list', 'field': field_description.name, 'objectId': admin.id(object), 'value': 0, 'code': admin.code(object) }) }}" class="sonata-ba-action sonata-ba-edit-inline">
-            <i class="glyphicon glyphicon-ok-circle"></i>
-            {%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}
-        </a>
-    {% else %}
-        <a href="{{ url('sonata_admin_set_object_field_value', { 'context': 'list', 'field': field_description.name, 'objectId': admin.id(object), 'value': 1, 'code': admin.code(object) }) }}" class="sonata-ba-action sonata-ba-edit-inline">
-            <i class="glyphicon glyphicon-ban-circle"></i>
-            {%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}
-        </a>
-    {% endif %}
-{% else %}
-    {% if value %}
-        <i class="glyphicon glyphicon-ok-circle"></i>
-        {%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}
-    {% else %}
-        <i class="glyphicon glyphicon-ban-circle"></i>
-        {%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}
-    {% endif %}
-{% endif %}
-{% endapply %}
+    {%- include '@SonataAdmin/CRUD/display_boolean.html.twig' with {
+        value: value,
+        inverse: field_description.option('inverse'),
+    } only -%}
 {% endblock %}

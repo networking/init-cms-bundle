@@ -1,21 +1,20 @@
 {#
 
-This file is part of the Networking package.
+This file is part of the Sonata package.
 
-(c) net working AG <info@networking.ch>
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends admin.getTemplate('base_list_field') %}
+
+{% extends get_admin_template('base_list_field', admin.code) %}
 
 {% block field %}
-    {%- if value is empty -%}
-        &nbsp;
-    {%- elseif field_description.options.format is defined -%}
-        <span class="show-tooltip" data-original-title="{{ value|date(field_description.options.format|default(null), field_description.options.timezone|default(null)) }}"> {{ value|date(field_description.options.format|default(null), field_description.options.timezone|default(null)) }}</span>
-    {%- else -%}
-        <span class="show-tooltip" data-original-title="{{ value|date('F j, Y H:i') }}">{{ value|date('F j, Y H:i') }}</span>
-    {%- endif -%}
+    {%- include '@SonataAdmin/CRUD/display_datetime.html.twig' with {
+        value: value,
+        format: field_description.option('format'),
+        timezone: field_description.option('timezone'),
+    } only -%}
 {% endblock %}
