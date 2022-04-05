@@ -15,6 +15,7 @@ use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -26,6 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Intl\Intl;
 
 /**
@@ -258,7 +260,21 @@ class TranslationAdmin extends AbstractAdmin
 
         // build the values array
         if ($this->hasRequest()) {
-            $filters = $this->request->query->get('filter', []);
+            /** @var InputBag|ParameterBag $bag */
+            $bag = $this->getRequest()->query;
+            if ($bag instanceof InputBag) {
+                // symfony 5.1+
+                $filters = $bag->all('filter');
+            } else {
+                $filters = $bag->get('filter', []);
+            }
+
+            if (isset($filters[DatagridInterface::PAGE])) {
+                $filters[DatagridInterface::PAGE] = (int) $filters[DatagridInterface::PAGE];
+            }
+            if (isset($filters[DatagridInterface::PER_PAGE])) {
+                $filters[DatagridInterface::PER_PAGE] = (int) $filters[DatagridInterface::PER_PAGE];
+            }
 
             // if persisting filters, save filters to session, or pull them out of session if no new filters set
             if ($this->persistFilters) {
@@ -275,8 +291,8 @@ class TranslationAdmin extends AbstractAdmin
                 $filters
             );
 
-            if (!$this->determinedPerPageValue($parameters['_per_page'])) {
-                $parameters['_per_page'] = $this->maxPerPage;
+            if (!isset($parameters[DatagridInterface::PER_PAGE]) || !$this->determinedPerPageValue($parameters[DatagridInterface::PER_PAGE])) {
+                $parameters[DatagridInterface::PER_PAGE] = $this->getMaxPerPage();
             }
 
             // always force the parent value
