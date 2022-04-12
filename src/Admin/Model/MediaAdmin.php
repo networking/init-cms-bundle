@@ -560,8 +560,8 @@ abstract class MediaAdmin extends Admin
                     $media->setProviderName($this->getRequest()->get($uniqid)['providerName']);
                 }
             }
-            
-            if($this->getRequest()->get('provider'))
+
+            if($this->getRequest()->get('provider')) {
                 $media->setProviderName($this->getRequest()->get('provider'));
             }
 
