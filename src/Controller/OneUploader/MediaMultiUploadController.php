@@ -9,6 +9,7 @@ use Oneup\UploaderBundle\Controller\AbstractController;
 use Oneup\UploaderBundle\Uploader\Response\FineUploaderResponse;
 use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MediaMultiUploadController extends AbstractController
 {
-    public function upload()
+    public function upload(): JsonResponse
     {
         /** @var Request $request */
         $request = $this->getRequest();
@@ -51,7 +52,7 @@ class MediaMultiUploadController extends AbstractController
      * @param ResponseInterface $response
      * @param Request           $request
      */
-    protected function handleUpload($file, ResponseInterface $response, Request $request)
+    protected function handleUpload($file, ResponseInterface $response, Request $request): void
     {
 
         /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
