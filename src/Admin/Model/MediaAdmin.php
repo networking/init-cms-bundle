@@ -438,11 +438,13 @@ abstract class MediaAdmin extends Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+
         $media = $this->getSubject();
 
         if (!$media) {
             $media = $this->getNewInstance();
         }
+
 
         if (!$media || !$media->getProviderName()) {
             return;
@@ -487,6 +489,7 @@ abstract class MediaAdmin extends Admin
 
         );
         $formMapper->add('providerName', HiddenType::class);
+
     }
 
     /**
@@ -551,14 +554,17 @@ abstract class MediaAdmin extends Admin
 
         if ($this->hasRequest()) {
 
-            $providerName = $this->getRequest()->get('provider');
             if ($this->getRequest()->isMethod('POST') && !$this->getRequest()->get('oneuploader')) {
                 $uniqid = $this->getUniqid();
                 if(array_key_exists('providerName', $this->getRequest()->get($uniqid, []))){
                     $media->setProviderName($this->getRequest()->get($uniqid)['providerName']);
                 }
             }
-            $media->setProviderName($providerName);
+            
+            if($this->getRequest()->get('provider'))
+                $media->setProviderName($this->getRequest()->get('provider'));
+            }
+
 
             $media->setContext($context = $this->getRequest()->get('context'));
         }
