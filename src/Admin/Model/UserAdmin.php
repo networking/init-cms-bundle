@@ -17,6 +17,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\UserBundle\Admin\Entity\UserAdmin as SonataUserAdmin;
 use Sonata\UserBundle\Form\Type\SecurityRolesType;
+use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -228,11 +229,14 @@ abstract class UserAdmin extends SonataUserAdmin
             if ($this->getSubject() == $this->tokenStorage->getToken()->getUser()) {
 
                 $user = $this->tokenStorage->getToken()->getUser();
-                $qrCodeUrl = $this->googleAuthenticatorHelper->getUrl($user);
 
-                $formMapper->with('Keys')
-                    ->add('qrCode', QrCodeType::class, ['required' => false, 'mapped' => false, 'qrCodeUrl' => $qrCodeUrl])
-                    ->end();
+                if($user instanceof UserInterface && $user->getTwoStepVerificationCode()){
+                    $qrCodeUrl = $this->googleAuthenticatorHelper->getUrl($user);
+
+                    $formMapper->with('Keys')
+                        ->add('qrCode', QrCodeType::class, ['required' => false, 'mapped' => false, 'qrCodeUrl' => $qrCodeUrl])
+                        ->end();
+                }
             }
         }
     }
