@@ -562,10 +562,12 @@ class NetworkingHelperExtension extends AbstractExtension
                 $locale = $this->getCurrentLocale();
             }
 
-            $data['value'] = trim($data['value']);
+            if(is_array($data) && array_key_exists('value', $data)){
+                $data['value'] = trim($data['value']);
 
-            if (strlen($data['value']) > 0) {
-                $locale = $data['value'];
+                if (strlen($data['value']) > 0) {
+                    $locale = $data['value'];
+                }
             }
 
             if (!$locale && method_exists($admin, 'getDefaultLocale')) {
