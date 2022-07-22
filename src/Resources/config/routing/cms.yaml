@@ -124,19 +124,7 @@ xml_sitemap:
     requirements:
     methods: GET
 
-_configure_cms:
-    path: /cms_install
-    defaults: {_controller: Networking\InitCmsBundle\Controller\InitCmsInstallController::indexAction}
 
-_welcome_cms:
-    path: /welcome
-    defaults: {_controller: Networking\InitCmsBundle\Controller\InitCmsInstallController::indexAction}
-
-_install_db:
-    path: /install_db/{complete}
-    defaults: {_controller: Networking\InitCmsBundle\Controller\InitCmsInstallController::installDbAction, complete: 0}
-    requirements:
-        complete: /d+
 
 _initcms_admin_navbar:
     path: '/admin/_initcms_admin_navbar/{page_id}'

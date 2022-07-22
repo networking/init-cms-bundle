@@ -65,14 +65,20 @@ class InitCmsInstallController extends AbstractController
         $hasDB = false;
         $installed = false;
         try {
+
+            $schemaManager = $this->getDoctrine()->getConnection()->getSchemaManager();
+            if ($schemaManager->tablesExist(array('page')) !== true) {
+                throw new \Exception('Pages not loaded');
+            }
+
             /** @var $page Page */
-            $page = $this->pageManager->findOneBy(
-                ['isHome' => 1, 'locale' => $request->getLocale()]
-            );
+            $page = $this->pageManager->findOneBy(['isHome' => 1]);
+
             if (!$page) {
                 throw new \Exception('Pages not loaded');
             }
-            $url = $page->getFullPath();
+
+            $url = '/';
             $label = 'Go to the homepage';
             $hasDB = true;
             $installed = true;
