@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
 /**

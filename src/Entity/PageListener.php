@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Networking\InitCmsBundle\Model\Page;
