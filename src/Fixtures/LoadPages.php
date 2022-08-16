@@ -39,7 +39,7 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
     }
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param \Doctrine\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {

@@ -38,7 +38,7 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
     }
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param \Doctrine\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
@@ -50,7 +50,7 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
     }
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param \Doctrine\Persistence\ObjectManager $manager
      * @param $locale
      */
     public function createMenuItems(ObjectManager $manager, $locale)

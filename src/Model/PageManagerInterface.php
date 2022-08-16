@@ -13,7 +13,7 @@ namespace Networking\InitCmsBundle\Model;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\RepositoryInterface;
 use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 
 /**
  * Class PageManagerInterface.

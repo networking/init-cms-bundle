@@ -177,7 +177,7 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
     }
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param \Doctrine\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {

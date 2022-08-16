@@ -59,7 +59,7 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
             @trigger_error('Passing a QueryBuilder closure to '.__CLASS__.'::__construct() is deprecated since version 2.7 and will be removed in 3.0.', E_USER_DEPRECATED);
 
             if (!$manager instanceof ObjectManager) {
-                throw new UnexpectedTypeException($manager, 'Doctrine\Common\Persistence\ObjectManager');
+                throw new UnexpectedTypeException($manager, 'Doctrine\Persistence\ObjectManager');
             }
 
             @trigger_error('Passing an EntityManager to '.__CLASS__.'::__construct() is deprecated since version 2.7 and will be removed in 3.0.', E_USER_DEPRECATED);

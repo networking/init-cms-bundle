@@ -51,7 +51,7 @@ class LanguageSwitcherHelper
     protected $serializer;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\Persistence\ObjectManager
      */
     protected $om;
 

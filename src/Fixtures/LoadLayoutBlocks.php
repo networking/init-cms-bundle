@@ -39,7 +39,7 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
     }
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param \Doctrine\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
@@ -51,7 +51,7 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
     }
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param \Doctrine\Persistence\ObjectManager $manager
      * @param $locale
      */
     public function createLayoutBlocks(ObjectManager $manager, $locale)

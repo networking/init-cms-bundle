@@ -271,7 +271,7 @@ class AutocompleteType extends DoctrineType
         $resolver->setNormalizer('loader', $loaderNormalizer);
         $resolver->setNormalizer('id_reader', $idReaderNormalizer);
 
-        $resolver->setAllowedTypes('em', ['null', 'string', 'Doctrine\Common\Persistence\ObjectManager']);
+        $resolver->setAllowedTypes('em', ['null', 'string', 'Doctrine\Persistence\ObjectManager']);
         $resolver->setAllowedTypes('loader', ['null', 'Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface']);
         $resolver->setAllowedTypes('query_builder', ['null', 'callable', 'Doctrine\ORM\QueryBuilder']);
         $resolver->setAllowedTypes('query_hints', ['array']);
