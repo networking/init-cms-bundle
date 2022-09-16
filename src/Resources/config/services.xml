@@ -141,6 +141,17 @@
                  public="false"/>
 
         <service id="networking_init_cms.annotation.reader" class="Networking\InitCmsBundle\Reader\SonataAdminAnnotationReader" autowire="true" public="true"/>
+        <service id="Networking\InitCmsBundle\Twig\Extension\ImageFilter">
+            <argument key="$flysystem" type="service" id="oneup_flysystem.media_filesystem"/>
+            <argument key="$cacheFlysystem" type="service" id="oneup_flysystem.cache_filesystem"/>
+        </service>
+
+
+
+        <service id="Networking\InitCmsBundle\Controller\CkeditorAdminController" autowire="true" public="true">
+            <argument key="$mediaAdmin" type="service" id="sonata.media.admin.media"/>
+            <tag name="controller.service_arguments"/>
+        </service>
 
 
     </services>

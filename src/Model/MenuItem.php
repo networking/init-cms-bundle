@@ -736,8 +736,8 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
         }
         if(!$this->getRedirectUrl() && !$this->getPage() && !$this->getInternalUrl()){
             $context->buildViolation('menu.page_or_url.required')
-                ->atPath('menu_page_or_url_required')
-                ->addViolation();;
+                ->atPath('page')
+                ->addViolation();
         }
     }
 }

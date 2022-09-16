@@ -8,8 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Fixtures;
+namespace Networking\InitCmsBundle\DataFixtures;
 
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -23,7 +25,7 @@ use Networking\InitCmsBundle\Model\TextInterface;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -39,7 +41,7 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
     }
 
     /**
-     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
@@ -51,7 +53,7 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
     }
 
     /**
-     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @param \Doctrine\Common\Persistence\ObjectManager $manager
      * @param $locale
      */
     public function createLayoutBlocks(ObjectManager $manager, $locale)
@@ -101,6 +103,11 @@ class LoadLayoutBlocks extends AbstractFixture implements OrderedFixtureInterfac
         foreach ($templates as $template) {
             return $template['zones'][0]['name'];
         }
+    }
+
+    public static function getGroups(): array
+    {
+        return ['init_cms'];
     }
 
     /**

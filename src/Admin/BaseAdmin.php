@@ -15,6 +15,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
 use Symfony\Component\Intl\Intl;
@@ -24,7 +25,7 @@ use Symfony\Component\Intl\Intl;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class BaseAdmin extends AbstractAdmin
+abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterface
 {
 
     protected $annotationReader;
@@ -37,11 +38,22 @@ abstract class BaseAdmin extends AbstractAdmin
     /**
      * @var array
      */
-    protected $trackedActions = ['list', 'edit'];
+    protected $trackedActions = [];
+
+    protected $container;
+
+    /**
+     * Sets the container.
+     */
+    public function setContainer(ContainerInterface $container = null){
+
+        $this->container = $container;
+    }
+
 
     public function configure()
     {
-        $this->annotationReader = $this->getContainer()->get('networking_init_cms.annotation.reader');
+        $this->annotationReader =  $this->container->get('networking_init_cms.annotation.reader');
     }
 
 
@@ -111,11 +123,12 @@ abstract class BaseAdmin extends AbstractAdmin
             return '';
         }
 
-        if (!$this->getRequest()->get('locale')) {
+        $locale = $this->getRequest()->get('locale');
+
+        if (!$locale) {
             $locale = $this->getRequest()->getLocale();
-        } else {
-            $locale = $this->getRequest()->get('locale');
         }
+
         //if the locale is posted in the filter
         if (is_array($locale)) {
             if (array_key_exists('value', $locale)) {
@@ -124,25 +137,19 @@ abstract class BaseAdmin extends AbstractAdmin
         }
 
         $localeChoices = array_flip($this->getLocaleChoices());
+
+
         if (!array_key_exists($locale, $localeChoices)) {
-            if (strlen($locale) > 2) {
-                $shortLocale = substr($locale, 0, 2);
-            } else {
-                $shortLocale = $locale;
-            }
-
-            foreach ($localeChoices as $key => $locale) {
-                if (strpos($key, $shortLocale) !== false) {
-                    return $key;
+            foreach ($localeChoices as $key => $choice) {
+                if (strpos($key, substr($locale, 0, 2)) !== false) {
+                    return $locale;
                 }
             }
 
-            foreach ($localeChoices as $key => $locale) {
-                if (strpos($key, $this->getContainer()->getParameter('locale')) !== false) {
-                    return $key;
-                }
-            }
+            return $this->languages[0]['locale'];
         }
+
+
 
         return $locale;
     }
@@ -204,7 +211,7 @@ abstract class BaseAdmin extends AbstractAdmin
      */
     protected function getContainer()
     {
-        return $this->getConfigurationPool()->getContainer();
+        return $this->container;
     }
 
     /**

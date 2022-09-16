@@ -36,6 +36,9 @@
                 <argument>list</argument>
                 <argument>@NetworkingInitCms/PageAdmin/page_list.html.twig</argument>
             </call>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
             <tag name="sonata.admin" manager_type="orm" label="pages.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
         </service>
@@ -55,6 +58,9 @@
             </call>
             <call method="setTranslationDomain">
                 <argument>PageAdmin</argument>
+            </call>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="content.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
@@ -81,6 +87,9 @@
                     <argument key="menu">%networking_init_cms.admin.menu_item.class%</argument>
                     <argument key="menu item">%networking_init_cms.admin.menu_item.class%</argument>
                 </argument>
+            </call>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
             </call>
 
             <call method="setTemplate">
@@ -111,6 +120,9 @@
             </call>
             <call method="setlanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
+            </call>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="help_text.title"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"

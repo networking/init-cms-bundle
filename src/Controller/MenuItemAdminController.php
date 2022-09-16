@@ -283,7 +283,14 @@ class MenuItemAdminController extends CRUDController
             }
         }
 
-        return parent::createAction();
+
+        $reponse =  parent::createAction();
+
+        if($this->isXmlHttpRequest() && $this->getRequest()->isMethod('POST')){
+            $reponse = $this->getJsonResponse($reponse);
+        }
+
+        return $reponse;
     }
 
     /**
@@ -301,7 +308,13 @@ class MenuItemAdminController extends CRUDController
             }
         }
 
-        return parent::editAction($id);
+        $reponse =  parent::editAction($id);
+
+        if($this->isXmlHttpRequest() && $this->getRequest()->isMethod('POST')){
+            $reponse = $this->getJsonResponse($reponse);
+        }
+
+        return $reponse;
     }
 
     /**
@@ -336,7 +349,7 @@ class MenuItemAdminController extends CRUDController
                 $this->admin->delete($object);
 
                 if ($this->isXmlHttpRequest()) {
-                    return $this->renderJson(
+                    return $this->getJsonResponse(
                         [
                             'result' => 'ok',
                             'objectId' => $this->admin->getNormalizedIdentifier($object),
@@ -349,7 +362,7 @@ class MenuItemAdminController extends CRUDController
                 }
             } catch (ModelManagerException $e) {
                 if ($this->isXmlHttpRequest()) {
-                    return $this->renderJson(
+                    return $this->getJsonResponse(
                         [
                             'result' => 'ok',
                             'objectId' => $this->admin->getNormalizedIdentifier($object),
@@ -470,25 +483,29 @@ class MenuItemAdminController extends CRUDController
     /**
      * {@inheritdoc}
      */
-    public function renderJson($data, $status = 200, $headers = [])
+    public function getJsonResponse($data, $status = 200, $headers = [])
     {
-        $response = parent::renderJson($data, $status, $headers);
-
-        $data = json_decode($response->getContent(), true);
-
+        if($data instanceof JsonResponse){
+            $status = $data->getStatusCode();
+            $data = json_decode($data->getContent(), true);
+        }
 
         if (!array_key_exists('message', $data)) {
 
             /** @var Request $request */
             $request = $this->getRequest();
 
+
             if ($data['result'] == 'ok') {
+
                 $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_success';
                 $data['is_new_menu_item'] = $this->isNewMenuItem;
                 if ($this->isNewMenuItem) {
+
                     $data['html'] = $this->placementAction();
                 }
                 $data['status'] = 'success';
+
             } elseif ($data['result'] == 'error') {
                 $data['status'] = 'error';
                 $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_error';
@@ -503,13 +520,7 @@ class MenuItemAdminController extends CRUDController
             $data['html'] = $this->listAction($this->get('session')->get('admin/last_page_id'));
         }
 
-        if ($response instanceof JsonResponse) {
-            $response->setData($data);
-        } else {
-            $response->setContent(json_encode($data));
-        }
-
-        return $response;
+        return new JsonResponse($data, $status, $headers);
     }
 
     /**
@@ -650,9 +661,9 @@ class MenuItemAdminController extends CRUDController
                 'result' => 'ok',
                 'objectId' => $this->admin->getNormalizedIdentifier($newMenuItem),
             ];
-            return $this->renderJson($data);
+            return $this->getJsonResponse($data);
         } catch (\Exception $e) {
-            return $this->renderJson($data);
+            return $this->getJsonResponse($data);
         }
     }
 }

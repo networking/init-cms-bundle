@@ -209,6 +209,14 @@ abstract class MediaAdmin extends Admin
                 '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:previewPdf',
             ]
         );
+
+        $collection->add(
+            'gallery',
+            'gallery',
+            [
+                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:gallery',
+            ]
+        );
     }
 
     /**
@@ -340,31 +348,7 @@ abstract class MediaAdmin extends Admin
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBatchActions()
-    {
-        $actions = [];
-        if ($this->request && $this->request->get('pcode') == '') {
-
-            // retrieve the default batch actions (currently only delete)
-            $actions = parent::getBatchActions();
-
-            if (
-                $this->hasRoute('edit') && $this->isGranted('EDIT') &&
-                $this->hasRoute('delete') && $this->isGranted('DELETE')
-            ) {
-                $actions['add_tags'] = [
-                    'label' => 'add_tags',
-                    'translation_domain' => $this->getTranslationDomain(),
-                    'ask_confirmation' => false,
-                ];
-            }
-        }
-
-        return $actions;
-    }
+ 
 
     /**
      * {@inheritdoc}
@@ -372,22 +356,6 @@ abstract class MediaAdmin extends Admin
     public function getExportFormats()
     {
         return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function generateUrl($name, array $parameters = [], $absolute = false)
-    {
-        try {
-            if ($this->getRequest()->get('pcode')) {
-                $parameters['pcode'] = $this->getRequest()->get('pcode');
-            }
-        } catch (\Exception $e) {
-            //do nothing
-        }
-
-        return parent::generateUrl($name, $parameters, $absolute);
     }
 
     /**
@@ -405,7 +373,7 @@ abstract class MediaAdmin extends Admin
      */
     public function getTemplate($name)
     {
-        if ($name === 'edit' && is_null($this->getSubject()->getId()) && !$this->request->get('pcode')) {
+        if ($name === 'edit' && is_null($this->getSubject()->getId()) && !$this->request->query->get('gallery')) {
             $provider = $this->pool->getProvider($this->request->get('provider'));
             if ($provider instanceof FileProvider) {
                 return '@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig';
@@ -526,19 +494,6 @@ abstract class MediaAdmin extends Admin
             ->add('createdAt', 'string', ['label' => 'label.created_at'])
             ->add('size', 'string', ['label' => 'label.size']);
 
-        if ($this->request && $this->request->get('pcode') == '') {
-            $listMapper->add(
-                '_action',
-                'actions',
-                [
-                    'actions' => [
-                        'show' => [],
-                        'edit' => [],
-                        'delete' => [],
-                    ],
-                ]
-            );
-        }
     }
 
     /**
@@ -619,5 +574,27 @@ abstract class MediaAdmin extends Admin
             'provider' => $provider,
             'context' => $context,
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureBatchActions($actions)
+    {
+        if ($this->request && !$this->request->query->get('galleryMode')) {
+
+            if (
+                $this->hasRoute('edit') && $this->isGranted('EDIT') &&
+                $this->hasRoute('delete') && $this->isGranted('DELETE')
+            ) {
+                $actions['add_tags'] = [
+                    'label' => 'add_tags',
+                    'translation_domain' => $this->getTranslationDomain(),
+                    'ask_confirmation' => false,
+                ];
+            }
+        }
+
+        return $actions;
     }
 }

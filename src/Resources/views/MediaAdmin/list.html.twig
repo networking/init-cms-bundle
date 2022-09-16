@@ -19,6 +19,8 @@ file that was distributed with this source code.
 
 {% form_theme form '@NetworkingInitCms/Form/form_admin_fields.html.twig' %}
 {% set active_tab = app.request.get('context') %}
+{% set route = galleryListMode ? 'gallery': 'list' %}
+
 {% block javascripts %}
     {{ parent() }}
     {% include '@NetworkingInitCms/MediaAdmin/list_script_draggable.html.twig' %}
@@ -32,8 +34,9 @@ file that was distributed with this source code.
 
 {% block list_filters %}
     {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
+
     {% if datagrid.filters %}
-        <form action="{{ admin.generateUrl('list') }}" method="GET"
+        <form action="{{ admin.generateUrl(route) }}" method="GET"
               class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters">
 
             <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
@@ -114,7 +117,7 @@ file that was distributed with this source code.
                                     <input type="submit" class="btn btn-default btn-sm"
                                            value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
                                     {% if not app.request.isXmlHttpRequest %}
-                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                                        <a href="{{ admin.generateUrl(route, {filters: 'reset'}) }}"
                                            class="link-underlined">
                                             {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
                                     {% endif %}
@@ -138,12 +141,12 @@ file that was distributed with this source code.
     <ul class="nav menu-tabs nav-tabs">
         {% if galleryListMode and persistent_parameters.context %}
             <li class="active">
-                <a href="{{ admin.generateUrl('list', {'context' : persistent_parameters.context}) }}">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
+                <a href="{{ admin.generateUrl(route, {'context' : persistent_parameters.context}) }}">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
             </li>
         {% else %}
             {% for name, context in media_pool.contexts %}
                 <li {% if name == persistent_parameters.context %}class="active"{% endif %}>
-                    <a href="{{ admin.generateUrl('list', {'context' : name, 'provider' : null} ) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                    <a href="{{ admin.generateUrl(route, {'context' : name, 'provider' : null} ) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
                 </li>
             {% endfor %}
         {% endif %}
@@ -217,10 +220,10 @@ file that was distributed with this source code.
                                 <strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong>
                                 <div class="btn-group btn-group-sm">
                                     <a class="btn btn-sm btn-{{ persistent_parameters.provider ? 'default': 'primary' }}"
-                                       href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                                       href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
                                     {% for provider_name in providers %}
                                         <a class="btn btn-sm btn-{{ persistent_parameters.provider == provider_name? 'primary':'default' }}"
-                                           href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}) }}">{{ provider_name|trans({}) }}</a>
+                                           href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}) }}">{{ provider_name|trans({}) }}</a>
                                     {% endfor %}
                                 </div>&nbsp;
                             {% endif %}
@@ -248,7 +251,7 @@ file that was distributed with this source code.
                                         {% set sort_by              = current ? datagrid.values._sort_order : field_description.options._sort_order %}
 
                                         {% if sortable %}
-                                            <a href="{{ admin.generateUrl('list', sort_parameters) }}" class="btn btn-sm btn-{{ sort_active_class ? 'primary':'default' }}">{% endif %}
+                                            <a href="{{ admin.generateUrl(route, sort_parameters) }}" class="btn btn-sm btn-{{ sort_active_class ? 'primary':'default' }}">{% endif %}
                                         {% if sort_active_class %}
                                             <i class="glyphicon glyphicon-chevron-{{ sort_by|lower == 'desc'? 'up':'down' }}"></i>
                                         {% endif %}

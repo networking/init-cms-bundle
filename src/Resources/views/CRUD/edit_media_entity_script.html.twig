@@ -66,6 +66,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
     Admin.log('[{{ id }}|field_dialog_form_action] action catch', this);
 
     var element = jQuery(this);
+    var trueElement = this
     var url, type = '';
     var data = {_xml_http_request: true};
 
@@ -137,11 +138,25 @@ var field_dialog_form_action_{{ id }} = function (event) {
             // otherwise, display form error
             field_dialog_{{ id }}.html(data);
 
-            Admin.add_pretty_errors(field_dialog_{{ id }});
-
             // reattach the event
             jQuery('form', field_dialog_{{ id }}).submit(field_dialog_form_action_{{ id }});
+        },
+        error: function (xhr, status, error){
+            const action = new URL(url, window.location.origin);
+            var response = xhr.responseJSON;
+            var uniqId = action.searchParams.get('uniqid')
+            var container = document.getElementById('sonata-ba-field-container-'+uniqId+'_binaryContent')
+            var inputField = document.getElementById(uniqId+'_binaryContent');
+            container.classList.add('has-error', 'sonata-ba-field-error')
+            var helpField = inputField.nextElementSibling
+
+            if(response.errors){
+                response.errors.forEach(error => {
+                    helpField.innerText = error;
+                })
+            }
         }
+
     });
 
     return false;

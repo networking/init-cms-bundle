@@ -33,34 +33,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
+use Sonata\AdminBundle\Controller\CRUDController as Controller;
 /**
  * Class MediaAdminController.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class MediaAdminController extends SonataMediaAdminController
+class MediaAdminController extends CRUDController
 {
-    /**
-     * @var TemplateRegistryInterface
-     */
-    private $templateRegistry;
 
-
-    public function configure()
-    {
-        parent::configure();
-
-        $this->templateRegistry = $this->container->get($this->admin->getCode().'.template_registry');
-        if (!$this->templateRegistry instanceof TemplateRegistryInterface) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Unable to find the template registry related to the current admin (%s)',
-                    $this->admin->getCode()
-                )
-            );
-        }
-    }
     /**
      * @param null $id
      *
@@ -248,6 +229,12 @@ class MediaAdminController extends SonataMediaAdminController
         return $this->renderJson($data);
     }
 
+    public function galleryAction(Request $request){
+        $request->query->set('galleryMode', true);
+
+        return $this->listAction($request);
+    }
+
 
     /**
      * @param Request|null $request
@@ -257,8 +244,6 @@ class MediaAdminController extends SonataMediaAdminController
     public function listAction(Request $request = null)
     {
         $this->admin->checkAccess('list');
-
-        $galleryListMode = $request->get('pcode') ? true : false;
 
         $datagrid = $this->admin->getDatagrid();
 
@@ -278,19 +263,21 @@ class MediaAdminController extends SonataMediaAdminController
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             $this->templateRegistry->getTemplate('list'),
             [
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
+                'media_pool' => $this->get('sonata.media.pool'),
+                'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
                 'lastItem' => 0,
                 'action' => 'list',
                 'form' => $formView,
                 'datagrid' => $datagrid,
-                'galleryListMode' => $galleryListMode,
+                'galleryListMode' => $request->query->get('galleryMode', false),
                 'csrf_token' => $this->getCsrfToken('sonata.batch'),
                 'show_actions' => true,
             ]
@@ -306,7 +293,7 @@ class MediaAdminController extends SonataMediaAdminController
     {
         $this->admin->checkAccess('list');
         
-        $galleryListMode = $request->get('pcode') ? true : false;
+        $galleryListMode = $request->query->get('galleryMode', false);
         $datagrid = $this->admin->getDatagrid();
         $datagrid->getForm()->createView();
         $persistentParameters = $this->admin->getPersistentParameters();
@@ -321,12 +308,14 @@ class MediaAdminController extends SonataMediaAdminController
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             '@NetworkingInitCms/MediaAdmin/list_items.html.twig',
             [
                 'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
+                'media_pool' => $this->get('sonata.media.pool'),
+                'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
                 'lastItem' => 0,
@@ -347,7 +336,11 @@ class MediaAdminController extends SonataMediaAdminController
     {
         $object = $this->admin->getObject($id);
 
-        return $this->render('NetworkingInitCmsBundle:MediaAdmin:preview.html.twig', ['object' => $object]);
+        return $this->renderWithExtraParams('NetworkingInitCmsBundle:MediaAdmin:preview.html.twig', [
+
+            'media_pool' => $this->get('sonata.media.pool'),
+            'persistent_parameters' => $this->admin->getPersistentParameters(),
+            'object' => $object]);
     }
 
     public function cloneAction(Request $request){

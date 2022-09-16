@@ -188,7 +188,7 @@ class DataSetupCommand extends Command
 
         $arguments = [
             'command' => 'doctrine:fixtures:load',
-            '--fixtures' => __DIR__.'/../Fixtures',
+            '--group' => ['init_cms'],
             '--append' => true,
         ];
 

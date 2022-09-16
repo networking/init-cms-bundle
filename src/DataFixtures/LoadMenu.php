@@ -8,8 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Fixtures;
+namespace Networking\InitCmsBundle\DataFixtures;
 
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -22,7 +24,7 @@ use Networking\InitCmsBundle\Entity\MenuItem;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadMenu extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -38,7 +40,7 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
     }
 
     /**
-     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
@@ -50,7 +52,7 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
     }
 
     /**
-     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @param \Doctrine\Common\Persistence\ObjectManager $manager
      * @param $locale
      */
     public function createMenuItems(ObjectManager $manager, $locale)
@@ -85,6 +87,11 @@ class LoadMenu extends AbstractFixture implements OrderedFixtureInterface, Conta
 
         $manager->persist($footerRoot);
         $manager->flush();
+    }
+
+    public static function getGroups(): array
+    {
+        return ['init_cms'];
     }
 
     /**

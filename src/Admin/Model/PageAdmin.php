@@ -516,6 +516,7 @@ abstract class PageAdmin extends BaseAdmin
     {
         $currentFilter = $this->getFilterParameters();
         $locale = $this->getDefaultLocale();
+
         if (array_key_exists('locale', $currentFilter)) {
             $locale = $currentFilter['locale']['value'];
         }

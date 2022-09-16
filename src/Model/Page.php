@@ -36,6 +36,7 @@ abstract class Page implements PageInterface
 
     /**
      * @var \Datetime
+     * @Gedmo\Versioned()
      */
     protected $updatedAt;
 
@@ -51,11 +52,13 @@ abstract class Page implements PageInterface
 
     /**
      * @var string
+     * @Gedmo\TreePathSource()
      */
     protected $url;
 
     /**
      * @var string
+     * @Gedmo\TreePath(separator="/")
      */
     protected $path;
 
@@ -538,8 +541,14 @@ abstract class Page implements PageInterface
     {
         if (!in_array(
             $status,
-            [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_REVIEW, self::STATUS_OFFLINE]
-        )) {
+            [
+                self::STATUS_DRAFT,
+                self::STATUS_PUBLISHED,
+                self::STATUS_REVIEW,
+                self::STATUS_OFFLINE,
+            ]
+        )
+        ) {
             throw new \InvalidArgumentException('Invalid status');
         }
         $this->status = $status;
@@ -568,7 +577,11 @@ abstract class Page implements PageInterface
      */
     public function setVisibility($visibility)
     {
-        if (!in_array($visibility, [self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC])) {
+        if (!in_array(
+            $visibility,
+            [self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC]
+        )
+        ) {
             throw new \InvalidArgumentException('Invalid visibility');
         }
         $this->visibility = $visibility;
@@ -625,8 +638,8 @@ abstract class Page implements PageInterface
     {
         $now = new \DateTime();
 
-        if ($now->getTimestamp() >= $this->getActiveStart()->getTimestamp() &&
-            $now->getTimestamp() <= $this->getActiveEnd()->getTimestamp()
+        if ($now->getTimestamp() >= $this->getActiveStart()->getTimestamp()
+            && $now->getTimestamp() <= $this->getActiveEnd()->getTimestamp()
         ) {
             return $this->status == self::STATUS_PUBLISHED;
         }
@@ -784,7 +797,8 @@ abstract class Page implements PageInterface
         if (!is_null($zone)) {
             $layoutBlocks = $this->layoutBlock->filter(
                 function ($layoutBlock) use ($zone) {
-                    return $layoutBlock->getZone() == $zone && $layoutBlock->isActive();
+                    return $layoutBlock->getZone() == $zone
+                        && $layoutBlock->isActive();
                 }
             );
 
@@ -1131,7 +1145,11 @@ abstract class Page implements PageInterface
      */
     public function getRoute()
     {
-        return ContentRouteManager::generateRoute($this->contentRoute, $this->contentRoute->getPath(), $this);
+        return ContentRouteManager::generateRoute(
+            $this->contentRoute,
+            $this->contentRoute->getPath(),
+            $this
+        );
     }
 
     /**
@@ -1247,7 +1265,8 @@ abstract class Page implements PageInterface
             foreach ($this->getTranslations() as $translation) {
                 if ($translation) {
                     // if we already meet you stop and go on with the next
-                    $translationsArray[$translation->getLocale()] = $translation;
+                    $translationsArray[$translation->getLocale()]
+                        = $translation;
                     $translation->getRecursiveTranslations($translationsArray);
                 }
             }
@@ -1257,7 +1276,11 @@ abstract class Page implements PageInterface
         if ($this->getOriginals() && !$this->getOriginals()->isEmpty()) {
             foreach ($this->getOriginals() as $translation) {
                 // if we already meet you stop and go on with the next
-                if (array_key_exists($translation->getLocale(), $translationsArray)) {
+                if (array_key_exists(
+                    $translation->getLocale(),
+                    $translationsArray
+                )
+                ) {
                     return;
                 }
                 $translationsArray[$translation->getLocale()] = $translation;
@@ -1474,6 +1497,7 @@ abstract class Page implements PageInterface
 
     /**
      * @param MediaInterface|null $socialMediaImage
+     *
      * @return Page
      */
     public function setSocialMediaImage(?MediaInterface $socialMediaImage): Page
@@ -1483,7 +1507,8 @@ abstract class Page implements PageInterface
         return $this;
     }
 
-    public function restoreFromPublished(PageInterface $publishedPage){
+    public function restoreFromPublished(PageInterface $publishedPage)
+    {
         $this->id = $publishedPage->getId();
         $this->createdAt = $publishedPage->getCreatedAt();
         $this->updatedAt = $publishedPage->getUpdatedAt();
@@ -1493,7 +1518,7 @@ abstract class Page implements PageInterface
         $this->status = $publishedPage->getStatus();
         $this->visibility = $publishedPage->getVisibility();
         $this->activeFrom = $publishedPage->getActiveFrom();
-        $this->activeTo= $publishedPage->getActiveTo();
+        $this->activeTo = $publishedPage->getActiveTo();
     }
 
 }

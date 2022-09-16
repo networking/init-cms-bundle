@@ -97,15 +97,15 @@ class CRUDController extends SonataCRUDController
      *
      * @return Response
      */
-    public function renderWithExtraParams($view, array $parameters = [], Response $response = null)
+    protected function addRenderExtraParams(array $parameters = []): array
     {
-        if (array_key_exists('action', $parameters) && $parameters['action'] == 'edit') {
+        if (array_key_exists('action', $parameters) && $parameters['action'] === 'edit') {
             $event = new CmsEvent($parameters['object']);
 
             $this->dispatcher->dispatch(self::EDIT_ENTITY, $event);
         }
 
-        return parent::renderWithExtraParams($view, $parameters, $response);
+        return parent::addRenderExtraParams($parameters);
     }
 
     /**

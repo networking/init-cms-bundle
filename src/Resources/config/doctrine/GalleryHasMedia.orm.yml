@@ -1,8 +1,0 @@
-Networking\InitCmsBundle\Entity\GalleryHasMedia:
-  type: entity
-  table: media__gallery_media
-  id:
-    id:
-      type: integer
-      generator:
-        strategy: AUTO

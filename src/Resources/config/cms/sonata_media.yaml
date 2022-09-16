@@ -24,7 +24,7 @@ sonata_media:
 
     cdn:
         server:
-            path: /uploads/media
+            path: /upload/media
 
     filesystem:
         local:
@@ -35,6 +35,8 @@ sonata_media:
         image:
             generator:  networking_init_cms.media.generator.media_path
             thumbnail:  networking_init_cms.media.thumbnail.format
+            allowed_extensions: [ 'jpg', 'png', 'jpeg', 'gif', 'webp', 'svg' ]
+            allowed_mime_types: [ 'image/pjpeg', 'image/jpeg', 'image/png', 'image/avif', 'image/x-png', 'image/gif','image/svg+xml','image/svg','image/webp' ]
         file:
             generator:  networking_init_cms.media.generator.media_path
             allowed_mime_types:

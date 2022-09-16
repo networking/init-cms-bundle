@@ -833,7 +833,7 @@ file that was distributed with this source code.
         {{ block('hidden_widget') }}
 
         <span id="field_actions_{{ id }}" class="field-actions">
-                <a href="{{ admin.generateUrl('list', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
+                <a href="{{ admin.generateUrl('gallery', {'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
                    onclick="return open_media_list_{{ id }}(this);"
                    class="btn btn-default btn-sm sonata-ba-action"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
@@ -844,7 +844,7 @@ file that was distributed with this source code.
 
             {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
                 &nbsp;
-                <a href="{{ admin.generateUrl('create', {'pcode': true,'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
+                <a href="{{ admin.generateUrl('create', {'gallery': true, 'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
                    onclick="return start_field_dialog_form_add_{{ id }}(this);"
                    class="btn btn-primary btn-sm sonata-ba-action"
                    title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"

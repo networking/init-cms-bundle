@@ -1,8 +1,0 @@
-Networking\InitCmsBundle\Entity\Group:
-  type: entity
-  table: fos_user_group
-  id:
-    id:
-      type: integer
-      generator:
-        strategy: AUTO

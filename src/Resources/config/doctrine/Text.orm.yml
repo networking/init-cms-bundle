@@ -1,8 +1,0 @@
-Networking\InitCmsBundle\Entity\Text:
-  type: entity
-  table: text
-  id:
-    id:
-      type: integer
-      generator:
-        strategy: AUTO

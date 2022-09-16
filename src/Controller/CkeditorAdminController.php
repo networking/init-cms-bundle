@@ -11,8 +11,13 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Admin\Model\MediaAdmin;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,8 +26,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\MediaBundle\Controller\MediaAdminController as BaseMediaAdminController;
 
-class CkeditorAdminController extends BaseMediaAdminController
+class CkeditorAdminController extends CRUDController
 {
+    protected $admin;
+
+    public function __construct(
+        CmsEventDispatcher $dispatcher,
+        PageCacheInterface $pageCache,
+        MediaAdmin $mediaAdmin
+    ) {
+        parent::__construct($dispatcher, $pageCache);
+    }
+
     /**
      * @return Response
      *
@@ -31,6 +46,7 @@ class CkeditorAdminController extends BaseMediaAdminController
     public function browserAction()
     {
         $this->checkIfMediaBundleIsLoaded();
+
         $this->admin->checkAccess('list');
 
         $datagrid = $this->admin->getDatagrid();
@@ -56,10 +72,11 @@ class CkeditorAdminController extends BaseMediaAdminController
             ->getQuery()->getResult();
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
-
-        return $this->render(
+        return $this->renderWithExtraParams(
             $this->getTemplate('browser'),
             [
+                'media_pool' => $this->get('sonata.media.pool'),
+                'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
                 'lastItem' => 0,
@@ -212,9 +229,11 @@ class CkeditorAdminController extends BaseMediaAdminController
 
         $tagAdmin = $this->get('networking_init_cms.admin.tag');
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             '@NetworkingInitCms/Ckeditor/browser_list_items.html.twig',
             [
+                'media_pool' => $this->get('sonata.media.pool'),
+                'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
                 'lastItem' => 0,

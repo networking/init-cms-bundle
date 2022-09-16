@@ -8,8 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Fixtures;
+namespace Networking\InitCmsBundle\DataFixtures;
 
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -17,13 +18,14 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 /**
  * Class LoadPages.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadPages extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadPages extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -39,7 +41,7 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
     }
 
     /**
-     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
@@ -102,6 +104,11 @@ class LoadPages extends AbstractFixture implements OrderedFixtureInterface, Cont
         foreach ($templates as $key => $template) {
             return $key;
         }
+    }
+
+    public static function getGroups(): array
+    {
+        return ['init_cms'];
     }
 
     /**

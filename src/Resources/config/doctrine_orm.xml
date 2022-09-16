@@ -95,6 +95,22 @@
             <tag name="form.type" alias="media_entity_type"/>
         </service>
 
+        <service id="Networking\InitCmsBundle\DataFixtures\LoadHelpText">
+            <tag name="doctrine.fixture.orm"></tag>
+        </service>
+
+        <service id="Networking\InitCmsBundle\DataFixtures\LoadLayoutBlocks">
+            <tag name="doctrine.fixture.orm"></tag>
+        </service>
+
+        <service id="Networking\InitCmsBundle\DataFixtures\LoadMenu">
+            <tag name="doctrine.fixture.orm"></tag>
+        </service>
+
+        <service id="Networking\InitCmsBundle\DataFixtures\LoadPages">
+            <tag name="doctrine.fixture.orm"></tag>
+        </service>
+
     </services>
 
 </container>

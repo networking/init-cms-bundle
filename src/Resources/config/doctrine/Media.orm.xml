@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Networking\InitCmsBundle\Entity\Media" table="media__media">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="locale" type="string" column="locale" length="6" nullable="true"/>
+    <field name="md5File" type="string" column="md5_file" length="255" nullable="true"/>
+    <one-to-many field="galleryHasMedias" target-entity="Networking\InitCmsBundle\Entity\GalleryHasMedia" mapped-by="media" fetch="LAZY">
+      <cascade>
+        <cascade-remove/>
+      </cascade>
+    </one-to-many>
+    <many-to-many field="tags" target-entity="Networking\InitCmsBundle\Entity\Tag" fetch="LAZY">
+      <join-table name="media_tags">
+        <join-columns>
+          <join-column name="media_id" referenced-column-name="id" on-delete="CASCADE"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="tag_id" referenced-column-name="id" on-delete="CASCADE"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+    <lifecycle-callbacks>
+      <lifecycle-callback type="prePersist" method="prePersist"/>
+      <lifecycle-callback type="preUpdate" method="preUpdate"/>
+    </lifecycle-callbacks>
+  </entity>
+</doctrine-mapping>

@@ -15,6 +15,7 @@ use FOS\CKEditorBundle\Model\ConfigManager;
 use FOS\CKEditorBundle\Config\CKEditorConfiguration;
 use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
+use Networking\InitCmsBundle\Admin\Model\PageAdmin;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
 use Networking\InitCmsBundle\Helper\BundleGuesser;
@@ -555,9 +556,15 @@ class NetworkingHelperExtension extends AbstractExtension
 
         if ($subject = $admin->getSubject()) {
             return $this->getFieldValue($subject, 'locale');
-        } elseif ($filter = $admin->getDatagrid()->getFilter('locale')) {
-            /** @var \Sonata\AdminBundle\Filter\Filter $filter */
-            $data = $filter->getValue();
+        }
+
+        $parameters = $admin->getFilterParameters();
+
+        if (array_key_exists('locale', $parameters)) {
+
+
+            $data = $parameters['locale'];
+            
             if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
                 $locale = $this->getCurrentLocale();
             }
@@ -573,7 +580,9 @@ class NetworkingHelperExtension extends AbstractExtension
             if (!$locale && method_exists($admin, 'getDefaultLocale')) {
                 $locale = $admin->getDefaultLocale();
             }
+
         }
+
 
         return $locale;
     }

@@ -8,7 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Networking\InitCmsBundle\Fixtures;
+namespace Networking\InitCmsBundle\DataFixtures;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -21,7 +23,7 @@ use Networking\InitCmsBundle\Entity\HelpText;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -177,7 +179,7 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
     }
 
     /**
-     * @param \Doctrine\Persistence\ObjectManager $manager
+     * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
@@ -216,6 +218,11 @@ class LoadHelpText extends AbstractFixture implements OrderedFixtureInterface, C
 
         $manager->persist($helpText);
         $manager->flush();
+    }
+
+    public static function getGroups(): array
+    {
+        return ['init_cms'];
     }
 
     /**
