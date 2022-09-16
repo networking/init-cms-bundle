@@ -16,6 +16,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "doctrine/dbal": "^2.13",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "friendsofsymfony/ckeditor-bundle": "^2.2",
         "jms/serializer-bundle": "^3.4",
