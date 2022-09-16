@@ -323,7 +323,7 @@ file that was distributed with this source code.
                     filters = {}
                 }
                 $.get(
-                    "{{ admin.generateUrl('refresh_list')|raw }}",
+                    "{{ admin.generateUrl('refresh_list', {'galleryMode': galleryListMode == 'gallery'})|raw }}",
                     filters,
                     function (xhr) {
                         $('#item_list').html(xhr);
