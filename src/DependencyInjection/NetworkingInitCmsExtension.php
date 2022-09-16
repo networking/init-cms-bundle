@@ -110,17 +110,17 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 }
             }
 
-            if (!$templatingEnginesSet) {
-                $engines = [];
-                if (class_exists('\Twig\Environment')) {
-                    $engines[] = 'twig';
-                } elseif (class_exists('Symfony\Component\Templating\PhpEngine')) {
-                    $engines[] = 'php';
-                }
-
-                $config = ['templating' => ['engines' => $engines]];
-                $container->prependExtensionConfig('framework', $config);
-            }
+//            if (!$templatingEnginesSet) {
+//                $engines = [];
+//                if (class_exists('\Twig\Environment')) {
+//                    $engines[] = 'twig';
+//                } elseif (class_exists('Symfony\Component\Templating\PhpEngine')) {
+//                    $engines[] = 'php';
+//                }
+//
+//                $config = ['templating' => ['engines' => $engines]];
+//                $container->prependExtensionConfig('framework', $config);
+//            }
 
             if ($isCacheActive && !$pageCacheSet) {
                 $pools['page.cache'] = ['adapter' => 'cache.app'];
