@@ -51,12 +51,6 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     }
 
 
-    public function configure()
-    {
-        $this->annotationReader =  $this->container->get('networking_init_cms.annotation.reader');
-    }
-
-
     /**
      * Set the language paramenter to contain a list of languages most likely
      * passed from the config.yaml file.
