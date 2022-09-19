@@ -38,7 +38,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     <script src="{{ asset('bundles/networkinginitcms/vendor/pdfjs/build/pdf.js') }}"></script>
 
     <script>
-        var DEFAULT_URL = '{% path object, 'reference' %}';
+        var DEFAULT_URL = '{{ sonata_path(object, 'reference')  }}';
     </script>
     <script type="text/javascript" src="{{ asset('pdf-viewer.js', 'init_cms') }}"></script>
 

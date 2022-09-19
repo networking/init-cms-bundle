@@ -14,15 +14,19 @@ namespace Networking\InitCmsBundle\Admin\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
+use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
 use Networking\InitCmsBundle\Form\Type\MediaEntityType;
 use Networking\InitCmsBundle\Model\Page;
+use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\Form\Type\CollectionType;
@@ -331,6 +335,7 @@ abstract class PageAdmin extends BaseAdmin
                     'format' => 'dd.MM.yyyy HH:mm',
                     'required' => false,
                     'widget' => 'single_text',
+                    'html5' => false,
                     'datetimepicker' => true,
                     'widget_reset_icon' => 'remove',
                 ]
@@ -342,6 +347,7 @@ abstract class PageAdmin extends BaseAdmin
                     'format' => 'dd.MM.yyyy HH:mm',
                     'required' => false,
                     'widget' => 'single_text',
+                    'html5' => false,
                     'datetimepicker' => true,
                     'widget_reset_icon' => 'remove',
                 ])
@@ -383,6 +389,7 @@ abstract class PageAdmin extends BaseAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
+
         $datagridMapper
             ->add(
                 'locale',
@@ -393,17 +400,19 @@ abstract class PageAdmin extends BaseAdmin
                         'getByLocale',
                     ],
                 ],
-                LanguageType::class,
                 [
-                    'placeholder' => false,
-                    'choice_loader' => new CallbackChoiceLoader(function () {
-                        return $this->getLocaleChoices();
-                    }),
-                    'preferred_choices' => [$this->getDefaultLocale()],
-                    'translation_domain' => $this->getTranslationDomain(),
+                    'field_type' => LanguageType::class,
+                    'field_options' => [
+                        'placeholder' => false,
+                        'choice_loader' => new CallbackChoiceLoader(function () {
+                            return $this->getLocaleChoices();
+                        }),
+                        'preferred_choices' => [$this->getDefaultLocale()],
+                        'translation_domain' => $this->getTranslationDomain(),
+                    ]
                 ]
             )
-            ->add('pageName', SimpleStringFilter::class, [], null, ['translation_domain' => $this->getTranslationDomain()])
+            ->add('pageName', SimpleStringFilter::class, [], ['translation_domain' => $this->getTranslationDomain()])
             ->add(
                 'path',
                 CallbackFilter::class,
@@ -413,17 +422,21 @@ abstract class PageAdmin extends BaseAdmin
                 'status',
                 SimpleStringFilter::class,
                 ['hidden' => true],
-                ChoiceType::class,
+
                 [
-                    'placeholder' => 'empty_option',
-                    'choices' => [
-                        PageInterface::STATUS_DRAFT => PageInterface::STATUS_DRAFT,
-                        PageInterface::STATUS_REVIEW => PageInterface::STATUS_REVIEW,
-                        PageInterface::STATUS_PUBLISHED => PageInterface::STATUS_PUBLISHED,
-                    ],
-                    'translation_domain' => $this->getTranslationDomain(),
+                    'field_type' => ChoiceType::class,
+                    'field_options' => [
+                        'placeholder' => 'empty_option',
+                        'choices' => [
+                            PageInterface::STATUS_DRAFT => PageInterface::STATUS_DRAFT,
+                            PageInterface::STATUS_REVIEW => PageInterface::STATUS_REVIEW,
+                            PageInterface::STATUS_PUBLISHED => PageInterface::STATUS_PUBLISHED,
+                        ],
+                        'translation_domain' => $this->getTranslationDomain(),
+                    ]
                 ]
             );
+
 
         foreach ($this->getExtensions() as $extension) {
             $extension->configureDatagridFilters($datagridMapper);
@@ -436,7 +449,7 @@ abstract class PageAdmin extends BaseAdmin
     public function configureDefaultFilterValues(array &$filterValues): void
     {
         $filterValues['locale'] = [
-            'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'type' => ContainsOperatorType::TYPE_EQUAL,
             'value' => $this->getDefaultLocale(),
         ];
     }
@@ -491,14 +504,14 @@ abstract class PageAdmin extends BaseAdmin
      * @param ProxyQuery $ProxyQuery
      * @param $alias
      * @param $field
-     * @param $data
+     * @param FilterData $data
      *
      * @return bool
      */
     public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
         $active = true;
-        if (!$locale = $data['value']) {
+        if (!$locale = $data->getValue()) {
             $locale = $this->getDefaultLocale();
             $active = false;
         }
@@ -524,7 +537,7 @@ abstract class PageAdmin extends BaseAdmin
         }
 
         $rootMenus = $this->getModelManager()->findBy(
-            'NetworkingInitCmsBundle:MenuItem',
+            MenuItem::class,
             ['isRoot' => 1, 'locale' => $locale]
         );
         $listMapper

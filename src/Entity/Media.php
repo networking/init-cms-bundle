@@ -40,11 +40,6 @@ class Media extends BaseMedia implements IgnoreRevertInterface
     protected $locale;
 
     /**
-     * @var ArrayCollection
-     */
-    protected $galleryHasMedias;
-
-    /**
      * @var string
      */
     protected $md5File;
@@ -174,19 +169,19 @@ class Media extends BaseMedia implements IgnoreRevertInterface
         return $this;
     }
 
-    public function prePersist()
+    public function prePersist(): void
     {
         $checksum = $this->getChecksum();
         $this->setMd5File($checksum);
 
-        return parent::prePersist();
+        parent::prePersist();
     }
 
-    public function preUpdate()
+    public function preUpdate(): void
     {
         $checksum = $this->getChecksum();
         $this->setMd5File($checksum);
 
-        return parent::preUpdate();
+       parent::preUpdate();
     }
 }

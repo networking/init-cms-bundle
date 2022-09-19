@@ -20,6 +20,7 @@ use Sonata\MediaBundle\Generator\GeneratorInterface;
 use Sonata\MediaBundle\Metadata\MetadataBuilderInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Sonata\MediaBundle\Provider\FileProvider;
+use Sonata\MediaBundle\Provider\ImageProviderInterface;
 use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Sonata\MediaBundle\Provider\Metadata;
 use Sonata\MediaBundle\Provider\MetadataInterface;
@@ -29,7 +30,7 @@ use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class ImageProvider extends FileProvider
+class ImageProvider extends FileProvider implements ImageProviderInterface
 {
     /** @var string */
     const SVG_CONTENT_TYPES = ['image/svg', 'image/svg+xml'];

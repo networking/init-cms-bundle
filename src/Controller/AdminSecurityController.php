@@ -99,14 +99,15 @@ class AdminSecurityController extends AbstractController
         $csrfToken = $this->csrfTokenManager->getToken('authenticate')->getValue();
 
         return $this->render(
-            'NetworkingInitCmsBundle:Admin:Security/login.html.twig',
+            '@NetworkingInitCms/Admin/Security/login.html.twig',
             [
                 'admin_pool' => $this->pool,
                 'base_template' => $this->templateRegistry->getTemplate('layout'),
                 'csrf_token' => $csrfToken,
                 'error' => $error,
                 'last_username' => (null === $session) ? '' : $session->get(Security::LAST_USERNAME),
-                'reset_route' => $this->generateUrl('networking_init_cms_admin_resetting_request'),
+                'reset_route' => $this->generateUrl('sonata_user_admin_resetting_request'),
+                'template_registry' => $this->templateRegistry
             ]
         );
     }

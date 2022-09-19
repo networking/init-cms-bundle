@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\EventListener;
 
 use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Class AdminTrackerListener.
@@ -39,11 +40,11 @@ class AdminTrackerListener
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+     * @param RequestEvent $event
      *
-     * @throws \RuntimeException
+     * @return void
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
 

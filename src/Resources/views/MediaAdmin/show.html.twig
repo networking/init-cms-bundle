@@ -75,7 +75,7 @@ file that was distributed with this source code.
 
         <tr>
             <td>{{ 'label.public_url'|trans({}, 'MediaAdmin') }}</td>
-            <td><input type="text" value="{% path media, format %}" style="width:500px"/></td>
+            <td><input type="text" value="{{ sonata_path(media, format)  }}" style="width:500px"/></td>
         <tr>
     </table>
 
@@ -86,7 +86,7 @@ file that was distributed with this source code.
                 <a href="{{ admin.generateUrl('show', { 'id' : media.id, 'format' : 'reference'}) }}">reference</a>
             </td>
             <td>
-                <input type="text" value="{% path media, 'reference' %}"  style="width:500px" />
+                <input type="text" value="{{ sonata_path(media, 'reference')  }}"  style="width:500px" />
             </td>
         </tr>
 
@@ -96,7 +96,7 @@ file that was distributed with this source code.
                     <a href="{{ admin.generateUrl('show', { 'id' : media.id, 'format' : name}) }}">{{ name }}</a>
                 </td>
                 <td>
-                    <input type="text" value="{% path media, name %}"  style="width:500px"/>
+                    <input type="text" value="{{ sonata_path(object, name)  }}"  style="width:500px"/>
                 </td>
             </tr>
         {% endfor %}

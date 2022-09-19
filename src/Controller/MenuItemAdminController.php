@@ -218,10 +218,10 @@ class MenuItemAdminController extends CRUDController
         // set the theme for the current Admin Form
         $this->setFormTheme($formView, $this->admin->getFilterTheme());
 
-        if ($this->isXmlHttpRequest()) {
+        if ($this->isXmlHttpRequest($request)) {
             if ($request->get('render')) {
                 return $this->renderWithExtraParams(
-                    'NetworkingInitCmsBundle:MenuItemAdmin:'.$ajaxTemplate.'.html.twig',
+                    '@NetworkingInitCms/MenuItemAdmin/'.$ajaxTemplate.'.html.twig',
                     [
                         'menus' => $menus,
                         'admin' => $this->admin,
@@ -230,7 +230,7 @@ class MenuItemAdminController extends CRUDController
                 );
             } else {
                 return $this->renderView(
-                    'NetworkingInitCmsBundle:MenuItemAdmin:'.$ajaxTemplate.'.html.twig',
+                    '@NetworkingInitCms/MenuItemAdmin/'.$ajaxTemplate.'.html.twig',
                     [
                         'menus' => $menus,
                         'admin' => $this->admin,
@@ -279,7 +279,7 @@ class MenuItemAdminController extends CRUDController
 
         $reponse =  parent::createAction($request);
 
-        if($this->isXmlHttpRequest() && $this->getRequest()->isMethod('POST')){
+        if($this->isXmlHttpRequest($request) && $this->getRequest()->isMethod('POST')){
             $reponse = $this->getJsonResponse($reponse);
         }
 
@@ -303,7 +303,7 @@ class MenuItemAdminController extends CRUDController
 
         $reponse =  parent::editAction($request);
 
-        if($this->isXmlHttpRequest() && $this->getRequest()->isMethod('POST')){
+        if($this->isXmlHttpRequest($request) && $this->getRequest()->isMethod('POST')){
             $reponse = $this->getJsonResponse($reponse);
         }
 
@@ -342,7 +342,7 @@ class MenuItemAdminController extends CRUDController
                 $this->currentMenuLanguage = $object->getLocale();
                 $this->admin->delete($object);
 
-                if ($this->isXmlHttpRequest()) {
+                if ($this->isXmlHttpRequest($request)) {
                     return $this->getJsonResponse(
                         [
                             'result' => 'ok',
@@ -355,7 +355,7 @@ class MenuItemAdminController extends CRUDController
                     $this->addFlash('sonata_flash_success', $this->trans('flash_delete_success', [], 'NetworkingInitCmsBundle'));
                 }
             } catch (ModelManagerException $e) {
-                if ($this->isXmlHttpRequest()) {
+                if ($this->isXmlHttpRequest($request)) {
                     return $this->getJsonResponse(
                         [
                             'result' => 'ok',

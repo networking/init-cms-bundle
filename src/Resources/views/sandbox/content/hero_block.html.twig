@@ -20,7 +20,7 @@ file that was distributed with this source code.
 		<div class="carousel-inner">
 			{% for mediaItem in gallery.galleryHasMedias %}
 			<div class="item">
-				<img src="{% path mediaItem.media, 'big' %}" alt="" />
+				<img src="{{ sonata_path(mediaItem.media, 'big')  }}" alt="" />
 				<div class="carousel-caption">
 					<p>{{ mediaItem.media.getDescription }}</p>
 				</div>

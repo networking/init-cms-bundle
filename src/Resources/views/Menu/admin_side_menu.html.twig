@@ -16,7 +16,7 @@
     {% endif %}
     {%- if item.displayed %}
         {#- check role of the group #}
-        {%- set display = (item.extra('roles') is empty or is_granted(sonata_admin.adminPool.getOption('role_super_admin')) ) %}
+        {%- set display = (item.extra('roles') is empty or is_granted(sonata_config.getOption('role_super_admin')) ) %}
         {%  if not display  %}
             {%- for role in item.extra('roles')%}
                 {%- set display = is_granted(role) %}

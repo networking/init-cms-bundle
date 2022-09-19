@@ -26,6 +26,10 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <service id="Networking\InitCmsBundle\Filter\SimpleStringFilter" autowire="true" public="true">
+            <tag name="sonata.admin.filter.type" />
+        </service>
+
         <service id="Networking\InitCmsBundle\Controller\InitCmsInstallController" autowire="true" public="true">
             <argument key="$userManager" type="service" id="networking_init_cms.user_manager"/>
             <tag name="controller.service_arguments"/>
@@ -128,7 +132,11 @@
         <!-- admin aliases -->
         <service id="Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin"
                  alias="networking_init_cms.admin.layout_block"
-                 public="false"/>
+                 public="true"/>
+
+        <service id="Networking\InitCmsBundle\Admin\Model\PageAdmin"
+                 alias="networking_init_cms.admin.page"
+                 public="true"/>
 
         <service id="Sonata\AdminBundle\Admin\Pool"
                  alias="sonata.admin.pool"

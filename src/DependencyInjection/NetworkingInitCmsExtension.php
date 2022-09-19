@@ -181,7 +181,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.db_driver', $config['db_driver']);
 
         if ($config['db_driver'] == 'orm') {
-            $config['class']['media'] = $container->getParameter('sonata.media.admin.media.class');
+            $config['class']['media'] = $container->getParameter('sonata.media.media.class');
             $this->registerDoctrineORMMapping($config);
         }
 

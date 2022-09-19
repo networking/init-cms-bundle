@@ -27,7 +27,7 @@ file that was distributed with this source code.
                role="form"
               action="{% block sonata_form_action_url %}{{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}{% endblock %}"
                 {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
-                {% if not sonata_admin.adminPool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+                {% if not sonata_config.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
               method="POST">
             {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
                 <div class="modal-header">

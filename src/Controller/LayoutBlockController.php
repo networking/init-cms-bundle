@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
@@ -65,9 +66,9 @@ class LayoutBlockController extends CRUDController
      */
     public function createAction(Request $request): Response
     {
-        if (!$this->isXmlHttpRequest()) {
-            return new Response('cannot load external of page module', 403);
-        }
+//        if (!$this->isXmlHttpRequest($request)) {
+//            return new Response('cannot load external of page module', 403);
+//        }
 
         if (false === $this->admin->isGranted('CREATE')) {
             throw new AccessDeniedException();
@@ -80,13 +81,13 @@ class LayoutBlockController extends CRUDController
         $formFieldId = $request->get('formFieldId');
 
         $code = $request->get('code');
-        $pageId = $request->get('pageId');
+        $pageId = 1;//$request->get('pageId');
         $uniqId = $request->get('uniqId');
         $classType = $request->get('classType');
-
         /** @var PageAdmin $pageAdmin */
-        $pageAdmin = $this->container->get($code);
+        $pageAdmin = $this->get('networking_init_cms.admin.page');
         $pageAdmin->setRequest($request);
+
 
         $page = $this->pageManager->find($pageId);
         if ($pageId && !$page) {
@@ -120,7 +121,7 @@ class LayoutBlockController extends CRUDController
                 // persist if the form was valid and if in preview mode the preview was approved
                 if ($form->isValid() && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
                     $this->admin->create($layoutBlock);
-                    if ($this->isXmlHttpRequest()) {
+                    if ($this->isXmlHttpRequest($request)) {
                         return $this->renderJson(
                             [
                                 'result' => 'ok',
@@ -415,5 +416,12 @@ class LayoutBlockController extends CRUDController
                 'html' => $html,
             ]
         );
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+                'networking_init_cms.admin.page' => \Networking\InitCmsBundle\Admin\Model\PageAdmin::class,
+            ] + parent::getSubscribedServices();
     }
 }

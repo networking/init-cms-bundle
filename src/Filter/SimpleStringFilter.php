@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Filter;
 
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\Type\Filter\DefaultType;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\DoctrineORMAdminBundle\Filter\Filter;
@@ -32,7 +33,8 @@ class SimpleStringFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function filter(ProxyQueryInterface $queryBuilder, $alias, $field, $data)
+    public function filter(
+        \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQueryInterface $query, string $alias, string $field, FilterData $data): void
     {
         if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
             return;
@@ -83,7 +85,7 @@ class SimpleStringFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions()
+    public function getDefaultOptions(): array
     {
         return [
             'format' => '%%%s%%',
@@ -115,7 +117,7 @@ class SimpleStringFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function getRenderSettings()
+    public function getRenderSettings(): array
     {
         return [
             DefaultType::class,

@@ -6,7 +6,7 @@ Networking\InitCmsBundle\Entity\Media:
             type: string
         tags:
             exclude: true
-        galleryHasMedias:
+        galleryItems:
             exclude: true
         md5File:
             exclude: true

@@ -30,7 +30,7 @@ class TagAdminController extends CRUDController
         /** @var Response $response */
         $response = parent::createAction($request);
 
-        if ($this->isXmlHttpRequest()) {
+        if ($this->isXmlHttpRequest($request)) {
             $content = $response->getContent();
             $jsonArray = json_decode($content, true);
 
@@ -92,7 +92,7 @@ class TagAdminController extends CRUDController
             try {
                 $this->admin->delete($object);
 
-                if ($this->isXmlHttpRequest()) {
+                if ($this->isXmlHttpRequest($request)) {
                     return $this->renderJson(['result' => 'ok']);
                 }
 
@@ -114,7 +114,7 @@ class TagAdminController extends CRUDController
             } catch (ModelManagerException $e) {
                 $this->logModelManagerException($e);
 
-                if ($this->isXmlHttpRequest()) {
+                if ($this->isXmlHttpRequest($request)) {
                     return $this->renderJson(['result' => 'error']);
                 }
 

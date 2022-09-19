@@ -15,6 +15,7 @@ use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
@@ -123,7 +124,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     public function configureDefaultFilterValues(array &$filterValues): void
     {
         $filterValues['locale'] = [
-            'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'type' => ContainsOperatorType::TYPE_EQUAL,
             'value' => $this->getDefaultLocale(),
         ];
     }

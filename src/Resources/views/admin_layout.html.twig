@@ -54,10 +54,10 @@ file that was distributed with this source code.
     {% block meta_config %}
     <meta data-sonata-admin='{{ {
         config: {
-            CONFIRM_EXIT: sonata_admin.adminPool.getOption('confirm_exit'),
-            USE_SELECT2:sonata_admin.adminPool.getOption('use_select2'),
+            CONFIRM_EXIT: sonata_config.getOption('confirm_exit'),
+            USE_SELECT2:sonata_config.getOption('use_select2'),
             USE_ICHECK: false,
-            USE_STICKYFORMS: sonata_admin.adminPool.getOption('use_stickyforms'),
+            USE_STICKYFORMS: sonata_config.getOption('use_stickyforms'),
         },
         translations: {
             CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
@@ -105,8 +105,8 @@ file that was distributed with this source code.
 {% endblock navbar_spacer %}
 
     <div class="{% block container_class %}container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %}{% endblock container_class %} row-offcanvas">
-
         <div class="row">
+        {% block sonata_wrapper %}
             <div class="col-sm-12 col-xs-12 col-md-offset-2 col-md-10 notice-block affix">
                 {% block notice %}
                     {% for notice_level in ['success','error','info', 'warning'] %}
@@ -149,16 +149,7 @@ file that was distributed with this source code.
                                         {{ _title|raw }}
                                     {% else %}
                                         {% if action is defined %}
-                                            {% for menu in breadcrumbs_builder.breadcrumbs(admin, action) %}
-                                                {% if loop.last %}
-                                                    {%- set translation_domain = menu.extra('translation_domain', 'messages') -%}
-                                                    {%- set label = menu.label -%}
-                                                    {%- if translation_domain is not same as(false) -%}
-                                                        {%- set label = label|trans(menu.extra('translation_params', {}), translation_domain) -%}
-                                                    {%- endif -%}
-                                                    {{ label|raw }}
-                                                {% endif %}
-                                            {% endfor %}
+                                            {{ render_breadcrumbs_for_title(admin, action) }}
                                         {% endif %}
                                         {% if action == 'edit' %}
                                             {% set settings = {} %}
@@ -243,6 +234,7 @@ file that was distributed with this source code.
                     </div>
                 {% endblock %}
             </div>
+        {% endblock sonata_wrapper %}
         </div>
 
         {% block footer %}
@@ -254,7 +246,7 @@ file that was distributed with this source code.
 {% block before_body_end %}
     <script type="text/javascript" src="{{ asset('app.js', 'init_cms') }}"></script>
     <script type="text/javascript" src="{{ asset('networking_initcms.js', 'init_cms') }}"></script>
-    {% if admin_pool is defined and admin_pool.getOption('confirm_exit') %}
+    {% if sonata_config.getOption('confirm_exit') %}
     <script src="{{ asset('bundles/networkinginitcms/vendor/jquery-confirm-exit/jquery.confirmExit.js') }}" type="text/javascript"></script>
     {% endif %}
     <script src="{{ asset('bundles/sonataadmin/Admin.js') }}" type="text/javascript"></script>

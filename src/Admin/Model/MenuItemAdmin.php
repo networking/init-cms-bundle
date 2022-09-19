@@ -20,6 +20,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
@@ -328,7 +329,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     public function configureDefaultFilterValues(array &$filterValues): void
     {
         $filterValues['locale'] = [
-            'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
+            'type' => ContainsOperatorType::TYPE_EQUAL,
             'value' => $this->getDefaultLocale(),
         ];
     }

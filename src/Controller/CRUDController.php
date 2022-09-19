@@ -102,7 +102,7 @@ class CRUDController extends SonataCRUDController
         if (array_key_exists('action', $parameters) && $parameters['action'] === 'edit') {
             $event = new CmsEvent($parameters['object']);
 
-            $this->dispatcher->dispatch(self::EDIT_ENTITY, $event);
+            $this->dispatcher->dispatch( $event, self::EDIT_ENTITY);
         }
 
         return parent::addRenderExtraParams($parameters);

@@ -38,7 +38,7 @@ class PageAdmin extends ModelPageAdmin
         $loggableClass = 'Gedmo\\Loggable\\Entity\\LogEntry';
         /** @var \Gedmo\Loggable\Entity\Repository\LogEntryRepository $repo */
         $repo = $this->getModelManager()->getEntityManager($this->getClass())->getRepository($loggableClass);
-        $logEntries = $repo->getLogEntries($this->subject);
+        $logEntries = $repo->getLogEntries($this->getSubject());
 
         return array_shift($logEntries);
     }

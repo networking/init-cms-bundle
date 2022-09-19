@@ -31,6 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Locales;
 
 /**
  * Class TranslationAdmin.
@@ -240,7 +241,7 @@ class TranslationAdmin extends AbstractAdmin
             } else {
                 $localeString = $locale;
             }
-            $localeList = Intl::getLocaleBundle()->getLocaleNames(substr($localeString, 0, 2));
+            $localeList =  Locales::getNames(substr($localeString, 0, 2));
 
             $fieldDescription = $this->getModelManager()->getNewFieldDescriptionInstance($this->getClass(), $locale);
             $fieldDescription->setTemplate(

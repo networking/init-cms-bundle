@@ -126,7 +126,7 @@ file that was distributed with this source code.
                                     {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
                                         {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
                                     {% else %}
-                                        {% set previewLink %}{% path object, 'reference' %}{% endset %}
+                                        {% set previewLink %}{{ sonata_path(object, 'reference')  }}{% endset %}
                                     {% endif %}
                                 {% else %}
                                     {% if object.contentType == 'application/pdf' %}
@@ -137,7 +137,7 @@ file that was distributed with this source code.
                                 {% if object.width is defined and object.width %}
                                 {% if object.providerName == 'sonata.media.provider.image' %}
                                     <script id="image-container"
-                                            data-image-src="{{ app.request.getSchemeAndHttpHost() }}{% path object, 'reference' %}"
+                                            data-image-src="{{ app.request.getSchemeAndHttpHost() }}{{ sonata_path(object, 'reference')  }}"
                                             data-image-id="{{ object.id }}"
                                             data-image-context="{{ object.context }}"
                                             data-image-provider="{{ object.providerName }}"
@@ -145,7 +145,7 @@ file that was distributed with this source code.
                                     ></script>
                                     <div id="image-editor"></div>
                                 {% else %}
-                                <img src="{% path object, 'reference' %}">
+                                <img src="{{ sonata_path(object, 'reference')  }}">
                                 {% endif %}
                                 {% else %}
                                 {% if previewLink %}
@@ -203,7 +203,7 @@ file that was distributed with this source code.
                                         {% if object.width is defined and object.width %}
                                         <tr>
                                             <th>
-                                                <a href="{% path object, 'reference' %}"
+                                                <a href="{{ sonata_path(object, 'reference')  }}"
                                                    data-featherlight-variant="initcms-featherlight"
                                                    data-featherlight="image"
                                                    target="_blank">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
@@ -212,7 +212,7 @@ file that was distributed with this source code.
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" onClick="this.select();"
                                                            readonly="readonly" id="reference"
-                                                           value="{{ app.request.schemeAndHttpHost }}{% path object, 'reference' %}"/>
+                                                           value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
                                                     <span class="input-group-addon"><a
                                                                 class="glyphicon glyphicon-copy copy-link"
                                                                 data-field="#reference"></a></span>
@@ -223,7 +223,7 @@ file that was distributed with this source code.
                                         {% for name, format in sonata_media.pool.formatNamesByContext(object.context) %}
                                             <tr>
                                                 <th>
-                                                    <a href="{% path object, name %}"
+                                                    <a href="{{ sonata_path(object, name)  }}"
                                                        data-featherlight-variant="initcms-featherlight"
                                                        data-featherlight="image"
                                                        target="_blank">
@@ -235,7 +235,7 @@ file that was distributed with this source code.
                                                         <input type="text" class="form-control" onClick="this.select();"
                                                                id="{{ name }}"
                                                                readonly="readonly"
-                                                               value="{{ app.request.schemeAndHttpHost }}{% path object, name %}"/>
+                                                               value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, name)  }}"/>
                                                         <span class="input-group-addon"><a
                                                                     class="glyphicon glyphicon-copy copy-link"
                                                                     data-field="#{{ name }}"></a></span>
@@ -247,14 +247,14 @@ file that was distributed with this source code.
                                     {% else %}
                                         <tr>
                                             <th>
-                                                <a href="{% path object, 'reference' %}"
+                                                <a href="{{ sonata_path(object, 'reference')  }}"
                                                    target="_blank">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
                                             </th>
                                             <td>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" onClick="this.select();"
                                                            readonly="readonly" id="reference"
-                                                           value="{{ app.request.schemeAndHttpHost }}{% path object, 'reference' %}"/>
+                                                           value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
                                                     <span class="input-group-addon"><a
                                                                 class="glyphicon glyphicon-copy copy-link"
                                                                 data-field="#reference"></a></span>

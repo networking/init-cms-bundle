@@ -19,8 +19,8 @@ file that was distributed with this source code.
 
   <li>
     <div class="thumbnail">
-	    <a href="{% path mediaItem.media, 'big' %}" rel="prettyPhoto[{{ gallery.name }}]">
-		    {% thumbnail mediaItem.media, 'small'%}
+	    <a href="{{ sonata_path(mediaItem.media, 'big')  }}" rel="prettyPhoto[{{ gallery.name }}]">
+            {{ sonata_thumbnail(mediaItem.media, 'small')  }}
 	    </a>
       {% if  mediaItem.media.name is defined %}
       <h5>{{ mediaItem.media.name }}</h5>

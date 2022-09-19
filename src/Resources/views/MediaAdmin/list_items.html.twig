@@ -16,7 +16,7 @@
             {% set iframeWidth = '600px' %}
             {% set iframeHeight = '300px' %}
         {% else %}
-            {% set previewLink %}{% path object, 'reference' %}{% endset %}
+            {% set previewLink %}{{ sonata_path(object, 'reference')  }}{% endset %}
             {% set previewType = 'image' %}
         {% endif %}
     {% else %}
@@ -84,7 +84,7 @@
         <div class="thumbnail context">
             <div class="media-element">
                 {% if object.width is defined and object.width %}
-                    <img src="{% path object, 'admin' %}?{{ date().timestamp }}"
+                    <img src="{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}"
                          class="img-responsive  center-block"/>
                 {% else %}
                     <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fa-4x center-block"></i>

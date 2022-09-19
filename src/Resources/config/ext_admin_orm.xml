@@ -9,6 +9,15 @@
         <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\Entity\MediaAdmin</parameter>
         <parameter key="sonata.media.admin.media.controller">NetworkingInitCmsBundle:MediaAdmin</parameter>
         <parameter key="sonata.media.admin.media.translation_domain">MediaAdmin</parameter>
+
+
+        <parameter key="sonata.user.admin.group.entity">Networking\InitCmsBundle\Entity\Group</parameter>
+        <parameter key="sonata.user.admin.group.controller">Sonata\AdminBundle\Controller\CRUDController</parameter>
+        <parameter key="sonata.user.admin.group.class">Networking\InitCmsBundle\Admin\Entity\GroupAdmin</parameter>
+        <parameter key="sonata.user.admin.groupname">sonata_user</parameter>
+        <parameter key="sonata.user.admin.label_catalogue">SonataUserBundle</parameter>
+        <parameter key="sonata.user.admin.group.translation_domain">SonataUserBundle</parameter>
+        <parameter key="sonata.user.admin.groupicon"><![CDATA[<i class='fa fa-users'></i>]]></parameter>
     </parameters>
 
 
@@ -19,7 +28,7 @@
 
         <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%" public="true">
             <argument/>
-            <argument>%sonata.media.admin.media.class%</argument>
+            <argument>%sonata.media.media.class%</argument>
             <argument>%sonata.media.admin.media.controller%</argument>
             <argument type="service" id="sonata.media.pool"/>
             <call method="setModelManager">
@@ -49,6 +58,16 @@
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
+        </service>
+
+        <service id="sonata.user.admin.group" class="%sonata.user.admin.group.class%" public="true">
+            <tag name="sonata.admin" manager_type="orm" group="%sonata.user.admin.groupname%" label="groups" label_catalogue="%sonata.user.admin.label_catalogue%" label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+            <argument/>
+            <argument>%sonata.user.admin.group.entity%</argument>
+            <argument>%sonata.user.admin.group.controller%</argument>
+            <call method="setTranslationDomain">
+                <argument>%sonata.user.admin.group.translation_domain%</argument>
+            </call>
         </service>
 
     </services>

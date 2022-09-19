@@ -14,6 +14,7 @@ use Networking\InitCmsBundle\Model\HelpTextManagerInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Templating\MutableTemplateRegistryInterface;
+use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -47,13 +48,13 @@ class HelpTextController extends AbstractController
     /**
      * HelpTextController constructor.
      * @param HelpTextManagerInterface $helpTextManager
-     * @param MutableTemplateRegistryInterface $templateRegistry
+     * @param TemplateRegistryInterface $templateRegistry
      * @param Pool $pool
      * @param TranslatorInterface $translator
      */
     public function __construct(
         HelpTextManagerInterface $helpTextManager,
-        MutableTemplateRegistryInterface $templateRegistry,
+        TemplateRegistryInterface $templateRegistry,
         Pool $pool,
         TranslatorInterface $translator
     ) {

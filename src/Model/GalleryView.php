@@ -200,7 +200,7 @@ class GalleryView implements GalleryViewInterface
     public function getTemplateOptions($params = [])
     {
         return [
-            'mediaItems' => $this->getMediaGallery()->getGalleryHasMedias(),
+            'mediaItems' => $this->getMediaGallery()->getGalleryItems(),
             'gallery' => $this->getMediaGallery(),
             'galleryView' => $this,
         ];
@@ -234,7 +234,7 @@ class GalleryView implements GalleryViewInterface
      */
     public function getMediaItems()
     {
-        $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryHasMedias() : [];
+        $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryItems() : [];
 
         return $mediaItems;
     }

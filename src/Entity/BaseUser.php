@@ -34,6 +34,8 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
      */
     protected $lastActivity;
 
+    protected $twoStepVerificationCode;
+
     /**
      * Hook on pre-persist operations.
      */
@@ -101,6 +103,27 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
 
         $this->adminSettings->setSetting($key, $value);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTwoStepVerificationCode()
+    {
+        return $this->twoStepVerificationCode;
+    }
+
+    /**
+     * @param mixed $twoStepVerificationCode
+     *
+     * @return BaseUser
+     */
+    public function setTwoStepVerificationCode($twoStepVerificationCode)
+    {
+        $this->twoStepVerificationCode = $twoStepVerificationCode;
+
+        return $this;
+    }
+
 
     public function getHash()
     {

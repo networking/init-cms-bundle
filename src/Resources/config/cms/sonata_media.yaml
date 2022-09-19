@@ -3,7 +3,7 @@ sonata_media:
     class:
         media:              Networking\InitCmsBundle\Entity\Media
         gallery:            Networking\InitCmsBundle\Entity\Gallery
-        gallery_item:  Networking\InitCmsBundle\Entity\GalleryHasMedia
+        gallery_item:       Networking\InitCmsBundle\Entity\GalleryItem
     default_context: default
     db_driver: doctrine_orm # or doctrine_mongodb
     contexts:

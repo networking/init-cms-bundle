@@ -554,7 +554,8 @@ class NetworkingHelperExtension extends AbstractExtension
             $admin->setRequest($this->requestStack->getCurrentRequest());
         }
 
-        if ($subject = $admin->getSubject()) {
+        if ($admin->hasSubject()) {
+            $subject = $admin->getSubject();
             return $this->getFieldValue($subject, 'locale');
         }
 

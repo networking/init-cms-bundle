@@ -2,7 +2,7 @@
     <section data-featherlight-gallery  data-featherlight-filter="a[rel='{{ relName|default('featherlight') }}[{{ gallery.name }}]']" >
         {% for galleryMedia in gallery.galleryHasMedias %}
 
-                    <a href="{% path galleryMedia.media, largeFormat|default(gallery.defaultFormat) %}" class="thumbnail"
+                <a href="{{ sonata_path(galleryMedia.media, (largeFormat|default(gallery.defaultFormat)))  }}" class="thumbnail"
                        rel="{{ relName|default('featherlight') }}[{{ gallery.name }}]">
                         {% thumbnail galleryMedia.media, thumbFormat|default(gallery.defaultFormat) %}
                     </a>

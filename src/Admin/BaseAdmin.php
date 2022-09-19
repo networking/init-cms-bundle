@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
 use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Locales;
 
 /**
  * Class BaseAdmin.
@@ -43,6 +44,9 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
      */
     protected $trackedActions = [];
 
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
     /**
@@ -102,7 +106,8 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
             $locale = $locale['value'];
         }
 
-        $localeList = Intl::getLocaleBundle()->getLocaleNames(substr($locale, 0, 2));
+        $localeList = Locales::getNames(substr($locale, 0, 2));
+
 
         foreach ($this->languages as $language) {
             $localeChoices[$localeList[$language['locale']]] = $language['locale'];

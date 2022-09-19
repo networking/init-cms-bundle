@@ -696,14 +696,14 @@ file that was distributed with this source code.
 {% endblock datetime_widget %}
 
 {% block networking_type_mediaprint_widget %}
-    {% media get_media_by_id(value), 'admin' %}
+    {{ sonata_media(get_media_by_id(value), 'admin') }}
 {% endblock %}
 
 {% block networking_type_media_preview_widget %}
     {% if is_image %}
-        <img src="{% path value, 'admin' %}?{{ date().timestamp }}"/>
+        <img src="{{ sonata_path(value, 'admin')  }}?{{ date().timestamp }}"/>
     {% else %}
-        {% media value, 'admin' %}
+        {{ sonata_media(value, 'admin') }}
     {% endif %}
 
 {% endblock %}

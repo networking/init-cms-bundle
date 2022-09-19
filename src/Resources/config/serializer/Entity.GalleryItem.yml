@@ -1,4 +1,4 @@
-Networking\InitCmsBundle\Entity\GalleryHasMedia:
+Networking\InitCmsBundle\Entity\GalleryItem:
     properties:
           id:
             type: integer

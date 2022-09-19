@@ -15,7 +15,7 @@
 {% block actions %}
     <div class="sonata-actions">
 
-        {% include '@SonataAdmin/Core/create_button.html.twig' %}
+        {% include '@SonataAdmin/Button/create_button.html.twig' %}
         {% if admin.hasroute('list') and admin.isGranted('LIST') %}
             <a class="btn sonata-action-element"
                href="{{ admin.generateUrl('list') }}">{{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>

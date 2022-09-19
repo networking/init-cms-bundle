@@ -12,7 +12,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\MediaBundle\Entity\BaseGalleryItem as BaseGalleryHasMedia;
+use Sonata\MediaBundle\Entity\BaseGalleryItem;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -20,7 +20,7 @@ use Sonata\MediaBundle\Entity\BaseGalleryItem as BaseGalleryHasMedia;
  * @ORM\Table(name="media__gallery_media")
  * @ORM\Entity()
  */
-class GalleryHasMedia extends BaseGalleryHasMedia
+class GalleryItem extends BaseGalleryItem
 {
     /**
      * @var int

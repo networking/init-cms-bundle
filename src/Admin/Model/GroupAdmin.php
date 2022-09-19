@@ -8,13 +8,15 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Networking\InitCmsBundle\Admin\BaseAdmin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\UserBundle\Admin\Entity\GroupAdmin as SonataGroupAdmin;
 use Sonata\UserBundle\Form\Type\SecurityRolesType;
 
-abstract class GroupAdmin extends SonataGroupAdmin
+
+abstract class GroupAdmin extends BaseAdmin
 {
     /**
      * @var array
@@ -47,7 +49,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
-            ->add('name', null, ['field_options' => ['translation_domain' => $this->translationDomain]])
+            ->add('name', null, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
         ;
     }
 
@@ -86,7 +88,7 @@ abstract class GroupAdmin extends SonataGroupAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
-            ->add('name', null, [ 'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline'])
+            ->add('name', null, [ 'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline'])
             ->add(
                 'roles',
                 SecurityRolesType::class,
@@ -94,8 +96,20 @@ abstract class GroupAdmin extends SonataGroupAdmin
                     'expanded' => true,
                     'multiple' => true,
                     'required' => false,
-                    'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline'
+                    'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline'
                 ]
             );
     }
+
+
+
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $formOptions = [
+        'validation_groups' => 'Registration',
+    ];
+
+
 }

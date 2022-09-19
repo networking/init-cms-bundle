@@ -102,7 +102,7 @@ class PageAdminController extends CRUDController
                 $html = '';
             }
 
-            if ($this->isXmlHttpRequest()) {
+            if ($this->isXmlHttpRequest($request)) {
                 return $this->renderJson(
                     [
                         'result' => $result,
@@ -176,7 +176,7 @@ class PageAdminController extends CRUDController
                 $html = '';
             }
 
-            if ($this->isXmlHttpRequest()) {
+            if ($this->isXmlHttpRequest($request)) {
                 return $this->renderJson(
                     [
                         'result' => $result,
@@ -244,7 +244,7 @@ class PageAdminController extends CRUDController
 
                 $this->admin->update($page);
 
-                if ($this->isXmlHttpRequest()) {
+                if ($this->isXmlHttpRequest($request)) {
                     $html = $this->renderView(
                         '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                         ['object' => $page, 'admin' => $this->admin]
@@ -316,7 +316,7 @@ class PageAdminController extends CRUDController
             $this->admin->update($page);
             $this->admin->update($translatedPage);
 
-            if ($this->isXmlHttpRequest()) {
+            if ($this->isXmlHttpRequest($request)) {
                 $html = $this->renderView(
                     '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
@@ -562,7 +562,7 @@ class PageAdminController extends CRUDController
         $form->setData($object);
 
         if ($request->getMethod() == 'POST') {
-            if (!$this->isXmlHttpRequest()) {
+            if (!$this->isXmlHttpRequest($request)) {
                 throw new NotFoundHttpException('Should only submit over ajax');
             }
 
@@ -587,12 +587,12 @@ class PageAdminController extends CRUDController
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
         $rootMenus = $this->admin->getModelManager()->findBy(
-            $this->container->getParameter('networking_init_cms.admin.menu_item.class'),
+            $this->getParameter('networking_init_cms.admin.menu_item.class'),
             ['isRoot' => 1, 'locale' => $object->getLocale()]
         );
 
         return $this->renderWithExtraParams(
-            $this->templateRegistry->getTemplate('edit'),
+            $this->admin->getTemplateRegistry()->getTemplate('edit'),
             [
                 'action' => 'edit',
                 'form' => $view,
