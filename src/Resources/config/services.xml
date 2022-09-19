@@ -21,19 +21,17 @@
             <tag name="controller.service_arguments"/>
         </prototype>
 
-        <service id="Networking\InitCmsBundle\Controller\AdminResettingController" autowire="true" public="true">
+        <service id="Networking\InitCmsBundle\Controller\AdminSecurityController" autowire="true" public="true">
             <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>
-            <argument key="$loginManager" type="service" id="fos_user.security.login_manager"/>
-            <argument key="$resettingFormFactory" type="service" id="fos_user.resetting.form.factory"/>
-            <argument key="$retryTTL">%fos_user.resetting.retry_ttl%</argument>
-            <argument key="$firewallName">%fos_user.firewall_name%</argument>
-            <argument key="$resettingTokenTTL">%fos_user.resetting.token_ttl%</argument>
-            <argument key="$fromEmail">%fos_user.resetting.email.from_email%</argument>
-            <argument key="$emailTemplate">%fos_user.resetting.email.template%</argument>
             <tag name="controller.service_arguments"/>
         </service>
 
-        <service id="Networking\InitCmsBundle\Controller\AdminSecurityController" autowire="true" public="true">
+        <service id="Networking\InitCmsBundle\Controller\InitCmsInstallController" autowire="true" public="true">
+            <argument key="$userManager" type="service" id="networking_init_cms.user_manager"/>
+            <tag name="controller.service_arguments"/>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Controller\HelpTextController" autowire="true" public="true">
             <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>
             <tag name="controller.service_arguments"/>
         </service>
@@ -99,11 +97,11 @@
 
         <service id="networking_init_cms.media.thumbnail.format"
                  class="Networking\InitCmsBundle\Thumbnail\FormatThumbnail">
-            <argument type="string">%sonata.media.thumbnail.format.default%</argument>
+            <argument type="string">jpg</argument>
         </service>
 
         <!-- object manager aliases -->
-        <service id="Networking\InitCmsBundle\Model\UserManagerInterface"
+        <service id="Networking\InitCmsBundle\Entity\UserManager"
                  alias="networking_init_cms.user_manager"
                  public="false"/>
 

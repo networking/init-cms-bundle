@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: yorkie
@@ -63,7 +64,7 @@ class FormatThumbnail implements ThumbnailInterface
     /**
      * {@inheritdoc}
      */
-    public function generatePublicUrl(MediaProviderInterface $provider, MediaInterface $media, $format)
+    public function generatePublicUrl(MediaProviderInterface $provider, MediaInterface $media, $format): string
     {
         if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)) {
             return $provider->getReferenceImage($media);
@@ -80,7 +81,7 @@ class FormatThumbnail implements ThumbnailInterface
     /**
      * {@inheritdoc}
      */
-    public function generatePrivateUrl(MediaProviderInterface $provider, MediaInterface $media, $format)
+    public function generatePrivateUrl(MediaProviderInterface $provider, MediaInterface $media, $format): string
     {
         if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)) {
             return $provider->getReferenceImage($media);

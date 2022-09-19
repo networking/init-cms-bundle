@@ -63,7 +63,7 @@ class LayoutBlockController extends CRUDController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig_Error_Runtime
      */
-    public function createAction()
+    public function createAction(Request $request): Response
     {
         if (!$this->isXmlHttpRequest()) {
             return new Response('cannot load external of page module', 403);
@@ -75,7 +75,6 @@ class LayoutBlockController extends CRUDController
 
         $layoutBlock = $this->admin->getNewInstance();
         /** @var Request $request */
-        $request = $this->getRequest();
         $this->admin->setSubject($layoutBlock);
 
         $formFieldId = $request->get('formFieldId');
@@ -163,7 +162,7 @@ class LayoutBlockController extends CRUDController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Twig_Error_Runtime
      */
-    public function editAction($id = null)
+    public function editAction($id = null): Response
     {
         $request = $this->getRequest();
 

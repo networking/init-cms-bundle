@@ -20,10 +20,9 @@
 
 
         <service id="networking_init_cms.user_manager" class="Networking\InitCmsBundle\Entity\UserManager">
-            <argument key="$passwordUpdater" type="service" id="fos_user.util.password_updater"/>
-            <argument key="$canonicalFieldsUpdater" type="service" id="fos_user.util.canonical_fields_updater"/>
-            <argument key="$om" type="service" id="fos_user.object_manager"/>
             <argument key="$class">%networking_init_cms.admin.user.class%</argument>
+            <argument key="$userPasswordHasher" type="service" id="security.password_hasher"/>
+            <argument key="$canonicalFieldsUpdater" type="service" id="sonata.user.util.canonical_fields_updater"/>
         </service>
 
         <service id="networking_init_cms.page_snapshot_manager"

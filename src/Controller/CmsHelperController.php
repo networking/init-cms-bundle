@@ -10,7 +10,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use FOS\UserBundle\Model\UserManagerInterface;
+use Networking\InitCmsBundle\Entity\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,7 @@ class CmsHelperController extends AbstractController
 {
     private $userManager;
 
-    public function __construct(UserManagerInterface $userManager)
+    public function __construct(UserManager $userManager)
     {
         $this->userManager = $userManager;
     }

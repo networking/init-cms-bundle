@@ -20,7 +20,7 @@ class MediaPathGenerator implements GeneratorInterface
      *
      * @return string
      */
-    public function generatePath(MediaInterface $media)
+    public function generatePath(MediaInterface $media): string
     {
         return sprintf('%s/%s', $media->getContext(), $media->getId());
     }

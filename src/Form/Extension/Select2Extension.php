@@ -9,6 +9,7 @@
 namespace Networking\InitCmsBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,14 +41,14 @@ class Select2Extension extends AbstractTypeExtension
      */
     public function getExtendedType()
     {
-        return 'Symfony\Component\Form\Extension\Core\Type\ChoiceType';
+        return ChoiceType::class;
     }
 
     /**
      * @return array|iterable
      */
-    public static function getExtendedTypes()
+    public static function getExtendedTypes(): iterable
     {
-        return ['Symfony\Component\Form\Extension\Core\Type\ChoiceType'];
+        return [ChoiceType::class];
     }
 }

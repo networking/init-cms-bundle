@@ -77,15 +77,10 @@ class MenuItemAdminController extends CRUDController
     /**
      * {@inheritdoc}
      */
-    public function listAction($pageId = false, $menuId = false, $ajaxTemplate = 'menu_tabs', $rootMenuId = null)
+    public function listAction(Request $request, $pageId = false, $menuId = false, $ajaxTemplate = 'menu_tabs', $rootMenuId = null): Response
     {
         $this->caller = __FUNCTION__;
-        if (false === $this->admin->isGranted('LIST')) {
-            throw new AccessDeniedException();
-        }
-
-        /** @var Request $request */
-        $request = $this->getRequest();
+        $this->admin->checkAccess('list');
 
         if ($request->get('page_id')) {
             $pageId = $request->get('page_id');
@@ -264,11 +259,9 @@ class MenuItemAdminController extends CRUDController
     /**
      * {@inheritdoc}
      */
-    public function createAction()
+    public function createAction(Request $request): Response
     {
         $this->caller = __FUNCTION__;
-        /** @var Request $request */
-        $request = $this->getRequest();
 
         if ($request->get('subclass') && $request->get('subclass') == 'menu') {
             if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
@@ -284,7 +277,7 @@ class MenuItemAdminController extends CRUDController
         }
 
 
-        $reponse =  parent::createAction();
+        $reponse =  parent::createAction($request);
 
         if($this->isXmlHttpRequest() && $this->getRequest()->isMethod('POST')){
             $reponse = $this->getJsonResponse($reponse);
@@ -296,7 +289,7 @@ class MenuItemAdminController extends CRUDController
     /**
      * {@inheritdoc}
      */
-    public function editAction($id = null)
+    public function editAction(Request $request): Response
     {
         $this->caller = __FUNCTION__;
         /** @var Request $request */
@@ -308,7 +301,7 @@ class MenuItemAdminController extends CRUDController
             }
         }
 
-        $reponse =  parent::editAction($id);
+        $reponse =  parent::editAction($request);
 
         if($this->isXmlHttpRequest() && $this->getRequest()->isMethod('POST')){
             $reponse = $this->getJsonResponse($reponse);
@@ -320,14 +313,15 @@ class MenuItemAdminController extends CRUDController
     /**
      * {@inheritdoc}
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request): Response
     {
-        $this->caller = __FUNCTION__;
-        /** @var Request $request */
-        $request = $this->getRequest();
+        $object = $this->assertObjectExists($request, true);
+        \assert(null !== $object);
 
-        $id = $request->get($this->admin->getIdParameter());
-        $object = $this->admin->getObject($id);
+        $this->admin->checkAccess('delete', $object);
+
+        $this->caller = __FUNCTION__;
+
 
         if (!$object) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));

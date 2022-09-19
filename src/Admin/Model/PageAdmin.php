@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Networking package.
  *
@@ -19,8 +21,10 @@ use Networking\InitCmsBundle\Form\Type\MediaEntityType;
 use Networking\InitCmsBundle\Model\Page;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\Form\Type\CollectionType;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -105,7 +109,7 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->add('translate', 'translate/{id}/locale/{locale}', [], ['method' => 'POST']);
         $collection->add('copy', 'copy/{id}', [], ['method' => 'POST']);
@@ -131,7 +135,7 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    public function getFormBuilder()
+    public function configureFormOptions(array &$formOptions): void
     {
         try {
             $request = $this->getRequest();
@@ -145,7 +149,6 @@ abstract class PageAdmin extends BaseAdmin
         }else{
             $this->pageLocale = $request->get('locale') ? $request->get('locale') : $request->getLocale();
         }
-
 
 
         if (!$this->pageLocale) {
@@ -168,13 +171,12 @@ abstract class PageAdmin extends BaseAdmin
 
         $this->formOptions['validation_groups'] = $validationGroups;
 
-        return parent::getFormBuilder();
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
 
         $this->getRequest()->attributes->add(['page_locale' => $this->pageLocale]);
@@ -319,7 +321,7 @@ abstract class PageAdmin extends BaseAdmin
                 [
                     'help_block' => 'visibility.helper.text',
                     'choices' => Page::getVisibilityList(),
-                    'translation_domain' => $this->translationDomain,
+                    'translation_domain' => $this->getTranslationDomain(),
                 ]
             )
             ->add('activeFrom',
@@ -379,7 +381,7 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add(
@@ -398,10 +400,10 @@ abstract class PageAdmin extends BaseAdmin
                         return $this->getLocaleChoices();
                     }),
                     'preferred_choices' => [$this->getDefaultLocale()],
-                    'translation_domain' => $this->translationDomain,
+                    'translation_domain' => $this->getTranslationDomain(),
                 ]
             )
-            ->add('pageName', SimpleStringFilter::class, [], null, ['translation_domain' => $this->translationDomain])
+            ->add('pageName', SimpleStringFilter::class, [], null, ['translation_domain' => $this->getTranslationDomain()])
             ->add(
                 'path',
                 CallbackFilter::class,
@@ -419,7 +421,7 @@ abstract class PageAdmin extends BaseAdmin
                         PageInterface::STATUS_REVIEW => PageInterface::STATUS_REVIEW,
                         PageInterface::STATUS_PUBLISHED => PageInterface::STATUS_PUBLISHED,
                     ],
-                    'translation_domain' => $this->translationDomain,
+                    'translation_domain' => $this->getTranslationDomain(),
                 ]
             );
 
@@ -431,7 +433,7 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * @param array $filterValues
      */
-    public function configureDefaultFilterValues(array &$filterValues)
+    public function configureDefaultFilterValues(array &$filterValues): void
     {
         $filterValues['locale'] = [
             'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
@@ -468,18 +470,18 @@ abstract class PageAdmin extends BaseAdmin
         return true;
     }
 
+
     /**
-     * @param string $context
+     * @param ProxyQuery $query
      *
      * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
      */
-    public function createQuery($context = 'list')
+    public function configureQuery(ProxyQueryInterface $query): ProxyQueryInterface
     {
-        /** @var ProxyQuery $query */
-        $query = $this->getModelManager()->createQuery($this->getClass(), 'p');
         $qb = $query->getQueryBuilder();
+        $alias = $qb->getRootAliases();
         $qb->addSelect('c');
-        $qb->leftJoin('p.contentRoute', 'c');
+        $qb->leftJoin($alias[0].'.contentRoute', 'c');
         $qb->orderBy('c.path', 'asc');
 
         return $query;
@@ -512,7 +514,7 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $currentFilter = $this->getFilterParameters();
         $locale = $this->getDefaultLocale();
@@ -682,10 +684,8 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    public function getBatchActions()
+    public function configureBatchActions(array $actions): array
     {
-        // retrieve the default (currently only the delete action) actions
-        $actions = [];
 
         if ($this->isGranted('PUBLISH')) {
             $actions['publish'] = [
@@ -719,7 +719,7 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    public function getExportFormats()
+    public function getExportFormats(): array
     {
         return [];
     }
@@ -729,7 +729,7 @@ abstract class PageAdmin extends BaseAdmin
      *
      * @return mixed|void
      */
-    public function postRemove($object)
+    public function postRemove(object $object): void
     {
         $contentRoute = $object->getContentRoute();
 

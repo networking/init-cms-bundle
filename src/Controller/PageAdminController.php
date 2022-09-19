@@ -503,15 +503,14 @@ class PageAdminController extends CRUDController
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction($id = null)
+    public function showAction(Request $request): Response
     {
-        /** @var Request $request */
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $object = $this->assertObjectExists($request, true);
+        \assert(null !== $object);
 
-        $id = $request->get($this->admin->getIdParameter());
+        $this->checkParentChildAssociation($request, $object);
 
-        /** @var PageInterface $object */
-        $object = $this->admin->getObject($id);
+        $this->admin->checkAccess('show', $object);
 
         if (!$object) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
@@ -539,16 +538,14 @@ class PageAdminController extends CRUDController
      * @return RedirectResponse|Response
      * @throws \Twig_Error_Runtime
      */
-    public function editAction($id = null)
+    public function editAction(Request $request): Response
     {
-        /** @var Request $request */
-        $request = $this->getRequest();
+        $object = $this->assertObjectExists($request, true);
+        \assert(null !== $object);
 
-        if ($id === null) {
-            $id = $request->get($this->admin->getIdParameter());
-        }
+        $this->checkParentChildAssociation($request, $object);
 
-        $object = $this->admin->getObject($id);
+        $this->admin->checkAccess('edit', $object);
 
         if (!$object) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));

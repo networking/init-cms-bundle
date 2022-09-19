@@ -28,7 +28,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
     /**
      * {@inheritdoc}
      */
-    public function configureFormFields(FormMapper $formMapper)
+    public function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper->remove('context')
             ->add('context', HiddenType::class);
@@ -37,7 +37,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
     /**
      * {@inheritdoc}
      */
-    public function configureDatagridFilters(DatagridMapper $datagridMapper)
+    public function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper->remove('context');
         $datagridMapper->add(
@@ -63,7 +63,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
     /**
      * {@inheritdoc}
      */
-    public function configureListFields(ListMapper $listMapper)
+    public function configureListFields(ListMapper $listMapper): void
     {
         $listMapper->remove('defaultFormat')
             ->remove('context')

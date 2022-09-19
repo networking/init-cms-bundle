@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
@@ -19,6 +20,7 @@ use Sonata\AdminBundle\Form\Type\Filter\DefaultType;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Sonata\Form\Type\EqualType;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
@@ -148,7 +150,7 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function configureRoutes(RouteCollection $collection)
+    public function configureRoutes(RouteCollectionInterface $collection): void
     {
         parent::configureRoutes($collection);
         $collection->add(
@@ -252,7 +254,9 @@ abstract class MediaAdmin extends Admin
             $filterParameters['providerName'] = ['value' => $persistentParameters['provider']];
         }
 
-        $this->request->getSession()->set($this->getCode().'.filter.parameters', $filterParameters);
+
+
+        $this->getRequest()->getSession()->set($this->getCode().'.filter.parameters', $filterParameters);
 
         // transform _sort_by from a string to a FieldDescriptionInterface for the datagrid.
         if (isset($filterParameters['_sort_by']) && is_string($filterParameters['_sort_by'])) {
@@ -272,7 +276,7 @@ abstract class MediaAdmin extends Admin
         // initialize the datagrid
         $this->datagrid = $this->getDatagridBuilder()->getBaseDatagrid($this, $filterParameters);
 
-        $this->datagrid->getPager()->setMaxPageLinks($this->maxPageLinks);
+        $this->datagrid->getPager()->setMaxPageLinks($this->getMaxPageLinks());
 
         $mapper = new DatagridMapper($this->getDatagridBuilder(), $this->datagrid, $this);
 
@@ -305,7 +309,7 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper, $context = '', $provider = '')
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add('name', null)
@@ -353,7 +357,7 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getExportFormats()
+    public function getExportFormats(): array
     {
         return [];
     }
@@ -373,8 +377,8 @@ abstract class MediaAdmin extends Admin
      */
     public function getTemplate($name)
     {
-        if ($name === 'edit' && is_null($this->getSubject()->getId()) && !$this->request->query->get('gallery')) {
-            $provider = $this->pool->getProvider($this->request->get('provider'));
+        if ($name === 'edit' && is_null($this->getSubject()->getId()) && !$this->getRequest()->query->get('gallery')) {
+            $provider = $this->pool->getProvider($this->getRequest()->get('provider'));
             if ($provider instanceof FileProvider) {
                 return '@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig';
             }
@@ -404,7 +408,7 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
 
         $media = $this->getSubject();
@@ -481,7 +485,7 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier(
@@ -499,12 +503,11 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getNewInstance()
+    public function alterNewInstance($object): void
     {
-        $media = $this->getModelManager()->getModelInstance($this->getClass());
 
         foreach ($this->getExtensions() as $extension) {
-            $extension->alterNewInstance($this, $media);
+            $extension->alterNewInstance($this, $object);
         }
 
         if ($this->hasRequest()) {
@@ -512,25 +515,24 @@ abstract class MediaAdmin extends Admin
             if ($this->getRequest()->isMethod('POST') && !$this->getRequest()->get('oneuploader')) {
                 $uniqid = $this->getUniqid();
                 if(array_key_exists('providerName', $this->getRequest()->get($uniqid, []))){
-                    $media->setProviderName($this->getRequest()->get($uniqid)['providerName']);
+                    $object->setProviderName($this->getRequest()->get($uniqid)['providerName']);
                 }
             }
 
             if($this->getRequest()->get('provider')) {
-                $media->setProviderName($this->getRequest()->get('provider'));
+                $object->setProviderName($this->getRequest()->get('provider'));
             }
 
 
-            $media->setContext($context = $this->getRequest()->get('context'));
+            $object->setContext($context = $this->getRequest()->get('context'));
         }
 
-        return $media;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPersistentParameters()
+    public function configurePersistentParameters(): array
     {
         if (!$this->hasRequest()) {
             return [];
@@ -579,9 +581,9 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function configureBatchActions($actions)
+    public function configureBatchActions($actions): array
     {
-        if ($this->request && !$this->request->query->get('galleryMode')) {
+        if ($this->getRequest() && !$this->getRequest()->query->get('galleryMode')) {
 
             if (
                 $this->hasRoute('edit') && $this->isGranted('EDIT') &&

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sonata.user.google.authenticator" class="Google\Authenticator\GoogleAuthenticator">
+
+        </service>
+        <service id="networking_init_cms.google.authenticator.provider" class="Networking\InitCmsBundle\GoogleAuthenticator\Helper">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="sonata.user.google.authenticator"/>
+            <argument type="service" id="security.authorization_checker"/>
+            <argument>%sonata.user.google.authenticator.forced_for_role%</argument>
+            <argument>%sonata.user.google.authenticator.trusted_ip_list%</argument>
+        </service>
+        <service id="networking_init_cms.google.authenticator.interactive_login_listener" class="Networking\InitCmsBundle\GoogleAuthenticator\InteractiveLoginListener">
+            <tag name="kernel.event_listener" event="security.interactive_login" method="onSecurityInteractiveLogin"/>
+            <argument type="service" id="networking_init_cms.google.authenticator.provider"/>
+        </service>
+        <service id="networking_init_cms.google.authenticator.request_listener" class="Networking\InitCmsBundle\GoogleAuthenticator\RequestListener">
+            <tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="-1"/>
+            <argument type="service" id="networking_init_cms.google.authenticator.provider"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="twig"/>
+        </service>
+        <service id="networking_init_cms.google.authenticator.success_handler" class="Networking\InitCmsBundle\EventListener\TwoFactorLoginSuccessHandler" public="false">
+        </service>
+    </services>
+</container>

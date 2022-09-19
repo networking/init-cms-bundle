@@ -23,25 +23,13 @@ networking_init_cms_admin_security_logout:
     path: /admin/logout
     defaults: { _controller: Networking\InitCmsBundle\Controller\AdminSecurityController::logoutAction}
 
-networking_init_cms_admin_resetting_request:
-    path: /admin/request
-    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::requestAction}
-    methods: [GET]
+sonata_user_admin_security:
+    resource: '@SonataUserBundle/Resources/config/routing/admin_security.xml'
+    prefix: /admin
 
-networking_init_cms_admin_resetting_send_email:
-    path: /admin/send-email
-    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::sendEmailAction}
-    methods: [POST]
-
-networking_init_cms_admin_resetting_check_email:
-    path: /admin/check-email
-    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::checkEmailAction}
-    methods: [GET]
-
-networking_init_cms_admin_resetting_reset:
-    path: /admin/reset/{token}
-    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::resetAction}
-    methods: [GET|POST]
+sonata_user_admin_resetting:
+    resource: '@SonataUserBundle/Resources/config/routing/admin_resetting.xml'
+    prefix: /admin
 
 networking_init_change_admin_language:
     path: /change_admin_language/{locale}

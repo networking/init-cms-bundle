@@ -19,7 +19,7 @@
 
         <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%" public="true">
             <argument/>
-            <argument>%sonata.media.admin.media.entity%</argument>
+            <argument>%sonata.media.admin.media.class%</argument>
             <argument>%sonata.media.admin.media.controller%</argument>
             <argument type="service" id="sonata.media.pool"/>
             <call method="setModelManager">

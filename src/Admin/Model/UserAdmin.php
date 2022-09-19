@@ -15,7 +15,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
-use Sonata\UserBundle\Admin\Entity\UserAdmin as SonataUserAdmin;
+use Sonata\UserBundle\Admin\Model\UserAdmin as BaseUserAdmin;
 use Sonata\UserBundle\Form\Type\SecurityRolesType;
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class UserAdmin extends SonataUserAdmin
+abstract class UserAdmin extends BaseUserAdmin
 {
     /**
      * @var string

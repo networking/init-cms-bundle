@@ -11,9 +11,11 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Networking\InitCmsBundle\Doctrine\UserManager as DoctrineUserManager;
+
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\UserBundle\Util\CanonicalFieldsUpdater;
-use FOS\UserBundle\Util\PasswordUpdaterInterface;
+use Sonata\UserBundle\Util\CanonicalFieldsUpdaterInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserManager.
@@ -22,24 +24,6 @@ use FOS\UserBundle\Util\PasswordUpdaterInterface;
  */
 class UserManager extends DoctrineUserManager
 {
-    /**
-     * UserManager constructor.
-     *
-     * @param PasswordUpdaterInterface $passwordUpdater
-     * @param CanonicalFieldsUpdater $canonicalFieldsUpdater
-     * @param EntityManagerInterface $om
-     * @param $class
-     */
-    public function __construct(
-        PasswordUpdaterInterface $passwordUpdater,
-        CanonicalFieldsUpdater $canonicalFieldsUpdater,
-        EntityManagerInterface $om,
-        $class
-    ) {
-        if (class_exists($class)) {
-            parent::__construct($passwordUpdater, $canonicalFieldsUpdater, $om, $class);
-        }
-    }
 
     /**
      * @return mixed
@@ -47,7 +31,7 @@ class UserManager extends DoctrineUserManager
     public function getLatestActivity()
     {
         $tenMinutesAgo = new \DateTime('- 10 minutes');
-        $qb = $this->objectManager->getRepository($this->getClass())->createQueryBuilder('u');
+        $qb = $this->registry->getRepository($this->getClass())->createQueryBuilder('u');
         $qb->where('u.updatedAt >= :datetime')
             ->setParameter(':datetime', $tenMinutesAgo);
 

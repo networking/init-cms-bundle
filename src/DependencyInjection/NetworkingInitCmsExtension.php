@@ -110,18 +110,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 }
             }
 
-//            if (!$templatingEnginesSet) {
-//                $engines = [];
-//                if (class_exists('\Twig\Environment')) {
-//                    $engines[] = 'twig';
-//                } elseif (class_exists('Symfony\Component\Templating\PhpEngine')) {
-//                    $engines[] = 'php';
-//                }
-//
-//                $config = ['templating' => ['engines' => $engines]];
-//                $container->prependExtensionConfig('framework', $config);
-//            }
-
             if ($isCacheActive && !$pageCacheSet) {
                 $pools['page.cache'] = ['adapter' => 'cache.app'];
                 $config = ['cache' => ['pools' => $pools]];
@@ -131,7 +119,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         }
 
     }
-
     /**
      * @param array $configs
      * @param ContainerBuilder $container
@@ -151,6 +138,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $loader->load('twig.xml');
         $loader->load('services.xml');
         $loader->load('validators.xml');
+        $loader->load('google_authenticator.xml');
 
         //mongodb is not yet fully supported but will come (eventually)
         if ('custom' !== $config['db_driver']) {
@@ -193,7 +181,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.db_driver', $config['db_driver']);
 
         if ($config['db_driver'] == 'orm') {
-            $config['class']['media'] = $container->getParameter('sonata.media.admin.media.entity');
+            $config['class']['media'] = $container->getParameter('sonata.media.admin.media.class');
             $this->registerDoctrineORMMapping($config);
         }
 
@@ -208,6 +196,8 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $this->configureLanguageCookie($config, $container);
 
         $this->configureClass($config, $container);
+
+        $this->configureGoogleAuthenticator($config, $container);
 
         $this->registerContainerParametersRecursive($container, $this->getAlias(), $config['translation_admin']);
     }
@@ -315,6 +305,52 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 break;
         }
     }
+
+
+
+    /**
+     * @param array $config
+     *
+     * @throws \RuntimeException
+     *
+     * @return mixed
+     */
+    public function configureGoogleAuthenticator($config, ContainerBuilder $container)
+    {
+        $container->setParameter('networking_init_cms.google.authenticator.enabled', $config['google_authenticator']['enabled']);
+
+        if (!$config['google_authenticator']['enabled']) {
+            $container->removeDefinition('networking_init_cms.google.authenticator');
+            $container->removeDefinition('networking_init_cms.google.authenticator.provider');
+            $container->removeDefinition('networking_init_cms.google.authenticator.interactive_login_listener');
+            $container->removeDefinition('networking_init_cms.google.authenticator.request_listener');
+
+            return;
+        }
+
+        if (!class_exists('Google\Authenticator\GoogleAuthenticator')
+            && !class_exists('Sonata\GoogleAuthenticator\GoogleAuthenticator')) {
+            throw new \RuntimeException('Please add "sonata-project/google-authenticator" package');
+        }
+
+        $container->setParameter('networking_init_cms.google.authenticator.forced_for_role', $config['google_authenticator']['forced_for_role']);
+
+        // NEXT_MAJOR: Remove this checks and only set the `trusted_ip_list`.
+        if (\count($config['google_authenticator']['ip_white_list']) > 0 && $config['google_authenticator']['trusted_ip_list'] !== ['127.0.0.1']) {
+            throw new \LogicException('Please use only "trusted_ip_list" parameter, "ip_white_list" is deprecated.');
+        }
+        $trustedIpList = $config['google_authenticator']['trusted_ip_list'];
+        if (\count($config['google_authenticator']['ip_white_list']) > 0) {
+            $trustedIpList = $config['google_authenticator']['ip_white_list'];
+        }
+        // NEXT_MAJOR: Remove `networking_init_cms.google.authenticator.ip_white_list` parameter.
+        $container->setParameter('networking_init_cms.google.authenticator.ip_white_list', $trustedIpList);
+        $container->setParameter('networking_init_cms.google.authenticator.trusted_ip_list', $trustedIpList);
+
+        $container->getDefinition('networking_init_cms.google.authenticator.provider')
+            ->replaceArgument(0, $config['google_authenticator']['server']);
+    }
+
 
     /**
      * Add short labels for languages (e.g. de_CH becomes DE).

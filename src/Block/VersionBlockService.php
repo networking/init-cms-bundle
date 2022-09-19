@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of the Networking package.
  *
@@ -23,35 +24,38 @@ use Twig\Environment;
  */
 class VersionBlockService extends AbstractBlockService
 {
-	/**
-	 * @var string
-	 */
-	protected $projectDir;
+    /**
+     * @var string
+     */
+    protected $projectDir;
 
     /**
      * VersionBlockService constructor.
+     *
      * @param Environment $twig
-     * @param $projectDir
+     * @param             $projectDir
      */
-	public function __construct(Environment $twig, $projectDir)
-	{
-		$this->projectDir = $projectDir;
-		parent::__construct($twig);
+    public function __construct(Environment $twig, $projectDir)
+    {
+        $this->projectDir = $projectDir;
+        parent::__construct($twig);
 
-	}
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function execute(BlockContextInterface $blockContext, Response $response = null)
-    {
+    public function execute(
+        BlockContextInterface $blockContext,
+        ?Response $response = null
+    ): Response {
         $version = 'master';
 
-        if(file_exists($this->projectDir.'/composer.lock')){
+        if (file_exists($this->projectDir.'/composer.lock')) {
             $content = file_get_contents($this->projectDir.'/composer.lock');
-            $content = json_decode($content,true);
-            foreach ($content['packages'] as $package){
-                if('networking/init-cms-bundle' === $package['name']){
+            $content = json_decode($content, true);
+            foreach ($content['packages'] as $package) {
+                if ('networking/init-cms-bundle' === $package['name']) {
                     $version = $package['version'];
                 }
             }
@@ -61,7 +65,7 @@ class VersionBlockService extends AbstractBlockService
             $blockContext->getTemplate(),
             [
                 'block' => $blockContext->getBlock(),
-	            'version' => $version
+                'version' => $version,
             ],
             $response
         );
@@ -79,7 +83,7 @@ class VersionBlockService extends AbstractBlockService
     /**
      * {@inheritdoc}
      */
-    public function configureSettings(OptionsResolver $resolver)
+    public function configureSettings(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [

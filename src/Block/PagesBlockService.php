@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Block;
 
@@ -40,7 +41,7 @@ class PagesBlockService extends AbstractBlockService
     /**
      * {@inheritdoc}
      */
-    public function execute(BlockContextInterface $blockContext, Response $response = null)
+    public function execute(BlockContextInterface $blockContext, ?Response $response = null): Response
     {
         $pages = $this->pageManager->getAllSortBy('updatedAt', 'DESC', Query::HYDRATE_ARRAY);
 
@@ -93,7 +94,7 @@ class PagesBlockService extends AbstractBlockService
     /**
      * {@inheritdoc}
      */
-    public function configureSettings(OptionsResolver $resolver)
+    public function configureSettings(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['template' => '@NetworkingInitCms/Block/block_page_status.html.twig']);
     }

@@ -12,7 +12,7 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\MediaBundle\Entity\BaseGalleryHasMedia as BaseGalleryHasMedia;
+use Sonata\MediaBundle\Entity\BaseGalleryItem as BaseGalleryHasMedia;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>

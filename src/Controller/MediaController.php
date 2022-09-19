@@ -10,15 +10,15 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use Sonata\MediaBundle\Controller\MediaController as BaseMediaController;
 use Sonata\MediaBundle\Provider\MediaProviderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class MediaController extends BaseMediaController
+class MediaController extends AbstractController
 {
     /**
      * output image direct to browser, retrieve from cache if activated.

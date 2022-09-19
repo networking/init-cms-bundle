@@ -1,8 +1,9 @@
+twig:
+    form_themes: ['@NetworkingInitCms/Form/form_admin_fields.html.twig']
+
 sonata_doctrine_orm_admin:
     templates:
-        form: [ '@NetworkingInitCms/Form/form_admin_fields.html.twig' ]
-        filter:
-            - '@NetworkingInitCms/Form/form_admin_fields.html.twig'
+
         types:
             list:
                 array:      '@NetworkingInitCms/CRUD/list_array.html.twig'

@@ -43,7 +43,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier('title')
@@ -65,7 +65,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
             ->add(
@@ -91,7 +91,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add(
@@ -120,7 +120,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     /**
      * @param array $filterValues
      */
-    public function configureDefaultFilterValues(array &$filterValues)
+    public function configureDefaultFilterValues(array &$filterValues): void
     {
         $filterValues['locale'] = [
             'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,

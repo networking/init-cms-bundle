@@ -7,10 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Block;
 
-use Networking\InitCmsBundle\Model\UserManagerInterface;
+use Networking\InitCmsBundle\Entity\UserManager;
 use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
@@ -34,7 +35,7 @@ class OnlineUsersBlockService extends AbstractBlockService
      * @param Environment $twig
      * @param UserManagerInterface $userManager
      */
-    public function __construct(Environment $twig, UserManagerInterface $userManager)
+    public function __construct(Environment $twig, UserManager $userManager)
     {
         $this->userManager = $userManager;
         parent::__construct($twig);
@@ -43,7 +44,7 @@ class OnlineUsersBlockService extends AbstractBlockService
     /**
      * {@inheritdoc}
      */
-    public function execute(BlockContextInterface $blockContext, Response $response = null)
+    public function execute(BlockContextInterface $blockContext, ?Response $response = null): Response
     {
         $users = $this->userManager->getLatestActivity();
 
@@ -68,7 +69,7 @@ class OnlineUsersBlockService extends AbstractBlockService
     /**
      * {@inheritdoc}
      */
-    public function configureSettings(OptionsResolver $resolver)
+    public function configureSettings(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [

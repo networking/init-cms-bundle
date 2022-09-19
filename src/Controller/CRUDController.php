@@ -122,15 +122,4 @@ class CRUDController extends SonataCRUDController
         return $this->get('translator')->trans($string, $params, $translationDomain);
     }
 
-    /**
-     * @param FormView $formView
-     * @param array $theme
-     * @throws \Twig\Error\RuntimeError
-     */
-    protected function setFormTheme(FormView $formView, $theme)
-    {
-        $twig = $this->get('twig');
-
-        $twig->getRuntime(FormRenderer::class)->setTheme($formView, $theme);
-    }
 }

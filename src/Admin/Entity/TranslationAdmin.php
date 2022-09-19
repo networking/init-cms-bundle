@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -20,6 +21,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Sonata\DoctrineORMAdminBundle\Filter\StringFilter;
@@ -142,7 +144,7 @@ class TranslationAdmin extends AbstractAdmin
      *
      * @return array
      */
-    public function getExportFormats()
+    public function getExportFormats(): array
     {
         return [];
     }
@@ -151,11 +153,12 @@ class TranslationAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
 
         /** @var \Doctrine\ORM\EntityManager $em */
         $em = $this->getContainer()->get('doctrine')->getManagerForClass('Lexik\Bundle\TranslationBundle\Entity\File');
+
 
         $domains = array();
         $domainsQueryResult = $em->createQueryBuilder()
@@ -203,8 +206,8 @@ class TranslationAdmin extends AbstractAdmin
                     'field_type'    => CheckboxType::class,
                 )
             )
-            ->add('key', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
-            ->add('translations.content', StringFilter::class, ['field_options' => ['translation_domain' => $this->translationDomain]])
+            ->add('key', StringFilter::class, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
+            ->add('translations.content', StringFilter::class, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
             ->add(
                 'domain',
                 SimpleStringFilter::class,
@@ -213,7 +216,7 @@ class TranslationAdmin extends AbstractAdmin
                 [
                     'choices' => $this->getDomains(),
                     'placeholder' => 'translation.domain.all_choices',
-                    'translation_domain' => $this->translationDomain,
+                    'translation_domain' => $this->getTranslationDomain(),
                     'choice_translation_domain' => false,
                 ]
             );
@@ -222,7 +225,7 @@ class TranslationAdmin extends AbstractAdmin
     /**
      * @param ListMapper $list
      */
-    protected function configureListFields(ListMapper $list)
+    protected function configureListFields(ListMapper $list): void
     {
         $list
             ->add(
@@ -232,14 +235,14 @@ class TranslationAdmin extends AbstractAdmin
             ->add('domain', 'string');
 
         foreach ($this->managedLocales as $locale) {
-            if ($this->request) {
-                $localeString = $this->request->getLocale();
+            if ($this->getRequest()) {
+                $localeString = $this->getRequest()->getLocale();
             } else {
                 $localeString = $locale;
             }
             $localeList = Intl::getLocaleBundle()->getLocaleNames(substr($localeString, 0, 2));
 
-            $fieldDescription = $this->modelManager->getNewFieldDescriptionInstance($this->getClass(), $locale);
+            $fieldDescription = $this->getModelManager()->getNewFieldDescriptionInstance($this->getClass(), $locale);
             $fieldDescription->setTemplate(
                 '@NetworkingInitCms/CRUD/base_inline_translation_field.html.twig'
             );
@@ -254,9 +257,8 @@ class TranslationAdmin extends AbstractAdmin
     /**
      * @return array
      */
-    public function getFilterParameters()
+    public function configureFilterParameters(array $parameters): array
     {
-        $parameters = [];
 
         // build the values array
         if ($this->hasRequest()) {
@@ -278,10 +280,10 @@ class TranslationAdmin extends AbstractAdmin
 
             // if persisting filters, save filters to session, or pull them out of session if no new filters set
             if ($this->persistFilters) {
-                if ($filters == [] && $this->request->query->get('filters') != 'reset') {
-                    $filters = $this->request->getSession()->get($this->getCode().'.filter.parameters', []);
+                if ($filters == [] && $this->getRequest()->query->get('filters') != 'reset') {
+                    $filters = $this->getRequest()->getSession()->get($this->getCode().'.filter.parameters', []);
                 } else {
-                    $this->request->getSession()->set($this->getCode().'.filter.parameters', $filters);
+                    $this->getRequest()->getSession()->set($this->getCode().'.filter.parameters', $filters);
                 }
             }
 
@@ -298,12 +300,18 @@ class TranslationAdmin extends AbstractAdmin
             // always force the parent value
             if ($this->isChild() && $this->getParentAssociationMapping()) {
                 $parameters[$this->getParentAssociationMapping()] = [
-                    'value' => $this->request->get(
+                    'value' => $this->getRequest()->get(
                         $this->getParent()->getIdParameter()
                     ),
                 ];
             }
         }
+
+        // transform _sort_by from a string to a FieldDescriptionInterface for the datagrid.
+        if (isset($parameters['locale']) && is_array($parameters['locale'])) {
+            $this->filterLocales = array_key_exists('value', $parameters['locale']) ? $parameters['locale']['value'] : $this->managedLocales;
+        }
+
 
         return $parameters;
     }
@@ -333,36 +341,19 @@ class TranslationAdmin extends AbstractAdmin
     /**
      * @param RouteCollection $collection
      */
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection
             ->add('clear_cache')
             ->add('create_trans_unit');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildDatagrid()
-    {
-        if ($this->datagrid) {
-            return;
-        }
 
-        $filterParameters = $this->getFilterParameters();
-
-        // transform _sort_by from a string to a FieldDescriptionInterface for the datagrid.
-        if (isset($filterParameters['locale']) && is_array($filterParameters['locale'])) {
-            $this->filterLocales = array_key_exists('value', $filterParameters['locale']) ? $filterParameters['locale']['value'] : $this->managedLocales;
-        }
-
-        parent::buildDatagrid();
-    }
 
     /**
      * @param FormMapper $form
      */
-    protected function configureFormFields(FormMapper $form)
+    protected function configureFormFields(FormMapper $form): void
     {
         $subject = $this->getSubject();
 
@@ -394,9 +385,8 @@ class TranslationAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function getBatchActions()
+    public function configureBatchActions(array $actions): array
     {
-        $actions = parent::getBatchActions();
         $actions['download'] = [
             'label' => 'batch.download',
             'ask_confirmation' => false,

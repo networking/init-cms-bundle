@@ -25,10 +25,10 @@ class TagAdminController extends CRUDController
     /**
      * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request): Response
     {
         /** @var Response $response */
-        $response = parent::createAction();
+        $response = parent::createAction($request);
 
         if ($this->isXmlHttpRequest()) {
             $content = $response->getContent();
@@ -69,22 +69,23 @@ class TagAdminController extends CRUDController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request): Response
     {
-        $request = $this->getRequest();
+
         $returnToMedia = $request->get('returnToMedia');
-        $id = $request->get($this->admin->getIdParameter());
-        $object = $this->admin->getObject($id);
+        $object = $this->assertObjectExists($request, true);
+        \assert(null !== $object);
 
-        if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        $this->checkParentChildAssociation($request, $object);
+
+        $this->admin->checkAccess('delete', $object);
+
+        $preResponse = $this->preDelete($request, $object);
+        if (null !== $preResponse) {
+            return $preResponse;
         }
 
-        if (false === $this->admin->isGranted('DELETE', $object)) {
-            throw new AccessDeniedException();
-        }
-
-        if ($this->getRestMethod() == 'DELETE') {
+        if ($this->getRestMethod() === 'DELETE') {
             // check the csrf token
             $this->validateCsrfToken('sonata.delete');
             $translator = $this->get('translator');

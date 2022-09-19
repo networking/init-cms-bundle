@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of the Networking package.
  *
@@ -20,6 +21,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -89,7 +91,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->add(
             'createFromPage',
@@ -137,7 +139,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         if (!$locale = $this->getRequest()->get('locale')) {
             $locale = $this->getRequest()->getLocale();
@@ -194,7 +196,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'layout' => 'horizontal',
                     ]
                 );
-            $pageAdmin = $this->configurationPool->getAdminByAdminCode('networking_init_cms.admin.page');
+            $pageAdmin = $this->getConfigurationPool()->getAdminByAdminCode('networking_init_cms.admin.page');
             $pageClass = $pageAdmin->getClass();
 
             $formMapper
@@ -245,7 +247,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                         'layout' => 'horizontal',
                         'help_block' => 'visibility.helper.text',
                         'choices' => MenuItem::getVisibilityList(),
-                        'translation_domain' => $this->translationDomain,
+                        'translation_domain' => $this->getTranslationDomain(),
                     ]
                 )
                 ->add(
@@ -278,7 +280,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add(
@@ -294,7 +296,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                         }
                     ),
                     'preferred_choices' => [$this->getDefaultLocale()],
-                    'translation_domain' => $this->translationDomain,
+                    'translation_domain' => $this->getTranslationDomain(),
                 ]
             );
     }
@@ -302,7 +304,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier('name')
@@ -323,7 +325,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     /**
      * @param array $filterValues
      */
-    public function configureDefaultFilterValues(array &$filterValues)
+    public function configureDefaultFilterValues(array &$filterValues): void
     {
         $filterValues['locale'] = [
             'type' => \Sonata\AdminBundle\Form\Type\Filter\ChoiceType::TYPE_EQUAL,
@@ -384,7 +386,7 @@ abstract class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    public function preRemove($object)
+    public function preRemove(object $object): void
     {
         if ($object->hasChildren()) {
             throw new ModelManagerException('flash_delete_children_error');

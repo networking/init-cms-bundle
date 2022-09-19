@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -85,7 +88,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     {
         $localeChoices = [];
 
-        if (!$this->request) {
+        if (!$this->getRequest()) {
             return [];
         }
 
@@ -113,7 +116,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
      */
     public function getDefaultLocale()
     {
-        if (!$this->request) {
+        if (!$this->getRequest()) {
             return '';
         }
 
@@ -171,7 +174,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $this->getSonataAnnotationReader()->configureListFields($this->getClass(), $listMapper);
     }
@@ -179,7 +182,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         $this->getSonataAnnotationReader()->configureFormFields($this->getClass(), $formMapper);
     }
@@ -187,7 +190,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * {@inheritdoc}
      */
-    protected function configureShowFields(ShowMapper $showMapper)
+    protected function configureShowFields(ShowMapper $showMapper): void
     {
         $this->getSonataAnnotationReader()->configureShowFields($this->getClass(), $showMapper);
     }
@@ -195,7 +198,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $this->getSonataAnnotationReader()->configureDatagridFilters($this->getClass(), $datagridMapper);
     }

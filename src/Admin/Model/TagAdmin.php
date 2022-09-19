@@ -17,6 +17,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 
 /**
  * Class TagAdmin.
@@ -50,7 +51,7 @@ abstract class TagAdmin extends AbstractAdmin
     /**
      * @param RouteCollection $collection
      */
-    public function configureRoutes(RouteCollection $collection)
+    public function configureRoutes(RouteCollectionInterface $collection): void
     {
         parent::configureRoutes($collection);
 
@@ -82,7 +83,7 @@ abstract class TagAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
 
 
@@ -93,7 +94,7 @@ abstract class TagAdmin extends AbstractAdmin
                 null,
                 [
                     'attr' => ['class' => 'tag_name_input'],
-                    'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline',
+                    'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline',
                 ]
             )
             ->add(
@@ -104,7 +105,7 @@ abstract class TagAdmin extends AbstractAdmin
                     'attr' => ['style' => 'width:220px'],
                     'choice_label' => 'AdminTitle',
                     'class' => $this->getClass(),
-                    'layout' => $this->request->isXmlHttpRequest() ? 'horizontal' : 'inline',
+                    'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline',
                     'required' => false,
                     'query_builder' => function (EntityRepository $er) use ($id) {
                         $qb = $er->createQueryBuilder('t');
@@ -123,7 +124,7 @@ abstract class TagAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add('path', null, ['label' => 'filter.label_name']);
@@ -132,7 +133,7 @@ abstract class TagAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier('name')

@@ -47,10 +47,10 @@ class MediaAdminController extends CRUDController
      *
      * @return Response
      */
-    public function showAction($id = null)
+    public function showAction(Request $request): Response
     {
-
-        $media = $this->admin->getObject($id);
+        $media = $this->assertObjectExists($request, true);
+        \assert(null !== $media);
 
         $this->admin->checkAccess('show', $media);
 
@@ -80,7 +80,7 @@ class MediaAdminController extends CRUDController
      *
      * @return Response
      */
-    public function createAction(Request $request = null)
+    public function createAction(Request $request): Response
     {
         $this->admin->checkAccess('create');
 
@@ -110,21 +110,21 @@ class MediaAdminController extends CRUDController
      *
      * @return Response
      */
-    public function redirectTo($object)
+    public function redirectTo(Request $request, object $object): RedirectResponse
     {
         $url = false;
 
-        if ($this->getRequest()->get('btn_update_and_list')) {
-            $url = $this->admin->generateUrl('list', ['active_tab' => $this->getRequest()->get('context')]);
+        if ($request->get('btn_update_and_list')) {
+            $url = $this->admin->generateUrl('list', ['active_tab' => $request->get('context')]);
         }
-        if ($this->getRequest()->get('btn_create_and_list')) {
-            $url = $this->admin->generateUrl('list', ['active_tab' => $this->getRequest()->get('context')]);
+        if ($request->get('btn_create_and_list')) {
+            $url = $this->admin->generateUrl('list', ['active_tab' => $request->get('context')]);
         }
 
-        if ($this->getRequest()->get('btn_create_and_create')) {
+        if ($request->get('btn_create_and_create')) {
             $params = [];
             if ($this->admin->hasActiveSubClass()) {
-                $params['subclass'] = $this->getRequest()->get('subclass');
+                $params['subclass'] = $request->get('subclass');
             }
             $url = $this->admin->generateUrl('create', $params);
         }
@@ -144,10 +144,9 @@ class MediaAdminController extends CRUDController
      *
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response|RedirectResponse
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request): Response
     {
-        $id = $this->getRequest()->get($this->admin->getIdParameter());
-        $object = $this->admin->getObject($id);
+        $object = $this->assertObjectExists($request);
 
         if (!$object) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
@@ -168,7 +167,7 @@ class MediaAdminController extends CRUDController
 
             return new RedirectResponse($this->admin->generateUrl(
                 'list',
-                ['active_tab' => $this->getRequest()->get('context')]
+                ['active_tab' => $request->get('context')]
             ));
         }
 
@@ -241,7 +240,7 @@ class MediaAdminController extends CRUDController
      *
      * @return Response
      */
-    public function listAction(Request $request = null)
+    public function listAction(Request $request): Response
     {
         $this->admin->checkAccess('list');
 
@@ -358,7 +357,7 @@ class MediaAdminController extends CRUDController
             $response['error'] = $e->getMessage();
         }
 
-        $request = $this->getRequest();
+        $request = $request;
         $response = new JsonResponse($response->assemble(), 200);
         $response->headers->set('Vary', 'Accept');
 

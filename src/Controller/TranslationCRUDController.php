@@ -53,19 +53,33 @@ class TranslationCRUDController extends CRUDController
      * @throws AccessDeniedException If access is not granted
      * @throws AccessDeniedException If access is not granted
      */
-    public function editAction($id = null, Request $request = null)
+    public function editAction(Request $request): Response
     {
-        if (!$request) {
-            $request = $this->getRequest();
+        $templateKey = 'edit';
+
+        $existingObject = $this->assertObjectExists($request, true);
+        \assert(null !== $existingObject);
+
+        $this->checkParentChildAssociation($request, $existingObject);
+
+        $this->admin->checkAccess('edit', $existingObject);
+
+        $preResponse = $this->preEdit($request, $existingObject);
+        if (null !== $preResponse) {
+            return $preResponse;
         }
+
+        $this->admin->setSubject($existingObject);
+        $objectId = $this->admin->getNormalizedIdentifier($existingObject);
+
         if (!$request->isMethod('POST')) {
             return $this->redirect($this->admin->generateUrl('list'));
         }
 
         /* @var $transUnit \Lexik\Bundle\TranslationBundle\Model\TransUnit */
-        $transUnit = $this->get('lexik_translation.translation_storage')->getTransUnitById($id);
+        $transUnit = $this->get('lexik_translation.translation_storage')->getTransUnitById($objectId);
         if (!$transUnit) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $objectId));
         }
 
         if (false === $this->admin->isGranted('EDIT', $transUnit)) {

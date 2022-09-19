@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -24,6 +26,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Networking\InitCmsBundle\Form\DataTransformer\PageToIdTransformer;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Model\ContentInterface;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
@@ -72,7 +75,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->add('deleteAjax', 'delete_ajax', [], ['method' => 'POST']);
         $collection->add('toggleActive', 'toggle_active', [], ['method' => 'POST']);
@@ -84,7 +87,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         if ($this->getSubject()) {
             $classType = $this->getSubject()->getClassType();
@@ -109,7 +112,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add('name')
@@ -119,7 +122,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier('name')
@@ -149,7 +152,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      *
      * @throws ModelManagerException
      */
-    public function prePersist($object)
+    public function prePersist(object $object): void
     {
         /** @var ContentInterface $contentObject */
         if ($contentObject = $object->getContent()) {
@@ -169,7 +172,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      * @param $object
      * @throws ModelManagerException
      */
-    public function preUpdate($object)
+    public function preUpdate(object $object): void
     {
         if ($contentObject = $object->getContent()) {
             $this->getModelManager()->update($contentObject);
@@ -181,7 +184,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      * @param $object
      * @throws ModelManagerException
      */
-    public function preRemove($object)
+    public function preRemove(object $object): void
     {
         if ($classType = $object->getClassType()) {
             $contentObject = $this->getModelManager()->find($classType, $object->getObjectId());

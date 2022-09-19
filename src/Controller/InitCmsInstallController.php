@@ -10,12 +10,12 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
-use FOS\UserBundle\Model\UserManagerInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Form\Type\InstallUserType as UserType;
+use Sonata\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -117,7 +117,7 @@ class InitCmsInstallController extends AbstractController
     {
         $installFailed = false;
         try {
-            $users = $this->userManager->findUsers();
+            $users = $this->userManager->findAll();
             if (count($users) < 1) {
                 throw new \Exception('Users not loaded');
             }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: yorkie
@@ -21,7 +22,7 @@ class FileProvider extends BaseProvider
      *
      * @return string
      */
-    protected function generateReferenceName(MediaInterface $media)
+    protected function generateReferenceName(MediaInterface $media): string
     {
         return $media->getMetadataValue('filename');
     }
@@ -29,7 +30,7 @@ class FileProvider extends BaseProvider
     /**
      * {@inheritdoc}
      */
-    public function buildEditForm(FormMapper $formMapper)
+    public function buildEditForm(FormMapper $formMapper): void
     {
         $formMapper->add('name');
         $formMapper->add('authorName');
