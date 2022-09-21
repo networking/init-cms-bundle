@@ -20,7 +20,7 @@
         "friendsofsymfony/ckeditor-bundle": "^2.2",
         "jms/serializer-bundle": "^3.4",
         "knplabs/knp-paginator-bundle": "^5.9.0",
-        "lexik/translation-bundle": "5.2.*",
+        "lexik/translation-bundle": "6.*",
         "oneup/flysystem-bundle": "^3.0",
         "oneup/uploader-bundle": "^3.2",
         "mopa/bootstrap-bundle": "^3.4",
