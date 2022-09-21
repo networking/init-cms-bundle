@@ -95,19 +95,9 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
         if (!$this->getRequest()) {
             return [];
         }
-
-        if (!$this->getRequest()->get('locale')) {
-            $locale = $this->getRequest()->getLocale();
-        } else {
-            $locale = $this->getRequest()->get('locale');
-        }
-
-        if (is_array($locale) && array_key_exists('value', $locale)) {
-            $locale = $locale['value'];
-        }
-
+        $locale = $this->getRequest()->getLocale();
+        
         $localeList = Locales::getNames(substr($locale, 0, 2));
-
 
         foreach ($this->languages as $language) {
             $localeChoices[$localeList[$language['locale']]] = $language['locale'];

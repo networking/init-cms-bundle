@@ -27,7 +27,7 @@
                         {% if sonata_config is defined %}
                             {% include get_global_template('user_block') %}
                         {% endif %}
-                        {% if admin_pool is defined %}
+                        {% if sonata_config is defined %}
                             {{ mopa_bootstrap_menu('AdminMenu') }}
                         {% endif %}
                 </div>

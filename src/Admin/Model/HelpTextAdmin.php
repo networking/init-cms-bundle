@@ -14,6 +14,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
@@ -105,14 +106,16 @@ abstract class HelpTextAdmin extends BaseAdmin
                     ],
                     'hidden' => false,
                 ],
-                ChoiceType::class,
                 [
-                    'placeholder' => false,
-                    'choice_loader' => new CallbackChoiceLoader(function () {
-                        return $this->getLocaleChoices();
-                    }),
-                    'preferred_choices' => [$this->getDefaultLocale()],
-                    'translation_domain' => false,
+                    'field_type' => ChoiceType::class,
+                    'field_options' => [
+                        'placeholder' => false,
+                        'choice_loader' => new CallbackChoiceLoader(function () {
+                            return $this->getLocaleChoices();
+                        }),
+                        'preferred_choices' => [$this->getDefaultLocale()],
+                        'translation_domain' => false,
+                    ]
                 ]
 
             );
@@ -137,12 +140,13 @@ abstract class HelpTextAdmin extends BaseAdmin
      *
      * @return bool
      */
-    public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
+    public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, FilterData $data)
     {
-        $active = true;
-        if (!$locale = $data['value']) {
-            $locale = $this->getDefaultLocale();
-            $active = false;
+        $locale = $this->getDefaultLocale();
+        $active = false;
+        if ($data->hasValue()) {
+            $locale = $data->getValue();
+            $active = true;
         }
 
         $qb = $ProxyQuery->getQueryBuilder();

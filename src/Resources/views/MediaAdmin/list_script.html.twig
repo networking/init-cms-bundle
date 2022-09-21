@@ -206,7 +206,7 @@
             }
         );
 
-        history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
+        history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context})|raw }}&time='+jQuery.now());
     }
 
 
@@ -246,6 +246,8 @@
 
         body.on('click', '.tag_link', function(e, noLoad){
             e.preventDefault();
+            e.stopPropagation();
+
             if(lastLink){
                 lastLink.parent().removeClass('info');
                 lastLink.siblings('a.dialog-link').hide();

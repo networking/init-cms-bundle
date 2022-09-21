@@ -19,14 +19,14 @@ file that was distributed with this source code.
 
 {% block list_filters %}
     {% if not app.request.isxmlhttprequest %}
-        {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
+        {% set name = admin.persistentParameters.context ? admin.persistentParameters.context: 'default' %}
         {% if datagrid.filters %}
             <form action="{{ admin.generateUrl('list') }}" method="GET"
                   class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
 
-                <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
-                {% if persistent_parameters.provider is defined %}
-                    <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
+                <input type="hidden" name="context" value="{{ admin.persistentParameters.context }}"/>
+                {% if admin.persistentParameters.provider is defined %}
+                    <input type="hidden" name="provider" value="{{ admin.persistentParameters.provider }}"/>
                 {% endif %}
                 <input type="hidden" name="active_tab" value="{{ name }}"/>
 
@@ -118,8 +118,8 @@ file that was distributed with this source code.
             </form>
         {% endif %}
         <ul class="nav menu-tabs nav-tabs">
-            {% for name, context in media_pool.contexts %}
-                <li {% if name == persistent_parameters.context %}class="active"{% endif %}>
+            {% for name, context in sonata_media.pool.contexts %}
+                <li {% if name == admin.persistentParameters.context %}class="active"{% endif %}>
                     <a href="{{ admin.generateUrl('list', {'context' : name}) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
                 </li>
             {% endfor %}
@@ -132,7 +132,7 @@ file that was distributed with this source code.
         <div id="objectList">
     {% endif %}
     <div class="tab-content">
-        {% for name, context in media_pool.contexts %}
+        {% for name, context in sonata_media.pool.contexts %}
             <div class="tab-pane {% if (active_tab is null and loop.first) or active_tab == name %}active{% endif %}"
                  id="gallery_{{ name }}">
                 <div class="row">
@@ -258,7 +258,7 @@ file that was distributed with this source code.
                                             {% endif %}
 
                                             {# Set the number of pages to display in the pager #}
-                                            {% for page in datagrid.pager.getLinks(admin_pool.getOption('pager_links')) %}
+                                            {% for page in datagrid.pager.getLinks(sonata_config.getOption('pager_links')) %}
                                                 {% if page == datagrid.pager.page %}
                                                     <li class="active"><a
                                                                 href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(datagrid, page)) }}">{{ page }}</a>

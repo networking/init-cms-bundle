@@ -171,9 +171,10 @@ abstract class PageAdmin extends BaseAdmin
             }
         }
 
-        $this->formOptions['constraints'] = new Valid();
 
-        $this->formOptions['validation_groups'] = $validationGroups;
+        $formOptions['constraints'] = new Valid();
+
+        $formOptions['validation_groups'] = $validationGroups;
 
     }
 
@@ -331,8 +332,9 @@ abstract class PageAdmin extends BaseAdmin
             ->add('activeFrom',
                 DateTimeType::class,
                 [
-                    'widget_form_group_attr' => ['class' => 'form-group form-inline'],
+                    'widget_form_group_attr' => ['class' => 'form-group'],
                     'format' => 'dd.MM.yyyy HH:mm',
+                    'label_render' => true,
                     'required' => false,
                     'widget' => 'single_text',
                     'html5' => false,
@@ -343,13 +345,14 @@ abstract class PageAdmin extends BaseAdmin
             ->add('activeTo',
                 DateTimeType::class,
                 [
-                    'widget_form_group_attr' => ['class' => 'form-group form-inline'],
+                    'widget_form_group_attr' => ['class' => 'form-group'],
                     'format' => 'dd.MM.yyyy HH:mm',
                     'required' => false,
                     'widget' => 'single_text',
                     'html5' => false,
                     'datetimepicker' => true,
                     'widget_reset_icon' => 'remove',
+                    'attr' => array('data-start-view' => 'hour')
                 ])
             ->add(
                 'templateName',

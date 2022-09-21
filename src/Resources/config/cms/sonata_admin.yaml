@@ -40,6 +40,8 @@ sonata_admin:
         short_object_description: '@NetworkingInitCms/Helper/short-object-description.html.twig'
         # default values of block templates, they should extend the base_block template
         list_block: '@NetworkingInitCms/Block/block_admin_list.html.twig'
+        form_theme: ['@NetworkingInitCms/Form/form_admin_fields.html.twig' ]
+        filter_theme: ['@NetworkingInitCms/Form/form_admin_fields.html.twig' ]
     dashboard:
         blocks:
             - { position: top, type: networking_init_cms.block.service.translatable_text, settings: { translation_key: "info.welcome_text", translation_domain: 'NetworkingInitCmsBundle'} }
@@ -78,7 +80,7 @@ sonata_admin:
                 label: "sonata_user"
                 label_catalogue: "SonataUserBundle"
                 icon: '<i class="fa fa-users"></i>'
-                items: [sonata.user.admin.user, sonata.user.admin.group]
+                items: [sonata.user.admin.user, networking_init_cms.admin.group]
             help_text:
                 on_top: true
                 label: "help_text.admin_menu_label"

@@ -1,3 +1,5 @@
+imports:
+    - { resource: "../event_listeners.yaml" }
 doctrine:
     dbal:
         types:

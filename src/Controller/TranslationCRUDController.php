@@ -10,8 +10,11 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
+use Lexik\Bundle\TranslationBundle\Storage\DoctrineORMStorage;
+use Lexik\Bundle\TranslationBundle\Storage\StorageInterface;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
-use Sonata\AdminBundle\Controller\CRUDController;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -28,18 +31,27 @@ use Symfony\Component\Yaml\Dumper;
  */
 class TranslationCRUDController extends CRUDController
 {
+
     /**
-     * @var pageCacheInterface 
+     * @var TransUnitManagerInterface
      */
-    private $pageCache;
+    private $transUnitManager;
+
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
 
     /**
      * TranslationCRUDController constructor.
      * @param PageCacheInterface $pageCache
      */
-    public function __construct(PageCacheInterface $pageCache)
+    public function __construct(CmsEventDispatcher $dispatcher, PageCacheInterface $pageCache, TransUnitManagerInterface $transUnitManager, StorageInterface $storage)
     {
-        $this->pageCache = $pageCache;
+        parent::__construct($dispatcher, $pageCache);
+        $this->transUnitManager = $transUnitManager;
+        $this->storage = $storage;
+
     }
 
     /**
@@ -76,8 +88,7 @@ class TranslationCRUDController extends CRUDController
             return $this->redirect($this->admin->generateUrl('list'));
         }
 
-        /* @var $transUnit \Lexik\Bundle\TranslationBundle\Model\TransUnit */
-        $transUnit = $this->get('lexik_translation.translation_storage')->getTransUnitById($objectId);
+        $transUnit = $this->storage->getTransUnitById($objectId);
         if (!$transUnit) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $objectId));
         }
@@ -93,10 +104,7 @@ class TranslationCRUDController extends CRUDController
 
         $this->admin->setSubject($transUnit);
 
-        /* @var $transUnitManager \Lexik\Bundle\TranslationBundle\Manager\TransUnitManager */
-        $transUnitManager = $this->get('lexik_translation.trans_unit.manager');
-
-        $parameters = $this->getRequest()->request;
+        $parameters = $request->request;
 
         $locale = $parameters->get('locale');
         $content = $parameters->get('value');
@@ -110,15 +118,14 @@ class TranslationCRUDController extends CRUDController
             );
         }
 
-        /* @var $translation \Lexik\Bundle\TranslationBundle\Model\Translation */
         if ($parameters->get('pk')) {
-            $translation = $transUnitManager->updateTranslation($transUnit, $locale, $content, true);
+            $translation = $this->transUnitManager->updateTranslation($transUnit, $locale, $content, true);
         } else {
-            $translation = $transUnitManager->addTranslation($transUnit, $locale, $content, null, true);
+            $translation = $this->transUnitManager->addTranslation($transUnit, $locale, $content, null, true);
         }
 
         if ($request->query->get('clear_cache')) {
-            $this->get('translator')->removeLocalesCacheFiles(array($locale));
+            $this->container->get('translator')->removeLocalesCacheFiles(array($locale));
         }
 
         return $this->renderJson(
@@ -137,10 +144,9 @@ class TranslationCRUDController extends CRUDController
     /**
      * @return RedirectResponse|Response
      */
-    public function createTransUnitAction()
+    public function createTransUnitAction(Request $request)
     {
-        $request = $this->getRequest();
-        $parameters = $this->getRequest()->request;
+        $parameters = $request->request;
         if (!$request->isMethod('POST')) {
             return $this->renderJson(
                 array(
@@ -169,9 +175,7 @@ class TranslationCRUDController extends CRUDController
             );
         }
 
-        /* @var $transUnitManager \Lexik\Bundle\TranslationBundle\Manager\TransUnitManager */
-        $transUnitManager = $this->get('lexik_translation.trans_unit.manager');
-        $transUnit = $transUnitManager->create($keyName, $domainName, true);
+        $transUnit = $this->transUnitManager->create($keyName, $domainName, true);
 
         return $this->editAction($transUnit->getId());
     }
@@ -181,13 +185,11 @@ class TranslationCRUDController extends CRUDController
      */
     public function clearCacheAction()
     {
-        $languages = $this->container->getParameter('networking_init_cms.page.languages');
-        $localeChoices = [$this->getUser()->getLocale()];
-        foreach ($languages as $language) {
-            $localeChoices[] = $language['locale'];
-        }
+        $languages = $this->getManagedLocales();
 
-        $this->get('translator')->removeLocalesCacheFiles($localeChoices);
+        dump($languages);
+
+        $this->container->get('translator')->removeLocalesCacheFiles($languages);
 
         /** @var \Networking\InitCmsBundle\Lib\pageCacheInterface $pageCache */
         if ($this->pageCache->isActive()) {
@@ -195,7 +197,7 @@ class TranslationCRUDController extends CRUDController
         }
 
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
-        $session = $this->get('session');
+        $session = $this->container->get('session');
         $session->getFlashBag()->set('sonata_flash_success', 'translations.cache_removed');
 
         return $this->redirect($this->admin->generateUrl('list'));
@@ -261,6 +263,7 @@ class TranslationCRUDController extends CRUDController
 
     protected function getManagedLocales()
     {
-        return $this->container->getParameter('lexik_translation.managed_locales');
+        return $this->getParameter('lexik_translation.managed_locales');
     }
+
 }

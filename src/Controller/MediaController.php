@@ -37,7 +37,7 @@ class MediaController extends AbstractController
             throw new NotFoundHttpException(sprintf('unable to find the media with the id : %s', $id));
         }
 
-        if (!$this->get('sonata.media.pool')->getDownloadStrategy($media)->isGranted($media, $request)) {
+        if (!$this->container->get('sonata.media.pool')->getDownloadStrategy($media)->isGranted($media, $request)) {
             throw new AccessDeniedException();
         }
         $provider = $this->getProvider($media);

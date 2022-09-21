@@ -13,14 +13,17 @@ namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
+use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\Filter\DefaultType;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Sonata\Form\Type\EqualType;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
@@ -77,11 +80,12 @@ abstract class MediaAdmin extends Admin
      *
      * @var array
      */
-    protected $datagridValues = [
-        '_page' => 1,
-        '_sort_order' => 'DESC',
-        '_sort_by' => 'createdAt',
-    ];
+    protected $datagridValues
+        = [
+            '_page' => 1,
+            '_sort_order' => 'DESC',
+            '_sort_by' => 'createdAt',
+        ];
 
     /**
      * Set the language paramenter to contain a list of languages most likely
@@ -157,14 +161,14 @@ abstract class MediaAdmin extends Admin
             'init_ckeditor_browser',
             'init_ckeditor_browser',
             [
-                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browser',
+                '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::browser',
             ]
         );
         $collection->add(
             'init_ckeditor_browser_refresh',
             'init_ckeditor_browser_refresh',
             [
-                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:browserRefresh',
+                '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::browserRefresh',
             ]
         );
 
@@ -172,7 +176,7 @@ abstract class MediaAdmin extends Admin
             'init_ckeditor_upload_file',
             'init_ckeditor_upload_file',
             [
-                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
+                '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::upload',
                 'type' => 'file',
                 'method' => 'POST',
             ]
@@ -182,7 +186,7 @@ abstract class MediaAdmin extends Admin
             'init_ckeditor_upload_image',
             'init_ckeditor_upload_image',
             [
-                '_controller' => 'NetworkingInitCmsBundle:CkeditorAdmin:upload',
+                '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::upload',
                 'type' => 'image',
                 'method' => 'POST',
             ]
@@ -192,7 +196,7 @@ abstract class MediaAdmin extends Admin
             'init_clone',
             'clone',
             [
-                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:clone',
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::cloneAction',
             ]
         );
 
@@ -200,7 +204,7 @@ abstract class MediaAdmin extends Admin
             'refresh_list',
             'refresh_list',
             [
-                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:refreshList',
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::refreshListAction',
             ]
         );
 
@@ -208,7 +212,7 @@ abstract class MediaAdmin extends Admin
             'pdf_preview',
             'pdf/view/{id}',
             [
-                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:previewPdf',
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::previewPdf',
             ]
         );
 
@@ -216,7 +220,7 @@ abstract class MediaAdmin extends Admin
             'gallery',
             'gallery',
             [
-                '_controller' => 'NetworkingInitCmsBundle:MediaAdmin:gallery',
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::gallery',
             ]
         );
     }
@@ -224,86 +228,10 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function buildDatagrid()
+    public function configureDefaultFilterValues(array &$filterValues): void
     {
-        if ($this->datagrid) {
-            return;
-        }
-
-        $filterParameters = $this->getFilterParameters();
-
-        $persistentParameters = $this->getPersistentParameters();
-        $context = $persistentParameters['context'];
-        $provider = $persistentParameters['provider'];
-
-        if ($context && array_key_exists('context', $filterParameters)) {
-            if ($filterParameters['context']['value'] != $context) {
-                $filterParameters['context']['value'] = $context;
-            }
-        } else {
-            $filterParameters['context'] = ['value' => $persistentParameters['context']];
-        }
-
-        if ($provider && array_key_exists('providerName', $filterParameters)) {
-            if ($filterParameters['providerName']['value'] != $provider) {
-                $filterParameters['providerName']['value'] = $provider;
-            }
-        } elseif ($provider) {
-            $filterParameters['providerName']['value'] = $provider;
-        } else {
-            $filterParameters['providerName'] = ['value' => $persistentParameters['provider']];
-        }
 
 
-
-        $this->getRequest()->getSession()->set($this->getCode().'.filter.parameters', $filterParameters);
-
-        // transform _sort_by from a string to a FieldDescriptionInterface for the datagrid.
-        if (isset($filterParameters['_sort_by']) && is_string($filterParameters['_sort_by'])) {
-            if ($this->hasListFieldDescription($filterParameters['_sort_by'])) {
-                $filterParameters['_sort_by'] = $this->getListFieldDescription($filterParameters['_sort_by']);
-            } else {
-                $filterParameters['_sort_by'] = $this->getModelManager()->getNewFieldDescriptionInstance(
-                    $this->getClass(),
-                    $filterParameters['_sort_by'],
-                    []
-                );
-
-                $this->getListBuilder()->buildField(null, $filterParameters['_sort_by'], $this);
-            }
-        }
-
-        // initialize the datagrid
-        $this->datagrid = $this->getDatagridBuilder()->getBaseDatagrid($this, $filterParameters);
-
-        $this->datagrid->getPager()->setMaxPageLinks($this->getMaxPageLinks());
-
-        $mapper = new DatagridMapper($this->getDatagridBuilder(), $this->datagrid, $this);
-
-        // build the datagrid filter
-        $this->configureDatagridFilters($mapper, $context, $provider);
-
-        // ok, try to limit to add parent filter
-        if ($this->isChild() && $this->getParentAssociationMapping() && !$mapper->has(
-                $this->getParentAssociationMapping()
-            )
-        ) {
-            $mapper->add(
-                $this->getParentAssociationMapping(),
-                null,
-                [
-                    'field_type' => 'sonata_type_model_reference',
-                    'field_options' => [
-                        'model_manager' => $this->getModelManager(),
-                    ],
-                    'operator_type' => 'hidden',
-                ]
-            );
-        }
-
-        foreach ($this->getExtensions() as $extension) {
-            $extension->configureDatagridFilters($mapper, $context);
-        }
     }
 
     /**
@@ -316,17 +244,25 @@ abstract class MediaAdmin extends Admin
             ->add('authorName', null, ['hidden' => true]);
 
         if ($this->showTagTree) {
-            $datagridMapper->add('tags', CallbackFilter::class, ['label_render' => false, 'label' => false,
-                'callback' => function ($queryBuilder, $alias, $field, $value) {
-                    if (!$value['value']) {
+            $datagridMapper->add('tags', CallbackFilter::class, [
+                'label_render' => false,
+                'label' => false,
+                'field_type' => HiddenType::class,
+                'callback' => function (
+                    ProxyQueryInterface $query,
+                    $alias,
+                    $field,
+                    FilterData $data
+                ) {
+                    if (!$data->hasValue()) {
                         return false;
                     }
-                    $queryBuilder->leftJoin(sprintf('%s.tags', $alias), 't');
-                    $queryBuilder->andWhere('t.id = :id');
-                    $queryBuilder->setParameter('id', $value['value']);
-
+                    $query->leftJoin(sprintf('%s.tags', $alias), 't');
+                    $query->andWhere('t.id = :id');
+                    $query->setParameter('id', $data->getValue());
                     return true;
-                }, 'field_type' => HiddenType::class, 'label_render' => false, 'label' => false, ]);
+                },
+            ]);
         } else {
             $datagridMapper->add('tags');
         }
@@ -337,7 +273,7 @@ abstract class MediaAdmin extends Admin
             [
                 'show_filter' => false,
                 'operator_type' => ContainsOperatorType::TYPE_EQUAL,
-                'case_sensitive' => true
+                'case_sensitive' => true,
 
             ]
         )
@@ -347,12 +283,11 @@ abstract class MediaAdmin extends Admin
                 [
                     'show_filter' => false,
                     'operator_type' => ContainsOperatorType::TYPE_EQUAL,
-                    'case_sensitive' => true
+                    'case_sensitive' => true,
                 ]
             );
     }
 
- 
 
     /**
      * {@inheritdoc}
@@ -377,8 +312,12 @@ abstract class MediaAdmin extends Admin
      */
     public function getTemplate($name)
     {
-        if ($name === 'edit' && is_null($this->getSubject()->getId()) && !$this->getRequest()->query->get('gallery')) {
-            $provider = $this->pool->getProvider($this->getRequest()->get('provider'));
+        if ($name === 'edit' && is_null($this->getSubject()->getId())
+            && !$this->getRequest()->query->get('gallery')
+        ) {
+            $provider = $this->pool->getProvider(
+                $this->getRequest()->get('provider')
+            );
             if ($provider instanceof FileProvider) {
                 return '@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig';
             }
@@ -424,7 +363,14 @@ abstract class MediaAdmin extends Admin
 
         $formMapper->add('providerName', HiddenType::class);
 
-        $formMapper->getFormBuilder()->addModelTransformer(new ProviderDataTransformer($this->pool, $this->getClass(), ['new_on_update' => false]), true);
+        $formMapper->getFormBuilder()->addModelTransformer(
+            new ProviderDataTransformer(
+                $this->pool,
+                $this->getClass(),
+                ['new_on_update' => false]
+            ),
+            true
+        );
 
         $provider = $this->pool->getProvider($media->getProviderName());
 
@@ -434,7 +380,11 @@ abstract class MediaAdmin extends Admin
             $provider->buildCreateForm($formMapper);
         }
 
-        if (in_array($media->getProviderName(), $this->localisedMediaProviders)) {
+        if (in_array(
+            $media->getProviderName(),
+            $this->localisedMediaProviders
+        )
+        ) {
             $formMapper->add(
                 'locale',
                 ChoiceType::class,
@@ -512,14 +462,22 @@ abstract class MediaAdmin extends Admin
 
         if ($this->hasRequest()) {
 
-            if ($this->getRequest()->isMethod('POST') && !$this->getRequest()->get('oneuploader')) {
+            if ($this->getRequest()->isMethod('POST')
+                && !$this->getRequest()->get('oneuploader')
+            ) {
                 $uniqid = $this->getUniqid();
-                if(array_key_exists('providerName', $this->getRequest()->get($uniqid, []))){
-                    $object->setProviderName($this->getRequest()->get($uniqid)['providerName']);
+                if (array_key_exists(
+                    'providerName',
+                    $this->getRequest()->get($uniqid, [])
+                )
+                ) {
+                    $object->setProviderName(
+                        $this->getRequest()->get($uniqid)['providerName']
+                    );
                 }
             }
 
-            if($this->getRequest()->get('provider')) {
+            if ($this->getRequest()->get('provider')) {
                 $object->setProviderName($this->getRequest()->get('provider'));
             }
 
@@ -534,48 +492,52 @@ abstract class MediaAdmin extends Admin
      */
     public function configurePersistentParameters(): array
     {
+        $parameters = [];
+
         if (!$this->hasRequest()) {
-            return [];
+            return $parameters;
         }
 
-        $filterParameters = $this->getFilterParameters();
+        $request = $this->getRequest();
 
-        $context = $this->getRequest()->get('context');
-        $provider = $this->getRequest()->get('provider');
+        $filter = $request->query->all('filter');
 
-        if ($this->getRequest()->get('providerName')) {
-            $provider = $this->getRequest()->get('providerName');
+        $context = $request->query->get('context');
+        $provider = $request->query->get('provider');
+
+        if ($request->query->get('providerName')) {
+            $provider = $request->query->get('providerName');
         }
 
         if (is_array($context) && array_key_exists('value', $context)) {
             $context = $context['value'];
         }
 
-        if (!$provider && array_key_exists('providerName', $filterParameters)) {
-            if (!$provider && !$context) {
-                $provider = $filterParameters['providerName']['value'];
-            }
-        }
-
-        if (!$context && array_key_exists('context', $filterParameters)) {
-            $context = $filterParameters['context']['value'];
+        if (!$context && array_key_exists('context', $filter)) {
+            $context = $filter['context']['value'];
         } elseif (!$context) {
             $context = $this->pool->getDefaultContext();
         }
 
         $providers = $this->pool->getProvidersByContext($context);
+        $provider = $request->query->get('provider');
 
         // if the context has only one provider, set it into the request
         // so the intermediate provider selection is skipped
-        if (count($providers) == 1 && null === $provider) {
+        if (1 === \count($providers) && null === $provider) {
             $provider = array_shift($providers)->getName();
-            $this->getRequest()->query->set('provider', $provider);
+            $request->query->set('provider', $provider);
         }
 
-        return [
-            'provider' => $provider,
+        // if there is a post server error, provider is not posted and in case of
+        // multiple providers, it has to be persistent to not being lost
+        if (1 < \count($providers) && null !== $provider) {
+            $parameters['provider'] = $provider;
+        }
+
+        return array_merge($parameters, [
             'context' => $context,
-        ];
+        ]);
     }
 
     /**
@@ -583,11 +545,16 @@ abstract class MediaAdmin extends Admin
      */
     public function configureBatchActions($actions): array
     {
-        if ($this->getRequest() && !$this->getRequest()->query->get('galleryMode')) {
+        if ($this->getRequest()
+            && !$this->getRequest()->query->get(
+                'galleryMode'
+            )
+        ) {
 
             if (
-                $this->hasRoute('edit') && $this->isGranted('EDIT') &&
-                $this->hasRoute('delete') && $this->isGranted('DELETE')
+                $this->hasRoute('edit') && $this->isGranted('EDIT')
+                && $this->hasRoute('delete')
+                && $this->isGranted('DELETE')
             ) {
                 $actions['add_tags'] = [
                     'label' => 'add_tags',

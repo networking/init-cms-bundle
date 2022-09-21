@@ -2,14 +2,7 @@ services:
     # Doctrine Extension listeners to handle behaviors
     Gedmo\Tree\TreeListener:
         tags:
-            - { name: doctrine.event_listener, event: prePersist, connection: default, priority: 100 }
-            - { name: doctrine.event_listener, event: preRemove, connection: default, priority: 100 }
-            - { name: doctrine.event_listener, event: preUpdate, connection: default, priority: 100 }
-            - { name: doctrine.event_listener, event: onFlush, connection: default, priority: 100 }
-            - { name: doctrine.event_listener, event: loadClassMetadata, connection: default, priority: 100 }
-            - { name: doctrine.event_listener, event: postPersist, connection: default, priority: 100 }
-            - { name: doctrine.event_listener, event: postUpdate, connection: default, priority: 100 }
-            - { name: doctrine.event_listener, event: postRemove, connection: default, priority: 100 }
+            - { name: doctrine.event_subscriber, connection: default }
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
@@ -21,22 +14,19 @@ services:
             - [ setDefaultLocale, [ '%env(LOCALE)%' ] ]
             - [ setTranslationFallback, [ false ] ]
 
-    gedmo.listener.timestampable:
-        class: Gedmo\Timestampable\TimestampableListener
+    Gedmo\Timestampable\TimestampableListener:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
-    gedmo.listener.sluggable:
-        class: Gedmo\Sluggable\SluggableListener
+    Gedmo\Sluggable\SluggableListener:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
-    gedmo.listener.sortable:
-        class: Gedmo\Sortable\SortableListener
+    Gedmo\Sortable\SortableListener:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
         calls:

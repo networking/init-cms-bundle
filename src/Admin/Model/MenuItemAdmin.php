@@ -19,10 +19,13 @@ use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Exception\ModelManagerException;
+use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -30,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use function PHPUnit\Framework\arrayHasKey;
 
 /**
  * Class MenuItemAdmin.
@@ -71,14 +75,54 @@ abstract class MenuItemAdmin extends BaseAdmin
     /**
      * @var array
      */
-    protected $linkTargets = ['_blank' => '_blank', '_self' => '_self', '_parent' => '_parent', '_top' => '_top'];
+    protected $linkTargets
+        = [
+            '_blank' => '_blank',
+            '_self' => '_self',
+            '_parent' => '_parent',
+            '_top' => '_top',
+        ];
 
     /**
      * @var array
      */
     protected $trackedActions = ['list'];
 
-    protected $formOptions =['layout' => 'horizontal'];
+    protected $formOptions = ['layout' => 'horizontal'];
+
+    public function alterNewInstance(object $object): void
+    {
+        $request = $this->getRequest();
+
+        if (!$locale = $request->get('locale')) {
+            $locale = $request->getLocale();
+        }
+
+        $uniqId = $this->getUniqid();
+
+        $rootId = $request->query->get('root_id');
+
+        if ($postArray = $request->request->get($uniqId)) {
+            if (array_key_exists('locale', $postArray)) {
+                $locale = $postArray['locale'];
+            }
+
+            if(array_key_exists('root', $postArray)){
+                $rootId = $postArray['root'];
+            }
+
+        }
+
+        if ($rootId) {
+            $root = $this->getModelManager()->find($this->getClass(), $rootId);
+            $object
+                ->setMenu($root)
+                ->setRoot($root);
+            $locale = $root->getLocale();
+        }
+
+        $object->setLocale($locale);
+    }
 
 
     /**
@@ -92,8 +136,8 @@ abstract class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollectionInterface $collection): void
-    {
+    protected function configureRoutes(RouteCollectionInterface $collection
+    ): void {
         $collection->add(
             'createFromPage',
             'create_from_page/root_id/{rootId}/page_id/{pageId}',
@@ -142,162 +186,167 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     protected function configureFormFields(FormMapper $formMapper): void
     {
-        if (!$locale = $this->getRequest()->get('locale')) {
-            $locale = $this->getRequest()->getLocale();
+        $request = $this->getRequest();
+
+        $createRoot = false;
+        if ($request->get('subclass') &&
+            $request->get('subclass') === 'menu'
+        ) {
+            $createRoot = true;
         }
 
-        $uniqId = $this->getUniqid();
-
-        if ($postArray = $this->getRequest()->get($uniqId)) {
-            if (array_key_exists('locale', $postArray)) {
-                $locale = $postArray['locale'];
-            }
+        if ($this->getSubject()->getIsRoot()) {
+            $createRoot = true;
         }
 
-        $id = $this->getRequest()->get('id');
-
-        if ($id) {
-            $menuItem = $this->getModelManager()->find($this->getClass(), $id);
-            $locale = $menuItem->getLocale();
-        }
-
-        if ($rootId = $this->getRequest()->get('root_id')) {
-            $root = $this->getModelManager()->find($this->getClass(), $rootId);
-        } elseif ($id) {
-            $root = $this->getModelManager()->find($this->getClass(), $this->getSubject()->getRoot());
-        } else {
-            $root = $this->getModelManager()->findOneBy($this->getClass(), ['isRoot' => 1, 'locale' => $locale]);
-        }
-
-        if ($this->getRequest()->get('subclass') && $this->getRequest()->get('subclass') == 'menu') {
-            $this->isRoot = true;
-        } elseif ($this->getSubject()->getIsRoot()) {
-            $this->isRoot = true;
-        }
 
         $formMapper
             ->with('general', ['label' => false])
-            ->add('locale', HiddenType::class, ['data' => $locale])
-            ->add('name', null, ['layout' => 'horizontal'])
-        ;
+            ->add('locale', HiddenType::class)
+            ->add('name', null, ['layout' => 'horizontal']);
 
-        if ($this->isRoot) {
+        if ($createRoot) {
             $formMapper
                 ->add('description', null, ['layout' => 'horizontal'])
                 ->add('isRoot', HiddenType::class, ['data' => true])
                 ->end();
-        } else {
-            $formMapper->end();
-            // start group page_or_url
-            $formMapper
-                ->with(
-                    'form.legend_page_or_url',
-                    [
-                        'collapsed' => false,
-                        'layout' => 'horizontal',
-                    ]
-                );
-            $pageAdmin = $this->getConfigurationPool()->getAdminByAdminCode('networking_init_cms.admin.page');
-            $pageClass = $pageAdmin->getClass();
 
-            $formMapper
-                ->add(
-                    'page',
-                    AutocompleteType::class,
-                    [
-                        'attr' => ['style' => 'width:220px'],
-                        'class' => $pageClass,
-                        'required' => false,
-                        'layout' => 'horizontal',
-                        'choice_label' => 'AdminTitle',
-                        'query_builder' => function (EntityRepository $er) use ($locale) {
-                            $qb = $er->createQueryBuilder('p');
-                            $qb->where('p.locale = :locale')
-                                ->orderBy('p.path', 'asc')
-                                ->setParameter(':locale', $locale);
-
-                            return $qb;
-                        },
-                    ]
-                );
-            $formMapper->add(
-                'redirect_url',
-                UrlType::class,
-                ['required' => false, 'help_block' => 'help.redirect_url', 'layout' => 'horizontal']
-            );
-            $formMapper->add(
-                'internal_url',
-                TextType::class,
-                ['required' => false, 'help_block' => 'help.internal_url', 'layout' => 'horizontal']
-            );
-            $formMapper->end();
-
-            // start group optionals
-            $formMapper
-                ->with(
-                    'form.legend_options',
-                    [
-                        'collapsed' => false,
-                        'layout' => 'horizontal',
-                    ]
-                )
-                ->add(
-                    'visibility',
-                    ChoiceType::class,
-                    [
-                        'layout' => 'horizontal',
-                        'help_block' => 'visibility.helper.text',
-                        'choices' => MenuItem::getVisibilityList(),
-                        'translation_domain' => $this->getTranslationDomain(),
-                    ]
-                )
-                ->add(
-                    'link_target',
-                    ChoiceType::class,
-                    [
-                        'layout' => 'horizontal',
-                        'choices' => $this->getTranslatedLinkTargets(),
-                        'required' => false,
-                    ]
-                )
-                ->add('link_class', TextType::class, ['layout' => 'horizontal', 'required' => false])
-                ->add('link_rel', TextType::class, ['layout' => 'horizontal', 'required' => false])
-                ->add('hidden', null, ['layout' => 'horizontal', 'required' => false])
-                ->end();
-
-            $transformer = new ModelToIdTransformer($this->getModelManager(), $this->getClass());
-
-            $menuField = $formMapper->getFormBuilder()->create(
-                'menu',
-                HiddenType::class,
-                ['data' => $root, 'data_class' => null]
-            )->addModelTransformer($transformer);
-            $formMapper->add($menuField, HiddenType::class);
-
-
+            return;
         }
+
+        $formMapper->end();
+        // start group page_or_url
+        $formMapper
+            ->with(
+                'form.legend_page_or_url',
+                [
+                    'collapsed' => false,
+                    'layout' => 'horizontal',
+                ]
+            );
+        $pageAdmin = $this->getConfigurationPool()->getAdminByAdminCode(
+            'networking_init_cms.admin.page'
+        );
+        $pageClass = $pageAdmin->getClass();
+        $locale = $this->getSubject()->getLocale();
+        $formMapper
+            ->add(
+                'page',
+                AutocompleteType::class,
+                [
+                    'attr' => ['style' => 'width:220px'],
+                    'class' => $pageClass,
+                    'required' => false,
+                    'layout' => 'horizontal',
+                    'choice_label' => 'AdminTitle',
+                    'query_builder' => function (EntityRepository $er) use (
+                        $locale
+                    ) {
+                        $qb = $er->createQueryBuilder('p');
+                        $qb->where('p.locale = :locale')
+                            ->orderBy('p.path', 'asc')
+                            ->setParameter(':locale', $locale);
+                        return $qb;
+                    },
+                ]
+            );
+        $formMapper->add(
+            'redirect_url',
+            UrlType::class,
+            [
+                'required' => false,
+                'help_block' => 'help.redirect_url',
+                'layout' => 'horizontal',
+            ]
+        );
+        $formMapper->add(
+            'internal_url',
+            TextType::class,
+            [
+                'required' => false,
+                'help_block' => 'help.internal_url',
+                'layout' => 'horizontal',
+            ]
+        );
+        $formMapper->end();
+
+        // start group optionals
+        $formMapper
+            ->with(
+                'form.legend_options',
+                [
+                    'collapsed' => false,
+                    'layout' => 'horizontal',
+                ]
+            )
+            ->add(
+                'visibility',
+                ChoiceType::class,
+                [
+                    'layout' => 'horizontal',
+                    'help_block' => 'visibility.helper.text',
+                    'choices' => MenuItem::getVisibilityList(),
+                    'translation_domain' => $this->getTranslationDomain(),
+                ]
+            )
+            ->add(
+                'link_target',
+                ChoiceType::class,
+                [
+                    'layout' => 'horizontal',
+                    'choices' => $this->getTranslatedLinkTargets(),
+                    'required' => false,
+                ]
+            )
+            ->add(
+                'link_class',
+                TextType::class,
+                ['layout' => 'horizontal', 'required' => false]
+            )
+            ->add(
+                'link_rel',
+                TextType::class,
+                ['layout' => 'horizontal', 'required' => false]
+            )
+            ->add(
+                'hidden',
+                null,
+                ['layout' => 'horizontal', 'required' => false]
+            )
+            ->end();
+
+
+        $formMapper->add(
+            'root',
+            ModelHiddenType::class,
+            ['class' => $this->getClass()]
+        );
+
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
-    {
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper
+    ): void {
         $datagridMapper
             ->add(
                 'locale',
                 CallbackFilter::class,
                 ['callback' => [$this, 'getByLocale']],
-                LanguageType::class,
+
                 [
-                    'placeholder' => false,
-                    'choice_loader' => new CallbackChoiceLoader(
-                        function () {
-                            return $this->getLocaleChoices();
-                        }
-                    ),
-                    'preferred_choices' => [$this->getDefaultLocale()],
-                    'translation_domain' => $this->getTranslationDomain(),
+                    'field_type' => LanguageType::class,
+                    'field_options' => [
+                        'placeholder' => false,
+                        'choice_loader' => new CallbackChoiceLoader(
+                            function () {
+                                return $this->getLocaleChoices();
+                            }
+                        ),
+                        'preferred_choices' => [$this->getDefaultLocale()],
+                        'translation_domain' => $this->getTranslationDomain(),
+                    ],
                 ]
             );
     }
@@ -342,17 +391,18 @@ abstract class MenuItemAdmin extends BaseAdmin
      *
      * @return bool
      */
-    public function getByLocale(
-        \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery $queryBuilder,
+    public function getByLocale(ProxyQuery $queryBuilder,
         $alias,
         $field,
-        $value
+        FilterData $data
     ) {
-        if (!$locale = $value['value']) {
+        if (!$data->hasValue()) {
             $locale = $this->getDefaultLocale();
         }
         $queryBuilder->where(sprintf('%s.locale = :locale', $alias));
-        $queryBuilder->andWhere($queryBuilder->expr()->isNotNull(sprintf('%s.parent', $alias)));
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->isNotNull(sprintf('%s.parent', $alias))
+        );
         $queryBuilder->setParameter(':locale', $locale);
 
         return true;
@@ -366,7 +416,6 @@ abstract class MenuItemAdmin extends BaseAdmin
     {
         $this->isRoot = $isRoot;
     }
-
 
 
     /**

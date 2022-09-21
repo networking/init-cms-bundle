@@ -25,7 +25,7 @@ file that was distributed with this source code.
         <div class="modal-body">
     {% endif %}
     {% for code, provider in providers %}
-        <a href="{{ admin.generateUrl('create', {'provider': provider.name}) }}"
+        <a href="{{ admin.generateUrl('create', {'provider': provider.name} + app.request.query.all|default({}) ) }}"
            class="btn btn-default"
            data-toggle="tooltip"
            data-placement="top"

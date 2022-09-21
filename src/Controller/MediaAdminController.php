@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
+use Networking\InitCmsBundle\Admin\Model\TagAdmin;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Exception\DuplicateMediaException;
@@ -25,6 +26,8 @@ use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
+use Sonata\MediaBundle\Provider\FileProvider;
+use Sonata\MediaBundle\Provider\Pool;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -62,11 +65,11 @@ class MediaAdminController extends CRUDController
             '@NetworkingInitCms/MediaAdmin/show.html.twig',
             [
                 'media' => $media,
-                'formats' => $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext()),
-                'format' => $this->getRequest()->get('format', 'reference'),
+                'formats' => $this->container->get('sonata.media.pool')->getFormatNamesByContext($media->getContext()),
+                'format' => $request->get('format', 'reference'),
                 'base_template' => $this->getBaseTemplate(),
                 'admin' => $this->admin,
-                'security' => $this->get('sonata.media.pool')->getDownloadStrategy($media),
+                'security' => $this->container->get('sonata.media.pool')->getDownloadStrategy($media),
                 'action' => 'view',
                 'pixlr' => $this->container->has('sonata.media.extra.pixlr') ? $this->container->get(
                     'sonata.media.extra.pixlr'
@@ -90,14 +93,47 @@ class MediaAdminController extends CRUDController
             return $this->render(
                 '@NetworkingInitCms/MediaAdmin/select_provider.html.twig',
                 [
-                    'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
-                        $request->get('context', $this->get('sonata.media.pool')->getDefaultContext())
+                    'providers' => $this->container->get('sonata.media.pool')->getProvidersByContext(
+                        $request->get('context', $this->container->get('sonata.media.pool')->getDefaultContext())
                     ),
                     'base_template' => $this->getBaseTemplate(),
                     'admin' => $this->admin,
                     'action' => 'create',
                 ]
             );
+        }
+
+        if (!$this->admin->hasSubject() && !$request->query->get('gallery') && !$request->query->get('pcode')) {
+            $provider = $this->container->get('sonata.media.pool')->getProvider(
+                $parameters['provider']
+            );
+
+            if ($provider instanceof FileProvider) {
+
+                $newObject = $this->admin->getNewInstance();
+
+                $preResponse = $this->preCreate($request, $newObject);
+                if (null !== $preResponse) {
+                    return $preResponse;
+                }
+
+                $this->admin->setSubject($newObject);
+
+                $form = $this->admin->getForm();
+
+                $form->setData($newObject);
+                $form->handleRequest($request);
+                $formView = $form->createView();
+                $this->setFormTheme($formView, $this->admin->getFormTheme());
+                $template = $this->admin->getTemplateRegistry()->getTemplate('create');
+
+                return $this->renderWithExtraParams($template, [
+                    'action' => 'create',
+                    'form' => $formView,
+                    'object' => $newObject,
+                    'objectId' => null,
+                ]);
+            }
         }
 
         return parent::createAction($request);
@@ -156,7 +192,7 @@ class MediaAdminController extends CRUDController
             throw new AccessDeniedException();
         }
         /** @var Request $request */
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
         if ($request->getMethod() == 'DELETE') {
             try {
                 $this->admin->delete($object);
@@ -172,7 +208,7 @@ class MediaAdminController extends CRUDController
         }
 
         return $this->render(
-            $this->templateRegistry->getTemplate('delete'),
+            $this->admin->getTemplateRegistry()->getTemplate('delete'),
             [
                 'object' => $object,
                 'action' => 'delete',
@@ -183,7 +219,7 @@ class MediaAdminController extends CRUDController
 
     public function batchActionAddTags(ProxyQueryInterface $selectedModelQuery)
     {
-        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+        $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
         if (!$this->admin->isGranted('EDIT') || !$this->admin->isGranted('DELETE')) {
             throw new AccessDeniedException();
         }
@@ -191,7 +227,7 @@ class MediaAdminController extends CRUDController
         $modelManager = $tagAdmin->getModelManager();
 
         /** @var Tag $tag */
-        $tag = $modelManager->find($tagAdmin->getClass(), $this->get('request_stack')->getCurrentRequest()->get('tags'));
+        $tag = $modelManager->find($tagAdmin->getClass(), $this->container->get('request_stack')->getCurrentRequest()->get('tags'));
 
         $data = [
             'result' => 'ok',
@@ -235,6 +271,29 @@ class MediaAdminController extends CRUDController
     }
 
 
+
+    /**
+     * This method can be overloaded in your custom CRUD controller.
+     * It's called from listAction.
+     */
+    protected function preList(Request $request): ?Response
+    {
+
+        $filter = $this->admin->getFilterParameters();
+
+        if($request->query->has('provider')){
+            $filter['providerName']['value'] = $request->query->get('provider');
+        }
+
+        if($request->query->has('context')){
+            $filter['context']['value'] = $request->query->get('context');
+        }
+        $request->query->set('filter', $filter);
+
+        return null;
+    }
+
+
     /**
      * @param Request|null $request
      *
@@ -244,13 +303,22 @@ class MediaAdminController extends CRUDController
     {
         $this->admin->checkAccess('list');
 
+        $preResponse = $this->preList($request);
+        if (null !== $preResponse) {
+            return $preResponse;
+        }
+
+        $galleryMode = $request->query->get('galleryMode', false);
+
+        if($request->query->has('pcode')){
+            $galleryMode = true;
+        }
+
         $datagrid = $this->admin->getDatagrid();
-
-        $persistentParameters = $this->admin->getPersistentParameters();
-
         $formView = $datagrid->getForm()->createView();
 
-        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
+        $persistentParameters = $this->admin->getPersistentParameters();
+        $this->setFormTheme($formView, $this->admin->getFilterTheme());
 
         $tags = $this->getDoctrine()
             ->getRepository(Tag::class)
@@ -260,15 +328,16 @@ class MediaAdminController extends CRUDController
             ->orderBy('t.path', 'ASC')
             ->getQuery()->getResult();
 
-        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+        $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
+
 
         return $this->renderWithExtraParams(
-            $this->templateRegistry->getTemplate('list'),
+            '@NetworkingInitCms/MediaAdmin/list.html.twig',
             [
-                'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
+                'providers' => $this->container->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
-                'media_pool' => $this->get('sonata.media.pool'),
+                'media_pool' => $this->container->get('sonata.media.pool'),
                 'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
@@ -276,7 +345,7 @@ class MediaAdminController extends CRUDController
                 'action' => 'list',
                 'form' => $formView,
                 'datagrid' => $datagrid,
-                'galleryListMode' => $request->query->get('galleryMode', false),
+                'galleryListMode' => $galleryMode,
                 'csrf_token' => $this->getCsrfToken('sonata.batch'),
                 'show_actions' => true,
             ]
@@ -291,6 +360,11 @@ class MediaAdminController extends CRUDController
     public function refreshListAction(Request $request)
     {
         $this->admin->checkAccess('list');
+
+        $preResponse = $this->preList($request);
+        if (null !== $preResponse) {
+            return $preResponse;
+        }
         
         $galleryListMode = $request->query->get('galleryMode', false);
         $datagrid = $this->admin->getDatagrid();
@@ -305,15 +379,15 @@ class MediaAdminController extends CRUDController
             ->orderBy('t.path', 'ASC')
             ->getQuery()->getResult();
 
-        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+        $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
 
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/MediaAdmin/list_items.html.twig',
             [
-                'providers' => $this->get('sonata.media.pool')->getProvidersByContext(
+                'providers' => $this->container->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
-                'media_pool' => $this->get('sonata.media.pool'),
+                'media_pool' => $this->container->get('sonata.media.pool'),
                 'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
@@ -335,9 +409,9 @@ class MediaAdminController extends CRUDController
     {
         $object = $this->admin->getObject($id);
 
-        return $this->renderWithExtraParams('NetworkingInitCmsBundle:MediaAdmin:preview.html.twig', [
+        return $this->renderWithExtraParams('@NetworkingInitCms/MediaAdmin/preview.html.twig', [
 
-            'media_pool' => $this->get('sonata.media.pool'),
+            'media_pool' => $this->container->get('sonata.media.pool'),
             'persistent_parameters' => $this->admin->getPersistentParameters(),
             'object' => $object]);
     }
@@ -477,5 +551,15 @@ class MediaAdminController extends CRUDController
         } catch (\Exception $e) {
             throw new UploadException($e->getMessage());
         }
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+                'networking_init_cms.admin.tag' => TagAdmin::class,
+                'sonata.media.pool' => Pool::class,
+                'sonata.media.manager.category' => '?'.CategoryManagerInterface::class,
+                'sonata.media.manager.context' => '?'.ContextManagerInterface::class,
+            ] + parent::getSubscribedServices();
     }
 }

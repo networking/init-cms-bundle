@@ -11,8 +11,8 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Networking\InitCmsBundle\Doctrine\UserManager as DoctrineUserManager;
-
 use Doctrine\ORM\EntityManagerInterface;
+use Networking\InitCmsBundle\Model\UserInterface;
 use Sonata\UserBundle\Util\CanonicalFieldsUpdaterInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -25,6 +25,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserManager extends DoctrineUserManager
 {
 
+    /**
+     * {@inheritdoc}
+     */
+    public function updateUser(UserInterface $user, $andFlush = true)
+    {
+        $this->save($user, $andFlush);
+    }
     /**
      * @return mixed
      */

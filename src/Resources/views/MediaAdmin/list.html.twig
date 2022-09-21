@@ -219,10 +219,10 @@ file that was distributed with this source code.
                             {% if providers|length > 1 %}
                                 <strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong>
                                 <div class="btn-group btn-group-sm">
-                                    <a class="btn btn-sm btn-{{ persistent_parameters.provider ? 'default': 'primary' }}"
+                                    <a class="btn btn-sm btn-{{ persistent_parameters.provider is defined  ? 'default': 'primary' }}"
                                        href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
                                     {% for provider_name in providers %}
-                                        <a class="btn btn-sm btn-{{ persistent_parameters.provider == provider_name? 'primary':'default' }}"
+                                        <a class="btn btn-sm btn-{{ persistent_parameters.provider is defined and  persistent_parameters.provider == provider_name? 'primary':'default' }}"
                                            href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}) }}">{{ provider_name|trans({}) }}</a>
                                     {% endfor %}
                                 </div>&nbsp;
@@ -245,10 +245,13 @@ file that was distributed with this source code.
                                     {% if field_description.options.sortable is defined and field_description.options.sortable %}
 
                                         {% set sortable             = true %}
-                                        {% set current              = datagrid.values._sort_by == field_description %}
-                                        {% set sort_parameters      = admin.modelmanager.sortparameters(field_description, datagrid) %}
+                                        {% set sort_parameters      = admin.datagrid.sortparameters(field_description) %}
+                                        {% set current              = admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] is defined
+                                            and (admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] == field_description
+                                            or admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')].name == sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')]) %}
                                         {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
-                                        {% set sort_by              = current ? datagrid.values._sort_order : field_description.options._sort_order %}
+                                        {% set sort_by              = current ? admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')] : field_description.option(constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER'), sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')]) %}
+
 
                                         {% if sortable %}
                                             <a href="{{ admin.generateUrl(route, sort_parameters) }}" class="btn btn-sm btn-{{ sort_active_class ? 'primary':'default' }}">{% endif %}

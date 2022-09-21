@@ -14,5 +14,5 @@ sonata_user:
     admin:                  # Admin Classes
         user:
             class:          'Networking\InitCmsBundle\Admin\Entity\UserAdmin'
-            controller:     'NetworkingInitCmsBundle:CRUD'
+            controller:     'Networking\InitCmsBundle\Controller\CRUDController'
             translation:    'SonataUserBundle'

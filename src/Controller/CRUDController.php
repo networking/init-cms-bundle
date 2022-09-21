@@ -40,11 +40,6 @@ class CRUDController extends SonataCRUDController
     protected $pageCache;
 
     /**
-     * @var TemplateRegistryInterface
-     */
-    protected $templateRegistry;
-
-    /**
      * CRUDController constructor.
      * @param CmsEventDispatcher $dispatcher
      * @param PageCacheInterface $pageCache
@@ -54,41 +49,7 @@ class CRUDController extends SonataCRUDController
         $this->dispatcher = $dispatcher;
         $this->pageCache = $pageCache;
     }
-
-
-    /**
-     * Set up the lasted edited dispatcher.
-     */
-    public function configure()
-    {
-        parent::configure();
-
-        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-        $session = $this->get('session');
-
-        switch (strtolower($this->container->getParameter('networking_init_cms.db_driver'))) {
-            case 'orm':
-                $lastEditedSubscriber = new ORMLastEditedListener($session);
-                break;
-            default:
-                $lastEditedSubscriber = false;
-                break;
-        }
-
-        if ($lastEditedSubscriber) {
-            $this->dispatcher->addSubscriber($lastEditedSubscriber);
-        }
-
-        $this->templateRegistry = $this->container->get($this->admin->getCode().'.template_registry');
-        if (!$this->templateRegistry instanceof TemplateRegistryInterface) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Unable to find the template registry related to the current admin (%s)',
-                    $this->admin->getCode()
-                )
-            );
-        }
-    }
+    
 
     /**
      * @param string   $view
@@ -119,7 +80,7 @@ class CRUDController extends SonataCRUDController
     {
         $translationDomain = $domain ? $domain : $this->admin->getTranslationDomain();
 
-        return $this->get('translator')->trans($string, $params, $translationDomain);
+        return $this->container->get('translator')->trans($string, $params, $translationDomain);
     }
 
 }

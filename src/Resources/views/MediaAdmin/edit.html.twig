@@ -50,7 +50,7 @@ file that was distributed with this source code.
             <div class="modal-content">
         {% endif %}
         <form class="form-vertical" novalidate="novalidate" method="POST"
-              action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
+              action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')} + app.request.query.all|default({}) ) }}"
                 {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}>
             {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
                 <div class="modal-header">
@@ -156,11 +156,11 @@ file that was distributed with this source code.
                                     <tr>
                                         <th>{{ 'label.size'|trans({}, 'SonataMediaBundle') }}</th>
                                         <td>
-                                            {% if object.width is defined and object.width %}{{ object.width|number_format_decimal }}px
-                                                x {{ object.height|number_format_decimal }}px
-                                                {% if object.size > 0 %}({{ object.size|number_format_decimal }} Bytes){% endif %}
+                                            {% if object.width is defined and object.width %}{{ object.width|number_format }}px
+                                                x {{ object.height|number_format }}px
+                                                {% if object.size > 0 %}({{ object.size|number_format }} Bytes){% endif %}
                                             {% else %}
-                                                {% if object.size > 0 %}{{ object.size|number_format_decimal }} Bytes{% endif %}
+                                                {% if object.size > 0 %}{{ object.size|number_format }} Bytes{% endif %}
                                             {% endif %}
                                         </td>
                                     <tr>

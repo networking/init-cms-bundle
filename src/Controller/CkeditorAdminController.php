@@ -12,10 +12,13 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\MediaAdmin;
+use Networking\InitCmsBundle\Admin\Model\TagAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
+use phpDocumentor\Reflection\DocBlock\Tags\Method;
+use Sonata\MediaBundle\Provider\Pool;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormRenderer;
@@ -43,25 +46,25 @@ class CkeditorAdminController extends CRUDController
      *
      * @throws \Twig_Error_Runtime
      */
-    public function browserAction()
+    public function browser(Request $request)
     {
         $this->checkIfMediaBundleIsLoaded();
 
         $this->admin->checkAccess('list');
 
         $datagrid = $this->admin->getDatagrid();
-        $datagrid->setValue('context', null, $this->getRequest()->get('context'));
-        $datagrid->setValue('providerName', null, $this->getRequest()->get('provider'));
+        $datagrid->setValue('context', null, $request->get('context'));
+        $datagrid->setValue('providerName', null, $request->get('provider'));
 
         $formats = [];
 
         foreach ($datagrid->getResults() as $media) {
-            $formats[$media->getId()] = $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
+            $formats[$media->getId()] = $this->container->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
         }
 
         $formView = $datagrid->getForm()->createView();
 
-        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
+        $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
         $tags = $this->getDoctrine()
             ->getRepository(Tag::class)
@@ -71,11 +74,11 @@ class CkeditorAdminController extends CRUDController
             ->orderBy('t.path', 'ASC')
             ->getQuery()->getResult();
 
-        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+        $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
         return $this->renderWithExtraParams(
             $this->getTemplate('browser'),
             [
-                'media_pool' => $this->get('sonata.media.pool'),
+                'media_pool' => $this->container->get('sonata.media.pool'),
                 'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
@@ -94,7 +97,7 @@ class CkeditorAdminController extends CRUDController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function uploadAction(Request $request, $type = 'image')
+    public function upload(Request $request, $type = 'image')
     {
         $this->checkIfMediaBundleIsLoaded();
 
@@ -121,7 +124,7 @@ class CkeditorAdminController extends CRUDController
         if ($file instanceof UploadedFile && $file->isValid()) {
 
             try {
-                $context = $request->get('context', $this->get('sonata.media.pool')->getDefaultContext());
+                $context = $request->get('context', $this->container->get('sonata.media.pool')->getDefaultContext());
 
 	            /** @var Media $media */
 	            $media = $mediaAdmin->getNewInstance();
@@ -199,7 +202,7 @@ class CkeditorAdminController extends CRUDController
      *
      * @throws \Twig_Error_Runtime
      */
-    public function browserRefreshAction()
+    public function browserRefresh()
     {
         $this->checkIfMediaBundleIsLoaded();
 
@@ -212,12 +215,12 @@ class CkeditorAdminController extends CRUDController
         $formats = [];
 
         foreach ($datagrid->getResults() as $media) {
-            $formats[$media->getId()] = $this->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
+            $formats[$media->getId()] = $this->container->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
         }
 
         $formView = $datagrid->getForm()->createView();
 
-        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
+        $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
         $tags = $this->getDoctrine()
             ->getRepository(Tag::class)
@@ -227,12 +230,12 @@ class CkeditorAdminController extends CRUDController
             ->orderBy('t.path', 'ASC')
             ->getQuery()->getResult();
 
-        $tagAdmin = $this->get('networking_init_cms.admin.tag');
+        $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
 
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/Ckeditor/browser_list_items.html.twig',
             [
-                'media_pool' => $this->get('sonata.media.pool'),
+                'media_pool' => $this->container->get('sonata.media.pool'),
                 'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
@@ -273,10 +276,18 @@ class CkeditorAdminController extends CRUDController
      */
     private function checkIfMediaBundleIsLoaded()
     {
-        $bundles = $this->container->getParameter('kernel.bundles');
+        $bundles = $this->getParameter('kernel.bundles');
 
         if (!isset($bundles['SonataMediaBundle'])) {
             throw new \RuntimeException('You cannot use this feature because you have to use SonataMediaBundle');
         }
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+                'networking_init_cms.admin.tag' => TagAdmin::class,
+                'sonata.media.pool' => Pool::class,
+            ] + parent::getSubscribedServices();
     }
 }

@@ -36,7 +36,6 @@ file that was distributed with this source code.
     #}
 
     {# model {{ sonata_admin.field_description.mappingtype }} #}
-
     {% if sonata_admin.field_description is empty %}
         {{ block('choice_widget') }}
     {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') %}
@@ -53,17 +52,48 @@ file that was distributed with this source code.
     {% endif %}
 {% endblock %}
 
+{% block form_row %}
+    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
+        {% set translation_domain = sonata_admin.field_description.translationDomain %}
+        {% if label is same as(false) %}
+            {% set label_render = false %}
+        {% else %}
+            {% set label_render = true %}
+        {% endif %}
+    {% endif %}
+    {{ parent() }}
+
+{% endblock form_row %}
+
+{% block form_label %}
+    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
+        {% set translation_domain = sonata_admin.field_description.translationDomain %}
+        {% if label is same as(false) %}
+            {% set label_render = false %}
+        {% else %}
+            {% set label_render = true %}
+        {% endif %}
+    {% endif %}
+    {{ parent() }}
+
+{% endblock form_label %}
+
 {% block sonata_type_model_list_widget %}
     <div id="field_container_{{ id }}" class="field-container">
         <span id="field_widget_{{ id }}">
 
-            {% if sonata_admin.field_description.associationadmin.id(sonata_admin.value) %}
+            {% if sonata_admin.value and sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value) is not null%}
                 {{ render(path('sonata_admin_short_object_information', {
-                    'code':     sonata_admin.field_description.associationadmin.code,
-                    'objectId': sonata_admin.field_description.associationadmin.id(sonata_admin.value),
-                    'uniqid':   sonata_admin.field_description.associationadmin.uniqid,
-                    'linkParameters': sonata_admin.field_description.options.link_parameters
-                })) }}
+                    '_sonata_admin': sonata_admin.field_description.associationadmin.baseCodeRoute,
+                    'objectId': sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value),
+                    'uniqid': sonata_admin.field_description.associationadmin.uniqid,
+                    'linkParameters': sonata_admin.field_description.option('link_parameters', {})
+                } + (
+                    sonata_admin.field_description.associationadmin.hasRequest()
+                    ? sonata_admin.field_description.associationadmin.request.attributes.get('_route_params', {})
+                    : {}
+                ) + app.request.query.all|default({})
+                )) }}
             {% elseif sonata_admin.field_description.options.placeholder is defined and sonata_admin.field_description.options.placeholder %}
                 <span class="inner-field-short-description">
                     {{ sonata_admin.field_description.options.placeholder|trans({}, 'SonataAdminBundle') }}
@@ -184,194 +214,6 @@ file that was distributed with this source code.
 {% endblock %}
 
 
-{# Labels #}
-{% block form_label %}
-    {% if sonata_admin.admin is not defined or not sonata_admin.admin %}
-        {{ parent() }}
-    {% elseif 'checkbox' in block_prefixes %}
-        {% apply spaceless %}
-            {% if app.request.get('provider') and label == 'form.label_binary_content' %}
-                {% set provider = app.request.get('provider')|split('.')[3] %}
-                {% set mylabel = label~'_'~provider %}
-                {% set test = mylabel|trans({}, sonata_admin.field_description.translationDomain) %}
-                {% if test != mylabel %}
-                    {% set label = mylabel %}
-                {% endif %}
-            {% endif %}
-            {% if sonata_admin.field_description.options.name is defined %}
-                {% set label = sonata_admin.field_description.options.name %}
-            {% endif %}
-
-            {% if label is not same as(false) %}
-                {% if label is empty %}
-                    {% set label = name|humanize %}
-                {% endif %}
-                {% if not compound %}
-                    {% set label_attr = label_attr|merge({'for': id}) %}
-                {% endif %}
-                {% set label_attr_class = '' %}
-                {% if horizontal %}
-                    {% set label_attr_class = 'control-label ' ~ label_attr_class ~ horizontal_label_class %}
-                {% endif %}
-
-                {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " " ~ label_attr_class ~ (required ? ' required' : ' optional') }) %}
-                <label{% for attrname,attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-
-                {%- if translation_domain is same as(false) -%}
-                    {{- label -}}
-                {%- elseif not sonata_admin.admin -%}
-                    {{- label|trans(label_translation_parameters, translation_domain) -}}
-                {%- else -%}
-                    {# NEXT_MAJOR: Remove "admin.translationDomain" #}
-                    {{- label|trans(label_translation_parameters, sonata_admin.field_description.translationDomain|default(admin.translationDomain|default(sonata_admin.admin.translationDomain))) -}}
-                {%- endif -%}
-
-                {{- block('label_asterisk') }}
-
-                {% if widget_checkbox_label in ['label', 'both'] %}
-                    &nbsp;{{ form_widget(form) }}
-                {% endif %}
-
-                {% if 'collection' in form.vars.block_prefixes and widget_add_btn|default(null) and form.vars.allow_add == true %}
-                    &nbsp;{{ block('form_widget_add_btn') }}
-                {% endif %}
-                {% if help_label %}
-                    {{ block('help_label') }}
-                {% endif %}
-                {% if help_label_tooltip.title %}
-                    {{ block('help_label_tooltip') }}
-                {% endif %}
-                {% if help_label_popover.title %}
-                    {{ block('help_label_popover') }}
-                {% endif %}
-                </label>
-            {% endif %}
-        {% endapply %}
-    {% elseif widget_checkbox_label in ['label', 'both'] %}
-        {% apply spaceless %}
-            {% if app.request.get('provider') and label == 'form.label_binary_content' %}
-                {% set provider = app.request.get('provider')|split('.')[3] %}
-                {% set mylabel = label~'_'~provider %}
-                {% set test = mylabel|trans( {}, sonata_admin.field_description.translationDomain) %}
-                {% if test != mylabel %}
-                    {% set label = mylabel %}
-                {% endif %}
-            {% endif %}
-            {% if sonata_admin.field_description.options.name is defined %}
-                {% set label = sonata_admin.field_description.options.name %}
-            {% endif %}
-
-            {% if label is not same as(false) %}
-                {% if label is empty %}
-                    {% set label = name|humanize %}
-                {% endif %}
-                {% if not compound %}
-                    {% set label_attr = label_attr|merge({'for': id}) %}
-                {% endif %}
-                {% set label_attr_class = '' %}
-                {% if horizontal %}
-                    {% set label_attr_class = 'control-label ' ~ label_attr_class ~ horizontal_label_class %}
-                {% endif %}
-                {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ " " ~ label_attr_class ~ (required ? ' required' : ' optional') }) %}
-                <label{% for attrname,attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-                {% if not sonata_admin.admin %}
-                    {{ label|trans({}, translation_domain) }}
-                {% else %}
-
-                    {{ label|trans({}, sonata_admin.field_description.translationDomain) }}
-                {% endif %}
-                {{- block('label_asterisk') }}
-                {% if 'collection' in form.vars.block_prefixes and widget_add_btn|default(null) and form.vars.allow_add == true %}
-                    &nbsp;{{ block('form_widget_add_btn') }}
-                {% endif %}
-                {% if help_label %}
-                    {{ block('help_label') }}
-                {% endif %}
-                {% if help_label_tooltip.title %}
-                    {{ block('help_label_tooltip') }}
-                {% endif %}
-                {% if help_label_popover.title %}
-                    {{ block('help_label_popover') }}
-                {% endif %}
-                </label>
-            {% else %}
-                {% if 'collection' in form.vars.block_prefixes and widget_add_btn|default(null) and form.vars.allow_add == true %}
-                    &nbsp;{{ block('form_widget_add_btn') }}
-                {% endif %}
-            {% endif %}
-        {% endapply %}
-    {% endif %}
-{% endblock form_label %}
-
-{% block help_label %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-    {% endif %}
-    <span class="help-block">{{ help_label|trans({}, translation_domain) }}</span>
-{% endblock help_label %}
-
-{% block help_label_tooltip %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-    {% endif %}
-    <span class="help-block">
-        <a href="#" data-toggle="tooltip" data-placement="{{ help_label_tooltip.placement }}"
-           data-title="{{ help_label_tooltip.title|trans({}, translation_domain) }}">
-            {% if help_label_tooltip.icon is not same as(false) %}
-                {{ mopa_bootstrap_icon(help_label_tooltip.icon) }}
-            {% endif %}
-            {% if help_label_tooltip.text is not same as(null) %}
-                {{ help_label_tooltip.text }}
-            {% endif %}
-        </a>
-    </span>
-{% endblock help_label_tooltip %}
-
-{% block help_label_popover %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-    {% endif %}
-    <span class="help-block">
-        <a href="#" data-toggle="popover" data-trigger="hover" data-placement="{{ help_label_popover.placement }}"
-           data-title="{{ help_label_popover.title|trans({}, translation_domain) }}"
-           data-content="{{ help_label_popover.content|trans({}, translation_domain) }}">
-            {% if help_label_popover.icon is not same as(false) %}
-                {{ mopa_bootstrap_icon(help_label_popover.icon) }}
-            {% endif %}
-            {% if help_label_popover.text is not same as(null) %}
-                {{ help_label_popover.text }}
-            {% endif %}
-        </a>
-    </span>
-{% endblock help_label_popover %}
-
-{% block form_actions_widget %}
-    {% for button in form.children %}
-        {{ form_widget(button) }}&nbsp; {# this needs to be here due to https://github.com/twbs/bootstrap/issues/3245 #}
-    {% endfor %}
-{% endblock %}
-
-{# Rows #}
-{% block form_actions_row %}
-    {{ block('button_row') }}
-{% endblock %}
-
-{% block form_rows_visible %}
-    {% apply spaceless %}
-        {% if form_errors(form) %}
-            <div class="symfony-form-errors">
-                {{ form_errors(form) }}
-            </div>
-        {% endif %}
-        {% for child in form %}
-            {% if 'hidden' not in child.vars.block_prefixes %} {# smbdy: why do we not add the hiddens of childs? 131024 phiamo: i think form rest should do this !? it was afaik removed because it cause side effekts #}
-                {{ form_row(child) }}
-            {% endif %}
-        {% endfor %}
-    {% endapply %}
-{% endblock form_rows_visible %}
-
-
 {% block widget_container_attributes_choice_widget %}
     {% apply spaceless %}
         id="{{ id }}"
@@ -400,77 +242,8 @@ file that was distributed with this source code.
 {% endblock choice_widget %}
 
 
-{% block form_row %}
-    {% apply spaceless %}
-        {% if sonata_admin is not defined or not sonata_admin_enabled or not sonata_admin.field_description %}
-            {{ parent() }}
-        {% else %}
-            {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-                {% set translation_domain = sonata_admin.field_description.translationDomain %}
-            {% endif %}
-            {% set inline_block = false %}
-            {% if sonata_admin.field_description.options.inline_block is defined and sonata_admin.field_description.options.inline_block %}
-                {% set inline_block = true %}
-            {% endif %}
-
-            {% if sonata_admin.field_description.options.name is defined %}
-                {% set label = sonata_admin.field_description.options.name %}
-            {% endif %}
-
-            {% if label is same as(false) %}
-                {% set label_render = false %}
-            {% else %}
-                {% set label_render = true %}
-            {% endif %}
-
-            {% set widget_form_group_attr = widget_form_group_attr|merge({id: 'sonata-ba-field-container-'~id}) %}
-
-            {{ block('widget_form_group_start') }}
-
-            {% set show_horizontal_wrapper = horizontal and not (form.parent is not null and 'collection' in form.parent.vars.block_prefixes and form.parent.vars.horizontal_wrap_children is same as(false)) %}
-
-            {% if horizontal and not label_render %}
-                {% set horizontal_input_wrapper_class = horizontal_input_wrapper_class ~ ' ' ~ horizontal_label_offset_class %}
-            {% endif %}
-
-            {% if show_horizontal_wrapper %}
-                <div class="{{ horizontal_input_wrapper_class }}">
-            {% endif %}
-            {% if sonata_admin.edit or sonata_admin.inline %}
-            <div class="sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }}">
-        {% endif %}
-
-            {% if widget_prefix %}{{ widget_prefix|trans({}, translation_domain)|raw }}{% endif %}
-            {{ form_widget(form) }}
-            {% if widget_suffix %}{{ widget_suffix|trans({}, translation_domain)|raw }}{% endif %}
-
-            {% set type = type|default('text') %}
-            {% if type != 'hidden' %}
-                {{ block('form_message') }}
-            {% endif %}
-
-            {% if sonata_admin.edit or sonata_admin.inline %}
-            </div>
-        {% endif %}
-
-            {% if show_horizontal_wrapper %}
-                </div>
-            {% endif %}
-            {% if form.parent is not null and 'collection' in form.parent.vars.block_prefixes and widget_remove_btn|default(null) and form.parent.vars.allow_delete|default(false) %}
-                {{ block('form_widget_remove_btn') }}
-            {% endif -%}
-            {{ block('widget_form_group_end') }}
-        {% endif %}
-    {% endapply %}
-{% endblock form_row %}
 
 {# Support #}
-{% block form_message %}
-    {% apply spaceless %}
-        {{ form_errors(form) }}
-        {{ block('form_help') }}
-    {% endapply %}
-{% endblock form_message %}
 
 {% block form_widget_remove_btn %}
     {% apply spaceless %}
@@ -489,44 +262,6 @@ file that was distributed with this source code.
         {% endif %}
     {% endapply %}
 {% endblock form_widget_remove_btn %}
-
-{% block widget_form_group_start %}
-    {% if widget_form_group|default(false) or form.parent == null %}
-        {% if form.parent is not null and 'collection' in form.parent.vars.block_prefixes %} {# i am a collection child #}
-            {% if not omit_collection_item %}
-                {# collection item wrapper doesnt need form-group it gets added to childs anyways #}
-                {% set widget_form_group_attr = widget_form_group_attr|merge({class: 'collection-item ' ~ widget_form_group_attr.class|default('')}) %}
-            {% endif %}
-        {% endif %}
-        {% if errors|length > 0 %}
-            {# Add Error Class to Widget Wrapper #}
-            {% set widget_form_group_attr = widget_form_group_attr|merge({'class': widget_form_group_attr.class|default('') ~ ' has-error sonata-ba-field-error'}) %}
-        {% endif %}
-        {% if help_widget_popover.selector is same as(null) %}
-            {% set help_widget_popover = help_widget_popover|merge({'selector': '#' ~ id }) %}
-        {% endif %}
-        <div{% if help_widget_popover.title is not same as(null) %}{{ block('help_widget_popover') }}{% endif %} {% for attrname,attrvalue in widget_form_group_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-        {# a form item containing the field in block_prefixes is a near subform or a field directly #}
-        {% if (form|length > 0 and form.parent != null)
-            and 'field' not in form.vars.block_prefixes
-            and 'date' not in form.vars.block_prefixes %}
-            {% if show_child_legend %}
-                {{ block('form_legend') }}
-            {% elseif label_render %}
-                {{ form_label(form, label|default(null)) }}
-            {% else %}
-            {% endif %}
-        {% else %}
-            {% if label_render %}
-                {{ form_label(form, label|default(null)) }}
-            {% endif %}
-        {% endif %}
-    {% else %}
-        {% if label_render %}
-            {{ form_label(form, label|default(null)) }}
-        {% endif %}
-    {% endif %}
-{% endblock widget_form_group_start %}
 
 
 {% block sonata_type_immutable_array_widget %}
@@ -573,25 +308,16 @@ file that was distributed with this source code.
                 <div data-provider="datepicker" class="{{ attr.widget_class|default('') ~ ' input-group date' }}"
                      data-link-field="{{ id }}" data-link-format="dd.mm.yyyy" data-date-format="dd.mm.yyyy"
                      data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
-                    <input {% if widget_form_control_class is not same as(false) %}class="{{ widget_form_control_class }}"
-                           {% endif %}type="text" {% if required %} required="required"{% endif %}
-                            {{ block('widget_attributes') }} value="{{ value }}"
-                    >
+                    {# Clear the id & name attributes so that they don't override the hidden fields values #}
+                    {% set id = id ~ '_mopa_picker_display' %}
+                    {% set full_name = null %}
+                    {% set type = 'text' %}
+                    {{ block('form_widget_simple') }}
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
                     {% if widget_reset_icon is defined %}
                         <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
                     {% endif %}
                 </div>
-                <script type="text/javascript">
-                    jQuery(document).ready(function () {
-                        jQuery('[data-link-field="{{ id }}"]').datetimepicker({
-                            autoclose: true,
-                            minView: 'month',
-                            startView: 'month',
-                            todayBtn: true
-                        });
-                    });
-                </script>
             {% else %}
                 {{ block('form_widget_simple') }}
             {% endif %}
@@ -615,26 +341,16 @@ file that was distributed with this source code.
                 {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'time' %}
                 <div data-provider="timepicker" class="input-group date"
                      data-link-field="{{ id }}" data-link-format="hh:ii" data-date-format="hh:ii">
-                    <input class="form-control"
-                           type="text" {% if required %} required="required"{% endif %}
-                            {{ block('widget_attributes') }} value="{{ value }}"
-                    >
+                    {# Clear the id & name attributes so that they don't override the hidden fields values #}
+                    {% set id = id ~ '_mopa_picker_display' %}
+                    {% set full_name = null %}
+                    {% set type = 'text' %}
+                    {{ block('form_widget_simple') }}
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
                     {% if widget_reset_icon is defined %}
                         <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
                     {% endif %}
                 </div>
-                <script type="text/javascript">
-                    jQuery(document).ready(function () {
-                        jQuery('[data-link-field="{{ id }}"]').datetimepicker({
-                            autoclose: true,
-                            formatViewType: 'time',
-                            maxView: 'day',
-                            minView: 'hour',
-                            startView: 'day'
-                        });
-                    });
-                </script>
             {% else %}
                 {{ block('form_widget_simple') }}
             {% endif %}
@@ -663,23 +379,15 @@ file that was distributed with this source code.
                 <div data-provider="datetimepicker" class="input-group date"
                      data-link-field="{{ id }}" data-date-format="dd.mm.yyyy hh:ii"
                      data-link-format="dd.mm.yyyy hh:ii" data-date-language="{{ app.request.getLocale()|slice(0, 2) }}">
-                    <input class="form-control"
-                           type="text" {% if required %} required="required"{% endif %} {{ block('widget_attributes') }}
-                           value="{% if value %}{{ value }}{% endif %}"
-                    >
+                    {% set id = id ~ '_mopa_picker_display' %}
+                    {% set full_name = null %}
+                    {% set type = 'text' %}
+                    {{ block('form_widget_simple') }}
                     <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_addon_icon) }}</span>
                     {% if widget_reset_icon is defined %}
                         <span class="input-group-addon">{{ mopa_bootstrap_icon(widget_reset_icon) }}</span>
                     {% endif %}
                 </div>
-                <script type="text/javascript">
-                    jQuery(document).ready(function () {
-                        jQuery('[data-link-field="{{ id }}"]').datetimepicker({
-                            autoclose: true,
-                            todayBtn: true
-                        });
-                    });
-                </script>
             {% else %}
                 {{ block('form_widget_simple') }}
             {% endif %}
@@ -709,25 +417,6 @@ file that was distributed with this source code.
 {% endblock %}
 
 
-{% block form_help %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-    {% endif %}
-    {% apply spaceless %}
-        {% if help_block %}
-            <span class="help-block">
-                {%- if help_html is same as(false) -%}
-                    {{- help_block|trans(help_translation_parameters, translation_domain) -}}
-                {%- else -%}
-                    {{- help_block|trans(help_translation_parameters, translation_domain)|raw -}}
-                {%- endif -%}
-            </span>
-        {% endif %}
-        {% if sonata_admin is defined and sonata_admin.field_description.help is defined %}
-            <span class="help-block sonata-ba-field-help">{{ sonata_admin.field_description.help }}</span>
-        {% endif %}
-    {% endapply %}
-{% endblock form_help %}
 
 {% block networking_type_iconradio_widget %}
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
@@ -767,11 +456,9 @@ file that was distributed with this source code.
     {% endapply %}
 {% endblock %}
 
-{% block checkbox_widget %}
-    {% apply spaceless %}
-        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/>
-    {% endapply %}
-{% endblock checkbox_widget %}
+
+
+
 
 {% block sonata_security_roles_widget %}
     {% apply spaceless %}
@@ -953,14 +640,6 @@ file that was distributed with this source code.
         {% endfor %}
     {% endapply %}
 {% endblock help_widget_popover %}
-
-{% block widget_form_group_end %}
-    {% apply spaceless %}
-        {% if widget_form_group|default(false) or form.parent == null %}
-            </div>
-        {% endif %}
-    {% endapply %}
-{% endblock widget_form_group_end %}
 
 {% block qr_code_widget %}
     <img src="{{ qrCodeUrl }}">

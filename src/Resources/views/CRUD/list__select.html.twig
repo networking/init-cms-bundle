@@ -9,7 +9,7 @@ file that was distributed with this source code.
 
 #}
 
-{% extends admin.getTemplate('base_list_field') %}
+{% extends admin.templateRegistry.getTemplate('base_list_field') %}
 
 {% block field %}
     <a class="btn btn-default btn-sm select-media pull-right"  href="#" data-object-id="{{ object.id }}">

@@ -16,6 +16,7 @@ use FOS\CKEditorBundle\Config\CKEditorConfiguration;
 use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
+use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
 use Networking\InitCmsBundle\Helper\BundleGuesser;
@@ -1144,7 +1145,7 @@ class NetworkingHelperExtension extends AbstractExtension
     public function getMediaById($id)
     {
         /** @var EntityRepository $repo */
-        $repo = $this->doctrine->getRepository('NetworkingInitCmsBundle:Media');
+        $repo = $this->doctrine->getRepository(Media::class);
 
         return $repo->find($id);
     }

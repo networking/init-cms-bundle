@@ -4,6 +4,7 @@ namespace Networking\InitCmsBundle\Controller\OneUploader;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Networking\InitCmsBundle\Entity\Media;
+use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Exception\DuplicateMediaException;
 use Oneup\UploaderBundle\Controller\AbstractController;
 use Oneup\UploaderBundle\Uploader\Response\FineUploaderResponse;
@@ -68,7 +69,7 @@ class MediaMultiUploadController extends AbstractController
         $tags = explode(',', $request->get('tags'));
         $tagCollection = new ArrayCollection();
         foreach ($tags as $tagId) {
-            $tag = $this->container->get('doctrine')->getRepository('NetworkingInitCmsBundle:Tag')->find($tagId);
+            $tag = $this->container->get('doctrine')->getRepository(Tag::class)->find($tagId);
 
             if ($tag) {
                 $tagCollection->add($tag);
@@ -76,12 +77,11 @@ class MediaMultiUploadController extends AbstractController
         }
 
         $media->setTags($tagCollection);
-        $provider = $mediaAdmin->getPool()->getProvider($media->getProviderName());
+        $provider = $this->container->get('sonata.media.pool')->getProvider($media->getProviderName());
 
         $provider->transform($media);
 
         $validator = $this->container->get('validator');
-
         $errors = $validator->validate($media);
 
         $errorMessages = [];

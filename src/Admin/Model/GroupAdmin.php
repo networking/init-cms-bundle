@@ -8,12 +8,15 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use App\Entity\User;
 use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\UserBundle\Form\Type\RolesMatrixType;
 use Sonata\UserBundle\Form\Type\SecurityRolesType;
+use Sonata\UserBundle\Model\UserInterface;
 
 
 abstract class GroupAdmin extends BaseAdmin
@@ -91,12 +94,18 @@ abstract class GroupAdmin extends BaseAdmin
             ->add('name', null, [ 'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline'])
             ->add(
                 'roles',
-                SecurityRolesType::class,
+                RolesMatrixType::class,
                 [
-                    'expanded' => true,
                     'multiple' => true,
                     'required' => false,
-                    'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline'
+                    'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline',
+                    'excluded_roles' => [
+                        UserInterface::ROLE_DEFAULT,
+                        UserInterface::ROLE_SUPER_ADMIN,
+                        'ROLE_ALLOWED_TO_SWITCH',
+                        'ROLE_SONATA_ADMIN',
+                        'ROLE_ADMIN'
+                    ]
                 ]
             );
     }

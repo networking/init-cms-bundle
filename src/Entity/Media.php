@@ -1,4 +1,8 @@
 <?php
+
+declare(strict_types=1);
+
+
 /**
  * This file is part of the Networking package.
  *
@@ -49,6 +53,18 @@ class Media extends BaseMedia implements IgnoreRevertInterface
         $this->tags = new ArrayCollection();
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setBinaryContent($binaryContent): void
+    {
+        $this->previousProviderReference = $this->providerReference;
+        $this->providerReference = null;
+        $this->binaryContent = $binaryContent;
+        $checksum = $this->getChecksum();
+        $this->setMd5File($checksum);
+    }
 
     /**
      * Add tags.

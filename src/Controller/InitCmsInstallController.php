@@ -139,7 +139,7 @@ class InitCmsInstallController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $kernel = $this->get('kernel');
+                $kernel = $this->container->get('kernel');
                 $application = new Application($kernel);
                 $application->setAutoExit(false);
 
@@ -180,11 +180,11 @@ class InitCmsInstallController extends AbstractController
 
                 if ($complete == 3) {
                     /* @var \Symfony\Component\HttpFoundation\Session\Session $session */
-                    $this->get('session')->getFlashBag()->add('success', 'Init CMS was successfully installed');
+                    $this->container->get('session')->getFlashBag()->add('success', 'Init CMS was successfully installed');
 
                     return new RedirectResponse($this->generateUrl('_configure_cms'));
                 }
-                $this->get('session')->getFlashBag()->add('error', $this->getConsoleDisplay($output));
+                $this->container->get('session')->getFlashBag()->add('error', $this->getConsoleDisplay($output));
                 $installFailed = true;
             }
         }

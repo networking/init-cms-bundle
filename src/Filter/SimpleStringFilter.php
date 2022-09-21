@@ -36,13 +36,10 @@ class SimpleStringFilter extends Filter
     public function filter(
         \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQueryInterface $query, string $alias, string $field, FilterData $data): void
     {
-        if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
-            return;
-        }
 
-        $data['value'] = trim($data['value']);
 
-        if (strlen($data['value']) == 0) {
+
+        if (!$data->hasValue()) {
             return;
         }
 
@@ -52,9 +49,10 @@ class SimpleStringFilter extends Filter
             $operator = 'LIKE';
         }
 
-        // c.name > '1' => c.name OPERATOR :FIELDNAME
-        $parameterName = $this->getNewParameterName($queryBuilder);
 
+        $parameterName = $this->getNewParameterName($query);
+
+        $queryBuilder = $query->getQueryBuilder();
         $or = $queryBuilder->expr()->orX();
 
         if ($this->getOption('case_sensitive')) {
@@ -67,16 +65,16 @@ class SimpleStringFilter extends Filter
             $or->add($queryBuilder->expr()->isNull(sprintf('%s.%s', $alias, $field)));
         }
 
-        $this->applyWhere($queryBuilder, $or);
+        $this->applyWhere($query, $or);
 
 
         if (ContainsOperatorType::TYPE_EQUAL === $this->getOption('operator_type')) {
-            $queryBuilder->setParameter($parameterName, $data['value']);
+            $queryBuilder->setParameter($parameterName, $data->getValue());
         } else {
             $queryBuilder->setParameter($parameterName,
                 sprintf(
                     $this->getOption('format'),
-                    $this->getOption('case_sensitive') ? $data['value'] : mb_strtolower($data['value'])
+                    $this->getOption('case_sensitive') ? $data->getValue() : mb_strtolower($data->getValue())
                 )
             );
         }

@@ -12,7 +12,7 @@ file that was distributed with this source code.
 {% extends base_template %}
 
 {% block title %}
-    <small>{{ 'title.dashboard'|trans({'%admin_title%': admin_pool.title}, 'NetworkingInitCmsBundle') }}</small>{% endblock %}
+    <small>{{ 'title.dashboard'|trans({'%admin_title%': sonata_config.title}, 'NetworkingInitCmsBundle') }}</small>{% endblock %}
 {% block breadcrumb %}{% endblock %}
 {% block content %}
     <div class="row">

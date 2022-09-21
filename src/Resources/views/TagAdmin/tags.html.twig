@@ -7,7 +7,7 @@
                 <div class="dotted">&nbsp;</div>
                 <div class="handle menu_item tag_item {{ selected==tag.id?'info':'' }} " id="div_{{ tag.id }}" ondrop="dropTag(event, '{{ tag.id }}')"   ondragover="openTag(event, '{{ tag.id }}')" >
                     <i class="tag_folder glyphicon glyphicon-folder-{{ selected==tag.id or tag.hasChild(selected)?'open':'close' }} cursor-pointer"></i>&nbsp;
-                    <a class="tag_link" id="tag_link_{{ tag.id }}" data-pk="{{ tag.id }}" href="#" >{{ tag.name }}</a>
+                    <a class="tag_link" id="tag_link_{{ tag.id }}" data-pk="{{ tag.id }}" >{{ tag.name }}</a>
 
                     {% if not noSort and tagAdmin.isGranted('DELETE', tag) and tagAdmin.hasRoute('delete') %}
                         <a href="{{ tagAdmin.generateObjectUrl('delete', tag, {'returnToMedia': true}) }}" class="pull-right dialog-link delete-tag" style="display: none"
@@ -26,7 +26,7 @@
 {% endmacro %}
 
 {% if datagrid is defined  %}
-{% set selected = datagrid.values.tags?datagrid.values.tags.value:0 %}
+{% set selected = datagrid.values.tags is defined?datagrid.values.tags.value:0 %}
     {% else %}
 {% set selected = lastItem %}
 {% endif %}

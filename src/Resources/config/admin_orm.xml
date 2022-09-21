@@ -3,6 +3,15 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+
+    <parameters>
+        <parameter key="networking_init_cms.admin.group.entity">Networking\InitCmsBundle\Entity\Group</parameter>
+        <parameter key="networking_init_cms.admin.group.controller">Sonata\AdminBundle\Controller\CRUDController</parameter>
+        <parameter key="networking_init_cms.admin.group.class">Networking\InitCmsBundle\Admin\Entity\GroupAdmin</parameter>
+        <parameter key="networking_init_cms.admin.label_catalogue">SonataUserBundle</parameter>
+        <parameter key="networking_init_cms.admin.group.translation_domain">SonataUserBundle</parameter>
+    </parameters>
     <services>
         <!-- Page Admin-->
         <service id="networking_init_cms.admin.page" class="Networking\InitCmsBundle\Admin\Entity\PageAdmin"
@@ -40,6 +49,7 @@
                 <argument type="service" id="service_container"/>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="pages.title"
+                 label_catalogue="PageAdmin"
                  label_translator_strategy="sonata.admin.label.strategy.underscore" persist_filters="true"/>
         </service>
 
@@ -102,6 +112,7 @@
                 <argument>@NetworkingInitCms/MenuItemAdmin/placement.html.twig</argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="menus.title"
+                 label_catalogue="MenuItemAdmin"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>
@@ -139,6 +150,7 @@
                 <argument>TagAdmin</argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="tags.title"
+                 label_catalogue="HelpTextAdmin"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>
@@ -174,12 +186,35 @@
                 <argument>edit</argument>
                 <argument>@NetworkingInitCms/TranslationAdmin/edit.html.twig</argument>
             </call>
+
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
             <tag name="sonata.admin" manager_type="orm" label="translation.title"
+                 label_catalogue="TranslationAdmin"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>
 
-        <service id="sonata.admin.manipulator.acl.object.orm" class="Sonata\DoctrineORMAdminBundle\Util\ObjectAclManipulator" public="true" autowire="true"/>
+
+        <service id="networking_init_cms.admin.group" class="%networking_init_cms.admin.group.class%" public="true">
+            <tag name="sonata.admin" manager_type="orm" label="groups.title"
+                 label_catalogue="%networking_init_cms.admin.label_catalogue%"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+            <argument/>
+            <argument>%networking_init_cms.admin.group.entity%</argument>
+            <argument>Networking\InitCmsBundle\Controller\CRUDController</argument>
+            <call method="setSonataAnnotationReader">
+                <argument type="service" id="networking_init_cms.annotation.reader"/>
+            </call>
+
+            <call method="setTranslationDomain">
+                <argument>%networking_init_cms.admin.group.translation_domain%</argument>
+            </call>
+        </service>
+
+        <service id="sonata.admin.manipulator.acl.object.orm"
+                 class="Sonata\DoctrineORMAdminBundle\Util\ObjectAclManipulator" public="true" autowire="true"/>
 
     </services>
 

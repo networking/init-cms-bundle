@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\ORM\Query;
+use Networking\InitCmsBundle\Admin\Model\MediaAdmin;
 use Networking\InitCmsBundle\Model\Tag;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -54,7 +55,7 @@ class TagAdminController extends CRUDController
      */
     public function getTagTree($objectId)
     {
-        $tagRepo = $this->getDoctrine()->getRepository('NetworkingInitCmsBundle:Tag');
+        $tagRepo = $this->getDoctrine()->getRepository(\Networking\InitCmsBundle\Entity\Tag::class);
         $tags = $tagRepo->findBy(['level' => 1], ['path' => 'ASC']);
 
         return $this->renderView('@NetworkingInitCms/TagAdmin/tags.html.twig', [
@@ -85,10 +86,10 @@ class TagAdminController extends CRUDController
             return $preResponse;
         }
 
-        if ($this->getRestMethod() === 'DELETE') {
+        if ($request->isMethod('DELETE')) {
             // check the csrf token
-            $this->validateCsrfToken('sonata.delete');
-            $translator = $this->get('translator');
+            $this->validateCsrfToken($request, 'sonata.delete');
+            $translator = $this->container->get('translator');
             try {
                 $this->admin->delete($object);
 
@@ -106,7 +107,7 @@ class TagAdminController extends CRUDController
                 );
 
                 if ($returnToMedia) {
-                    $mediaAdmin = $this->get('sonata.media.admin.media');
+                    $mediaAdmin = $this->container->get('sonata.media.admin.media');
                     $url = $mediaAdmin->generateUrl('list');
 
                     return new RedirectResponse($url);
@@ -131,7 +132,7 @@ class TagAdminController extends CRUDController
             return $this->redirectTo($object);
         }
 
-        return $this->render('@NetworkingInitCms/TagAdmin/delete.html.twig', [
+        return $this->renderWithExtraParams('@NetworkingInitCms/TagAdmin/delete.html.twig', [
             'object' => $object,
             'action' => 'delete',
             'returnToMedia' => $returnToMedia,
@@ -168,7 +169,7 @@ class TagAdminController extends CRUDController
 
         $tag->setName($name);
 
-        $validator = $this->get('validator');
+        $validator = $this->container->get('validator');
         $errors = $validator->validate($tag);
 
         if (count($errors) > 0) {
@@ -198,9 +199,9 @@ class TagAdminController extends CRUDController
         /** @var Request $request */
         $nodes = $request->get('nodes') ? $request->get('nodes') : [];
 
-        $admin = $this->get('networking_init_cms.admin.tag');
+        $admin = $this->container->get('networking_init_cms.admin.tag');
 
-        $validator = $this->get('validator');
+        $validator = $this->container->get('validator');
         try {
             foreach ($nodes as $node) {
                 if (!$node['id']) {
@@ -250,5 +251,14 @@ class TagAdminController extends CRUDController
         $response = $query->execute([], Query::HYDRATE_ARRAY);
 
         return $this->renderJson($response);
+    }
+
+
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+                'sonata.media.admin.media' => MediaAdmin::class,
+            ] + parent::getSubscribedServices();
     }
 }

@@ -12,6 +12,8 @@
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Entity\BaseUser;
+use Networking\InitCmsBundle\Entity\Group;
 use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
 use Sonata\Doctrine\Mapper\Builder\OptionsBuilder;
 use Sonata\Doctrine\Mapper\DoctrineCollector;
@@ -460,6 +462,28 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                     'referencedColumnName' => 'id',
                     'onDelete' => 'SET NULL',
                     'nullable' => 'true',
+                ])
+        );
+
+
+
+        $collector->addAssociation(
+            BaseUser::class,
+            'mapManyToMany',
+            OptionsBuilder::createManyToMany('groups', Group::class)
+                ->mappedBy('groups')
+                ->addJoinTable('user_user_group', [
+                    [
+                        'name' => 'user_id',
+                        'referencedColumnName' => 'id',
+                        'onDelete' => 'CASCADE',
+                    ],
+                ], [
+                    [
+                        'name' => 'group_id',
+                        'referencedColumnName' => 'id',
+                        'onDelete' => 'CASCADE',
+                    ],
                 ])
         );
     }

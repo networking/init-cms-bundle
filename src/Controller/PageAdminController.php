@@ -523,7 +523,7 @@ class PageAdminController extends CRUDController
         $this->admin->setSubject($object);
 
         return $this->renderWithExtraParams(
-            $this->templateRegistry->getTemplate('show'),
+            $this->admin->getTemplateRegistry()->getTemplate('show'),
             [
                 'action' => 'show',
                 'object' => $object,
@@ -689,7 +689,7 @@ class PageAdminController extends CRUDController
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
         return $this->renderWithExtraParams(
-            $this->templateRegistry->getTemplate('edit'),
+            $this->admin->getTemplateRegistry()->getTemplate('edit'),
             [
                 'action' => 'edit',
                 'form' => $view,
@@ -723,7 +723,7 @@ class PageAdminController extends CRUDController
                 'form' => $view,
                 'object' => $page,
                 'admin' => $this->admin,
-                'admin_pool' => $this->get('sonata.admin.pool'),
+                'admin_pool' => $this->container->get('sonata.admin.pool'),
             ]
         );
 
@@ -734,7 +734,7 @@ class PageAdminController extends CRUDController
                 'form' => $view,
                 'object' => $page,
                 'admin' => $this->admin,
-                'admin_pool' => $this->get('sonata.admin.pool'),
+                'admin_pool' => $this->container->get('sonata.admin.pool'),
             ]
         );
 
@@ -894,7 +894,7 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'POST') {
-            $serializer = $this->get('jms_serializer');
+            $serializer = $this->container->get('jms_serializer');
 
             $publishedPage = $this->pageManager->revertToPublished($draftPage, $serializer);
 
@@ -903,7 +903,7 @@ class PageAdminController extends CRUDController
                 $form->setData($publishedPage);
 
                 $pageSettingsTemplate = $this->render(
-                    $this->templateRegistry->getTemplate('edit'),
+                    $this->admin->getTemplateRegistry()->getTemplate('edit'),
                     [
                         'action' => 'edit',
                         'form' => $form->createView(),

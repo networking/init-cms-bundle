@@ -17,7 +17,7 @@
         <prototype namespace="Networking\InitCmsBundle\Controller\"
                    resource="../../Controller"
                    exclude="../../Controller/OneUploader"
-                   public="true">
+                   public="true" autowire="true">
             <tag name="controller.service_arguments"/>
         </prototype>
 
@@ -91,10 +91,10 @@
             </call>
         </service>
 
+        <!-- object manager aliases -->
         <service id="Symfony\Cmf\Component\Routing\DynamicRouter"
                  alias="networking_init_cms.cms_router"
                  public="false"/>
-
 
         <service id="networking_init_cms.media.generator.media_path"
                  class="Networking\InitCmsBundle\Generator\MediaPathGenerator"/>
@@ -104,7 +104,6 @@
             <argument type="string">jpg</argument>
         </service>
 
-        <!-- object manager aliases -->
         <service id="Networking\InitCmsBundle\Entity\UserManager"
                  alias="networking_init_cms.user_manager"
                  public="false"/>
@@ -138,6 +137,14 @@
                  alias="networking_init_cms.admin.page"
                  public="true"/>
 
+        <service id="Networking\InitCmsBundle\Admin\Model\TagAdmin"
+                 alias="networking_init_cms.admin.tag"
+                 public="true"/>
+
+        <service id="Networking\InitCmsBundle\Admin\Model\MediaAdmin"
+                 alias="sonata.media.admin.media"
+                 public="true"/>
+
         <service id="Sonata\AdminBundle\Admin\Pool"
                  alias="sonata.admin.pool"
                  public="false"/>
@@ -151,8 +158,6 @@
             <argument key="$flysystem" type="service" id="oneup_flysystem.media_filesystem"/>
             <argument key="$cacheFlysystem" type="service" id="oneup_flysystem.cache_filesystem"/>
         </service>
-
-
 
         <service id="Networking\InitCmsBundle\Controller\CkeditorAdminController" autowire="true" public="true">
             <argument key="$mediaAdmin" type="service" id="sonata.media.admin.media"/>

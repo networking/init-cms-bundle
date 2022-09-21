@@ -66,9 +66,9 @@ class LayoutBlockController extends CRUDController
      */
     public function createAction(Request $request): Response
     {
-//        if (!$this->isXmlHttpRequest($request)) {
-//            return new Response('cannot load external of page module', 403);
-//        }
+        if (!$this->isXmlHttpRequest($request)) {
+            return new Response('cannot load external of page module', 403);
+        }
 
         if (false === $this->admin->isGranted('CREATE')) {
             throw new AccessDeniedException();
@@ -85,7 +85,7 @@ class LayoutBlockController extends CRUDController
         $uniqId = $request->get('uniqId');
         $classType = $request->get('classType');
         /** @var PageAdmin $pageAdmin */
-        $pageAdmin = $this->get('networking_init_cms.admin.page');
+        $pageAdmin = $this->container->get('networking_init_cms.admin.page');
         $pageAdmin->setRequest($request);
 
 
@@ -115,11 +115,11 @@ class LayoutBlockController extends CRUDController
         /** @var $form \Symfony\Component\Form\Form */
         $form = $this->admin->getForm();
         $form->setData($layoutBlock);
-        $form->handleRequest($this->getRequest());
-        if ($this->getRestMethod() == 'POST') {
+        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
             try {
                 // persist if the form was valid and if in preview mode the preview was approved
-                if ($form->isValid() && (!$this->isInPreviewMode() || $this->isPreviewApproved())) {
+                if ($form->isValid() && (!$this->isInPreviewMode($request) || $this->isPreviewApproved($request))) {
                     $this->admin->create($layoutBlock);
                     if ($this->isXmlHttpRequest($request)) {
                         return $this->renderJson(
@@ -130,7 +130,7 @@ class LayoutBlockController extends CRUDController
                                 'layoutBlockId' => $this->admin->getNormalizedIdentifier($layoutBlock),
                                 'zone' => $layoutBlock->getZone(),
                                 'sortOder' => $layoutBlock->getSortOrder(),
-                                'html' => $this->getLayoutBlockFormWidget($pageId, $formFieldId, $uniqId, $code),
+                                'html' => $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code),
                             ]
                         );
                     }
@@ -145,7 +145,7 @@ class LayoutBlockController extends CRUDController
         $view = $form->createView();
 
         // set the theme for the current Admin Form
-        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
+        $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
 
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/PageAdmin/layout_block_edit.html.twig',
@@ -163,9 +163,8 @@ class LayoutBlockController extends CRUDController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Twig_Error_Runtime
      */
-    public function editAction($id = null): Response
+    public function editAction(Request $request, $id = null): Response
     {
-        $request = $this->getRequest();
 
         $pageId = $request->get('pageId');
         $formFieldId = $request->get('formFieldId');
@@ -185,7 +184,7 @@ class LayoutBlockController extends CRUDController
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $this->admin->update($layoutBlock);
-                $html = $this->getLayoutBlockFormWidget($pageId, $formFieldId, $uniqId, $code);
+                $html = $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code);
                 $status = 200;
 
                 return new Response($html, $status);
@@ -201,7 +200,7 @@ class LayoutBlockController extends CRUDController
         $view = $form->createView();
 
         // set the theme for the current Admin Form
-        $this->get('twig')->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
+        $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
 
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/PageAdmin/layout_block_edit.html.twig',
@@ -226,7 +225,7 @@ class LayoutBlockController extends CRUDController
         $formFieldId = $request->get('formFieldId');
         $uniqId = $request->get('uniqId');
         $code = $request->get('code', 'networking_init_cms.admin.page');
-        $html = $this->getLayoutBlockFormWidget($pageId, $formFieldId, $uniqId, $code);
+        $html = $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code);
         $status = 200;
 
         return new Response($html, $status);
@@ -243,6 +242,7 @@ class LayoutBlockController extends CRUDController
      * @throws \Twig_Error_Runtime
      */
     protected function getLayoutBlockFormWidget(
+        Request $request,
         $pageId,
         $formFieldId,
         $uniqId,
@@ -255,8 +255,6 @@ class LayoutBlockController extends CRUDController
         /** @var \Networking\InitCmsBundle\Admin\Model\PageAdmin $pageAdmin */
         $pageAdmin = $this->container->get($code);
 
-        /** @var Request $request */
-        $request = $this->getRequest();
         $pageAdmin->setRequest($request);
         $pageAdmin->setUniqid($uniqId);
 
@@ -280,7 +278,7 @@ class LayoutBlockController extends CRUDController
         $form->setData($page);
         $view = $form->get('layoutBlock')->createView();
         $id = $form->get('layoutBlock')->getViewData()['id'];
-        $twig = $this->get('twig');
+        $twig = $this->container->get('twig');
         $twig->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
 
         return $this->renderView(
@@ -407,7 +405,7 @@ class LayoutBlockController extends CRUDController
             $layoutBlock->setIsActive(!$layoutBlock->getIsActive());
             $this->admin->update($layoutBlock);
         }
-        $html = $this->getLayoutBlockFormWidget($pageId, $formFieldId, $uniqId, $code);
+        $html = $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code);
         $status = $layoutBlock->getIsActive()?'activated':'deactivated';
         return new JsonResponse(
             [

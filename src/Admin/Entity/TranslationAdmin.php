@@ -14,6 +14,7 @@ namespace Networking\InitCmsBundle\Admin\Entity;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
+use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
@@ -38,7 +39,7 @@ use Symfony\Component\Intl\Locales;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class TranslationAdmin extends AbstractAdmin
+class TranslationAdmin extends BaseAdmin
 {
     /**
      * @var array
@@ -176,49 +177,20 @@ class TranslationAdmin extends AbstractAdmin
         ksort($domains);
 
         $datagridMapper
-            ->add(
-                'show_non_translated_only',
-                CallbackFilter::class,
-                array
-                (
-                    'callback'      => function (ProxyQuery $queryBuilder, $alias, $field, $options) {
-                        /* @var $queryBuilder \Doctrine\ORM\QueryBuilder */
-                        if (!isset($options['value']) || empty($options['value']) || false === $options['value']) {
-                            return;
-                        }
-                        $this->joinTranslations($queryBuilder, $alias);
-
-                        foreach ($this->getEmptyFieldPrefixes() as $prefix) {
-                            if (empty($prefix)) {
-                                $queryBuilder->orWhere('translations.content IS NULL');
-                            } else {
-                                $queryBuilder->orWhere('translations.content LIKE :content')->setParameter(
-                                    'content',
-                                    $prefix . '%'
-                                );
-                            }
-
-                        }
-                    },
-                    'field_options' => array(
-                        'required' => true,
-                        'value'    => $this->getNonTranslatedOnly(),
-                    ),
-                    'field_type'    => CheckboxType::class,
-                )
-            )
             ->add('key', StringFilter::class, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
             ->add('translations.content', StringFilter::class, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
             ->add(
                 'domain',
                 SimpleStringFilter::class,
                 [],
-                ChoiceType::class,
                 [
-                    'choices' => $this->getDomains(),
-                    'placeholder' => 'translation.domain.all_choices',
-                    'translation_domain' => $this->getTranslationDomain(),
-                    'choice_translation_domain' => false,
+                    'field_type' => ChoiceType::class,
+                    'field_options' => [
+                        'choices' => $this->getDomains(),
+                        'placeholder' => 'translation.domain.all_choices',
+                        'translation_domain' => $this->getTranslationDomain(),
+                        'choice_translation_domain' => false,
+                    ]
                 ]
             );
     }
@@ -242,16 +214,18 @@ class TranslationAdmin extends AbstractAdmin
                 $localeString = $locale;
             }
             $localeList =  Locales::getNames(substr($localeString, 0, 2));
-
-            $fieldDescription = $this->getModelManager()->getNewFieldDescriptionInstance($this->getClass(), $locale);
-            $fieldDescription->setTemplate(
-                '@NetworkingInitCms/CRUD/base_inline_translation_field.html.twig'
-            );
-            $fieldDescription->setOption('locale', $locale);
-            $fieldDescription->setOption('editable', $this->editableOptions);
-            $fieldDescription->setOption('label', $localeList[$locale]);
-            $fieldDescription->setOption('translation_domain', 'none');
-            $list->add($fieldDescription);
+            $list->add($locale, 'string',  [
+                'route' => [
+                    'name' => 'edit',
+                    'parameters' => [],
+                ],
+                'virtual_field' => true,
+                'locale' => $locale,
+                'editable' => $this->editableOptions,
+                'label' => $localeList[$locale],
+                'translation_domain' => false,
+                'template' => '@NetworkingInitCms/CRUD/base_inline_translation_field.html.twig'
+            ]);
         }
     }
 
@@ -289,10 +263,10 @@ class TranslationAdmin extends AbstractAdmin
             }
 
             $parameters = array_merge(
-                $this->getModelManager()->getDefaultSortValues($this->getClass()),
-                $this->datagridValues,
+                $this->getDefaultSortValues(),
                 $filters
             );
+
 
             if (!isset($parameters[DatagridInterface::PER_PAGE]) || !$this->determinedPerPageValue($parameters[DatagridInterface::PER_PAGE])) {
                 $parameters[DatagridInterface::PER_PAGE] = $this->getMaxPerPage();
@@ -367,13 +341,6 @@ class TranslationAdmin extends AbstractAdmin
             ->add('domain', TextType::class);
     }
 
-    /**
-     * @return ContainerInterface
-     */
-    protected function getContainer()
-    {
-        return $this->getConfigurationPool()->getContainer();
-    }
 
     /**
      * @return string

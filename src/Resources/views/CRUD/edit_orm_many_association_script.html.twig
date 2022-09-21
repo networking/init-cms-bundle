@@ -150,8 +150,9 @@ var field_dialog_form_action_{{ id }} = function (event) {
                 // reload the form element
                 jQuery('#field_widget_{{ id }}').closest('form').ajaxSubmit({
                     url: '{{ url('sonata_admin_retrieve_form_element', {
+                                '_sonata_admin': sonata_admin.admin.root.baseCodeRoute,
                                 'elementId': id,
-                                'subclass':  sonata_admin.admin.hasActiveSubClass()?sonata_admin.admin.getActiveSubclassCode():'',
+                                'subclass': sonata_admin.admin.hasActiveSubClass() ? sonata_admin.admin.getActiveSubclassCode() : null,
                                 'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
                                 'uniqid':    sonata_admin.admin.root.uniqid,
                                 'code':      sonata_admin.admin.root.code,
@@ -426,11 +427,17 @@ field_{{ id }}.on('change', function (event) {
     jQuery('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/sonataadmin/ajax-loader.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
     jQuery.ajax({
         type: 'GET',
-        url: '{{ url('sonata_admin_short_object_information', {
-                    'objectId': 'OBJECT_ID',
-                    'uniqid': associationadmin.uniqid,
-                    'code': associationadmin.code
-                })}}'.replace('OBJECT_ID', jQuery(this).val()),
+        url:  '{{ path('sonata_admin_short_object_information',{
+            '_sonata_admin': associationadmin.baseCodeRoute,
+            'objectId': 'OBJECT_ID',
+            'uniqid': associationadmin.uniqid,
+            'linkParameters': sonata_admin.field_description.option('link_parameters', {})
+        } + (
+            associationadmin.hasRequest()
+            ? associationadmin.request.attributes.get('_route_params', {})
+            : {}
+        ) + app.request.query.all|default({})
+        )}}'.replace('OBJECT_ID', jQuery(this).val()),
         dataType: 'html',
         success: function (html) {
             jQuery('#field_widget_{{ id }}').html(html);

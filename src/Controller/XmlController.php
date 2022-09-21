@@ -81,7 +81,7 @@ class XmlController extends AbstractController
             'languages' => $this->languages
         ];
 
-        $template = 'NetworkingInitCmsBundle:Sitemap:multilingual_sitemap.xml.twig';
+        $template = 'Sonata\\AdminBundle\\FieldDescriptionI\\FieldDescriptionInterface::/Sitemap/multilingual_sitemap.xml.twig';
 
         if ($locale || count($this->languages) === 1) {
             $locale = $locale?:$params['languages']['locale'];
@@ -90,7 +90,7 @@ class XmlController extends AbstractController
             $params['pages'] = $this->objectManager->getRepository($this->pageClass)->findBy($page_filter);
             $params['additional_links'] = $this->getAdditionalLinks($locale);
 
-            $template = 'NetworkingInitCmsBundle:Sitemap:sitemap.xml.twig';
+            $template = '@NetworkingInitSitemap/sitemap.xml.twig';
         }
 
         $response = $this->render($template,$params);

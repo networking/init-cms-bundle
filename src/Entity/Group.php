@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Networking\InitCmsBundle\Entity\Group
  *
- * @ORM\Table(name="fos_user_group")
+ * @ORM\Table(name="user_group")
  * @ORM\Entity()
  */
 class Group
@@ -40,7 +40,7 @@ class Group
     /**
      * @var array
      */
-    protected $roles;
+    protected $roles = [];
 
     /**
      * Group constructor.
@@ -129,6 +129,11 @@ class Group
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
 }

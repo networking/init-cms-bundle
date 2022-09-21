@@ -7,17 +7,8 @@
     <parameters>
         <!-- Media -->
         <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\Entity\MediaAdmin</parameter>
-        <parameter key="sonata.media.admin.media.controller">NetworkingInitCmsBundle:MediaAdmin</parameter>
+        <parameter key="sonata.media.admin.media.controller">Networking\InitCmsBundle\Controller\MediaAdminController</parameter>
         <parameter key="sonata.media.admin.media.translation_domain">MediaAdmin</parameter>
-
-
-        <parameter key="sonata.user.admin.group.entity">Networking\InitCmsBundle\Entity\Group</parameter>
-        <parameter key="sonata.user.admin.group.controller">Sonata\AdminBundle\Controller\CRUDController</parameter>
-        <parameter key="sonata.user.admin.group.class">Networking\InitCmsBundle\Admin\Entity\GroupAdmin</parameter>
-        <parameter key="sonata.user.admin.groupname">sonata_user</parameter>
-        <parameter key="sonata.user.admin.label_catalogue">SonataUserBundle</parameter>
-        <parameter key="sonata.user.admin.group.translation_domain">SonataUserBundle</parameter>
-        <parameter key="sonata.user.admin.groupicon"><![CDATA[<i class='fa fa-users'></i>]]></parameter>
     </parameters>
 
 
@@ -50,24 +41,15 @@
                 <argument type="collection">
                     <argument key="list">@NetworkingInitCms/MediaAdmin/list.html.twig</argument>
                     <argument key="edit">@NetworkingInitCms/MediaAdmin/edit.html.twig</argument>
+                    <argument key="create">@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig</argument>
                     <argument key="show">@NetworkingInitCms/CRUD/show.html.twig</argument>
                     <argument key="ajax">@NetworkingInitCms/ajax_layout.html.twig</argument>
                 </argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="admin_label_media"
+            <tag name="sonata.admin" manager_type="orm" label="media.title"
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
-        </service>
-
-        <service id="sonata.user.admin.group" class="%sonata.user.admin.group.class%" public="true">
-            <tag name="sonata.admin" manager_type="orm" group="%sonata.user.admin.groupname%" label="groups" label_catalogue="%sonata.user.admin.label_catalogue%" label_translator_strategy="sonata.admin.label.strategy.underscore"/>
-            <argument/>
-            <argument>%sonata.user.admin.group.entity%</argument>
-            <argument>%sonata.user.admin.group.controller%</argument>
-            <call method="setTranslationDomain">
-                <argument>%sonata.user.admin.group.translation_domain%</argument>
-            </call>
         </service>
 
     </services>

@@ -13,9 +13,11 @@ use Networking\InitCmsBundle\Provider\ImageProvider;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Sonata\MediaBundle\Resizer\ResizerInterface;
+use Sonata\MediaBundle\Thumbnail\GenerableThumbnailInterface;
+use Sonata\MediaBundle\Thumbnail\ResizableThumbnailInterface;
 use Sonata\MediaBundle\Thumbnail\ThumbnailInterface;
 
-class FormatThumbnail implements ThumbnailInterface
+class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface, GenerableThumbnailInterface
 {
     /**
      * @var string
@@ -38,11 +40,16 @@ class FormatThumbnail implements ThumbnailInterface
     /**
      * @param string $id
      */
-    public function addResizer($id, ResizerInterface $resizer)
+    public function addResizer(string $id, ResizerInterface $resizer): void
     {
         if (!isset($this->resizers[$id])) {
             $this->resizers[$id] = $resizer;
         }
+    }
+
+    public function hasResizer(string $id): bool
+    {
+        return isset($this->resizers[$id]);
     }
 
     /**
@@ -52,7 +59,7 @@ class FormatThumbnail implements ThumbnailInterface
      * @throws \Exception
      *
      */
-    public function getResizer($id)
+    public function getResizer(string $id): ResizerInterface
     {
         if (!isset($this->resizers[$id])) {
             throw new \LogicException(sprintf('Resizer with id: "%s" is not attached.', $id));
@@ -67,6 +74,7 @@ class FormatThumbnail implements ThumbnailInterface
     public function generatePublicUrl(MediaProviderInterface $provider, MediaInterface $media, $format): string
     {
         if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)) {
+
             return $provider->getReferenceImage($media);
         }
 
@@ -99,13 +107,16 @@ class FormatThumbnail implements ThumbnailInterface
     /**
      * {@inheritdoc}
      */
-    public function generate(MediaProviderInterface $provider, MediaInterface $media)
+    public function generate(MediaProviderInterface $provider, MediaInterface $media):  void
     {
+
         if (!$provider->requireThumbnails()) {
             return;
         }
 
         $referenceFile = $provider->getReferenceFile($media);
+
+
 
         if (!$referenceFile->exists()) {
             return;
@@ -136,7 +147,7 @@ class FormatThumbnail implements ThumbnailInterface
     /**
      * {@inheritdoc}
      */
-    public function delete(MediaProviderInterface $provider, MediaInterface $media, $formats = null)
+    public function delete(MediaProviderInterface $provider, MediaInterface $media, $formats = null): void
     {
         if (null === $formats) {
             $formats = array_keys($provider->getFormats());

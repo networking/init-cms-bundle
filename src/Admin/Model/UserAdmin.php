@@ -10,14 +10,18 @@
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
+use Networking\InitCmsBundle\Entity\Group;
 use Networking\InitCmsBundle\Form\Type\QrCodeType;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\UserBundle\Admin\Model\UserAdmin as BaseUserAdmin;
+use Sonata\UserBundle\Form\Type\RolesMatrixType;
 use Sonata\UserBundle\Form\Type\SecurityRolesType;
 use Sonata\UserBundle\Model\UserInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -55,7 +59,7 @@ abstract class UserAdmin extends BaseUserAdmin
     private $googleAuthEnabled = false;
 
     /**
-     * @var \Sonata\UserBundle\GoogleAuthenticator\Helper
+     * @var \Networking\InitCmsBundle\GoogleAuthenticator\Helper
      */
     private $googleAuthenticatorHelper;
 
@@ -75,7 +79,7 @@ abstract class UserAdmin extends BaseUserAdmin
     }
 
 
-    public function setGoogleAuthenticatorHelper(\Sonata\UserBundle\GoogleAuthenticator\Helper $helper)
+    public function setGoogleAuthenticatorHelper(\Networking\InitCmsBundle\GoogleAuthenticator\Helper $helper)
     {
         $this->googleAuthenticatorHelper = $helper;
     }
@@ -124,8 +128,7 @@ abstract class UserAdmin extends BaseUserAdmin
      */
     public function postUpdate($object): void
     {
-        $securityContext = $this->getConfigurationPool()->getContainer()->get('security.token_storage');
-        if ($object == $securityContext->getToken()->getUser()) {
+        if ($object == $this->tokenStorage->getToken()->getUser()) {
             $this->getRequest()->getSession()->set('admin/_locale', $object->getLocale());
         }
     }
@@ -146,11 +149,10 @@ abstract class UserAdmin extends BaseUserAdmin
             );
         if ($this->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
             $listMapper
-                ->add(
-                    'impersonating',
-                    'string',
-                    ['template' => 'NetworkingInitCmsBundle:Admin:Field/impersonating.html.twig']
-                );
+                ->add('impersonating', FieldDescriptionInterface::TYPE_STRING, [
+                    'virtual_field' => true,
+                    'template' => '@NetworkingInitCms/Admin/Field/impersonating.html.twig'
+            ]);
         }
 
         $listMapper->add(
@@ -172,7 +174,7 @@ abstract class UserAdmin extends BaseUserAdmin
     protected function configureDatagridFilters(DatagridMapper $filterMapper): void
     {
         $filterMapper
-            ->add('username', null, ['field_options' => ['translation_domain' => $this->translationDomain]])
+            ->add('username', null, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
             ->add('email', null, ['hidden' => true])
             ->add('groups', null, ['hidden' => true]);
     }
@@ -182,41 +184,49 @@ abstract class UserAdmin extends BaseUserAdmin
      */
     protected function configureFormFields(FormMapper $formMapper): void
     {
+
         $formMapper
-            ->with('General')
+            ->with('General', ['class' => 'col-md-6'])
             ->add('username')
             ->add('email')
             ->add('plainPassword', TextType::class, ['required' => (!$this->getSubject() || is_null($this->getSubject()->getId()))])
             ->end()
-            ->with('Groups')
-            ->add('groups', ModelType::class, [
-                'required' => false,
-                'expanded' => true,
-                'multiple' => true,
-                'translation_domain' => false,
-            ])
-            ->end()
-            ->with('Profile')
+            ->with('Profile', ['class' => 'col-md-6'])
             ->add('firstname', null, ['required' => false])
             ->add('lastname', null, ['required' => false])
             ->add('locale', LocaleType::class, ['required' => false])
-            ->end();
+            ->end()
+            ->with('Groups', ['class' => 'col-md-3'])
+            ->add('groups', ModelType::class, [
+                'class' => Group::class,
+                'required' => false,
+                'expanded' => true,
+                'multiple' => true,
+            ])
+            ->end()
+
+        ;
 
         if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
             $formMapper
-                ->with('Management')
+                ->with('Management', ['class' => 'col-md-9'])
                 ->add(
                     'realRoles',
-                    SecurityRolesType::class,
+                    RolesMatrixType::class,
                     [
-                        'expanded' => true,
                         'multiple' => true,
                         'required' => false,
-                        'label_render' => false,
                         'label' => false,
+                        'excluded_roles' => [
+                            UserInterface::ROLE_DEFAULT,
+                            UserInterface::ROLE_SUPER_ADMIN,
+                            'ROLE_ALLOWED_TO_SWITCH',
+                            'ROLE_SONATA_ADMIN',
+                            'ROLE_ADMIN'
+                        ]
                     ]
                 )
-                ->add('enabled', null, ['required' => false], ['inline_block' => true])
+                ->add('enabled', CheckboxType::class, ['label_render' => true, 'widget_checkbox_label' => 'widget', 'label_attr' => ['class' => 'checkbox-line']])
                 ->end();
         }
 

@@ -6,6 +6,10 @@
                 <source>action._delete</source>
                 <target>Delete</target>
             </trans-unit>
+            <trans-unit id="form.label_groups">
+                <source>form.label_groups</source>
+                <target>Groups</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

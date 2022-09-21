@@ -15,7 +15,17 @@ file that was distributed with this source code.
     {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
 {% endblock %}
 
+{% block title %}
+    {{ admin.isChild and admin.parent.subject ? 'title_edit'|trans({'%name%': admin.parent.toString(admin.parent.subject)|u.truncate(15, '...') }, 'SonataAdminBundle') : '' }}
+{% endblock %}
+
+{% block navbar_title %}
+    {{ admin.isChild and admin.parent.subject ? 'title_edit'|trans({'%name%': admin.parent.toString(admin.parent.subject)|u.truncate(100, '...') }, 'SonataAdminBundle') : '' }}
+{% endblock %}
+
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
+{# Define the variable out of the block to prevent error if someone is overriding the list_table and not the list_footer #}
+{% set datagrid_has_results = admin.datagrid.results|length > 0 %}
 
 {% block list_filters %}
     {% if admin.datagrid.filters %}
@@ -115,7 +125,7 @@ file that was distributed with this source code.
         <div id="objectList">
     {% endif %}
     {% set batchactions = admin.batchactions %}
-    {% if admin.datagrid.results|length > 0 %}
+    {% if datagrid_has_results%}
         {% if admin.hasRoute('batch') %}
             <form action="{{ admin.generateUrl('batch', {'filter': admin.filterParameters}) }}" method="POST" >
             <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
@@ -125,12 +135,12 @@ file that was distributed with this source code.
                 <thead>
                 <tr>
                     {% for field_description in admin.list.elements %}
-                        {% if admin.hasRoute('batch') and field_description.getOption('code') == '_batch' and batchactions|length > 0 %}
+                        {% if admin.hasRoute('batch') and field_description.name == constant('Sonata\\AdminBundle\\Datagrid\\ListMapper::NAME_BATCH') and batchactions|length > 0 %}
                             {% if not app.request.isXmlHttpRequest %}
                                 <th class="sonata-ba-list-field-header sonata-ba-list-field-header-batch">
                                 </th>
                             {% endif %}
-                        {% elseif field_description.getOption('code') == '_select' %}
+                        {% elseif field_description.getOption('code') == constant('Sonata\\AdminBundle\\Datagrid\\ListMapper::NAME_SELECT') %}
                             <th class="sonata-ba-list-field-header sonata-ba-list-field-header-select"></th>
                         {% elseif field_description.name == '_action' and app.request.isXmlHttpRequest %}
                             {# Action buttons disabled in ajax view! #}
@@ -146,27 +156,26 @@ file that was distributed with this source code.
                                     or admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')].name == sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')]) %}
                                 {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
                                 {% set sort_by              = current ? admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')] : field_description.option(constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER'), sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')]) %}
-
                             {% endif %}
 
                             {% apply spaceless %}
                                 <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if loop.index in [1,2] %}nowrap {% endif %} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
-                                    {% if sortable %}<a
-                                            href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
-                                        {% if field_description.label %}
-
-                                            {% set translation_domain = admin.translationDomain %}
-                                            {% if field_description.translationDomain %}
-                                                {% set translation_domain = field_description.translationDomain %}
-                                            {% endif %}
-                                            {% if field_description.translationDomain is same as('none') %}
-                                                {{ field_description.label }}
-                                            {% else %}
-                                                {{ field_description.label|trans({}, translation_domain)  }}
-                                            {% endif %}
-
+                                    {% if sortable %}
+                                        <a href="{{ admin.generateUrl('list', sort_parameters) }}">
+                                    {% endif %}
+                                    {% if field_description.getOption('label_icon') %}
+                                        <span class="sonata-ba-list-field-header-label-icon">
+                                                    {{ field_description.getOption('label_icon')|parse_icon }}
+                                                </span>
+                                    {% endif %}
+                                    {% if field_description.label is not same as(false) %}
+                                        {% if field_description.translationDomain is same as(false) %}
+                                            {{ field_description.label }}
+                                        {% else %}
+                                            {{ field_description.label|trans({}, field_description.translationDomain) }}
                                         {% endif %}
-                                     {% if sortable %}</a>{% endif %}
+                                    {% endif %}
+                                    {% if sortable %}</a>{% endif %}
                                 </th>
                             {% endapply %}
                         {% endif %}
@@ -226,67 +235,27 @@ file that was distributed with this source code.
                 </tfoot>
             {% endblock %}
         </table>
-        {% if admin.datagrid.pager.haveToPaginate() %}
-            <div class="row">
-                <div class="col-xs-2">
-                    <div class="clearfix">&nbsp;</div>
-                    {{ admin.datagrid.pager.page }} / {{ admin.datagrid.pager.lastpage }}</div>
-                <div class="col-xs-8 text-center">
-                    <ul class="pagination pagination-xs">
 
-                        {% if admin.datagrid.pager.page != 1 %}
+        {% if not app.request.isxmlhttprequest %}
+            {% if admin.hasRoute('export') and admin.hasAccess('export') and export_formats|length %}
+                <p> {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}:
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="fas fa-share-square" aria-hidden="true"></i>
+                        {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for format in export_formats %}
                             <li>
-                                <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, 1)) }}"
-                                   title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
+                                <a href="{{ admin.generateUrl('export', admin.datagrid.paginationparameters(0) + {'format' : format}) }}">
+                                    <i class="fas fa-arrow-circle-o-down" aria-hidden="true"></i>
+                                    {{ ("export_format_" ~ format)|trans({}, 'SonataAdminBundle') }}
+                                </a>
                             </li>
-                        {% endif %}
-
-                        {% if admin.datagrid.pager.page != admin.datagrid.pager.previouspage %}
-                            <li>
-                                <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.previouspage)) }}"
-                                   title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
-                            </li>
-                        {% endif %}
-
-                        {# Set the number of pages to display in the pager #}
-                        {% for page in admin.datagrid.pager.getLinks(admin_pool.getOption('pager_links')) %}
-                            {% if page == admin.datagrid.pager.page %}
-                                <li class="active"><a
-                                            href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, page)) }}">{{ page }}</a>
-                                </li>
-                            {% else %}
-                                <li>
-                                    <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, page)) }}">{{ page }}</a>
-                                </li>
-                            {% endif %}
                         {% endfor %}
-
-                        {% if admin.datagrid.pager.page != admin.datagrid.pager.nextpage %}
-                            <li>
-                                <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.nextpage)) }}"
-                                   title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
-                            </li>
-                        {% endif %}
-
-                        {% if admin.datagrid.pager.page != admin.datagrid.pager.lastpage %}
-                            <li>
-                                <a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.lastpage)) }}"
-                                   title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
-                            </li>
-                        {% endif %}
-
                     </ul>
                 </div>
-            </div>
-        {% endif %}
-        {% if not app.request.isxmlhttprequest %}
-            {% if admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
-                <p> {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}:
-                    {% for format in admin.getExportFormats() %}
-                        <a
-                        href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}"
-                        class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
-                    {% endfor %}
                 </p>
             {% endif %}
         {% endif %}
@@ -294,9 +263,11 @@ file that was distributed with this source code.
             </form>
         {% endif %}
     {% else %}
-        <p class="notice">
-            {{ 'no_result'|trans({}, 'SonataAdminBundle') }}
-        </p>
+        {% block no_result_content %}
+            <div class="alert alert-info">
+                {{ 'no_result'|trans({}, 'SonataAdminBundle') }}
+            </div>
+        {% endblock %}
     {% endif %}
     {% if not app.request.isXmlHttpRequest %}
         </div>
@@ -314,7 +285,6 @@ file that was distributed with this source code.
         {% block batch_javascript %}
         jQuery(document).ready(function ($) {
             $('#list_batch_checkbox').click(function () {
-                    console.log($(this).is(':checked'));
                 $(this).closest('table').find("td input[type='checkbox']").prop('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
             });
         });

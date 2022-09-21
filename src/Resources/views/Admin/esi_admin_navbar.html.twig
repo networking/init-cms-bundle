@@ -10,17 +10,17 @@
                                 <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
                                      width="77">
                             </a>
-                            {% if admin_pool is defined %}
+                            {% if sonata_config is defined %}
                                 <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                    {{ admin_pool.title }}
+                                    {{ sonata_config.title }}
                                 </a>
                             {% endif %}
                         </div>
                         <div class="pull-right nav-admin">
-                            {% if admin_pool is defined %}
-                                {% include admin_pool.getTemplate('user_block') %}
+                            {% if sonata_config is defined %}
+                                {% include get_global_template('user_block') %}
                             {% endif %}
-                            {% if admin_pool is defined %}
+                            {% if sonata_config is defined %}
                                 {{ knp_menu_render('AdminMenu',
                                 {'currentClass': 'active',
                                 'ancestorClass': 'active',

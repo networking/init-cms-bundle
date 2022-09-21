@@ -261,6 +261,40 @@ file that was distributed with this source code.
     <script type="text/javascript" src="{{ asset('init_cms.js', 'init_cms') }}"></script>
     {% endif %}
     {% endif %}
+
+    <script type="text/javascript">
+        $(function(){
+
+            $('[data-provider="datepicker"]').datetimepicker({
+                autoclose: true,
+                minView: 'month',
+                todayBtn: true,
+                startView: 'month'
+            });
+
+            $('[data-provider="datetimepicker"]').datetimepicker({
+                autoclose: true,
+                todayBtn: true
+            });
+
+            $('[data-provider="timepicker"]').datetimepicker({
+                autoclose: true,
+                format: 'hh:ii',
+                formatViewType: 'time',
+                maxView: 'day',
+                minView: 'hour',
+                startView: 'day'
+            });
+
+            // Restore value from hidden input
+            $('input[type=hidden]', '.date').each(function(){
+                if($(this).val()) {
+                    $(this).parent().datetimepicker('setValue');
+                }
+            });
+
+        });
+    </script>
 {% endblock before_body_end %}
     {# Render any javascript which was given usin the jsblock twig nodes#}
     {% jsblock 'render' %}

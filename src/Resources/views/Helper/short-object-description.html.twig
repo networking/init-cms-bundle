@@ -1,5 +1,5 @@
 {% if object.providerName is defined and object.providerName == 'sonata.media.provider.image' %}
-{% set description %}{% thumbnail object, 'admin' with {'width': 75, 'height': 60} %} {% endset %}
+{% set description %}{{ sonata_thumbnail(object, 'admin', {'width': 75, 'height': 60}) }}{% endset %}
 {% else %}
     {% set description = description|truncate(30)  %}
 {% endif %}

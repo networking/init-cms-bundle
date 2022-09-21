@@ -284,7 +284,7 @@ class FrontendPageController extends AbstractController
         }
 
         if ($page->getVisibility() != PageInterface::VISIBILITY_PUBLIC) {
-            if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            if (false === $this->container->get('security.authorization_checker')->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException();
             }
         }
@@ -372,7 +372,7 @@ class FrontendPageController extends AbstractController
             $params = array_merge($query, $params);
         }
 
-        $newURL = $this->get('router')->generate($routeName, $params);
+        $newURL = $this->container->get('router')->generate($routeName, $params);
 
         $response = new RedirectResponse($newURL);
 
@@ -442,7 +442,7 @@ class FrontendPageController extends AbstractController
         if ($path) {
             $url = base64_decode($path);
         } else {
-            $url = $this->get('router')->generate('networking_init_cms_default');
+            $url = $this->container->get('router')->generate('networking_init_cms_default');
         }
 
         $response = $this->redirect($url);
