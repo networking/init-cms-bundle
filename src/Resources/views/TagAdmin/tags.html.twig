@@ -26,8 +26,9 @@
 {% endmacro %}
 
 {% if datagrid is defined  %}
-{% set selected = datagrid.values.tags is defined?datagrid.values.tags.value:0 %}
-    {% else %}
+{% set selected = datagrid.values.tags is iterable?datagrid.values.tags.value:0 %}
+{% set selected = 0 %}
+{% else %}
 {% set selected = lastItem %}
 {% endif %}
 <div class="sortable menu-tree">

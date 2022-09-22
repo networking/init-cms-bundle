@@ -22,7 +22,7 @@
             {action: "add_tags", tags: id, idx: [media], _sonata_csrf_token :"{{ csrf_token }}"},
             function(xhr){
                 if (xhr.result === 'ok') {
-                    createInitCmsMessageBox(xhr.status, xhr.message);
+                    InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                     $('.info > a.tag_link').trigger('click');
                     history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
                 }

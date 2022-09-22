@@ -63,7 +63,7 @@ file that was distributed with this source code.
                 },
                 success: function (xhr) {
                     if (xhr.result === 'ok') {
-                        createInitCmsMessageBox(xhr.status, xhr.message);
+                        InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                         jQuery('#layoutBlockModal').modal('hide');
                         jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
                         jQuery('input[type=submit]', this).off();
@@ -227,7 +227,7 @@ file that was distributed with this source code.
                 },
                 stop: function (event, ui) {
                     saveLayoutBlockSort(function (xhr) {
-                        createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                        InitCms.createInitCmsMessageBox(xhr.messageStatus, xhr.message);
                     });
                 },
                 update: function (event, ui) {
@@ -359,7 +359,7 @@ file that was distributed with this source code.
                             _method: 'DELETE'
                         },
                         success: function (xhr) {
-                            createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                            InitCms.createInitCmsMessageBox(xhr.messageStatus, xhr.message);
                             jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
                             saveLayoutBlockSort();
                         }
@@ -379,7 +379,7 @@ file that was distributed with this source code.
                             _method: 'PUT'
                         },
                         success: function (xhr) {
-                            createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+                            InitCms.createInitCmsMessageBox(xhr.messageStatus, xhr.message);
                             jQuery('#field_container_{{ id }}').replaceWith(xhr.html);
                             saveLayoutBlockSort();
                         }

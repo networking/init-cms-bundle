@@ -42,7 +42,7 @@
         var form = jQuery(this).closest('form');
 
         if (jQuery('[name^="idx[]"]:checked', form).length == 0 && jQuery('[name^="all_elements"]:checked', form).length == 0) {
-            createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
+            InitCms.createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
             return;
         }
 

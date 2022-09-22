@@ -66,10 +66,10 @@ file that was distributed with this source code.
                     jQuery('#translationSettings').html(xhr.html);
                     if(xhr.message)
                     {
-                        createInitCmsMessageBox(xhr.status, xhr.message);
+                        InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                     }
                 }else{
-                    createInitCmsMessageBox(xhr.status, xhr.message);
+                    InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                 }
                 translationDialog.modal('hide');
             }

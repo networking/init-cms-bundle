@@ -187,7 +187,6 @@ class TranslationCRUDController extends CRUDController
     {
         $languages = $this->getManagedLocales();
 
-        dump($languages);
 
         $this->container->get('translator')->removeLocalesCacheFiles($languages);
 

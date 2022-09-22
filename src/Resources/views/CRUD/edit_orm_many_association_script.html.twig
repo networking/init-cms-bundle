@@ -26,7 +26,7 @@ var field_{{ id }} = jQuery('#{{ id }}');
 var field_dialog_form_add_{{ id }} = function (event) {
 
 
-    Admin.log('[{{ id }}|field_dialog_form_add] add link action');
+    InitCms.debugMessage('[{{ id }}|field_dialog_form_add] add link action');
 
     event.preventDefault();
     event.stopPropagation();
@@ -41,7 +41,7 @@ var field_dialog_form_add_{{ id }} = function (event) {
         url: link.attr('href'),
         success: function (html) {
 
-            Admin.log('[{{ id }}|field_dialog_form_add] ajax success', field_dialog_{{ id }});
+            InitCms.debugMessage('[{{ id }}|field_dialog_form_add] ajax success', field_dialog_{{ id }});
 
             // populate the popup container
             field_dialog_{{ id }}.html(html);
@@ -57,7 +57,7 @@ var field_dialog_form_add_{{ id }} = function (event) {
             field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
 
                 if (!jQuery(e.target).hasClass('collapse')) {
-                    Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
+                    InitCms.debugMessage('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
                     // make sure we have a clean state
                     field_dialog_{{ id }}.off('click', 'a');
                     field_dialog_{{ id }}.off('submit', 'form');
@@ -84,7 +84,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
     event.stopPropagation();
     initialize_popup_{{ id }}();
 
-    Admin.log('[{{ id }}|field_dialog_form_action] action catch', this);
+    InitCms.debugMessage('[{{ id }}|field_dialog_form_action] action catch', this);
 
 
     if (this.nodeName == 'FORM') {
@@ -99,12 +99,12 @@ var field_dialog_form_action_{{ id }} = function (event) {
     }
 
     if (element.hasClass('sonata-ba-action')) {
-        Admin.log('[{{ id }}|field_dialog_form_action] reserved action stop catch all events');
+        InitCms.debugMessage('[{{ id }}|field_dialog_form_action] reserved action stop catch all events');
         return false;
     }
 
 
-    Admin.log('[{{ id }}|field_dialog_form_action] execute ajax call');
+    InitCms.debugMessage('[{{ id }}|field_dialog_form_action] execute ajax call');
 
     // the ajax post
     jQuery(element).ajaxSubmit({
@@ -113,7 +113,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
         data: data,
         success: function (data, status, xhr) {
 
-            Admin.log('[{{ id }}|field_dialog_form_action] ajax success');
+            InitCms.debugMessage('[{{ id }}|field_dialog_form_action] ajax success');
 
             var ct = xhr.getResponseHeader("content-type") || "application/json";
             if (ct != 'application/json') {
@@ -172,7 +172,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
                             newElement.attr('selected', 'selected');
 
                         }
-                        Admin.log('[{{ id }}|field_dialog] trigger append form element');
+                        InitCms.debugMessage('[{{ id }}|field_dialog] trigger append form element');
                         {% if select2 is defined and select2 %}
                         container.on('sonata-admin-append-form-element', function () {
                             jQuery("#{{ id }}").select2();
@@ -217,7 +217,7 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
             link.hasClass('tag_link') ||
             link.hasClass('show_all_media')
     ){
-        Admin.log('[{{ id }}|field_dialog_form_list_link] handle default javascript action');
+        InitCms.debugMessage('[{{ id }}|field_dialog_form_list_link] handle default javascript action');
         return;
     }
 
@@ -226,7 +226,7 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
     event.preventDefault();
     event.stopPropagation();
 
-    Admin.log('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
+    InitCms.debugMessage('[{{ id }}|field_dialog_form_list_link] handle link click in a list');
     var element = link.parents('#field_dialog_{{ id }} .sonata-ba-list-field');
 
     //select media
@@ -243,7 +243,7 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
         url: jQuery(this).attr('href'),
         dataType: 'html',
         success: function (html) {
-            Admin.log('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
+            InitCms.debugMessage('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
 
             $('#field_dialog_{{ id }}').html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
             field_dialog_form_list_handle_action_{{ id }}();
@@ -256,9 +256,9 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
 // this function handle action on the modal list when inside a selected list
 var field_dialog_form_list_handle_action_{{ id }} = function () {
 
-    Admin.log('[{{ id }}|field_dialog_form_list_handle_action] attaching valid js event');
+    InitCms.debugMessage('[{{ id }}|field_dialog_form_list_handle_action] attaching valid js event');
 
-    Admin.add_filters(field_dialog_{{ id }});
+    InitCms.toggleFilters(field_dialog_{{ id }});
 
     field_dialog_{{ id }}.off('click', 'a');
     field_dialog_{{ id }}.off('submit', 'form');
@@ -271,7 +271,7 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
 
         var form = jQuery(this);
 
-        Admin.log('[{{ id }}|field_dialog_form_list_handle_action] catching submit event, sending ajax request');
+        InitCms.debugMessage('[{{ id }}|field_dialog_form_list_handle_action] catching submit event, sending ajax request');
 
         jQuery(form).ajaxSubmit({
             type: form.attr('method'),
@@ -280,7 +280,7 @@ var field_dialog_form_list_handle_action_{{ id }} = function () {
             data: {_xml_http_request: true},
             success: function (html) {
 
-                Admin.log('[{{ id }}|field_dialog_form_list_handle_action] form submit success, restoring event');
+                InitCms.debugMessage('[{{ id }}|field_dialog_form_list_handle_action] form submit success, restoring event');
 
                 field_dialog_{{ id }}.html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
                 field_dialog_form_list_handle_action_{{ id }}();
@@ -297,7 +297,7 @@ var field_dialog_form_list_{{ id }} = function (event) {
     event.preventDefault();
     event.stopPropagation();
 
-    Admin.log('[{{ id }}|field_dialog_form_list] open the list modal');
+    InitCms.debugMessage('[{{ id }}|field_dialog_form_list] open the list modal');
 
     var a = jQuery(this);
 
@@ -309,12 +309,12 @@ var field_dialog_form_list_{{ id }} = function (event) {
         dataType: 'html',
         success: function (html) {
 
-            Admin.log('[{{ id }}|field_dialog_form_list] retrieving the list content');
+            InitCms.debugMessage('[{{ id }}|field_dialog_form_list] retrieving the list content');
 
             // populate the popup container
             field_dialog_{{ id }}.html('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>{{ associationadmin.label|trans({}, associationadmin.translationdomain) }}</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');
 
-            Admin.add_filters(field_dialog_{{ id }});
+            InitCms.toggleFilters(field_dialog_{{ id }});
 
             // capture the submit event to make an ajax call, ie : POST data to the
             // related create admin
@@ -340,7 +340,7 @@ var field_dialog_form_list_{{ id }} = function (event) {
             field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
 
                 if (!jQuery(e.target).hasClass('collapse')) {
-                    Admin.log('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
+                    InitCms.debugMessage('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
 
                     // make sure we have a clean state
                     field_dialog_{{ id }}.off('click', 'a');
@@ -361,7 +361,7 @@ function initialize_popup_{{ id }}() {
         // move the dialog as a child of the root element, nested form breaks html ...
         jQuery(document.body).append(field_dialog_{{ id }});
 
-        Admin.log('[{{ id }}|field_dialog] move dialog container as a document child');
+        InitCms.debugMessage('[{{ id }}|field_dialog] move dialog container as a document child');
     }
 }
 
@@ -422,7 +422,7 @@ function field_remove_element_{{ id }}(event) {
 // update the label
 field_{{ id }}.on('change', function (event) {
 
-    Admin.log('[{{ id }}] update the label');
+    InitCms.debugMessage('[{{ id }}] update the label');
 
     jQuery('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/sonataadmin/ajax-loader.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
     jQuery.ajax({

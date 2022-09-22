@@ -5,33 +5,36 @@ const terser = require('terser');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const webpack = require('webpack');
-
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    resolve: {alias: {vue: 'vue/dist/vue.esm.js'}},
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.esm.js',
+            'bootstrap-saas': path.resolve(__dirname, './node_modules/bootstrap-saas'),
+        },
+    },
     externals: {
-        jquery: 'jQuery',
-        $: 'jQuery',
         filerobotImageEditor: 'FilerobotImageEditor'
     },
     entry: {
-        imageEditor: './src/Resources/public/js/filebot.js',
+        admin: './assets/js/admin.js',
+        imageEditor: './assets/js/filebot.js',
         networking_initcms: [
-            './src/Resources/public/vendor/select2/css/select2.min.css',
-            './src/Resources/public/vendor/select2/css/select2-bootstrap.min.css',
-            './src/Resources/public/vendor/jqueryui/themes/base/jquery-ui.css',
-            './src/Resources/public/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
-            './src/Resources/public/scss/initcms_bootstrap.scss',
-            './src/Resources/public/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
+            './assets/vendor/select2/css/select2.min.css',
+            './assets/vendor/select2/css/select2-bootstrap.min.css',
+            './assets/vendor/jqueryui/themes/base/jquery-ui.css',
+            './assets/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
+            './assets/scss/initcms_bootstrap.scss',
+            './assets/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
         ],
-        'tui-image-editor': './src/Resources/public/css/tui-image-editor.css',
-        'sandbox': ['./src/Resources/public/js/sandbox.js', './src/Resources/public/css/sandbox.css'],
-        'admin-navbar': './src/Resources/public/scss/admin-navbar-standalone.scss',
+        'tui-image-editor': './assets/css/tui-image-editor.css',
+        'admin-navbar': './assets/scss/admin-navbar-standalone.scss',
     },
     output: {
-        publicPath: '/bundles/networkinginitcms/build/',
+        publicPath: '/bundles/networkinginitcms',
         pathinfo: true,
-        path: path.resolve(__dirname, 'src/Resources/public/build/'),
+        path: path.resolve(__dirname, 'src/Resources/public/'),
         clean: true,
         filename: '[name].[contenthash:8].js',
     },
@@ -75,15 +78,77 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        }),
         new WebpackManifestPlugin(),
         new VueLoaderPlugin(),
+        new CopyPlugin({
+                patterns: [
+                    {
+                        from: './assets/js/admin-lte/',
+
+                        // optional target path, relative to the output dir
+                        to: './admin-lte/[path][name][ext]',
+                    },
+                    {
+                        from: './assets/js/pdf-viewer.js',
+                        to: './js/pdf-viewer.js',
+                    },
+                    {
+                        from: './assets/vendor/featherlight/src/featherlight.css',
+                        to: './vendor/featherlight/src/featherlight.css',
+                    },
+                    {
+                        from: './assets/vendor/select2/js/i18n/',
+                        to: './vendor/select2/js/i18n/',
+                    },
+                    {
+                        from: './assets/vendor/smalot-bootstrap-datetimepicker/js/',
+                        to: './vendor/smalot-bootstrap-datetimepicker/js/',
+                    },
+                    {
+                        from: './assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
+                        to: './vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
+                    },
+                    {
+                        from: './assets/vendor/ios-html5-drag-drop-shim/',
+                        to: './vendor/ios-html5-drag-drop-shim/',
+                    },
+                    {
+                        from: './assets/vendor/nestedSortable/',
+                        to: './vendor/nestedSortable/',
+                    },
+                    {
+                        from: './assets/vendor/dropzone/dropzone.js',
+                        to: './vendor/dropzone/dropzone.js',
+                    },
+                    {
+                        from: './assets/vendor/filerobot-image-editor/index_old.js',
+                        to: './vendor/filerobot-image-editor/index_old.js',
+                    },
+                    {
+                        from: './assets/js/ckeditor/',
+                        to: './js/ckeditor/',
+                    },
+                    {
+                        from: './assets/fonts/',
+                        to: './fonts/',
+                    },
+                    {
+                        from: './assets/img/',
+                        to: './img/',
+                    }
+                ]
+            }),
         new WebpackConcatPlugin({
             bundles: [
                 {
-                    dest: './src/Resources/public/build/jquery-plugins.js',
+                    dest: './src/Resources/public/jquery-plugins.js',
                     src: [
-                        './src/Resources/public/vendor/jqueryui/jquery-ui.min.js',
-                        './src/Resources/public/vendor/jquery-form/jquery.form.js',
+                        './assets/vendor/jqueryui/jquery-ui.min.js',
+                        './assets/vendor/jquery-form/jquery.form.js',
                     ],
                     transforms: {
                         after: async (code) => {
@@ -93,11 +158,11 @@ module.exports = {
                     },
                 },
                 {
-                    dest: './src/Resources/public/build/bootstrap-plugins.js',
+                    dest: './src/Resources/public/bootstrap-plugins.js',
                     src: [
-                        './src/Resources/public/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
-                        './src/Resources/public/vendor/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
-                        './src/Resources/public/vendor/bootstrap-contextmenu/bootstrap-contextmenu.js',
+                        './assets/vendor/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
+                        './assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
+                        './assets/vendor/bootstrap-contextmenu/bootstrap-contextmenu.js',
                     ],
                     transforms: {
                         after: async (code) => {
@@ -107,11 +172,12 @@ module.exports = {
                     },
                 },
                 {
-                    dest: './src/Resources/public/build/app.js',
+                    dest: './src/Resources/public/app.js',
                     src: [
-                        './src/Resources/public/js/collection.js',
-                        './src/Resources/public/vendor/select2/js/select2.full.js',
-                        './src/Resources/public/vendor/featherlight/src/featherlight.js',
+                        './assets/js/collection.js',
+                        './assets/vendor/select2/js/select2.full.js',
+                        './assets/vendor/featherlight/src/featherlight.js',
+                        './assets/js/index.js',
                     ],
                     transforms: {
                         after: async (code) => {
@@ -121,26 +187,8 @@ module.exports = {
                     },
                 },
                 {
-                    dest: './src/Resources/public/build/init_cms.js',
-                    src: './src/Resources/public/js/init_cms.js',
-                    transforms: {
-                        after: async (code) => {
-                            const minifiedCode = await terser.minify(code);
-                            return minifiedCode.code;
-                        },
-                    },
-                },
-                {
-                    dest: './src/Resources/public/build/admin-lte/app.min.js',
-                    src: './src/Resources/public/js/admin-lte/app.min.js',
-                },
-                {
-                    dest: './src/Resources/public/build/pdf-viewer.js',
-                    src: './src/Resources/public/js/pdf-viewer.js',
-                },
-                {
-                    dest: './src/Resources/public/build/bootstrap.js',
-                    src: './../../mopa/bootstrap-bundle/Resources/public/bootstrap-sass/assets/javascripts/bootstrap.js',
+                    src: './node_modules/bootstrap/dist/js/bootstrap.js',
+                    dest: './src/Resources/public/bootstrap.js',
                 }
             ],
         })

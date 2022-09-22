@@ -396,9 +396,7 @@ abstract class MenuItemAdmin extends BaseAdmin
         $field,
         FilterData $data
     ) {
-        if (!$data->hasValue()) {
-            $locale = $this->getDefaultLocale();
-        }
+        $locale = $data->hasValue()?$data->getValue():$this->getDefaultLocale();
         $queryBuilder->where(sprintf('%s.locale = :locale', $alias));
         $queryBuilder->andWhere(
             $queryBuilder->expr()->isNotNull(sprintf('%s.parent', $alias))

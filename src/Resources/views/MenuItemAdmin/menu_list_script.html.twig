@@ -88,7 +88,7 @@ function submitAjaxForm(event) {
                     menuDialog.html(xhr.html);
                 } else {
                     menuDialog.modal('hide');
-                    createInitCmsMessageBox(xhr.status, xhr.message);
+                    InitCms.InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                 }
             }
         },
@@ -139,14 +139,14 @@ function saveSibling(url) {
         success: function (xhr) {
             if (xhr.result == 'ok') {
                 menuDialog.modal('hide');
-                createInitCmsMessageBox(xhr.status, xhr.message);
+                InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                 if (lastTab) {
                     jQuery('a[href="' + lastTab + '"]').tab('show');
                 }
             }
         },
         error: function (xhr, textStatus, errorThrown) {
-            createInitCmsMessageBox('error', xhr.responseText);
+            InitCms.createInitCmsMessageBox('error', xhr.responseText);
             setUpSortTree();
             menuDialog.modal('hide');
         }
@@ -185,7 +185,7 @@ jQuery(function () {
             jQuery.post(
                 "{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}",
                 {"nodes": ret},
-                function (xhr) {createInitCmsMessageBox('success', xhr.message);}
+                function (xhr) {InitCms.createInitCmsMessageBox('success', xhr.message);}
             );
 
             return ret;

@@ -3,13 +3,13 @@ oneup_flysystem:
     adapters:
         default_adapter:
             local:
-                directory: '%kernel.cache_dir%/flysystem'
+                location: '%kernel.cache_dir%/flysystem'
         media:
             local:
-                directory: "%kernel.project_dir%/public/"
+                location: "%kernel.project_dir%/public/"
         cache:
             local:
-                directory: "%kernel.project_dir%/public/media/cache/"
+                location: "%kernel.project_dir%/public/media/cache/"
     filesystems:
         default_filesystem:
             adapter: default_adapter

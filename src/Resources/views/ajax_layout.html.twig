@@ -17,7 +17,7 @@ file that was distributed with this source code.
         {% for notice_level in ['success','error','info', 'warning'] %}
             {% set session_var = 'sonata_flash_' ~ notice_level %}
             {% for flash in app.session.flashbag.get(session_var) %}
-            createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+            InitCms.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
             {% endfor %}
         {% endfor %}
         </script>

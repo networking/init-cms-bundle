@@ -31,7 +31,7 @@
         var form = jQuery(this).closest('form');
 
         if (jQuery('[name^="idx[]"]:checked', form).length === 0 && jQuery('[name^="all_elements"]:checked', form).length === 0) {
-            createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
+            InitCms.createInitCmsMessageBox('info', '{{ 'flash_batch_empty'|trans([], 'NetworkingInitCmsBundle') }}');
             return;
         }
 
@@ -41,7 +41,7 @@
             dataType: 'json',
             success: function (xhr) {
                 if (xhr.result === 'ok') {
-                    createInitCmsMessageBox(xhr.status, xhr.message);
+                    InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                     $('.batch-actions').hide();
                     refreshList();
                 }
@@ -86,7 +86,7 @@
             success: function (xhr) {
                 if (xhr.result == 'ok') {
                     tagDialog.modal('hide');
-                    createInitCmsMessageBox(xhr.status, xhr.message);
+                    InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                     reloadSortTree(xhr.html);
                 }
             },
@@ -187,7 +187,7 @@
             "{{ tagAdmin.generateUrl('update_tree') }}",
             {"nodes": jQuery(e).nestedSortable('toArray')},
             function (xhr) {
-                createInitCmsMessageBox(xhr.status, xhr.message);
+                InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                 history.replaceState({time: jQuery.now() }, 'updated', '{{ admin.generateUrl('list', {'context': context}) }}&time='+jQuery.now());
             }
         );

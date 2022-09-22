@@ -22,7 +22,7 @@ file that was distributed with this source code.
 {% block sonata_wrapper %}
     <div class="row">
         <div id="login" class="connection modal">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="login-box-body">
                         {% block sonata_user_login_form %}
@@ -77,7 +77,6 @@ file that was distributed with this source code.
                                                    required="required"
                                                    type="text"
                                                    value="{{ last_username }}"/>
-                                            <span class="glyphicon glyphicon-user form-control-feedback"></span>
                                         </div>
 
                                         <div class="form-group has-feedback">
@@ -87,7 +86,6 @@ file that was distributed with this source code.
                                                    placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
                                                    required="required"
                                                    type="password"/>
-                                            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                                         </div>
 
                                         <div class="row">
@@ -103,11 +101,17 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <div class="col-xs-4">
-                                            <button type="submit"
-                                                    class="btn btn-primary btn-block btn-flat">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</button>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <button type="submit"
+                                                        class="btn btn-primary btn-block btn-flat">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</button>
+                                            </div>
                                         </div>
-                                        <a href="{{ reset_route }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col text-center">
+                                                <p><a href="{{ reset_route }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a></p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
 

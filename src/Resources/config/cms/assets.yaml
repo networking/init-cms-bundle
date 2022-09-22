@@ -2,5 +2,5 @@ framework:
     assets:
         packages:
             init_cms:
-                base_path: '/bundles/networkinginitcms/build'
-                json_manifest_path: "%kernel.project_dir%/public/bundles/networkinginitcms/build/manifest.json"
+                base_path: '/bundles/networkinginitcms'
+                json_manifest_path: "%kernel.project_dir%/public/bundles/networkinginitcms/manifest.json"

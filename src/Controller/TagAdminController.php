@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TagAdminController extends CRUDController
 {
@@ -199,7 +200,7 @@ class TagAdminController extends CRUDController
         /** @var Request $request */
         $nodes = $request->get('nodes') ? $request->get('nodes') : [];
 
-        $admin = $this->container->get('networking_init_cms.admin.tag');
+        $admin = $this->admin;
 
         $validator = $this->container->get('validator');
         try {
@@ -226,9 +227,9 @@ class TagAdminController extends CRUDController
                 $this->admin->update($tag);
             }
 
-            $response = ['status' => 'success', 'message' => $this->admin->trans('info.tag_sorted')];
+            $response = ['status' => 'success', 'message' => $this->trans('info.tag_sorted')];
         } catch (\Exception $e) {
-            $response = ['status' => 'error', 'message' => $this->admin->trans('info.tag_sorted_error')];
+            $response = ['status' => 'error', 'message' => $this->trans('info.tag_sorted_error')];
         }
 
         return $this->renderJson($response);
@@ -259,6 +260,7 @@ class TagAdminController extends CRUDController
     {
         return [
                 'sonata.media.admin.media' => MediaAdmin::class,
+                'validator' => ValidatorInterface::class,
             ] + parent::getSubscribedServices();
     }
 }

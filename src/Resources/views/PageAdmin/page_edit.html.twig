@@ -10,18 +10,9 @@ file that was distributed with this source code.
 #}
 {% extends base_template %}
  {% block meta_config %}
-     <meta data-sonata-admin='{{ {
-         config: {
-             CONFIRM_EXIT: false,
-             USE_SELECT2:sonata_config.getOption('use_select2'),
-             USE_ICHECK: false,
-             USE_STICKYFORMS: sonata_config.getOption('use_stickyforms'),
-         },
-         translations: {
-             CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle'),
-         },
-     }|json_encode()|raw }}'
-     >
+     <meta name="init-cms-setup"
+           data-init-cms-config='{{ {'DEBUG':sonata_config.getOption('js_debug'),'CONFIRM_EXIT': false}|json_encode()|raw }}'
+           data-init-cms-translations='{{ {CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle')}|json_encode()|raw }}'>
  {% endblock %}
 {% block title %}
     {% if admin.id(object) %}

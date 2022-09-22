@@ -7,9 +7,9 @@ module.exports = merge(commonConfig, {
     mode: 'development',
     devtool: 'inline-source-map',
     output: {
-        publicPath: '/bundles/networkinginitcms/build/',
+        publicPath: '/bundles/networkinginitcms',
         pathinfo: true,
-        path: path.resolve(__dirname, 'src/Resources/public/build/'),
+        path: path.resolve(__dirname, 'src/Resources/public/'),
         clean: true,
         filename: '[name].js',
     },

@@ -148,12 +148,12 @@ file that was distributed with this source code.
                             {# Disable fields with 'ajax_hidden' option set to true #}
                         {% else %}
                             {% set sortable = false %}
-                            {% if field_description.options.sortable is defined and field_description.options.sortable %}
+                            {% if field_description.option('sortable', false) %}
                                 {% set sortable             = true %}
                                 {% set sort_parameters      = admin.datagrid.sortparameters(field_description) %}
                                 {% set current              = admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] is defined
                                     and (admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] == field_description
-                                    or admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')].name == sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')]) %}
+                                or admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')].name == sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')]) %}
                                 {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
                                 {% set sort_by              = current ? admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')] : field_description.option(constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER'), sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')]) %}
                             {% endif %}
@@ -273,8 +273,8 @@ file that was distributed with this source code.
         </div>
     {% else %}
         <script type="text/javascript">
-            $(function () {
-                Admin.add_filters();
+            jQuery(function () {
+                InitCms.toggleFilters();
             });
         </script>
     {% endif %}
