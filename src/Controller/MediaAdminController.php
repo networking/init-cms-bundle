@@ -232,7 +232,7 @@ class MediaAdminController extends CRUDController
         $data = [
             'result' => 'ok',
             'status' => 'warning',
-            'message' => $this->admin->trans('tag_not_selected'),
+            'message' => $this->trans('tag_not_selected'),
         ];
 
         if ($tag !== null) {
@@ -258,7 +258,7 @@ class MediaAdminController extends CRUDController
             $data = [
                 'result' => 'ok',
                 'status' => $status,
-                'message' => $this->admin->trans($message, ['%tag%' => $tag->getPath()]), ];
+                'message' => $this->trans($message, ['%tag%' => $tag->getPath()]), ];
         }
 
         return $this->renderJson($data);

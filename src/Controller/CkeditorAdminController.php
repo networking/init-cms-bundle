@@ -111,7 +111,7 @@ class CkeditorAdminController extends CRUDController
         $provider = $request->get('provider');
         $file = $request->files->get('upload');
 
-	    $message = $this->admin->trans(
+	    $message = $this->trans(
 		    'The file is not readable.',[], 'validators'
 	    );
 	    $response = ['uploaded' => 0, 'error'  => ['message' =>  $message]];
@@ -186,7 +186,7 @@ class CkeditorAdminController extends CRUDController
 
 	        $response = ['uploaded' => 0, 'error'  => ['message' =>  $file->getError()]];
         } else {
-            $message = $this->admin->trans(
+            $message = $this->trans(
                 'error.file_upload_size',
                 ['%max_server_size%' => ini_get('upload_max_filesize')], 'media'
             );
