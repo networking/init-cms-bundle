@@ -24,7 +24,7 @@
         "oneup/flysystem-bundle": "^4.0",
         "oneup/uploader-bundle": "^4.0",
         "mopa/bootstrap-bundle": "^3.4",
-        "sensio/framework-extra-bundle": "^5.1",
+        "sensio/framework-extra-bundle": "^6.1",
         "sonata-project/admin-bundle": "^4.17.0",
         "sonata-project/doctrine-orm-admin-bundle": "^4.7",
         "sonata-project/media-bundle": "^4.5",
