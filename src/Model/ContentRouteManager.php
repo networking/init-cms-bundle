@@ -32,6 +32,10 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
      */
     protected $class;
 
+    protected $allowLocaleCookie;
+    
+    protected $singleLanauge;
+
     /**
      * {@inheritdoc}
      */

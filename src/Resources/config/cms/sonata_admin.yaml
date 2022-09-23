@@ -1,7 +1,6 @@
 sonata_admin:
     persist_filters: true
     options:
-        use_select2: false
         pager_links: 10
     security:
         handler: sonata.admin.security.handler.acl

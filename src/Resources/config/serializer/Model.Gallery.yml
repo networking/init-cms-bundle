@@ -13,4 +13,4 @@ Sonata\MediaBundle\Model\Gallery:
       defaultFormat:
           type: string
       galleryItems:
-          type: ArrayCollection<Networking\InitCmsBundle\Entity\GalleryItems>
+          type: ArrayCollection<Networking\InitCmsBundle\Entity\GalleryItem>

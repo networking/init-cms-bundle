@@ -156,7 +156,7 @@ sonata_media:
     class:
         media:              Networking\InitCmsBundle\Entity\Media
         gallery:            Networking\InitCmsBundle\Entity\Gallery
-        gallery_has_media:  Networking\InitCmsBundle\Entity\GalleryHasMedia
+        gallery_has_media:  Networking\InitCmsBundle\Entity\GalleryItems
     default_context: default
     db_driver: doctrine_orm # or doctrine_mongodb
     contexts:

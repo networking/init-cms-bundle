@@ -1,10 +1,10 @@
 {% macro lightbox(gallery, relName, largeFormat, thumbFormat, shownName ) %}
     <section data-featherlight-gallery  data-featherlight-filter="a[rel='{{ relName|default('featherlight') }}[{{ gallery.name }}]']" >
-        {% for galleryMedia in gallery.galleryHasMedias %}
+        {% for galleryMedia in gallery.galleryItems %}
 
                 <a href="{{ sonata_path(galleryMedia.media, (largeFormat|default(gallery.defaultFormat)))  }}" class="thumbnail"
                        rel="{{ relName|default('featherlight') }}[{{ gallery.name }}]">
-                        {% thumbnail galleryMedia.media, thumbFormat|default(gallery.defaultFormat) %}
+                        {{ sonata_thumbnail(galleryMedia.media, thumbFormat|default(gallery.defaultFormat)) }}
                     </a>
                     {% if  galleryMedia.media.name is defined and shownName|default(false) %}
                         <h5>{{ galleryMedia.media.name }}</h5>
@@ -20,16 +20,16 @@
     <div id="{{ id|default('carousel') }}" class="carousel {{ transition|default('slide') }}"
          style="height: {{ height|default('100%') }}">
         <ol class="carousel-indicators">
-            {% for galleryMedia in gallery.galleryHasMedias %}
+            {% for galleryMedia in gallery.galleryItems %}
                 <li data-target="#{{ id|default('carousel') }}" data-slide-to="{{ loop.index -1 }}"
                     {% if loop.first %}class="active"{% endif %}></li>
             {% endfor %}
         </ol>
         <!-- Carousel items -->
         <div class="carousel-inner">
-            {% for galleryMedia in gallery.galleryHasMedias %}
+            {% for galleryMedia in gallery.galleryItems %}
                 <div class="{% if loop.first %}active {% endif %}item">
-                    {% media galleryMedia.media, format|default(gallery.defaultFormat) with { 'style': 'max-height:' ~ height|default('auto')} %}
+                    {{ sonata_media( galleryMedia.media, format|default(gallery.defaultFormat), { 'style': 'max-height:' ~ height|default('auto')}) }}
                     {% if galleryMedia.media.getDescription %}
                         <div class="carousel-caption">
                             <p>{{ galleryMedia.media.getDescription }}</p>
@@ -48,10 +48,10 @@
     <div>
         <h4>Lightbox</h4>
         <ul class="thumbnails">
-            {% for galleryMedia in gallery.galleryHasMedias %}
+            {% for galleryMedia in gallery.galleryItems %}
                 <li>
                     <div class="thumbnail">
-                        {% media galleryMedia.media, 'admin' %}
+                        {{ sonata_media(galleryMedia.media, 'admin') }}
                     </div>
                 </li>
             {% endfor %}
@@ -64,7 +64,7 @@
         <h4>Carousel</h4>
 
         <div class="thumbnail">
-            {% media gallery.galleryHasMedias[0].media, 'admin' %}
+            {{ sonata_media(gallery.galleryItems[0].media, 'admin') }}
         </div>
     </div>
 {% endmacro %}
@@ -72,10 +72,10 @@
     <div>
         <h4>List</h4>
         <ul class="thumbnails">
-            {% for galleryMedia in gallery.galleryHasMedias %}
+            {% for galleryMedia in gallery.galleryItems %}
                 <li>
                     <div class="thumbnail">
-                        {% media galleryMedia.media, 'admin' %}
+                        {{ sonata_media(galleryMedia.media, 'admin') }}
                     </div>
                 </li>
             {% endfor %}

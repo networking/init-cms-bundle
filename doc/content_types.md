@@ -59,7 +59,7 @@ The first key is ***content*** which can contain what ever you like (honestly). 
 ```
 public function getAdminContent()
 {
-    $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryHasMedias() : array();
+    $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryitems() : array();
 
     return array(
         'content' => array('mediaItems' => $mediaItems),

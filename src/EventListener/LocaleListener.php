@@ -85,13 +85,15 @@ class LocaleListener
 
         if(false === getenv('ALLOW_LOCALE_COOKIE')){
 	        $env['ALLOW_LOCALE_COOKIE'] = $this->allowLocaleCookie;
+            putenv(sprintf('ALLOW_LOCALE_COOKIE=%s', $this->allowLocaleCookie) );
         }
 
 	    if(false === getenv('SINGLE_LANGUAGE')){
 		    $env['SINGLE_LANGUAGE'] = $this->singleLanguage;
+            putenv(sprintf('SINGLE_LANGUAGE=%s', $this->singleLanguage) );
 	    }
 	    if(count($env)){
-		    (new Dotenv())->populate($env);
+		    (new Dotenv())->populate($env, true);
 	    }
     }
 

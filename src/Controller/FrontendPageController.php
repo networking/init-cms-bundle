@@ -120,12 +120,16 @@ class FrontendPageController extends AbstractController
         return false;
     }
 
+    public function indexAction(Request $request){
+        return $this->index($request);
+    }
+
     /**
      * @param Request $request
      * @return array|bool|mixed|string|RedirectResponse|Response|null
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function indexAction(Request $request)
+    public function index(Request $request)
     {
         /** @var PageSnapshotInterface $page */
         $page = $request->get('_content');
@@ -396,9 +400,12 @@ class FrontendPageController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function viewDraftAction(Request $request, $locale, $path = null)
+    public function viewDraftAction(Request $request, $locale = null, $path = null)
     {
-        $request->setLocale($locale);
+
+        if($locale){
+            $request->setLocale($locale);
+        }
 
         return $this->changeViewMode($request, PageInterface::STATUS_DRAFT, $path);
     }
@@ -412,9 +419,11 @@ class FrontendPageController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function viewLiveAction(Request $request, $locale, $path = null)
+    public function viewLiveAction(Request $request, $locale = null, $path = null)
     {
-        $request->setLocale($locale);
+        if($locale){
+            $request->setLocale($locale);
+        }
 
         return $this->changeViewMode($request, PageInterface::STATUS_PUBLISHED, $path);
     }

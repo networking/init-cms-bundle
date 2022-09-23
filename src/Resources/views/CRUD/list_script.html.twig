@@ -55,7 +55,7 @@
                 var container = jQuery(".sonata-ba-delete", listDialog);
                 var text = container.clone().children().remove().end().text();
                 var containerHtml = container.html();
-                var re = new RegExp(addSlashes(trim(text)));
+                var re = new RegExp(addSlashes(InitCms.trim(text)));
                 containerHtml = containerHtml.replace(re, '');
 
                 jQuery(".sonata-ba-delete").html(containerHtml);

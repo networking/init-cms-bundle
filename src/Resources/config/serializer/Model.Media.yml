@@ -40,7 +40,7 @@ Sonata\MediaBundle\Model\Media:
             type: string
         size:
             type: integer
-        galleryHasMedias:
+        galleryItems:
             exclude: true
         cdnFlushIdentifier:
             exclude: true

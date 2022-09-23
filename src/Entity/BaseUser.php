@@ -49,6 +49,20 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
 
     protected $gender;
 
+
+    protected $locale;
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale)
+    {
+        $this->locale = $locale;
+        return $this;
+    }
+
     /**
      * Hook on pre-persist operations.
      */
@@ -92,7 +106,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
      */
     public function getAdminSetting($key)
     {
-        if (array_key_exists($key, $this->adminSettings)) {
+        if (array_key_exists($key, $this->getAdminSettings())) {
             return $this->adminSettings[$key];
         }
 

@@ -373,7 +373,7 @@ class LayoutBlockController extends CRUDController
                 $this->admin->delete($layoutBlock);
             }
         }
-        $html = $this->getLayoutBlockFormWidget($pageId, $formFieldId, $uniqId, $code);
+        $html = $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code);
 
         return new JsonResponse(
             [

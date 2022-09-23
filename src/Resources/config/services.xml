@@ -7,6 +7,12 @@
 
         <defaults autowire="true" autoconfigure="true" public="false"/>
 
+        <prototype namespace="Networking\InitCmsBundle\Controller\"
+                   resource="../../Controller"
+                   exclude="../../Controller/OneUploader"
+                   public="true" autowire="true">
+            <tag name="controller.service_arguments"/>
+        </prototype>
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
         <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
 
@@ -14,12 +20,7 @@
             <argument key="$managedLocales">%lexik_translation.managed_locales%</argument>
         </service>
 
-        <prototype namespace="Networking\InitCmsBundle\Controller\"
-                   resource="../../Controller"
-                   exclude="../../Controller/OneUploader"
-                   public="true" autowire="true">
-            <tag name="controller.service_arguments"/>
-        </prototype>
+
 
         <service id="Networking\InitCmsBundle\Controller\AdminSecurityController" autowire="true" public="true">
             <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>

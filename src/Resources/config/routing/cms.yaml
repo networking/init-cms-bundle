@@ -45,16 +45,17 @@ networking_init_change_language:
     requirements:
         locale: .+
 
-networking_init_view_draft:
-    path: /view_draft/{locale}/{path}
-    defaults: {_controller: Networking\InitCmsBundle\Controller\FrontendPageController::viewDraftAction}
-    requirements:
-        locale: (.*)?
-        path: (.*)?
 
 networking_init_view_draft_no_param:
     path: /view_draft
     defaults: {_controller: Networking\InitCmsBundle\Controller\FrontendPageController::viewDraftAction}
+    
+networking_init_view_draft:
+    path: /view_draft/{locale}/{path}
+    defaults: {_controller: Networking\InitCmsBundle\Controller\FrontendPageController::viewDraftAction }
+    requirements:
+        locale: (.*)?
+        path: (.*)?
 
 networking_init_view_live:
     path: /view_live/{locale}/{path}

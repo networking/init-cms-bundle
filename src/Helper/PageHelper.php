@@ -516,11 +516,15 @@ class PageHelper
         $secure = $samesite ==='none'?true:$params['secure'];
 
         $cookies = [];
+        $expires = 0;
+        if($params['lifetime']){
+            $expires = time()+$params['lifetime'];
+        }
 
         $cookies[] = Cookie::create(
             '_locale',
             $locale,
-            time()+$params['lifetime'],
+            $expires,
             $params['path'],
             $params['domain'],
             $secure,
@@ -534,7 +538,7 @@ class PageHelper
             $cookies[] = Cookie::create(
                 '_locale_legacy',
                 $locale,
-                time()+$params['lifetime'],
+                $expires,
                 $params['path'],
                 $params['domain'],
                 $secure,
