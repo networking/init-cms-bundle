@@ -192,8 +192,8 @@
                 <source>menu.admin_menu_label</source>
                 <target>Menüs</target>
             </trans-unit>
-            <trans-unit id="menus.title">
-                <source>menus.title</source>
+            <trans-unit id="menus">
+                <source>menus</source>
                 <target>Menüs</target>
             </trans-unit>
             <trans-unit id="placement_title">
@@ -215,6 +215,10 @@
             <trans-unit id="action_page_edit">
                 <source>action_page_edit</source>
                 <target>Seite bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_menu_item_list">
+                <source>breadcrumb.link_menu_item_list</source>
+                <target><![CDATA[<small>Organisieren Sie Ihre</small> Menüs]]></target>
             </trans-unit>
         </body>
     </file>

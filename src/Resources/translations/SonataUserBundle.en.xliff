@@ -10,6 +10,34 @@
                 <source>form.label_groups</source>
                 <target>Groups</target>
             </trans-unit>
+            <trans-unit id="groups">
+                <source>groups</source>
+                <target>User Groups</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_group_list">
+                <source>breadcrumb.link_group_list</source>
+                <target>User Groups</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Add new</target>
+            </trans-unit>
+            <trans-unit id="title_edit">
+                <source>title_edit</source>
+                <target>%admin_label% Edit</target>
+            </trans-unit>
+            <trans-unit id="ROLE_ALLOWED_TO_SWITCH">
+                <source>ROLE_ALLOWED_TO_SWITCH</source>
+                <target>Impersonate users</target>
+            </trans-unit>
+            <trans-unit id="ROLE_ADMIN">
+                <source>ROLE_ADMIN</source>
+                <target>Admin role</target>
+            </trans-unit>
+            <trans-unit id="ROLE_SONATA_ADMIN">
+                <source>ROLE_SONATA_ADMIN</source>
+                <target>Admin role</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

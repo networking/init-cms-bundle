@@ -34,8 +34,8 @@
                 <source>breadcrumb.link_tag_delete</source>
                 <target>Diesen Tag löschen</target>
             </trans-unit>
-            <trans-unit id="tags.title">
-                <source>tags.title</source>
+            <trans-unit id="tags">
+                <source>tags</source>
                 <target>Medien-Tags</target>
             </trans-unit>
             <trans-unit id="action._publish">

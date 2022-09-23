@@ -46,6 +46,50 @@
                 <source>Select</source>
                 <target>Select</target>
             </trans-unit>
+            <trans-unit id="users">
+                <source>users</source>
+                <target>Users</target>
+            </trans-unit>
+            <trans-unit id="media">
+                <source>media</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="gallery">
+                <source>gallery</source>
+                <target>Gallery</target>
+            </trans-unit>
+            <trans-unit id="gallery_item">
+                <source>gallery_item</source>
+                <target>Gallery item</target>
+            </trans-unit>
+            <trans-unit id="pages">
+                <source>pages</source>
+                <target>Pages</target>
+            </trans-unit>
+            <trans-unit id="menus">
+                <source>menus</source>
+                <target>Menus</target>
+            </trans-unit>
+            <trans-unit id="content">
+                <source>content</source>
+                <target>Content elements</target>
+            </trans-unit>
+            <trans-unit id="help_text">
+                <source>help_text</source>
+                <target>Help texts</target>
+            </trans-unit>
+            <trans-unit id="tags">
+                <source>tags</source>
+                <target>Media tags</target>
+            </trans-unit>
+            <trans-unit id="translation">
+                <source>translation</source>
+                <target>Translation</target>
+            </trans-unit>
+            <trans-unit id="groups">
+                <source>groups</source>
+                <target>User groups</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

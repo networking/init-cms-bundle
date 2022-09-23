@@ -973,7 +973,7 @@
 
                 <p>Zu jedem Modul k&ouml;nnen spezifische Rechte vergeben werden. Die Art und Anzahl Module basiert auf der Funktionalit&auml;t Ihrer individuellen Webseite. Dabei werden sowohl Standard-Module wie Seiten oder Menu wie auch (evt.) individuell f&uuml;r Ihre Applikation programmierte Module aufgelistet.</p>
 
-                <p>Eine &quot;Benutzerrolle&quot; erm&ouml;glicht es einem Benutzer, eine spezifische Aktion auszuf&uuml;hren. So kann sich zum Beispiel ein Benutzer, der die Benutzerrolle &quot;ROLE_ADMIN&quot; (Admin-Benutzerrolle) hat, f&uuml;r das Backend der Anwendung anmelden, w&auml;hrend es einem Benutzer mit der Benutzerrolle &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot; gestattet ist, Seiten zu erstellen und seine/ihre eigenen Seiten zu l&ouml;schen.</p>
+                <p>Eine &quot;Benutzerrolle&quot; erm&ouml;glicht es einem Benutzer, eine spezifische Aktion auszuf&uuml;hren. So kann sich zum Beispiel ein Benutzer, der die Benutzerrolle &quot;ROLE_SONATA_ADMIN&quot; (Admin-Benutzerrolle) hat, f&uuml;r das Backend der Anwendung anmelden, w&auml;hrend es einem Benutzer mit der Benutzerrolle &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot; gestattet ist, Seiten zu erstellen und seine/ihre eigenen Seiten zu l&ouml;schen.</p>
 
                 <p>Die M&ouml;glichkeit, benutzergruppenspezifische Rollen zuzuweisen, vereinfacht die Zuweisung eines Benutzers zu den richtigen Benutzergruppen; mit anderen Worten, es muss nicht jede einzelne Rolle jedem einzelnen Benutzer zugewiesen werden. Entsprechend gilt auch: Wenn sich eine Benutzerrolle &auml;ndern sollte, betrifft diese &Auml;nderung alle Benutzer, die zur gleichen Benutzergruppe geh&ouml;ren.</p>
 
@@ -1105,8 +1105,8 @@
                 <source>help_text.admin_menu_label</source>
                 <target>Hilfetexte</target>
             </trans-unit>
-            <trans-unit id="help_text.title">
-                <source>help_text.title</source>
+            <trans-unit id="help_text">
+                <source>help_text</source>
                 <target>Hilfetexte</target>
             </trans-unit>
             <trans-unit id="help_text.label">

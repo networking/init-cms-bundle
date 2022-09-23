@@ -190,6 +190,10 @@
                 <source>menu.admin_menu_label</source>
                 <target>Menu's</target>
             </trans-unit>
+            <trans-unit id="breadcrumb.link_menu_item_list">
+                <source>breadcrumb.link_menu_item_list</source>
+                <target><![CDATA[<small>Beheer uw</small>]]> menu's</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

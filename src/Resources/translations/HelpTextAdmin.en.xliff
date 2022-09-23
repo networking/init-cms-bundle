@@ -907,7 +907,7 @@
                 <target><![CDATA[
                      <p>The user groups provide a way of maintaining user &quot;roles&quot; (permissions). As mentioned in the user overview, a user may belong to one or many user groups.</p>
 
-                     <p>A &quot;role&quot; allows a user to carry out a specific action, for example, a user that has the role &quot;ROLE_ADMIN&quot; can log into the back end of the application, a user that has the role &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot;, is allowed to create pages, and delete his/her own pages&quot;.</p>
+                     <p>A &quot;role&quot; allows a user to carry out a specific action, for example, a user that has the role &quot;ROLE_SONATA_ADMIN&quot; can log into the back end of the application, a user that has the role &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot;, is allowed to create pages, and delete his/her own pages&quot;.</p>
 
                      <p>By assigning a user group specific roles, you need only care later about assigning a user the correct user groups, rather than assigning single roles to each and every user. Also if a role should change, one change in the user group will affect all users who belong to that group.</p>
 
@@ -961,7 +961,7 @@
                 	<li>this means the user owning the object is always allowed to DELETE the object, even when it only has the staff role.</li>
                 </ul>
 
-                <p>In order for a user to be able to use the backend you will need to assign the role &#39;ROLE_ADMIN&#39;</p>
+                <p>In order for a user to be able to use the backend you will need to assign the role &#39;ROLE_SONATA_ADMIN&#39;</p>
 
                 <p>The role &#39;ROLE_ALLOWED_TO_SWITCH&#39; allows the user, if they have access to the user admin area, to impersonate another user to see what they would see.</p>
 
@@ -1009,7 +1009,7 @@
                 	<li>this means the user owning the object is always allowed to DELETE the object, even when it only has the staff role.</li>
                 </ul>
 
-                <p>In order for a user to be able to use the backend you will need to assign the role &#39;ROLE_ADMIN&#39;</p>
+                <p>In order for a user to be able to use the backend you will need to assign the role &#39;ROLE_SONATA_ADMIN&#39;</p>
 
                 <p>The role &#39;ROLE_ALLOWED_TO_SWITCH&#39; allows the user, if they have access to the user admin area, to impersonate another user to see what they would see.</p>
 
@@ -1040,8 +1040,8 @@
                 <source>help_text.admin_menu_label</source>
                 <target>Help Texts</target>
             </trans-unit>
-            <trans-unit id="help_text.title">
-                <source>help_text.title</source>
+            <trans-unit id="help_text">
+                <source>help_text</source>
                 <target>Help Texts</target>
             </trans-unit>
             <trans-unit id="help_text.label">
@@ -1055,6 +1055,10 @@
             <trans-unit id="action._delete">
                 <source>action._delete</source>
                 <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
+                <target>Create help text</target>
             </trans-unit>
         </body>
     </file>

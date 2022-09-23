@@ -113,7 +113,7 @@ class LocaleListener
 
         $patterns = $this->accessMap->getPatterns($request);
         //@todo find a better solution to know if we are in the admin area or not
-        $localeType = (in_array('ROLE_ADMIN', $patterns[0])) ? 'admin/_locale' : '_locale';
+        $localeType = (in_array('ROLE_SONATA_ADMIN', $patterns[0])) ? 'admin/_locale' : '_locale';
         if ($localeType == 'admin/_locale') {
             $locale = $request->getSession()->get($localeType);
         } else {
@@ -191,7 +191,7 @@ class LocaleListener
         // If user language does not exist in frontend website, get next best
         $frontendLocale = $this->guessFrontendLocale($locale);
 
-        if (in_array('ROLE_ADMIN', $patterns[0])) {
+        if (in_array('ROLE_SONATA_ADMIN', $patterns[0])) {
             $request->setLocale($locale);
         } else {
             $request->setLocale($frontendLocale);

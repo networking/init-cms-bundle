@@ -597,8 +597,8 @@
                 <source>pages.label</source>
                 <target>Pages</target>
             </trans-unit>
-            <trans-unit id="pages.title">
-                <source>pages.title</source>
+            <trans-unit id="pages">
+                <source>pages</source>
                 <target>Pages</target>
             </trans-unit>
             <trans-unit id="pages.content_not_found">

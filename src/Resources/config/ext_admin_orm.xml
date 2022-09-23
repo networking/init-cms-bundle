@@ -46,7 +46,7 @@
                     <argument key="ajax">@NetworkingInitCms/ajax_layout.html.twig</argument>
                 </argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="media.title"
+            <tag name="sonata.admin" manager_type="orm" label="media"
                  label_catalogue="%sonata.media.admin.media.translation_domain%"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>

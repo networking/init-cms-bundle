@@ -116,7 +116,6 @@
             placeholder: 'placeholder',
             revert: 250,
             tabSize: 10,
-            toleranceElement: 'div.menu_item',
             isTree: true,
             forcePlaceholderSize: true,
             forceHelperSize: true,
@@ -148,7 +147,7 @@
                 updateTree(this)
             },
             stop: function(e, ui) {
-                var list = ui.item.context.parentElement;
+                var list = e.target;
                 sortList(list);
             },
             expand: function(){

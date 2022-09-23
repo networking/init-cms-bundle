@@ -78,6 +78,26 @@ file that was distributed with this source code.
 
 {% endblock form_label %}
 
+{% block sonata_roles_matrix_widget %}
+    {% apply spaceless %}
+        {{ renderMatrix(form)|raw }}
+        <ul class="list-unstyled">
+            {{ renderRolesList(form)|raw }}
+        </ul>
+    {% endapply %}
+{% endblock sonata_roles_matrix_widget %}
+
+{% block checkbox_widget %}
+    {% if 'sonata_roles_matrix' in form.parent.vars.block_prefixes %}
+        <div class="checkbox">
+            {{- form_label(form, null, { widget: parent() }) -}}
+        </div>
+    {% else %}
+    {{ parent() }}
+    {% endif %}
+{% endblock checkbox_widget %}
+
+
 {% block sonata_type_model_list_widget %}
     <div id="field_container_{{ id }}" class="field-container">
         <span id="field_widget_{{ id }}">

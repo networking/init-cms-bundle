@@ -19,11 +19,11 @@ file that was distributed with this source code.
     </div>
     <div class="pull-right text menu-item-link"><span class="info-soft">
         {% if node.page %}
-            {{ 'title.page'|trans({}, admin.translationDomain) }}:</span> <a class="show-tooltip"
+            <span>{{ 'title.page'|trans({}, admin.translationDomain) }}:</span> <a class="show-tooltip"
                                                                              data-original-title="{{ 'action_page_edit'|trans({}, admin.translationDomain) }}"
                                                                              href="{{ path(pageAdmin.getBaseRouteName() ~'_edit', {id: node.page.id}) }}">{{ node.page.pageName }}</a>
         {% elseif node.redirectUrl %}
-            {{ 'label_redirect_url'|trans({}, admin.translationDomain) }}:</span> <a target="_blank"
+            <span>{{ 'label_redirect_url'|trans({}, admin.translationDomain) }}:</span> <a target="_blank"
                                                                                      href="{{ node.redirectUrl }}">{{ node.redirectUrl }}</a>
         {% endif %}
     </div>

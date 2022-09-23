@@ -58,8 +58,8 @@
                 <source>breadcrumb.link_gallery_delete</source>
                 <target>Delete</target>
             </trans-unit>
-            <trans-unit id="admin_label_media">
-                <source>admin_label_media</source>
+            <trans-unit id="media">
+                <source>media</source>
                 <target>Media</target>
             </trans-unit>
             <trans-unit id="admin_label_gallery">

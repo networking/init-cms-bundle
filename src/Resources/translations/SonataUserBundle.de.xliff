@@ -17,6 +17,10 @@
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
             </trans-unit>
+            <trans-unit id="groups">
+                <source>groups</source>
+                <target>Benutzername Gruppen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

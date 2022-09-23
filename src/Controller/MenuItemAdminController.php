@@ -234,7 +234,7 @@ class MenuItemAdminController extends CRUDController
         return $this->renderWithExtraParams(
             $this->admin->getTemplateRegistry()->getTemplate('list'),
             [
-                'action' => 'navigation',
+                'action' => 'list',
                 'form' => $formView,
                 'datagrid' => $datagrid,
                 'menus' => $menus,

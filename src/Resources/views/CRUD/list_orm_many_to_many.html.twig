@@ -32,7 +32,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {%- block relation_link -%}
-    <a href="{{ field_description.associationadmin.generateObjectUrl(route_name, element, field_description.options.route.parameters) }}">
+    <a href="{{ field_description.associationadmin.generateObjectUrl(route_name, element) }}">
         {{- element|render_relation_element(field_description) -}}
     </a>
 {%- endblock -%}

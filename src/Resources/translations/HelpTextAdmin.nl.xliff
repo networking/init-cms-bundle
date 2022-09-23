@@ -538,7 +538,7 @@
                 <target><![CDATA[
                      <p>De gebruikersgroepen bieden de mogelijkheid om &quot;rollen&quot; (rechten) te beheren. Zoals genoemd in het gebruikersoverzicht kan een gebruiker tot één of meer groepen beheren.</p>
 
-                     <p>Een &quot;rol&quot; staat een gebruiker toe om bepaalde handelingen te mogen verrichten. Een gebruiker die bijvoorbeeld de rol &quot;ROLE_ADMIN&quot; heeft, mag inloggen in het CMS van uw website en een gebruiker met de rol &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot; mag pagina's aanmaken en zijn/haar eigen pagina's wijzigen en verwijderen.</p>
+                     <p>Een &quot;rol&quot; staat een gebruiker toe om bepaalde handelingen te mogen verrichten. Een gebruiker die bijvoorbeeld de rol &quot;ROLE_SONATA_ADMIN&quot; heeft, mag inloggen in het CMS van uw website en een gebruiker met de rol &quot;ROLE_NETWORKING_INIT_CMS_PAGE_ADMIN_PAGE_EDITOR&quot; mag pagina's aanmaken en zijn/haar eigen pagina's wijzigen en verwijderen.</p>
 
                      <p>Door een gebruikersgroep specifieke rollen toe te kennen behoeft u later alleen de juiste gebruikers in de juiste groepen te plaatsen, in plaats van alle afzonderlijke rollen toe te kennen aan elke gebruiker. Ook is het zo dat als u een rol wilt wijzigen, zal één wijziging in de gebruikersgroep invloed hebben op alle gebruikers binnen die groep.</p>
 
@@ -579,8 +579,8 @@
                 <source>help_text.admin_menu_label</source>
                 <target>Help Texts</target>
             </trans-unit>
-            <trans-unit id="help_text.title">
-                <source>help_text.title</source>
+            <trans-unit id="help_text">
+                <source>help_text</source>
                 <target>Help Texts</target>
             </trans-unit>
         </body>

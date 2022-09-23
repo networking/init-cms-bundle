@@ -50,8 +50,8 @@
                 <source>translation.domain.all_choices</source>
                 <target>All areas</target>
             </trans-unit>
-            <trans-unit id="translation.title">
-                <source>translation.title</source>
+            <trans-unit id="translation">
+                <source>translation</source>
                 <target>Translations</target>
             </trans-unit>
             <trans-unit id="translation.admin_menu_label">

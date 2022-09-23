@@ -102,9 +102,6 @@ abstract class GroupAdmin extends BaseAdmin
                     'excluded_roles' => [
                         UserInterface::ROLE_DEFAULT,
                         UserInterface::ROLE_SUPER_ADMIN,
-                        'ROLE_ALLOWED_TO_SWITCH',
-                        'ROLE_SONATA_ADMIN',
-                        'ROLE_ADMIN'
                     ]
                 ]
             );

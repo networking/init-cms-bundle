@@ -1,7 +1,7 @@
 {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
 
-<script src="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/index.min.js') }}"></script>
-<script src="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/scroll-behaviour.min.js') }}"></script>
+<script src="{{ asset('vendor/ios-html5-drag-drop-shim/release/index.min.js', 'init_cms') }}"></script>
+<script src="{{ asset('vendor/ios-html5-drag-drop-shim/release/scroll-behaviour.min.js', 'init_cms') }}"></script>
 <script>
 
     MobileDragDrop.polyfill({

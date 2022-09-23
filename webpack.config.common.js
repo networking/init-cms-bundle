@@ -23,7 +23,7 @@ module.exports = {
         networking_initcms: [
             './assets/vendor/select2/css/select2.min.css',
             './assets/vendor/select2/css/select2-bootstrap.min.css',
-            './assets/vendor/jqueryui/themes/base/jquery-ui.css',
+            './assets/vendor/jquery-ui-1.12.1/jquery-ui.css',
             './assets/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
             './assets/scss/initcms_bootstrap.scss',
             './assets/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
@@ -97,6 +97,14 @@ module.exports = {
                         to: './js/pdf-viewer.js',
                     },
                     {
+                        from: './assets/js/sandbox.js',
+                        to: './js/sandbox.js',
+                    },
+                    {
+                        from: './assets/css/sandbox.css',
+                        to: './css/sandbox.css',
+                    },
+                    {
                         from: './assets/vendor/featherlight/src/featherlight.css',
                         to: './vendor/featherlight/src/featherlight.css',
                     },
@@ -147,7 +155,7 @@ module.exports = {
                 {
                     dest: './src/Resources/public/jquery-plugins.js',
                     src: [
-                        './assets/vendor/jqueryui/jquery-ui.min.js',
+                        './assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js',
                         './assets/vendor/jquery-form/jquery.form.js',
                     ],
                     transforms: {

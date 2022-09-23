@@ -1,0 +1,4 @@
+/*! X-editable - v1.5.3 
+* In-place editing with Twitter Bootstrap, jQuery UI or pure jQuery
+* http://github.com/vitalets/x-editable
+* Copyright (c) 2015 - 2016 Vitaliy Potapov; Licensed MIT */

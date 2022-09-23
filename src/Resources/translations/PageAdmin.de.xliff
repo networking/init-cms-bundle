@@ -630,8 +630,8 @@
                 <source>pages.admin_menu_label</source>
                 <target>Seiten</target>
             </trans-unit>
-            <trans-unit id="pages.title">
-                <source>pages.title</source>
+            <trans-unit id="pages">
+                <source>pages</source>
                 <target>Seiten</target>
             </trans-unit>
             <trans-unit id="pages.content_not_found">
@@ -694,8 +694,8 @@
                 <source>flash_unlink_success</source>
                 <target>Verknüpfung entfernt</target>
             </trans-unit>
-            <trans-unit id="content.title">
-                <source>content.title</source>
+            <trans-unit id="content">
+                <source>content</source>
                 <target>Inhaltselement</target>
             </trans-unit>
         </body>
