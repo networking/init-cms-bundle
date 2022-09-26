@@ -129,6 +129,10 @@ module.exports = {
                         to: './vendor/nestedSortable/',
                     },
                     {
+                        from: './assets/vendor/icheck/',
+                        to: './vendor/icheck/',
+                    },
+                    {
                         from: './assets/vendor/dropzone/dropzone.js',
                         to: './vendor/dropzone/dropzone.js',
                     },

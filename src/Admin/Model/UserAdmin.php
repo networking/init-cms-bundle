@@ -39,11 +39,6 @@ abstract class UserAdmin extends BaseUserAdmin
     protected $baseRoutePattern = 'cms/users';
 
     /**
-     * @var string
-     */
-    protected $baseRouteName = 'admin_networking_initcms_user';
-
-    /**
      * @var array
      */
     protected $trackedActions = ['list'];
@@ -63,6 +58,11 @@ abstract class UserAdmin extends BaseUserAdmin
      */
     private $googleAuthenticatorHelper;
 
+
+    protected function generateBaseRouteName(bool $isChildAdmin = false): string
+    {
+        return 'admin_networking_initcms_user';
+    }
 
     /**
      * @param TokenStorageInterface $container

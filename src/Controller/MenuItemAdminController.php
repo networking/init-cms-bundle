@@ -334,11 +334,11 @@ class MenuItemAdminController extends CRUDController
                             'result' => 'ok',
                             'objectId' => $this->admin->getNormalizedIdentifier($object),
                             'status' => 'success',
-                            'message' => $this->container->get('translator')->trans('flash_delete_success', [], 'NetworkingInitCmsBundle'),
+                            'message' => $this->trans('flash_delete_success', [], 'NetworkingInitCmsBundle'),
                         ]
                     );
                 } else {
-                    $this->addFlash('sonata_flash_success', $this->container->get('translator')->trans('flash_delete_success', [], 'NetworkingInitCmsBundle'));
+                    $this->addFlash('sonata_flash_success', $this->trans('flash_delete_success', [], 'NetworkingInitCmsBundle'));
                 }
             } catch (ModelManagerException $e) {
                 if ($this->isXmlHttpRequest($request)) {
@@ -347,11 +347,11 @@ class MenuItemAdminController extends CRUDController
                             'result' => 'ok',
                             'objectId' => $this->admin->getNormalizedIdentifier($object),
                             'status' => 'error',
-                            'message' => $this->container->get('translator')->trans($e->getMessage(), [], $this->admin->getTranslationDomain()),
+                            'message' => $this->trans($e->getMessage(), [], $this->admin->getTranslationDomain()),
                         ]
                     );
                 } else {
-                    $this->addFlash('sonata_flash_error', $this->container->get('translator')->trans('flash_delete_error', [], 'NetworkingInitCmsBundle'));
+                    $this->addFlash('sonata_flash_error', $this->trans('flash_delete_error', [], 'NetworkingInitCmsBundle'));
                 }
             }
 
@@ -450,9 +450,9 @@ class MenuItemAdminController extends CRUDController
                 $this->admin->update($menuItem);
             }
 
-            $response = ['status' => 'ok', 'message' => $this->container->get('translator')->trans('info.menu_sorted')];
+            $response = ['status' => 'ok', 'message' => $this->trans('info.menu_sorted')];
         } catch (\Exception $e) {
-            $response = ['status' => 'error', 'message' => $this->container->get('translator')->trans('info.menu_sorted_error')];
+            $response = ['status' => 'error', 'message' => $this->trans('info.menu_sorted_error')];
         }
 
         return $response;
@@ -486,7 +486,7 @@ class MenuItemAdminController extends CRUDController
             }
 
             if ($message) {
-                $data['message'] = $this->container->get('translator')->trans($message);
+                $data['message'] = $this->trans($message);
             }
         }
 

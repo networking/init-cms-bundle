@@ -126,7 +126,7 @@ class PageAutocompleteType extends EntityType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'networking_type_page_autocomplete';
     }

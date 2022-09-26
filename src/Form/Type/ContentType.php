@@ -115,7 +115,7 @@ class ContentType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'networking_type_content_block';
     }

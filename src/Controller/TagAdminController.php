@@ -100,7 +100,7 @@ class TagAdminController extends CRUDController
 
                 $this->addFlash(
                     'sonata_flash_success',
-                    $translator->trans(
+                    $this->trans(
                         'flash_delete_success',
                         ['%name%' => $this->escapeHtml($this->admin->toString($object))],
                         'SonataAdminBundle'
@@ -122,7 +122,7 @@ class TagAdminController extends CRUDController
 
                 $this->addFlash(
                     'sonata_flash_error',
-                    $translator->trans(
+                    $this->trans(
                         'flash_delete_error',
                         ['%name%' => $this->escapeHtml($this->admin->toString($object))],
                         'SonataAdminBundle'

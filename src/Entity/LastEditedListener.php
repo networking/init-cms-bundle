@@ -66,6 +66,6 @@ class LastEditedListener extends ModelLastEditedListener
             $name = 'Page';
         }
         
-        $this->session->set($name.'.last_edited', $entity->getId());
+        $this->requestStack->getSession()->set($name.'.last_edited', $entity->getId());
     }
 }

@@ -61,10 +61,6 @@ abstract class PageAdmin extends BaseAdmin
      */
     protected $baseRoutePattern = 'cms/pages';
 
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'admin_networking_initcms_page';
 
     /**
      * @var string
@@ -95,6 +91,12 @@ abstract class PageAdmin extends BaseAdmin
         '_sort_order' => 'ASC',
         '_sort_by' => 'path',
     ];
+
+
+    protected function generateBaseRouteName(bool $isChildAdmin = false): string
+    {
+        return 'admin_networking_initcms_page';
+    }
 
     /**
      * @return string

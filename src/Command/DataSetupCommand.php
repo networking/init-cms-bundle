@@ -71,7 +71,7 @@ class DataSetupCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('drop')) {
             $this->dropSchema($output);
@@ -88,6 +88,8 @@ class DataSetupCommand extends Command
             $this->loadFixtures($output);
             $this->publishPages($output);
         }
+
+        return 0;
     }
 
     /**

@@ -129,6 +129,11 @@ class SimpleStringFilter extends Filter
         ];
     }
 
+    public function getFormOptions(): array
+    {
+        return [];
+    }
+
 
     /**
      * @param string $type

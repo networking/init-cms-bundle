@@ -37,6 +37,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 /**
  * Class MediaAdminController.
  *
@@ -195,8 +197,9 @@ class MediaAdminController extends CRUDController
         $request = $this->container->get('request_stack')->getCurrentRequest();
         if ($request->getMethod() == 'DELETE') {
             try {
+                $name = $object->__toString();
                 $this->admin->delete($object);
-                $this->addFlash('sonata_flash_success', $this->trans('flash_delete_success', [], 'SonataAdminBundle'));
+                $this->addFlash('sonata_flash_success', $this->trans('flash_delete_success', ['%name%' => $name], 'SonataAdminBundle'));
             } catch (ModelManagerException $e) {
                 $this->addFlash('sonata_flash_error', $this->trans('flash_delete_error', [], 'SonataAdminBundle'));
             }
@@ -207,7 +210,7 @@ class MediaAdminController extends CRUDController
             ));
         }
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             $this->admin->getTemplateRegistry()->getTemplate('delete'),
             [
                 'object' => $object,
@@ -479,7 +482,7 @@ class MediaAdminController extends CRUDController
 
 
         /** @var ImageProvider $provider */
-        $provider = $this->admin->getPool()->getProvider($baseMedia->getProviderName());
+        $provider = $this->container->get('sonata.media.pool')->getProvider($baseMedia->getProviderName());
 
 
         $image = $provider->getReferenceImage($baseMedia);
@@ -512,7 +515,7 @@ class MediaAdminController extends CRUDController
 
         $provider->transform($media);
 
-        $validator = $this->container->get('validator');
+        $validator = $this->container->get('validator.validator');
 
         $errors = $validator->validate($media);
 
@@ -556,6 +559,7 @@ class MediaAdminController extends CRUDController
     public static function getSubscribedServices(): array
     {
         return [
+                'validator.validator' => ValidatorInterface::class,
                 'networking_init_cms.admin.tag' => TagAdmin::class,
                 'sonata.media.pool' => Pool::class,
                 'sonata.media.manager.category' => '?'.CategoryManagerInterface::class,

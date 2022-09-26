@@ -47,10 +47,6 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     protected $baseRoutePattern = 'cms/menu';
 
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'admin_networking_initcms_menuitem';
 
     /**
      * The number of result to display in the list.
@@ -90,38 +86,10 @@ abstract class MenuItemAdmin extends BaseAdmin
 
     protected $formOptions = ['layout' => 'horizontal'];
 
-    public function alterNewInstance(object $object): void
+
+    protected function generateBaseRouteName(bool $isChildAdmin = false): string
     {
-        $request = $this->getRequest();
-
-        if (!$locale = $request->get('locale')) {
-            $locale = $request->getLocale();
-        }
-
-        $uniqId = $this->getUniqid();
-
-        $rootId = $request->query->get('root_id');
-
-        if ($postArray = $request->request->get($uniqId)) {
-            if (array_key_exists('locale', $postArray)) {
-                $locale = $postArray['locale'];
-            }
-
-            if(array_key_exists('root', $postArray)){
-                $rootId = $postArray['root'];
-            }
-
-        }
-
-        if ($rootId) {
-            $root = $this->getModelManager()->find($this->getClass(), $rootId);
-            $object
-                ->setMenu($root)
-                ->setRoot($root);
-            $locale = $root->getLocale();
-        }
-
-        $object->setLocale($locale);
+        return 'admin_networking_initcms_menuitem';
     }
 
 
@@ -181,6 +149,41 @@ abstract class MenuItemAdmin extends BaseAdmin
         );
     }
 
+
+    public function alterNewInstance(object $object): void
+    {
+        $request = $this->getRequest();
+
+        if (!$locale = $request->get('locale')) {
+            $locale = $request->getLocale();
+        }
+
+        $uniqId = $this->getUniqid();
+
+        $rootId = $request->query->get('root_id');
+
+        if ($postArray = $request->request->get($uniqId)) {
+            if (array_key_exists('locale', $postArray)) {
+                $locale = $postArray['locale'];
+            }
+
+            if(array_key_exists('root', $postArray)){
+                $rootId = $postArray['root'];
+            }
+
+        }
+
+        if ($rootId) {
+            $root = $this->getModelManager()->find($this->getClass(), $rootId);
+            $object
+                ->setMenu($root)
+                ->setRoot($root);
+            $locale = $root->getLocale();
+        }
+
+        $object->setLocale($locale);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -220,6 +223,7 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->with(
                 'form.legend_page_or_url',
                 [
+                    'label' => 'form.legend_page_or_url',
                     'collapsed' => false,
                     'layout' => 'horizontal',
                 ]
@@ -275,6 +279,7 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->with(
                 'form.legend_options',
                 [
+                    'label' => 'form.legend_options',
                     'collapsed' => false,
                     'layout' => 'horizontal',
                 ]
@@ -313,14 +318,12 @@ abstract class MenuItemAdmin extends BaseAdmin
                 null,
                 ['layout' => 'horizontal', 'required' => false]
             )
-            ->end();
-
-
-        $formMapper->add(
-            'root',
+            ->add(
+            'menu',
             ModelHiddenType::class,
-            ['class' => $this->getClass()]
-        );
+                ['class' => $this->getClass()]
+            )
+            ->end();
 
     }
 

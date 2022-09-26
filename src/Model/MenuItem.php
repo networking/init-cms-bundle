@@ -399,9 +399,6 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
      */
     public function getRootParent(MenuItemInterface $menuItem)
     {
-        if (!$menuItem->getId()) {
-            return false;
-        }
 
         if ($parent = $menuItem->getParent()) {
             return $this->getRootParent($parent);

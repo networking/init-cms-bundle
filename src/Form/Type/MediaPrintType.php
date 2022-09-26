@@ -22,7 +22,7 @@ class MediaPrintType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'networking_type_mediaprint';
     }

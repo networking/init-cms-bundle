@@ -13,7 +13,7 @@ namespace Networking\InitCmsBundle\Model;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Networking\InitCmsBundle\Helper\BundleGuesser;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -21,9 +21,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 abstract class LastEditedListener implements EventSubscriberInterface
 {
     /**
-     * @var SessionInterface
+     * @var RequestStack
      */
-    protected $session;
+    protected $requestStack;
 
     /**
      * @var BundleGuesser
@@ -32,11 +32,11 @@ abstract class LastEditedListener implements EventSubscriberInterface
 
     /**
      * LastEditedListener constructor.
-     * @param SessionInterface $session
+     * @param RequestStack $requestStack
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->bundleGuesser = new BundleGuesser();
     }
 

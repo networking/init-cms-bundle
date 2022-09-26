@@ -63,7 +63,7 @@ class MediaPreviewType extends AbstractType
         $resolver->setRequired(['provider']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'networking_type_media_preview';
     }

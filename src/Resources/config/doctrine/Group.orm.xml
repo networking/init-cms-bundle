@@ -5,6 +5,6 @@
       <generator strategy="IDENTITY"/>
     </id>
     <field name="name" type="string" length="255" nullable="false"></field>
-    <field name="roles" type="array" nullable="false"></field>
+    <field name="roles" type="array" nullable="true"></field>
   </entity>
 </doctrine-mapping>

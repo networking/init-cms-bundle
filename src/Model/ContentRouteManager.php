@@ -55,7 +55,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
     /**
      * {@inheritdoc}
      */
-    public function getRouteByName($name)
+    public function getRouteByName($name): Route
     {
         throw new RouteNotFoundException("No route found for name '$name'");
     }
@@ -63,9 +63,9 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
     /**
      * {@inheritdoc}
      */
-    public function getRoutesByNames($names)
+    public function getRoutesByNames($names): array
     {
-        return new RouteCollection();
+        return [];
     }
 
     /**

@@ -76,7 +76,7 @@ class ContentRouteManager extends BaseContentRouteManager
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollectionForRequest(Request $request)
+    public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $url = $request->getPathInfo();
 

@@ -355,7 +355,7 @@ class AutocompleteType extends DoctrineType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'networking_type_autocomplete';
     }
