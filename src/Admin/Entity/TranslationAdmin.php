@@ -239,12 +239,7 @@ class TranslationAdmin extends BaseAdmin
         if ($this->hasRequest()) {
             /** @var InputBag|ParameterBag $bag */
             $bag = $this->getRequest()->query;
-            if ($bag instanceof InputBag) {
-                // symfony 5.1+
-                $filters = $bag->all('filter');
-            } else {
-                $filters = $bag->get('filter', []);
-            }
+            $filters = $bag->all('filter');
 
             if (isset($filters[DatagridInterface::PAGE])) {
                 $filters[DatagridInterface::PAGE] = (int) $filters[DatagridInterface::PAGE];

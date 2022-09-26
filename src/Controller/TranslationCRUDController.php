@@ -183,7 +183,7 @@ class TranslationCRUDController extends CRUDController
     /**
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function clearCacheAction()
+    public function clearCacheAction(Request $request)
     {
         $languages = $this->getManagedLocales();
 
@@ -196,7 +196,7 @@ class TranslationCRUDController extends CRUDController
         }
 
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
-        $session = $this->container->get('session');
+        $session = $request->getSession();
         $session->getFlashBag()->set('sonata_flash_success', 'translations.cache_removed');
 
         return $this->redirect($this->admin->generateUrl('list'));

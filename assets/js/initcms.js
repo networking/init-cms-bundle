@@ -138,6 +138,7 @@ const InitCms = {
         });
 
         this.toggleFilters()
+        this.setupEditibaleFields()
 
     },
     toggleFilters(subject) {
@@ -151,7 +152,27 @@ const InitCms = {
         $('[data-toggle="advanced-filter"]', subject).on('click', () => {
             $('.advanced-filter').toggle();
         });
+    },
+    setupEditibaleFields(subject){
+        jQuery('.x-editable', subject).editable({
+            emptyclass: 'editable-empty btn btn-sm btn-default',
+            emptytext: '<i class="fas fa-pencil-alt"></i>',
+            container: 'body',
+            placement: 'auto',
+            success(response) {
+                const html = jQuery(response);
+                InitCms.setupEditibaleFields(html);
+                jQuery(this).closest('td').replaceWith(html);
+            },
+            error: (xhr) => {
+                // On some error responses, we return JSON.
+                if (xhr.getResponseHeader('Content-Type') === 'application/json') {
+                    return JSON.parse(xhr.responseText);
+                }
 
+                return xhr.responseText;
+            },
+        });
     },
     confirmExit(formElement) {
         formElement.dataset.original = new URLSearchParams(new FormData(formElement)).toString()

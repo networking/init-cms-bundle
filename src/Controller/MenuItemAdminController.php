@@ -89,7 +89,7 @@ class MenuItemAdminController extends CRUDController
         if ($request->get('menu_id')) {
             $menuId = $request->get('menu_id');
             if ($menuId) {
-                $this->container->get('session')->set('MenuItem.last_edited', $menuId);
+                $request->getSession()->set('MenuItem.last_edited', $menuId);
             }
         }
 
@@ -177,7 +177,7 @@ class MenuItemAdminController extends CRUDController
                 if ($rootMenuId == $rootNode->getId()) {
                     $menus = [
                         'rootNode' => $rootNode,
-                        'navigation' => $this->createPlacementNavigation($rootNode, $admin, $controller),
+                        'navigation' => $this->createPlacementNavigation($request, $rootNode, $admin, $controller),
                     ];
                     break;
                 }
@@ -229,7 +229,7 @@ class MenuItemAdminController extends CRUDController
             );
         }
 
-        $lastEdited = $this->container->get('session')->get('MenuItem.last_edited');
+        $lastEdited = $request->getSession()->get('MenuItem.last_edited');
 
         return $this->renderWithExtraParams(
             $this->admin->getTemplateRegistry()->getTemplate('list'),
@@ -261,7 +261,7 @@ class MenuItemAdminController extends CRUDController
         if ($request->get('subclass') == 'menu item') {
             $this->isNewMenuItem = true;
             if ($request->get('root_id')) {
-                $this->container->get('session')->set('root_menu_id', $request->get('root_id'));
+                $request->getSession()->set('root_menu_id', $request->get('root_id'));
             }
         }
 
@@ -491,7 +491,7 @@ class MenuItemAdminController extends CRUDController
         }
 
         if (!array_key_exists('html', $data)) {
-            $response = $this->listAction($request, $this->container->get('session')->get('admin/last_page_id'));
+            $response = $this->listAction($request, $request->getSession()->get('admin/last_page_id'));
             $data['html'] = $response->getContent();
         }
 
@@ -508,14 +508,14 @@ class MenuItemAdminController extends CRUDController
     public function placementAction(Request $request)
     {
         /** @var \Networking\InitCmsBundle\Entity\MenuItem $rootNode */
-        $rootNode = $this->admin->getObject($this->container->get('session')->get('root_menu_id'));
+        $rootNode = $this->admin->getObject($request->getSession()->get('root_menu_id'));
 
         if (!$rootNode) {
             throw new NotFoundHttpException();
         }
 
         if ($rootNode->getChildren()->count() > 1) {
-            $reponse = $this->listAction($request, null, null, 'placement', $this->container->get('session')->get('root_menu_id'));
+            $reponse = $this->listAction($request, null, null, 'placement', $request->getSession()->get('root_menu_id'));
             return $reponse->getContent();
         } else {
             return false;
@@ -537,11 +537,11 @@ class MenuItemAdminController extends CRUDController
      *
      * @return mixed
      */
-    public function createPlacementNavigation($rootNode, $admin, $controller)
+    public function createPlacementNavigation(Request $request, $rootNode, $admin, $controller)
     {
 
 
-        $lastEdited = $this->container->get('session')->get('MenuItem.last_edited');
+        $lastEdited = $request->getSession()->get('MenuItem.last_edited');
 
         $menuItemManager = $this->menuItemManager;
         $nodeDecorator = function ($node) use ($admin, $controller, $menuItemManager, $lastEdited) {

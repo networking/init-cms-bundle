@@ -493,7 +493,7 @@ abstract class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function configurePersistentParameters(): array
+    protected function configurePersistentParameters(): array
     {
         $parameters = [];
 
