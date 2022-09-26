@@ -106,10 +106,10 @@ abstract class PageAdmin extends BaseAdmin
         return 'glyphicon-file';
     }
 
-    public function __construct($code, $class, $baseControllerName, PageManagerInterface $pageManager)
+    public function __construct(PageManagerInterface $pageManager)
     {
         $this->pageManager = $pageManager;
-        parent::__construct($code, $class, $baseControllerName);
+        parent::__construct();
     }
 
     /**

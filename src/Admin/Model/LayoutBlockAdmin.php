@@ -55,9 +55,6 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     protected $pageAdmin;
 
     public function __construct(
-        $code,
-        $class,
-        $baseControllerName,
         PageManagerInterface $pageManager,
         LayoutBlockFormListener $layoutBlockFormListener,
         SerializerInterface $serializer,
@@ -69,7 +66,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         $this->serializer = $serializer;
         $this->pageAdmin = $pageAdmin;
 
-        parent::__construct($code, $class, $baseControllerName);
+        parent::__construct();
     }
 
     /**
