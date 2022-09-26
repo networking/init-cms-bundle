@@ -23,7 +23,7 @@ file that was distributed with this source code.
             <div class="modal-content">
         {% endif %}
 
-        <form class="form-horizontal"
+        <form class="{% if form.vars.horizontal %}form-horizontal{% endif %}"
                role="form"
               action="{{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
                 {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}

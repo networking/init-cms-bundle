@@ -24,7 +24,7 @@ file that was distributed with this source code.
             <span id="field_widget_{{ id }}" >
                 {% if sonata_admin.field_description.associationadmin.id(sonata_admin.value) %}
                     {{ render(path('sonata_admin_short_object_information', {
-                        'code':     sonata_admin.field_description.associationadmin.code,
+                        '_sonata_admin':     sonata_admin.field_description.associationadmin.code,
                         'objectId': sonata_admin.field_description.associationadmin.id(sonata_admin.value),
                         'uniqid':   sonata_admin.field_description.associationadmin.uniqid,
                         'linkParameters': sonata_admin.field_description.options.link_parameters

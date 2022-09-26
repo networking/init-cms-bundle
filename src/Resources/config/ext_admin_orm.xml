@@ -18,9 +18,6 @@
         </service>
 
         <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%" public="true">
-            <argument/>
-            <argument>%sonata.media.media.class%</argument>
-            <argument>%sonata.media.admin.media.controller%</argument>
             <argument type="service" id="sonata.media.pool"/>
             <call method="setModelManager">
                 <argument type="service" id="sonata.media.admin.media.manager"/>
@@ -47,7 +44,9 @@
                 </argument>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="media"
-                 label_catalogue="%sonata.media.admin.media.translation_domain%"
+                 model_class="%sonata.media.media.class%"
+                 controller="%sonata.media.admin.media.controller%"
+                 translation_domain="%sonata.media.admin.media.translation_domain%"
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>

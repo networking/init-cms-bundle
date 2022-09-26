@@ -43,12 +43,6 @@ use function PHPUnit\Framework\arrayHasKey;
 abstract class MenuItemAdmin extends BaseAdmin
 {
     /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'cms/menu';
-
-
-    /**
      * The number of result to display in the list.
      *
      * @var int
@@ -85,6 +79,13 @@ abstract class MenuItemAdmin extends BaseAdmin
     protected $trackedActions = ['list'];
 
     protected $formOptions = ['layout' => 'horizontal'];
+
+
+
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/menu';
+    }
 
 
     protected function generateBaseRouteName(bool $isChildAdmin = false): string

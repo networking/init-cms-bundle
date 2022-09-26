@@ -38,10 +38,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 abstract class LayoutBlockAdmin extends BaseAdmin
 {
     /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'cms/layout_block';
-    /**
      * used to prefix dynamically generated form fields.
      */
     const CUSTOM_FIELD_PREFIX = 'networking_init_cms_content_';
@@ -67,6 +63,11 @@ abstract class LayoutBlockAdmin extends BaseAdmin
         $this->pageAdmin = $pageAdmin;
 
         parent::__construct();
+    }
+
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/layout_block';
     }
 
     /**

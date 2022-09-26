@@ -29,10 +29,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
  */
 abstract class HelpTextAdmin extends BaseAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'cms/help';
+
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/help';
+    }
 
     /**
      * @return string

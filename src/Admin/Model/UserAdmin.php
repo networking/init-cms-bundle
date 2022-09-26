@@ -33,10 +33,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 abstract class UserAdmin extends BaseUserAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'cms/users';
 
     /**
      * @var array
@@ -58,6 +54,10 @@ abstract class UserAdmin extends BaseUserAdmin
      */
     private $googleAuthenticatorHelper;
 
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/users';
+    }
 
     protected function generateBaseRouteName(bool $isChildAdmin = false): string
     {

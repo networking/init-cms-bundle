@@ -26,6 +26,13 @@ abstract class GroupAdmin extends BaseAdmin
      */
     protected $trackedActions = ['list'];
 
+
+
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/user_groups';
+    }
+
     /**
      * @param $trackedActions
      *

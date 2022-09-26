@@ -526,7 +526,7 @@ file that was distributed with this source code.
 
                 {% if form.vars.data %}
                     {{ render(path('sonata_admin_short_object_information', {
-                        'code':     admin.code,
+                        '_sonata_admin':     admin.code,
                         'objectId': admin.id(form.vars.data),
                         'uniqid':   admin.uniqid
                     })) }}
@@ -664,4 +664,57 @@ file that was distributed with this source code.
 {% block qr_code_widget %}
     <img src="{{ qrCodeUrl }}">
 {% endblock %}
+
+{% block sonata_type_native_collection_widget_row %}
+    {% apply spaceless %}
+        <div class="sonata-collection-row">
+            {% if allow_delete %}
+            <div class="row">
+                <div class="col-xs-1">
+                    <a href="#" class="btn btn-link sonata-collection-delete">
+                        <i class="fas fa-minus-circle" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="col-xs-11">
+                    {% endif %}
+                    {{ form_row(child, { label: false }) }}
+                    {% if allow_delete %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    {% endapply %}
+{% endblock sonata_type_native_collection_widget_row %}
+
+{% block sonata_type_native_collection_widget %}
+    {% apply spaceless %}
+        {% if prototype is defined and not prototype.rendered %}
+            {% set prototype_markup = form_row(prototype) %}
+            {% set data_prototype_name = form.vars.form.vars.prototype.vars.name|default('__name__') %}
+            {% set data_prototype_label = form.vars.form.vars.prototype.vars.label|default('__name__label__') %}
+            {% set widget_form_group_attr = widget_form_group_attr|merge({
+                'data-prototype': prototype_markup,
+                'data-prototype-name': data_prototype_name,
+                'data-prototype-label': data_prototype_label
+            })|merge(attr) %}
+        {% endif %}
+        {# Add row by default use attr.class to change#}
+        {% if 'collection' in form.vars.block_prefixes and attr.class is defined %}
+            {% set widget_form_group_attr = widget_form_group_attr|merge({'class': widget_form_group_attr.class|default('row') ~ ' ' ~ attr.class}) %}
+        {% endif %}
+        {# collection item adds class {form_id}_form-group  too #}
+        {% set widget_form_group_attr = widget_form_group_attr|merge({'id': 'collection' ~ id ~ '_form_group', 'class': widget_form_group_attr.class ~ ' collection-items ' ~ id ~ '_form_group'}) %}
+
+        <div {% for attrname,attrvalue in widget_form_group_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+        {# Add initial prototype form #}
+        {% if form.vars.value|length == 0 and prototype is defined %}
+            {% for name in prototype_names %}
+                {{ prototype_markup|replace({'__name__': name})|raw }}
+            {% endfor %}
+        {% endif %}
+        {{ block('form_widget') }}
+        </div>
+    {% endapply %}
+{% endblock sonata_type_native_collection_widget %}
+
 

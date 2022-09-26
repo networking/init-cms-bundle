@@ -330,7 +330,7 @@ field_{{ id }}.on('change', function (event) {
             url: '{{ url('sonata_admin_short_object_information', {
                                 'objectId': 'OBJECT_ID',
                                 'uniqid': admin.uniqid,
-                                'code': admin.code
+                                '_sonata_admin': admin.code
                             })}}'.replace('OBJECT_ID', field_value_{{ id }}),
             dataType: 'html',
             success: function (html) {

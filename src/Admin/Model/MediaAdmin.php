@@ -39,10 +39,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
  */
 abstract class MediaAdmin extends Admin
 {
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'cms/media';
 
     /**
      * @var array
@@ -86,6 +82,13 @@ abstract class MediaAdmin extends Admin
             '_sort_order' => 'DESC',
             '_sort_by' => 'createdAt',
         ];
+
+
+
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/media';
+    }
 
     /**
      * Set the language paramenter to contain a list of languages most likely

@@ -1,4 +1,3 @@
-# app/config/config.yaml
 sonata_block:
     default_contexts: [cms]
     blocks:

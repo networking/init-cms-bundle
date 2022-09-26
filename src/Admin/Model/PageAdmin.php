@@ -59,12 +59,6 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * @var string
      */
-    protected $baseRoutePattern = 'cms/pages';
-
-
-    /**
-     * @var string
-     */
     protected $pageLocale;
 
     /**
@@ -91,6 +85,13 @@ abstract class PageAdmin extends BaseAdmin
         '_sort_order' => 'ASC',
         '_sort_by' => 'path',
     ];
+
+
+
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
+        return 'cms/pages';
+    }
 
 
     protected function generateBaseRouteName(bool $isChildAdmin = false): string
