@@ -81,7 +81,7 @@ class LayoutBlockController extends CRUDController
         $formFieldId = $request->get('formFieldId');
 
         $code = $request->get('code');
-        $pageId = 1;//$request->get('pageId');
+        $pageId = $request->get('pageId');
         $uniqId = $request->get('uniqId');
         $classType = $request->get('classType');
         /** @var PageAdmin $pageAdmin */

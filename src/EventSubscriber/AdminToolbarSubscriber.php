@@ -102,7 +102,7 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         }
 
         try {
-            if (!$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+            if (!$this->authorizationChecker->isGranted('ROLE_SONATA_ADMIN')) {
                 return;
             }
         } catch (AuthenticationCredentialsNotFoundException $e) {
@@ -151,6 +151,7 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         } elseif ($page instanceof \Networking\InitCmsBundle\Model\Page) {
             $page_id = $page->getId();
         }
+
 
         if (false !== $pos) {
             $toolbar = "\n".str_replace("\n", '', $this->twig->render(

@@ -55,14 +55,13 @@ file that was distributed with this source code.
             {% if app.request.isxmlhttprequest %}
                 <button class="btn btn-default" data-dismiss="modal"
                         aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</button>
-                <input type="submit" class="btn btn-danger"
-                       value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
+
+                <button type="submit" name="btn_delete" class="btn btn-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}</button>
             {% else %}
                 <a href="{{ admin.generateObjectUrl('list', object) }}"
                    class="btn btn-default">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                <input type="submit" class="btn btn-danger"
-                       value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>
 
+                <button type="submit" name="btn_delete" class="btn btn-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}</button>
                 {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}
                     {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
 

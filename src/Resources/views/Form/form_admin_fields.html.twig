@@ -78,6 +78,13 @@ file that was distributed with this source code.
 
 {% endblock form_label %}
 
+{% block form_help %}
+    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
+        {% set translation_domain = sonata_admin.field_description.translationDomain %}
+    {% endif %}
+    {{ parent() }}
+
+{% endblock form_help %}
 {% block sonata_roles_matrix_widget %}
     {% apply spaceless %}
         {{ renderMatrix(form)|raw }}
@@ -716,5 +723,40 @@ file that was distributed with this source code.
         </div>
     {% endapply %}
 {% endblock sonata_type_native_collection_widget %}
+
+{% block help_label %}
+    <span class="help-block">{{ help_label|trans({}, translation_domain) }}</span>
+{% endblock help_label %}
+
+{% block help_label_tooltip %}
+    <span class="help-block">
+        <a href="#" data-toggle="tooltip" data-placement="{{ help_label_tooltip.placement}}" data-title="{{ help_label_tooltip.title|trans({}, translation_domain) }}">
+            {% if help_label_tooltip.icon is not same as(false) %}
+                {{ mopa_bootstrap_icon(help_label_tooltip.icon) }}
+            {% endif %}
+            {% if help_label_tooltip.text is not same as(null) %}
+                {{ help_label_tooltip.text|trans({}, translation_domain) }}
+            {% endif %}
+        </a>
+    </span>
+{% endblock help_label_tooltip %}
+
+{% block help_block_tooltip %}
+    {% set help_label_tooltip = help_block_tooltip %}
+    {{ block('help_label_tooltip') }}
+{% endblock help_block_tooltip %}
+
+{% block help_label_popover %}
+    <span class="help-block">
+        <a href="#" data-toggle="popover" data-trigger="hover" data-placement="{{ help_label_popover.placement}}" data-title="{{ help_label_popover.title|trans({}, translation_domain) }}" data-content="{{ help_label_popover.content|trans({}, translation_domain) }}" data-html="true">
+            {% if help_label_popover.icon is not same as(false) %}
+                {{ mopa_bootstrap_icon(help_label_popover.icon) }}
+            {% endif %}
+            {% if help_label_popover.text is not same as(null) %}
+                {{ help_label_popover.text|trans({}, translation_domain)|raw }}
+            {% endif %}
+        </a>
+    </span>
+{% endblock help_label_popover %}
 
 

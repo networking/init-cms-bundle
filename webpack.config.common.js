@@ -141,6 +141,10 @@ module.exports = {
                         to: './vendor/filerobot-image-editor/index_old.js',
                     },
                     {
+                        from: './assets/vendor/fontawesome',
+                        to: './vendor/fontawesome',
+                    },
+                    {
                         from: './assets/js/ckeditor/',
                         to: './js/ckeditor/',
                     },

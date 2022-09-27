@@ -450,11 +450,14 @@ class FrontendPageController extends AbstractController
 
         if ($path) {
             $url = base64_decode($path);
+
+
         } else {
             $url = $this->container->get('router')->generate('networking_init_cms_default');
         }
 
         $response = $this->redirect($url);
+
         if ($this->getPageHelper()->isAllowLocaleCookie()) {
             $cookies = $this->pageHelper->setLocaleCookies($request->getLocale());
             foreach ($cookies as $cookie){

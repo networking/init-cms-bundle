@@ -63,28 +63,28 @@ security:
 
     access_control:
         # URL of FOSUserBundle which need to be available to anonymous users
-        - { path: ^/_wdt, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/_profiler, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login_$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/_wdt, role: PUBLIC_ACCESS }
+        - { path: ^/_profiler, role: PUBLIC_ACCESS }
+        - { path: ^/login$, role: PUBLIC_ACCESS }
+        - { path: ^/login_$, role: PUBLIC_ACCESS }
 
         # -> custom access control for the admin area of the URL
-        - { path: ^/admin/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/login_check$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/request, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/send-email, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/check-email, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/_initcms_admin_navbar/.*$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/login$, role: PUBLIC_ACCESS }
+        - { path: ^/admin/logout$, role: PUBLIC_ACCESS }
+        - { path: ^/admin/login_check$, role: PUBLIC_ACCESS }
+        - { path: ^/admin/request, role: PUBLIC_ACCESS }
+        - { path: ^/admin/send-email, role: PUBLIC_ACCESS }
+        - { path: ^/admin/check-email, role: PUBLIC_ACCESS }
+        - { path: ^/admin/reset, role: PUBLIC_ACCESS }
+        - { path: ^/admin/_initcms_admin_navbar/.*$, role: PUBLIC_ACCESS }
         # -> end
 
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: PUBLIC_ACCESS }
+        - { path: ^/resetting, role: PUBLIC_ACCESS }
 
         # Secured part of the site
         # This config requires being logged for the whole site and having the admin role for the admin part.
         # Change these rules to adapt them to your needs
         - { path: ^/admin$, role: [ ROLE_SONATA_ADMIN ] }
         - { path: ^/admin/.*, role: [ ROLE_SONATA_ADMIN ] }
-        - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/.*, role: PUBLIC_ACCESS }

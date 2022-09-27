@@ -18,6 +18,7 @@ use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Sonata\AdminBundle\Admin\Pool;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -38,16 +39,17 @@ class AdminMenuBuilder extends MenuBuilder
 
     /**
      * AdminMenuBuilder constructor.
-     * @param FactoryInterface $factory
-     * @param TokenStorageInterface $tokenStorage
+     *
+     * @param FactoryInterface              $factory
+     * @param TokenStorageInterface         $tokenStorage
      * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param RequestStack $requestStack
-     * @param RouterInterface $router
-     * @param MenuItemManagerInterface $menuManager
-     * @param TranslatorInterface $translator
-     * @param MatcherInterface $matcher
-     * @param Pool $pool
-     * @param bool $allowLocaleCookie
+     * @param RequestStack                  $requestStack
+     * @param RouterInterface               $router
+     * @param MenuItemManagerInterface      $menuManager
+     * @param TranslatorInterface           $translator
+     * @param MatcherInterface              $matcher
+     * @param Pool                          $pool
+     * @param bool                          $allowLocaleCookie
      */
     public function __construct(
         FactoryInterface $factory,
@@ -127,20 +129,44 @@ class AdminMenuBuilder extends MenuBuilder
 
             if ($entity instanceof VersionableInterface) {
                 if ($snapShot = $entity->getSnapshot()) {
-                    $liveRoute = $this->router->generate($this->getRoute($snapShot->getRoute()));
+                    $liveRoute = $this->router->generate(
+                        RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                        [
+                            RouteObjectInterface::ROUTE_OBJECT => $this->getRoute(
+                                $snapShot->getRoute()
+                            ),
+                        ]
+                    );
                 }
 
-                $draftRoute = $this->router->generate($entity->getRoute());
-                $pageAdmin = $this->pool->getAdminByAdminCode('networking_init_cms.admin.page');
+                $draftRoute = $this->router->generate(
+                        RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                        [
+                            RouteObjectInterface::ROUTE_OBJECT => $entity->getRoute()
+                        ]
+                    );
+
+                $pageAdmin = $this->pool->getAdminByAdminCode(
+                    'networking_init_cms.admin.page'
+                );
                 $editPath = $pageAdmin->generateObjectUrl('edit', $entity);
 
                 $language = $entity->getRoute()->getLocale();
             } elseif ($entity instanceof ResourceVersionInterface) {
-                $liveRoute = $this->router->generate($this->getRoute($entity->getRoute()));
-                $draftRoute = $this->router->generate($this->getRoute($entity->getPage()->getRoute()));
+                $liveRoute = $this->router->generate(
+                    $this->getRoute($entity->getRoute())
+                );
+                $draftRoute = $this->router->generate(
+                    $this->getRoute($entity->getPage()->getRoute())
+                );
 
-                $pageAdmin = $this->pool->getAdminByAdminCode('networking_init_cms.admin.page');
-                $editPath = $pageAdmin->generateObjectUrl('edit', $entity->getPage());
+                $pageAdmin = $this->pool->getAdminByAdminCode(
+                    'networking_init_cms.admin.page'
+                );
+                $editPath = $pageAdmin->generateObjectUrl(
+                    'edit',
+                    $entity->getPage()
+                );
 
                 $language = $entity->getRoute()->getLocale();
             }
@@ -152,12 +178,18 @@ class AdminMenuBuilder extends MenuBuilder
             if ($draftRoute) {
                 $draftPath = $this->router->generate(
                     'networking_init_view_draft',
-                    ['locale' => $language, 'path' => base64_encode($draftRoute)]
+                    [
+                        'locale' => $language,
+                        'path' => base64_encode($draftRoute),
+                    ]
                 );
             } else {
                 $draftPath = $this->router->generate(
                     'networking_init_view_draft',
-                    ['locale' => $language, 'path' => base64_encode($this->request->getBaseUrl())]
+                    [
+                        'locale' => $language,
+                        'path' => base64_encode($this->request->getBaseUrl()),
+                    ]
                 );
             }
             if ($liveRoute) {
@@ -168,7 +200,10 @@ class AdminMenuBuilder extends MenuBuilder
             } else {
                 $livePath = $this->router->generate(
                     'networking_init_view_live',
-                    ['locale' => $language, 'path' => base64_encode($this->request->getBaseUrl())]
+                    [
+                        'locale' => $language,
+                        'path' => base64_encode($this->request->getBaseUrl()),
+                    ]
                 );
             }
 
@@ -179,7 +214,10 @@ class AdminMenuBuilder extends MenuBuilder
             if ($lastActions) {
                 $lastActionArray = json_decode($lastActions);
                 if (count($lastActionArray)) {
-                    if ($this->request->get('_route') == 'sonata_admin_dashboard' || $sonataAdmin) {
+                    if ($this->request->get('_route')
+                        == 'sonata_admin_dashboard'
+                        || $sonataAdmin
+                    ) {
                         $lastAction = next($lastActionArray);
                     } else {
                         $lastAction = reset($lastActionArray);
@@ -203,13 +241,19 @@ class AdminMenuBuilder extends MenuBuilder
                         'uri' => $editPath,
                     ]
                 );
-                $this->addIcon($menu['Edit'], ['icon' => 'edit', 'append' => false]);
+                $this->addIcon(
+                    $menu['Edit'],
+                    ['icon' => 'edit', 'append' => false]
+                );
             }
-            if (!$sonataAdmin && $this->request->get('_route') != 'sonata_admin_dashboard') {
+            if (!$sonataAdmin
+                && $this->request->get('_route') != 'sonata_admin_dashboard'
+            ) {
                 $menu->addChild('Admin', ['uri' => $lastActionUrl]);
             }
 
-            $firstItemStatus = !$sonataAdmin?$this->request->getSession()->get('_viewStatus'):'';
+            $firstItemStatus = !$sonataAdmin ? $this->request->getSession()
+                ->get('_viewStatus') : '';
             $dropdown = $menu->addChild(
                 'link.website_'.$firstItemStatus,
                 [
@@ -223,31 +267,45 @@ class AdminMenuBuilder extends MenuBuilder
             if ($draftPath) {
                 $dropdown->addChild(
                     'view_website.status_draft',
-                    ['uri' => $draftPath, 'linkAttributes' => ['class' => 'color-draft'], 'extras' => ['translation_domain' => 'NetworkingInitCmsBundle']]
+                    [
+                        'uri' => $draftPath,
+                        'linkAttributes' => ['class' => 'color-draft'],
+                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                    ]
                 );
             }
             if ($livePath) {
                 $dropdown->addChild(
                     'view_website.status_published',
-                    ['uri' => $livePath, 'linkAttributes' => ['class' => 'color-published'], 'extras' => ['translation_domain' => 'NetworkingInitCmsBundle']]
+                    [
+                        'uri' => $livePath,
+                        'linkAttributes' => ['class' => 'color-published'],
+                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                    ]
                 );
             }
 
             if (!$draftPath && !$livePath) {
                 $dropdown->addChild(
                     'view_website.status_draft',
-                    ['uri' => $defaultHome, 'linkAttributes' => ['class' => 'color-draft'], 'extras' => ['translation_domain' => 'NetworkingInitCmsBundle']]
+                    [
+                        'uri' => $defaultHome,
+                        'linkAttributes' => ['class' => 'color-draft'],
+                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                    ]
                 );
                 $dropdown->addChild(
                     'view_website.status_published',
-                    ['uri' => $defaultHome, 'extras' => ['translation_domain' => 'NetworkingInitCmsBundle']]
+                    [
+                        'uri' => $defaultHome,
+                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                    ]
                 );
             }
         }
 
         return $menu;
     }
-
 
 
     /**
@@ -258,13 +316,18 @@ class AdminMenuBuilder extends MenuBuilder
      */
     protected function addIcon($item, $icon)
     {
-        $icon = array_merge(['tag' => (isset($icon['glyphicon'])) ? 'span' : 'i'], $icon);
+        $icon = array_merge(
+            ['tag' => (isset($icon['glyphicon'])) ? 'span' : 'i'],
+            $icon
+        );
         $addclass = '';
         if (isset($icon['inverted']) && $icon['inverted'] === true) {
             $addclass = ' icon-white';
         }
-        $classicon = (isset($icon['glyphicon'])) ? ' class="'.$icon['glyphicon'] : ' class="far fa-'.$icon['icon'];
-        $myicon = ' <'.$icon['tag'].$classicon.$addclass.'"></'.$icon['tag'].'>';
+        $classicon = (isset($icon['glyphicon'])) ? ' class="'.$icon['glyphicon']
+            : ' class="far fa-'.$icon['icon'];
+        $myicon = ' <'.$icon['tag'].$classicon.$addclass.'"></'.$icon['tag']
+            .'>';
         if (!isset($icon['append']) || $icon['append'] === true) {
             $label = $item->getLabel().' '.$myicon;
         } else {
@@ -283,6 +346,10 @@ class AdminMenuBuilder extends MenuBuilder
      */
     protected function getRoute(ContentRoute $contentRoute)
     {
-        return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
+        return ContentRouteManager::generateRoute(
+            $contentRoute,
+            $contentRoute->getPath(),
+            ''
+        );
     }
 }

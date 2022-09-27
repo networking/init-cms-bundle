@@ -17,6 +17,7 @@ use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;

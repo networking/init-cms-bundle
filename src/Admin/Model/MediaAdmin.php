@@ -405,7 +405,7 @@ abstract class MediaAdmin extends Admin
                 'expanded' => false,
                 'multiple' => $this->hasMultipleMediaTags,
                 'select2' => true,
-                'property' => 'adminTitle',
+                'choice_label' => 'adminTitle',
                 'help_label' => 'help.media_tag',
                 'taggable' => $this->hasMultipleMediaTags,
                 'attr' => ['style' => 'width:220px'],
