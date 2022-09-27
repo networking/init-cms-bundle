@@ -71,6 +71,7 @@ abstract class HelpTextAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
+            ->with('', ['label' => false])
             ->add(
                 'locale',
                 ChoiceType::class,
@@ -88,7 +89,8 @@ abstract class HelpTextAdmin extends BaseAdmin
                 'text',
                 CKEditorType::class,
                 ['config' => ['toolbar' => 'standard', 'contentsCss' => null]]
-            );
+            )
+        ->end();
     }
 
     /**
