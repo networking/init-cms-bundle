@@ -8,9 +8,9 @@
                     <li><a tabindex="-1"
                            href="{{ url('admin_networking_initcms_user_edit', {id: app.user.id}) }}">{{ 'label.account_settings'|trans({}, 'PageAdmin', locale) }}</a>
                     </li>
-                    {% if is_granted('IS_IMPERSONATOR') and sonata_user.impersonating %}
+                    {% if is_granted('IS_IMPERSONATOR') and sonata_user.isImpersonatingEnabled %}
                         <li>
-                            <a href="{{ url(sonata_user.impersonating.route, sonata_user.impersonating.parameters| merge({'_switch_user': '_exit'})) }}">({{ 'label.exit'|trans({}, 'PageAdmin', locale) }}
+                            <a href="{{ url(sonata_user.impersonatingRoute, sonata_user.impersonatingRouteParameters|merge({'_switch_user': '_exit'})) }}">({{ 'label.exit'|trans({}, 'PageAdmin', locale) }}
                                 )</a></li>
                     {% endif %}
                     <li>
