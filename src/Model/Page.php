@@ -1155,7 +1155,7 @@ abstract class Page implements PageInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoutes()
+    public function getRoutes(): array
     {
         return [$this->getRoute()];
     }

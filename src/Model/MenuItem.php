@@ -585,7 +585,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     /**
      * Implements IteratorAggregate.
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->children->getIterator();
     }
