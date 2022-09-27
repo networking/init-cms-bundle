@@ -15,7 +15,7 @@ class CheckSessionPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('session')) {
+        if (!$container->has('session.handler')) {
             $message = 'InitCmsBundle requires the "session" service to be available.';
 
             if (class_exists(Recipe::class)) {

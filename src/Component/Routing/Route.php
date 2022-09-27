@@ -47,7 +47,7 @@ class Route extends SymfonyRoute implements RouteObjectInterface
     /**
      * @return mixed
      */
-    public function getRouteKey()
+    public function getRouteKey(): ?string
     {
         return $this->getPath();
     }
@@ -61,7 +61,7 @@ class Route extends SymfonyRoute implements RouteObjectInterface
      *
      * @return Route The current Route instance
      */
-    public function setDefaults(array $defaults)
+    public function setDefaults(array $defaults): static
     {
         $this->defaults = [];
 
@@ -77,7 +77,7 @@ class Route extends SymfonyRoute implements RouteObjectInterface
      *
      * @return Route The current Route instance
      */
-    public function addDefaults(array $defaults)
+    public function addDefaults(array $defaults): static
     {
         foreach ($defaults as $name => $default) {
             $this->defaults[$name] = $default;
@@ -93,7 +93,7 @@ class Route extends SymfonyRoute implements RouteObjectInterface
      *
      * @see setOptions
      */
-    public function getOption($name)
+    public function getOption($name): mixed
     {
         $option = parent::getOption($name);
         if (null === $option && 'compiler_class' === $name) {
@@ -110,7 +110,7 @@ class Route extends SymfonyRoute implements RouteObjectInterface
      *
      * @see setOptions
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         $options = parent::getOptions();
         if (!array_key_exists('compiler_class', $options)) {
@@ -123,7 +123,7 @@ class Route extends SymfonyRoute implements RouteObjectInterface
     /**
      * @return array
      */
-    public function getDefaults()
+    public function getDefaults(): array
     {
         return $this->defaults;
     }
@@ -138,7 +138,7 @@ class Route extends SymfonyRoute implements RouteObjectInterface
      *
      * @return object the document or entity this route entry points to
      */
-    public function getContent()
+    public function getContent(): ?object
     {
         return $this->getDefault(self::CONTENT_OBJECT);
     }

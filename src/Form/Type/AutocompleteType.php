@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\DoctrineChoiceLoader;
 use Doctrine\ORM\Query\Parameter;
+use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\IdReader;
 use Doctrine\ORM\QueryBuilder;
 use Networking\InitCmsBundle\Form\ChoiceList\ORMQueryBuilderLoader;
@@ -315,7 +316,7 @@ class AutocompleteType extends DoctrineType
      *
      * @return ORMQueryBuilderLoader|\Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface
      */
-    public function getLoader(ObjectManager $manager, $queryBuilder, $class, $hints = [])
+    public function getLoader(ObjectManager $manager, object $queryBuilder, string $class): EntityLoaderInterface
     {
         $loader = new ORMQueryBuilderLoader($queryBuilder, $manager, $class);
 

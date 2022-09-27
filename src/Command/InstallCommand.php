@@ -15,23 +15,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputArgument;
 
-/**
- * Class InstallCommand.
- *
- * @author Yorkie Chadwick <y.chadwick@networking.ch>
- */
+#[AsCommand(
+    name: 'networking:initcms:install',
+    description: 'Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources',
+)]
 class InstallCommand extends Command
 {
+    protected static $defaultName = 'networking:initcms:install';
+
+    protected static $defaultDescription = 'Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources';
+
     /**
      * configuration for the command.
      */
     protected function configure()
     {
-        $this->setName('networking:initcms:install')
-            ->setDescription(
-                'Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources'
-            )
+        $this
             ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
             ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
             ->addOption('username', '', InputOption::VALUE_REQUIRED, 'username of the to be created super user')

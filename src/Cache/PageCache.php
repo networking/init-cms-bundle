@@ -132,7 +132,7 @@ class PageCache
      *
      * @return CacheItemInterface
      */
-    public function getItem($key)
+    public function getItem($key): \Symfony\Component\Cache\CacheItem
     {
         return $this->pageCache->getItem($key);
     }
@@ -142,7 +142,7 @@ class PageCache
      *
      * @return \Traversable|CacheItem[]
      */
-    public function getItems(array $keys = [])
+    public function getItems(array $keys = []): iterable
     {
         return $this->pageCache->getItems($keys);
     }

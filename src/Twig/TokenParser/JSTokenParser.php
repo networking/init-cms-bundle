@@ -39,7 +39,7 @@ class JSTokenParser extends AbstractTokenParser
     /**
      * Gets the tag name associated with this token parser.
      */
-    public function getTag()
+    public function getTag(): string
     {
         return 'jsblock';
     }

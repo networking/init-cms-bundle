@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\Persistence\ManagerRegistry;
 use Networking\InitCmsBundle\Admin\Model\TagAdmin;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
@@ -323,7 +324,7 @@ class MediaAdminController extends CRUDController
         $persistentParameters = $this->admin->getPersistentParameters();
         $this->setFormTheme($formView, $this->admin->getFilterTheme());
 
-        $tags = $this->getDoctrine()
+        $tags = $this->container->get('doctrine')
             ->getRepository(Tag::class)
             ->createQueryBuilder('t')
             ->select('t', 'c')
@@ -374,7 +375,7 @@ class MediaAdminController extends CRUDController
         $datagrid->getForm()->createView();
         $persistentParameters = $this->admin->getPersistentParameters();
 
-        $tags = $this->getDoctrine()
+        $tags = $this->container->get('doctrine')
             ->getRepository(Tag::class)
             ->createQueryBuilder('t')
             ->select('t', 'c')
@@ -559,6 +560,7 @@ class MediaAdminController extends CRUDController
     public static function getSubscribedServices(): array
     {
         return [
+                'doctrine' => ManagerRegistry::class,
                 'validator.validator' => ValidatorInterface::class,
                 'networking_init_cms.admin.tag' => TagAdmin::class,
                 'sonata.media.pool' => Pool::class,

@@ -63,7 +63,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
     /**
      * {@inheritdoc}
      */
-    public function getRoutesByNames($names): array
+    public function getRoutesByNames(?array $names = null): iterable
     {
         return [];
     }

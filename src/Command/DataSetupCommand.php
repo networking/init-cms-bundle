@@ -19,18 +19,21 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputArgument;
 
-/**
- * Class DataSetupCommand.
- *
- * @author Yorkie Chadwick <y.chadwick@networking.ch>
- */
+#[AsCommand(
+    name: 'networking:initcms:data-setup',
+    description: 'create and update db schema and append fixtures',
+)]
 class DataSetupCommand extends Command
 {
     /**
      * @var string
      */
     protected static $defaultName = 'networking:initcms:data-setup';
+
+    protected static $defaultDescription = 'create and update db schema and append fixtures';
     /**
      * @var ManagerRegistry
      */
@@ -62,7 +65,7 @@ class DataSetupCommand extends Command
      */
     protected function configure()
     {
-        $this->setDescription('create and update db schema and append fixtures')
+        $this
             ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
             ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
             ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl');

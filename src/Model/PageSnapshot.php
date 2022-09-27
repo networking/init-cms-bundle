@@ -262,7 +262,7 @@ abstract class PageSnapshot implements PageSnapshotInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoutes()
+    public function getRoutes(): iterable
     {
         return [$this->getRoute()];
     }

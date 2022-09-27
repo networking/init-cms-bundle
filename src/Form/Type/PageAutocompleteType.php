@@ -118,7 +118,7 @@ class PageAutocompleteType extends EntityType
     /**
      * @return string
      */
-    public function getParent()
+    public function getParent(): string
     {
         return AutocompleteType::class;
     }
