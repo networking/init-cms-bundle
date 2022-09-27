@@ -1,3 +1,0 @@
-webpack_encore:
-    builds:
-        init_cms: '%kernel.project_dir%/public/bundles/networkinginitcms/build'
