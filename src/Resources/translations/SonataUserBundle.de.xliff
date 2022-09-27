@@ -21,6 +21,14 @@
                 <source>groups</source>
                 <target>Benutzername Gruppen</target>
             </trans-unit>
+            <trans-unit id="form.group_profile">
+                <source>form.group_profile</source>
+                <target>Profile</target>
+            </trans-unit>
+            <trans-unit id="form.group_groups">
+                <source>form.group_groups</source>
+                <target>Benutzername Gruppen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

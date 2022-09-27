@@ -38,6 +38,14 @@
                 <source>ROLE_SONATA_ADMIN</source>
                 <target>Admin role</target>
             </trans-unit>
+            <trans-unit id="form.group_profile">
+                <source>form.group_profile</source>
+                <target>Profile</target>
+            </trans-unit>
+            <trans-unit id="form.group_groups">
+                <source>form.group_groups</source>
+                <target>User groups</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
