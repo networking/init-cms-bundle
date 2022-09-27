@@ -10,28 +10,28 @@
 
 namespace Networking\InitCmsBundle\Twig\TokenParser;
 
-use Twig_TokenParser;
+use Twig\TokenParser\AbstractTokenParser;
 use Networking\InitCmsBundle\Twig\Node\JSNode;
-
+use Twig\Token;
 /**
  * Class JSTokenParser.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class JSTokenParser extends Twig_TokenParser
+class JSTokenParser extends AbstractTokenParser
 {
     /**
      * Parses a token and returns a node.
      *
-     * @param \Twig_Token $token A \Twig_Token instance
+     * @param Token $token
      *
-     * @return \Twig_NodeInterface A \Twig_NodeInterface instance
+     * @return JSNode
      */
-    public function parse(\Twig_Token $token)
+    public function parse(Token $token)
     {
         $stream = $this->parser->getStream();
         $value = $this->parser->getExpressionParser()->parseExpression();
-        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         return new JSNode($value, $token->getLine(), $this->getTag());
     }

@@ -11,20 +11,21 @@
 namespace Networking\InitCmsBundle\Twig\Node;
 
 use Networking\InitCmsBundle\Twig\Extension\NetworkingHelperExtension;
-
+use Twig\Node\Node;
+use Twig\Compiler;
 /**
  * Class JSNode.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class JSNode extends \Twig_Node
+class JSNode extends Node
 {
     /**
-     * @param \Twig_Node $method
+     * @param Node $method
      * @param array      $lineno
      * @param null       $tag
      */
-    public function __construct(\Twig_Node $method, $lineno, $tag = null)
+    public function __construct(Node $method, $lineno, $tag = null)
     {
         parent::__construct(['method' => $method], [], $lineno, $tag);
     }
@@ -32,9 +33,9 @@ class JSNode extends \Twig_Node
     /**
      * Compiles the node to PHP.
      *
-     * @param \Twig_Compiler A Twig_Compiler instance
+     * @param Compiler A Twig_Compiler instance
      */
-    public function compile(\Twig_Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
                 ->addDebugInfo($this)
