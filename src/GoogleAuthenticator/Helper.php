@@ -94,7 +94,7 @@ class Helper
      */
     public function getSessionKey(UsernamePasswordToken $token)
     {
-        return sprintf('sonata_user_google_authenticator_%s_%s', $token->getProviderKey(), $token->getUsername());
+        return sprintf('sonata_user_google_authenticator_%s_%s', $token->getFirewallName(), $token->getUserIdentifier());
     }
 
     public function needToHaveGoogle2FACode(Request $request): bool
