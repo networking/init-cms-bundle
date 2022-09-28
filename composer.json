@@ -26,7 +26,7 @@
     "lexik/translation-bundle": "6.*",
     "oneup/flysystem-bundle": "^4.0",
     "oneup/uploader-bundle": "^4.0",
-    "mopa/bootstrap-bundle": "^5.0",
+    "networking/bootstrap-bundle": "^5.0",
     "sensio/framework-extra-bundle": "^5.1 || ^6.1",
     "sonata-project/admin-bundle": "^4.17.0",
     "sonata-project/doctrine-orm-admin-bundle": "^4.7",
@@ -81,11 +81,5 @@
   "require-dev": {
     "dg/bypass-finals": "^1.1",
     "symfony/phpunit-bridge": "^5.0"
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:networking/MopaBootstrapBundle.git"
-    }
-  ]
+  }
 }

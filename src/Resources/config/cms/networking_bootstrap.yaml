@@ -1,4 +1,4 @@
-mopa_bootstrap:
+networking_bootstrap:
     menu: ~
     form:
         horizontal: false
