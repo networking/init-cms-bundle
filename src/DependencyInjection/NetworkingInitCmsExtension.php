@@ -334,7 +334,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.google.authenticator.forced_for_role', $config['google_authenticator']['forced_for_role']);
 
         $trustedIpList = $config['google_authenticator']['trusted_ip_list'];
-        if (\count($config['google_authenticator']['ip_white_list']) > 0) {
+        if (array_key_exists('ip_white_list', $config['google_authenticator']) && \count($config['google_authenticator']['ip_white_list']) > 0) {
             $trustedIpList = $config['google_authenticator']['ip_white_list'];
         }
         // NEXT_MAJOR: Remove `networking_init_cms.google.authenticator.ip_white_list` parameter.

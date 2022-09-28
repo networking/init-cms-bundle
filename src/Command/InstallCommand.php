@@ -18,10 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 
-#[AsCommand(
-    name: 'networking:initcms:install',
-    description: 'Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources',
-)]
+#[AsCommand(name: 'networking:initcms:install', description: 'Install the Networking Init cms: create update schema, load fixtures, create super user, dump assetic resources')]
 class InstallCommand extends Command
 {
     protected static $defaultName = 'networking:initcms:install';

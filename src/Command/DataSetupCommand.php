@@ -22,10 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 
-#[AsCommand(
-    name: 'networking:initcms:data-setup',
-    description: 'create and update db schema and append fixtures',
-)]
+#[AsCommand(name: 'networking:initcms:data-setup', description: 'create and update db schema and append fixtures')]
 class DataSetupCommand extends Command
 {
     /**

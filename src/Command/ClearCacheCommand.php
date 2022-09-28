@@ -11,10 +11,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(
-    name: 'networking:initcms:cleartranslations',
-    description: 'Clear translations',
-)]
+#[AsCommand(name: 'networking:initcms:cleartranslations', description: 'Clear translations')]
 class ClearCacheCommand extends Command
 {
 
