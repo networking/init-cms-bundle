@@ -11,6 +11,7 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Persistence\ManagerRegistry;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\BaseMenuItem;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
@@ -258,10 +259,10 @@ class MenuItemAdminController extends CRUDController
             }
         }
 
-        if ($request->get('subclass') == 'menu item') {
+        if ($request->query->get('subclass') == 'menu item') {
             $this->isNewMenuItem = true;
-            if ($request->get('root_id')) {
-                $request->getSession()->set('root_menu_id', $request->get('root_id'));
+            if ($request->query->get('root_id')) {
+                $request->getSession()->set('root_menu_id', $request->query->get('root_id'));
             }
         }
 
@@ -632,7 +633,7 @@ class MenuItemAdminController extends CRUDController
             } else {
                 $this->menuItemManager->persistAsFirstChildOf($newMenuItem, $menuItem);
             }
-            $this->getDoctrine()->getManager()->flush();
+            $this->container->get('doctrine')->getManager()->flush();
             $data = [
                 'result' => 'ok',
                 'objectId' => $this->admin->getNormalizedIdentifier($newMenuItem),
@@ -641,5 +642,13 @@ class MenuItemAdminController extends CRUDController
         } catch (\Exception $e) {
             return $this->getJsonResponse($request, $data);
         }
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+            'doctrine' => '?'.ManagerRegistry::class,
+            ] + parent::getSubscribedServices(
+        );
     }
 }

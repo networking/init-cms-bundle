@@ -163,7 +163,7 @@ abstract class MenuItemAdmin extends BaseAdmin
 
         $rootId = $request->query->get('root_id');
 
-        if ($postArray = $request->request->get($uniqId)) {
+        if ($postArray = $request->request->all($uniqId)) {
             if (array_key_exists('locale', $postArray)) {
                 $locale = $postArray['locale'];
             }

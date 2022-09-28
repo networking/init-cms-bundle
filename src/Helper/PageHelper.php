@@ -453,8 +453,8 @@ class PageHelper
 
         $now = new \DateTime();
 
-        $activeStart = array_key_exists('active_from', $page) ? new \DateTime($page['active_from']) : new \DateTime();
-        $activeEnd = array_key_exists('active_to', $page) ? new \DateTime($page['active_to']) : new \DateTime();
+        $activeStart = array_key_exists('active_from', $page) && $page['active_from'] ? new \DateTime($page['active_from']) : new \DateTime();
+        $activeEnd = array_key_exists('active_to', $page) && $page['active_to'] ? new \DateTime($page['active_to']) : new \DateTime();
 
         if ($now->getTimestamp() >= $activeStart->getTimestamp() &&
             $now->getTimestamp() <= $activeEnd->getTimestamp()

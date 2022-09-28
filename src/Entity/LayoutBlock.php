@@ -19,6 +19,12 @@ use Networking\InitCmsBundle\Model\LayoutBlock as ModelLayoutBlock;
  */
 class LayoutBlock extends ModelLayoutBlock
 {
+
+    /**
+     * @var int
+     */
+    protected $id;
+    
     /**
      * Hook on pre-persist operations.
      */

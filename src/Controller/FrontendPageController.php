@@ -356,15 +356,25 @@ class FrontendPageController extends AbstractController
 
         $request->setLocale($locale);
 
-        if (!is_array($translationRoute)) {
-            $routeName = $translationRoute;
-        } else {
-            $routeName = $translationRoute['_route'];
-            unset($translationRoute['_route']);
-            foreach ($translationRoute as $key => $var) {
-                $params[$key] = $var;
+        if(is_array($translationRoute)){
+            {
+                $routeName = $translationRoute['_route'];
+                unset($translationRoute['_route']);
+                foreach ($translationRoute as $key => $var) {
+                    $params[$key] = $var;
+                }
             }
         }
+
+        if ($translationRoute instanceof RouteObjectInterface) {
+            $routeName = RouteObjectInterface::OBJECT_BASED_ROUTE_NAME;
+            $params[RouteObjectInterface::ROUTE_OBJECT] = $translationRoute;
+        }
+
+        if(is_string($translationRoute)){
+            $routeName = $translationRoute;
+        }
+
 
         $params['_locale'] = $locale;
 

@@ -37,7 +37,6 @@ use Symfony\Component\Form\ChoiceList\Factory\PropertyAccessDecorator;
  */
 class AutocompleteType extends DoctrineType
 {
-    protected $hints;
 
     /**
      * @var ChoiceListFactoryInterface
@@ -107,12 +106,10 @@ class AutocompleteType extends DoctrineType
                 if ($options['loader']) {
                     $entityLoader = $options['loader'];
                 } elseif (null !== $options['query_builder']) {
-                    $entityLoader = $this->getLoader($options['em'], $options['query_builder'], $options['class'],
-                        $options['query_hints']);
+                    $entityLoader = $this->getLoader($options['em'], $options['query_builder'], $options['class']);
                 } else {
                     $queryBuilder = $options['em']->getRepository($options['class'])->createQueryBuilder('e');
-                    $entityLoader = $this->getLoader($options['em'], $queryBuilder, $options['class'],
-                        $options['query_hints']);
+                    $entityLoader = $this->getLoader($options['em'], $queryBuilder, $options['class']);
                 }
 
                 $doctrineChoiceLoader = new DoctrineChoiceLoader(
@@ -260,7 +257,6 @@ class AutocompleteType extends DoctrineType
             'choice_value' => $choiceValue,
             'id_reader' => null, // internal
             'choice_translation_domain' => false,
-            'query_hints' => [],
             'select2' => true,
         ]);
 
@@ -275,7 +271,6 @@ class AutocompleteType extends DoctrineType
         $resolver->setAllowedTypes('em', ['null', 'string', 'Doctrine\Persistence\ObjectManager']);
         $resolver->setAllowedTypes('loader', ['null', 'Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface']);
         $resolver->setAllowedTypes('query_builder', ['null', 'callable', 'Doctrine\ORM\QueryBuilder']);
-        $resolver->setAllowedTypes('query_hints', ['array']);
     }
 
     /**
@@ -312,7 +307,6 @@ class AutocompleteType extends DoctrineType
      * @param ObjectManager $manager
      * @param mixed         $queryBuilder
      * @param string        $class
-     * @param array         $hints
      *
      * @return ORMQueryBuilderLoader|\Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface
      */
@@ -320,9 +314,6 @@ class AutocompleteType extends DoctrineType
     {
         $loader = new ORMQueryBuilderLoader($queryBuilder, $manager, $class);
 
-        foreach ($hints as $name => $value) {
-            $loader->setHint($name, $value);
-        }
 
         return $loader;
     }

@@ -1,7 +1,5 @@
 Networking\InitCmsBundle\Model\LayoutBlock:
     properties:
-        id:
-            type: integer
         name:
             type: string
         zone:

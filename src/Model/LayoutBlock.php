@@ -20,10 +20,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class LayoutBlock implements LayoutBlockInterface
 {
-    /**
-     * @var int
-     */
-    protected $id;
 
     /**
      * @var string
