@@ -52,7 +52,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      *
      * @return object
      */
-    public function findById($id): mixed
+    public function findById($id): ?object
     {
         return $this->find($id);
     }
@@ -158,7 +158,7 @@ class PageManager extends MaterializedPathRepository implements PageManagerInter
      *
      * @return string|null $id id of the content object or null if unable to determine an id
      */
-    public function getContentId($content): mixed
+    public function getContentId($content): ?string
     {
         return $content->getId();
     }
