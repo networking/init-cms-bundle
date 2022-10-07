@@ -524,16 +524,16 @@ file that was distributed with this source code.
 
     {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
     {% if not label_render %}{% set widget_controls = false %}{% endif %}
-    {# {{ block('widget_form_group_start') }} #}
     <div id="field_container_{{ id }}" class="field-container">
             <span id="field_widget_{{ id }}">
-
                 {% if form.vars.data %}
-                    {{ render(path('sonata_admin_short_object_information', {
-                        '_sonata_admin':     admin.code,
-                        'objectId': admin.id(form.vars.data),
-                        'uniqid':   admin.uniqid
-                    })) }}
+                    {% set object = admin.object(admin.id(form.vars.data)) %}
+                    {% include get_admin_template('short_object_description', admin.code) with {
+                        'admin': admin,
+                        'object': object,
+                        'description': admin.toString(object),
+                        'link_parameters': app.request.get('linkParameters')
+                    } %}
                     &nbsp;
                 {% else %}
                     <span class="inner-field-short-description">
@@ -544,7 +544,8 @@ file that was distributed with this source code.
         {{ block('hidden_widget') }}
 
         <span id="field_actions_{{ id }}" class="field-actions">
-                <a href="{{ admin.generateUrl('gallery', {'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
+
+                <a href="{{ admin.generateUrl('gallery', {'context': (context?context:''), 'provider': (provider_name ? provider_name : '')}) }}"
                    onclick="return open_media_list_{{ id }}(this);"
                    class="btn btn-default btn-sm sonata-ba-action"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
@@ -555,7 +556,7 @@ file that was distributed with this source code.
 
             {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
                 &nbsp;
-                <a href="{{ admin.generateUrl('create', {'gallery': true, 'context': context, 'provider': (provider_name ? provider_name : '')}) }}"
+                <a href="{{ admin.generateUrl('create', {'gallery': true, 'context': (context?context:''), 'provider': (provider_name ? provider_name : '')}) }}"
                    onclick="return start_field_dialog_form_add_{{ id }}(this);"
                    class="btn btn-primary btn-sm sonata-ba-action"
                    title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
