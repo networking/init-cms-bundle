@@ -268,7 +268,7 @@ class MediaAdminController extends CRUDController
         return $this->renderJson($data);
     }
 
-    public function galleryAction(Request $request){
+    public function gallery(Request $request){
         $request->query->set('galleryMode', true);
 
         return $this->listAction($request);
@@ -322,6 +322,10 @@ class MediaAdminController extends CRUDController
         $formView = $datagrid->getForm()->createView();
 
         $persistentParameters = $this->admin->getPersistentParameters();
+
+        $filterPersister = $this->admin->getFilterPersister();
+
+        $filters = $filterPersister->get($this->admin->getCode());
         $this->setFormTheme($formView, $this->admin->getFilterTheme());
 
         $tags = $this->container->get('doctrine')
@@ -333,16 +337,18 @@ class MediaAdminController extends CRUDController
             ->getQuery()->getResult();
 
         $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
-
-
+        $context = $request->query->getAlpha('context', $persistentParameters['context']);
+        if(!$context){
+            $context = $persistentParameters['context'];
+        }
+        $mediaPool = $this->container->get('sonata.media.pool');
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/MediaAdmin/list.html.twig',
             [
-                'providers' => $this->container->get('sonata.media.pool')->getProvidersByContext(
-                    $request->get('context', $persistentParameters['context'])
-                ),
-                'media_pool' => $this->container->get('sonata.media.pool'),
-                'persistent_parameters' => $this->admin->getPersistentParameters(),
+                'providers' => $mediaPool->getProvidersByContext($context),
+                'media_pool' => $mediaPool,
+                'persistent_parameters' => $persistentParameters,
+                'currentProvider' => array_key_exists('providerName', $filters)?$filters['providerName']['value']:$persistentParameters['filter'],
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
                 'lastItem' => 0,
@@ -361,7 +367,7 @@ class MediaAdminController extends CRUDController
      *
      * @return Response
      */
-    public function refreshListAction(Request $request)
+    public function refreshList(Request $request)
     {
         $this->admin->checkAccess('list');
 
@@ -409,7 +415,7 @@ class MediaAdminController extends CRUDController
      *
      * @return Response
      */
-    public function previewPdfAction($id)
+    public function previewPdf($id)
     {
         $object = $this->admin->getObject($id);
 
@@ -420,7 +426,7 @@ class MediaAdminController extends CRUDController
             'object' => $object]);
     }
 
-    public function cloneAction(Request $request){
+    public function clone(Request $request){
 
         $response = new FineUploaderResponse();
 
