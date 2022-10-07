@@ -473,18 +473,18 @@ class PageAdminController extends CRUDController
         if ($this->admin->isGranted('PUBLISH') === false) {
             throw new AccessDeniedException();
         }
-
+        /** @var PageInterface[] $selectedModels */
         $selectedModels = $selectedModelQuery->execute();
-
         try {
             foreach ($selectedModels as $selectedModel) {
+
                 if ($this->pageCache->isActive()) {
-                    /** @var PageInterface $selectedModel */
-                    $cacheKey = $selectedModel->getLocale().$selectedModel->getFullPath();
+                    $cacheKey = 'page_'.$selectedModel->getLocale().str_replace('/', '', $selectedModel->getFullPath());
                     $this->pageCache->delete($cacheKey);
                 }
             }
         } catch (\Exception $e) {
+
             $this->addFlash('sonata_flash_error', $this->translate('flash_batch_cache_clear_error', [], 'NetworkingInitCmsBundle'));
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
