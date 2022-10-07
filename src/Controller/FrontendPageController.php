@@ -315,13 +315,29 @@ class FrontendPageController extends AbstractController
      *
      * @return Response
      */
+    public function home(Request $request)
+    {
+        if ($request->get('_route') === 'networking_init_cms_default') {
+            $request = $this->getPageHelper()->matchContentRouteRequest($request);
+        }
+
+        return $this->index($request);
+    }
+
+    /**
+     * Show the home page (start page) for given locale.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function homeAction(Request $request)
     {
         if ($request->get('_route') === 'networking_init_cms_default') {
             $request = $this->getPageHelper()->matchContentRouteRequest($request);
         }
 
-        return $this->indexAction($request);
+        return $this->index($request);
     }
 
     /**
