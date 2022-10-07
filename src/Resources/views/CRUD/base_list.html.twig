@@ -143,9 +143,9 @@ file that was distributed with this source code.
                         {% elseif field_description.getOption('code') == constant('Sonata\\AdminBundle\\Datagrid\\ListMapper::NAME_SELECT') %}
                             <th class="sonata-ba-list-field-header sonata-ba-list-field-header-select"></th>
                         {% elseif field_description.name == '_action' and app.request.isXmlHttpRequest %}
-                            {# Action buttons disabled in ajax view! #}
+                             Action buttons disabled in ajax view!
                         {% elseif field_description.getOption('ajax_hidden') == true and app.request.isXmlHttpRequest %}
-                            {# Disable fields with 'ajax_hidden' option set to true #}
+                             Disable fields with 'ajax_hidden' option set to true
                         {% else %}
                             {% set sortable = false %}
                             {% if field_description.option('sortable', false) %}
@@ -188,7 +188,7 @@ file that was distributed with this source code.
                 <tbody>
                 {% for object in admin.datagrid.results %}
                     <tr {% if last_edited is defined and object.id == last_edited %}class="info {% if object.status is defined and object.status == 'status_offline' %}danger{% endif %}"{% endif %}>
-                        {% include get_admin_template('inner_list_row', admin.code) %}
+                         {% include get_admin_template('inner_list_row', admin.code) %}
                     </tr>
                 {% endfor %}
                 {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}
@@ -235,6 +235,13 @@ file that was distributed with this source code.
                 </tfoot>
             {% endblock %}
         </table>
+
+        {% block pager_links %}
+            {% if admin.datagrid.pager.haveToPaginate() %}
+                <hr/>
+                {% include get_admin_template('pager_links', admin.code) %}
+            {% endif %}
+        {% endblock %}
 
         {% if not app.request.isxmlhttprequest %}
             {% if admin.hasRoute('export') and admin.hasAccess('export') and export_formats|length %}
