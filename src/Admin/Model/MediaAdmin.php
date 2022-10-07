@@ -71,20 +71,13 @@ abstract class MediaAdmin extends Admin
      */
     protected $showTagTree;
 
-    /**
-     * Default values to the datagrid.
-     *
-     * @var array
-     */
-    protected $datagridValues
-        = [
-            '_page' => 1,
-            '_sort_order' => 'DESC',
-            '_sort_by' => 'createdAt',
-        ];
 
 
-
+    public function configureDefaultSortValues(array &$sortValues): void
+    {
+        $sortValues[DatagridInterface::SORT_BY] = 'createdAt';
+        $sortValues[DatagridInterface::SORT_ORDER] = 'DESC';
+    }
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
         return 'cms/media';
@@ -199,7 +192,7 @@ abstract class MediaAdmin extends Admin
             'init_clone',
             'clone',
             [
-                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::cloneAction',
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::clone',
             ]
         );
 
@@ -207,7 +200,7 @@ abstract class MediaAdmin extends Admin
             'refresh_list',
             'refresh_list',
             [
-                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::refreshListAction',
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::refreshList',
             ]
         );
 
@@ -508,6 +501,7 @@ abstract class MediaAdmin extends Admin
         $context = $request->query->get('context');
         $provider = $request->query->get('provider');
 
+
         if ($request->query->get('providerName')) {
             $provider = $request->query->get('providerName');
         }
@@ -518,12 +512,14 @@ abstract class MediaAdmin extends Admin
 
         if (!$context && array_key_exists('context', $filter)) {
             $context = $filter['context']['value'];
-        } elseif (!$context) {
+        }
+
+        if (!$context || $context === '0') {
             $context = $this->pool->getDefaultContext();
+            $request->query->set('context', $context);
         }
 
         $providers = $this->pool->getProvidersByContext($context);
-        $provider = $request->query->get('provider');
 
         // if the context has only one provider, set it into the request
         // so the intermediate provider selection is skipped
@@ -534,13 +530,47 @@ abstract class MediaAdmin extends Admin
 
         // if there is a post server error, provider is not posted and in case of
         // multiple providers, it has to be persistent to not being lost
-        if (1 < \count($providers) && null !== $provider) {
+        if (1 < \count($providers)) {
             $parameters['provider'] = $provider;
         }
+
 
         return array_merge($parameters, [
             'context' => $context,
         ]);
+    }
+
+    public function configureFilterParameters(array $parameters): array
+    {
+
+        if(array_key_exists('context', $parameters) && !$parameters['context']['value']){
+            $parameters['context']['value'] = $this->pool->getDefaultContext();
+        }
+
+        $persistentParameters = $this->getPersistentParameters();
+
+        $context = $persistentParameters['context'];
+        $provider = $persistentParameters['provider'];
+
+        if ($context && array_key_exists('context', $parameters)) {
+            if ($parameters['context']['value'] != $context) {
+                $parameters['context']['value'] = $context;
+            }
+        } else {
+            $parameters['context'] = ['value' => $persistentParameters['context']];
+        }
+
+        if ($provider && array_key_exists('providerName', $parameters)) {
+            if ($parameters['providerName']['value'] != $provider) {
+                $parameters['providerName']['value'] = $provider;
+            }
+        } elseif ($provider) {
+            $parameters['providerName']['value'] = $provider;
+        } else {
+            $parameters['providerName'] = ['value' => $persistentParameters['provider']];
+        }
+
+        return $parameters;
     }
 
     /**

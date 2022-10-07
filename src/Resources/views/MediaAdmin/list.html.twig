@@ -219,10 +219,10 @@ file that was distributed with this source code.
                             {% if providers|length > 1 %}
                                 <strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong>
                                 <div class="btn-group btn-group-sm">
-                                    <a class="btn btn-sm btn-{{ persistent_parameters.provider is defined  ? 'default': 'primary' }}"
+                                    <a class="btn btn-sm btn-{{ currentProvider is empty ? 'primary': 'default' }}"
                                        href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
                                     {% for provider_name in providers %}
-                                        <a class="btn btn-sm btn-{{ persistent_parameters.provider is defined and  persistent_parameters.provider == provider_name? 'primary':'default' }}"
+                                        <a class="btn btn-sm btn-{{ currentProvider == provider_name? 'primary':'default' }}"
                                            href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}) }}">{{ provider_name|trans({}) }}</a>
                                     {% endfor %}
                                 </div>&nbsp;
@@ -305,7 +305,7 @@ file that was distributed with this source code.
                             :
                             {% for format in admin.getExportFormats() %}
                                 <a
-                                href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(datagrid, 0) + {'format' : format}) }}"
+                                href="{{ admin.generateUrl('export', admin.datagrid.paginationparameters(datagrid, 0) + {'format' : format}) }}"
                                 class="link-underlined">{{ format }}</a>{% if not loop.last %},{% endif %}
                             {% endfor %}
                         </p>
