@@ -12,10 +12,10 @@ file that was distributed with this source code.
 {% extends base_template %}
 
 {% block actions %}
-    <div class="sonata-actions">
+    <div class="well form-actions">
         {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object)%}
             <a class="btn btn-default sonata-action-element" href="{{ admin.generateObjectUrl('edit', object) }}">
-                <i class="glyphicon glyphicon-edit"></i>
+                <i class="fa fa-edit"></i>
                 {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
         {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
@@ -23,10 +23,10 @@ file that was distributed with this source code.
                 <i class="glyphicon glyphicon-book"></i>
                 {{ 'link_action_history'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
-        {% include '@SonataAdmin/Core/create_button.html.twig' %}
+        {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
         {% if admin.hasroute('list') and admin.isGranted('LIST')%}
             <a class="btn btn-default sonata-action-element" href="{{ admin.generateUrl('list') }}">
-                <i class="glyphicon glyphicon-list"></i>
+                <i class="fa fa-list"></i>
                 {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
     </div>
