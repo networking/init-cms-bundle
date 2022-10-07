@@ -116,8 +116,8 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollectionInterface $collection
-    ): void {
+    protected function configureRoutes(RouteCollectionInterface $collection): void 
+    {
         $collection->add(
             'translate',
             'translate/{id}/locale/{locale}',
@@ -220,13 +220,14 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
 
         $this->getRequest()->attributes->add(
             ['page_locale' => $this->pageLocale]
         );
-        $horizontal = $this->hasSubject() && $this->getSubject()->getId()?'horizontal':null;
+        $horizontal = $this->hasSubject() && $this->getSubject()->getId()
+            ? 'horizontal' : null;
         try {
             /** @var Request $request */
             $request = $this->getRequest();
@@ -238,7 +239,7 @@ abstract class PageAdmin extends BaseAdmin
         if (($this->hasObject() || $request->isXmlHttpRequest())
             && !$request->get('no_layout')
         ) {
-            $formMapper
+            $form
                 ->with('page_content')
                 ->add(
                     'layoutBlock',
@@ -255,10 +256,10 @@ abstract class PageAdmin extends BaseAdmin
 
         }
 
-        $formMapper->with('page_settings');
+        $form->with('page_settings');
 
         if ($this->canCreateHomepage && !$this->hasObject()) {
-            $formMapper->add(
+            $form->add(
                 'isHome',
                 CheckboxType::class,
                 ['required' => false],
@@ -267,7 +268,7 @@ abstract class PageAdmin extends BaseAdmin
         }
 
         if (!$this->hasObject()) {
-            $formMapper
+            $form
                 ->add(
                     'locale',
                     ChoiceType::class,
@@ -281,7 +282,7 @@ abstract class PageAdmin extends BaseAdmin
                 );
         }
 
-        $formMapper->add(
+        $form->add(
             'pageName',
             TextType::class,
             [
@@ -293,7 +294,7 @@ abstract class PageAdmin extends BaseAdmin
 
         if (!$this->canCreateHomepage) {
             if (!$this->hasObject() || !$this->getSubject()->isHome()) {
-                $formMapper
+                $form
                     ->add(
                         'parent',
                         AutocompleteType::class,
@@ -316,7 +317,7 @@ abstract class PageAdmin extends BaseAdmin
             }
 
             if (!$this->hasObject() || !$this->getSubject()->isHome()) {
-                $formMapper
+                $form
                     ->add(
                         'alias',
                         AutocompleteType::class,
@@ -345,7 +346,7 @@ abstract class PageAdmin extends BaseAdmin
         if ($this->hasObject()) {
             $attr = $this->getSubject()->isHome() ? ['readonly' => 'readonly']
                 : [];
-            $formMapper
+            $form
                 ->add(
                     'url',
                     TextType::class,
@@ -359,7 +360,7 @@ abstract class PageAdmin extends BaseAdmin
                     ['display_method' => 'getFullPath', 'attr' => $attr]
                 );
         } else {
-            $formMapper
+            $form
                 ->add(
                     'url',
                     TextType::class,
@@ -374,7 +375,7 @@ abstract class PageAdmin extends BaseAdmin
                 );
         }
 
-        $formMapper
+        $form
             ->add(
                 'visibility',
                 ChoiceType::class,
@@ -427,9 +428,9 @@ abstract class PageAdmin extends BaseAdmin
                     'layout' => $horizontal,
                 ]
             );
-        $formMapper->end();
+        $form->end();
         // end of group: page_settings
-        $formMapper
+        $form
             ->with('meta_settings')
             ->add(
                 'metaTitle',
@@ -469,7 +470,7 @@ abstract class PageAdmin extends BaseAdmin
             ->end();
 
         foreach ($this->getExtensions() as $extension) {
-            $extension->configureFormFields($formMapper);
+            $extension->configureFormFields($form);
         }
 
     }
@@ -477,10 +478,10 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper
-    ): void {
+    protected function configureDatagridFilters(DatagridMapper $filter): void
+    {
 
-        $datagridMapper
+        $filter
             ->add(
                 'locale',
                 CallbackFilter::class,
@@ -536,7 +537,7 @@ abstract class PageAdmin extends BaseAdmin
 
 
         foreach ($this->getExtensions() as $extension) {
-            $extension->configureDatagridFilters($datagridMapper);
+            $extension->configureDatagridFilters($filter);
         }
     }
 
