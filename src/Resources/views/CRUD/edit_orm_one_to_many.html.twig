@@ -9,7 +9,6 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-
 {% if not sonata_admin.field_description.hasassociationadmin %}
     {% for element in value %}
         {{ element|render_relation_element(sonata_admin.field_description) }}
@@ -22,7 +21,6 @@ file that was distributed with this source code.
             and sonata_admin.field_description.associationadmin.hasAccess('create')
             and btn_add
             and (sonata_admin.field_description.options.limit is not defined or form.children|length < sonata_admin.field_description.options.limit) %}
-
         {% if sonata_admin.edit == 'inline' %}
             {% if display_create_button %}
                 {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
@@ -33,7 +31,7 @@ file that was distributed with this source code.
                                 class="btn btn-default sonata-ba-action"
                                 title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                                 >
-                            <i class="glyphicon glyphicon-plus"></i>
+                            <i class="fa fa-plus"></i>
                             {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                         </a>
                     </span>
@@ -81,7 +79,7 @@ file that was distributed with this source code.
                             jQuery('div#field_container_{{ id }} tbody.sonata-ba-tbody td.sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }}').each(function (index, element) {
                                 // remove the sortable handler and put it back
                                 jQuery('span.sonata-ba-sortable-handler', element).remove();
-                                jQuery(element).append('<span class="sonata-ba-sortable-handler"><i class="glyphicon glyphicon-move" class="cursor-pointer"></i></span>');
+                                jQuery(element).append('<span class="sonata-ba-sortable-handler"><i class="fa-solid fa-arrows-up-down-left-right" class="cursor-pointer"></i></span>');
                                 jQuery('input', element).hide();
                             });
 
@@ -130,7 +128,7 @@ file that was distributed with this source code.
                                 element = jQuery(element).find('div.sonata-ba-field.sonata-ba-field-standard-natural');
                                 // remove the sortable handler and put it back
                                 jQuery('span.sonata-ba-sortable-handler', element).remove();
-                                jQuery(element).append('<span class="sonata-ba-sortable-handler"><i class="glyphicon glyphicon-move" class="cursor-pointer"></i></span>');
+                                jQuery(element).append('<span class="sonata-ba-sortable-handler"><i class="fa-solid fa-arrows-up-down-left-right cursor-pointer"></i></span>');
                                 jQuery('input', element).hide();
                             });
 
@@ -144,7 +142,6 @@ file that was distributed with this source code.
                             apply_position_value_{{ id }}();
                             jQuery('div#field_container_{{ id }} ul.sortable').sortable('refresh');
                         });
-
 
                         {% endif %}
 
@@ -168,7 +165,7 @@ file that was distributed with this source code.
                             class="btn btn-default sonata-ba-action"
                             title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                             >
-                        <i class="glyphicon glyphicon-plus"></i>
+                        <i class="fa fa-plus"></i>
                         {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                     </a>
                 {% endif %}
@@ -208,7 +205,6 @@ file that was distributed with this source code.
                                         <td class="sonata-ba-td-{{ id }}-{{ field_name }}{% if nested_field.vars.errors|length > 0 %} error{% endif %}">
                                             {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
                                                 {{ form_widget(nested_field) }}
-
                                                 {% set dummy = nested_group_field.setrendered %}
                                             {% else %}
                                                 {{ form_widget(nested_field) }}
@@ -248,7 +244,7 @@ file that was distributed with this source code.
                                             </span>
                                         {% endif %}
                                         {% if loop.last %}
-                                        <a class="pull-right btn btn-danger btn-small __delete"><i class="glyphicon glyphicon-trash"></i><span style="display: none;">{{ delete_button|raw }}</span></a>
+                                        <a class="pull-right btn btn-danger btn-small __delete"><i class="fa fa-trash"></i><span style="display: none;">{{ delete_button|raw }}</span></a>
                                     {% endif %}
 
                                     {% endfor %}

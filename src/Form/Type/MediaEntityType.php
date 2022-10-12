@@ -105,9 +105,7 @@ class MediaEntityType extends AbstractType
                 'context' => false,
                 'admin_code' => 'sonata.media.admin.media',
                 'error_bubbling' => false,
-                'compound' => false,
-                'data_class' => null
-
+                'compound' => false
             ]
         );
 

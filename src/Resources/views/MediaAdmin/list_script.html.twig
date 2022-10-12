@@ -151,7 +151,7 @@
                 sortList(list);
             },
             expand: function(){
-                $('li.mjs-nestedSortable-hovering > div > i.glyphicon-folder-close').toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open')
+                $('li.mjs-nestedSortable-hovering > div > i.fa-folder').toggleClass('fa-folder').toggleClass('fa-folder-open')
             }
         });
 
@@ -296,7 +296,7 @@
         body.on('click', 'i.tag_folder', function(e) {
             var target = $(e.target);
             target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
-            target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
+            target.toggleClass('fa-folder').toggleClass('fa-folder-open');
         });
 
         body.on('click', '.batch-add-tags', submitAjaxBatchForm);

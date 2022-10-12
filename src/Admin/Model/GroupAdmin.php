@@ -84,13 +84,6 @@ abstract class GroupAdmin extends BaseAdmin
         );
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'glyphicon-group';
-    }
 
     /**
      * {@inheritdoc}

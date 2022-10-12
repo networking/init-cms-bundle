@@ -38,7 +38,7 @@ file that was distributed with this source code.
                                        data-sort-order="0"
                                        data-value="{{ zone.restricted_types }}"
                                        title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <i class="fa fa-plus"></i>
                                     </a>
                                 </div>
                             </li>
@@ -60,15 +60,15 @@ file that was distributed with this source code.
                                         <div class="content_preview">
                                             <div class="layout_controls">
                                                 <div class="pull-left">
-                                                    <i class="glyphicon glyphicon-move soft-background"></i>
-                                                    <i class="glyphicon glyphicon-trash soft-background delete_block"
+                                                    <i class="fa-solid fa-arrows-up-down-left-right soft-background"></i>
+                                                    <i class="fa fa-trash soft-background delete_block"
                                                        data-value="{{ layout_block_field.vars.value.id }}"></i>
-                                                    <i class="glyphicon glyphicon-pencil soft-background layout-link"
+                                                    <i class="fa-regular fa-pen-to-square soft-background layout-link"
                                                        data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block_field.vars.value.id}) }}"></i>
                                                 </div>
                                                 <div class="pull-right text-{{ layout_block_field.vars.value.isActive?'success':'danger' }}">
                                                     {{ layout_block_field.vars.value.isActive?'Online':'Offline' }}
-                                                    <i class="glyphicon glyphicon-{{ layout_block_field.vars.value.isActive?'ok':'minus' }}-sign
+                                                    <i class="fa fa-{{ layout_block_field.vars.value.isActive?'circle-check':'ban' }}
                                                     btn btn-xs btn-{{ layout_block_field.vars.value.isActive?'success':'danger' }} toggle-active"
                                                     data-value="{{ layout_block_field.vars.value.id }}"> </i>
                                                 </div>
@@ -90,7 +90,7 @@ file that was distributed with this source code.
                                                data-sort-order="{{ loop.index }}"
                                                data-value="{{ zone.restricted_types }}"
                                                title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                                <i class="glyphicon glyphicon-plus"></i>
+                                                <i class="fa fa-plus"></i>
                                             </a>
                                         </div>
                                     </li>

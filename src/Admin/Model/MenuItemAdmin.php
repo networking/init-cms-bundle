@@ -94,13 +94,6 @@ abstract class MenuItemAdmin extends BaseAdmin
     }
 
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'glyphicon-align-left';
-    }
 
     /**
      * {@inheritdoc}

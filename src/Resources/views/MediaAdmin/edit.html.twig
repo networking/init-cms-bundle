@@ -192,7 +192,7 @@ file that was distributed with this source code.
                                                        readonly="readonly" id="download"
                                                        value="{{ url('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
                                                 <span class="input-group-addon"><a
-                                                            class="glyphicon glyphicon-copy copy-link"
+                                                            class="fa fa-clipboard copy-link"
                                                             data-field="#download"></a></span>
                                             </div>
                                             {% if 'sonata.media.security.public_strategy' != sonata_media.pool.getContext(object.context).download.strategy %}
@@ -214,7 +214,7 @@ file that was distributed with this source code.
                                                            readonly="readonly" id="reference"
                                                            value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
                                                     <span class="input-group-addon"><a
-                                                                class="glyphicon glyphicon-copy copy-link"
+                                                                class="fa fa-clipboard copy-link"
                                                                 data-field="#reference"></a></span>
                                                 </div>
                                             </td>
@@ -237,7 +237,7 @@ file that was distributed with this source code.
                                                                readonly="readonly"
                                                                value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, name)  }}"/>
                                                         <span class="input-group-addon"><a
-                                                                    class="glyphicon glyphicon-copy copy-link"
+                                                                    class="fa fa-clipboard copy-link"
                                                                     data-field="#{{ name }}"></a></span>
                                                     </div>
 
@@ -256,7 +256,7 @@ file that was distributed with this source code.
                                                            readonly="readonly" id="reference"
                                                            value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
                                                     <span class="input-group-addon"><a
-                                                                class="glyphicon glyphicon-copy copy-link"
+                                                                class="fa fa-clipboard copy-link"
                                                                 data-field="#reference"></a></span>
                                                 </div>
                                             </td>

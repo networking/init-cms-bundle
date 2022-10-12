@@ -62,7 +62,7 @@
                                 <li><a href="{{ admin.generateObjectUrl('edit', object) }}"
                                        title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
                                        data-follow="{{ admin.generateObjectUrl('edit', object) }}">
-                                        <i class="glyphicon glyphicon-pencil"></i> {{ 'action_edit'|trans({}, 'SonataAdminBundle') }}
+                                        <i class="fa-regular fa-pen-to-square"></i> {{ 'action_edit'|trans({}, 'SonataAdminBundle') }}
                                     </a></li>
                             {% endif %}
                             {% if(admin.isGranted('DELETE', object)) %}
@@ -70,7 +70,7 @@
                                        class="dialog-link"
                                        id="{{ admin.getClassnameLabel() }}_{{ object.id }}"
                                        title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
-                                        <i class="glyphicon glyphicon-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                                        <i class="fa fa-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
                                     </a></li>
                             {% endif %}
                         {% endif %}

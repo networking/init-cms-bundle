@@ -63,11 +63,6 @@ file that was distributed with this source code.
                 </div>
 
                 <div class="pull-right">
-                    {% if app.user %}
-                        <button type="button" class="btn btn-default navbar-btn pull-right hidden-sm hidden-xs"  id="toggleWidth">
-                            <i class="glyphicon glyphicon-{% if app.user and app.user.getAdminSetting('admin_portal_width') == 'small' %}resize-full{% else %}resize-small{% endif %}"></i>
-                        </button>
-                    {% endif %}
                     <ul class="nav pull-right">
                         <li>
                             <a href="JavaScript:window.close()"

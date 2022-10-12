@@ -197,7 +197,7 @@ file that was distributed with this source code.
                                 {% if sortable %}
                                     <a href="{{ admin.generateUrl('init_ckeditor_browser', urlParams|merge(sort_parameters)) }}" class="btn btn-sm btn-{{ sort_active_class ? 'primary':'default' }}">{% endif %}
                                 {% if sort_active_class %}
-                                    <i class="glyphicon glyphicon-chevron-{{ sort_by|lower == 'desc'? 'up':'down' }}"></i>
+                                    <i class="fa fa-chevron-{{ sort_by|lower == 'desc'? 'up':'down' }}"></i>
                                 {% endif %}
                                 {{ field_description.label|trans({}, admin.translationDomain)  }}
                                 </a>
@@ -307,7 +307,7 @@ file that was distributed with this source code.
             body.on('click', 'i.tag_folder', function(e) {
                 var target = $(e.target);
                 target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
-                target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
+                target.toggleClass('fa-folder').toggleClass('fa-folder-open');
             });
 
             body.on('click', 'a.media-pager', function (e) {

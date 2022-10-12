@@ -99,13 +99,6 @@ abstract class PageAdmin extends BaseAdmin
         return 'admin_networking_initcms_page';
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'glyphicon-file';
-    }
 
     public function __construct(PageManagerInterface $pageManager)
     {

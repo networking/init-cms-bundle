@@ -140,7 +140,7 @@ file that was distributed with this source code.
                         <h1><span class="info-soft">{{ ('media_context.' ~ name)|trans({}) }}</span>
                             <a class="btn btn-primary btn-sm menu-dialog-link"
                                href="{{ admin.generateUrl('create', {'context' : name}) }}">
-                                <i class="glyphicon glyphicon-plus icon-white"></i> {{ 'button.create.gallery_item'|trans({}, 'MediaAdmin') }}
+                                <i class="fa fa-plus icon-white"></i> {{ 'button.create.gallery_item'|trans({}, 'MediaAdmin') }}
                             </a>
                         </h1>
                         {% set batchactions = admin.batchactions %}

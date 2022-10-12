@@ -323,7 +323,7 @@ function field_remove_element_{{ id }}(event) {
 
 field_{{ id }}.on('change', function (event) {
     InitCms.debugMessage('[{{ id }}] update the label');
-    jQuery('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/sonataadmin/ajax-loader.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
+    jQuery('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/networkinginitcms/img/loading.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
     if (field_{{ id }}.val()) {
         jQuery.ajax({
             type: 'GET',

@@ -40,13 +40,6 @@ abstract class TagAdmin extends AbstractAdmin
 
     protected $formOptions =['layout' => 'horizontal'];
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'glyphicon-tags';
-    }
 
     /**
      * @param RouteCollection $collection

@@ -35,13 +35,6 @@ abstract class HelpTextAdmin extends BaseAdmin
         return 'cms/help';
     }
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'glyphicon-question';
-    }
 
     /**
      * {@inheritdoc}

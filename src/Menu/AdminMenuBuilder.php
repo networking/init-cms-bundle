@@ -316,18 +316,7 @@ class AdminMenuBuilder extends MenuBuilder
      */
     protected function addIcon($item, $icon)
     {
-        $icon = array_merge(
-            ['tag' => (isset($icon['glyphicon'])) ? 'span' : 'i'],
-            $icon
-        );
-        $addclass = '';
-        if (isset($icon['inverted']) && $icon['inverted'] === true) {
-            $addclass = ' icon-white';
-        }
-        $classicon = (isset($icon['glyphicon'])) ? ' class="'.$icon['glyphicon']
-            : ' class="far fa-'.$icon['icon'];
-        $myicon = ' <'.$icon['tag'].$classicon.$addclass.'"></'.$icon['tag']
-            .'>';
+        $myicon = ' <i class="far fa-"'.$icon['icon'].'"></i>';
         if (!isset($icon['append']) || $icon['append'] === true) {
             $label = $item->getLabel().' '.$myicon;
         } else {

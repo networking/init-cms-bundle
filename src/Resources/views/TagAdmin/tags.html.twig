@@ -6,13 +6,13 @@
         <li  class="table-row-style sortable-tag mjs-nestedSortable-{{ selected==tag.id or tag.hasChild(selected)?'expanded':'collapsed' }} {% if lastItem and tag.id == lastItem %}last-item{% endif %}" id="tag_{{ tag.id }}" data-tag-name="{{ tag.name }}">
                 <div class="dotted">&nbsp;</div>
                 <div class="handle menu_item tag_item {{ selected==tag.id?'info':'' }} " id="div_{{ tag.id }}" ondrop="dropTag(event, '{{ tag.id }}')"   ondragover="openTag(event, '{{ tag.id }}')" >
-                    <i class="tag_folder glyphicon glyphicon-folder-{{ selected==tag.id or tag.hasChild(selected)?'open':'close' }} cursor-pointer"></i>&nbsp;
+                    <i class="tag_folder fa fa-folder{{ selected==tag.id or tag.hasChild(selected)?'-open':'' }} cursor-pointer"></i>&nbsp;
                     <a class="tag_link" id="tag_link_{{ tag.id }}" data-pk="{{ tag.id }}" >{{ tag.name }}</a>
 
                     {% if not noSort and tagAdmin.isGranted('DELETE', tag) and tagAdmin.hasRoute('delete') %}
                         <a href="{{ tagAdmin.generateObjectUrl('delete', tag, {'returnToMedia': true}) }}" class="pull-right dialog-link delete-tag" style="display: none"
                            id="{{ tagAdmin.getClassnameLabel() }}_{{ tag.id }}" data-original-title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}" title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
-                            <i class="glyphicon glyphicon-trash"></i>
+                            <i class="fa fa-trash"></i>
                         </a>
                     {% endif %}
                 </div>

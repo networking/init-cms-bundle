@@ -78,6 +78,7 @@ file that was distributed with this source code.
 
 {% endblock form_label %}
 
+
 {% block form_help %}
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
@@ -100,7 +101,55 @@ file that was distributed with this source code.
             {{- form_label(form, null, { widget: parent() }) -}}
         </div>
     {% else %}
-    {{ parent() }}
+        {% apply spaceless %}
+            {% if label is not same as(false) and label is empty %}
+                {%- if label_format is defined and label_format is not empty -%}
+                    {% set label = label_format|replace({
+                        '%name%': name,
+                        '%id%': id,
+                    }) %}
+                {%- else -%}
+                    {% set label = name|humanize %}
+                {%- endif -%}
+            {% endif %}
+            {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+                <div
+                {%- if widget_type == 'inline-btn' %} class="btn-group" data-toggle="buttons"
+                {%- else %} class="checkbox"
+                {%- endif %}>
+            {% endif %}
+            {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+                {% if widget_type == 'inline-btn' %}
+                    {% set default_class = 'btn btn-primary' %}
+                    {% set label_attr = attr|default({'class': default_class}) %}
+                    {% if checked %}
+                        {% set label_attr = label_attr|merge({'class': 'active ' ~ attr.class|default(default_class)}) %}
+                    {% endif %}
+                {% endif %}
+                {% if not compound %}
+                    {% set label_attr = label_attr|merge({'for': id}) %}
+                {% endif %}
+                <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}
+                {%- if layout == 'inline' %} class="checkbox-inline"{% endif %}>
+            {% endif %}
+            <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/>
+            {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+                {% if label_render %}
+                    {% if widget_checkbox_label in ['both', 'widget'] %}
+                        {% if choice_translation_domain is not defined %}
+                            {% set choice_translation_domain = translation_domain %}
+                        {% endif %}
+                        {{ choice_translation_domain is same as(false) ? label|raw : label|trans({}, choice_translation_domain)|raw }}
+                    {% else %}
+                        {{ form_help(form) }}
+                    {% endif %}
+                    </label>
+                {% endif %}
+            {% endif %}
+            {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+                </div>
+            {% endif %}
+        {% endapply %}
     {% endif %}
 {% endblock checkbox_widget %}
 
@@ -108,7 +157,6 @@ file that was distributed with this source code.
 {% block sonata_type_model_list_widget %}
     <div id="field_container_{{ id }}" class="field-container">
         <span id="field_widget_{{ id }}">
-
             {% if sonata_admin.value and sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value) is not null%}
                 {{ render(path('sonata_admin_short_object_information', {
                     '_sonata_admin': sonata_admin.field_description.associationadmin.baseCodeRoute,
@@ -121,6 +169,7 @@ file that was distributed with this source code.
                     : {}
                 ) + app.request.query.all|default({})
                 )) }}
+
             {% elseif sonata_admin.field_description.options.placeholder is defined and sonata_admin.field_description.options.placeholder %}
                 <span class="inner-field-short-description">
                     {{ sonata_admin.field_description.options.placeholder|trans({}, 'SonataAdminBundle') }}
@@ -140,7 +189,7 @@ file that was distributed with this source code.
                    class="btn btn-default btn-sm sonata-ba-action"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
                 >
-                    <i class="glyphicon glyphicon-list"></i>
+                    <i class="fa fa-list"></i>
                     {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -152,7 +201,7 @@ file that was distributed with this source code.
                    class="btn btn-primary btn-sm sonata-ba-action"
                    title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                 >
-                    <i class="glyphicon glyphicon-plus"></i>
+                    <i class="fa fa-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -164,7 +213,7 @@ file that was distributed with this source code.
                    class="btn btn-danger btn-sm sonata-ba-action"
                    title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
                 >
-                    <i class="glyphicon glyphicon-trash "></i>
+                    <i class="fa fa-trash "></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -521,7 +570,6 @@ file that was distributed with this source code.
 {% endblock sonata_security_roles_widget %}
 
 {% block media_entity_type_widget %}
-
     {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
     {% if not label_render %}{% set widget_controls = false %}{% endif %}
     <div id="field_container_{{ id }}" class="field-container">
@@ -542,7 +590,6 @@ file that was distributed with this source code.
             </span>
 
         {{ block('hidden_widget') }}
-
         <span id="field_actions_{{ id }}" class="field-actions">
 
                 <a href="{{ admin.generateUrl('gallery', {'context': (context?context:''), 'provider': (provider_name ? provider_name : '')}) }}"
@@ -550,7 +597,7 @@ file that was distributed with this source code.
                    class="btn btn-default btn-sm sonata-ba-action"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
                 >
-                    <i class="glyphicon glyphicon-list"></i>
+                    <i class="fa fa-list"></i>
                     {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
                 </a>
 
@@ -561,7 +608,7 @@ file that was distributed with this source code.
                    class="btn btn-primary btn-sm sonata-ba-action"
                    title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                 >
-                    <i class="glyphicon glyphicon-plus"></i>
+                    <i class="fa fa-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
@@ -573,7 +620,7 @@ file that was distributed with this source code.
                    class="btn btn-danger btn-sm sonata-ba-action"
                    title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
                 >
-                    <i class="glyphicon glyphicon-trash"></i>
+                    <i class="fa fa-trash"></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
