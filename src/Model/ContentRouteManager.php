@@ -32,10 +32,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
      */
     protected $class;
 
-    protected $allowLocaleCookie;
     
-    protected $singleLanauge;
-
     /**
      * {@inheritdoc}
      */
@@ -130,7 +127,6 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
         if($controller = $contentRoute->getController()){
             $defaults[RouteObjectInterface::CONTROLLER_NAME] = $controller;
         }
-
         if (self::hasLocaleUrl()  && $addLocale) {
             $locale = substr($contentRoute->getLocale(), 0, 2);
             $path = self::stripLocale($path, $locale);
