@@ -11,10 +11,6 @@ file that was distributed with this source code.
 
 {% extends base_template %}
 
-{% block actions %}
-    {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
-{% endblock %}
-
 {% block title %}
     {{ admin.isChild and admin.parent.subject ? 'title_edit'|trans({'%name%': admin.parent.toString(admin.parent.subject)|u.truncate(15, '...') }, 'SonataAdminBundle') : '' }}
 {% endblock %}
