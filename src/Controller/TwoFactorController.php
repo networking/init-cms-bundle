@@ -68,7 +68,7 @@ class TwoFactorController extends AbstractController
         );
     }
 
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return [
                 'networking_init_cms.google.authenticator.helper' => '?'.HelperInterface::class,
