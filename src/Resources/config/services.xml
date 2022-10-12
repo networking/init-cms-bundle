@@ -20,7 +20,10 @@
             <argument key="$managedLocales">%lexik_translation.managed_locales%</argument>
         </service>
 
-
+        <service id="Networking\InitCmsBundle\Controller\TwoFactorController" autowire="true" public="true">
+            <argument key="$userManager" type="service" id="networking_init_cms.user_manager"/>
+            <tag name="controller.service_arguments"/>
+        </service>
 
         <service id="Networking\InitCmsBundle\Controller\AdminSecurityController" autowire="true" public="true">
             <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>

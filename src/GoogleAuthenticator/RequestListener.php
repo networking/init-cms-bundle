@@ -12,8 +12,9 @@ declare(strict_types=1);
  */
 
 namespace Networking\InitCmsBundle\GoogleAuthenticator;
-
+use Sonata\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -35,12 +36,6 @@ class RequestListener
      */
     protected $tokenStorage;
 
-    /**
-     * NEXT_MAJOR: Remove this property.
-     *
-     * @var EngineInterface
-     */
-    protected $templating;
 
     /**
      * @var Environment
@@ -48,8 +43,6 @@ class RequestListener
     private $twig;
 
     /**
-     * NEXT_MAJOR: Remove `$templating` argument and make `$twig` argument mandatory.
-     *
      * @param EngineInterface|Environment $templating
      */
     public function __construct(Helper $helper, TokenStorageInterface $tokenStorage, Environment $twig = null)
@@ -57,6 +50,7 @@ class RequestListener
         $this->helper = $helper;
         $this->tokenStorage = $tokenStorage;
         $this->twig = $twig;
+
     }
 
     public function onCoreRequest(RequestEvent $event): void
@@ -66,7 +60,7 @@ class RequestListener
         }
 
         $token = $this->tokenStorage->getToken();
-
+        $request = $event->getRequest();
         if (!$token) {
             return;
         }
@@ -75,11 +69,19 @@ class RequestListener
             return;
         }
 
+        if(!$this->helper->needToHaveGoogle2FACode($request)){
+            return;
+        }
+
         $key = $this->helper->getSessionKey($token);
         $request = $event->getRequest();
         $session = $event->getRequest()->getSession();
         $user = $token->getUser();
 
+        if(!$user->hasStepVerificationCode() && '/admin/two_factor_setup' !== $request->getRequestUri()){
+            $event->setResponse(new RedirectResponse('/admin/two_factor_setup'));
+            return;
+        }
         if (!$session->has($key)) {
             return;
         }
@@ -99,21 +101,13 @@ class RequestListener
             $state = 'error';
         }
 
-        // NEXT_MAJOR: Remove the following check and the `else` condition
-        if ($this->twig) {
-            $event->setResponse(new Response($this->twig->render('@NetworkingInitCms/Admin/Security/login.html.twig', [
-                'base_template' => '@NetworkingInitCms/admin_layout.html.twig',
-                'error' => [],
-                'state' => $state,
-                'two_step_submit' => true,
-            ])));
-        } else {
-            $event->setResponse($this->templating->renderResponse('@NetworkingInitCms/Admin/Security/login.html.twig', [
-                'base_template' => '@NetworkingInitCms/admin_layout.html.twig',
-                'error' => [],
-                'state' => $state,
-                'two_step_submit' => true,
-            ]));
-        }
+
+        $event->setResponse(new Response($this->twig->render('@NetworkingInitCms/Admin/Security/login.html.twig', [
+            'base_template' => '@NetworkingInitCms/admin_layout.html.twig',
+            'error' => [],
+            'state' => $state,
+            'two_step_submit' => true,
+        ])));
+
     }
 }

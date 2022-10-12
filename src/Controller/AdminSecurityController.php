@@ -8,6 +8,8 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Entity\UserManager;
+use Networking\InitCmsBundle\GoogleAuthenticator\Helper;
 use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Sonata\UserBundle\Model\UserInterface;
@@ -16,6 +18,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -36,7 +40,6 @@ class AdminSecurityController extends AbstractController
      * @var TemplateRegistryInterface
      */
     private $templateRegistry;
-
     /**
      * AdminSecurityController constructor.
      * @param CsrfTokenManagerInterface $csrfTokenManager
@@ -111,6 +114,7 @@ class AdminSecurityController extends AbstractController
             ]
         );
     }
+
 
     public function checkAction(): void
     {

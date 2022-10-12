@@ -260,8 +260,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
     {
         $container->setParameter('networking_init_cms.single_language', $config['single_language']);
 
-        $config['allow_locale_cookie'] = $config['single_language'] ? false : $config['allow_locale_cookie'];
-
         $container->setParameter('networking_init_cms.allow_locale_cookie', $config['allow_locale_cookie']);
     }
 
@@ -319,7 +317,8 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
         if (!$config['google_authenticator']['enabled']) {
             $container->removeDefinition('networking_init_cms.google.authenticator');
-            $container->removeDefinition('networking_init_cms.google.authenticator.provider');
+            $container->removeDefinition('networking_init_cms.google.authenticator.success_handler');
+            $container->removeDefinition('networking_init_cms.google.authenticator.helper');
             $container->removeDefinition('networking_init_cms.google.authenticator.interactive_login_listener');
             $container->removeDefinition('networking_init_cms.google.authenticator.request_listener');
 
@@ -340,9 +339,10 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         // NEXT_MAJOR: Remove `networking_init_cms.google.authenticator.ip_white_list` parameter.
         $container->setParameter('networking_init_cms.google.authenticator.ip_white_list', $trustedIpList);
         $container->setParameter('networking_init_cms.google.authenticator.trusted_ip_list', $trustedIpList);
-
-        $container->getDefinition('networking_init_cms.google.authenticator.provider')
+        $container->getDefinition('networking_init_cms.google.authenticator.helper')
             ->replaceArgument(0, $config['google_authenticator']['server']);
+        $container->setAlias( 'Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface', 'networking_init_cms.google.authenticator.helper');
+
     }
 
 

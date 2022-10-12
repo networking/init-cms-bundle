@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\EventListener;
 
-use FOS\UserBundle\Model\UserManagerInterface;
 use Networking\InitCmsBundle\GoogleAuthenticator\Helper;
+use Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface;
 use Sonata\UserBundle\Model\User;
+use Sonata\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +40,7 @@ final class TwoFactorLoginSuccessHandler implements AuthenticationSuccessHandler
     /**
      * @var Helper
      */
-    private $googleAuthenticator;
+    private $helper;
 
     /**
      * @var UserManagerInterface
@@ -58,7 +59,7 @@ final class TwoFactorLoginSuccessHandler implements AuthenticationSuccessHandler
         ?UrlGeneratorInterface $urlGenerator = null // NEXT_MAJOR: make it mandatory.
     ) {
         $this->engine = $engine;
-        $this->googleAuthenticator = $helper;
+        $this->helper = $helper;
         $this->userManager = $userManager;
         $this->urlGenerator = $urlGenerator;
     }
@@ -70,33 +71,17 @@ final class TwoFactorLoginSuccessHandler implements AuthenticationSuccessHandler
     {
         /** @var $user User */
         $user = $token->getUser();
-        $needToHave2FA = $this->googleAuthenticator->needToHaveGoogle2FACode($request);
+        $needToHave2FA = $this->helper->needToHaveGoogle2FACode($request);
 
         if ($needToHave2FA && !$user->getTwoStepVerificationCode()) {
-            $secret = $this->googleAuthenticator->generateSecret();
-            $user->setTwoStepVerificationCode($secret);
-
-            $qrCodeUrl = $this->googleAuthenticator->getUrl($user);
-            $this->userManager->updateUser($user);
-
-            return new Response($this->engine->render(
-                '@NetworkingInitCms/Admin/Security/login.html.twig',
-                [
-                    'qrCodeUrl' => $qrCodeUrl,
-                    'qrSecret' => $secret,
-                    'base_template' => '@NetworkingInitCms/admin_layout.html.twig',
-                    'error' => [],
-                ]
-            ));
+            $url = $this->urlGenerator->generate('networking_init_cms_admin_two_factor_setup');
+            return new RedirectResponse($url);
+            
         } elseif ($needToHave2FA && $user->getTwoStepVerificationCode()) {
-            $request->getSession()->set($this->googleAuthenticator->getSessionKey($token), null);
+            $request->getSession()->set($this->helper->getSessionKey($token), null);
         }
 
-        // NEXT_MAJOR: remove hardcoded url.
-        $url = $this->urlGenerator
-            ? $this->urlGenerator->generate('sonata_admin_dashboard')
-            : '/admin'
-        ;
+        $url = $this->urlGenerator->generate('sonata_admin_dashboard');
 
         return new RedirectResponse($url);
     }

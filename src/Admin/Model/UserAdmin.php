@@ -147,6 +147,9 @@ abstract class UserAdmin extends BaseUserAdmin
                 null,
                 ['editable' => true]
             );
+        if($this->googleAuthEnabled){
+            $listMapper->add('hasStepVerificationCode', 'boolean');
+        }
         if ($this->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
             $listMapper
                 ->add('impersonating', FieldDescriptionInterface::TYPE_STRING, [
@@ -228,7 +231,7 @@ abstract class UserAdmin extends BaseUserAdmin
         }
 
         if($this->googleAuthEnabled){
-            $formMapper->with('Keys')
+            $formMapper->with('Keys', ['label' => false])
                 ->add('twoStepVerificationCode', null, ['required' => false, 'disabled' => true])
                 ->end();
 

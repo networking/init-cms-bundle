@@ -366,4 +366,9 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
         ];
     }
 
+    public function hasStepVerificationCode()
+    {
+        return !!$this->twoStepVerificationCode;
+    }
+
 }

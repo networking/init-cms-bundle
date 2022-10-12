@@ -1,46 +1,69 @@
 {#
-
+{#
 This file is part of the Sonata package.
 
 (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/bootstrap/css/bootstrap.min.css') }}" type="text/css" media="all" >
-        <link rel="stylesheet" href="/bundles/sonataadmin/css/layout.css" type="text/css" media="all">
-        <link rel="stylesheet" href="/bundles/sonataadmin/css/colors.css" type="text/css" media="all">
-    </head>
+{% extends base_template %}
 
-    <body class="sonata-bc">
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="connection">
+{% block body_attributes %}class="sonata-bc login-page"{% endblock %}
 
-                    <form method="POST">
-                        {% if state == 'error' %}
-                            <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
-                        {% endif %}
-
-                        <div class="control-group">
-                            <label for="code">{{ 'label_two_step_code'|trans({}, 'SonataUserBundle') }}</label>
-
-                            <div class="controls">
-                                <input type="text" id="username" name="_code" class="big sonata-medium" autocomplete='off'/>
-                                <span class="help-block sonata-ba-field-help">{{ 'message_two_step_code_help'|trans({}, 'SonataUserBundle') }}</span>
+{% block sonata_wrapper %}
+    <div class="row">
+    <div id="login" class="connection modal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                {% block sonata_user_login_form %}
+                    {% block sonata_user_login_error %}
+                        {% if error %}
+                            <div class="alert alert-danger alert-error">
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
                             </div>
-                        </div>
+                        {% endif %}
+                    {% endblock %}
+                        <form method="POST" role="form">
+                            <div class="login-box modal-body">
+                                {% if state == 'error' %}
+                                    <div class="alert alert-error">{{ 'two_step_code_error'|trans({}, 'TwoFactor') }}</div>
+                                {% endif %}
+                                {% if hasStepVerificationCode %}
+                                    <div class="alert alert-warning">{{ 'two_step_code_exists'|trans({}, 'TwoFactor') }}</div>
+                                {% endif %}
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p align="middle">{{ 'message_two_step_into'|trans({}, 'TwoFactor') }}</p>
+                                        <p align="middle"><img src="{{ qrCodeUrl }}" alt="QR-code"></p>
+                                        <p align="middle">{{ 'qr_code_secret'|trans({}, 'TwoFactor') }}
+                                            : {{ qrSecret }}</p>
+                                        <hr>
+                                        <input type="text" class="form-control  input-large" id="code" name="_code"
+                                               autocomplete='off' autofocus/>
 
-                        <div class="well form-actions">
-                            <input type="submit" class="btn primary" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
-                        </div>
-                    </form>
-                </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <button type="submit"
+                                                class="btn btn-primary btn-block btn-flat">{{ 'confirm_code'|trans({}, 'TwoFactor') }}</button>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 20px">
+                                    <div class="col text-center">
+                                        <p>
+                                            <a href="{{ url('networking_init_cms_admin_security_logout') }}">{{ 'complete_later'|trans({}, 'TwoFactor') }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                {% endblock %}
             </div>
         </div>
-    </body>
-</html>
+    </div>
+
+{% endblock sonata_wrapper %}

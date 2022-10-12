@@ -19,6 +19,11 @@ networking_init_cms_admin_security_check:
     defaults: { _controller: Networking\InitCmsBundle\Controller\AdminSecurityController::checkAction}
     methods: [POST]
 
+networking_init_cms_admin_two_factor_setup:
+    path: /admin/two_factor_setup
+    defaults: { _controller: Networking\InitCmsBundle\Controller\TwoFactorController::setTwoFactorAuthentication}
+    methods: [GET, POST]
+
 networking_init_cms_admin_security_logout:
     path: /admin/logout
     defaults: { _controller: Networking\InitCmsBundle\Controller\AdminSecurityController::logoutAction}

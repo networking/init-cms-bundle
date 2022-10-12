@@ -21,105 +21,122 @@ file that was distributed with this source code.
 
 {% block sonata_wrapper %}
     <div class="row">
-        <div id="login" class="connection modal">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="login-box-body">
-                        {% block sonata_user_login_form %}
-                            {% block sonata_user_login_error %}
-                                {% if error %}
-                                    <div class="alert alert-danger alert-error">
-                                        {{ error.messageKey|trans(error.messageData, 'security') }}
-                                    </div>
+    <div id="login" class="connection modal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+
+                {% block sonata_user_login_form %}
+                    {% block sonata_user_login_error %}
+                        {% if error %}
+                            <div class="alert alert-danger alert-error">
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+                    {% if qrCodeUrl is defined %}
+                        <form method="POST" role="form">
+                            <div class="login-box modal-body">
+                                {% if state == 'error' %}
+                                    <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
                                 {% endif %}
-                            {% endblock %}
-                            {% if qrCodeUrl is defined %}
                                 <div class="row">
                                     <div class="col-xs-12">
+                                        <p align="middle">{{ 'message_two_step_into'|trans({}, 'SonataUserBundle') }}</p>
                                         <p align="middle"><img src="{{ qrCodeUrl }}" alt="QR-code"></p>
                                         <p align="middle">{{ 'qr_code_secret'|trans({}, 'SonataUserBundle') }}
                                             : {{ qrSecret }}</p>
-                                        <p align="middle">
-                                            <a href="{{ path('sonata_admin_dashboard') }}">{{ 'qr_go_next'|trans({}, 'SonataUserBundle') }}</a>
-                                        </p>
+                                        <hr>
+                                            <input type="text" class="form-control  input-large" id="code" name="_code"
+                                                   autocomplete='off' autofocus/>
+
                                     </div>
                                 </div>
-                            {% elseif two_step_submit|default(false) %}
-                                <form method="POST" role="form">
-                                    {% if state == 'error' %}
-                                        <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
-                                    {% endif %}
-                                    <label for="code">{{ 'label_two_step_code'|trans({}, 'SonataUserBundle') }}</label>
-                                    <div class="input-group input-group-lg">
-                                        <input type="text" class="form-control" id="code" name="_code"
-                                               autocomplete='off' autofocus/>
-                                        <span class="input-group-btn">
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <button type="submit"
+                                                class="btn btn-primary btn-block btn-flat">{{ 'security.login.confirm_code'|trans({}, 'SonataUserBundle') }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    {% elseif two_step_submit|default(false) %}
+                        <form method="POST" role="form">
+                            <div class="login-box modal-body">
+                                {% if state == 'error' %}
+                                    <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
+                                {% endif %}
+                                <label for="code">{{ 'label_two_step_code'|trans({}, 'SonataUserBundle') }}</label>
+                                <div class="input-group input-group-lg">
+                                    <input type="text" class="form-control" id="code" name="_code"
+                                           autocomplete='off' autofocus/>
+                                    <span class="input-group-btn">
                                                 <input class="btn btn-primary"
                                                        id="_submit"
                                                        name="_submit"
                                                        type="submit"
                                                        value="{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}"/>
                                             </span>
-                                    </div>
-                                    <span class="help-block sonata-ba-field-help">{{ 'message_two_step_code_help'|trans({}, 'SonataUserBundle') }}</span>
-                                </form>
-                            {% else %}
-                                <form action="{{ path("sonata_user_admin_security_check") }}" method="post"
-                                      role="form">
-                                    <div class="login-box modal-body">
-                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                                </div>
+                                <span class="help-block sonata-ba-field-help">{{ 'message_two_step_code_help'|trans({}, 'SonataUserBundle') }}</span>
+                            </div>
+                        </form>
+                    {% else %}
+                        <form action="{{ path("sonata_user_admin_security_check") }}" method="post"
+                              role="form">
+                            <div class="login-box modal-body">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
 
-                                        <div class="form-group has-feedback">
-                                            <input class="form-control"
-                                                   id="username"
-                                                   name="_username"
-                                                   placeholder="{{ 'security.login.username'|trans({}, 'SonataUserBundle') }}"
-                                                   required="required"
-                                                   type="text"
-                                                   value="{{ last_username }}"/>
-                                        </div>
+                                <div class="form-group">
+                                    <input class="form-control input-large"
+                                           id="username"
+                                           name="_username"
+                                           placeholder="{{ 'security.login.username'|trans({}, 'SonataUserBundle') }}"
+                                           required="required"
+                                           type="text"
+                                           value="{{ last_username }}"/>
+                                </div>
 
-                                        <div class="form-group has-feedback">
-                                            <input class="form-control"
-                                                   id="password"
-                                                   name="_password"
-                                                   placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
-                                                   required="required"
-                                                   type="password"/>
-                                        </div>
+                                <div class="form-group">
+                                    <input class="form-control input-large"
+                                           id="password"
+                                           name="_password"
+                                           placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
+                                           required="required"
+                                           type="password"/>
+                                </div>
 
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" id="remember_me" name="_remember_me"
-                                                               value="on"/>
-                                                        {{ 'security.login.remember_me'|trans({}, 'SonataUserBundle') }}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <button type="submit"
-                                                        class="btn btn-primary btn-block btn-flat">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</button>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-top: 20px">
-                                            <div class="col text-center">
-                                                <p><a href="{{ reset_route }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a></p>
-                                            </div>
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="remember_me" name="_remember_me"
+                                                       value="on"/>
+                                                {{ 'security.login.remember_me'|trans({}, 'SonataUserBundle') }}
+                                            </label>
                                         </div>
                                     </div>
-                                </form>
-
-
-                            {% endif %}
-                        {% endblock %}
-                    </div>
-                </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <button type="submit"
+                                                class="btn btn-primary btn-block btn-flat">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</button>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 20px">
+                                    <div class="col text-center">
+                                        <p>
+                                            <a href="{{ reset_route }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    {% endif %}
+                {% endblock %}
             </div>
         </div>
     </div>

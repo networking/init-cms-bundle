@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="networing_init_cms.google.authenticator" class="Google\Authenticator\GoogleAuthenticator">
-
-        </service>
-        <service id="networking_init_cms.google.authenticator.provider" class="Networking\InitCmsBundle\GoogleAuthenticator\Helper">
+        <service id="networing_init_cms.google.authenticator" class="Google\Authenticator\GoogleAuthenticator"></service>
+        <service id="networking_init_cms.google.authenticator.helper" class="Networking\InitCmsBundle\GoogleAuthenticator\Helper" public="true">
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="networing_init_cms.google.authenticator"/>
             <argument type="service" id="security.authorization_checker"/>
             <argument>%networking_init_cms.google.authenticator.forced_for_role%</argument>
             <argument>%networking_init_cms.google.authenticator.trusted_ip_list%</argument>
         </service>
-        <service id="networking_init_cms.google.authenticator.interactive_login_listener" class="Networking\InitCmsBundle\GoogleAuthenticator\InteractiveLoginListener">
+        <service id="networking_init_cms.google.authenticator.interactive_login_listener" class="Networking\InitCmsBundle\GoogleAuthenticator\InteractiveLoginListener" autowire="false">
+            <argument key="$helper" type="service" id="networking_init_cms.google.authenticator.helper"/>
             <tag name="kernel.event_listener" event="security.interactive_login" method="onSecurityInteractiveLogin"/>
-            <argument type="service" id="networking_init_cms.google.authenticator.provider"/>
         </service>
         <service id="networking_init_cms.google.authenticator.request_listener" class="Networking\InitCmsBundle\GoogleAuthenticator\RequestListener">
             <tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="-1"/>
-            <argument type="service" id="networking_init_cms.google.authenticator.provider"/>
-            <argument type="service" id="security.token_storage"/>
-            <argument type="service" id="twig"/>
+            <argument key="$helper" type="service" id="networking_init_cms.google.authenticator.helper"/>
+            <argument key="$tokenStorage" type="service" id="security.token_storage"/>
+            <argument key="$twig" type="service" id="twig"/>
         </service>
         <service id="networking_init_cms.google.authenticator.success_handler" class="Networking\InitCmsBundle\EventListener\TwoFactorLoginSuccessHandler" public="false">
+            <argument key="$engine" type="service" id="twig"/>
+            <argument key="$helper" type="service" id="networking_init_cms.google.authenticator.helper"/>
+            <argument key="$userManager" type="service" id="networking_init_cms.user_manager"/>
+            <argument key="$urlGenerator" type="service" id="router.default"/>
         </service>
     </services>
 </container>

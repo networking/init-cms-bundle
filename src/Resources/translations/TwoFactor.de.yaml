@@ -1,0 +1,7 @@
+label_has_step_verification_code: 2FA aktiviert
+two_step_code_exists: 2FA ist bereits aktiviert, möchten Sie Ihren Code ersetzen?
+message_two_step_into: 'Öffnen Sie Ihre Authentifizierungs-App, z. B. Google Authenticator, scannen Sie den Code und geben Sie ihn in das Eingabefeld unten ein.'
+message_two_step_code_help: 'Öffnen Sie "Authenticator App" auf Ihrem Gerät, um Ihren Authentisierungscode anzuzeigen.'
+confirm_code: Code Bestätigen
+complete_later: Abbrechen
+qr_code_secret: Wenn Sie den QR-Code nicht scannen können, können Sie stattdessen dieses Geheimnis in Ihrer App eingeben.
