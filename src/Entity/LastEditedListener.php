@@ -16,6 +16,7 @@ use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener;
 use Networking\InitCmsBundle\Model\MenuItemInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 
 /**
  * Class LastEditedListener.
@@ -54,6 +55,15 @@ class LastEditedListener extends ModelLastEditedListener
      */
     protected function setSessionVariable($entity)
     {
+
+        if(!$this->requestStack->getMainRequest()){
+            return;
+        }
+
+        if(!$this->requestStack->getMainRequest()->hasSession()){
+            return;
+        }
+
         $this->bundleGuesser->initialize($entity);
 
         $name = $this->bundleGuesser->getShortName();
@@ -66,6 +76,10 @@ class LastEditedListener extends ModelLastEditedListener
             $name = 'Page';
         }
         
-        $this->requestStack->getSession()->set($name.'.last_edited', $entity->getId());
+        try{
+            $this->requestStack->getSession()->set($name.'.last_edited', $entity->getId());
+        }catch (SessionNotFoundException $e){
+            return;
+        }
     }
 }
