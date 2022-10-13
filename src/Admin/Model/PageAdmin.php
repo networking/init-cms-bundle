@@ -29,6 +29,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
+use Sonata\DoctrineORMAdminBundle\Filter\ChoiceFilter;
 use Sonata\Form\Type\CollectionType;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -511,9 +512,8 @@ abstract class PageAdmin extends BaseAdmin
             )
             ->add(
                 'status',
-                SimpleStringFilter::class,
-                ['hidden' => true],
-
+                ChoiceFilter::class,
+                ['show_filter' => true],
                 [
                     'field_type' => ChoiceType::class,
                     'field_options' => [
@@ -555,12 +555,12 @@ abstract class PageAdmin extends BaseAdmin
      */
     public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
-        if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
+        if (!$data || !$data instanceof FilterData || !$data->hasValue()) {
             return false;
         }
-        $data['value'] = trim($data['value']);
+        $value = trim($data->getValue());
 
-        if (strlen($data['value']) == 0) {
+        if (strlen($value) == 0) {
             return false;
         }
 
@@ -577,7 +577,7 @@ abstract class PageAdmin extends BaseAdmin
         );
         $qb->setParameter(
             sprintf(':%s', $parameterName),
-            '%'.$data['value'].'%'
+            '%'.$value.'%'
         );
 
         return true;
@@ -610,10 +610,8 @@ abstract class PageAdmin extends BaseAdmin
      */
     public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
-        $active = true;
         if (!$locale = $data->getValue()) {
             $locale = $this->getDefaultLocale();
-            $active = false;
         }
 
         $qb = $ProxyQuery->getQueryBuilder();
@@ -621,7 +619,7 @@ abstract class PageAdmin extends BaseAdmin
         $qb->orderBy(sprintf('%s.path', $alias), 'asc');
         $qb->setParameter(':locale', $locale);
 
-        return $active;
+        return true;
     }
 
     /**
@@ -810,7 +808,7 @@ abstract class PageAdmin extends BaseAdmin
      */
     public function configureBatchActions(array $actions): array
     {
-
+        unset($actions['delete']);
         if ($this->isGranted('PUBLISH')) {
             $actions['publish'] = [
                 'label' => 'label.action_publish',
@@ -838,6 +836,8 @@ abstract class PageAdmin extends BaseAdmin
             ];
         }
 
+
+
         return $actions;
     }
 
@@ -861,7 +861,6 @@ abstract class PageAdmin extends BaseAdmin
         try {
             $this->getModelManager()->delete($contentRoute);
         } catch (\Exception $e) {
-            var_dump($e);
             die;
         }
     }
