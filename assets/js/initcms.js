@@ -139,6 +139,7 @@ const InitCms = {
 
         this.toggleFilters()
         this.setupEditibaleFields()
+        this.pagerSelector()
 
     },
     toggleFilters(subject) {
@@ -218,6 +219,14 @@ const InitCms = {
             }
         }
         return str;
+    },
+    pagerSelector() {
+
+        jQuery('select.per-page').change(function(event) {
+            jQuery('input[type=submit]').hide();
+
+            window.top.location.href=this.options[this.selectedIndex].value;
+        });
     },
     createInitCmsMessageBox(status, message) {
         status = status == 'error'?'danger':status;

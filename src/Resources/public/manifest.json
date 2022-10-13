@@ -1,5 +1,5 @@
 {
-  "admin.js": "/bundles/networkinginitcms/admin.92d8a639.js",
+  "admin.js": "/bundles/networkinginitcms/admin.e0cb01bb.js",
   "imageEditor.css": "/bundles/networkinginitcms/imageEditor.521ca06a.css",
   "imageEditor.js": "/bundles/networkinginitcms/imageEditor.58f4823f.js",
   "networking_initcms.js": "/bundles/networkinginitcms/networking_initcms.31d6cfe0.js",
@@ -3002,7 +3002,7 @@
   "fonts/proximanova-webfont.eot": "/bundles/networkinginitcms/fonts/proximanova-webfont.eot",
   "fonts/proximanova-webfont.ttf": "/bundles/networkinginitcms/fonts/proximanova-webfont.ttf",
   "vendor/nestedSortable/meteor/nested-sortable-tests.js": "/bundles/networkinginitcms/vendor/nestedSortable/meteor/nested-sortable-tests.js",
-  "admin.92d8a639.js.map": "/bundles/networkinginitcms/admin.92d8a639.js.map",
+  "admin.e0cb01bb.js.map": "/bundles/networkinginitcms/admin.e0cb01bb.js.map",
   "imageEditor.58f4823f.js.map": "/bundles/networkinginitcms/imageEditor.58f4823f.js.map",
   "networking_initcms.1dab53d4.css.map": "/bundles/networkinginitcms/networking_initcms.1dab53d4.css.map",
   "admin-navbar.f54a6a82.css.map": "/bundles/networkinginitcms/admin-navbar.f54a6a82.css.map"
