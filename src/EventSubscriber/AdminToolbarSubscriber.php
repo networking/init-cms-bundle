@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Twig\Environment;
 
 /**
  * AdminToolbarSubscriber injects the Admin Toolbar.
@@ -56,7 +57,7 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
      */
     protected $position;
 
-    public function __construct(\Twig_Environment $twig, AuthorizationCheckerInterface $securityContext,  $mode = self::ENABLED, $position =
+    public function __construct(Environment $twig, AuthorizationCheckerInterface $securityContext,  $mode = self::ENABLED, $position =
     'top')
     {
         $this->twig = $twig;
