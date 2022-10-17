@@ -65,7 +65,7 @@ class DataSetupCommand extends Command
         $this
             ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
             ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
-            ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl');
+            ->addOption('use-acl', '', InputOption::VALUE_OPTIONAL, 'If set: use acl', false);
     }
 
     /**
@@ -78,7 +78,7 @@ class DataSetupCommand extends Command
         }
 
         $this->updateSchema($output);
-
+        
         if ($input->getOption('use-acl')) {
             $this->initACL($output);
             $this->sonataSetupACL($output);

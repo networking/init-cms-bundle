@@ -31,12 +31,12 @@ class InstallCommand extends Command
     protected function configure()
     {
         $this
+            ->addArgument('username', InputArgument::REQUIRED, 'username of the to be created super user')
+            ->addArgument('email', InputArgument::REQUIRED, 'the email address of the to be created super user')
+            ->addArgument('password',  InputArgument::REQUIRED, 'password of the to be created super user')
             ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
             ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
-            ->addOption('username', '', InputOption::VALUE_REQUIRED, 'username of the to be created super user')
-            ->addOption('email', '', InputOption::VALUE_REQUIRED, 'the email address of the to be created super user')
-            ->addOption('password', '', InputOption::VALUE_REQUIRED, 'password of the to be created super user')
-            ->addOption('use-acl', '', InputOption::VALUE_NONE, 'If set: use acl')
+            ->addOption('use-acl', '', InputOption::VALUE_OPTIONAL, 'If set: use acl', false)
         ;
     }
 
@@ -47,6 +47,8 @@ class InstallCommand extends Command
     {
         $this->setupData($input, $output);
         $this->createAdminUser($input, $output);
+
+        return 0;
     }
 
     /**
@@ -80,18 +82,13 @@ class InstallCommand extends Command
     {
         $arguments = [];
 
-        $arguments['command'] = 'fos:user:create';
+        $arguments['command'] = 'sonata:user:create';
 
-        if ($input->getOption('username')) {
-            $arguments['username'] = $input->getOption('username');
-        }
-        if ($input->getOption('email')) {
-            $arguments['email'] = $input->getOption('email');
-        }
-        if ($input->getOption('password')) {
-            $arguments['password'] = $input->getOption('password');
-        }
-        $command = $this->getApplication()->find('fos:user:create');
+        $arguments['username'] = $input->getArgument('username');
+        $arguments['email'] = $input->getArgument('email');
+        $arguments['password'] = $input->getArgument('password');
+
+        $command = $this->getApplication()->find('sonata:user:create');
 
         $arguments['--super-admin'] = true;
 
