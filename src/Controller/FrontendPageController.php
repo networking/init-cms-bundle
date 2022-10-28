@@ -164,6 +164,7 @@ class FrontendPageController extends AbstractController
                 $params = $this->getPageParameters($request);
 
                 if ($params instanceof RedirectResponse) {
+                    $this->addResponseLocaleCookies($params, $request->getLocale());
                     return $params;
                 }
                 $html = $this->renderView(
@@ -179,6 +180,7 @@ class FrontendPageController extends AbstractController
             $params = $this->getPageParameters($request);
 
             if ($params instanceof RedirectResponse) {
+                $this->addResponseLocaleCookies($params, $request->getLocale());
                 return $params;
             }
             $html = $this->renderView(
@@ -188,15 +190,23 @@ class FrontendPageController extends AbstractController
             $response = new Response($html);
         }
 
+       $this->addResponseLocaleCookies($response, $request->getLocale());
+
+        return $response;
+    }
+
+    /**
+     * @param Response $response
+     */
+    private function addResponseLocaleCookies(Response $response, $locale): void
+    {
         if ($this->getPageHelper()->isAllowLocaleCookie() && !$this->getPageHelper()->isSingleLanguage()) {
 
-            $cookies = $this->pageHelper->setLocaleCookies($request->getLocale());
-            foreach ($cookies as $cookie){
+            $cookies = $this->pageHelper->setLocaleCookies($locale);
+            foreach ($cookies as $cookie) {
                 $response->headers->setCookie($cookie);
             }
         }
-
-        return $response;
     }
 
     /**
