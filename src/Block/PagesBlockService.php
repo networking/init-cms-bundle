@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Block;
 
 use Doctrine\ORM\Query;
+use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\BlockBundle\Block\Service\AbstractBlockService;
@@ -45,27 +46,33 @@ class PagesBlockService extends AbstractBlockService
     {
         $pages = $this->pageManager->getAllSortBy('updatedAt', 'DESC', Query::HYDRATE_ARRAY);
 
+        $drafts = $this->getAllDraftsPages();
+        $reviews = $this->getAllDraftsPages();
+
         $draftPageCount = 0;
         $reviewPageCount = 0;
-        $publishedPageCount = 0;
+        $publishedPageCount = $this->getPublishedCount();
         $reviewPages = [];
         $draftPages = [];
 
-        foreach ($pages as $page) {
-            if (array_key_exists('snapshots', $page) && count($page['snapshots']) > 0) {
-                ++$publishedPageCount;
-            }
-            if ($page['status'] == PageInterface::STATUS_REVIEW) {
-                ++$reviewPageCount;
-                ++$draftPageCount;
-                $reviewPages[\Locale::getDisplayLanguage($page['locale'])][] = $page;
-            }
+        foreach ($drafts as $page) {
 
-            if ($page['status'] == PageInterface::STATUS_DRAFT) {
-                ++$draftPageCount;
-                $draftPages[\Locale::getDisplayLanguage($page['locale'])][] = $page;
+            if ($page->isDraft()) {
+                $draftPageCount++;
+                $draftPages[\Locale::getDisplayLanguage($page->getLocale())][]
+                    = $page;
             }
         }
+
+        foreach ($reviews as $page) {
+
+            if ($page->isReview()) {
+                $reviewPageCount++;
+                $draftPageCount++;
+
+            }
+        }
+
 
         return $this->renderResponse(
             $blockContext->getTemplate(),
@@ -74,7 +81,6 @@ class PagesBlockService extends AbstractBlockService
                 'draft_pages' => $draftPageCount,
                 'review_pages' => $reviewPageCount,
                 'published_pages' => $publishedPageCount,
-                'pages' => $pages,
                 'reviewPages' => $reviewPages,
                 'draftPages' => $draftPages,
             ],
@@ -83,13 +89,47 @@ class PagesBlockService extends AbstractBlockService
     }
 
 
+    public function getPublishedCount(){
+
+        $qb = $this->pageManager->createQueryBuilder('p');
+        return $qb->getEntityManager()->getConnection()->executeQuery('SELECT DISTINCT page_id FROM page_snapshot')->rowCount();
+    }
+
+
+    public function getAllDraftsPages()
+    {
+        $qb = $this->pageManager->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.status = :draft')
+            ->orderBy('p.updatedAt', 'DESC');
+
+
+        return $qb->getQuery()->execute(
+            array(':draft' => PageInterface::STATUS_DRAFT)
+        );
+    }
+
+    public function getAllReviewPages()
+    {
+        $qb = $this->pageManager->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.status = :review')
+            ->orderBy('p.updatedAt', 'DESC');
+
+
+        return $qb->getQuery()->execute(
+            array(':draft' => PageInterface::STATUS_REVIEW)
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return 'Online Users Block';
+        return 'Page status block';
     }
+
 
     /**
      * {@inheritdoc}
