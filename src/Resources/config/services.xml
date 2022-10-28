@@ -16,6 +16,11 @@
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
         <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
 
+        <service id="Networking\InitCmsBundle\Command\ClearLogCommand" public="true">
+            <argument key="$pageClass">%networking_init_cms.admin.page.class%</argument>
+            <tag name="console.command"/>
+        </service>
+
         <service id="Networking\InitCmsBundle\Command\ClearCacheCommand" autowire="true" public="true">
             <argument key="$managedLocales">%lexik_translation.managed_locales%</argument>
         </service>
