@@ -13,6 +13,7 @@ namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
+use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -29,6 +30,7 @@ use Sonata\Form\Type\EqualType;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
+use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
@@ -396,9 +398,8 @@ abstract class MediaAdmin extends Admin
             [
                 'required' => false,
                 'expanded' => false,
-                'multiple' => $this->hasMultipleMediaTags,
+                'multiple' => true,
                 'select2' => true,
-                'choice_label' => 'adminTitle',
                 'help_label' => 'help.media_tag',
                 'taggable' => $this->hasMultipleMediaTags,
                 'attr' => ['style' => 'width:220px'],
@@ -477,7 +478,6 @@ abstract class MediaAdmin extends Admin
                 $object->setProviderName($this->getRequest()->get('provider'));
             }
 
-
             $object->setContext($context = $this->getRequest()->get('context'));
         }
 
@@ -500,7 +500,6 @@ abstract class MediaAdmin extends Admin
 
         $context = $request->query->get('context');
         $provider = $request->query->get('provider');
-
 
         if ($request->query->get('providerName')) {
             $provider = $request->query->get('providerName');
