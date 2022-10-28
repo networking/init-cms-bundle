@@ -109,7 +109,7 @@
                         }
                     });
                 },
-                url: "{{ oneup_uploader_endpoint('media_admin') }}", // Set the url
+                url: "{{ oneup_uploader_endpoint('media_admin') }}?context={{app.request.get('context')}}", // Set the url
                 params: {context: '{{app.request.get('context')}}', provider: '{{app.request.get('provider')}}', oneuploader: true},
                 thumbnailWidth: 80,
                 thumbnailHeight: 80,
