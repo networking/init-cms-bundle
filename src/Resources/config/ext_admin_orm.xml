@@ -18,7 +18,8 @@
         </service>
 
         <service id="sonata.media.admin.media" class="%sonata.media.admin.media.class%" public="true">
-            <argument type="service" id="sonata.media.pool"/>
+            <argument key="$pool" type="service" id="sonata.media.pool"/>
+            <argument key="$validator" type="service" id="validator"/>
             <call method="setModelManager">
                 <argument type="service" id="sonata.media.admin.media.manager"/>
             </call>

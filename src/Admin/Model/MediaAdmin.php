@@ -30,9 +30,11 @@ use Sonata\Form\Type\EqualType;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
+use Sonata\MediaBundle\Provider\Pool;
 use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class MediaAdmin.
@@ -72,6 +74,18 @@ abstract class MediaAdmin extends Admin
      * @var bool
      */
     protected $showTagTree;
+
+    private ValidatorInterface $validator;
+
+    public function __construct($pool, ValidatorInterface $validator) {
+        $this->validator = $validator;
+        parent::__construct($pool);
+    }
+
+    public function validate(object $object)
+    {
+        return $this->validator->validate($object);
+    }
 
 
 

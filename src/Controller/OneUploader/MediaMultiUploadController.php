@@ -7,11 +7,14 @@ use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Exception\DuplicateMediaException;
 use Oneup\UploaderBundle\Controller\AbstractController;
+use Oneup\UploaderBundle\Uploader\File\FileInterface;
+use Oneup\UploaderBundle\Uploader\File\FilesystemFile;
 use Oneup\UploaderBundle\Uploader\Response\FineUploaderResponse;
 use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * This file is part of the init-cms-sandbox  package.
@@ -23,6 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MediaMultiUploadController extends AbstractController
 {
+ 
+
     public function upload(): JsonResponse
     {
         /** @var Request $request */
@@ -55,7 +60,12 @@ class MediaMultiUploadController extends AbstractController
      */
     protected function handleUpload($file, ResponseInterface $response, Request $request): void
     {
-
+        // wrap the file if it is not done yet which can only happen
+        // if it wasn't a chunked upload, in which case it is definitely
+        // on the local filesystem.
+        if (!($file instanceof FileInterface)) {
+            $file = new FilesystemFile($file);
+        }
         /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
         $mediaAdmin = $this->container->get('sonata.media.admin.media');
 
@@ -81,8 +91,9 @@ class MediaMultiUploadController extends AbstractController
 
         $provider->transform($media);
 
-        $validator = $this->container->get('validator');
-        $errors = $validator->validate($media);
+        $this->validate($file, $request, $response);
+
+        $errors = $mediaAdmin->validate($media);
 
         $errorMessages = [];
         if ($errors->count() > 0) {
