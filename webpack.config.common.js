@@ -149,12 +149,16 @@ module.exports = {
                         to: './js/ckeditor/',
                     },
                     {
-                        from: './assets/fonts/',
-                        to: './fonts/',
+                        from: './assets/vendor/pdfjs',
+                        to: './vendor/pdfjs',
                     },
                     {
-                        from: './assets/img/',
-                        to: './img/',
+                        from: './assets/fonts',
+                        to: './fonts',
+                    },
+                    {
+                        from: './assets/img',
+                        to: './img',
                     }
                 ]
             }),

@@ -34,13 +34,13 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 
     <!-- This snippet is used in production (included from viewer.html) -->
-    <link rel="resource" type="application/l10n" href="{{ asset('bundles/networkinginitcms/vendor/pdfjs/web/locale/locale.properties') }}">
-    <script src="{{ asset('bundles/networkinginitcms/vendor/pdfjs/build/pdf.js') }}"></script>
+    <link rel="resource" type="application/l10n" href="{{ asset('vendor/pdfjs/web/locale/locale.properties', 'init_cms') }}">
+    <script src="{{ asset('vendor/pdfjs/build/pdf.js', 'init_cms') }}"></script>
 
     <script>
         var DEFAULT_URL = '{{ sonata_path(object, 'reference')  }}';
     </script>
-    <script type="text/javascript" src="{{ asset('pdf-viewer.js', 'init_cms') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdf-viewer.js', 'init_cms') }}"></script>
 
 </head>
 
