@@ -10,6 +10,7 @@
 
 namespace Networking\InitCmsBundle\DependencyInjection;
 
+use Networking\InitCmsBundle\Cache\PageCache;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -149,8 +150,8 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                         ->children()
                             ->scalarNode('activate')->defaultValue(false)->end()
-                            ->scalarNode('cache_time')->defaultValue('86400')->end()
-                            ->scalarNode('cache_service')->defaultValue('Networking\InitCmsBundle\Cache\PageCache')->end()
+                            ->scalarNode('cache_time')->defaultValue(86400)->end()
+                            ->scalarNode('cache_service')->defaultValue(PageCache::class)->end()
                         ->end()
                 ->end()
                 ->arrayNode('xml_sitemap')
