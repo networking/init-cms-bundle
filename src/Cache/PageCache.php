@@ -21,20 +21,11 @@ class PageCache
     implements PageCacheInterface, AdapterInterface, PruneableInterface,
                ResettableInterface
 {
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $pageCache;
+    private CacheItemPoolInterface $pageCache;
 
-    /**
-     * @var int
-     */
-    private $expiresAfter;
+    private int $expiresAfter;
 
-    /**
-     * @var boolean
-     */
-    private $activated;
+    private bool $activated;
 
     /**
      * PageCache constructor.
@@ -113,9 +104,7 @@ class PageCache
         if (is_null($time)) {
             $time = $this->expiresAfter;
         }
-
         $item->expiresAfter($time);
-
         return $this->save($item);
     }
 
@@ -192,7 +181,7 @@ class PageCache
      */
     public function save(CacheItemInterface $item): bool
     {
-        $this->pageCache->save($item);
+        return $this->pageCache->save($item);
     }
 
     /**
@@ -200,7 +189,7 @@ class PageCache
      */
     public function saveDeferred(CacheItemInterface $item): bool
     {
-        $this->pageCache->saveDeferred($item);
+        return $this->pageCache->saveDeferred($item);
     }
 
     /**
@@ -208,7 +197,7 @@ class PageCache
      */
     public function commit(): bool
     {
-        $this->pageCache->commit();
+        return $this->pageCache->commit();
     }
 
 
@@ -244,6 +233,6 @@ class PageCache
      */
     public function getCacheTime(): string
     {
-        $this->expiresAfter;
+        return $this->expiresAfter;
     }
 }
