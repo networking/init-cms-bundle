@@ -610,14 +610,18 @@ abstract class PageAdmin extends BaseAdmin
      */
     public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
+        if(is_array($data)){
+            $data=  FilterData::fromArray($data);
+        }
+        
         if (!$locale = $data->getValue()) {
             $locale = $this->getDefaultLocale();
         }
 
-        $qb = $ProxyQuery->getQueryBuilder();
-        $qb->andWhere(sprintf('%s.%s = :locale', $alias, $field));
-        $qb->orderBy(sprintf('%s.path', $alias), 'asc');
-        $qb->setParameter(':locale', $locale);
+        $alias = $ProxyQuery->getRootAlias();
+        $ProxyQuery->andWhere(sprintf('%s.%s = :locale', $alias, $field));
+        $ProxyQuery->orderBy(sprintf('%s.path', $alias), 'asc');
+        $ProxyQuery->setParameter(':locale', $locale);
 
         return true;
     }
