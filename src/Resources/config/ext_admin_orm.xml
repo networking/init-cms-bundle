@@ -23,9 +23,6 @@
             <call method="setModelManager">
                 <argument type="service" id="sonata.media.admin.media.manager"/>
             </call>
-            <call method="setTranslationDomain">
-                <argument>%sonata.media.admin.media.translation_domain%</argument>
-            </call>
             <call method="setLanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
             </call>
@@ -44,7 +41,7 @@
                     <argument key="ajax">@NetworkingInitCms/ajax_layout.html.twig</argument>
                 </argument>
             </call>
-            <tag name="sonata.admin" manager_type="orm" label="media"
+            <tag name="sonata.admin" manager_type="orm" label="admin_label_media"
                  model_class="%sonata.media.media.class%"
                  controller="%sonata.media.admin.media.controller%"
                  translation_domain="%sonata.media.admin.media.translation_domain%"
