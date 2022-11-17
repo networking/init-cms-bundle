@@ -469,9 +469,10 @@ class MenuItemAdminController extends CRUDController
             $data = json_decode($data->getContent(), true);
         }
 
+
         if (!array_key_exists('message', $data)) {
 
-            if ($data['result'] == 'ok') {
+            if ($status == 200) {
 
                 $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_success';
                 $data['is_new_menu_item'] = $this->isNewMenuItem;
@@ -481,9 +482,16 @@ class MenuItemAdminController extends CRUDController
                 }
                 $data['status'] = 'success';
 
-            } elseif ($data['result'] == 'error') {
+            }
+
+            if ($status !== 200) {
                 $data['status'] = 'error';
                 $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_error';
+
+                $data['errors'] = [];
+                foreach ($data['violations'] as $violation) {
+                    $data['errors'][] = $violation['title'];
+                }
             }
 
             if ($message) {
