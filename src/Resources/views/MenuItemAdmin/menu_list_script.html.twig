@@ -88,7 +88,7 @@ function submitAjaxForm(event) {
                     menuDialog.html(xhr.html);
                 } else {
                     menuDialog.modal('hide');
-                    InitCms.InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
+                    InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
                 }
             }
         },
