@@ -87,7 +87,7 @@ class TagAdminController extends CRUDController
             return $preResponse;
         }
 
-        if ($request->isMethod('DELETE')) {
+        if (\in_array($request->getMethod(), [Request::METHOD_POST, Request::METHOD_DELETE], true)) {
             // check the csrf token
             $this->validateCsrfToken($request, 'sonata.delete');
             $translator = $this->container->get('translator');

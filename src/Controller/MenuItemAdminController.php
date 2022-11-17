@@ -324,7 +324,7 @@ class MenuItemAdminController extends CRUDController
             }
         }
 
-        if ($request->getMethod() == 'DELETE') {
+        if (\in_array($request->getMethod(), [Request::METHOD_POST, Request::METHOD_DELETE], true)) {
             try {
                 $this->currentMenuLanguage = $object->getLocale();
                 $this->admin->delete($object);
