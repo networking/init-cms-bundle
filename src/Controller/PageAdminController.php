@@ -894,8 +894,8 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'POST') {
-            $serializer = $this->container->get('jms_serializer');
 
+            $serializer = $this->pageHelper->getSerializer();
             $publishedPage = $this->pageManager->revertToPublished($draftPage, $serializer);
 
             if ($request->isXmlHttpRequest()) {

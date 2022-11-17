@@ -551,4 +551,9 @@ class PageHelper
 
         return $cookies;
     }
+
+    public function getSerializer()
+    {
+        return $this->serializer;
+    }
 }
