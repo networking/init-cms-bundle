@@ -126,6 +126,8 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
      */
     protected $visibility = self::VISIBILITY_PUBLIC;
 
+    protected $wasValidated = false;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -728,6 +730,10 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
      * @Assert\Callback()
      */
     public function validate(ExecutionContextInterface $context, $payload){
+
+        if($this->wasValidated){
+            return;
+        }
         if($this->getIsRoot() ){
             return;
         }
@@ -736,5 +742,6 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
                 ->atPath('page')
                 ->addViolation();
         }
+        $this->wasValidated = true;
     }
 }
