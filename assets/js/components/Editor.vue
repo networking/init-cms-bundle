@@ -88,7 +88,6 @@
     </div>
 </template>
 <script>
-    import Vue from 'vue';
     import axios from 'axios';
     import 'bootstrap';
     import FilerobotImageEditor from './imageEditor';

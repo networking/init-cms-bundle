@@ -14,6 +14,7 @@ const InitCms = {
         const config = document.head.querySelector('meta[name="init-cms-setup"]');
         this.config = JSON.parse(config.dataset.initCmsConfig);
         this.translations = JSON.parse(config.dataset.initCmsTranslations);
+
     },
     setupDefaultBehaviour(){
 
@@ -140,6 +141,7 @@ const InitCms = {
         this.toggleFilters()
         this.setupEditibaleFields()
         this.pagerSelector()
+        this.showTabErrors(document);
 
     },
     toggleFilters(subject) {
@@ -235,6 +237,49 @@ const InitCms = {
         document.querySelectorAll('.notice-block').forEach((e) => {
             e.innerHTML = messageHtml
         })
+    },
+    showTabErrors(subject) {
+        this.debugMessage("[core|setup_form_tabs_for_errors] setup form tab's errors");
+
+        // Switch to first tab with server side validation errors on page load
+        jQuery('form', subject).each((index, element) => {
+            this.showFirstErrorTab(jQuery(element), '.has-error');
+        });
+
+        // Switch to first tab with HTML5 errors on form submit
+        jQuery(subject)
+            .on('click', 'form [type="submit"]', (event) => {
+                this.showFirstErrorTab(jQuery(event.target).closest('form'), ':invalid');
+            })
+            .on('keypress', 'form [type="text"]', (event) => {
+                if (event.which === 13) {
+                    this.showFirstErrorTab(jQuery(event.target), ':invalid');
+                }
+            });
+    },
+    showFirstErrorTab(form, errorSelector) {
+        this.debugMessage('[core|show_form_first_tab_with_errors] show first tab with errors', form);
+
+        const tabs = form.find('.nav-tabs a');
+        let firstTabWithErrors;
+
+        tabs.each((index, element) => {
+            const id = jQuery(element).attr('href');
+            const tab = jQuery(element);
+            const icon = tab.find('.has-errors');
+
+            if (jQuery(id).find(errorSelector).length > 0) {
+                // Only show first tab with errors
+                if (!firstTabWithErrors) {
+                    tab.tab('show');
+                    firstTabWithErrors = tab;
+                }
+
+                icon.removeClass('hide');
+            } else {
+                icon.addClass('hide');
+            }
+        });
     },
     debugMessage(...args) {
         if (!this.getConfig('DEBUG')) {
