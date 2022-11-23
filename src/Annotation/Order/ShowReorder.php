@@ -5,6 +5,7 @@ namespace Networking\InitCmsBundle\Annotation\Order;
 /**
  * @Annotation
  */
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class ShowReorder extends AbstractReorder implements ShowReorderInterface
 {
     /**

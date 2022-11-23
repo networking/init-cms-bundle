@@ -5,6 +5,7 @@ namespace Networking\InitCmsBundle\Annotation;
 /**
  * @Annotation
  */
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class AutoService implements AutoServiceInterface
 {
     /**
