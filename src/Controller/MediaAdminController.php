@@ -64,6 +64,8 @@ class MediaAdminController extends CRUDController
             throw new NotFoundHttpException('unable to find the media with the id');
         }
 
+
+
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/MediaAdmin/show.html.twig',
             [
@@ -337,7 +339,7 @@ class MediaAdminController extends CRUDController
             ->getQuery()->getResult();
 
         $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
-        $context = $request->query->getAlpha('context', $persistentParameters['context']);
+        $context = $request->query->get('context', $persistentParameters['context']);
         if(!$context){
             $context = $persistentParameters['context'];
         }
