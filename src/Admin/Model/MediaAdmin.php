@@ -543,7 +543,7 @@ abstract class MediaAdmin extends Admin
 
         // if there is a post server error, provider is not posted and in case of
         // multiple providers, it has to be persistent to not being lost
-        if (1 < \count($providers)) {
+        if (1 < \count($providers) || null !== $provider) {
             $parameters['provider'] = $provider;
         }
 
