@@ -164,8 +164,10 @@ const InitCms = {
             placement: 'auto',
             success(response) {
                 const html = jQuery(response);
+
                 InitCms.setupEditibaleFields(html);
                 jQuery(this).closest('td').replaceWith(html);
+                window.dispatchEvent(new CustomEvent('x-edited-success', { 'bubbles': true, 'detail': {'subject': this} }))
             },
             error: (xhr) => {
                 // On some error responses, we return JSON.

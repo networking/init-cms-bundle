@@ -5169,15 +5169,19 @@ Editableform based on Twitter Bootstrap 3
 				}],
 				[$(document), {
 					mousedown: $.proxy(function (e) {
-						// Clicked outside the datepicker, hide it
-						if (!(
-							this.element.is(e.target) ||
-							this.element.find(e.target).size() ||
-							this.picker.is(e.target) ||
-							this.picker.find(e.target).size()
-						)) {
-							this.hide();
-						}
+
+						try{
+                            // Clicked outside the datepicker, hide it
+                            if (!(
+                                this.element.is(e.target) ||
+                                this.element.find(e.target).size() ||
+                                this.picker.is(e.target) ||
+                                this.picker.find(e.target).size()
+                            )) {
+                                this.hide();
+                            }
+                        }catch (e){
+                        }
 					}, this)
 				}]
 			];
