@@ -8,7 +8,7 @@
             </trans-unit>
             <trans-unit id="form.label_groups">
                 <source>form.label_groups</source>
-                <target>Groups</target>
+                <target>User groups</target>
             </trans-unit>
             <trans-unit id="groups">
                 <source>groups</source>
@@ -45,6 +45,18 @@
             <trans-unit id="form.group_groups">
                 <source>form.group_groups</source>
                 <target>User groups</target>
+            </trans-unit>
+            <trans-unit id="list.label_groups">
+                <source>list.label_groups</source>
+                <target>User groups</target>
+            </trans-unit>
+            <trans-unit id="form.group_management">
+            	<source>form.group_management</source>
+            	<target>Userrole Management</target>
+            </trans-unit>
+            <trans-unit id="form.group_general">
+            	<source>form.group_general</source>
+            	<target>Username / Password</target>
             </trans-unit>
         </body>
     </file>

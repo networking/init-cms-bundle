@@ -29,6 +29,14 @@
                 <source>form.group_groups</source>
                 <target>Benutzername Gruppen</target>
             </trans-unit>
+            <trans-unit id="form.label_groups">
+                <source>form.label_groups</source>
+                <target>Benutzername Gruppen</target>
+            </trans-unit>
+            <trans-unit id="list.label_groups">
+                <source>list.label_groups</source>
+                <target>Benutzername Gruppen</target>
+            </trans-unit>
             <trans-unit id="form.label_qr_code">
                 <source>form.label_qr_code</source>
                 <target>2FA Google QR Code</target>
@@ -44,6 +52,14 @@
             <trans-unit id="message_two_step_into">
                 <source>message_two_step_into</source>
                 <target>Öffnen Sie Ihre Authentifizierungs-App, z. B. Google Authenticator, scannen Sie den Code und geben Sie ihn in das Eingabefeld unten ein. </target>
+            </trans-unit>
+            <trans-unit id="form.group_management">
+            	<source>form.group_management</source>
+            	<target>Benutzerrollen Management</target>
+            </trans-unit>
+            <trans-unit id="form.group_general">
+            	<source>form.group_general</source>
+            	<target>Benutzername / Passwort</target>
             </trans-unit>
         </body>
     </file>
