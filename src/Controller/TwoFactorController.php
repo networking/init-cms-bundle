@@ -28,7 +28,7 @@ class TwoFactorController extends AbstractController
     public function setTwoFactorAuthentication(Request $request, TokenStorageInterface $tokenStorage)
     {
         try{
-            $helper= $this->get('networking_init_cms.google.authenticator.helper');
+            $helper= $this->container->get('networking_init_cms.google.authenticator.helper');
         }catch (ServiceNotFoundException $e){
             return new RedirectResponse($this->generateUrl('sonata_admin_dashboard'));
         }
