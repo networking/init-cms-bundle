@@ -149,10 +149,10 @@ class AnnotationReader implements AnnotationReaderInterface
             }
             foreach($this->annotationReader->getMethodAnnotations($reflectionMethod) as $methodAnnotation){
 
-
-                $explode = explode("\\", $methodAnnotation->getName());
-                $type = end($explode);
                 $reflectionAnnotation = new \ReflectionClass($methodAnnotation);
+                $explode = explode("\\", $reflectionAnnotation->getName());
+                $type = end($explode);
+
 
                 foreach($reflectionAnnotation->getInterfaces() as $reflectionInterface){
                     $explode = explode("\\", $reflectionInterface->getName());
