@@ -11,6 +11,7 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Networking\InitCmsBundle\Admin\Model\MediaAdmin;
 use Networking\InitCmsBundle\Admin\Model\TagAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
@@ -33,12 +34,16 @@ class CkeditorAdminController extends CRUDController
 {
     protected $admin;
 
+    protected $doctrine;
+
     public function __construct(
         CmsEventDispatcher $dispatcher,
         PageCacheInterface $pageCache,
-        MediaAdmin $mediaAdmin
+        MediaAdmin $mediaAdmin,
+        ManagerRegistry $doctrine
     ) {
         parent::__construct($dispatcher, $pageCache);
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -66,7 +71,7 @@ class CkeditorAdminController extends CRUDController
 
         $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
-        $tags = $this->getDoctrine()
+        $tags = $this->doctrine
             ->getRepository(Tag::class)
             ->createQueryBuilder('t')
             ->select('t', 'c')
@@ -222,7 +227,7 @@ class CkeditorAdminController extends CRUDController
 
         $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
-        $tags = $this->getDoctrine()
+        $tags = $this->doctrine
             ->getRepository(Tag::class)
             ->createQueryBuilder('t')
             ->select('t', 'c')
