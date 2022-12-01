@@ -130,6 +130,10 @@ class Helper implements HelperInterface
             return false;
         }
 
+        if($this->authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN')){
+            return false;
+        }
+
         foreach ($this->forcedForRoles as $role) {
             if ($this->authorizationChecker->isGranted($role)) {
                 return true;
