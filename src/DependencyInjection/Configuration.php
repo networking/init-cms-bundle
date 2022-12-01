@@ -132,7 +132,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('google_authenticator')
                     ->addDefaultsIfNotSet()
                         ->children()
-                            ->scalarNode('server')->cannotBeEmpty()->end()
+                            ->scalarNode('server')->isRequired()->end()
                             ->scalarNode('enabled')->defaultFalse()->end()
                             ->arrayNode('trusted_ip_list')
                             ->prototype('scalar')->end()
