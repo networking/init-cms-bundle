@@ -134,7 +134,7 @@
 
             {% if datagrid.pager.page != 1 %}
                 <li>
-                    <a href="{{ admin.generateUrl('list', admin.datagrid.paginationparameters(datagrid, 1)) }}"
+                    <a href="{{ admin.generateUrl('list', admin.datagrid.paginationparameters(1)) }}"
                        data-page="1" class="media-pager"
                        data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
                        data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
@@ -146,7 +146,7 @@
 
             {% if datagrid.pager.page != datagrid.pager.previouspage %}
                 <li>
-                    <a href="{{ admin.generateUrl('list', admin.datagrid.paginationparameters(datagrid, datagrid.pager.previouspage)) }}"
+                    <a href="{{ admin.generateUrl('list', admin.datagrid.paginationparameters(datagrid.pager.previouspage)) }}"
                        data-page="{{ datagrid.pager.previouspage }}" class="media-pager"
                        data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
                        data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"

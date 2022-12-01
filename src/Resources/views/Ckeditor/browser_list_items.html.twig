@@ -114,7 +114,7 @@
 
             {% if datagrid.pager.page != 1 %}
                 <li>
-                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters( datagrid, 1)|merge(ckParameters)) }}"
+                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.datagrid.paginationparameters(1)|merge(ckParameters)) }}"
                        data-page="1" class="media-pager"
                        data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
                        data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
@@ -126,7 +126,7 @@
 
             {% if datagrid.pager.page != datagrid.pager.previouspage %}
                 <li>
-                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.previouspage)|merge(ckParameters)) }}"
+                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.datagrid.paginationparameters(datagrid.pager.previouspage)|merge(ckParameters)) }}"
                        data-page="{{ datagrid.pager.previouspage }}" class="media-pager"
                        data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
                        data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
@@ -136,11 +136,11 @@
                 </li>
             {% endif %}
 
-            {# Set the number of pages to display in the pager #}
+{#             Set the number of pages to display in the pager#}
             {% for page in datagrid.pager.getLinks(sonata_config.getOption('pager_links')) %}
                 {% if page == datagrid.pager.page %}
                     <li class="active">
-                        <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, page)|merge(ckParameters)) }}"
+                        <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.datagrid.paginationparameters(page)|merge(ckParameters)) }}"
                            data-page="{{ page }}" class="media-pager"
                            data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
                            data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
@@ -148,7 +148,7 @@
                     </li>
                 {% else %}
                     <li>
-                        <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, page)|merge(ckParameters)) }}"
+                        <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.datagrid.paginationparameters(page)|merge(ckParameters)) }}"
                            data-page="{{ page }}" class="media-pager"
                            data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
                            data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
@@ -158,29 +158,29 @@
                 {% endif %}
             {% endfor %}
 
-            {% if datagrid.pager.page != datagrid.pager.nextpage %}
-                <li>
-                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.nextpage)|merge(ckParameters)) }}"
-                        ata-page="{{ datagrid.pager.nextpage }}" class="media-pager"
-                        data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
-                        data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
-                        data-sort-order="{{ datagrid.values._sort_order }}"
-                        data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
-                       title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
-                </li>
-            {% endif %}
+{#            {% if datagrid.pager.page != datagrid.pager.nextpage %}#}
+{#                <li>#}
+{#                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.nextpage)|merge(ckParameters)) }}"#}
+{#                        ata-page="{{ datagrid.pager.nextpage }}" class="media-pager"#}
+{#                        data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"#}
+{#                        data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"#}
+{#                        data-sort-order="{{ datagrid.values._sort_order }}"#}
+{#                        data-sort-by="{{ datagrid.values._sort_by.fieldName}}"#}
+{#                       title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>#}
+{#                </li>#}
+{#            {% endif %}#}
 
-            {% if datagrid.pager.page != datagrid.pager.lastpage %}
-                <li>
-                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.lastpage)|merge(ckParameters)) }}"
-                       data-page="{{ datagrid.pager.lastpage }}" class="media-pager"
-                       data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
-                       data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
-                       data-sort-order="{{ datagrid.values._sort_order }}"
-                       data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
-                       title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>
-                </li>
-            {% endif %}
+{#            {% if datagrid.pager.page != datagrid.pager.lastpage %}#}
+{#                <li>#}
+{#                    <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.modelmanager.paginationparameters(  datagrid, datagrid.pager.lastpage)|merge(ckParameters)) }}"#}
+{#                       data-page="{{ datagrid.pager.lastpage }}" class="media-pager"#}
+{#                       data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"#}
+{#                       data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"#}
+{#                       data-sort-order="{{ datagrid.values._sort_order }}"#}
+{#                       data-sort-by="{{ datagrid.values._sort_by.fieldName}}"#}
+{#                       title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">&raquo;</a>#}
+{#                </li>#}
+{#            {% endif %}#}
 
         </ul>
     </div>
