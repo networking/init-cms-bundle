@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\GoogleAuthenticator;
 
 use Google\Authenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
+use Google\Authenticator\GoogleQrUrl;
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -88,7 +89,7 @@ class Helper implements HelperInterface
      */
     public function getUrl(UserInterface $user)
     {
-        return $this->authenticator->getUrl($user->getUsername(), $this->server, $user->getTwoStepVerificationCode());
+       return GoogleQrUrl::generate($user->getUsername(),  $user->getTwoStepVerificationCode(), $this->server);
     }
 
     /**
@@ -96,7 +97,7 @@ class Helper implements HelperInterface
      */
     public function getUrlFromSecret(UserInterface $user, $secret)
     {
-        return $this->authenticator->getUrl($user->getUsername(), $this->server, $secret);
+        return GoogleQrUrl::generate($user->getUsername(),  $secret, $this->server);
     }
 
     /**
