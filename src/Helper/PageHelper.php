@@ -297,6 +297,10 @@ class PageHelper
         $context = new PageSnapshotDeserializationContext();
         $context->setDeserializeTranslations($unserializeTranslations);
 
+        if(strpos($pageSnapshot->getResourceName(), 'Proxies\__CG__\\') !== false){
+            $pageSnapshot->setResourceName(str_replace('Proxies\__CG__\\', '', $pageSnapshot->getResourceName()));
+        }
+
         return $this->serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json', $context);
     }
 

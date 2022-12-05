@@ -69,7 +69,7 @@ abstract class PageSnapshot implements PageSnapshotInterface
      */
     public function __construct(VersionableInterface $resource)
     {
-        $this->resourceName = get_class($resource);
+        $this->resourceName = str_replace('Proxies\__CG__\\', '',  get_class($resource));
         $this->resourceId = $resource->getResourceId();
         $this->version = $resource->getCurrentVersion();
         $this->snapshotDate = new \DateTime('now');
