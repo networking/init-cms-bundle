@@ -19,7 +19,7 @@
             </trans-unit>
             <trans-unit id="groups">
                 <source>groups</source>
-                <target>Benutzername Gruppen</target>
+                <target>Gruppen</target>
             </trans-unit>
             <trans-unit id="form.group_profile">
                 <source>form.group_profile</source>
@@ -27,15 +27,15 @@
             </trans-unit>
             <trans-unit id="form.group_groups">
                 <source>form.group_groups</source>
-                <target>Benutzername Gruppen</target>
+                <target>Gruppen</target>
             </trans-unit>
             <trans-unit id="form.label_groups">
                 <source>form.label_groups</source>
-                <target>Benutzername Gruppen</target>
+                <target>Gruppen</target>
             </trans-unit>
             <trans-unit id="list.label_groups">
                 <source>list.label_groups</source>
-                <target>Benutzername Gruppen</target>
+                <target>Gruppen</target>
             </trans-unit>
             <trans-unit id="form.label_qr_code">
                 <source>form.label_qr_code</source>
