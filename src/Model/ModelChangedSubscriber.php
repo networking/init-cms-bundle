@@ -10,7 +10,9 @@
 
 namespace Networking\InitCmsBundle\Model;
 
+use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\Common\EventArgs;
+use Doctrine\ORM\Events;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -19,7 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class ModelChangedListener implements ModelChangedListenerInterface
+abstract class ModelChangedSubscriber implements ModelChangedSubscriberInterface, EventSubscriberInterface
 {
     /**
      * @var TokenStorageInterface
@@ -32,14 +34,34 @@ abstract class ModelChangedListener implements ModelChangedListenerInterface
     protected $logger;
 
     /**
+     * @var bool
+     */
+    protected $loggingActive;
+
+    /**
      * ModelChangedListener constructor.
      * @param Logger $logger
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(Logger $logger, TokenStorageInterface $tokenStorage)
+    public function __construct(Logger $logger, TokenStorageInterface $tokenStorage, $loggingActive = false)
     {
         $this->logger = $logger;
         $this->tokenStorage = $tokenStorage;
+        $this->loggingActive = $loggingActive;
+
+    }
+
+    public function getSubscribedEvents()
+    {
+        if(!$this->loggingActive){
+            return [];
+        }
+
+        return [
+            Events::postPersist,
+            Events::postUpdate,
+            Events::postRemove,
+        ];
     }
 
     /**

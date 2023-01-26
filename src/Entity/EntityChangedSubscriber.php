@@ -3,9 +3,9 @@
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\EventArgs;
-use Networking\InitCmsBundle\Model\ModelChangedListener;
+use Networking\InitCmsBundle\Model\ModelChangedSubscriber;
 
-class EntityChangedListener extends ModelChangedListener
+class EntityChangedSubscriber extends ModelChangedSubscriber
 {
     /**
      * @param EventArgs $args

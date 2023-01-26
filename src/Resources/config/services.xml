@@ -72,8 +72,9 @@
             </call>
         </service>
 
-        <service id="networking_init_cms.handler" class="Monolog\Handler\StreamHandler">
+        <service id="networking_init_cms.handler" class="Monolog\Handler\RotatingFileHandler">
             <argument>%kernel.logs_dir%/%kernel.environment%.changed_entities.log</argument>
+            <argument>7</argument>
             <argument>200</argument>
         </service>
 

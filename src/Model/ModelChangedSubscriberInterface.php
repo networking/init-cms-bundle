@@ -17,7 +17,7 @@ use Doctrine\Common\EventArgs;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface ModelChangedListenerInterface
+interface ModelChangedSubscriberInterface
 {
     /**
      * @param EventArgs $args
