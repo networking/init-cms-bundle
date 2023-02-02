@@ -20,7 +20,6 @@ security:
         sonata_user_bundle:
             id: sonata.user.security.user_provider
 
-    enable_authenticator_manager: true
     firewalls:
         # -> custom firewall for the admin area of the URL
         admin:
