@@ -18,7 +18,6 @@ class ClearCacheCommand extends Command
     protected $translator;
     protected $managedLocales;
     /** @TODO Remove in later versions */
-    protected static $defaultName = 'networking:initcms:cleartranslations';
 
 
 

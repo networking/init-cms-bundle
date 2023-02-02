@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ClearLogCommand extends \Symfony\Component\Console\Command\Command
 {
 
-    protected static $defaultName = 'networking:initcms:clear-logs';
 
     private ManagerRegistry $em;
 

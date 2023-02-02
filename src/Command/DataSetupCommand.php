@@ -25,12 +25,7 @@ use Symfony\Component\Console\Input\InputArgument;
 #[AsCommand(name: 'networking:initcms:data-setup', description: 'create and update db schema and append fixtures')]
 class DataSetupCommand extends Command
 {
-    /**
-     * @var string
-     */
-    protected static $defaultName = 'networking:initcms:data-setup';
-
-    protected static $defaultDescription = 'create and update db schema and append fixtures';
+   
     /**
      * @var ManagerRegistry
      */
