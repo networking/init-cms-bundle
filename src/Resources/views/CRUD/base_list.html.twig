@@ -42,7 +42,7 @@ file that was distributed with this source code.
                             <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
                                    class="control-label col-md-3 filter">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
 
-                            <div class="form-inline col-md-9">
+                            <div class="col-md-9">
                                 {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium advanced-filter' }}
                                 ) }}
                                 {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label , 'class': 'input-medium'}, 'translation_domain': admin.translationDomain }) }}
@@ -58,7 +58,7 @@ file that was distributed with this source code.
                         <div class="form-group" {{ filterVisible ? '': 'style="display:none"'  }}>
                             <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain)  }}</label>
 
-                            <div class="form-inline col-md-9">
+                            <div class="col-md-9">
                                 {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium advanced-filter' }}
                                 ) }}
                                 {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
