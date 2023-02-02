@@ -69,7 +69,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return \Doctrine\ORM\QueryBuilder|mixed
      */
-    public function getParentPagesQuery($locale, $id = null, $showHome = false, $showChildren = false)
+    public function getParentPagesQuery($locale, $id = null, $showHome = false, $showChildren = false): mixed
     {
         $qb = $this->createQueryBuilder('p');
         if (!$showHome) {
@@ -107,7 +107,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return mixed
      */
-    public function getParentPagesChoices($locale, $id = null)
+    public function getParentPagesChoices($locale, $id = null): mixed
     {
         $qb = $this->getParentPagesQuery($locale, $id);
 
@@ -121,7 +121,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return mixed
      */
-    public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT)
+    public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT): mixed
     {
         $query = $this->getAllSortByQuery($sort, $order);
 
@@ -242,7 +242,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @throws OptimisticLockException
      * @throws ReflectionException
      */
-    public function resetContent(LayoutBlock $layoutBlock, SerializerInterface $serializer)
+    public function resetContent(LayoutBlock $layoutBlock, SerializerInterface $serializer): LayoutBlock
     {
 
         if ($snapshotContent = $layoutBlock->getSnapshotContent()) {
@@ -274,7 +274,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @throws TransactionRequiredException
      * @throws ReflectionException
      */
-    public function revertObject($object, $property)
+    public function revertObject($object, $property): mixed
     {
         $reflection = new ReflectionClass($object);
 
@@ -346,7 +346,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @throws TransactionRequiredException
      * @throws ReflectionException
      */
-    public function revertObjectVars($parent, $oldObject)
+    public function revertObjectVars($parent, $oldObject): ?object
     {
         $reflection = new ReflectionClass($oldObject);
 
@@ -374,7 +374,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @param array $layoutBlockIds
      * @return Collection
      */
-    public function cleanLayoutBlocks(Collection $currentLayoutBlocks, array $layoutBlockIds)
+    public function cleanLayoutBlocks(Collection $currentLayoutBlocks, array $layoutBlockIds): Collection
     {
 
         $blocksToRemove = $currentLayoutBlocks->filter(
@@ -418,7 +418,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getTreeQueryBuilder($rootNode = null)
+    public function getTreeQueryBuilder($rootNode = null): QueryBuilder
     {
         return $this->getChildrenQueryBuilder($rootNode, false, null, 'asc', true);
     }
@@ -430,7 +430,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return \Doctrine\ORM\Query
      */
-    public function getTreeQuery($rootNode = null)
+    public function getTreeQuery($rootNode = null): Query
     {
         return $this->getTreeQueryBuilder($rootNode)->getQuery();
     }
@@ -442,7 +442,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return array
      */
-    public function getTree($rootNode = null)
+    public function getTree($rootNode = null): mixed
     {
         return $this->getTreeQuery($rootNode)->execute();
     }
@@ -469,7 +469,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getPathQueryBuilder($node)
+    public function getPathQueryBuilder($node): QueryBuilder
     {
         $meta = $this->getClassMetadata();
         $config = $this->listener->getConfiguration($this->_em, $meta->getName());
@@ -515,7 +515,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return \Doctrine\ORM\Query
      */
-    public function getPathQuery($node)
+    public function getPathQuery($node): Query
     {
         return $this->getPathQueryBuilder($node)->getQuery();
     }
@@ -527,12 +527,12 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      *
      * @return array list of Nodes in path
      */
-    public function getPath($node)
+    public function getPath($node): mixed
     {
         return $this->getPathQuery($node)->getResult();
     }
 
-    public function getChildrenQueryBuilder($node = null, $direct = false, $sortByField = null, $direction = 'asc', $includeNode = false)
+    public function getChildrenQueryBuilder($node = null, $direct = false, $sortByField = null, $direction = 'asc', $includeNode = false): QueryBuilder
     {
         $meta = $this->getClassMetadata();
         $config = $this->listener->getConfiguration($this->_em, $meta->getName());
