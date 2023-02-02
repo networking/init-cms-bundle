@@ -21,7 +21,7 @@
     "ext-json": "*",
     "doctrine/doctrine-fixtures-bundle": "^3.4",
     "friendsofsymfony/ckeditor-bundle": "^2.2",
-    "jms/serializer-bundle": "^4.0",
+    "jms/serializer-bundle": "^5.2.0",
     "knplabs/knp-paginator-bundle": "^5.9.0",
     "lexik/translation-bundle": "6.*",
     "oneup/flysystem-bundle": "^4.0",
