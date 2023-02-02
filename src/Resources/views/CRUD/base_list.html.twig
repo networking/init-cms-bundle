@@ -25,7 +25,7 @@ file that was distributed with this source code.
 
 {% block list_filters %}
     {% if admin.datagrid.filters %}
-        <form action="{{ admin.generateUrl('list') }}" method="GET"
+        <form action="{{ admin.generateUrl('list', {pcode: app.request.get('pcode')}) }}" method="GET"
               class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters">
             {% set filter_main = '' %}
             {% set filter_hidden = '' %}
