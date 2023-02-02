@@ -26,7 +26,7 @@
     "lexik/translation-bundle": "6.*",
     "oneup/flysystem-bundle": "^4.0",
     "oneup/uploader-bundle": "^4.0",
-    "networking/bootstrap-bundle": "^5.0",
+    "networking/bootstrap-bundle": "^6.0",
     "sensio/framework-extra-bundle": "^6.0",
     "sonata-project/admin-bundle": "^4.17.0",
     "sonata-project/doctrine-orm-admin-bundle": "^4.7",
