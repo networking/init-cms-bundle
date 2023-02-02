@@ -35,7 +35,7 @@ class JSNode extends Node
      *
      * @param Compiler A Twig_Compiler instance
      */
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
                 ->addDebugInfo($this)
