@@ -958,7 +958,7 @@ class NetworkingHelperExtension extends AbstractExtension
      * @return string
      */
     public static function truncate(
-        \Twig_Environment $env,
+        Environment $env,
         $text,
         $length = 100,
         $ellipsis = '...',
