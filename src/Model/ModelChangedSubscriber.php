@@ -51,7 +51,7 @@ abstract class ModelChangedSubscriber implements ModelChangedSubscriberInterface
 
     }
 
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         if(!$this->loggingActive){
             return [];
