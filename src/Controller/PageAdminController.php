@@ -122,7 +122,7 @@ class PageAdminController extends CRUDController
             return $this->redirect($this->admin->generateUrl('edit', ['id' => $id]));
         }
 
-        return $this->render(
+        return $this->renderWithExtraParams(
             '@NetworkingInitCms/PageAdmin/page_translation_copy.html.twig',
             [
                 'action' => 'copy',
