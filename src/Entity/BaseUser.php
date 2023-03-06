@@ -47,8 +47,6 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
 
     protected $lastname;
 
-    protected $gender;
-
 
     protected $locale;
 
@@ -248,41 +246,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setBiography($biography)
-    {
-        $this->biography = $biography;
 
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBiography()
-    {
-        return $this->biography;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDateOfBirth($dateOfBirth)
-    {
-        $this->dateOfBirth = $dateOfBirth;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDateOfBirth()
-    {
-        return $this->dateOfBirth;
-    }
 
 
     /**
@@ -301,24 +265,6 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     public function getFirstname()
     {
         return $this->firstname;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setGender($gender)
-    {
-        $this->gender = $gender;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGender()
-    {
-        return $this->gender;
     }
 
 
