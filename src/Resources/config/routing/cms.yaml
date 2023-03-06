@@ -6,6 +6,10 @@ networking_init_cms_home:
     path: /
     defaults: {_controller: Networking\InitCmsBundle\Controller\FrontendPageController::homeAction}
 
+networking_init_cms_admin_no_slash:
+    path: /admin
+    defaults: {_controller: Networking\InitCmsBundle\Controller\FrontendPageController::adminAction}
+
 networking_init_cms_admin:
     path: /admin/
     defaults: {_controller: Networking\InitCmsBundle\Controller\FrontendPageController::adminAction}
