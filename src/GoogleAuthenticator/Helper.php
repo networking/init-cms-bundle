@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\GoogleAuthenticator;
 
 use Sonata\GoogleAuthenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
-use Google\Authenticator\GoogleQrUrl;
+use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
