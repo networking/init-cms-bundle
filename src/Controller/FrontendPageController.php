@@ -17,6 +17,7 @@ use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\Page;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Admin\Pool;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -135,8 +136,8 @@ class FrontendPageController extends AbstractController
         $page = $request->get('_content');
 
         $template = $request->get('_template');
-        if ($template instanceof \Sensio\Bundle\FrameworkExtraBundle\Configuration\Template) {
-            $template = $template->getTemplate();
+        if ($template instanceof Template) {
+            $template = $template->template;
         }
         $user = $this->getUser();
 

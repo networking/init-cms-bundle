@@ -436,9 +436,9 @@ class PageHelper
             $request->attributes->set('_route_params', $requestParams);
 
             $configuration = $request->attributes->get('_template');
-            $request->attributes->set('_template', $configuration->getTemplate());
-            $request->attributes->set('_template_vars', $configuration->getVars());
-            $request->attributes->set('_template_streamable', $configuration->isStreamable());
+            $request->attributes->set('_template', $configuration->template);
+            $request->attributes->set('_template_vars', $configuration->vars);
+            $request->attributes->set('_template_streamable', $configuration->stream);
         }
 
         return $request;

@@ -11,7 +11,7 @@
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Component\Routing\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
@@ -115,7 +115,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
      */
     public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content, $addLocale = true)
     {
-        $template = new Template(['template' => $contentRoute->getTemplate()]);
+        $template = new Template($contentRoute->getTemplate());
 
         $defaults = [
             'route_params' => '',

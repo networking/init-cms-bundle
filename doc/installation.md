@@ -49,7 +49,6 @@ If you are not using flex, you will need to add the bundle to your app/AppKernel
                     new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
                     new Symfony\Bundle\AsseticBundle\AsseticBundle(),
                     new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-                    new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
                     // these are the bundles for the CMS
         
                     new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
@@ -85,7 +84,6 @@ If you are not using flex, you will need to add the bundle to your app/AppKernel
     
     return [
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
-    Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
     Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
