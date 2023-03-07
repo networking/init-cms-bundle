@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="networing_init_cms.google.authenticator" class="Google\Authenticator\GoogleAuthenticator"></service>
+        <service id="networing_init_cms.google.authenticator" class="Sonata\GoogleAuthenticator\GoogleAuthenticator"></service>
         <service id="networking_init_cms.google.authenticator.helper" class="Networking\InitCmsBundle\GoogleAuthenticator\Helper" public="true">
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="networing_init_cms.google.authenticator"/>

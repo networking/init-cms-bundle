@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\GoogleAuthenticator;
 
-use Google\Authenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
+use Sonata\GoogleAuthenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
 use Google\Authenticator\GoogleQrUrl;
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
