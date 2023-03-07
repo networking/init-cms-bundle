@@ -213,9 +213,9 @@ class PageCache
     /**
      * {@inheritdoc}
      */
-    public function reset()
+    public function reset():void
     {
-        return $this->pageCache->reset();
+       $this->pageCache->reset();
     }
 
     /**
