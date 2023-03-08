@@ -26,7 +26,7 @@
     "lexik/translation-bundle": "6.*",
     "oneup/flysystem-bundle": "^4.0",
     "oneup/uploader-bundle": "^4.0",
-    "networking/bootstrap-bundle": "dev-master",
+    "networking/bootstrap-bundle": "^v6.2",
     "sonata-project/admin-bundle": "^4.17.0",
     "sonata-project/doctrine-orm-admin-bundle": "^4.7",
     "sonata-project/media-bundle": "^4.5",
