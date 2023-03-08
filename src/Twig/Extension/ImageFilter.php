@@ -36,7 +36,7 @@ class ImageFilter extends \Twig\Extension\AbstractExtension{
     public function webpImage(string $imagePath, ?int $width = null, ?int $height = null, $compression = 80): string
     {
 
-        $mimeType = $this->flysystem->getMimetype($imagePath);
+        $mimeType = $this->flysystem->mimeType($imagePath);
         if($mimeType === 'image/svg' || $mimeType === 'image/svg+xml'){
             return $imagePath;
         }
@@ -51,27 +51,57 @@ class ImageFilter extends \Twig\Extension\AbstractExtension{
 
         $dir = str_replace(end($parts), '', $newImagePath);
 
-
-        if(!is_dir($this->cacheFlysystem->getAdapter()->getPathPrefix().$dir)){
-            $dirCreated = $this->cacheFlysystem->getAdapter()->createDir($dir, new Config(['visibility' => 'public']));
+        if(!$this->cacheFlysystem->directoryExists($dir)){
+            $dirCreated = $this->cacheFlysystem->createDirectory($dir, ['visibility' => 'public'] );
             if(!$dirCreated){
                 return $imagePath;
             }
         }
 
         try{
-            $im = new \Imagick($this->flysystem->getAdapter()->applyPathPrefix($imagePath));
-            if($width && $height){
-                $im->resizeImage($width, $height, \Imagick::FILTER_UNDEFINED, 1);
+            if(class_exists(\Imagick::class)){
+                $image = $this->createWithImagick($imagePath, $width, $height, $compression);
+            }else{
+                $image = $this->createWithGD($imagePath, $width, $height);
             }
-            $im->setImageFormat( "webp" );
-            $im->setOption('webp:method', '6');
-            $im->setImageCompressionQuality($compression);
-            $im->writeImage($this->cacheFlysystem->getAdapter()->applyPathPrefix($newImagePath));
+
+            $this->cacheFlysystem->write($newImagePath, $image, ['visibility' => 'public']);
         }catch (\Exception $e){
+            dump($e->getMessage());
             return $imagePath;
         }
 
         return '/media/cache'.$newImagePath;
+    }
+
+
+    public function createWithGD($imagePath, $width, $height): string|false
+    {
+        /** @var \GdImage $gd */
+        $gd = imagecreatefromstring($this->flysystem->read($imagePath));
+
+        ob_start();
+        if($width && $height){
+            $gd = imagescale($gd,$width, $height);
+        }
+        imagewebp($gd, null, IMG_WEBP_LOSSLESS);
+        $gd = ob_get_contents();
+        ob_end_clean();
+
+        return $gd;
+    }
+
+    public function createWithImagick($imagePath, $width, $height, $compression): string|false
+    {
+        $im = new \Imagick();
+        $im->readImageFile($this->flysystem->readStream($imagePath));
+        if($width && $height){
+            $im->resizeImage($width, $height, \Imagick::FILTER_UNDEFINED, 1);
+        }
+        $im->setImageFormat( "webp" );
+        $im->setOption('webp:method', '6');
+        $im->setImageCompressionQuality($compression);
+
+        return $im->getImageBlob();
     }
 }
