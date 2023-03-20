@@ -34,21 +34,21 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * @var \DateTime
      */
-    protected $lastActivity;
+    protected ?DateTime $lastActivity;
 
-    protected $twoStepVerificationCode;
+    protected ?string $twoStepVerificationCode;
 
     /**
      * @var Group[]|Collection
      */
-    protected $groups;
+    protected Collection|array $groups;
 
-    protected $firstname;
+    protected ?string $firstname;
 
-    protected $lastname;
+    protected ?string $lastname;
 
 
-    protected $locale;
+    protected ?string $locale;
 
     public function getLocale(): ?string
     {
