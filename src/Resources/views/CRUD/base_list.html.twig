@@ -43,9 +43,8 @@ file that was distributed with this source code.
                                    class="control-label col-md-3 filter">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
 
                             <div class="col-md-9">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium advanced-filter' }}
-                                ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label , 'class': 'input-medium'}, 'translation_domain': admin.translationDomain }) }}
+                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'advanced-filter pull-left' }}  ) }}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
                             </div>
                         </div>
                     {% endset %}
@@ -59,10 +58,8 @@ file that was distributed with this source code.
                             <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain)  }}</label>
 
                             <div class="col-md-9">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium advanced-filter' }}
-                                ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
-                                ) }}
+                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'advanced-filter pull-left' }}) }}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain } ) }}
                             </div>
                         </div>
                     {% endset %}
