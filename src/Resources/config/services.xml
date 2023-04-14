@@ -15,7 +15,10 @@
         </prototype>
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
         <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
-
+        <service id="Networking\InitCmsBundle\Controller\MediaController">
+            <argument key="$mediaManager" type="service" id="sonata.media.manager.media"/>
+            <argument key="$pool" type="service" id="sonata.media.pool"/>
+        </service>
         <service id="Networking\InitCmsBundle\Command\ClearLogCommand" public="true">
             <argument key="$pageClass">%networking_init_cms.admin.page.class%</argument>
             <tag name="console.command"/>
