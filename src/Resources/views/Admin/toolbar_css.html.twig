@@ -4879,9 +4879,9 @@
         color: #333 !important;
     }
 
-    .navbar-initcms .dropdown-menu a:focus,
-    .navbar-initcms .dropdown-menu a:hover {
-        color: #fff !important;
+    .navbar-initcms .show > .dropdown-menu {
+        display: block;
+        font-size: inherit;
     }
 
     .navbar-initcms .dropdown-menu a.color-draft {
@@ -4891,5 +4891,6 @@
     .navbar-initcms .dropdown-menu a.color-published {
         color: green !important;
     }
+
     {% endblock css %}
 </style>
