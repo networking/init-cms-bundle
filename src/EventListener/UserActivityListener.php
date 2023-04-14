@@ -72,7 +72,7 @@ class UserActivityListener
                     $updatedAtCol = $classMetaData->getColumnName('updatedAt');
 
                     $conn = $this->em->getConnection();
-                    $sql = "UPDATE ${table} SET ${updatedAtCol} = :date WHERE ${identifier} = :id";
+                    $sql = "UPDATE {$table} SET {$updatedAtCol} = :date WHERE {$identifier} = :id";
                     $stmt = $conn->prepare($sql);
                     $stmt->bindValue('date', (new \DateTime('now'))->format( 'Y-m-d H:i:s'));
                     $stmt->bindValue('id', $user->getId());
