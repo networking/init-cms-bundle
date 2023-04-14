@@ -11,7 +11,7 @@
 
 namespace Networking\InitCmsBundle\Model;
 
-use Networking\InitCmsBundle\Annotation as Sonata;
+use Networking\InitCmsBundle\Annotation\FormCallback;
 
 /**
  * Class Text.
@@ -25,21 +25,7 @@ abstract class Text implements ContentInterface, TextInterface
      */
     protected $id;
 
-    /**
-     * @var string
-     * @Sonata\FormMapper(
-     *      name="text",
-     *      type="FOS\CKEditorBundle\Form\Type\CKEditorType",
-     *      options={
-     *          "label_render" = false,
-     *          "horizontal_input_wrapper_class" = "col-md-12",
-     *          "horizontal_label_offset_class" = "",
-     *          "layout" = "horizontal",
-     *          "label" = false,
-     *          "required"=false
-     *      }
-     * )
-     */
+
     protected $text;
 
     /**
@@ -51,6 +37,21 @@ abstract class Text implements ContentInterface, TextInterface
      * @var \DateTime
      */
     protected $updatedAt;
+
+    #[FormCallback]
+    public static function buildForm(\Symfony\Component\Form\FormBuilder $formBuilder){
+        $formBuilder
+            ->add('text',
+                'FOS\CKEditorBundle\Form\Type\CKEditorType',
+                [
+                    'horizontal_input_wrapper_class' => 'col-md-12',
+                    'horizontal_label_offset_class' => '',
+                    'label' => false,
+                    'label_render' => false,
+                    'required' => false,
+                ]
+            );
+    }
 
     /**
      * clone action, set id null.
