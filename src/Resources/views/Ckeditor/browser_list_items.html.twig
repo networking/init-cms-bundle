@@ -1,10 +1,6 @@
 {% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
 {% set previewLink = false %}
 {% for object in datagrid.results %}
-    {% set path = path('networking_init_cms_file_download', {'id': object.id, 'name': object.getMetadataValue('filename')}) %}
-    {% if object.width %}
-        {% set path = 'networking_init_cms_image_view' %}
-    {% endif %}
 
     {% if object.width is defined and object.width %}
         {% if object.providerName == 'sonata.media.provider.youtube' %}
@@ -52,7 +48,7 @@
                             class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" >
                     <li>
-                        <a href="{{ sonata_path(object, 'reference')  }}}"  tabindex="-1"
+                        <a href="{{ sonata_path(object, 'reference')  }}"  tabindex="-1"
                            class="select">{{ 'list.label_select'|trans({}, 'MediaAdmin') }}: {{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
                     </li>
                     {% if formats[object.id]|length > 0 %}

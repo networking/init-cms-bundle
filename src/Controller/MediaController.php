@@ -10,6 +10,8 @@
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Gaufrette\File;
+use Sonata\MediaBundle\Model\MediaInterface;
 use Sonata\MediaBundle\Model\MediaManagerInterface;
 use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Sonata\MediaBundle\Provider\Pool;
@@ -25,27 +27,37 @@ class MediaController extends AbstractController
     public function __construct(
         private readonly MediaManagerInterface $mediaManager,
         private readonly Pool $pool
-    )
-    {
+    ) {
     }
+
     /**
      * output image direct to browser, retrieve from cache if activated.
      *
      * @param Request $request
-     * @param $id
-     * @param string $format
+     * @param         $id
+     * @param string  $format
      *
      * @return Response
      */
-    public function viewImageAction(Request $request, $id, $format = MediaProviderInterface::FORMAT_REFERENCE)
-    {
+    public function viewAction(
+        Request $request,
+        $id,
+        $name = null,
+        $format = MediaProviderInterface::FORMAT_REFERENCE
+    ) {
         $media = $this->mediaManager->find($id);
 
         if (!$media) {
-            throw new NotFoundHttpException(sprintf('unable to find the media with the id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the media with the id : %s', $id)
+            );
         }
 
-        if (!$this->pool->getDownloadStrategy($media)->isGranted($media, $request)) {
+        if (!$this->pool->getDownloadStrategy($media)->isGranted(
+            $media,
+            $request
+        )
+        ) {
             throw new AccessDeniedException();
         }
         $provider = $this->pool->getProvider($media->getProviderName());
@@ -53,18 +65,96 @@ class MediaController extends AbstractController
         if ($format == 'reference') {
             $file = $provider->getReferenceFile($media);
         } else {
-            $file = $provider->getFilesystem()->get($provider->generatePrivateUrl($media, $format));
+            $file = $provider->getFilesystem()->get(
+                $provider->generatePrivateUrl($media, $format)
+            );
         }
 
+        $name = $name ?: $media->getName();
 
+        return $this->getResponse($file, $media, $name, 'inline');
+    }
+
+    public function downloadAction(
+        Request $request,
+        $id,
+        $name = null,
+        $format = MediaProviderInterface::FORMAT_REFERENCE
+    ) {
+        $media = $this->mediaManager->find($id);
+
+        if (!$media) {
+            throw new NotFoundHttpException(
+                sprintf('unable to find the media with the id : %s', $id)
+            );
+        }
+
+        if (!$this->pool->getDownloadStrategy($media)->isGranted(
+            $media,
+            $request
+        )
+        ) {
+            throw new AccessDeniedException();
+        }
+
+        $provider = $this->pool->getProvider($media->getProviderName());
+
+        if ('reference' == $format) {
+            $file = $provider->getReferenceFile($media);
+        } else {
+            $file = $provider->getFilesystem()->get(
+                $provider->generatePrivateUrl($media, $format)
+            );
+        }
+
+        $name = $name ?: $media->getName();
+
+        return $this->getResponse($file, $media, $name);
+
+    }
+
+
+    /**
+     * @param mixed $file
+     * @param MediaInterface $media
+     * @param mixed $name
+     * @param mixed $type
+     *
+     * @return Response
+     */
+    protected function getResponse(
+        File $file,
+        MediaInterface $media,
+        mixed $name,
+        $mode = 'attachment'
+    ): Response {
         $content = $file->getContent();
-        $headers = array_merge(array(
-            'Content-Type' => $media->getContentType(),
-            'Accept-Ranges' => 'bytes',
-            'Content-Length' => $media->getSize(),
-            'Content-Disposition' => sprintf('inline; filename="%s"', $media->getMetadataValue('filename')),
-        ), array());
 
-       return new Response($content, 200, $headers);
+        $type = $media->getExtension();
+
+
+        $name = str_replace('.'.$type, '', $name);
+
+        $headers = array_merge(
+            [
+                'Content-Type' => $media->getContentType(),
+                'Accept-Ranges' => 'bytes',
+                'Content-Length' => $media->getSize(),
+                'Content-Disposition' => sprintf(
+                    $mode.'; filename="%s.%s"',
+                    $name,
+                    $type
+                ),
+            ],
+            []
+        );
+
+        $response = new Response($content, 200, $headers);
+
+        $response->setPublic();
+        $response->setLastModified($media->getUpdatedAt());
+        $response->getEtag();
+
+        return $response;
     }
 }

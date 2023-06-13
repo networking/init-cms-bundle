@@ -92,14 +92,21 @@ networking_init_cms_help_dashboard:
 
 networking_init_cms_file_download:
     path: /file/download/{id}/{name}
-    defaults: { _controller: Sonata\MediaBundle\Controller\MediaController::downloadAction, format: 'reference' }
+    defaults: { _controller: Networking\InitCmsBundle\Controller\MediaController::downloadAction, format: 'reference' }
+    requirements:
+        name: (.*)?
+        format: (.*)?
+
+networking_init_cms_file_view:
+    path: /file/view/{id}/{name}
+    defaults: { _controller: Networking\InitCmsBundle\Controller\MediaController::viewAction, format: 'reference' }
     requirements:
         name: (.*)?
         format: (.*)?
 
 networking_init_cms_image_view:
     path: /image/view/{id}/{format}/{name}
-    defaults: { _controller: Networking\InitCmsBundle\Controller\MediaController::viewImageAction, format: 'reference' }
+    defaults: { _controller: Networking\InitCmsBundle\Controller\MediaController::viewAction, format: 'reference' }
     requirements:
         name: (.*)?
         format: (.*)?

@@ -12,6 +12,7 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -48,24 +49,11 @@ class CacheController extends AbstractController
      */
     public function clearAction()
     {
-
-        /*
-         * to do: check if logged in user is sysadmin
-         * */
         if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->pageCache->clean();
-
-            /*clean function does not return status, therefore set success to true */
-            $success = true;
-            $response = ['success' => $success];
-
-            return new Response(json_encode($response));
+            return new JsonResponse(json_encode(['success' => $this->pageCache->clear()]));
         } else {
-            /*wrong autorisation */
-            $success = false;
-            $response = ['success' => $success];
-
-            return new Response(json_encode($response));
+            $response = [];
+            return new JsonResponse($response, 403);
         }
     }
 }
