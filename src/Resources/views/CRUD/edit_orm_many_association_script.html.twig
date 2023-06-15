@@ -191,9 +191,12 @@ var field_dialog_form_action_{{ id }} = function (event) {
             // otherwise, display form error
             field_dialog_{{ id }}.html(data);
 
-            Admin.add_pretty_errors(field_dialog_{{ id }});
-
             // reattach the event
+            jQuery('form', field_dialog_{{ id }}).submit(field_dialog_form_action_{{ id }});
+        },
+        error: function (xhr, status, error) {
+
+            field_dialog_{{ id }}.html(xhr.responseText);
             jQuery('form', field_dialog_{{ id }}).submit(field_dialog_form_action_{{ id }});
         }
     });
