@@ -239,6 +239,6 @@ abstract class Tag
      */
     public function __toString()
     {
-        return $this->path;
+        return $this->path??$this->name;
     }
 }
