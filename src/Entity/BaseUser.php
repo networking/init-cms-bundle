@@ -292,6 +292,9 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
      */
     public function getFullname()
     {
+        if(!$this->getFirstname() && !$this->getLastname()){
+            return $this->getUsername();
+        }
         return sprintf('%s %s', $this->getFirstname(), $this->getLastname());
     }
 
