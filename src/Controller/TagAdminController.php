@@ -14,6 +14,9 @@ use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Admin\Model\MediaAdmin;
 use Networking\InitCmsBundle\Model\Tag;
 use Sonata\AdminBundle\Exception\ModelManagerException;
+use Sonata\AdminBundle\Form\FormErrorIteratorToConstraintViolationList;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,11 +35,9 @@ class TagAdminController extends CRUDController
         /** @var Response $response */
         $response = parent::createAction($request);
 
-        if ($this->isXmlHttpRequest($request)) {
+        if ($this->isXmlHttpRequest($request) && $response->getStatusCode() === 200) {
             $content = $response->getContent();
             $jsonArray = json_decode($content, true);
-
-
             if ($jsonArray && $jsonArray['result'] == 'ok') {
                 $object = $this->admin->getObject($jsonArray['objectId']);
                 $jsonArray['status'] =  'success';
@@ -45,8 +46,16 @@ class TagAdminController extends CRUDController
                 $response = $this->renderJson($jsonArray, 200);
             }
         }
+        
+
+        
 
         return $response;
+    }
+
+    protected function handleXmlHttpRequestErrorResponse(Request $request, FormInterface $form): ?JsonResponse
+    {
+        return null;
     }
 
     /**
@@ -56,8 +65,7 @@ class TagAdminController extends CRUDController
      */
     public function getTagTree($objectId)
     {
-        $tagRepo = $this->getDoctrine()->getRepository(\Networking\InitCmsBundle\Entity\Tag::class);
-        $tags = $tagRepo->findBy(['level' => 1], ['path' => 'ASC']);
+        $tags = $this->admin->getModelManager()->findBy(\Networking\InitCmsBundle\Entity\Tag::class, ['level' => 1], ['path' => 'ASC']);
 
         return $this->renderView('@NetworkingInitCms/TagAdmin/tags.html.twig', [
             'noSort' => false,
