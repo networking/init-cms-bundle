@@ -13,7 +13,7 @@
       <gedmo:tree-path-source />
     </field>
     <field name="path" type="string" column="path" length="255" nullable="true">
-      <gedmo:tree-path append-id="false" separator="/"/>
+      <gedmo:tree-path append_id="false" separator="/"/>
     </field>
     <field name="level" type="integer" column="lvl" nullable="true">
       <gedmo:tree-level/>
