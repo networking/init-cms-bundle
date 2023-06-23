@@ -75,10 +75,7 @@ abstract class MediaAdmin extends Admin
      */
     protected $showTagTree;
 
-    private ValidatorInterface $validator;
-
-    public function __construct($pool, ValidatorInterface $validator) {
-        $this->validator = $validator;
+    public function __construct($pool, private readonly ValidatorInterface $validator) {
         parent::__construct($pool);
     }
 
@@ -102,8 +99,6 @@ abstract class MediaAdmin extends Admin
     /**
      * Set the language paramenter to contain a list of languages most likely
      * passed from the config.yaml file.
-     *
-     * @param array $languages
      */
     public function setLanguages(array $languages)
     {
@@ -265,7 +260,7 @@ abstract class MediaAdmin extends Admin
                     $alias,
                     $field,
                     FilterData $data
-                ) {
+                ): bool {
                     if (!$data->hasValue()) {
                         return false;
                     }
@@ -309,9 +304,6 @@ abstract class MediaAdmin extends Admin
         return [];
     }
 
-    /**
-     * @param array $providers
-     */
     public function setLocalisedMediaProviders(array $providers)
     {
         $this->localisedMediaProviders = $providers;

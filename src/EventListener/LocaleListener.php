@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\EventListener;
 
 use Symfony\Component\Dotenv\Dotenv;
@@ -31,11 +33,6 @@ class LocaleListener
     protected $router;
 
     /**
-     * @var string
-     */
-    protected $defaultLocale;
-
-    /**
      * @var \Symfony\Component\Security\Http\AccessMapInterface
      */
     protected $accessMap;
@@ -46,20 +43,8 @@ class LocaleListener
     protected $availableLanguages;
 
     /**
-     * @var bool
-     */
-    protected $allowLocaleCookie;
-
-    /**
-     * @var bool
-     */
-    protected $singleLanguage;
-
-    /**
      * LocaleListener constructor.
      *
-     * @param AccessMapInterface   $accessMap
-     * @param array                $availableLanguages
      * @param string               $defaultLocale
      * @param RouterInterface|null $router
      * @param bool                 $allowLocaleCookie
@@ -68,18 +53,15 @@ class LocaleListener
     public function __construct(
         AccessMapInterface $accessMap,
         array $availableLanguages,
-        $allowLocaleCookie,
-        $singleLanguage,
-        $defaultLocale = 'en',
+        protected $allowLocaleCookie,
+        protected $singleLanguage,
+        protected $defaultLocale = 'en',
         RouterInterface $router = null
 
     ) {
         $this->accessMap = $accessMap;
         $this->availableLanguages = $availableLanguages;
-        $this->defaultLocale = $defaultLocale;
         $this->router = $router;
-        $this->allowLocaleCookie = $allowLocaleCookie;
-        $this->singleLanguage = $singleLanguage;
 
         $env = [];
 
@@ -98,7 +80,6 @@ class LocaleListener
     }
 
     /**
-     * @param RequestEvent $event
      * @return void
      */
     public function onKernelRequest(RequestEvent $event)
@@ -163,11 +144,11 @@ class LocaleListener
      */
     protected function getLocaleFromUrl($url)
     {
-        $parts = explode('/', $url);
+        $parts = explode('/', (string) $url);
         $locale = $parts[1];
 
         foreach ($this->availableLanguages as $language) {
-            if ($locale === substr($language['locale'], 0, 2)) {
+            if ($locale === substr((string) $language['locale'], 0, 2)) {
                 return $language['locale'];
             }
         }
@@ -175,9 +156,6 @@ class LocaleListener
         return false;
     }
 
-    /**
-     * @param \Symfony\Component\Security\Http\Event\InteractiveLoginEvent $event
-     */
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
         $request = $event->getRequest();
@@ -203,11 +181,10 @@ class LocaleListener
     /**
      * guess frontend locale.
      *
-     * @param mixed $locales
      *
      * @return string
      */
-    protected function guessFrontendLocale($locales)
+    protected function guessFrontendLocale(mixed $locales)
     {
         // search for match in array
         if (is_array($locales)) {
@@ -243,7 +220,7 @@ class LocaleListener
                 return $language['locale'];
             }
             // first part of browser accept language matches an available language
-            if (substr($locale, 0, 2) == substr($language['locale'], 0, 2)) {
+            if (substr((string) $locale, 0, 2) == substr((string) $language['locale'], 0, 2)) {
                 return $language['locale'];
             }
         }
@@ -254,7 +231,6 @@ class LocaleListener
     /**
      * get preferred locale.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return string
      */
@@ -271,7 +247,6 @@ class LocaleListener
     /**
      * get browser accept languages.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return array
      */
@@ -279,7 +254,7 @@ class LocaleListener
     {
         $browserLanguages = [];
 
-        if (strlen($request->server->get('HTTP_ACCEPT_LANGUAGE')) == 0) {
+        if (strlen((string) $request->server->get('HTTP_ACCEPT_LANGUAGE')) == 0) {
             return [];
         }
 
@@ -287,8 +262,8 @@ class LocaleListener
             $request->server->get('HTTP_ACCEPT_LANGUAGE')
         );
         foreach ($languages as $lang) {
-            if (strstr($lang, '-')) {
-                $codes = explode('-', $lang);
+            if (strstr((string) $lang, '-')) {
+                $codes = explode('-', (string) $lang);
                 if ($codes[0] == 'i') {
                     // Language not listed in ISO 639 that are not variants
                     // of any listed language, which can be registered with the
@@ -317,10 +292,8 @@ class LocaleListener
      * split http accept header.
      *
      * @param string $header
-     *
-     * @return array
      */
-    public function splitHttpAcceptHeader($header)
+    public function splitHttpAcceptHeader($header): array
     {
         $values = [];
         foreach (array_filter(explode(',', $header)) as $value) {

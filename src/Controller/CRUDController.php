@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
@@ -27,7 +29,7 @@ use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
  */
 class CRUDController extends SonataCRUDController
 {
-    const EDIT_ENTITY = 'crud_controller.edit_entity';
+    final public const EDIT_ENTITY = 'crud_controller.edit_entity';
 
     /**
      * @var CmsEventDispatcher
@@ -41,8 +43,6 @@ class CRUDController extends SonataCRUDController
 
     /**
      * CRUDController constructor.
-     * @param CmsEventDispatcher $dispatcher
-     * @param PageCacheInterface $pageCache
      */
     public function __construct(CmsEventDispatcher $dispatcher, PageCacheInterface $pageCache)
     {
@@ -78,7 +78,7 @@ class CRUDController extends SonataCRUDController
      */
     public function translate($string, $params = [], $domain = null)
     {
-        $translationDomain = $domain ? $domain : $this->admin->getTranslationDomain();
+        $translationDomain = $domain ?: $this->admin->getTranslationDomain();
 
         return $this->container->get('translator')->trans($string, $params, $translationDomain);
     }

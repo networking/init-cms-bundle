@@ -105,7 +105,7 @@ class PagesBlockService extends AbstractBlockService
 
 
         return $qb->getQuery()->execute(
-            array(':draft' => PageInterface::STATUS_DRAFT)
+            [':draft' => PageInterface::STATUS_DRAFT]
         );
     }
 
@@ -118,14 +118,14 @@ class PagesBlockService extends AbstractBlockService
 
 
         return $qb->getQuery()->execute(
-            array(':draft' => PageInterface::STATUS_REVIEW)
+            [':draft' => PageInterface::STATUS_REVIEW]
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Page status block';
     }

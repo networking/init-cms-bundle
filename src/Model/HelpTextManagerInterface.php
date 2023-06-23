@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: marcbissegger
  * Date: 10/24/13
  * Time: 4:37 PM.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 interface HelpTextManagerInterface

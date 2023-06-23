@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Security\Acl\Permission;
 
 use Symfony\Component\Security\Acl\Permission\PermissionMapInterface;
@@ -21,25 +23,23 @@ use Symfony\Component\Security\Acl\Permission\PermissionMapInterface;
  */
 class AdminPermissionMap implements PermissionMapInterface
 {
-    const PERMISSION_VIEW = 'VIEW';
-    const PERMISSION_EDIT = 'EDIT';
-    const PERMISSION_CREATE = 'CREATE';
-    const PERMISSION_DELETE = 'DELETE';
-    const PERMISSION_UNDELETE = 'UNDELETE';
-    const PERMISSION_LIST = 'LIST';
-    const PERMISSION_EXPORT = 'EXPORT';
-    const PERMISSION_OPERATOR = 'OPERATOR';
-    const PERMISSION_MASTER = 'MASTER';
-    const PERMISSION_OWNER = 'OWNER';
-    const PERMISSION_PUBLISH = 'PUBLISH';
+    final public const PERMISSION_VIEW = 'VIEW';
+    final public const PERMISSION_EDIT = 'EDIT';
+    final public const PERMISSION_CREATE = 'CREATE';
+    final public const PERMISSION_DELETE = 'DELETE';
+    final public const PERMISSION_UNDELETE = 'UNDELETE';
+    final public const PERMISSION_LIST = 'LIST';
+    final public const PERMISSION_EXPORT = 'EXPORT';
+    final public const PERMISSION_OPERATOR = 'OPERATOR';
+    final public const PERMISSION_MASTER = 'MASTER';
+    final public const PERMISSION_OWNER = 'OWNER';
+    final public const PERMISSION_PUBLISH = 'PUBLISH';
 
     /**
      * Map each permission to the permissions it should grant access for
      * fe. grant access for the view permission if the user has the edit permission.
-     *
-     * @var array
      */
-    private $map = [
+    private array $map = [
 
         self::PERMISSION_VIEW => [
             MaskBuilder::MASK_VIEW,

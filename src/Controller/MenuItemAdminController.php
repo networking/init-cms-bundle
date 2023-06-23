@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -149,9 +151,7 @@ class MenuItemAdminController extends CRUDController
         //use one of the locale to filter the list of menu entries (see above
         $rootNodes = $this->menuItemManager->getRootNodesByLocale($this->currentMenuLanguage, 'id');
 
-        $childOpen = function ($node) {
-            return sprintf('<li class="table-row-style" id="listItem_%s">', $node['id']);
-        };
+        $childOpen = fn($node): string => sprintf('<li class="table-row-style" id="listItem_%s">', $node['id']);
         $admin = $this->admin;
         $controller = $this;
         /** @var ArrayCollection $menuAllItems */
@@ -302,6 +302,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function deleteAction(Request $request): Response
     {
+        $id = null;
         $object = $this->assertObjectExists($request, true);
         \assert(null !== $object);
 
@@ -369,7 +370,6 @@ class MenuItemAdminController extends CRUDController
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $rootId
      * @param $pageId
      *
@@ -398,9 +398,8 @@ class MenuItemAdminController extends CRUDController
         $menuItem->setParent($rootNode);
         $menuItem->setName($page->getTitle());
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($menuItem);
-        $em->flush();
+        $modelManager = $this->admin->getModelManager();
+        $modelManager->create($menuItem);
 
         $this->admin->createObjectSecurity($menuItem);
 
@@ -416,7 +415,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function ajaxControllerAction(Request $request)
     {
-        $operation = $request->request->get('operation') ? $request->request->get('operation') : $request->query->get(
+        $operation = $request->request->get('operation') ?: $request->query->get(
             'operation'
         );
 
@@ -432,7 +431,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function updateNodes(Request $request)
     {
-        $nodes = $request->get('nodes') ? $request->get('nodes') : [];
+        $nodes = $request->get('nodes') ?: [];
 
         try {
             foreach ($nodes as $node) {
@@ -452,7 +451,7 @@ class MenuItemAdminController extends CRUDController
             }
 
             $response = ['status' => 'ok', 'message' => $this->trans('info.menu_sorted')];
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $response = ['status' => 'error', 'message' => $this->trans('info.menu_sorted_error')];
         }
 
@@ -464,9 +463,10 @@ class MenuItemAdminController extends CRUDController
      */
     public function getJsonResponse(Request $request, $data, $status = 200, $headers = [])
     {
+        $message = null;
         if($data instanceof JsonResponse){
             $status = $data->getStatusCode();
-            $data = json_decode($data->getContent(), true);
+            $data = json_decode($data->getContent(), true, 512, JSON_THROW_ON_ERROR);
         }
 
 
@@ -510,11 +510,10 @@ class MenuItemAdminController extends CRUDController
     /**
      * renders the template html for the modal.
      *
-     * @return bool|string|Response
      *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
-    public function placementAction(Request $request)
+    public function placementAction(Request $request): bool|string|\Symfony\Component\HttpFoundation\Response
     {
         /** @var \Networking\InitCmsBundle\Entity\MenuItem $rootNode */
         $rootNode = $this->admin->getObject($request->getSession()->get('root_menu_id'));
@@ -587,7 +586,7 @@ class MenuItemAdminController extends CRUDController
             );
         };
 
-        $rootOpen = function ($tree) {
+        $rootOpen = function ($tree): string {
             $node = $tree[0];
             if ($node['lvl'] == 1) {
                 $class = 'ui-sortable';
@@ -615,10 +614,8 @@ class MenuItemAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      * @param $newMenuItemId
      * @param $menuItemId
-     *
      * @return Response
      */
     public function newPlacementAction(Request $request, $newMenuItemId, $menuItemId)
@@ -647,7 +644,7 @@ class MenuItemAdminController extends CRUDController
                 'objectId' => $this->admin->getNormalizedIdentifier($newMenuItem),
             ];
             return $this->getJsonResponse($request, $data);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return $this->getJsonResponse($request, $data);
         }
     }

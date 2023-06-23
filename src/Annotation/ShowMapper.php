@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Annotation;
 
 /**
@@ -15,7 +17,7 @@ class ShowMapper extends AbstractMapper implements ShowInterface
     /**
      * @var array
      */
-    public $withOptions = array();
+    public $withOptions = [];
 
     /**
      * @var string
@@ -25,12 +27,9 @@ class ShowMapper extends AbstractMapper implements ShowInterface
     /**
      * @var array
      */
-    public $tabOptions = array();
+    public $tabOptions = [];
 
-    /**
-     * @return null|string
-     */
-    public function getWith()
+    public function getWith(): ?string
     {
         return $this->with;
     }

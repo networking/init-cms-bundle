@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
@@ -20,6 +22,8 @@ use Networking\InitCmsBundle\Model\ContentRouteManager;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Networking\InitCmsBundle\Model\MenuItem;
 use Networking\InitCmsBundle\Model\Page;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -100,11 +104,6 @@ class MenuBuilder
     protected $menuIterators = [];
 
     /**
-     * @var bool
-     */
-    protected $allowLocaleCookie;
-
-    /**
      * MenuBuilder constructor.
      *
      * @param FactoryInterface $factory
@@ -126,7 +125,7 @@ class MenuBuilder
         MenuItemManagerInterface $menuManager,
         TranslatorInterface $translator,
         MatcherInterface $matcher,
-        $allowLocaleCookie = true
+        protected $allowLocaleCookie = true
     ) {
         $this->factory = $factory;
         $this->tokenStorage = $tokenStorage;
@@ -136,7 +135,6 @@ class MenuBuilder
         $this->menuManager = $menuManager;
         $this->translator = $translator;
         $this->matcher = $matcher;
-        $this->allowLocaleCookie = $allowLocaleCookie;
 
         $this->setLoggedIn();
         $this->setViewStatus();
@@ -158,14 +156,12 @@ class MenuBuilder
 
     public function setViewStatus()
     {
-        $this->viewStatus = $this->request->getSession()->get('_viewStatus')
-            ? $this->request->getSession()->get('_viewStatus')
-            : Page::STATUS_PUBLISHED;
+        $this->viewStatus = $this->request->getSession()->get('_viewStatus') ?: Page::STATUS_PUBLISHED;
     }
 
     public function setCurrentPath()
     {
-        $this->currentPath = substr($this->request->getPathInfo(), -1) != '/' ? $this->request->getPathInfo(
+        $this->currentPath = !str_ends_with($this->request->getPathInfo(), '/') ? $this->request->getPathInfo(
             ).'/' : $this->request->getPathInfo();
     }
 
@@ -257,7 +253,7 @@ class MenuBuilder
             'displayChildren' => true,
 
         ];
-        $item = $this->factory->createItem($menuItem->getId(), $options);
+        $item = $this->factory->createItem('menu_'.$menuItem->getId(), $options);
 
         if ($menuItem->isHidden()) {
             $item->setDisplay(false);
@@ -279,7 +275,7 @@ class MenuBuilder
             $menuName = reset($menuName);
         }
 
-        if (array_key_exists($menuName, $this->menuIterators) && count($this->menuIterators[$menuName]) > 0) {
+        if (array_key_exists($menuName, $this->menuIterators) && (is_countable($this->menuIterators[$menuName]) ? count($this->menuIterators[$menuName]) : 0) > 0) {
             return $this->menuIterators[$menuName];
         }
 
@@ -349,10 +345,8 @@ class MenuBuilder
     /**
      * Creates a full menu based on the starting point given.
      *
-     * @param ItemInterface $item
      * @param array $menuIterator
      * @param int $startDepth
-     *
      * @return ItemInterface
      */
     public function createMenu(ItemInterface $item, $menuIterator, $startDepth)
@@ -403,8 +397,6 @@ class MenuBuilder
     /**
      * Set the children menu item nodes to be shown only if the node
      * is current or the parent is a current ancestor.
-     *
-     * @param ItemInterface $item
      */
     public function showOnlyCurrentChildren(ItemInterface $item)
     {
@@ -422,8 +414,6 @@ class MenuBuilder
     /**
      * Recursively set attributes on all children of a given menu.
      *
-     * @param ItemInterface $item
-     * @param array $attr
      * @deprecated please use setRecursiveAttribute
      * @alias setRecursiveAttribute
      *
@@ -435,9 +425,6 @@ class MenuBuilder
 
     /**
      * Recursively set attributes on an item and its' children.
-     *
-     * @param ItemInterface $item
-     * @param array $attr
      */
     public function setRecursiveAttribute(ItemInterface $item, array $attr)
     {

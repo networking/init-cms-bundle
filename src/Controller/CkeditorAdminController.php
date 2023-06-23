@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sonata package.
  *
@@ -8,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,7 +50,7 @@ class CkeditorAdminController extends CRUDController
     /**
      * @return Response
      *
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function browser(Request $request)
     {
@@ -97,13 +98,12 @@ class CkeditorAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      * @param string  $type
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function upload(Request $request, $type = 'image')
     {
+        $errorMessages = [];
         $this->checkIfMediaBundleIsLoaded();
 
         $this->admin->checkAccess('create');
@@ -181,10 +181,8 @@ class CkeditorAdminController extends CRUDController
 		            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
 	            }
 
-            } catch (\Exception $e) {
+            } catch (\Exception|\Throwable $e) {
 
-	            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
-            } catch (\Throwable $e) {
 	            $response = ['uploaded' => 0, 'error'  => ['message' => $e->getMessage()]];
             }
         } elseif ($file instanceof UploadedFile && !$file->isValid()) {
@@ -205,7 +203,7 @@ class CkeditorAdminController extends CRUDController
     /**
      * @return Response
      *
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function browserRefresh()
     {

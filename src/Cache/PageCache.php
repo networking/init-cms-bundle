@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Cache;
-
 
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -17,37 +17,29 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package Networking\InitCmsBundle\Cache
  */
-class PageCache
-    implements PageCacheInterface, AdapterInterface, PruneableInterface,
-               ResettableInterface
+class PageCache implements
+    PageCacheInterface,
+    AdapterInterface,
+    PruneableInterface,
+    ResettableInterface
 {
-    private CacheItemPoolInterface $pageCache;
-
-    private int $expiresAfter;
-
-    private bool $activated;
-
     /**
      * PageCache constructor.
      *
-     * @param CacheItemPoolInterface $pageCache
-     * @param int                    $expiresAfter
-     * @param bool                   $activated
+     * @param int $expiresAfter
+     * @param bool $activated
      */
     public function __construct(
-        CacheItemPoolInterface $pageCache,
-        $expiresAfter = 86400,
-        $activated = true
+        private readonly CacheItemPoolInterface $pageCache,
+        private $expiresAfter = 86400,
+        private $activated = true
     ) {
-        $this->pageCache = $pageCache;
-        $this->expiresAfter = $expiresAfter;
-        $this->activated = $activated;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isCacheable(Request $request, $user)
+    public function isCacheable(Request $request, $user): bool
     {
         if (!$this->activated) {
             return false;
@@ -82,14 +74,13 @@ class PageCache
     {
 
         /** @var ItemInterface $item */
-        $item = $this->getItem(md5($keyword));
+        $item = $this->getItem(md5((string)$keyword));
 
         if (!$item->isHit()) {
             return null;
         }
 
         return $item->get();
-
     }
 
     /**
@@ -97,7 +88,7 @@ class PageCache
      */
     public function set($keyword, $value = '', $time = null)
     {
-        $item = $this->getItem(md5($keyword));
+        $item = $this->getItem(md5((string)$keyword));
 
         $item->set($value);
 
@@ -105,6 +96,7 @@ class PageCache
             $time = $this->expiresAfter;
         }
         $item->expiresAfter($time);
+
         return $this->save($item);
     }
 
@@ -113,7 +105,7 @@ class PageCache
      */
     public function delete($keyword)
     {
-        return $this->pageCache->delete(md5($keyword));
+        return $this->pageCache->delete(md5((string)$keyword));
     }
 
     /**
@@ -213,24 +205,19 @@ class PageCache
     /**
      * {@inheritdoc}
      */
-    public function reset():void
+    public function reset(): void
     {
-       $this->pageCache->reset();
+        $this->pageCache->reset();
     }
 
     /**
      * Is Cache active.
-     *
-     * @return bool
      */
     public function isActive(): bool
     {
         return $this->activated;
     }
 
-    /**
-     * @return string
-     */
     public function getCacheTime(): string
     {
         return $this->expiresAfter;

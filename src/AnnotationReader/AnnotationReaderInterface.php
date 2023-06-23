@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\AnnotationReader;
 
 use Doctrine\Common\Annotations\Reader;
 
 interface AnnotationReaderInterface
 {
-    const
+    public const
         SCOPE_CLASS = 'class',
         SCOPE_METHOD = 'method',
         SCOPE_PROPERTY = 'property'

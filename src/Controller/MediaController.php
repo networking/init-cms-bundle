@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the sko  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Gaufrette\File;
@@ -33,10 +35,8 @@ class MediaController extends AbstractController
     /**
      * output image direct to browser, retrieve from cache if activated.
      *
-     * @param Request $request
      * @param         $id
      * @param string  $format
-     *
      * @return Response
      */
     public function viewAction(
@@ -116,11 +116,8 @@ class MediaController extends AbstractController
 
     /**
      * @param mixed $file
-     * @param MediaInterface $media
-     * @param mixed $name
      * @param mixed $type
      *
-     * @return Response
      */
     protected function getResponse(
         File $file,
@@ -133,7 +130,7 @@ class MediaController extends AbstractController
         $type = $media->getExtension();
 
 
-        $name = str_replace('.'.$type, '', $name);
+        $name = str_replace('.'.$type, '', (string) $name);
 
         $headers = array_merge(
             [

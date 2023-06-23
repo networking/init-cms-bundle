@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -34,21 +36,21 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * @var \DateTime
      */
-    protected ?DateTime $lastActivity;
+    protected ?DateTime $lastActivity = null;
 
-    protected ?string $twoStepVerificationCode;
+    protected ?string $twoStepVerificationCode = null;
 
     /**
      * @var Group[]|Collection
      */
     protected Collection|array $groups;
 
-    protected ?string $firstname;
+    protected ?string $firstname = null;
 
-    protected ?string $lastname;
+    protected ?string $lastname = null;
 
 
-    protected ?string $locale;
+    protected ?string $locale = null;
 
     public function getLocale(): ?string
     {
@@ -133,11 +135,9 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     }
 
     /**
-     * @param mixed $twoStepVerificationCode
-     *
      * @return BaseUser
      */
-    public function setTwoStepVerificationCode($twoStepVerificationCode)
+    public function setTwoStepVerificationCode(mixed $twoStepVerificationCode)
     {
         $this->twoStepVerificationCode = $twoStepVerificationCode;
 
@@ -179,11 +179,9 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
 
 
     /**
-     * @param mixed $groups
-     *
      * @return BaseUser
      */
-    public function setGroups($groups)
+    public function setGroups(mixed $groups)
     {
         foreach ($groups as $group) {
             $this->addGroup($group);

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,23 +10,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Networking\InitCmsBundle\Entity\ResourceVersion;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 
 /**
  * Class VersionListener.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
+#[AsDoctrineListener(event: \Doctrine\ORM\Events::postPersist)]
+#[AsDoctrineListener(event: \Doctrine\ORM\Events::postUpdate)]
 class VersionListener
 {
-    /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
-     */
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(PostPersistEventArgs $args)
     {
         $entity = $args->getEntity();
         $em = $args->getObjectManager();
@@ -34,14 +38,12 @@ class VersionListener
         }
     }
 
-    /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
-     */
-    public function postUpdate(LifecycleEventArgs $args)
+    public function postUpdate(PostUpdateEventArgs $args)
     {
         $entity = $args->getEntity();
         $em = $args->getObjectManager();
         if ($entity instanceof VersionableInterface) {
+
             if (!$entity->hasListener()) {
                 $this->makeSnapshot($entity, $em);
             }
@@ -50,12 +52,11 @@ class VersionListener
 
     /**
      * @param $entity
-     * @param \Doctrine\ORM\EntityManager $em
      */
     private function makeSnapshot($entity, \Doctrine\ORM\EntityManager $em)
     {
         $resourceVersion = new ResourceVersion($entity);
-        $class = $em->getClassMetadata(get_class($resourceVersion));
+        $class = $em->getClassMetadata($resourceVersion::class);
 
         $em->persist($resourceVersion);
         $em->getUnitOfWork()->computeChangeSet($class, $resourceVersion);

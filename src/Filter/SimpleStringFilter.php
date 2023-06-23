@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Filter;
 
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
@@ -25,7 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class SimpleStringFilter extends Filter
 {
 
-    public const CHOICES = [
+    final public const CHOICES = [
         ContainsOperatorType::TYPE_CONTAINS => 'LIKE',
         ContainsOperatorType::TYPE_NOT_CONTAINS => 'NOT LIKE',
         ContainsOperatorType::TYPE_EQUAL => '=',
@@ -74,7 +76,7 @@ class SimpleStringFilter extends Filter
             $queryBuilder->setParameter($parameterName,
                 sprintf(
                     $this->getOption('format'),
-                    $this->getOption('case_sensitive') ? $data->getValue() : mb_strtolower($data->getValue())
+                    $this->getOption('case_sensitive') ? $data->getValue() : mb_strtolower((string) $data->getValue())
                 )
             );
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,26 +11,18 @@ use Networking\InitCmsBundle\Annotation as Sonata;
 /**
  * Networking\InitCmsBundle\Model\GalleryView.
  *
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(name="gallery_view")
- * @ORM\Entity()
  */
 class GalleryView implements GalleryViewInterface
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var MediaGallery
      *
-     * @ORM\ManyToOne(targetEntity="Networking\InitCmsBundle\Entity\Gallery", cascade={"merge"})
-     * @ORM\JoinColumn( name="media_gallery_id", onDelete="CASCADE" )
      *
      * @Sonata\FormMapper(
      *      name="mediaGallery",
@@ -46,7 +40,6 @@ class GalleryView implements GalleryViewInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="gallery_type", type="string", length=50)
      * @Sonata\FormMapper(
      *     name="galleryType",
      *     type="Symfony\Component\Form\Extension\Core\Type\ChoiceType",
@@ -62,14 +55,12 @@ class GalleryView implements GalleryViewInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime")
      */
     protected $createdAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime")
      */
     protected $updatedAt;
 
@@ -217,10 +208,7 @@ class GalleryView implements GalleryViewInterface
         ];
     }
 
-    /**
-     * @return bool
-     */
-    public function hasMedia()
+    public function hasMedia(): bool
     {
         if (count($this->getMediaItems()) > 0) {
             return true;
@@ -239,10 +227,7 @@ class GalleryView implements GalleryViewInterface
         return $mediaItems;
     }
 
-    /**
-     * @return string
-     */
-    public function getContentTypeName()
+    public function getContentTypeName(): string
     {
         return 'Gallery Viewer';
     }

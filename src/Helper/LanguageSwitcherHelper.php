@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -8,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Helper;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,11 +57,6 @@ class LanguageSwitcherHelper
     protected $om;
 
     /**
-     * @var string
-     */
-    protected $fallbackRoute;
-
-    /**
      * @var PageHelper
      */
     protected $pageHelper;
@@ -68,13 +64,8 @@ class LanguageSwitcherHelper
 
     /**
      * LanguageSwitcherHelper constructor.
-     * @param RequestStack $requestStack
-     * @param EntityManagerInterface $om
-     * @param PageHelper $pageHelper
-     * @param PageManagerInterface $pageManager
-     * @param RouterInterface $router
-     * @param SerializerInterface $serializer
      * @param $fallbackRoute
+     * @param string $fallbackRoute
      */
     public function __construct(
         RequestStack $requestStack,
@@ -83,11 +74,10 @@ class LanguageSwitcherHelper
         PageManagerInterface $pageManager,
         RouterInterface $router,
         SerializerInterface $serializer,
-        $fallbackRoute
+        protected $fallbackRoute
     ) {
         $this->requestStack = $requestStack;
         $this->om = $om;
-        $this->fallbackRoute = $fallbackRoute;
         $this->pageHelper = $pageHelper;
         $this->pageManager = $pageManager;
         $this->router = $router;
@@ -102,11 +92,10 @@ class LanguageSwitcherHelper
      * @param $oldLocale
      * @param $locale
      *
-     * @return array|\Networking\InitCmsBundle\Component\Routing\Route|string
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function getTranslationRoute($oldUrl, $oldLocale, $locale)
+    public function getTranslationRoute($oldUrl, $oldLocale, $locale): array|\Networking\InitCmsBundle\Component\Routing\Route|string
     {
         $cookies = $this->requestStack->getCurrentRequest()->cookies ? $this->requestStack->getCurrentRequest(
         )->cookies->all() : [];
@@ -120,14 +109,14 @@ class LanguageSwitcherHelper
         try {
             $request = $this->pageHelper->matchContentRouteRequest($oldRequest);
 
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             $request = $oldRequest;
         }
 
         if (!$content = $request->get('_content', false)) {
             try {
                 $route = $this->router->matchRequest(Request::create($oldUrl));
-            } catch (ResourceNotFoundException $e) {
+            } catch (ResourceNotFoundException) {
                 if ($route = $this->router->matchRequest(Request::create('/404'))) {
                     return $route;
                 }
@@ -195,10 +184,8 @@ class LanguageSwitcherHelper
     /**
      * Get the query string parameters for the current request
      * Not used at present.
-     *
-     * @return null|string
      */
-    public function getQueryString()
+    public function getQueryString(): ?string
     {
         $qs = Request::normalizeQueryString($this->requestStack->getCurrentRequest()->server->get('QUERY_STRING'));
 
@@ -210,10 +197,8 @@ class LanguageSwitcherHelper
      * otherwise it returns the path for the URL given.
      *
      * @param null $referrer
-     *
-     * @return null|string
      */
-    public function getPathInfo($referrer = null)
+    public function getPathInfo($referrer = null): ?string
     {
         $baseUrl = $this->prepareBaseUrl($referrer);
 
@@ -234,8 +219,8 @@ class LanguageSwitcherHelper
             return '/';
         } elseif (null === $baseUrl) {
             return $referrer;
-        } elseif ($pos = strpos($pathInfo, $host)) {
-            $pathInfo = substr($pathInfo, $pos + strlen($host));
+        } elseif ($pos = strpos((string) $pathInfo, (string) $host)) {
+            $pathInfo = substr((string) $pathInfo, $pos + strlen((string) $host));
         }
 
         return (string)$pathInfo;
@@ -245,18 +230,16 @@ class LanguageSwitcherHelper
      * Prepares the Base URL.
      *
      * @param $referrer
-     *
-     * @return bool|string
      */
-    public function prepareBaseUrl($referrer)
+    public function prepareBaseUrl($referrer): bool|string
     {
-        $filename = basename($this->requestStack->getCurrentRequest()->server->get('SCRIPT_FILENAME'));
+        $filename = basename((string) $this->requestStack->getCurrentRequest()->server->get('SCRIPT_FILENAME'));
 
-        if (basename($this->requestStack->getCurrentRequest()->server->get('SCRIPT_NAME')) === $filename) {
+        if (basename((string) $this->requestStack->getCurrentRequest()->server->get('SCRIPT_NAME')) === $filename) {
             $baseUrl = $this->requestStack->getCurrentRequest()->server->get('SCRIPT_NAME');
-        } elseif (basename($this->requestStack->getCurrentRequest()->server->get('PHP_SELF')) === $filename) {
+        } elseif (basename((string) $this->requestStack->getCurrentRequest()->server->get('PHP_SELF')) === $filename) {
             $baseUrl = $this->requestStack->getCurrentRequest()->server->get('PHP_SELF');
-        } elseif (basename($this->requestStack->getCurrentRequest()->server->get('ORIG_SCRIPT_NAME')) === $filename) {
+        } elseif (basename((string) $this->requestStack->getCurrentRequest()->server->get('ORIG_SCRIPT_NAME')) === $filename) {
             $baseUrl = $this->requestStack->getCurrentRequest()->server->get(
                 'ORIG_SCRIPT_NAME'
             ); // 1and1 shared hosting compatibility
@@ -265,7 +248,7 @@ class LanguageSwitcherHelper
             // php_self
             $path = $this->requestStack->getCurrentRequest()->server->get('PHP_SELF', '');
             $file = $this->requestStack->getCurrentRequest()->server->get('SCRIPT_FILENAME', '');
-            $segs = explode('/', trim($file, '/'));
+            $segs = explode('/', trim((string) $file, '/'));
             $segs = array_reverse($segs);
             $index = 0;
             $last = count($segs);
@@ -274,7 +257,7 @@ class LanguageSwitcherHelper
                 $seg = $segs[$index];
                 $baseUrl = '/'.$seg.$baseUrl;
                 ++$index;
-            } while (($last > $index) && (false !== ($pos = strpos($path, $baseUrl))) && (0 != $pos));
+            } while (($last > $index) && (false !== ($pos = strpos((string) $path, $baseUrl))) && (0 != $pos));
         }
 
         // Does the baseUrl have anything in common with the request_uri?
@@ -285,19 +268,19 @@ class LanguageSwitcherHelper
             return $prefix;
         }
 
-        if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, dirname($baseUrl))) {
+        if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, dirname((string) $baseUrl))) {
             // directory portion of $baseUrl matches
             return rtrim($prefix, '/');
         }
 
         $truncatedRequestUri = $requestUri;
-        if (($pos = strpos($requestUri, '?')) !== false) {
-            $truncatedRequestUri = substr($requestUri, 0, $pos);
+        if (($pos = strpos((string) $requestUri, '?')) !== false) {
+            $truncatedRequestUri = substr((string) $requestUri, 0, $pos);
         }
 
-        $basename = basename($baseUrl);
+        $basename = basename((string) $baseUrl);
 
-        if (empty($basename) || !strpos(rawurldecode($truncatedRequestUri), $basename)) {
+        if (empty($basename) || !strpos(rawurldecode((string) $truncatedRequestUri), $basename)) {
             // no match whatsoever; set it blank
             return '';
         }
@@ -305,14 +288,14 @@ class LanguageSwitcherHelper
         // If using mod_rewrite or ISAPI_Rewrite strip the script filename
         // out of baseUrl. $pos !== 0 makes sure it is not matching a value
         // from PATH_INFO or QUERY_STRING
-        if ((strlen($requestUri) >= strlen($baseUrl)) && ((false !== ($pos = strpos(
-                        $requestUri,
-                        $baseUrl
+        if ((strlen((string) $requestUri) >= strlen((string) $baseUrl)) && ((false !== ($pos = strpos(
+                        (string) $requestUri,
+                        (string) $baseUrl
                     ))) && ($pos !== 0))) {
-            $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
+            $baseUrl = substr((string) $requestUri, 0, $pos + strlen((string) $baseUrl));
         }
 
-        return rtrim($baseUrl, '/');
+        return rtrim((string) $baseUrl, '/');
     }
 
     /*
@@ -332,13 +315,13 @@ class LanguageSwitcherHelper
      */
     protected function getUrlencodedPrefix($string, $prefix)
     {
-        if (0 !== strpos(rawurldecode($string), $prefix)) {
+        if (!str_starts_with(rawurldecode((string) $string), (string) $prefix)) {
             return false;
         }
 
-        $len = strlen($prefix);
+        $len = strlen((string) $prefix);
 
-        if (preg_match("#^(%[[:xdigit:]]{2}|.){{$len}}#", $string, $match)) {
+        if (preg_match("#^(%[[:xdigit:]]{2}|.){{$len}}#", (string) $string, $match)) {
             return $match[0];
         }
 

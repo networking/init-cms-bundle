@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Helper;
 
 use Networking\InitCmsBundle\Model\ContentInterface;
@@ -23,13 +25,11 @@ class ContentInterfaceHelper
     /**
      * Set the variables to the given content type object.
      *
-     * @param ContentInterface $object
      * @param $fieldName
      * @param $value
      * @param null $method
      *
      * @return mixed
-     *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public function setFieldValue(ContentInterface $object, $fieldName, $value, $method = null)
@@ -62,12 +62,10 @@ class ContentInterfaceHelper
     /**
      * Fetch the variables from the given content type object.
      *
-     * @param ContentInterface $object
      * @param $fieldName
      * @param null $method
      *
      * @return mixed
-     *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public function getFieldValue(ContentInterface $object, $fieldName, $method = null)
@@ -97,17 +95,15 @@ class ContentInterfaceHelper
      * @static
      *
      * @param string $property
-     *
-     * @return string
      */
-    public static function camelize($property)
+    public static function camelize($property): string
     {
-        $callback = function ($matches) {
+        $callback = function ($matches): string {
             if ($matches[1] === '.') {
-                return '_'.strtoupper($matches[2]);
+                return '_'.strtoupper((string) $matches[2]);
             }
 
-            return strtoupper($matches[2]);
+            return strtoupper((string) $matches[2]);
         };
 
         return ucfirst(preg_replace_callback('/([_\ .])(.)/', $callback, $property));

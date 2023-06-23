@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Doctrine\Extensions\Versionable;
 
 /**
@@ -20,22 +22,22 @@ interface VersionableInterface
     /**
      * @var string
      */
-    const STATUS_DRAFT = 'status_draft';
+    public const STATUS_DRAFT = 'status_draft';
 
     /**
      * @var string
      */
-    const STATUS_REVIEW = 'status_review';
+    public const STATUS_REVIEW = 'status_review';
 
     /**
      * @var string
      */
-    const STATUS_PUBLISHED = 'status_published';
+    public const STATUS_PUBLISHED = 'status_published';
 
     /**
      * @var string
      */
-    const STATUS_OFFLINE = 'status_offline';
+    public const STATUS_OFFLINE = 'status_offline';
 
     /**
      * @return mixed
@@ -58,7 +60,7 @@ interface VersionableInterface
     public function getResourceId();
 
     /**
-     * @return array
+     * @return bool
      */
     public function hasListener();
 }

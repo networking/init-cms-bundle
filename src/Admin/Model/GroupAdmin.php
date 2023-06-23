@@ -1,10 +1,13 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: yorkie
- * Date: 20.12.17
- * Time: 16:38.
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
@@ -38,7 +41,7 @@ abstract class GroupAdmin extends BaseAdmin
      *
      * @return $this
      */
-    public function setTrackedActions($trackedActions)
+    public function setTrackedActions($trackedActions): AbstractAdmin
     {
         $this->trackedActions = $trackedActions;
 
@@ -48,7 +51,7 @@ abstract class GroupAdmin extends BaseAdmin
     /**
      * @return array
      */
-    public function getTrackedActions()
+    public function getTrackedActions(): array
     {
         return $this->trackedActions;
     }
@@ -106,16 +109,6 @@ abstract class GroupAdmin extends BaseAdmin
                 ]
             );
     }
-
-
-
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $formOptions = [
-        'validation_groups' => 'Registration',
-    ];
 
 
 }

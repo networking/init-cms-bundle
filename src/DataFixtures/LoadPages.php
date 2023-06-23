@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\DataFixtures;
 
@@ -25,17 +26,13 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadPages extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
+class LoadPages extends Fixture
+    implements FixtureGroupInterface, OrderedFixtureInterface,
+               ContainerAwareInterface
 {
-    /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
+    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         $this->container = $container;
     }
@@ -43,32 +40,47 @@ class LoadPages extends Fixture implements FixtureGroupInterface, OrderedFixture
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $languages = $this->container->getParameter('networking_init_cms.page.languages');
+        $languages = $this->container->getParameter(
+            'networking_init_cms.page.languages'
+        );
 
         $defaultTemplate = $this->getFirstTemplate();
 
-        if(!$defaultTemplate){
-            $defaultTemplate = '@NetworkingInitCms/sandbox/page/one_column.html.twig';
+        if (!$defaultTemplate) {
+            $defaultTemplate
+                = '@NetworkingInitCms/sandbox/page/one_column.html.twig';
         }
 
         foreach ($languages as $key => $lang) {
-            $this->createHomePages($manager, $defaultTemplate, $lang['locale'], $key, $languages);
+            $this->createHomePages(
+                $manager,
+                $defaultTemplate,
+                $lang['locale'],
+                $key,
+                $languages
+            );
         }
     }
 
     /**
-     * @param ObjectManager $manager
-     * @param $template
-     * @param $locale
-     * @param $key
-     * @param $languages
+     * @param               $template
+     * @param               $locale
+     * @param               $key
+     * @param               $languages
      * @throws \Exception
      */
-    public function createHomePages(ObjectManager $manager, $template, $locale, $key, $languages)
-    {
-        $pageClass = $this->container->getParameter('networking_init_cms.admin.page.class');
+    public function createHomePages(
+        ObjectManager $manager,
+        $template,
+        $locale,
+        $key,
+        $languages
+    ): void {
+        $pageClass = $this->container->getParameter(
+            'networking_init_cms.admin.page.class'
+        );
         /** @var PageInterface $homePage */
         $homePage = new $pageClass();
 
@@ -84,7 +96,9 @@ class LoadPages extends Fixture implements FixtureGroupInterface, OrderedFixture
 
         // set original for translations
         if ($key > 0) {
-            $firstPage = $this->getReference('homepage_'.$languages['0']['locale']);
+            $firstPage = $this->getReference(
+                'homepage_'.$languages['0']['locale']
+            );
             $homePage->setOriginal($firstPage);
         }
 
@@ -94,12 +108,12 @@ class LoadPages extends Fixture implements FixtureGroupInterface, OrderedFixture
         $this->addReference('homepage_'.$locale, $homePage);
     }
 
-    /**
-     * @return array
-     */
-    protected function getFirstTemplate()
+
+    protected function getFirstTemplate(): string|int
     {
-        $templates = $this->container->getParameter('networking_init_cms.page.templates');
+        $templates = $this->container->getParameter(
+            'networking_init_cms.page.templates'
+        );
 
         foreach ($templates as $key => $template) {
             return $key;
@@ -111,10 +125,7 @@ class LoadPages extends Fixture implements FixtureGroupInterface, OrderedFixture
         return ['init_cms'];
     }
 
-    /**
-     * @return int
-     */
-    public function getOrder()
+    public function getOrder(): int
     {
         return 1;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Annotation\Order;
 
 /**
@@ -13,10 +15,7 @@ class FormReorder extends AbstractReorder implements FormReorderInterface
      */
     public $with = null;
 
-    /**
-     * @return string|null
-     */
-    public function getWith()
+    public function getWith(): ?string
     {
         return $this->with;
     }

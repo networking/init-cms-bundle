@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Helper\PageHelper;
@@ -31,32 +33,15 @@ use Symfony\Component\Console\Input\ArrayInput;
  */
 class InitCmsInstallController extends AbstractController
 {
-    /**
-     * @var \Symfony\Bundle\FrameworkBundle\Console\Application
-     */
-    private $application;
+    private ?\Symfony\Bundle\FrameworkBundle\Console\Application $application = null;
 
-    /**
-     * @var array
-     */
-    private $consoleOutput = [];
+    private array $consoleOutput = [];
 
-    private $pageManager;
-
-    private $userManager;
-
-    private $pageHelper;
-
-    public function __construct(PageManagerInterface $pageManager, PageHelper $pageHelper, UserManagerInterface $userManager)
+    public function __construct(private readonly PageManagerInterface $pageManager, private readonly PageHelper $pageHelper, private readonly UserManagerInterface $userManager)
     {
-        $this->pageManager = $pageManager;
-        $this->userManager = $userManager;
-        $this->pageHelper = $pageHelper;
     }
 
     /**
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -67,7 +52,7 @@ class InitCmsInstallController extends AbstractController
         try {
 
             $schemaManager = $this->getDoctrine()->getConnection()->getSchemaManager();
-            if ($schemaManager->tablesExist(array('page')) !== true) {
+            if ($schemaManager->tablesExist(['page']) !== true) {
                 throw new \Exception('Pages not loaded');
             }
 
@@ -108,12 +93,11 @@ class InitCmsInstallController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @param $complete
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function installDbAction(Request $request, $complete)
+    public function installDbAction(Request $request, $complete): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $installFailed = false;
         try {
@@ -123,11 +107,11 @@ class InitCmsInstallController extends AbstractController
             }
 
             return new RedirectResponse($this->generateUrl('_configure_cms'));
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $connection = $this->getDoctrine()->getConnection();
             try {
                 $connection->connect();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 return new RedirectResponse($this->generateUrl('_configure_cms'));
             }
         }
@@ -201,7 +185,6 @@ class InitCmsInstallController extends AbstractController
     }
 
     /**
-     * @param OutputInterface $output
      * @return int
      * @throws \Exception
      */
@@ -220,7 +203,6 @@ class InitCmsInstallController extends AbstractController
     }
 
     /**
-     * @param OutputInterface $output
      * @return int
      * @throws \Exception
      */
@@ -237,7 +219,6 @@ class InitCmsInstallController extends AbstractController
     }
 
     /**
-     * @param OutputInterface $output
      * @return int
      * @throws \Exception
      */
@@ -254,7 +235,6 @@ class InitCmsInstallController extends AbstractController
     }
 
     /**
-     * @param OutputInterface $output
      * @param $username
      * @param $email
      * @param $password
@@ -278,7 +258,6 @@ class InitCmsInstallController extends AbstractController
     }
 
     /**
-     * @param OutputInterface $output
      * @return int
      * @throws \Exception
      */
@@ -297,8 +276,6 @@ class InitCmsInstallController extends AbstractController
     }
 
     /**
-     * @param OutputInterface $output
-     *
      * @return int
      */
     public function publishPages(OutputInterface $output)
@@ -337,12 +314,7 @@ class InitCmsInstallController extends AbstractController
         return $this->application;
     }
 
-    /**
-     * @param StreamOutput $output
-     *
-     * @return string
-     */
-    private function getConsoleDisplay(StreamOutput $output)
+    private function getConsoleDisplay(StreamOutput $output): string
     {
         rewind($output->getStream());
         $errors = [
@@ -355,8 +327,6 @@ class InitCmsInstallController extends AbstractController
     }
 
     /**
-     * @param StreamOutput $output
-     *
      * @return StreamOutput
      */
     private function getStreamOutput(StreamOutput $output = null)

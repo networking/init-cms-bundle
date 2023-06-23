@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\DataFixtures;
 
@@ -27,15 +28,9 @@ use Networking\InitCmsBundle\Model\TextInterface;
  */
 class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
-    /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
+    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         $this->container = $container;
     }
@@ -43,7 +38,7 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $languages = $this->container->getParameter('networking_init_cms.page.languages');
 
@@ -56,7 +51,7 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
      * @param $locale
      */
-    public function createLayoutBlocks(ObjectManager $manager, $locale)
+    public function createLayoutBlocks(ObjectManager $manager, $locale): void
     {
         $textClass = false;
 
@@ -97,7 +92,7 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
     /**
      * @return array
      */
-    protected function getFirstZone()
+    protected function getFirstZone(): string
     {
         $templates = $this->container->getParameter('networking_init_cms.page.templates');
         foreach ($templates as $template) {
@@ -110,10 +105,7 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
         return ['init_cms'];
     }
 
-    /**
-     * @return int
-     */
-    public function getOrder()
+    public function getOrder(): int
     {
         return 2;
     }

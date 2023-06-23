@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use League\Flysystem\Config;
@@ -7,29 +10,13 @@ use Twig\TwigFilter;
 
 class ImageFilter extends \Twig\Extension\AbstractExtension{
 
-    /**
-     * @var Filesystem
-     */
-    private $flysystem;
-
-    /**
-     * @var Filesystem
-     */
-    private $cacheFlysystem;
-
-    /**
-     * @param Filesystem $flysystem
-     * @param Filesystem $cacheFlysystem
-     */
-    public function __construct(Filesystem $flysystem, Filesystem $cacheFlysystem)
+    public function __construct(private readonly Filesystem $flysystem, private readonly Filesystem $cacheFlysystem)
     {
-        $this->flysystem = $flysystem;
-        $this->cacheFlysystem = $cacheFlysystem;
     }
     public function getFilters(): array
     {
         return [
-            new TwigFilter('webp_image', [$this, 'webpImage'])
+            new TwigFilter('webp_image', $this->webpImage(...))
         ];
     }
 

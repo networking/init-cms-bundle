@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -15,59 +17,44 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * HelpText.
  *
- * @ORM\Table(name="help_text")
- * @ORM\Entity(repositoryClass="Networking\InitCmsBundle\Entity\HelpTextRepository")
  */
-class HelpText implements HelpTextInterface
+class HelpText implements HelpTextInterface, \Stringable
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="locale", type="string", length=6)
      */
     protected $locale;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="translation_key", type="string", length=255)
      */
     protected $translationKey;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text", type="text")
      */
     protected $text;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=true)
      */
     protected $title;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="is_deletable", type="boolean")
      */
     protected $isDeletable = true;
 
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->title;
     }

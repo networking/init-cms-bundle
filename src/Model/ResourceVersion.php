@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
@@ -50,12 +52,9 @@ abstract class ResourceVersion implements ResourceVersionInterface
      */
     protected $snapshotDate;
 
-    /**
-     * @param \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface $resource
-     */
     public function __construct(VersionableInterface $resource)
     {
-        $this->resourceName = get_class($resource);
+        $this->resourceName = $resource::class;
         $this->resourceId = $resource->getResourceId();
         $this->versionedData = $resource->getVersionedData();
         $this->version = $resource->getCurrentVersion();

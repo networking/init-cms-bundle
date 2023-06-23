@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the ubs package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
@@ -26,20 +28,13 @@ class ContentType extends AbstractType
      */
     protected $annotationReader;
 
-    /**
-     * @param SonataAdminAnnotationReaderInterface $annotationReader
-     */
     public function __construct(
         SonataAdminAnnotationReaderInterface $annotationReader
     ) {
         $this->annotationReader = $annotationReader;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $annotations = $this->annotationReader->getFormMapperAnnotations($options['class']);
 
@@ -58,13 +53,11 @@ class ContentType extends AbstractType
     }
 
     /**
-     * @param array $options
      *
-     * @return \Sonata\AdminBundle\Admin\FieldDescriptionInterface
      *
      * @throws \RuntimeException
      */
-    protected function getFieldDescription(array $options)
+    protected function getFieldDescription(array $options): \Sonata\AdminBundle\Admin\FieldDescriptionInterface
     {
         if (!isset($options['sonata_field_description'])) {
             throw new \RuntimeException('Please provide a valid `sonata_field_description` option');
@@ -73,16 +66,11 @@ class ContentType extends AbstractType
         return $options['sonata_field_description'];
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
-        $dataClass = function (Options $options) {
-            return $options['class'];
-        };
+        $dataClass = fn(Options $options) => $options['class'];
 
         $resolver->setDefaults(
             [
@@ -98,10 +86,8 @@ class ContentType extends AbstractType
 
     /**
      * @param string $entity
-     * @param array  $callbacks
-     * @param array  $args
      */
-    protected function invokeCallbacks($entity, array $callbacks, array $args)
+    protected function invokeCallbacks($entity, array $callbacks, array $args): void
     {
         if (count($callbacks) > 0) {
             $classReflection = new \ReflectionClass($entity);
@@ -112,9 +98,6 @@ class ContentType extends AbstractType
         }
     }
 
-    /**
-     * @return string
-     */
     public function getBlockPrefix(): string
     {
         return 'networking_type_content_block';

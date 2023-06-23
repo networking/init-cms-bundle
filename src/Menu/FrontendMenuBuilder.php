@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Menu;
 
 use Networking\InitCmsBundle\Entity\MenuItem as Menu;
@@ -55,10 +57,8 @@ class FrontendMenuBuilder extends MenuBuilder
      *
      * @param string $menuName
      * @param string $classes
-     *
-     * @return bool|\Knp\Menu\ItemInterface
      */
-    public function createSubnavMenu($menuName, $classes = 'nav nav-tabs nav-stacked')
+    public function createSubnavMenu($menuName, $classes = 'nav nav-tabs nav-stacked'): bool|\Knp\Menu\ItemInterface
     {
         $menu = $this->factory->createItem('root');
 
@@ -87,11 +87,9 @@ class FrontendMenuBuilder extends MenuBuilder
     /**
      * Creates the login and change language navigation for the right side of the top frontend navigation.
      *
-     * @param RequestStack $requestStack
      * @param $languages
      * @param string $classes
      * @param bool $dropDownMenu
-     *
      * @return \Knp\Menu\ItemInterface
      */
     public function createLangMenu(
@@ -118,12 +116,9 @@ class FrontendMenuBuilder extends MenuBuilder
     }
 
     /**
-     * @param ItemInterface $item
-     * @param MenuItem $node
      * @param $startDepth
-     * @return bool|ItemInterface
      */
-    public function addNodeToMenu(ItemInterface $item, MenuItem $node, $startDepth)
+    public function addNodeToMenu(ItemInterface $item, MenuItem $node, $startDepth): bool|\Knp\Menu\ItemInterface
     {
         if ($node->getLvl() < $startDepth) {
             return false;

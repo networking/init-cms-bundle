@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,7 +43,6 @@ class ContentRouteManager extends BaseContentRouteManager
     /**
      * ContentRouteManager constructor.
      *
-     * @param EntityManagerInterface $om
      * @param $class
      */
     public function __construct(EntityManagerInterface $om, $class)
@@ -62,8 +63,6 @@ class ContentRouteManager extends BaseContentRouteManager
     }
 
     /**
-     * @param ContentRouteInterface $contentRoute
-     *
      * @return object
      */
     public function findContentByContentRoute(ContentRouteInterface $contentRoute)
@@ -87,7 +86,7 @@ class ContentRouteManager extends BaseContentRouteManager
 
         try {
             $connection->connect();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return $collection;
         }
 
@@ -95,7 +94,7 @@ class ContentRouteManager extends BaseContentRouteManager
             return $collection;
         }
 
-        $searchUrl = (substr($url, -1) != '/') ? $url.'/' : $url;
+        $searchUrl = (!str_ends_with($url, '/')) ? $url.'/' : $url;
 
         $searchUrl = self::stripLocale($searchUrl, $request->getLocale());
 
@@ -103,7 +102,7 @@ class ContentRouteManager extends BaseContentRouteManager
 
         try {
             $contentRoutes = $this->repository->findBy($params);
-        } catch (\UnexpectedValueException $e) {
+        } catch (\UnexpectedValueException) {
             return $collection;
         }
 
@@ -130,16 +129,16 @@ class ContentRouteManager extends BaseContentRouteManager
 
                 try {
                 $test = new \ReflectionClass($contentRoute->getClassType());
-            } catch (\ReflectionException $e) {
+            } catch (\ReflectionException) {
                 continue;
             }
 
             if ($viewStatus == VersionableInterface::STATUS_DRAFT
-                && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface'))
+                && ($test->implementsInterface(\Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface::class))
             ) {
                 continue;
             } elseif ($viewStatus == VersionableInterface::STATUS_PUBLISHED
-                && ($test->implementsInterface('Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface'))
+                && ($test->implementsInterface(\Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface::class))
             ) {
                 continue;
             }

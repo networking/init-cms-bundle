@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony package.
  *
@@ -8,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -34,11 +35,11 @@ use Twig\Environment;
  */
 class AdminToolbarSubscriber implements EventSubscriberInterface
 {
-    const DISABLED = 1;
-    const ENABLED = 2;
+    final public const DISABLED = 1;
+    final public const ENABLED = 2;
 
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     protected $twig;
 
@@ -53,17 +54,14 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
     protected $mode;
 
     /**
-     * @var string
+     * @param string $position
      */
-    protected $position;
-
-    public function __construct(Environment $twig, AuthorizationCheckerInterface $securityContext,  $mode = self::ENABLED, $position =
+    public function __construct(Environment $twig, AuthorizationCheckerInterface $securityContext,  $mode = self::ENABLED, protected $position =
     'top')
     {
         $this->twig = $twig;
         $this->authorizationChecker = $securityContext;
         $this->mode = (int) $mode;
-        $this->position = $position;
     }
 
     public function isEnabled()
@@ -72,11 +70,10 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param ResponseEvent $event
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function onKernelResponse(ResponseEvent $event)
     {
@@ -106,13 +103,13 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
             if (!$this->authorizationChecker->isGranted('ROLE_SONATA_ADMIN')) {
                 return;
             }
-        } catch (AuthenticationCredentialsNotFoundException $e) {
+        } catch (AuthenticationCredentialsNotFoundException) {
             return;
         }
 
         if (self::DISABLED === $this->mode
             || $response->isRedirection()
-            || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
+            || ($response->headers->has('Content-Type') && !str_contains($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->getRequestFormat()
         ) {
             return;
@@ -124,12 +121,10 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
     /**
      * Injects the admin toolbar into the given Response.
      *
-     * @param Response $response
-     * @param Request  $request
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     protected function injectToolbar(Response $response, Request $request)
     {
@@ -155,7 +150,7 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
 
 
         if (false !== $pos) {
-            $toolbar = "\n".str_replace("\n", '', $this->twig->render(
+            $toolbar = "\n".str_replace("\n", '', (string) $this->twig->render(
                 '@NetworkingInitCms/Admin/toolbar_js.html.twig',
                 [
                     'position' => $this->position,

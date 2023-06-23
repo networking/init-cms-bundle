@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the demo_cms package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
@@ -33,24 +35,12 @@ class TranslationCRUDController extends CRUDController
 {
 
     /**
-     * @var TransUnitManagerInterface
-     */
-    private $transUnitManager;
-
-    /**
-     * @var StorageInterface
-     */
-    private $storage;
-
-    /**
      * TranslationCRUDController constructor.
      * @param PageCacheInterface $pageCache
      */
-    public function __construct(CmsEventDispatcher $dispatcher, PageCacheInterface $pageCache, TransUnitManagerInterface $transUnitManager, StorageInterface $storage)
+    public function __construct(CmsEventDispatcher $dispatcher, PageCacheInterface $pageCache, private readonly TransUnitManagerInterface $transUnitManager, private readonly StorageInterface $storage)
     {
         parent::__construct($dispatcher, $pageCache);
-        $this->transUnitManager = $transUnitManager;
-        $this->storage = $storage;
 
     }
 
@@ -95,9 +85,7 @@ class TranslationCRUDController extends CRUDController
 
         if (false === $this->admin->isGranted('EDIT', $transUnit)) {
             return $this->renderJson(
-                array(
-                    'message' => 'access denied',
-                ),
+                ['message' => 'access denied'],
                 403
             );
         }
@@ -111,9 +99,7 @@ class TranslationCRUDController extends CRUDController
 
         if (!$locale) {
             return $this->renderJson(
-                array(
-                    'message' => 'locale missing',
-                ),
+                ['message' => 'locale missing'],
                 422
             );
         }
@@ -125,17 +111,11 @@ class TranslationCRUDController extends CRUDController
         }
 
         if ($request->query->get('clear_cache')) {
-            $this->container->get('translator')->removeLocalesCacheFiles(array($locale));
+            $this->container->get('translator')->removeLocalesCacheFiles([$locale]);
         }
 
         return $this->renderJson(
-            array(
-                'key' => $transUnit->getKey(),
-                'domain' => $transUnit->getDomain(),
-                'pk' => $translation->getId(),
-                'locale' => $translation->getLocale(),
-                'value' => $translation->getContent(),
-            )
+            ['key' => $transUnit->getKey(), 'domain' => $transUnit->getDomain(), 'pk' => $translation->getId(), 'locale' => $translation->getLocale(), 'value' => $translation->getContent()]
         );
     }
 
@@ -144,23 +124,19 @@ class TranslationCRUDController extends CRUDController
     /**
      * @return RedirectResponse|Response
      */
-    public function createTransUnitAction(Request $request)
+    public function createTransUnitAction(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $parameters = $request->request;
         if (!$request->isMethod('POST')) {
             return $this->renderJson(
-                array(
-                    'message' => 'method not allowed',
-                ),
+                ['message' => 'method not allowed'],
                 403
             );
         }
         $admin = $this->admin;
         if (false === $admin->isGranted('EDIT')) {
             return $this->renderJson(
-                array(
-                    'message' => 'access denied',
-                ),
+                ['message' => 'access denied'],
                 403
             );
         }
@@ -168,9 +144,7 @@ class TranslationCRUDController extends CRUDController
         $domainName = $parameters->get('domain');
         if (!$keyName || !$domainName) {
             return $this->renderJson(
-                array(
-                    'message' => 'missing key or domain',
-                ),
+                ['message' => 'missing key or domain'],
                 422
             );
         }
@@ -202,12 +176,7 @@ class TranslationCRUDController extends CRUDController
         return $this->redirect($this->admin->generateUrl('list'));
     }
 
-    /**
-     * @param ProxyQueryInterface $query
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|StreamedResponse
-     */
-    public function batchActionDownload(ProxyQueryInterface $query)
+    public function batchActionDownload(ProxyQueryInterface $query): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\StreamedResponse
     {
         $flashType = 'success';
 
@@ -225,7 +194,7 @@ class TranslationCRUDController extends CRUDController
                      */
                     foreach ($query->getQuery()->getResult() as $pos => $transUnit) {
                         $chunkPrefix = $transUnit->getDomain().'__'.$transUnit->getKey().'__'.$transUnit->getId().'__';
-                        $chunk = array();
+                        $chunk = [];
                         /** @var TranslationInterface $translation */
                         foreach ($transUnit->getTranslations() as $translation) {
                             $chunk[$chunkPrefix.$translation->getLocale()] = $translation->getContent();
@@ -234,10 +203,7 @@ class TranslationCRUDController extends CRUDController
                         flush();
                         ob_flush();
                     }
-                } catch (\PDOException $e) {
-                    $flashType = 'error';
-                    flush();
-                } catch (DBALException $e) {
+                } catch (\PDOException|DBALException $e) {
                     $flashType = 'error';
                     flush();
                 }

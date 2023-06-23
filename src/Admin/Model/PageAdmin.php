@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * This file is part of the Networking package.
  *
@@ -9,6 +7,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
@@ -169,7 +168,7 @@ abstract class PageAdmin extends BaseAdmin
     {
         try {
             $request = $this->getRequest();
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             $request = $this->getContainer()->get('request_stack')
                 ->getCurrentRequest();
         }
@@ -178,9 +177,7 @@ abstract class PageAdmin extends BaseAdmin
         if ($this->hasObject()) {
             $this->pageLocale = $this->getSubject()->getLocale();
         } else {
-            $this->pageLocale = $request->get('locale') ? $request->get(
-                'locale'
-            ) : $request->getLocale();
+            $this->pageLocale = $request->get('locale') ?: $request->getLocale();
         }
 
 
@@ -225,7 +222,7 @@ abstract class PageAdmin extends BaseAdmin
         try {
             /** @var Request $request */
             $request = $this->getRequest();
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             $requestStack = $this->getContainer()->get('request_stack');
             $request = $requestStack->getCurrentRequest();
         }
@@ -480,19 +477,14 @@ abstract class PageAdmin extends BaseAdmin
                 'locale',
                 CallbackFilter::class,
                 [
-                    'callback' => [
-                        $this,
-                        'getByLocale',
-                    ],
+                    'callback' => $this->getByLocale(...),
                 ],
                 [
                     'field_type' => LanguageType::class,
                     'field_options' => [
                         'placeholder' => false,
                         'choice_loader' => new CallbackChoiceLoader(
-                            function () {
-                                return $this->getLocaleChoices();
-                            }
+                            fn() => $this->getLocaleChoices()
                         ),
                         'preferred_choices' => [$this->getDefaultLocale()],
                         'translation_domain' => $this->getTranslationDomain(),
@@ -508,7 +500,7 @@ abstract class PageAdmin extends BaseAdmin
             ->add(
                 'path',
                 CallbackFilter::class,
-                ['callback' => [$this, 'matchPath'], 'hidden' => true]
+                ['callback' => $this->matchPath(...), 'hidden' => true]
             )
             ->add(
                 'status',
@@ -546,11 +538,9 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param ProxyQuery $ProxyQuery
      * @param            $alias
      * @param            $field
      * @param            $data
-     *
      * @return bool
      */
     public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -558,7 +548,7 @@ abstract class PageAdmin extends BaseAdmin
         if (!$data || !$data instanceof FilterData || !$data->hasValue()) {
             return false;
         }
-        $value = trim($data->getValue());
+        $value = trim((string) $data->getValue());
 
         if (strlen($value) == 0) {
             return false;
@@ -601,11 +591,9 @@ abstract class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param ProxyQuery $ProxyQuery
      * @param            $alias
      * @param            $field
      * @param FilterData $data
-     *
      * @return bool
      */
     public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -782,8 +770,7 @@ abstract class PageAdmin extends BaseAdmin
         $templates = $this->getContainer()->getParameter(
             'networking_init_cms.page.templates'
         );
-        reset($templates);
-        $defaultTemplate = key($templates);
+        $defaultTemplate = array_key_first($templates);
 
         return $defaultTemplate;
     }
@@ -801,7 +788,7 @@ abstract class PageAdmin extends BaseAdmin
             'networking_init_cms.page.templates'
         );
         foreach ($templates as $key => $template) {
-            $icons[$key] = isset($template['icon']) ? $template['icon'] : '';
+            $icons[$key] = $template['icon'] ?? '';
         }
 
         return $icons;
@@ -864,7 +851,7 @@ abstract class PageAdmin extends BaseAdmin
 
         try {
             $this->getModelManager()->delete($contentRoute);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             die;
         }
     }

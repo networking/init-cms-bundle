@@ -92,7 +92,7 @@ class VimeoProvider extends BaseVideoProvider
 
         try {
             $metadata = $this->getMetadata($media, $url);
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             $media->setEnabled(false);
             $media->setProviderStatus(MediaInterface::STATUS_ERROR);
 
@@ -137,7 +137,7 @@ class VimeoProvider extends BaseVideoProvider
             return;
         }
 
-        if (1 === preg_match('{vimeo\.com/(?:video/|)(?<video_id>\d+)}', $media->getBinaryContent(), $matches)) {
+        if (1 === preg_match('{vimeo\.com/(?:video/|)(?<video_id>\d+)}', (string) $media->getBinaryContent(), $matches)) {
             $media->setBinaryContent($matches['video_id']);
         }
     }

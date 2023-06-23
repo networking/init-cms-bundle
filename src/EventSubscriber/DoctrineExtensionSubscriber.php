@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\EventSubscriber;
 
@@ -14,34 +15,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class DoctrineExtensionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var BlameableListener
-     */
-    private $blameableListener;
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-    /**
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-    /**
-     * @var LoggableListener
-     */
-    private $loggableListener;
-
-
-    public function __construct(
-        BlameableListener $blameableListener,
-        TokenStorageInterface $tokenStorage,
-        TranslatableListener $translatableListener,
-        LoggableListener $loggableListener
-    ) {
-        $this->blameableListener = $blameableListener;
-        $this->tokenStorage = $tokenStorage;
-        $this->translatableListener = $translatableListener;
-        $this->loggableListener = $loggableListener;
+    public function __construct(private readonly BlameableListener $blameableListener, private readonly TokenStorageInterface $tokenStorage, private readonly TranslatableListener $translatableListener, private readonly LoggableListener $loggableListener)
+    {
     }
 
 

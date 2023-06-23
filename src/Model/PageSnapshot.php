@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
@@ -64,12 +66,9 @@ abstract class PageSnapshot implements PageSnapshotInterface
      */
     protected $path;
 
-    /**
-     * @param \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface $resource
-     */
     public function __construct(VersionableInterface $resource)
     {
-        $this->resourceName = str_replace('Proxies\__CG__\\', '',  get_class($resource));
+        $this->resourceName = str_replace('Proxies\__CG__\\', '',  $resource::class);
         $this->resourceId = $resource->getResourceId();
         $this->version = $resource->getCurrentVersion();
         $this->snapshotDate = new \DateTime('now');
@@ -226,7 +225,7 @@ abstract class PageSnapshot implements PageSnapshotInterface
      */
     public function setContentRoute(ContentRouteInterface $contentRoute)
     {
-        $contentRoute->setClassType(get_class($this));
+        $contentRoute->setClassType(static::class);
         $contentRoute->setLocale($this->page->getLocale());
         $contentRoute->setTemplateName($this->page->getTemplateName());
         $contentRoute->setName($this->page->getPageName());

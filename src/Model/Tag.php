@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class Tag
+abstract class Tag implements \Stringable
 {
     /**
      * @var int
@@ -152,9 +154,6 @@ abstract class Tag
         $this->level = $level;
     }
 
-    /**
-     * @param Tag $parent
-     */
     public function setParent(Tag $parent = null)
     {
         $this->parent = $parent;
@@ -185,8 +184,6 @@ abstract class Tag
     }
 
     /**
-     * @param array $parentNames
-     *
      * @return $this
      */
     public function setParentNames(array $parentNames)
@@ -237,7 +234,7 @@ abstract class Tag
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->path??$this->name;
     }

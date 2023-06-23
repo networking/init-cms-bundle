@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -38,20 +40,17 @@ use Symfony\Component\Form\ChoiceList\Factory\PropertyAccessDecorator;
 class AutocompleteType extends DoctrineType
 {
 
-    /**
-     * @var ChoiceListFactoryInterface
-     */
-    private $choiceListFactory;
+    private readonly \Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface|\Symfony\Component\Form\ChoiceList\Factory\CachingFactoryDecorator $choiceListFactory;
 
     /**
      * @var IdReader[]
      */
-    private $idReaders = [];
+    private array $idReaders = [];
 
     /**
      * @var DoctrineChoiceLoader[]
      */
-    private $choiceLoaders = [];
+    private array $choiceLoaders = [];
 
     /**
      * AutocompleteType constructor.
@@ -73,10 +72,7 @@ class AutocompleteType extends DoctrineType
         parent::__construct($registry);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $registry = $this->registry;
 
@@ -134,7 +130,7 @@ class AutocompleteType extends DoctrineType
             }
 
             // BC: use __toString() by default
-            return [__CLASS__, 'createChoiceLabel'];
+            return [self::class, 'createChoiceLabel'];
         };
 
         $choiceName = function (Options $options) {
@@ -145,7 +141,7 @@ class AutocompleteType extends DoctrineType
             // field name. We can only use numeric IDs as names, as we cannot
             // guarantee that a non-numeric ID contains a valid form name
             if ($idReader->isIntId()) {
-                return [__CLASS__, 'createChoiceName'];
+                return [self::class, 'createChoiceName'];
             }
 
             // Otherwise, an incrementing integer is used as name automatically
@@ -161,7 +157,7 @@ class AutocompleteType extends DoctrineType
 
             // If the entity has a single-column ID, use that ID as value
             if ($idReader->isSingleId()) {
-                return [$idReader, 'getIdValue'];
+                return $idReader->getIdValue(...);
             }
 
             // Otherwise, an incrementing integer is used as value automatically
@@ -206,7 +202,7 @@ class AutocompleteType extends DoctrineType
                 $queryBuilder = call_user_func($queryBuilder, $options['em']->getRepository($options['class']));
 
                 if (null !== $queryBuilder && !$queryBuilder instanceof QueryBuilder) {
-                    throw new UnexpectedTypeException($queryBuilder, 'Doctrine\ORM\QueryBuilder');
+                    throw new UnexpectedTypeException($queryBuilder, \Doctrine\ORM\QueryBuilder::class);
                 }
             }
 
@@ -268,9 +264,9 @@ class AutocompleteType extends DoctrineType
         $resolver->setNormalizer('loader', $loaderNormalizer);
         $resolver->setNormalizer('id_reader', $idReaderNormalizer);
 
-        $resolver->setAllowedTypes('em', ['null', 'string', 'Doctrine\Persistence\ObjectManager']);
-        $resolver->setAllowedTypes('loader', ['null', 'Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface']);
-        $resolver->setAllowedTypes('query_builder', ['null', 'callable', 'Doctrine\ORM\QueryBuilder']);
+        $resolver->setAllowedTypes('em', ['null', 'string', \Doctrine\Persistence\ObjectManager::class]);
+        $resolver->setAllowedTypes('loader', ['null', \Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface::class]);
+        $resolver->setAllowedTypes('query_builder', ['null', 'callable', \Doctrine\ORM\QueryBuilder::class]);
     }
 
     /**
@@ -278,14 +274,12 @@ class AutocompleteType extends DoctrineType
      * equal parameters to be equal.
      *
      * @param QueryBuilder $queryBuilder
-     *
-     * @return array
      */
-    private function getQueryBuilderForCachingHash($queryBuilder)
+    private function getQueryBuilderForCachingHash($queryBuilder): array
     {
         return [
             $queryBuilder->getQuery()->getSQL(),
-            array_map([$this, 'parameterToArray'], $queryBuilder->getParameters()->toArray()),
+            array_map($this->parameterToArray(...), $queryBuilder->getParameters()->toArray()),
         ];
     }
 
@@ -296,7 +290,7 @@ class AutocompleteType extends DoctrineType
      *
      * @return array The array representation of the parameter
      */
-    private function parameterToArray(Parameter $parameter)
+    private function parameterToArray(Parameter $parameter): array
     {
         return [$parameter->getName(), $parameter->getType(), $parameter->getValue()];
     }
@@ -329,7 +323,7 @@ class AutocompleteType extends DoctrineType
      *
      * @return string The SHA-256 hash
      */
-    public static function generateHash($value, $namespace = '')
+    public static function generateHash(mixed $value, $namespace = ''): string
     {
         if (is_object($value)) {
             $value = spl_object_hash($value);
@@ -344,9 +338,6 @@ class AutocompleteType extends DoctrineType
         return hash('sha256', $namespace.':'.serialize($value));
     }
 
-    /**
-     * @return string
-     */
     public function getBlockPrefix(): string
     {
         return 'networking_type_autocomplete';

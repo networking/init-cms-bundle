@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Admin;
 
 use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;

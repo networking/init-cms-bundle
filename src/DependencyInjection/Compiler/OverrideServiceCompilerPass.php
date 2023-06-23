@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
@@ -23,10 +24,7 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 class OverrideServiceCompilerPass implements CompilerPassInterface
 {
-    /**
-     * @param ContainerBuilder $container
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($container->hasDefinition('sonata.admin.builder.orm_list')) {
             $definition = $container->getDefinition('sonata.admin.builder.orm_list');
@@ -49,7 +47,7 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         if($container->hasParameter('networking_init_cms.page_cache_service')){
             $service = $container->getParameter('networking_init_cms.page_cache_service');
             $definition = $container->getDefinition($service);
-            $container->setDefinition('Networking\InitCmsBundle\Cache\PageCacheInterface', $definition);
+            $container->setDefinition(\Networking\InitCmsBundle\Cache\PageCacheInterface::class, $definition);
         }
 
         if($container->hasDefinition('sonata.user.admin.user')){

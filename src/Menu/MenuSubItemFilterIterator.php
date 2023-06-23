@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Menu;
 
 /**
@@ -18,24 +20,15 @@ namespace Networking\InitCmsBundle\Menu;
 class MenuSubItemFilterIterator extends \FilterIterator
 {
     /**
-     * @var string
-     */
-    private $currentUri;
-
-    /**
-     * @param \Iterator $iterator
      * @param $currentUri
+     * @param string $currentUri
      */
-    public function __construct(\Iterator $iterator, $currentUri)
+    public function __construct(\Iterator $iterator, private $currentUri)
     {
-        $this->currentUri = $currentUri;
         parent::__construct($iterator);
     }
 
-    /**
-     * @return bool
-     */
-    public function accept()
+    public function accept(): bool
     {
         if ($this->currentUri === $this->current()->getPath()
             || $this->currentUri === $this->current()->getInternalUrl()

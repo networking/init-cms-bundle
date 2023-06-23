@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\EventListener;
 
 use Sonata\AdminBundle\Admin\Pool;
@@ -31,17 +33,12 @@ class AdminTrackerListener
      */
     protected $admin;
 
-    /**
-     * @param \Sonata\AdminBundle\Admin\Pool $adminPool
-     */
     public function __construct(Pool $adminPool)
     {
         $this->adminPool = $adminPool;
     }
 
     /**
-     * @param RequestEvent $event
-     *
      * @return void
      */
     public function onKernelRequest(RequestEvent $event)
@@ -68,7 +65,7 @@ class AdminTrackerListener
             if (!$this->admin) {
                 throw new \RuntimeException(sprintf(
                     'Unable to find the admin class related to the current controller (%s)',
-                    get_class($this)
+                    static::class
                 ));
             }
 
@@ -89,7 +86,7 @@ class AdminTrackerListener
 
             foreach ($object->getTrackedActions() as $trackedAction) {
                 // if an action which is flagged as 'to be tracked' is matching the end of the route: add info to session
-                if (preg_match('#'.$trackedAction.'$#', $request->get('_route'), $matches)) {
+                if (preg_match('#'.$trackedAction.'$#', (string) $request->get('_route'), $matches)) {
                     $this->updateTrackedInfo(
                         $request->getSession(),
                         '_networking_initcms_admin_tracker',
@@ -115,7 +112,7 @@ class AdminTrackerListener
     protected function updateTrackedInfo($session, $sessionKey, $trackInfoArray, $limit = 5)
     {
         // save the url, controller and action in the session
-        $value = json_decode($session->get($sessionKey), true);
+        $value = json_decode((string) $session->get($sessionKey), true, 512, JSON_THROW_ON_ERROR);
         if (is_null($value)) {
             $value = [];
         }
@@ -126,11 +123,11 @@ class AdminTrackerListener
         );
 
         // remove last value, if array has more than limit items
-        if ($limit > 0 and count($value) > $limit) {
+        if ($limit > 0 and (is_countable($value) ? count($value) : 0) > $limit) {
             array_pop($value);
         }
 
         // set the session value
-        $session->set($sessionKey, json_encode($value));
+        $session->set($sessionKey, json_encode($value, JSON_THROW_ON_ERROR));
     }
 }

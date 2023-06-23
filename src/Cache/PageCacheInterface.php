@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: reichmuth
  * Date: 11.02.15
  * Time: 15:46.
  */
-
 namespace Networking\InitCmsBundle\Cache;
 
 use Symfony\Component\HttpFoundation\Request;

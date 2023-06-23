@@ -62,7 +62,7 @@ class CacheBlockService extends AbstractBlockService
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Cache Block';
     }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the sko  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Form\Extension;
 
 use Sonata\AdminBundle\Form\Type\ModelType;
@@ -27,14 +29,14 @@ class ModelTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function finishView(FormView $view, FormInterface $form, array $options)
+    public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         if (true === $options['multiple'] && false === $options['expanded'] && isset($options['taggable'])) {
             $view->vars['taggable'] = $options['taggable'];
         }
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($options['transformer']) {
             $builder->addViewTransformer($options['transformer'], true);
@@ -44,7 +46,7 @@ class ModelTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['taggable' => false, 'transformer' => false]);
         $resolver->setDefined(['taggable', 'transformer']);
@@ -55,7 +57,7 @@ class ModelTypeExtension extends AbstractTypeExtension
      *
      * @return string The name of the type being extended
      */
-    public function getExtendedType()
+    public function getExtendedType(): string
     {
         return ModelType::class;
     }
@@ -66,10 +68,5 @@ class ModelTypeExtension extends AbstractTypeExtension
     public static function getExtendedTypes(): iterable
     {
         return [ModelType::class];
-    }
-
-    public function __call($name, $arguments)
-    {
-        // TODO: Implement @method iterable getExtendedTypes()
     }
 }

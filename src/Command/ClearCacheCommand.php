@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -16,22 +18,18 @@ class ClearCacheCommand extends Command
 {
 
     protected $translator;
-    protected $managedLocales;
     /** @TODO Remove in later versions */
 
 
 
-    public function __construct(TranslatorInterface $translator, $managedLocales, string $name = null)
+    public function __construct(TranslatorInterface $translator, protected $managedLocales, string $name = null)
     {
-        $this->managedLocales = $managedLocales;
         $this->translator = $translator;
         parent::__construct($name);
     }
 
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
      * @return int|null|void
      */
     public function execute(InputInterface $input, OutputInterface $output)

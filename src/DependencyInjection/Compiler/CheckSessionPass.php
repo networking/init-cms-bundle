@@ -1,6 +1,13 @@
 <?php
-
-
+/**
+ * This file is part of the Networking package.
+ *
+ * (c) net working AG <info@networking.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+declare(strict_types=1);
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
 
@@ -13,7 +20,7 @@ class CheckSessionPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has('session.handler')) {
             $message = 'InitCmsBundle requires the "session" service to be available.';

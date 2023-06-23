@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -19,9 +21,6 @@ use Symfony\Component\Form\AbstractType;
  */
 class MediaPrintType extends AbstractType
 {
-    /**
-     * @return string
-     */
     public function getBlockPrefix(): string
     {
         return 'networking_type_mediaprint';

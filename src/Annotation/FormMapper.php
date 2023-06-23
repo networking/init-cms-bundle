@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Annotation;
 
 /**
@@ -11,7 +13,7 @@ class FormMapper extends AbstractMapper implements FormInterface
     /**
      * @var array
      */
-    public $options = array();
+    public $options = [];
 
     /**
      * @var string
@@ -21,7 +23,7 @@ class FormMapper extends AbstractMapper implements FormInterface
     /**
      * @var array
      */
-    public $withOptions = array();
+    public $withOptions = [];
 
     /**
      * @var string
@@ -31,7 +33,7 @@ class FormMapper extends AbstractMapper implements FormInterface
     /**
      * @var array
      */
-    public $tabOptions = array();
+    public $tabOptions = [];
 
     /**
      * @var bool
@@ -46,10 +48,7 @@ class FormMapper extends AbstractMapper implements FormInterface
         return $this->options;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getWith()
+    public function getWith(): ?string
     {
         return $this->with;
     }
@@ -70,10 +69,7 @@ class FormMapper extends AbstractMapper implements FormInterface
         return $this->ignoreOnParent;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getTab()
+    public function getTab(): ?string
     {
         return $this->tab;
     }

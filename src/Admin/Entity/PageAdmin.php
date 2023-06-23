@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -13,6 +16,7 @@ namespace Networking\InitCmsBundle\Admin\Entity;
 use Gedmo\Loggable\Entity\LogEntry;
 use Networking\InitCmsBundle\Admin\Model\PageAdmin as BasePageAdmin;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
+use Networking\InitCmsBundle\Model\PageInterface;
 
 /**
  * Class PageAdmin.
@@ -21,26 +25,30 @@ use Networking\InitCmsBundle\Entity\LayoutBlock;
  */
 class PageAdmin extends BasePageAdmin
 {
-    /**
-     * @param LayoutBlock $layoutBlock
-     *
-     * @return \Networking\InitCmsBundle\Model\PageInterface
-     */
-    public function getPageByLayoutBlock(LayoutBlock $layoutBlock)
+    private ?LogEntry $lastEditedBy = null;
+
+
+    public function getPageByLayoutBlock(LayoutBlock $layoutBlock): PageInterface
     {
         return $layoutBlock->getPage();
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLastEditedBy()
+    public function getLastEditedBy(): ?LogEntry
     {
+        if ($this->lastEditedBy) {
+            return $this->lastEditedBy;
+        }
+
         $loggableClass = LogEntry::class;
         /** @var \Gedmo\Loggable\Entity\Repository\LogEntryRepository $repo */
-        $repo = $this->getModelManager()->getEntityManager($this->getClass())->getRepository($loggableClass);
-        $logEntries = $repo->getLogEntries($this->getSubject());
+        $repo = $this->getModelManager()->getEntityManager($loggableClass)
+            ->getRepository($loggableClass);
 
-        return array_shift($logEntries);
+        $this->lastEditedBy = $repo->findOneBy([
+            'objectClass' => $this->getClass(),
+            'objectId' => $this->getSubject()->getId(),
+        ], ['version' => 'DESC']);
+
+        return $this->lastEditedBy;
     }
 }

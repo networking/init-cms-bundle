@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -8,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +19,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 /**
  * @author net working AG <info@networking.ch>
  */
-class MenuItem implements MenuItemInterface, \IteratorAggregate
+class MenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
 {
     /**
      * @var array
@@ -31,9 +32,9 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     protected $id;
 
     /**
-     * @Assert\NotBlank
      * @var string
      */
+    #[Assert\NotBlank]
     protected $name;
 
     /**
@@ -136,7 +137,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->name;
     }
@@ -726,9 +727,7 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate
         return !is_null($this->page);
     }
 
-    /**
-     * @Assert\Callback()
-     */
+    #[Assert\Callback]
     public function validate(ExecutionContextInterface $context, $payload){
 
         if($this->wasValidated){

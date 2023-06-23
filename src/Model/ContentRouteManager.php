@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Component\Routing\Route;
@@ -16,6 +18,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -94,8 +97,6 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
     }
 
     /**
-     * @param string $class
-     *
      * @return ContentRouteManager
      */
     public function setClass(string $class)
@@ -106,14 +107,12 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
     }
 
     /**
-     * @param ContentRouteInterface $contentRoute
      * @param $path
      * @param $content
      * @param $addLocale
-     *
      * @return Route
      */
-    public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content, $addLocale = true)
+    public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content, $addLocale = true): RouteObjectInterface
     {
         $template = new Template($contentRoute->getTemplate());
 
@@ -156,8 +155,8 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
             return $url;
         }
 
-        $locale = substr($locale, 0, 2);
-        $parts = explode('/', $url);
+        $locale = substr((string) $locale, 0, 2);
+        $parts = explode('/', (string) $url);
 
         if(count($parts) < 2){
         	return $url;
@@ -166,7 +165,7 @@ abstract class ContentRouteManager implements ContentRouteManagerInterface, Rout
         $urlLocale = $parts[1];
 
         if ($urlLocale === $locale) {
-            return substr($url, 3);
+            return substr((string) $url, 3);
         }
 
         return $url;

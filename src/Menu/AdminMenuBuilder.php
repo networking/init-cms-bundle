@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
@@ -77,10 +79,7 @@ class AdminMenuBuilder extends MenuBuilder
         );
     }
 
-    /**
-     * @return bool|\Knp\Menu\ItemInterface
-     */
-    public function createAdminMenu()
+    public function createAdminMenu(): bool|\Knp\Menu\ItemInterface
     {
 
         // Default to homepage
@@ -113,7 +112,7 @@ class AdminMenuBuilder extends MenuBuilder
             $dashboardUrl = $this->router->generate('sonata_admin_dashboard');
 
             if ($sonataAdminParam = $this->request->get('_sonata_admin')) {
-                $possibleAdmins = explode('|', $sonataAdminParam);
+                $possibleAdmins = explode('|', (string) $sonataAdminParam);
 
                 foreach ($possibleAdmins as $adminCode) {
                     // we are in the admin area
@@ -212,8 +211,8 @@ class AdminMenuBuilder extends MenuBuilder
             $lastActions = $session->get('_networking_initcms_admin_tracker');
 
             if ($lastActions) {
-                $lastActionArray = json_decode($lastActions);
-                if (count($lastActionArray)) {
+                $lastActionArray = json_decode((string) $lastActions, null, 512, JSON_THROW_ON_ERROR);
+                if (is_countable($lastActionArray) ? count($lastActionArray) : 0) {
                     if ($this->request->get('_route')
                         == 'sonata_admin_dashboard'
                         || $sonataAdmin
@@ -329,8 +328,6 @@ class AdminMenuBuilder extends MenuBuilder
     }
 
     /**
-     * @param ContentRoute $contentRoute
-     *
      * @return \Networking\InitCmsBundle\Component\Routing\Route
      */
     protected function getRoute(ContentRoute $contentRoute)

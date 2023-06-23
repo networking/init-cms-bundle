@@ -70,25 +70,16 @@ class TranslationAdmin extends BaseAdmin
      */
     protected $filterLocales = [];
 
-    /**
-     * @param array $options
-     */
     public function setEditableOptions(array $options)
     {
         $this->editableOptions = $options;
     }
 
-    /**
-     * @param TransUnitManagerInterface $translationManager
-     */
     public function setTransUnitManager(TransUnitManagerInterface $translationManager)
     {
         $this->transUnitManager = $translationManager;
     }
 
-    /**
-     * @param array $managedLocales
-     */
     public function setManagedLocales(array $managedLocales)
     {
         $this->managedLocales = $managedLocales;
@@ -118,17 +109,11 @@ class TranslationAdmin extends BaseAdmin
         return array_key_exists('nonTranslatedOnly', $this->getDefaultSelections()) && (bool) $this->defaultSelections['nonTranslatedOnly'];
     }
 
-    /**
-     * @param array $selections
-     */
     public function setDefaultSelections(array $selections)
     {
         $this->defaultSelections = $selections;
     }
 
-    /**
-     * @param array $prefixes
-     */
     public function setEmptyPrefixes(array $prefixes)
     {
         $this->emptyFieldPrefixes = $prefixes;
@@ -159,12 +144,12 @@ class TranslationAdmin extends BaseAdmin
     {
 
         /** @var \Doctrine\ORM\EntityManager $em */
-        $em = $this->getContainer()->get('doctrine')->getManagerForClass('Lexik\Bundle\TranslationBundle\Entity\File');
+        $em = $this->getContainer()->get('doctrine')->getManagerForClass(\Lexik\Bundle\TranslationBundle\Entity\File::class);
 
 
-        $domains = array();
+        $domains = [];
         $domainsQueryResult = $em->createQueryBuilder()
-            ->select('DISTINCT t.domain')->from('\Lexik\Bundle\TranslationBundle\Entity\File', 't')
+            ->select('DISTINCT t.domain')->from('\\' . \Lexik\Bundle\TranslationBundle\Entity\File::class, 't')
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
 
@@ -360,7 +345,6 @@ class TranslationAdmin extends BaseAdmin
     }
 
     /**
-     * @param ProxyQuery $queryBuilder
      * @param String     $alias
      */
     private function joinTranslations(ProxyQuery $queryBuilder, $alias, array $locales = null)
@@ -370,7 +354,7 @@ class TranslationAdmin extends BaseAdmin
         if (array_key_exists($alias, $joins)) {
             $joins = $joins[$alias];
             foreach ($joins as $join) {
-                if (strpos($join->__toString(), "$alias.translations ")) {
+                if (strpos((string) $join->__toString(), "$alias.translations ")) {
                     $alreadyJoined = true;
                 }
             }
@@ -391,7 +375,7 @@ class TranslationAdmin extends BaseAdmin
      */
     private function formatLocales(array $locales)
     {
-        $formattedLocales = array();
+        $formattedLocales = [];
         array_walk_recursive(
             $locales,
             function ($language) use (&$formattedLocales) {

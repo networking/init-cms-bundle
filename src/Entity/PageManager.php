@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -81,9 +83,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
                 $page = $this->find($id);
                 $collection = new ArrayCollection($page->getAllChildren());
                 $childrenIds = $collection->map(
-                    function (PageInterface $p) {
-                        return $p->getId();
-                    }
+                    fn(PageInterface $p) => $p->getId()
                 );
 
                 if ($childrenIds->count()) {
@@ -104,8 +104,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     /**
      * @param $locale
      * @param null $id
-     *
-     * @return mixed
      */
     public function getParentPagesChoices($locale, $id = null): mixed
     {
@@ -118,8 +116,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @param $sort
      * @param string $order
      * @param int $hydrationMode
-     *
-     * @return mixed
      */
     public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT): mixed
     {
@@ -131,8 +127,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     /**
      * @param $sort
      * @param string $order
-     *
-     * @return Query
      */
     public function getAllSortByQuery($sort, $order = 'DESC'): Query
     {
@@ -168,10 +162,8 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param PageInterface $draftPage
      * @param \JMS\Serializer\Serializer $serializer
      *
-     * @return PageInterface
      */
     public function revertToPublished(PageInterface $draftPage, SerializerInterface $serializer): PageInterface
     {
@@ -206,9 +198,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
 
             $matches = $currentLayoutBlocks->filter(
-                function (LayoutBlock $layoutBlock) use ($publishedlayoutBlock) {
-                    return $publishedlayoutBlock->getId() === $layoutBlock->getId();
-                }
+                fn(LayoutBlock $layoutBlock) => $publishedlayoutBlock->getId() === $layoutBlock->getId()
             );
             $layoutBlock = $matches->first();
 
@@ -235,9 +225,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param LayoutBlock $layoutBlock
      *
-     * @return LayoutBlock
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
@@ -268,7 +256,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @param $object
      * @param $var
      * @param $property
-     * @return mixed
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws TransactionRequiredException
@@ -283,7 +270,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             return $object;
         }
 
-        $method = sprintf('get%s', ucfirst($property->getName()));
+        $method = sprintf('get%s', ucfirst((string) $property->getName()));
 
         if (!$reflection->hasMethod($method)) {
             return $object;
@@ -305,7 +292,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             }
 
             $var->clear();
-            $method = sprintf('set%s', ucfirst($property->getName()));
+            $method = sprintf('set%s', ucfirst((string) $property->getName()));
             $reflection = new ReflectionClass($object);
             if ($reflection->hasMethod($method)) {
                 $object->{$method}($newCollection);
@@ -315,12 +302,12 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
         }
 
-        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor(get_class($var))) {
+        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor($var::class)) {
 
             $newVar = $this->revertObjectVars($object, $var);
             $this->_em->persist($newVar);
 
-            $method = sprintf('set%s', ucfirst($property->getName()));
+            $method = sprintf('set%s', ucfirst((string) $property->getName()));
             if ($reflection->hasMethod($method)) {
                 $object->{$method}($newVar);
             }
@@ -329,7 +316,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
         }
 
-        $method = sprintf('set%s', ucfirst($property->getName()));
+        $method = sprintf('set%s', ucfirst((string) $property->getName()));
         if ($reflection->hasMethod($method)) {
             $object->{$method}($var);
         }
@@ -340,7 +327,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     /**
      * @param $parent
      * @param $oldObject
-     * @return object|null
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws TransactionRequiredException
@@ -369,18 +355,11 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         return $object;
     }
 
-    /**
-     * @param Collection $currentLayoutBlocks
-     * @param array $layoutBlockIds
-     * @return Collection
-     */
     public function cleanLayoutBlocks(Collection $currentLayoutBlocks, array $layoutBlockIds): Collection
     {
 
         $blocksToRemove = $currentLayoutBlocks->filter(
-            function (LayoutBlock $oldBlock) use ($layoutBlockIds) {
-                return !in_array($oldBlock->getId(), $layoutBlockIds);
-            }
+            fn(LayoutBlock $oldBlock) => !in_array($oldBlock->getId(), $layoutBlockIds)
         );
 
         foreach ($blocksToRemove as $deadBlock) {
@@ -391,11 +370,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
     }
 
-    /**
-     * @param PageInterface $page
-     *
-     * @return mixed
-     */
     public function save(PageInterface $page): mixed
     {
         if (!$page->getId() && !$page->getContentRoute()->getTemplateName()) {
@@ -415,8 +389,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * Get tree query builder
      *
      * @param object $rootNode
-     *
-     * @return \Doctrine\ORM\QueryBuilder
      */
     public function getTreeQueryBuilder($rootNode = null): QueryBuilder
     {
@@ -427,8 +399,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * Get tree query
      *
      * @param object $rootNode
-     *
-     * @return \Doctrine\ORM\Query
      */
     public function getTreeQuery($rootNode = null): Query
     {
@@ -466,8 +436,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * Get the Tree path query builder by given $node
      *
      * @param object $node
-     *
-     * @return \Doctrine\ORM\QueryBuilder
      */
     public function getPathQueryBuilder($node): QueryBuilder
     {
@@ -481,10 +449,10 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $node = new EntityWrapper($node, $this->_em);
         $nodePath = $node->getPropertyValue($config['path']);
         $paths = [];
-        $nodePathLength = strlen($nodePath);
+        $nodePathLength = strlen((string) $nodePath);
         $separatorMatchOffset = 0;
         while ($separatorMatchOffset < $nodePathLength) {
-            $separatorPos = strpos($nodePath, $config['path_separator'], $separatorMatchOffset);
+            $separatorPos = strpos((string) $nodePath, $config['path_separator'], $separatorMatchOffset);
 
             if (false === $separatorPos || $separatorPos === $nodePathLength - 1) {
                 // last node, done
@@ -495,7 +463,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
                 $separatorMatchOffset = 1;
             } else {
                 // add node
-                $paths[] = substr($nodePath, 0, $config['path_ends_with_separator'] ? $separatorPos + 1 : $separatorPos);
+                $paths[] = substr((string) $nodePath, 0, $config['path_ends_with_separator'] ? $separatorPos + 1 : $separatorPos);
                 $separatorMatchOffset = $separatorPos + 1;
             }
         }
@@ -512,8 +480,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * Get the Tree path query by given $node
      *
      * @param object $node
-     *
-     * @return \Doctrine\ORM\Query
      */
     public function getPathQuery($node): Query
     {
@@ -637,9 +603,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $nodes = $this->getNodesHierarchyQuery($node, $direct, $options, $includeNode)->getArrayResult();
         usort(
             $nodes,
-            static function ($a, $b) use ($path) {
-                return strcmp($a[$path], $b[$path]);
-            }
+            static fn($a, $b): int => strcmp((string) $a[$path], (string) $b[$path])
         );
 
         return $nodes;
@@ -650,5 +614,3 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         return Strategy::MATERIALIZED_PATH === $this->listener->getStrategy($this->_em, $this->getClassMetadata()->name)->getName();
     }
 }
-
-

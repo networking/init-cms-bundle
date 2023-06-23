@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
@@ -28,9 +30,6 @@ class PageToIdTransformer implements DataTransformerInterface
      */
     private $pageManager;
 
-    /**
-     * @param PageManagerInterface $om
-     */
     public function __construct(PageManagerInterface $om)
     {
         $this->pageManager = $om;
@@ -57,11 +56,10 @@ class PageToIdTransformer implements DataTransformerInterface
      *
      * @param string $id
      *
-     * @return PageInterface|null
      *
      * @throws TransformationFailedException if object (issue) is not found
      */
-    public function reverseTransform($id)
+    public function reverseTransform($id): ?\Networking\InitCmsBundle\Model\PageInterface
     {
         if (!$id) {
             return null;

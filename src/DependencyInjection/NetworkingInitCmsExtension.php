@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Networking package.
  *
@@ -8,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\DependencyInjection;
 
@@ -32,10 +32,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class NetworkingInitCmsExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * @param ContainerBuilder $container
-     */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $bundles = $container->getParameter('kernel.bundles');
 
@@ -122,12 +119,10 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
     }
     /**
-     * @param array $configs
-     * @param ContainerBuilder $container
      *
      * @throws \ReflectionException|\Exception
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -218,7 +213,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         if ($cacheService) {
             $reflectionClass = new \ReflectionClass($cacheService);
 
-            if (in_array('Networking\InitCmsBundle\Cache\PageCacheInterface', $reflectionClass->getInterfaceNames())) {
+            if (in_array(\Networking\InitCmsBundle\Cache\PageCacheInterface::class, $reflectionClass->getInterfaceNames())) {
                 $container->setParameter('networking_init_cms.page_cache_service', $cacheService);
             } else {
                 throw new \RuntimeException(
@@ -231,7 +226,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
     }
 
     /**
-     * @param ContainerBuilder $container
      * @param String $alias
      * @param array $config
      */
@@ -243,7 +237,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         );
 
         foreach ($iterator as $value) {
-            $path = array();
+            $path = [];
             for ($i = 0; $i <= $iterator->getDepth(); $i++) {
                 $path[] = $iterator->getSubIterator($i)->key();
             }
@@ -254,7 +248,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
     /**
      * @param $config
-     * @param ContainerBuilder $container
      */
     public function configureLanguageCookie($config, ContainerBuilder $container)
     {
@@ -265,7 +258,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
     /**
      * @param $config
-     * @param ContainerBuilder $container
      *
      * @throws \InvalidArgumentException
      */
@@ -283,23 +275,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.manager.user.class', $config['class']['user']);
         $container->setParameter('networking_init_cms.manager.menu_item.class', $config['class']['menu_item']);
 
-        switch ($config['db_driver']) {
-            case 'orm':
-                $container->setParameter(
-                    'networking_init_cms.admin.layout_block.class',
-                    'Networking\InitCmsBundle\Entity\LayoutBlock'
-                );
-                break;
-            case 'mongodb':
-                $container->setParameter(
-                    'networking_init_cms.admin.layout_block.class',
-                    'Networking\InitCmsBundle\Docment\LayoutBlock'
-                );
-                break;
-            default:
-                throw new \InvalidArgumentException('db driver must be either orm or mongodb');
-                break;
-        }
+       $container->setParameter('networking_init_cms.admin.layout_block.class',\Networking\InitCmsBundle\Entity\LayoutBlock::class);
     }
 
 
@@ -326,14 +302,14 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         }
 
         if (!class_exists('Google\Authenticator\GoogleAuthenticator')
-            && !class_exists('Sonata\GoogleAuthenticator\GoogleAuthenticator')) {
+            && !class_exists(\Sonata\GoogleAuthenticator\GoogleAuthenticator::class)) {
             throw new \RuntimeException('Please add "sonata-project/google-authenticator" package');
         }
 
         $container->setParameter('networking_init_cms.google.authenticator.forced_for_role', $config['google_authenticator']['forced_for_role']);
 
         $trustedIpList = $config['google_authenticator']['trusted_ip_list'];
-        if (array_key_exists('ip_white_list', $config['google_authenticator']) && \count($config['google_authenticator']['ip_white_list']) > 0) {
+        if (array_key_exists('ip_white_list', $config['google_authenticator']) && (is_countable($config['google_authenticator']['ip_white_list']) ? \count($config['google_authenticator']['ip_white_list']) : 0) > 0) {
             $trustedIpList = $config['google_authenticator']['ip_white_list'];
         }
         // NEXT_MAJOR: Remove `networking_init_cms.google.authenticator.ip_white_list` parameter.
@@ -341,7 +317,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.google.authenticator.trusted_ip_list', $trustedIpList);
         $container->getDefinition('networking_init_cms.google.authenticator.helper')
             ->replaceArgument(0, $config['google_authenticator']['server']);
-        $container->setAlias( 'Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface', 'networking_init_cms.google.authenticator.helper');
+        $container->setAlias( \Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface::class, 'networking_init_cms.google.authenticator.helper');
 
     }
 
@@ -349,7 +325,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
     /**
      * Add short labels for languages (e.g. de_CH becomes DE).
      *
-     * @param array $languages
      *
      * @return array
      */
@@ -357,16 +332,13 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
     {
         foreach ($languages as $key => $val) {
             if (!array_key_exists('short_label', $val) || !$val['short_label']) {
-                $languages[$key]['short_label'] = substr(strtoupper($val['label']), 0, 2);
+                $languages[$key]['short_label'] = substr(strtoupper((string) $val['label']), 0, 2);
             }
         }
 
         return $languages;
     }
 
-    /**
-     * @param array $config
-     */
     public function registerDoctrineORMMapping(array $config)
     {
         foreach ($config['class'] as $type => $class) {

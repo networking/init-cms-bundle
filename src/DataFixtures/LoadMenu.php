@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\DataFixtures;
 
@@ -24,17 +25,13 @@ use Networking\InitCmsBundle\Entity\MenuItem;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadMenu extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
+class LoadMenu extends Fixture
+    implements FixtureGroupInterface, OrderedFixtureInterface,
+               ContainerAwareInterface
 {
-    /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
+    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         $this->container = $container;
     }
@@ -42,9 +39,11 @@ class LoadMenu extends Fixture implements FixtureGroupInterface, OrderedFixtureI
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $languages = $this->container->getParameter('networking_init_cms.page.languages');
+        $languages = $this->container->getParameter(
+            'networking_init_cms.page.languages'
+        );
 
         foreach ($languages as $lang) {
             $this->createMenuItems($manager, $lang['locale']);
@@ -53,9 +52,9 @@ class LoadMenu extends Fixture implements FixtureGroupInterface, OrderedFixtureI
 
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
-     * @param $locale
+     * @param                                            $locale
      */
-    public function createMenuItems(ObjectManager $manager, $locale)
+    public function createMenuItems(ObjectManager $manager, $locale): void
     {
         $menuRoot = new MenuItem();
 
@@ -94,10 +93,7 @@ class LoadMenu extends Fixture implements FixtureGroupInterface, OrderedFixtureI
         return ['init_cms'];
     }
 
-    /**
-     * @return int
-     */
-    public function getOrder()
+    public function getOrder(): int
     {
         return 3;
     }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 /**
@@ -17,11 +19,11 @@ namespace Networking\InitCmsBundle\Model;
  */
 interface MenuItemInterface
 {
-    const PATH_SEPARATOR = '/';
+    public const PATH_SEPARATOR = '/';
 
-    const VISIBILITY_PUBLIC = 'public';
+    public const VISIBILITY_PUBLIC = 'public';
 
-    const VISIBILITY_PROTECTED = 'protected';
+    public const VISIBILITY_PROTECTED = 'protected';
 
     /**
      * @return string

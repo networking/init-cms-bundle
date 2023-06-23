@@ -69,7 +69,6 @@ class Media extends BaseMedia implements IgnoreRevertInterface
     /**
      * Add tags.
      *
-     * @param \Networking\InitCmsBundle\Entity\Tag $tag
      *
      * @return $this
      */

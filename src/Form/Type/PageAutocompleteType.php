@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,10 +51,7 @@ class PageAutocompleteType extends EntityType
         parent::__construct($registry);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -77,10 +76,8 @@ class PageAutocompleteType extends EntityType
 
     /**
      * @param $locale
-     *
-     * @return callable
      */
-    public function getClosureByLocale($locale)
+    public function getClosureByLocale($locale): callable
     {
         return $queryBuilder = function (EntityRepository $er) use ($locale) {
             $queryBuilder = $er->createQueryBuilder('p');
@@ -93,10 +90,8 @@ class PageAutocompleteType extends EntityType
 
     /**
      * @param $pageId
-     *
-     * @return callable
      */
-    public function getClosureByPageId($pageId)
+    public function getClosureByPageId($pageId): callable
     {
         return $queryBuilder = function (EntityRepository $er) use ($pageId) {
             $qb = $er->createQueryBuilder('p');

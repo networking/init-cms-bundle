@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * This file is part of the Sonata package.
  *
@@ -8,7 +11,6 @@
  * file that was distributed with this source code.
  *
  */
-
 namespace Networking\InitCmsBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
@@ -21,16 +23,12 @@ class ModelToIdTransformer implements DataTransformerInterface
 {
     protected $modelManager;
 
-    protected $className;
-
     /**
-     * @param ModelManagerInterface $modelManager
      * @param string                $className
      */
-    public function __construct(ModelManagerInterface $modelManager, $className)
+    public function __construct(ModelManagerInterface $modelManager, protected $className)
     {
         $this->modelManager = $modelManager;
-        $this->className = $className;
     }
 
     /**

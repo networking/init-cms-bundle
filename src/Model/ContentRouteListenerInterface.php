@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,9 +10,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
@@ -23,12 +26,10 @@ interface ContentRouteListenerInterface
      *
      * @return mixed
      */
-    public function prePersist(LifecycleEventArgs $args);
+    public function prePersist(ContentRouteInterface $contentRoute, PrePersistEventArgs $args): void;
 
     /**
-     * @param PreUpdateEventArgs $args
-     *
      * @return mixed
      */
-    public function preUpdate(PreUpdateEventArgs $args);
+    public function preUpdate(ContentRouteInterface $contentRoute, PreUpdateEventArgs $args): void;
 }

@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * This file is part of the Networking package.
  *
@@ -9,6 +7,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
@@ -40,7 +39,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     /**
      * used to prefix dynamically generated form fields.
      */
-    const CUSTOM_FIELD_PREFIX = 'networking_init_cms_content_';
+    public const CUSTOM_FIELD_PREFIX = 'networking_init_cms_content_';
 
     public $trackedActions = [];
 
@@ -158,7 +157,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
                 $this->getModelManager()->create($contentObject);
                 $object->setObjectId($contentObject->getId());
                 $this->autoPageDraft($object->getPage());
-            } catch (ModelManagerException $e) {
+            } catch (ModelManagerException) {
                 throw new ModelManagerException(
                     $this->trans('Cannot create content, object is invalid', [], 'validators')
                 );
@@ -203,7 +202,6 @@ abstract class LayoutBlockAdmin extends BaseAdmin
     }
 
     /**
-     * @param PageInterface $page
      * @throws \Exception
      */
     public function autoPageDraft(PageInterface $page)

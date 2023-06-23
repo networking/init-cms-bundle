@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * This file is part of the Networking package.
  *
@@ -10,6 +7,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin;
 
@@ -52,7 +50,8 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * Sets the container.
      */
-    public function setContainer(ContainerInterface $container = null){
+    public function setContainer(ContainerInterface $container = null): void
+    {
 
         $this->container = $container;
     }
@@ -64,7 +63,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
      *
      * @param array $languages
      */
-    public function setLanguages(array $languages)
+    public function setLanguages(array $languages): void
     {
         $this->languages = $languages;
     }
@@ -72,7 +71,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * Set up listner to make sure the correct locale is used.
      */
-    public function setUpTranslatableLocale()
+    public function setUpTranslatableLocale(): void
     {
         /** @var \Gedmo\Translatable\TranslatableListener $translatable */
         $translatableListener = $this->getContainer()->get('stof_doctrine_extensions.listener.translatable', ContainerInterface::NULL_ON_INVALID_REFERENCE);
@@ -88,7 +87,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
      *
      * @return array
      */
-    protected function getLocaleChoices()
+    protected function getLocaleChoices(): array
     {
         $localeChoices = [];
 
@@ -108,7 +107,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * @return string
      */
-    public function getDefaultLocale()
+    public function getDefaultLocale(): string
     {
         if (!$this->getRequest()) {
             return '';
@@ -150,7 +149,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
      *
      * @return BaseAdmin
      */
-    public function setTrackedActions(array $trackedActions)
+    public function setTrackedActions(array $trackedActions): AbstractAdmin
     {
         $this->trackedActions = $trackedActions;
 
@@ -160,7 +159,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * @return array
      */
-    public function getTrackedActions()
+    public function getTrackedActions(): array
     {
         return $this->trackedActions;
     }
@@ -200,7 +199,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * @return ContainerInterface
      */
-    protected function getContainer()
+    protected function getContainer(): ContainerInterface
     {
         return $this->container;
     }
@@ -208,7 +207,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     /**
      * @return SonataAdminAnnotationReaderInterface
      */
-    protected function getSonataAnnotationReader()
+    protected function getSonataAnnotationReader(): SonataAdminAnnotationReaderInterface
     {
         return $this->annotationReader;
     }
@@ -217,7 +216,7 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
      * @param SonataAdminAnnotationReaderInterface $annotationReader
      * @return $this
      */
-    public function setSonataAnnotationReader(SonataAdminAnnotationReaderInterface $annotationReader)
+    public function setSonataAnnotationReader(SonataAdminAnnotationReaderInterface $annotationReader): self
     {
         $this->annotationReader = $annotationReader;
         return $this;

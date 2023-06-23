@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Command;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
@@ -12,11 +14,8 @@ class ClearLogCommand extends \Symfony\Component\Console\Command\Command
 {
 
 
-    private ManagerRegistry $em;
-
-    public function __construct(ManagerRegistry $em, $pageClass, string $name = null)
+    public function __construct(private readonly ManagerRegistry $em, $pageClass, string $name = null)
     {
-        $this->em = $em;
         $this->pageClass = $pageClass;
         parent::__construct();
     }

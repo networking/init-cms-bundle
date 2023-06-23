@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: marcbissegger
  * Date: 10/24/13
  * Time: 3:24 PM.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 /**

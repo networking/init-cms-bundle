@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Annotation;
 
 abstract class AbstractMapper
@@ -17,7 +19,7 @@ abstract class AbstractMapper
     /**
      * @var array
      */
-    public $fieldDescriptionOptions = array();
+    public $fieldDescriptionOptions = [];
 
     /**
      * @return null|string

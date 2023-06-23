@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
@@ -69,9 +70,7 @@ abstract class HelpTextAdmin extends BaseAdmin
                 'locale',
                 ChoiceType::class,
                 [
-                    'choice_loader' => new CallbackChoiceLoader(function () {
-                        return $this->getLocaleChoices();
-                    }),
+                    'choice_loader' => new CallbackChoiceLoader(fn() => $this->getLocaleChoices()),
                     'preferred_choices' => [$this->getDefaultLocale()],
                     'translation_domain' => false,
                 ]
@@ -96,19 +95,14 @@ abstract class HelpTextAdmin extends BaseAdmin
                 'locale',
                 CallbackFilter::class,
                 [
-                    'callback' => [
-                        $this,
-                        'getByLocale',
-                    ],
+                    'callback' => $this->getByLocale(...),
                     'hidden' => false,
                 ],
                 [
                     'field_type' => ChoiceType::class,
                     'field_options' => [
                         'placeholder' => false,
-                        'choice_loader' => new CallbackChoiceLoader(function () {
-                            return $this->getLocaleChoices();
-                        }),
+                        'choice_loader' => new CallbackChoiceLoader(fn() => $this->getLocaleChoices()),
                         'preferred_choices' => [$this->getDefaultLocale()],
                         'translation_domain' => false,
                     ]
@@ -129,11 +123,9 @@ abstract class HelpTextAdmin extends BaseAdmin
     }
 
     /**
-     * @param ProxyQuery $ProxyQuery
      * @param $alias
      * @param $field
      * @param $data
-     *
      * @return bool
      */
     public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, FilterData $data)

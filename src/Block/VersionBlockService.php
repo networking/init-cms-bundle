@@ -25,19 +25,14 @@ use Twig\Environment;
 class VersionBlockService extends AbstractBlockService
 {
     /**
-     * @var string
-     */
-    protected $projectDir;
-
-    /**
      * VersionBlockService constructor.
      *
      * @param Environment $twig
      * @param             $projectDir
+     * @param string $projectDir
      */
-    public function __construct(Environment $twig, $projectDir)
+    public function __construct(Environment $twig, protected $projectDir)
     {
-        $this->projectDir = $projectDir;
         parent::__construct($twig);
 
     }
@@ -53,7 +48,7 @@ class VersionBlockService extends AbstractBlockService
 
         if (file_exists($this->projectDir.'/composer.lock')) {
             $content = file_get_contents($this->projectDir.'/composer.lock');
-            $content = json_decode($content, true);
+            $content = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
             foreach ($content['packages'] as $package) {
                 if ('networking/init-cms-bundle' === $package['name']) {
                     $version = $package['version'];
@@ -75,7 +70,7 @@ class VersionBlockService extends AbstractBlockService
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Version Block';
     }

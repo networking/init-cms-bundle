@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+declare(strict_types=1);
 namespace Networking\InitCmsBundle\Admin\Model;
 
 use Networking\InitCmsBundle\Entity\Group;
@@ -39,20 +39,11 @@ abstract class UserAdmin extends BaseUserAdmin
      */
     protected $trackedActions = ['list'];
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
-    /**
-     * @var bool
-     */
-    private $googleAuthEnabled = false;
+    private bool $googleAuthEnabled = false;
 
-    /**
-     * @var \Networking\InitCmsBundle\GoogleAuthenticator\Helper
-     */
-    private $googleAuthenticatorHelper;
+    private ?\Networking\InitCmsBundle\GoogleAuthenticator\Helper $googleAuthenticatorHelper = null;
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {

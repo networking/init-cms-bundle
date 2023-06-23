@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -8,17 +10,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Entity;
 
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
-use Networking\InitCmsBundle\Model\Page;
+use App\Entity\Page;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageListener as ModelPageListener;
 
+#[AsDoctrineListener(event: Events::postPersist)]
+#[AsDoctrineListener(event: Events::onFlush, priority: -100)]
 /**
  * Class PageListener.
  *
@@ -26,28 +34,31 @@ use Networking\InitCmsBundle\Model\PageListener as ModelPageListener;
  */
 class PageListener extends ModelPageListener
 {
+
     /**
      * @param LifecycleEventArgs $args
      * @return mixed|void
      * @throws \Doctrine\ORM\ORMException
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(PostPersistEventArgs $args): void
     {
-        /** Do not need to set content route properties here as done in onFlush event */
-        $entity = $args->getObject();
+
+        /** @var PageInterface $page */
+        $page = $args->getEntity();
+
+        if (!$page instanceof PageInterface) {
+            return;
+        }
 
         /** @var EntityManager $em */
         $em = $args->getObjectManager();
 
-        if ($entity instanceof PageInterface) {
+        if ($contentRoute = $page->getContentRoute()) {
+            $contentRoute->setObjectId($page->getId());
+            $contentRoute->setPath(PageHelper::getPageRoutePath($page->getPath()));
 
-            if ($contentRoute = $entity->getContentRoute()) {
-                $contentRoute->setObjectId($entity->getId());
-                $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
-
-                $em->persist($contentRoute);
-                $em->getUnitOfWork()->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
-            }
+            $em->persist($contentRoute);
+            $em->getUnitOfWork()->computeChangeSet($em->getClassMetadata($contentRoute::class), $contentRoute);
         }
     }
 
@@ -56,9 +67,9 @@ class PageListener extends ModelPageListener
      * @return mixed|void
      * @throws \Doctrine\ORM\ORMException
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
-        $em = $args->getEntityManager();
+        $em = $args->getObjectManager();
 
         $unitOfWork = $em->getUnitOfWork();
 
@@ -72,12 +83,12 @@ class PageListener extends ModelPageListener
                     $contentRoute->setPath(PageHelper::getPageRoutePath($entity->getPath()));
 
                     $em->persist($contentRoute);
-                    $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
+                    $unitOfWork->computeChangeSet($em->getClassMetadata($contentRoute::class), $contentRoute);
                     foreach ($entity->getAllChildren() as $child) {
                         $contentRoute = $child->getContentRoute();
                         $contentRoute->setPath(PageHelper::getPageRoutePath($child->getPath()));
                         $em->persist($contentRoute);
-                        $unitOfWork->computeChangeSet($em->getClassMetadata(get_class($contentRoute)), $contentRoute);
+                        $unitOfWork->computeChangeSet($em->getClassMetadata($contentRoute::class), $contentRoute);
 
                         if ($entity->getStatus() == Page::STATUS_PUBLISHED) {
                             if ($childSnapshot = $child->getSnapshot()) {
@@ -92,11 +103,11 @@ class PageListener extends ModelPageListener
                                 $em->persist($snapshotRoute);
 
                                 $unitOfWork->computeChangeSet(
-                                    $em->getClassMetadata(get_class($childSnapshot)),
+                                    $em->getClassMetadata($childSnapshot::class),
                                     $childSnapshot
                                 );
                                 $unitOfWork->computeChangeSet(
-                                    $em->getClassMetadata(get_class($snapshotRoute)),
+                                    $em->getClassMetadata($snapshotRoute::class),
                                     $snapshotRoute
                                 );
                             }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Helper;
 
 /**
@@ -29,7 +31,7 @@ class BundleGuesser
      */
     public function initialize($class)
     {
-        $this->reflector = new \ReflectionClass(get_class($class));
+        $this->reflector = new \ReflectionClass($class::class);
 
         return $this;
     }
@@ -43,34 +45,22 @@ class BundleGuesser
             substr($ns, 0, ($p2 = strpos($ns, '\\', $p1 + 1)) === false ? strlen($ns) : $p2);
     }
 
-    /**
-     * @return string
-     */
-    public function getBundleShortName()
+    public function getBundleShortName(): string
     {
         return str_replace('\\', '', $this->getBundleName());
     }
 
-    /**
-     * @return string
-     */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return $this->reflector->getNamespaceName();
     }
 
-    /**
-     * @return string
-     */
-    public function getShortName()
+    public function getShortName(): string
     {
         return $this->reflector->getShortName();
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->reflector->getName();
     }
@@ -93,10 +83,7 @@ class BundleGuesser
             substr($short, 0, $pos);
     }
 
-    /**
-     * @return string
-     */
-    public function guessEntityName()
+    public function guessEntityName(): string
     {
         return sprintf('%s\\%s', $this->guessEntityNamespace(), $this->guessEntityShortName());
     }
@@ -110,10 +97,7 @@ class BundleGuesser
             : sprintf("%s\Repository", substr($ns, 0, $p));
     }
 
-    /**
-     * @return string
-     */
-    public function guessRepositoryShortName()
+    public function guessRepositoryShortName(): string
     {
         return sprintf(
             '%sRepository',
@@ -121,10 +105,7 @@ class BundleGuesser
         );
     }
 
-    /**
-     * @return string
-     */
-    public function guessRepositoryName()
+    public function guessRepositoryName(): string
     {
         return sprintf('%s\\%s', $this->guessRepositoryNamespace(), $this->guessRepositoryShortName());
     }
@@ -138,10 +119,7 @@ class BundleGuesser
             : sprintf("%s\Form\Type", substr($ns, 0, $p));
     }
 
-    /**
-     * @return string
-     */
-    public function guessFormTypeShortName()
+    public function guessFormTypeShortName(): string
     {
         return sprintf(
             '%sFormType',
@@ -149,10 +127,7 @@ class BundleGuesser
         );
     }
 
-    /**
-     * @return string
-     */
-    public function guessFormTypeName()
+    public function guessFormTypeName(): string
     {
         return sprintf('%s\%s', $this->guessFormTypeNamespace(), $this->guessFormTypeShortName());
     }

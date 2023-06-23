@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Helper;
 
 use JMS\Serializer\SerializerInterface;
@@ -72,25 +74,8 @@ class PageHelper
     protected $pageCache;
 
     /**
-     * @var bool
-     */
-    protected $allowLocaleCookie;
-
-    /**
-     * @var bool
-     */
-    protected $singleLanguage;
-
-    /**
      * PageHelper constructor.
      *
-     * @param SerializerInterface          $serializer
-     * @param ManagerRegistry              $registry
-     * @param PageManagerInterface         $pageManager
-     * @param PageSnapshotManagerInterface $pageSnapshotManager
-     * @param ContentRouteManagerInterface $contentRouteManager
-     * @param DynamicRouter                $router
-     * @param PageCacheInterface            $pageCache
      * @param bool                         $allowLocaleCookie
      * @param bool                         $singleLanguage
      */
@@ -102,8 +87,8 @@ class PageHelper
         ContentRouteManagerInterface $contentRouteManager,
         DynamicRouter $router,
         PageCacheInterface $pageCache,
-        $allowLocaleCookie = true,
-        $singleLanguage = false
+        protected $allowLocaleCookie = true,
+        protected $singleLanguage = false
     ) {
         $this->serializer = $serializer;
         $this->registry = $registry;
@@ -113,8 +98,6 @@ class PageHelper
         $this->contentRouteManager = $contentRouteManager;
         $this->router = $router;
         $this->pageCache = $pageCache;
-        $this->allowLocaleCookie = $allowLocaleCookie;
-        $this->singleLanguage = $singleLanguage;
     }
 
     /**
@@ -124,7 +107,7 @@ class PageHelper
      */
     public static function getPageRoutePath($path)
     {
-        $pathArray = explode(PageInterface::PATH_SEPARATOR, $path);
+        $pathArray = explode(PageInterface::PATH_SEPARATOR, (string) $path);
 
         foreach ($pathArray as $key => $path) {
             $pathArray[$key] = preg_replace('/-(\d)+$/', '', $path);
@@ -142,13 +125,11 @@ class PageHelper
     /**
      * Set the variables to the given content type object.
      *
-     * @param PageInterface $object
      * @param $fieldName
      * @param $value
      * @param null $method
      *
      * @return mixed
-     *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public static function setFieldValue(PageInterface $object, $fieldName, $value, $method = null)
@@ -181,12 +162,10 @@ class PageHelper
     /**
      * Fetch the variables from the given content type object.
      *
-     * @param PageInterface $object
      * @param $fieldName
      * @param null $method
      *
      * @return mixed
-     *
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public static function getFieldValue(PageInterface $object, $fieldName, $method = null)
@@ -231,15 +210,13 @@ class PageHelper
      *
      * @return mixed
      */
-    public static function replaceSlugInPath($path, $id, $slug)
+    public static function replaceSlugInPath($path, $id, $slug): string|array|null
     {
-        return preg_replace('#(.+/)?.*(-'.$id.'/)#', '$1'.$slug.'$2', $path);
+        return preg_replace('#(.+/)?.*(-'.$id.'/)#', '$1'.$slug.'$2', (string) $path);
     }
 
     /**
      * Create a snapshot of a given page.
-     *
-     * @param PageInterface $page
      */
     public function makePageSnapshot(PageInterface $page)
     {
@@ -279,7 +256,7 @@ class PageHelper
             $this->pageCache->clean();
         }
 
-        $om = $this->registry->getManagerForClass(get_class($snapshotContentRoute));
+        $om = $this->registry->getManagerForClass($snapshotContentRoute::class);
         $om->persist($snapshotContentRoute);
         $om->flush();
     }
@@ -287,9 +264,7 @@ class PageHelper
     /**
      * Unserialize the PageSnapshot data into a page object.
      *
-     * @param PageSnapshotInterface $pageSnapshot
      * @param bool                  $unserializeTranslations
-     *
      * @return array|\JMS\Serializer\scalar|object
      */
     public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $unserializeTranslations = true)
@@ -297,7 +272,7 @@ class PageHelper
         $context = new PageSnapshotDeserializationContext();
         $context->setDeserializeTranslations($unserializeTranslations);
 
-        if(strpos($pageSnapshot->getResourceName(), 'Proxies\__CG__\\') !== false){
+        if(str_contains($pageSnapshot->getResourceName(), 'Proxies\__CG__\\')){
             $pageSnapshot->setResourceName(str_replace('Proxies\__CG__\\', '', $pageSnapshot->getResourceName()));
         }
 
@@ -307,9 +282,7 @@ class PageHelper
     /**
      * create a copy of a given page object in a given locale.
      *
-     * @param PageInterface $page
      * @param $locale
-     *
      * @return PageInterface
      */
     public function makeTranslationCopy(PageInterface $page, $locale)
@@ -362,7 +335,6 @@ class PageHelper
     /**
      * create a copy of a given page object.
      *
-     * @param PageInterface $page
      *
      * @return PageInterface
      */
@@ -420,7 +392,6 @@ class PageHelper
     /**
      * Fills the request object with the content route parameters if found.
      *
-     * @param Request $request
      *
      * @return Request
      */
@@ -453,7 +424,7 @@ class PageHelper
      */
     public function jsonPageIsActive($jsonString)
     {
-        $page = json_decode($jsonString, true);
+        $page = json_decode((string) $jsonString, true, 512, JSON_THROW_ON_ERROR);
 
         $now = new \DateTime();
 
@@ -478,8 +449,6 @@ class PageHelper
     }
 
     /**
-     * @param bool $allowLocaleCookie
-     *
      * @return PageHelper
      */
     public function setAllowLocaleCookie(bool $allowLocaleCookie)
@@ -498,8 +467,6 @@ class PageHelper
     }
 
     /**
-     * @param bool $singleLanguage
-     *
      * @return PageHelper
      */
     public function setSingleLanguage(bool $singleLanguage)

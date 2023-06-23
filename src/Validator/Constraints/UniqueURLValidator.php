@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
 use Gedmo\Sluggable\Util\Urlizer;
@@ -33,9 +35,6 @@ class UniqueURLValidator extends ConstraintValidator
      */
     protected $pageManager;
 
-    /**
-     * @param PageManagerInterface $pageManager
-     */
     public function __construct(PageManagerInterface $pageManager)
     {
         $this->pageManager = $pageManager;
@@ -44,7 +43,7 @@ class UniqueURLValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $url = Urlizer::urlize($value->getUrl());
         $pages = $this->pageManager->findBy(['url' => $url, 'parent' => $value->getParent(), 'locale' => $value->getLocale()]);
@@ -62,11 +61,11 @@ class UniqueURLValidator extends ConstraintValidator
 
 
 
-                    return false;
+                    return;
                 }
             }
         }
 
-        return true;
+        return;
     }
 }

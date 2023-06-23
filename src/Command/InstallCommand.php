@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+declare(strict_types=1);
 namespace Networking\InitCmsBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -25,7 +25,7 @@ class InstallCommand extends Command
     /**
      * configuration for the command.
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addArgument('username', InputArgument::REQUIRED, 'username of the to be created super user')
@@ -51,10 +51,9 @@ class InstallCommand extends Command
     /**
      * @param $input
      * @param $output
-     * @return int
      * @throws \Exception
      */
-    private function setupData(InputInterface $input, OutputInterface $output)
+    private function setupData(InputInterface $input, OutputInterface $output): int
     {
         $command = $this->getApplication()->find('networking:initcms:data-setup');
         $arguments = [
@@ -70,12 +69,9 @@ class InstallCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
      * @throws \Exception
      */
-    private function createAdminUser(InputInterface $input, OutputInterface $output)
+    private function createAdminUser(InputInterface $input, OutputInterface $output): int
     {
         $arguments = [];
 

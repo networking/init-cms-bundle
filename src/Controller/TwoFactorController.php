@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\GoogleAuthenticator\Helper;
@@ -14,14 +16,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class TwoFactorController extends AbstractController
 {
 
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
-    public function __construct(UserManagerInterface $userManager)
+    public function __construct(private readonly UserManagerInterface $userManager)
     {
-        $this->userManager = $userManager;
     }
 
 
@@ -29,7 +25,7 @@ class TwoFactorController extends AbstractController
     {
         try{
             $helper= $this->container->get('networking_init_cms.google.authenticator.helper');
-        }catch (ServiceNotFoundException $e){
+        }catch (ServiceNotFoundException){
             return new RedirectResponse($this->generateUrl('sonata_admin_dashboard'));
         }
 

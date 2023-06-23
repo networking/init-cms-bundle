@@ -1,139 +1,76 @@
 <?php
 /**
- * This file is part of the init_cms_sandbox package.
+ * This file is part of the Networking package.
  *
  * (c) net working AG <info@networking.ch>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sonata\MediaBundle\Model\MediaInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Class PageInterface.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface, \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
+interface PageInterface
+    extends \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
+            \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
 {
-    const PATH_SEPARATOR = '/';
+    public const PATH_SEPARATOR = '/';
 
-    const VISIBILITY_PUBLIC = 'public';
+    public const VISIBILITY_PUBLIC = 'public';
 
-    const VISIBILITY_PROTECTED = 'protected';
+    public const VISIBILITY_PROTECTED = 'protected';
+
+    public static function getStatusList(): array;
+
+    public static function getVisibilityList(): array;
+
+    public function setUpdatedAt(): self;
 
     /**
-     * Set updatedAt.
-     *
-     * @return $this
-     */
-    public function setUpdatedAt();
-
-    /**
-     * Get id.
-     *
-     * @return int
+     * @return int|string|null
      */
     public function getId();
 
-    /**
-     * Set createdAt.
-     *
-     * @param \Datetime $createdAt
-     *
-     * @return $this
-     */
-    public function setCreatedAt($createdAt);
+    public function setCreatedAt(\DateTimeInterface $createdAt): self;
 
-    /**
-     * Get createdAt.
-     *
-     * @return \Datetime
-     */
-    public function getCreatedAt();
+    public function getCreatedAt(): ?\DateTimeInterface;
 
-    /**
-     * Get updatedAt.
-     *
-     * @return \Datetime
-     */
-    public function getUpdatedAt();
+    public function getUpdatedAt(): ?\DateTimeInterface;
 
-    /**
-     * @return string
-     */
-    public function getTitle();
+    public function getTitle(): ?string;
 
-    /**
-     * Set pageName.
-     *
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function setPageName($title);
+    public function setPageName(?string $title): self;
 
-    /**
-     * Get pageName.
-     *
-     * @return string
-     */
-    public function getPageName();
+    public function getPageName(): ?string;
 
-    /**
-     * Set metaTitle.
-     *
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function setMetaTitle($title);
+    public function setMetaTitle(?string $title): self;
 
-    /**
-     * Get metaTitle.
-     *
-     * @return string
-     */
-    public function getMetaTitle();
+    public function getMetaTitle(): ?string;
 
-    /**
-     * @param $path
-     */
-    public function setPath($path);
+    public function setPath(?string $path): self;
 
-    /**
-     * @return string
-     */
-    public function getPath();
+    public function getPath(): ?string;
 
-    /**
-     * @return mixed
-     */
-    public function getLevel();
+    public function getLevel(): ?int;
 
-    /**
-     * @param $metaKeyword
-     */
-    public function setMetaKeyword($metaKeyword);
+    public function setMetaKeyword(?string $metaKeyword): void;
 
-    /**
-     * @return string
-     */
-    public function getMetaKeyword();
+    public function getMetaKeyword(): ?string;
 
-    /**
-     * @param $metaDescription
-     */
-    public function setMetaDescription($metaDescription);
+    public function setMetaDescription(?string $metaDescription): void;
 
-    /**
-     * @return string
-     */
-    public function getMetaDescription();
+    public function getMetaDescription(): ?string;
 
     /**
      * @param PageInterface $parent
@@ -142,483 +79,180 @@ interface PageInterface extends \Symfony\Cmf\Component\Routing\RouteReferrersRea
      */
     public function setParent(PageInterface $parent = null);
 
-    /**
-     * @param $level
-     */
-    public function getParent($level = -1);
-
-    /**
-     * @param PageInterface $alias
-     */
-    public function setAlias(PageInterface $alias = null);
-
-    /**
-     * @return PageInterface
-     */
-    public function getAlias();
+    public function getParent(int $level = -1): PageInterface|int|null;
 
-    /**
-     * @param array $parents
-     *
-     * @return $this
-     */
-    public function setParents(array $parents);
-
-    /**
-     * @return array
-     */
-    public function getParents();
+    public function setAlias(?PageInterface $alias);
 
-    /**
-     * @param PageInterface $children
-     *
-     * @return $this
-     */
-    public function addChildren(PageInterface $children);
+    public function getAlias(): ?PageInterface;
 
-    /**
-     * @return mixed
-     */
-    public function getChildren();
+    public function setParents(array $parents): self;
 
     /**
-     * @param $children
-     *
-     * @return $this
+     * @return Collection<int, self>
      */
-    public function setChildren($children);
+    public function getParents(): array;
 
-    /**
-     * @param array $children
-     *
-     * @return array
-     */
-    public function getAllChildren(&$children = []);
+    public function addChildren(PageInterface $children): self;
 
     /**
-     * @param $children
-     *
-     * @return $this
+     * @return Collection<int, self>
      */
-    public function setAllChildren($children);
+    public function getChildren(): Collection|array;
 
-    /**
-     * Set active.
-     *
-     * @param string $status
-     *
-     * @return $this
-     */
-    public function setStatus($status);
+    public function setChildren(array $children): self;
 
-    /**
-     * Get status.
-     *
-     * @return string
-     */
-    public function getStatus();
+    public function getAllChildren(array &$children = []): array;
 
-    /**
-     * Set page visibility.
-     *
-     * @param string $visibility
-     *
-     * @return $this
-     */
-    public function setVisibility($visibility);
+    public function setAllChildren(array $children): self;
 
-    /**
-     * Get page visibility.
-     *
-     * @return string
-     */
-    public function getVisibility();
+    public function setStatus(?string $status): self;
 
-    /**
-     * @return bool
-     */
-    public function isDraft();
+    public function getStatus(): string;
 
-    /**
-     * @return bool
-     */
-    public function isReview();
+    public function setVisibility(string $visibility): self;
 
-    /**
-     * @return bool
-     */
-    public function isPublished();
+    public function getVisibility(): string;
 
-    /**
-     * @return bool
-     */
-    public function isOffline();
+    public function isDraft(): bool;
 
-    /**
-     * @return bool
-     */
-    public function isActive();
+    public function isReview(): bool;
 
-    /**
-     * Set activeTo.
-     *
-     * @param  $activeTo
-     *
-     * @return $this
-     */
-    public function setActiveTo($activeTo);
+    public function isPublished(): bool;
 
-    /**
-     * Get activeTo.
-     *
-     * @return string
-     */
-    public function getActiveTo();
+    public function isOffline(): bool;
 
-    /**
-     * Set activeFrom.
-     *
-     * @param  $activeFrom
-     *
-     * @return $this
-     */
-    public function setActiveFrom($activeFrom);
+    public function isActive(): bool;
 
-    /**
-     * Get activeFrom.
-     *
-     * @return string
-     */
-    public function getActiveFrom();
+    public function setActiveTo(?\DateTimeInterface $activeTo): self;
 
-    /**
-     * Add layout block.
-     *
-     * @param LayoutBlockInterface $layoutBlock
-     *
-     * @return $this
-     */
-    public function addLayoutBlock(LayoutBlockInterface $layoutBlock);
+    public function getActiveTo(): ?\DateTimeInterface;
 
-    /**
-     * remove content.
-     *
-     * @param LayoutBlockInterface $layoutBlock
-     *
-     * @return $this
-     */
-    public function removeLayoutBlock(LayoutBlockInterface $layoutBlock);
+    public function setActiveFrom(?\DateTimeInterface $activeFrom): self;
 
-    /**
-     * @param $layoutBlocks
-     *
-     * @return $this
-     */
-    public function setLayoutBlock($layoutBlocks);
+    public function getActiveFrom(): ?\DateTimeInterface;
 
-    public function orderLayoutBlocks();
+    public function addLayoutBlock(LayoutBlockInterface $layoutBlock): self;
 
-    /**
-     * Get menuItem.
-     *
-     * @param null $zone
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
-     */
-    public function getLayoutBlock($zone = null);
+    public function removeLayoutBlock(LayoutBlockInterface $layoutBlock): self;
 
-    /**
-     * Add menuItem.
-     *
-     * @param MenuItemInterface $menuItem
-     *
-     * @return $this
-     */
-    public function setMenuItem(MenuItemInterface $menuItem);
+    public function setLayoutBlock($layoutBlocks): self;
 
-    /**
-     * remove menuItem.
-     *
-     * @param MenuItemInterface $menuItem
-     *
-     * @return $this
-     */
-    public function removeMenuItem(MenuItemInterface $menuItem);
+    public function orderLayoutBlocks(): void;
 
-    /**
-     * Get menuItem.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMenuItem();
+    public function getLayoutBlock(?string $zone): Collection;
 
-    /**
-     * @param $rootId
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMenuItemByRoot($rootId);
+    public function setMenuItem(MenuItemInterface $menuItem): self;
 
-    /**
-     * @return string
-     */
-    public function __toString();
+    public function removeMenuItem(MenuItemInterface $menuItem): self;
 
-    /**
-     * @param $isHome
-     *
-     * @return $this
-     */
-    public function setIsHome($isHome);
+    public function getMenuItem(): Collection;
 
-    /**
-     * @return bool
-     */
-    public function getIsHome();
+    public function getMenuItemByRoot($rootId): Collection;
 
-    /**
-     * @return bool
-     */
-    public function isHome();
+    public function __toString(): string;
 
-    /**
-     * @param string $locale
-     *
-     * @return $this
-     */
-    public function setLocale($locale);
+    public function setIsHome(bool $isHome): self;
 
-    /**
-     * @return string
-     */
-    public function getLocale();
+    public function getIsHome(): bool;
 
-    /**
-     * @param array $originals
-     *
-     * @return $this
-     */
-    public function setOriginals(array $originals);
+    public function isHome(): bool;
 
-    /**
-     * @param PageInterface $page
-     *
-     * @return $this
-     */
-    public function setOriginal(PageInterface $page);
+    public function setLocale(?string $locale): self;
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOriginals();
+    public function getLocale(): ?string;
 
-    /**
-     * @param PageInterface $page
-     *
-     * @return bool
-     */
-    public function isDirectTranslation(PageInterface $page);
+    public function setOriginals(array $originals): self;
 
-    /**
-     * @param PageInterface $page
-     *
-     * @return mixed
-     */
-    public function getDirectTranslationFor(PageInterface $page);
+    public function setOriginal(PageInterface $page): self;
 
-    /**
-     * @param PageInterface $page
-     *
-     * @return $this
-     */
-    public function addTranslation(PageInterface $page);
+    public function getOriginals(): Collection|array;
 
-    /**
-     * @param PageInterface $page
-     *
-     * @return $this
-     */
-    public function removeTranslation(PageInterface $page);
+    public function isDirectTranslation(PageInterface $page): bool;
 
-    /**
-     * @param array|ArrayCollection  $translations
-     *
-     * @return $this
-     */
-    public function setTranslations($translations);
+    public function getDirectTranslationFor(PageInterface $page): ?PageInterface;
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getTranslations();
+    public function addTranslation(PageInterface $page): self;
 
-    /**
-     * @return array
-     */
-    public function getTranslatedLocales();
+    public function removeTranslation(PageInterface $page): self;
 
-    /**
-     * @return string
-     */
-    public function getAdminTitle();
+    public function setTranslations(array|Collection $translations): self;
 
     /**
-     * @param string $url
+     * @return Collection<int, PageInterface>
      */
-    public function setUrl($url);
+    public function getTranslations(): Collection|array;
 
-    /**
-     * @return string
-     */
-    public function getUrl();
+    public function getTranslatedLocales(): array;
 
-    /**
-     * @param ContentRouteInterface $contentRoute
-     *
-     * @return $this
-     */
-    public function setContentRoute(ContentRouteInterface $contentRoute);
+    public function getAdminTitle(): string;
 
-    /**
-     * @return ContentRouteInterface
-     */
-    public function getContentRoute();
+    public function setUrl(?string $url);
 
-    /**
-     * @param $snapshots
-     *
-     * @return $this
-     */
-    public function setSnapshots($snapshots);
+    public function getUrl(): ?string;
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection $snapshots
-     */
-    public function getSnapshots();
+    public function setContentRoute(ContentRouteInterface $contentRoute): self;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getRoute();
+    public function getContentRoute(): ContentRouteInterface;
 
-    /**
-     * @param $template
-     *
-     * @return $this
-     */
-    public function setTemplate($template);
+    public function setSnapshots($snapshots): self;
 
     /**
-     * @return string
+     * @return Collection<int, PageSnapshotInterface>
      */
-    public function getTemplate();
+    public function getSnapshots(): Collection;
 
-    /**
-     * @param $templateName
-     *
-     * @return $this
-     */
-    public function setTemplateName($templateName);
+    public function getRoute(): RouteObjectInterface;
 
-    /**
-     * @return string
-     */
-    public function getTemplateName();
+    public function setTemplate(string $template): self;
 
-    /**
-     * @return string
-     */
-    public function getFullPath();
+    public function getTemplate(): ?string;
 
-    /**
-     * @return string
-     */
-    public function getAliasFullPath();
+    public function setTemplateName(string $templateName): self;
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getAllTranslations();
+    public function getTemplateName(): ?string;
 
-    /**
-     * Recursively search for all possible translations of this page, either originals
-     * of this page, translations of this page or translations of the original of this page.
-     *
-     * @param array $translationsArray
-     *
-     * @return array
-     */
-    public function getRecursiveTranslations(&$translationsArray);
+    public function getFullPath(): ?string;
 
-    /**
-     * @return array
-     */
-    public static function getStatusList();
+    public function getAliasFullPath(): ?string;
 
     /**
-     * @return array
+     * @return Collection<PageInterface>
      */
-    public static function getVisibilityList();
+    public function getAllTranslations(): Collection;
 
-    /**
-     * @return bool
-     */
-    public function hasPublishedVersion();
+    public function buildAllTranslations(array &$translationsArray): void;
 
-    /**
-     * @return int
-     */
-    public function convertParentToInteger();
+    public function hasPublishedVersion(): bool;
 
-    /**
-     * @return int
-     */
-    public function convertAliasToInteger();
+    public function convertParentToInteger(): ?int;
 
-    /**
-     * @param $id
-     *
-     * @return $this|null
-     */
-    public function convertIntegerToPage($id);
+    public function convertAliasToInteger(): ?int;
 
     /**
-     * @return array
+     * @return array<int>
      */
-    public function convertParentsToArray();
+    public function convertParentsToArray(): array;
 
     /**
-     * @return array
+     * @return array<int>
      */
-    public function convertChildrenToIntegerArray();
+    public function convertChildrenToIntegerArray(): array;
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array<int>
      */
-    public function prepareMenuItemsForSerialization();
+    public function convertTranslationsToIntegerArray(): array;
 
     /**
-     * @return array
+     * @return array<int>
      */
-    public function convertTranslationsToIntegerArray();
+    public function convertOriginalsToIntegerArray(): array;
 
-    /**
-     * @return array
-     */
-    public function convertOriginalsToIntegerArray();
+    public function getStatusLabel(): string;
 
-    /**
-     * @return string
-     */
-    public function getStatusLabel();
+    public function setSocialMediaImage(?MediaInterface $socialMediaImage): self;
 
-    /**
-     * @return MediaInterface|null
-     */
-    public function getSocialMediaImage();
+    public function getSocialMediaImage(): ?MediaInterface;
 
-    /**
-     * @param PageInterface $publishedPage
-     */
-    public function restoreFromPublished(PageInterface $publishedPage);
+    public function restoreFromPublished(PageInterface $publishedPage): void;
 }

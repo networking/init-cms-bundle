@@ -20,21 +20,15 @@ use Sonata\MediaBundle\Thumbnail\ThumbnailInterface;
 class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface, GenerableThumbnailInterface
 {
     /**
-     * @var string
-     */
-    private $defaultFormat;
-
-    /**
      * @var ResizerInterface[]
      */
-    private $resizers = [];
+    private array $resizers = [];
 
     /**
      * @param string $defaultFormat
      */
-    public function __construct($defaultFormat)
+    public function __construct(private $defaultFormat)
     {
-        $this->defaultFormat = $defaultFormat;
     }
 
     /**
@@ -127,7 +121,7 @@ class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface
         }
         foreach ($provider->getFormats() as $format => $settings) {
 
-            if (substr($format, 0, \strlen($media->getContext())) === $media->getContext() ||
+            if (str_starts_with($format, $media->getContext()) ||
                 MediaProviderInterface::FORMAT_ADMIN === $format) {
                 $resizer = (isset($settings['resizer']) && ($settings['resizer'])) ?
                     $this->getResizer($settings['resizer']) :

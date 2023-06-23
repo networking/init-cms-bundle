@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Reader;
 
 use Networking\InitCmsBundle\AnnotationReader\AnnotationReader;
@@ -115,7 +117,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
             $fieldDescriptionOptions = $annotation->getFieldDescriptionOptions();
             $routeName = $annotation->getRouteName();
             if ($routeName) {
-                $fieldDescriptionOptions['route'] = array('name' => $routeName);
+                $fieldDescriptionOptions['route'] = ['name' => $routeName];
             }
 
             $listMapper->$method(
@@ -125,7 +127,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
             );
         }
 
-        $this->invokeCallbacks($entity, $this->getListMapperCallbacks($entity), array($listMapper));
+        $this->invokeCallbacks($entity, $this->getListMapperCallbacks($entity), [$listMapper]);
 
         $reorder = $this->getListReorderAnnotation($entity);
         if ($reorder) {
@@ -173,7 +175,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
             }
         }
 
-        $this->invokeCallbacks($entity, $this->getFormMapperCallbacks($entity), array($formMapper));
+        $this->invokeCallbacks($entity, $this->getFormMapperCallbacks($entity), [$formMapper]);
 
         foreach ($this->getFormReorderAnnotations($entity) as $formReorderAnnotation) {
             $reorderWith = $formReorderAnnotation->getWith() ?: $formMapper->getAdmin()->getLabel();
@@ -213,7 +215,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
             }
         }
 
-        $this->invokeCallbacks($entity, $this->getShowMapperCallbacks($entity), array($showMapper));
+        $this->invokeCallbacks($entity, $this->getShowMapperCallbacks($entity), [$showMapper]);
 
         foreach ($this->getShowReorderAnnotations($entity) as $showReorderAnnotation) {
             $reorderWith = $showReorderAnnotation->getWith() ?: $showMapper->getAdmin()->getLabel();
@@ -235,12 +237,11 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
                 $annotation->getName() ?: $propertyName,
                 $annotation->getType(),
                 $annotation->getFilterOptions(),
-                $annotation->getFieldType(),
-                $annotation->getFieldOptions()
+                $annotation->getFieldType()
             );
         }
 
-        $this->invokeCallbacks($entity, $this->getDatagridMapperCallbacks($entity), array($datagridMapper));
+        $this->invokeCallbacks($entity, $this->getDatagridMapperCallbacks($entity), [$datagridMapper]);
     }
 
     /**
@@ -297,7 +298,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         $annotations = $this->getAnnotations($entity);
         $scopeAnnotations = $annotations[self::SCOPE_CLASS];
         if (!isset($scopeAnnotations[self::ANNOTATION_TYPE_ADMIN_FORM_REORDER])) {
-            return array();
+            return [];
         }
 
         return $scopeAnnotations[self::ANNOTATION_TYPE_ADMIN_FORM_REORDER];
@@ -312,22 +313,18 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         $annotations = $this->getAnnotations($entity);
         $scopeAnnotations = $annotations[self::SCOPE_CLASS];
         if (!isset($scopeAnnotations[self::ANNOTATION_TYPE_ADMIN_SHOW_REORDER])) {
-            return array();
+            return [];
         }
 
         return $scopeAnnotations[self::ANNOTATION_TYPE_ADMIN_SHOW_REORDER];
     }
 
     /**
-     * @param array $foundAnnotations
-     * @param array $excludedAnnotations
-     * @param array $properties
-     * @param mixed $prototypeAnnotation
      * @return array
      */
-    protected function collectAllAnnotations(array $foundAnnotations, array $excludedAnnotations, array $properties, $prototypeAnnotation)
+    protected function collectAllAnnotations(array $foundAnnotations, array $excludedAnnotations, array $properties, mixed $prototypeAnnotation)
     {
-        $annotations = array();
+        $annotations = [];
 
         foreach ($properties as $reflectionProperty) {
             $propertyName = $reflectionProperty->getName();
@@ -348,7 +345,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
      * @param string $className
      * @return \ReflectionProperty[]
      */
-    protected function getReflectionProperties($className)
+    protected function getReflectionProperties($className): array
     {
         $reflectionClass = new \ReflectionClass($className);
         return $reflectionClass->getProperties();
@@ -356,8 +353,6 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
 
     /**
      * @param string $entity
-     * @param array $callbacks
-     * @param array $args
      */
     protected function invokeCallbacks($entity, array $callbacks, array $args)
     {

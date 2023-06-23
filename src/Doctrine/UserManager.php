@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Doctrine;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,18 +26,6 @@ use Sonata\UserBundle\Model\UserManagerInterface;
  */
 abstract class UserManager extends BaseEntityManager implements UserManagerInterface
 {
-    private CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater;
-
-    /**
-     * TODO: Simplify this once support for Symfony 4.4 is dropped.
-     *
-     * @psalm-suppress UndefinedDocblockClass
-     * @phpstan-ignore-next-line
-     *
-     * @var UserPasswordEncoderInterface|UserPasswordHasherInterface
-     */
-    private object $userPasswordHasher;
-
     /**
      * TODO: Simplify this once support for Symfony 4.4 is dropped.
      *
@@ -48,14 +38,11 @@ abstract class UserManager extends BaseEntityManager implements UserManagerInter
     public function __construct(
         string $class,
         ManagerRegistry $registry,
-        CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater,
+        private readonly CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater,
         // @phpstan-ignore-next-line
-        object $userPasswordHasher
+        private readonly object $userPasswordHasher
     ) {
         parent::__construct($class, $registry);
-
-        $this->canonicalFieldsUpdater = $canonicalFieldsUpdater;
-        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     /**

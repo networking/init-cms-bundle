@@ -34,8 +34,6 @@ class YouTubeProvider extends BaseVideoProvider
 
 
 
-    private bool $html5;
-
     public function __construct(
         string $name,
         Filesystem $filesystem,
@@ -45,11 +43,9 @@ class YouTubeProvider extends BaseVideoProvider
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
         ?MetadataBuilderInterface $metadata = null,
-        bool $html5 = false
+        private readonly bool $html5 = false
     ) {
         parent::__construct($name, $filesystem, $cdn, $pathGenerator, $thumbnail, $client, $requestFactory, $metadata);
-
-        $this->html5 = $html5;
     }
 
     public function getProviderMetadata(): MetadataInterface
@@ -211,7 +207,7 @@ class YouTubeProvider extends BaseVideoProvider
 
         try {
             $metadata = $this->getMetadata($media, $url);
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             $media->setEnabled(false);
             $media->setProviderStatus(MediaInterface::STATUS_ERROR);
 
@@ -267,13 +263,13 @@ class YouTubeProvider extends BaseVideoProvider
             return;
         }
 
-        if (11 === \strlen($media->getBinaryContent())) {
+        if (11 === \strlen((string) $media->getBinaryContent())) {
             return;
         }
 
         $isMatching = preg_match(
             '{^(?:https?://)?(?:www\.)?(?:m\.)?(?:youtu\.be/|youtube\.com/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)/))(?<video_id>[^\#\?&\'>]+)}',
-            $media->getBinaryContent(),
+            (string) $media->getBinaryContent(),
             $matches
         );
 

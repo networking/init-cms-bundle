@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin;
@@ -62,7 +64,7 @@ class LayoutBlockController extends CRUDController
     /**
      * @return Response
      * @throws \Twig\Error\RuntimeError
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function createAction(Request $request): Response
     {
@@ -161,7 +163,7 @@ class LayoutBlockController extends CRUDController
      * @param null $id
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function editAction(Request $request, $id = null): Response
     {
@@ -214,10 +216,9 @@ class LayoutBlockController extends CRUDController
     }
 
     /**
-     * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function reloadAction(Request $request)
     {
@@ -239,7 +240,7 @@ class LayoutBlockController extends CRUDController
      *
      * @return mixed
      *
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     protected function getLayoutBlockFormWidget(
         Request $request,
@@ -292,8 +293,6 @@ class LayoutBlockController extends CRUDController
     }
 
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function updateLayoutBlockSortAction(Request $request)
@@ -311,7 +310,7 @@ class LayoutBlockController extends CRUDController
             if (array_key_exists('layoutBlocks', $zone) && is_array($zone['layoutBlocks'])) {
                 foreach ($zone['layoutBlocks'] as $key => $layoutBlockStr) {
                     $sort = ++$key;
-                    $blockId = str_replace('layoutBlock_', '', $layoutBlockStr);
+                    $blockId = str_replace('layoutBlock_', '', (string) $layoutBlockStr);
 
                     if ($blockId) {
                         try {
@@ -353,11 +352,9 @@ class LayoutBlockController extends CRUDController
     }
 
     /**
-     * @param Request $request
      *
      * @return JsonResponse
-     *
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function deleteAjaxAction(Request $request)
     {
@@ -385,14 +382,13 @@ class LayoutBlockController extends CRUDController
     }
 
     /**
-     * @param Request $request
      *
      * @return JsonResponse
-     *
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function toggleActiveAction(Request $request)
     {
+        $layoutBlock = null;
         $id = $request->get('id');
         $pageId = $request->get('pageId');
         $uniqId = $request->get('uniqId');

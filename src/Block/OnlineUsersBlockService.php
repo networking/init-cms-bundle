@@ -61,7 +61,7 @@ class OnlineUsersBlockService extends AbstractBlockService
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Online Users Block';
     }

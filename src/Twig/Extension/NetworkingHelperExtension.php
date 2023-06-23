@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Doctrine\ORM\EntityRepository;
@@ -106,15 +108,6 @@ class NetworkingHelperExtension extends AbstractExtension
      * @var ConfigManager
      */
     protected $ckEditorConfigManager;
-    /**
-     * @var array
-     */
-    protected $templates;
-
-    /**
-     * @var array
-     */
-    protected $contentTypes;
 
     /**
      * @var string
@@ -124,15 +117,6 @@ class NetworkingHelperExtension extends AbstractExtension
     /**
      * NetworkingHelperExtension constructor.
      *
-     * @param KernelInterface      $kernel
-     * @param Environment      $templating
-     * @param RequestStack         $requestStack
-     * @param ManagerRegistry      $doctrine
-     * @param TranslatorInterface  $translator
-     * @param LayoutBlockAdmin     $layoutBlockAdmin
-     * @param SerializerInterface  $serializer
-     * @param PageManagerInterface $pageManager
-     * @param CKEditorConfiguration        $ckEditorConfigManager
      * @param array                $templates
      * @param array                $contentTypes
      */
@@ -146,8 +130,8 @@ class NetworkingHelperExtension extends AbstractExtension
         SerializerInterface $serializer,
         PageManagerInterface $pageManager,
         CKEditorConfiguration $ckEditorConfigManager,
-        $templates = [],
-        $contentTypes = []
+        protected $templates = [],
+        protected $contentTypes = []
 
     ) {
         $this->kernel = $kernel;
@@ -159,8 +143,6 @@ class NetworkingHelperExtension extends AbstractExtension
         $this->serializer = $serializer;
         $this->pageManager = $pageManager;
         $this->ckEditorConfigManager = $ckEditorConfigManager;
-        $this->templates = $templates;
-        $this->contentTypes = $contentTypes;
     }
 
     /**
@@ -177,15 +159,15 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @return array|\Twig_Filter[]
+     * @return array|\Twig\TwigFilter[]
      */
     public function getFilters()
     {
         $filters = [
-            new TwigFilter('truncate', [$this, 'truncate'], ['needs_environment' => true]),
-            new TwigFilter('excerpt', [$this, 'excerpt'], ['needs_environment' => true]),
-            new TwigFilter('highlight', [$this, 'highlight']),
-            new TwigFilter('base64_encode', [$this, 'base64Encode']),
+            new TwigFilter('truncate', $this->truncate(...), ['needs_environment' => true]),
+            new TwigFilter('excerpt', $this->excerpt(...), ['needs_environment' => true]),
+            new TwigFilter('highlight', $this->highlight(...)),
+            new TwigFilter('base64_encode', $this->base64Encode(...)),
         ];
 
         return $filters;
@@ -199,32 +181,31 @@ class NetworkingHelperExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('render_initcms_block', [$this, 'renderInitCmsBlock'], ['is_safe' => ['html']]),
-            new TwigFunction('get_initcms_template_zones', [$this, 'getInitCmsTemplateZones'], ['is_safe' => ['html']]),
-            new TwigFunction('render_initcms_field_as_string', [$this, 'renderInitcmsFieldAsString'], ['is_safe' => ['html']]),
-            new TwigFunction('get_form_field_zone', [$this, 'getFormFieldZone'], ['is_safe' => ['html']]),
-            new TwigFunction('get_sub_form_by_zone', [$this, 'getSubFormsByZone'], ['is_safe' => ['html']]),
-            new TwigFunction('get_content_type_options', [$this, 'getContentTypeOptions'], ['is_safe' => ['html']]),
-            new TwigFunction('get_initcms_admin_icon_path', [$this, 'getInitcmsAdminIconPath'], ['is_safe' => ['html']]),
-            new TwigFunction('get_current_admin_locale', [$this, 'getCurrentAdminLocale'], ['is_safe' => ['html']]),
-            new TwigFunction('render_initcms_admin_block', [$this, 'renderInitcmsAdminBlock'], ['is_safe' => ['html']]),
-            new TwigFunction('render_content_type_name', [$this, 'renderContentTypeName'], ['is_safe' => ['html']]),
-            new TwigFunction('render_admin_subnav', [$this, 'renderAdminSubNav'], ['is_safe' => ['html']]),
-            new TwigFunction('is_admin_active', [$this, 'isAdminActive'], ['is_safe' => ['html']]),
-            new TwigFunction('is_admin_group_active', [$this, 'isAdminGroupActive'], ['is_safe' => ['html']]),
-            new TwigFunction('get_initcms_page_url', [$this, 'getPageUrl'], ['is_safe' => ['html']]),
-            new TwigFunction('get_media_by_id', [$this, 'getMediaById'], ['is_safe' => ['html']]),
-            new TwigFunction('ckeditor_is_rendered', [$this, 'ckeditorIsRendered']),
-            new TwigFunction('content_css', [$this, 'getContentCss']),
-            new TwigFunction('get_file_icon', [$this, 'getFileIcon']),
-            new TwigFunction('crop_middle', [$this, 'cropMiddle']),
-            new TwigFunction('human_readable_filesize', [$this, 'getHumanReadableSize']),
+            new TwigFunction('render_initcms_block', $this->renderInitCmsBlock(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_initcms_template_zones', $this->getInitCmsTemplateZones(...), ['is_safe' => ['html']]),
+            new TwigFunction('render_initcms_field_as_string', $this->renderInitcmsFieldAsString(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_form_field_zone', $this->getFormFieldZone(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_sub_form_by_zone', $this->getSubFormsByZone(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_content_type_options', $this->getContentTypeOptions(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_initcms_admin_icon_path', $this->getInitcmsAdminIconPath(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_current_admin_locale', $this->getCurrentAdminLocale(...), ['is_safe' => ['html']]),
+            new TwigFunction('render_initcms_admin_block', $this->renderInitcmsAdminBlock(...), ['is_safe' => ['html']]),
+            new TwigFunction('render_content_type_name', $this->renderContentTypeName(...), ['is_safe' => ['html']]),
+            new TwigFunction('render_admin_subnav', $this->renderAdminSubNav(...), ['is_safe' => ['html']]),
+            new TwigFunction('is_admin_active', $this->isAdminActive(...), ['is_safe' => ['html']]),
+            new TwigFunction('is_admin_group_active', $this->isAdminGroupActive(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_initcms_page_url', $this->getPageUrl(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_media_by_id', $this->getMediaById(...), ['is_safe' => ['html']]),
+            new TwigFunction('ckeditor_is_rendered', $this->ckeditorIsRendered(...)),
+            new TwigFunction('content_css', $this->getContentCss(...)),
+            new TwigFunction('get_file_icon', $this->getFileIcon(...)),
+            new TwigFunction('crop_middle', $this->cropMiddle(...)),
+            new TwigFunction('human_readable_filesize', $this->getHumanReadableSize(...)),
         ];
     }
 
     /**
      * @param $template
-     * @param LayoutBlockInterface $layoutBlock
      * @param array $params
      * @return string
      * @throws \Twig\Error\LoaderError
@@ -259,13 +240,11 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param LayoutBlockInterface $layoutBlock
-     * @return bool|string
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock)
+    public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock): bool|string
     {
         if ($layoutBlock->getObjectId()) {
             // Draft View
@@ -287,8 +266,6 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param LayoutBlockInterface $layoutBlock
-     *
      * @return mixed
      */
     public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
@@ -304,19 +281,17 @@ class NetworkingHelperExtension extends AbstractExtension
         if (method_exists($contentItem, 'getContentTypeName')) {
             $name = $contentItem->getContentTypeName();
         } else {
-            $name = get_class($contentItem);
+            $name = $contentItem::class;
         }
 
         return $this->translator->trans($name);
     }
 
     /**
-     * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
      * @param string                                   $adminCode
      *
-     * @return bool|\Knp\Menu\ItemInterface
      */
-    public function renderAdminSubNav(AdminInterface $admin, $adminCode = '')
+    public function renderAdminSubNav(AdminInterface $admin, $adminCode = ''): bool|\Knp\Menu\ItemInterface
     {
         $menu = false;
 
@@ -347,9 +322,7 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
      * @param string                                   $adminCode
-     *
      * @return bool
      */
     public function isAdminActive(AdminInterface $admin, $adminCode = '')
@@ -373,9 +346,7 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param array  $group
      * @param string $adminCode
-     *
      * @return bool
      */
     public function isAdminGroupActive(array $group, $adminCode = '')
@@ -410,19 +381,16 @@ class NetworkingHelperExtension extends AbstractExtension
         $zones = $this->templates[$template]['zones'];
 
         foreach ($zones as $key => $zone) {
-            $temp = array_map([$this, 'jsString'], $zone['restricted_types']);
+            $temp = array_map($this->jsString(...), $zone['restricted_types']);
             $zones[$key]['restricted_types'] = '['.implode(',', $temp).']';
 
-            $zones[$key]['restricted_types'] = json_encode($zone['restricted_types']);
+            $zones[$key]['restricted_types'] = json_encode($zone['restricted_types'], JSON_THROW_ON_ERROR);
         }
 
         return $zones;
     }
 
-    /**
-     * @return int|string|null
-     */
-    public function getCurrentTemplate()
+    public function getCurrentTemplate(): int|string|null
     {
         if(!$this->currentTemplate){
             $request = $this->requestStack->getCurrentRequest();
@@ -456,12 +424,10 @@ class NetworkingHelperExtension extends AbstractExtension
     /**
      * Guess which icon should represent an entity admin.
      *
-     * @param AdminInterface $admin
      * @param string         $size
      * @param bool           $active
      *
      * @return string
-     *
      * @todo This is a bit of a hack. Need to provide a better way of providing admin icons
      */
     public function getInitcmsAdminIconPath(
@@ -517,7 +483,7 @@ class NetworkingHelperExtension extends AbstractExtension
     public static function slugify($text)
     {
         // replace non letter or digits by -
-        $text = preg_replace('~[^\\pL\d]+~u', '_', $text);
+        $text = preg_replace('~[^\\pL\d]+~u', '_', (string) $text);
 
         // trim
         $text = trim($text, '_');
@@ -531,7 +497,7 @@ class NetworkingHelperExtension extends AbstractExtension
         $text = strtolower($text);
 
         // remove unwanted characters
-        $text = preg_replace('~[^-\w]+~', '', $text);
+        $text = preg_replace('~[^\-\w]+~', '', $text);
 
         if (empty($text)) {
             return 'n-a';
@@ -543,7 +509,6 @@ class NetworkingHelperExtension extends AbstractExtension
     /**
      * returns the locale of the current admin user.
      *
-     * @param AdminInterface $admin
      *
      * @return mixed|string
      */
@@ -572,7 +537,7 @@ class NetworkingHelperExtension extends AbstractExtension
             }
 
             if(is_array($data) && array_key_exists('value', $data)){
-                $data['value'] = trim($data['value']);
+                $data['value'] = trim((string) $data['value']);
 
                 if (strlen($data['value']) > 0) {
                     $locale = $data['value'];
@@ -629,15 +594,13 @@ class NetworkingHelperExtension extends AbstractExtension
      *
      * @return mixed
      */
-    public static function camelize($str, $firstToCapital = false)
+    public static function camelize($str, $firstToCapital = false): string|array|null
     {
         if ($firstToCapital) {
-            $str[0] = strtoupper($str[0]);
+            $str[0] = strtoupper((string) $str[0]);
         }
 
-        return preg_replace_callback('/_([a-z])/', function ($s) {
-            return strtoupper($s[1]);
-        }, $str);
+        return preg_replace_callback('/_([a-z])/', fn($s): string => strtoupper((string) $s[1]), (string) $str);
     }
 
     /**
@@ -650,10 +613,8 @@ class NetworkingHelperExtension extends AbstractExtension
 
     /**
      * @param $class
-     *
-     * @return string
      */
-    public function networking_init_cms_resource_bundle($class)
+    public function networking_init_cms_resource_bundle($class): string
     {
         return strtolower(str_replace('bundle', '', $this->getBundleName($class)));
     }
@@ -665,7 +626,7 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function getBundleName($class)
     {
-        $reflector = new \ReflectionClass(get_class($class));
+        $reflector = new \ReflectionClass($class::class);
 
         return ($p1 = strpos($ns = $reflector->getNamespaceName(), '\\')) === false ? $ns :
             substr($ns, 0, ($p2 = strpos($ns, '\\', $p1 + 1)) === false ? strlen($ns) : $p2);
@@ -673,12 +634,10 @@ class NetworkingHelperExtension extends AbstractExtension
 
     /**
      * @param $class
-     *
-     * @return string
      */
-    public function getShortName($class)
+    public function getShortName($class): string
     {
-        $reflector = new \ReflectionClass(get_class($class));
+        $reflector = new \ReflectionClass($class::class);
 
         return $reflector->getShortName();
     }
@@ -688,7 +647,7 @@ class NetworkingHelperExtension extends AbstractExtension
      *
      * @return mixed
      */
-    public function getBundleShortName($class)
+    public function getBundleShortName($class): string
     {
         return str_replace('\\', '', $this->getBundleName($class));
     }
@@ -715,8 +674,6 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param FormView $formView
-     *
      * @return mixed
      */
     public function getFormFieldZone(FormView $formView)
@@ -753,22 +710,18 @@ class NetworkingHelperExtension extends AbstractExtension
 
     /**
      * @param $value
-     *
-     * @return string
      */
-    public function base64Encode($value)
+    public function base64Encode($value): string
     {
-        return base64_encode($value);
+        return base64_encode((string) $value);
     }
 
     /**
      * @param $template
      * @param $object
-     * @param FormView $formView
      * @param null     $translationDomain
      *
      * @return string
-     *
      * @throws \Twig\Error\Error
      */
     public function renderInitcmsFieldAsString(
@@ -887,10 +840,7 @@ class NetworkingHelperExtension extends AbstractExtension
         $this->collectedHtml[] = $data;
     }
 
-    /**
-     * @return string
-     */
-    public function render()
+    public function render(): string
     {
         return implode("\n    ", $this->collectedHtml)."\n";
     }
@@ -899,18 +849,16 @@ class NetworkingHelperExtension extends AbstractExtension
      * Extracts an excerpt from the text surrounding the phrase with a number of characters on each side
      * determined by radius.
      *
-     * @param Environment $env
      * @param string            $text     String to search the phrase in
      * @param string            $phrase   Phrase that will be searched for
      * @param int               $radius   The amount of characters that will be returned on each side of the founded phrase
      * @param string            $ellipsis Ending that will be appended
-     *
      * @return string
      */
     public function excerpt(Environment $env, $text, $phrase, $radius = 100, $ellipsis = '...')
     {
         if (empty($text) || empty($phrase)) {
-            return $this->truncate($env, $text, $radius * 2, $ellipsis);
+            return static::truncate($env, $text, $radius * 2, $ellipsis);
         }
 
         $text = html_entity_decode($text, null, $env->getCharset());
@@ -948,13 +896,11 @@ class NetworkingHelperExtension extends AbstractExtension
      * Cuts a string to the length of $length and replaces the last characters
      * with the ellipsis if the text is longer than length.
      *
-     * @param \Twig_Environment $env
      * @param string            $text     String to truncate
      * @param int               $length   Length of returned string, including ellipsis
      * @param string            $ellipsis Will be used as Ending and appended to the trimmed string (`ending` is deprecated)
      * @param bool              $exact    If false, $text will not be cut mid-word
      * @param bool              $html     If true, HTML tags would be handled correctly
-     *
      * @return string
      */
     public static function truncate(
@@ -1046,7 +992,7 @@ class NetworkingHelperExtension extends AbstractExtension
                 if ($lastOpenTag > $lastCloseTag) {
                     preg_match_all('/<[\w]+[^>]*>/s', $truncate, $lastTagMatches);
                     $lastTag = array_pop($lastTagMatches[0]);
-                    $spacepos = mb_strrpos($truncate, $lastTag) + mb_strlen($lastTag);
+                    $spacepos = mb_strrpos($truncate, (string) $lastTag) + mb_strlen((string) $lastTag);
                 }
                 $bits = mb_substr($truncate, $spacepos);
                 preg_match_all('/<\/([a-z]+)>/', $bits, $droppedTags, PREG_SET_ORDER);
@@ -1126,11 +1072,9 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param PageInterface $page
-     *
      * @return mixed
      */
-    public function getPageUrl(PageInterface $page)
+    public function getPageUrl(PageInterface $page): string
     {
         return $this->requestStack->getCurrentRequest()->getBaseUrl().$page->getFullPath();
     }
@@ -1195,48 +1139,21 @@ class NetworkingHelperExtension extends AbstractExtension
      * Guess which fontawesome icon to use.
      *
      * @param $filename
-     *
-     * @return string
      */
-    public function getFileIcon($filename)
+    public function getFileIcon($filename): string
     {
-        $parts = explode('.', $filename);
+        $parts = explode('.', (string) $filename);
         $postfix = strtolower(end($parts));
-        switch ($postfix) {
-            case 'doc':
-            case 'docx':
-                $icon = 'far fa-file-word';
-                break;
-            case 'pdf':
-                $icon = 'far fa-file-pdf';
-                break;
-            case 'xls':
-            case 'xlsx':
-                $icon = 'far fa-file-excel';
-                break;
-            case 'ppt':
-            case 'pptx':
-                $icon = 'far fa-file-powerpoint';
-                break;
-            case 'zip':
-                $icon = 'far fa-file-archive';
-                break;
-            case 'txt':
-            case 'rtf':
-                $icon = 'far fa-file-alt';
-                break;
-            case 'png':
-            case 'gif':
-            case 'jpeg':
-            case 'jpg':
-            case 'svg':
-                $icon = 'far fa-file-image';
-                break;
-            default:
-                $icon = 'far fa-file';
-                break;
-
-        }
+        $icon = match ($postfix) {
+            'doc', 'docx' => 'far fa-file-word',
+            'pdf' => 'far fa-file-pdf',
+            'xls', 'xlsx' => 'far fa-file-excel',
+            'ppt', 'pptx' => 'far fa-file-powerpoint',
+            'zip' => 'far fa-file-archive',
+            'txt', 'rtf' => 'far fa-file-alt',
+            'png', 'gif', 'jpeg', 'jpg', 'svg' => 'far fa-file-image',
+            default => 'far fa-file',
+        };
 
         return 'fa '.$icon;
     }
@@ -1252,23 +1169,21 @@ class NetworkingHelperExtension extends AbstractExtension
     {
 
         // return text if it doesn't need to be cropped
-        if (!$text || strlen($text) <= $maxLength || !substr($text, 0)) {
+        if (!$text || strlen((string) $text) <= $maxLength || !substr((string) $text, 0)) {
             return $text;
         }
 
         $substrLength = floor(($maxLength - strlen($delimiter)) / 2);
 
-        return substr($text, 0, $substrLength).$delimiter.substr($text, -$substrLength);
+        return substr((string) $text, 0, $substrLength).$delimiter.substr((string) $text, -$substrLength);
     }
 
     /**
      * @param $size
      * @param null $unit
      * @param int  $decemals
-     *
-     * @return string
      */
-    public function getHumanReadableSize($size, $unit = null, $decemals = 2)
+    public function getHumanReadableSize($size, $unit = null, $decemals = 2): string
     {
         $byteUnits = [' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
         if (!is_null($unit) && !in_array($unit, $byteUnits)) {
@@ -1286,11 +1201,9 @@ class NetworkingHelperExtension extends AbstractExtension
 
     /**
      * @param $s
-     *
-     * @return string
      */
-    protected function jsString($s)
+    protected function jsString($s): string
     {
-        return '"'.addcslashes($s, "\0..\37\"\\").'"';
+        return '"'.addcslashes((string) $s, "\0..\37\"\\").'"';
     }
 }

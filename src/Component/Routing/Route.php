@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Component\Routing;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -22,7 +24,7 @@ use Symfony\Component\Routing\RouteCompiler;
  */
 class Route extends SymfonyRoute implements RouteObjectInterface
 {
-    const LOCALE = '_locale';
+    final public const LOCALE = '_locale';
 
     /**
      * @param $pattern

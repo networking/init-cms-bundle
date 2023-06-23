@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 /**
@@ -189,21 +191,10 @@ interface LayoutBlockInterface extends ContentInterface
     public function setIsSnapshot($isSnapshot);
 
     /**
-     * @param bool $isSnapshot
-     *
-     * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
-     */
-    public function setNoAutoDraft($isSnapshot);
-
-    /**
      * @return bool
      */
     public function getIsSnapshot();
 
-    /**
-     * @return bool
-     */
-    public function getSetNoAutoDraft();
 
     /**
      * @param array $snapshotContent

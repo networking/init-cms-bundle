@@ -42,9 +42,6 @@ Networking\InitCmsBundle\Model\Page:
             type: ArrayCollection<Networking\InitCmsBundle\Entity\LayoutBlock>
         menuItem:
             exclude: true
-            accessor:
-                getter: prepareMenuItemsForSerialization
-            type: ArrayCollection<Networking\InitCmsBundle\Entity\MenuItem>
         isHome:
             type: boolean
         status:

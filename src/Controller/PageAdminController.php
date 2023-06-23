@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -60,15 +62,13 @@ class PageAdminController extends CRUDController
     /**
      * Create a copy of a page in the given local and connect the pages.
      *
-     * @param Request $request
      * @param $id
      * @param $locale
      *
      * @return RedirectResponse|Response
-     *
      * @throws NotFoundHttpException
      */
-    public function translateAction(Request $request, $id, $locale)
+    public function translateAction(Request $request, $id, $locale): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -93,7 +93,7 @@ class PageAdminController extends CRUDController
                     '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $status = 'error';
                 $message = $message = $this->translate(
                     'message.translation_not_saved',
@@ -137,12 +137,10 @@ class PageAdminController extends CRUDController
 
 
     /**
-     * @param Request $request
      * @param $id
-     *
      * @return RedirectResponse|Response
      */
-    public function copyAction(Request $request, $id)
+    public function copyAction(Request $request, $id): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -167,7 +165,7 @@ class PageAdminController extends CRUDController
                     '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $status = 'error';
                 $message = $message = $this->translate(
                     'message.copy_not_saved',
@@ -216,7 +214,6 @@ class PageAdminController extends CRUDController
     /**
      * Link pages as translations of each other.
      *
-     * @param Request $request
      * @param $id
      * @param $locale
      *
@@ -224,7 +221,7 @@ class PageAdminController extends CRUDController
      * @throws NotFoundHttpException
      *
      */
-    public function linkAction(Request $request, $id, $locale)
+    public function linkAction(Request $request, $id, $locale): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -271,9 +268,7 @@ class PageAdminController extends CRUDController
             $pages = new ArrayCollection($pages);
             $originalLocale = $page->getLocale();
             $pages = $pages->filter(
-                function (PageInterface $linkPage) use ($originalLocale) {
-                    return !in_array($originalLocale, $linkPage->getTranslatedLocales());
-                }
+                fn(PageInterface $linkPage) => !in_array($originalLocale, $linkPage->getTranslatedLocales())
             );
         }
 
@@ -291,15 +286,13 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      * @param $id
      * @param $translationId
      *
      * @return RedirectResponse|Response
-     *
      * @throws NotFoundHttpException
      */
-    public function unlinkAction(Request $request, $id, $translationId)
+    public function unlinkAction(Request $request, $id, $translationId): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
 
         /** @var PageInterface $page */
@@ -349,10 +342,8 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param ProxyQueryInterface $selectedModelQuery
      *
      * @return RedirectResponse
-     *
      * @throws AccessDeniedException
      */
     public function batchActionPublish(ProxyQueryInterface $selectedModelQuery)
@@ -374,7 +365,7 @@ class PageAdminController extends CRUDController
                 $modelManager->update($selectedModel);
                 $this->makeSnapshot($selectedModel);
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->addFlash('sonata_flash_error', $this->translate('flash_batch_publish_error', [], 'NetworkingInitCmsBundle'));
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
@@ -385,10 +376,8 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param ProxyQueryInterface $selectedModelQuery
      *
      * @return RedirectResponse
-     *
      * @throws AccessDeniedException
      */
     public function batchActionCopy(ProxyQueryInterface $selectedModelQuery)
@@ -405,7 +394,7 @@ class PageAdminController extends CRUDController
                 /* @var PageInterface $selectedModel */
                 $this->pageHelper->makePageCopy($selectedModel);
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->addFlash('sonata_flash_error', $this->translate('flash_batch_copy_error', [], 'NetworkingInitCmsBundle'));
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
@@ -417,8 +406,6 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
     public function batchTranslateAction(Request $request)
@@ -428,7 +415,7 @@ class PageAdminController extends CRUDController
         }
 
         $form = $this->createForm(
-            'Networking\InitCmsBundle\Form\Type\PageBatchCopyType',
+            \Networking\InitCmsBundle\Form\Type\PageBatchCopyType::class,
             [],
             ['locales' => $this->getParameter('networking_init_cms.page.languages')]
         );
@@ -463,10 +450,8 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param ProxyQueryInterface $selectedModelQuery
      *
      * @return RedirectResponse
-     *
      * @throws AccessDeniedException
      */
     public function batchActionCacheClear(ProxyQueryInterface $selectedModelQuery)
@@ -484,7 +469,7 @@ class PageAdminController extends CRUDController
                     $this->pageCache->delete($cacheKey);
                 }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->addFlash('sonata_flash_error', $this->translate('flash_batch_cache_clear_error', [], 'NetworkingInitCmsBundle'));
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
@@ -505,6 +490,7 @@ class PageAdminController extends CRUDController
      */
     public function showAction(Request $request): Response
     {
+        $id = null;
         $object = $this->assertObjectExists($request, true);
         \assert(null !== $object);
 
@@ -536,10 +522,11 @@ class PageAdminController extends CRUDController
      * @param null $id
      *
      * @return RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function editAction(Request $request): Response
     {
+        $id = null;
         $object = $this->assertObjectExists($request, true);
         \assert(null !== $object);
 
@@ -604,11 +591,10 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      * @param $id
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function editPageSettingsAction(Request $request, $id)
     {
@@ -656,7 +642,7 @@ class PageAdminController extends CRUDController
      * @param null $uniqid
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function pageSettingsAction($id = null, $uniqid = null)
     {
@@ -702,12 +688,10 @@ class PageAdminController extends CRUDController
     /**
      * Return the json response for the ajax edit action.
      *
-     * @param Form $form
-     * @param PageInterface $page
      *
      * @return Response
      *
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     protected function getAjaxEditResponse(Form $form, PageInterface $page)
     {
@@ -753,8 +737,6 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
     public function parentPageListAction(Request $request)
@@ -773,12 +755,11 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      *
      * @return RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
-    public function draftAction(Request $request)
+    public function draftAction(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $id = $request->get($this->admin->getIdParameter());
 
@@ -786,12 +767,11 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      *
      * @return RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
-    public function reviewAction(Request $request)
+    public function reviewAction(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $id = $request->get($this->admin->getIdParameter());
 
@@ -799,12 +779,11 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      *
      * @return RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
-    public function offlineAction(Request $request)
+    public function offlineAction(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $id = $request->get($this->admin->getIdParameter());
 
@@ -872,7 +851,6 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      * @param null $id
      *
      * @return RedirectResponse|Response
@@ -880,7 +858,7 @@ class PageAdminController extends CRUDController
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function cancelDraftAction(Request $request, $id = null)
+    public function cancelDraftAction(Request $request, $id = null): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         /** @var $draftPage PageInterface */
         $draftPage = $this->admin->getObject($id);
@@ -936,9 +914,7 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
      * @param null $id
-     *
      * @return RedirectResponse
      */
     public function publishAction(Request $request, $id = null)
@@ -978,8 +954,6 @@ class PageAdminController extends CRUDController
 
     /**
      * Create a snapshot of a published page.
-     *
-     * @param PageInterface $page
      */
     protected function makeSnapshot(PageInterface $page)
     {
@@ -994,7 +968,6 @@ class PageAdminController extends CRUDController
     /**
      * Return a json array with the calculated path for a page object.
      *
-     * @param Request $request
      *
      * @return Response
      * @internal param string $path

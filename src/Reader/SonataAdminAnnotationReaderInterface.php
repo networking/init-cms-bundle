@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Reader;
 
 use Networking\InitCmsBundle\Annotation\ListInterface;
@@ -23,7 +25,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 
 interface SonataAdminAnnotationReaderInterface extends AnnotationReaderInterface
 {
-    const
+    public const
         ANNOTATION_TYPE_ADMIN_LIST = 'ListInterface',
         ANNOTATION_TYPE_ADMIN_LIST_CALLBACK = 'ListCallbackInterface',
         ANNOTATION_TYPE_ADMIN_LIST_REORDER = 'ListReorderInterface',

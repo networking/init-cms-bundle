@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: yorkie
  * Date: 19.02.18
  * Time: 16:54.
  */
-
 namespace Networking\InitCmsBundle\Menu;
 
 use Knp\Menu\ItemInterface;
@@ -21,8 +23,6 @@ class CmsMenuVoter implements VoterInterface
 
     /**
      * CmsMenuVoter constructor.
-     *
-     * @param RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -56,8 +56,8 @@ class CmsMenuVoter implements VoterInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        $withSlash = substr($request->getPathInfo(), -1) != '/' ? $request->getPathInfo().'/' : $request->getPathInfo();
-        $withOutSlash = substr($request->getPathInfo(), -1) == '/' ? substr($request->getPathInfo(), 0, -1) : $request->getPathInfo();
+        $withSlash = !str_ends_with($request->getPathInfo(), '/') ? $request->getPathInfo().'/' : $request->getPathInfo();
+        $withOutSlash = str_ends_with($request->getPathInfo(), '/') ? substr($request->getPathInfo(), 0, -1) : $request->getPathInfo();
 
         $withSlashWithLocale = '/'.substr($request->getLocale(), 0, 2).$withSlash;
         $withOutSlashWithLocale = '/'.substr($request->getLocale(), 0, 2).$withOutSlash;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Admin;
 
 use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
@@ -9,9 +11,6 @@ trait SonataAdminAnnotationShowMapperTrait
 {
     use SonataAdminAnnotationReaderTrait;
 
-    /**
-     * @param ShowMapper $showMapper
-     */
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $this->getSonataAnnotationReader()->configureShowFields($this->getClass(), $showMapper);

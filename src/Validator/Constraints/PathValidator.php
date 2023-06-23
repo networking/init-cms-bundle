@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
@@ -24,12 +26,12 @@ class PathValidator extends ConstraintValidator
     /**
      * @const string
      */
-    const PATTERN = '~^(/?|/\S+)$~ixu';
+    final public const PATTERN = '~^(/?|/\S+)$~ixu';
 
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (null === $value || '' === $value) {
             return;

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -29,6 +31,7 @@ use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
 use Sonata\MediaBundle\Provider\FileProvider;
 use Sonata\MediaBundle\Provider\Pool;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -144,6 +147,11 @@ class MediaAdminController extends CRUDController
         return parent::createAction($request);
     }
 
+    protected function handleXmlHttpRequestErrorResponse(Request $request, FormInterface $form): ?JsonResponse
+    {
+        return null;
+    }
+
     /**
      * redirect the user depend on this choice.
      *
@@ -187,6 +195,7 @@ class MediaAdminController extends CRUDController
      */
     public function deleteAction(Request $request): Response
     {
+        $id = null;
         $object = $this->assertObjectExists($request);
 
         if (!$object) {
@@ -203,7 +212,7 @@ class MediaAdminController extends CRUDController
                 $name = $object->__toString();
                 $this->admin->delete($object);
                 $this->addFlash('sonata_flash_success', $this->trans('flash_delete_success', ['%name%' => $name], 'SonataAdminBundle'));
-            } catch (ModelManagerException $e) {
+            } catch (ModelManagerException) {
                 $this->addFlash('sonata_flash_error', $this->trans('flash_delete_error', [], 'SonataAdminBundle'));
             }
 
@@ -256,7 +265,7 @@ class MediaAdminController extends CRUDController
 
                 $status = 'success';
                 $message = 'tag_added';
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $status = 'error';
                 $message = 'tag_not_added';
             }
@@ -365,8 +374,6 @@ class MediaAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
     public function refreshList(Request $request)
@@ -455,7 +462,6 @@ class MediaAdminController extends CRUDController
     }
 
     /**
-     * @param string $base64Content
      * @return mixed
      */
     public function extractBase64String(string $base64Content)
@@ -468,10 +474,9 @@ class MediaAdminController extends CRUDController
     /**
      * @param $filename
      * @param $newExtension
-     * @return string
      */
-    private function fixExtension($filename, $newExtension) {
-        $info = pathinfo($filename);
+    private function fixExtension($filename, $newExtension): string {
+        $info = pathinfo((string) $filename);
         return $info['filename'] . '.' . $newExtension;
     }
 
@@ -479,7 +484,7 @@ class MediaAdminController extends CRUDController
         $request->query->set('oneuploader', true);
 
         $content = $request->getContent();
-        $content = json_decode($content);
+        $content = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
         $fileData = $content->file;
         $clone = $content->clone;
         $id = $content->id;

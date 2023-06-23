@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -37,16 +39,12 @@ class UserActivityListener
         $this->em = $em;
     }
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function setTokenStorage(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
 
     /**
-     * @param ControllerEvent $event
      * @throws \Exception
      */
     public function onCoreController(ControllerEvent $event)
@@ -66,7 +64,7 @@ class UserActivityListener
             //here we can update the user as necessary
             if (method_exists($user, 'setLastActivity')) {
                 try {
-                    $classMetaData = $this->em->getClassMetadata(get_class($user));
+                    $classMetaData = $this->em->getClassMetadata($user::class);
                     $table = $classMetaData->getTableName();
                     $identifier = $classMetaData->getSingleIdentifierColumnName();
                     $updatedAtCol = $classMetaData->getColumnName('updatedAt');
@@ -76,8 +74,8 @@ class UserActivityListener
                     $stmt = $conn->prepare($sql);
                     $stmt->bindValue('date', (new \DateTime('now'))->format( 'Y-m-d H:i:s'));
                     $stmt->bindValue('id', $user->getId());
-                    $stmt->execute();
-                } catch (\Doctrine\ORM\ORMException $e) {
+                    $stmt->executeStatement();
+                } catch (\Doctrine\ORM\ORMException) {
                     //do nothing, entity manager is closed
                 }
             }

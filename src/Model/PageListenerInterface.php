@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the init_cms_sandbox package.
  *
@@ -7,9 +10,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
@@ -23,14 +26,14 @@ interface PageListenerInterface
     /**
      * @param LifecycleEventArgs $args
      *
-     * @return mixed
+     * @return void
      */
-    public function postPersist(LifecycleEventArgs $args);
+    public function postPersist(PostPersistEventArgs $args): void;
 
     /**
      * @param OnFlushEventArgs $args
      *
-     * @return mixed
+     * @return void
      */
-    public function onFlush(OnFlushEventArgs $args);
+    public function onFlush(OnFlushEventArgs $args): void;
 }

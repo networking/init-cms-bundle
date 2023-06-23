@@ -1,14 +1,13 @@
 <?php
 /**
  * This file is part of the Networking package.
- * This file is part of the Networking package.
  *
  * (c) net working AG <info@networking.ch>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+declare(strict_types=1);
 namespace Networking\InitCmsBundle\Admin;
 
 use Sonata\AdminBundle\Admin\AdminHelper as SonataAdminHelper;
@@ -37,7 +36,7 @@ class PageAdminHelper extends SonataAdminHelper
      *
      * @return array
      */
-    public function appendFormFieldElement(AdminInterface $admin, $subject, $elementId)
+    public function appendFormFieldElement(AdminInterface $admin, $subject, $elementId): array
     {
         // retrieve the subject
         $formBuilder = $admin->getFormBuilder();
@@ -54,7 +53,7 @@ class PageAdminHelper extends SonataAdminHelper
 
         try {
             $value = $fieldDescription->getValue($form->getData());
-        } catch (NoValueException $e) {
+        } catch (NoValueException) {
             $value = null;
         }
 
@@ -65,8 +64,8 @@ class PageAdminHelper extends SonataAdminHelper
             $data[$childFormBuilder->getName()] = [];
         }
 
-        $objectCount = count($value);
-        $postCount = count($data[$childFormBuilder->getName()]);
+        $objectCount = is_countable($value) ? count($value) : 0;
+        $postCount = is_countable($data[$childFormBuilder->getName()]) ? count($data[$childFormBuilder->getName()]) : 0;
 
         $fields = array_keys($fieldDescription->getAssociationAdmin()->getFormFieldDescriptions());
 
@@ -97,7 +96,7 @@ class PageAdminHelper extends SonataAdminHelper
     /**
      * {@inheritdoc}
      */
-    public function addNewInstance($object, FieldDescriptionInterface $fieldDescription)
+    public function addNewInstance($object, FieldDescriptionInterface $fieldDescription): void
     {
         $instance = $fieldDescription->getAssociationAdmin()->getNewInstance();
 
@@ -117,7 +116,7 @@ class PageAdminHelper extends SonataAdminHelper
                 throw new \RuntimeException(sprintf(
                     'Please add a method %s in the %s class!',
                     $method,
-                    get_class($object)
+                    $object::class
                 ));
             }
         }
@@ -125,10 +124,7 @@ class PageAdminHelper extends SonataAdminHelper
         $object->$method($instance);
     }
 
-    /**
-     * @param array $data
-     */
-    public function setNewLayoutBlockParameters(array $data)
+    public function setNewLayoutBlockParameters(array $data): void
     {
         $this->newLayoutBlockParameters = $data;
     }

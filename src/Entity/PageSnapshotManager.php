@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +33,7 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
      */
     public function __construct(EntityManagerInterface $om, $class)
     {
-        $classMetaData = new ClassMetadata($class, new UnderscoreNamingStrategy());
+        $classMetaData = new ClassMetadata($class, new UnderscoreNamingStrategy(numberAware: true));
 
         parent::__construct($om, $classMetaData);
     }
@@ -66,9 +68,7 @@ class PageSnapshotManager extends EntityRepository implements PageSnapshotManage
 
         try {
             return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        } catch (NonUniqueResultException $e) {
+        } catch (NoResultException|NonUniqueResultException $e) {
             return null;
         }
     }

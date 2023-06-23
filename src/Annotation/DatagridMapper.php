@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Annotation;
 
 /**
@@ -11,12 +13,12 @@ class DatagridMapper extends AbstractMapper implements DatagridInterface
     /**
      * @var array
      */
-    public $filterOptions = array();
+    public $filterOptions = [];
 
     /**
      * @var array
      */
-    public $fieldOptions = array();
+    public $fieldOptions = [];
 
     /**
      * @var string
@@ -38,10 +40,7 @@ class DatagridMapper extends AbstractMapper implements DatagridInterface
         return $this->fieldOptions;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getFieldType(){
+    public function getFieldType(): ?string{
         return $this->fieldType;
     }
 }

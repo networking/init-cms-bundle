@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the demo_cms  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\ORM\Query;
@@ -37,18 +39,20 @@ class TagAdminController extends CRUDController
 
         if ($this->isXmlHttpRequest($request) && $response->getStatusCode() === 200) {
             $content = $response->getContent();
-            $jsonArray = json_decode($content, true);
-            if ($jsonArray && $jsonArray['result'] == 'ok') {
-                $object = $this->admin->getObject($jsonArray['objectId']);
-                $jsonArray['status'] =  'success';
-                $jsonArray['message'] =  $this->translate('flash_create_success', ['%name%' =>  $this->escapeHtml($this->admin->toString($object))], 'SonataAdminBundle');
-                $jsonArray['html'] = $this->getTagTree($jsonArray['objectId']);
-                $response = $this->renderJson($jsonArray, 200);
+            try{
+                $jsonArray = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+                if ($jsonArray && $jsonArray['result'] == 'ok') {
+                    $object = $this->admin->getObject($jsonArray['objectId']);
+                    $jsonArray['status'] =  'success';
+                    $jsonArray['message'] =  $this->translate('flash_create_success', ['%name%' =>  $this->escapeHtml($this->admin->toString($object))], 'SonataAdminBundle');
+                    $jsonArray['html'] = $this->getTagTree($jsonArray['objectId']);
+                    $response = $this->renderJson($jsonArray, 200);
+                }
+            }catch (\Exception){
+                return $response;
             }
-        }
-        
 
-        
+        }
 
         return $response;
     }
@@ -162,8 +166,6 @@ class TagAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
     public function inlineEditAction(Request $request)
@@ -181,7 +183,7 @@ class TagAdminController extends CRUDController
         $validator = $this->container->get('validator');
         $errors = $validator->validate($tag);
 
-        if (count($errors) > 0) {
+        if ((is_countable($errors) ? count($errors) : 0) > 0) {
             $messages = [];
             foreach ($errors as $error) {
                 $messages[] = $error->getMessage();
@@ -199,14 +201,12 @@ class TagAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
     public function updateTreeAction(Request $request)
     {
         /** @var Request $request */
-        $nodes = $request->get('nodes') ? $request->get('nodes') : [];
+        $nodes = $request->get('nodes') ?: [];
 
         $admin = $this->admin;
 
@@ -228,7 +228,7 @@ class TagAdminController extends CRUDController
                 $tag->setLevel($node['depth'] + 1);
 
                 $errors = $validator->validate($tag);
-                if (count($errors) > 0) {
+                if ((is_countable($errors) ? count($errors) : 0) > 0) {
                     throw new ValidatorException();
                 }
 
@@ -236,7 +236,7 @@ class TagAdminController extends CRUDController
             }
 
             $response = ['status' => 'success', 'message' => $this->trans('info.tag_sorted')];
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $response = ['status' => 'error', 'message' => $this->trans('info.tag_sorted_error')];
         }
 
@@ -244,8 +244,6 @@ class TagAdminController extends CRUDController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
     public function searchTagsAction(Request $request)

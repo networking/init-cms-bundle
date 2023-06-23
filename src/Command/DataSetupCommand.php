@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Command;
 
@@ -55,7 +56,7 @@ class DataSetupCommand extends Command
     /**
      * configuration for the command.
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
@@ -87,12 +88,7 @@ class DataSetupCommand extends Command
         return 0;
     }
 
-    /**
-     * @param OutputInterface $output
-     *
-     * @return int
-     */
-    public function dropSchema(OutputInterface $output)
+    public function dropSchema(OutputInterface $output): int
     {
         $command = $this->getApplication()->find('doctrine:schema:drop');
 
@@ -107,11 +103,9 @@ class DataSetupCommand extends Command
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
      * @return int|string
      */
-    private function updateSchema(OutputInterface $output)
+    private function updateSchema(OutputInterface $output): int
     {
         $command = $this->getApplication()->find('doctrine:schema:update');
 
@@ -127,10 +121,8 @@ class DataSetupCommand extends Command
 
     /**
      * @param $output
-     *
-     * @return int
      */
-    private function initACL($output)
+    private function initACL($output): int
     {
         $command = $this->getApplication()->find('acl:init');
 
@@ -145,10 +137,8 @@ class DataSetupCommand extends Command
 
     /**
      * @param $output
-     *
-     * @return int
      */
-    private function sonataSetupACL($output)
+    private function sonataSetupACL($output): int
     {
         $command = $this->getApplication()->find('sonata:admin:setup-acl');
 
@@ -161,25 +151,12 @@ class DataSetupCommand extends Command
         return $command->run($input, $output);
     }
 
-    /**
-     * interact
-     * unused at the moment.
-     *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @throws \Exception
-     */
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-    }
+
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
      * @return int|string
      */
-    private function loadFixtures(OutputInterface $output)
+    private function loadFixtures(OutputInterface $output): int
     {
         $command = $this->getApplication()->find('doctrine:fixtures:load');
 
@@ -194,7 +171,7 @@ class DataSetupCommand extends Command
         return $command->run($input, $output);
     }
 
-    public function publishPages(OutputInterface $output)
+    public function publishPages(OutputInterface $output): int
     {
         $this->registry->resetManager();
         $this->pageManager->resetEntityManager($this->registry->getManager());

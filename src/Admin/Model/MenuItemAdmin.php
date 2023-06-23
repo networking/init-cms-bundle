@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * This file is part of the Networking package.
  *
@@ -8,6 +7,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin\Model;
 
@@ -330,16 +330,14 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->add(
                 'locale',
                 CallbackFilter::class,
-                ['callback' => [$this, 'getByLocale']],
+                ['callback' => $this->getByLocale(...)],
 
                 [
                     'field_type' => LanguageType::class,
                     'field_options' => [
                         'placeholder' => false,
                         'choice_loader' => new CallbackChoiceLoader(
-                            function () {
-                                return $this->getLocaleChoices();
-                            }
+                            fn() => $this->getLocaleChoices()
                         ),
                         'preferred_choices' => [$this->getDefaultLocale()],
                         'translation_domain' => $this->getTranslationDomain(),

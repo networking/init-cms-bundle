@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the <name> project.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -17,30 +19,14 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Networking\InitCmsBundle\Entity\Group
  *
- * @ORM\Table(name="user_group")
- * @ORM\Entity()
  */
-class Group
+class Group implements \Stringable
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var array
-     */
-    protected $roles = [];
 
     /**
      * Group constructor.
@@ -48,10 +34,8 @@ class Group
      * @param string $name
      * @param array  $roles
      */
-    public function __construct($name, $roles = [])
+    public function __construct(protected $name, protected $roles = [])
     {
-        $this->name = $name;
-        $this->roles = $roles;
     }
 
     /**
@@ -60,7 +44,7 @@ class Group
     public function addRole($role)
     {
         if (!$this->hasRole($role)) {
-            $this->roles[] = strtoupper($role);
+            $this->roles[] = strtoupper((string) $role);
         }
 
         return $this;
@@ -85,9 +69,9 @@ class Group
     /**
      * {@inheritdoc}
      */
-    public function hasRole($role)
+    public function hasRole($role): bool
     {
-        return in_array(strtoupper($role), $this->roles, true);
+        return in_array(strtoupper((string) $role), $this->roles, true);
     }
 
     /**
@@ -103,7 +87,7 @@ class Group
      */
     public function removeRole($role)
     {
-        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+        if (false !== $key = array_search(strtoupper((string) $role), $this->roles, true)) {
             unset($this->roles[$key]);
             $this->roles = array_values($this->roles);
         }
@@ -131,7 +115,7 @@ class Group
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }

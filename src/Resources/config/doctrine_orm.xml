@@ -66,27 +66,20 @@
                 <argument key="$contentTypes">%networking_init_cms.page.content_types%</argument>
         </service>
 
-        <service id="Networking\InitCmsBundle\Entity\EntityChangedSubscriber" lazy="true">
+        <service id="Networking\InitCmsBundle\Entity\EntityChangedListener" lazy="true">
             <argument type="service" id="networking_init_cms.logger"/>
             <argument key="$loggingActive">%env(default:DEFAULT_TRACKING:bool:NETWORKING_TRACK_USER)%</argument>
-            <tag name="doctrine.event_subscriber" />
         </service>
 
         <service id="Networking\InitCmsBundle\Entity\ContentRouteListener" lazy="true">
             <argument key="$templates">%networking_init_cms.page.templates%</argument>
-            <tag name="doctrine.event_listener" event="prePersist" method="prePersist"/>
-            <tag name="doctrine.event_listener" event="preUpdate" method="preUpdate"/>
         </service>
 
         <service id="Networking\InitCmsBundle\Entity\LastEditedListener" lazy="true">
-            <tag name="doctrine.event_listener" event="postPersist" method="postPersist"/>
-            <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
         </service>
 
         <service id="Networking\InitCmsBundle\Entity\PageListener" lazy="true">
             <tag name="jms_serializer.event_subscriber"/>
-            <tag name="doctrine.event_listener" event="postPersist" method="postPersist" priority="-100"/>
-            <tag name="doctrine.event_listener" event="onFlush" method="onFlush" priority="-100"/>
         </service>
 
         <!-- Form Types -->

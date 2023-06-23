@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Builder;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -24,20 +26,11 @@ use Sonata\AdminBundle\FieldDescription\TypeGuesserInterface;
  */
 class ListBuilder implements ListBuilderInterface
 {
-    private TypeGuesserInterface $guesser;
-
-    /**
-     * @var string[]
-     */
-    private array $templates = [];
-
     /**
      * @param string[] $templates
      */
-    public function __construct(TypeGuesserInterface $guesser, array $templates = [])
+    public function __construct(private readonly TypeGuesserInterface $guesser, private array $templates = [])
     {
-        $this->guesser = $guesser;
-        $this->templates = $templates;
     }
 
     public function getBaseList(array $options = []): FieldDescriptionCollection
@@ -79,7 +72,7 @@ class ListBuilder implements ListBuilderInterface
             throw new \RuntimeException(sprintf(
                 'Please define a type for field `%s` in `%s`',
                 $fieldDescription->getName(),
-                \get_class($fieldDescription->getAdmin())
+                $fieldDescription->getAdmin()::class
             ));
         }
 

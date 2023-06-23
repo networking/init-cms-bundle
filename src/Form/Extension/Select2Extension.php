@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: yorkie
  * Date: 04.12.17
  * Time: 13:34.
  */
-
 namespace Networking\InitCmsBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
@@ -19,7 +21,7 @@ class Select2Extension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function finishView(FormView $view, FormInterface $form, array $options)
+    public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         if (false === $options['expanded'] && isset($options['select2'])) {
             $view->vars['select2'] = $options['select2'];
@@ -29,7 +31,7 @@ class Select2Extension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefined('select2');
     }
@@ -39,7 +41,7 @@ class Select2Extension extends AbstractTypeExtension
      *
      * @return string The name of the type being extended
      */
-    public function getExtendedType()
+    public function getExtendedType(): string
     {
         return ChoiceType::class;
     }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Networking\InitCmsBundle\Entity\Media;
@@ -25,12 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MediaPreviewType extends AbstractType
 {
-    /**
-     * @param FormView      $view
-     * @param FormInterface $form
-     * @param array         $options
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $media = $form->getData();
         if (!$media instanceof MediaInterface) {
@@ -50,13 +47,13 @@ class MediaPreviewType extends AbstractType
         $view->vars = array_replace(
             $view->vars,
             [
-                'is_image' => substr($contentType, 0, 5) == 'image',
+                'is_image' => str_starts_with($contentType, 'image'),
                 'provider' => $options['provider'],
             ]
         );
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('is_image', true);
 

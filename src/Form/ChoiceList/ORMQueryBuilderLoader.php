@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Form\ChoiceList;
 
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
@@ -20,17 +22,16 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
 {
 
 
-    /**
-     * Contains the query builder that builds the query for fetching the
-     * entities.
-     *
-     * This property should only be accessed through queryBuilder.
-     */
-    private QueryBuilder $queryBuilder;
-
-    public function __construct(QueryBuilder $queryBuilder)
+    public function __construct(
+        /**
+         * Contains the query builder that builds the query for fetching the
+         * entities.
+         *
+         * This property should only be accessed through queryBuilder.
+         */
+        private readonly QueryBuilder $queryBuilder
+    )
     {
-        $this->queryBuilder = $queryBuilder;
     }
 
     /**
@@ -60,16 +61,12 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
 
             // Filter out non-integer values (e.g. ""). If we don't, some
             // databases such as PostgreSQL fail.
-            $values = array_values(array_filter($values, function ($v) {
-                return (string) $v === (string) (int) $v;
-            }));
+            $values = array_values(array_filter($values, fn($v) => (string) $v === (string) (int) $v));
         } elseif ('guid' === $metadata->getTypeOfField($identifier)) {
             $parameterType = Connection::PARAM_STR_ARRAY;
 
             // Like above, but we just filter out empty strings.
-            $values = array_values(array_filter($values, function ($v) {
-                return (string) $v !== '';
-            }));
+            $values = array_values(array_filter($values, fn($v) => (string) $v !== ''));
         } else {
             $parameterType = Connection::PARAM_STR_ARRAY;
         }

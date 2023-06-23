@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: yorkie
  * Date: 21.12.17
  * Time: 16:41.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Entity\UserManager;
@@ -27,42 +29,16 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 class AdminSecurityController extends AbstractController
 {
     /**
-     * @var CsrfTokenManagerInterface
-     */
-    private $csrfTokenManager;
-
-    /**
-     * @var Pool
-     */
-    private $pool;
-
-    /**
-     * @var TemplateRegistryInterface
-     */
-    private $templateRegistry;
-    /**
      * AdminSecurityController constructor.
-     * @param CsrfTokenManagerInterface $csrfTokenManager
-     * @param Pool $pool
-     * @param TemplateRegistryInterface $templateRegistry
      */
-    public function __construct(
-        CsrfTokenManagerInterface $csrfTokenManager,
-        Pool $pool,
-        TemplateRegistryInterface $templateRegistry
-    ) {
-
-        $this->csrfTokenManager = $csrfTokenManager;
-        $this->pool = $pool;
-        $this->templateRegistry = $templateRegistry;
+    public function __construct(private readonly CsrfTokenManagerInterface $csrfTokenManager, private readonly Pool $pool, private readonly TemplateRegistryInterface $templateRegistry)
+    {
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response|RedirectResponse
      */
-    public function loginAction(Request $request)
+    public function loginAction(Request $request): \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         if ($this->getUser() instanceof UserInterface) {
             $this->addFlash('sonata_user_error', 'sonata_user_already_authenticated');
@@ -116,14 +92,14 @@ class AdminSecurityController extends AbstractController
     }
 
 
-    public function checkAction(): void
+    public function checkAction(): never
     {
         throw new \RuntimeException(
             'You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.'
         );
     }
 
-    public function logoutAction(): void
+    public function logoutAction(): never
     {
         throw new \RuntimeException('You must activate the logout in your security firewall configuration.');
     }

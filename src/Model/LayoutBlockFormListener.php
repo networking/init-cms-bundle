@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -8,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,11 +33,6 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 	protected $om;
 
 	/**
-	 * @var array
-	 */
-	protected $contentTypes;
-
-	/**
 	 * @var ValidatorInterface
 	 */
 	protected $validator;
@@ -52,16 +48,14 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 	protected $contentType;
 
      /**
-     * LayoutBlockFormListener constructor.
-     * @param EntityManagerInterface $om
-     * @param ValidatorInterface $validator
-     * @param $contentTypes
-     */
-	public function __construct(EntityManagerInterface $om,ValidatorInterface $validator, $contentTypes ) {
+  * LayoutBlockFormListener constructor.
+  * @param $contentTypes
+  * @param mixed[] $contentTypes
+  */
+ public function __construct(EntityManagerInterface $om,ValidatorInterface $validator, protected $contentTypes ) {
 		$this->om = $om;
 
 		$this->validator = $validator;
-        $this->contentTypes = $contentTypes;
 	}
 
 	public function setAdmin(LayoutBlockAdmin $admin)
@@ -175,7 +169,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
                 try{
                     /** @var \Symfony\Component\Form\Form $field */
                     $field = $this->getFieldFromArray($form->get('content'), $path);
-                }catch (\Exception $e){
+                }catch (\Exception){
                     continue;
                 }
 
@@ -190,7 +184,7 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
 	}
 
     private function getFieldFromArray(FormInterface $field, $path, $index = 0){
-        $pathArr = explode('.', $path);
+        $pathArr = explode('.', (string) $path);
         $child =  $field->get($pathArr[$index]);
         $index++;
         if(count($pathArr) > $index){
@@ -201,13 +195,12 @@ abstract class LayoutBlockFormListener implements EventSubscriberInterface, Layo
     }
 
 	/**
-	 * Get the content type of the content object, if the object is new, use the first available type.
-	 *
-	 * @param LayoutBlockInterface $layoutBlock
-	 *
-	 * @return string
-	 */
-	public function getContentType(LayoutBlockInterface $layoutBlock = null)
+  * Get the content type of the content object, if the object is new, use the first available type.
+  *
+  *
+  * @return string
+  */
+ public function getContentType(LayoutBlockInterface $layoutBlock = null)
 	{
 		if (is_null($layoutBlock) || !$classType = $layoutBlock->getClassType()) {
 			if ($this->contentType) {

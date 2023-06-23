@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Doctrine\Types;
 
 use Doctrine\DBAL\Types\Type;
@@ -37,9 +39,7 @@ abstract class EnumType extends Type
      */
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $values = array_map(function ($val) {
-            return "'".$val."'";
-        }, $this->values);
+        $values = array_map(fn($val): string => "'".$val."'", $this->values);
 
         return 'ENUM('.implode(', ', $values).") COMMENT '(DC2Type:".$this->name.")'";
     }

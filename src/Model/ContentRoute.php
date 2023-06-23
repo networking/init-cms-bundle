@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -8,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -21,35 +22,29 @@ use Symfony\Component\Routing\Route;
  *
  * @author net working AG <info@networking.ch>
  */
-class ContentRoute implements ContentRouteInterface
+class ContentRoute implements ContentRouteInterface, \Stringable
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
      */
     protected $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="class_type", type="string", length=255)
      */
     protected $classType;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="object_id", type="integer", nullable=true)
      */
     protected $objectId;
 
@@ -61,42 +56,37 @@ class ContentRoute implements ContentRouteInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     protected $path = null;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="controller", type="string", length=255, nullable=true)
      */
     protected $controller;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="template", type="string", length=255, nullable=true)
      */
     protected $template;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="template_name", type="string", length=255, nullable=true)
      */
     protected $templateName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="locale", type="string", length=255)
      */
     protected $locale;
 
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->path;
     }
@@ -110,8 +100,6 @@ class ContentRoute implements ContentRouteInterface
     }
 
     /**
-     * @param string $name
-     *
      * @return $this
      */
     public function setName(string $name)

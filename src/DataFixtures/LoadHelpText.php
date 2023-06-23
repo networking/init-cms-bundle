@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -25,15 +26,9 @@ use Networking\InitCmsBundle\Entity\HelpText;
  */
 class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
-    /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
+    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
-    /**
-     * @var array
-     */
-    private $textArray = [
+    private array $textArray = [
 
         'overview' => [
             'title' => 'overview.title',
@@ -170,10 +165,7 @@ class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixt
         ],
     ];
 
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         $this->container = $container;
     }
@@ -181,7 +173,7 @@ class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixt
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $languages = $this->container->getParameter('networking_init_cms.page.languages');
         foreach ($languages as $lang) {
@@ -200,14 +192,13 @@ class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixt
     }
 
     /**
-     * @param ObjectManager $manager
      * @param $locale
      * @param $translationKey
      * @param $title
      * @param $text
      * @param $isDeletable
      */
-    public function createHelpText(ObjectManager $manager, $locale, $translationKey, $title, $text, $isDeletable)
+    public function createHelpText(ObjectManager $manager, $locale, $translationKey, $title, $text, $isDeletable): void
     {
         $helpText = new HelpText();
         $helpText->setTitle($title);
@@ -225,10 +216,7 @@ class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixt
         return ['init_cms'];
     }
 
-    /**
-     * @return int
-     */
-    public function getOrder()
+    public function getOrder(): int
     {
         return 5;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Admin;
 
 use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
@@ -9,9 +11,6 @@ trait SonataAdminAnnotationListMapperTrait
 {
     use SonataAdminAnnotationReaderTrait;
 
-    /**
-     * @param ListMapper $listMapper
-     */
     protected function configureListFields(ListMapper $listMapper)
     {
         $this->getSonataAnnotationReader()->configureListFields($this->getClass(), $listMapper);

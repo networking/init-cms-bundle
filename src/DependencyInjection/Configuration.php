@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\Cache\PageCache;
@@ -36,7 +38,7 @@ class Configuration implements ConfigurationInterface
             $rootNode = $treeBuilder->getRootNode();
         }
         //mongodb is not yet fully supported but will come (eventually)
-        $supportedDrivers = ['orm', 'mongodb'];
+        $supportedDrivers = ['orm'];
 
         $rootNode
             ->children()
@@ -57,6 +59,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('db_driver')
                     ->defaultValue('orm')
+                    ->setDeprecated('The "%path%.db_driver" configuration key is deprecated since version 6.2 and will be removed in 6.3.')
                     ->validate()
                     ->ifNotInArray($supportedDrivers)
                     ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDrivers))
@@ -188,7 +191,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('emptyPrefixes')
-                            ->defaultValue(array('__', 'new_', ''))
+                            ->defaultValue(['__', 'new_', ''])
                             ->prototype('array')->end()
                         ->end()
                         ->arrayNode('editable')

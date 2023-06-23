@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -8,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author net working AG <info@networking.ch>
  */
-class LayoutBlock implements LayoutBlockInterface
+class LayoutBlock implements LayoutBlockInterface, \Stringable
 {
 
     /**
@@ -34,7 +35,7 @@ class LayoutBlock implements LayoutBlockInterface
     /**
      * @var PageInterface
      */
-    protected $page;
+    protected $page = null;
 
     /**
      * @var string
@@ -89,7 +90,6 @@ class LayoutBlock implements LayoutBlockInterface
     public function __construct()
     {
         $this->snapshotContent = new ArrayCollection();
-        $this->page = null;
     }
 
     public function __clone()
@@ -101,7 +101,7 @@ class LayoutBlock implements LayoutBlockInterface
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getContentTypeName();
     }
@@ -399,29 +399,9 @@ class LayoutBlock implements LayoutBlockInterface
     }
 
     /**
-     * @param bool $isSnapshot
-     *
-     * @return \Networking\InitCmsBundle\Entity\LayoutBlock
-     */
-    public function setNoAutoDraft($isSnapshot)
-    {
-        $this->isSnapshot = $isSnapshot;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function getIsSnapshot()
-    {
-        return $this->isSnapshot;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getSetNoAutoDraft()
     {
         return $this->isSnapshot;
     }
@@ -456,7 +436,6 @@ class LayoutBlock implements LayoutBlockInterface
      */
     public function takeSnapshot($snapshotContent)
     {
-        $this->setNoAutoDraft = true;
         $this->setSnapshotContent($snapshotContent);
     }
 

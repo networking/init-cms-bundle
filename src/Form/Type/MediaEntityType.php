@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
@@ -40,9 +42,6 @@ class MediaEntityType extends AbstractType
      */
     public $pool;
 
-    /**
-     * @param Pool $pool
-     */
     public function __construct(Pool $pool)
     {
         $this->pool = $pool;
@@ -51,7 +50,7 @@ class MediaEntityType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($options['model_manager'] === null) {
             $pool = $this->pool;
@@ -74,7 +73,7 @@ class MediaEntityType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $pool = $this->pool;
 
@@ -94,7 +93,7 @@ class MediaEntityType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [

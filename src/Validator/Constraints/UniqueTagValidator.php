@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the demo_cms  package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
 use Networking\InitCmsBundle\Admin\Model\TagAdmin;
@@ -29,7 +31,7 @@ class UniqueTagValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $tags = $this->tagAdmin
             ->getModelManager()
@@ -47,11 +49,11 @@ class UniqueTagValidator extends ConstraintValidator
 	                    ->addViolation()
                     ;
 
-                    return false;
+                    return;
                 }
             }
         }
 
-        return true;
+        return;
     }
 }

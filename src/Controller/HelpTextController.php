@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Model\HelpTextManagerInterface;
@@ -26,51 +28,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class HelpTextController extends AbstractController
 {
     /**
-     * @var HelpTextManagerInterface
-     */
-    private $helpTextManager;
-
-    /**
-     * @var MutableTemplateRegistryInterface
-     */
-    private $templateRegistry;
-
-    /**
-     * @var Pool
-     */
-    private $pool;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * HelpTextController constructor.
-     * @param HelpTextManagerInterface $helpTextManager
-     * @param TemplateRegistryInterface $templateRegistry
-     * @param Pool $pool
-     * @param TranslatorInterface $translator
      */
-    public function __construct(
-        HelpTextManagerInterface $helpTextManager,
-        TemplateRegistryInterface $templateRegistry,
-        Pool $pool,
-        TranslatorInterface $translator
-    ) {
-        $this->helpTextManager = $helpTextManager;
-        $this->templateRegistry = $templateRegistry;
-        $this->pool = $pool;
-        $this->translator = $translator;
+    public function __construct(private readonly HelpTextManagerInterface $helpTextManager, private readonly TemplateRegistryInterface $templateRegistry, private readonly Pool $pool, private readonly TranslatorInterface $translator)
+    {
     }
 
     /**
      * Help text page action.
      *
-     * @param Request $request
      * @param $adminCode
      * @param string $action
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function adminHelpAction(Request $request, $adminCode, $action = '')
@@ -114,7 +82,6 @@ class HelpTextController extends AbstractController
     /**
      * return the base template name.
      *
-     * @param Request $request
      *
      * @return string the template name
      */
@@ -130,10 +97,8 @@ class HelpTextController extends AbstractController
     /**
      * Create the navigation for the help text view.
      *
-     * @param array $dashBoardGroups
      * @param $locale
      * @param $helpTextManager
-     *
      * @return array
      */
     protected function adminGetHelpTextNavigation(array $dashBoardGroups, $locale, $helpTextManager)
@@ -177,11 +142,11 @@ class HelpTextController extends AbstractController
                     }
 
                     $help_text_result = $helpTextManager->searchHelpTextByKeyLocale($admin->getCode(), $locale);
-                    if (count($help_text_result) > 0) {
+                    if ((is_countable($help_text_result) ? count($help_text_result) : 0) > 0) {
                         foreach ($help_text_result as $row) {
                             //split Translation Key into adminCode and action
-                            $strripos = strripos($row->getTranslationKey(), '.');
-                            $action = substr($row->getTranslationKey(), $strripos + 1);
+                            $strripos = strripos((string) $row->getTranslationKey(), '.');
+                            $action = substr((string) $row->getTranslationKey(), $strripos + 1);
                             $navArray[$group['label']]['group_items'][$row->getId()]['adminCode'] = $admin->getCode(
                             );
                             $navArray[$group['label']]['group_items'][$row->getId()]['action'] = $action;

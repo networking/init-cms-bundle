@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -8,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Model;
 
 use Networking\InitCmsBundle\Annotation\FormCallback;
@@ -42,7 +43,7 @@ abstract class Text implements ContentInterface, TextInterface
     public static function buildForm(\Symfony\Component\Form\FormBuilder $formBuilder){
         $formBuilder
             ->add('text',
-                'FOS\CKEditorBundle\Form\Type\CKEditorType',
+                \FOS\CKEditorBundle\Form\Type\CKEditorType::class,
                 [
                     'horizontal_input_wrapper_class' => 'col-md-12',
                     'horizontal_label_offset_class' => '',

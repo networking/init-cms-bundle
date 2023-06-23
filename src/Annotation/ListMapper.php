@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Networking\InitCmsBundle\Annotation;
 
 /**
@@ -17,18 +19,12 @@ class ListMapper extends AbstractMapper implements ListInterface
      */
     public $routeName = null;
 
-    /**
-     * @return boolean
-     */
-    public function isIdentifier()
+    public function isIdentifier(): bool
     {
         return (bool)$this->identifier;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getRouteName()
+    public function getRouteName(): ?string
     {
         return $this->routeName;
     }

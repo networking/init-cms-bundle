@@ -32,36 +32,8 @@ use Twig\Environment;
  */
 final class TwoFactorLoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
-    /**
-     * @var Environment
-     */
-    private $engine;
-
-    /**
-     * @var Helper
-     */
-    private $helper;
-
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    public function __construct(
-        Environment $engine,
-        Helper $helper,
-        UserManagerInterface $userManager,
-        ?UrlGeneratorInterface $urlGenerator = null // NEXT_MAJOR: make it mandatory.
-    ) {
-        $this->engine = $engine;
-        $this->helper = $helper;
-        $this->userManager = $userManager;
-        $this->urlGenerator = $urlGenerator;
+    public function __construct(private readonly Environment $engine, private readonly Helper $helper, private readonly UserManagerInterface $userManager, private readonly ?UrlGeneratorInterface $urlGenerator = null)
+    {
     }
 
     /**

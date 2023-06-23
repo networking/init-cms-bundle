@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,7 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\Model\PageAdmin;
@@ -79,13 +81,6 @@ class FrontendPageController extends AbstractController
 
     /**
      * FrontendPageController constructor.
-     * @param PageCacheInterface $pageCache
-     * @param TokenStorageInterface $tokenStorage
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param Pool $pool
-     * @param LanguageSwitcherHelper $languageSwitcherHelper
-     * @param PageManagerInterface $pageManager
-     * @param PageHelper $pageHelper
      */
     public function __construct(
         PageCacheInterface $pageCache,
@@ -106,10 +101,7 @@ class FrontendPageController extends AbstractController
 
     }
 
-    /**
-     * @return bool|\Sonata\AdminBundle\Admin\Pool
-     */
-    protected function getAdminPool()
+    protected function getAdminPool(): bool|\Sonata\AdminBundle\Admin\Pool
     {
         if ($this->tokenStorage->getToken() && $this->authorizationChecker->isGranted(
                 'ROLE_SONATA_ADMIN'
@@ -126,7 +118,6 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return array|bool|mixed|string|RedirectResponse|Response|null
      * @throws \Psr\Cache\InvalidArgumentException
      */
@@ -196,9 +187,6 @@ class FrontendPageController extends AbstractController
         return $response;
     }
 
-    /**
-     * @param Response $response
-     */
     private function addResponseLocaleCookies(Response $response, $locale): void
     {
         if ($this->getPageHelper()->isAllowLocaleCookie() && !$this->getPageHelper()->isSingleLanguage()) {
@@ -213,12 +201,9 @@ class FrontendPageController extends AbstractController
     /**
      * Check if page is an alias for another page.
      *
-     * @param Request $request
-     * @param PageInterface $page
      *
-     * @return bool|RedirectResponse
      */
-    public function getRedirect(Request $request, PageInterface $page)
+    public function getRedirect(Request $request, PageInterface $page): bool|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
             if ($alias = $page->getAlias()) {
@@ -234,12 +219,7 @@ class FrontendPageController extends AbstractController
         return false;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array|bool|RedirectResponse
-     */
-    public function getPageParameters(Request $request)
+    public function getPageParameters(Request $request): array|bool|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $page = $request->get('_content', null);
 
@@ -254,13 +234,7 @@ class FrontendPageController extends AbstractController
         return $this->getDraftParameters($request, $page);
     }
 
-    /**
-     * @param Request $request
-     * @param PageInterface $page
-     *
-     * @return array|bool|RedirectResponse
-     */
-    public function getDraftParameters(Request $request, PageInterface $page)
+    public function getDraftParameters(Request $request, PageInterface $page): array|bool|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         if ($redirect = $this->getRedirect($request, $page)) {
             return $redirect;
@@ -322,7 +296,6 @@ class FrontendPageController extends AbstractController
     /**
      * Show the home page (start page) for given locale.
      *
-     * @param Request $request
      *
      * @return Response
      */
@@ -338,7 +311,6 @@ class FrontendPageController extends AbstractController
     /**
      * Show the home page (start page) for given locale.
      *
-     * @param Request $request
      *
      * @return Response
      */
@@ -354,9 +326,7 @@ class FrontendPageController extends AbstractController
     /**
      * Change the language in the admin area (currently not implemented in the template).
      *
-     * @param Request $request
      * @param $locale
-     *
      * @return RedirectResponse
      */
     public function changeAdminLanguageAction(Request $request, $locale)
@@ -369,10 +339,8 @@ class FrontendPageController extends AbstractController
     /**
      * Change language in the front end area.
      *
-     * @param Request $request
      * @param $oldLocale
      * @param $locale
-     *
      * @return RedirectResponse
      */
     public function changeLanguageAction(Request $request, $oldLocale, $locale)
@@ -431,10 +399,8 @@ class FrontendPageController extends AbstractController
     /**
      * View the website in Draft mode.
      *
-     * @param Request $request
      * @param string $locale
      * @param string /null $path
-     *
      * @return RedirectResponse
      */
     public function viewDraftAction(Request $request, $locale = null, $path = null)
@@ -450,10 +416,8 @@ class FrontendPageController extends AbstractController
     /**
      * View the website in Live mode.
      *
-     * @param Request $request
      * @param string $locale
      * @param string /null $path
-     *
      * @return RedirectResponse
      */
     public function viewLiveAction(Request $request, $locale = null, $path = null)
@@ -468,12 +432,10 @@ class FrontendPageController extends AbstractController
     /**
      * Change the page viewing mode to live or draft.
      *
-     * @param Request $request
      * @param $status
      * @param $path
      *
      * @return RedirectResponse
-     *
      * @throws AccessDeniedException
      */
     protected function changeViewMode(Request $request, $status, $path)
@@ -486,7 +448,7 @@ class FrontendPageController extends AbstractController
         $request->getSession()->set('_viewStatus', $status);
 
         if ($path) {
-            $url = base64_decode($path);
+            $url = base64_decode((string) $path);
 
 
         } else {
@@ -511,10 +473,8 @@ class FrontendPageController extends AbstractController
      * @param $referrer
      * @param $oldLocale
      * @param $locale
-     *
-     * @return array|RouteObjectInterface
      */
-    protected function getTranslationRoute($referrer, $oldLocale, $locale)
+    protected function getTranslationRoute($referrer, $oldLocale, $locale): array|\Symfony\Cmf\Component\Routing\RouteObjectInterface
     {
 
         $oldURL = $this->languageSwitcherHelper->getPathInfo($referrer);
@@ -523,7 +483,6 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return Response
      */
     public function translationNotFoundAction(Request $request)
@@ -547,7 +506,6 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @param null $page_id
      * @return Response
      */
@@ -578,25 +536,22 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * @param PageSnapshotInterface $page
-     *
      * @return mixed
      */
     public function getSnapshotVisibility(PageSnapshotInterface $page)
     {
-        $jsonObject = json_decode($page->getVersionedData());
+        $jsonObject = json_decode((string) $page->getVersionedData(), null, 512, JSON_THROW_ON_ERROR);
 
         return $jsonObject->visibility;
     }
 
     /**
-     * @param PageSnapshotInterface $page
      * @return bool
      * @throws \Exception
      */
     public function isSnapshotActive(PageSnapshotInterface $page)
     {
-        $jsonObject = json_decode($page->getVersionedData());
+        $jsonObject = json_decode((string) $page->getVersionedData(), null, 512, JSON_THROW_ON_ERROR);
 
         $now = new \DateTime();
 
@@ -639,15 +594,13 @@ class FrontendPageController extends AbstractController
 
 
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function getJsonUrlsAction(Request $request)
     {
         $locale = $request->get('_locale', false);
 
-        $locale = str_replace('-', '_', $locale);
+        $locale = str_replace('-', '_', (string) $locale);
         /** @var PageAdmin $pageAdmin */
         $pageAdmin = $this->pool->getAdminByAdminCode('networking_init_cms.admin.page');
 
@@ -677,7 +630,7 @@ class FrontendPageController extends AbstractController
 
 
         foreach ($languages as $language) {
-            $setup['locales'][] = [$language['label'], str_replace('_', '-', $language['locale'])];
+            $setup['locales'][] = [$language['label'], str_replace('_', '-', (string) $language['locale'])];
         }
 
         return new JsonResponse($setup);

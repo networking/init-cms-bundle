@@ -1,13 +1,13 @@
 <?php
 /**
- * This file is part of the init-cms-sandbox  package.
+ * This file is part of the Networking package.
  *
  * (c) net working AG <info@networking.ch>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+declare(strict_types=1);
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
 use Networking\InitCmsBundle\Provider\VimeoProvider;
@@ -25,7 +25,7 @@ class MediaProviderCompilerPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
 
 

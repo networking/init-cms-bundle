@@ -23,45 +23,23 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class Helper implements HelperInterface
 {
     /**
-     * @var string
-     */
-    protected $server;
-
-    /**
      * @var BaseGoogleAuthenticator
      */
     protected $authenticator;
 
     /**
-     * @var string[]
-     */
-    private $forcedForRoles;
-
-    /**
-     * @var string[]
-     */
-    private $trustedIpList;
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
-
-    /**
      * @param string[] $trustedIpList IPs that will bypass 2FA authorization
+     * @param string $server
+     * @param string[] $forcedForRoles
      */
     public function __construct(
-        $server,
+        protected $server,
         BaseGoogleAuthenticator $authenticator,
-        AuthorizationCheckerInterface $authorizationChecker,
-        array $forcedForRoles = [],
-        array $trustedIpList = []
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly array $forcedForRoles = [],
+        private readonly array $trustedIpList = []
     ) {
-        $this->server = $server;
         $this->authenticator = $authenticator;
-        $this->authorizationChecker = $authorizationChecker;
-        $this->forcedForRoles = $forcedForRoles;
-        $this->trustedIpList = $trustedIpList;
     }
 
     /**
@@ -108,18 +86,12 @@ class Helper implements HelperInterface
         return $this->authenticator->generateSecret();
     }
 
-    /**
-     * @return string
-     */
-    public function getSessionKey(UsernamePasswordToken $token)
+    public function getSessionKey(UsernamePasswordToken $token): string
     {
         return sprintf('networking_init_cms_google_authenticator_%s_%s', $token->getFirewallName(), $token->getUserIdentifier());
     }
 
-    /**
-     * @return string
-     */
-    public function getVerifySessionKey(UsernamePasswordToken $token)
+    public function getVerifySessionKey(UsernamePasswordToken $token): string
     {
         return sprintf('networking_init_cms_google_authenticator_verify__%s_%s', $token->getFirewallName(), $token->getUserIdentifier());
     }

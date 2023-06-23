@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: yorkie
  * Date: 09.01.18
  * Time: 14:03.
  */
-
 namespace Networking\InitCmsBundle\Form\DataTransformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,11 +16,8 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class TagTransformer implements DataTransformerInterface
 {
-    protected $hasMultipleTags;
-
-    public function __construct($hasMultipleTags)
+    public function __construct(protected $hasMultipleTags)
     {
-        $this->hasMultipleTags = $hasMultipleTags;
     }
 
     /**
