@@ -59,7 +59,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('db_driver')
                     ->defaultValue('orm')
-                    ->setDeprecated('The "%path%.db_driver" configuration key is deprecated since version 6.2 and will be removed in 6.3.')
+                    ->setDeprecated('The "%path%.db_driver" configuration key is deprecated since version 6.2 and will be removed in 6.3.', '6.3')
                     ->validate()
                     ->ifNotInArray($supportedDrivers)
                     ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDrivers))
