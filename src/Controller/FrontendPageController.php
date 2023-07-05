@@ -474,7 +474,7 @@ class FrontendPageController extends AbstractController
      * @param $oldLocale
      * @param $locale
      */
-    protected function getTranslationRoute($referrer, $oldLocale, $locale): array|\Symfony\Cmf\Component\Routing\RouteObjectInterface
+    protected function getTranslationRoute($referrer, $oldLocale, $locale): array|\Symfony\Cmf\Component\Routing\RouteObjectInterface|string
     {
 
         $oldURL = $this->languageSwitcherHelper->getPathInfo($referrer);
