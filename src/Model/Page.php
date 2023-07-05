@@ -869,15 +869,18 @@ abstract class Page implements PageInterface
 
     public function buildAllTranslations(array &$translationsArray): void
     {
+
         // find all possible translations
         if ($this->getTranslations() && !$this->getTranslations()->isEmpty()) {
+
+
             foreach ($this->getTranslations() as $translation) {
-                if ($translation) {
-                    // if we already meet you stop and go on with the next
-                    $translationsArray[$translation->getLocale()]
-                        = $translation;
-                    $translation->buildAllTranslations($translationsArray);
+                if (array_key_exists( $translation->getLocale(), $translationsArray) ) {
+                    return;
                 }
+                    // if we already meet you stop and go on with the next
+                    $translationsArray[$translation->getLocale()]  = $translation;
+                    $translation->buildAllTranslations($translationsArray);
             }
         }
 
@@ -885,11 +888,7 @@ abstract class Page implements PageInterface
         if ($this->getOriginals() && !$this->getOriginals()->isEmpty()) {
             foreach ($this->getOriginals() as $translation) {
                 // if we already meet you stop and go on with the next
-                if (array_key_exists(
-                    $translation->getLocale(),
-                    $translationsArray
-                )
-                ) {
+                if (array_key_exists( $translation->getLocale(), $translationsArray) ) {
                     return;
                 }
                 $translationsArray[$translation->getLocale()] = $translation;
