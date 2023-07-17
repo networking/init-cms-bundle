@@ -108,7 +108,7 @@ abstract class MediaAdmin extends Admin
     /**
      * @return array
      */
-    public function getTrackedActions()
+    public function getTrackedActions(): array
     {
         return $this->trackedActions;
     }
