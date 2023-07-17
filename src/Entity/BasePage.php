@@ -21,6 +21,9 @@ use Networking\InitCmsBundle\Model\Page as ModelPage;
  */
 class BasePage extends ModelPage
 {
+    protected string $snapshotClassType = PageSnapshot::class;
+    
+    
     public function getContentRoute(): ContentRouteInterface
     {
         if (!$this->contentRoute) {
