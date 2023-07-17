@@ -12,7 +12,11 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\EventListener;
 
+use Sonata\AdminBundle\Admin\AdminExtensionInterface;
+use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Admin\Pool;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -33,6 +37,11 @@ class AdminTrackerListener
      */
     protected $admin;
 
+    /**
+     * @var Request
+     */
+    protected $request;
+
     public function __construct(Pool $adminPool)
     {
         $this->adminPool = $adminPool;
@@ -43,57 +52,49 @@ class AdminTrackerListener
      */
     public function onKernelRequest(RequestEvent $event)
     {
-        $request = $event->getRequest();
+        $this->request = $event->getRequest();
 
-        if (!$request) {
+        if (!$this->request) {
             return;
         }
 
-        if (!$request->hasSession()) {
+        if (!$this->request->hasSession()) {
             return;
         }
 
-        if($request->isXmlHttpRequest()){
+        if($this->request->isXmlHttpRequest()){
             return;
         }
 
-        $adminCode = $request->get('_sonata_admin');
-
-        if (!is_null($adminCode)) {
-            $this->admin = $this->adminPool->getAdminByAdminCode($adminCode);
-            $this->admin->setRequest($request);
-            if (!$this->admin) {
-                throw new \RuntimeException(sprintf(
-                    'Unable to find the admin class related to the current controller (%s)',
-                    static::class
-                ));
-            }
-
-            foreach ($this->admin->getExtensions() as $extension) {
-                $this->setTrackedAction($extension);
-            }
-            $this->setTrackedAction($this->admin);
+        try{
+            $admin = $this->adminPool->getAdminByAdminCode($this->request->get('_sonata_admin', ''));
+        }catch (\Exception){
+            return;
         }
+
+        $admin->setRequest($this->request);
+
+        foreach ($admin->getExtensions() as $extension) {
+            $this->setTrackedAction($extension);
+        }
+        $this->setTrackedAction($admin);
     }
 
     /**
      * @param $object
      */
-    public function setTrackedAction($object)
+    public function setTrackedAction(AdminInterface | AdminExtensionInterface $object)
     {
         if (method_exists($object, 'getTrackedActions')) {
-            $request = $this->admin->getRequest();
 
             foreach ($object->getTrackedActions() as $trackedAction) {
                 // if an action which is flagged as 'to be tracked' is matching the end of the route: add info to session
-                if (preg_match('#'.$trackedAction.'$#', (string) $request->get('_route'), $matches)) {
+                if (preg_match('#'.$trackedAction.'$#', (string) $this->request->get('_route'), $matches)) {
                     $this->updateTrackedInfo(
-                        $request->getSession(),
+                        $this->request->getSession(),
                         '_networking_initcms_admin_tracker',
                         [
-                            'url' => $request->getRequestUri(),
-                            'controller' => $this->admin->getBaseControllerName(),
-                            'action' => $trackedAction,
+                            'url' => $this->request->getRequestUri(),
                         ]
                     );
                 }
@@ -109,25 +110,40 @@ class AdminTrackerListener
      * @param array  $trackInfoArray
      * @param int    $limit
      */
-    protected function updateTrackedInfo($session, $sessionKey, $trackInfoArray, $limit = 5)
+    protected function updateTrackedInfo(
+        SessionInterface $session,
+        string $sessionKey,
+        array $trackInfoArray,
+        int $limit = 5): void
     {
-        // save the url, controller and action in the session
-        $value = json_decode((string) $session->get($sessionKey), true, 512, JSON_THROW_ON_ERROR);
+        try{
+            $value = json_decode(
+                (string) $session->get($sessionKey, '[]'),
+                true,
+                512,
+                JSON_THROW_ON_ERROR);
+        }catch (\Exception){
+            $value = [];
+        }
+
         if (is_null($value)) {
             $value = [];
         }
-        // add new value as first value (to the top of the stack)
+
+
+        if(current($value) === $trackInfoArray){
+            return;
+        }
+
         array_unshift(
             $value,
             $trackInfoArray
         );
 
-        // remove last value, if array has more than limit items
-        if ($limit > 0 and (is_countable($value) ? count($value) : 0) > $limit) {
+        if ($limit > 0 && (is_countable($value) ? count($value) : 0) > $limit) {
             array_pop($value);
         }
 
-        // set the session value
         $session->set($sessionKey, json_encode($value, JSON_THROW_ON_ERROR));
     }
 }
