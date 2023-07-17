@@ -87,4 +87,10 @@
             </constraint>
         </property>
     </class>
+
+    <class name="Networking\InitCmsBundle\Entity\Group">
+        <property name="name">
+            <constraint name="NotBlank"/>
+        </property>
+    </class>
 </constraint-mapping>

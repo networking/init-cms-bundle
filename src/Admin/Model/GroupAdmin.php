@@ -102,6 +102,7 @@ abstract class GroupAdmin extends BaseAdmin
                     'multiple' => true,
                     'required' => false,
                     'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline',
+                    'choice_translation_domain' => null,
                     'excluded_roles' => [
                         UserInterface::ROLE_DEFAULT,
                         UserInterface::ROLE_SUPER_ADMIN,

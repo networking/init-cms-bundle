@@ -14,12 +14,20 @@
                 <source>action._delete</source>
                 <target>Löschen</target>
             </trans-unit>
-            <trans-unit id="link_action_create">
-                <source>link_action_create</source>
+            <trans-unit id="form.label_groups">
+                <source>form.label_groups</source>
+                <target>Benutzergruppen</target>
             </trans-unit>
             <trans-unit id="groups">
                 <source>groups</source>
-                <target>Gruppen</target>
+                <target>Benutzergruppen</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_group_list">
+                <source>breadcrumb.link_group_list</source>
+                <target>Benutzergruppen</target>
+            </trans-unit>
+            <trans-unit id="link_action_create">
+                <source>link_action_create</source>
             </trans-unit>
             <trans-unit id="form.group_profile">
                 <source>form.group_profile</source>
@@ -27,10 +35,6 @@
             </trans-unit>
             <trans-unit id="form.group_groups">
                 <source>form.group_groups</source>
-                <target>Gruppen</target>
-            </trans-unit>
-            <trans-unit id="form.label_groups">
-                <source>form.label_groups</source>
                 <target>Gruppen</target>
             </trans-unit>
             <trans-unit id="list.label_groups">

@@ -90,6 +90,14 @@
                 <source>groups</source>
                 <target>User groups</target>
             </trans-unit>
+            <trans-unit id="ROLE_ALLOWED_TO_SWITCH">
+                <source>ROLE_ALLOWED_TO_SWITCH</source>
+                <target>Allowed to impersonate users</target>
+            </trans-unit>
+            <trans-unit id="ROLE_SONATA_ADMIN">
+                <source>ROLE_SONATA_ADMIN</source>
+                <target>Allowed in admin area</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

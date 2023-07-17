@@ -79,7 +79,7 @@ abstract class UserAdmin extends BaseUserAdmin
     /**
      * @return array
      */
-    public function getTrackedActions()
+    public function getTrackedActions(): array
     {
         return $this->trackedActions;
     }
@@ -211,6 +211,7 @@ abstract class UserAdmin extends BaseUserAdmin
                         'multiple' => true,
                         'required' => false,
                         'label' => false,
+                        'choice_translation_domain' => null,
                         'excluded_roles' => [
                             UserInterface::ROLE_DEFAULT,
                             UserInterface::ROLE_SUPER_ADMIN,

@@ -54,6 +54,14 @@
                 <source>Gallery Viewer</source>
                 <target>Bildergallerie</target>
             </trans-unit>
+            <trans-unit id="gallery">
+                <source>gallery</source>
+                <target>Bildergallerie</target>
+            </trans-unit>
+            <trans-unit id="gallery_item">
+                <source>gallery_item</source>
+                <target>Gallerie Element</target>
+             </trans-unit>
             <trans-unit id="header">
                 <source>header</source>
                 <target>Kopfzeile</target>
@@ -81,6 +89,14 @@
             <trans-unit id="carousel">
                 <source>carousel</source>
                 <target>Karusell</target>
+            </trans-unit>
+            <trans-unit id="ROLE_ALLOWED_TO_SWITCH">
+                <source>ROLE_ALLOWED_TO_SWITCH</source>
+                <target>Darf Benutzer imitieren </target>
+            </trans-unit>
+            <trans-unit id="ROLE_SONATA_ADMIN">
+                <source>ROLE_SONATA_ADMIN</source>
+                <target>Darf im Adminbereich</target>
             </trans-unit>
 		</body>
 	</file>
