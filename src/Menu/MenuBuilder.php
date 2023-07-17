@@ -209,7 +209,7 @@ class MenuBuilder
         $iterator = new \RecursiveIteratorIterator($itemIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $menuItem) {
             $parentId = $childNode->getParent()->getId();
-            if ($menuItem->getName() != $parentId) {
+            if ($menuItem->getName() !== sprintf('menu_%s', $parentId)) {
                 continue;
             }
 
