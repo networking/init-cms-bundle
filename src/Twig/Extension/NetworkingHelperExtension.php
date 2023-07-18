@@ -1173,7 +1173,7 @@ class NetworkingHelperExtension extends AbstractExtension
             return $text;
         }
 
-        $substrLength = floor(($maxLength - strlen($delimiter)) / 2);
+        $substrLength = (int) floor(($maxLength - strlen($delimiter)) / 2);
 
         return substr((string) $text, 0, $substrLength).$delimiter.substr((string) $text, -$substrLength);
     }
