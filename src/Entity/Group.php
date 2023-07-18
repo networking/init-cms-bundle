@@ -22,21 +22,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Group implements \Stringable
 {
-    /**
-     * @var int
-     *
-     */
     protected $id;
-
-    /**
-     * Group constructor.
-     *
-     * @param string $name
-     * @param array  $roles
-     */
-    public function __construct(protected $name, protected $roles = [])
-    {
-    }
+    protected array $roles = [];
+    protected string $name;
+    
 
     /**
      * {@inheritdoc}
