@@ -4,7 +4,7 @@
     {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
     <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
         {% if app.request.isxmlhttprequest %}
-            <button class="btn btn-default" data-dismiss="modal"
+            <button class="btn btn-light" data-dismiss="modal"
                     aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
             {% if admin.id(object) %}
                 <input type="submit" class="btn btn-primary" name="btn_update"
@@ -14,11 +14,11 @@
                        value="{{ 'btn_create'|trans({}, 'NetworkingInitCmsBundle') }}"/>
             {% endif %}
         {% else %}
-            <a class="btn btn-default "
+            <a class="btn btn-light "
                href="{{ admin.generateObjectUrl('list', object) }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                <input class="btn btn-default btn-primary" type="submit" name="btn_create_and_list"
+                <input class="btn btn-light btn-primary" type="submit" name="btn_create_and_list"
                        value="{{ 'btn_create_and_return_to_list'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                <input class="btn btn-default " type="submit" name="btn_create_and_create"
+                <input class="btn btn-light " type="submit" name="btn_create_and_create"
                        value="{{ 'btn_create_and_create_a_new_one'|trans({}, 'NetworkingInitCmsBundle') }}"/>
         {% endif %}
     </div>

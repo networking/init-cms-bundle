@@ -80,7 +80,7 @@ file that was distributed with this source code.
                 {#<input type="hidden" value="DELETE" name="_method" />#}
 
                 {% if app.request.isxmlhttprequest %}
-                    <button class="btn btn-default " data-dismiss="modal"
+                    <button class="btn btn-light " data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                 {% else %}
                     <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">

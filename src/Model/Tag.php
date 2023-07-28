@@ -49,7 +49,7 @@ abstract class Tag implements \Stringable
     /**
      * @var ArrayCollection
      */
-    protected $children;
+    protected $children = [];
 
     /**
      * @var Tag
@@ -236,6 +236,9 @@ abstract class Tag implements \Stringable
      */
     public function __toString(): string
     {
+        if(!$this->name){
+            return '';
+        }
         return $this->path??$this->name;
     }
 }

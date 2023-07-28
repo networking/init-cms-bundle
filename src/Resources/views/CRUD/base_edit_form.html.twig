@@ -13,27 +13,30 @@ file that was distributed with this source code.
 
     {% set url = objectId|default(admin.id(object)) is not null ? 'edit' : 'create' %}
 
+    {% set isAjax = app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+
     {% if not admin.hasRoute(url) %}
         <div>
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-            <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-        {% endif %}
 
-        <form {% if form.vars.horizontal or app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}class="form-horizontal"{% endif %}
-               role="form"
+
+        <form role="form"
               action="{% block sonata_form_action_url %}{{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}{% endblock %}"
                 {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
-                {% if not sonata_config.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+                novalidate="novalidate"
                 {% block sonata_form_attributes %}{% endblock %}
               method="POST">
-            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+
+
+            {% if not isAjax %}
+                <div class="card">
+                    {% endif %}
+
+            {% if isAjax %}
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3>
+                    <h3 class="modal-title">
                         {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
                         {% if admin.id(object) is not null %}
                             {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
@@ -51,12 +54,17 @@ file that was distributed with this source code.
                             {% endif %}
                         {% endif %}
                     </h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                    <!--end::Close-->
                 </div>
             {% endif %}
-            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}<div class="modal-body">{% endif %}
+            <div class="{{ isAjax?'modal':'card' }}-body">
 
                 {% if form.vars.errors|length > 0 %}
-                    <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
+                    <div class="{% if isAjax %}alert alert-danger{% else %}invalid-feedback{% endif %} d-block">
                         {{ form_errors(form) }}
                     </div>
                 {% endif %}
@@ -102,13 +110,13 @@ file that was distributed with this source code.
                 {% block sonata_post_fieldsets %}{% endblock %}
                 {{ form_rest(form ) }}
 
-    {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}</div>{% endif %}
+            </div>
 
             {% block formactions %}
                 {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
-                    {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-                        <button class="btn btn-default" data-dismiss="modal"
+                <div class="{{ isAjax?'modal':'card' }}-footer form-actions">
+                    {% if isAjax %}
+                        <button class="btn btn-light" data-bs-dismiss="modal" type="button"
                                 aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
                         {% if admin.id(object) %}
                             <input type="submit" class="btn btn-primary" name="btn_update"
@@ -118,7 +126,7 @@ file that was distributed with this source code.
                                    value="{{ 'btn_create'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
                         {% endif %}
                     {% else %}
-                        <a class="btn btn-default"
+                        <a class="btn btn-light"
                            href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
                         {% if admin.supportsPreviewMode %}
                             <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
@@ -127,7 +135,7 @@ file that was distributed with this source code.
                         {% if admin.id(object) %}
                             <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
                                    value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                            <input type="submit" class="btn btn-default" name="btn_update_and_list"
+                            <input type="submit" class="btn btn-light" name="btn_update_and_list"
                                    value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
 
                             {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
@@ -138,19 +146,19 @@ file that was distributed with this source code.
                         {% else %}
                             <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
                                    value="{{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                            <input type="submit" class="btn btn-default" name="btn_create_and_list"
+                            <input type="submit" class="btn btn-light" name="btn_create_and_list"
                                    value="{{ 'btn_create_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                            <input class="btn btn-default" type="submit" name="btn_create_and_create"
+                            <input class="btn btn-light" type="submit" name="btn_create_and_create"
                                    value="{{ 'btn_create_and_create_a_new_one'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
                         {% endif %}
                     {% endif %}
                 </div>
             {% endblock formactions %}
+
+                    {% if not isAjax %}
+                </div>
+            {% endif %}
         </form>
-        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-            </div>
-            </div>
-        {% endif %}
     {% endif %}
 
     {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}

@@ -31,7 +31,7 @@ file that was distributed with this source code.
 
 {% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
     <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
-       class="btn btn-default btn-sm {% if object.isPublished() %}disabled{% endif %}"
+       class="btn btn-light btn-sm {% if object.isPublished() %}disabled{% endif %}"
        {% if object.isPublished() %}onclick="return false"{% endif %}>
         {{ 'button.publish'|trans({}, admin.translationDomain) }}
     </a>
@@ -50,7 +50,7 @@ file that was distributed with this source code.
     {{ 'or'|trans({}, admin.translationDomain) }}
     <br>
     <a href="{{ admin.generateUrl('offline', {id: object.id}) }}"
-       class="btn btn-default btn-sm {% if object.isPublished() %}disabled{% endif %}"
+       class="btn btn-light btn-sm {% if object.isPublished() %}disabled{% endif %}"
        {% if object.isPublished() %}onclick="return false"{% endif %}>
         {{ 'button.offline'|trans({}, admin.translationDomain) }}
     </a>

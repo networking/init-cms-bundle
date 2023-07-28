@@ -13,6 +13,12 @@
                    public="true" autowire="true">
             <tag name="controller.service_arguments"/>
         </prototype>
+
+        <prototype namespace="Networking\InitCmsBundle\Twig\Extension\"
+                   resource="../../Twig/Extension"
+                   public="true" autowire="true">
+            <tag name="twig.extension"/>
+        </prototype>
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
         <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
         <service id="Networking\InitCmsBundle\Controller\MediaController">

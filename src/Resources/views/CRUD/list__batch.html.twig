@@ -8,7 +8,10 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
+{% extends get_admin_template('base_list_field', admin.code) %}
 
-<td class="sonata-ba-list-field sonata-ba-list-field-batch">
-  <input type="checkbox" name="idx[]" value="{{ admin.id(object) }}" />
-</td>
+{% block field %}
+  <div class="form-check form-check-sm form-check-custom form-check-solid">
+    <input class="form-check-input" type="checkbox" name="idx[]" value="{{ admin.id(object) }}" />
+  </div>
+{% endblock %}

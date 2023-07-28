@@ -17,128 +17,240 @@ file that was distributed with this source code.
 {% block sonata_left_side %}
 {% endblock sonata_left_side %}
 
-{% block body_attributes %}class="sonata-bc login-page"{% endblock %}
 
-{% block sonata_wrapper %}
-    <div class="row">
-    <div id="login" class="connection modal">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-
-                {% block sonata_user_login_form %}
-                    {% block sonata_user_login_error %}
-                        {% if error %}
-                            <div class="alert alert-danger alert-error">
-                                {{ error.messageKey|trans(error.messageData, 'security') }}
-                            </div>
-                        {% endif %}
-                    {% endblock %}
-                    {% if qrCodeUrl is defined %}
-                        <form method="POST" role="form">
-                            <div class="login-box modal-body">
-                                {% if state == 'error' %}
-                                    <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
-                                {% endif %}
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <p align="middle">{{ 'message_two_step_into'|trans({}, 'SonataUserBundle') }}</p>
-                                        <p align="middle"><img src="{{ qrCodeUrl }}" alt="QR-code"></p>
-                                        <p align="middle">{{ 'qr_code_secret'|trans({}, 'SonataUserBundle') }}
-                                            : {{ qrSecret }}</p>
-                                        <hr>
-                                            <input type="text" class="form-control  input-large" id="code" name="_code"
-                                                   autocomplete='off' autofocus/>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <button type="submit"
-                                                class="btn btn-primary btn-block btn-flat">{{ 'security.login.confirm_code'|trans({}, 'SonataUserBundle') }}</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    {% elseif two_step_submit|default(false) %}
-                        <form method="POST" role="form">
-                            <div class="login-box modal-body">
-                                {% if state == 'error' %}
-                                    <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
-                                {% endif %}
-                                <label for="code">{{ 'label_two_step_code'|trans({}, 'SonataUserBundle') }}</label>
-                                <div class="input-group input-group-lg">
-                                    <input type="text" class="form-control" id="code" name="_code"
+{% block page %}
+    <style>body { background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/assets/media/auth/bg9.jpg') }}'); } [data-bs-theme="dark"] body { background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/assets/media/auth/bg9.jpg') }}'); }</style>
+    <!--begin::Authentication - Sign-in -->
+    <div class="d-flex flex-column flex-column-fluid flex-lg-row">
+    <!--begin::Aside-->
+    <div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
+        <!--begin::Aside-->
+        <div class="d-flex flex-center flex-lg-start flex-column">
+            <!--begin::Logo-->
+            <a href="https://www.initcms.com" target="_blank" class="mb-7">
+                <img alt="Logo" src="{{ asset('bundles/networkinginitcms/img/initcms-396x100.png') }}" />
+            </a>
+            <!--end::Logo-->
+            <!--begin::Title-->
+            <h2 class="text-white fw-normal m-0">Init CMS</h2>
+            <!--end::Title-->
+        </div>
+        <!--begin::Aside-->
+    </div>
+    <!--begin::Aside-->
+    <!--begin::Body-->
+    <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12 p-lg-20">
+    <!--begin::Card-->
+        <div class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20">
+        <!--begin::Wrapper-->
+            <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20">
+            <!--begin::Form-->
+                {% if qrCodeUrl is defined %}
+                    <form method="POST" role="form">
+                        <div class="login-box modal-body">
+                            {% if state == 'error' %}
+                                <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <p align="middle">{{ 'message_two_step_into'|trans({}, 'SonataUserBundle') }}</p>
+                                    <p align="middle"><img src="{{ qrCodeUrl }}" alt="QR-code"></p>
+                                    <p align="middle">{{ 'qr_code_secret'|trans({}, 'SonataUserBundle') }}
+                                        : {{ qrSecret }}</p>
+                                    <hr>
+                                    <input type="text" class="form-control  input-large" id="code" name="_code"
                                            autocomplete='off' autofocus/>
-                                    <span class="input-group-btn">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <button type="submit"
+                                            class="btn btn-primary btn-block btn-flat">{{ 'security.login.confirm_code'|trans({}, 'SonataUserBundle') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                {% elseif two_step_submit|default(false) %}
+                    <form class="form" id="kt_login_signin_form"  role="form">
+                        <div class="login-box modal-body">
+                            {% if state == 'error' %}
+                                <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
+                            {% endif %}
+                            <label for="code">{{ 'label_two_step_code'|trans({}, 'SonataUserBundle') }}</label>
+                            <div class="input-group input-group-lg">
+                                <input type="text" class="form-control" id="code" name="_code"
+                                       autocomplete='off' autofocus/>
+                                <span class="input-group-btn">
                                                 <input class="btn btn-primary"
                                                        id="_submit"
                                                        name="_submit"
                                                        type="submit"
                                                        value="{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}"/>
                                             </span>
-                                </div>
-                                <span class="help-block sonata-ba-field-help">{{ 'message_two_step_code_help'|trans({}, 'SonataUserBundle') }}</span>
                             </div>
-                        </form>
-                    {% else %}
-                        <form action="{{ path("sonata_user_admin_security_check") }}" method="post"
-                              role="form">
-                            <div class="login-box modal-body">
-                                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                            <span class="help-block sonata-ba-field-help">{{ 'message_two_step_code_help'|trans({}, 'SonataUserBundle') }}</span>
+                        </div>
+                    </form>
+                {% else %}
+                    <!--begin::Login Sign in form-->
+                    <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="{{ url("sonata_user_admin_security_check") }}" method="post"
+                          role="form">
+                        <!--begin::Heading-->
+                        <div class="text-center mb-11">
+                            <!--begin::Title-->
+                            <h1 class="text-dark fw-bolder mb-3" data-kt-translate="sign-in-title">Sign In</h1>
+                            <!--end::Title-->
+                            <!--begin::Subtitle-->
+{#                            <div class="text-gray-500 fw-semibold fs-6">Your Social Campaigns</div>#}
+                            <!--end::Subtitle=-->
+                        </div>
+                        <!--begin::Heading-->
+                        <div class="separator separator-content my-14">
+                            <span class="w-125px text-gray-500 fw-semibold fs-7">Username or Password</span>
+                        </div>
+                        <!--end::Separator-->
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
 
-                                <div class="form-group">
-                                    <input class="form-control input-large"
-                                           id="username"
-                                           name="_username"
-                                           placeholder="{{ 'security.login.username'|trans({}, 'SonataUserBundle') }}"
-                                           required="required"
-                                           type="text"
-                                           value="{{ last_username }}"/>
-                                </div>
+                        {% block sonata_user_login_error %}
+                            {% if error %}
+                                <!--begin::Alert-->
+                                <div class="alert alert-danger d-flex align-items-center p-5">
+                                    <!--begin::Icon-->
+                                    <i class="ki-duotone ki-shield-tick fs-2hx text-danger me-4"><span class="path1"></span><span class="path2"></span></i>
+                                    <!--end::Icon-->
 
-                                <div class="form-group">
-                                    <input class="form-control input-large"
-                                           id="password"
-                                           name="_password"
-                                           placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
-                                           required="required"
-                                           type="password"/>
-                                </div>
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-column">
+                                        <!--begin::Title-->
+                                        <h4 class="mb-1 text-danger">{{ 'flash_error'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
+                                        <!--end::Title-->
 
-                                <div class="row">
-                                    <div class="col-xs-8">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" id="remember_me" name="_remember_me"
-                                                       value="on"/>
-                                                {{ 'security.login.remember_me'|trans({}, 'SonataUserBundle') }}
-                                            </label>
-                                        </div>
+                                        <!--begin::Content-->
+                                        <span>{{ error.messageKey|trans(error.messageData, 'security') }}.</span>
+                                        <!--end::Content-->
                                     </div>
+                                    <!--end::Wrapper-->
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <button type="submit"
-                                                class="btn btn-primary btn-block btn-flat">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</button>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-top: 20px">
-                                    <div class="col text-center">
-                                        <p>
-                                            <a href="{{ reset_route }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    {% endif %}
-                {% endblock %}
-            </div>
+                                <!--end::Alert-->
+                            {% endif %}
+                        {% endblock %}
+
+                        <!--begin::Input group=-->
+                        <div class="fv-row mb-8">
+                            <!--begin::Email-->
+                            <input type="text" placeholder="{{ 'security.login.username'|trans({}, 'SonataUserBundle') }}" name="_username"
+                                   value="{{ last_username }}" autocomplete="off" data-kt-translate="sign-in-input-email" class="form-control bg-transparent" />
+                            <!--end::Email-->
+                        </div>
+                        <div class="fv-row mb-8">
+                            <input class="form-control bg-transparent" type="password" placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
+                             data-kt-translate="sign-in-input-password" name="_password" />
+                        </div>
+                        <!--end::Input group=-->
+                        <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+                            <div></div>
+                            <a href="{{ url('networking_init_cms_admin_resetting_request') }}" id="kt_login_forgot" data-kt-translate="sign-in-forgot-password">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
+                        </div>
+                        <!--begin::Submit button-->
+                        <div class="d-grid mb-10">
+                            <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+                                <!--begin::Indicator label-->
+                                <span class="indicator-label">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</span>
+                                <!--end::Indicator label-->
+                                <!--begin::Indicator progress-->
+                                <span class="indicator-progress" data-kt-translate="general-progress">Please wait...
+										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                <!--end::Indicator progress-->
+                            </button>
+                        </div>
+                        <!--end::Submit button-->
+                    </form>
+                    <!--end::Login Sign in form-->
+                {% endif %}
+            <!--end::Form-->
         </div>
+        <!--end::Wrapper-->
+        <!--begin::Footer-->
+        {% block footer %}
+        <div class="d-flex flex-stack px-lg-10">
+        <!--begin::Languages-->
+        <div class="me-0">
+            <!--begin::Toggle-->
+            <button class="btn btn-flex btn-link btn-color-gray-700 btn-active-color-primary rotate fs-base" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0px, 0px">
+                <img data-kt-element="current-lang-flag" class="w-20px h-20px rounded me-3" src="{{ asset('bundles/networkinginitcms/admin-theme/assets/media/flags/united-states.svg') }}" alt="" />
+                <span data-kt-element="current-lang-name" class="me-1">English</span>
+                <i class="ki-duotone ki-down fs-5 text-muted rotate-180 m-0"></i>
+            </button>
+            <!--end::Toggle-->
+            <!--begin::Menu-->
+            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-4 fs-7" data-kt-menu="true" id="kt_auth_lang_menu">
+                <!--begin::Menu item-->
+                <div class="menu-item px-3">
+                    <a href="#" class="menu-link d-flex px-5" data-kt-lang="German">
+                        <span class="symbol symbol-20px me-4">
+                            <img data-kt-element="lang-flag" class="rounded-1" src="{{ asset('bundles/networkinginitcms/admin-theme/assets/media/flags/germany.svg') }}" alt="" />
+                        </span>
+                        <span data-kt-element="lang-name">German</span>
+                    </a>
+                </div>
+                <!--end::Menu item-->
+                <!--begin::Menu item-->
+                <div class="menu-item px-3">
+                    <a href="#" class="menu-link d-flex px-5" data-kt-lang="French">
+                        <span class="symbol symbol-20px me-4">
+                            <img data-kt-element="lang-flag" class="rounded-1" src="{{ asset('bundles/networkinginitcms/admin-theme/assets/media/flags/france.svg') }}" alt="" />
+                        </span>
+                        <span data-kt-element="lang-name">French</span>
+                    </a>
+                </div>
+                <!--end::Menu item-->
+                <!--begin::Menu item-->
+                <div class="menu-item px-3">
+                    <a href="#" class="menu-link d-flex px-5" data-kt-lang="Italian">
+                        <span class="symbol symbol-20px me-4">
+                            <img data-kt-element="lang-flag" class="rounded-1" src="{{ asset('bundles/networkinginitcms/admin-theme/assets/media/flags/italy.svg') }}" alt="" />
+                        </span>
+                        <span data-kt-element="lang-name">Italian</span>
+                    </a>
+                </div>
+                <!--end::Menu item-->
+                <!--begin::Menu item-->
+                <div class="menu-item px-3">
+                    <a href="#" class="menu-link d-flex px-5" data-kt-lang="English">
+                        <span class="symbol symbol-20px me-4">
+                            <img data-kt-element="lang-flag" class="rounded-1" src="{{ asset('bundles/networkinginitcms/admin-theme/assets/media/flags/united-states.svg') }}" alt="" />
+                        </span>
+                        <span data-kt-element="lang-name">English</span>
+                    </a>
+                </div>
+                <!--end::Menu item-->
+            </div>
+            <!--end::Menu-->
+        </div>
+        <!--end::Languages-->
+        </div>
+        {% endblock footer %}
+        <!--end::Footer-->
     </div>
+        <!--end::Card-->
 
-{% endblock sonata_wrapper %}
+    </div>
+    <!--end::Authentication - Sign-in-->
+
+{% endblock page %}
+
+{% block before_body_end %}
+        <!--begin::Javascript-->
+        <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/assets/')}}";</script>
+        <!--begin::Global Javascript Bundle(mandatory for all pages)-->
+        <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/global/plugins.bundle.js') }}"></script>
+        <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/scripts.bundle.js') }}"></script>
+        <!--end::Global Javascript Bundle-->
+		<!--begin::Custom Javascript(used for this page only)-->
+		<script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/authentication/sign-in/general.js')}}"></script>
+		<script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/authentication/sign-in/i18n.js')}}"></script>
+		<!--end::Custom Javascript-->
+{% endblock %}

@@ -253,9 +253,18 @@ class MediaAdminController extends CRUDController
         if ($tag !== null) {
             $selectedModels = $selectedModelQuery->execute();
 
+            $status = 'success';
+            $message = 'tag_added';
+
             try {
                 /** @var Media $selectedModel */
                 foreach ($selectedModels as $selectedModel) {
+
+                    if($selectedModel->getTags()->contains($tag)){
+                        $status = 'warning';
+                        $message = 'tag_already_added';
+                        continue;
+                    }
                     if (!$this->getParameter('networking_init_cms.multiple_media_tags')) {
                         $selectedModel->setTags(new ArrayCollection());
                     }
@@ -263,16 +272,17 @@ class MediaAdminController extends CRUDController
                     $this->admin->getModelManager()->update($selectedModel);
                 }
 
-                $status = 'success';
-                $message = 'tag_added';
-            } catch (\Exception) {
+
+            } catch (\Exception $e) {
                 $status = 'error';
-                $message = 'tag_not_added';
+                $message = $e->getMessage();
             }
 
             $data = [
                 'result' => 'ok',
                 'status' => $status,
+                'tag' => $tag->getId(),
+                'media' => $selectedModel->getId(),
                 'message' => $this->trans($message, ['%tag%' => $tag->getPath()]), ];
         }
 
@@ -352,6 +362,13 @@ class MediaAdminController extends CRUDController
         if(!$context){
             $context = $persistentParameters['context'];
         }
+
+        $tagFilter = $datagrid->getFilter('tags');
+        $selectedTag = false;
+
+        if(array_key_exists('tags', $filters) && array_key_exists('value', $filters['tags'])){
+            $selectedTag = (int)$filters['tags']['value'];
+        }
         $mediaPool = $this->container->get('sonata.media.pool');
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/MediaAdmin/list.html.twig',
@@ -362,6 +379,7 @@ class MediaAdminController extends CRUDController
                 'currentProvider' => array_key_exists('providerName', $filters)?$filters['providerName']['value']:$persistentParameters['filter'],
                 'tags' => $tags,
                 'tagAdmin' => $tagAdmin,
+                'tagJson' => $tagAdmin->getTagTree($selectedTag),
                 'lastItem' => 0,
                 'action' => 'list',
                 'form' => $formView,

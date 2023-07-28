@@ -29,11 +29,13 @@ use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\ChoiceFilter;
+use Sonata\DoctrineORMAdminBundle\Filter\DateRangeFilter;
 use Sonata\Form\Type\CollectionType;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
+use Sonata\Form\Type\DateRangePickerType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -88,8 +90,8 @@ abstract class PageAdmin extends BaseAdmin
         ];
 
 
-    protected function generateBaseRoutePattern(bool $isChildAdmin = false
-    ): string {
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
+    {
         return 'cms/pages';
     }
 
@@ -109,7 +111,7 @@ abstract class PageAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollectionInterface $collection): void 
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->add(
             'translate',
@@ -177,7 +179,8 @@ abstract class PageAdmin extends BaseAdmin
         if ($this->hasObject()) {
             $this->pageLocale = $this->getSubject()->getLocale();
         } else {
-            $this->pageLocale = $request->get('locale') ?: $request->getLocale();
+            $this->pageLocale = $request->get('locale')
+                ?: $request->getLocale();
         }
 
 
@@ -195,7 +198,6 @@ abstract class PageAdmin extends BaseAdmin
         $this->canCreateHomepage = (!$homePage) ? true : false;
 
         if (!$this->canCreateHomepage) {
-
             if (!$this->hasObject() || !$this->getSubject()->isHome()) {
                 $validationGroups[] = 'not_home';
             }
@@ -205,7 +207,6 @@ abstract class PageAdmin extends BaseAdmin
         $formOptions['constraints'] = new Valid();
 
         $formOptions['validation_groups'] = $validationGroups;
-
     }
 
     /**
@@ -244,7 +245,6 @@ abstract class PageAdmin extends BaseAdmin
                     ]
                 )
                 ->end();
-
         }
 
         $form->with('page_settings');
@@ -267,7 +267,7 @@ abstract class PageAdmin extends BaseAdmin
                         'choices' => $this->getLocaleChoices(),
                         'choice_translation_domain' => false,
                         'preferred_choices' => [$this->pageLocale],
-                        'help_block' => 'locale.helper.text',
+                        'help' => 'locale.helper.text',
                         'layout' => $horizontal,
                     ]
                 );
@@ -277,7 +277,7 @@ abstract class PageAdmin extends BaseAdmin
             'pageName',
             TextType::class,
             [
-                'help_block' => 'page_name.helper.text',
+                'help' => 'page_name.helper.text',
                 'attr' => ['class' => 'input-xxlarge'],
                 'layout' => $horizontal,
             ]
@@ -290,7 +290,7 @@ abstract class PageAdmin extends BaseAdmin
                         'parent',
                         AutocompleteType::class,
                         [
-                            'help_block' => 'parent.helper.text',
+                            'help' => 'parent.helper.text',
                             'attr' => ['class' => 'input-xxlarge'],
                             'choice_label' => 'AdminTitle',
                             'class' => $this->getClass(),
@@ -377,7 +377,8 @@ abstract class PageAdmin extends BaseAdmin
                     'layout' => $horizontal,
                 ]
             )
-            ->add('activeFrom',
+            ->add(
+                'activeFrom',
                 DateTimeType::class,
                 [
                     'widget_form_group_attr' => ['class' => 'form-group'],
@@ -386,8 +387,6 @@ abstract class PageAdmin extends BaseAdmin
                     'required' => false,
                     'widget' => 'single_text',
                     'html5' => false,
-                    'datetimepicker' => true,
-                    'widget_reset_icon' => 'remove',
                     'layout' => $horizontal,
                 ]
             )
@@ -400,8 +399,6 @@ abstract class PageAdmin extends BaseAdmin
                     'required' => false,
                     'widget' => 'single_text',
                     'html5' => false,
-                    'datetimepicker' => true,
-                    'widget_reset_icon' => 'remove',
                     'attr' => ['data-start-view' => 'hour'],
                     'layout' => $horizontal,
                 ]
@@ -463,7 +460,6 @@ abstract class PageAdmin extends BaseAdmin
         foreach ($this->getExtensions() as $extension) {
             $extension->configureFormFields($form);
         }
-
     }
 
     /**
@@ -477,6 +473,7 @@ abstract class PageAdmin extends BaseAdmin
                 'locale',
                 CallbackFilter::class,
                 [
+                    'advanced_filter' => false,
                     'callback' => $this->getByLocale(...),
                 ],
                 [
@@ -495,20 +492,59 @@ abstract class PageAdmin extends BaseAdmin
                 'pageName',
                 SimpleStringFilter::class,
                 [],
-                ['translation_domain' => $this->getTranslationDomain()]
+                [
+                    'translation_domain' => $this->getTranslationDomain(),
+                    'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
+                    ],
+                ]
             )
             ->add(
                 'path',
                 CallbackFilter::class,
-                ['callback' => $this->matchPath(...), 'hidden' => true]
+                [
+                    'callback' => $this->matchPath(...),
+                    'advanced_filter' => false,
+                ],
+                [
+                    'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
+                    ],
+                ]
+            )
+            ->add(
+                'activeFrom',
+                DateRangeFilter::class,
+                [
+                    'field_type' => DateRangePickerType::class,
+                    'advanced_filter' => false,
+                ],
+                [
+                    'field_options' => [
+                    'attr' => ['class' => 'd-flex flex-row'],
+                        'field_options_start' => [
+                            'format' => 'dd.MM.yyyy',
+                            'widget' => 'single_text',
+                            'html5' => false,
+                            'row_attr' => ['class' => 'form-floating w-50'],
+                        ],
+                        'field_options_end' => [
+                            'format' => 'dd.MM.yyyy',
+                            'widget' => 'single_text',
+                            'html5' => false,
+                            'row_attr' => ['class' => 'form-floating w-50'],
+                        ],
+                    ],
+                ]
             )
             ->add(
                 'status',
                 ChoiceFilter::class,
-                ['show_filter' => true],
+                [],
                 [
                     'field_type' => ChoiceType::class,
                     'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
                         'placeholder' => 'empty_option',
                         'choices' => [
                             PageInterface::STATUS_DRAFT => PageInterface::STATUS_DRAFT,
@@ -541,6 +577,7 @@ abstract class PageAdmin extends BaseAdmin
      * @param            $alias
      * @param            $field
      * @param            $data
+     *
      * @return bool
      */
     public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -548,7 +585,7 @@ abstract class PageAdmin extends BaseAdmin
         if (!$data || !$data instanceof FilterData || !$data->hasValue()) {
             return false;
         }
-        $value = trim((string) $data->getValue());
+        $value = trim((string)$data->getValue());
 
         if (strlen($value) == 0) {
             return false;
@@ -579,8 +616,8 @@ abstract class PageAdmin extends BaseAdmin
      *
      * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
      */
-    public function configureQuery(ProxyQueryInterface $query
-    ): ProxyQueryInterface {
+    public function configureQuery(ProxyQueryInterface $query): ProxyQueryInterface
+    {
         $qb = $query->getQueryBuilder();
         $alias = $qb->getRootAliases();
         $qb->addSelect('c');
@@ -594,14 +631,15 @@ abstract class PageAdmin extends BaseAdmin
      * @param            $alias
      * @param            $field
      * @param FilterData $data
+     *
      * @return bool
      */
     public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
     {
-        if(is_array($data)){
-            $data=  FilterData::fromArray($data);
+        if (is_array($data)) {
+            $data = FilterData::fromArray($data);
         }
-        
+
         if (!$locale = $data->getValue()) {
             $locale = $this->getDefaultLocale();
         }
@@ -826,7 +864,6 @@ abstract class PageAdmin extends BaseAdmin
                 'ask_confirmation' => true, // by default always true
             ];
         }
-
 
 
         return $actions;

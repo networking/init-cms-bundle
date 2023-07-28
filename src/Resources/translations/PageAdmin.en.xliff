@@ -8,7 +8,7 @@
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_list">
                 <source>breadcrumb.link_page_list</source>
-                <target><![CDATA[<small>Organise your</small> ]]> Pages</target>
+                <target>Organise your Pages</target>
             </trans-unit>
             <trans-unit id="breadcrumb.link_page_edit">
                 <source>breadcrumb.link_page_edit</source>

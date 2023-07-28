@@ -14,11 +14,11 @@ file that was distributed with this source code.
 {% block actions %}
     <div class="sonata-actions">
         {% if admin.hasRoute('edit') and admin.isGranted('EDIT', page) %}
-            <a class="btn btn-default sonata-action-element"
+            <a class="btn btn-light sonata-action-element"
                href="{{ admin.generateObjectUrl('edit', page) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
         {% if admin.hasRoute('create') and admin.isGranted('CREATE') %}
-            <a class="btn btn-default  sonata-action-element"
+            <a class="btn btn-light  sonata-action-element"
                href="{{ admin.generateUrl('create') }}">{{ 'link_action_create'|trans({}, admin.translationDomain) }}</a>
         {% endif %}
     </div>
@@ -45,7 +45,7 @@ file that was distributed with this source code.
         <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
             <form method="POST" action="{{ admin.generateUrl('cancelDraft', {id: page.id}) }}">
                 {% if app.request.isxmlhttprequest %}
-                    <button class="btn btn-default " data-dismiss="modal"
+                    <button class="btn btn-light " data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                     <input type="submit" class="btn btn-danger"
                            value="{{ 'button.confirm_cancel_draft'|trans({}, admin.translationDomain) }}"/>
@@ -53,7 +53,7 @@ file that was distributed with this source code.
                     <input type="submit" class="btn btn-danger"
                            value="{{ 'button.confirm_cancel_draft'|trans({}, admin.translationDomain) }}"/>
 
-                    <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-default">
+                    <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-light">
                                             {{ 'button.cancel'|trans({}, admin.translationDomain) }}
                                         </a>
                 {% endif %}

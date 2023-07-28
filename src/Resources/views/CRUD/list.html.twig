@@ -11,7 +11,7 @@ file that was distributed with this source code.
 {% extends '@NetworkingInitCms/CRUD/base_list.html.twig' %}
 
 {% block actions %}
-    <h1>{% include '@NetworkingInitCms/Core/create_button.html.twig' %}</h1>
+   {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
 {% endblock %}
 
 {% block list_table %}
@@ -29,5 +29,6 @@ file that was distributed with this source code.
 {% endblock %}
 {% block before_body_end %}
     {{ parent() }}
-    {% include '@NetworkingInitCms/CRUD/list_script.html.twig' %}
+{#    {% include '@NetworkingInitCms/CRUD/list_script.html.twig' %}#}
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/list.js')}}"></script>
 {% endblock %}

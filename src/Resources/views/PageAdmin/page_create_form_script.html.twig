@@ -11,49 +11,60 @@ file that was distributed with this source code.
 {% autoescape false %}
 <script type="text/javascript">
 
-    (function ($) {
+    KTUtil.onDOMContentLoaded(function () {
 
-        $("#{{ admin.getUniqid }}_locale").on('change', function () {
-            var locale = $(this).val();
-            $.getJSON(
-                    '{{ admin.generateUrl('parentPageList') }}',
-                    {locale:locale},
-                    function (data) {
-                        var parentPages = $("#{{ admin.getUniqid }}_parent");
-                        parentPages.empty();
-                        parentPages.append($('<option></option>'));
-                        $.each(data, function (k, v) {
-                            if (v) {
-                                parentPages.append($('<option></option>').val(k).html(v));
-                            }
-                        });
-                    }
-            )
-        });
 
-        $("#{{ admin.uniqid }}_parent").on("change", function (e) {
-            var path = $('#{{ admin.uniqid }}_url').val();
-            var pageId = e.val
-            if (pageId == '') {
-                $('#help_{{ admin.uniqid }}_url').html('/' + path);
-            } else {
-                if (pageId == undefined) {
-                    pageId = $("#{{ admin.uniqid }}_parent").val();
-                }
-                $.getJSON(
-                    '{{ admin.generateUrl('getPath') }}',
-                        {'page_id':pageId, 'path':path},
-                    function (xhr) {
-                        $('#sonata-ba-field-container-{{ admin.uniqid }}_url label > .help-block').html(xhr.path);
+        KTUtil.on(document.querySelector("form"), "#{{ admin.getUniqid }}_locale", 'change', (event) => {
+            let element = event.target;
+            let locale = element.value;
+            fetch('{{ admin.generateUrl('parentPageList') }}?locale=' + locale)
+                .then(response => response.json())
+                .then(data => {
+                    let parentPages = document.querySelector("#{{ admin.getUniqid }}_parent");
+                    parentPages.innerHTML = '';
+                    parentPages.appendChild(document.createElement('option'));
+                    for (let key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            let option = document.createElement('option');
+                            option.value = key;
+                            option.innerHTML = data[key];
+                            parentPages.appendChild(option);
+                        }
                     }
-                );
+                })
+        })
+
+        let updateURLHelpText = async (element) => {
+            let pageId = element.value;
+            let locale = document.querySelector("#{{ admin.getUniqid }}_locale").value;
+            let urlField = document.querySelector('#{{ admin.uniqid }}_url');
+            let path = '/'
+            if(pageId){
+                let repsone = await fetch('{{ admin.generateUrl('getPath') }}?page_id=' + pageId + '&locale=' + locale)
+                let data = await repsone.json();
+                path = data.path
             }
 
-        });
+            urlField.previousElementSibling.innerHTML = path + urlField.value;
+        }
 
-        $('#{{ admin.uniqid }}_url').bind('change', function () {
-            $("#{{ admin.uniqid }}_parent").trigger('change');
-        });
+        KTUtil.on(document.querySelector("form"), "#{{ admin.getUniqid }}_parent", 'change', (event) => {
+            updateURLHelpText(event.target);
+        })
+
+        KTUtil.on(document.querySelector('form'), '#{{ admin.uniqid }}_url', 'keyup', (event) => {
+            updateURLHelpText(document.querySelector("#{{ admin.uniqid }}_parent"));
+        })
+
+
+    });
+
+    (function ($) {
+
+
+        {#$('#{{ admin.uniqid }}_url').bind('change', function () {#}
+        {#    $("#{{ admin.uniqid }}_parent").trigger('change');#}
+        {#});#}
 
     })(jQuery);
 </script>

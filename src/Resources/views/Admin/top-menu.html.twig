@@ -1,0 +1,86 @@
+<!--begin::Menu wrapper-->
+<div
+        class="
+        app-header-menu
+        app-header-mobile-drawer
+        align-items-stretch
+    "
+        data-kt-drawer="true"
+        data-kt-drawer-name="app-header-menu"
+        data-kt-drawer-activate="{default: true, lg: false}"
+        data-kt-drawer-overlay="true"
+        data-kt-drawer-width="250px"
+        data-kt-drawer-direction="end"
+        data-kt-drawer-toggle="#kt_app_header_menu_toggle"
+        data-kt-swapper="true"
+        data-kt-swapper-mode="{default: 'append', lg: 'prepend'}"
+        data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}"
+>
+    <!--begin::Menu-->
+    <div class="menu
+            menu-rounded
+            menu-column
+            menu-lg-row
+            my-5
+            my-lg-0
+            align-items-stretch
+            fw-semibold
+            px-2 px-lg-0
+        "
+         id="kt_app_header_menu"
+         data-kt-menu="true"
+    >
+
+        <div class="menu-item here menu-here-bg me-0 me-lg-2">
+                <span class="menu-link">
+                    <span class="menu-title">
+                        <a href="{{ url('sonata_admin_dashboard') }}">Dashboard </a>
+                    </span>
+                </span>
+        </div>
+
+        <div class="menu-item me-0 me-lg-2">
+                <span class="menu-link">
+                    <span class="menu-title">
+                        <a href="{{ url('admin_networking_initcms_page_list') }}" class="text-muted">Pages </a>
+                    </span>
+                </span>
+        </div>
+
+        <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
+             class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
+            <!--begin:Menu link--><span class="menu-link"><span
+                        class="menu-title">{{ 'help'|trans({}, 'NetworkingInitCmsBundle') }}</span><span
+                        class="menu-arrow d-lg-none"></span></span><!--end:Menu link--><!--begin:Menu sub-->
+            <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown px-lg-2 py-lg-4 w-lg-200px">
+                {% if _help_text is empty %}
+                    {% if admin is not defined %}
+                        {% set adminCode = 'dashboard' %}
+                        {% set actionHelp = '' %}
+                    {% else %}
+                        {% set adminCode = admin.code %}
+                        {% set actionHelp = action %}
+                    {% endif %}
+                    <div class="menu-item">
+                        <!--begin:Menu link--><a class="menu-link"
+                                                 href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
+                                                 target="_blank"
+                                                 title="Check out the complete documentation"
+                                                 data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                 data-bs-dismiss="click" data-bs-placement="right"><span
+                                    class="menu-icon"><i class="ki-outline ki-abstract-26 fs-2"></i></span><span
+                                    class="menu-title">Documentation</span></a><!--end:Menu link--></div>
+                    <!--end:Menu item--><!--begin:Menu item-->
+
+                {% endif %}
+
+
+                <div class="menu-item"><!--begin:Menu link--><a class="menu-link"
+                                                                href="https://github.com/networking/init-cms-bundle/releases/tag/6.2.17"
+                                                                target="_blank"><span class="menu-icon"><i
+                                    class="ki-outline ki-code fs-2"></i></span><span
+                                class="menu-title">Changelog v6.2.17</span></a><!--end:Menu link--></div>
+                <!--end:Menu item--></div><!--end:Menu sub--></div><!--end:Menu item-->    </div>
+    <!--end::Menu-->
+</div>
+<!--end::Menu wrapper-->

@@ -245,59 +245,63 @@ class AdminMenuBuilder extends MenuBuilder
                     ['icon' => 'edit', 'append' => false]
                 );
             }
-            if (!$sonataAdmin
-                && $this->request->get('_route') != 'sonata_admin_dashboard'
+            
+            if (!$sonataAdmin  && $this->request->get('_route') != 'sonata_admin_dashboard'
             ) {
                 $menu->addChild('Admin', ['uri' => $lastActionUrl]);
             }
 
-            $firstItemStatus = !$sonataAdmin ? $this->request->getSession()
-                ->get('_viewStatus') : '';
-            $dropdown = $menu->addChild(
-                'link.website_'.$firstItemStatus,
-                [
-                    'dropdown' => true,
-                    'caret' => true,
-                    'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
-                ]
-            );
+
 
 
             if ($draftPath) {
-                $dropdown->addChild(
+                $menu->addChild(
                     'view_website.status_draft',
                     [
                         'uri' => $draftPath,
-                        'linkAttributes' => ['class' => 'color-draft'],
-                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                        'extras' => [
+                            'translation_domain' => 'NetworkingInitCmsBundle',
+                            'color' => 'text-warning',
+                            'icon' => 'ki-outline ki-notepad-edit',
+                        ],
                     ]
                 );
             }
             if ($livePath) {
-                $dropdown->addChild(
+                $menu->addChild(
                     'view_website.status_published',
                     [
                         'uri' => $livePath,
-                        'linkAttributes' => ['class' => 'color-published'],
-                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                        'extras' => [
+                            'translation_domain' => 'NetworkingInitCmsBundle',
+                            'color' => 'text-success',
+                            'icon' => 'ki-outline ki-abstract-17'
+                        ],
                     ]
                 );
             }
 
             if (!$draftPath && !$livePath) {
-                $dropdown->addChild(
+                $menu->addChild(
                     'view_website.status_draft',
                     [
                         'uri' => $defaultHome,
-                        'linkAttributes' => ['class' => 'color-draft'],
-                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                        'extras' => [
+                            'translation_domain' => 'NetworkingInitCmsBundle',
+                            'color' => 'text-warning',
+                            'icon' => 'ki-outline ki-notepad-edit',
+                        ],
                     ]
                 );
-                $dropdown->addChild(
+                $menu->addChild(
                     'view_website.status_published',
                     [
                         'uri' => $defaultHome,
-                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                        'extras' => [
+                            'translation_domain' => 'NetworkingInitCmsBundle',
+                            'color' => 'text-success',
+                            'icon' => 'ki-outline ki-abstract-17'
+                        ],
                     ]
                 );
             }

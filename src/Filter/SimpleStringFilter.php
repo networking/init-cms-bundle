@@ -88,6 +88,7 @@ class SimpleStringFilter extends Filter
     public function getDefaultOptions(): array
     {
         return [
+            'advanced_filter' => false,
             'format' => '%%%s%%',
             'field_type' => TextType::class,
             'operator_type' => ContainsOperatorType::TYPE_CONTAINS,
@@ -119,6 +120,7 @@ class SimpleStringFilter extends Filter
      */
     public function getRenderSettings(): array
     {
+
         return [
             DefaultType::class,
             [
@@ -126,14 +128,18 @@ class SimpleStringFilter extends Filter
                 'field_options' => $this->getFieldOptions(),
                 'label' => $this->getLabel(),
                 'label_render' => $this->getLabelRender(),
-                'widget_form_group' => $this->getWidgetControlGroup(),
             ],
         ];
     }
 
     public function getFormOptions(): array
     {
-        return [];
+        return [
+            'field_type' => $this->getFieldType(),
+            'field_options' => $this->getFieldOptions(),
+            'label' => $this->getLabel(),
+            'label_render' => $this->getLabelRender(),
+        ];
     }
 
 

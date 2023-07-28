@@ -153,3 +153,25 @@ networking_init_cms_page_url_json:
     defaults: { _controller: Networking\InitCmsBundle\Controller\FrontendPageController::getJsonUrlsAction}
 
 
+
+networking_init_cms_admin_resetting_request:
+    path: /admin/request
+    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::requestAction}
+    methods: [GET]
+
+networking_init_cms_admin_resetting_send_email:
+    path: /admin/send-email
+    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::sendEmailAction}
+    methods: [POST]
+
+networking_init_cms_admin_resetting_check_email:
+    path: /admin/check-email
+    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::checkEmailAction}
+    methods: [GET]
+
+networking_init_cms_admin_resetting_reset:
+    path: /admin/reset/{token}
+    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::resetAction}
+    methods: [GET|POST]
+
+

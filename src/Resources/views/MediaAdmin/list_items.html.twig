@@ -1,7 +1,4 @@
-
-
 {% set random = date().timestamp %}
-
 {% for object in datagrid.results %}
     {% set previewLink = false %}
     {% if object.width is defined and object.width %}
@@ -27,82 +24,110 @@
         {% set iframeWidth = '700px' %}
         {% set iframeHeight = '989px' %}
     {% endif %}
-    <div class="media-box" draggable="true" ondragstart="event.dataTransfer.setData('Text', '{{ object.id }}')">
-        <div class="zero-clipboard">
-                {% if previewLink %}
-            <div class="btn-clipboard btn-clipboard-left">
-                <a href="{{ previewLink }}"
-                        {% if previewType == 'iframe' %}
-                            data-featherlight-iframe-width="{{ iframeWidth }}"
-                            data-featherlight-iframe-height="{{ iframeHeight }}"
-                        {% endif %}
-                   data-featherlight-variant="initcms-featherlight"
-                   data-featherlight="{{ previewType }}"
-                   class="image-preview-link" title="{{ object.name }}">
-                    <i class="fa fa-search-plus"></i>
-                </a>
-            </div>
-                {% endif %}
-            {% if not galleryListMode %}
-                <div class="btn-clipboard btn-clipboard-right">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true"
-                       aria-expanded="false">{{ "dropdown_options"|trans({}, admin.translationDomain) }} <span
-                                class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu"
-                        aria-labelledby="context-menu_{{ object.id }}">
-                        {% if app.request.isxmlhttprequest and not show_actions %}
-                            <li>
-                                <a class="select-media" href="#" data-object-id="{{ object.id }}">
-                                    {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
-                                </a>
-                            </li>
-                        {% else %}
-                            {% if(admin.isGranted('EDIT', object)) %}
-                                <li><a href="{{ admin.generateObjectUrl('edit', object) }}"
-                                       title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
-                                       data-follow="{{ admin.generateObjectUrl('edit', object) }}">
-                                        <i class="fa-regular fa-pen-to-square"></i> {{ 'action_edit'|trans({}, 'SonataAdminBundle') }}
-                                    </a></li>
-                            {% endif %}
-                            {% if(admin.isGranted('DELETE', object)) %}
-                                <li><a href="{{ admin.generateObjectUrl('delete', object) }}"
-                                       class="dialog-link"
-                                       id="{{ admin.getClassnameLabel() }}_{{ object.id }}"
-                                       title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
-                                        <i class="fa fa-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
-                                    </a></li>
-                            {% endif %}
-                        {% endif %}
-                    </ul>
+    <div class="media-box" draggable="true" data-object-id="{{ object.id }}" ondragstart="dragstart_handler(event)" ondragend="dragEnd(event)">
+        <div class="card card-custom overlay h-100">
+            <div class="card-body p-0 card-body p-0">
+                <div class="overlay-wrapper d-flex flex-center h-100">
+                    {% if object.width is defined and object.width %}
+                        <img src="{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}"
+                             class="{% if object.width > 250 and object.width > object.height%}w-100 rounded{% endif %}
+                              {% if object.height > 154 and object.height > object.width %}h-100{% endif %}
+                              "/>
+                    {% else %}
+                        <div class="d-flex flex-column flex-center my-auto">
+                            <div>
+                                <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fs-4x"></i>
+
+                            </div>
+                            <div class="position-bottom">
+                                {% if app.request.isxmlhttprequest and galleryListMode %}
+                                    <a class="select-media font-size-h4 font-weight-bolder text-hover-primary" href="#"
+                                       data-object-id="{{ object.id }}"
+                                       data-toggle="tooltip"
+                                       title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
+                                {% else %}
+                                    <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}"
+                                       class="font-size-h4 font-weight-bolder text-hover-primary"
+                                       data-toggle="tooltip"
+                                       title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <br>
                 </div>
-                <div class="btn-clipboard btn-clipboard-bottom">
-                    <input type="checkbox" name="idx[]" class="delete_check_box" value="{{ admin.id(object) }}"/>
-                </div>
-            {% endif %}
-        </div>
-        <div class="thumbnail context">
-            <div class="media-element">
-                {% if object.width is defined and object.width %}
-                    <img src="{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}"
-                         class="img-responsive  center-block"/>
-                {% else %}
-                    <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fa-4x center-block"></i>
-                {% endif %}
-            </div>
-            <div class="media-title">
-                {% if app.request.isxmlhttprequest and galleryListMode %}
-                <a class="select-media link-underlined" href="#" data-object-id="{{ object.id }}"
-                   data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
-            {% else %}
-                <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}" class="link-underlined"
-                   data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
-                {% endif %}<br>
-                {#<span class="help-block">{{ object.contentType }}, {{ human_readable_filesize(object.size, null, 2) }}</span>#}
-            </div>
-        </div>
+                <div class="overlay-layer overlay-layer-dark rounded flex-center">
+
+                    <div class="d-flex flex-column flex-center">
+                        <div class="mb-1">
+                            {% if app.request.isxmlhttprequest and galleryListMode %}
+                                <a class="select-media fs-4 fw-semibold text-white text-hover-primary"
+                                   href="#" data-object-id="{{ object.id }}"
+                                   data-toggle="tooltip"
+                                   title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
+                            {% else %}
+                                <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}"
+                                   class="fs-4 fw-semibold text-white text-hover-primary"
+                                   data-toggle="tooltip"
+                                   title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if not galleryListMode %}
+                            {% if previewLink %}
+                                <a href="{% if previewType == 'iframe' %}#iframe{{ object.id }}{% else %}{{ previewLink }}{% endif %}"
+                                   data-fslightbox="lightbox-basic"
+                                        {% if previewType == 'iframe' %}
+                                           data-class="d-block"
+                                        {% endif %}
+                                   title="{{ object.name }}" class="has-action btn btn-clean btn-light btn-icon mr-2"><i
+                                            class="fbi bi-eye-fill text-primary"></i></a>
+                            {% if previewType == 'iframe' %}
+                                <iframe
+                                        src="{{ previewLink }}"
+                                        id="iframe{{ object.id }}"
+                                        width="{{ iframeWidth }}"
+                                        height="{{ iframeHeight }}"
+                                        frameBorder="0"
+                                        class="hidden-iframe"
+                                        allow="autoplay; fullscreen"
+                                        allowFullScreen
+                                ></iframe>
+                                {% endif %}
+                            {% endif %}
 
 
+                                {% if app.request.isxmlhttprequest and not show_actions %}
+                                    <a class="select-media btn btn-clean btn-icon mr-2  font-weight-bold btn-primary btn-shadow"
+                                       href="#"
+                                       data-object-id="{{ object.id }}">
+                                        {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
+                                    </a>
+                                {% else %}
+                                    {% if(admin.isGranted('EDIT', object)) %}
+                                        <a class="btn btn-clean btn-icon mr-2 font-weight-bold btn-primary btn-shadow"
+                                           href="{{ admin.generateObjectUrl('edit', object) }}"
+                                           title="{{ 'action_edit'|trans({}, 'SonataAdminBundle') }}"
+                                           data-follow="{{ admin.generateObjectUrl('edit', object) }}">
+                                            <i class="la la-edit"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if(admin.isGranted('DELETE', object)) %}
+                                        <a href="{{ admin.generateObjectUrl('delete', object) }}"
+                                           class="dialog-link btn btn-clean btn-icon mr-2 font-weight-bold btn-danger btn-shadow"
+                                           id="{{ admin.getClassnameLabel() }}_{{ object.id }}"
+                                           title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
+                                            <i class="la la-trash"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 {% endfor %}
 <div class="clearfix">&nbsp;</div>

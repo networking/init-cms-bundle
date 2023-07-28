@@ -22,15 +22,20 @@ file that was distributed with this source code.
             {% endfor %}
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6">
+    <div class="d-flex flex-row ">
+        <div class="d-flex flex-column flex-row-auto w-50 p-2">
             {% for block in blocks.left %}
+                <div class="mb-2">
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
+                </div>
+
             {% endfor %}
         </div>
-        <div class="col-sm-6">
+        <div class="d-flex flex-column flex-row-auto  w-50 p-2">
             {% for block in blocks.right %}
+                <div class="mb-2">
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
+                </div>
             {% endfor %}
         </div>
     </div>

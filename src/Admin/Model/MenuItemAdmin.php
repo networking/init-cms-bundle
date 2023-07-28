@@ -28,6 +28,7 @@ use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
@@ -78,9 +79,6 @@ abstract class MenuItemAdmin extends BaseAdmin
      */
     protected $trackedActions = ['list'];
 
-    protected $formOptions = ['layout' => 'horizontal'];
-
-
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
@@ -94,12 +92,11 @@ abstract class MenuItemAdmin extends BaseAdmin
     }
 
 
-
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollectionInterface $collection
-    ): void {
+    protected function configureRoutes(RouteCollectionInterface $collection): void
+    {
         $collection->add(
             'createFromPage',
             'create_from_page/root_id/{rootId}/page_id/{pageId}',
@@ -161,10 +158,9 @@ abstract class MenuItemAdmin extends BaseAdmin
                 $locale = $postArray['locale'];
             }
 
-            if(array_key_exists('root', $postArray)){
+            if (array_key_exists('root', $postArray)) {
                 $rootId = $postArray['root'];
             }
-
         }
 
         if ($rootId) {
@@ -186,8 +182,7 @@ abstract class MenuItemAdmin extends BaseAdmin
         $request = $this->getRequest();
 
         $createRoot = false;
-        if ($request->get('subclass') &&
-            $request->get('subclass') === 'menu'
+        if ($request->get('subclass') && $request->get('subclass') === 'menu'
         ) {
             $createRoot = true;
         }
@@ -244,6 +239,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                         $qb->where('p.locale = :locale')
                             ->orderBy('p.path', 'asc')
                             ->setParameter(':locale', $locale);
+
                         return $qb;
                     },
                 ]
@@ -252,8 +248,9 @@ abstract class MenuItemAdmin extends BaseAdmin
             'redirect_url',
             UrlType::class,
             [
+                'row_attr' => ['class' => 'form-floating'],
                 'required' => false,
-                'help_block' => 'help.redirect_url',
+                'help' => 'help.redirect_url',
                 'layout' => 'horizontal',
             ]
         );
@@ -261,8 +258,9 @@ abstract class MenuItemAdmin extends BaseAdmin
             'internal_url',
             TextType::class,
             [
+                'row_attr' => ['class' => 'form-floating'],
                 'required' => false,
-                'help_block' => 'help.internal_url',
+                'help' => 'help.internal_url',
                 'layout' => 'horizontal',
             ]
         );
@@ -282,8 +280,9 @@ abstract class MenuItemAdmin extends BaseAdmin
                 'visibility',
                 ChoiceType::class,
                 [
+                    'row_attr' => ['class' => 'form-floating'],
                     'layout' => 'horizontal',
-                    'help_block' => 'visibility.helper.text',
+                    'help' => 'visibility.helper.text',
                     'choices' => MenuItem::getVisibilityList(),
                     'translation_domain' => $this->getTranslationDomain(),
                 ]
@@ -292,6 +291,7 @@ abstract class MenuItemAdmin extends BaseAdmin
                 'link_target',
                 ChoiceType::class,
                 [
+                    'row_attr' => ['class' => 'form-floating'],
                     'layout' => 'horizontal',
                     'choices' => $this->getTranslatedLinkTargets(),
                     'required' => false,
@@ -300,38 +300,44 @@ abstract class MenuItemAdmin extends BaseAdmin
             ->add(
                 'link_class',
                 TextType::class,
-                ['layout' => 'horizontal', 'required' => false]
+                [
+                    'row_attr' => ['class' => 'form-floating'],
+                    'layout' => 'horizontal',
+                    'required' => false,
+                ]
             )
             ->add(
                 'link_rel',
                 TextType::class,
-                ['layout' => 'horizontal', 'required' => false]
+                [
+                    'row_attr' => ['class' => 'form-floating'],
+                    'layout' => 'horizontal',
+                    'required' => false,
+                ]
             )
             ->add(
                 'hidden',
-                null,
-                ['layout' => 'horizontal', 'required' => false]
+                CheckboxType::class,
+                ['layout' => 'horizontal', 'required' => false,]
             )
             ->add(
-            'menu',
-            ModelHiddenType::class,
+                'menu',
+                ModelHiddenType::class,
                 ['class' => $this->getClass()]
             )
             ->end();
-
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper
-    ): void {
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    {
         $datagridMapper
             ->add(
                 'locale',
                 CallbackFilter::class,
                 ['callback' => $this->getByLocale(...)],
-
                 [
                     'field_type' => LanguageType::class,
                     'field_options' => [
@@ -386,12 +392,14 @@ abstract class MenuItemAdmin extends BaseAdmin
      *
      * @return bool
      */
-    public function getByLocale(ProxyQuery $queryBuilder,
+    public function getByLocale(
+        ProxyQuery $queryBuilder,
         $alias,
         $field,
         FilterData $data
     ) {
-        $locale = $data->hasValue()?$data->getValue():$this->getDefaultLocale();
+        $locale = $data->hasValue() ? $data->getValue()
+            : $this->getDefaultLocale();
         $queryBuilder->where(sprintf('%s.locale = :locale', $alias));
         $queryBuilder->andWhere(
             $queryBuilder->expr()->isNotNull(sprintf('%s.parent', $alias))

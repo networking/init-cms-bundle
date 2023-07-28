@@ -720,6 +720,24 @@ class MenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
     }
 
     /**
+     * @param $id
+     *
+     * @return bool
+     */
+    public function hasChild($id)
+    {
+        foreach ($this->getChildren() as $child) {
+            if ($child->getId() == $id) {
+                return true;
+            }
+
+            return $child->hasChild($id);
+        }
+
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function hasPage()

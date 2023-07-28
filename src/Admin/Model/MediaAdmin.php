@@ -282,6 +282,9 @@ abstract class MediaAdmin extends Admin
                 'operator_type' => ContainsOperatorType::TYPE_EQUAL,
                 'case_sensitive' => true,
 
+            ],
+            [
+                'field_type' => HiddenType::class,
             ]
         )
             ->add(
@@ -291,6 +294,9 @@ abstract class MediaAdmin extends Admin
                     'show_filter' => false,
                     'operator_type' => ContainsOperatorType::TYPE_EQUAL,
                     'case_sensitive' => true,
+                ],
+                [
+                    'field_type' => HiddenType::class,
                 ]
             );
     }

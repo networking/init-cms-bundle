@@ -11,6 +11,7 @@ file that was distributed with this source code.
 
 {% extends base_template %}
 
+
 {% block title %}
     {{ admin.isChild and admin.parent.subject ? 'title_edit'|trans({'%name%': admin.parent.toString(admin.parent.subject)|u.truncate(15, '...') }, 'SonataAdminBundle') : '' }}
 {% endblock %}
@@ -26,242 +27,302 @@ file that was distributed with this source code.
 {% block list_filters %}
     {% if admin.datagrid.filters %}
         <form action="{{ admin.generateUrl('list', {pcode: app.request.get('pcode')}) }}" method="GET"
-              class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}form-horizontal filters">
-            {% set filter_main = '' %}
-            {% set filter_hidden = '' %}
-            {% set showHiddenFilters = 0 %}
-            {#{% for filter in admin.datagrid.filters if (filter.options.field_type is not defined or filter.options.field_type != 'hidden' ) %}#}
-            {% for filter in admin.datagrid.filters %}
+              class="kt-form kt-form--fit">
 
-                {% set filterVisible = filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null %}
+                <div class="card mb-7">
+                    <div class="card-content">
+                        <div class="card-body">
+                            {% set withAdvancedFilter = false %}
+                            {% set activeFilters = [] %}
 
-                {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
-                    {% set filter_main %}
-                        {{ filter_main }}
-                        <div class="form-group" {{ filterVisible ? '': 'style="display:none"'  }}>
-                            <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                                   class="control-label col-md-3 filter">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
+                            {% for key, filter in admin.datagrid.filters|filter((filter, key ) => filter.isActive) %}
 
-                            <div class="col-md-9">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'advanced-filter pull-left' }}  ) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
-                            </div>
-                        </div>
-                    {% endset %}
-                {% else %}
-                    {% if filter.isActive %}
-                        {% set showHiddenFilters = 1 %}
-                    {% endif %}
-                    {% set filter_hidden %}
-                        {{ filter_hidden }}
-                        <div class="form-group" {{ filterVisible ? '': 'style="display:none"'  }}>
-                            <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain)  }}</label>
-
-                            <div class="col-md-9">
-                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'advanced-filter pull-left' }}) }}
-                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain } ) }}
-                            </div>
-                        </div>
-                    {% endset %}
-                {% endif %}
-            {% endfor %}
-            {% set label = admin.label|trans({}, admin.translationDomain) %}
-            <div>
-                <div>
-                    <fieldset>
-                        <h4 class="filter_legend"><small data-toggle="advanced-filter">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }} </small></h4>
-
-                        <div class="filter_container row">
-                            <div class="col-md-12">
-                                {{ filter_main }}
-
-                                {% if admin.hasActiveSubclass %}
-                                    <input type="hidden" name="subclass" id="filter_subclass" value="{{ admin.activeSubclassCode }}"/>
+                                {% if not loop.first %}
+                                    {% set activeFilters = activeFilters|merge([key]) %}
                                 {% endif %}
-                                <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
-                                {% set foo = form.children['_page'].setRendered() %}
-                                <div id="hidden_filters" class="collapse {% if showHiddenFilters == 1 %}in{% endif %}">
-                                    {% for paramKey, paramValue in admin.persistentParameters %}
-                                        <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
-                                    {% endfor %}
-                                    {% if filter_hidden != '' %}
-                                        {# add div with hidden / show function#}
-                                        {{ filter_hidden }}
-                                    {% endif %}
-                                </div>
-                                <div>
-                                    <input type="submit" class="btn  btn-default btn-sm"
-                                           value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                    <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
-                                       class="link-underlined">
-                                        {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                                    {% if filter_hidden %}
-                                        <a data-toggle="collapse" data-target="#hidden_filters" id="filter_toggle"
-                                           class="filter-close cursor-pointer">
-                                            {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
+
+                            {% endfor %}
+                            {% for filter in admin.datagrid.filters %}
+
+                                {% if loop.first %}
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center  me-3 w-50">
+                                            {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                                <div class="d-none col-md-2 {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+                                                    {% set attr = form[filter.formName].children['value'].vars.attr|default({}) %}
+                                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
+                                                </div>
+                                            {% else %}
+                                                {{ form_widget(form.children[filter.formName].children['type']  ) }}
+                                            {% endif %}
+                                            <div class="d-flex flex-row-fluid form-floating">
+                                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+
+                                                <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                                                       class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex align-items-center">
+                                            <input type="submit" class="btn btn btn-primary me-5"
+                                                   value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                                            <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                                               class="btn btn-sm btn-light">
+                                                {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                            {% if loop.length > 1 %}
+                                                <a href="#" id="kt_horizontal_search_advanced_link" class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#kt_advanced_search_form" aria-expanded="false">Advanced Search</a>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                    {% if loop.length > 1 %}
+                                        <div class="collapse {% if activeFilters|length > 0 %}show{% endif %}" id="kt_advanced_search_form">
+                                        <div class="separator separator-dashed mt-9 mb-6"></div>
+                                     {% endif %}
+                                {% endif %}
+
+                                {% if not loop.first %}
+                                    <div class="mb-5">
+                                        {% set attr = form[filter.formName].children['value'].vars.attr|default({}) %}
+                                        {% set row_attr = form[filter.formName].children['value'].vars.row_attr|default({}) %}
+                                        {% set row_class = row_attr.class|default('')|trim %}
+                                        {%- if 'form-floating' in row_class -%}
+                                            {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                                <div class="d-none col-md-2 {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+
+                                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
+                                                </div>
+                                            {% else %}
+                                                {{ form_widget(form.children[filter.formName].children['type']  ) }}
+                                            {% endif %}
+                                            <div class="form-floating w-100">
+                                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+
+                                                <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                                                       class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain)  }}
+                                                </label>
+                                            </div>
+                                        {%- else -%}
+                                            <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                                                   class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain)  }}
+                                            </label>
+                                            {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                                <div class="d-none {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+                                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
+                                                </div>
+                                            {% else %}
+                                                {{ form_widget(form.children[filter.formName].children['type']  ) }}
+                                            {% endif %}
+                                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+                                        {%- endif -%}
+                                    </div>
+                                {% endif %}
+
+                                {% if filter.option('advanced_filter') and 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                    {% set withAdvancedFilter = true %}
+                                {% endif %}
+
+                                {% if loop.length > 1 and loop.last %}
+                                    {% if withAdvancedFilter %}
+                                        <a href="#" id="kt_advance_filter_toggle">
+                                            <i class="fas fa-cogs" aria-hidden="true"></i>
+                                            {{ 'btn_advanced_filters'|trans({}, 'SonataAdminBundle') }}
                                         </a>
-                                        {{ form_rest(form) }}
                                     {% endif %}
-                                </div>
-                            </div>
+                                    </div>
+                                {% endif %}
+
+
+                            {% endfor %}
+
+                            {% if admin.hasActiveSubclass %}
+                                <input type="hidden" name="subclass" id="filter_subclass" value="{{ admin.activeSubclassCode }}"/>
+                            {% endif %}
+                            <input type="hidden" name="filter[{{ constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::PAGE') }}]" id="filter__page" value="1">
+                            {% set foo = form[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::PAGE')].setRendered() %}
+                            {{ form_rest(form) }}
                         </div>
-                    </fieldset>
+                    </div>
                 </div>
-                <div class="clearfix">&nbsp;</div>
-            </div>
         </form>
     {% endif %}
 {% endblock %}
 
 {% block list_table %}
+    {% set batchactions = admin.batchactions %}
     {% if not  app.request.isxmlhttprequest %}
         <div id="objectList">
     {% endif %}
-    {% set batchactions = admin.batchactions %}
-    {% if datagrid_has_results%}
-        {% if admin.hasRoute('batch') %}
-            <form action="{{ admin.generateUrl('batch', {'filter': admin.filterParameters}) }}" method="POST" >
-            <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
-        {% endif %}
-        <table class="table table-hover table-compact">
-            {% block table_header %}
-                <thead>
-                <tr>
-                    {% for field_description in admin.list.elements %}
-                        {% if admin.hasRoute('batch') and field_description.name == constant('Sonata\\AdminBundle\\Datagrid\\ListMapper::NAME_BATCH') and batchactions|length > 0 %}
-                            {% if not app.request.isXmlHttpRequest %}
-                                <th class="sonata-ba-list-field-header sonata-ba-list-field-header-batch">
-                                </th>
-                            {% endif %}
-                        {% elseif field_description.getOption('code') == constant('Sonata\\AdminBundle\\Datagrid\\ListMapper::NAME_SELECT') %}
-                            <th class="sonata-ba-list-field-header sonata-ba-list-field-header-select"></th>
-                        {% elseif field_description.name == '_action' and app.request.isXmlHttpRequest %}
-                             Action buttons disabled in ajax view!
-                        {% elseif field_description.getOption('ajax_hidden') == true and app.request.isXmlHttpRequest %}
-                             Disable fields with 'ajax_hidden' option set to true
-                        {% else %}
-                            {% set sortable = false %}
-                            {% if field_description.option('sortable', false) %}
-                                {% set sortable             = true %}
-                                {% set sort_parameters      = admin.datagrid.sortparameters(field_description) %}
-                                {% set current              = admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] is defined
-                                    and (admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] == field_description
-                                or admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')].name == sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')]) %}
-                                {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
-                                {% set sort_by              = current ? admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')] : field_description.option(constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER'), sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')]) %}
-                            {% endif %}
 
-                            {% apply spaceless %}
-                                <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if loop.index in [1,2] %}nowrap {% endif %} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
-                                    {% if sortable %}
-                                        <a href="{{ admin.generateUrl('list', sort_parameters) }}">
-                                    {% endif %}
-                                    {% if field_description.getOption('label_icon') %}
-                                        <span class="sonata-ba-list-field-header-label-icon">
-                                                    {{ field_description.getOption('label_icon')|parse_icon }}
-                                                </span>
-                                    {% endif %}
-                                    {% if field_description.label is not same as(false) %}
-                                        {% if field_description.translationDomain is same as(false) %}
-                                            {{ field_description.label }}
-                                        {% else %}
-                                            {{ field_description.label|trans({}, field_description.translationDomain) }}
-                                        {% endif %}
-                                    {% endif %}
-                                    {% if sortable %}</a>{% endif %}
-                                </th>
-                            {% endapply %}
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                </thead>
-            {% endblock %}
-
-            {% block table_body %}
-                <tbody>
-                {% for object in admin.datagrid.results %}
-                    <tr {% if last_edited is defined and object.id == last_edited %}class="info {% if object.status is defined and object.status == 'status_offline' %}danger{% endif %}"{% endif %}>
-                         {% include get_admin_template('inner_list_row', admin.code) %}
-                    </tr>
-                {% endfor %}
-                {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}
-                    <tr>
-                        <td>
-                            <input type="checkbox" id="list_batch_checkbox" name="all_elements"/>
-                        </td>
-                        <td colspan="{{ admin.list.elements|length -1 }}">
-                            <label for="list_batch_checkbox"><strong>{{ 'all_elements'|trans({}, 'SonataAdminBundle') }}</strong></label>
-                        </td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            {% endblock %}
-
-            {% block table_footer %}
-                <tfoot>
-                <tr>
-                    <th colspan="{{ admin.list.elements|length - (app.request.isXmlHttpRequest ? (admin.list.has('_action') + admin.list.has('batch')) : 0) }}">
-                        <div class="form-inline">
-                            {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}{{ block('batch') }}{% endif %}
-                            <div class="pull-right">
-                                <label class="control-label"><strong>
-                                        {% trans with {'%count%': attribute(admin.datagrid.pager, 'countResults') is defined ? admin.datagrid.pager.countResults() : admin.datagrid.pager.getNbResults()} from 'SonataAdminBundle' %}list_results_count{% endtrans %}
-                                    </strong></label>
-                                {% block max_per_page %}
-                                    <label class="control-label"
-                                           for="{{ admin.uniqid }}_per_page">{% trans from 'SonataAdminBundle' %}
-                                        label_per_page{% endtrans %}</label>
-                                    <select class="per-page small" id="{{ admin.uniqid }}_per_page"
-                                            style="width: auto; height: auto">
-                                        {% for per_page in admin.getperpageoptions %}
-                                            <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
-                                                    value="{{ admin.generateUrl('list', {'filter':datagrid.values|merge({'_per_page': per_page})}) }}">
-                                                {{ per_page }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                {% endblock %}
-                            </div>
-                        </div>
-                    </th>
-                </tr>
-                </tfoot>
-            {% endblock %}
-        </table>
-
-        {% block pager_links %}
-            {% if admin.datagrid.pager.haveToPaginate() %}
-                <hr/>
-                {% include get_admin_template('pager_links', admin.code) %}
+    <div class="d-flex flex-wrap flex-stack pb-7">
+        <div class="d-flex flex-wrap align-items-center my-1">
+            <h3 class="fw-bold me-5 my-1">{{ admin.datagrid.pager.countResults() }} Items Found</h3>
+        </div>
+        <div class="d-flex flex-wrap align-items-center my-1">
+            {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}
+                {{ block('batch') }}
             {% endif %}
-        {% endblock %}
-
-        {% if not app.request.isxmlhttprequest %}
             {% if admin.hasRoute('export') and admin.hasAccess('export') and export_formats|length %}
-                <p> {{ "label_export_download"|trans({}, "NetworkingInitCmsBundle") }}:
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <i class="fas fa-share-square" aria-hidden="true"></i>
+                <div class="d-flex justify-content-end" data-kt-list-table-toolbar="base">
+                    <!--begin::Toggle-->
+                    <button type="button" class="btn btn-sm btn-primary rotate" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0,5">
+                        <i class="ki-outline ki-cloud-download  " aria-hidden="true"></i>
                         {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
-                        <span class="caret"></span>
+                        <i class="ki-duotone ki-down fs-3 rotate-180 ms-3 me-0"></i>
                     </button>
-                    <ul class="dropdown-menu">
+                    <!--end::Toggle-->
+
+                    <!--begin::Menu-->
+                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true">
+                        <!--end::Menu separator-->
                         {% for format in export_formats %}
-                            <li>
-                                <a href="{{ admin.generateUrl('export', admin.datagrid.paginationparameters(0) + {'format' : format}) }}">
-                                    <i class="fas fa-arrow-circle-o-down" aria-hidden="true"></i>
+                            <!--begin::Menu item-->
+                            <div class="menu-item px-3">
+                                <a href="{{ admin.generateUrl('export', admin.datagrid.paginationparameters(0) + {'format' : format}) }}" class="menu-link px-3">
                                     {{ ("export_format_" ~ format)|trans({}, 'SonataAdminBundle') }}
                                 </a>
-                            </li>
+                            </div>
+                            <!--end::Menu item-->
                         {% endfor %}
-                    </ul>
+                    </div>
+                    <!--end::Menu-->
                 </div>
-                </p>
+                <!--end::Dropdown wrapper-->
             {% endif %}
-        {% endif %}
-        {% if admin.hasRoute('batch') %}
+        </div>
+    </div>
+    {% if datagrid_has_results%}
+
+        <div class="card">
+            {% if not app.request.isxmlhttprequest %}
+            <div class="card-header">
+                <div class="card-title">
+                    <!--begin::Input group-->
+                    <div class="position-relative w-md-400px me-md-2">
+                        <!--begin::Search-->
+                        <div class="d-flex align-items-center w-md-auto position-relative my-1">
+                            <i class="ki-outline ki-magnifier fs-3 position-absolute ms-5"></i>
+                            <input type="text" data-kt-list-table-filter="search" class="form-control form-control-sm form-control-solid ps-13"
+                                   id="quick-search"
+                                   placeholder="{{ 'quick search' |trans({}, 'NetworkingInitCmsBundle') }}">
+                        </div>
+                        <!--end::Search-->
+                    </div>
+                </div>
+                    <div class="card-toolbar" >
+{#                        {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}#}
+{#                            {{ block('batch') }}#}
+{#                        {% endif %}#}
+{#                        {% if admin.hasRoute('export') and admin.hasAccess('export') and export_formats|length %}#}
+{#                            <div class="d-flex justify-content-end" data-kt-list-table-toolbar="base">#}
+{#                                <!--begin::Toggle-->#}
+{#                                <button type="button" class="btn btn-sm btn-primary rotate" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0,5">#}
+{#                                    <i class="ki-outline ki-cloud-download  " aria-hidden="true"></i>#}
+{#                                    {{ "label_export_download"|trans({}, "SonataAdminBundle") }}#}
+{#                                    <i class="ki-duotone ki-down fs-3 rotate-180 ms-3 me-0"></i>#}
+{#                                </button>#}
+{#                                <!--end::Toggle-->#}
+
+{#                                <!--begin::Menu-->#}
+{#                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true">#}
+{#                                    <!--end::Menu separator-->#}
+{#                                    {% for format in export_formats %}#}
+{#                                    <!--begin::Menu item-->#}
+{#                                    <div class="menu-item px-3">#}
+{#                                        <a href="{{ admin.generateUrl('export', admin.datagrid.paginationparameters(0) + {'format' : format}) }}" class="menu-link px-3">#}
+{#                                            {{ ("export_format_" ~ format)|trans({}, 'SonataAdminBundle') }}#}
+{#                                        </a>#}
+{#                                    </div>#}
+{#                                    <!--end::Menu item-->#}
+{#                                    {% endfor %}#}
+{#                                </div>#}
+{#                                <!--end::Menu-->#}
+{#                            </div>#}
+{#                            <!--end::Dropdown wrapper-->#}
+{#                        {% endif %}#}
+                    </div>
+            </div>
+            {% endif %}
+            {% if batchactions|length > 0 %}
+            <form action="{{ admin.generateUrl('batch', {'filter': admin.filterParameters}) }}" method="POST" id="kt-batch-form">
+                <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
+                {% endif %}
+            <div class="card-body">
+                <div>
+                <table id="init_cms_data_table" class="table table-hover table-row-bordered gy-7 gs-7">
+                    {% block table_header %}
+                        <thead>
+                        <tr class="fw-semibold fs-6 text-muted">
+                            {% for field_description in admin.list.elements %}
+                                {% if admin.hasRoute('batch') and field_description.name == constant('Sonata\\AdminBundle\\Datagrid\\ListMapper::NAME_BATCH') and batchactions|length > 0 %}
+                                    {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}
+                                        <th class="no_sorting">
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                                <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#init_cms_data_table .form-check-input" value="1" />
+                                            </div>
+                                        </th>
+                                    {% endif %}
+                                {% elseif field_description.getOption('code') == constant('Sonata\\AdminBundle\\Datagrid\\ListMapper::NAME_SELECT') %}
+                                    <th class="sonata-ba-list-field-header sonata-ba-list-field-header-select"></th>
+                                {% elseif field_description.name == '_action' and app.request.isXmlHttpRequest %}
+                                    Action buttons disabled in ajax view!
+                                {% elseif field_description.getOption('ajax_hidden') == true and app.request.isXmlHttpRequest %}
+                                    Disable fields with 'ajax_hidden' option set to true
+                                {% else %}
+                                    {% set sortable = false %}
+                                    {% if field_description.option('sortable', false) %}
+                                        {% set sortable             = true %}
+                                        {% set sort_parameters      = admin.datagrid.sortparameters(field_description) %}
+                                        {% set current              = admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] is defined
+                                            and (admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] == field_description
+                                            or admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')].name == sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')]) %}
+                                        {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
+                                        {% set sort_by              = current ? admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')] : field_description.option(constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER'), sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')]) %}
+                                    {% endif %}
+
+                                    {% apply spaceless %}
+                                        <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if not sortable %}no_sorting{% endif %}">
+                                                {% if field_description.getOption('label_icon') %}
+                                                    <span class="sonata-ba-list-field-header-label-icon">
+                                                    {{ field_description.getOption('label_icon')|parse_icon }}
+                                                </span>
+                                                {% endif %}
+                                                {% if field_description.label is not same as(false) %}
+                                                    {% if field_description.translationDomain is same as(false) %}
+                                                        {{ field_description.label }}
+                                                    {% else %}
+                                                        {{ field_description.label|trans({}, field_description.translationDomain) }}
+                                                    {% endif %}
+                                                {% endif %}
+                                        </th>
+                                    {% endapply %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                    {% endblock %}
+
+                    {% block table_body %}
+                        <tbody class="fw-semibold text-gray-600">
+                        {% for object in admin.datagrid.results %}
+                            <tr {% if last_edited is defined and object.id == last_edited %}class="info {% if object.status is defined and object.status == 'status_offline' %}danger{% endif %}"{% endif %}>
+                                {% include get_admin_template('inner_list_row', admin.code) %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% endblock %}
+
+                    {% block table_footer %}
+                    {% endblock %}
+                </table>
+                </div>
+            </div>
+                {% if batchactions|length > 0 %}
             </form>
-        {% endif %}
+            {% endif %}
+        </div>
+
+
     {% else %}
         {% block no_result_content %}
             <div class="alert alert-info">
@@ -269,41 +330,29 @@ file that was distributed with this source code.
             </div>
         {% endblock %}
     {% endif %}
-    {% if not app.request.isXmlHttpRequest %}
-        </div>
-    {% else %}
-        <script type="text/javascript">
-            jQuery(function () {
-                InitCms.toggleFilters();
-            });
-        </script>
-    {% endif %}
+    </div>
 {% endblock %}
 
 {% block batch %}
-    <script type="text/javascript">
-        {% block batch_javascript %}
-        jQuery(document).ready(function ($) {
-            $('#list_batch_checkbox').click(function () {
-                $(this).closest('table').find("td input[type='checkbox']").prop('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
-            });
-        });
-        {% endblock %}
-    </script>
-
     {% block batch_actions %}
-        {% if csrf_token is defined %}
-            <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
-        {% endif %}
-
         {% if batchactions|length > 0  %}
-        <select name="action" class="input-medium form-control">
-            {% for action, options in batchactions %}
-                <option value="{{ action }}">{{ options.label|trans({}, options.translation_domain|default(admin.translationDomain)) }}</option>
-            {% endfor %}
-        </select>
+            <div class="d-flex justify-content-end align-items-center d-none" data-kt-list-table-toolbar="selected">
+                <div class="fw-bold me-5">
+                    <span class="me-2" data-kt-list-table-select="selected_count"></span>Selected</div>
+                <div class="input-group">
+                    <select name="action" class="form-select form-select-sm" data-kt-list-table-select="batch_action">
+                        {% for action, options in batchactions %}
+                            <option value="{{ action }}">{{ options.label|trans({}, options.translation_domain|default(admin.translationDomain)) }}</option>
+                        {% endfor %}
+                    </select>
+                        <input type="submit" class="btn btn-primary btn-sm batch-dialog-link" value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}">
+                </div>
+            </div>
+
         {% endif %}
     {% endblock %}
-
-    <input type="submit" class="btn btn-primary btn-sm batch-dialog-link" value="{{ 'btn_batch'|trans({}, 'SonataAdminBundle') }}">
 {% endblock %}
+
+{% block before_body_end %}
+    {{ parent() }}
+{% endblock before_body_end %}

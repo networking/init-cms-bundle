@@ -12,7 +12,7 @@ file that was distributed with this source code.
 {% extends admin.templateRegistry.getTemplate('base_list_field') %}
 
 {% block field %}
-    <a class="btn btn-default btn-sm select-media pull-right"  href="#" data-object-id="{{ object.id }}">
+    <a class="btn btn-light btn-sm select-media pull-right"  href="#" data-object-id="{{ object.id }}">
         <i class="fa fa-arrow-right"></i>
         {{ 'list_select'|trans({}, 'SonataAdminBundle') }}
     </a>

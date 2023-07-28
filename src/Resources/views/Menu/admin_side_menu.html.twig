@@ -1,22 +1,44 @@
 {% extends 'knp_menu.html.twig' %}
 
 {% block root %}
-    {%- set listAttributes = item.childrenAttributes|merge({'class': 'sidebar-menu', 'data-widget': 'tree'}) %}
+    {%- set listAttributes = item.childrenAttributes|merge({'class': 'menu-nav'}) %}
     {%- set request        = item.extra('request') ?: app.request %}
     {{ block('list') -}}
 {% endblock %}
 
-{% block item %}
+{% block list %}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        {% import _self as knp_menu %}
 
-    {% if item.level is same as(1) %}
-    {%- do item.setAttribute('class', (item.attribute('class')~' first-level')|trim) %}
+        {% if item.level is same as(1) %}
+            <div class="menu-sub menu-sub-accordion">
+                    {{ block('children') }}
+            </div>
+        {% else %}
+                {{ block('children') }}
+        {% endif %}
     {% endif %}
-    {% if item.level is same as(2) %}
-    {%- do item.setAttribute('class', (item.attribute('class')~' second-level')|trim) %}
+{% endblock %}
+
+
+{% block item %}
+    {%- do item.setAttribute('class', (item.attribute('class')~' menu-item')|trim) %}
+    {%- do item.setLinkAttribute('class', ' menu-link'|trim) %}
+    {% if item.hasChildren %}
+        {%- do item.setAttribute('class', (item.attribute('class')~' menu-accordion')|trim) %}
+        {%- do item.setAttribute('data-kt-menu-trigger', 'click') %}
     {% endif %}
+
+    {%- if matcher.isCurrent(item) %}
+        {%- do item.setAttribute('class', (item.attribute('class')~' active') ) %}
+    {%- elseif matcher.isAncestor(item, options.matchingDepth) %}
+        {%- do item.setAttribute('class', (item.attribute('class')~' here show')) %}
+    {%- endif %}
+
+
     {%- if item.displayed %}
         {#- check role of the group #}
-        {%- set display = (item.extra('roles') is empty or is_granted(sonata_config.getOption('role_super_admin')) ) %}
+        {%- set display = (item.extra('roles') is empty or is_granted(sonata_admin.adminPool.getOption('role_super_admin')) ) %}
         {%  if not display  %}
             {%- for role in item.extra('roles')%}
                 {%- set display = is_granted(role) %}
@@ -25,10 +47,55 @@
     {%- endif %}
 
     {%- if item.displayed and display|default %}
-        {% set options = options|merge({branch_class: 'treeview', currentClass: "active", ancestorClass: "active"}) %}
-        {%- do item.setChildrenAttribute('class', (item.childrenAttribute('class')~' active')|trim) %}
-        {%- do item.setChildrenAttribute('class', (item.childrenAttribute('class')~' treeview-menu')|trim) %}
-        {{ parent() }}
+
+
+        {%- set classes = item.attribute('class') is not empty ? [item.attribute('class')] : [] %}
+        {%- if matcher.isCurrent(item) %}
+            {%- set classes = classes|merge([options.currentClass]) %}
+        {%- elseif matcher.isAncestor(item, options.matchingDepth) %}
+            {%- set classes = classes|merge([options.ancestorClass]) %}
+        {%- endif %}
+        {%- if item.actsLikeFirst %}
+            {%- set classes = classes|merge([options.firstClass]) %}
+        {%- endif %}
+        {%- if item.actsLikeLast %}
+            {%- set classes = classes|merge([options.lastClass]) %}
+        {%- endif %}
+
+        {# Mark item as "leaf" (no children) or as "branch" (has children that are displayed) #}
+        {% if item.hasChildren and options.depth is not same as(0) %}
+            {% if options.branch_class is not empty and item.displayChildren %}
+                {%- set classes = classes|merge([options.branch_class]) %}
+            {% endif %}
+        {% elseif options.leaf_class is not empty %}
+            {%- set classes = classes|merge([options.leaf_class]) %}
+        {%- endif %}
+
+        {% if not matcher.isAncestor(item) %}
+            {%- do item.setChildrenAttribute('class', (item.childrenAttribute('class')~' collapse')|trim) %}
+        {% else %}
+            {%- do item.setChildrenAttribute('class', (item.childrenAttribute('class')~' show')|trim) %}
+        {% endif %}
+        {%- do item.setChildrenAttribute('class', (item.childrenAttribute('class')~'   menu-submenu')|trim) %}
+        {%- do item.setChildrenAttribute('id', 'submenu' ~item.name|slug|trim) %}
+
+        {%- set attributes = item.attributes %}
+        {%- if classes is not empty %}
+            {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
+        {%- endif %}
+        {% import _self as knp_menu %}
+        <div{{ knp_menu.attributes(attributes) }}>
+            {%- if item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
+                {{ block('linkElement') }}
+            {%- else %}
+                {{ block('spanElement') }}
+            {%- endif %}
+            {# render the list of children#}
+            {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
+            {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
+            {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
+            {{ block('list') }}
+        </div>
     {% endif %}
 {% endblock %}
 
@@ -36,38 +103,65 @@
     {% apply spaceless %}
         {% set translation_domain = item.extra('translation_domain', 'messages') %}
         {% if item.extra('on_top') is defined and not item.extra('on_top') %}
-            {% set icon = item.extra('icon')|default(item.level > 1 ? '<i class="fa fa-angle-double-right" aria-hidden="true"></i>' : '') %}
         {% else %}
             {% set icon = item.extra('icon') %}
         {% endif %}
         {% set is_link = true %}
-        {{ parent() }}
+        {% import _self as knp_menu %}
+
+        {%- set classes = item.linkAttribute('class') is not empty ? [item.linkAttribute('class')] : [] %}
+        {%- set attributes = item.linkAttributes %}
+
+        {%- if matcher.isCurrent(item) %}
+            {%- set classes = classes|merge(['active']) %}
+        {%- elseif matcher.isAncestor(item, options.matchingDepth) %}
+            {%- set classes = classes|merge(['menu-item-open menu-item-here']) %}
+        {%- endif %}
+        {%- if item.actsLikeFirst %}
+            {%- set classes = classes|merge([options.firstClass]) %}
+        {%- endif %}
+        {%- if item.actsLikeLast %}
+            {%- set classes = classes|merge([options.lastClass]) %}
+        {%- endif %}
+
+
+        {%- if classes is not empty %}
+            {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
+        {%- endif %}
+
+        <a href="{{ item.uri }}"{{ knp_menu.attributes(attributes) }}>
+            {{ block('label') }}
+        </a>
     {% endapply %}
 {% endblock %}
 
 {% block spanElement %}
     {% apply spaceless %}
-        <a href="#">
-            {% set icon = item.extra('icon')|default('') %}
-            {{ icon|raw }}
-
+        <span class="menu-link">
+            <span class="menu-icon">
+                <i class="{{ item.extra('icon')|default('') }}"></i>
+            </span>
             {% set translation_domain = item.extra('translation_domain') %}
-
-            {{ parent() }}
-            {%- if item.extra('keep_open') is not defined or not item.extra('keep_open') -%}
-               <i class="fa pull-right fa-angle-left" style="line-height: inherit"></i>
-            {%- endif -%}
-        </a>
+            {{ block('label') }}
+            <span class="menu-arrow"></span></span>
+        </span>
     {% endapply %}
 {% endblock %}
 
 {% block label %}
     {% if is_link is defined and is_link %}
-        {{ icon|default|raw }}
+        {% if icon is defined %}
+            <span class="menu-icon"><i class="{{ icon|default|raw }}"></i></span>
+        {% else %}
+            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+        {% endif %}
     {% endif %}
+
+    <span class="menu-title">
     {% if options.allow_safe_labels and item.extra('safe_label', false) %}
         {{ item.label|raw }}
     {% else %}
         {{ item.label|trans({}, translation_domain|default('messages')) }}
     {% endif %}
+    </span>
 {% endblock %}

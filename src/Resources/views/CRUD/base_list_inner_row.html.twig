@@ -1,4 +1,5 @@
 {% for field_description in admin.list.elements %}
+
     {% if (field_description.name == '_action' or field_description.name == 'batch')  and app.request.isXmlHttpRequest %}
         {# Action buttons disabled in ajax view! #}
     {% elseif field_description.getOption('ajax_hidden') == true and app.request.isXmlHttpRequest %}

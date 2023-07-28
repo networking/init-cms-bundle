@@ -5,7 +5,7 @@
         {% if create_text == 'link_action_create' %}
             {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
         {% endif %}
-    <a class="btn btn-default btn-sm sonata-action-element" href="{{ admin.generateUrl('clear_cache') }}">
+    <a class="btn btn-light btn-sm sonata-action-element" href="{{ admin.generateUrl('clear_cache') }}">
         <i class="fa fa-rotate-right"></i> {{ 'action.clear_cache'|trans({}, 'TranslationAdmin') }}
     </a>
         {% if admin.subClasses is empty %}

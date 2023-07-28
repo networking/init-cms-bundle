@@ -1,15 +1,25 @@
 {% extends sonata_block.templates.block_base %}
 
 {% block block %}
-    <div class="well well-small">
-        <h4>{{ 'title.last_user_activity'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
-        {% for user in online_users %}
-            {{ user.username }}
-        <span class="font-small info-soft">
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h3 class="card-title">
+                    <span class="card-icon">
+				        <i class="la la-user-friends fs-2x"></i>
+				    </span>
+                <span class="card-label">{{ 'title.last_user_activity'|trans({}, 'NetworkingInitCmsBundle') }}
+                </span>
+            </h3>
+        </div>
+        <div class="card-body">
+            {% for user in online_users %}
+                {{ user.username }}
+                <span class="font-small info-soft">
              {{ 'label.last_activity'|trans({}, 'NetworkingInitCmsBundle') }}: {{ user.lastActivity|date("H:i d M Y") }}
         </span>
-         <br />
-        {% endfor %}
+                <br/>
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock %}

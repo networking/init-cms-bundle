@@ -218,7 +218,7 @@ class PageCache implements
         return $this->activated;
     }
 
-    public function getCacheTime(): string
+    public function getCacheTime(): string|int
     {
         return $this->expiresAfter;
     }

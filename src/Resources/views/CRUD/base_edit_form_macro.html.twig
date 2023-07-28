@@ -3,15 +3,13 @@
         {% for code in groups|filter(code => admin.formgroups[code] is defined) %}
             {% set form_group = admin.formgroups[code] %}
             <div class="{{ form_group.class|default('col-md-12') }} sonata-ba-collapsed-fields">
-                <fieldset class="{{ form_group.box_class }}">
+                <div class="{{ form_group.box_class }}">
                     {% if form_group.label and form_group.label != admin.label %}
-                    <div class="box-header">
-                        <legend class="box-title">
+                        <h3 class="font-size-lg text-dark font-weight-bold my-6">
                             {{ form_group.label|trans({}, form_group.translation_domain ?: admin.translationDomain) }}
-                        </legend>
-                    </div>
+                        </h3>
                     {% endif %}
-                    <div class="box-body">
+                    <div class="mb-3">
                             {% if form_group.description %}
                                 <p>{{ form_group.description|trans({}, form_group.translation_domain ?: admin.translationDomain) }}</p>
                             {% endif %}
@@ -22,8 +20,12 @@
                                 <em>{{ 'message_form_group_empty'|trans({}, 'SonataAdminBundle') }}</em>
                             {% endfor %}
                     </div>
-                </fieldset>
+                </div>
+                {% if not loop.last %}
+                <div class="separator separator-dashed"></div>
+                {% endif %}
             </div>
+
         {% endfor %}
     </div>
 {% endmacro %}

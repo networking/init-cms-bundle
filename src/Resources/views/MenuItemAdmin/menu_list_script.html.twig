@@ -16,242 +16,240 @@ var lastTab = localStorage.getItem('lastTab');
 
 var lastEdited = '{{ last_edited }}';
 
-function initializeDialog() {
-    if (!menuDialog) {
-        menuDialog = jQuery('#menu_dialog');
-        menuDialog.modal({
-            height: 'auto',
-            width: 650,
-            show: false,
-        });
-        menuDialog.on('hide.bs.modal', function () {
-            jQuery.ajax({
-                url: '{{ admin.generateUrl('list', {'render': true}) }}',
-                dataType: 'html',
-                success: function (html) {
-                    jQuery('#menuTabs').html(html);
-                    setUpSortTree();
-                    if (lastTab) {
-                        jQuery('a[href="' + lastTab + '"]').tab('show');
-                    }
-                }
-            });
-            jQuery('input[type=submit]', this).off();
-        });
-        jQuery(document.body).append(menuDialog);
-        jQuery(menuDialog).on('submit', 'form',  submitAjaxForm);
-    }
+var menuDialog, lastTab, tabs, lastEdited, listUrl, updateUrl, ready = false;
+
+function reloadList() {
+    axios.get(tabs.data('list-url'), {'locale': $('#filter_locale_value').val(), ...axiosConfig}
+    ).then(function (response) {
+        tabs.html(response.data);
+        setUpSortTree();
+        $('a[href="' + lastTab + '"]').tab('show');
+    })
 }
 
-
-function setLastTab(tab){
+function setLastTab(tab) {
     lastTab = tab;
     localStorage.setItem('lastTab', lastTab);
 }
+
 function createAjaxDialog(event) {
     event.preventDefault();
-    event.stopPropagation();
-
-    initializeDialog();
-
-    var a = jQuery(this);
-    var url = a.attr('href');
-    if (!url) {
-        url = a.attr('ref');
-    }
-
-    jQuery.ajax({
-        url: url,
-        dataType: 'html',
-        data: {'locale': jQuery('#filter_locale_value').val()},
-        success: function (html) {
-            // populate the popup container
-            menuDialog.html(html);
-            menuDialog.modal('show');
-        }
-    });
+    axios.get(
+        $(this).attr('href'),
+        {'locale': $('#filter_locale_value').val(), ...axiosConfig}
+    ).then(function (response) {
+        menuDialog.html(response.data);
+        menuDialog.modal('show');
+    })
 }
 
 function submitAjaxForm(event) {
     event.preventDefault();
     event.stopPropagation();
-
-    var form = jQuery(this);
-
-    jQuery(form).ajaxSubmit({
-        type: form.attr('method'),
-        url: form.attr('action'),
-        dataType: 'json',
-        success: function (xhr) {
-            if (xhr.result == 'ok') {
-                if (xhr.is_new_menu_item && xhr.html) {
-                    menuDialog.html(xhr.html);
+    axios.post(this.action, new FormData(this), axiosConfig)
+        .then(function (response) {
+            var data = response.data;
+            if (data.result == 'ok') {
+                reloadList();
+                if (data.is_new_menu_item && data.html) {
+                    menuDialog.html(data.html);
                 } else {
                     menuDialog.modal('hide');
-                    InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
+                    createInitCmsMessageBox(data.status, data.message);
                 }
             }
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            if(xhr.hasOwnProperty('responseJSON')){
-                var messageHtml = '<div class="alert alert-danger">' + xhr.responseJSON.message + ' <br>'+xhr.responseJSON.errors.join('<br>')+'</div>';
-                jQuery('.modal-body').prepend(messageHtml);
-            }else{
-                menuDialog.html(xhr.responseText);
+        })
+        .catch(function (error) {
+            console.log(error);
+            var data = error.response.data;
+            if (typeof data === 'object') {
+                $('.modal-body').prepend('<div class="alert alert-danger">' + data.message + ' <br>' + data.errors.join('<br>') + '</div>');
+            } else {
+                menuDialog.html(data);
             }
-        }
-    });
-}
-
-function updateMenu(e) {
-   jQuery(e).nestedSortable('toArray', {startDepthCount: 0});
-
+        })
 }
 
 function setUpSortTree() {
-
-    jQuery('div.navigation').each(function (e, ui) {
-        jQuery(ui).find('ul:first').nestedSortable({
-            disableNestingClass: 'no-nest',
-            forcePlaceholderSize: true,
-            forceHelperSize: true,
-            handle: 'i.fa-arrows-up-down-left-right',
-            tolerance: 'pointer',
-            items: 'li',
-            listType: 'ul',
-            opacity: .6,
-            placeholder: 'placeholder',
-            revert: 250,
-            tabSize: 20,
-            toleranceElement: 'div.menu_item',
-            update: function (e, ui) {
-                updateMenu(this)
+    $('div.menu_tree').each(function (e, ui) {
+        var tree = $(ui);
+        var treeData = tree.data('tree');
+        tree.jstree({
+            "types": {
+                "default": {
+                    "icon": "la la-file text-primary icon-2x"
+                },
+                "file": {
+                    "icon": "la la-file text-primary icon-2x"
+                }
+            },
+            "plugins": [
+                "dnd",
+                "externalUrl",
+                "delete",
+                "types",
+            ],
+            'core': {
+                "themes": {
+                    "variant": "large"
+                },
+                "check_callback": function (operation, node, node_parent, node_position, more) {
+                    return true;
+                },
+                data: function (node, cb) {
+                    cb(treeData)
+                }
             }
         });
-    });
 
-}
-
-function saveSibling(url) {
-    jQuery.ajax({
-        url: url,
-        dataType: 'json',
-        success: function (xhr) {
-            if (xhr.result == 'ok') {
-                menuDialog.modal('hide');
-                InitCms.createInitCmsMessageBox(xhr.status, xhr.message);
-                if (lastTab) {
-                    jQuery('a[href="' + lastTab + '"]').tab('show');
-                }
-            }
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            InitCms.createInitCmsMessageBox('error', xhr.responseText);
-            setUpSortTree();
-            menuDialog.modal('hide');
+        if (ready) {
+            return;
         }
+
+        tree.on('ready.jstree', function () {
+            postMenuLoad();
+            ready = true;
+        });
+
     });
 }
 
-jQuery(function () {
 
-    var ua = navigator.userAgent,
-            event = (ua.match(/iPad/i)) ? "touchstart" : "click";
-
-    jQuery('#menuTabs').on('click', '.menu-dialog-link', createAjaxDialog);
-
-    {% if menu_id %}
-    jQuery('a.link-page-edit[data-page_id="{{ menu_id }}"]').trigger('click');
-    {% endif %}
-
-    var nestedExtensions = {
-        toArray: function (options) {
-
-            var o = $.extend({}, this.options, options),
-                    sDepth = o.startDepthCount || 0,
-                    ret = [],
-                    left = 2;
-
-
-            $(this.element).children(o.items).each(function () {
-                left = _recursiveArray(this, sDepth + 1, left);
-            });
-
-            ret = ret.sort(function (a, b) {
-                return (a.left - b.left);
-            });
-
-
-            jQuery.post(
-                "{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}",
-                {"nodes": ret},
-                function (xhr) {InitCms.createInitCmsMessageBox('success', xhr.message);}
-            );
-
-            return ret;
-
-            function _recursiveArray(item, depth, left) {
-
-                var right = left + 1,
-                        id,
-                        pid;
-
-                if (jQuery(item).children(o.listType).children(o.items).length > 0) {
-                    depth++;
-                    jQuery(item).children(o.listType).children(o.items).each(function () {
-                        right = _recursiveArray($(this), depth, right);
-                    });
-                    depth--;
-                }
-
-                id = ($(item).attr(o.attribute || 'id')).match(o.expression || (/(.+)[-=_](.+)/));
-
-                if (depth === sDepth + 1) {
-                    pid = o.rootID;
-                } else {
-                    var parentItem = ($(item).parent(o.listType)
-                            .parent(o.items)
-                            .attr(o.attribute || 'id'))
-                            .match(o.expression || (/(.+)[-=_](.+)/));
-                    pid = parentItem[2];
-                }
-
-                if (id) {
-                    ret.push({"item_id": id[2], "parent_id": pid, "depth": depth, "left": left, "right": right});
-                }
-
-                left = right + 1;
-                return left;
-            }
-
-        }
-    };
-
-
-    jQuery.extend(jQuery.mjs.nestedSortable.prototype, nestedExtensions);
-
-    initializeDialog();
-
-    setUpSortTree();
+function postMenuLoad() {
+    if (lastEdited) {
+        var lastEditedNode = $('#menu-item-' + lastEdited);
+        lastEditedNode.trigger('click');
+        lastTab = '#menu_' + lastEditedNode.data('root-id');
+        setLastTab(lastTab);
+    }
 
     if (lastTab) {
-        jQuery('a[href="' + lastTab + '"]').tab('show');
+        $('a[href="' + lastTab + '"]').tab('show');
+    }
+}
+
+function flattenArray(item, depth, left, ret, pid) {
+    var right = left + 1,
+        id = item.data.id,
+        pid;
+
+    if (item.children.length > 0) {
+        depth++;
+        item.children.forEach(function (node) {
+            right = flattenArray(node, depth, right, ret, id);
+        });
+        depth--;
     }
 
-    if (lastEdited) {
-        var tab = jQuery('#listItem_' + lastEdited).closest('div.tab-pane');
-        setLastTab('#' + tab.attr('id'));
-        jQuery('a[href="' + lastTab + '"]').tab('show');
+    if (id) {
+        ret.push({
+            "name": item.text,
+            "item_id": id,
+            "parent_id": pid,
+            "depth": depth,
+            "left": left,
+            "right": right
+        });
     }
 
-    jQuery('body').on('show.bs.tab', function(e){
-        var target = jQuery(e.target);
-        setLastTab(target.attr('href'));
+    left = right + 1;
+    return left;
+}
+
+function updateMenuSort(nodes, doReload) {
+    var ret = [];
+    var left = 2;
+
+    nodes.forEach(function (node) {
+        left = flattenArray(node, 1, left, ret, node.data.rootId);
+    })
+
+    ret = ret.sort(function (a, b) {
+        return (a.left - b.left);
     });
 
-    jQuery('.show-tooltip').tooltip({placement: 'bottom', delay: { show: 800, hide: 100 }});
+    axios.post(updateUrl, {"nodes": ret}, axiosConfig)
+        .then(function (response) {
+            createInitCmsMessageBox('success', response.data.message);
+            menuDialog.modal('hide');
+            console.log(doReload)
+            if (doReload) {
+                reloadList()
+            }
+        })
+}
 
+$(function () {
+    tabs = $('#menuTabs');
+    menuDialog = $('#menu_dialog');
+    lastTab = localStorage.getItem('lastTab');
+    lastEdited = tabs.data('last-edited');
+    listUrl = tabs.data('list-url');
+    updateUrl = tabs.data('update-url');
+    tabs.on('click', '.menu-dialog-link', createAjaxDialog);
 
+    setUpSortTree();
+    menuDialog = $('#menu_dialog');
+    menuDialog.modal({show: false});
+    $(menuDialog).on('submit', 'form', submitAjaxForm);
+
+    $('body').on('shown.bs.tab', function (e) {
+        setLastTab($(e.target).attr('href'));
+    });
+
+    $(document).on("dnd_stop.vakata", function (e, data) {
+        updateMenuSort(data.data.origin.get_json(), ($(data.data.origin.element[0]).attr('id') === 'placement_menu'))
+    });
 });
+
+(function ($, undefined) {
+    "use strict";
+    var link = document.createElement('a');
+    link.className = "delete-tag menu-dialog-link float-right ";
+    link.innerHTML = '<i class="la la-trash icon-lg"></i>';
+
+    $.jstree.defaults.delete = $.noop;
+    $.jstree.plugins.delete = function (options, parent) {
+
+        this.teardown = function () {
+            if (this.settings.delete) {
+                this.element.find(".delete-tag").remove();
+            }
+            parent.teardown.call(this);
+        };
+        this.redraw_node = function (obj, deep, callback, force_draw) {
+
+            obj = parent.redraw_node.call(this, obj, deep, callback, force_draw);
+
+            var tmp = link.cloneNode(true);
+            var node = this.get_node(obj);
+            tmp.href = node.data.deleteUrl;
+            obj.insertBefore(tmp, obj.childNodes[2]);
+            return obj;
+        };
+    };
+
+    var externalUrl = document.createElement('a');
+    externalUrl.className = "external-url float-right mr-8";
+    $.jstree.defaults.externalUrl = $.noop;
+    $.jstree.plugins.externalUrl = function (options, parent) {
+        this.teardown = function () {
+            if (this.settings.externalUrl) {
+                this.element.find(".external-url").remove();
+            }
+            parent.teardown.call(this);
+        };
+        this.redraw_node = function (obj, deep, callback, force_draw) {
+
+            obj = parent.redraw_node.call(this, obj, deep, callback, force_draw);
+            var node = this.get_node(obj);
+            var tmp = externalUrl.cloneNode(true);
+            tmp.href = node.data.externalUrl;
+            tmp.innerHTML = node.data.path
+            obj.insertBefore(tmp, obj.childNodes[2]);
+            return obj;
+        };
+    };
+})($);
 </script>
 {% endautoescape %}

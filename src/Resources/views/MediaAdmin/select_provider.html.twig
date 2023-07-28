@@ -26,7 +26,7 @@ file that was distributed with this source code.
     {% endif %}
     {% for code, provider in providers %}
         <a href="{{ admin.generateUrl('create', {'provider': provider.name} + app.request.query.all|default({}) ) }}"
-           class="btn btn-default"
+           class="btn btn-light"
            data-toggle="tooltip"
            data-placement="top"
            title="{{ provider.providerMetadata.description|trans({}, 'MediaAdmin') }}"

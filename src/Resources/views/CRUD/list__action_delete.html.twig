@@ -11,8 +11,15 @@ file that was distributed with this source code.
 
 
 {% if admin.isGranted('DELETE', object) and admin.hasRoute('delete') and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
-    <a href="{{ admin.generateObjectUrl('delete', object) }}" class="btn btn-default btn-sm button-in-row show-tooltip dialog-link"
-       id="{{ admin.getClassnameLabel() }}_{{ object.id }}" data-original-title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}"
-       title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}"><i class="fa fa-trash"></i>
+
+    <a href="{{ admin.generateObjectUrl('delete', object) }}" class="
+    {% if isSubNav is defined %}menu-link px-3{% else %} btn btn-light btn-sm button-in-row {% endif %} dialog-link"
+       {% if isSubNav is not defined %}data-bs-toggle="tooltip" data-bs-placement="bottom"{% endif %}
+       id="{{ admin.getClassnameLabel() }}_{{ object.id }}"
+       title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
+        <i class="ki-outline ki-trash fs-3"></i>
+        {% if isSubNav is defined  %}
+         &nbsp;  {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+        {% endif %}
    </a>
 {% endif %}

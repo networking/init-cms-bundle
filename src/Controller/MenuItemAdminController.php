@@ -14,9 +14,11 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
+use Networking\InitCmsBundle\Admin\Entity\PageAdmin;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\BaseMenuItem;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Entity\MenuItem;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
@@ -93,6 +95,7 @@ class MenuItemAdminController extends CRUDController
             $menuId = $request->get('menu_id');
             if ($menuId) {
                 $request->getSession()->set('MenuItem.last_edited', $menuId);
+
             }
         }
 
@@ -157,49 +160,15 @@ class MenuItemAdminController extends CRUDController
         /** @var ArrayCollection $menuAllItems */
         $menuAllItems = new ArrayCollection($this->menuItemManager->findAllJoinPage());
 
-        $nodeDecorator = function ($node) use ($admin, $controller, $menuAllItems) {
-            $items = $menuAllItems->filter(
-                function ($menuItem) use ($node) {
-                    if ($menuItem->getId() == $node['id']) {
-                        return $menuItem;
-                    }
-                }
-            );
-            $node = $items->first();
 
-            return $controller->renderView(
-                '@NetworkingInitCms/MenuItemAdmin/menu_list_item.html.twig',
-                ['admin' => $admin, 'node' => $node]
-            );
-        };
-
+        $selected = $request->getSession()->get('MenuItem.last_edited');
+        $rootNodes = $this->menuItemManager->getRootNodesByLocale($this->currentMenuLanguage, 'id');
         foreach ($rootNodes as $rootNode) {
-            if ($rootMenuId) {
-                if ($rootMenuId == $rootNode->getId()) {
-                    $menus = [
-                        'rootNode' => $rootNode,
-                        'navigation' => $this->createPlacementNavigation($request, $rootNode, $admin, $controller),
-                    ];
-                    break;
-                }
-            } else {
-                $navigation = $this->menuItemManager->childrenHierarchy(
-                    $rootNode,
-                    null,
-                    [
-                        'rootOpen' => '<ul class="table-row-style">',
-                        'decorate' => true,
-                        'childOpen' => $childOpen,
-                        'childClose' => '</li>',
-                        'nodeDecorator' => $nodeDecorator,
-                    ],
-                    false
-                );
-                $menus[] = [
-                    'rootNode' => $rootNode,
-                    'navigation' => $navigation,
-                ];
-            }
+            $children = $this->menuItemManager->getChildren($rootNode, true);
+            $menus[] = [
+                'rootNode' => $rootNode,
+                'navigation' => $this->addMenuBranch($children, $selected, []),
+            ];
         }
 
         $datagrid = $this->admin->getDatagrid();
@@ -219,18 +188,21 @@ class MenuItemAdminController extends CRUDController
         // set the theme for the current Admin Form
         $this->setFormTheme($formView, $this->admin->getFilterTheme());
 
+        $lastEdited = $request->getSession()->get('MenuItem.last_edited');
+
         if ($this->isXmlHttpRequest($request)) {
-            return $this->renderWithExtraParams(
-                '@NetworkingInitCms/MenuItemAdmin/'.$ajaxTemplate.'.html.twig',
-                [
-                    'menus' => $menus,
-                    'admin' => $this->admin,
-                    'page_id' => $pageId,
-                ]
-            );
+
+            $parameters = [
+                'menus' => $menus,
+                'admin' => $this->admin,
+                'page_id' => $pageId,
+            ];
+
+            $html = $this->renderView('@NetworkingInitCms/MenuItemAdmin/'.$ajaxTemplate.'.html.twig', $this->addRenderExtraParams($parameters));
+            return $this->renderJson(['html' => $html, 'last_editied' => $lastEdited], 200, []);
         }
 
-        $lastEdited = $request->getSession()->get('MenuItem.last_edited');
+
 
         return $this->renderWithExtraParams(
             $this->admin->getTemplateRegistry()->getTemplate('list'),
@@ -484,6 +456,8 @@ class MenuItemAdminController extends CRUDController
 
             }
 
+
+
             if ($status !== 200) {
                 $data['status'] = 'error';
                 $message = 'flash_'.str_replace('Action', '', $this->getCaller()).'_error';
@@ -517,18 +491,54 @@ class MenuItemAdminController extends CRUDController
     {
         /** @var \Networking\InitCmsBundle\Entity\MenuItem $rootNode */
         $rootNode = $this->admin->getObject($request->getSession()->get('root_menu_id'));
-
+        $selected = $request->getSession()->get('MenuItem.last_edited');
         if (!$rootNode) {
             throw new NotFoundHttpException();
         }
 
         if ($rootNode->getChildren()->count() > 1) {
-            $reponse = $this->listAction($request, null, null, 'placement', $request->getSession()->get('root_menu_id'));
-            return $reponse->getContent();
+            $children = $this->menuItemManager->getChildren($rootNode, true);
+            $params = [
+                'admin' => $this->admin,
+                'menu' => [
+                    'rootNode' => $rootNode,
+                    'navigation' => $this->addMenuPlacment($children, $selected, []),
+                ],
+            ];
+            $template = '@NetworkingInitCms/MenuItemAdmin/placement.html.twig';
+
+            return $this->renderView($template, $params);
         } else {
             return false;
         }
     }
+
+    private function addMenuPlacment($nodes, $selected, $nodeArray): array
+    {
+        /** @var PageAdmin $pageAdmin */
+        foreach ($nodes as $node) {
+            $item = [
+                'text' => $node->getName(),
+                'data' => [
+                    'id' => $node->getId(),
+                    'rootId' => $node->getRoot(),
+                ],
+                'state' => [
+                    'selected' => $selected === $node->getId(),
+                    'opened' => true,
+                ],
+            ];
+            if ($node->getChildren()) {
+                $children = $this->menuItemManager->getChildren($node, true);
+                $item['children'] = $this->addMenuBranch($children, $selected, []);
+            }
+
+            $nodeArray[] = $item;
+        }
+
+        return $nodeArray;
+    }
+
 
     /**
      * @return string
@@ -655,5 +665,47 @@ class MenuItemAdminController extends CRUDController
             'doctrine' => '?'.ManagerRegistry::class,
             ] + parent::getSubscribedServices(
         );
+    }
+
+    /**
+     * @param MenuItem[] $nodes
+     * @param $selected
+     * @param $nodeArray
+     * @return mixed
+     */
+    private function addMenuBranch($nodes, $selected, $nodeArray)
+    {
+        /** @var PageAdmin $pageAdmin */
+        $pageAdmin = $this->container->get('sonata.admin.pool')->getAdminByAdminCode('networking_init_cms.admin.page');
+        foreach ($nodes as $node) {
+            $item = [
+                'text' => $node->getName(),
+                'a_attr' => [
+                    'id' => 'menu-item-'.$node->getId(),
+                    'class' => 'menu-dialog-link',
+                    'href' => $this->admin->generateObjectUrl('edit', $node),
+                    'data-root-id' => $node->getRoot()
+                ],
+                'data' => [
+                    'id' => $node->getId(),
+                    'rootId' => $node->getRoot(),
+                    'externalUrl' => $node->getPage() ? $pageAdmin->generateObjectUrl('edit',$node->getPage()) : ($node->getRedirectUrl() ?: $node->getInternalUrl()),
+                    'path' => $node->getPage() ? $node->getPage()->getPageName() : ($node->getRedirectUrl() ?: $node->getInternalUrl()),
+                    'deleteUrl' => $this->admin->generateObjectUrl('delete', $node),
+                ],
+                'state' => [
+                    'selected' => $selected === $node->getId(),
+                    'opened' => $node->hasChild($selected),
+                ],
+            ];
+            if ($node->getChildren()) {
+                $children = $this->menuItemManager->getChildren($node, true);
+                $item['children'] = $this->addMenuBranch($children, $selected, []);
+            }
+
+            $nodeArray[] = $item;
+        }
+
+        return $nodeArray;
     }
 }

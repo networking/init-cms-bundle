@@ -45,7 +45,7 @@ class TagAdminController extends CRUDController
                     $object = $this->admin->getObject($jsonArray['objectId']);
                     $jsonArray['status'] =  'success';
                     $jsonArray['message'] =  $this->translate('flash_create_success', ['%name%' =>  $this->escapeHtml($this->admin->toString($object))], 'SonataAdminBundle');
-                    $jsonArray['html'] = $this->getTagTree($jsonArray['objectId']);
+                    $jsonArray['json'] = $this->admin->getTagTree($object->getId());
                     $response = $this->renderJson($jsonArray, 200);
                 }
             }catch (\Exception){

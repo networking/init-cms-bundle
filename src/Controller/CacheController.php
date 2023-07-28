@@ -50,10 +50,9 @@ class CacheController extends AbstractController
     public function clearAction()
     {
         if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-            return new JsonResponse(json_encode(['success' => $this->pageCache->clear()], JSON_THROW_ON_ERROR));
+            return new JsonResponse(['success' => $this->pageCache->clear()]);
         } else {
-            $response = [];
-            return new JsonResponse($response, 403);
+            return new JsonResponse([], 403);
         }
     }
 }

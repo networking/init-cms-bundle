@@ -10,6 +10,7 @@ file that was distributed with this source code.
 
 This code manage the many-to-[one|many] Media association field popup
 #}
+{# delete file #}
 {% autoescape false %}
 <!-- media edit many association -->
 <script type="text/javascript">
@@ -17,7 +18,7 @@ This code manage the many-to-[one|many] Media association field popup
 
 var field_dialog_{{ id }} = false;
 var field_value_{{ id }} = false;
-var field_{{ id }} = jQuery('#{{ id }}');
+var field_{{ id }} = $('#{{ id }}');
 
 //Show Create form
 var field_dialog_form_add_{{ id }} = function (event) {
@@ -27,12 +28,12 @@ var field_dialog_form_add_{{ id }} = function (event) {
     event.stopPropagation();
     initialize_popup_{{ id }}();
 
-    var link = jQuery(this);
+    var link = $(this);
 
     field_dialog_{{ id }}.html('');
 
     // retrieve the form element from the related admin generator
-    jQuery.ajax({
+    $.ajax({
         url: link.attr('href'),
         success: function (html) {
             InitCms.debugMessage('[{{ id }}|field_dialog_form_add] ajax success', field_dialog_{{ id }});
@@ -50,7 +51,7 @@ var field_dialog_form_add_{{ id }} = function (event) {
 
             //listent to modal closing
             field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
-                if (!jQuery(e.target).hasClass('collapse')) {
+                if (!$(e.target).hasClass('collapse')) {
                     InitCms.debugMessage('[{{ id }}|field_dialog_form_add] dialog closed - removing `live` events');
                     // make sure we have a clean state
                     field_dialog_{{ id }}.off('click', 'a');
@@ -65,7 +66,7 @@ var field_dialog_form_add_{{ id }} = function (event) {
 var field_dialog_form_action_{{ id }} = function (event) {
     InitCms.debugMessage('[{{ id }}|field_dialog_form_action] action catch', this);
 
-    var element = jQuery(this);
+    var element = $(this);
     var trueElement = this
     var url, type = '';
     var data = {_xml_http_request: true};
@@ -98,7 +99,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
     InitCms.debugMessage('[{{ id }}|field_dialog_form_action] execute ajax call');
 
     // the ajax post
-    jQuery(element).ajaxSubmit({
+    $(element).ajaxSubmit({
         url: url,
         type: type,
         data: data,
@@ -110,7 +111,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
             if (ct != 'application/json') {
                 var IS_JSON = true;
                 try {
-                    data = jQuery.parseJSON(data);
+                    data = $.parseJSON(data);
                 }
                 catch (err) {
                     IS_JSON = false;
@@ -139,7 +140,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
             field_dialog_{{ id }}.html(data);
 
             // reattach the event
-            jQuery('form', field_dialog_{{ id }}).submit(field_dialog_form_action_{{ id }});
+            $('form', field_dialog_{{ id }}).submit(field_dialog_form_action_{{ id }});
         },
         error: function (xhr, status, error){
             const action = new URL(url, window.location.origin);
@@ -164,7 +165,7 @@ var field_dialog_form_action_{{ id }} = function (event) {
 //handle a click in the list view
 var field_dialog_form_list_link_{{ id }} = function (event) {
 
-    var link = jQuery(this);
+    var link = $(this);
 
     //trigger javascript actions
     if (link.hasClass('filter-close') ||
@@ -197,9 +198,9 @@ var field_dialog_form_list_link_{{ id }} = function (event) {
     }
 
     //update modal window with ajax call
-    jQuery.ajax({
+    $.ajax({
         type: 'GET',
-        url: jQuery(this).attr('href'),
+        url: $(this).attr('href'),
         dataType: 'html',
         success: function (html) {
             InitCms.debugMessage('[{{ id }}|field_dialog_form_list_link] callback success, attach valid js event');
@@ -222,12 +223,12 @@ var field_dialog_form_list_{{ id }} = function (event) {
 
     InitCms.debugMessage('[{{ id }}|field_dialog_form_list] open the list modal');
 
-    var a = jQuery(this);
+    var a = $(this);
 
     field_dialog_{{ id }}.html('');
 
     // retrieve the form element from the related admin generator
-    jQuery.ajax({
+    $.ajax({
         url: a.attr('href'),
         dataType: 'html',
         success: function (html) {
@@ -244,8 +245,8 @@ var field_dialog_form_list_{{ id }} = function (event) {
             field_dialog_{{ id }}.on('click', 'a', field_dialog_form_list_link_{{ id }});
             field_dialog_{{ id }}.on('submit','form', function (event) {
                 event.preventDefault();
-                var form = jQuery(this);
-                jQuery(form).ajaxSubmit({
+                var form = $(this);
+                $(form).ajaxSubmit({
                     type: form.attr('method'),
                     url: form.attr('action'),
                     dataType: 'html',
@@ -261,7 +262,7 @@ var field_dialog_form_list_{{ id }} = function (event) {
 
             field_dialog_{{ id }}.on('hide.bs.modal', function (e) {
 
-                if (!jQuery(e.target).hasClass('collapse')) {
+                if (!$(e.target).hasClass('collapse')) {
                     InitCms.debugMessage('[{{ id }}|field_dialog_form_list] close callback, removing js event');
                     // make sure we have a clean state
                     field_dialog_{{ id }}.off('click', 'a');
@@ -276,10 +277,10 @@ var field_dialog_form_list_{{ id }} = function (event) {
 function initialize_popup_{{ id }}() {
     // initialize component
     if (!field_dialog_{{ id }}) {
-        field_dialog_{{ id }} = jQuery("#field_dialog_{{ id }}");
+        field_dialog_{{ id }} = $("#field_dialog_{{ id }}");
 
         // move the dialog as a child of the root element, nested form breaks html ...
-        jQuery(document.body).append(field_dialog_{{ id }});
+        $(document.body).append(field_dialog_{{ id }});
 
         InitCms.debugMessage('[{{ id }}|field_dialog] move dialog container as a document child');
     }
@@ -289,8 +290,8 @@ function open_media_list_{{ id }}(link) {
     // remove the html event
     link.onclick = null;
     initialize_popup_{{ id }}();
-    // add the jQuery event to the a element
-    jQuery(link).on('click', field_dialog_form_list_{{ id }}).trigger('click');
+    // add the $ event to the a element
+    $(link).on('click', field_dialog_form_list_{{ id }}).trigger('click');
     return false;
 }
 //set up event handlers for opening dialog for form add view
@@ -298,22 +299,22 @@ function start_field_dialog_form_add_{{ id }}(link) {
     // remove the html event
     link.onclick = null;
     initialize_popup_{{ id }}();
-    // add the jQuery event to the a element
-    jQuery(link).on('click', field_dialog_form_add_{{ id }}).trigger('click');
+    // add the $ event to the a element
+    $(link).on('click', field_dialog_form_add_{{ id }}).trigger('click');
     return false;
 }
 //set up event handlers for removing an element
 function remove_selected_element_{{ id }}(link) {
     // remove the html event
     link.onclick = null;
-    // add the jQuery event to the a element
-    jQuery(link).on('click', field_remove_element_{{ id}}) .trigger('click') ;
+    // add the $ event to the a element
+    $(link).on('click', field_remove_element_{{ id}}) .trigger('click') ;
     return false;
 }
 //remove the image
 function field_remove_element_{{ id }}(event) {
     event.preventDefault();
-    if (jQuery('#{{ id }} option').get(0)) {
+    if ($('#{{ id }} option').get(0)) {
         field_{{ id }}.attr('selectedIndex', '-1').children("option:selected").attr("selected", false);
     }
     field_{{ id }}.val('');
@@ -323,9 +324,9 @@ function field_remove_element_{{ id }}(event) {
 
 field_{{ id }}.on('change', function (event) {
     InitCms.debugMessage('[{{ id }}] update the label');
-    jQuery('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/networkinginitcms/img/loading.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
+    $('#field_widget_{{ id }}').html("<span><img src=\"{{ asset('bundles/networkinginitcms/img/loading.gif') }}\" style=\"vertical-align: middle; margin-right: 10px\"/>{{ 'loading_information'|trans([], 'SonataAdminBundle') }}</span>");
     if (field_{{ id }}.val()) {
-        jQuery.ajax({
+        $.ajax({
             type: 'GET',
             url: '{{ url('sonata_admin_short_object_information', {
                                 'objectId': 'OBJECT_ID',
@@ -334,11 +335,11 @@ field_{{ id }}.on('change', function (event) {
                             })}}'.replace('OBJECT_ID', field_value_{{ id }}),
             dataType: 'html',
             success: function (html) {
-                jQuery('#field_widget_{{ id }}').html(html);
+                $('#field_widget_{{ id }}').html(html);
             }
         });
     }else{
-        jQuery('#field_widget_{{ id }}').html('');
+        $('#field_widget_{{ id }}').html('');
     }
 
 });
