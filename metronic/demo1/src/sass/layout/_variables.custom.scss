@@ -1,0 +1,132 @@
+//
+// Variables
+//
+
+// Reboot
+$app-bg-color: #fcfcfc;
+$app-bg-color-dark: transparent;
+$app-blank-bg-color: $app-bg-color;
+$app-blank-bg-color-dark: $app-bg-color-dark;
+
+// General
+$app-general-root-font-size-desktop: 13px;
+$app-general-root-font-size-tablet: 12px;
+$app-general-root-font-size-mobile: 12px;
+
+// Container
+$app-container-padding-x: 30px;
+$app-container-padding-x-mobile: 20px;
+
+// Header base
+$app-header-base-height: 74px;
+$app-header-base-height-mobile: 60px;
+$app-header-base-bg-color: transparent;
+$app-header-base-bg-color-dark: #131313;
+$app-header-base-bg-color-mobile: $app-header-base-bg-color;
+$app-header-base-bg-color-mobile-dark: $app-header-base-bg-color-dark;
+$app-header-base-box-shadow: none;
+$app-header-base-box-shadow-dark: none;
+
+// Header minimize
+$app-header-minimize-height: 74px;
+$app-header-minimize-height-mobile: 60px;
+$app-header-minimize-bg-color: $body-bg;
+$app-header-minimize-bg-color-dark: $app-header-base-bg-color-dark;
+$app-header-minimize-box-shadow: 0px 10px 30px 0px rgba(82,63,105,0.05);
+$app-header-minimize-box-shadow-dark: $box-shadow-sm-dark;
+
+// Header light
+$app-header-light-separator-color: #E4E6EF;
+$app-header-light-separator-color-dark: $border-color-dark;
+
+// Header dark
+$app-header-dark-bg-color:#131313;
+$app-header-dark-separator-color: #282a3d;
+$app-header-dark-scrollbar-color: #3b3b64;
+$app-header-dark-scrollbar-color-hover: lighten($app-header-dark-scrollbar-color, 3%);
+$app-header-dark-menu-active-link-bg-color: #242424;
+
+// Sidebar base
+$app-sidebar-base-width: 265px;
+$app-sidebar-base-width-mobile: 250px; 
+
+$app-sidebar-base-toggle-btn-box-shadow: 0px 8px 14px rgba(15, 42, 81, 0.04);
+$app-sidebar-base-toggle-btn-box-shadow-dark: none;
+$app-sidebar-base-toggle-btn-bg-color: $body-bg;
+$app-sidebar-base-toggle-btn-bg-color-dark: $gray-200-dark;
+$app-sidebar-base-toggle-btn-border-color: #F1F1F2;
+$app-sidebar-base-toggle-btn-border-color-dark: none;
+$app-sidebar-base-border-color: #F1F1F2;
+$app-sidebar-base-border-color-dark: none;
+
+// Sidebar minimize
+$app-sidebar-minimize-width: 75px;
+
+// Sidebar light
+$app-sidebar-light-bg-color: $body-bg;
+$app-sidebar-light-bg-color-dark:#131313;
+
+$app-sidebar-light-box-shadow: 0 0 28px 0 rgba(82,63,105,.05);
+$app-sidebar-light-box-shadow-dark: none;
+
+$app-sidebar-light-separator-color: $app-header-light-separator-color;
+$app-sidebar-light-separator-color-dark: $app-header-light-separator-color-dark;
+
+$app-sidebar-light-scrollbar-color-hover: $gray-200;
+$app-sidebar-light-scrollbar-color-hover-dark: $gray-200-dark;
+$app-sidebar-light-menu-heading-color: #B5B5C3;
+$app-sidebar-light-menu-heading-color-dark: $gray-500-dark;
+$app-sidebar-light-menu-link-bg-color-active:#F7F8FB;
+$app-sidebar-light-menu-link-bg-color-active-dark:#2A2A3C;
+$app-sidebar-light-menu-link-color: #252F4A;
+$app-sidebar-light-menu-link-color-dark: $gray-300;
+$app-sidebar-light-menu-link-icon-color: #99A1B7;
+$app-sidebar-light-menu-link-icon-color-dark: #7F8194;
+$app-sidebar-light-header-menu-link-bg-color-active: #F7F8FB;
+$app-sidebar-light-header-menu-link-bg-color-active-dark: $gray-100-dark;
+    
+// Sidebar dark
+$app-sidebar-dark-bg-color: #131313;
+$app-sidebar-dark-separator-color: #393945;
+$app-sidebar-dark-scrollbar-color-hover: lighten($app-sidebar-dark-separator-color, 2%);
+$app-sidebar-dark-menu-heading-color: #626671;
+$app-sidebar-dark-menu-sub-link-color: #888A8E;
+$app-sidebar-dark-menu-link-bg-color-active: #1C1C21;
+
+// Aside base
+$app-aside-base-width: 320px;
+$app-aside-base-width-mobile: 300px; 
+$app-aside-base-bg-color: $body-bg;
+$app-aside-base-bg-color-dark: #131313; 
+$app-aside-base-gap-end: $app-container-padding-x;
+$app-aside-base-gap-top: $app-container-padding-x;
+$app-aside-base-gap-bottom: $app-container-padding-x;
+
+// Toolbar base
+$app-toolbar-base-height: 55px;
+$app-toolbar-base-bg-color: $body-bg;
+$app-toolbar-base-bg-color-dark: #131313;
+$app-toolbar-base-box-shadow: 0px 10px 30px 0px rgba(82,63,105,0.05);
+$app-toolbar-base-box-shadow-dark: none;
+$app-toolbar-base-border-top: 1px dashed $border-dashed-color;
+$app-toolbar-base-border-top-dark: 1px dashed $border-dashed-color-dark;
+
+// Footer
+$app-footer-height: 60px;
+$app-footer-height-mobile: auto;
+$app-footer-bg-color: transparent;
+$app-footer-bg-color-dark: transparent;
+$app-footer-box-shadow: 0px 10px 30px 0px rgba(82,63,105,0.05);
+$app-footer-box-shadow-dark: none;
+
+// Scrolltop
+$scrolltop-bottom: 43px;
+$scrolltop-bottom-mobile: 23px;
+$scrolltop-end: 7px;
+$scrolltop-end-mobile: 5px;
+
+// Layout builder toggle(used for Demo purposes only)
+$app-layout-builder-toggle-end: 50px;
+$app-layout-builder-toggle-end-mobile: 40px;
+$app-layout-builder-toggle-bottom: 40px;
+$app-layout-builder-toggle-bottom-mobile: 20px; 

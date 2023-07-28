@@ -1,0 +1,22 @@
+//
+// Aside
+//
+
+// Desktop mode
+@include media-breakpoint-up(lg) {
+    .app-aside {
+        border: 1px solid var(--#{$prefix}border-color);
+		border-radius: $card-border-radius;
+		box-shadow: $card-box-shadow;
+    }
+}
+
+// Dark mode
+@include color-mode(dark) {
+    // Desktop mode
+	@include media-breakpoint-up(lg) {
+		.app-aside {
+			//box-shadow: $card-box-shadow-dark;
+		}
+	}
+}
