@@ -62,6 +62,7 @@ class AnnotationReader implements AnnotationReaderInterface
     {
         $returnAnnotations = [];
         $annotations = $this->getAnnotations($entity);
+
         $scopeAnnotations = $annotations[$scope] ?? [];
 
         if ($scope === self::SCOPE_CLASS) {

@@ -6,7 +6,7 @@
 
     <parameters>
         <!-- Media -->
-        <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\Entity\MediaAdmin</parameter>
+        <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\MediaAdmin</parameter>
         <parameter key="sonata.media.admin.media.controller">Networking\InitCmsBundle\Controller\MediaAdminController</parameter>
         <parameter key="sonata.media.admin.media.translation_domain">MediaAdmin</parameter>
     </parameters>

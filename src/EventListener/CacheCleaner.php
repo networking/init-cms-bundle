@@ -14,7 +14,7 @@ namespace Networking\InitCmsBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
-use Networking\InitCmsBundle\Model\MenuItem;
+use Networking\InitCmsBundle\Entity\MenuItem;
 
 class CacheCleaner
 {

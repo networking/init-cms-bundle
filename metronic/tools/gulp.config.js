@@ -17,9 +17,9 @@ const gulpConfig = {
                     "sweetalert2",
                 ],
             },
-            jsMinify: false,
+            jsMinify: true,
             cssMinify: false,
-            jsSourcemaps: false,
+            jsSourcemaps: true,
             cssSourcemaps: false,
         },
         path: {
@@ -310,6 +310,16 @@ const gulpConfig = {
                     },
                     dist: {
                         scripts: "{$config.dist}/plugins/custom/draggable/draggable.bundle.js",
+                    },
+                },
+                sorablejs: {
+                    src: {
+                        scripts: [
+                            "{$config.path.node_modules}/sortablejs/modular/sortable.complete.esm.js",
+                        ],
+                    },
+                    dist: {
+                        scripts: "{$config.dist}/plugins/custom/sortablejs/sortablejs.bundle.js",
                     },
                 },
                 prismjs: {
@@ -607,7 +617,17 @@ const gulpConfig = {
                         styles: "{$config.dist}/plugins/custom/cookiealert/cookiealert.bundle.css",
                         scripts: "{$config.dist}/plugins/custom/cookiealert/cookiealert.bundle.js",
                     }
-                }
+                },
+                "fos-router": {
+                    src: {
+                        scripts: [
+                            "{$config.path.node_modules}/fos-router/public/js/router.js",
+                        ]
+                    },
+                    dist: {
+                        scripts: "{$config.dist}/plugins/custom/fos-router/fos-router.bundle.js",
+                    }
+                },
             }
         },
         widgets: {
@@ -664,10 +684,21 @@ const gulpConfig = {
                     "{$config.path.common_src}/js/cms/list.js",
                     "{$config.path.common_src}/js/cms/menu-admin.js",
                     "{$config.path.common_src}/js/cms/media-admin.js",
+                    "{$config.path.common_src}/js/cms/page-admin.js",
                 ],
             },
             dist: {
                 scripts: "{$config.dist}/js/cms/",
+            }
+        },
+        'ckeditor-plugins': {
+            src: {
+                scripts: [
+                    "{$config.path.common_src}/js/cms/ckeditor-plugins/**/*.js",
+                ],
+            },
+            dist: {
+                scripts: "{$config.dist}/js/cms/ckeditor-plugins/",
             }
         }
     }

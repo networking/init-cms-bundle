@@ -277,10 +277,14 @@ var CMSMediaAdmin = function () {
         filters = Object.fromEntries(data.entries());
 
 
+
+
         axios.get(tagsContainer.dataset.refreshListUrl, {...axiosConfig, params: filters})
             .then(function (response) {
-            $('#item_list').html(response.data);
-            $("html, body").animate({scrollTop: $('#item_list').scrollTop()}, "slow");
+                $('#item_list').html(response.data);
+                $("html, body").animate({scrollTop: $('#item_list').scrollTop()}, "slow");
+
+                refreshFsLightbox();
         })
     }
 

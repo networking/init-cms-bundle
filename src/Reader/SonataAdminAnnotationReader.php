@@ -70,6 +70,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
     public function getFormMapperAnnotations($entity)
     {
         $formAnnotations = $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_FORM, self::SCOPE_PROPERTY);
+
         if (!$this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_FORM_ALL, self::SCOPE_CLASS)) {
             return $formAnnotations;
         }
@@ -250,6 +251,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
      */
     public function getFormMapperCallbacks($entity)
     {
+        
         return $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_FORM_CALLBACK, self::SCOPE_METHOD);
     }
 

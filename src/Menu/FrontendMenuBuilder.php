@@ -15,7 +15,7 @@ namespace Networking\InitCmsBundle\Menu;
 use Networking\InitCmsBundle\Entity\MenuItem as Menu;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Knp\Menu\ItemInterface;
-use Networking\InitCmsBundle\Model\MenuItem;
+use Networking\InitCmsBundle\Entity\MenuItem;
 
 /**
  * Class FrontendMenuBuilder.

@@ -18,10 +18,10 @@ use Knp\Menu\Iterator\RecursiveItemIterator;
 use Knp\Menu\Matcher\MatcherInterface;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\MenuItem as Menu;
-use Networking\InitCmsBundle\Model\ContentRouteManager;
+use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
-use Networking\InitCmsBundle\Model\MenuItem;
-use Networking\InitCmsBundle\Model\Page;
+use Networking\InitCmsBundle\Entity\MenuItem;
+use Networking\InitCmsBundle\Entity\BasePage;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -156,7 +156,7 @@ class MenuBuilder
 
     public function setViewStatus()
     {
-        $this->viewStatus = $this->request->getSession()->get('_viewStatus') ?: Page::STATUS_PUBLISHED;
+        $this->viewStatus = $this->request->getSession()->get('_viewStatus') ?: BasePage::STATUS_PUBLISHED;
     }
 
     public function setCurrentPath()

@@ -50514,3 +50514,7 @@ div#item_list .media-box .hidden-iframe {
 .ui-helper-hidden-accessible {
   display: none;
 }
+
+.dropzone .content_preview {
+  text-align: initial;
+}

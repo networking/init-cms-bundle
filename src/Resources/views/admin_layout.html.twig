@@ -42,8 +42,7 @@ file that was distributed with this source code.
                 <link href="{{ asset(css) }}" type="text/css" rel="stylesheet" media="screen"/>
             {% endfor %}
         {% endblock content_css %}
-        <link href="{{ asset('vendor/featherlight/src/featherlight.css', 'init_cms') }}" type="text/css"
-              rel="stylesheet" media="screen"/>
+
         <link href="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/global/plugins.bundle.css') }}"
               rel="stylesheet" type="text/css"/>
         <link href="{{ asset('bundles/networkinginitcms/admin-theme/assets/css/style.bundle.css') }}" rel="stylesheet"
@@ -91,6 +90,9 @@ file that was distributed with this source code.
         {% if app.request.cookies.get('sidebar_minimize_state', 'off') == 'on' %}
             data-kt-app-sidebar-minimize="on"
         {% endif %}
+        {% if _side_menu %}
+      data-kt-app-aside-fixed="true"
+      {% endif %}
       data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
       class="app-default">
 
@@ -232,65 +234,64 @@ file that was distributed with this source code.
 
                             {% block sonata_wrapper %}
 
-                            {% block sonata_admin_content %}
+                                {% block sonata_admin_content %}
 
-                            {% if _preview is not empty %}
-                                {{ _preview|raw }}
-                            {% endif %}
-
-                            {% if _content is not empty %}
-                                {{ _content|raw }}
-                            {% endif %}
-
-                            {% if _help_text is not empty %}
-                                {{ _help_text|raw }}
-                            {% endif %}
-
-                            {% if _show is not empty %}
-                                {{ _show|raw }}
-                            {% endif %}
-
-                            {% if _form is not empty %}
-                                <div class="sonata-ba-form">
-                                    {{ _form|raw }}
-                                </div>
-                            {% endif %}
-
-                            {% if _list_table is not empty %}
-                                    {% if _list_filters is not empty %}
-                                         {{ _list_filters|raw }}
+                                    {% if _preview is not empty %}
+                                        {{ _preview|raw }}
                                     {% endif %}
-                                    {{ _list_table|raw }}
-                            {% endif %}
 
-                        </div>
-                        {% if _side_menu is not empty %}
-                            <div id="kt_app_aside">
-                                <div class="sonata-ba-side-menu"></div>
-                            </div>
-                            <div id="kt_app_aside" class="app-aside flex-column mt-7" data-kt-drawer="true"
-                                 data-kt-drawer-name="app-aside" data-kt-drawer-activate="{default: true, lg: false}"
-                                 data-kt-drawer-overlay="true" data-kt-drawer-width="auto"
-                                 data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_app_aside_toggle" style="">
-                                <!--begin::Aside wrapper-->
-                                <div id="kt_app_aside_wrapper" class="hover-scroll-y px-5 mx-5 my-5"
-                                     data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
-                                     data-kt-scroll-dependencies="#kt_app_header"
-                                     data-kt-scroll-wrappers="#kt_app_aside" data-kt-scroll-offset="5px"
-                                     data-kt-scroll-save-state="true" style="height: 1139px;">
-                                    <!--begin::Aside1-->
-                                    {{ _side_menu|raw }}
-                                    <!--end::Aside1-->
-                                </div>
-                                <!--end::Aside wrapper-->
-                            </div>
-                        {% endif %}
-                        {% endblock %}
+                                    {% if _content is not empty %}
+                                        {{ _content|raw }}
+                                    {% endif %}
+
+                                    {% if _help_text is not empty %}
+                                        {{ _help_text|raw }}
+                                    {% endif %}
+
+                                    {% if _show is not empty %}
+                                        {{ _show|raw }}
+                                    {% endif %}
+
+                                    {% if _form is not empty %}
+                                        <div class="sonata-ba-form">
+                                            {{ _form|raw }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if _list_table is not empty %}
+                                            {% if _list_filters is not empty %}
+                                                 {{ _list_filters|raw }}
+                                            {% endif %}
+                                            {{ _list_table|raw }}
+                                    {% endif %}
+
+                                {% endblock %}
                         {% endblock sonata_wrapper %}
+                        </div>
                     </div>
                 </div>
             </div>
-            <!--end::Content wrapper-->
+            <!--end::Main-->
+
+            {% if _side_menu is not empty %}
+                <div id="kt_app_aside" class="app-aside flex-column mt-7" data-kt-drawer="true"
+                     data-kt-drawer-name="app-aside" data-kt-drawer-activate="{default: true, lg: false}"
+                     data-kt-drawer-overlay="true" data-kt-drawer-width="auto"
+                     data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_app_aside_toggle" style="">
+                    <!--begin::Aside wrapper-->
+                    <div id="kt_app_aside_wrapper" class="hover-scroll-y px-5 mx-5 my-5"
+                         data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+                         data-kt-scroll-dependencies="#kt_app_header"
+                         data-kt-scroll-wrappers="#kt_app_aside" data-kt-scroll-offset="5px"
+                         data-kt-scroll-save-state="true" style="height: 1139px;">
+                        <!--begin::Aside1-->
+                        {{ _side_menu|raw }}
+                        <!--end::Aside1-->
+                    </div>
+                    <!--end::Aside wrapper-->
+                </div>
+            {% endif %}
+
             <!--begin::Footer-->
             {% block footer %}
                 {{ sonata_block_render({ 'type': 'networking_init_cms.block.service.version' }, {}) }}
@@ -298,11 +299,10 @@ file that was distributed with this source code.
             <!--end::Footer-->
 
         </div>
-        <!--end:::Main-->
-    </div>
     <!--end::Wrapper-->
     </div>
     <!--end::Page-->
+    </div>
 {% endblock page %}
     </div>
 {% endblock app %}
@@ -311,12 +311,17 @@ file that was distributed with this source code.
 
     <!--begin::Javascript-->
     <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/assets/') }}";</script>
+    <script type="text/javascript">
+        var CKEDITOR_BASEPATH = "/bundles/fosckeditor/";
+    </script>
+    <script type="text/javascript" src="/bundles/fosckeditor/ckeditor.js"></script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/scripts.bundle.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/admin.js') }}"></script>
+    <script type="module" src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/admin.js') }}"></script>
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/jstree/jstree.bundle.js') }}"></script>
-
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/fos-router/fos-router.bundle.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used for this page only)-->
@@ -333,6 +338,8 @@ file that was distributed with this source code.
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js')}}"></script>
+
     <!--end::Vendors Javascript-->
     <!--begin::Custom Javascript(used for this page only)-->
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/widgets.bundle.js') }}"></script>

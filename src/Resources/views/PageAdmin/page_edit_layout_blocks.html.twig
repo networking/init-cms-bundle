@@ -1,20 +1,19 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% if admin is not defined %}
     {% set admin = sonata_admin.admin %}
 {% endif %}
+{% set id =  admin.uniqid ~'_layout_blocks' %}
+{% set contentTypes = get_content_type_options() %}
 <div id="field_container_{{ id }}">
     <p></p>
-    {% set increment = 0 %}
     {% if not admin.subject.alias %}
         {% for key, zone in get_initcms_template_zones() %}
             {% if (loop.first) %}
@@ -23,82 +22,27 @@ file that was distributed with this source code.
 
 
             <div class="{{ zone.class }}">
-                <div class="dropzone well well-small">
+                <div class="dropzone mb-3"
+                     data-zone="{{ zone.name }}"
+                     data-page-id="{{ admin.subject.id }}"
+                     data-admin-code="{{ admin.code }}"
+                >
                     <h6>{{ zone.name|trans() }} </h6>
                     {% if zone.max_content_items is not same as(-1) %}
-                        <ul id="zone_{{ zone.name }}" class="sortable" data-content-types="{{ zone.restricted_types }}"
-                            data-max-items="{{ zone.max_content_items }}">
-                            {# Add a list item for the very first plus button with a field set to 0, used for the sorting of the li items that follow#}
-                            <li class="networking-sort-zone">
-                                <div class="plus_button"
-                                     {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
-                                    <a class="add-layout"
-                                       href="{{ url('admin_networking_initcms_layoutblock_create') }}"
-                                       data-zone="{{ zone.name }}"
-                                       data-sort-order="0"
-                                       data-value="{{ zone.restricted_types }}"
-                                       title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                        <i class="fa fa-plus"></i>
-                                    </a>
-                                </div>
-                            </li>
-                            <li class="empty_layout_block" {% if get_sub_form_by_zone(form.children, zone.name)|length > 0 %} style="display: none;"{% endif %}>
+                        <div id="zone_{{ zone.name }}" class="draggable-zone min-h-200px"
+                             data-content-types="{{ zone.restricted_types }}"
+                             data-max-items="{{ zone.max_content_items }}">
+
+                            <div class="empty_layout_block {% if get_sub_form_by_zone(form.children, zone.name)|length > 0 %}d-none{% endif %}">
                                 <p class="info-soft ">
                                     {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
                                 </p>
-                            </li>
+                            </div>
                             {# loop through layout blocks #}
-                            {% for layout_block_field_name, layout_block_field in get_sub_form_by_zone(form.children, zone.name) %}
-                                {% set layoutBlockContent = render_initcms_admin_block(layout_block_field.vars.value) %}
-                                {% if layoutBlockContent %}
-
-                                    <li class="networking-sortable-list networking-sort-zone"
-                                        id="layoutBlock_{{ layout_block_field.vars.value.id }}"
-                                        data-content-type="{{ layout_block_field.vars.value.classType }}">
-                                        {# preview of layout block of content #}
-
-                                        <div class="content_preview">
-                                            <div class="layout_controls">
-                                                <div class="pull-left">
-                                                    <i class="fa-solid fa-arrows-up-down-left-right soft-background"></i>
-                                                    <i class="fa fa-trash soft-background delete_block"
-                                                       data-value="{{ layout_block_field.vars.value.id }}"></i>
-                                                    <i class="fa-regular fa-pen-to-square soft-background layout-link"
-                                                       data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block_field.vars.value.id}) }}"></i>
-                                                </div>
-                                                <div class="pull-right text-{{ layout_block_field.vars.value.isActive?'success':'danger' }}">
-                                                    {{ layout_block_field.vars.value.isActive?'Online':'Offline' }}
-                                                    <i class="fa fa-{{ layout_block_field.vars.value.isActive?'circle-check':'ban' }}
-                                                    btn btn-xs btn-{{ layout_block_field.vars.value.isActive?'success':'danger' }} toggle-active"
-                                                    data-value="{{ layout_block_field.vars.value.id }}"> </i>
-                                                </div>
-                                                <div class="clear"></div>
-                                                <br>
-                                            </div>
-
-                                            <div class="layout-link" {% if not layout_block_field.vars.value.isActive %} style="opacity:0.3"{% endif %}
-                                                 data-href="{{ url('admin_networking_initcms_layoutblock_edit', {'id': layout_block_field.vars.value.id}) }}">
-                                                {{ layoutBlockContent|raw }}
-                                            </div>
-                                        </div>
-                                        {# start the block for the plus button #}
-                                        <div class="plus_button"
-                                             {% if zone.max_content_items > 0 and get_sub_form_by_zone(form.children, zone.name)|length >= zone.max_content_items %}style="display: none;"{% endif %}>
-                                            <a class="add-layout"
-                                               href="{{ url('admin_networking_initcms_layoutblock_create') }}"
-                                               data-zone="{{ zone.name }}"
-                                               data-sort-order="{{ loop.index }}"
-                                               data-value="{{ zone.restricted_types }}"
-                                               title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
-                                                <i class="fa fa-plus"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                    {% set increment = increment + 1 %}
-                                {% endif %}
+                            {% for layout_block in admin.subject.layoutBlock(zone.name, true) %}
+                                {% include '@NetworkingInitCms/PageAdmin/layout_block.html.twig' with {'layout_block': layout_block} %}
                             {% endfor %}
-
-                        </ul>
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -113,18 +57,5 @@ file that was distributed with this source code.
                     class="link-underlined  font-light">
                 {{ 'link.alias.page'|trans({'%alias_page%': admin.subject.alias}, 'NetworkingInitCmsBundle') }}</a>
         </div>
-    {% endif %}
-    {# add dependent javascript based on if the request is ajax or not #}
-    {% if app.request.isXmlHttpRequest %}
-        {% include '@NetworkingInitCms/PageAdmin/page_edit_orm_one_ajax.html.twig' %}
-    {% else %}
-
-        {# addToBottom adds the content in the block to the end of the page #}
-        {% jsblock 'addToBottom' %}
-        <div id="layoutBlockModal" class="modal" aria-hidden="true" role="dialog" style="display: none">
-        </div>
-        {% include '@NetworkingInitCms/Form/content_type_select.html.twig' %}
-        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks_script.html.twig' with {'admin': admin} %}
-        {% jsblock 'addToBottomEnd' %}
     {% endif %}
 </div>

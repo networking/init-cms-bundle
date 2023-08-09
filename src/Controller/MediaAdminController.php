@@ -15,7 +15,7 @@ namespace Networking\InitCmsBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\Persistence\ManagerRegistry;
-use Networking\InitCmsBundle\Admin\Model\TagAdmin;
+use Networking\InitCmsBundle\Admin\TagAdmin;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Exception\DuplicateMediaException;
@@ -417,6 +417,7 @@ class MediaAdminController extends CRUDController
             ->getQuery()->getResult();
 
         $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
+
 
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/MediaAdmin/list_items.html.twig',

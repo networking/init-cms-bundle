@@ -486,6 +486,7 @@ const bundle = (bundle) => {
       dotPaths(bundle.src[type]);
       const outputFile = baseFileName(bundle.dist[type]);
 
+
       switch (type) {
         case "styles":
           if (bundle.dist.hasOwnProperty(type)) {
@@ -634,6 +635,7 @@ const outputFunc = (bundle) => {
             }
             break;
           case "scripts":
+
             /**
              * START: bundle by folder
              */
@@ -642,6 +644,8 @@ const outputFunc = (bundle) => {
                 "*.js",
                 "bundle/*.js"
               );
+
+
 
               const __filename = fileURLToPath(import.meta.url);
               const __dirname = pathDir.dirname(__filename);
@@ -709,6 +713,7 @@ const outputFunc = (bundle) => {
               .on("error", console.error.bind(console));
             const output2 = outputChannel(bundle.dist[type], undefined, type)();
             if (output2) {
+
               stream.pipe(output2);
             }
             outputFuncStreams.push(stream);

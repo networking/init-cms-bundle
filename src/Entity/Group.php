@@ -20,10 +20,19 @@ use Doctrine\ORM\Mapping as ORM;
  * Networking\InitCmsBundle\Entity\Group
  *
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'user_group')]
 class Group implements \Stringable
 {
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
+    
+    #[ORM\Column(type: 'simple_array')]
     protected array $roles = [];
+
+    #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
     
 

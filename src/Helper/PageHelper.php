@@ -220,12 +220,13 @@ class PageHelper
      */
     public function makePageSnapshot(PageInterface $page)
     {
-        foreach ($page->getLayoutBlock() as $layoutBlock) {
-            $layoutBlockContent = $this->registry->getManagerForClass($layoutBlock->getClassType())->getRepository($layoutBlock->getClassType())->find(
-                $layoutBlock->getObjectId()
-            );
-            $layoutBlock->takeSnapshot($this->serializer->serialize($layoutBlockContent, 'json'));
-        }
+//        foreach ($page->getLayoutBlock() as $layoutBlock) {
+//            $layoutBlockContent = $this->registry->getManagerForClass($layoutBlock->getClassType())->getRepository($layoutBlock->getClassType())->find(
+//                $layoutBlock->getObjectId()
+//            );
+//            $layoutBlock->takeSnapshot($this->serializer->serialize($layoutBlockContent, 'json'));
+//        }
+
 
         $pageSnapshotClass = $this->pageSnapshotManager->getClassName();
 
@@ -246,11 +247,13 @@ class PageHelper
         $pageSnapshot->setPath(self::getPageRoutePath($page->getPath()));
 
         $om = $this->registry->getManagerForClass($pageSnapshotClass);
+
         $om->persist($pageSnapshot);
         $om->flush();
 
         $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
         $snapshotContentRoute->setObjectId($pageSnapshot->getId());
+
 
         if ($oldPageSnapshot && ($oldPageSnapshot->getPath() != self::getPageRoutePath($page->getPath()))) {
             $this->pageCache->clean();
@@ -311,7 +314,7 @@ class PageHelper
             $newLayoutBlock = clone $layoutBlock;
 
 
-            $content = $om->getRepository($newLayoutBlock->getClassType())->find(
+            $content = $om->getRepository($newLayoutBlock::class)->find(
                 $newLayoutBlock->getObjectId()
             );
             $newContent = clone $content;
@@ -368,7 +371,7 @@ class PageHelper
             $newLayoutBlock = clone $layoutBlock;
 
 
-            $content = $om->getRepository($newLayoutBlock->getClassType())->find(
+            $content = $om->getRepository($newLayoutBlock::class)->find(
                 $newLayoutBlock->getObjectId()
             );
             $newContent = clone $content;

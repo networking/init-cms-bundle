@@ -1,4 +1,5 @@
-window.axiosConfig = axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
+window.axiosConfig  = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
+
 
 // Class definition
 var CMSAdmin = function () {
@@ -77,6 +78,73 @@ var CMSAdmin = function () {
 
     }
 
+    var initCkeditor = () => {
+        var elements = [].slice.call(document.querySelectorAll('[data-control="ckeditor"], [data-kt-ckeditor="true"]'));
+        elements.map(function (element) {
+            if (element.getAttribute("data-kt-initialized") === "1") {
+                return;
+            }
+            let id = element.getAttribute("id")
+
+            let config = JSON.parse(element.dataset.config)
+            let plugins = JSON.parse(element.dataset.plugins)
+            let templates = JSON.parse(element.dataset.templates)
+            let styles = JSON.parse(element.dataset.styles)
+            let filebrowser = JSON.parse(element.dataset.filebrowser)
+            if (CKEDITOR.instances[id]) {
+                CKEDITOR.instances[id].destroy(true);
+                delete CKEDITOR.instances[id];
+            }
+
+            for(const [key, value] of Object.entries(plugins)) {
+
+                CKEDITOR.plugins.addExternal(key, value.path, value.filename);
+            }
+
+
+            let params = {}
+
+            console.log(config)
+            for(const [key, value] of Object.entries(config)) {
+                if(key === 'filebrowserBrowseRoute') {
+                    params['filebrowserBrowseUrl'] = Routing.generate(value, config.filebrowserBrowseRouteParameters)
+                    continue;
+                }
+
+                if(key === 'filebrowserImageBrowseRoute') {
+                    params['filebrowserImageBrowseUrl'] = Routing.generate(value, config.filebrowserImageBrowseRouteParameters)
+                    continue;
+                }
+
+                if(key === 'filebrowserUploadRoute') {
+                    params['filebrowserUploadUrl'] = Routing.generate(value, config.filebrowserUploadRouteParameters)
+                    continue;
+                }
+
+                if(key === 'filebrowserImageUploadRoute') {
+                    params['filebrowserImageUploadUrl'] = Routing.generate(value, config.filebrowserImageUploadRouteParameters)
+                    continue;
+                }
+
+                if(key === 'filebrowserBrowseRouteParameters' || key === 'filebrowserImageBrowseRouteParameters' || key === 'filebrowserUploadRouteParameters' || key === 'filebrowserImageUploadRouteParameters') {
+                    continue
+                }
+
+                params[key] = value
+            }
+            CKEDITOR.disableAutoInline = true
+            let editor = CKEDITOR.replace(id,params);
+
+            editor.on( 'change', function( evt ) {
+                element.value = evt.editor.getData();
+            });
+
+
+            element.setAttribute("data-kt-initialized", "1");
+        });
+
+    }
+
     // Public methods
     return {
         init: function () {
@@ -90,6 +158,7 @@ var CMSAdmin = function () {
             this.createDatePickers();
             this.createDateTimePickers();
             this.createSelect2()
+            this.createCkeditors()
         },
         createInitCmsMessageBox: function(status, message) {
             toastr.options = {
@@ -124,6 +193,9 @@ var CMSAdmin = function () {
         },
         createDateTimePickers: function () {
             initializeDateTimePickers();
+        },
+        createCkeditors: function () {
+            initCkeditor()
         },
         createSelect2: function () {
             // Check if jQuery included
@@ -369,7 +441,7 @@ class MediaEntity{
 
         data.set('galleryMode', 'gallery'),
 
-        filters = Object.fromEntries(data.entries());
+            filters = Object.fromEntries(data.entries());
 
         axios.get(tagsContainer.dataset.refreshListUrl, {...axiosConfig, params: filters})
             .then(function (response) {
@@ -395,10 +467,10 @@ class MediaEntity{
         axios.get(url.toString(), {...axiosConfig})
             .then(response => {
 
-            this.dialogContainer.querySelector('.modal-content').innerHTML = response.data;
-            this.addSearchListeners()
-            this.setupTree()
-        })
+                this.dialogContainer.querySelector('.modal-content').innerHTML = response.data;
+                this.addSearchListeners()
+                this.setupTree()
+            })
 
     }
     addMediaDialog(event) {
@@ -484,6 +556,9 @@ KTUtil.onDOMContentLoaded(function () {
     window.CMSAdmin = CMSAdmin;
 
     document.body.addEventListener('shown.bs.modal', function (e) {
+        CMSAdmin.initSpecialFields()
+    })
+    document.body.addEventListener('fields:added', function (e) {
         CMSAdmin.initSpecialFields()
     })
 });

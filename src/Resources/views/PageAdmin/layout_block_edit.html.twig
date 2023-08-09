@@ -1,51 +1,37 @@
 {% block form %}
     {% set url = admin.id(object) ? 'edit' : 'create' %}
-    {% if not admin.hasRoute(url) %}
-        <div>
-            {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
-        </div>
-    {% else %}
-        <div class="modal-dialog modal-full">
-            <div class="modal-content">
-                <form class="form-horizontal"
-                      action="{{ admin.generateUrl(url, {'id': admin.id(object),'uniqid': admin.uniqid, 'classType': object.classType}) }}"
-                        {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
-                      method="POST">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>{{ 'title.edit_content'|trans({}, 'PageAdmin') }}
-                            - {{ render_content_type_name(object) }}</h4>
-                    </div>
-                    <div class="modal-body">
-                        {% if form.vars.errors|length > 0 %}
-                                {{ form_errors(form) }}
+        <form class="form-horizontal"
+              action="{{ admin.generateUrl(url, {'id': admin.id(object),'uniqid': admin.uniqid, 'classType': object.classType}) }}"
+                {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
+              method="POST">
+
+                {% if form.vars.errors|length > 0 %}
+                        {{ form_errors(form) }}
+                {% endif %}
+                {# Layout Block hidden fields #}
+                {% for name, form_group in admin.formgroups %}
+                    {% for field_name in form_group.fields %}
+                        {% if admin.formfielddescriptions[field_name] is defined %}
+                            {{ form_row(form[field_name]) }}
                         {% endif %}
-                        {# Layout Block hidden fields #}
-                        {% for name, form_group in admin.formgroups %}
-                            {% for field_name in form_group.fields %}
-                                {% if admin.formfielddescriptions[field_name] is defined %}
-                                    {{ form_row(form[field_name]) }}
-                                {% endif %}
-                            {% endfor %}
-                        {% endfor %}
-                        {{ form_rest(form) }}
-                    </div>
-                    {% block formactions %}
-                        {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                        <div class="modal-footer">
-                            <button class="btn btn-light" data-dismiss="modal"
-                                    aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
-                            {% if admin.id(object) %}
-                                <button class="btn btn-primary"
-                                        name="btn_update">{{ 'btn_update'|trans({}, 'NetworkingInitCmsBundle') }}</button>
-                            {% else %}
-                                <button class="btn btn-primary"
-                                        name="btn_update">{{ 'button.save'|trans({}, 'PageAdmin') }}</button>
-                            {% endif %}
-                        </div>
-                    {% endblock formactions %}
-                </form>
+                    {% endfor %}
+                {% endfor %}
+                {{ form_rest(form) }}
             </div>
-        </div>
-    {% endif %}
+            {% block formactions %}
+                {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                    <button class="btn btn-light" data-dismiss="edit"
+                            data-value="{{ admin.id(object)  }}"
+                            aria-hidden="true">{{ 'button.cancel'|trans({}, 'PageAdmin') }}</button>
+                    {% if admin.id(object) %}
+                        <button class="btn btn-primary"
+                                data-save="edit"
+                                data-value="{{ admin.id(object)  }}"
+                                name="btn_update">{{ 'btn_update'|trans({}, 'NetworkingInitCmsBundle') }}</button>
+                    {% else %}
+                        <button class="btn btn-primary"
+                                name="btn_update">{{ 'button.save'|trans({}, 'PageAdmin') }}</button>
+                    {% endif %}
+            {% endblock formactions %}
+        </form>
 {% endblock %}

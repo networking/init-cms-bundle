@@ -132,7 +132,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $loader->load('event_listeners.xml');
         $loader->load('forms.xml');
         $loader->load('menus.xml');
-        $loader->load('twig.xml');
         $loader->load('services.xml');
         $loader->load('validators.xml');
         $loader->load('google_authenticator.xml');
@@ -152,6 +151,15 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
+
+        $layoutBlockAdmin = $container->getDefinition('networking_init_cms.admin.layout_block');
+        $subClasses = [];
+        foreach ($config['content_types'] as $contentType)
+        {
+            $subClasses[$contentType['class']] = $contentType['class'];
+        }
+        $layoutBlockAdmin->addMethodCall('setSubClasses', [$subClasses] );
+        
         $container->setParameter(
             'networking_init_cms.translation_fallback_route',
             $config['translation_fallback_route']

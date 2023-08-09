@@ -130,7 +130,6 @@
         </div>
     </div>
 {% endfor %}
-<div class="clearfix">&nbsp;</div>
 {% if datagrid.pager.haveToPaginate() %}
     <div class="col-md-3 col-xs-12 text-right pull-right">
         <label class="control-label"><strong>{% trans  with {'%count%': attribute(admin.datagrid.pager, 'countResults') is defined ? admin.datagrid.pager.countResults : admin.datagrid.pager.nbResults} from 'SonataAdminBundle' %}

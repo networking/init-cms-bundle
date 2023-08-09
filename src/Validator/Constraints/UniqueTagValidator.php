@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
-use Networking\InitCmsBundle\Admin\Model\TagAdmin;
+use Networking\InitCmsBundle\Admin\TagAdmin;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

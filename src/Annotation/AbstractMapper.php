@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Annotation;
 
-abstract class AbstractMapper
+abstract class AbstractMapper implements AdminInterface
 {
     /**
      * @var string

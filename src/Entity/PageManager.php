@@ -235,7 +235,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
         if ($snapshotContent = $layoutBlock->getSnapshotContent()) {
 
-            $publishedContent = $serializer->deserialize($snapshotContent, $layoutBlock->getClassType(), 'json');
+            $publishedContent = $serializer->deserialize($snapshotContent, $layoutBlock::class, 'json');
 
             $reflection = new ReflectionClass($publishedContent);
             foreach ($reflection->getProperties() as $property) {

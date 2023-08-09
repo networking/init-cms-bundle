@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Gaufrette\Util;
 use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
@@ -25,27 +26,39 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'media__media')]
+#[ORM\HasLifecycleCallbacks]
 class Media extends BaseMedia implements IgnoreRevertInterface
 {
     
     /**
      * @var int
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
     /**
      * @var ArrayCollection
      */
+    #[ORM\ManyToMany(targetEntity: 'Networking\InitCmsBundle\Entity\Tag')]
+    #[ORM\JoinTable( name: 'media_tags')]
+    #[ORM\JoinColumn(name: 'media_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'tag_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $tags;
 
     /**
      * @var string
      */
+    #[ORM\Column(name: 'locale', type: 'string', length: 6, nullable: true)]
     protected $locale;
 
     /**
      * @var string
      */
+    #[ORM\Column(name: 'md5_file', type: 'string', length: 255, nullable: true)]
     protected $md5File;
 
     public function __construct()
@@ -184,6 +197,7 @@ class Media extends BaseMedia implements IgnoreRevertInterface
         return $this;
     }
 
+    #[ORM\PrePersist]
     public function prePersist(): void
     {
         $checksum = $this->getChecksum();
@@ -192,6 +206,7 @@ class Media extends BaseMedia implements IgnoreRevertInterface
         parent::prePersist();
     }
 
+    #[ORM\PreUpdate]
     public function preUpdate(): void
     {
         $checksum = $this->getChecksum();

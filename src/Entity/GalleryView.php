@@ -11,23 +11,170 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Networking\InitCmsBundle\Model\GalleryView as ModelGalleryView;
+use Doctrine\ORM\Mapping as ORM;
+use Networking\InitCmsBundle\Entity\Gallery as MediaGallery;
+use Networking\InitCmsBundle\Model\GalleryViewInterface;
+use Networking\InitCmsBundle\Annotation as Sonata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class GalleryView.
  */
-class GalleryView extends ModelGalleryView
+#[ORM\Entity]
+#[ORM\Table(name: 'gallery_view')]
+class GalleryView extends LayoutBlock implements GalleryViewInterface
 {
-    public function prePersist()
+    /**
+     * @var int
+     *
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected $id;
+
+    #[ORM\ManyToOne(
+        targetEntity: MediaGallery::class,
+        fetch: 'LAZY',
+        cascade: ["merge"])]
+    #[ORM\JoinColumn(name: 'media_gallery_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Sonata\FormMapper(
+        name: 'mediaGallery',
+        type: 'Symfony\Bridge\Doctrine\Form\Type\EntityType',
+        options: [
+            'label' => 'form.label_gallery',
+            'data_class' => null,
+            'class' => 'Networking\InitCmsBundle\Entity\Gallery',
+            'layout' => 'horizontal',
+            'required' => false,
+        ]
+    )]
+    #[Assert\NotNull]
+    protected ?Gallery $mediaGallery = null;
+
+
+    #[ORM\Column(type: 'string', length: 50)]
+    #[Sonata\FormMapper(
+        name: 'galleryType',
+        type: 'Symfony\Component\Form\Extension\Core\Type\ChoiceType',
+        options: [
+            'label' => 'form.label_gallery_type',
+            'choices' => ['list' => 'list', 'lightbox' => 'lightbox', 'carousel' => 'carousel'],
+            'layout' => 'horizontal',
+        ]
+    )]
+    protected string $galleryType = 'lightbox';
+
+
+
+    public function __clone()
     {
-        $this->createdAt = $this->updatedAt = new \DateTime('now');
+        $this->id = null;
+    }
+
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
-     * Hook on pre-update operations.
+     * @param \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
+     *
+     * @return $this
      */
-    public function preUpdate()
+    public function setMediaGallery($mediaGallery)
     {
-        $this->updatedAt = new \DateTime('now');
+        $this->mediaGallery = $mediaGallery;
+
+        return $this;
+    }
+
+    /**
+     * @return \Networking\InitCmsBundle\Entity\Gallery
+     */
+    public function getMediaGallery()
+    {
+        return $this->mediaGallery;
+    }
+
+
+    /**
+     * @param $galleryType
+     *
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setGalleryType($galleryType)
+    {
+        if (!in_array($galleryType, ['lightbox', 'carousel', 'list'])) {
+            throw new \InvalidArgumentException('Gallery type not valid');
+        }
+        $this->galleryType = $galleryType;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGalleryType()
+    {
+        return $this->galleryType;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    public function getTemplateOptions($params = [])
+    {
+        return [
+            'mediaItems' => $this->getMediaGallery()->getGalleryItems(),
+            'gallery' => $this->getMediaGallery(),
+            'galleryView' => $this,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdminContent()
+    {
+        return [
+            'content' => ['galleryView' => $this],
+            'template' => '@NetworkingInitCms/GalleryAdmin/gallery_view_block.html.twig',
+        ];
+    }
+
+    public function hasMedia(): bool
+    {
+        if (count($this->getMediaItems()) > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMediaItems()
+    {
+        $mediaItems = $this->getMediaGallery() ? $this->getMediaGallery()->getGalleryItems() : [];
+
+        return $mediaItems;
+    }
+
+    public function getContentTypeName(): string
+    {
+        return 'Gallery Viewer';
     }
 }

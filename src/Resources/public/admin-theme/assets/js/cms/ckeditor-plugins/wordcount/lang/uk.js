@@ -1,0 +1,2 @@
+CKEDITOR.plugins.setLang("wordcount","uk",{WordCount:"Слів:",CharCount:"Символів:",CharCountWithHTML:" (включаючи HTML-розмітку):",Paragraphs:"Параграфів:",ParagraphsRemaining:"Параграфів лишилося",pasteWarning:"Контент не може бути вставлено, оскільки перевищує допустимий ліміт",Selected:"Виділено: ",title:"Статистика"});
+//# sourceMappingURL=uk.js.map

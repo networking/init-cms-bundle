@@ -14,7 +14,7 @@ namespace Networking\InitCmsBundle\Helper;
 
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
-use Networking\InitCmsBundle\Model\ContentRouteManager;
+use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;

@@ -19,6 +19,15 @@
                    public="true" autowire="true">
             <tag name="twig.extension"/>
         </prototype>
+
+        <service id="Networking\InitCmsBundle\Twig\Extension\NetworkingHelperExtension">
+            <argument key="$templates">%networking_init_cms.page.templates%</argument>
+            <argument key="$contentTypes">%networking_init_cms.page.content_types%</argument>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service alias="fos_ck_editor.configuration" id="FOS\CKEditorBundle\Config\CKEditorConfiguration" />
+
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
         <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
         <service id="Networking\InitCmsBundle\Controller\MediaController">
@@ -148,19 +157,19 @@
                  public="false"/>
 
         <!-- admin aliases -->
-        <service id="Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin"
+        <service id="Networking\InitCmsBundle\Admin\LayoutBlockAdmin"
                  alias="networking_init_cms.admin.layout_block"
                  public="true"/>
 
-        <service id="Networking\InitCmsBundle\Admin\Model\PageAdmin"
+        <service id="Networking\InitCmsBundle\Admin\PageAdmin"
                  alias="networking_init_cms.admin.page"
                  public="true"/>
 
-        <service id="Networking\InitCmsBundle\Admin\Model\TagAdmin"
+        <service id="Networking\InitCmsBundle\Admin\TagAdmin"
                  alias="networking_init_cms.admin.tag"
                  public="true"/>
 
-        <service id="Networking\InitCmsBundle\Admin\Model\MediaAdmin"
+        <service id="Networking\InitCmsBundle\Admin\MediaAdmin"
                  alias="sonata.media.admin.media"
                  public="true"/>
 

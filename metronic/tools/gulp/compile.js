@@ -120,7 +120,7 @@ const rtlTask = (cb) => {
         build.build,
         (val, key, userdata) => {
             if (val.hasOwnProperty("src") && val.hasOwnProperty("dist")) {
-                if (["custom", "media", "api", "misc", 'cms'].indexOf(key) !== -1) {
+                if (["custom", "media", "api", "misc", 'cms', "ckeditor-plugins"].indexOf(key) !== -1) {
                     if (userdata.indexOf(key) === -1 && typeof val.styles !== "undefined") {
                         // rtl conversion in each plugins
                         for (let i in val.styles) {
@@ -164,7 +164,8 @@ let buildBundleTask = (cb) => {
     var streams = [];
     objectWalkRecursive(build.build, function (val, key) {
         if (val.hasOwnProperty("src") && val.hasOwnProperty("dist")) {
-            if (["custom", "media", "api", "misc", "cms"].indexOf(key) !== -1) {
+            if (["custom", "media", "api", "misc", "cms", "ckeditor-plugins"].indexOf(key) !== -1) {
+
                 outputFunc(val);
             } else {
                 streams = bundle(val);
@@ -191,7 +192,7 @@ if (args.presets && fs.existsSync(build.config.path.src + '/sass/presets')) {
 
     objectWalkRecursive(build.build, function (val, key) {
         if (val.hasOwnProperty("src") && val.hasOwnProperty("dist")) {
-            if (["custom", "media", "api", "misc", "cms"].indexOf(key) !== -1) {
+            if (["custom", "media", "api", "misc", "cms", "ckeditor-plugins"].indexOf(key) !== -1) {
             } else {
                 // build for presets
                 if (typeof val.src.styles !== 'undefined') {

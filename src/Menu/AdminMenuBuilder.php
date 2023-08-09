@@ -14,8 +14,8 @@ namespace Networking\InitCmsBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\Matcher\MatcherInterface;
-use Networking\InitCmsBundle\Model\ContentRoute;
-use Networking\InitCmsBundle\Model\ContentRouteManager;
+use Networking\InitCmsBundle\Entity\ContentRoute;
+use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;

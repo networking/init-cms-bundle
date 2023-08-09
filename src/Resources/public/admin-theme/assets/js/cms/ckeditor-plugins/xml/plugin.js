@@ -1,0 +1,6 @@
+/**
+ * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+CKEDITOR.plugins.add("xml",{}),CKEDITOR.xml=function(e){var l=null;if("object"==typeof e)l=e;else{var t=(e||"").replace(/&nbsp;/g," ");if("ActiveXObject"in window){try{l=new ActiveXObject("MSXML2.DOMDocument")}catch(e){try{l=new ActiveXObject("Microsoft.XmlDom")}catch(e){}}l&&(l.async=!1,l.resolveExternals=!1,l.validateOnParse=!1,l.loadXML(t))}else window.DOMParser&&(l=(new DOMParser).parseFromString(t,"text/xml"))}this.baseXml=l},CKEDITOR.xml.prototype={selectSingleNode:function(e,l){var t=this.baseXml;if(l||(l=t)){if("selectSingleNode"in l)return l.selectSingleNode(e);if(t.evaluate){var n=t.evaluate(e,l,null,9,null);return n&&n.singleNodeValue||null}}return null},selectNodes:function(e,l){var t=this.baseXml,n=[];if(l||(l=t)){if("selectNodes"in l)return l.selectNodes(e);if(t.evaluate){var i=t.evaluate(e,l,null,5,null);if(i)for(var r;r=i.iterateNext();)n.push(r)}}return n},getInnerXml:function(e,l){var t=this.selectSingleNode(e,l),n=[];if(t)for(t=t.firstChild;t;)t.xml?n.push(t.xml):window.XMLSerializer&&n.push((new XMLSerializer).serializeToString(t)),t=t.nextSibling;return n.length?n.join(""):null}};
+//# sourceMappingURL=plugin.js.map

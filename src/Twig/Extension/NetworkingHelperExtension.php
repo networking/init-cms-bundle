@@ -16,8 +16,8 @@ use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Model\ConfigManager;
 use FOS\CKEditorBundle\Config\CKEditorConfiguration;
 use JMS\Serializer\SerializerInterface;
-use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
-use Networking\InitCmsBundle\Admin\Model\PageAdmin;
+use Networking\InitCmsBundle\Admin\LayoutBlockAdmin;
+use Networking\InitCmsBundle\Admin\PageAdmin;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
@@ -69,50 +69,12 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     protected $ckeditorRendered = false;
 
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
-     * @var Environment
-     */
-    protected $templating;
-
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-    /**
-     * @var ManagerRegistry
-     */
-    protected $doctrine;
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-    /**
-     * @var LayoutBlockAdmin
-     */
-    protected $layoutBlockAdmin;
-    /**
-     * @var SerializerInterface
-     */
-    protected $serializer;
-    /**
-     * @var PageManagerInterface
-     */
-    protected $pageManager;
-
-    /**
-     * @var ConfigManager
-     */
-    protected $ckEditorConfigManager;
 
     /**
      * @var string
      */
     protected $currentTemplate;
+
 
     /**
      * NetworkingHelperExtension constructor.
@@ -121,28 +83,20 @@ class NetworkingHelperExtension extends AbstractExtension
      * @param array                $contentTypes
      */
     public function __construct(
-        KernelInterface $kernel,
-        Environment $templating,
-        RequestStack $requestStack,
-        ManagerRegistry $doctrine,
-        TranslatorInterface $translator,
-        LayoutBlockAdmin $layoutBlockAdmin,
-        SerializerInterface $serializer,
-        PageManagerInterface $pageManager,
-        CKEditorConfiguration $ckEditorConfigManager,
+        protected KernelInterface $kernel,
+        protected Environment $templating,
+        protected RequestStack $requestStack,
+        protected ManagerRegistry $doctrine,
+        protected TranslatorInterface $translator,
+        protected LayoutBlockAdmin $layoutBlockAdmin,
+        protected SerializerInterface $serializer,
+        protected PageManagerInterface $pageManager,
+        protected CKEditorConfiguration $ckEditorConfigManager,
         protected $templates = [],
         protected $contentTypes = []
 
     ) {
-        $this->kernel = $kernel;
-        $this->templating = $templating;
-        $this->requestStack = $requestStack;
-        $this->doctrine = $doctrine;
-        $this->translator = $translator;
-        $this->layoutBlockAdmin = $layoutBlockAdmin;
-        $this->serializer = $serializer;
-        $this->pageManager = $pageManager;
-        $this->ckEditorConfigManager = $ckEditorConfigManager;
+
     }
 
     /**
@@ -196,6 +150,8 @@ class NetworkingHelperExtension extends AbstractExtension
             new TwigFunction('is_admin_group_active', $this->isAdminGroupActive(...), ['is_safe' => ['html']]),
             new TwigFunction('get_initcms_page_url', $this->getPageUrl(...), ['is_safe' => ['html']]),
             new TwigFunction('get_media_by_id', $this->getMediaById(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_content_type_name', $this->getContentTypeName(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_content_type_icon', $this->getContentTypeIcon(...), ['is_safe' => ['html']]),
             new TwigFunction('ckeditor_is_rendered', $this->ckeditorIsRendered(...)),
             new TwigFunction('content_css', $this->getContentCss(...)),
             new TwigFunction('get_file_icon', $this->getFileIcon(...)),
@@ -214,25 +170,9 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = [])
     {
-        if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
-            // Draft View
-            $contentItem = $layoutBlock->getContent();
-        } else {
-            // Live View
-            $contentItem = $this->serializer->deserialize(
-                $serializedContent,
-                $layoutBlock->getClassType(),
-                'json'
-            );
-        }
 
-        if (!is_object($contentItem)) {
-            $this->layoutBlockAdmin->delete($layoutBlock);
 
-            return '---';
-        }
-
-        $options = $contentItem->getTemplateOptions($params);
+        $options = $layoutBlock->getTemplateOptions($params);
 
         $options = array_merge($options, $params);
 
@@ -246,21 +186,9 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock): bool|string
     {
-        if ($layoutBlock->getObjectId()) {
-            // Draft View
-            $contentItem = $layoutBlock->getContent();
-        } else {
-            $classType = $layoutBlock->getClassType();
-            $contentItem = new $classType();
-        }
 
-        if (!is_object($contentItem)) {
-            $this->layoutBlockAdmin->delete($layoutBlock);
 
-            return false;
-        }
-
-        $adminContent = $contentItem->getAdminContent();
+        $adminContent = $layoutBlock->getAdminContent();
 
         return $this->templating->render($adminContent['template'], $adminContent['content']);
     }
@@ -270,13 +198,18 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
     {
-        if ($layoutBlock->getObjectId()) {
-            $contentItem = $layoutBlock->getContent();
-        } else {
-            $classType = $layoutBlock->getClassType();
 
-            $contentItem = new $classType();
+        if (method_exists($layoutBlock, 'getContentTypeName')) {
+            $name = $layoutBlock->getContentTypeName();
+        } else {
+            $name = $layoutBlock::class;
         }
+
+        return $this->translator->trans($name);
+    }
+
+    public function getContentTypeName($class){
+        $contentItem = new ($class)();
 
         if (method_exists($contentItem, 'getContentTypeName')) {
             $name = $contentItem->getContentTypeName();
@@ -286,6 +219,16 @@ class NetworkingHelperExtension extends AbstractExtension
 
         return $this->translator->trans($name);
     }
+
+    public function getContentTypeIcon($class){
+        foreach ($this->contentTypes as $contentType) {
+            if ($contentType['class'] === $class) {
+                return $contentType['icon'];
+            }
+        }
+    }
+
+
 
     /**
      * @param string                                   $adminCode
@@ -664,7 +607,9 @@ class NetworkingHelperExtension extends AbstractExtension
     {
         $zones = [];
 
-        foreach ($formChildren as $subForms) {
+        $layoutBlocksFormView = $formChildren['layoutBlock'];
+
+        foreach ($layoutBlocksFormView as $subForms) {
             if ($this->getFormFieldZone($subForms) == $zone) {
                 $zones[] = $subForms;
             }

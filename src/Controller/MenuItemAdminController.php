@@ -14,7 +14,7 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
-use Networking\InitCmsBundle\Admin\Entity\PageAdmin;
+use Networking\InitCmsBundle\Admin\PageAdmin;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\BaseMenuItem;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;

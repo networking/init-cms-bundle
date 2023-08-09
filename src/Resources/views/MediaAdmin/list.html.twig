@@ -90,7 +90,6 @@ file that was distributed with this source code.
                 {% else %}
                 <div class="card mb-7">
                     <div class="card-content">
-                    <div class="card-body">
                     {% endif %}
 
                             <form action="{{ admin.generateUrl('list', {pcode: app.request.get('pcode'), 'galleryMode': galleryListMode}) }}" method="GET"
@@ -100,6 +99,9 @@ file that was distributed with this source code.
 {#                        {% if persistent_parameters.provider is defined %}#}
 {#                            <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>#}
 {#                        {% endif %}#}
+                    {% if not galleryListMode %}
+                    <div class="card-body">
+                        {% endif %}
                         <input type="hidden" name="active_tab" value="{{ name }}"/>
                         {% set withAdvancedFilter = false %}
                         {% set activeFilters = [] %}
@@ -236,11 +238,12 @@ file that was distributed with this source code.
                                 {% endfor %}
                             {% endif %}
                         </ul>
-                        {% if not galleryListMode %}
-                            </div>
-                        {% endif %}
+        {% if not galleryListMode %}
+            </div>
+            {% endif %}
+
                     </form>
-                        {% if not galleryListMode %}
+                     {% if not galleryListMode %}
                 </div>
             </div>
         {% endif %}

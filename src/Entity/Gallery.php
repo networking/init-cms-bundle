@@ -18,12 +18,14 @@ use Sonata\MediaBundle\Entity\BaseGallery as BaseGallery;
  * @author Yorkie Chawdick <y.chadwick@networking.ch>
  *
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'media__gallery')]
 class Gallery extends BaseGallery
 {
-    /**
-     * @var int
-     *
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
     protected $id;
 
     /**

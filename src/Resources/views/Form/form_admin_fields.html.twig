@@ -655,70 +655,70 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block ckeditor_widget %}
-    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+    <textarea {{ block('widget_attributes') }}
+            data-kt-ckeditor="true"
+            data-styles="{{ styles|default([])|json_encode }}"
+            data-templates="{{ templates|default([])|json_encode }}"
+            data-plugins="{{ plugins|json_encode }}"
+            data-auto-inline="{{ auto_inline|default(false) }}"
+            data-inline="{{ inline|default(false) }}"
+            data-input-sync="{{ input_sync|default(false) }}"
+            data-filebrowser="{{ filebrowsers|json_encode }}"
+            data-config="{{ config|merge({'language': app.request.locale})|json_encode }}"
+    >{{ value }}</textarea>
 
-    {% if enable and not async %}
-        {{ block('_ckeditor_javascript') }}
-    {% endif %}
+{#    {% if enable and not async %}#}
+{#        {{ block('_ckeditor_javascript') }}#}
+{#    {% endif %}#}
 {% endblock %}
 
-{% block ckeditor_javascript %}
-    {% if enable and async %}
-        {{ block('_ckeditor_javascript') }}
-    {% endif %}
-{% endblock %}
+{#{% block ckeditor_javascript %}#}
+{#    {% if enable and async %}#}
+{#        {{ block('_ckeditor_javascript') }}#}
+{#    {% endif %}#}
+{#{% endblock %}#}
 
-{% block _ckeditor_javascript %}
-    {% if autoload %}
-        <script type="text/javascript">
-            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";
-        </script>
-        <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>
-        {% if jquery %}
-            <script type="text/javascript" src="{{ ckeditor_js_path(jquery_path) }}"></script>
-        {% endif %}
-    {% endif %}
-    <script type="text/javascript">
-        {% if jquery %}
-        $(function () {
-            {% endif %}
+{#{% block _ckeditor_javascript %}#}
+{#    {% if autoload %}#}
+{#        <script type="text/javascript">#}
+{#            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path(base_path) }}";#}
+{#        </script>#}
+{#        <script type="text/javascript" src="{{ ckeditor_js_path(js_path) }}"></script>#}
+{#        {% if jquery %}#}
+{#            <script type="text/javascript" src="{{ ckeditor_js_path(jquery_path) }}"></script>#}
+{#        {% endif %}#}
+{#    {% endif %}#}
+{#    <script type="text/javascript">#}
 
-            {% if require_js %}
-            require(['ckeditor'], function () {
-                {% endif %}
+{#            require(['ckeditor'], function () {#}
 
-                {{ ckeditor_destroy(id) }}
+{#                {{ ckeditor_destroy(id) }}#}
 
-                {% for plugin_name, plugin in plugins %}
-                {{ ckeditor_plugin(plugin_name, plugin) }}
-                {% endfor %}
+{#                {% for plugin_name, plugin in plugins %}#}
+{#                {{ ckeditor_plugin(plugin_name, plugin) }}#}
+{#                {% endfor %}#}
 
-                {% for style_name, style in styles %}
-                {{ ckeditor_styles_set(style_name, style) }}
-                {% endfor %}
+{#                {% for style_name, style in styles %}#}
+{#                {{ ckeditor_styles_set(style_name, style) }}#}
+{#                {% endfor %}#}
 
-                {% for template_name, template in templates %}
-                {{ ckeditor_template(template_name, template) }}
-                {% endfor %}
+{#                {% for template_name, template in templates %}#}
+{#                {{ ckeditor_template(template_name, template) }}#}
+{#                {% endfor %}#}
 
-                {% block ckeditor_widget_extra %}{% endblock ckeditor_widget_extra %}
-                {% set config = config|merge({'language': app.request.locale}) %}
+{#                {% block ckeditor_widget_extra %}{% endblock ckeditor_widget_extra %}#}
+{#                {% set config = config|merge({'language': app.request.locale}) %}#}
 
-                {{ ckeditor_widget(id, config, {
-                    auto_inline: auto_inline,
-                    inline: inline,
-                    input_sync: input_sync,
-                    filebrowsers: filebrowsers
-                }) }}
+{#                {{ ckeditor_widget(id, config, {#}
+{#                    auto_inline: auto_inline,#}
+{#                    inline: inline,#}
+{#                    input_sync: input_sync,#}
+{#                    filebrowsers: filebrowsers#}
+{#                }) }}#}
 
-                {% if require_js %}
-            });
-            {% endif %}
-            {% if jquery %}
-        });
-        {% endif %}
-    </script>
-{% endblock %}
+{#            });#}
+{#    </script>#}
+{#{% endblock %}#}
 
 
 {% block help_widget_popover %}

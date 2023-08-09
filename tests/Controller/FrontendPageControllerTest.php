@@ -20,7 +20,7 @@ use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Cache\PageCache;
 use PHPUnit\Framework\TestCase;
 use Networking\InitCmsBundle\Controller\FrontendPageController;
-use Networking\InitCmsBundle\Model\Page;
+use Networking\InitCmsBundle\Entity\BasePage;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -42,7 +42,7 @@ class FrontendPageControllerTest extends TestCase
         );
 
         //Mocks
-        $mockPage = $this->getMockBuilder('\Networking\InitCmsBundle\Model\Page')
+        $mockPage = $this->getMockBuilder('\Networking\InitCmsBundle\Entity\BasePage')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -167,7 +167,7 @@ class FrontendPageControllerTest extends TestCase
 
         //Mocks
         // page
-        $mockPage = $this->getMockBuilder('\Networking\InitCmsBundle\Model\Page')
+        $mockPage = $this->getMockBuilder('\Networking\InitCmsBundle\Entity\BasePage')
             ->disableOriginalConstructor()
             ->getMock();
         $mockPage->expects($this->once())
@@ -274,7 +274,7 @@ class FrontendPageControllerTest extends TestCase
     {
 
         // MOCKS
-        $mockPage = $this->createMock('Networking\InitCmsBundle\Model\Page');
+        $mockPage = $this->createMock('Networking\InitCmsBundle\Entity\BasePage');
         $mockPage->expects($this->once())
             ->method('getVisibility')
             ->will($this->returnValue(PageInterface::VISIBILITY_PUBLIC));
@@ -433,9 +433,9 @@ class FrontendPageControllerTest extends TestCase
      */
     public function testHomeAction()
     {
-        $mockPage = $this->createMock('\Networking\InitCmsBundle\Model\Page');
+        $mockPage = $this->createMock('\Networking\InitCmsBundle\Entity\BasePage');
         $mockSnapshot = $this->createMock(
-            '\Networking\InitCmsBundle\Model\PageSnapshot',
+            '\Networking\InitCmsBundle\Entity\PageSnapshot',
             [$mockPage]
         );
 

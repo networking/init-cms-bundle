@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\ORM\Query;
-use Networking\InitCmsBundle\Admin\Model\MediaAdmin;
-use Networking\InitCmsBundle\Model\Tag;
+use Networking\InitCmsBundle\Admin\MediaAdmin;
+use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Form\FormErrorIteratorToConstraintViolationList;
 use Symfony\Component\Form\FormInterface;

@@ -1,0 +1,6 @@
+/**
+ * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+CKEDITOR.plugins.add("ajax",{requires:"xml"}),CKEDITOR.ajax=function(){function t(){if(!CKEDITOR.env.ie||"file:"!=location.protocol)try{return new XMLHttpRequest}catch(t){}try{return new ActiveXObject("Msxml2.XMLHTTP")}catch(t){}try{return new ActiveXObject("Microsoft.XMLHTTP")}catch(t){}return null}function n(t){return 4==t.readyState&&(t.status>=200&&t.status<300||304==t.status||0===t.status||1223==t.status)}function e(t){return n(t)?t.responseText:null}function r(t){if(n(t)){var e=t.responseXML;return new CKEDITOR.xml(e&&e.firstChild?e:t.responseText)}return null}function u(n,e,r){var u=!!e,a=t();return a?(a.open("GET",n,u),u&&(a.onreadystatechange=function(){4==a.readyState&&(e(r(a)),a=null)}),a.send(null),u?"":r(a)):null}return{load:function(t,n){return u(t,n,e)},post:function(n,r,u,a){return function(n,e,r,u,a){var o=t();if(!o)return null;o.open("POST",n,!0),o.onreadystatechange=function(){4==o.readyState&&(u&&u(a(o)),o=null)},o.setRequestHeader("Content-type",r||"application/x-www-form-urlencoded; charset=UTF-8"),o.send(e)}(n,r,u,a,e)},loadXml:function(t,n){return u(t,n,r)}}}();
+//# sourceMappingURL=plugin.js.map

@@ -100,6 +100,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('name')->isRequired()->end()
                             ->scalarNode('class')->isRequired()->end()
+                            ->scalarNode('icon')->defaultValue('ki-outline ki-abstract-7')->end()
                         ->end()
                     ->end()
                     ->defaultValue(

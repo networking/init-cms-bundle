@@ -12,11 +12,11 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Admin\Model\PageAdmin;
+use Networking\InitCmsBundle\Admin\PageAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
-use Networking\InitCmsBundle\Model\ContentRouteManager;
-use Networking\InitCmsBundle\Model\Page;
+use Networking\InitCmsBundle\Entity\ContentRouteManager;
+use Networking\InitCmsBundle\Entity\BasePage;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -32,8 +32,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Model\PageInterface;
-use Networking\InitCmsBundle\Model\PageSnapshot;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 
@@ -623,7 +623,11 @@ class FrontendPageController extends AbstractController
         /** @var Page $page */
         foreach ($result as $page) {
 
-            $setup['pages'][$page->getAdminTitle()] = $page->getRoute()->getPath();
+            $setup['pages'][]= [
+                'name' => $page->getAdminTitle(),
+                'url' => $page->getRoute()->getPath()
+            ]
+                ;
         }
 
         $languages = $this->getParameter('networking_init_cms.page.languages');
@@ -633,6 +637,6 @@ class FrontendPageController extends AbstractController
             $setup['locales'][] = [$language['label'], str_replace('_', '-', (string) $language['locale'])];
         }
 
-        return new JsonResponse($setup);
+        return new JsonResponse($setup, 200, ['Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*']);
     }
 }

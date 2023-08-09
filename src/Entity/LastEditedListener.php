@@ -20,22 +20,46 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
+use Networking\InitCmsBundle\Controller\CRUDController;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
+use Networking\InitCmsBundle\Helper\BundleGuesser;
 use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener;
 use Networking\InitCmsBundle\Model\MenuItemInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 
-#[AsDoctrineListener(event: Events::postPersist)]
-#[AsDoctrineListener(event: Events::postUpdate)]
 /**
  * Class LastEditedListener.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LastEditedListener extends ModelLastEditedListener
+#[AsEventListener(event: CRUDController::EDIT_ENTITY, method: 'registerEdited')]
+#[AsDoctrineListener(event: Events::postPersist)]
+#[AsDoctrineListener(event: Events::postUpdate)]
+class LastEditedListener
 {
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
+
+    /**
+     * @var BundleGuesser
+     */
+    protected $bundleGuesser;
+    
+    /**
+     * LastEditedListener constructor.
+     */
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+        $this->bundleGuesser = new BundleGuesser();
+    }
+
     /**
      * @param LifecycleEventArgs $args
      */

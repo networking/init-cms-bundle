@@ -101,7 +101,7 @@ class PageListenerTest extends TestCase
             ->with($this->equalTo(108));
 
         // entity
-        $entity = $this->createMock('\Networking\InitCmsBundle\Model\Page');
+        $entity = $this->createMock('\Networking\InitCmsBundle\Entity\BasePage');
 
         $entity->expects($this->once())
             ->method('getId')
@@ -233,7 +233,7 @@ class PageListenerTest extends TestCase
             ->with($this->equalTo('/'));
 
         // entity
-        $entity = $this->createMock('\Networking\InitCmsBundle\Model\Page');
+        $entity = $this->createMock('\Networking\InitCmsBundle\Entity\BasePage');
         $entity->expects($this->once())
             ->method('getContentRoute')
             ->will($this->returnValue($contentRoute));
