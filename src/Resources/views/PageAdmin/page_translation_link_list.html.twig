@@ -10,44 +10,21 @@ file that was distributed with this source code.
 #}
 {% extends base_template %}
 
-{% block actions %}
-    <div class="sonata-actions">
-        {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}
-            <a class="btn sonata-action-element"
-               href="{{ admin.generateObjectUrl('edit', page) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
-        {% endif %}
-        {% if admin.hasRoute('create') and admin.isGranted('CREATE') %}
-            <a class="btn sonata-action-element"
-               href="{{ admin.generateUrl('create') }}">{{ 'link_action_create'|trans({}, admin.translationDomain) }}</a>
-        {% endif %}
-    </div>
-{% endblock %}
 
 {% block content %}
-    {% if app.request.isxmlhttprequest %}
-        <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4>{{ 'title.translation_link'|trans({'%object%': page, '%language%': language}, admin.translationDomain) }}</h4>
-        </div>
-    {% else %}
-        <h1>{{ 'title.translation_link'|trans({'%object%': page, '%language%': language}, admin.translationDomain) }}</h1>
-    {% endif %}
 
+        <h2>{{ 'title.translation_link'|trans({'%object%': page, '%language%': language}, admin.translationDomain) }}</h2>
+<form method="POST" action="{{ admin.generateUrl('link', {'id': page.id, 'locale': locale}) }}"
+      id="translation-link-form"
+>
     {% if pages|length < 1 %}
-
-        <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
-
-            {{ 'info.no_pages_for_translation'|trans({'%language%': language}, admin.translationDomain) }}
-        </div>
+        <p>{{ 'info.no_pages_for_translation'|trans({'%language%': language}, admin.translationDomain) }}</p>
+        <button class="btn btn-light btn-cancel"
+        aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
     {% else %}
 
-        <form method="POST" action="{{ admin.generateUrl('link', {'id': page.id, 'locale': locale}) }}">
-            <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
-
-                {{ 'message.translation_link'|trans({'%object%': page, '%original_language%': original_language, '%language%': language}, admin.translationDomain) }}
-                <table class="table table-hover table-compact">
+                <p>{{ 'message.translation_link'|trans({'%object%': page, '%original_language%': original_language, '%language%': language}, admin.translationDomain) }}</p>
+                <table class="table table-hover table-bordered">
                     <thead>
                     <tr>
                         <th style="width:5%"></th>
@@ -72,36 +49,10 @@ file that was distributed with this source code.
 
                     {% endfor %}
                 </table>
-
-            </div>
-            <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
-
-
-                {#<input type="hidden" value="DELETE" name="_method" />#}
-
-                {% if app.request.isxmlhttprequest %}
-                    <button class="btn btn-light " data-dismiss="modal"
-                            aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
-                {% else %}
-                    <a href="{{ admin.generateObjectUrl('edit', page) }}" class="btn btn-danger">
-                        {{ 'button.cancel'|trans({}, admin.translationDomain) }}
-                    </a>
-                {% endif %}
-
-                <input type="submit" class="btn btn-primary"
-                       value="{{ 'link.link'|trans({}, admin.translationDomain) }}"/>
-
-                {#{% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}#}
-                {#{{ 'delete_or'|trans({}, 'SonataAdminBundle') }}#}
-
-                {#<a class="btn btn-success" href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>#}
-                {#{% endif %}#}
-
-            </div>
-        </form>
-        {% if app.request.isxmlhttprequest %}
-            </div>
-        </div>
-        {% endif %}
+                <button class="btn btn-light btn-cancel"
+                        aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+            <input type="submit" class="btn btn-primary"
+                   value="{{ 'link.link'|trans({}, admin.translationDomain) }}"/>
     {% endif %}
+        </form>
 {% endblock %}

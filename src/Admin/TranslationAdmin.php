@@ -206,7 +206,7 @@ class TranslationAdmin extends BaseAdmin
                 ],
                 'virtual_field' => true,
                 'locale' => $locale,
-                'editable' => $this->editableOptions,
+                'editable' => true,
                 'label' => $localeList[$locale],
                 'translation_domain' => false,
                 'template' => '@NetworkingInitCms/CRUD/base_inline_translation_field.html.twig'

@@ -8,8 +8,11 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-<form method="post" novalidate
-      action="{{ admin.generateUrl('editPageSettings', {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}">
+<form method="POST" novalidate
+      action="{{ admin.generateUrl('editPageSettings', {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}"
+      id="page-settings-form"
+>
+    <input type="hidden" name="_method" value="PATCH">
     {% if form.vars.errors|length > 0 %}
         {{ form_errors(form) }}
     {% endif %}

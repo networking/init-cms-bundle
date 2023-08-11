@@ -39,13 +39,6 @@
         </property>
     </class>
 
-    <class name="Networking\InitCmsBundle\Entity\MenuItem">
-        <property name="name">
-            <constraint name="NotBlank"/>
-        </property>
-        <constraint name="Callback">validate</constraint>
-    </class>
-
     <class name="Networking\InitCmsBundle\Entity\Media">
         <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
             <option name="fields">

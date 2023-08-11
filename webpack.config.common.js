@@ -7,6 +7,7 @@ const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const webpack = require('webpack');
 const CopyPlugin = require("copy-webpack-plugin");
 
+
 module.exports = {
     resolve: {
         alias: {
@@ -18,16 +19,21 @@ module.exports = {
         filerobotImageEditor: 'FilerobotImageEditor'
     },
     entry: {
-        admin: './assets/js/admin.js',
+        cmsAdmin: './assets/cms/cms-admin.js',
+        list: './assets/cms/list.js',
+        mediaAdmin: './assets/cms/media-admin.js',
+        menuAdmin: './assets/cms/menu-admin.js',
+        pageAdmin: './assets/cms/page-admin.js',
         imageEditor: './assets/js/filebot.js',
-        networking_initcms: [
-            './assets/vendor/select2/css/select2.min.css',
-            './assets/vendor/select2/css/select2-bootstrap.min.css',
-            './assets/vendor/jquery-ui-1.12.1/jquery-ui.css',
-            './assets/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
-            './assets/scss/initcms_bootstrap.scss',
-            './assets/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
-        ],
+
+        // networking_initcms: [
+        //     './assets/vendor/select2/css/select2.min.css',
+        //     './assets/vendor/select2/css/select2-bootstrap.min.css',
+        //     './assets/vendor/jquery-ui-1.12.1/jquery-ui.css',
+        //     './assets/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
+        //     './assets/scss/initcms_bootstrap.scss',
+        //     './assets/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
+        // ],
         'tui-image-editor': './assets/css/tui-image-editor.css',
         'admin-navbar': './assets/scss/admin-navbar-standalone.scss',
     },
@@ -93,6 +99,12 @@ module.exports = {
                         to: './admin-lte/[path][name][ext]',
                     },
                     {
+                        from: './assets/admin-theme/',
+
+                        // optional target path, relative to the output dir
+                        to: './admin-theme/[path][name][ext]',
+                    },
+                    {
                         from: './assets/js/pdf-viewer.js',
                         to: './js/pdf-viewer.js',
                     },
@@ -149,6 +161,14 @@ module.exports = {
                         to: './js/ckeditor/',
                     },
                     {
+                        from: './assets/js/ckeditor/',
+                        to: './js/ckeditor/',
+                    },
+                    {
+                        from: './assets/vendor/x-editable/dist/bootstrap5-editable/',
+                        to: './vendor/bootstrap5-editable/',
+                    },
+                    {
                         from: './assets/vendor/pdfjs',
                         to: './vendor/pdfjs',
                     },
@@ -159,6 +179,10 @@ module.exports = {
                     {
                         from: './assets/img',
                         to: './img',
+                    },
+                    {
+                        from: './assets/cms/app.js',
+                        to: './cmsApp.js',
                     }
                 ]
             }),

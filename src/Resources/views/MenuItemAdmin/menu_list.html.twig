@@ -12,7 +12,7 @@ file that was distributed with this source code.
 
 {% block stylesheets %}
 {{ parent() }}
-<link href="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/jstree/jstree.bundle.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/jstree/jstree.bundle.css') }}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 
@@ -122,6 +122,8 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/jstree/jstree.bundle.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/menu-admin.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/jstree/jstree.bundle.js') }}"></script>
+    <script src="{{ asset('menuAdmin.js', 'init_cms') }}"></script>
+    <script>
+    </script>
 {% endblock %}

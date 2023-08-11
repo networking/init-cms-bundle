@@ -310,21 +310,8 @@ class PageHelper
 
         foreach ($layoutBlocks as $layoutBlock) {
 
-            /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
-
-
-            $content = $om->getRepository($newLayoutBlock::class)->find(
-                $newLayoutBlock->getObjectId()
-            );
-            $newContent = clone $content;
-
-            $om->persist($newContent);
-            $om->flush();
-
-            $newLayoutBlock->setObjectId($newContent->getId());
             $newLayoutBlock->setPage($pageCopy);
-
             $om->persist($newLayoutBlock);
         }
 

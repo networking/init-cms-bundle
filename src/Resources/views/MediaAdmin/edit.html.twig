@@ -80,7 +80,69 @@ file that was distributed with this source code.
 
                                 {% for field_name in form_group.fields %}
                                     {% if admin.formfielddescriptions[field_name] is defined %}
-                                        {{ form_row(form[field_name]) }}
+
+                                        {% if field_name == 'binaryContent' and object.providerName == 'sonata.media.provider.image'%}
+                                            <!--begin::Image input placeholder-->
+                                            <style>
+                                                .image-input-placeholder {
+                                                    background-image: url('/bundles/networkinginitcms/admin-theme/media/svg/avatars/blank.svg');
+                                                }
+
+                                                [data-bs-theme="dark"] .image-input-placeholder {
+                                                    background-image: url('/bundles/networkinginitcms/admin-theme/media/svg/avatars/blank-dark.svg');
+                                                }
+                                            </style>
+                                            <!--end::Image input placeholder-->
+
+                                            <!--begin::Image input-->
+                                            <div class="image-input image-input-outline image-input-placeholder" data-kt-image-input="true" >
+                                                <!--begin::Image preview wrapper-->
+                                                <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ sonata_path(object, 'admin')  }})"></div>
+                                                <!--end::Image preview wrapper-->
+
+                                                <!--begin::Edit button-->
+                                                <label class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                       data-kt-image-input-action="change"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-dismiss="click"
+                                                       title="{{ (form[field_name].vars.label)|trans({}, admin.translationDomain) }}">
+                                                    <i class="fa fa-pencil fs-6"></i>
+
+                                                    <!--begin::Inputs-->
+                                                    <inpu type="file" name="{{ form[field_name].vars.id }}" />
+                                                    <input type="hidden" name="avatar_remove" />
+                                                    <!--end::Inputs-->
+                                                </label>
+                                                <!--end::Edit button-->
+
+                                                <!--begin::Cancel button-->
+                                                <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                      data-kt-image-input-action="cancel"
+                                                      data-bs-toggle="tooltip"
+                                                      data-bs-dismiss="click"
+                                                      title="Cancel avatar">
+                                                    <i class="ki-outline ki-cross fs-3"></i>
+                                                </span>
+                                                <!--end::Cancel button-->
+
+                                                <!--begin::Remove button-->
+                                                <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                      data-kt-image-input-action="remove"
+                                                      data-bs-toggle="tooltip"
+                                                      data-bs-dismiss="click"
+                                                      title="Remove avatar">
+                                                    <i class="ki-outline ki-cross fs-3"></i>
+                                                </span>
+                                                <!--end::Remove button-->
+                                            </div>
+                                            {{ form_errors(form[field_name]) }}
+                                            {% else %}
+                                            <!--end::Image input-->
+                                            {{ form_row(form[field_name]) }}
+                                            {% endif %}
+
+
+
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -88,7 +150,7 @@ file that was distributed with this source code.
                     {% endfor %}
 
                     {% block sonata_post_fieldsets %}{% endblock %}
-                    {{ form_rest(form, {'horizontal': (app.request.isXmlHttpRequest or app.request.get('_xml_http_request') ? 'true': form.vars.horizontal)}) }}
+                    {{ form_rest(form) }}
 
                 </div>
                 {% if object.id %}
@@ -164,12 +226,12 @@ file that was distributed with this source code.
                                     <td>
 
                                         <div class="input-group">
-                                            <input type="text" class="form-control" onClick="this.select();"
+                                            <input type="text" class="form-control copy-field"
                                                    readonly="readonly" id="download"
                                                    value="{{ url('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
-                                            <span class="input-group-addon"><a
-                                                        class="fa fa-clipboard copy-link"
-                                                        data-field="#download"></a></span>
+                                            <button class="btn btn-light-primary" data-clipboard-target="#download">
+                                                <i class="fa fa-clipboard copy-link"></i>
+                                            </button>
                                         </div>
                                         {% if 'sonata.media.security.public_strategy' != sonata_media.pool.getContext(object.context).download.strategy %}
                                             <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadSecurity(object).description|raw }}
@@ -180,41 +242,39 @@ file that was distributed with this source code.
                                     <tr>
                                         <th>
                                             <a href="{{ sonata_path(object, 'reference')  }}"
-                                               data-featherlight-variant="initcms-featherlight"
-                                               data-featherlight="image"
-                                               target="_blank">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
+                                               data-fslightbox="lightbox-basic">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
                                         </th>
                                         <td>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" onClick="this.select();"
+                                                <input type="text" class="form-control copy-field"
                                                        readonly="readonly" id="reference"
                                                        value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
-                                                <span class="input-group-addon"><a
-                                                            class="fa fa-clipboard copy-link"
-                                                            data-field="#reference"></a></span>
+                                                <button class="btn btn-light-primary" data-clipboard-target="#reference">
+                                                    <i class="fa fa-clipboard copy-link"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
 
                                     {% for name, format in sonata_media.pool.formatNamesByContext(object.context) %}
-                                        <tr>
+
+                                    <tr>
                                             <th>
                                                 <a href="{{ sonata_path(object, name)  }}"
-                                                   data-featherlight-variant="initcms-featherlight"
-                                                   data-featherlight="image"
-                                                   target="_blank">
+                                                   data-fslightbox="lightbox-basic">
                                                     {% if format.width %}{{ 'label.width'|trans({}, 'MediaAdmin') }}: {{ format.width }}{% if format.height %}x {{ 'label.height'|trans({}, 'MediaAdmin') }}: {{ format.height }}{% endif %}px{% endif %}
                                                 </a>
                                             </th>
                                             <td>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" onClick="this.select();"
+                                                    <input type="text" class="form-control copy-field"
                                                            id="{{ name }}"
                                                            readonly="readonly"
                                                            value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, name)  }}"/>
-                                                    <span class="input-group-addon"><a
-                                                                class="fa fa-clipboard copy-link"
-                                                                data-field="#{{ name }}"></a></span>
+
+                                                    <button class="btn btn-light-primary" data-clipboard-target="#{{ name }}">
+                                                        <i class="fa fa-clipboard copy-link"></i>
+                                                    </button>
                                                 </div>
 
                                             </td>
@@ -228,12 +288,12 @@ file that was distributed with this source code.
                                         </th>
                                         <td>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" onClick="this.select();"
+                                                <input type="text" class="form-control copy-field"
                                                        readonly="readonly" id="reference"
                                                        value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
-                                                <span class="input-group-addon"><a
-                                                            class="fa fa-clipboard copy-link"
-                                                            data-field="#reference"></a></span>
+                                                <button class="btn btn-light-primary" data-clipboard-target="#reference">
+                                                    <i class="fa fa-clipboard copy-link"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -299,31 +359,49 @@ file that was distributed with this source code.
 {% block before_body_end %}
     {{ parent() }}
     {% if object.providerName == 'sonata.media.provider.image' %}
-    <script src="{{ asset('vendor/filerobot-image-editor/index_old.js', 'init_cms') }}" type="text/javascript"></script>
-
-    <script type="text/javascript" src="{{ asset('imageEditor.js', 'init_cms') }}"></script>
+        <script src="{{ asset('vendor/filerobot-image-editor/index_old.js', 'init_cms') }}" type="text/javascript"></script>
+        <script type="text/javascript" src="{{ asset('imageEditor.js', 'init_cms') }}"></script>
+        <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
     {% endif %}
     <script>
-        (function ($) {
-            function copyToClipboard(field) {
-                /* Get the text field */
-                var copyText = $(field);
+        KTUtil.onDOMContentLoaded(() => {
+            const targets = document.querySelectorAll('.copy-field');
+            targets.forEach((target) => {
+                const button = target.nextElementSibling;
 
-                /* Select the text field */
-                copyText.select();
+                button.addEventListener('click', function(e){
+                    e.preventDefault();
+                })
 
-                /* Copy the text inside the text field */
-                document.execCommand("copy");
+                // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+                var clipboard = new ClipboardJS(button, {
+                    target: target,
+                    text: function() {
+                        return target.value;
+                    }
+                });
 
-                /* Alert the copied text */
-                alert('{{ 'copy_to_clipboard'|trans({}, 'MediaAdmin') }}'.replace('%item%', copyText.val()));
-            }
+                // Success action handler
+                clipboard.on('success', function(e) {
 
-            $('body').on('click', '.copy-link', function () {
-                var field = $(this).data('field');
-                copyToClipboard(field);
+
+                    const currentLabel = button.innerHTML;
+
+                    // Exit label update when already in progress
+                    if(button.innerHTML === 'Copied!'){
+                        return;
+                    }
+
+                    // Update button label
+                    button.innerHTML = 'Copied!';
+
+                    // Revert button label after 3 seconds
+                    setTimeout(function(){
+                        button.innerHTML = currentLabel;
+                    }, 3000)
+                });
             })
+        })
 
-        })(jQuery)
     </script>
 {% endblock %}

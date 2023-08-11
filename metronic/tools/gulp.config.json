@@ -4,7 +4,7 @@
       "src": "../{demo}/src"
     },
     "dist": [
-      "../../src/Resources/public/admin-theme/assets"
+      "../../assets/admin-theme"
     ]
   }
 }

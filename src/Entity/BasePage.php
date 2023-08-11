@@ -426,6 +426,7 @@ abstract class BasePage implements PageInterface
      */
     public function setVisibility(string $visibility): self
     {
+
         if (!in_array(
             $visibility,
             [self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC]

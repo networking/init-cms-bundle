@@ -374,7 +374,7 @@ const getDemo = () => {
     demo = demo[0];
   }
 
-  return demo === '' ? 'demo1' : demo;
+  return demo === '' ? 'theme' : demo;
 };
 
 const getTheme = () => {

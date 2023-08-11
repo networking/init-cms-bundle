@@ -421,6 +421,7 @@ class MediaAdmin extends Admin
             'expanded' => false,
             'multiple' => true,
             'select2' => true,
+            'property' => 'adminTitle',
             'help_label' => 'help.media_tag',
             'taggable' => $this->hasMultipleMediaTags,
             'attr' => ['style' => 'width:220px'],

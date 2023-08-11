@@ -218,7 +218,7 @@ Applied as jQuery method.
             //if form already exist - delete previous data 
             if(this.$form) {
                 //todo: destroy prev data!
-                //this.$form.destroy();
+                this.$form.remove();
             }
 
             this.$form = $('<div>');

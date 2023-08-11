@@ -203,7 +203,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             $layoutBlock = $matches->first();
 
             if (!$layoutBlock) {
-                $layoutBlock = new LayoutBlock();
+                $layoutBlock = clone $publishedlayoutBlock;
                 $layoutBlock->setPage($draftPage);
                 $currentLayoutBlocks->add($layoutBlock);
             }

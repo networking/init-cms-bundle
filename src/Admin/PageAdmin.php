@@ -167,6 +167,12 @@ class PageAdmin extends BaseAdmin
             [],
             ['method' => 'GET|DELETE']
         );
+        $collection->add(
+            'getPageStatus',
+            'page_status/{id}/',
+            [],
+            ['method' => 'GET']
+        );
 
         foreach ($collection->getElements() as $key => $element) {
             $collection->get($key)->setOption('expose', true);
@@ -217,6 +223,10 @@ class PageAdmin extends BaseAdmin
         $formOptions['constraints'] = new Valid();
 
         $formOptions['validation_groups'] = $validationGroups;
+
+        if ($this->getSubject()?->getId()) {
+            $formOptions['method'] = 'PATCH';
+        }
     }
 
     /**

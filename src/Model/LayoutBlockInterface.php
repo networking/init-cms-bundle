@@ -62,18 +62,6 @@ interface LayoutBlockInterface extends ContentInterface
     public function getPageId();
 
     /**
-     * @param int $objectId
-     *
-     * @return $this
-     */
-    public function setObjectId($objectId);
-
-    /**
-     * @return int
-     */
-    public function getObjectId();
-
-    /**
      * Set isActive.
      *
      * @param bool $active

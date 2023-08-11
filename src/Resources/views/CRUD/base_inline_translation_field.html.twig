@@ -9,47 +9,87 @@ file that was distributed with this source code.
 
 #}
 
-<td class="sonata-ba-list-field sonata-ba-list-field-{{ field_description.type }} word-break" objectId="{{ admin.id(object) }}">
-{% set locale = field_description.options.locale %}
-{% set translation = null %}
-{% for trans in object.translations %}
-    {% if trans.locale == locale %}
-        {% set translation = trans %}
-    {% endif %}
-{% endfor %}
-{% set id = 'transunit'~'-'~object.id~'-'~locale %}
-{% set pk = translation.id|default('') %}
-{% set content = translation.content|default('') %}
-<a href="#" id="{{ id }}" data-pk="{{ pk }}" style="overflow: hidden;">
-    {%- block field %}{{ content }}{% endblock -%}
-</a>
+<td class="sonata-ba-list-field sonata-ba-list-field-{{ field_description.type }}" objectId="{{ admin.id(object) }}"{% if field_description.option('row_align') %} style="text-align:{{ field_description.option('row_align') }}"{% endif %}>
+    {% set route_name = field_description.option('route').name|default(sonata_config.getOption('default_admin_route')) %}
+    {% set route_parameters = field_description.option('route').parameters|default([]) %}
 
-{% if admin.isGranted('EDIT', object) %}
-{% set options = field_description.options.editable %}
-<script>
-    jQuery('#{{ id }}').editable({
-        mode: "{{ options.mode }}",
-        type: "{{ options.type }}",
-        emptytext: "{{ options.emptytext }}",
-        placement: "{{ options.placement }}",
-        url: {{ admin.generateObjectUrl(field_description.options.route.name, object, field_description.options.route.parameters)|json_encode|raw }},
-        name: {{ object.key|json_encode|raw }},
-        params: function(params) {
-            // make sure pk is always loaded from element
-            params.pk = jQuery(this).attr('data-pk');
-            params.locale = {{ locale|json_encode|raw }};
-            return params;
-        },
-        error: function(response) {
-            response = JSON.parse(response.responseText);
-            return response ? response.message : response;
-        },
-        success: function(response, newValue) {
-            jQuery(this).attr('data-pk', response.pk);
-            return response;
-        },
-        value: {{ content|json_encode|raw }}
-    });
-</script>
-{% endif %}
+    {% if
+        field_description.option('identifier', false)
+        and admin.hasRoute(route_name)
+        and admin.hasAccess(route_name, route_name in ['show', 'edit'] ? object : null)
+    %}
+        <a class="sonata-link-identifier" href="{{ admin.generateObjectUrl(route_name, object, route_parameters) }}">
+            {%- block field %}
+                {% apply spaceless %}
+                    {% if field_description.option('collapse') is not null %}
+                        {% set collapse = field_description.option('collapse') %}
+                        <div class="sonata-readmore"
+                             data-readmore-height="{{ collapse.height|default(40) }}"
+                             data-readmore-more="{{ collapse.more|default('read_more')|trans({}, 'SonataAdminBundle') }}"
+                             data-readmore-less="{{ collapse.less|default('read_less')|trans({}, 'SonataAdminBundle') }}">{{ value }}</div>
+                    {% else %}
+                        {{ value }}
+                    {% endif %}
+                {% endapply %}
+            {% endblock -%}
+        </a>
+    {% else %}
+        {% set is_editable = field_description.option('editable', false) and admin.hasAccess('edit', object) %}
+        {% if is_editable and field_description.option('multiple', false) and value is iterable %}
+            {# multiple editable field should be real multiple #}
+            {# https://vitalets.github.io/x-editable/docs.html#checklist #}
+            {% set x_editable_type = 'checklist' %}
+        {% else %}
+            {% set x_editable_type = field_description.type|sonata_xeditable_type %}
+        {% endif %}
+
+        {% if is_editable and x_editable_type %}
+            {% set url = admin.generateObjectUrl(field_description.options.route.name, object, field_description.options.route.parameters) %}
+
+
+
+            {% if field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_DATE') and value is not empty %}
+                {# it is a x-editable format https://vitalets.github.io/x-editable/docs.html#date #}
+                {% set data_value = value|date('Y-m-d', options.timezone|default(null)) %}
+            {% elseif field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_BOOLEAN') and value is empty %}
+                {% set data_value = 0 %}
+            {% elseif value is iterable %}
+                {% set data_value = value|json_encode %}
+            {% else %}
+                {% set data_value = value %}
+            {% endif %}
+
+            {% set locale = field_description.options.locale %}
+            {% set translation = null %}
+            {% for trans in object.translations %}
+                {% if trans.locale == locale %}
+                    {% set translation = trans %}
+                {% endif %}
+            {% endfor %}
+            {% set id = 'transunit'~'-'~object.id~'-'~locale %}
+            {% set pk = translation.id|default('') %}
+            {% set content = translation.content|default('') %}
+            <span {% block field_span_attributes %}class="x-editable"
+                  data-type="{{ x_editable_type }}"
+                  data-value="{{ content }}"
+                  id="{{ id }}"
+                  {% if field_description.label is not same as(false) %}
+                      {% if field_description.translationDomain is same as(false) %}
+                          data-title="{{ field_description.label }}"
+                      {% else %}
+                          data-title="{{ field_description.label|trans({}, field_description.translationDomain) }}"
+                      {% endif %}
+                  {% endif %}
+                    {% if field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_DATE') %}
+                        data-format="yyyy-mm-dd"
+                    {% endif %}
+                  data-x-editable-params="{{ ([{locale: locale }] )|json_encode}}"
+                  data-pk="{{ pk }}"
+                  data-url="{{ url }}" {% endblock %}>
+                {{ content }}
+            </span>
+        {% else %}
+            {{ block('field') }}
+        {% endif %}
+    {% endif %}
 </td>

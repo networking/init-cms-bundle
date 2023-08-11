@@ -77,11 +77,6 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     protected $updatedAt;
 
     /**
-     * @var ContentInterface
-     */
-    protected $content;
-
-    /**
      * @var string
      */
     protected $origClassType;
@@ -206,25 +201,6 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
         return $this->page->getId();
     }
 
-    /**
-     * @param int $objectId
-     *
-     * @return $this
-     */
-    public function setObjectId($objectId)
-    {
-        $this->objectId = $objectId;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getObjectId()
-    {
-        return $this->objectId;
-    }
 
     /**
      * Set isActive.
@@ -445,14 +421,11 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
 
     public function restoreFormPublished(
         LayoutBlockInterface $published){
-        $this->name = $published->getName();
         $this->zone = $published->getZone();
-        $this->objectId = $published->getObjectId();
         $this->isActive = $published->isActive();
         $this->sortOrder = $published->getSortOrder();
         $this->createdAt = $published->getCreatedAt();
         $this->updatedAt = $published->getUpdatedAt();
-        $this->content = $published->getContent();
         $this->snapshotContent = $published->getSnapshotContent();
     }
 }

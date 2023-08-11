@@ -33,6 +33,8 @@ class FormTypeExtension extends \Symfony\Component\Form\AbstractTypeExtension
             }
         }
 
+
+
         $view->vars = \array_replace($view->vars, [
             'layout' => $layout,
             'horizontal_label_class' => $options['horizontal_label_class'],
@@ -78,6 +80,7 @@ class FormTypeExtension extends \Symfony\Component\Form\AbstractTypeExtension
     {
         $resolver->setDefaults([
             'layout' => null,
+            'horizontal' => false,
             'label_render' => true,
             'horizontal_label_class' => null,
             'horizontal_label_offset_class' => null,

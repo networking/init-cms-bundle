@@ -9,6 +9,11 @@ file that was distributed with this source code.
 
 #}
 {% extends base_template %}
+
+{% block meta_config %}
+{{ parent() }}
+    <meta name="init-cms-page-id" content="{{ object.id }}"/>
+{% endblock %}
 {% block title %}
     <h1 class="break-word">
         <span class="page_title">{{ admin.toString(object) }} </span> <span
@@ -20,25 +25,14 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block top_actions %}
-    <div class="align-middle ">
-        {% if admin.lastEditedBy() %}
-            {{ 'info.last_changed_by'|trans([], admin.translationDomain) }} {{ admin.lastEditedBy().username }}
-            <span class="text-muted font-size-sm">{{ admin.lastEditedBy().loggedAt|date('H:i:s d.m.Y') }}</span>
-        {% endif %}
-        {% if not object.isPublished() and object.getSnapshot() %}
-            <br/>{{ 'info.last_published_version'|trans({'%date%':object.getSnapshot().snapshotDate|date("d.m.Y")}, admin.translationDomain)|raw }}
-        {% endif %}
-    </div>
-    <div class="card-toolbar ml-6" id="pageStatusSettings">
         {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
-    </div>
 {% endblock %}
 
 {% block form %}
 
     <div class="card card-custom">
-        <div class="card-header card-header-tabs-line">
-            <div class="card-toolbar">
+        <div class="card-header card-header-tabs-line align-items-end">
+            <div class="card-toolbar mb-0">
                 <ul class="nav nav-tabs nav-line-tabs fs-6">
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="tab" href="#page_content">
@@ -84,7 +78,7 @@ file that was distributed with this source code.
                         {% include '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig' %}
                     </div>
                 {% endif %}
-                <div class="tab-pane" id="menu" role="tabpanel">
+                <div class="tab-pane" id="menu" role="tabpanel" >
                     {% include '@NetworkingInitCms/PageAdmin/page_menu_settings.html.twig' %}
                 </div>
             </div>
@@ -160,6 +154,6 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-        <script type="module"  src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/page-admin.js') }}"></script>
+        <script type="module"  src="{{ asset('pageAdmin.js', 'init_cms') }}"></script>
 {% endblock %}
 

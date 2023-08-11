@@ -384,22 +384,24 @@ class LayoutBlockController extends CRUDController
     {
         $layoutBlock = null;
         $id = $request->get('id');
-        $pageId = $request->get('pageId');
-        $uniqId = $request->get('uniqId');
-        $code = $request->get('code');
-        $formFieldId = $request->get('formFieldId');
 
-        if ($id) {
-            /** @var LayoutBlock $layoutBlock */
-            $layoutBlock = $this->admin->getObject($id);
-            $layoutBlock->setIsActive(!$layoutBlock->getIsActive());
-            $this->admin->update($layoutBlock);
+
+        if (!$id) {
+            throw $this->createNotFoundException();
         }
+
+        /** @var LayoutBlock $layoutBlock */
+        $layoutBlock = $this->admin->getObject($id);
+
+        if (!$layoutBlock) {
+            throw $this->createNotFoundException();
+        }
+        $layoutBlock->setIsActive(!$layoutBlock->getIsActive());
+        $this->admin->update($layoutBlock);
         $status = $layoutBlock->getIsActive()?'activated':'deactivated';
         return new JsonResponse(
             [
                 'active' => $layoutBlock->getIsActive(),
-                'messageStatus' => 'success',
                 'message' => $this->translate(sprintf('message.layout_block_%s', $status)),
             ]
         );

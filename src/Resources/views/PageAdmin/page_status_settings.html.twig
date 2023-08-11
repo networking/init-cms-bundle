@@ -1,89 +1,114 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
  {% set path = object.path %}
-<div class="dropdown dropdown-inline mr-2">
+<div id="pageStatusSettings" class="d-flex align-items-center gap-2 gap-lg-3">
+    <div class="align-middle ">
+        {% if admin.lastEditedBy() %}
+            {{ 'info.last_changed_by'|trans([], admin.translationDomain) }} {{ admin.lastEditedBy().username }}
+            <span class="text-muted font-size-sm">{{ admin.lastEditedBy().loggedAt|date('H:i:s d.m.Y') }}</span>
+        {% endif %}
+        {% if not object.isPublished() and object.getSnapshot() %}
+            <br/>{{ 'info.last_published_version'|trans({'%date%':object.getSnapshot().snapshotDate|date("d.m.Y")}, admin.translationDomain)|raw }}
+        {% endif %}
+    </div>
+    <div class="card-toolbar ml-6">
+        <div class="dropdown dropdown-inline mr-2">
+            {% set buttonClass = object.isPublished()?'success':'warning'  %}
 
-    <button type="button" class="btn btn-sm btn-light-{{ object.isPublished()?'success':'warning' }}  dropdown-toggle"
-            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {{ object.statusLabel|trans({}, admin.translationDomain) }}
-    </button>
-    <!--begin::Dropdown Menu-->
-        <!--begin::Navigation-->
-        <ul class="dropdown-menu flex-column navi-hover py-2">
-            {% if not object.isPublished %}
-                {% set reviewPath = object.review?'draft':'review' %}
-                <li>
-                    <a href="{{ admin.generateUrl(reviewPath, {id: object.id}) }}" class="dropdown-item">
-                        <span class="navi-icon"><i class="icon-lg las la-eye"></i></span>
-                        <span class="navi-text">{{ 'button.review'|trans({}, admin.translationDomain) }}</span>
-                    </a>
-                </li>
-            {% endif %}
+            {% set buttonClass = object.isOffline()?'danger':buttonClass %}
 
-            {% if object.isPublished or object.isOffline %}
-                <li>
-                    <a href="{{ admin.generateUrl('draft', {id: object.id}) }}"
-                       class="dropdown-item {% if object.isDraft() %}disabled{% endif %}"
-                       {% if object.isDraft() %}onclick="return false"{% endif %}>
-                        <span class="navi-icon"><i class="icon-lg lab la-firstdraft"></i></span>
-                        <span class="navi-text">{{ 'button.draft'|trans({}, admin.translationDomain) }}</span>
-                    </a>
-                </li>
-            {% endif %}
+            <button type="button"
+                    class="btn btn-sm btn-light-{{ buttonClass }}  dropdown-toggle"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ object.statusLabel|trans({}, admin.translationDomain) }}
+            </button>
+            <!--begin::Dropdown Menu-->
+            <!--begin::Navigation-->
+            <ul class="dropdown-menu flex-column navi-hover py-2">
+                {% if not object.isPublished %}
+                    {% set reviewPath = object.review?'draft':'review' %}
+                    <li>
+                        <a href="{{ admin.generateUrl(reviewPath, {id: object.id}) }}" class="dropdown-item">
+                            <span class="navi-icon"><i class="fs-3 las la-eye"></i></span>
+                            <span class="navi-text">{{ 'button.review'|trans({}, admin.translationDomain) }}</span>
+                        </a>
+                    </li>
+                {% endif %}
 
-            {% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
-                <li>
-                    <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
-                       class="dropdown-item {% if object.isPublished() %}disabled{% endif %}"
-                       {% if object.isPublished() %}onclick="return false"{% endif %}>
-                        <span class="navi-icon"><i class="icon-lg las la-check-double"></i></span>
-                        <span class="navi-text">{{ 'button.publish'|trans({}, admin.translationDomain) }}</span>
-                    </a>
-                </li>
-            {% endif %}
-            {% if not object.isPublished() and object.getSnapshot() %}
-                <li>
-                    <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}"
-                       class="dropdown-item status-dialog-link">
-                        <span class="navi-icon"><i class="icon-lg las la-undo-alt"></i></span>
-                        <span class="navi-text">{{ 'link.revert_to_publish'|trans({}, admin.translationDomain) }}</span></a>
-                </li>
-                <li>
-                    <a href="{{ path('networking_init_view_live', {'locale': object.locale, 'path': path | base64_encode}) }}"
-                       class="dropdown-item">
-                        <span class="navi-icon"><i class="icon-lg flaticon-browser"></i></span>
-                        <span class="navi-text">{{ 'link.live'|trans({}, admin.translationDomain) }}</span></a>
-                </li>
-            {% endif %}
-            {% if not object.isPublished %}
-                <li>
-                    <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode}) }}"
-                       class="dropdown-item">
-                        <span class="navi-icon"><i class="icon-lg las la-search-plus"></i></span>
-                        <span class="navi-text">{{ 'link.preview'|trans({}, admin.translationDomain) }}</span>
-                    </a>
-                </li>
-            {% endif %}
+                {% if object.isPublished or object.isOffline %}
+                    <li>
+                        <a href="{{ admin.generateUrl('draft', {id: object.id}) }}"
+                           class="dropdown-item "
+                           {% if object.isDraft() %}onclick="return false"{% endif %}>
+                            <span class="navi-icon"><i class="fs-3 las la-edit"></i></span>
+                            <span class="navi-text">{{ 'button.draft'|trans({}, admin.translationDomain) }}</span>
+                        </a>
+                    </li>
+                {% endif %}
 
-            {% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
-                <li>
-                    <a href="{{ admin.generateUrl('offline', {id: object.id}) }}"
-                       class="dropdown-item {% if object.isPublished() %}disabled{% endif %}"
-                       {% if object.isPublished() %}onclick="return false"{% endif %}>
-                        <span class="navi-icon"><i class="icon-lg las la-power-off"></i></span>
-                        <span class="navi-text"> {{ 'button.offline'|trans({}, admin.translationDomain) }}</span>
-                    </a>
-                </li>
-            {% endif %}
+                {% if admin.isGranted('PUBLISH', object) and not object.isPublished and not object.isOffline %}
+                    <li>
+                        <a href="{{ admin.generateUrl('publish', {id: object.id}) }}"
+                           class="dropdown-item {% if object.isPublished() %}disabled{% endif %}"
+                           {% if object.isPublished() %}onclick="return false"{% endif %}>
+                            <span class="navi-icon"><i class="fs-3 las la-check-double"></i></span>
+                            <span class="navi-text">{{ 'button.publish'|trans({}, admin.translationDomain) }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if not object.isPublished() and object.getSnapshot() and not object.isOffline %}
+                    <li>
+                        <a href="{{ admin.generateUrl('cancelDraft', {id: object.id}) }}"
+                           data-text="{{ 'info.cancel_draft'|trans({'%object%': object}, admin.translationDomain) }}"
+                           class="dropdown-item status-dialog-link">
+                            <span class="navi-icon"><i class="fs-3 las la-undo-alt"></i></span>
+                            <span class="navi-text">{{ 'link.revert_to_publish'|trans({}, admin.translationDomain) }}</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ path('networking_init_view_live', {'locale': object.locale, 'path': path | base64_encode}) }}"
+                           class="dropdown-item">
+                            <span class="navi-icon"><i class="fs-3 las la-search-plus"></i></span>
+                            <span class="navi-text">{{ 'link.live'|trans({}, admin.translationDomain) }}</span></a>
+                    </li>
+                {% endif %}
+                {% if not object.isPublished %}
+                    <li>
+                        <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode}) }}"
+                           class="dropdown-item">
+                            <span class="navi-icon"><i class="fs-3 las la-search-plus"></i></span>
+                            <span class="navi-text">{{ 'link.preview'|trans({}, admin.translationDomain) }}</span>
+                        </a>
+                    </li>
+                {% endif %}
 
-        </ul>
-        <!--end::Navigation-->
+                {% if admin.isGranted('PUBLISH', object) and not object.isOffline %}
+                    <li>
+                        <a href="{{ admin.generateUrl('offline', {id: object.id}) }}"
+                           class="dropdown-item" >
+                            <span class="navi-icon"><i class="fs-3 las la-power-off"></i></span>
+                            <span class="navi-text"> {{ 'button.offline'|trans({}, admin.translationDomain) }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if admin.isGranted('PUBLISH', object) and object.isOffline %}
+                    <li>
+                        <a href="{{ admin.generateUrl('offline', {id: object.id, 'put-online': true}) }}"
+                           class="dropdown-item" >
+                            <span class="navi-icon"><i class="fs-3 las la-power-off"></i></span>
+                            <span class="navi-text"> {{ 'button.online'|trans({}, admin.translationDomain) }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+            <!--end::Navigation-->
+        </div>
+    </div>
 </div>

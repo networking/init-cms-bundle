@@ -171,12 +171,16 @@ class TagAdminController extends CRUDController
     public function inlineEditAction(Request $request)
     {
         $id = $request->get('pk');
+
         $name = $request->get('value');
+
 
         /** @var $tag Tag */
         if (!$tag = $this->admin->getObject($id)) {
             throw new NotFoundHttpException('unable to find the tag with the id');
         }
+
+        dump($tag);
 
         $tag->setName($name);
 

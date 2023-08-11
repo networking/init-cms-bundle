@@ -74,4 +74,3 @@ CKEDITOR.plugins.add("internal_link", {
         }, 'urlOptions');
     }
 });
-

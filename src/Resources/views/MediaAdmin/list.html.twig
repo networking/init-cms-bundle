@@ -401,8 +401,8 @@ file that was distributed with this source code.
             </div>
         </div>
     </div>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/media-admin.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+    <script src="{{ asset('mediaAdmin.js', 'init_cms') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
     <script>
         {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
         MobileDragDrop.polyfill({
@@ -410,7 +410,7 @@ file that was distributed with this source code.
             dragImageTranslateOverride: MobileDragDrop.scrollBehaviourDragImageTranslateOverride
         });
 
-        (new Image()).src = "{{ asset('bundles/networkinginitcms/admin-theme/assets/media/products/1.png') }}"
+        (new Image()).src = "{{ asset('bundles/networkinginitcms/admin-theme/media/products/1.png') }}"
         function dragstart_handler(ev) {
             ev.dataTransfer.setData("Text", ev.target.dataset.objectId);
             ev.dataTransfer.effectAllowed = "copy";

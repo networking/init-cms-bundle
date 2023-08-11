@@ -21,9 +21,9 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageInterface
-    extends \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
-            \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
+interface PageInterface extends
+    \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
+    \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
 {
     public const PATH_SEPARATOR = '/';
 
@@ -139,6 +139,10 @@ interface PageInterface
 
     public function orderLayoutBlocks(): void;
 
+    /**
+     * @param string|null $zone
+     * @return Collection<int, LayoutBlockInterface>
+     */
     public function getLayoutBlock(?string $zone): Collection;
 
     public function setMenuItem(MenuItemInterface $menuItem): self;

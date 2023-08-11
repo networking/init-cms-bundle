@@ -43,12 +43,12 @@ file that was distributed with this source code.
             {% endfor %}
         {% endblock content_css %}
 
-        <link href="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/global/plugins.bundle.css') }}"
+        <link href="{{ asset('bundles/networkinginitcms/admin-theme/plugins/global/plugins.bundle.css') }}"
               rel="stylesheet" type="text/css"/>
-        <link href="{{ asset('bundles/networkinginitcms/admin-theme/assets/css/style.bundle.css') }}" rel="stylesheet"
+        <link href="{{ asset('bundles/networkinginitcms/admin-theme/css/style.bundle.css') }}" rel="stylesheet"
               type="text/css"/>
 
-        <link href="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/jstree/jstree.bundle.css') }}"
+        <link href="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/jstree/jstree.bundle.css') }}"
               rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
     {% endblock %}
@@ -310,22 +310,23 @@ file that was distributed with this source code.
 {% block before_body_end %}
 
     <!--begin::Javascript-->
-    <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/assets/') }}";</script>
+    <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/') }}";</script>
     <script type="text/javascript">
         var CKEDITOR_BASEPATH = "/bundles/fosckeditor/";
     </script>
     <script type="text/javascript" src="/bundles/fosckeditor/ckeditor.js"></script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/global/plugins.bundle.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/scripts.bundle.js') }}"></script>
-    <script type="module" src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/cms/admin.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/jstree/jstree.bundle.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/fos-router/fos-router.bundle.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('cmsAdmin.js', 'init_cms') }}"></script>
+    <link href="{{ asset('bundles/networkinginitcms/vendor/bootstrap5-editable/css/bootstrap-editable.css') }}"
+      rel="stylesheet" type="text/css"/>
+    <script src="{{ asset('bundles/networkinginitcms/vendor/bootstrap5-editable/js/bootstrap-editable.js') }}"></script>
+    <script src="{{ asset('cmsApp.js', 'init_cms') }}"></script>
 
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used for this page only)-->
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>
+{#    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>#}
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
@@ -337,18 +338,18 @@ file that was distributed with this source code.
     <script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js')}}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'CMSAdmin.setRoutes' }) }}"></script>
 
     <!--end::Vendors Javascript-->
     <!--begin::Custom Javascript(used for this page only)-->
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/widgets.bundle.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/custom/widgets.js') }}"></script>
-    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/custom/apps/chat/chat.js') }}"></script> #}
-    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/custom/utilities/modals/upgrade-plan.js') }}"></script> #}
-    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/custom/utilities/modals/create-app.js') }}"></script> #}
-    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/custom/utilities/modals/new-target.js') }}"></script> #}
-    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/assets/js/custom/utilities/modals/users-search.js') }}"></script> #}
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/widgets.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/widgets.js') }}"></script>
+    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/apps/chat/chat.js') }}"></script> #}
+    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/utilities/modals/upgrade-plan.js') }}"></script> #}
+    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/utilities/modals/create-app.js') }}"></script> #}
+    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/utilities/modals/new-target.js') }}"></script> #}
+    {#        <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/utilities/modals/users-search.js') }}"></script> #}
     <!--end::Custom Javascript-->
     <!--end::Javascript-->
 {% endblock before_body_end %}
@@ -357,13 +358,23 @@ file that was distributed with this source code.
     {% autoescape false %}
     <script type="text/javascript">
         {% for notice_level in ['success','error','info', 'warning'] %}
-        {% set session_var = 'sonata_flash_' ~ notice_level %}
-        {% for flash in app.session.flashbag.get(session_var) %}
+            {% set session_var = 'sonata_flash_' ~ notice_level %}
+            {% for flash in app.session.flashbag.get(session_var) %}
+            KTUtil.onDOMContentLoaded(function () {
+                CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+            })
+            {% endfor %}
+        {% endfor %}
+        // On document ready
         KTUtil.onDOMContentLoaded(function () {
-            CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
-        })
-        {% endfor %}
-        {% endfor %}
+            CMSAdmin.init();
+            document.body.addEventListener('shown.bs.modal', function (e) {
+                CMSAdmin.initSpecialFields()
+            })
+            document.body.addEventListener('fields:added', function (e) {
+                CMSAdmin.initSpecialFields()
+            })
+        });
     </script>
     {% endautoescape %}
 {% endblock body %}

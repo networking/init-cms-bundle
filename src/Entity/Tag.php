@@ -48,7 +48,7 @@ class Tag
      * @var string
      */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Gedmo\TreePath(separator: '/', appendId: true)]
+    #[Gedmo\TreePath(separator: '/', appendId: false)]
     protected $path;
 
     /**
@@ -89,14 +89,10 @@ class Tag
     #[Gedmo\TreeParent()]
     protected $parent;
 
-    public function __construct(VersionableInterface $resource)
-    {
-        $this->resourceName = $resource::class;
-        $this->resourceId = $resource->getResourceId();
-        $this->versionedData = $resource->getVersionedData();
-        $this->version = $resource->getCurrentVersion();
-        $this->snapshotDate = new \DateTime('now');
-    }
+    /**
+     * @var array
+     */
+    protected $parentNames;
 
     /**
      * @param $id
@@ -115,84 +111,70 @@ class Tag
     }
 
     /**
-     * @param $resourceId
+     * Set name.
+     *
+     * @param string $name
+     *
      */
-    public function setResourceId($resourceId)
+    public function setName($name): self
     {
-        $this->resourceId = $resourceId;
+        $this->name = $name;
+
+        return $this;
+    }
+
+
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 
     /**
-     * @return int
+     * Set slug.
+     *
+     * @param string $slug
+     *
+     * @return Tag|false
      */
-    public function getResourceId()
+    public function setSlug($slug)
     {
-        return $this->resourceId;
+        if (!empty($this->slug)) {
+            return false;
+        }
+        $this->slug = $slug;
+
+        return $this;
     }
 
     /**
-     * @param $resourceName
+     * Get slug.
+     *
+     * @return string
      */
-    public function setResourceName($resourceName)
+    public function getSlug()
     {
-        $this->resourceName = $resourceName;
+        return $this->slug;
     }
 
     /**
      * @return string
      */
-    public function getResourceName()
+    public function getPath()
     {
-        return $this->resourceName;
+        return $this->path;
     }
 
     /**
-     * @param $snapshotDate
+     * @param string $path
      */
-    public function setSnapshotDate($snapshotDate)
+    public function setPath($path)
     {
-        $this->snapshotDate = $snapshotDate;
+        $this->path = $path;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getSnapshotDate()
-    {
-        return $this->snapshotDate;
-    }
 
-    /**
-     * @param $version
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-    }
 
-    /**
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
 
-    /**
-     * @param $versionedData
-     */
-    public function setVersionedData($versionedData)
-    {
-        $this->versionedData = $versionedData;
-    }
-
-    /**
-     * @return array
-     */
-    public function getVersionedData()
-    {
-        return $this->versionedData;
-    }
 
     public function getLevel(): ?int
     {
@@ -206,18 +188,68 @@ class Tag
         return $this;
     }
 
-    public function hasChild(): bool
+    public function setParent(Tag $parent = null)
     {
-        return !$this->children->isEmpty();
+        $this->parent = $parent;
     }
 
-    public function getName(): ?string
+    public function getParent()
     {
-        return $this->name;
+        return $this->parent;
     }
 
     public function getChildren(): Collection
     {
+        if(!$this->children){
+            return [];
+        }
         return $this->children;
+    }
+
+    public function getAdminTitle(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setParentNames(array $parentNames): self
+    {
+        $this->parentNames = $parentNames;
+
+        return $this;
+    }
+
+    public function getParentNames(): array
+    {
+        if (!$this->parentNames) {
+            $page = $this;
+            $parentNames = [$page->getName()];
+
+            while ($page->getParent()) {
+                $page = $page->getParent();
+                $parentNames[] = $page->getName();
+            }
+
+            $this->setParentNames(array_reverse($parentNames));
+        }
+
+        return $this->parentNames;
+    }
+
+    public function hasChild($id): bool
+    {
+        foreach ($this->getChildren() as $child) {
+            if ($child->getId() == $id) {
+                return true;
+            }
+
+            return $child->hasChild($id);
+        }
+
+        return false;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }

@@ -266,19 +266,7 @@ const gulpConfig = {
                             fonts: [
                                 "{$config.path.node_modules}/@fortawesome/fontawesome-free/webfonts/**",
                             ],
-                        },
-                        "x-editable": {
-                            styles: [
-                                "{$config.path.common_src}/plugins/x-editable/dist/bootstrap5-editable/css/bootstrap-editable.css",
-                            ],
-                            scripts: [
-                                "{$config.path.common_src}/plugins/x-editable/dist/bootstrap5-editable/js/bootstrap-editable.js",
-                            ],
-                            images: [
-                                "{$config.path.common_src}/plugins/x-editable/dist/bootstrap5-editable/img/clear.png",
-                                "{$config.path.common_src}/plugins/x-editable/dist/bootstrap5-editable/img/loading.gif",
-                            ]
-                        },
+                        }
                     },
                     override: {
                         styles: ["{$config.path.src}/sass/plugins.scss"],
@@ -617,17 +605,7 @@ const gulpConfig = {
                         styles: "{$config.dist}/plugins/custom/cookiealert/cookiealert.bundle.css",
                         scripts: "{$config.dist}/plugins/custom/cookiealert/cookiealert.bundle.js",
                     }
-                },
-                "fos-router": {
-                    src: {
-                        scripts: [
-                            "{$config.path.node_modules}/fos-router/public/js/router.js",
-                        ]
-                    },
-                    dist: {
-                        scripts: "{$config.dist}/plugins/custom/fos-router/fos-router.bundle.js",
-                    }
-                },
+                }
             }
         },
         widgets: {

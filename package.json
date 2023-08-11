@@ -7,6 +7,7 @@
     "test": "tests"
   },
   "scripts": {
+    "watch": "webpack --config=webpack.config.dev.js --watch",
     "dev": "webpack --config=webpack.config.dev.js",
     "build": "webpack --config=webpack.config.prod.js"
   },
@@ -26,10 +27,11 @@
   "homepage": "https://github.com/networking/init-cms-bundle#readme",
   "dependencies": {
     "axios": "^0.26.1",
-    "bootstrap": "3",
-    "bootstrap-sass": "3",
+    "bootstrap": "5",
     "file-loader": "^6.0.0",
+    "fos-router": "../../friendsofsymfony/jsrouting-bundle/Resources/",
     "jquery": "^3.6.1",
+    "jstree": "^3.3.15",
     "select2": "^4.1.0-rc.0",
     "vue": "^2.6.10",
     "vue-context-menu": "^2.0.6",

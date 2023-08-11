@@ -21,9 +21,10 @@
         </div>
         <div class="d-flex align-items-center">
             <span class="me-2">{{ layout_block.isActive?'Online':'Offline' }}</span>
-            <i class="me-2 ki-outline ki-{{ layout_block.isActive?'check-circle':'minus-circle' }}
-                btn btn-sm btn-light-{{ layout_block.isActive?'success':'danger' }} toggle-active"
-               data-value="{{ layout_block.id }}"> </i>
+            <button type="button" class="me-2 btn btn-sm btn-light-{{ layout_block.isActive?'success':'danger' }} toggle-active"
+                    data-value="{{ layout_block.id }}"
+            ><i class="ki-outline ki-{{ layout_block.isActive?'check-circle':'minus-circle' }}"></i>
+            </button>
 
             <button type="button" class="me-2 btn btn-sm btn-light-danger delete_block"
                     data-value="{{ layout_block.id }}"
