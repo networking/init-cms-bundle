@@ -144,7 +144,6 @@ class LayoutBlockAdmin extends BaseAdmin
         /** @var ContentInterface $contentObject */
         try {
 
-            dump($object->getPage());
             $this->autoPageDraft($object->getPage());
         } catch (ModelManagerException) {
             throw new ModelManagerException(

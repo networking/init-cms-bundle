@@ -2,6 +2,11 @@ import {CMSAdmin} from './cms-admin';
 import 'jstree'
 class MediaEntity{
     constructor(element) {
+
+        if(element.dataset.modelListInitialized) {
+            return
+        }
+
         this.element = element
         this.id = element.dataset.fieldId
         this.field = document.querySelector('#' + this.id)
@@ -14,6 +19,7 @@ class MediaEntity{
         this.objectId = this.field.value
         this.selectMediaEventId = ''
         this.searchMediaEventId = ''
+        this.addMediaEventId  = ''
 
         KTUtil.on(this.element, '#' + this.id, 'change', this.updatePreview.bind(this));
         KTUtil.on(this.element, '#field_dialog_' + this.id, 'hide.bs.modal', this.removeListeners.bind(this));
@@ -22,6 +28,9 @@ class MediaEntity{
 
     }
     initialize() {
+
+        this.element.dataset.modelListInitialized = true
+
         this.listLink.addEventListener('click', this.createListDialog.bind(this))
         this.removeLink.addEventListener('click', this.removeSelectedElement.bind(this))
         this.addLink.addEventListener('click', this.addMediaDialog.bind(this))
@@ -43,6 +52,11 @@ class MediaEntity{
 
         this.dialogContainer = document.querySelector('#field_dialog_' + this.id)
         this.dialog = new bootstrap.Modal(this.dialogContainer, {height:'auto', width:650, show:false})
+
+
+        document.body.addEventListener('hidden.bs.modal', (event) => {
+            this.removeListeners()
+        })
 
     }
     setupTree(){
@@ -102,6 +116,12 @@ class MediaEntity{
             this.removeListeners()
         }
         this.addMediaEventId = KTUtil.on(this.dialogContainer, 'form', 'submit', this.uploadMedia.bind(this));
+        this.dialogContainer.querySelectorAll('[data-bs-dismiss="modal"]').forEach((element) => {
+            element.addEventListener('click', (event) => {
+                event.preventDefault()
+                this.dialog.hide()
+            })
+        })
     }
     createListDialog(event) {
         event.preventDefault();

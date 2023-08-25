@@ -18,6 +18,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
+use Sonata\DoctrineORMAdminBundle\Filter\ChoiceFilter;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
@@ -48,6 +49,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
             [
                 'show_filter' => false,
                 'operator_type' => ContainsOperatorType::TYPE_EQUAL,
+                'field_type' => HiddenType::class,
                 'case_sensitive' => true
             ]
         )
@@ -55,7 +57,6 @@ class GalleryAdminExtension extends AbstractAdminExtension
                 'providerName',
                 SimpleStringFilter::class,
                 [
-                    'show_filter' => false,
                     'operator_type' => ContainsOperatorType::TYPE_EQUAL,
                     'case_sensitive' => true
                 ]

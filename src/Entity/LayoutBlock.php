@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 /**
  * Networking\InitCmsBundle\Entity\LayoutBlock.
@@ -48,7 +49,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     /**
      * @var PageInterface
      */
-
+    #[Ignore]
     protected $page = null;
 
 
@@ -76,27 +77,9 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     #[ORM\Column(type: 'datetime')]
     protected $updatedAt;
 
-    /**
-     * @var string
-     */
-    protected $origClassType;
-
-    /**
-     * @var bool
-     */
-    protected $isSnapshot = false;
-
-    /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     */
-    protected $snapshotContent;
 
     protected string $classType;
 
-    public function __construct()
-    {
-        $this->snapshotContent = new ArrayCollection();
-    }
 
     public function __clone()
     {
@@ -303,84 +286,13 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
         return $this->sortOrder;
     }
 
-    /**
-     * @return ContentInterface
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * @param ContentInterface $content
-     *
-     * @return $this
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $isSnapshot
-     *
-     * @return \Networking\InitCmsBundle\Entity\LayoutBlock
-     */
-    public function setIsSnapshot($isSnapshot)
-    {
-        $this->isSnapshot = $isSnapshot;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getIsSnapshot()
-    {
-        return $this->isSnapshot;
-    }
-
-    /**
-     * @param array $snapshotContent
-     *
-     * @return \Networking\InitCmsBundle\Entity\LayoutBlock
-     */
-    public function setSnapshotContent($snapshotContent)
-    {
-//        if (!is_array($snapshotContent)) {
-//            $snapshotContent = [$snapshotContent];
-//        }
-        $this->snapshotContent = $snapshotContent;//new ArrayCollection($snapshotContent);
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSnapshotContent()
-    {
-        return $this->snapshotContent;
-    }
-
-    /**
-     * @param $snapshotContent
-     *
-     * @internal param $content
-     */
-    public function takeSnapshot($snapshotContent)
-    {
-        $this->setSnapshotContent($snapshotContent);
-    }
 
     /**
      * @param array $params
      *
      * @return array|bool
      */
+    #[Ignore]
     public function getTemplateOptions($params = [])
     {
         return false;
@@ -389,6 +301,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     /**
      * @return array|bool
      */
+    #[Ignore]
     public static function getFieldDefinition()
     {
         return false;
@@ -397,6 +310,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     /**
      * @return array|bool
      */
+    #[Ignore]
     public function getAdminContent()
     {
         return false;
@@ -405,6 +319,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     /**
      * @return string
      */
+    #[Ignore]
     public function getContentTypeName()
     {
         return 'Layout Content Block';
@@ -427,5 +342,15 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
         $this->createdAt = $published->getCreatedAt();
         $this->updatedAt = $published->getUpdatedAt();
         $this->snapshotContent = $published->getSnapshotContent();
+    }
+
+    public function restoreFormSerializer(
+        array $published){
+        $this->zone = $published['zone'];
+        $this->isActive = $published['isActive'];
+        $this->sortOrder = $published['sortOrder'];
+        $this->createdAt = $published['createdAt'];
+        $this->updatedAt = $published['updatedAt'];
+        $this->snapshotContent = $published['snapshotContent'];
     }
 }

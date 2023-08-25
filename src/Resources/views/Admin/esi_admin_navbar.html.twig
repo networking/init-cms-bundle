@@ -1,36 +1,40 @@
 {% if app.user is defined %}
-    {% if is_granted('ROLE_SONATA_ADMIN') %}
-        {% include '@NetworkingInitCms/Admin/toolbar_css.html.twig' %}
-        <div class="navbar-initcms">
-            <div class="initnavbar initnavbar-fixed-top navbar-initcms initnavbar-inverse">
-                <div class="initnavbar-inner">
-                    <div class="container">
-                        <div class="pull-left">
-                            <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
-                                <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
-                                     width="77">
-                            </a>
-                            {% if sonata_config is defined %}
-                                <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
+    {% include '@NetworkingInitCms/Admin/toolbar_css.html.twig' %}
+<div class="navbar-initcms">
+    <div data-bs-theme="light">
+        <nav class="navbar fixed-top navbar-expand-sm p-0 navbar-dark bg-dark" aria-label="Third navbar example">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url('sonata_admin_dashboard') }}">
+                                            <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
+                                                 width="77">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#controls" aria-controls="controls" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse " id="controls">
+                    <ul class="navbar-nav me-auto mb-sm-0">
+                        {% if sonata_config is defined %}
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ url('sonata_admin_dashboard') }}">
                                     {{ sonata_config.title }}
                                 </a>
-                            {% endif %}
-                        </div>
-                        <div class="pull-right nav-admin">
-                            {% if sonata_config is defined %}
-                                {% include get_global_template('user_block') %}
-                            {% endif %}
-                            {% if sonata_config is defined %}
-                                {{ knp_menu_render('AdminMenu',
-                                {'currentClass': 'active',
+                            </li>
+                        {% endif %}
+                    </ul>
+                    {% if sonata_config is defined %}#}
+                            {{ knp_menu_render('FrontendAdminMenu',{
+                                'template': '@NetworkingInitCms/Admin/esi-admin-menu.html.twig',
+                                'currentClass': 'active',
                                 'ancestorClass': 'active',
-                                'allow_safe_labels': true
-                                }) }}
-                            {% endif %}
-                        </div>
-                    </div>
+                                'branch_class': 'nav-item dropdown',
+                                'leaf_class': 'nav-item',
+                                'allow_safe_labels': true}) }}
+                    {% endif %}
                 </div>
             </div>
-        </div>
-    {% endif %}
+        </nav>
+    </div>
+</div>
 {% endif %}

@@ -63,6 +63,7 @@ class FormTypeExtension extends \Symfony\Component\Form\AbstractTypeExtension
         $view->vars['widget_items_attr'] = $options['widget_items_attr'];
         $view->vars['widget_form_group_attr'] = $options['widget_form_group_attr'];
         $view->vars['widget_checkbox_label'] = $options['widget_checkbox_label'];
+        $view->vars['widget_checkbox_label'] = $options['widget_checkbox_label'];
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options): void

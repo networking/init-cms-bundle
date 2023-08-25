@@ -13,13 +13,13 @@ file that was distributed with this source code.
 {% block title %}{{ page.metaTitle }}{% endblock %}
 
 {% block content %}
-    {% if page.layoutBlock('header') is not empty %}
+    {% if page.layoutBlocks('header') is not empty %}
         <div class="row">
             <div class="col">
                 <div class="jumbotron">
-                    {% set headerBlockCount = page.layoutBlock('header')|length %}
+                    {% set headerBlockCount = page.layoutBlocks('header')|length %}
 
-                    {% for layoutBlock in page.layoutBlock('header') %}
+                    {% for layoutBlock in page.layoutBlocks('header') %}
                         <div class="span{{ 12/headerBlockCount }}">
                             {{ render_initcms_block('@NetworkingInitCms/sandbox/content/hero_block.html.twig', layoutBlock) }}
                         </div>
@@ -32,7 +32,7 @@ file that was distributed with this source code.
 
         <div class="col-md-6">
             <div class="middle">
-                {% for layoutBlock in page.layoutBlock('left') %}
+                {% for layoutBlock in page.layoutBlocks('left') %}
                     {{ render_initcms_block('@NetworkingInitCms/sandbox/conent/cms_block.html.twig', layoutBlock) }}
                 {% endfor %}
             </div>
@@ -41,7 +41,7 @@ file that was distributed with this source code.
         <div class="col-md-6">
             {% block content_sidebar %}
                 <div class="middle">
-                    {% for layoutBlock in page.layoutBlock('right') %}
+                    {% for layoutBlock in page.layoutBlocks('right') %}
                         {{ render_initcms_block('@NetworkingInitCms/sandbox/content/cms_block.html.twig', layoutBlock) }}
                     {% endfor %}
                 </div>

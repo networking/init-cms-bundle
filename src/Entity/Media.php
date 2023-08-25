@@ -20,6 +20,7 @@ use Gaufrette\Util;
 use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 /**
  * Class Media.
@@ -64,14 +65,17 @@ class Media extends BaseMedia implements IgnoreRevertInterface
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->galleryItems = new ArrayCollection();
     }
 
 
     /**
      * {@inheritdoc}
      */
+    #[Ignore]
     public function setBinaryContent($binaryContent): void
     {
+
         $this->previousProviderReference = $this->providerReference;
         $this->providerReference = null;
         $this->binaryContent = $binaryContent;

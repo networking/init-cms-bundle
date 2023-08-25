@@ -1,9 +1,12 @@
+import './cms-admin.scss';
 import InitCms from "../js/initcms";
 
-window.axiosConfig  = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
+window.axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
 
-import Routing from 'fos-router';
-import CMSMediaEntity from "./media-entity";
+import CMSMediaEntity from "./media-entity"
+import CMSOneToManySortable from "./one-to-many-sortable"
+import CMSModelList from "./model-list"
+import {CMSRouting} from "./cms-routing"
 import 'select2'
 
 $.fn.select2.defaults.set("theme", "bootstrap5");
@@ -11,28 +14,38 @@ $.fn.select2.defaults.set("width", "100%");
 $.fn.select2.defaults.set("selectionCssClass", ":all:");
 
 
-
 // Class definition
-const CMSAdmin =  {
+const CMSAdmin = {
     // Define shared variables
     listDialog: null,
-    Routing: null,
+    routing: null,
+    collectionCounters: [],
 
-    init() {
+    async getRouting() {
+        if (!this.routing) {
+            console.log('loading routing')
+            this.routing = CMSRouting.load();
+        }
+
+        return this.routing;
+    },
+
+    async init() {
+        this.routing = await this.getRouting();
         CMSMediaEntity.init();
+        CMSModelList.init();
+        CMSOneToManySortable.init();
         this.initLinkDialogs();
         this.initializeDatePickers();
         this.initializeDateTimePickers();
         this.initSelect2();
+        this.initCkeditor();
+        this.initCollectionType()
 
     },
-    setRoutes(routes){
-        Routing.setRoutingData(routes);
-        this.Routing = Routing;
-    },
 
 
-    initLinkDialogs(){
+    initLinkDialogs() {
 
         KTUtil.on(document.body, '.dialog-link', 'click', (event) => {
 
@@ -40,14 +53,14 @@ const CMSAdmin =  {
         });
     },
 
-    createLinkDialog(event){
+    createLinkDialog(event) {
         event.preventDefault();
         event.stopPropagation();
         this.initializeDialog();
 
         let link = event.target;
 
-        if(!link.getAttribute('href')) {
+        if (!link.getAttribute('href')) {
             link = link.closest('a');
         }
 
@@ -64,13 +77,17 @@ const CMSAdmin =  {
         })
     },
 
-    initializeDialog(){
+    initializeDialog() {
         if (!this.listDialog) {
-            this.listDialog = new bootstrap.Modal(document.querySelector('#list_dialog', { height:'auto', width:650, show:false}))
+            this.listDialog = new bootstrap.Modal(document.querySelector('#list_dialog', {
+                height: 'auto',
+                width: 650,
+                show: false
+            }))
         }
     },
 
-    initializeDatePickers(){
+    initializeDatePickers() {
         document.querySelectorAll('[data-provider="datepicker"]').forEach((element) => {
             let dateFormat = element.dataset.dateFormat
             let locale = element.dataset.dateLanguage
@@ -78,7 +95,7 @@ const CMSAdmin =  {
         })
     },
 
-    initializeDateTimePickers(){
+    initializeDateTimePickers() {
         document.querySelectorAll('[data-provider="datetimepicker"]').forEach((element) => {
             let dateFormat = element.dataset.dateFormat
             let locale = element.dataset.dateLanguage
@@ -87,11 +104,12 @@ const CMSAdmin =  {
                 locale: locale,
                 enableTime: true,
                 allowInput: true,
-                time_24hr: true})
+                time_24hr: true
+            })
         })
 
     },
-    initSelect2(){
+    initSelect2() {
         var elements = [].slice.call(document.querySelectorAll('[data-control="select2"], [data-kt-select2="true"]'));
 
         elements.map(function (element) {
@@ -102,9 +120,11 @@ const CMSAdmin =  {
         });
 
     },
-    initCkeditor(){
+    initCkeditor() {
         var elements = [].slice.call(document.querySelectorAll('[data-control="ckeditor"], [data-kt-ckeditor="true"]'));
-        elements.map(function (element) {
+
+
+        elements.map((element) => {
             if (element.getAttribute("data-kt-initialized") === "1") {
                 return;
             }
@@ -120,7 +140,7 @@ const CMSAdmin =  {
                 delete CKEDITOR.instances[id];
             }
 
-            for(const [key, value] of Object.entries(plugins)) {
+            for (const [key, value] of Object.entries(plugins)) {
 
                 CKEDITOR.plugins.addExternal(key, value.path, value.filename);
             }
@@ -128,37 +148,37 @@ const CMSAdmin =  {
 
             let params = {}
 
-            for(const [key, value] of Object.entries(config)) {
-                if(key === 'filebrowserBrowseRoute') {
-                    params['filebrowserBrowseUrl'] = Routing.generate(value, config.filebrowserBrowseRouteParameters)
+            for (const [key, value] of Object.entries(config)) {
+                if (key === 'filebrowserBrowseRoute') {
+                    params['filebrowserBrowseUrl'] = this.routing.generate(value, config.filebrowserBrowseRouteParameters)
                     continue;
                 }
 
-                if(key === 'filebrowserImageBrowseRoute') {
-                    params['filebrowserImageBrowseUrl'] = Routing.generate(value, config.filebrowserImageBrowseRouteParameters)
+                if (key === 'filebrowserImageBrowseRoute') {
+                    params['filebrowserImageBrowseUrl'] = this.routing.generate(value, config.filebrowserImageBrowseRouteParameters)
                     continue;
                 }
 
-                if(key === 'filebrowserUploadRoute') {
-                    params['filebrowserUploadUrl'] = Routing.generate(value, config.filebrowserUploadRouteParameters)
+                if (key === 'filebrowserUploadRoute') {
+                    params['filebrowserUploadUrl'] = this.routing.generate(value, config.filebrowserUploadRouteParameters)
                     continue;
                 }
 
-                if(key === 'filebrowserImageUploadRoute') {
-                    params['filebrowserImageUploadUrl'] = Routing.generate(value, config.filebrowserImageUploadRouteParameters)
+                if (key === 'filebrowserImageUploadRoute') {
+                    params['filebrowserImageUploadUrl'] = this.routing.generate(value, config.filebrowserImageUploadRouteParameters)
                     continue;
                 }
 
-                if(key === 'filebrowserBrowseRouteParameters' || key === 'filebrowserImageBrowseRouteParameters' || key === 'filebrowserUploadRouteParameters' || key === 'filebrowserImageUploadRouteParameters') {
+                if (key === 'filebrowserBrowseRouteParameters' || key === 'filebrowserImageBrowseRouteParameters' || key === 'filebrowserUploadRouteParameters' || key === 'filebrowserImageUploadRouteParameters') {
                     continue
                 }
 
                 params[key] = value
             }
             CKEDITOR.disableAutoInline = true
-            let editor = CKEDITOR.replace(id,params);
+            let editor = CKEDITOR.replace(id, params);
 
-            editor.on( 'change', function( evt ) {
+            editor.on('change', function (evt) {
                 element.value = evt.editor.getData();
             });
 
@@ -167,11 +187,68 @@ const CMSAdmin =  {
         });
 
     },
+    initCollectionType() {
+        let subject = document.querySelector('body');
+
+        if (subject.dataset.cmsCollectionType) {
+            return;
+        }
+
+        subject.dataset.cmsCollectionType = 1;
+
+        KTUtil.on(subject, '[data-collection-add-btn]', 'click', (event) => {
+            event.preventDefault()
+            let btn = event.target
+            if (btn.classList.contains('btn')) {
+                btn = btn.closest('.btn');
+            }
+
+            let counter = 0
+            const containerName = btn.dataset.collectionAddBtn;
+            const container = document.querySelector(`#${containerName}`)
+            let lastItem = [...document.querySelectorAll(`div[id^="${container.id}_"]`)].pop()
+            if (lastItem) {
+                counter = parseInt(lastItem.id.replace(`${container.id}_`, ''))
+            }
+            counter += 1
+
+
+            let proto = container.dataset.prototype;
+            const protoName = container.dataset.prototypeName || '__name__';
+            // Set field id
+            const idRegexp = new RegExp(`${container.id}_${protoName}`, 'g');
+            proto = proto.replace(idRegexp, `${container.id}_${counter}`);
+
+            // Set field name
+            const parts = container.id.split('_');
+            const nameRegexp = new RegExp(`${parts[parts.length - 1]}\\]\\[${protoName}`, 'g');
+            proto = proto.replace(nameRegexp, `${parts[parts.length - 1]}][${counter}`);
+
+            container.insertAdjacentHTML('beforeend', proto)
+            CMSAdmin.initSpecialFields()
+        });
+
+        KTUtil.on(subject, '[data-collection-remove-btn]', 'click', (event) => {
+            event.preventDefault()
+
+            let btn = event.target
+
+            if (btn.classList.contains('btn')) {
+                btn = btn.closest('.btn');
+            }
+            btn.closest('.collection-item').remove();
+
+        })
+    },
     initSpecialFields() {
+
+        CMSMediaEntity.init()
+        CMSModelList.init()
         this.initializeDatePickers()
         this.initializeDateTimePickers()
         this.createSelect2()
         this.initCkeditor()
+        this.initCollectionType()
     },
     createInitCmsMessageBox(status, message) {
         toastr.options = {
@@ -203,7 +280,6 @@ const CMSAdmin =  {
     },
     createSelect2() {
         // Check if jQuery included
-
         var elements = [].slice.call(document.querySelectorAll('[data-control="select2"], [data-kt-select2="true"]'));
 
 

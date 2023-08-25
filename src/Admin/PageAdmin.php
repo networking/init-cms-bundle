@@ -254,7 +254,7 @@ class PageAdmin extends BaseAdmin
             $form
                 ->with('page_content')
                 ->add(
-                    'layoutBlock',
+                    'layoutBlocks',
                     CollectionType::class,
                     [
                         'required' => true,

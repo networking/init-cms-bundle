@@ -607,7 +607,7 @@ class NetworkingHelperExtension extends AbstractExtension
     {
         $zones = [];
 
-        $layoutBlocksFormView = $formChildren['layoutBlock'];
+        $layoutBlocksFormView = $formChildren['layoutBlocks'];
 
         foreach ($layoutBlocksFormView as $subForms) {
             if ($this->getFormFieldZone($subForms) == $zone) {

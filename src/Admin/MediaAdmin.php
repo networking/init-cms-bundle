@@ -27,6 +27,7 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
+use Sonata\Form\Type\CollectionType;
 use Sonata\Form\Type\EqualType;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
@@ -429,6 +430,10 @@ class MediaAdmin extends Admin
         ]
 
     );
+
+
+
+
     $formMapper->add('providerName', HiddenType::class);
 
 }

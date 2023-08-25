@@ -16,7 +16,7 @@ file that was distributed with this source code.
 	<div class="row">
 		<div class="col">
 			<div class="jumbotron">
-				{% for layoutBlock in page.layoutBlock('header') %}
+				{% for layoutBlock in page.layoutBlocks('header') %}
 					{{ render_initcms_block('@NetworkingInitCms/sandbox/content/cms_block.html.twig', layoutBlock)}}
 				{% endfor %}
 			</div>
@@ -25,7 +25,7 @@ file that was distributed with this source code.
 	<div class="row">
 		<div class="col-md-12">
 			<div class="middle">
-				{% for layoutBlock in page.layoutBlock('main_content')  %}
+				{% for layoutBlock in page.layoutBlocks('main_content')  %}
 					{{ render_initcms_block('@NetworkingInitCms/sandbox/content/cms_block.html.twig', layoutBlock)}}
 				{% endfor %}
 			</div>

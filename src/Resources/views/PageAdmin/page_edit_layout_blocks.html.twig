@@ -39,7 +39,7 @@ file that was distributed with this source code.
                                 </p>
                             </div>
                             {# loop through layout blocks #}
-                            {% for layout_block in admin.subject.layoutBlock(zone.name, true) %}
+                            {% for layout_block in admin.subject.layoutBlocks(zone.name, true) %}
                                 {% include '@NetworkingInitCms/PageAdmin/layout_block.html.twig' with {'layout_block': layout_block} %}
                             {% endfor %}
                         </div>

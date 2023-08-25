@@ -80,69 +80,7 @@ file that was distributed with this source code.
 
                                 {% for field_name in form_group.fields %}
                                     {% if admin.formfielddescriptions[field_name] is defined %}
-
-                                        {% if field_name == 'binaryContent' and object.providerName == 'sonata.media.provider.image'%}
-                                            <!--begin::Image input placeholder-->
-                                            <style>
-                                                .image-input-placeholder {
-                                                    background-image: url('/bundles/networkinginitcms/admin-theme/media/svg/avatars/blank.svg');
-                                                }
-
-                                                [data-bs-theme="dark"] .image-input-placeholder {
-                                                    background-image: url('/bundles/networkinginitcms/admin-theme/media/svg/avatars/blank-dark.svg');
-                                                }
-                                            </style>
-                                            <!--end::Image input placeholder-->
-
-                                            <!--begin::Image input-->
-                                            <div class="image-input image-input-outline image-input-placeholder" data-kt-image-input="true" >
-                                                <!--begin::Image preview wrapper-->
-                                                <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ sonata_path(object, 'admin')  }})"></div>
-                                                <!--end::Image preview wrapper-->
-
-                                                <!--begin::Edit button-->
-                                                <label class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                                       data-kt-image-input-action="change"
-                                                       data-bs-toggle="tooltip"
-                                                       data-bs-dismiss="click"
-                                                       title="{{ (form[field_name].vars.label)|trans({}, admin.translationDomain) }}">
-                                                    <i class="fa fa-pencil fs-6"></i>
-
-                                                    <!--begin::Inputs-->
-                                                    <inpu type="file" name="{{ form[field_name].vars.id }}" />
-                                                    <input type="hidden" name="avatar_remove" />
-                                                    <!--end::Inputs-->
-                                                </label>
-                                                <!--end::Edit button-->
-
-                                                <!--begin::Cancel button-->
-                                                <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                                      data-kt-image-input-action="cancel"
-                                                      data-bs-toggle="tooltip"
-                                                      data-bs-dismiss="click"
-                                                      title="Cancel avatar">
-                                                    <i class="ki-outline ki-cross fs-3"></i>
-                                                </span>
-                                                <!--end::Cancel button-->
-
-                                                <!--begin::Remove button-->
-                                                <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                                      data-kt-image-input-action="remove"
-                                                      data-bs-toggle="tooltip"
-                                                      data-bs-dismiss="click"
-                                                      title="Remove avatar">
-                                                    <i class="ki-outline ki-cross fs-3"></i>
-                                                </span>
-                                                <!--end::Remove button-->
-                                            </div>
-                                            {{ form_errors(form[field_name]) }}
-                                            {% else %}
-                                            <!--end::Image input-->
                                             {{ form_row(form[field_name]) }}
-                                            {% endif %}
-
-
-
                                     {% endif %}
                                 {% endfor %}
                             </div>

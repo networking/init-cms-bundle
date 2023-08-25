@@ -1,10 +1,10 @@
 import Sortable from '../admin-theme/plugins/custom/sortablejs/sortablejs.bundle.js';
-import {CMSAdmin} from './cms-admin';
-import CMSRouting from './cms-routing';
+
 
 let containers = null;
 let dropzones = null;
 let contentTypeList = null;
+let CMSRouting = await CMSAdmin.getRouting();
 let addBlockUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_create');
 let sortUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_updateLayoutBlockSort');
 let deleteUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_deleteAjax');
@@ -233,8 +233,8 @@ let saveLayoutBlock = (e) => {
             let displayBlock = document.getElementById('layoutBlockHtml' + id)
             let editBlock = document.getElementById('editBlockHtml' + id)
             let layoutBlock = document.getElementById('layoutBlock_' + id)
-            layoutBlock.querySelector('.edit_block').setAttribute('disabled', false)
-            layoutBlock.querySelector('.delete_block').setAttribute('disabled', false)
+            layoutBlock.querySelector('.edit_block').removeAttribute('disabled')
+            layoutBlock.querySelector('.delete_block').removeAttribute('disabled')
             editBlock.classList.add('d-none')
             editBlock.innerHTML = ''
             displayBlock.classList.remove('d-none')
@@ -478,8 +478,9 @@ let statusDialog = (e) => {
     }).then((result) => {
         if (result.isConfirmed) {
             axios.post(el.href, axiosConfig).then((response) => {
-                window.location = response.data.redirect
-
+                if (response.data.redirect) {
+                    return window.location = response.data.redirect
+                }
             }).catch((err) => {
                 if (err.response.data.message) {
                     return CMSAdmin.createInitCmsMessageBox('error', err.response.data.message);

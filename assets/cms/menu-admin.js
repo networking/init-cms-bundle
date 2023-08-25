@@ -1,7 +1,7 @@
-import {CMSAdmin} from './cms-admin';
-import CMSRouting from './cms-routing';
 import 'jstree'
 import 'bootstrap'
+
+let CMSRouting = await CMSAdmin.getRouting()
 
 var CMSMenuAdmin = function () {
 
@@ -32,6 +32,10 @@ var CMSMenuAdmin = function () {
             return;
         }
         let tabTriggerEl = document.querySelector('a[href="' + lastTab + '"]')
+
+        if(!tabTriggerEl) {
+            return;
+        }
         var tab = new bootstrap.Tab(tabTriggerEl)
 
         tab.show()
@@ -72,7 +76,7 @@ var CMSMenuAdmin = function () {
     }
 
 
-    var submitAjaxForm =(event) => {
+    var submitAjaxForm = (event) => {
         event.preventDefault();
         event.stopPropagation();
 

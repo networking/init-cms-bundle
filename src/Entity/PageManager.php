@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,6 +18,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\TransactionRequiredException;
@@ -24,13 +26,22 @@ use Gedmo\Tool\Wrapper\EntityWrapper;
 use Gedmo\Tree\Entity\Repository\AbstractTreeRepository;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Gedmo\Tree\Strategy;
+use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
+use Networking\FormGeneratorBundle\Model\BaseForm;
+use Networking\FormGeneratorBundle\Model\FormField;
+use Networking\FormGeneratorBundle\Model\FormPageContent;
+use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use ReflectionClass;
 use ReflectionException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class PageManager.
@@ -39,13 +50,21 @@ use ReflectionException;
  */
 class PageManager extends AbstractTreeRepository implements PageManagerInterface
 {
+    public $mergingInfos = [];
+
+    public $deserializedEntities = [];
+
+    private $pageHelper;
+
     /**
      * PageManager constructor.
+     *
      * @param EntityManagerInterface $om
-     * @param $class
+     * @param                        $class
      */
-    public function __construct(EntityManagerInterface $om, $class)
+    public function __construct(EntityManagerInterface $om, PageHelper $pageHelper, $class)
     {
+        $this->pageHelper = $pageHelper;
         if (class_exists($class)) {
             $classMetaData = $om->getClassMetadata($class);
 
@@ -60,19 +79,23 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      */
     public function findById($id): ?object
     {
-        return $this->find($id);
+        return $this->findOneBy(['id' => $id]);
     }
 
     /**
-     * @param $locale
+     * @param      $locale
      * @param null $id
      * @param bool $showHome
      * @param bool $showChildren
      *
      * @return \Doctrine\ORM\QueryBuilder|mixed
      */
-    public function getParentPagesQuery($locale, $id = null, $showHome = false, $showChildren = false): mixed
-    {
+    public function getParentPagesQuery(
+        $locale,
+        $id = null,
+        $showHome = false,
+        $showChildren = false
+    ): mixed {
         $qb = $this->createQueryBuilder('p');
         if (!$showHome) {
             $qb->where($qb->expr()->isNull('p.isHome').' OR p.isHome <> 1');
@@ -80,14 +103,16 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         if ($id) {
             if (!$showChildren) {
                 /** @var $page PageInterface */
-                $page = $this->find($id);
+                $page = $this->findById($id);
                 $collection = new ArrayCollection($page->getAllChildren());
                 $childrenIds = $collection->map(
                     fn(PageInterface $p) => $p->getId()
                 );
 
                 if ($childrenIds->count()) {
-                    $qb->andWhere($qb->expr()->notIn('p.id', $childrenIds->toArray()));
+                    $qb->andWhere(
+                        $qb->expr()->notIn('p.id', $childrenIds->toArray())
+                    );
                 }
             }
             $qb->andWhere($qb->expr()->neq('p.id', $id));
@@ -102,7 +127,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param $locale
+     * @param      $locale
      * @param null $id
      */
     public function getParentPagesChoices($locale, $id = null): mixed
@@ -113,25 +138,29 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param $sort
+     * @param        $sort
      * @param string $order
-     * @param int $hydrationMode
+     * @param int    $hydrationMode
      */
-    public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT): mixed
-    {
+    public function getAllSortBy(
+        $sort,
+        $order = 'DESC',
+        $hydrationMode = Query::HYDRATE_OBJECT
+    ): mixed {
         $query = $this->getAllSortByQuery($sort, $order);
 
         return $query->execute([], $hydrationMode);
     }
 
     /**
-     * @param $sort
+     * @param        $sort
      * @param string $order
      */
     public function getAllSortByQuery($sort, $order = 'DESC'): Query
     {
         $qb = $this->createQueryBuilder('p');
-        $qb2 = $this->getEntityManager()->getRepository(PageSnapshot::class)->createQueryBuilder('pp');
+        $qb2 = $this->_em->getRepository(PageSnapshot::class)
+            ->createQueryBuilder('pp');
         $qb->select('p', 'ps')
             ->leftJoin('p.snapshots', 'ps')
             ->where(
@@ -161,68 +190,67 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         return $content->getId();
     }
 
-    /**
-     * @param \JMS\Serializer\Serializer $serializer
-     *
-     */
-    public function revertToPublished(PageInterface $draftPage, SerializerInterface $serializer): PageInterface
+    public function revertToPublished(PageInterface $page, $serializer){
+        return $this->cancelDraft($page, $serializer);
+    }
+
+    public function cancelDraft(PageInterface $page, \Symfony\Component\Serializer\SerializerInterface $serializer)
     {
-        $currentLayoutBlocks = $draftPage->getLayoutBlock();
-        $pageSnapshot = $draftPage->getSnapshot();
-        $contentRoute = $draftPage->getContentRoute();
+        $currentLayoutBlocks = $page->getLayoutBlocks();
+        $pageSnapshot = $page->getSnapshot();
+        $contentRoute = $page->getContentRoute();
+        $pageManager = $this;
+        $context = [
+            AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE => true,
+            AbstractObjectNormalizer::OBJECT_TO_POPULATE => $page,
+            AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES => true,
+            AbstractNormalizer::CALLBACKS => [
+                'translations' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): array {
+                    $translations = [];
+                    foreach ($innerObject as $key => $page){
+                        $translations[$key] = $pageManager->findById(
+                            $page->getId()
+                        );
+                        $page->setTranslations($translations);
+                    }
+                    return  $translations ;
+                },
+                'original' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): ?PageInterface {
+                    return $innerObject ? $pageManager->findById(
+                        $innerObject
+                    ):null;
+                },
+                'alias' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): ?PageInterface {
+                    return $innerObject ? $pageManager->findById(
+                        $innerObject
+                    ):null;
+                },
 
-        $context = new PageSnapshotDeserializationContext();
-        $context->setDeserializeTranslations(true);
-
-        /** @var $publishedPage PageInterface */
-        $publishedPage = $serializer->deserialize(
-            $pageSnapshot->getVersionedData(),
-            $this->getClassName(),
-            'json',
-            $context
-        );
-
-        $contentRoute->setTemplate($pageSnapshot->getContentRoute()->getTemplate());
-        $contentRoute->setTemplateName($pageSnapshot->getContentRoute()->getTemplateName());
-        $contentRoute->setController($pageSnapshot->getContentRoute()->getController());
-        $contentRoute->setPath($pageSnapshot->getContentRoute()->getPath());
-
-        $draftPage->restoreFromPublished($publishedPage);
+            ],
+            AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true,
+        ];
+        $page = $serializer->deserialize($pageSnapshot->getVersionedData(), $page::class, 'json', $context);
 
 
-        $layoutBlockIds = [];
+        foreach ($page->getLayoutBlocks() as $layoutBlock) {
 
-        // Set the layout blocks of the NOW managed entity to
-        // exactly that of the published version
-        foreach ($publishedPage->getLayoutBlock() as $publishedlayoutBlock) {
-
-
-            $matches = $currentLayoutBlocks->filter(
-                fn(LayoutBlock $layoutBlock) => $publishedlayoutBlock->getId() === $layoutBlock->getId()
-            );
-            $layoutBlock = $matches->first();
-
-            if (!$layoutBlock) {
-                $layoutBlock = clone $publishedlayoutBlock;
-                $layoutBlock->setPage($draftPage);
-                $currentLayoutBlocks->add($layoutBlock);
+            if(!$layoutBlock->getId()){
+                $this->resetContent($layoutBlock);
             }
+            $this->_em->persist($layoutBlock);
 
-            $layoutBlock->restoreFormPublished($publishedlayoutBlock);
-
-            $layoutBlock = $this->resetContent($layoutBlock, $serializer);
-
-            $layoutBlockIds[] = $layoutBlock->getId() ?: null;
         }
 
-        $currentLayoutBlocks = $this->cleanLayoutBlocks($currentLayoutBlocks, $layoutBlockIds);
-        $draftPage->setLayoutBlock($currentLayoutBlocks);
-        $this->_em->persist($contentRoute);
-        $this->_em->persist($draftPage);
-        $this->_em->flush();
 
-        return $draftPage;
+        $this->_em->persist($page);
+
+        $this->_em->flush();
+//
+        return $page;
     }
+
+
+
 
     /**
      *
@@ -230,23 +258,18 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @throws OptimisticLockException
      * @throws ReflectionException
      */
-    public function resetContent(LayoutBlock $layoutBlock, SerializerInterface $serializer): LayoutBlock
+    public function resetContent(LayoutBlock $layoutBlock): LayoutBlock
     {
+        $reflection = new ReflectionClass($layoutBlock);
 
-        if ($snapshotContent = $layoutBlock->getSnapshotContent()) {
+        $layoutBlockProperties = $reflection->getProperties();
 
-            $publishedContent = $serializer->deserialize($snapshotContent, $layoutBlock::class, 'json');
+        $genericProperties = new ReflectionClass(LayoutBlock::class);
+        foreach ($layoutBlockProperties as $property) {
 
-            $reflection = new ReflectionClass($publishedContent);
-            foreach ($reflection->getProperties() as $property) {
-                $this->revertObject($publishedContent, $property);
+            if(!$genericProperties->hasProperty($property->getName())){
+                $this->revertObject($layoutBlock, $property);
             }
-
-            $this->_em->persist($publishedContent);
-            $this->_em->flush();
-
-            $layoutBlock->setObjectId($publishedContent->getId());
-
         }
 
         return $layoutBlock;
@@ -256,21 +279,22 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @param $object
      * @param $var
      * @param $property
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws TransactionRequiredException
      * @throws ReflectionException
      */
-    public function revertObject($object, $property): mixed
+    public function revertObject($object, \ReflectionProperty $property): mixed
     {
+
         $reflection = new ReflectionClass($object);
 
         if ($reflection->implementsInterface(IgnoreRevertInterface::class)) {
-            dump($object);
             return $object;
         }
 
-        $method = sprintf('get%s', ucfirst((string) $property->getName()));
+        $method = sprintf('get%s', ucfirst((string)$property->getName()));
 
         if (!$reflection->hasMethod($method)) {
             return $object;
@@ -278,45 +302,50 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
         $var = $object->{$method}();
 
-        if ($var instanceof Collection) {
 
+        if ($var instanceof Collection) {
             if ($var->count() < 1) {
                 return $object;
             }
 
-            $newCollection = new ArrayCollection();
-
+            $newCollection = [];
             foreach ($var as $v) {
+
                 $newVar = $this->revertObjectVars($object, $v);
-                $newCollection->add($newVar);
+                $newCollection[] = $newVar;
             }
 
-            $var->clear();
-            $method = sprintf('set%s', ucfirst((string) $property->getName()));
+            $method = sprintf('set%s', ucfirst((string)$property->getName()));
             $reflection = new ReflectionClass($object);
+
+            $persistentCollection = new PersistentCollection($this->_em, $property->class, new ArrayCollection($newCollection));
+
             if ($reflection->hasMethod($method)) {
-                $object->{$method}($newCollection);
+
+                $object->{$method}($persistentCollection);
             }
 
-            return $object;
 
+            return $object;
         }
 
-        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor($var::class)) {
 
-            $newVar = $this->revertObjectVars($object, $var);
-            $this->_em->persist($newVar);
+        if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor($var::class)
+        ) {
 
-            $method = sprintf('set%s', ucfirst((string) $property->getName()));
+            $var = $this->revertObjectVars($object, $var);
+
+
+            $method = sprintf('set%s', ucfirst((string)$property->getName()));
             if ($reflection->hasMethod($method)) {
-                $object->{$method}($newVar);
+                $object->{$method}($var);
             }
+            $this->_em->persist($var);
 
             return $object;
-
         }
 
-        $method = sprintf('set%s', ucfirst((string) $property->getName()));
+        $method = sprintf('set%s', ucfirst((string)$property->getName()));
         if ($reflection->hasMethod($method)) {
             $object->{$method}($var);
         }
@@ -327,6 +356,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     /**
      * @param $parent
      * @param $oldObject
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws TransactionRequiredException
@@ -334,41 +364,58 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      */
     public function revertObjectVars($parent, $oldObject): ?object
     {
+
+
         $reflection = new ReflectionClass($oldObject);
 
         if ($reflection->implementsInterface(IgnoreRevertInterface::class)) {
             return $oldObject;
         }
-        $object = clone $oldObject;
+
+        if($oldObject->getId()){
+            $object = $this->_em
+                ->getRepository($reflection->getName())
+                ->findOneBy(['id' => $oldObject->getId()]);
+
+        }
+
+
+        if (!$object) {
+            $object = clone $oldObject;
+        }
+
+        if (array_key_exists($object::class, $this->deserializedEntities)) {
+            if (array_key_exists(  $object->getId(), $this->deserializedEntities[$object::class] ) ) {
+                return $this->deserializedEntities[$object::class][$object->getId(
+                )];
+            }
+        }
 
         foreach ($reflection->getProperties() as $reflectionProperty) {
             $method = sprintf('get%s', ucfirst($reflectionProperty->getName()));
             if ($reflection->hasMethod($method)) {
                 $val = $object->{$method}();
                 /** Prevent Recursive loop */
+
+
                 if ($val !== $parent) {
-                    $this->revertObject($object, $reflectionProperty);
+                    $object = $this->revertObject($object, $reflectionProperty);
+                    if($val instanceof PersistentCollection){
+                        dump($reflectionProperty->getName());
+                        dump($object->{$method}());
+                    }
                 }
+
+
             }
         }
+
+        $this->deserializedEntities[$object::class][$object->getId()] = $object;
+
 
         return $object;
     }
 
-    public function cleanLayoutBlocks(Collection $currentLayoutBlocks, array $layoutBlockIds): Collection
-    {
-
-        $blocksToRemove = $currentLayoutBlocks->filter(
-            fn(LayoutBlock $oldBlock) => !in_array($oldBlock->getId(), $layoutBlockIds)
-        );
-
-        foreach ($blocksToRemove as $deadBlock) {
-            $currentLayoutBlocks->removeElement($deadBlock);
-        }
-
-        return $currentLayoutBlocks;
-
-    }
 
     public function save(PageInterface $page): mixed
     {
@@ -392,7 +439,13 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      */
     public function getTreeQueryBuilder($rootNode = null): QueryBuilder
     {
-        return $this->getChildrenQueryBuilder($rootNode, false, null, 'asc', true);
+        return $this->getChildrenQueryBuilder(
+            $rootNode,
+            false,
+            null,
+            'asc',
+            true
+        );
     }
 
     /**
@@ -417,14 +470,24 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         return $this->getTreeQuery($rootNode)->execute();
     }
 
-    public function getRootNodesQueryBuilder($sortByField = null, $direction = 'asc'): QueryBuilder
-    {
-        return $this->getChildrenQueryBuilder(null, true, $sortByField, $direction);
+    public function getRootNodesQueryBuilder(
+        $sortByField = null,
+        $direction = 'asc'
+    ): QueryBuilder {
+        return $this->getChildrenQueryBuilder(
+            null,
+            true,
+            $sortByField,
+            $direction
+        );
     }
 
-    public function getRootNodesQuery($sortByField = null, $direction = 'asc'): Query
-    {
-        return $this->getRootNodesQueryBuilder($sortByField, $direction)->getQuery();
+    public function getRootNodesQuery(
+        $sortByField = null,
+        $direction = 'asc'
+    ): Query {
+        return $this->getRootNodesQueryBuilder($sortByField, $direction)
+            ->getQuery();
     }
 
     public function getRootNodes($sortByField = null, $direction = 'asc'): array
@@ -440,7 +503,10 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     public function getPathQueryBuilder($node): QueryBuilder
     {
         $meta = $this->getClassMetadata();
-        $config = $this->listener->getConfiguration($this->_em, $meta->getName());
+        $config = $this->listener->getConfiguration(
+            $this->_em,
+            $meta->getName()
+        );
         $alias = 'materialized_path_entity';
         $qb = $this->getQueryBuilder()
             ->select($alias)
@@ -449,12 +515,18 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $node = new EntityWrapper($node, $this->_em);
         $nodePath = $node->getPropertyValue($config['path']);
         $paths = [];
-        $nodePathLength = strlen((string) $nodePath);
+        $nodePathLength = strlen((string)$nodePath);
         $separatorMatchOffset = 0;
         while ($separatorMatchOffset < $nodePathLength) {
-            $separatorPos = strpos((string) $nodePath, $config['path_separator'], $separatorMatchOffset);
+            $separatorPos = strpos(
+                (string)$nodePath,
+                $config['path_separator'],
+                $separatorMatchOffset
+            );
 
-            if (false === $separatorPos || $separatorPos === $nodePathLength - 1) {
+            if (false === $separatorPos
+                || $separatorPos === $nodePathLength - 1
+            ) {
                 // last node, done
                 $paths[] = $nodePath;
                 $separatorMatchOffset = $nodePathLength;
@@ -463,14 +535,21 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
                 $separatorMatchOffset = 1;
             } else {
                 // add node
-                $paths[] = substr((string) $nodePath, 0, $config['path_ends_with_separator'] ? $separatorPos + 1 : $separatorPos);
+                $paths[] = substr(
+                    (string)$nodePath,
+                    0,
+                    $config['path_ends_with_separator'] ? $separatorPos + 1
+                        : $separatorPos
+                );
                 $separatorMatchOffset = $separatorPos + 1;
             }
         }
-        $qb->where($qb->expr()->in(
-            $alias.'.'.$config['path'],
-            $paths
-        ));
+        $qb->where(
+            $qb->expr()->in(
+                $alias.'.'.$config['path'],
+                $paths
+            )
+        );
         $qb->orderBy($alias.'.'.$config['level'], 'ASC');
 
         return $qb;
@@ -498,10 +577,18 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         return $this->getPathQuery($node)->getResult();
     }
 
-    public function getChildrenQueryBuilder($node = null, $direct = false, $sortByField = null, $direction = 'asc', $includeNode = false): QueryBuilder
-    {
+    public function getChildrenQueryBuilder(
+        $node = null,
+        $direct = false,
+        $sortByField = null,
+        $direction = 'asc',
+        $includeNode = false
+    ): QueryBuilder {
         $meta = $this->getClassMetadata();
-        $config = $this->listener->getConfiguration($this->_em, $meta->getName());
+        $config = $this->listener->getConfiguration(
+            $this->_em,
+            $meta->getName()
+        );
         $separator = addcslashes($config['path_separator'], '%');
         $alias = 'materialized_path_entity';
         $path = $config['path'];
@@ -519,30 +606,51 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
                     $alias.'.'.$path,
                     $qb->expr()->literal(
                         $nodePath
-                        .($config['path_ends_with_separator'] ? '' : $separator).'%'
+                        .($config['path_ends_with_separator'] ? '' : $separator)
+                        .'%'
                     )
                 )
             );
 
             if ($includeNode) {
-                $includeNodeExpr = $qb->expr()->eq($alias.'.'.$path, $qb->expr()->literal($nodePath));
+                $includeNodeExpr = $qb->expr()->eq(
+                    $alias.'.'.$path,
+                    $qb->expr()->literal($nodePath)
+                );
             } else {
-                $expr->add($qb->expr()->neq($alias.'.'.$path, $qb->expr()->literal($nodePath)));
+                $expr->add(
+                    $qb->expr()->neq(
+                        $alias.'.'.$path,
+                        $qb->expr()->literal($nodePath)
+                    )
+                );
             }
 
             if ($direct) {
                 $expr->add(
                     $qb->expr()->orx(
-                        $qb->expr()->eq($alias.'.'.$config['level'], $qb->expr()->literal($node->getPropertyValue($config['level']))),
-                        $qb->expr()->eq($alias.'.'.$config['level'], $qb->expr()->literal($node->getPropertyValue($config['level']) + 1))
+                        $qb->expr()->eq(
+                            $alias.'.'.$config['level'],
+                            $qb->expr()->literal(
+                                $node->getPropertyValue($config['level'])
+                            )
+                        ),
+                        $qb->expr()->eq(
+                            $alias.'.'.$config['level'],
+                            $qb->expr()->literal(
+                                $node->getPropertyValue($config['level']) + 1
+                            )
+                        )
                     )
                 );
             }
         } elseif ($direct) {
             $expr = $qb->expr()->not(
-                $qb->expr()->like($alias.'.'.$path,
+                $qb->expr()->like(
+                    $alias.'.'.$path,
                     $qb->expr()->literal(
-                        ($config['path_starts_with_separator'] ? $separator : '')
+                        ($config['path_starts_with_separator'] ? $separator
+                            : '')
                         .'%'.$separator.'%'
                         .($config['path_ends_with_separator'] ? $separator : '')
                     )
@@ -558,25 +666,52 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             $qb->orWhere('('.$includeNodeExpr.')');
         }
 
-        $orderByField = null === $sortByField ? $alias.'.'.$config['path'] : $alias.'.'.$sortByField;
+        $orderByField = null === $sortByField ? $alias.'.'.$config['path']
+            : $alias.'.'.$sortByField;
         $orderByDir = 'asc' === $direction ? 'asc' : 'desc';
         $qb->orderBy($orderByField, $orderByDir);
 
         return $qb;
     }
 
-    public function getChildrenQuery($node = null, $direct = false, $sortByField = null, $direction = 'asc', $includeNode = false): Query
-    {
-        return $this->getChildrenQueryBuilder($node, $direct, $sortByField, $direction, $includeNode)->getQuery();
+    public function getChildrenQuery(
+        $node = null,
+        $direct = false,
+        $sortByField = null,
+        $direction = 'asc',
+        $includeNode = false
+    ): Query {
+        return $this->getChildrenQueryBuilder(
+            $node,
+            $direct,
+            $sortByField,
+            $direction,
+            $includeNode
+        )->getQuery();
     }
 
-    public function getChildren($node = null, $direct = false, $sortByField = null, $direction = 'asc', $includeNode = false): ?array
-    {
-        return $this->getChildrenQuery($node, $direct, $sortByField, $direction, $includeNode)->execute();
+    public function getChildren(
+        $node = null,
+        $direct = false,
+        $sortByField = null,
+        $direction = 'asc',
+        $includeNode = false
+    ): ?array {
+        return $this->getChildrenQuery(
+            $node,
+            $direct,
+            $sortByField,
+            $direction,
+            $includeNode
+        )->execute();
     }
 
-    public function getNodesHierarchyQueryBuilder($node = null, $direct = false, array $options = [], $includeNode = false): QueryBuilder
-    {
+    public function getNodesHierarchyQueryBuilder(
+        $node = null,
+        $direct = false,
+        array $options = [],
+        $includeNode = false
+    ): QueryBuilder {
         $sortBy = [
             'field' => null,
             'dir' => 'asc',
@@ -586,24 +721,54 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             $sortBy = array_merge($sortBy, $options['childSort']);
         }
 
-        return $this->getChildrenQueryBuilder($node, $direct, $sortBy['field'], $sortBy['dir'], $includeNode);
+        return $this->getChildrenQueryBuilder(
+            $node,
+            $direct,
+            $sortBy['field'],
+            $sortBy['dir'],
+            $includeNode
+        );
     }
 
-    public function getNodesHierarchyQuery($node = null, $direct = false, array $options = [], $includeNode = false): Query
-    {
-        return $this->getNodesHierarchyQueryBuilder($node, $direct, $options, $includeNode)->getQuery();
+    public function getNodesHierarchyQuery(
+        $node = null,
+        $direct = false,
+        array $options = [],
+        $includeNode = false
+    ): Query {
+        return $this->getNodesHierarchyQueryBuilder(
+            $node,
+            $direct,
+            $options,
+            $includeNode
+        )->getQuery();
     }
 
-    public function getNodesHierarchy($node = null, $direct = false, array $options = [], $includeNode = false): array
-    {
+    public function getNodesHierarchy(
+        $node = null,
+        $direct = false,
+        array $options = [],
+        $includeNode = false
+    ): array {
         $meta = $this->getClassMetadata();
-        $config = $this->listener->getConfiguration($this->_em, $meta->getName());
+        $config = $this->listener->getConfiguration(
+            $this->_em,
+            $meta->getName()
+        );
         $path = $config['path'];
 
-        $nodes = $this->getNodesHierarchyQuery($node, $direct, $options, $includeNode)->getArrayResult();
+        $nodes = $this->getNodesHierarchyQuery(
+            $node,
+            $direct,
+            $options,
+            $includeNode
+        )->getArrayResult();
         usort(
             $nodes,
-            static fn($a, $b): int => strcmp((string) $a[$path], (string) $b[$path])
+            static fn($a, $b): int => strcmp(
+                (string)$a[$path],
+                (string)$b[$path]
+            )
         );
 
         return $nodes;
@@ -611,6 +776,17 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
     protected function validate(): bool
     {
-        return Strategy::MATERIALIZED_PATH === $this->listener->getStrategy($this->_em, $this->getClassMetadata()->name)->getName();
+        return Strategy::MATERIALIZED_PATH === $this->listener->getStrategy(
+            $this->_em,
+            $this->getClassMetadata()->name
+        )->getName();
+    }
+
+    public function getSnapshot($id): ?PageSnapshotInterface
+    {
+        return $this->_em->getRepository(PageSnapshot::class)->findOneBy(
+            ['resourceId' => $id],
+            ['version' => 'DESC']
+        );
     }
 }

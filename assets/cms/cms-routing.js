@@ -1,7 +1,17 @@
-const routes = require('./routing/routing.json');
 import Routing from 'fos-router';
 
-Routing.setRoutingData(routes);
-
-const CMSRouting = Routing
-export default CMSRouting;
+export const CMSRouting = {
+    instance: null,
+    async load(){
+        if(!this.instance) {
+            this.instance = await this.getRoutes();
+        }
+        return this.instance;
+    },
+    async getRoutes(){
+        let response = await fetch('/js/routing');
+        let data = await response.json();
+        Routing.setRoutingData(data);
+        return Routing;
+    }
+}

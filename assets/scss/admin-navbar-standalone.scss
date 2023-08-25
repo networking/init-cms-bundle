@@ -1,11 +1,83 @@
-.navbar-initcms{
+//@import "initcms_variables";
+//@import "variables";
+
+.navbar-initcms {
   @import "../vendor/fontawesome/scss/fontawesome";
   $fa-font-path: "../vendor/fontawesome/webfonts";
   @import "../vendor/fontawesome/scss/solid";
   @import "../vendor/fontawesome/scss/regular";
   @import "../vendor/fontawesome/scss/brands";
 
+  @import "bootstrap/scss/functions";
+  @import "bootstrap/scss/variables";
+  @import "bootstrap/scss/variables-dark";
+  @import "bootstrap/scss/maps";
+  @import "bootstrap/scss/mixins";
+  @import "bootstrap/scss/utilities";
+  @import "bootstrap/scss/root";
+  @import "bootstrap/scss/reboot";
+
+
+
+  // Root
+  //
+  // Ability to the value of the root font sizes, affecting the value of `rem`.
+  // null by default, thus nothing is generated.
+
+  :root {
+    @if $font-size-root != null {
+      @include font-size(var(--#{$prefix}root-font-size));
+    }
+
+    @if $enable-smooth-scroll {
+      @media (prefers-reduced-motion: no-preference) {
+        scroll-behavior: smooth;
+      }
+    }
+  }
+
+
+  // Body
+  //
+  // 1. Remove the margin in all browsers.
+  // 2. As a best practice, apply a default `background-color`.
+  // 3. Prevent adjustments of font size after orientation changes in iOS.
+  // 4. Change the default tap highlight to be completely transparent in iOS.
+
+  // scss-docs-start reboot-body-rules
+  [data-bs-theme="light"] {
+    margin: 0; // 1
+    font-family: var(--#{$prefix}body-font-family);
+    @include font-size(var(--#{$prefix}body-font-size));
+    font-weight: var(--#{$prefix}body-font-weight);
+    line-height: var(--#{$prefix}body-line-height);
+    color: var(--#{$prefix}body-color);
+    text-align: var(--#{$prefix}body-text-align);
+    background-color: var(--#{$prefix}body-bg); // 2
+    -webkit-text-size-adjust: 100%; // 3
+    -webkit-tap-highlight-color: rgba($black, 0); // 4
+  }
+
+
+
+  @import "bootstrap/scss/type";
+  @import "bootstrap/scss/containers";
+  @import "bootstrap/scss/grid";
+  @import "bootstrap/scss/buttons";
+  @import "bootstrap/scss/transitions";
+  @import "bootstrap/scss/dropdown";
+  @import "bootstrap/scss/button-group";
+  @import "bootstrap/scss/nav";
+  @import "bootstrap/scss/navbar";
+  // Helpers
+  @import "bootstrap/scss/helpers";
+
+  // Utilities
+  @import "bootstrap/scss/utilities/api";
+  // scss-docs-end import-stack
 }
-@import "initcms_variables";
-@import "variables";
-@import "admin-navbar";
+body.initcms-admin-navbar-loaded {
+  margin-top: 70px;
+}
+
+

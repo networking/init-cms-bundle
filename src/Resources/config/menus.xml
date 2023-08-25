@@ -7,7 +7,15 @@
     <services>
         <service id="Networking\InitCmsBundle\Menu\AdminMenuBuilder" autowire="true">
             <argument key="$allowLocaleCookie">%networking_init_cms.allow_locale_cookie%</argument>
-            <tag name="knp_menu.menu_builder" method="createAdminMenu" alias="AdminMenu" />
+        </service>
+        <service id="AdminMenu" class="Knp\Menu\MenuItem">
+            <factory service="Networking\InitCmsBundle\Menu\AdminMenuBuilder" method="createAdminMenu" />
+            <tag name="knp_menu.menu" alias="AdminMenu" />
+        </service>
+
+        <service id="FrontendAdminMenu" class="Knp\Menu\MenuItem">
+            <factory service="Networking\InitCmsBundle\Menu\AdminMenuBuilder" method="createFrontendAdminMenu" />
+            <tag name="knp_menu.menu" alias="FrontendAdminMenu" />
         </service>
 
         <service id="Networking\InitCmsBundle\Menu\CmsMenuVoter" autowire="true">

@@ -34,7 +34,6 @@ file that was distributed with this source code.
     This is not the best way to do if
     TODO : improve this part
     #}
-
     {# model {{ sonata_admin.field_description.mappingtype }} #}
     {% if sonata_admin.field_description is empty %}
         {{ block('choice_widget') }}
@@ -62,7 +61,6 @@ file that was distributed with this source code.
         {% endif %}
     {% endif %}
     {{ parent() }}
-
 {% endblock form_row %}
 
 
@@ -189,9 +187,28 @@ file that was distributed with this source code.
 
 
 {% block sonata_type_model_list_widget %}
-    <div id="field_container_{{ id }}" class="field-container">
-        <span id="field_widget_{{ id }}">
-            {% if sonata_admin.value and sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value) is not null%}
+    <div id="field_container_{{ id }}" class="field-container model-list"
+         data-field-id="{{ id }}"
+         data-is-list-mode="true"
+         data-field-reload-url="{{ url('sonata_admin_retrieve_form_element', {
+             '_sonata_admin': sonata_admin.admin.root.baseCodeRoute,
+             'elementId': id,
+             'subclass': sonata_admin.admin.hasActiveSubClass() ? sonata_admin.admin.getActiveSubclassCode() : null,
+             'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
+             'uniqid':    sonata_admin.admin.root.uniqid,
+             'code':      sonata_admin.admin.root.code,
+             'locale':    app.request.locale
+         }) }}"
+        >
+        <span id="field_widget_{{ id }}"
+
+              data-preview-url="{{ url('sonata_admin_short_object_information', {
+                  'objectId': '__objectId__',
+                  'uniqid': sonata_admin.field_description.associationadmin.uniqid,
+                  '_sonata_admin': sonata_admin.field_description.associationadmin.baseCodeRoute,
+                  'linkParameters': sonata_admin.field_description.option('link_parameters', {})
+              })}}">
+            {% if sonata_admin.value and sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value) is not null %}
                 {{ render(path('sonata_admin_short_object_information', {
                     '_sonata_admin': sonata_admin.field_description.associationadmin.baseCodeRoute,
                     'objectId': sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value),
@@ -210,16 +227,14 @@ file that was distributed with this source code.
                 </span>
             {% endif %}
         </span>
-        <span style="display: none">
-            {{ form_widget(form) }}
-        </span>
+        {{ block('hidden_widget') }}
 
         <span id="field_actions_{{ id }}" class="field-actions">
 
             {% if sonata_admin.field_description.associationadmin.hasroute('list') and sonata_admin.field_description.associationadmin.isGranted('LIST') %}
                 &nbsp;
                 <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('list') }}"
-                   onclick="return start_field_dialog_form_list_{{ id }}(this);"
+                   id="field_list_link_{{ id }}"
                    class="btn btn-light btn-sm sonata-ba-action"
                    title="{{ 'link_list'|trans({}, 'SonataAdminBundle') }}"
                 >
@@ -231,7 +246,7 @@ file that was distributed with this source code.
             {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
                 &nbsp;
                 <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
-                   onclick="return start_field_dialog_form_add_{{ id }}(this);"
+                   id="field_add_link_{{ id }}"
                    class="btn btn-primary btn-sm sonata-ba-action"
                    title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
                 >
@@ -243,23 +258,18 @@ file that was distributed with this source code.
             {% if sonata_admin.field_description.associationadmin.hasRoute('delete') and sonata_admin.field_description.associationadmin.isGranted('DELETE') %}
                 &nbsp;
                 <a href=""
-                   onclick="return remove_selected_element_{{ id }}(this);"
+                   id="field_remove_link_{{ id }}"
                    class="btn btn-danger btn-sm sonata-ba-action"
                    title="{{ 'link_delete'|trans({}, 'SonataAdminBundle') }}"
                 >
-                    <i class="fa fa-trash "></i>
+                    <i class="fa fa-trash"></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
             {% endif %}
         </span>
-
-        <div class="modal" id="field_dialog_{{ id }}" style="display: none" role="dialog"
-             aria-hidden="true">
-        </div>
-
     </div>
 
-    {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
+{#    {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}#}
 {% endblock %}
 
 {% block sonata_type_admin_widget %}
@@ -340,7 +350,7 @@ file that was distributed with this source code.
 
 
     {% if select2 is defined and select2 %}
-        {% set placeholder = attr.placeholder|default(label) %}
+        {% set placeholder = attr.placeholder|default(placeholder) %}
         {% if translation_domain %}
             {% set placeholder = placeholder|trans({}, translation_domain) %}
         {% endif %}
@@ -358,23 +368,7 @@ file that was distributed with this source code.
 
 {# Support #}
 
-{% block form_widget_remove_btn %}
-    {% apply spaceless %}
 
-        {% if widget_remove_btn.wrapper_div is not same as(false) %}
-            <div class="{{ widget_remove_btn.wrapper_div.class }} col-sm-offset-3">
-        {% endif %}
-        {% if widget_remove_btn|default(null) %}
-            {% set button_type = 'remove' %}
-            {% set button_values = widget_remove_btn %}
-            {{ block('collection_button') }}
-        {% endif %}
-        {% if widget_remove_btn.wrapper_div is not same as(false) %}
-            </div>
-            <div class="clearfix"></div>
-        {% endif %}
-    {% endapply %}
-{% endblock form_widget_remove_btn %}
 
 
 {% block sonata_type_immutable_array_widget %}
@@ -739,54 +733,88 @@ file that was distributed with this source code.
 
 {% block sonata_type_native_collection_widget_row %}
     {% apply spaceless %}
-        <div class="sonata-collection-row">
-            {% if allow_delete %}
-            <div class="row">
-                <div class="col-xs-1">
-                    <a href="#" class="btn btn-link sonata-collection-delete">
-                        <i class="fas fa-minus-circle" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="col-xs-11">
-                    {% endif %}
-                    {{ form_row(child, { label: false }) }}
-                    {% if allow_delete %}
-                </div>
-            </div>
-            {% endif %}
+        <div class="collection-item">
+        {{ form_row(child, { label: false }) }}
         </div>
     {% endapply %}
 {% endblock sonata_type_native_collection_widget_row %}
 
 {% block sonata_type_native_collection_widget %}
     {% apply spaceless %}
-        {% if prototype is defined and not prototype.rendered %}
-            {% set prototype_markup = form_row(prototype) %}
-            {% set data_prototype_name = form.vars.form.vars.prototype.vars.name|default('__name__') %}
-            {% set data_prototype_label = form.vars.form.vars.prototype.vars.label|default('__name__label__') %}
-            {% set widget_form_group_attr = widget_form_group_attr|merge({
-                'data-prototype': prototype_markup,
-                'data-prototype-name': data_prototype_name,
-                'data-prototype-label': data_prototype_label
-            })|merge(attr) %}
+        {% if prototype is defined %}
+            {% set child = prototype %}
+            {% set allow_delete_backup = allow_delete %}
+            {% set allow_delete = true %}
+            {% set attr = attr|merge({
+                'data-collection-counter': form.children|length,
+                'data-prototype': block('sonata_type_native_collection_widget_row'),
+                'data-prototype-name': prototype.vars.name,
+                'class': attr.class|default('') }) %}
+            {% set allow_delete = allow_delete_backup %}
         {% endif %}
-        {# Add row by default use attr.class to change#}
-        {% if 'collection' in form.vars.block_prefixes and attr.class is defined %}
-            {% set widget_form_group_attr = widget_form_group_attr|merge({'class': widget_form_group_attr.class|default('row') ~ ' ' ~ attr.class}) %}
-        {% endif %}
-        {# collection item adds class {form_id}_form-group  too #}
-        {% set widget_form_group_attr = widget_form_group_attr|merge({'id': 'collection' ~ id ~ '_form_group', 'class': widget_form_group_attr.class ~ ' collection-items ' ~ id ~ '_form_group'}) %}
-
-        <div {% for attrname,attrvalue in widget_form_group_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-        {# Add initial prototype form #}
-        {% if form.vars.value|length == 0 and prototype is defined %}
-            {% for name in prototype_names %}
-                {{ prototype_markup|replace({'__name__': name})|raw }}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            {% for child in form %}
+                {{ block('sonata_type_native_collection_widget_row') }}
             {% endfor %}
-        {% endif %}
-        {{ block('form_widget') }}
+            {{ form_rest(form) }}
         </div>
+        {% if 'collection' in form.vars.block_prefixes and widget_add_btn|default(null) and form.vars.allow_add == true %}
+            &nbsp;{{ block('form_widget_add_btn') }}
+        {% endif %}
     {% endapply %}
 {% endblock sonata_type_native_collection_widget %}
+
+{% block form_widget_add_btn %}
+    {% apply spaceless %}
+        {% if widget_add_btn|default(null) %}
+            {% set button_type = 'add' %}
+            {% set button_values = widget_add_btn %}
+            {{ block('collection_button') }}
+        {% endif %}
+    {% endapply %}
+{% endblock form_widget_add_btn %}
+
+{% block form_widget_remove_btn %}
+    {% apply spaceless %}
+
+        {% if widget_remove_btn.wrapper_div is not same as(false) %}
+            <div class="{{ widget_remove_btn.wrapper_div.class }}">
+        {% endif %}
+        {% if widget_remove_btn|default(null) %}
+            {% set button_type = 'remove' %}
+            {% set button_values = widget_remove_btn %}
+            {{ block('collection_button') }}
+        {% endif %}
+        {% if widget_remove_btn.wrapper_div is not same as(false) %}
+            </div>
+        {% endif %}
+    {% endapply %}
+{% endblock form_widget_remove_btn %}
+
+
+{% block collection_button %}
+    <a {% for attrname,attrvalue in button_values.attr %} {{attrname}}="{{attrvalue}}"{% endfor %} data-collection-{{ button_type }}-btn="{{ form.vars['id'] }}">
+    {% if button_values.icon is not null %}
+        {{ networking_bootstrap_icon(button_values.icon, button_values.icon_inverted|default(false)) }}
+    {% endif %}
+    {% if button_values.label is defined %}
+        {{ button_values.label|trans({}, button_values.translation_domain|default(translation_domain)) }}
+    {% endif %}
+    </a>
+{% endblock collection_button %}
+
+{%- block form_widget_compound -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- if form is rootform -%}
+            {{ form_errors(form) }}
+        {%- endif -%}
+        {{- block('form_rows') -}}
+        {{- form_rest(form) -}}
+        {% if 'collection' in form.parent.vars.block_prefixes and form.parent.vars.allow_delete == true %}
+            &nbsp;{{ block('form_widget_remove_btn') }}
+        {% endif %}
+    </div>
+{%- endblock form_widget_compound -%}
 
 

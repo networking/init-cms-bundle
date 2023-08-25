@@ -24,6 +24,7 @@ module.exports = {
         mediaAdmin: './assets/cms/media-admin.js',
         menuAdmin: './assets/cms/menu-admin.js',
         pageAdmin: './assets/cms/page-admin.js',
+        formAdmin: './assets/cms/form-admin.js',
         imageEditor: './assets/js/filebot.js',
 
         // networking_initcms: [

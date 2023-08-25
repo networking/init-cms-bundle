@@ -106,7 +106,7 @@ class LayoutBlockController extends CRUDController
         $layoutBlock->setPage($page);
 
         if ($request->isMethod('POST')) {
-            try {
+//            try {
                 // persist if the form was valid and if in preview mode the preview was approved
                 if ((!$this->isInPreviewMode($request) || $this->isPreviewApproved($request))) {
                     $this->admin->create($layoutBlock);
@@ -125,12 +125,12 @@ class LayoutBlockController extends CRUDController
                     }
                 }
 
-            } catch (ModelManagerException $e) {
-                return $this->json(
-                    ['status' => 'error', 'message' => $e->getMessage()],
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
+//            } catch (ModelManagerException $e) {
+//                return $this->json(
+//                    ['status' => 'error', 'message' => $e->getMessage()],
+//                    Response::HTTP_BAD_REQUEST
+//                );
+//            }
         }
 
 

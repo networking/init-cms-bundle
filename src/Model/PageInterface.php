@@ -23,6 +23,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  */
 interface PageInterface extends
     \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
+    IgnoreRevertInterface,
     \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
 {
     public const PATH_SEPARATOR = '/';
@@ -88,9 +89,9 @@ interface PageInterface extends
     public function setParents(array $parents): self;
 
     /**
-     * @return Collection<int, self>
+     * @return array<int, PageInterface>
      */
-    public function getParents(): array;
+    public function getParents();
 
     public function addChildren(PageInterface $children): self;
 
@@ -135,7 +136,7 @@ interface PageInterface extends
 
     public function removeLayoutBlock(LayoutBlockInterface $layoutBlock): self;
 
-    public function setLayoutBlock($layoutBlocks): self;
+    public function setLayoutBlocks($layoutBlocks): self;
 
     public function orderLayoutBlocks(): void;
 
@@ -143,7 +144,7 @@ interface PageInterface extends
      * @param string|null $zone
      * @return Collection<int, LayoutBlockInterface>
      */
-    public function getLayoutBlock(?string $zone): Collection;
+    public function getLayoutBlocks(?string $zone): Collection|array;
 
     public function setMenuItem(MenuItemInterface $menuItem): self;
 
@@ -166,8 +167,6 @@ interface PageInterface extends
     public function getLocale(): ?string;
 
     public function setOriginals(array $originals): self;
-
-    public function setOriginal(PageInterface $page): self;
 
     public function getOriginals(): Collection|array;
 

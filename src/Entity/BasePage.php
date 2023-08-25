@@ -25,6 +25,7 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 
 /**
@@ -79,25 +80,28 @@ abstract class BasePage implements PageInterface
 
     protected PageInterface|int|null $parent = null;
 
+    /**
+    * @var array<int, PageInterface>
+     */
+    #[Ignore]
     protected array $parents = [];
     /**
      * @var Collection<int, PageInterface>
      */
+    #[Ignore]
     protected Collection|array $children;
 
     protected array $allChildren = [];
 
     protected ?PageInterface $alias = null;
 
-    /**
-     * @var Collection<int, LayoutBlockInterface>
-     */
-    protected Collection $layoutBlock;
+    protected ?Collection $layoutBlocks = null;
 
     /**
      * @var Collection<int, MenuItemInterface>
      */
-    protected Collection $menuItem;
+    #[Ignore]
+    protected ?Collection $menuItem = null;
 
     #[ORM\Column(type: 'boolean')]
     protected bool $isHome = false;
@@ -129,16 +133,17 @@ abstract class BasePage implements PageInterface
      */
     protected Collection|array $originals;
 
+    #[Ignore]
     protected ?ContentRouteInterface $contentRoute = null;
 
     /**
      * @var Collection<int, PageSnapshotInterface>
      */
-    protected Collection $snapshots;
+    #[Ignore]
+    protected ?Collection $snapshots = null;
 
+    #[Ignore]
     protected string $snapshotClassType = PageSnapshot::class;
-
-    protected ?string $oldTitle = null;
 
     protected ?MediaInterface $socialMediaImage = null;
 
@@ -147,7 +152,7 @@ abstract class BasePage implements PageInterface
     {
         $this->translations = new ArrayCollection();
         $this->originals = new ArrayCollection();
-        $this->layoutBlock = new ArrayCollection();
+        $this->layoutBlocks = new ArrayCollection();
         $this->menuItem = new ArrayCollection();
         $this->children = new ArrayCollection();
 
@@ -238,6 +243,8 @@ abstract class BasePage implements PageInterface
     public function setPath(?string $path): self
     {
         $this->path = $path;
+
+        return $this;
     }
 
     public function getPath(): ?string
@@ -529,20 +536,20 @@ abstract class BasePage implements PageInterface
     public function addLayoutBlock(LayoutBlockInterface $layoutBlock): self
     {
         $layoutBlock->setPage($this);
-        $this->layoutBlock->add($layoutBlock);
+        $this->layoutBlocks->add($layoutBlock);
 
         return $this;
     }
 
     public function removeLayoutBlock(LayoutBlockInterface $layoutBlock): self
     {
-        $this->layoutBlock->removeElement($layoutBlock);
+        $this->layoutBlocks->removeElement($layoutBlock);
 
         return $this;
     }
 
 
-    public function setLayoutBlock($layoutBlocks): self
+    public function setLayoutBlocks($layoutBlocks): self
     {
         if (gettype($layoutBlocks) == 'array') {
             $layoutBlocks = new ArrayCollection($layoutBlocks);
@@ -552,19 +559,19 @@ abstract class BasePage implements PageInterface
             $block->setPage($this);
         }
 
-        $this->layoutBlock = $layoutBlocks;
+        $this->layoutBlocks = $layoutBlocks;
 
         return $this;
     }
 
     public function orderLayoutBlocks(): void
     {
-        $layoutBlocks = $this->layoutBlock->toArray();
+        $layoutBlocks = $this->layoutBlocks->toArray();
 
         usort($layoutBlocks, [__CLASS__, 'compareSortOrder']);
-        $this->layoutBlock = new ArrayCollection();
+        $this->layoutBlocks = new ArrayCollection();
         foreach ($layoutBlocks as $layoutBlock) {
-            $this->layoutBlock->add($layoutBlock);
+            $this->layoutBlocks->add($layoutBlock);
         }
     }
 
@@ -576,18 +583,22 @@ abstract class BasePage implements PageInterface
     }
 
 
-    public function getLayoutBlock(?string $zone = null, $includingInactive = false): Collection
+    public function getLayoutBlocks(?string $zone = null, $includingInactive = false): Collection|array
     {
         if (!is_null($zone)) {
-            return $this->layoutBlock->filter(
-                function (LayoutBlockInterface $layoutBlock) use ($zone, $includingInactive) {
+            return $this->layoutBlocks->filter(
+                function (?LayoutBlockInterface $layoutBlock) use ($zone, $includingInactive) {
+
+                    if(is_null($layoutBlock)){
+                        return false;
+                    }
 
                     return $layoutBlock->getZone() == $zone && ($includingInactive || $layoutBlock->isActive());
                 }
             );
         }
 
-        return $this->layoutBlock;
+        return $this->layoutBlocks;
     }
 
     public function setMenuItem(MenuItemInterface $menuItem): self
@@ -673,8 +684,11 @@ abstract class BasePage implements PageInterface
         return $this;
     }
 
-    public function setOriginal(PageInterface $page): self
+    public function setOriginal(?PageInterface $page): self
     {
+        if(!$page){
+            return $this;
+        }
         $this->originals->add($page);
 
         return $this;
@@ -683,6 +697,11 @@ abstract class BasePage implements PageInterface
     public function getOriginals(): Collection|array
     {
         return $this->originals;
+    }
+
+    public function getOriginal(): ?PageInterface
+    {
+        return $this->originals->first()?:null;
     }
 
     public function isDirectTranslation(PageInterface $page): bool
@@ -696,6 +715,17 @@ abstract class BasePage implements PageInterface
         }
 
         return false;
+    }
+
+    public function getDirectTranslation(): ?PageInterface
+    {
+        foreach ($this->getAllTranslations() as $translation) {
+            if ($translation->isDirectTranslation($this)) {
+                return $translation;
+            }
+        }
+
+        return null;
     }
 
     public function getDirectTranslationFor(PageInterface $page): ?PageInterface
@@ -712,7 +742,7 @@ abstract class BasePage implements PageInterface
     public function addTranslation(PageInterface $page): self
     {
         $this->translations->add($page);
-        $page->setOriginal($this);
+        $page->getOriginals()->add($this);
 
         return $this;
     }
@@ -1037,9 +1067,15 @@ abstract class BasePage implements PageInterface
         $translations = [];
 
         foreach ($this->translations as $translation) {
-            $translations[$translation->getLocale()] = $translation->getId();
+            $translations[] = [
+                'locale' => $translation->getLocale(),
+                'id' => $translation->getId(),
+                'contentRoute' => [
+                    'id' => $translation->getContentRoute()->getId(),
+                    'path' => $translation->getContentRoute()->getPath(),
+                ]
+            ];
         }
-
         return $translations;
     }
 
@@ -1048,7 +1084,7 @@ abstract class BasePage implements PageInterface
         $originals = [];
 
         foreach ($this->originals as $original) {
-            $originals[$original->getLocale()] = $original->getId();
+            $originals[] = $original->getId();
         }
 
         return $originals;
@@ -1081,7 +1117,6 @@ abstract class BasePage implements PageInterface
 
     public function restoreFromPublished(PageInterface $publishedPage): void
     {
-        $this->id = $publishedPage->getId();
         $this->createdAt = $publishedPage->getCreatedAt();
         $this->updatedAt = $publishedPage->getUpdatedAt();
         $this->pageName = $publishedPage->getPageName();

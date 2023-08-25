@@ -12,18 +12,31 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Helper;
 
-use JMS\Serializer\SerializerInterface;
+//use JMS\Serializer\SerializerInterface;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManagerInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
+use Networking\InitCmsBundle\Serializer\LayoutBlockNormalizer;
 use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use Sonata\AdminBundle\Exception\NoValueException;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -220,19 +233,65 @@ class PageHelper
      */
     public function makePageSnapshot(PageInterface $page)
     {
-//        foreach ($page->getLayoutBlock() as $layoutBlock) {
-//            $layoutBlockContent = $this->registry->getManagerForClass($layoutBlock->getClassType())->getRepository($layoutBlock->getClassType())->find(
-//                $layoutBlock->getObjectId()
-//            );
-//            $layoutBlock->takeSnapshot($this->serializer->serialize($layoutBlockContent, 'json'));
-//        }
-
 
         $pageSnapshotClass = $this->pageSnapshotManager->getClassName();
 
         /** @var \Networking\InitCmsBundle\Model\PageSnapshotInterface $pageSnapshot */
         $pageSnapshot = new $pageSnapshotClass($page);
-        $pageSnapshot->setVersionedData($this->serializer->serialize($page, 'json'))
+
+
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (object $object, string $format, array $context): int {
+                return $object->getId();
+            },
+            AbstractNormalizer::CALLBACKS => [
+                'translations' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertTranslationsToIntegerArray():[] ;
+                },
+                'originals' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertOriginalsToIntegerArray():[];
+                },
+                'parent' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): ?int {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertParentToInteger():null;
+                },
+                'alias' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []): ?int {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertAliasToInteger():null;
+                },
+                'parents' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertParentsToArray():[];
+                },
+                'children' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertChildrenToIntegerArray():[];
+                },
+                'original' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): ?int {
+                    return $outerObject instanceof PageInterface ? $outerObject->getId():null;
+                },
+            ],
+            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                'allChildren',
+                'allTranslations',
+                'snapshots',
+                'snapshot',
+                'route',
+                'routes',
+                'oldTitle',
+                'tags',
+                'contentRoute',
+                'menuItem',
+                'oringal',
+                'directTranslation',
+                '__initializer__',
+                '__cloner__',
+                '__isInitialized__'
+            ],
+            AbstractNormalizer::REQUIRE_ALL_PROPERTIES => false,
+            AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => false,
+        ];
+
+        $data = $this->serializer->serialize($page, 'json', $defaultContext);
+
+
+        $pageSnapshot->setVersionedData($data)
             ->setPage($page);
 
         if ($oldPageSnapshot = $page->getSnapshot()) {
@@ -272,12 +331,42 @@ class PageHelper
      */
     public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $unserializeTranslations = true)
     {
-        $context = new PageSnapshotDeserializationContext();
-        $context->setDeserializeTranslations($unserializeTranslations);
 
         if(str_contains($pageSnapshot->getResourceName(), 'Proxies\__CG__\\')){
             $pageSnapshot->setResourceName(str_replace('Proxies\__CG__\\', '', $pageSnapshot->getResourceName()));
         }
+
+        $pageManager = $this->pageManager;
+        $context = [
+            AbstractNormalizer::CALLBACKS => [
+                'translations' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): array {
+                    $translations = [];
+                    foreach ($innerObject as $key => $page){
+                            $translations[$key] = $pageManager->find(
+                                $page->getId()
+                            );
+                        $page->setTranslations($translations);
+                    }
+                    return  $translations ;
+                },
+                'original' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): ?PageInterface {
+                    return $innerObject ? $pageManager->find(
+                        $innerObject
+                    ):null;
+                },
+                'alias' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): ?PageInterface {
+                    return $innerObject ? $pageManager->find(
+                        $innerObject
+                    ):null;
+                },
+
+            ],
+            AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true,
+        ];
+        return $this->serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json', $context);
+
+        $context = new PageSnapshotDeserializationContext();
+        $context->setDeserializeTranslations($unserializeTranslations);
 
         return $this->serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json', $context);
     }
@@ -303,7 +392,7 @@ class PageHelper
         $pageCopy->setIsHome($page->getIsHome());
         $pageCopy->setLocale($locale);
         $pageCopy->setTemplateName($page->getTemplateName());
-        $pageCopy->setOriginal($page);
+        $pageCopy->getOriginals()->add($page);
 
         $layoutBlocks = $page->getLayoutBlock();
 	    $om = $this->registry->getManager();

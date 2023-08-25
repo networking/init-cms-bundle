@@ -363,26 +363,26 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
         $collector = DoctrineCollector::getInstance();
 
-        $collector->addAssociation(
-            $config['class']['page'],
-            'mapManyToMany',
-            OptionsBuilder::createManyToMany('translations', $config['class']['page'])
-                ->mappedBy('originals')
-        );
-
-
-        $collector->addAssociation(
-            $config['class']['page'],
-            'mapManyToMany',
-            OptionsBuilder::createManyToMany('originals', $config['class']['page'])
-                ->inversedBy('translations')
-                ->cascade(['persist'])
-                ->addJoinTable(
-                    'page_translation',
-                    ['name' => 'translation_id', 'referencedColumnName' => 'id',],
-                    ['name' => 'original_id', 'referencedColumnName' => 'id',]
-                )
-        );
+//        $collector->addAssociation(
+//            $config['class']['page'],
+//            'mapManyToMany',
+//            OptionsBuilder::createManyToMany('translations', $config['class']['page'])
+//                ->mappedBy('originals')
+//        );
+//
+//
+//        $collector->addAssociation(
+//            $config['class']['page'],
+//            'mapManyToMany',
+//            OptionsBuilder::createManyToMany('originals', $config['class']['page'])
+//                ->inversedBy('translations')
+//                ->cascade(['persist'])
+//                ->addJoinTable(
+//                    'page_translation',
+//                    ['name' => 'translation_id', 'referencedColumnName' => 'id',],
+//                    ['name' => 'original_id', 'referencedColumnName' => 'id',]
+//                )
+//        );
 
         //LayoutBlock
 
@@ -390,7 +390,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             $baseNameSpace.'\\LayoutBlock',
             'mapManyToOne',
             OptionsBuilder::createManyToOne('page', $config['class']['page'])
-                ->inversedBy('layoutBlock')
+                ->inversedBy('layoutBlocks')
                 ->cascade(['persist', 'detach'])
                 ->addJoin([
                     'name' => 'page_id',

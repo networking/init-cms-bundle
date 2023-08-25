@@ -107,7 +107,7 @@ class AdminMenuBuilder extends MenuBuilder
 
         if ($this->isLoggedIn) {
             $editPath = false;
-            $menu->setChildrenAttribute('class', $class.' pull-right');
+            $menu->setChildrenAttribute('class', $class);
 
             $dashboardUrl = $this->router->generate('sonata_admin_dashboard');
 
@@ -310,6 +310,228 @@ class AdminMenuBuilder extends MenuBuilder
         return $menu;
     }
 
+    public function createFrontendAdminMenu(): bool|\Knp\Menu\ItemInterface
+    {
+
+        // Default to homepage
+        $liveRoute = null;
+
+        $livePath = null;
+
+        $draftRoute = null;
+
+        $draftPath = null;
+
+        $menu = $this->factory->createItem('root');
+
+        $sonataAdmin = null;
+
+        $entity = null;
+
+        $defaultHome = $this->router->generate('networking_init_cms_default');
+
+        $adminLocale = $this->request->getSession()->get('admin/_locale');
+        $class = 'navbar-nav me-3';
+
+        if ($this->isLoggedIn) {
+            $editPath = false;
+            $menu->setChildrenAttribute('class', $class);
+
+            $dashboardUrl = $this->router->generate('sonata_admin_dashboard');
+
+            if ($sonataAdminParam = $this->request->get('_sonata_admin')) {
+                $possibleAdmins = explode('|', (string) $sonataAdminParam);
+
+                foreach ($possibleAdmins as $adminCode) {
+                    // we are in the admin area
+                    $sonataAdmin = $this->pool->getAdminByAdminCode($adminCode);
+                    if ($id = $this->request->get('id')) {
+                        $entity = $sonataAdmin->getObject($id);
+                    }
+                }
+            } else {
+                // we are in the frontend
+                $entity = $this->request->get('_content');
+            }
+
+            if ($entity instanceof VersionableInterface) {
+                if ($snapShot = $entity->getSnapshot()) {
+                    $liveRoute = $this->router->generate(
+                        RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                        [
+                            RouteObjectInterface::ROUTE_OBJECT => $this->getRoute(
+                                $snapShot->getRoute()
+                            ),
+                        ]
+                    );
+                }
+
+                $draftRoute = $this->router->generate(
+                    RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                    [
+                        RouteObjectInterface::ROUTE_OBJECT => $entity->getRoute()
+                    ]
+                );
+
+                $pageAdmin = $this->pool->getAdminByAdminCode(
+                    'networking_init_cms.admin.page'
+                );
+                $editPath = $pageAdmin->generateObjectUrl('edit', $entity);
+
+                $language = $entity->getRoute()->getLocale();
+            } elseif ($entity instanceof ResourceVersionInterface) {
+                $liveRoute = $this->router->generate(
+                    $this->getRoute($entity->getRoute())
+                );
+                $draftRoute = $this->router->generate(
+                    $this->getRoute($entity->getPage()->getRoute())
+                );
+
+                $pageAdmin = $this->pool->getAdminByAdminCode(
+                    'networking_init_cms.admin.page'
+                );
+                $editPath = $pageAdmin->generateObjectUrl(
+                    'edit',
+                    $entity->getPage()
+                );
+
+                $language = $entity->getRoute()->getLocale();
+            }
+
+            if (!isset($language)) {
+                $language = $this->request->getLocale();
+            }
+
+            if ($draftRoute) {
+                $draftPath = $this->router->generate(
+                    'networking_init_view_draft',
+                    [
+                        'locale' => $language,
+                        'path' => base64_encode($draftRoute),
+                    ]
+                );
+            } else {
+                $draftPath = $this->router->generate(
+                    'networking_init_view_draft',
+                    [
+                        'locale' => $language,
+                        'path' => base64_encode($this->request->getBaseUrl()),
+                    ]
+                );
+            }
+            if ($liveRoute) {
+                $livePath = $this->router->generate(
+                    'networking_init_view_live',
+                    ['locale' => $language, 'path' => base64_encode($liveRoute)]
+                );
+            } else {
+                $livePath = $this->router->generate(
+                    'networking_init_view_live',
+                    [
+                        'locale' => $language,
+                        'path' => base64_encode($this->request->getBaseUrl()),
+                    ]
+                );
+            }
+
+            $session = $this->request->getSession();
+            $lastActionUrl = $dashboardUrl;
+            $lastActions = $session->get('_networking_initcms_admin_tracker');
+
+            if ($lastActions) {
+                $lastActionArray = json_decode((string) $lastActions, null, 512, JSON_THROW_ON_ERROR);
+                if (is_countable($lastActionArray) ? count($lastActionArray) : 0) {
+                    if ($this->request->get('_route')
+                        == 'sonata_admin_dashboard'
+                        || $sonataAdmin
+                    ) {
+                        $lastAction = next($lastActionArray);
+                    } else {
+                        $lastAction = reset($lastActionArray);
+                    }
+                    if ($lastAction) {
+                        $lastActionUrl = $lastAction->url;
+                    }
+                }
+            }
+
+            if ($editPath && !$sonataAdmin) {
+                $menu->addChild(
+                    'Edit',
+                    [
+                        'label' => $this->translator->trans(
+                            'link_action_edit',
+                            [],
+                            'SonataAdminBundle',
+                            $adminLocale
+                        ),
+                        'uri' => $editPath,
+                    ]
+                );
+                $this->addIcon(
+                    $menu['Edit'],
+                    ['icon' => 'edit', 'append' => false]
+                );
+            }
+            if (!$sonataAdmin
+                && $this->request->get('_route') != 'sonata_admin_dashboard'
+            ) {
+                $menu->addChild('Admin', ['uri' => $lastActionUrl]);
+            }
+
+            $firstItemStatus = !$sonataAdmin ? $this->request->getSession()
+                ->get('_viewStatus') : '';
+            $dropdown = $menu->addChild(
+                'link.website_'.$firstItemStatus,
+                [
+                    'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                ]
+            );
+
+
+            if ($draftPath) {
+                $dropdown->addChild(
+                    'view_website.status_draft',
+                    [
+                        'uri' => $draftPath,
+                        'linkAttributes' => ['class' => 'text-warning'],
+                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                    ]
+                );
+            }
+            if ($livePath) {
+                $dropdown->addChild(
+                    'view_website.status_published',
+                    [
+                        'uri' => $livePath,
+                        'linkAttributes' => ['class' => 'text-success'],
+                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                    ]
+                );
+            }
+
+            if (!$draftPath && !$livePath) {
+                $dropdown->addChild(
+                    'view_website.status_draft',
+                    [
+                        'uri' => $defaultHome,
+                        'linkAttributes' => ['class' => 'color-draft'],
+                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                    ]
+                );
+                $dropdown->addChild(
+                    'view_website.status_published',
+                    [
+                        'uri' => $defaultHome,
+                        'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
+                    ]
+                );
+            }
+        }
+
+        return $menu;
+    }
+
 
     /**
      * @param $item
@@ -319,7 +541,7 @@ class AdminMenuBuilder extends MenuBuilder
      */
     protected function addIcon($item, $icon)
     {
-        $myicon = ' <i class="far fa-"'.$icon['icon'].'"></i>';
+        $myicon = ' <i class="far fa-'.$icon['icon'].'"></i>';
         if (!isset($icon['append']) || $icon['append'] === true) {
             $label = $item->getLabel().' '.$myicon;
         } else {

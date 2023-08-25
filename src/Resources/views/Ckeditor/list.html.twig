@@ -301,6 +301,7 @@ file that was distributed with this source code.
 {% block before_body_end %}
     {{ parent() }}
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/jstree/jstree.bundle.js') }}"></script>
     <script>
         KTUtil.onDOMContentLoaded(() => {
             console.log('loaded')

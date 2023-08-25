@@ -1024,7 +1024,7 @@ class PageAdminController extends CRUDController
 
         if ($request->getMethod() == 'POST') {
             $serializer = $this->pageHelper->getSerializer();
-            $this->pageManager->revertToPublished(
+            $this->pageManager->cancelDraft(
                 $draftPage,
                 $serializer
             );
@@ -1032,7 +1032,7 @@ class PageAdminController extends CRUDController
 
             return $this->renderJson(
                 [
-                    'redirect' => $this->admin->generateObjectUrl('edit', $publishedPage),
+                    'redirect' => $this->admin->generateObjectUrl('edit', $draftPage),
                 ]
             );
 
