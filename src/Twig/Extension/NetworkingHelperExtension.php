@@ -920,7 +920,7 @@ class NetworkingHelperExtension extends AbstractExtension
         }
         $openTags = [];
         if ($html) {
-            $text = html_entity_decode($text, null, $env->getCharset());
+            $text = html_entity_decode($text, ENT_QUOTES, $env->getCharset());
             if (mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
             }
