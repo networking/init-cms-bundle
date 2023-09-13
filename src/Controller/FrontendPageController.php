@@ -571,7 +571,7 @@ class FrontendPageController extends AbstractController
      */
     public function getActiveStart($page)
     {
-        if (!property_exists($page, 'active_from')) {
+        if (!property_exists($page, 'active_from')  || $page->active_from === null) {
             return new \DateTime();
         }
 
@@ -585,7 +585,7 @@ class FrontendPageController extends AbstractController
      */
     public function getActiveEnd($page)
     {
-        if (!property_exists($page, 'active_to')) {
+        if (!property_exists($page, 'active_to') || $page->active_to === null) {
             return new \DateTime();
         }
 
