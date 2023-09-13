@@ -39,7 +39,7 @@ class RequestListener
     /**
      * @param EngineInterface|Environment $templating
      */
-    public function __construct(Helper $helper, TokenStorageInterface $tokenStorage, private readonly Environment $twig = null)
+    public function __construct(Helper $helper, TokenStorageInterface $tokenStorage, private readonly Environment $twig)
     {
         $this->helper = $helper;
         $this->tokenStorage = $tokenStorage;
