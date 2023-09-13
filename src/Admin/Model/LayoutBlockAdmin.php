@@ -159,7 +159,7 @@ abstract class LayoutBlockAdmin extends BaseAdmin
                 $this->autoPageDraft($object->getPage());
             } catch (ModelManagerException) {
                 throw new ModelManagerException(
-                    $this->trans('Cannot create content, object is invalid', [], 'validators')
+                    $this->getTranslator()->trans('Cannot create content, object is invalid', [], 'validators')
                 );
             }
         }
