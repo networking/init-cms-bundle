@@ -190,14 +190,14 @@ class LocaleListener
         if (is_array($locales)) {
             foreach ($locales as $locale) {
                 $match = $this->matchLocaleInAvailableLanguages($locale);
-                if (strlen($match) > 0) {
+                if ($match && strlen($match) > 0) {
                     return $match;
                 }
             }
         } // check if locale matches in available languages
         else {
             $match = $this->matchLocaleInAvailableLanguages($locales);
-            if (strlen($match) > 0) {
+            if ($match && strlen($match) > 0) {
                 return $match;
             }
         }
