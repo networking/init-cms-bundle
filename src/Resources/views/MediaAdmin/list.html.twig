@@ -72,7 +72,6 @@ file that was distributed with this source code.
 
 
             {% if galleryListMode %}
-
                 <div class="modal-header">
                     <div class="modal-title">
                         {{ admin.label|trans({}, admin.translationDomain) }}
@@ -389,6 +388,13 @@ file that was distributed with this source code.
         </div>
     {% else %}
      </div>
+        {% if galleryListMode and multiSelect %}
+            <div class="modal-footer">
+                <a class="btn btn-primary  confirm-select">
+                    <i class="fa fa-plus"></i> {{ 'confirm_selection'|trans({}, 'admin') }}
+                </a>
+            </div>
+        {% endif %}
 {% endif %}
 {% endblock %}
 

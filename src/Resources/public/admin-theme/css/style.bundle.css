@@ -50447,12 +50447,6 @@ body,
     color: #ffffff !important;
   }
 }
-div#item_list .media-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: move;
-}
 
 .tooltip-inner {
   max-width: 350px;

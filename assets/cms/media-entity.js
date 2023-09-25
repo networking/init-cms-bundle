@@ -116,6 +116,7 @@ class MediaEntity{
             this.removeListeners()
         }
         this.addMediaEventId = KTUtil.on(this.dialogContainer, 'form', 'submit', this.uploadMedia.bind(this));
+        this.selectMediaEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
         this.dialogContainer.querySelectorAll('[data-bs-dismiss="modal"]').forEach((element) => {
             element.addEventListener('click', (event) => {
                 event.preventDefault()
@@ -159,6 +160,7 @@ class MediaEntity{
         }
         let url = link.getAttribute('href')
 
+
         if(!url || url === '#') {
             return
         }
@@ -173,6 +175,8 @@ class MediaEntity{
         }).then(html => {
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addSearchListeners()
+            this.addUploadListeners()
+            CMSAdmin.initSpecialFields()
             this.setupTree()
         })
     }

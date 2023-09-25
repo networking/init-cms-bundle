@@ -3,12 +3,12 @@
     {% set previewLink = false %}
     {% if object.width is defined and object.width %}
         {% if object.providerName == 'sonata.media.provider.youtube' %}
-            {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
+            {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=0{% endset %}
             {% set previewType = 'iframe' %}
             {% set iframeWidth = '600px' %}
             {% set iframeHeight = '300px' %}
         {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
-            {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
+            {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=0{% endset %}
             {% set previewType = 'iframe' %}
             {% set iframeWidth = '600px' %}
             {% set iframeHeight = '300px' %}
@@ -25,7 +25,7 @@
         {% set iframeHeight = '989px' %}
     {% endif %}
     <div class="media-box" draggable="true" data-object-id="{{ object.id }}" ondragstart="dragstart_handler(event)" ondragend="dragEnd(event)">
-        <div class="card card-custom overlay h-100">
+        <div class="card card-custom overlay h-100 {% if object.id in selected %}overlay-block{% endif %}">
             <div class="card-body p-0 card-body p-0">
                 <div class="overlay-wrapper d-flex flex-center h-100">
                     {% if object.width is defined and object.width %}
@@ -61,13 +61,13 @@
                     <div class="d-flex flex-column flex-center">
                         <div class="mb-1">
                             {% if app.request.isxmlhttprequest and galleryListMode %}
-                                <a class="select-media fs-4 fw-semibold text-white text-hover-primary"
+                                <a class="select-media fs-6 fw-semibold text-white text-hover-primary"
                                    href="#" data-object-id="{{ object.id }}"
                                    data-toggle="tooltip"
                                    title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
                             {% else %}
                                 <a href="{{ admin.generateUrl('edit', {'id' : object.id}) }}"
-                                   class="fs-4 fw-semibold text-white text-hover-primary"
+                                   class="fs-6 fw-semibold text-white text-hover-primary"
                                    data-toggle="tooltip"
                                    title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
                             {% endif %}
@@ -97,6 +97,7 @@
                             {% endif %}
 
 
+
                                 {% if app.request.isxmlhttprequest and not show_actions %}
                                     <a class="select-media btn btn-clean btn-icon mr-2  font-weight-bold btn-primary btn-shadow"
                                        href="#"
@@ -121,6 +122,18 @@
                                         </a>
                                     {% endif %}
                                 {% endif %}
+                            {% endif %}
+
+                            {% if multiSelect %}
+
+                                <div class="form-check form-check-custom form-check-success form-check-solid">
+                                    <input class="form-check-input" type="checkbox" value="" name="idx[]"
+                                           {% if object.id in selected %}checked{% endif %}
+                                           class="select_check_box"
+                                           data-path="{{ sonata_path(object, 'admin') }}"
+                                           data-object-id="{{ object.id }}"
+                                           value="{{ admin.id(object) }}"/>
+                                </div>
                             {% endif %}
                         </div>
                     </div>

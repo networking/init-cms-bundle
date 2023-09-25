@@ -19,7 +19,7 @@ class CollectionTypeExtension
             'label' => 'remove_item',
             'wrapper_div' => ['class' => 'form-group'],
             'horizontal_wrapper_div' => ['class' => 'col-sm-3 col-sm-offset-3'],
-            'attr' => ['class' => 'btn btn-sm btn-light-danger remove-button'],
+            'attr' => ['class' => 'btn btn-sm btn-light-danger remove-button float-end'],
             'icon' => 'fa fa-trash'
         ]
     ];
@@ -58,6 +58,7 @@ class CollectionTypeExtension
         $view->vars['widget_remove_btn'] = $options['widget_remove_btn'];
         $view->vars['prototype_names'] = $options['prototype_names'];
         $view->vars['show_legend'] = $options['show_legend'];
+        $view->vars['sortable'] = $options['sortable'];
     }
         /**
      * {@inheritdoc}
@@ -71,6 +72,7 @@ class CollectionTypeExtension
             'widget_remove_btn' => self::DEFAULTS['widget_remove_btn'],
             'show_legend' => false,
             'prototype_names' => [],
+            'sortable' => false,
         ]);
 
 

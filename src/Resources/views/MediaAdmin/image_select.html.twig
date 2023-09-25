@@ -1,0 +1,229 @@
+{#
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+{% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
+
+
+{% form_theme form '@NetworkingInitCms/Form/form_admin_fields.html.twig' %}
+{% set active_tab = app.request.get('context') %}
+
+{% block preview %}
+{% endblock %}
+
+{% block actions %}
+{% endblock %}
+
+{% block list_filters %}
+    {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
+    {% if datagrid.filters %}
+        <form action="{{ path('admin_networking_initcms_media_gallery_select', app.request.query.all) }}" method="GET"
+              class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters">
+
+            <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
+            {% if persistent_parameters.provider is defined %}
+                <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>
+            {% endif %}
+            <input type="hidden" name="active_tab" value="{{ name }}"/>
+
+            {% set filter_main = '' %}
+            {% set filter_hidden = '' %}
+            {% set showHiddenFilters = 0 %}
+            {% for filter in datagrid.filters %}
+
+                {% set filterVisible = filter.options['show_filter'] is same as(true) or filter.options['show_filter'] is null %}
+
+                {% if filter.options.hidden is not defined  or (filter.options.hidden == false) %}
+                    {% set filter_main %}
+                        {{ filter_main }}
+                        <div class="form-group" {{ filterVisible ? '': 'style="display:none"' }}>
+
+                            {% if filter.label %}
+                                <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
+                            {% endif %}
+                            <div class="form-inline col-md-9 {% if not filter.label %}col-md-offset-3{% endif %}">
+                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium  advanced-filter' }}
+                                ) }}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
+                                ) }}
+                            </div>
+                        </div>
+                    {% endset %}
+                {% else %}
+                    {% if filter.isActive %}
+                        {% set showHiddenFilters = 1 %}
+                    {% endif %}
+                    {% set filter_hidden %}
+                        {{ filter_hidden }}
+                        <div class="form-group" {{ filterVisible ? '':'style="display:none"' }}>
+                            {% if filter.label %}
+                                <label class="control-label col-md-3 filter {{ filter.isActive ? 'active' : 'inactive' }}"> {{ filter.label|trans({}, admin.translationDomain) }}</label>
+                            {% endif %}
+                            <div class="form-inline col-md-9 {% if not filter.label %}col-md-offset-3{% endif %}">
+                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':{'class': 'input-medium  advanced-filter' }}
+                                ) }}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'class': 'input-medium' }}
+                                ) }}
+                            </div>
+                        </div>
+                    {% endset %}
+                {% endif %}
+            {% endfor %}
+
+            {% set label = admin.label|trans({}, admin.translationDomain) %}
+            <div>
+                <div>
+                    <fieldset>
+                        <h4 class="filter_legend">
+                            <small data-toggle="advanced-filter">{{ 'info.filter'|trans({'%admin_label%':label }, 'NetworkingInitCmsBundle') }}</small>
+                        </h4>
+
+                        <div class="filter_container row">
+                            <div class="col-md-10">
+                                {{ filter_main }}
+                                <input type="hidden" name="filter[_page]" id="filter__page" value="1"/>
+                                {% set foo = form.children['_page'].setRendered() %}
+                                <div id="hidden_filters"
+                                     class="collapse  {% if showHiddenFilters == 1 %}in{% endif %}">
+                                    {% for paramKey, paramValue in admin.persistentParameters %}
+                                        <input type="hidden" name="{{ paramKey }}" value="{{ paramValue }}"/>
+                                    {% endfor %}
+                                    {% if filter_hidden != '' %}
+                                        {# add div with hidden / show function #}
+                                        {{ filter_hidden }}
+                                    {% endif %}
+                                    {% set foo = form.children['_page'].setRendered() %}
+                                </div>
+                                <div>
+                                    <input type="submit" class="btn btn-default btn-sm"
+                                           value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                                    {% if not app.request.isXmlHttpRequest %}
+                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                                           class="link-underlined">
+                                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                    {% endif %}
+                                    {% if filter_hidden %}
+                                        <a data-toggle="collapse" data-target="#hidden_filters"
+                                           id="filter_toggle"
+                                           class="filter-close cursor-pointer">
+                                            {{ 'link.show_more_filters'|trans({}, 'NetworkingInitCmsBundle') }}
+                                        </a>
+                                    {% endif %}
+                                    {{ form_rest(form) }}
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="clearfix">&nbsp;</div>
+            </div>
+        </form>
+    {% endif %}
+    <ul class="nav menu-tabs nav-tabs">
+        {% if persistent_parameters.context %}
+            <li class="active">
+                <a href="{{ path('admin_networking_initcms_media_gallery_select', app.request.query.all|merge({'context' : persistent_parameters.context})) }}">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</a>
+            </li>
+        {% else %}
+            {% for name, context in media_pool.contexts %}
+                <li {% if name == persistent_parameters.context %}class="active"{% endif %}>
+                    <a href="{{ path('gallery_select',  app.request.query.all|merge({'context' : name, 'provider' : null}) ) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+{% endblock %}
+
+{% block list_table %}
+        {# provider #}
+    <div class="clearfix">&nbsp;</div>
+    <div class="clearfix"><p>&nbsp;</p></div>
+
+    <div class="row">
+        {% if admin.showTagTree %}
+            <div class="col-md-3 col-xs-12">
+                <div id="tagsContainer">
+                    {% include "@NetworkingInitCms/TagAdmin/tags.html.twig" with {'noSort': app.request.isXmlHttpRequest, 'tags': tags, 'lastItem': lastItem, 'tagAdmin': tagAdmin} %}
+                </div>
+            </div>
+        {% endif %}
+        <div id="item_list" class="col-md-{{ admin.showTagTree?'9':'12' }} col-xs-12 text-center">
+            {% if datagrid.results|length > 0 %}
+                {% include "@NetworkingInitCms/MediaAdmin/image_select_items.html.twig" %}
+            {% else %}
+                <p class="notice">
+                    {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+    <script type="text/javascript">
+        function refreshList(filters) {
+            if (!filters) {
+                filters = {}
+            }
+            $.get(
+                "{{ path('admin_networking_initcms_media_gallery_select_refresh', app.request.query.all)|raw }}",
+                filters,
+                function (xhr) {
+                    $('#item_list').html(xhr);
+                    $(".modal-body").animate({scrollTop: $('#item_list').scrollTop()}, "slow");
+                }
+            );
+        }
+        Admin.add_filters();
+
+        var tagContainer = $('#tagsContainer');
+        {% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
+        var tagDialog;
+        var lastLink = $('{{ selected }}');
+
+        tagContainer.on('click', '.tag_link', function (e) {
+            e.preventDefault();
+            if (lastLink) {
+                lastLink.parent().removeClass('info');
+                lastLink.siblings('a.dialog-link').hide();
+            }
+            var link = $(e.target);
+            var tagId = link.data('pk');
+            link.parent().addClass('info');
+            if (link.parent().siblings('ul').children().length < 1) {
+                link.siblings('a.dialog-link').show();
+            }
+            var listItem = link.closest('li');
+            if ($(listItem).hasClass('mjs-nestedSortable-collapsed')) {
+                link.siblings('i').trigger('click');
+            }
+
+            lastLink = link;
+            refreshList({'filter': {'tags': {'value': tagId}}});
+        });
+
+        tagContainer.on('click', '.show_all_media', function (e) {
+            e.preventDefault();
+            if (lastLink) {
+                lastLink.parent().removeClass('info');
+                lastLink.siblings('a.dialog-link').hide();
+            }
+            // $('.media-box').show();
+            refreshList({'filter': {'_page': 1}});
+            var link = $(e.target);
+            link.parent().addClass('info');
+            lastLink = link;
+        });
+
+        tagContainer.on('click', 'i.tag_folder', function (e) {
+            var target = $(e.target);
+            target.closest('li').toggleClass('mjs-nestedSortable-collapsed').toggleClass('mjs-nestedSortable-expanded');
+            target.toggleClass('glyphicon-folder-close').toggleClass('glyphicon-folder-open');
+        });
+
+    </script>
+{% endblock %}
+
+

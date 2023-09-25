@@ -1,0 +1,81 @@
+
+
+{% set random = date().timestamp %}
+
+{% for object in datagrid.results %}
+    {% set previewLink = false %}
+    {% if object.width is defined and object.width %}
+        {% if object.providerName == 'sonata.media.provider.youtube' %}
+            {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
+            {% set previewType = 'iframe' %}
+            {% set iframeWidth = '600px' %}
+            {% set iframeHeight = '300px' %}
+        {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
+            {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
+            {% set previewType = 'iframe' %}
+            {% set iframeWidth = '600px' %}
+            {% set iframeHeight = '300px' %}
+        {% else %}
+            {% set previewLink %}{{ sonata_path(object, 'reference') }}{% endset %}
+            {% set previewType = 'image' %}
+        {% endif %}
+    {% else %}
+        {% if object.contentType == 'application/pdf' %}
+            {% set previewLink %}{{ admin.generateUrl('pdf_preview', {'id': object.id}) }}{% endset %}
+        {% endif %}
+        {% set previewType = 'iframe' %}
+        {% set iframeWidth = '700px' %}
+        {% set iframeHeight = '989px' %}
+    {% endif %}
+    <div class="media-box" draggable="true" ondragstart="event.dataTransfer.setData('Text', '{{ object.id }}')">
+        <div class="zero-clipboard">
+            {% if previewLink %}
+                <div class="btn-clipboard btn-clipboard-left">
+                    <a href="{{ previewLink }}"
+                            {% if previewType == 'iframe' %}
+                                data-featherlight-iframe-width="{{ iframeWidth }}"
+                                data-featherlight-iframe-height="{{ iframeHeight }}"
+                            {% endif %}
+                       data-featherlight-variant="initcms-featherlight"
+                       data-featherlight="{{ previewType }}"
+                       class="image-preview-link" title="{{ object.name }}">
+                        <i class="fa fa-search-plus"></i>
+                    </a>
+                </div>
+            {% endif %}
+            <div class="btn-clipboard btn-clipboard-bottom">
+                <input type="checkbox" name="idx[]"
+                       {% if object.id in selected %}checked{% endif %}
+                       class="select_check_box"
+                       data-path="{{ sonata_path(object, 'admin') }}"
+                       data-object-id="{{ object.id }}"
+                       value="{{ admin.id(object) }}"/>
+            </div>
+        </div>
+        <div class="thumbnail context">
+            <div class="media-element">
+                {% if object.width is defined and object.width %}
+                    <img src="{{ sonata_path(object, 'admin') }}?{{ date().timestamp }}"
+                         class="img-responsive  center-block"/>
+                {% else %}
+                    <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fa-4x center-block"></i>
+                {% endif %}
+            </div>
+            <div class="media-title">
+                <a class="select-media link-underlined" href="#" data-object-id="{{ object.id }}"
+                   data-toggle="tooltip" title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
+            </div>
+        </div>
+
+
+    </div>
+{% endfor %}
+<div class="clearfix">&nbsp;</div>
+{% if datagrid.pager.haveToPaginate() %}
+    {% include get_admin_template('pager_links', admin.code) %}
+{% endif %}
+{% if datagrid.results|length < 1 %}
+    <p class="notice">
+        {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+    </p>
+{% endif %}

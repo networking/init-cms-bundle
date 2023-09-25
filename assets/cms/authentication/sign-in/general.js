@@ -1,5 +1,6 @@
 "use strict";
 
+
 // Class definition
 let KTSigninGeneral = function () {
     // Elements
@@ -72,7 +73,7 @@ let KTSigninGeneral = function () {
                     '_username': {
                         validators: {
                             regexp: {
-                                regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$|^sysadmin$/,
                                 message: translate('email_invalid'),
                             },
                             notEmpty: {
@@ -101,7 +102,8 @@ let KTSigninGeneral = function () {
     }
 
 
-    let handleSubmitAjax = function (e) {
+    let handleSubmitAjax = async function (e) {
+        let CMSRouting = await CMSAdmin.getRouting();
         // Handle form submit
         submitButton.addEventListener('click', function (e) {
             // Prevent button default action
@@ -115,7 +117,51 @@ let KTSigninGeneral = function () {
 
                     // Disable button to avoid multiple click
                     submitButton.disabled = true;
-                    form.submit();
+                    // form.submit();
+                    // return;
+
+                    let formData = new FormData(form);
+
+                    let loginInfo = {}
+                    formData.forEach( (value, key) => {
+                        loginInfo[key] = value;
+                    })
+
+                    axios.post(CMSRouting.generate('api_login'), loginInfo, {...axiosConfig})
+                        .then((response) => {
+                            submitButton.disabled = false;
+                            submitButton.removeAttribute('data-kt-indicator');
+                            let redirect = response.data.redirect;
+                            Swal.fire({
+                                    text: "Authentication successful!",
+                                    type: "success",
+                                    icon: "success",
+                                    timer: 1000,
+                                    showConfirmButton: false,
+                                }).then(() => {
+                                    let host =  window.location.protocol + '//' + window.location.host
+                                    if(redirect.indexOf(host) === -1 || redirect.indexOf('http') === -1) {
+                                        redirect = host + redirect
+                                    }
+                                    location.href = redirect
+                                });
+                        })
+                        .catch((error) => {
+                            submitButton.disabled = false;
+                            submitButton.removeAttribute('data-kt-indicator');
+                            let data = error.response.data
+
+                            Swal.fire({
+                                text: data.error,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: translate('ok'),
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                            submitButton.disabled = false;
+                        })
 
                 } else {
                     // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/

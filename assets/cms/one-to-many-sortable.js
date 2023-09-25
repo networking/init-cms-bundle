@@ -5,7 +5,6 @@ class OneToManySortable{
 
     constructor(element) {
         this.element = element
-        this.type = element.dataset.fieldType
         this.draggable = this.element.dataset.cmsSortableDraggable
         this.initialize()
         document.body.addEventListener('sonata.add_element', (event) => {

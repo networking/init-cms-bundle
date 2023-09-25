@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Admin;
 
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
@@ -77,43 +78,46 @@ class MediaAdmin extends Admin
      */
     protected $showTagTree;
 
-    public function __construct($pool, private readonly ValidatorInterface $validator) {
-    parent::__construct($pool);
-}
+    public function __construct(
+        $pool,
+        private readonly ValidatorInterface $validator
+    ) {
+        parent::__construct($pool);
+    }
 
     public function validate(object $object)
-{
-    return $this->validator->validate($object);
-}
-
+    {
+        return $this->validator->validate($object);
+    }
 
 
     public function configureDefaultSortValues(array &$sortValues): void
-{
-    $sortValues[DatagridInterface::SORT_BY] = 'createdAt';
-    $sortValues[DatagridInterface::SORT_ORDER] = 'DESC';
-}
+    {
+        $sortValues[DatagridInterface::SORT_BY] = 'createdAt';
+        $sortValues[DatagridInterface::SORT_ORDER] = 'DESC';
+    }
+
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
-{
-    return 'cms/media';
-}
+    {
+        return 'cms/media';
+    }
 
     /**
      * Set the language paramenter to contain a list of languages most likely
      * passed from the config.yaml file.
      */
     public function setLanguages(array $languages)
-{
-    $this->languages = $languages;
-}
+    {
+        $this->languages = $languages;
+    }
 
     /**
      * @return array
      */
     public function getTrackedActions(): array
-{
-    return $this->trackedActions;
-}
+    {
+        return $this->trackedActions;
+    }
 
     /**
      * @param $trackedActions
@@ -121,11 +125,11 @@ class MediaAdmin extends Admin
      * @return $this
      */
     public function setTrackedActions($trackedActions)
-{
-    $this->trackedActions = $trackedActions;
+    {
+        $this->trackedActions = $trackedActions;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @param $hasMultipleMediaTags
@@ -133,11 +137,11 @@ class MediaAdmin extends Admin
      * @return $this
      */
     public function setMultipleMediaTags($hasMultipleMediaTags)
-{
-    $this->hasMultipleMediaTags = $hasMultipleMediaTags;
+    {
+        $this->hasMultipleMediaTags = $hasMultipleMediaTags;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @param $showTagTree boolean
@@ -145,185 +149,204 @@ class MediaAdmin extends Admin
      * @return $this
      */
     public function setShowTagTree($showTagTree)
-{
-    $this->showTagTree = $showTagTree;
+    {
+        $this->showTagTree = $showTagTree;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @return bool
      */
     public function getShowTagTree()
-{
-    return $this->showTagTree;
-}
+    {
+        return $this->showTagTree;
+    }
 
 
     /**
      * {@inheritdoc}
      */
     public function configureRoutes(RouteCollectionInterface $collection): void
-{
-    parent::configureRoutes($collection);
-    $collection->add(
-        'init_ckeditor_browser',
-        'init_ckeditor_browser',
-        [
-            '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::browser',
-        ],
-        [],
-        ['expose' => true]
-    );
-    $collection->add(
-        'init_ckeditor_browser_refresh',
-        'init_ckeditor_browser_refresh',
-        [
-            '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::browserRefresh',
-        ],
-        [],
-        ['expose' => true]
-    );
+    {
+        parent::configureRoutes($collection);
+        $collection->add(
+            'init_ckeditor_browser',
+            'init_ckeditor_browser',
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::browser',
+            ],
+            [],
+            ['expose' => true]
+        );
+        $collection->add(
+            'init_ckeditor_browser_refresh',
+            'init_ckeditor_browser_refresh',
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::browserRefresh',
+            ],
+            [],
+            ['expose' => true]
+        );
 
-    $collection->add(
-        'init_ckeditor_upload_file',
-        'init_ckeditor_upload_file',
-        [
-            '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::upload',
-            'type' => 'file',
-            'method' => 'POST',
-        ],
-        [],
-        ['expose' => true]
-    );
+        $collection->add(
+            'init_ckeditor_upload_file',
+            'init_ckeditor_upload_file',
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::upload',
+                'type' => 'file',
+                'method' => 'POST',
+            ],
+            [],
+            ['expose' => true]
+        );
 
-    $collection->add(
-        'init_ckeditor_upload_image',
-        'init_ckeditor_upload_image',
-        [
-            '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::upload',
-            'type' => 'image',
-            'method' => 'POST',
-        ],
-        [],
-        ['expose' => true]
-    );
+        $collection->add(
+            'init_ckeditor_upload_image',
+            'init_ckeditor_upload_image',
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\CkeditorAdminController::upload',
+                'type' => 'image',
+                'method' => 'POST',
+            ],
+            [],
+            ['expose' => true]
+        );
 
-    $collection->add(
-        'init_clone',
-        'clone',
-        [
-            '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::clone',
-        ]
-    );
+        $collection->add(
+            'init_clone',
+            'clone',
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::clone',
+            ]
+        );
 
-    $collection->add(
-        'refresh_list',
-        'refresh_list',
-        [
-            '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::refreshList',
-        ]
-    );
+        $collection->add(
+            'refresh_list',
+            'refresh_list',
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::refreshList',
+            ]
+        );
 
-    $collection->add(
-        'pdf_preview',
-        'pdf/view/{id}',
-        [
-            '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::previewPdf',
-        ]
-    );
+        $collection->add(
+            'pdf_preview',
+            'pdf/view/{id}',
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::previewPdf',
+            ]
+        );
 
-    $collection->add(
-        'gallery',
-        'gallery',
-        [
-            '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::gallery',
-        ]
-    );
-}
+        $collection->add(
+            'gallery',
+            'gallery',
+            [
+                '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::gallery',
+            ]
+        );
+
+        $collection
+            ->add(
+                'gallery_select',
+                'gallery_select',
+                [
+                    '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::gallerySelect',
+                ],
+                [],
+                ['expose' => true]
+            )
+            ->add(
+                'gallery_select_refresh',
+                'gallery_select_refresh',
+                [
+                    '_controller' => 'Networking\InitCmsBundle\Controller\MediaAdminController::gallerySelectRefresh',
+                ],
+                [],
+                ['expose' => true]
+            );
+    }
 
     /**
      * {@inheritdoc}
      */
     public function configureDefaultFilterValues(array &$filterValues): void
-{
-
-
-}
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
-{
-    $datagridMapper
-        ->add('name', null)
-        ->add('authorName', null, ['hidden' => true]);
+    {
+        $datagridMapper
+            ->add('name', null)
+            ->add('authorName', null, ['hidden' => true]);
 
-    if ($this->showTagTree) {
-        $datagridMapper->add('tags', CallbackFilter::class, [
-            'label_render' => false,
-            'label' => false,
-            'field_type' => HiddenType::class,
-            'callback' => function (
-                ProxyQueryInterface $query,
-                $alias,
-                $field,
-                FilterData $data
-            ): bool {
-                if (!$data->hasValue()) {
-                    return false;
-                }
-                $query->leftJoin(sprintf('%s.tags', $alias), 't');
-                $query->andWhere('t.id = :id');
-                $query->setParameter('id', $data->getValue());
-                return true;
-            },
-        ]);
-    } else {
-        $datagridMapper->add('tags');
-    }
+        if ($this->showTagTree) {
+            $datagridMapper->add('tags', CallbackFilter::class, [
+                'label_render' => false,
+                'label' => false,
+                'field_type' => HiddenType::class,
+                'callback' => function (
+                    ProxyQueryInterface $query,
+                    $alias,
+                    $field,
+                    FilterData $data
+                ): bool {
+                    if (!$data->hasValue()) {
+                        return false;
+                    }
+                    $query->leftJoin(sprintf('%s.tags', $alias), 't');
+                    $query->andWhere('t.id = :id');
+                    $query->setParameter('id', $data->getValue());
 
-    $datagridMapper->add(
-        'context',
-        SimpleStringFilter::class,
-        [
-            'show_filter' => false,
-            'operator_type' => ContainsOperatorType::TYPE_EQUAL,
-            'case_sensitive' => true,
+                    return true;
+                },
+            ]);
+        } else {
+            $datagridMapper->add('tags');
+        }
 
-        ],
-        [
-            'field_type' => HiddenType::class,
-        ]
-    )
-        ->add(
-            'providerName',
+        $datagridMapper->add(
+            'context',
             SimpleStringFilter::class,
             [
                 'show_filter' => false,
                 'operator_type' => ContainsOperatorType::TYPE_EQUAL,
                 'case_sensitive' => true,
+
             ],
             [
                 'field_type' => HiddenType::class,
             ]
-        );
-}
+        )
+            ->add(
+                'providerName',
+                SimpleStringFilter::class,
+                [
+                    'show_filter' => false,
+                    'operator_type' => ContainsOperatorType::TYPE_EQUAL,
+                    'case_sensitive' => true,
+                ],
+                [
+                    'field_type' => HiddenType::class,
+                ]
+            );
+    }
 
 
     /**
      * {@inheritdoc}
      */
     public function getExportFormats(): array
-{
-    return [];
-}
+    {
+        return [];
+    }
 
     public function setLocalisedMediaProviders(array $providers)
-{
-    $this->localisedMediaProviders = $providers;
-}
+    {
+        $this->localisedMediaProviders = $providers;
+    }
 
     /**
      * @param string $name
@@ -331,20 +354,20 @@ class MediaAdmin extends Admin
      * @return null|string
      */
     public function getTemplate($name)
-{
-    if ($name === 'edit' && is_null($this->getSubject()->getId())
-        && !$this->getRequest()->query->get('gallery')
-    ) {
-        $provider = $this->pool->getProvider(
-            $this->getRequest()->get('provider')
-        );
-        if ($provider instanceof FileProvider) {
-            return '@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig';
+    {
+        if ($name === 'edit' && is_null($this->getSubject()->getId())
+            && !$this->getRequest()->query->get('gallery')
+        ) {
+            $provider = $this->pool->getProvider(
+                $this->getRequest()->get('provider')
+            );
+            if ($provider instanceof FileProvider) {
+                return '@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig';
+            }
         }
-    }
 
-    return $this->getTemplateRegistry()->getTemplate($name);
-}
+        return $this->getTemplateRegistry()->getTemplate($name);
+    }
 
     /**
      * @param $media
@@ -352,91 +375,87 @@ class MediaAdmin extends Admin
      * @return object
      */
     public function checkForDuplicate($media)
-{
-    $duplicate = $this->getModelManager()->findOneBy(
-        $this->getClass(),
-        [
-            'context' => $media->getContext(),
-            'md5File' => $media->getMd5File(),
-        ]
-    );
+    {
+        $duplicate = $this->getModelManager()->findOneBy(
+            $this->getClass(),
+            [
+                'context' => $media->getContext(),
+                'md5File' => $media->getMd5File(),
+            ]
+        );
 
-    return $duplicate;
-}
+        return $duplicate;
+    }
 
     /**
      * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper): void
-{
+    {
 
-    $media = $this->getSubject();
+        $media = $this->getSubject();
 
-    if (!$media) {
-        $media = $this->getNewInstance();
-    }
+        if (!$media) {
+            $media = $this->getNewInstance();
+        }
 
 
-    if (!$media || !$media->getProviderName()) {
-        return;
-    }
+        if (!$media || !$media->getProviderName()) {
+            return;
+        }
 
-    $formMapper->add('providerName', HiddenType::class);
+        $formMapper->add('providerName', HiddenType::class);
 
-    $formMapper->getFormBuilder()->addModelTransformer(
-        new ProviderDataTransformer(
-            $this->pool,
-            $this->getClass(),
-            ['new_on_update' => false]
-        ),
-        true
-    );
-
-    $provider = $this->pool->getProvider($media->getProviderName());
-
-    if ($media->getId()) {
-        $provider->buildEditForm($formMapper);
-    } else {
-        $provider->buildCreateForm($formMapper);
-    }
-
-    if (in_array(
-        $media->getProviderName(),
-        $this->localisedMediaProviders
-    )
-    ) {
-        $formMapper->add(
-            'locale',
-            ChoiceType::class,
-            ['choices' => $this->getLocaleChoices()]
+        $formMapper->getFormBuilder()->addModelTransformer(
+            new ProviderDataTransformer(
+                $this->pool,
+                $this->getClass(),
+                ['new_on_update' => false]
+            ),
+            true
         );
+
+        $provider = $this->pool->getProvider($media->getProviderName());
+
+        if ($media->getId()) {
+            $provider->buildEditForm($formMapper);
+        } else {
+            $provider->buildCreateForm($formMapper);
+        }
+
+        if (in_array(
+            $media->getProviderName(),
+            $this->localisedMediaProviders
+        )
+        ) {
+            $formMapper->add(
+                'locale',
+                ChoiceType::class,
+                ['choices' => $this->getLocaleChoices()]
+            );
+        }
+
+        $transformer = new TagTransformer($this->hasMultipleMediaTags);
+
+        $formMapper->add(
+            'tags',
+            ModelType::class,
+            [
+                'required' => false,
+                'expanded' => false,
+                'multiple' => true,
+                'select2' => true,
+                'property' => 'adminTitle',
+                'help_label' => 'help.media_tag',
+                'taggable' => $this->hasMultipleMediaTags,
+                'attr' => ['style' => 'width:220px'],
+                'transformer' => $transformer,
+            ]
+        );
+
+
+        $formMapper->add('providerName', HiddenType::class);
     }
-
-    $transformer = new TagTransformer($this->hasMultipleMediaTags);
-
-    $formMapper->add(
-        'tags',
-        ModelType::class,
-        [
-            'required' => false,
-            'expanded' => false,
-            'multiple' => true,
-            'select2' => true,
-            'property' => 'adminTitle',
-            'help_label' => 'help.media_tag',
-            'taggable' => $this->hasMultipleMediaTags,
-            'attr' => ['style' => 'width:220px'],
-            'transformer' => $transformer,
-        ]
-
-    );
-
-
-
-
-    $formMapper->add('providerName', HiddenType::class);
-
-}
 
     /**
      * Provide an array of locales where the locale is the key and the label is
@@ -446,183 +465,182 @@ class MediaAdmin extends Admin
      * @return array
      */
     protected function getLocaleChoices()
-{
-    $locale = [];
+    {
+        $locale = [];
 
-    foreach ($this->languages as $language) {
-        $locale[$language['label']] = $language['locale'];
+        foreach ($this->languages as $language) {
+            $locale[$language['label']] = $language['locale'];
+        }
+
+        return $locale;
     }
-
-    return $locale;
-}
 
     /**
      * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper): void
-{
-    $listMapper
-        ->addIdentifier(
-            'name',
-            'string',
-            [
-                'template' => '@NetworkingInitCms/MediaAdmin/list_name.html.twig',
-            ]
-        )
-        ->add('createdAt', 'string', ['label' => 'label.created_at'])
-        ->add('size', 'string', ['label' => 'label.size']);
-
-}
+    {
+        $listMapper
+            ->addIdentifier(
+                'name',
+                'string',
+                [
+                    'template' => '@NetworkingInitCms/MediaAdmin/list_name.html.twig',
+                ]
+            )
+            ->add('createdAt', 'string', ['label' => 'label.created_at'])
+            ->add('size', 'string', ['label' => 'label.size']);
+    }
 
     /**
      * {@inheritdoc}
      */
     public function alterNewInstance($object): void
-{
+    {
 
-    foreach ($this->getExtensions() as $extension) {
-        $extension->alterNewInstance($this, $object);
-    }
+        foreach ($this->getExtensions() as $extension) {
+            $extension->alterNewInstance($this, $object);
+        }
 
-    if ($this->hasRequest()) {
-
-        if ($this->getRequest()->isMethod('POST')
-            && !$this->getRequest()->get('oneuploader')
-        ) {
-            $uniqid = $this->getUniqid();
-            if (array_key_exists(
-                'providerName',
-                $this->getRequest()->get($uniqid, [])
-            )
+        if ($this->hasRequest()) {
+            if ($this->getRequest()->isMethod('POST')
+                && !$this->getRequest()->get('oneuploader')
             ) {
-                $object->setProviderName(
-                    $this->getRequest()->get($uniqid)['providerName']
-                );
+                $uniqid = $this->getUniqid();
+                if (array_key_exists(
+                    'providerName',
+                    $this->getRequest()->get($uniqid, [])
+                )
+                ) {
+                    $object->setProviderName(
+                        $this->getRequest()->get($uniqid)['providerName']
+                    );
+                }
             }
-        }
 
-        if ($this->getRequest()->get('provider')) {
-            $object->setProviderName($this->getRequest()->get('provider'));
-        }
+            if ($this->getRequest()->get('provider')) {
+                $object->setProviderName($this->getRequest()->get('provider'));
+            }
 
-        $object->setContext($context = $this->getRequest()->get('context'));
+            $object->setContext($context = $this->getRequest()->get('context'));
+        }
     }
-
-}
 
     /**
      * {@inheritdoc}
      */
     protected function configurePersistentParameters(): array
-{
-    $parameters = [];
+    {
+        $parameters = [];
 
-    if (!$this->hasRequest()) {
-        return $parameters;
+        if (!$this->hasRequest()) {
+            return $parameters;
+        }
+
+        $request = $this->getRequest();
+
+        $filter = $request->query->all('filter');
+
+        $context = $request->query->get('context');
+        $provider = $request->query->get('provider');
+
+        if ($request->query->get('providerName')) {
+            $provider = $request->query->get('providerName');
+        }
+
+        if (is_array($context) && array_key_exists('value', $context)) {
+            $context = $context['value'];
+        }
+
+        if (!$context && array_key_exists('context', $filter)) {
+            $context = $filter['context']['value'];
+        }
+
+        if (!$context || $context === '0') {
+            $context = $this->pool->getDefaultContext();
+            $request->query->set('context', $context);
+        }
+
+        $providers = $this->pool->getProvidersByContext($context);
+
+        // if the context has only one provider, set it into the request
+        // so the intermediate provider selection is skipped
+        if (1 === \count($providers) && null === $provider) {
+            $provider = array_shift($providers)->getName();
+            $request->query->set('provider', $provider);
+        }
+
+        // if there is a post server error, provider is not posted and in case of
+        // multiple providers, it has to be persistent to not being lost
+        if (1 < \count($providers) || null !== $provider) {
+            $parameters['provider'] = $provider;
+        }
+
+
+        return array_merge($parameters, [
+            'context' => $context,
+        ]);
     }
-
-    $request = $this->getRequest();
-
-    $filter = $request->query->all('filter');
-
-    $context = $request->query->get('context');
-    $provider = $request->query->get('provider');
-
-    if ($request->query->get('providerName')) {
-        $provider = $request->query->get('providerName');
-    }
-
-    if (is_array($context) && array_key_exists('value', $context)) {
-        $context = $context['value'];
-    }
-
-    if (!$context && array_key_exists('context', $filter)) {
-        $context = $filter['context']['value'];
-    }
-
-    if (!$context || $context === '0') {
-        $context = $this->pool->getDefaultContext();
-        $request->query->set('context', $context);
-    }
-
-    $providers = $this->pool->getProvidersByContext($context);
-
-    // if the context has only one provider, set it into the request
-    // so the intermediate provider selection is skipped
-    if (1 === \count($providers) && null === $provider) {
-        $provider = array_shift($providers)->getName();
-        $request->query->set('provider', $provider);
-    }
-
-    // if there is a post server error, provider is not posted and in case of
-    // multiple providers, it has to be persistent to not being lost
-    if (1 < \count($providers) || null !== $provider) {
-        $parameters['provider'] = $provider;
-    }
-
-
-    return array_merge($parameters, [
-        'context' => $context,
-    ]);
-}
 
     public function configureFilterParameters(array $parameters): array
-{
+    {
 
-    if(array_key_exists('context', $parameters) && !$parameters['context']['value']){
-        $parameters['context']['value'] = $this->pool->getDefaultContext();
-    }
-
-    $persistentParameters = $this->getPersistentParameters();
-
-    $context = $persistentParameters['context'];
-    $provider = $persistentParameters['provider'];
-
-    if ($context && array_key_exists('context', $parameters)) {
-        if ($parameters['context']['value'] != $context) {
-            $parameters['context']['value'] = $context;
+        if (array_key_exists('context', $parameters)
+            && !$parameters['context']['value']
+        ) {
+            $parameters['context']['value'] = $this->pool->getDefaultContext();
         }
-    } else {
-        $parameters['context'] = ['value' => $persistentParameters['context']];
-    }
 
-    if ($provider && array_key_exists('providerName', $parameters)) {
-        if ($parameters['providerName']['value'] != $provider) {
+        $persistentParameters = $this->getPersistentParameters();
+
+        $context = $persistentParameters['context'];
+        $provider = $persistentParameters['provider'];
+
+        if ($context && array_key_exists('context', $parameters)) {
+            if ($parameters['context']['value'] != $context) {
+                $parameters['context']['value'] = $context;
+            }
+        } else {
+            $parameters['context']
+                = ['value' => $persistentParameters['context']];
+        }
+
+        if ($provider && array_key_exists('providerName', $parameters)) {
+            if ($parameters['providerName']['value'] != $provider) {
+                $parameters['providerName']['value'] = $provider;
+            }
+        } elseif ($provider) {
             $parameters['providerName']['value'] = $provider;
+        } else {
+            $parameters['providerName']
+                = ['value' => $persistentParameters['provider']];
         }
-    } elseif ($provider) {
-        $parameters['providerName']['value'] = $provider;
-    } else {
-        $parameters['providerName'] = ['value' => $persistentParameters['provider']];
-    }
 
-    return $parameters;
-}
+        return $parameters;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function configureBatchActions($actions): array
-{
-    if ($this->getRequest()
-        && !$this->getRequest()->query->get(
-            'galleryMode'
-        )
-    ) {
-
-        if (
-            $this->hasRoute('edit') && $this->isGranted('EDIT')
-            && $this->hasRoute('delete')
-            && $this->isGranted('DELETE')
+    {
+        if ($this->getRequest()
+            && !$this->getRequest()->query->get(
+                'galleryMode'
+            )
         ) {
-            $actions['add_tags'] = [
-                'label' => 'add_tags',
-                'translation_domain' => $this->getTranslationDomain(),
-                'ask_confirmation' => false,
-            ];
+            if ($this->hasRoute('edit') && $this->isGranted('EDIT')
+                && $this->hasRoute('delete')
+                && $this->isGranted('DELETE')
+            ) {
+                $actions['add_tags'] = [
+                    'label' => 'add_tags',
+                    'translation_domain' => $this->getTranslationDomain(),
+                    'ask_confirmation' => false,
+                ];
+            }
         }
-    }
 
-    return $actions;
-}
+        return $actions;
+    }
 }

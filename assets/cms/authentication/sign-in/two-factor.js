@@ -12,9 +12,9 @@ var KTSigninTwoFactor = function() {
         submitButton.addEventListener('click', function (e) {
             e.preventDefault();
 
-            var validated = true;
+            let validated = true;
 
-            var inputs = [].slice.call(form.querySelectorAll('input[maxlength="1"]'));
+            let inputs = [].slice.call(form.querySelectorAll('input[maxlength="1"]'));
             inputs.map(function (input) {
                 if (input.value === '' || input.value.length === 0) {
                     validated = false;
@@ -28,36 +28,35 @@ var KTSigninTwoFactor = function() {
                 // Disable button to avoid multiple click 
                 submitButton.disabled = true;
 
-                // Simulate ajax request
-                setTimeout(function() {
-                    // Hide loading indication
-                    submitButton.removeAttribute('data-kt-indicator');
+                let code = inputs.reduce((acc, input) => acc + input.value, '')
 
-                    // Enable button
+                axios.post('/admin', { _code: code }, {...axiosConfig}).then((response) => {
                     submitButton.disabled = false;
-
-                    // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
+                    submitButton.removeAttribute('data-kt-indicator');
                     Swal.fire({
                         text: "You have been successfully verified!",
                         icon: "success",
+                        timer: 1000,
+                        showConfirmButton: false,
+                    }).then(function (result) {
+                       location.href = window.location.href;
+                    });
+                }).catch((error) => {
+                    submitButton.disabled = false;
+                    submitButton.removeAttribute('data-kt-indicator');
+                    inputs.forEach((input) => input.value = '')
+                    swal.fire({
+                        text: "Please enter valid securtiy code and try again.",
+                        icon: "error",
                         buttonsStyling: false,
                         confirmButtonText: "Ok, got it!",
                         customClass: {
-                            confirmButton: "btn btn-primary"
+                            confirmButton: "btn fw-bold btn-light-primary"
                         }
-                    }).then(function (result) {
-                        if (result.isConfirmed) { 
-                            inputs.map(function (input) {
-                                input.value = '';
-                            });
-
-                            var redirectUrl = form.getAttribute('data-kt-redirect-url');
-                            if (redirectUrl) {
-                                location.href = redirectUrl;
-                            }
-                        }
+                    }).then(function() {
+                        KTUtil.scrollTop();
                     });
-                }, 1000); 
+                })
             } else {
                 swal.fire({
                     text: "Please enter valid securtiy code and try again.",
@@ -119,6 +118,19 @@ var KTSigninTwoFactor = function() {
                 input6.blur();
             }
         });
+
+        document.addEventListener("paste", (event) => {
+            event.preventDefault();
+
+            let paste = (event.clipboardData || window.clipboardData).getData("text");
+
+            let code = paste.split('').slice(0, 6);
+
+            code.forEach((value, index) => {
+                let input = form.querySelector(`[name=code_${index + 1}]`);
+                input.value = value;
+            })
+        })
     }    
 
     // Public functions

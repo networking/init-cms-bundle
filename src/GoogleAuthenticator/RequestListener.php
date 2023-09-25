@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\GoogleAuthenticator;
 use Sonata\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -66,13 +67,28 @@ class RequestListener
             return;
         }
 
+        if (preg_match('/.*\/_profiler\/.*/', $request->getRequestUri())) {
+            return;
+        }
+
+        if (preg_match('/.*\/_wdt\/.*/', $request->getRequestUri())) {
+            return;
+        }
+
+        if (preg_match('/.*\/js\/.*/', $request->getRequestUri())) {
+            return;
+        }
+
         $key = $this->helper->getSessionKey($token);
         $request = $event->getRequest();
         $session = $event->getRequest()->getSession();
         $user = $token->getUser();
 
         if(!$user->hasStepVerificationCode() && '/admin/two_factor_setup' !== $request->getRequestUri()){
-            $event->setResponse(new RedirectResponse('/admin/two_factor_setup'));
+
+            $response = $request->isXmlHttpRequest()?new JsonResponse(['redirect' => '/admin/two_factor_setup']):new RedirectResponse('/admin/two_factor_setup');
+
+            $event->setResponse($response);
             return;
         }
         if (!$session->has($key)) {
@@ -84,14 +100,27 @@ class RequestListener
         }
 
         $state = 'init';
-        if ('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod() &&  $request->get('_code', false)) {
             if (true === $this->helper->checkCode($user, $request->get('_code'))) {
                 $session->set($key, true);
+                if($request->isXmlHttpRequest()){
+                    $event->setResponse(new JsonResponse(['success' => 'success'], 200));
+                    return;
+                }
 
                 return;
             }
 
             $state = 'error';
+
+            if($request->isXmlHttpRequest()){
+                $event->setResponse(new JsonResponse(['error' => 'Invalid code'], 400));
+                return;
+            }
+        }
+
+        if($request->isXmlHttpRequest()){
+            return;
         }
 
 

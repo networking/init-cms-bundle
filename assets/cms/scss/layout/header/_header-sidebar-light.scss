@@ -1,0 +1,55 @@
+//
+// Custom Header(used by Light Sidebar layout only)
+//
+
+
+[data-kt-app-layout="light-sidebar"] {
+    // Desktop mode
+    @include media-breakpoint-up(lg) {
+        .app-header-menu {
+            .menu {
+                // Menu root item
+                > .menu-item {
+                    @include menu-link-here-state( 
+                        $title-color: var(--#{$prefix}primary), 
+                        $icon-color: var(--#{$prefix}primary), 
+                        $bullet-color: var(--#{$prefix}primary), 
+                        $arrow-color: var(--#{$prefix}primary), 
+                        $bg-color: null,
+                        $all-links: false
+                    );
+
+                    @include menu-link-active-state( 
+                        $title-color: var(--#{$prefix}primary), 
+                        $icon-color: var(--#{$prefix}primary), 
+                        $bullet-color: var(--#{$prefix}primary), 
+                        $arrow-color: var(--#{$prefix}primary), 
+                        $bg-color: var(--#{$prefix}gray-100),
+                        $all-links: false
+                    );
+                }
+            }
+        }        
+    }
+}
+
+// Desktop mode
+@include media-breakpoint-up(lg) {
+    [data-kt-app-layout="light-sidebar"]:not([data-kt-app-header-fixed="true"]) {
+        .app-header {
+            background-color: transparent;    
+            box-shadow: none;
+            border-bottom: none;
+        }
+    }    
+}
+
+// Tablet & mobile modes
+@include media-breakpoint-down(lg) {
+    [data-kt-app-layout="light-sidebar"]:not([data-kt-app-header-fixed-mobile="true"]) {
+        .app-header {
+            background-color: transparent;    
+            box-shadow: none;            
+        }
+    }
+}

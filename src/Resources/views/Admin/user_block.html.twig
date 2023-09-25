@@ -93,11 +93,11 @@
                 </div>
 
                 <!--begin::Menu item-->
-                {% if is_granted('IS_IMPERSONATOR') and sonata_user.isImpersonatingEnabled %}>
+                {% if is_granted('IS_IMPERSONATOR') and sonata_user.isImpersonatingEnabled %}
                     <div class="menu-item px-5 my-1">
-                        <a class="menu-link px-5"
-                           href="{{ url(sonata_user.impersonatingRoute, sonata_user.impersonatingRouteParameters|merge({'_switch_user': '_exit'})) }}">({{ 'label.exit'|trans({}, 'PageAdmin', locale) }}
-                            )</a>
+                        <a class="menu-link px-5"href="{{ url(sonata_user.impersonatingRoute, sonata_user.impersonatingRouteParameters|merge({'_switch_user': '_exit'})) }}">
+                            ({{ 'switch_user_exit'|trans({}, 'SonataUserBundle', locale) }} )
+                        </a>
                     </div>
                 {% endif %}
                 <!--end::Menu item-->

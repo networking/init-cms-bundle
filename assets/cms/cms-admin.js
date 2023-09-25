@@ -4,9 +4,11 @@ import InitCms from "../js/initcms";
 window.axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
 
 import CMSMediaEntity from "./media-entity"
+import CMSGalleryEntity from "./gallery-entity"
 import CMSOneToManySortable from "./one-to-many-sortable"
 import CMSModelList from "./model-list"
 import {CMSRouting} from "./cms-routing"
+import CMSSortableCollection from "./sortable-collection"
 import 'select2'
 
 $.fn.select2.defaults.set("theme", "bootstrap5");
@@ -33,6 +35,7 @@ const CMSAdmin = {
     async init() {
         this.routing = await this.getRouting();
         CMSMediaEntity.init();
+        CMSGalleryEntity.init();
         CMSModelList.init();
         CMSOneToManySortable.init();
         this.initLinkDialogs();
@@ -196,12 +199,15 @@ const CMSAdmin = {
 
         subject.dataset.cmsCollectionType = 1;
 
+        CMSSortableCollection.init()
+
         KTUtil.on(subject, '[data-collection-add-btn]', 'click', (event) => {
             event.preventDefault()
             let btn = event.target
-            if (btn.classList.contains('btn')) {
+            if (!btn.classList.contains('btn')) {
                 btn = btn.closest('.btn');
             }
+
 
             let counter = 0
             const containerName = btn.dataset.collectionAddBtn;
@@ -225,6 +231,7 @@ const CMSAdmin = {
             proto = proto.replace(nameRegexp, `${parts[parts.length - 1]}][${counter}`);
 
             container.insertAdjacentHTML('beforeend', proto)
+            btn.dispatchEvent(new CustomEvent('afterAddItem', {bubbles: true, detail: {proto: proto, counter: counter}}))
             CMSAdmin.initSpecialFields()
         });
 
@@ -233,16 +240,18 @@ const CMSAdmin = {
 
             let btn = event.target
 
-            if (btn.classList.contains('btn')) {
+            if (!btn.classList.contains('btn')) {
                 btn = btn.closest('.btn');
             }
             btn.closest('.collection-item').remove();
+            btn.dispatchEvent(new CustomEvent('afterRemoveItem', {bubbles: true}))
 
         })
     },
     initSpecialFields() {
 
         CMSMediaEntity.init()
+        CMSGalleryEntity.init()
         CMSModelList.init()
         this.initializeDatePickers()
         this.initializeDateTimePickers()
