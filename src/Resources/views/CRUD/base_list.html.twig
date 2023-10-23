@@ -8,8 +8,10 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
+{% set isAjax = app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
 
-{% extends base_template %}
+{% extends isAjax?'@NetworkingInitCms/modal-list.html.twig':base_template %}
+
 
 
 {% block title %}
@@ -33,55 +35,84 @@ file that was distributed with this source code.
                     <div class="card-content">
                         <div class="card-body">
                             {% set withAdvancedFilter = false %}
-                            {% set activeFilters = [] %}
+                            {% set activeHiddenFilters = false %}
+                            {% set advancedFilters = [] %}
+                            {% set showFilters = [] %}
 
-                            {% for key, filter in admin.datagrid.filters|filter((filter, key ) => filter.isActive) %}
+                            {% for key, filter in admin.datagrid.filters %}
 
-                                {% if not loop.first %}
-                                    {% set activeFilters = activeFilters|merge([key]) %}
+                                {% if not loop.first and ( filter.isActive and filter.option('advanced_filter') is same as (true)) %}
+
+                                {% endif %}
+
+                                {% if filter.option('show_filter') is not same as (true) and not loop.first %}
+                                    {% set advancedFilters = advancedFilters|merge([key]) %}
+                                    {% if filter.isActive()  %}
+                                        {% set activeHiddenFilters = true %}
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if filter.option('show_filter') is same as (true) or loop.first %}
+                                    {% set showFilters = showFilters|merge([key]) %}
+                                {% endif %}
+
+                                {% if filter.option('advanced_filter') %}
+                                    {% set withAdvancedFilter = true %}
                                 {% endif %}
 
                             {% endfor %}
-                            {% for filter in admin.datagrid.filters %}
 
-                                {% if loop.first %}
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex align-items-center  me-3 w-50">
-                                            {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
-                                                <div class="d-none col-md-2 {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
-                                                    {% set attr = form[filter.formName].children['value'].vars.attr|default({}) %}
-                                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
-                                                </div>
-                                            {% else %}
-                                                {{ form_widget(form.children[filter.formName].children['type']  ) }}
-                                            {% endif %}
-                                            <div class="d-flex flex-row-fluid form-floating">
-                                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
-
-                                                <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                                                       class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
+                            {% for filterName in showFilters %}
+                                {% set filter = admin.datagrid.filters[filterName] %}
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center me-3 mb-3 w-50">
+                                        {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                            <div class="d-none col-md-2 {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+                                                {% set attr = form[filter.formName].children['value'].vars.attr|default({}) %}
+                                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
                                             </div>
-                                        </div>
+                                        {% else %}
+                                            {{ form_widget(form.children[filter.formName].children['type']  ) }}
+                                        {% endif %}
+                                        <div class="d-flex flex-row-fluid">
 
-                                        <div class="d-flex align-items-center">
-                                            <input type="submit" class="btn btn btn-primary me-5"
-                                                   value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                            <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
-                                               class="btn btn-sm btn-light">
-                                                {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                                            {% if loop.length > 1 %}
-                                                <a href="#" id="kt_horizontal_search_advanced_link" class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#kt_advanced_search_form" aria-expanded="false">Advanced Search</a>
-                                            {% endif %}
+                                            {% set field_options = filter.options.field_options|default({}) %}
 
+                                            {%- set row_attr = field_options.row_attr|default({})|merge({
+                                                'class': 'w-100 '  ~ field_options.row_attr.class|default('') }) -%}
+
+
+                                            {{ form_row(form.children[filter.formName].children['value'],
+                                                {
+                                                    'attr':{'placeholder': filter.label},
+                                                    'translation_domain': admin.translationDomain,
+                                                    'row_attr': row_attr
+                                                }) }}
                                         </div>
                                     </div>
-                                    {% if loop.length > 1 %}
-                                        <div class="collapse {% if activeFilters|length > 0 %}show{% endif %}" id="kt_advanced_search_form">
-                                        <div class="separator separator-dashed mt-9 mb-6"></div>
-                                     {% endif %}
-                                {% endif %}
+                                    {% if loop.last %}
+                                    <div class="d-flex align-items-center">
+                                        <input type="submit" class="btn btn btn-sm btn-primary me-5"
+                                               value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                                           class="btn btn-sm btn-light  me-5">
+                                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                        {% if advancedFilters|length > 0 %}
+                                            <a href="#" id="kt_horizontal_search_advanced_link"
+                                               class="btn btn-link collapsed" data-bs-toggle="collapse"
+                                               data-bs-target="#kt_advanced_search_form" aria-expanded="false">Weitere Suchoptionen</a>
+                                        {% endif %}
 
-                                {% if not loop.first %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+
+                            {% if advancedFilters|length > 0 %}
+                                <div class="collapse {% if activeHiddenFilters is same as(true) %}show{% endif %}" id="kt_advanced_search_form">
+                                        <div class="separator separator-dashed mt-9 mb-6"></div>
+                                    {% for filterName in advancedFilters %}
+                                        {% set filter = admin.datagrid.filters[filterName] %}
                                     <div class="mb-5">
                                         {% set attr = form[filter.formName].children['value'].vars.attr|default({}) %}
                                         {% set row_attr = form[filter.formName].children['value'].vars.row_attr|default({}) %}
@@ -89,7 +120,6 @@ file that was distributed with this source code.
                                         {%- if 'form-floating' in row_class -%}
                                             {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
                                                 <div class="d-none col-md-2 {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
-
                                                     {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
                                                 </div>
                                             {% else %}
@@ -97,7 +127,6 @@ file that was distributed with this source code.
                                             {% endif %}
                                             <div class="form-floating w-100">
                                                 {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
-
                                                 <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
                                                        class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain)  }}
                                                 </label>
@@ -113,27 +142,19 @@ file that was distributed with this source code.
                                             {% else %}
                                                 {{ form_widget(form.children[filter.formName].children['type']  ) }}
                                             {% endif %}
-                                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+                                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
                                         {%- endif -%}
                                     </div>
-                                {% endif %}
+                                    {% endfor %}
+{#                                    {% if withAdvancedFilter %}#}
+{#                                        <a href="#" id="kt_advance_filter_toggle">#}
+{#                                            <i class="fas fa-cogs" aria-hidden="true"></i>#}
+{#                                            {{ 'btn_advanced_filters'|trans({}, 'SonataAdminBundle') }}#}
+{#                                        </a>#}
+{#                                    {% endif %}#}
+                                </div>
+                            {% endif %}
 
-                                {% if filter.option('advanced_filter') and 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
-                                    {% set withAdvancedFilter = true %}
-                                {% endif %}
-
-                                {% if loop.length > 1 and loop.last %}
-                                    {% if withAdvancedFilter %}
-                                        <a href="#" id="kt_advance_filter_toggle">
-                                            <i class="fas fa-cogs" aria-hidden="true"></i>
-                                            {{ 'btn_advanced_filters'|trans({}, 'SonataAdminBundle') }}
-                                        </a>
-                                    {% endif %}
-                                    </div>
-                                {% endif %}
-
-
-                            {% endfor %}
 
                             {% if admin.hasActiveSubclass %}
                                 <input type="hidden" name="subclass" id="filter_subclass" value="{{ admin.activeSubclassCode }}"/>
@@ -156,39 +177,8 @@ file that was distributed with this source code.
 
     <div class="d-flex flex-wrap flex-stack pb-7">
         <div class="d-flex flex-wrap align-items-center my-1">
-            <h3 class="fw-bold me-5 my-1">{{ admin.datagrid.pager.countResults() }} Items Found</h3>
-        </div>
-        <div class="d-flex flex-wrap align-items-center my-1">
-            {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}
-                {{ block('batch') }}
-            {% endif %}
-            {% if admin.hasRoute('export') and admin.hasAccess('export') and export_formats|length %}
-                <div class="d-flex justify-content-end" data-kt-list-table-toolbar="base">
-                    <!--begin::Toggle-->
-                    <button type="button" class="btn btn-sm btn-primary rotate" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0,5">
-                        <i class="ki-outline ki-cloud-download  " aria-hidden="true"></i>
-                        {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
-                        <i class="ki-duotone ki-down fs-3 rotate-180 ms-3 me-0"></i>
-                    </button>
-                    <!--end::Toggle-->
+            <h3 class="fw-bold me-5 my-1">{% trans with {'%count%': admin.datagrid.pager.countResults()} from 'SonataAdminBundle' %}list_results_count{% endtrans %}</h3>
 
-                    <!--begin::Menu-->
-                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true">
-                        <!--end::Menu separator-->
-                        {% for format in export_formats %}
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="{{ admin.generateUrl('export', admin.datagrid.paginationparameters(0) + {'format' : format}) }}" class="menu-link px-3">
-                                    {{ ("export_format_" ~ format)|trans({}, 'SonataAdminBundle') }}
-                                </a>
-                            </div>
-                            <!--end::Menu item-->
-                        {% endfor %}
-                    </div>
-                    <!--end::Menu-->
-                </div>
-                <!--end::Dropdown wrapper-->
-            {% endif %}
         </div>
     </div>
     {% if datagrid_has_results%}
@@ -209,38 +199,40 @@ file that was distributed with this source code.
                         <!--end::Search-->
                     </div>
                 </div>
-                    <div class="card-toolbar" >
-{#                        {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}#}
-{#                            {{ block('batch') }}#}
-{#                        {% endif %}#}
-{#                        {% if admin.hasRoute('export') and admin.hasAccess('export') and export_formats|length %}#}
-{#                            <div class="d-flex justify-content-end" data-kt-list-table-toolbar="base">#}
-{#                                <!--begin::Toggle-->#}
-{#                                <button type="button" class="btn btn-sm btn-primary rotate" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0,5">#}
-{#                                    <i class="ki-outline ki-cloud-download  " aria-hidden="true"></i>#}
-{#                                    {{ "label_export_download"|trans({}, "SonataAdminBundle") }}#}
-{#                                    <i class="ki-duotone ki-down fs-3 rotate-180 ms-3 me-0"></i>#}
-{#                                </button>#}
-{#                                <!--end::Toggle-->#}
+                <div class="card-toolbar" >
+                    {% block list_toolbar %}
+                    {% endblock %}
+                    {% if batchactions|length > 0 and not app.request.isxmlhttprequest %}
+                        {{ block('batch') }}
+                    {% endif %}
+                        <div class="d-flex justify-content-end" data-kt-list-table-toolbar="base">
+                    {% if admin.hasRoute('export') and admin.hasAccess('export') and admin.getExportFormats|length %}
+                            <!--begin::Toggle-->
+                            <button type="button" class="btn btn-sm btn-primary rotate" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0,5">
+                                <i class="ki-outline ki-cloud-download  " aria-hidden="true"></i>
+                                {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
+                                <i class="ki-duotone ki-down fs-3 rotate-180 ms-3 me-0"></i>
+                            </button>
+                            <!--end::Toggle-->
 
-{#                                <!--begin::Menu-->#}
-{#                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true">#}
-{#                                    <!--end::Menu separator-->#}
-{#                                    {% for format in export_formats %}#}
-{#                                    <!--begin::Menu item-->#}
-{#                                    <div class="menu-item px-3">#}
-{#                                        <a href="{{ admin.generateUrl('export', admin.datagrid.paginationparameters(0) + {'format' : format}) }}" class="menu-link px-3">#}
-{#                                            {{ ("export_format_" ~ format)|trans({}, 'SonataAdminBundle') }}#}
-{#                                        </a>#}
-{#                                    </div>#}
-{#                                    <!--end::Menu item-->#}
-{#                                    {% endfor %}#}
-{#                                </div>#}
-{#                                <!--end::Menu-->#}
-{#                            </div>#}
-{#                            <!--end::Dropdown wrapper-->#}
-{#                        {% endif %}#}
-                    </div>
+                            <!--begin::Menu-->
+                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true">
+                                <!--end::Menu separator-->
+                                {% for format in export_formats %}
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a href="{{ admin.generateUrl('export', admin.datagrid.paginationparameters(0) + {'format' : format}) }}" class="menu-link px-3">
+                                            {{ ("export_format_" ~ format)|trans({}, 'SonataAdminBundle') }}
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                {% endfor %}
+                            </div>
+                            <!--end::Menu-->
+                        <!--end::Dropdown wrapper-->
+                    {% endif %}
+                        </div>
+                </div>
             </div>
             {% endif %}
             {% if batchactions|length > 0 %}

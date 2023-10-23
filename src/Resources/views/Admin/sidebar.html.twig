@@ -66,7 +66,7 @@
                     data-kt-menu="true"
                     data-kt-menu-expand="false">
                 {% block side_bar_nav %}
-                    {{ knp_menu_render('sonata_admin_sidebar', {template: '@NetworkingInitCms/Menu/admin_side_menu.html.twig', }) }}
+                    {{ knp_menu_render('sonata_admin_sidebar', {template: get_global_template('knp_menu_template')}) }}
                 {% endblock %}
             </div>
             <!--end::Menu-->
@@ -74,6 +74,7 @@
         <!--end::Menu wrapper-->
     </div>
     <!--end::sidebar menu-->
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
     <!--begin::Footer-->
     <div class="app-sidebar-footer flex-column-auto pt-2 pb-6 px-6" id="kt_app_sidebar_footer">
         <a href="https://preview.keenthemes.com/html/metronic/docs" class="btn btn-flex flex-center btn-custom btn-primary overflow-hidden text-nowrap px-0 h-40px w-100" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
@@ -85,4 +86,5 @@
         </a>
     </div>
     <!--end::Footer-->
+    {% endif %}
 </div>

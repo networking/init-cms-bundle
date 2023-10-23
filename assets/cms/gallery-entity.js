@@ -1,5 +1,6 @@
 import {CMSAdmin} from './cms-admin';
 import 'jstree'
+import CMSSortableCollection from "./sortable-collection";
 class GalleryEntity{
     constructor(element) {
 
@@ -17,6 +18,8 @@ class GalleryEntity{
         this.checkMediaInputId = ''
         this.selected = new Set()
         this.previousSelected = new Set()
+
+        CMSSortableCollection.init()
 
         KTUtil.on(this.element, '#field_dialog_' + this.id, 'hide.bs.modal', this.removeListeners.bind(this));
 

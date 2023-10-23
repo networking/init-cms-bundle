@@ -15,14 +15,10 @@ namespace Networking\InitCmsBundle\Controller;
 use Networking\InitCmsBundle\Admin\PageAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
-use Networking\InitCmsBundle\Entity\ContentRouteManager;
-use Networking\InitCmsBundle\Entity\BasePage;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,37 +43,37 @@ class FrontendPageController extends AbstractController
     /**
      * @var PageCacheInterface
      */
-    protected $pageCache;
+    protected PageCacheInterface $pageCache;
 
     /**
      * @var TokenStorageInterface
      */
-    protected $tokenStorage;
+    protected TokenStorageInterface $tokenStorage;
 
     /**
      * @var AuthorizationCheckerInterface
      */
-    protected $authorizationChecker;
+    protected AuthorizationCheckerInterface $authorizationChecker;
 
     /**
      * @var Pool
      */
-    protected $pool;
+    protected Pool $pool;
 
     /**
      * @var LanguageSwitcherHelper
      */
-    protected $languageSwitcherHelper;
+    protected LanguageSwitcherHelper $languageSwitcherHelper;
 
     /**
      * @var PageManagerInterface
      */
-    protected $pageManager;
+    protected PageManagerInterface $pageManager;
 
     /**
      * @var PageHelper
      */
-    protected $pageHelper;
+    protected PageHelper $pageHelper;
 
     /**
      * FrontendPageController constructor.
@@ -114,6 +110,7 @@ class FrontendPageController extends AbstractController
     }
 
     public function indexAction(Request $request){
+
         return $this->index($request);
     }
 
@@ -152,7 +149,7 @@ class FrontendPageController extends AbstractController
 
             $response = $this->pageCache->get($cacheKey);
 
-            if (!$response || !$response instanceof Response) {
+            if (!$response instanceof Response) {
                 $params = $this->getPageParameters($request);
 
                 if ($params instanceof RedirectResponse) {
@@ -205,14 +202,10 @@ class FrontendPageController extends AbstractController
      */
     public function getRedirect(Request $request, PageInterface $page): bool|\Symfony\Component\HttpFoundation\RedirectResponse
     {
-        if (method_exists($page, 'getAlias') && $page instanceof PageInterface) {
-            if ($alias = $page->getAlias()) {
-                $alias->getFullPath();
+        if (method_exists($page, 'getAliasFullPath')) {
+            if ($page->getAliasFullPath()) {
                 $baseUrl = $request->getBaseUrl();
-
-                $route = ContentRouteManager::generateRoute($alias->getContentRoute(), $alias->getFullPath(), '');
-
-                return new RedirectResponse($baseUrl.$route->getPath());
+                return new RedirectResponse($baseUrl.$page->getAliasFullPath());
             }
         }
 

@@ -26,104 +26,96 @@ file that was distributed with this source code.
 {% endblock %}
 {% block list_filters %}
     {% if admin.datagrid.filters and not app.request.isxmlhttprequest %}
-        <form action="{{ admin.generateUrl('list') }}" method="GET" class="kt-form kt-form--fit menu-filter">
-            <div class="card mb-7">
-                <div class="card-content">
-                    <div class="card-body">
-                        {% set withAdvancedFilter = false %}
+        <form action="{{ admin.generateUrl('list') }}" method="GET" class="kt-form kt-form--fit card-rounded-top bg-white px-8 py-9 border menu-filter"
+              style="box-shadow: 0px 2rem 5rem 0rem rgba(0,0,0,.05)">
+            {% set withAdvancedFilter = false %}
 
-                        {% for filter in admin.datagrid.filters %}
+            {% for filter in admin.datagrid.filters %}
 
-                            {% if loop.first %}
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center  me-3">
-                                        {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
-                                            <div class="mb-2 d-none {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
-                                                {% set attr = form[filter.formName].children['value'].vars.attr|default({'class': 'form-select-sm'}) %}
-                                                {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
-                                            </div>
-                                        {% else %}
-                                            {{ form_widget(form.children[filter.formName].children['type']  ) }}
-                                        {% endif %}
-                                        <div class="d-flex flex-row-fluid form-floating ">
-                                            {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
-                                        <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                                               class="control-label filter">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center">
-                                        <input type="submit" class="btn btn btn-primary me-5"
-                                               value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
-                                           class="btn btn-sm btn-light">
-                                            {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                                          {% if loop.length > 1 %}
-                                              <a href="#" id="kt_horizontal_search_advanced_link" class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#kt_advanced_search_form" aria-expanded="false">Advanced Search</a>
-                                              {% endif %}
-
-                                    </div>
+                {% if loop.first %}
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center  me-3">
+                            {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                <div class="mb-2 d-none {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+                                    {% set attr = form[filter.formName].children['value'].vars.attr|default({'class': 'form-select-sm'}) %}
+                                    {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
                                 </div>
+                            {% else %}
+                                {{ form_widget(form.children[filter.formName].children['type']  ) }}
                             {% endif %}
-
-                            {% if not loop.first %}
-                            <div class="mb-5" >
-                                <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
-                                       class="control-label filter">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
-
-                                {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
-                                    <div class="mb-2 d-none {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
-                                        {% set attr = form[filter.formName].children['value'].vars.attr|default({'class': 'form-select-sm'}) %}
-                                        {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
-                                    </div>
-                                {% else %}
-                                    {{ form_widget(form.children[filter.formName].children['type']  ) }}
-                                {% endif %}
-                                <div class="d-flex flex-row-fluid">
-                                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
-                                </div>
+                            <div class="d-flex flex-row-fluid form-floating ">
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+                            <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                                   class="control-label filter">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
                             </div>
-                            {% endif %}
+                        </div>
 
-                            {% if filter.option('advanced_filter') and 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
-                                {% set withAdvancedFilter = true %}
-                            {% endif %}
-                        {% endfor %}
+                        <div class="d-flex align-items-center">
+                            <input type="submit" class="btn btn btn-primary me-5"
+                                   value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                            <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                               class="btn btn-sm btn-light">
+                                {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                              {% if loop.length > 1 %}
+                                  <a href="#" id="kt_horizontal_search_advanced_link" class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#kt_advanced_search_form" aria-expanded="false">Advanced Search</a>
+                                  {% endif %}
 
-                        {% if admin.hasActiveSubclass %}
-                            <input type="hidden" name="subclass" id="filter_subclass" value="{{ admin.activeSubclassCode }}"/>
-                        {% endif %}
-                        <input type="hidden" name="filter[{{ constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::PAGE') }}]" id="filter__page" value="1">
-                        {% set foo = form[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::PAGE')].setRendered() %}
-                        {{ form_rest(form) }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if not loop.first %}
+                <div class="mb-5" >
+                    <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                           class="control-label filter">{{ filter.label|trans({}, admin.translationDomain)  }}</label>
+
+                    {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                        <div class="mb-2 d-none {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+                            {% set attr = form[filter.formName].children['value'].vars.attr|default({'class': 'form-select-sm'}) %}
+                            {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
+                        </div>
+                    {% else %}
+                        {{ form_widget(form.children[filter.formName].children['type']  ) }}
+                    {% endif %}
+                    <div class="d-flex flex-row-fluid">
+                        {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
                     </div>
                 </div>
-            </div>
+                {% endif %}
 
+                {% if filter.option('advanced_filter') and 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                    {% set withAdvancedFilter = true %}
+                {% endif %}
+            {% endfor %}
+
+            {% if admin.hasActiveSubclass %}
+                <input type="hidden" name="subclass" id="filter_subclass" value="{{ admin.activeSubclassCode }}"/>
+            {% endif %}
+            <input type="hidden" name="filter[{{ constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::PAGE') }}]" id="filter__page" value="1">
+            {% set foo = form[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::PAGE')].setRendered() %}
+            {{ form_rest(form) }}
         </form>
 
     {% endif %}
 {% endblock %}
 
 {% block list_table %}
-    <div id="menuTabs"
-         data-list-url="{{ admin.generateUrl('list', {'render': true}) }}"
-         data-update-url="{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}"
-         data-last-edited="{{ menu_id }}">
-        {% include "@NetworkingInitCms/MenuItemAdmin/menu_tabs.html.twig" %}
-    </div>
+<div id="menuTabs"
+     data-list-url="{{ admin.generateUrl('list', {'render': true}) }}"
+     data-update-url="{{ admin.generateUrl('ajaxController', {"operation":"updateNodes"}) }}"
+     data-last-edited="{{ menu_id }}">
+    {% include "@NetworkingInitCms/MenuItemAdmin/menu_tabs.html.twig" %}
+</div>
 <div class="modal fade" tabindex="-1" role="dialog" id="menu_dialog">
     <div class="modal-dialog modal-lg" >
         <div class="modal-content">
         </div>
     </div>
-    </div>
+</div>
 {% endblock %}
 
 {% block before_body_end %}
     {{ parent() }}
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/jstree/jstree.bundle.js') }}"></script>
     <script src="{{ asset('menuAdmin.js', 'init_cms') }}"></script>
-    <script>
-    </script>
 {% endblock %}

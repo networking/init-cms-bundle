@@ -35,6 +35,12 @@ security:
                 failure_path: null
                 use_referer: true
                 default_target_path: /admin/dashboard
+            json_login:
+                provider: sonata_user_bundle
+                # api_login is a route we will create below
+                check_path: cms_api_login
+                username_path: _username
+                password_path: _password
             logout:
                 path: /admin/logout
                 target: /

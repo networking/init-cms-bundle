@@ -12,7 +12,7 @@ iframe{
 }
 
 
-div#item_list {
+div#item_list > .tiles {
   display: grid;
   grid-gap: 2rem;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -23,6 +23,7 @@ div#item_list {
     justify-content: space-between;
     cursor: move;
     aspect-ratio: 1;
+    overflow: hidden;
     .hidden-iframe{
       position: absolute;
       width: 1px;
@@ -66,4 +67,7 @@ div#item_list {
 .dropzone .content_preview
 {
   text-align: initial;
+}
+.collection-item{
+  background-color: rgb(250 250 250 / 50%);
 }

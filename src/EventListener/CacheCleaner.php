@@ -12,10 +12,19 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PostRemoveEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Events;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Entity\MenuItem;
 
+#[
+    AsEntityListener(event: Events::postPersist, method: 'postPersist', entity: MenuItem::class),
+    AsEntityListener(event: Events::postUpdate, method: 'postUpdate', entity: MenuItem::class),
+    AsEntityListener(event: Events::postRemove, method: 'postRemove', entity: MenuItem::class),
+]
 class CacheCleaner
 {
     /**
@@ -32,31 +41,19 @@ class CacheCleaner
         $this->pageCache = $pageCache;
     }
 
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(MenuItem $menuItem, PostPersistEventArgs $args)
     {
-        $entity = $args->getEntity();
-
-        if ($entity instanceof MenuItem) {
             $this->cleanCache();
-        }
     }
 
-    public function postUpdate(LifecycleEventArgs $args)
+    public function postUpdate(MenuItem $menuItem, PostUpdateEventArgs $args)
     {
-        $entity = $args->getEntity();
-
-        if ($entity instanceof MenuItem) {
             $this->cleanCache();
-        }
     }
 
-    public function postRemove(LifecycleEventArgs $args)
+    public function postRemove(MenuItem $menuItem, PostRemoveEventArgs $args)
     {
-        $entity = $args->getEntity();
-
-        if ($entity instanceof MenuItem) {
             $this->cleanCache();
-        }
     }
 
     /**

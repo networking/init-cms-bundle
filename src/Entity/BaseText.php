@@ -48,7 +48,7 @@ abstract class BaseText extends LayoutBlock implements ContentInterface, TextInt
     /**
      * clone action, set id null.
      */
-    public function __clone()
+    public function __clone(): void
     {
         $this->id = null;
     }
@@ -106,7 +106,7 @@ abstract class BaseText extends LayoutBlock implements ContentInterface, TextInt
      *
      * @return array
      */
-    public function getTemplateOptions($params = [])
+    public function getTemplateOptions($params = []): array
     {
         return ['text' => $this->getText()];
     }
@@ -125,7 +125,7 @@ abstract class BaseText extends LayoutBlock implements ContentInterface, TextInt
     /**
      * @return array
      */
-    public function getAdminContent()
+    public function getAdminContent(): array
     {
         return [
             'content' => ['text' => $this],

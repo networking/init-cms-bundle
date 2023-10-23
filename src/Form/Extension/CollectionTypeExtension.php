@@ -20,7 +20,7 @@ class CollectionTypeExtension
             'wrapper_div' => ['class' => 'form-group'],
             'horizontal_wrapper_div' => ['class' => 'col-sm-3 col-sm-offset-3'],
             'attr' => ['class' => 'btn btn-sm btn-light-danger remove-button float-end'],
-            'icon' => 'fa fa-trash'
+            'icon' => 'trash'
         ]
     ];
 

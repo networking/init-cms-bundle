@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Helper;
 
 use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -46,10 +45,6 @@ class LanguageSwitcherHelper
      */
     protected $pageManager;
 
-    /**
-     * @var SerializerInterface
-     */
-    protected $serializer;
 
     /**
      * @var \Doctrine\Persistence\ObjectManager
@@ -73,7 +68,6 @@ class LanguageSwitcherHelper
         PageHelper $pageHelper,
         PageManagerInterface $pageManager,
         RouterInterface $router,
-        SerializerInterface $serializer,
         protected $fallbackRoute
     ) {
         $this->requestStack = $requestStack;
@@ -81,7 +75,6 @@ class LanguageSwitcherHelper
         $this->pageHelper = $pageHelper;
         $this->pageManager = $pageManager;
         $this->router = $router;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -133,6 +126,8 @@ class LanguageSwitcherHelper
                 return $route;
             }
         }
+
+
 
         if ($content instanceof PageInterface) {
             $translation = $content->getAllTranslations()->get($locale);

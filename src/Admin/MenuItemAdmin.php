@@ -178,7 +178,7 @@ class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
         $request = $this->getRequest();
 
@@ -193,23 +193,30 @@ class MenuItemAdmin extends BaseAdmin
         }
 
 
-        $formMapper
+        $form
             ->with('general', ['label' => false])
-            ->add('locale', HiddenType::class)
             ->add('name', null, ['layout' => 'horizontal']);
 
         if ($createRoot) {
-            $formMapper
+            $form
                 ->add('description', null, ['layout' => 'horizontal'])
                 ->add('isRoot', HiddenType::class, ['data' => true])
+                ->add('locale', ChoiceType::class, [
+                    'placeholder' => false,
+                    'choice_loader' => new CallbackChoiceLoader(
+                        fn() => $this->getLocaleChoices()
+                    ),
+                    'preferred_choices' => [$this->getDefaultLocale()],
+                    'translation_domain' => $this->getTranslationDomain()])
                 ->end();
 
             return;
         }
+        $form ->add('locale', HiddenType::class);
 
-        $formMapper->end();
+        $form->end();
         // start group page_or_url
-        $formMapper
+        $form
             ->with(
                 'form.legend_page_or_url',
                 [
@@ -223,16 +230,17 @@ class MenuItemAdmin extends BaseAdmin
         );
         $pageClass = $pageAdmin->getClass();
         $locale = $this->getSubject()->getLocale();
-        $formMapper
+        $form
             ->add(
                 'page',
                 AutocompleteType::class,
                 [
-                    'attr' => ['style' => 'width:220px'],
+                    'attr' => ['placeholder' => ''],
                     'class' => $pageClass,
                     'required' => false,
                     'layout' => 'horizontal',
                     'choice_label' => 'AdminTitle',
+                    'row_attr' => ['class' => 'form-floating mb-3'],
                     'query_builder' => function (EntityRepository $er) use (
                         $locale
                     ) {
@@ -245,30 +253,30 @@ class MenuItemAdmin extends BaseAdmin
                     },
                 ]
             );
-        $formMapper->add(
+        $form->add(
             'redirect_url',
             UrlType::class,
             [
-                'row_attr' => ['class' => 'form-floating'],
+                'row_attr' => ['class' => 'form-floating mb-3'],
                 'required' => false,
                 'help' => 'help.redirect_url',
                 'layout' => 'horizontal',
             ]
         );
-        $formMapper->add(
+        $form->add(
             'internal_url',
             TextType::class,
             [
-                'row_attr' => ['class' => 'form-floating'],
+                'row_attr' => ['class' => 'form-floating mb-3'],
                 'required' => false,
                 'help' => 'help.internal_url',
                 'layout' => 'horizontal',
             ]
         );
-        $formMapper->end();
+        $form->end();
 
         // start group optionals
-        $formMapper
+        $form
             ->with(
                 'form.legend_options',
                 [
@@ -281,7 +289,7 @@ class MenuItemAdmin extends BaseAdmin
                 'visibility',
                 ChoiceType::class,
                 [
-                    'row_attr' => ['class' => 'form-floating'],
+                    'row_attr' => ['class' => 'form-floating mb-3'],
                     'layout' => 'horizontal',
                     'help' => 'visibility.helper.text',
                     'choices' => MenuItem::getVisibilityList(),
@@ -292,7 +300,7 @@ class MenuItemAdmin extends BaseAdmin
                 'link_target',
                 ChoiceType::class,
                 [
-                    'row_attr' => ['class' => 'form-floating'],
+                    'row_attr' => ['class' => 'form-floating mb-3'],
                     'layout' => 'horizontal',
                     'choices' => $this->getTranslatedLinkTargets(),
                     'required' => false,
@@ -302,7 +310,7 @@ class MenuItemAdmin extends BaseAdmin
                 'link_class',
                 TextType::class,
                 [
-                    'row_attr' => ['class' => 'form-floating'],
+                    'row_attr' => ['class' => 'form-floating mb-3'],
                     'layout' => 'horizontal',
                     'required' => false,
                 ]
@@ -311,7 +319,7 @@ class MenuItemAdmin extends BaseAdmin
                 'link_rel',
                 TextType::class,
                 [
-                    'row_attr' => ['class' => 'form-floating'],
+                    'row_attr' => ['class' => 'form-floating mb-3'],
                     'layout' => 'horizontal',
                     'required' => false,
                 ]
@@ -332,9 +340,9 @@ class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add(
                 'locale',
                 CallbackFilter::class,
@@ -356,9 +364,9 @@ class MenuItemAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier('name')
             ->add('path')
             ->add(

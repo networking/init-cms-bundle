@@ -106,6 +106,7 @@ class ImageProvider extends FileProvider implements ImageProviderInterface
 	        return $path;
         }
 
+
         return $this->getCdn()->getPath($path, $media->getCdnIsFlushable());
     }
 

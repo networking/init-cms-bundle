@@ -13,11 +13,8 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Doctrine\ORM\EntityRepository;
-use FOS\CKEditorBundle\Model\ConfigManager;
 use FOS\CKEditorBundle\Config\CKEditorConfiguration;
-use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Admin\LayoutBlockAdmin;
-use Networking\InitCmsBundle\Admin\PageAdmin;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
@@ -89,7 +86,6 @@ class NetworkingHelperExtension extends AbstractExtension
         protected ManagerRegistry $doctrine,
         protected TranslatorInterface $translator,
         protected LayoutBlockAdmin $layoutBlockAdmin,
-        protected SerializerInterface $serializer,
         protected PageManagerInterface $pageManager,
         protected CKEditorConfiguration $ckEditorConfigManager,
         protected $templates = [],
@@ -487,11 +483,19 @@ class NetworkingHelperExtension extends AbstractExtension
                 }
             }
 
+
             if (!$locale && method_exists($admin, 'getDefaultLocale')) {
                 $locale = $admin->getDefaultLocale();
             }
 
+
+
+            if(!$locale){
+                $locale = $this->getCurrentLocale();
+            }
+
         }
+
 
 
         return $locale;
@@ -806,7 +810,7 @@ class NetworkingHelperExtension extends AbstractExtension
             return static::truncate($env, $text, $radius * 2, $ellipsis);
         }
 
-        $text = html_entity_decode($text, null, $env->getCharset());
+        $text = html_entity_decode($text, ENT_QUOTES, $env->getCharset());
 
         $append = $prepend = $ellipsis;
 

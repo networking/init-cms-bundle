@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Model\Tag;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
@@ -29,19 +30,14 @@ use Sonata\AdminBundle\Route\RouteCollectionInterface;
  */
 class TagAdmin extends AbstractAdmin
 {
-    /**
-     * Default values to the datagrid.
-     *
-     * @var array
-     */
-    protected $datagridValues = [
-        '_page' => 1,
-        '_per_page' => 25,
-        '_sort_by' => 'path',
-        '_sort_order' => 'ASC',
-    ];
 
     protected $formOptions =['layout' => 'horizontal'];
+
+    public function configureDefaultSortValues(array &$sortValues) : void{
+        $sortValues[DatagridInterface::PER_PAGE] = 1000000;
+        $sortValues[DatagridInterface::SORT_BY] = 'path';
+        $sortValues[DatagridInterface::SORT_ORDER] = 'ASC';
+    }
 
 
     /**
@@ -79,12 +75,12 @@ class TagAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
 
 
         $id = $this->getSubject() ? $this->getSubject()->getId() : null;
-        $formMapper
+        $form
             ->with('tag.form.group_tag', ['label' => false])
             ->add(
                 'name',
@@ -121,18 +117,18 @@ class TagAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add('path', null, ['label' => 'filter.label_name']);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier('name')
             ->add('path')
             ->add(

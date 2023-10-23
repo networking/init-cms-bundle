@@ -1,4 +1,0 @@
-Networking\InitCmsBundle\Entity\GalleryItem:
-    properties:
-          id:
-            type: integer

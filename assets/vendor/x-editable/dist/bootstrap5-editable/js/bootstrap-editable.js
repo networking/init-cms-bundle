@@ -5462,6 +5462,7 @@ Editableform based on Twitter Bootstrap 3
 			this.component = false;
 
 		this.picker = $(DPGlobal.template);
+
 		this._buildEvents();
 		this._attachEvents();
 
@@ -5630,14 +5631,14 @@ Editableform based on Twitter Bootstrap 3
 				[$(document), {
 					mousedown: $.proxy(function (e) {
 						// Clicked outside the datepicker, hide it
-						if (!(
-							this.element.is(e.target) ||
-							this.element.find(e.target).size() ||
-							this.picker.is(e.target) ||
-							this.picker.find(e.target).size()
-						)) {
-							this.hide();
-						}
+						// if (!(
+						// 	this.element.is(e.target) ||
+						// 	this.element.find(e.target).size() ||
+						// 	this.picker.is(e.target) ||
+						// 	this.picker.find(e.target).size()
+						// )) {
+						// 	this.hide();
+						// }
 					}, this)
 				}]
 			];

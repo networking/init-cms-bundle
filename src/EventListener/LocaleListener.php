@@ -53,9 +53,9 @@ class LocaleListener
     public function __construct(
         AccessMapInterface $accessMap,
         array $availableLanguages,
-        protected $allowLocaleCookie,
-        protected $singleLanguage,
-        protected $defaultLocale = 'en',
+        protected bool $allowLocaleCookie,
+        protected bool $singleLanguage,
+        protected string $defaultLocale = 'en',
         RouterInterface $router = null
 
     ) {
@@ -82,7 +82,7 @@ class LocaleListener
     /**
      * @return void
      */
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

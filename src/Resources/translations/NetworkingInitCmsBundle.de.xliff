@@ -321,6 +321,14 @@
                   ]]>
                  </target>
              </trans-unit>
+             <trans-unit id="link.show_all">
+             	<source>link.show_all</source>
+             	<target>Alle anzeigen</target>
+             </trans-unit>
+             <trans-unit id="help">
+             	<source>help</source>
+             	<target>Hilfe</target>
+             </trans-unit>
 
 
 

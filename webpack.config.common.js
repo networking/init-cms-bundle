@@ -29,15 +29,6 @@ module.exports = {
         twoFactorSignin: './assets/cms/authentication/sign-in/two-factor.js',
         generalSignin: './assets/cms/authentication/sign-in/general.js',
         networking_initcms: './assets/cms/scss/style.scss',
-
-        // networking_initcms: [
-        //     './assets/vendor/select2/css/select2.min.css',
-        //     './assets/vendor/select2/css/select2-bootstrap.min.css',
-        //     './assets/vendor/jquery-ui-1.12.1/jquery-ui.css',
-        //     './assets/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
-        //     './assets/scss/initcms_bootstrap.scss',
-        //     './assets/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
-        // ],
         'tui-image-editor': './assets/css/tui-image-editor.css',
         'admin-navbar': './assets/scss/admin-navbar-standalone.scss',
     },
@@ -96,62 +87,18 @@ module.exports = {
         new VueLoaderPlugin(),
         new CopyPlugin({
                 patterns: [
-                    // {
-                    //     from: './assets/js/admin-lte/',
-                    //
-                    //     // optional target path, relative to the output dir
-                    //     to: './admin-lte/[path][name][ext]',
-                    // },
                     {
                         from: './assets/admin-theme/',
-
-                        // optional target path, relative to the output dir
                         to: './admin-theme/[path][name][ext]',
                     },
                     {
                         from: './assets/js/pdf-viewer.js',
                         to: './js/pdf-viewer.js',
                     },
-                    // {
-                    //     from: './assets/js/sandbox.js',
-                    //     to: './js/sandbox.js',
-                    // },
-                    // {
-                    //     from: './assets/css/sandbox.css',
-                    //     to: './css/sandbox.css',
-                    // },
-                    // {
-                    //     from: './assets/vendor/featherlight/src/featherlight.css',
-                    //     to: './vendor/featherlight/src/featherlight.css',
-                    // },
-                    {
-                        from: './assets/vendor/select2/js/i18n/',
-                        to: './vendor/select2/js/i18n/',
-                    },
-                    // {
-                    //     from: './assets/vendor/smalot-bootstrap-datetimepicker/js/',
-                    //     to: './vendor/smalot-bootstrap-datetimepicker/js/',
-                    // },
                     {
                         from: './assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
                         to: './vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
                     },
-                    // {
-                    //     from: './assets/vendor/ios-html5-drag-drop-shim/',
-                    //     to: './vendor/ios-html5-drag-drop-shim/',
-                    // },
-                    // {
-                    //     from: './assets/vendor/nestedSortable/',
-                    //     to: './vendor/nestedSortable/',
-                    // },
-                    // {
-                    //     from: './assets/vendor/icheck/',
-                    //     to: './vendor/icheck/',
-                    // },
-                    // {
-                    //     from: './assets/vendor/dropzone/dropzone.js',
-                    //     to: './vendor/dropzone/dropzone.js',
-                    // },
                     {
                         from: './assets/vendor/filerobot-image-editor/index_old.js',
                         to: './vendor/filerobot-image-editor/index_old.js',
@@ -173,10 +120,6 @@ module.exports = {
                         to: './vendor/pdfjs',
                     },
                     {
-                        from: './assets/fonts',
-                        to: './fonts',
-                    },
-                    {
                         from: './assets/img',
                         to: './img',
                     },
@@ -186,55 +129,6 @@ module.exports = {
                     }
                 ]
             }),
-        // new WebpackConcatPlugin({
-        //     bundles: [
-        //         {
-        //             dest: './src/Resources/public/jquery-plugins.js',
-        //             src: [
-        //                 './assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js',
-        //                 './assets/vendor/jquery-form/jquery.form.js',
-        //             ],
-        //             transforms: {
-        //                 after: async (code) => {
-        //                     const minifiedCode = await terser.minify(code);
-        //                     return minifiedCode.code;
-        //                 },
-        //             },
-        //         },
-        //         {
-        //             dest: './src/Resources/public/bootstrap-plugins.js',
-        //             src: [
-        //                 './assets/vendor/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
-        //                 './assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
-        //                 './assets/vendor/bootstrap-contextmenu/bootstrap-contextmenu.js',
-        //             ],
-        //             transforms: {
-        //                 after: async (code) => {
-        //                     const minifiedCode = await terser.minify(code);
-        //                     return minifiedCode.code;
-        //                 },
-        //             },
-        //         },
-        //         {
-        //             dest: './src/Resources/public/app.js',
-        //             src: [
-        //                 './assets/js/collection.js',
-        //                 './assets/vendor/select2/js/select2.full.js',
-        //                 './assets/vendor/featherlight/src/featherlight.js',
-        //                 './assets/js/index.js',
-        //             ],
-        //             transforms: {
-        //                 after: async (code) => {
-        //                     const minifiedCode = await terser.minify(code);
-        //                     return minifiedCode.code;
-        //                 },
-        //             },
-        //         },
-        //         {
-        //             src: './node_modules/bootstrap/dist/js/bootstrap.js',
-        //             dest: './src/Resources/public/bootstrap.js',
-        //         }
-        //     ],
-        // })
+
     ]
 }

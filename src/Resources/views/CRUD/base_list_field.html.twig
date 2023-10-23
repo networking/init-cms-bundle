@@ -9,7 +9,25 @@ file that was distributed with this source code.
 
 #}
 
-<td class="sonata-ba-list-field sonata-ba-list-field-{{ field_description.type }}" objectId="{{ admin.id(object) }}"{% if field_description.option('row_align') %} style="text-align:{{ field_description.option('row_align') }}"{% endif %}>
+
+{% if field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_DATE') and value is not empty %}
+    {# it is a x-editable format https://vitalets.github.io/x-editable/docs.html#date #}
+    {% set data_value = value|date('Y-m-d', options.timezone|default(null)) %}
+{% elseif field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_DATETIME') and value is not empty %}
+    {# it is a x-editable format https://vitalets.github.io/x-editable/docs.html#date #}
+    {% set data_value = value|date('c', 'UTC') %}
+{% elseif field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_BOOLEAN') and value is empty %}
+    {% set data_value = 0 %}
+{% elseif value is iterable %}
+    {% set data_value = value|json_encode %}
+{% else %}
+    {% set data_value = value %}
+{% endif %}
+
+
+<td objectId="{{ admin.id(object) }}"
+    data-sort="{{ data_value }}"
+        {% if field_description.option('row_align') %} style="text-align:{{ field_description.option('row_align') }}"{% endif %}>
     {% set route_name = field_description.option('route').name|default(sonata_config.getOption('default_admin_route')) %}
     {% set route_parameters = field_description.option('route').parameters|default([]) %}
 
@@ -18,15 +36,15 @@ file that was distributed with this source code.
         and admin.hasRoute(route_name)
         and admin.hasAccess(route_name, route_name in ['show', 'edit'] ? object : null)
     %}
-        <a class="sonata-link-identifier" href="{{ admin.generateObjectUrl(route_name, object, route_parameters) }}">
+        <a href="{{ admin.generateObjectUrl(route_name, object, route_parameters) }}">
             {%- block field %}
                 {% apply spaceless %}
                     {% if field_description.option('collapse') is not null %}
                         {% set collapse = field_description.option('collapse') %}
                         <div class="sonata-readmore"
-                             data-readmore-height="{{ collapse.height|default(40) }}"
-                             data-readmore-more="{{ collapse.more|default('read_more')|trans({}, 'SonataAdminBundle') }}"
-                             data-readmore-less="{{ collapse.less|default('read_less')|trans({}, 'SonataAdminBundle') }}">{{ value }}</div>
+                              data-readmore-height="{{ collapse.height|default(40) }}"
+                              data-readmore-more="{{ collapse.more|default('read_more')|trans({}, 'SonataAdminBundle') }}"
+                              data-readmore-less="{{ collapse.less|default('read_less')|trans({}, 'SonataAdminBundle') }}">{{ value }}</div>
                     {% else %}
                         {{ value }}
                     {% endif %}
@@ -44,30 +62,19 @@ file that was distributed with this source code.
         {% endif %}
 
         {% if is_editable and x_editable_type %}
-            {# NEXT_MAJOR: Remove the 'code' parameter #}
             {% set url = path(
                 'sonata_admin_set_object_field_value',
                 {
                     '_sonata_admin': admin.baseCodeRoute,
                     'context': 'list',
                     'field': field_description.name,
-                    'objectId': admin.urlSafeIdentifier(object),
-                    'code': admin.code(object)
+                    'objectId': admin.urlSafeIdentifier(object)
                 } + (admin.hasRequest() ? admin.request.attributes.get('_route_params', {}) : {})
                 + admin.getPersistentParameters()
                 + app.request.query.all|default({})
-                ) %}
+            ) %}
 
-            {% if field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_DATE') and value is not empty %}
-                {# it is a x-editable format https://vitalets.github.io/x-editable/docs.html#date #}
-                {% set data_value = value|date('Y-m-d', options.timezone|default(null)) %}
-            {% elseif field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_BOOLEAN') and value is empty %}
-                {% set data_value = 0 %}
-            {% elseif value is iterable %}
-                {% set data_value = value|json_encode %}
-            {% else %}
-                {% set data_value = value %}
-            {% endif %}
+
 
             <span {% block field_span_attributes %}class="x-editable"
                   data-type="{{ x_editable_type }}"
@@ -79,9 +86,9 @@ file that was distributed with this source code.
                           data-title="{{ field_description.label|trans({}, field_description.translationDomain) }}"
                       {% endif %}
                   {% endif %}
-                    {% if field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_DATE') %}
-                        data-format="yyyy-mm-dd"
-                    {% endif %}
+                  {% if field_description.type == constant('Sonata\\AdminBundle\\FieldDescription\\FieldDescriptionInterface::TYPE_DATE') %}
+                    data-format="yyyy-mm-dd"
+                  {% endif %}
                   data-pk="{{ admin.id(object) }}"
                   data-url="{{ url }}" {% endblock %}>
                 {{ block('field') }}

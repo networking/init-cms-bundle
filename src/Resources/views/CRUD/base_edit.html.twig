@@ -29,13 +29,12 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block actions %}
-    <div class="sonata-actions">
-        {% include '@SonataAdmin/Button/show_button.html.twig' %}
-        {% include '@SonataAdmin/Button/history_button.html.twig' %}
-        {% include '@SonataAdmin/Button/acl_button.html.twig' %}
-        {% include '@SonataAdmin/Button/create_button.html.twig' %}
-        {% include '@SonataAdmin/Button/list_button.html.twig' %}
-    </div>
+    {% if admin.hasAccess('list') and admin.hasRoute('list') %}
+            <a class="btn btn-sm btn-outine btn-light-primary" href="{{ admin.generateUrl('list') }}">
+                <i class="fas fa-list" aria-hidden="true"></i>
+                {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}
+            </a>
+    {% endif %}
 {% endblock %}
 
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}

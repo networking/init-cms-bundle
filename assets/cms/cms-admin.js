@@ -1,6 +1,4 @@
 import './cms-admin.scss';
-import InitCms from "../js/initcms";
-
 window.axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
 
 import CMSMediaEntity from "./media-entity"
@@ -10,6 +8,7 @@ import CMSModelList from "./model-list"
 import {CMSRouting} from "./cms-routing"
 import CMSSortableCollection from "./sortable-collection"
 import 'select2'
+import { setLocale } from '@symfony/ux-translator';
 
 $.fn.select2.defaults.set("theme", "bootstrap5");
 $.fn.select2.defaults.set("width", "100%");
@@ -25,7 +24,6 @@ const CMSAdmin = {
 
     async getRouting() {
         if (!this.routing) {
-            console.log('loading routing')
             this.routing = CMSRouting.load();
         }
 
@@ -44,6 +42,7 @@ const CMSAdmin = {
         this.initSelect2();
         this.initCkeditor();
         this.initCollectionType()
+        setLocale(document.documentElement.lang);
 
     },
 
@@ -191,15 +190,18 @@ const CMSAdmin = {
 
     },
     initCollectionType() {
-        let subject = document.querySelector('body');
+        document.querySelectorAll('[data-collection-list]').forEach((element) => {
+            this.setupCollectionType(element)
+        })
+    },
+    setupCollectionType(subject) {
 
         if (subject.dataset.cmsCollectionType) {
             return;
         }
 
-        subject.dataset.cmsCollectionType = 1;
-
         CMSSortableCollection.init()
+
 
         KTUtil.on(subject, '[data-collection-add-btn]', 'click', (event) => {
             event.preventDefault()
@@ -215,8 +217,8 @@ const CMSAdmin = {
             let lastItem = [...document.querySelectorAll(`div[id^="${container.id}_"]`)].pop()
             if (lastItem) {
                 counter = parseInt(lastItem.id.replace(`${container.id}_`, ''))
+                counter += 1
             }
-            counter += 1
 
 
             let proto = container.dataset.prototype;
@@ -246,7 +248,9 @@ const CMSAdmin = {
             btn.closest('.collection-item').remove();
             btn.dispatchEvent(new CustomEvent('afterRemoveItem', {bubbles: true}))
 
-        })
+        });
+
+        subject.dataset.cmsCollectionType = 1;
     },
     initSpecialFields() {
 

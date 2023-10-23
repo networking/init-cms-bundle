@@ -33,7 +33,7 @@ file that was distributed with this source code.
                              data-content-types="{{ zone.restricted_types }}"
                              data-max-items="{{ zone.max_content_items }}">
 
-                            <div class="empty_layout_block {% if get_sub_form_by_zone(form.children, zone.name)|length > 0 %}d-none{% endif %}">
+                            <div class="empty_layout_block {% if admin.subject.layoutBlocks(zone.name, true)|length > 0 %}d-none{% endif %}">
                                 <p class="info-soft ">
                                     {% trans from 'PageAdmin' %}info.layout_block_empty{% endtrans %}
                                 </p>

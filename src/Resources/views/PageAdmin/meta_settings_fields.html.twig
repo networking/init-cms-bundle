@@ -12,5 +12,5 @@
         {% endif %}
     {% endfor %}
     <input name="{{ form['_token'].vars.full_name }}" type="hidden" value="{{ form['_token'].vars.data }}" />
-    <input type="submit" class="btn btn-primary" name="btn-meta-settings" id="metaSettingsSubmit" value="{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}" />
+    <input type="submit" class="btn btn-sm btn-primary" name="btn-meta-settings" id="metaSettingsSubmit" value="{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}" />
 </form>

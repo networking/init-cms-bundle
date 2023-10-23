@@ -276,14 +276,14 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add('name', null)
             ->add('authorName', null, ['hidden' => true]);
 
         if ($this->showTagTree) {
-            $datagridMapper->add('tags', CallbackFilter::class, [
+            $filter->add('tags', CallbackFilter::class, [
                 'label_render' => false,
                 'label' => false,
                 'field_type' => HiddenType::class,
@@ -304,10 +304,10 @@ class MediaAdmin extends Admin
                 },
             ]);
         } else {
-            $datagridMapper->add('tags');
+            $filter->add('tags');
         }
 
-        $datagridMapper->add(
+        $filter->add(
             'context',
             SimpleStringFilter::class,
             [
@@ -390,7 +390,7 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
 
         $media = $this->getSubject();
@@ -404,9 +404,9 @@ class MediaAdmin extends Admin
             return;
         }
 
-        $formMapper->add('providerName', HiddenType::class);
+        $form->add('providerName', HiddenType::class);
 
-        $formMapper->getFormBuilder()->addModelTransformer(
+        $form->getFormBuilder()->addModelTransformer(
             new ProviderDataTransformer(
                 $this->pool,
                 $this->getClass(),
@@ -418,9 +418,9 @@ class MediaAdmin extends Admin
         $provider = $this->pool->getProvider($media->getProviderName());
 
         if ($media->getId()) {
-            $provider->buildEditForm($formMapper);
+            $provider->buildEditForm($form);
         } else {
-            $provider->buildCreateForm($formMapper);
+            $provider->buildCreateForm($form);
         }
 
         if (in_array(
@@ -428,7 +428,7 @@ class MediaAdmin extends Admin
             $this->localisedMediaProviders
         )
         ) {
-            $formMapper->add(
+            $form->add(
                 'locale',
                 ChoiceType::class,
                 ['choices' => $this->getLocaleChoices()]
@@ -437,7 +437,7 @@ class MediaAdmin extends Admin
 
         $transformer = new TagTransformer($this->hasMultipleMediaTags);
 
-        $formMapper->add(
+        $form->add(
             'tags',
             ModelType::class,
             [
@@ -454,7 +454,7 @@ class MediaAdmin extends Admin
         );
 
 
-        $formMapper->add('providerName', HiddenType::class);
+        $form->add('providerName', HiddenType::class);
     }
 
     /**
@@ -478,9 +478,9 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier(
                 'name',
                 'string',

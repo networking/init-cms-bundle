@@ -93,6 +93,7 @@ abstract class BasePage implements PageInterface
 
     protected array $allChildren = [];
 
+    #[Ignore]
     protected ?PageInterface $alias = null;
 
     protected ?Collection $layoutBlocks = null;
@@ -146,6 +147,11 @@ abstract class BasePage implements PageInterface
     protected string $snapshotClassType = PageSnapshot::class;
 
     protected ?MediaInterface $socialMediaImage = null;
+
+    protected ?string $aliasFullPath = null;
+
+    #[Ignore]
+    protected ?string $oldTitle = null;
 
 
     public function __construct()
@@ -586,6 +592,7 @@ abstract class BasePage implements PageInterface
     public function getLayoutBlocks(?string $zone = null, $includingInactive = false): Collection|array
     {
         if (!is_null($zone)) {
+
             return $this->layoutBlocks->filter(
                 function (?LayoutBlockInterface $layoutBlock) use ($zone, $includingInactive) {
 
@@ -699,6 +706,7 @@ abstract class BasePage implements PageInterface
         return $this->originals;
     }
 
+    #[Ignore]
     public function getOriginal(): ?PageInterface
     {
         return $this->originals->first()?:null;
@@ -800,6 +808,9 @@ abstract class BasePage implements PageInterface
 
     public function setUrl(?string $url)
     {
+        if(!$url){
+            return;
+        }
         $url = Urlizer::urlize($url);
         $this->url = $url;
     }
@@ -852,6 +863,7 @@ abstract class BasePage implements PageInterface
 
     public function getRoute(): RouteObjectInterface
     {
+
         return ContentRouteManager::generateRoute(
             $this->contentRoute,
             $this->contentRoute->getPath(),
@@ -909,8 +921,20 @@ abstract class BasePage implements PageInterface
         return $this->getContentRoute()?->getPath() ?? null;
     }
 
+    public function setAliasFullPath(?string $aliasFullPath): self
+    {
+        $this->aliasFullPath = $aliasFullPath;
+
+        return $this;
+    }
+
     public function getAliasFullPath(): ?string
     {
+
+        if($this->aliasFullPath){
+            return $this->aliasFullPath;
+        }
+
         if (!$this->getAlias()) {
             return null;
         }
@@ -1098,6 +1122,10 @@ abstract class BasePage implements PageInterface
 
         if ($this->isOffline()) {
             return self::STATUS_OFFLINE;
+        }
+
+        if ($this->isReview()) {
+            return self::STATUS_REVIEW;
         }
 
         return self::STATUS_DRAFT;

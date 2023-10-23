@@ -17,9 +17,9 @@ file that was distributed with this source code.
        {% if isSubNav is not defined %}data-bs-toggle="tooltip" data-bs-placement="bottom"{% endif %}
        id="{{ admin.getClassnameLabel() }}_{{ object.id }}"
        title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
-        <i class="ki-outline ki-trash fs-3"></i>
+        <i class="ki-outline ki-trash fs-3 {{ isSubNav is defined and isSubNav?'menu-icon':'' }}"></i>
         {% if isSubNav is defined  %}
-         &nbsp;  {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+          {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
         {% endif %}
    </a>
 {% endif %}

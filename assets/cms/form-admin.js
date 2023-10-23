@@ -139,7 +139,6 @@ let initDropZone = ()=> {
 
         },
         onRemove: function (/**Event*/evt) {
-            console.log(evt)
         }
     });
 }

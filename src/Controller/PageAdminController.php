@@ -23,6 +23,7 @@ use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,7 +86,7 @@ class PageAdminController extends CRUDController
         $language = \Locale::getDisplayLanguage($locale);
 
         if ($request->getMethod() == 'POST') {
-//            try {
+            try {
                 $pageCopy = $this->pageHelper->makeTranslationCopy(
                     $page,
                     $locale
@@ -100,16 +101,16 @@ class PageAdminController extends CRUDController
                     '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
-//            } catch (\Exception $e) {
-//                $status = Response::HTTP_NOT_ACCEPTABLE;
-//                $message = $message = $this->translate(
-//                    'message.translation_not_saved',
-//                    ['%language%' => $language, '%url%' => $page->getFullPath()]
-//                );
-//
-//                $message = $e->getMessage();
-//                $html = '';
-//            }
+            } catch (\Exception $e) {
+                $status = Response::HTTP_NOT_ACCEPTABLE;
+                $message = $message = $this->translate(
+                    'message.translation_not_saved',
+                    ['%language%' => $language, '%url%' => $page->getFullPath()]
+                );
+
+                $message = $e->getMessage();
+                $html = '';
+            }
 
             return $this->renderJson(
                 [
@@ -710,7 +711,7 @@ class PageAdminController extends CRUDController
                 $object->setStatus(PageInterface::STATUS_DRAFT);
                 $this->admin->update($object);
 
-                return $this->getAjaxEditResponse($object);
+                return $this->getAjaxEditResponse($object, $form);
             } else {
                 $form->addError(
                     new FormError(
@@ -771,7 +772,7 @@ class PageAdminController extends CRUDController
                 $page->setUpdatedAt();
                 $page = $this->admin->update($page);
 
-                return $this->getAjaxEditResponse($page);
+                return $this->getAjaxEditResponse($page, $form);
             }
             $response->setStatusCode(422);
         }
@@ -840,7 +841,7 @@ class PageAdminController extends CRUDController
      *
      * @throws \Twig\Error\RuntimeError
      */
-    protected function getAjaxEditResponse(PageInterface $page)
+    protected function getAjaxEditResponse(PageInterface $page, ?FormInterface $form = null)
     {
 
         $pageStatusSettingsHtml = $this->renderView(
@@ -852,6 +853,14 @@ class PageAdminController extends CRUDController
             ]
         );
 
+        $layoutBlockSettingsHtml = $form?$this->renderView(
+            '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig',
+            [
+                'form' => $form->createView(),
+                'admin' => $this->admin,
+            ]
+        ):'';
+
         return $this->renderJson(
             [
                 'result' => 'ok',
@@ -859,6 +868,7 @@ class PageAdminController extends CRUDController
                 'title' => $page->__toString(),
                 'message' => $this->translate('info.page_settings_updated'),
                 'pageStatusSettings' => $pageStatusSettingsHtml,
+                'layoutBlockSettingsHtml' => $layoutBlockSettingsHtml,
             ]
         );
     }

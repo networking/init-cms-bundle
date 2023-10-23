@@ -22,7 +22,7 @@ const App = {
 
 
 
-        $('.x-editable', subject).editable({
+        jQuery('.x-editable', subject).editable({
             emptyclass: 'editable-empty btn btn-sm btn-default',
             emptytext: '<i class="fas fa-pencil-alt"></i>',
             container: 'body',
@@ -42,19 +42,24 @@ const App = {
                 return params;
             },
             success(response) {
-
                 if(cb){
                     return cb(response);
                 }
-
                 if(response instanceof Object && response.pk){
                     jQuery(this).attr('data-pk', response.pk);
                     return response;
                 }
 
-                const html = jQuery(response);
-                this.setup_xeditable(html);
-                jQuery(this).closest('td').replaceWith(html);
+
+
+
+                let template = document.createElement('template');
+                template.innerHTML = response.trim();
+                let newHtml = template.content.querySelector('.x-editable');
+                let span = this;
+                span.replaceWith(newHtml)
+                window.dispatchEvent(new CustomEvent('xeditable:success', {detail: {subject: span}}));
+                App.setup_xeditable(span.closest('td'));
             },
             error: (xhr) => {
                 // On some error responses, we return JSON.

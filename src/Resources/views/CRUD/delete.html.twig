@@ -49,21 +49,21 @@ file that was distributed with this source code.
                 <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
             {% endif %}
             {% if app.request.isxmlhttprequest %}
-                <button class="btn btn-light" data-bs-dismiss="modal" type="button"
+                <button class="btn btn-sm btn-light" data-bs-dismiss="modal" type="button"
                         aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</button>
-                <button type="submit" name="btn_delete" class="btn btn-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}</button>
+                <button type="submit" name="btn_delete" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}</button>
             {% else %}
                 <a href="{{ admin.generateObjectUrl('list', object) }}"
-                   class="btn btn-light">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-{#                <input type="submit" class="btn btn-danger"#}
+                   class="btn btn-sm btn-light">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+{#                <input type="submit" class="btn btn-sm btn-danger"#}
 {#                       value="{{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}"/>#}
 
-                <button type="submit" name="btn_delete" class="btn btn-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}</button>
+                <button type="submit" name="btn_delete" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}</button>
 
                 {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}
                     {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
 
-                    <a class="btn btn-success"
+                    <a class="btn btn-sm btn-success"
                        href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
                 {% endif %}
             {% endif %}

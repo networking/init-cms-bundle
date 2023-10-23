@@ -15,10 +15,14 @@ file that was distributed with this source code.
     <meta name="init-cms-page-id" content="{{ object.id }}"/>
 {% endblock %}
 {% block title %}
-    <h1 class="break-word">
+
+    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+        <span>
+
         <span class="page_title">{{ admin.toString(object) }} </span> <span
-                class="text-muted font-size-lg font-weight-light">({{ language }})</span>
-        <a class="font-size-sm font-weight-light"
+                    class="text-muted font-size-lg fw-light">({{ language }})</span>
+        </span>
+        <a class="small fw-light"
            href="{{ admin.generateUrl('list', {'locale': object.locale}) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
     </h1>
 

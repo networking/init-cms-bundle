@@ -2,6 +2,13 @@
 
 import $ from 'jquery';
 import {CMSAdmin, Routing} from './cms-admin';
+import de from './lang/datables/de.json';
+import fr from './lang/datables/fr.json';
+import en from './lang/datables/en.json';
+import it from './lang/datables/it.json';
+import { getLocale } from '@symfony/ux-translator';
+import {trans, ALL} from './translator.js';
+
 // Class definition
 var CMSList = function () {
     // Define shared variables
@@ -14,15 +21,32 @@ var CMSList = function () {
     var advanceFilterToggle
 
     // Private functions
-    var initCustomerList = function () {
+    var initList = function () {
         // Set date data order
         const tableRows = table.querySelectorAll('tbody tr');
 
-        tableRows.forEach(row => {
-            // const dateRow = row.querySelectorAll('td');
-            // const realDate = moment(dateRow[5].innerHTML, "DD MMM YYYY, LT").format(); // select date from 5th column in table
-            // dateRow[5].setAttribute('data-order', realDate);
-        });
+        let locale = getLocale();
+        let language = en
+        switch (locale.substring(0, 2)) {
+            case 'de':
+                language = de;
+                break;
+            case 'fr':
+                language = fr;
+                break;
+            case 'it':
+                language = it;
+                break;
+            default:
+                language = en;
+        }
+
+
+        let lengthMenu = [[20, 50, 100, -1], [20, 50, 100, trans(ALL, {}, 'admin')]];
+
+        if (table.dataset.lengthMenu) {
+            lengthMenu = JSON.parse(table.dataset.lengthMenu);
+        }
 
         // Init datatable --- more info on datatables: https://datatables.net/manual/
         datatable = new DataTable(table,{
@@ -30,15 +54,18 @@ var CMSList = function () {
             'columnDefs': [
                 { orderable: false, targets: [0,'no_sorting'] },
             ],
-            "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]],
+            'classes': {
+                sLengthSelect: "form-select form-select-sm d-inline-block form-select-solid w-75px" ,
+            },
+            language: language,
+            "lengthMenu": lengthMenu,
         });
 
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
         datatable.on('draw', function () {
             initToggleToolbar();
-            handleDeleteRows();
             toggleToolbars();
-            KTMenu.init(); // reinit KTMenu instances 
+            KTMenu.init(); // reinit KTMenu instances
         });
     }
 
@@ -53,97 +80,6 @@ var CMSList = function () {
             })
             datatable.search(e.target.value).draw();
 
-        });
-    }
-
-    // Filter Datatable
-    // var handleFilterDatatable = () => {
-    //     // Select filter options
-    //     filterMonth = $('[data-kt-list-table-filter="month"]');
-    //     filterPayment = document.querySelectorAll('[data-kt-list-table-filter="payment_type"] [name="payment_type"]');
-    //     const filterButton = document.querySelector('[data-kt-list-table-filter="filter"]');
-    //
-    //     // Filter datatable on submit
-    //     filterButton.addEventListener('click', function () {
-    //         // Get filter values
-    //         const monthValue = filterMonth.val();
-    //         let paymentValue = '';
-    //
-    //         // Get payment value
-    //         filterPayment.forEach(r => {
-    //             if (r.checked) {
-    //                 paymentValue = r.value;
-    //             }
-    //
-    //             // Reset payment value if "All" is selected
-    //             if (paymentValue === 'all') {
-    //                 paymentValue = '';
-    //             }
-    //         });
-    //
-    //         // Build filter string from filter options
-    //         const filterString = monthValue + ' ' + paymentValue;
-    //
-    //         // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
-    //         datatable.search(filterString).draw();
-    //     });
-    // }
-
-    // Delete customer
-    var handleDeleteRows = () => {
-        // Select all delete buttons
-        const deleteButtons = table.querySelectorAll('[data-kt-list-table-filter="delete_row"]');
-
-        deleteButtons.forEach(d => {
-            // Delete button on click
-            d.addEventListener('click', function (e) {
-                e.preventDefault();
-
-                // Select parent row
-                const parent = e.target.closest('tr');
-
-                // Get customer name
-                const customerName = parent.querySelectorAll('td')[1].innerText;
-
-                // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
-                Swal.fire({
-                    text: "Are you sure you want to delete " + customerName + "?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
-                    customClass: {
-                        confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
-                    }
-                }).then(function (result) {
-                    if (result.value) {
-                        Swal.fire({
-                            text: "You have deleted " + customerName + "!.",
-                            icon: "success",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-                        }).then(function () {
-                            // Remove current row
-                            datatable.row($(parent)).remove().draw();
-                        });
-                    } else if (result.dismiss === 'cancel') {
-                        Swal.fire({
-                            text: customerName + " was not deleted.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-                        });
-                    }
-                });
-            })
         });
     }
 
@@ -283,7 +219,7 @@ var CMSList = function () {
                 return;
             }
 
-            initCustomerList();
+            initList();
             initToggleToolbar();
             handleSearchDatatable();
             initBatchDialog();

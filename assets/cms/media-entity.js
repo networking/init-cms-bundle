@@ -105,24 +105,28 @@ class MediaEntity{
         KTUtil.off(this.dialogContainer, 'submit', this.addMediaEventId);
     }
     addSearchListeners() {
-        if(this.selectMediaEventId !== '') {
-            this.removeListeners()
+        if(this.searchMediaEventId !== '') {
+            KTUtil.off(this.dialogContainer, 'submit', this.searchMediaEventId);
         }
-        this.selectMediaEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
         this.searchMediaEventId = KTUtil.on(this.dialogContainer, 'form', 'submit', this.searchMedia.bind(this));
     }
     addUploadListeners() {
         if(this.addMediaEventId !== '') {
-            this.removeListeners()
+            KTUtil.off(this.dialogContainer, 'submit', this.addMediaEventId);
         }
         this.addMediaEventId = KTUtil.on(this.dialogContainer, 'form', 'submit', this.uploadMedia.bind(this));
-        this.selectMediaEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
         this.dialogContainer.querySelectorAll('[data-bs-dismiss="modal"]').forEach((element) => {
             element.addEventListener('click', (event) => {
                 event.preventDefault()
                 this.dialog.hide()
             })
         })
+    }
+    addClickOnLinkListeners() {
+        if(this.selectMediaEventId !== '') {
+            KTUtil.off(this.dialogContainer, 'click', this.selectMediaEventId);
+        }
+        this.selectMediaEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
     }
     createListDialog(event) {
         event.preventDefault();
@@ -138,6 +142,7 @@ class MediaEntity{
 
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addSearchListeners()
+            this.addClickOnLinkListeners()
             this.dialog.show();
             this.setupTree()
         })
@@ -145,6 +150,7 @@ class MediaEntity{
     clickLinkInDialog(event) {
         event.preventDefault();
         let link = event.target
+
         if(link.classList.contains('select-media')) {
             this.selectMedia(event)
             return
@@ -157,6 +163,10 @@ class MediaEntity{
         if(link.classList.contains('show_all_media')) {
             this.refreshList({'filter[tags][value]': ''});
             return
+        }
+
+        if(!link.getAttribute('href')){
+            link = link.closest('a')
         }
         let url = link.getAttribute('href')
 
@@ -176,6 +186,7 @@ class MediaEntity{
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addSearchListeners()
             this.addUploadListeners()
+            this.addClickOnLinkListeners()
             CMSAdmin.initSpecialFields()
             this.setupTree()
         })

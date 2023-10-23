@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 #[AsDoctrineListener(event: Events::preRemove)]
 #[AsDoctrineListener(event: Events::postPersist)]
-#[AsDoctrineListener(event: Events::postUpdate)]
+    #[AsDoctrineListener(event: Events::postUpdate)]
 class EntityChangedListener implements ModelChangedListenerInterface
 {
     /**

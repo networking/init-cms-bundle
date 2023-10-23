@@ -35,10 +35,14 @@
         {%- do item.setAttribute('class', (item.attribute('class')~' here show')) %}
     {%- endif %}
 
-
     {%- if item.displayed %}
         {#- check role of the group #}
-        {%- set display = (item.extra('roles') is empty or is_granted(sonata_admin.adminPool.getOption('role_super_admin')) ) %}
+        {%- if item.displayed -%}
+            {#- check role of the group #}
+            {%- set display = item.extra('roles') is empty or is_granted(sonata_config.getOption('role_super_admin')) or item.extra('roles')|filter(role => is_granted(role))|length > 0 -%}
+        {%- endif -%}
+
+
         {%  if not display  %}
             {%- for role in item.extra('roles')%}
                 {%- set display = is_granted(role) %}

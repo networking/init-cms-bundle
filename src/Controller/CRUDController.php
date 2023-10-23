@@ -13,14 +13,12 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
-use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController;
-use Networking\InitCmsBundle\Entity\LastEditedListener as ORMLastEditedListener;
-use Symfony\Component\Form\FormRenderer;
-use Symfony\Component\Form\FormView;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class CRUDController.
@@ -32,7 +30,7 @@ class CRUDController extends SonataCRUDController
     final public const EDIT_ENTITY = 'crud_controller.edit_entity';
 
     /**
-     * @var CmsEventDispatcher
+     * @var EventDispatcherInterface
      */
     protected $dispatcher;
 
@@ -44,7 +42,7 @@ class CRUDController extends SonataCRUDController
     /**
      * CRUDController constructor.
      */
-    public function __construct(CmsEventDispatcher $dispatcher, PageCacheInterface $pageCache)
+    public function __construct(EventDispatcherInterface $dispatcher, PageCacheInterface $pageCache)
     {
         $this->dispatcher = $dispatcher;
         $this->pageCache = $pageCache;
@@ -60,10 +58,12 @@ class CRUDController extends SonataCRUDController
      */
     protected function addRenderExtraParams(array $parameters = []): array
     {
+
+
         if (array_key_exists('action', $parameters) && $parameters['action'] === 'edit') {
             $event = new CmsEvent($parameters['object']);
 
-            $this->dispatcher->dispatch( $event, self::EDIT_ENTITY);
+            $this->dispatcher->dispatch($event);
         }
 
         return parent::addRenderExtraParams($parameters);

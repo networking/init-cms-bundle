@@ -51,14 +51,11 @@ If you are not using flex, you will need to add the bundle to your app/AppKernel
                     new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
                     // these are the bundles for the CMS
         
-                    new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-                    new JMS\SerializerBundle\JMSSerializerBundle(),
                     new Knp\Bundle\MenuBundle\KnpMenuBundle(),
                     new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
                     new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
                     new FOS\UserBundle\FOSUserBundle(),
                     new Sonata\AdminBundle\SonataAdminBundle(),
-                    new JMS\AopBundle\JMSAopBundle(),
                     new Sonata\UserBundle\SonataUserBundle(),
                     new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
                     new Sonata\BlockBundle\SonataBlockBundle(),
@@ -104,7 +101,6 @@ If you are not using flex, you will need to add the bundle to your app/AppKernel
     FOS\UserBundle\FOSUserBundle::class => ['all' => true],
     Sonata\UserBundle\SonataUserBundle::class => ['all' => true],
     Sonata\NotificationBundle\SonataNotificationBundle::class => ['all' => true],
-    JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
     Sonata\MediaBundle\SonataMediaBundle::class => ['all' => true],
     Sonata\IntlBundle\SonataIntlBundle::class => ['all' => true],
     FOS\CKEditorBundle\FOSCKEditorBundle::class => ['all' => true],

@@ -30,6 +30,7 @@ class GalleryItem extends BaseGalleryItem
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
+
     /**
      * Get id.
      *

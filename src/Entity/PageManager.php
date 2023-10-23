@@ -24,24 +24,16 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\TransactionRequiredException;
 use Gedmo\Tool\Wrapper\EntityWrapper;
 use Gedmo\Tree\Entity\Repository\AbstractTreeRepository;
-use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Gedmo\Tree\Strategy;
-use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\SerializerInterface;
-use Networking\FormGeneratorBundle\Model\BaseForm;
-use Networking\FormGeneratorBundle\Model\FormField;
-use Networking\FormGeneratorBundle\Model\FormPageContent;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
-use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class PageManager.
@@ -54,7 +46,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
     public $deserializedEntities = [];
 
-    private $pageHelper;
 
     /**
      * PageManager constructor.
@@ -62,9 +53,8 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
      * @param EntityManagerInterface $om
      * @param                        $class
      */
-    public function __construct(EntityManagerInterface $om, PageHelper $pageHelper, $class)
+    public function __construct(EntityManagerInterface $om, $class)
     {
-        $this->pageHelper = $pageHelper;
         if (class_exists($class)) {
             $classMetaData = $om->getClassMetadata($class);
 

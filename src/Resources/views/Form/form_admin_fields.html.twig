@@ -51,7 +51,10 @@ file that was distributed with this source code.
     {% endif %}
 {% endblock %}
 
-{% block form_row %}
+
+
+{%- block form_row -%}
+
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
         {% if label is same as(false) %}
@@ -60,13 +63,46 @@ file that was distributed with this source code.
             {% set label_render = true %}
         {% endif %}
     {% endif %}
-    {{ parent() }}
-{% endblock form_row %}
+
+    {%- if compound is defined and compound -%}
+        {%- set element = 'fieldset' -%}
+    {%- endif -%}
+
+
+    {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
+
+    {% set widget_attr = {attr: {}} %}
+    {% set is_form_floating = false %}
+    {%- if 'form-floating' in row_class -%}
+        {% set row_class = row_class|replace({'form-floating': ''}) %}
+        {% set is_form_floating = true %}
+        {% set placeholder = attr.placeholder|default(label|trans({}, translation_domain)) %}
+        {%- set widget_attr = {attr: {placeholder: attr.placeholder|default(label|trans({}, translation_domain))}} -%}
+    {% endif %}
+
+    {%- if help is not empty -%}
+        {%- set attrs = widget_attr.attr|merge({'aria-describedby': id ~"_help"}) -%}
+        {%- set widget_attr = widget_attr|merge({attr: attrs }) -%}
+    {%- endif -%}
+
+
+    <{{ element|default('div') }}{% with {attr: row_attr|merge({class: row_class})} %}{{ block('attributes') }}{% endwith %}>
+    {%- if is_form_floating is same as(true) -%}
+        <div class="form-floating">
+            {{- form_widget(form, widget_attr ) -}}
+            {{- form_label(form) -}}
+        </div>
+    {%- else -%}
+        {{- form_label(form) -}}
+        {{- form_widget(form, widget_attr) -}}
+    {%- endif -%}
+    {{ form_help(form) }}
+    {{- form_errors(form) -}}
+    </{{ element|default('div') }}>
+{%- endblock form_row %}
 
 
 {%- block form_label_content -%}
-
-
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
             {% set label = label_format|replace({
@@ -164,11 +200,11 @@ file that was distributed with this source code.
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
     {% endif %}
     {{ parent() }}
-
 {% endblock form_help %}
+
 {% block sonata_roles_matrix_widget %}
     {% apply spaceless %}
-        {{ renderMatrix(form)|raw }}
+        {{ renderMatrix(form)|replace({'table-condensed': 'table-bordered'})|raw }}
         <ul class="list-unstyled">
             {{ renderRolesList(form)|raw }}
         </ul>
@@ -176,13 +212,37 @@ file that was distributed with this source code.
 {% endblock sonata_roles_matrix_widget %}
 
 {% block checkbox_widget %}
-    {% if 'sonata_roles_matrix' in form.parent.vars.block_prefixes %}
-        <div class="checkbox">
-            {{- form_label(form, null, { widget: parent() }) -}}
-        </div>
-    {% else %}
-        {{- parent() -}}
-    {% endif %}
+{#    {% if 'sonata_roles_matrix' in form.parent.vars.block_prefixes %}#}
+{#        <div class="checkbox">#}
+{#           // {{- form_label(form, null, { widget: parent() }) -}}#}
+{#        </div>#}
+{#    {% else %}#}
+        {%- set attr_class = attr_class|default(attr.class|default('')) -%}
+        {%- set row_class = '' -%}
+        {%- if 'btn-check' not in attr_class -%}
+            {%- set attr_class = attr_class ~ ' form-check-input' -%}
+            {%- set row_class = 'form-check mb-3' -%}
+        {%- endif -%}
+        {%- set attr = attr|merge({class: attr_class|trim}) -%}
+        {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+        {%- if 'checkbox-inline' in parent_label_class %}
+            {%- set row_class = row_class ~ ' form-check-inline' -%}
+        {% endif -%}
+        {%- if 'checkbox-switch' in parent_label_class %}
+            {%- set row_class = row_class ~ ' form-switch' -%}
+        {% endif -%}
+        {%- if row_class is not empty -%}
+            <div class="{{ row_class }}">
+        {%- endif -%}
+
+        {% set checkbox %}
+            <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        {% endset %}
+        {{- form_label(form, null, { widget: checkbox }) -}}
+        {%- if row_class is not empty -%}
+            </div>
+        {%- endif -%}
+{#    {% endif %}#}
 {% endblock checkbox_widget %}
 
 
@@ -307,9 +367,7 @@ file that was distributed with this source code.
             {% set label = name|humanize %}
         {% endif %}
         <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
-            {% if icon is not empty %}
-                {{ networking_bootstrap_icon(icon, icon_inverted|default(false)) }}
-            {% endif %}
+
             {{ label|trans({}, translation_domain) }}</button>
     {% endapply %}
 {% endblock button_widget %}
@@ -347,27 +405,34 @@ file that was distributed with this source code.
     {% if sonata_admin.admin is defined and  sonata_admin.admin %}
         {% set translation_domain = sonata_admin.field_description.translationDomain %}
     {% endif %}
-
-
     {% if select2 is defined and select2 %}
-        {% set placeholder = attr.placeholder|default(placeholder) %}
-        {% if translation_domain %}
-            {% set placeholder = placeholder|trans({}, translation_domain) %}
+
+
+        {% if multiple is same as(false)  %}
+            {%- if label is empty -%}
+                {%- if label_format is not empty -%}
+                    {% set label = label_format|replace({
+                        '%name%': name,
+                        '%id%': id,
+                    }) %}
+                {%- else -%}
+                    {% set label = name|humanize %}
+                {%- endif -%}
+            {%- endif -%}
+
+            {% set attr = attr|merge({placeholder: attr.placeholder|default(label)}) %}
+            {% set placeholder = attr.placeholder %}
+            {% if translation_domain %}
+                {% set placeholder = placeholder|trans({}, translation_domain) %}
+            {% endif %}
         {% endif %}
+
         {% set attr = attr|merge({'data-control': 'select2', 'data-placeholder': placeholder}) %}
     {% endif %}
-{#    {% if taggable is defined and taggable %}#}
-{#        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' sonata-medium-taggable')|trim}) %}#}
-{#    {% endif %}#}
     {% set allowClear = (multiple or not required?'true':'false') %}
     {% set attr = attr|merge({'data-allow-clear': allowClear }) %}
     {{ parent() }}
 {% endblock choice_widget %}
-
-
-
-{# Support #}
-
 
 
 
@@ -538,6 +603,32 @@ file that was distributed with this source code.
         {% endif %}
     {% endapply %}
 {% endblock %}
+
+{%- block radio_widget -%}
+    {%- set attr_class = attr_class|default(attr.class|default('')) -%}
+    {%- set row_class = '' -%}
+    {%- if 'btn-check' not in attr_class -%}
+        {%- set attr_class = attr_class ~ ' form-check-input' -%}
+        {%- set row_class = 'form-check mb-3' -%}
+    {%- endif -%}
+    {%- set attr = attr|merge({class: attr_class|trim}) -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {%- if 'radio-inline' in parent_label_class -%}
+        {%- set row_class = row_class ~ ' form-check-inline' -%}
+    {%- endif -%}
+    {%- if row_class is not empty -%}
+        <div class="{{ row_class }}">
+    {%- endif -%}
+    {% set radio %}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    {% endset %}
+    {{- form_label(form, null, { widget: radio }) -}}
+    {%- if row_class is not empty -%}
+        </div>
+    {%- endif -%}
+{%- endblock radio_widget %}
+
+
 
 
 
@@ -739,6 +830,9 @@ file that was distributed with this source code.
     {%- if help is not empty -%}
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
+
+    {% set row_attr = row_attr|default({})|merge({'data-collection-list': '#'~id}) %}
+
     {% if sortable %}
         {%- set row_attr = row_attr|default({})|merge({
             'data-sortable-collection-type': sortable,
@@ -826,12 +920,16 @@ file that was distributed with this source code.
 
     <a {% for attrname,attrvalue in button_values.attr %} {{attrname}}="{{attrvalue}}"{% endfor %} data-collection-{{ button_type }}-btn="{{ form.vars['id'] }}">
     {% if button_values.icon is not null %}
+        {% if button_values.label is not defined  or not button_values.label %}
+            {% set button_values = button_values|merge({icon: button_values.icon ~ ' pe-0'}) %}
+        {% endif %}
         {{ networking_bootstrap_icon(button_values.icon, button_values.icon_inverted|default(false)) }}
     {% endif %}
     {% if button_values.label is defined %}
         {{ button_values.label|trans({}, button_values.translation_domain|default(translation_domain)) }}
     {% endif %}
     </a>
+    <div class="clearfix"></div>
 {% endblock collection_button %}
 
 {%- block form_widget_compound -%}
@@ -841,7 +939,7 @@ file that was distributed with this source code.
         {%- endif -%}
         {{- block('form_rows') -}}
         {{- form_rest(form) -}}
-        {% if 'collection' in form.parent.vars.block_prefixes and form.parent.vars.allow_delete == true %}
+        {% if form.parent and 'collection' in form.parent.vars.block_prefixes and form.parent.vars.allow_delete == true %}
             &nbsp;{{ block('form_widget_remove_btn') }}
         {% endif %}
     </div>
@@ -907,9 +1005,6 @@ file that was distributed with this source code.
         {% endfor %}
         {{ form_rest(form) }}
     </div>
-    {% if 'collection' in form.vars.block_prefixes and widget_add_btn|default(null) and form.vars.allow_add == true %}
-        &nbsp;{{ block('form_widget_add_btn') }}
-    {% endif %}
 {% endapply %}
 {% endblock gallery_widget %}
 
@@ -919,172 +1014,46 @@ file that was distributed with this source code.
     </div>
 {% endblock %}
 
+{% block sonata_type_datetime_picker_widget %}
+    {{ block('datetime_widget') }}
+{% endblock sonata_type_datetime_picker_widget %}
 
-{#{% block gallery_row %}#}
-{#    <div class="list-group-item collection-item form-group well" id="gallery_{{ id }}">#}
-{#        <div class="row">#}
-{#            <div class="form-group col-sm-12">#}
-{#                <a href="{{ path('gallery_select', {'_sonata_admin': 'sonata.media.admin.media', 'context':app.request.get('context', 'default'), 'pcode':1, 'provider':'sonata.media.provider.image'}) }}"#}
-{#                   id="select-button-{{ id }}"#}
-{#                   data-collection-id="#collection{{ id }}_form_group"#}
-{#                   data-index="{{ name }}"#}
-{#                   data-form-id="{{ id }}" class="open-select-media btn-primary btn">Bilder Auswählen</a>#}
-{#            </div>#}
-{#        </div>#}
+{% block money_widget -%}
+    {%- set prepend = not (money_pattern starts with '{{') -%}
+    {%- set append = not (money_pattern ends with '}}') -%}
 
-{#        <div class="clearfix"></div>#}
-{#        <div class="col-sm-12">#}
-{#            {{ form_row(form) }}#}
-{#        </div>#}
-{#    </div>#}
-{#    <div class="modal" id="field_dialog_gallery" style="display: none" role="dialog"#}
-{#         aria-hidden="true">#}
-{#    </div>#}
+    {%- if 'form-floating' in attr.group_class|default({}) -%}
 
-{#    <script>#}
-{#        function updateSortImageSort(){#}
-{#            jQuery(`#collection{{ id }}_form_group > div.list-group-item`).each(function(i, e){#}
+        {%- if label is same as(false) -%}
+            {% set label = name|humanize|title %}
+        {%- endif -%}
 
-{#                console.log(i)#}
-{#                jQuery(e).find('.position').val(i);#}
-{#            });#}
-{#        }#}
-{#        (function(){#}
+        {% set form_floating = 'form-floating' %}
+        {% set placeholder = label|trans({}, translation_domain) %}
+        {%- set attr = attr|merge({placeholder: label}) -%}
+    {% endif %}
 
-{#            jQuery('#collection{{ id }}_form_group').sortable({#}
-{#                handle: 'i.glyphicon-move',#}
-{#                opacity: 0.6,#}
-{#                placeholder: "ui-state-highlight",#}
-{#                items: 'div.list-group-item',#}
-{#                connectWith: ".sortable",#}
-{#                tolerance: 'pointer',#}
-{#                stop: function (event, ui) {#}
-{#                    updateSortImageSort();#}
-{#                }#}
-{#            })#}
+    {%- if prepend or append -%}
+        <div class="input-group {{ group_class|default('') }}">
+            {%- if prepend -%}
+                <span class="input-group-text">{{ money_pattern|form_encode_currency }}</span>
+            {%- endif -%}
 
-{#            let fullName = "{{ full_name }}"#}
-
-{#            var fieldDialog = $('#field_dialog_gallery');#}
-
-{#            $('body').on('click', '.open-select-media', function(e){#}
-{#                e.preventDefault();#}
-{#                e.stopPropagation();#}
-{#                let a = $(this);#}
-{#                open_select_list(a)#}
-{#            })#}
-
-{#            function open_select_list(a){#}
-{#                let selected = [];#}
-{#                $('*[data-selected]').each(function (i, e){#}
-{#                    selected.push($(e).data('selected'))#}
-{#                });#}
-{#                console.log(a.data('collection-id'))#}
-
-{#                let imageCollection = $(a.data('collection-id'));#}
-{#                let category = a.data('index');#}
-{#                let categoryFormId = a.data('form-id');#}
-{#                jQuery.ajax({#}
-{#                    url: a.attr('href'),#}
-{#                    data: {selected: selected},#}
-{#                    dataType: 'html',#}
-{#                    success: function (html) {#}
-
-{#                        Admin.log('[{{ id }}|field_dialog_form_list] retrieving the list content');#}
-
-{#                        // populate the popup container#}
-{#                        fieldDialog.html(`<div class="modal-dialog modal-full">#}
-{#                                            <div class="modal-content">#}
-{#                                                <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>Media</h3></div>#}
-{#                                                <div class="modal-body">${html}</div>#}
-{#                                                <div class="modal-footer">#}
-{#                                                    <a class="btn btn-primary  confirm-select">#}
-{#                                                    <i class="fa fa-plus"></i> {{ 'confirm_selection'|trans({}, 'admin') }}#}
-{#                                                    </a>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                          </div>`);#}
-
-{#                        Admin.add_filters(fieldDialog);#}
-
-{#                        fieldDialog.on('click', '.confirm-select', function (e){#}
-{#                            e.preventDefault()#}
-{#                            $('.select_check_box').each(function (i, item) {#}
-{#                                let id = $(item).data('object-id');#}
-{#                                console.log(id)#}
-{#                                let itemIndex = selected.findIndex(function(item) {#}
-
-{#                                    return item.id === id;#}
-{#                                });#}
-
-
-{#                                if (item.checked && itemIndex === -1) {#}
-{#                                    let path = $(item).data('path');#}
-{#                                    let elem = imageCollection.collection('add')#}
-{#                                    let lastChild = elem[0].lastChild#}
-{#                                    let childId = lastChild.id#}
-
-{#                                    selected.push({'id': id,'fieldId':childId})#}
-{#                                    let node = `<a href="/admin/cms/media/${id}/edit?provider=sonata.media.provider.image&amp;context=default" target="new">#}
-{#                                                <img  src="${path}" width="75" height="60"></a> &nbsp;&nbsp;`;#}
-{#                                    $(`#${childId}_media`).val(id)#}
-{#                                    $(`#${childId}`).data('selected', {'id': id,'fieldId':childId})#}
-{#                                    $(`#field_widget_${childId}_media`).find('.inner-field-short-description').html(node)#}
-{#                                }#}
-
-{#                                if(!item.checked && itemIndex !== -1){#}
-
-{#                                    let selectedItem = selected[itemIndex];#}
-{#                                    let fieldId = `#${selectedItem.fieldId}`#}
-{#                                    selected.splice(itemIndex, 1);#}
-{#                                    try{#}
-{#                                        imageCollection.collection('remove', $(fieldId))#}
-{#                                    }catch (e){#}
-{#                                        console.log(pathItem.position)#}
-{#                                    }#}
-{#                                }#}
-{#                            });#}
-{#                            updateSortImageSort()#}
-{#                            fieldDialog.modal('hide');#}
-
-{#                        });#}
-
-{#                        // capture the submit event to make an ajax call, ie : POST data to the#}
-{#                        // related create admin#}
-{#                        #}{#fieldDialog.on('click', 'a', field_dialog_form_list_link_{{ id }});#}
-{#                        fieldDialog.on('submit','form', function (event) {#}
-{#                            event.preventDefault();#}
-{#                            var form = jQuery(this);#}
-{#                            jQuery(form).ajaxSubmit({#}
-{#                                type: form.attr('method'),#}
-{#                                url: form.attr('action'),#}
-{#                                dataType: 'html',#}
-{#                                data: {_xml_http_request: true},#}
-{#                                success: function (html) {#}
-{#                                    fieldDialog.html('<div class="modal-dialog modal-full"><div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>Media</h3></div><div class="modal-body">' + html + '</div> <div class="modal-footer"></div></div></div>');#}
-{#                                }#}
-{#                            });#}
-{#                        });#}
-
-{#                        // open the dialog in modal mode#}
-{#                        fieldDialog.modal('show');#}
-
-{#                        fieldDialog.on('hide.bs.modal', function (e) {#}
-
-{#                            // make sure we have a clean state#}
-{#                            fieldDialog.off('click', 'a');#}
-{#                            fieldDialog.off('click', '.confirm-select');#}
-{#                            fieldDialog.off('submit', 'form');#}
-{#                            fieldDialog.html('')#}
-{#                            Admin.log('[{{ id }}|field_dialog_form_list] close callback, removing js event');#}
-{#                        });#}
-{#                    }#}
-{#                });#}
-{#                return false;#}
-{#            }#}
-{#        })();#}
-{#    </script>#}
-
-{#{% endblock %}#}
+            {% if 'form-floating' in form_floating|default('') %}
+                <span class="form-floating">
+                    {{- block('form_widget_simple') -}}
+                    {{- block('form_label') -}}
+                </span>
+                {% else %}
+                    {{- block('form_widget_simple') -}}
+            {% endif %}
+            {%- if append -%}
+                <span class="input-group-text">{{ money_pattern|form_encode_currency }}</span>
+            {%- endif -%}
+        </div>
+    {%- else -%}
+        {{- block('form_widget_simple') -}}
+    {%- endif -%}
+{%- endblock money_widget %}
 
 

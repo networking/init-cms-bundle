@@ -72,28 +72,7 @@ public function getAdminContent()
 ------------------------------------
 #### Serializing for versioning ####
 
-The last very important part is the serializing mechanism. This can be a bit tricky depending on how complex your content type is. The more DB associations that an entity has the more mapping you will need to do.
 
-You will first need to create a folder in your **Resources/config** folder called **Serializer** and then create a config file with the name **Enity.YourContentName.yaml**, or you can use annotations directly in the Entity class.
-
-Here is a simple example of serializer configuration for the Text content type:
-
-```
-Networking\InitCmsBundle\Entity\Text:
-    properties:
-        id:
-            type: integer
-        layoutBlock:
-            exclude: true
-        text:
-            type: string
-        createdAt:
-            type: DateTime
-        updatedAt:
-            type: DateTime
-```
-
-For a more detailed look at serialization have a look at the [JMSSerializerBundle documentation](http://jmsyst.com/bundles/JMSSerializerBundle)
 
 
 ------------------------------------    

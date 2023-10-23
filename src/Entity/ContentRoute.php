@@ -15,6 +15,7 @@ namespace Networking\InitCmsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 /**
  * Networking\InitCmsBundle\Entity\ContentRoute.
@@ -94,6 +95,7 @@ class ContentRoute implements ContentRouteInterface, \Stringable
     /**
      * $var object $content.
      */
+    #[Ignore]
     protected $content;
 
     /**

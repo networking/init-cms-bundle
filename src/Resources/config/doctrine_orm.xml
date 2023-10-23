@@ -80,7 +80,6 @@
         </service>
 
         <service id="Networking\InitCmsBundle\Entity\PageListener" lazy="true">
-            <tag name="jms_serializer.event_subscriber"/>
         </service>
 
         <!-- Form Types -->

@@ -25,7 +25,8 @@ file that was distributed with this source code.
     {% set currentAdmin = admin %}
 {% endif %}
 <!DOCTYPE html>
-<html class="no-js">
+<html class="no-js" lang="{{ app.request.locale|slice(0,2) }}">
+
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
@@ -132,7 +133,8 @@ file that was distributed with this source code.
     <!--begin::Page-->
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
         {% block init_cms_top_nav %}
-            {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}
+            {% set has_side_menu = _side_menu is not empty %}
+            {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' with {has_side_menu: has_side_menu} %}
         {% endblock init_cms_top_nav %}
         <!--begin::Wrapper-->
         <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
@@ -168,33 +170,11 @@ file that was distributed with this source code.
                                                         {% if object.locale is defined %}
                                                             {% set settings = {'locale': object.locale} %}
                                                         {% endif %}
-
-                                                        <a class="link-underlined font-small font-light"
-                                                           href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
                                                     {% endif %}
                                                 {% endif %}
                                             </h1>
                                         {% endif %}
                                         <!--end::Title-->
-                                        {% if action is defined %}
-                                            <!--begin::Breadcrumb-->
-                                            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                                                <!--begin::Item-->
-                                                <li class="breadcrumb-item text-muted">
-                                                    <a href="../../demo1/dist/index.html"
-                                                       class="text-muted text-hover-primary">Dashboard</a>
-                                                </li>
-                                                <!--end::Item-->
-                                                <!--begin::Item-->
-                                                <li class="breadcrumb-item">
-                                                    <span class="bullet bg-gray-400 w-5px h-2px"></span>
-                                                </li>
-                                                <!--end::Item-->
-                                                <!--begin::Item-->
-                                                <li class="breadcrumb-item text-muted">Dashboards</li>
-                                                <!--end::Item-->
-                                            </ul>
-                                        {% endif %}
                                     </div>
                                     <!--end::Page title-->
                                     <!--begin::Actions-->
@@ -211,12 +191,14 @@ file that was distributed with this source code.
                                                     {% set actionHelp = '' %}
                                                 {% else %}
                                                     {% set adminCode = admin.code %}
-                                                    {% set actionHelp = action %}
+                                                    {% set actionHelp = action|default(false) %}
                                                 {% endif %}
+                                                {% if actionHelp is not same as(false) %}
                                                 <a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
                                                    target="_blank">
                                                     <i class="ki-outline ki-question-2 fs-2"></i>
                                                 </a>
+                                                {% endif %}
                                             {% endif %}
                                         {% endif %}
                                     </div>
@@ -269,7 +251,7 @@ file that was distributed with this source code.
             <!--end::Main-->
 
             {% if _side_menu is not empty %}
-                <div id="kt_app_aside" class="app-aside flex-column mt-7" data-kt-drawer="true"
+                <div id="kt_app_aside" class="app-aside flex-column" data-kt-drawer="true"
                      data-kt-drawer-name="app-aside" data-kt-drawer-activate="{default: true, lg: false}"
                      data-kt-drawer-overlay="true" data-kt-drawer-width="auto"
                      data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_app_aside_toggle" style="">
@@ -303,7 +285,13 @@ file that was distributed with this source code.
 {% endblock app %}
     <!--end::App-->
 {% block before_body_end %}
+    <div class="modal fade" tabindex="-1" role="dialog" id="list_dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
 
+            </div>
+        </div>
+    </div>
     <!--begin::Javascript-->
     <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/') }}";</script>
     <script type="text/javascript">
@@ -323,8 +311,8 @@ file that was distributed with this source code.
 
     <!--end::Vendors Javascript-->
     <!--begin::Custom Javascript(used for this page only)-->
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/widgets.bundle.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/widgets.js') }}"></script>
+{#    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/widgets.bundle.js') }}"></script>#}
+{#    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/widgets.js') }}"></script>#}
     <!--end::Custom Javascript-->
     <!--end::Javascript-->
 {% endblock before_body_end %}
@@ -335,6 +323,12 @@ file that was distributed with this source code.
         {% for notice_level in ['success','error','info', 'warning'] %}
             {% set session_var = 'sonata_flash_' ~ notice_level %}
             {% for flash in app.session.flashbag.get(session_var) %}
+            KTUtil.onDOMContentLoaded(function () {
+                CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+            })
+            {% endfor %}
+
+            {% for flash in app.session.flashbag.get(notice_level) %}
             KTUtil.onDOMContentLoaded(function () {
                 CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
             })

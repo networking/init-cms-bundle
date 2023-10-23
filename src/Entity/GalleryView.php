@@ -67,7 +67,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
 
 
 
-    public function __clone()
+    public function __clone(): void
     {
         $this->id = null;
     }
@@ -134,7 +134,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
      *
      * @return array
      */
-    public function getTemplateOptions($params = [])
+    public function getTemplateOptions($params = []): array
     {
         return [
             'mediaItems' => $this->getMediaGallery()->getGalleryItems(),
@@ -146,7 +146,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
     /**
      * @return array
      */
-    public function getAdminContent()
+    public function getAdminContent(): array
     {
         return [
             'content' => ['galleryView' => $this],

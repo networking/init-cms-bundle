@@ -1,4 +1,0 @@
-Networking\InitCmsBundle\Entity\Text:
-    properties:
-        id:
-            type: integer

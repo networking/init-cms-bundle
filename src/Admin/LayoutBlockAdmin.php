@@ -12,8 +12,6 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Admin;
 
-use JMS\Serializer\Serializer;
-use JMS\Serializer\SerializerInterface;
 use Networking\InitCmsBundle\Entity\LayoutBlockFormListener;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
@@ -46,19 +44,16 @@ class LayoutBlockAdmin extends BaseAdmin
     protected $pageManager;
 
     protected $layoutBlockFormListener;
-    protected $serializer;
     protected $pageAdmin;
 
     public function __construct(
         PageManagerInterface $pageManager,
         LayoutBlockFormListener $layoutBlockFormListener,
-        SerializerInterface $serializer,
         PageAdmin $pageAdmin
     ) {
 
         $this->pageManager = $pageManager;
         $this->layoutBlockFormListener = $layoutBlockFormListener;
-        $this->serializer = $serializer;
         $this->pageAdmin = $pageAdmin;
 
         parent::__construct();
@@ -74,6 +69,9 @@ class LayoutBlockAdmin extends BaseAdmin
      */
     protected function configureRoutes(RouteCollectionInterface $collection): void
     {
+
+
+        $collection->add('addBlock', 'add_block', [], ['method' => 'GET']);
         $collection->add('deleteAjax', 'delete_ajax', [], ['method' => 'POST']);
         $collection->add('toggleActive', 'toggle_active', [], ['method' => 'POST']);
         $collection->add('reload', 'reload', [], ['method' => 'GET']);
@@ -83,25 +81,26 @@ class LayoutBlockAdmin extends BaseAdmin
         foreach ($collection->getElements() as $key => $element) {
             $collection->get($key)->setOption('expose', true);
         }
+
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
 
         $transformer = new PageToIdTransformer($this->pageManager);
-        parent::configureFormFields($formMapper);
+        parent::configureFormFields($form);
 
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add('name')
             ->add('page');
     }
@@ -109,9 +108,9 @@ class LayoutBlockAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier('name')
             ->add('page')
             ->add('isActive');
@@ -171,13 +170,7 @@ class LayoutBlockAdmin extends BaseAdmin
         $this->autoPageDraft($object->getPage());
     }
 
-    /**
-     * @return SerializerInterface
-     */
-    protected function getSerializer()
-    {
-        return $this->serializer;
-    }
+
 
     /**
      * @throws \Exception

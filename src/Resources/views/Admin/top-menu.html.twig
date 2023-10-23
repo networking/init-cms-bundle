@@ -59,7 +59,8 @@
                         {% set actionHelp = '' %}
                     {% else %}
                         {% set adminCode = admin.code %}
-                        {% set actionHelp = action %}
+
+                        {% set actionHelp = action|default('') %}
                     {% endif %}
                     <div class="menu-item">
                         <!--begin:Menu link--><a class="menu-link"

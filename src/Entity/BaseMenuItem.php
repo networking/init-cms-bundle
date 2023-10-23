@@ -409,7 +409,7 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
      *
      * @return $this
      */
-    public function setIsRoot($isRoot)
+    public function setIsRoot(bool $isRoot)
     {
         $this->isRoot = $isRoot;
 
@@ -419,7 +419,12 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
     /**
      * @return bool
      */
-    public function getIsRoot()
+    public function getIsRoot(): bool
+    {
+        return $this->isRoot;
+    }
+
+    public function isRoot(): bool
     {
         return $this->isRoot;
     }

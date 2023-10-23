@@ -15,21 +15,21 @@ file that was distributed with this source code.
         {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
     {% endif %}
     {% if admin.subClasses is empty %}
-        <a class="btn btn-primary btn-sm" href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin) }) }}">
+        <a class="btn btn-outline btn-outline-primary btn-active-light-primary btn-sm " href="{{ admin.generateUrl('create', {locale: get_current_admin_locale(admin) }) }}">
             <i class="fa fa-plus"></i> {{ create_text }}</a>
     {% else %}
-        <span class="btn-group  btn-sm sonata-action-element">
-                    <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                       <i class="fa fa-plus"></i>  {{ create_text }}
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% for subclass in admin.subclasses|keys %}
-                            <li>
-                                <a href="{{ admin.generateUrl('create', {'subclass': subclass}) }}">{{ subclass|trans({}, admin.translationDomain) }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </span>
+        <div class="dropdown">
+            <a class="btn btn-outline btn-outline-primary btn-active-light-primary btn-sm  dropdown-toggle" role="button" id="createDropdown" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+               <i class="fa fa-plus"></i>  {{ create_text }}
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu"  aria-labelledby="createDropdown">
+                {% for subclass in admin.subclasses|keys %}
+                    <li>
+                        <a  class="dropdown-item" href="{{ admin.generateUrl('create', {'subclass': subclass}) }}">{{ subclass|trans({}, admin.translationDomain) }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 {% endif %}

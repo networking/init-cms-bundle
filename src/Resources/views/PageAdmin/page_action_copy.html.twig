@@ -13,9 +13,9 @@ file that was distributed with this source code.
      class="{% if isSubNav is defined %}menu-link px-3{% else %} btn btn-light btn-sm button-in-row {% endif %} dialog-link"
      {% if isSubNav is not defined %}data-bs-toggle="tooltip" data-bs-placement="bottom"{% endif %}
      title="{{ 'action._copy'|trans({}, 'PageAdmin') }}">
-    <i class="ki-outline ki-copy fs-3"></i>
+    <i class="ki-outline ki-copy fs-3 {{ isSubNav is defined and isSubNav?'menu-icon':'' }}"></i>
     {% if isSubNav is defined  %}
-      &nbsp; {{ 'action._copy'|trans({}, 'PageAdmin') }}
+       {{ 'action._copy'|trans({}, 'PageAdmin') }}
     {% endif %}
   </a>
 {% endif %}

@@ -3,7 +3,7 @@
        target="_blank"  class="{% if isSubNav is defined %}menu-link px-3{% else %} btn btn-light btn-sm button-in-row {% endif %}"
        {% if isSubNav is not defined %}data-bs-toggle="tooltip" data-bs-placement="bottom"{% endif %}
        title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}">
-        <i class="ki-outline ki-magnifier fs-3"></i>
+        <i class="ki-outline ki-magnifier fs-3 {{ isSubNav is defined and isSubNav?'menu-icon':'' }}"></i>
         {% if isSubNav is defined  %}
             &nbsp;{{ 'action_show'|trans({}, 'SonataAdminBundle') }}
         {% endif %}

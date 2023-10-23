@@ -6,7 +6,7 @@ This file is part of the Networking package.
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
- {% set path = object.path %}
+ {% set path = object.fullPath%}
 <div id="pageStatusSettings" class="d-flex align-items-center gap-2 gap-lg-3">
     <div class="align-middle ">
         {% if admin.lastEditedBy() %}
@@ -20,6 +20,8 @@ file that was distributed with this source code.
     <div class="card-toolbar ml-6">
         <div class="dropdown dropdown-inline mr-2">
             {% set buttonClass = object.isPublished()?'success':'warning'  %}
+
+            {% set buttonClass = object.isReview()?'info':buttonClass %}
 
             {% set buttonClass = object.isOffline()?'danger':buttonClass %}
 

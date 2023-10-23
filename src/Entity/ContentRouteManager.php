@@ -16,11 +16,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Networking\InitCmsBundle\Component\Routing\Route;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManagerInterface;
+use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
@@ -63,7 +66,6 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
     public function __construct(EntityManagerInterface $om, $class)
     {
         $this->objectManager = $om;
-        $this->repository = $om->getRepository($class);
         $this->setClassName($class);
     }
 
@@ -137,12 +139,18 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
     /**
      * @param $path
      * @param $content
-     * @param $addLocale
+     * @param bool $addLocale
+     *
      * @return Route
      */
-    public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content, $addLocale = true): RouteObjectInterface
+    public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content, bool $addLocale = true): RouteObjectInterface
     {
         $template = new Template($contentRoute->getTemplate());
+
+        if(!$path && $content instanceof PageInterface){
+            $path = PageHelper::getPageRoutePath($content->getPath());
+            $contentRoute->setPath($path);
+        }
 
         $defaults = [
             'route_params' => '',
@@ -214,7 +222,7 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
     /**
      * @return object
      */
-    public function findContentByContentRoute(ContentRouteInterface $contentRoute)
+    public function findContentByContentRoute(ContentRouteInterface $contentRoute): RouteReferrersReadInterface
     {
         $repository = $this->objectManager->getRepository($contentRoute->getClassType());
 
@@ -230,18 +238,12 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
 
         $collection = new RouteCollection();
 
-        /** @var $connection \Doctrine\DBAL\Connection */
-        $connection = $this->objectManager->getConnection();
+//        $connection = $this->objectManager->getConnection();
 
-        try {
-            $connection->connect();
-        } catch (\Exception) {
-            return $collection;
-        }
-
-        if (!$connection->isConnected()) {
-            return $collection;
-        }
+//        if (!$connection->isConnected()) {
+//            dump('not connected');
+//            return $collection;
+//        }
 
         $searchUrl = (!str_ends_with($url, '/')) ? $url.'/' : $url;
 
@@ -250,7 +252,7 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
         $params = ['path' => $searchUrl];
 
         try {
-            $contentRoutes = $this->repository->findBy($params);
+            $contentRoutes = $this->objectManager->getRepository($this->className)->findBy($params);
         } catch (\UnexpectedValueException) {
             return $collection;
         }

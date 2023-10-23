@@ -174,4 +174,10 @@ networking_init_cms_admin_resetting_reset:
     defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::resetAction}
     methods: [GET|POST]
 
+cms_api_login:
+    path: /admin/api/login
+    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminSecurityController::apiLogin}
+    options:
+        expose: true
+
 

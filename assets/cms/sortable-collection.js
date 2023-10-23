@@ -37,8 +37,12 @@ class SortableCollection{
         let container = this.element.querySelector(this.element.dataset.cmsSortableContainer)
 
         if(!container) {
+
             return
         }
+
+
+
         let sortable = new Sortable(container, {
             draggable: this.draggable,
             animation: 150,
@@ -74,11 +78,12 @@ const CMSSortableCollection =  {
 
     init(){
         document.querySelectorAll('[data-sortable-collection-type]').forEach((element) => {
+
             if(element.dataset.cmsCollectionType) {
+                console.log(element.dataset.cmsCollectionType)
                 return
             }
 
-            element.dataset.cmsCollectionType = 1;
             let sortable = new SortableCollection(element)
 
         })

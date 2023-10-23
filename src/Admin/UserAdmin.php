@@ -14,6 +14,7 @@ namespace Networking\InitCmsBundle\Admin;
 
 use Networking\InitCmsBundle\Entity\Group;
 use Networking\InitCmsBundle\Form\Type\QrCodeType;
+use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
@@ -46,6 +47,10 @@ class UserAdmin extends BaseUserAdmin
     private bool $googleAuthEnabled = false;
 
     private ?\Networking\InitCmsBundle\GoogleAuthenticator\Helper $googleAuthenticatorHelper = null;
+
+    public function configureDefaultSortValues(array &$sortValues) : void{
+        $sortValues[DatagridInterface::PER_PAGE] = 1000000;
+    }
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
@@ -129,9 +134,9 @@ class UserAdmin extends BaseUserAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier('username')
             ->add('email')
             ->add('groups', null, ['template' => '@NetworkingInitCms/CRUD/list_orm_many_to_many.html.twig', 'route' => ['name' => 'edit']])
@@ -141,17 +146,17 @@ class UserAdmin extends BaseUserAdmin
                 ['editable' => true]
             );
         if($this->googleAuthEnabled){
-            $listMapper->add('hasStepVerificationCode', 'boolean');
+            $list->add('hasStepVerificationCode', 'boolean');
         }
         if ($this->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
-            $listMapper
+            $list
                 ->add('impersonating', FieldDescriptionInterface::TYPE_STRING, [
                     'virtual_field' => true,
                     'template' => '@NetworkingInitCms/Admin/Field/impersonating.html.twig'
                 ]);
         }
 
-        $listMapper->add(
+        $list->add(
             '_action',
             'actions',
             [
@@ -178,10 +183,10 @@ class UserAdmin extends BaseUserAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
 
-        $formMapper
+        $form
             ->with('General', ['class' => 'col-md-6'])
             ->add('username')
             ->add('email')
@@ -204,7 +209,7 @@ class UserAdmin extends BaseUserAdmin
         ;
 
         if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
-            $formMapper
+            $form
                 ->with('Management', ['class' => 'col-md-9'])
                 ->add(
                     'realRoles',
@@ -225,7 +230,7 @@ class UserAdmin extends BaseUserAdmin
         }
 
         if($this->googleAuthEnabled){
-            $formMapper->with('Keys', ['label' => false])
+            $form->with('Keys', ['label' => false])
                 ->add('twoStepVerificationCode', null, ['required' => false, 'disabled' => true])
                 ->end();
 
@@ -237,7 +242,7 @@ class UserAdmin extends BaseUserAdmin
                 if($user instanceof UserInterface && $user->getTwoStepVerificationCode()){
                     $qrCodeUrl = $this->googleAuthenticatorHelper->getUrl($user);
 
-                    $formMapper->with('Keys')
+                    $form->with('Keys')
                         ->add('qrCode', QrCodeType::class, ['required' => false, 'mapped' => false, 'qrCodeUrl' => $qrCodeUrl])
                         ->end();
                 }

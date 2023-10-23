@@ -15,28 +15,22 @@ namespace Networking\InitCmsBundle\Entity;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
-use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
 use Networking\InitCmsBundle\Controller\CRUDController;
-use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Helper\BundleGuesser;
-use Networking\InitCmsBundle\Model\LastEditedListener as ModelLastEditedListener;
 use Networking\InitCmsBundle\Model\MenuItemInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-
 /**
  * Class LastEditedListener.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-#[AsEventListener(event: CRUDController::EDIT_ENTITY, method: 'registerEdited')]
 #[AsDoctrineListener(event: Events::postPersist)]
 #[AsDoctrineListener(event: Events::postUpdate)]
 class LastEditedListener
@@ -58,6 +52,7 @@ class LastEditedListener
     {
         $this->requestStack = $requestStack;
         $this->bundleGuesser = new BundleGuesser();
+
     }
 
     /**
@@ -65,7 +60,7 @@ class LastEditedListener
      */
     public function postPersist(PostPersistEventArgs $args): void
     {
-        $this->setSessionVariable($args->getEntity());
+        $this->setSessionVariable($args->getObject());
     }
 
     /**
@@ -73,14 +68,16 @@ class LastEditedListener
      */
     public function postUpdate(PostUpdateEventArgs $args): void
     {
-        $this->setSessionVariable($args->getEntity());
+        $this->setSessionVariable($args->getObject());
     }
 
     /**
      * @return mixed|void
      */
+    #[AsEventListener]
     public function registerEdited(CmsEvent $event): void
     {
+
         $this->setSessionVariable($event->getEntity());
     }
 
@@ -109,10 +106,12 @@ class LastEditedListener
         if($entity instanceof PageInterface){
             $name = 'Page';
         }
+
         
         try{
             $this->requestStack->getSession()->set($name.'.last_edited', $entity->getId());
         }catch (SessionNotFoundException){
+
             return;
         }
     }

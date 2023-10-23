@@ -81,7 +81,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     protected string $classType;
 
 
-    public function __clone()
+    public function __clone(): void
     {
         $this->id = null;
         $this->page = null;
@@ -290,12 +290,12 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     /**
      * @param array $params
      *
-     * @return array|bool
+     * @return array
      */
     #[Ignore]
-    public function getTemplateOptions($params = [])
+    public function getTemplateOptions($params = []): array
     {
-        return false;
+        return [];
     }
 
     /**
@@ -311,9 +311,9 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
      * @return array|bool
      */
     #[Ignore]
-    public function getAdminContent()
+    public function getAdminContent(): array
     {
-        return false;
+        return [];
     }
 
     /**

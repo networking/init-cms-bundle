@@ -8,20 +8,10 @@ file that was distributed with this source code.
 #}
 
 {% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet"
-          href="{{ asset('bundles/networkinginitcms/vendor/ios-html5-drag-drop-shim/release/default.css') }}">
-{% endblock %}
 
 
 {% set active_tab = app.request.get('context') %}
 {% set route = galleryListMode ? 'gallery': 'list' %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {% include '@NetworkingInitCms/MediaAdmin/list_script_draggable.html.twig' %}
-{% endblock %}
 
 {% block preview %}
 {% endblock %}
@@ -70,34 +60,13 @@ file that was distributed with this source code.
 
     {% if datagrid.filters %}
 
-
-            {% if galleryListMode %}
-                <div class="modal-header">
-                    <div class="modal-title">
-                        {{ admin.label|trans({}, admin.translationDomain) }}
-                    </div>
-                    <div class="modal-toolbar">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm"
-                                    data-bs-dismiss="modal">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-body">
-                {% else %}
+                {% if not galleryListMode %}
                 <div class="card mb-7">
                     <div class="card-content">
                     {% endif %}
 
                             <form action="{{ admin.generateUrl('list', {pcode: app.request.get('pcode'), 'galleryMode': galleryListMode}) }}" method="GET"
                                   class="kt-form kt-form--fit" id="search-form">
-
-                            {#                        <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>#}
-{#                        {% if persistent_parameters.provider is defined %}#}
-{#                            <input type="hidden" name="provider" value="{{ persistent_parameters.provider }}"/>#}
-{#                        {% endif %}#}
                     {% if not galleryListMode %}
                     <div class="card-body">
                         {% endif %}
@@ -241,11 +210,13 @@ file that was distributed with this source code.
             </div>
             {% endif %}
 
-                    </form>
-                     {% if not galleryListMode %}
-                </div>
-            </div>
-        {% endif %}
+       </form>
+
+                        {% if not galleryListMode %}
+                    </div>
+                            </div>
+                                {% endif %}
+
     {% endif %}
 {% endblock %}
 
@@ -366,7 +337,7 @@ file that was distributed with this source code.
                     <div class="col-md-9">
                         <div id="item_list" class="col text-center">
                             {% if datagrid.results|length > 0 %}
-                                {% include "@NetworkingInitCms/MediaAdmin/list_items.html.twig" %}
+                                    {% include "@NetworkingInitCms/MediaAdmin/list_items.html.twig" %}
                             {% else %}
                                 <p class="notice">
                                     {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
@@ -411,12 +382,7 @@ file that was distributed with this source code.
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
     <script>
         {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
-        MobileDragDrop.polyfill({
-            // use this to make use of the scroll behaviour
-            dragImageTranslateOverride: MobileDragDrop.scrollBehaviourDragImageTranslateOverride
-        });
 
-        (new Image()).src = "{{ asset('bundles/networkinginitcms/admin-theme/media/products/1.png') }}"
         function dragstart_handler(ev) {
             ev.dataTransfer.setData("Text", ev.target.dataset.objectId);
             ev.dataTransfer.effectAllowed = "copy";

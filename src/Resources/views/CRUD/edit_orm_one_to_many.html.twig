@@ -1,5 +1,4 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
@@ -7,7 +6,6 @@ moved all relation fields to the networking crud folder
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% macro one_to_many_list(sonata_admin, id, form) %}
@@ -61,21 +59,19 @@ file that was distributed with this source code.
                 </table>
             {% endif %}
         {% elseif form.children|length > 0 %}
-            <div class="dropzone ">
-                <div class="sortable sortable-container">
-                    {% for nested_group_field_name, nested_group_field in form.children %}
+            {% for nested_group_field_name, nested_group_field in form.children %}
                         {% set delete_button = '' %}
                         <div class="border mb-2 content_type_item bg-white sortable-item list-item-{{ id }}">
                             {% set fields = '' %}
                             {% for field_name, nested_field in nested_group_field.children %}
                                 {% if field_name == '_delete' %}
                                     {% set delete_button = form_widget(nested_field, {'attr': {'class': '__delete_input d-none'}}) %}
-                                {% elseif field_name == sonata_admin.field_description.options.sortable %}
+                                {% elseif sonata_admin.field_description.options['sortable'] is defined and field_name == sonata_admin.field_description.options['sortable'] %}
                                     {% set sortableField = form_row(nested_field, { 'inline': 'natural','edit'  : 'inline'}) %}
                                     {% set dummy = nested_group_field.setrendered %}
                                 {% else %}
                                     {% set fields %}
-                                        {{ fields  }}
+                                        {{ fields }}
                                         <span class="sonata-ba-td-{{ id }}-{{ field_name }}">
                                                 {% if sonata_admin.field_description.associationadmin.formfielddescriptions[field_name] is defined %}
                                                     {{ form_row(nested_field, {
@@ -90,28 +86,29 @@ file that was distributed with this source code.
                                     {% endset %}
                                 {% endif %}
                                 {% if loop.last %}
+                                        {% if sonata_admin.field_description.options.sortable  is defined %}
                                     <div class="p-3 d-flex flex-row align-items-center justify-content-between mr-3">
+                                            <span class="sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }}">
+                                            {{ sortableField|raw }}
+                                        </span>
 
-                                                <span class="sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }}">
-                                                    {{ sortableField|raw }}
-                                                </span>
-                                        <button type="button" class="me-2 btn btn-sm btn-light-danger __delete">
-                                            <i class="fa fa-trash soft-background pe-0"></i>
-                                        </button>
-                                        <span class="d-none">
-                                                    {{ delete_button|raw }}
-                                                </span>
                                     </div>
-                                    <div class="content_preview border-top p-3">
+                                        {% endif %}
+                                    <div class="content_preview {% if sonata_admin.field_description.options.sortable  is defined %}border-top{% endif %} p-3">
                                         {{ fields }}
+                                        <div class="form-group">
+                                            <button type="button" class="me-2 btn btn-sm btn-light-danger float-end __delete">
+                                                <i class="fa fa-trash soft-background pe-0"></i>
+                                            </button>
+                                            <span class="d-none">{{ delete_button|raw }} </span>
+                                            <div class="clearfix"></div>
+                                        </div>
                                     </div>
                                 {% endif %}
 
                             {% endfor %}
                         </div>
                     {% endfor %}
-                </div>
-            </div>
         {% endif %}
     {% else %}
         {{ form_widget(form) }}
@@ -127,70 +124,69 @@ file that was distributed with this source code.
     {% if app.request.xmlHttpRequest %}
         {{ _self.one_to_many_list(sonata_admin, id, form) }}
     {% else %}
-    <div id="field_container_{{ id }}" class="field-container"
+        <div id="field_container_{{ id }}" class="field-container mb-3"
 
-         {% if sonata_admin.field_description.options.sortable is defined %}
+                {% if sonata_admin.field_description.options.sortable is defined %}
             data-cms-sortable-draggable=".sortable-item"
             data-cms-sortable-one-to-many="true"
             data-cms-sortable-selector=".sonata-ba-td-{{ id }}-{{ sonata_admin.field_description.options.sortable }}"
             data-cms-sortable-container="#field_widget_{{ id }} .sortable-container"
-            {% endif %}>
+                {% endif %}>
 
-        {% set display_create_button = sonata_admin.field_description.associationadmin.hasRoute('create')
-            and sonata_admin.field_description.associationadmin.hasAccess('create')
-            and btn_add
-            and (sonata_admin.field_description.options.limit is not defined or form.children|length < sonata_admin.field_description.options.limit) %}
-        {% if sonata_admin.edit == 'inline' %}
-            {% if display_create_button %}
-                {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
-                        <span id="field_actions_{{ id }}" class="row">
-                        <a
-                                href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
+            {% set display_create_button = sonata_admin.field_description.associationadmin.hasRoute('create')
+                and sonata_admin.field_description.associationadmin.hasAccess('create')
+                and btn_add
+                and (sonata_admin.field_description.options.limit is not defined or form.children|length < sonata_admin.field_description.options.limit) %}
+
+
+            <div id="field_widget_{{ id }}">
+            {{ _self.one_to_many_list(sonata_admin, id, form) }}
+            </div>
+
+            {% if sonata_admin.edit == 'inline' %}
+                {% if display_create_button %}
+                    {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
+                        <span id="field_actions_{{ id }}" >
+                        <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
                                 onclick="return start_field_retrieve_{{ id }}(this);"
-                                class="btn btn-light sonata-ba-action"
+                                class="btn btn-sm btn-light-primary add-button sonata-ba-action"
                                 title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
-                                >
+                            >
                             <i class="fa fa-plus"></i>
                             {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                         </a>
                     </span>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
 
-            {# include association code #}
-            {% jsblock 'addToBottom' %}
-            {% include '@NetworkingInitCms/CRUD/edit_orm_one_association_script.html.twig' %}
-            {% jsblock 'addToBottomEnd' %}
-        {% else %}
-            <span id="field_actions_{{ id }}">
+                {# include association code #}
+                {% jsblock 'addToBottom' %}
+                {% include '@NetworkingInitCms/CRUD/edit_orm_one_association_script.html.twig' %}
+                {% jsblock 'addToBottomEnd' %}
+            {% else %}
+                <span id="field_actions_{{ id }}">
                 {% if display_create_button %}
-                {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
-                    <a
-                            href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
-                            onclick="return start_field_dialog_form_add_{{ id }}(this);"
-                            class="btn btn-light sonata-ba-action"
-                            title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
-                            >
+                    {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
+                        <a
+                                href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
+                                onclick="return start_field_dialog_form_add_{{ id }}(this);"
+                                class="btn btn-sm btn-light-primary add-button sonata-ba-action"
+                                title="{{ 'link_add'|trans({}, 'SonataAdminBundle') }}"
+                        >
                         <i class="fa fa-plus"></i>
                         {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                     </a>
-                {% endif %}
+                    {% endif %}
                 {% endif %}
             </span>
+                <div class="modal" id="field_dialog_{{ id }}" style="display: none" role="dialog"
+                     aria-hidden="true">
+                </div>
+                {% jsblock 'addToBottom' %}
+                {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
+                {% jsblock 'addToBottomEnd' %}
+            {% endif %}
 
-            <div class="modal" id="field_dialog_{{ id }}" style="display: none" role="dialog"
-                 aria-hidden="true">
-
-            </div>
-            {% jsblock 'addToBottom' %}
-            {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
-            {% jsblock 'addToBottomEnd' %}
-        {% endif %}
-
-        <span id="field_widget_{{ id }}">
-            {{ _self.one_to_many_list(sonata_admin, id, form) }}
-        </span>
-
-    </div>
+        </div>
     {% endif %}
 {% endif %}

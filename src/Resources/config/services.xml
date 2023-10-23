@@ -192,6 +192,24 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <service id="Networking\InitCmsBundle\Serializer\MediaNormalizer"  autowire="true" public="true">
+            <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
+            <argument key="$propertyNormalizer" type="service" id="serializer.normalizer.property"/>
+            <argument key="$mediaClass" type="string">%sonata.media.media.class%</argument>
+            <tag name="serializer.normalizer" priority="1000"/>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Serializer\LayoutBlockNormalizer"  autowire="true" public="true">
+            <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
+            <argument key="$propertyNormalizer" type="service" id="serializer.normalizer.property"/>
+            <tag name="serializer.normalizer" priority="1000"/>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Serializer\PageNormalizer"  autowire="true" public="true">
+            <argument key="$pageClass" type="string">%networking_init_cms.admin.page.class%</argument>
+            <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
+            <tag name="serializer.normalizer" priority="100"/>
+        </service>
 
     </services>
 </container>

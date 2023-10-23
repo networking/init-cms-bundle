@@ -23,6 +23,6 @@ file that was distributed with this source code.
         {% endif %}
     {% endfor %}
     <input name="{{ form['_token'].vars.full_name }}" type="hidden" value="{{ form['_token'].vars.data }}" />
-    <input type="submit" class="btn btn-primary" name="btn_update" id="pageSettingsSubmit"
+    <input type="submit" class="btn btn-sm btn-primary" name="btn_update" id="pageSettingsSubmit"
            loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}" value="{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}"/>
 </form>

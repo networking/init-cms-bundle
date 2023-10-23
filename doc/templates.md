@@ -38,7 +38,7 @@ The twig extension extracts the content entity out of the layout block in one of
  OR
 
  b. If the page is published the content is serialized and is retrieved using the getSnapshotContent method. The content is
-    then deserialized from its json format using the JMS Serializer bundle .
+    then deserialized from its json format using the Symfony Serializer.
 
 The method "getTemplateOptions($params)" is then called on the content object. The content object delivers back an array
 of whatever it likes, and the array plus paramters are passed on the the templating service to be rendered with the

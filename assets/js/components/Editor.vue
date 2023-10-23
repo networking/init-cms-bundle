@@ -45,8 +45,13 @@
             <div class="modal-dialog  modal-full" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
                         <h4 class="modal-title">{{ $t('created_image') }}</h4>
+
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="ki-outline ki-cross fs-1"></i>
+                        </div>
                     </div>
                     <div class="modal-body align-center">
                         <div class="row">
@@ -59,9 +64,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('cancel') }}</button>
-                        <button type="button" class="btn btn-warning" @click.prevent="updateImage">{{ $t('replace_image') }}</button>
-                        <button type="button" class="btn btn-primary" @click.prevent="cloneImage">{{ $t('create_new_image') }}</button>
+                        <button type="button" class="btn btn-sm btn-light" data-dismiss="modal">{{ $t('cancel') }}</button>
+                        <button type="button" class="btn btn-sm btn-warning" @click.prevent="updateImage">{{ $t('replace_image') }}</button>
+                        <button type="button" class="btn btn-sm btn-primary" @click.prevent="cloneImage">{{ $t('create_new_image') }}</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
@@ -70,8 +75,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">{{ $t('are_you_sure') }}</h4>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <p>
@@ -79,8 +87,8 @@
                         </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" @click.prevent="confirmUpdate">{{ $t('continue') }}</button>
-                    <button type="button" class="btn btn-default" @click.prevent="rejectUpdate">{{ $t('cancel') }}</button>
+                    <button type="button" class="btn btn-sm btn-warning" @click.prevent="confirmUpdate">{{ $t('continue') }}</button>
+                    <button type="button" class="btn btn-sm btn-light" @click.prevent="rejectUpdate">{{ $t('cancel') }}</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -89,7 +97,6 @@
 </template>
 <script>
     import axios from 'axios';
-    import 'bootstrap';
     import FilerobotImageEditor from './imageEditor';
 
     const ALLOWED_FILE_EXTENTIONS = ['gif', 'jpg', 'jpeg', 'png'];
@@ -159,6 +166,14 @@
             this.context = imageContainer.getAttribute('data-image-context');
             this.provider = imageContainer.getAttribute('data-image-provider');
             this.fileExtension = this.imageURL.slice((this.imageURL.lastIndexOf(".") - 1 >>> 0) + 2);
+
+            this.imageModal = new bootstrap.Modal(document.getElementById('imageModal'), {
+                keyboard: false
+            })
+
+            this.confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
+                keyboard: false
+            })
         },
         data() {
             this.$i18n.locale = langauge;
@@ -174,6 +189,8 @@
                 alertMessage: false,
                 alertType: false,
                 fileExtension: '',
+                imageModal: {},
+                confirmModal: {}
             }
         },
         watch: {
@@ -201,11 +218,11 @@
                 this.alert = false;
                 this.alertType = false;
                 this.alertMessage = false;
-                $('#imageModal').modal('show');
+                this.imageModal.show()
                 return false;
             },
             cloneImage(){
-                $('#imageModal').modal('hide');
+                this.imageModal.hide()
                 axios
                     .post('/admin/cms/media/clone', {
                         'id': this.id,
@@ -229,15 +246,18 @@
                 });
             },
             updateImage(){
-                $('#imageModal').modal('hide');
-                $('#confirmModal').modal('show');
+
+                this.imageModal.hide()
+                this.confirmModal.show()
             },
             rejectUpdate(){
-                $('#imageModal').modal('show');
-                $('#confirmModal').modal('hide');
+
+                this.imageModal.show()
+                this.confirmModal.hide()
             },
             confirmUpdate(){
-                $('#confirmModal').modal('hide');
+                this.confirmModal.hide()
+
                 axios
                     .post('/admin/cms/media/clone', {
                         'id': this.id,

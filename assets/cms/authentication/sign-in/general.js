@@ -36,12 +36,12 @@ let KTSigninGeneral = function () {
             'ok': 'Ok, compris!'
         },
         'it': {
-            'email_invalid': 'La valeur n\'est pas une adresse e-mail valide',
-            'email_empty': 'L\'adresse e-mail est requise',
-            'password_empty': 'Le mot de passe est requis',
-            'login_success': 'Vous vous êtes connecté avec succès!',
-            'login_error': 'Désolé, il semble qu\'il y ait des erreurs détectées, veuillez réessayer.',
-            'ok': 'Ok, compris!'
+            'email_invalid': 'Il valore non è un indirizzo e-mail valido',
+            'email_empty': 'L\'indirizzo e-mail è richiesto',
+            'password_empty': 'La password è richiesta',
+            'login_success': 'L\'accesso è stato effettuato con successo!',
+            'login_error': 'Spiacente, sembra che siano stati rilevati degli errori, si prega di riprovare.',
+            'ok': 'Ok, capito!'
         },
     }
 
@@ -127,13 +127,13 @@ let KTSigninGeneral = function () {
                         loginInfo[key] = value;
                     })
 
-                    axios.post(CMSRouting.generate('api_login'), loginInfo, {...axiosConfig})
+                    axios.post(CMSRouting.generate('cms_api_login'), loginInfo, {...axiosConfig})
                         .then((response) => {
                             submitButton.disabled = false;
                             submitButton.removeAttribute('data-kt-indicator');
                             let redirect = response.data.redirect;
                             Swal.fire({
-                                    text: "Authentication successful!",
+                                    text: translate('login_success'),
                                     type: "success",
                                     icon: "success",
                                     timer: 1000,

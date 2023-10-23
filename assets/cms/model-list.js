@@ -70,19 +70,19 @@ class ModelList{
     }
     addClickOnLinkListeners() {
         if(this.selectModelEventId !== '') {
-            this.removeListeners()
+            KTUtil.off(this.dialogContainer, 'click', this.selectModelEventId);
         }
         this.selectModelEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
     }
     addSearchListeners() {
         if(this.selectModelEventId !== '') {
-            this.removeListeners()
+            KTUtil.off(this.dialogContainer, 'submit', this.searchModelEventId);
         }
         this.searchModelEventId = KTUtil.on(this.dialogContainer, 'form', 'submit', this.searchModel.bind(this));
     }
     addSubmitisteners() {
         if(this.addModelEventId !== '') {
-            this.removeListeners()
+            KTUtil.off(this.dialogContainer, 'submit', this.addModelEventId);
         }
         this.addModelEventId = KTUtil.on(this.dialogContainer, 'form', 'submit', this.submitModel.bind(this));
         this.dialogContainer.querySelectorAll('[data-bs-dismiss="modal"]').forEach((element) => {

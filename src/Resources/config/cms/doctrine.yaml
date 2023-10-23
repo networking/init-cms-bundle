@@ -1,5 +1,5 @@
 imports:
-    - { resource: "../event_listeners.yaml" }
+    - { resource: "../gedmo_doctrine_extensions.yaml" }
 doctrine:
     dbal:
         types:

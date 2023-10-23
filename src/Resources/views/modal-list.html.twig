@@ -1,0 +1,61 @@
+{% set _title = block('title') is defined ? block('title')|trim : null %}
+<div class="modal-header">
+    <div class="modal-title h3">
+            {% if _title is not empty or action is defined %}
+                <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                    {% if _title is not empty %}
+                        {{ _title|raw }}
+                    {% else %}
+                        {% if action is defined %}
+                            {{ render_breadcrumbs_for_title(admin, action)|replace({'&lt;': '<', '&gt;':'>'})|raw }}
+                        {% endif %}
+                        {% if action == 'edit' %}
+                            {% set settings = {} %}
+                            {% if object.locale is defined %}
+                                {% set settings = {'locale': object.locale} %}
+                            {% endif %}
+
+                            <a class="link-underlined font-small font-light"
+                               href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                        {% endif %}
+                    {% endif %}
+                </h1>
+            {% endif %}
+    </div>
+    <div class="modal-toolbar">
+        <!--begin::Close-->
+        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+            <i class="ki-outline ki-cross fs-1"></i>
+        </div>
+        <!--end::Close-->
+    </div>
+
+</div>
+<div class="modal-body">
+    {% for notice_level in ['success','error','info', 'warning'] %}
+        {% set session_var = 'sonata_flash_' ~ notice_level %}
+        {% set color = (notice_level=='error')?'danger':notice_level %}
+        {% for flash in app.session.flashbag.get(session_var) %}
+        <!--begin::Alert-->
+        <div class="alert alert-{{ color }} d-flex align-items-center p-5">
+            <!--begin::Icon-->
+            <i class="ki-duotone ki-shield-tick fs-2hx text-{{ color }} me-4"><span class="path1"></span><span class="path2"></span></i>
+            <!--end::Icon-->
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-column">
+                <!--begin::Title-->
+                <!--end::Title-->
+                <!--begin::Content-->
+                <span>{{ flash }}</span>
+                <!--end::Content-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Alert-->
+        {% endfor %}
+    {% endfor %}
+    {% block list_filters %}
+    {% endblock %}
+    {% block list_table %}
+    {% endblock %}
+</div>

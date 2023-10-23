@@ -24,10 +24,10 @@ class JSNode extends Node
 {
     /**
      * @param Node $method
-     * @param array      $lineno
+     * @param int      $lineno
      * @param null       $tag
      */
-    public function __construct(Node $method, $lineno, $tag = null)
+    public function __construct(Node $method, int $lineno, $tag = null)
     {
         parent::__construct(['method' => $method], [], $lineno, $tag);
     }

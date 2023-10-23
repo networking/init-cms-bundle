@@ -541,11 +541,11 @@ class AdminMenuBuilder extends MenuBuilder
      */
     protected function addIcon($item, $icon)
     {
-        $myicon = ' <i class="far fa-'.$icon['icon'].'"></i>';
+        $iconTag = ' <i class="fa fa-'.$icon['icon'].'"></i>';
         if (!isset($icon['append']) || $icon['append'] === true) {
-            $label = $item->getLabel().' '.$myicon;
+            $label = $item->getLabel().' '.$iconTag;
         } else {
-            $label = $myicon.' '.$item->getLabel();
+            $label = $iconTag.' '.$item->getLabel();
         }
         $item->setLabel($label)
             ->setExtra('safe_label', true);

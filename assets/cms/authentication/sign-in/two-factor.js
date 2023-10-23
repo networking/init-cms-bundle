@@ -1,10 +1,53 @@
 "use strict";
 
 // Class Definition
-var KTSigninTwoFactor = function() {
+let KTSigninTwoFactor = function() {
     // Elements
     var form;
     var submitButton;
+
+    const lang = localStorage.getItem("kt_auth_lang")??document.getElementsByTagName('html')[0].getAttribute('lang');
+
+    const texts = {
+        'en': {
+            'login_success': 'You have been successfully verified!',
+            'login_error': 'Sorry, please enter valid securtiy code and try again.',
+            'ok': 'Ok, got it!'
+        },
+        'de': {
+            'login_success': 'Sie wurden erfolgreich verifiziert!',
+            'login_error': 'Entschuldigung, bitte geben Sie einen gültigen Sicherheitscode ein und versuchen Sie es erneut.',
+            'ok': 'Ok, verstanden!'
+        },
+        'fr': {
+            'login_success': 'Vous avez été vérifié avec succès !',
+            'login_error': 'Désolé, veuillez saisir un code de sécurité valide et réessayer.',
+            'ok': 'Ok, compris!'
+        },
+        'it': {
+            'login_success': 'Sei stato verificato con successo!',
+            'login_error': 'Spiacente, inserire un codice di sicurezza valido e riprovare.',
+            'ok': 'Ok, capito!'
+        },
+    }
+
+    let translate = function (text) {
+
+        switch (lang) {
+            case 'German':
+            case 'de':
+                return texts['de'][text];
+            case 'Italian':
+            case 'it':
+                return texts['it'][text];
+            case 'French':
+            case 'fr':
+                return texts['fr'][text];
+            default:
+                return texts['en'][text];
+
+        }
+    }
 
     // Handle form
     var handleForm = function(e) {        
@@ -34,7 +77,7 @@ var KTSigninTwoFactor = function() {
                     submitButton.disabled = false;
                     submitButton.removeAttribute('data-kt-indicator');
                     Swal.fire({
-                        text: "You have been successfully verified!",
+                        text: translate('login_success'),
                         icon: "success",
                         timer: 1000,
                         showConfirmButton: false,
@@ -59,10 +102,10 @@ var KTSigninTwoFactor = function() {
                 })
             } else {
                 swal.fire({
-                    text: "Please enter valid securtiy code and try again.",
+                    text: translate('login_error'),
                     icon: "error",
                     buttonsStyling: false,
-                    confirmButtonText: "Ok, got it!",
+                    confirmButtonText: translate('ok'),
                     customClass: {
                         confirmButton: "btn fw-bold btn-light-primary"
                     }

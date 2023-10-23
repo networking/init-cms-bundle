@@ -70,6 +70,7 @@ class TranslationAdmin extends BaseAdmin
      */
     protected $filterLocales = [];
 
+
     public function setEditableOptions(array $options)
     {
         $this->editableOptions = $options;
@@ -140,7 +141,7 @@ class TranslationAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
 
         /** @var \Doctrine\ORM\EntityManager $em */
@@ -161,7 +162,7 @@ class TranslationAdmin extends BaseAdmin
         );
         ksort($domains);
 
-        $datagridMapper
+        $filter
             ->add('key', StringFilter::class, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
             ->add('translations.content', StringFilter::class, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
             ->add(

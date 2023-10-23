@@ -5,14 +5,14 @@ let CMSRouting = await CMSAdmin.getRouting()
 
 var CMSMenuAdmin = function () {
 
-    var lastTab = localStorage.getItem('lastTab');
-    var lastEdited;
-    var menuDialog;
-    var tabs;
-    var listUrl;
-    var updateUrl;
-    var ready = false;
-    var trees = [];
+    let lastTab = localStorage.getItem('lastTab');
+    let lastEdited;
+    let menuDialog;
+    let tabs;
+    let listUrl;
+    let updateUrl;
+    let ready = false;
+    let trees = [];
 
     var reloadList = () => {
         axios.get(tabs.dataset.listUrl, {'locale': document.querySelector('#filter_locale_value').value, ...axiosConfig}
@@ -22,6 +22,7 @@ var CMSMenuAdmin = function () {
             if(response.data.hasOwnProperty('last_edited') > -1) {
                 setLastEdited(response.data.last_edited)
             }
+            ready = false;
             setUpSortTree();
             selectLastTab(lastTab)
         })
@@ -54,8 +55,6 @@ var CMSMenuAdmin = function () {
 
     var createAjaxDialog = (event)=> {
         event.preventDefault();
-
-
 
         let link = event.target;
 
@@ -99,6 +98,11 @@ var CMSMenuAdmin = function () {
                     }
                     reloadList();
                 }
+
+                if(data.result === 'reload'){
+                    window.location.reload();
+                }
+
             })
             .catch(function (error) {
                 var data = error.response.data;
@@ -162,35 +166,31 @@ var CMSMenuAdmin = function () {
 
             tree.on("move_node.jstree", function (e, data) {
                 updateMenuSort(data.new_instance.get_json(), ($(data.new_instance.element[0]).attr('id') === 'placement_menu'))
-
-                if (treeSwitch && treeSwitch.checked) {
-                    showHideTree(treeSwitch)
-                }
-
             });
 
-            tree.on('after_close.jstree', function (e, data) {
-                treeSwitch.checked = false
-            })
+            if (tree.attr('id') !== 'placement_menu') {
+                tree.on('after_close.jstree', function (e, data) {
+                    treeSwitch.checked = false
+                })
 
-            if (ready) {
-                return;
+
+                tree.on('ready.jstree', function () {
+                    postMenuLoad();
+                });
             }
-
-            tree.on('ready.jstree', function () {
-                ready = true;
-                postMenuLoad();
-            });
-
         });
     }
 
 
     var postMenuLoad = () => {
 
+        if(ready) return;
+
         document.querySelectorAll('[data-tree-id]').forEach(function (item) {
+            item.checked = localStorage.getItem('tree_' + item.dataset.treeId) !== 'false'
             showHideTree(item)
         })
+        ready = true
     }
 
     var setLastEdited = (id) => {
@@ -252,17 +252,16 @@ var CMSMenuAdmin = function () {
 
     var handleShowHideTree = (event) => {
         let treeSwitch = event.target;
+        let treeId = treeSwitch.dataset.treeId;
+        localStorage.setItem('tree_' + treeId, treeSwitch.checked)
         showHideTree(treeSwitch)
     }
 
     var showHideTree = (treeSwitch) => {
         let treeId = treeSwitch.dataset.treeId;
-        let open = treeSwitch.checked
-
-        localStorage.setItem('tree_' + treeId, open)
         trees.find((tree) => {
             if(tree.attr('id') === treeId) {
-                if(open) {
+                if(localStorage.getItem('tree_' + treeId) !== 'false') {
                     return tree.jstree(true).open_all()
                 }
                 return tree.jstree(true).close_all()

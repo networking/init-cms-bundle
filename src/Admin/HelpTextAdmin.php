@@ -39,9 +39,9 @@ class HelpTextAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier('title')
             ->addIdentifier('translationKey')
             ->add('locale')
@@ -61,9 +61,9 @@ class HelpTextAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
-        $formMapper
+        $form
             ->with('', ['label' => false])
             ->add(
                 'locale',
@@ -87,9 +87,9 @@ class HelpTextAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add(
                 'locale',
                 CallbackFilter::class,

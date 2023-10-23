@@ -1,7 +1,5 @@
-
-
+<div class="tiles">
 {% set random = date().timestamp %}
-
 {% for object in datagrid.results %}
     {% set previewLink = false %}
     {% if object.width is defined and object.width %}
@@ -79,3 +77,4 @@
         {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
     </p>
 {% endif %}
+</div>

@@ -39,9 +39,9 @@ class GalleryAdminExtension extends AbstractAdminExtension
     /**
      * {@inheritdoc}
      */
-    public function configureFormFields(FormMapper $formMapper): void
+    public function configureFormFields(FormMapper $form): void
     {
-        $formMapper
+        $form
             ->remove('galleryItems')
             ->remove('context')
             ->remove('name')
@@ -50,11 +50,11 @@ class GalleryAdminExtension extends AbstractAdminExtension
         ;
 
         // define group zoning
-        $formMapper
+        $form
             ->with('Gallery', ['class' => 'col-md-9'])->end()
             ->with('Options', ['class' => 'col-md-3'])->end();
 
-        $context = $formMapper->getAdmin()->getPersistentParameter('context');
+        $context = $form->getAdmin()->getPersistentParameter('context');
 
         if (!$context) {
             $context = $this->pool->getDefaultContext();
@@ -71,7 +71,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
         }
 
 
-        $formMapper
+        $form
             ->with('Options')
             ->add('context', ChoiceType::class, [
                 'choices' => $contexts,
@@ -106,7 +106,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
                     'allow_delete' => true,
                     'required' => false,
                     'prototype' => true,
-                    'label' => false, // dont show another legend of subform
+                    'label' => false,
                     'translation_domain' => 'admin',
                 ]
             )
@@ -116,10 +116,10 @@ class GalleryAdminExtension extends AbstractAdminExtension
     /**
      * {@inheritdoc}
      */
-    public function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    public function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper->remove('context');
-        $datagridMapper->add(
+        $filter->remove('context');
+        $filter->add(
             'context',
             SimpleStringFilter::class,
             [
@@ -142,9 +142,9 @@ class GalleryAdminExtension extends AbstractAdminExtension
     /**
      * {@inheritdoc}
      */
-    public function configureListFields(ListMapper $listMapper): void
+    public function configureListFields(ListMapper $list): void
     {
-        $listMapper->remove('defaultFormat')
+        $list->remove('defaultFormat')
             ->remove('context')
             ->add(
                 '_action',

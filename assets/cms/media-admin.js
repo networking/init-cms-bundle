@@ -277,14 +277,13 @@ var CMSMediaAdmin = function () {
         filters = Object.fromEntries(data.entries());
 
 
-
-
         axios.get(tagsContainer.dataset.refreshListUrl, {...axiosConfig, params: filters})
             .then(function (response) {
                 $('#item_list').html(response.data);
                 $("html, body").animate({scrollTop: $('#item_list').scrollTop()}, "slow");
 
                 refreshFsLightbox();
+                KTComponents.init();
         })
     }
 
@@ -348,6 +347,24 @@ var CMSMediaAdmin = function () {
                 let tags = e.target.dataset.tags;
                 let name = e.target.dataset.name;
                 refreshList({
+                    'filter[_page]': page,
+                    'filter[_sort_order]': sort_order,
+                    'filter[_sort_by]':sort_by,
+                    'filter[tags][value]': tags,
+                    'filter[name][value]': name,
+                });
+            })
+
+            KTUtil.on(document.body, '.per-page', 'change', function (e) {
+                e.preventDefault();
+                let per_page = e.target.value;
+                let page = e.target.dataset.page;
+                let sort_order = e.target.dataset.sortOrder;
+                let sort_by = e.target.dataset.sortBy;
+                let tags = e.target.dataset.tags;
+                let name = e.target.dataset.name;
+                refreshList({
+                    'filter[_per_page]': per_page,
                     'filter[_page]': page,
                     'filter[_sort_order]': sort_order,
                     'filter[_sort_by]':sort_by,

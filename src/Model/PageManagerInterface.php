@@ -57,7 +57,7 @@ interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInt
      *
      * @return mixed
      */
-    public function revertToPublished(PageInterface $draftPage, \JMS\Serializer\SerializerInterface $serializer);
+    public function revertToPublished(PageInterface $draftPage,  \Symfony\Component\Serializer\SerializerInterface $serializer);
 
     /**
      * @param PageInterface $page

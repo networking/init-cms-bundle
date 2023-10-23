@@ -59,9 +59,9 @@ class GroupAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add('name', null, ['field_options' => ['translation_domain' => $this->getTranslationDomain()]])
         ;
     }
@@ -69,12 +69,12 @@ class GroupAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier('name');
 
-        $listMapper->add(
+        $list->add(
             '_action',
             'actions',
             [
@@ -91,9 +91,9 @@ class GroupAdmin extends BaseAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
-        $formMapper
+        $form
             ->add('name', null, [ 'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline'])
             ->add(
                 'roles',
