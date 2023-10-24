@@ -329,10 +329,10 @@
              	<source>help</source>
              	<target>Hilfe</target>
              </trans-unit>
-
-
-
-
+             <trans-unit id="selected">
+             	<source>selected</source>
+             	<target>Ausgewählt</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

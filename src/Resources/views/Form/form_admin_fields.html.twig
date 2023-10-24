@@ -212,16 +212,12 @@ file that was distributed with this source code.
 {% endblock sonata_roles_matrix_widget %}
 
 {% block checkbox_widget %}
-{#    {% if 'sonata_roles_matrix' in form.parent.vars.block_prefixes %}#}
-{#        <div class="checkbox">#}
-{#           // {{- form_label(form, null, { widget: parent() }) -}}#}
-{#        </div>#}
-{#    {% else %}#}
         {%- set attr_class = attr_class|default(attr.class|default('')) -%}
-        {%- set row_class = '' -%}
+
+        {% set row_class = row_attr.class|default('mb-3') %}
         {%- if 'btn-check' not in attr_class -%}
             {%- set attr_class = attr_class ~ ' form-check-input' -%}
-            {%- set row_class = 'form-check mb-3' -%}
+            {%- set row_class = row_class ~ ' form-check' -%}
         {%- endif -%}
         {%- set attr = attr|merge({class: attr_class|trim}) -%}
         {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
@@ -238,7 +234,12 @@ file that was distributed with this source code.
         {% set checkbox %}
             <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
         {% endset %}
+        {% if label is not same as(false) %}
         {{- form_label(form, null, { widget: checkbox }) -}}
+            {% else %}
+            {{ checkbox|raw }}
+        {% endif %}
+
         {%- if row_class is not empty -%}
             </div>
         {%- endif -%}
@@ -606,10 +607,11 @@ file that was distributed with this source code.
 
 {%- block radio_widget -%}
     {%- set attr_class = attr_class|default(attr.class|default('')) -%}
-    {%- set row_class = '' -%}
+    {% set row_class = row_attr.class|default('mb-3') %}
+
     {%- if 'btn-check' not in attr_class -%}
         {%- set attr_class = attr_class ~ ' form-check-input' -%}
-        {%- set row_class = 'form-check mb-3' -%}
+        {%- set row_class = row_class ~' form-check' -%}
     {%- endif -%}
     {%- set attr = attr|merge({class: attr_class|trim}) -%}
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
@@ -622,7 +624,11 @@ file that was distributed with this source code.
     {% set radio %}
     <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
     {% endset %}
+    {% if label is not same as(false) %}
     {{- form_label(form, null, { widget: radio }) -}}
+    {% else %}
+    {{ radio|raw }}
+    {% endif %}
     {%- if row_class is not empty -%}
         </div>
     {%- endif -%}

@@ -36,9 +36,9 @@ file that was distributed with this source code.
             </div>
 
             {% if data.action == 'delete' %}
-                <button type="submit" class="btn btn-danger modal-close"><i class="fa fa-trash"></i> {{ 'btn_execute_batch_action'|trans({}, 'SonataAdminBundle') }}</button>
+                <button type="submit" class="btn btn-danger" data-bs-dismiss="modal"><i class="fa fa-trash"></i> {{ 'btn_execute_batch_action'|trans({}, 'SonataAdminBundle') }}</button>
             {% else %}
-            <input type="submit" class="btn btn-warning modal-close"  value="{{ 'btn_execute_batch_action'|trans({}, 'SonataAdminBundle') }}" />
+            <input type="submit" class="btn btn-warning" data-bs-dismiss="modal" value="{{ 'btn_execute_batch_action'|trans({}, 'SonataAdminBundle') }}" />
             {% endif %}
             {% if admin.hasRoute('list') and admin.isGranted('LIST') %}
                 {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}

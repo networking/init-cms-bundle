@@ -319,10 +319,10 @@
                   ]]>
                  </target>
              </trans-unit>
-
-
-
-
+             <trans-unit id="selected">
+             	<source>selected</source>
+             	<target>Selected</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>
