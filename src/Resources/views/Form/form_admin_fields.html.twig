@@ -205,7 +205,11 @@ file that was distributed with this source code.
 
 {% block help_block %}
     {% apply spaceless %}
-        {% if help_block %}<p class="form-text mb-0 help-text">{{ help_block|trans({}, translation_domain)|raw }}</p>{%endif %}
+        {% if help_block %}
+            <p class="form-text mb-0 help-text">
+            {{ help_block|trans(help_translation_parameters, translation_domain)|raw }}
+            </p>
+        {%endif %}
         {% if help_block_tooltip.title %}
             &nbsp;{{ block('help_block_tooltip') }}
         {% endif %}
