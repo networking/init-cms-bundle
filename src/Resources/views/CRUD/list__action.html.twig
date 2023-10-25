@@ -15,16 +15,18 @@ file that was distributed with this source code.
         {% include field_description.options.actions.edit.template %}
 
             <!--begin::Toggle-->
-            <button type="button" class="btn btn-sm btn-light rotate" data-kt-menu-trigger="click"
-                    data-kt-menu-placement="bottom-start" data-kt-menu-offset="0,5"
-                    data-bs-toggle="tooltip" data-bs-placement="top"
+            <button type="button" class="btn btn-sm btn-light rotate"
+                    data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                    data-kt-menu-placement="bottom-end"
                     title="{{ 'link.show_more_actions'|trans({}, 'NetworkingInitCmsBundle') }}"
                 ><i class="ki-outline ki-dots-horizontal fs-3"></i>
             </button>
             <!--end::Toggle-->
 
             <!--begin::Menu-->
-            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-auto" data-kt-menu="true">
+            <div class="menu menu-sub menu-sub-dropdown
+            menu-column menu-rounded menu-gray-800 py-4
+            menu-state-bg fw-semibold w-auto" data-kt-menu="true">
                 <!--end::Menu separator-->
                 {% for key, actions in field_description.options.actions %}
                 <div class="menu-item px-3">

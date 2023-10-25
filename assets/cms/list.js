@@ -53,7 +53,8 @@ var CMSList = function () {
         datatable = new DataTable(table,{
             'order': [],
             'columnDefs': [
-                { orderable: false, targets: [0,'no_sorting'] },
+                {
+                    orderable: false, targets: ['no_sorting'] },
             ],
             'classes': {
                 sLengthSelect: "form-select form-select-sm d-inline-block form-select-solid w-75px" ,
@@ -74,18 +75,30 @@ var CMSList = function () {
     var handleSearchDatatable = () => {
         const filterSearch = document.querySelector('[data-kt-list-table-filter="search"]');
         filterSearch.addEventListener('keyup', function (e) {
-            table.querySelector('[data-kt-check="true"]').checked = false;
-            const allCheckboxes = table.querySelectorAll('tbody [type="checkbox"]');
-            allCheckboxes.forEach(c => {
-                c.checked = false;
-            })
+
+            if(table.querySelector('[data-kt-check="true"]')){
+                resetCheckboxes();
+            }
+
             datatable.search(e.target.value).draw();
 
         });
     }
 
+    var resetCheckboxes = () => {
+        table.querySelector('[data-kt-check="true"]').checked = false;
+        const allCheckboxes = table.querySelectorAll('tbody [type="checkbox"]');
+        allCheckboxes.forEach(c => {
+            c.checked = false;
+        })
+    }
+
     var initBatchDialog = () => {
-        document.querySelector('.batch-dialog-link').addEventListener('click', createBatchDialog);
+        let batchLink = document.querySelector('.batch-dialog-link')
+        if (!batchLink) {
+            return;
+        }
+        batchLink.addEventListener('click', createBatchDialog);
 
     };
 
@@ -176,8 +189,11 @@ var CMSList = function () {
     // Toggle toolbars
     const toggleToolbars = () => {
         // Define variables
-        const toolbarBase = document.querySelector('[data-kt-list-table-toolbar="base"]');
         const toolbarSelected = document.querySelector('[data-kt-list-table-toolbar="selected"]');
+        if(!toolbarSelected) {
+            return;
+        }
+        const toolbarBase = document.querySelector('[data-kt-list-table-toolbar="base"]');
         const selectedCount = document.querySelector('[data-kt-list-table-select="selected_count"]');
 
         // Select refreshed checkbox DOM elements 
