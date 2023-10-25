@@ -71,3 +71,7 @@ div#item_list > .tiles {
 .collection-item{
   background-color: rgb(250 250 250 / 50%);
 }
+
+table.dataTable > thead .sorting_asc, table.dataTable > thead .sorting_desc {
+  vertical-align: bottom;
+}

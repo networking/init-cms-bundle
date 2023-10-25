@@ -84,9 +84,9 @@ file that was distributed with this source code.
 
                                             {{ form_row(form.children[filter.formName].children['value'],
                                                 {
-                                                    'attr':{'placeholder': filter.label},
+                                                    'attr':{'placeholder': filter.options.attr.placeholder|default()},
                                                     'translation_domain': admin.translationDomain,
-                                                    'row_attr': row_attr
+                                                    'row_attr': row_attr,
                                                 }) }}
                                         </div>
                                     </div>
@@ -126,7 +126,7 @@ file that was distributed with this source code.
                                                 {{ form_widget(form.children[filter.formName].children['type']  ) }}
                                             {% endif %}
                                             <div class="form-floating w-100">
-                                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+                                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.options.attr.placeholder|default()}, 'translation_domain': admin.translationDomain }) }}
                                                 <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
                                                        class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain)  }}
                                                 </label>
@@ -255,7 +255,7 @@ file that was distributed with this source code.
                                         </th>
                                     {% endif %}
                                 {% elseif field_description.getOption('code') == constant('Sonata\\AdminBundle\\Datagrid\\ListMapper::NAME_SELECT') %}
-                                    <th class="sonata-ba-list-field-header sonata-ba-list-field-header-select"></th>
+                                    <th></th>
                                 {% elseif field_description.name == '_action' and app.request.isXmlHttpRequest %}
                                     Action buttons disabled in ajax view!
                                 {% elseif field_description.getOption('ajax_hidden') == true and app.request.isXmlHttpRequest %}
@@ -273,11 +273,9 @@ file that was distributed with this source code.
                                     {% endif %}
 
                                     {% apply spaceless %}
-                                        <th class="sonata-ba-list-field-header-{{ field_description.type }} {% if not sortable %}no_sorting{% endif %}">
+                                        <th class="{% if not sortable %}no_sorting{% endif %}">
                                                 {% if field_description.getOption('label_icon') %}
-                                                    <span class="sonata-ba-list-field-header-label-icon">
                                                     {{ field_description.getOption('label_icon')|parse_icon }}
-                                                </span>
                                                 {% endif %}
                                                 {% if field_description.label is not same as(false) %}
                                                     {% if field_description.translationDomain is same as(false) %}

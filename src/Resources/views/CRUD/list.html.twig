@@ -16,6 +16,5 @@ file that was distributed with this source code.
 
 {% block before_body_end %}
     {{ parent() }}
-{#    {% include '@NetworkingInitCms/CRUD/list_script.html.twig' %}#}
     <script src="{{ asset('list.js', 'init_cms')}}"></script>
 {% endblock %}

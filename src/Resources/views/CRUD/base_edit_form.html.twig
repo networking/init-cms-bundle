@@ -95,7 +95,9 @@ file that was distributed with this source code.
                                                     </p>
                                                 {% endif %}
                                                 {% if form_helper.render_groups is defined %}
-                                                    {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab) }}
+
+                                                    {% set tab_class = form_tab.class|default('row') %}
+                                                    {{ form_helper.render_groups(admin, form, form_tab['groups'], has_tab, tab_class) }}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -105,7 +107,8 @@ file that was distributed with this source code.
                         </div>
                     {% else %}
                         {% if form_helper.render_groups is defined %}
-                            {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab) }}
+                            {% set tab_class = admin.formtabs['default'].class|default('row') %}
+                            {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, has_tab, tab_class) }}
                         {% endif %}
                     {% endif %}
                 {% endblock %}

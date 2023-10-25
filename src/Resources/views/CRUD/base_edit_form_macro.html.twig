@@ -1,5 +1,5 @@
-{% macro render_groups(admin, form, groups, has_tab) %}
-    <div class="row">
+{% macro render_groups(admin, form, groups, has_tab, tab_class) %}
+    <div class="{{ tab_class }}">
         {% for code in groups|filter(code => admin.formgroups[code] is defined) %}
             {% set form_group = admin.formgroups[code] %}
             <div class="{{ form_group.class|default('col-md-12 mb-3') }}">
