@@ -1,0 +1,79 @@
+/*!
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+/*! ../../admin-theme/plugins/custom/ckeditor/ckeditor-classic.bundle.js */
+
+/*! ./components/form-legend */
+
+/*! ./components/info-text */
+
+/*! ./components/multiple-checkboxes */
+
+/*! ./components/select-basic */
+
+/*! ./components/text-area */
+
+/*! ./components/text-input */
+
+/*! ./form-component */
+
+/*! ./select-basic */
+
+/*! smooth-scroll */
+
+/*! smooth-scroll v16.1.3 | (c) 2020 Chris Ferdinandi | MIT License | http://github.com/cferdinandi/smooth-scroll */
+
+/*! sortablejs/modular/sortable.complete.esm.js */
+
+/*!**********************************!*\
+  !*** ./assets/cms/form-admin.js ***!
+  \**********************************/
+
+/*!********************************************!*\
+  !*** ./assets/cms/components/info-text.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./assets/cms/components/text-area.js ***!
+  \********************************************/
+
+/*!*********************************************!*\
+  !*** ./assets/cms/components/text-input.js ***!
+  \*********************************************/
+
+/*!**********************************************!*\
+  !*** ./assets/cms/components/form-legend.js ***!
+  \**********************************************/
+
+/*!***********************************************!*\
+  !*** ./assets/cms/components/select-basic.js ***!
+  \***********************************************/
+
+/*!*************************************************!*\
+  !*** ./assets/cms/components/form-component.js ***!
+  \*************************************************/
+
+/*!******************************************************!*\
+  !*** ./assets/cms/components/multiple-checkboxes.js ***!
+  \******************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/sortablejs/modular/sortable.complete.esm.js ***!
+  \******************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./node_modules/smooth-scroll/dist/smooth-scroll.polyfills.min.js ***!
+  \************************************************************************/
+
+/*!*******************************************************************************!*\
+  !*** ./assets/admin-theme/plugins/custom/ckeditor/ckeditor-classic.bundle.js ***!
+  \*******************************************************************************/
+
+/**!
+ * Sortable 1.15.0
+ * @author	RubaXa   <trash@rubaxa.org>
+ * @author	owenm    <owen23355@gmail.com>
+ * @license MIT
+ */
