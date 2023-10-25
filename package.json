@@ -27,6 +27,7 @@
   "homepage": "https://github.com/networking/init-cms-bundle#readme",
   "dependencies": {
     "axios": "^0.26.1",
+    "bazinga-translator": "^5.1.0",
     "bootstrap": "5",
     "file-loader": "^6.0.0",
     "fos-router": "../../friendsofsymfony/jsrouting-bundle/Resources/",
@@ -40,7 +41,6 @@
     "vue-i18n": "^8.15.0"
   },
   "devDependencies": {
-    "@symfony/ux-translator": "file:../../symfony/ux-translator/assets",
     "@babel/core": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "copy-webpack-plugin": "^11.0.0",

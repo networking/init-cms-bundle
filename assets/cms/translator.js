@@ -1,16 +1,19 @@
-import { localeFallbacks } from '../../../../../var/translations/configuration';
-import { trans, getLocale, setLocale, setLocaleFallbacks } from '@symfony/ux-translator';
-/*
- * This file is part of the Symfony UX Translator package.
- *
- * If folder "../var/translations" does not exist, or some translations are missing,
- * you must warmup your Symfony cache to refresh JavaScript translations.
- *
- * If you use TypeScript, you can rename this file to "translator.ts" to take advantage of types checking.
- */
+import Translator from "bazinga-translator";
 
-setLocaleFallbacks(localeFallbacks);
+export const CMSTranslator = {
+    instance: null,
+    async load(){
+        if(!this.instance) {
+            this.instance = await this.getRoutes();
+        }
+        return this.instance;
+    },
+    async getRoutes(){
 
-export { trans };
-
-export * from '../../../../../var/translations';
+        let locale = document.documentElement.lang.replace('-', '_');
+        let response = await fetch('/js/translations/' + locale + '.json');
+        let data = await response.json();
+        Translator.fromJSON(data);
+        return Translator;
+    }
+}

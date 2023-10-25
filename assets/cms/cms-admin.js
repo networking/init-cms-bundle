@@ -6,9 +6,9 @@ import CMSGalleryEntity from "./gallery-entity"
 import CMSOneToManySortable from "./one-to-many-sortable"
 import CMSModelList from "./model-list"
 import {CMSRouting} from "./cms-routing"
+import {CMSTranslator} from "./translator"
 import CMSSortableCollection from "./sortable-collection"
 import 'select2'
-import { setLocale } from '@symfony/ux-translator';
 
 $.fn.select2.defaults.set("theme", "bootstrap5");
 $.fn.select2.defaults.set("width", "100%");
@@ -20,6 +20,7 @@ const CMSAdmin = {
     // Define shared variables
     listDialog: null,
     routing: null,
+    translations: null,
     collectionCounters: [],
 
     async getRouting() {
@@ -30,8 +31,17 @@ const CMSAdmin = {
         return this.routing;
     },
 
+    async getTranslations() {
+        if (!this.translations) {
+            this.translations = CMSTranslator.load();
+        }
+
+        return this.translations;
+    },
+
     async init() {
         this.routing = await this.getRouting();
+        this.translations = await this.getTranslations(this.routing);
         CMSMediaEntity.init();
         CMSGalleryEntity.init();
         CMSModelList.init();
@@ -42,7 +52,6 @@ const CMSAdmin = {
         this.initSelect2();
         this.initCkeditor();
         this.initCollectionType()
-        setLocale(document.documentElement.lang);
 
     },
 

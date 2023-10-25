@@ -54,7 +54,8 @@
     "symfony/yaml": "^6.0",
     "symfony/polyfill-apcu": "^1.0",
     "symfony-cmf/routing-bundle": "^3.0",
-    "twig/twig": "^3.0"
+    "twig/twig": "^3.0",
+    "willdurand/js-translation-bundle": "^5.1"
   },
   "scripts": {
   },

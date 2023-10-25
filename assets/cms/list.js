@@ -1,13 +1,15 @@
 "use strict";
 
 import $ from 'jquery';
-import {CMSAdmin, Routing} from './cms-admin';
+import {CMSAdmin} from './cms-admin';
 import de from './lang/datables/de.json';
 import fr from './lang/datables/fr.json';
 import en from './lang/datables/en.json';
 import it from './lang/datables/it.json';
-import { getLocale } from '@symfony/ux-translator';
-import {trans, ALL} from './translator.js';
+
+
+let Translator =  await CMSAdmin.getTranslations();
+
 
 // Class definition
 var CMSList = function () {
@@ -25,7 +27,7 @@ var CMSList = function () {
         // Set date data order
         const tableRows = table.querySelectorAll('tbody tr');
 
-        let locale = getLocale();
+        let locale =  document.documentElement.lang;
         let language = en
         switch (locale.substring(0, 2)) {
             case 'de':
@@ -41,8 +43,7 @@ var CMSList = function () {
                 language = en;
         }
 
-
-        let lengthMenu = [[20, 50, 100, -1], [20, 50, 100, trans(ALL, {}, 'admin')]];
+        let lengthMenu = [[20, 50, 100, -1], [20, 50, 100, Translator.trans('all', {}, 'admin')]];
 
         if (table.dataset.lengthMenu) {
             lengthMenu = JSON.parse(table.dataset.lengthMenu);
