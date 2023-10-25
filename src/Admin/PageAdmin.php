@@ -188,6 +188,7 @@ class PageAdmin extends BaseAdmin
 
         if ($this->hasObject()) {
             $this->pageLocale = $this->getSubject()->getLocale();
+            $formOptions['attr'] = ['class' => 'row'];
         } else {
             $this->pageLocale = $request->get('locale')
                 ?: $request->getDefaultLocale();
@@ -289,6 +290,7 @@ class PageAdmin extends BaseAdmin
                         'choice_translation_domain' => false,
                         'preferred_choices' => [$this->pageLocale],
                         'help' => 'locale.helper.text',
+                        'row_attr' => ['class' => 'form-floating mb-3'],
                         
                     ]
                 );
@@ -298,7 +300,9 @@ class PageAdmin extends BaseAdmin
             'pageName',
             TextType::class,
             [
+                'row_attr' => ['class' => 'form-floating mb-3'],
                 'help' => 'page_name.helper.text',
+
                 
             ]
         );
@@ -314,7 +318,7 @@ class PageAdmin extends BaseAdmin
                             'help' => 'parent.helper.text',
                             'choice_label' => 'AdminTitle',
                             'class' => $this->getClass(),
-                            'row_attr' => ['class' => 'form-floating mb-2'],
+                            'row_attr' => ['class' => 'form-floating mb-4'],
                             'required' => false,
                             'query_builder' => $this->pageManager->getParentPagesQuery(
                                 $this->pageLocale,
@@ -336,7 +340,7 @@ class PageAdmin extends BaseAdmin
                         [
                             'help' => 'alias.helper.text',
                             'choice_label' => 'AdminTitle',
-                            'row_attr' => ['class' => 'form-floating mb-2'],
+                            'row_attr' => ['class' => 'form-floating mb-4'],
                             'class' => $this->getClass(),
                             'required' => false,
                             'query_builder' => $this->pageManager->getParentPagesQuery(
@@ -356,21 +360,19 @@ class PageAdmin extends BaseAdmin
         $requireUrl = $this->canCreateHomepage ? false : true;
 
         if ($this->hasObject()) {
-            $attr = $this->getSubject()->isHome() ? ['readonly' => 'readonly']
-                : [];
-            $form
-                ->add(
-                    'url',
-                    TextType::class,
-                    [
-                        'required' => $requireUrl,
-                        'help_label' => $this->getSubject()->getFullPath(),
-                        'help' => 'url.helper.text',
-                        'row_attr' => ['class' => 'form-floating mb-2'],
-                        
-                    ],
-                    ['display_method' => 'getFullPath', 'attr' => $attr]
-                );
+            if(!$this->getSubject()->isHome()){
+                $form
+                    ->add(
+                        'url',
+                        TextType::class,
+                        [
+                            'required' => false,
+                            'row_attr' => ['class' => 'form-floating mb-4'],
+                        ],
+                        ['display_method' => 'getFullPath']
+                    );
+            }
+
         } else {
             $form
                 ->add(
@@ -378,9 +380,9 @@ class PageAdmin extends BaseAdmin
                     TextType::class,
                     [
                         'required' => $requireUrl,
-                        'help_label' => '/',
+//                        'help_label' => '/',
                         'help' => 'url.helper.text',
-                        'row_attr' => ['class' => 'form-floating mb-2'],
+                        'row_attr' => ['class' => 'form-floating mb-4'],
                         
                     ],
                     ['display_method' => 'getFullPath']
@@ -396,7 +398,7 @@ class PageAdmin extends BaseAdmin
                     'choices' => BasePage::getVisibilityList(),
                     'translation_domain' => $this->getTranslationDomain(),
                     
-                    'row_attr' => ['class' => 'form-floating mb-2'],
+                    'row_attr' => ['class' => 'form-floating mb-4'],
                 ]
             )
             ->add(
@@ -409,7 +411,7 @@ class PageAdmin extends BaseAdmin
                     'required' => false,
                     'widget' => 'single_text',
                     'html5' => false,
-                    'row_attr' => ['class' => 'form-floating mb-2'],
+                    'row_attr' => ['class' => 'form-floating mb-4 col-6'],
                     
                 ]
             )
@@ -423,7 +425,7 @@ class PageAdmin extends BaseAdmin
                     'widget' => 'single_text',
                     'html5' => false,
                     'attr' => ['data-start-view' => 'hour'],
-                    'row_attr' => ['class' => 'form-floating mb-2'],
+                    'row_attr' => ['class' => 'form-floating mb-4 col-6'],
                     
                 ]
             )
@@ -449,7 +451,7 @@ class PageAdmin extends BaseAdmin
                 null,
                 [
                     'help_block' => 'meta_title.helper.text',
-                    'row_attr' => ['class' => 'form-floating mb-2'],
+                    'row_attr' => ['class' => 'form-floating mb-4'],
                     
                 ]
             )
@@ -457,7 +459,7 @@ class PageAdmin extends BaseAdmin
                 'metaKeyword',
                 null,
                 [
-                    'row_attr' => ['class' => 'form-floating mb-2'],
+                    'row_attr' => ['class' => 'form-floating mb-4'],
                     
                 ]
             )
@@ -465,7 +467,7 @@ class PageAdmin extends BaseAdmin
                 'metaDescription',
                 null,
                 [
-                    'row_attr' => ['class' => 'form-floating mb-2'],
+                    'row_attr' => ['class' => 'form-floating mb-4'],
                     'attr' => ['class' => 'h-500px']
                     
                 ]

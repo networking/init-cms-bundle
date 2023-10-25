@@ -161,7 +161,6 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
 
             $with = $annotation->getWith() ?: $formMapper->getAdmin()->getLabel();
             $formMapper->with($with, $annotation->getWithOptions());
-
             $formMapper->add(
                 $annotation->getName() ?: $propertyName,
                 $annotation->getType(),

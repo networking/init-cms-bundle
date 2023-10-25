@@ -247,6 +247,10 @@
                 <source>button.confirm_cancel_draft</source>
                 <target>Yes, revert</target>
             </trans-unit>
+            <trans-unit id="button.confirm_delete">
+                <source>button.confirm_delete</source>
+                <target>Yes, delete</target>
+            </trans-unit>
             <trans-unit id="button.cancel">
                 <source>button.cancel</source>
                 <target>Cancel</target>
@@ -419,6 +423,10 @@
             <trans-unit id="message.layout_block_not_created">
                 <source>message.layout_block_not_created</source>
                 <target>The layout block could not be created, please control the form fields</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_updated">
+                <source>message.layout_block_updated</source>
+                <target>Layout block successfully saved.</target>
             </trans-unit>
             <trans-unit id="message.layout_block_not_edited">
                 <source>message.layout_block_not_edited</source>

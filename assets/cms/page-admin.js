@@ -11,8 +11,10 @@ let deleteUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_delete
 let lastTranslationSettingsHtml = null;
 let pageId = null;
 let erroredContainers = new Set();
+let Translator = await CMSAdmin.getTranslations();
 
 function initDropZone() {
+
 
     containers = document.querySelectorAll(".draggable-zone");
     dropzones = document.querySelectorAll(".dropzone");
@@ -63,14 +65,22 @@ function initDropZone() {
                     let dropzone = container.parentElement
                     createItem(item.dataset.contentType, dropzone.dataset.pageId, dropzone.dataset.zone, evt.newIndex)
                         .then((response) => {
+
                             item.outerHTML = response.data.html
                             CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
                             saveLayoutBlockSort(evt, (response) => {
                                 CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
                             })
+                            document.querySelector('#layoutBlock_' + response.data.layoutBlockId + '  .create_block').click()
+
 
                         })
                         .catch((error) => {
+                            if(!error.response){
+                                console.error(error)
+                                return
+                            }
+
                             let message = error.response.data.detail
 
                             CMSAdmin.createInitCmsMessageBox('error', message);
@@ -205,6 +215,27 @@ let submitLayoutSort = async (zones, pageId, adminCode) => {
         code: adminCode,
     }, axiosConfig)
 }
+
+let fadeOutContentBlocks = (except) => {
+    let contentBlocks = document.querySelectorAll('.content_type_item')
+    contentBlocks.forEach((item) => {
+        if (item === except) {
+
+
+            return
+        }
+        item.classList.add('opacity-5')
+    })
+}
+
+let fadeInContentBlocks = () => {
+    let contentBlocks = document.querySelectorAll('.content_type_item')
+    contentBlocks.forEach((item) => {
+        item.classList.remove('opacity-5')
+    })
+}
+
+
 let editBlock = (e) => {
     e.preventDefault();
     let el = e.target;
@@ -217,6 +248,12 @@ let editBlock = (e) => {
 
 
     let layoutBlock = document.getElementById('layoutBlock_' + id)
+
+    fadeOutContentBlocks(layoutBlock)
+
+
+
+
     layoutBlock.querySelector('.edit_block').setAttribute('disabled', true)
     layoutBlock.querySelector('.delete_block').setAttribute('disabled', true)
 
@@ -229,6 +266,9 @@ let editBlock = (e) => {
         displayBlock.classList.add('d-none')
         editBlock.classList.remove('d-none')
         document.body.dispatchEvent(new CustomEvent('fields:added'))
+
+        let scroll = new SmoothScroll();
+        scroll.animateScroll(layoutBlock, null, { speed: 1000, easing: 'easeOutCubic' });
     }).catch((error) => {
         let message = error.response.data.detail
         CMSAdmin.createInitCmsMessageBox('error', message);
@@ -247,6 +287,8 @@ let createBlock = (e) => {
 
 
     let layoutBlock = document.getElementById('layoutBlock_' + id)
+
+    fadeOutContentBlocks(layoutBlock)
     layoutBlock.querySelector('.create_block').setAttribute('disabled', true)
 
     let createUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_create',{
@@ -264,6 +306,8 @@ let createBlock = (e) => {
         displayBlock.classList.add('d-none')
         editBlock.classList.remove('d-none')
         document.body.dispatchEvent(new CustomEvent('fields:added'))
+        let scroll = new SmoothScroll();
+        scroll.animateScroll(layoutBlock, null, { speed: 1000, easing: 'easeOutCubic' });
     }).catch((error) => {
         if(!error.response){
             console.error(error)
@@ -285,6 +329,7 @@ let cancelEditBlock = (e) => {
     editBlock.classList.add('d-none')
     editBlock.innerHTML = ''
     displayBlock.classList.remove('d-none')
+    fadeInContentBlocks()
 
 }
 
@@ -300,6 +345,7 @@ let cancelCreateBlock = (e) => {
     editBlock.classList.add('d-none')
     editBlock.innerHTML = ''
     displayBlock.classList.remove('d-none')
+    fadeInContentBlocks()
 }
 
 let saveLayoutBlock = (e) => {
@@ -330,6 +376,7 @@ let saveLayoutBlock = (e) => {
             CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message);
             let event = new CustomEvent('page-updated')
             document.body.dispatchEvent(event)
+            fadeInContentBlocks()
         }
     }).catch((error) => {
         if(!error.response){
@@ -371,6 +418,7 @@ let createLayoutBlock = (e) => {
             CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message);
             let event = new CustomEvent('page-updated')
             document.body.dispatchEvent(event)
+            fadeInContentBlocks()
         }
     }).catch((error) => {
         if(!error.response){
@@ -435,15 +483,15 @@ let deleteBlock = (e) => {
 
 
     Swal.fire({
-        html: `Are you sure you want to delete this block?`,
+        html: Translator.trans('page_admin.confirm', [], 'PageAdmin'),
         icon: "warning",
         buttonsStyling: false,
         showCancelButton: true,
-        confirmButtonText: "Ok, got it!",
-        cancelButtonText: 'Nope, cancel it',
+        confirmButtonText: Translator.trans('button.confirm_delete', [], 'PageAdmin'),
+        cancelButtonText: Translator.trans('button.cancel', [], 'PageAdmin'),
         customClass: {
-            confirmButton: "btn btn-danger",
-            cancelButton: 'btn btn-primary'
+            confirmButton: "btn btn-sm btn-danger",
+            cancelButton: 'btn btn-sm btn-light'
         }
     }).then((result) => {
         if (result.isConfirmed) {
@@ -451,7 +499,7 @@ let deleteBlock = (e) => {
                 id: el.dataset.value,
                 _method: 'DELETE'
             }).then((response) => {
-
+                fadeInContentBlocks()
                 document.querySelector('#layoutBlock_' + el.dataset.value).remove()
                 CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
                 saveLayoutBlockSort();
@@ -461,6 +509,8 @@ let deleteBlock = (e) => {
                 }
 
                 container.querySelector('.empty_layout_block').classList.remove("d-none")
+
+
 
             }).catch((err) => {
 
@@ -483,11 +533,11 @@ let unlinkTranslation = (e) => {
         icon: "warning",
         buttonsStyling: false,
         showCancelButton: true,
-        confirmButtonText: "Ok, got it!",
-        cancelButtonText: 'Nope, cancel it',
+        confirmButtonText: Translator.trans('button.confirm_delete', [], 'PageAdmin'),
+        cancelButtonText: Translator.trans('button.cancel', [], 'PageAdmin'),
         customClass: {
-            confirmButton: "btn btn-danger",
-            cancelButton: 'btn btn-primary'
+            confirmButton: "btn btn-sm btn-danger",
+            cancelButton: 'btn btn-sm btn-light'
         }
     }).then((result) => {
         if (result.isConfirmed) {

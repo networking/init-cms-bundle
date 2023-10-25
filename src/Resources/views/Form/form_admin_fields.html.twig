@@ -55,8 +55,11 @@ file that was distributed with this source code.
 
 {%- block form_row -%}
 
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
+    {% if sonata_admin.admin is defined and sonata_admin.admin %}
+
+        {% if translation_domain is same as(null) %}
+            {% set translation_domain = sonata_admin.field_description.translationDomain %}
+        {% endif %}
         {% if label is same as(false) %}
             {% set label_render = false %}
         {% else %}
@@ -76,18 +79,23 @@ file that was distributed with this source code.
     {%- if 'form-floating' in row_class -%}
         {% set row_class = row_class|replace({'form-floating': ''}) %}
         {% set is_form_floating = true %}
-        {% set placeholder = attr.placeholder|default(label|trans({}, translation_domain)) %}
-        {%- set widget_attr = {attr: {placeholder: attr.placeholder|default(label|trans({}, translation_domain))}} -%}
     {% endif %}
+
 
     {%- if help is not empty -%}
         {%- set attrs = widget_attr.attr|merge({'aria-describedby': id ~"_help"}) -%}
         {%- set widget_attr = widget_attr|merge({attr: attrs }) -%}
     {%- endif -%}
 
+    {% if help_widget_popover.selector is same as(null) %}
+        {% set help_widget_popover = help_widget_popover|merge({'selector': '#' ~ id }) %}
+    {% endif %}
 
-    <{{ element|default('div') }}{% with {attr: row_attr|merge({class: row_class})} %}{{ block('attributes') }}{% endwith %}>
+    <{{ element|default('div') }}
+    {% if help_widget_popover.title is not same as(null) %}{{ block('help_widget_popover') }}{% endif %}
+    {% with {attr: row_attr|merge({class: row_class})} %}{{ block('attributes') }}{% endwith %}>
     {%- if is_form_floating is same as(true) -%}
+        {%- set widget_attr = {attr: {placeholder: attr.placeholder|default('')}} -%}
         <div class="form-floating">
             {{- form_widget(form, widget_attr ) -}}
             {{- form_label(form) -}}
@@ -97,6 +105,7 @@ file that was distributed with this source code.
         {{- form_widget(form, widget_attr) -}}
     {%- endif -%}
     {{ form_help(form) }}
+    {{ block('help_block') }}
     {{- form_errors(form) -}}
     </{{ element|default('div') }}>
 {%- endblock form_row %}
@@ -134,14 +143,6 @@ file that was distributed with this source code.
 {%- block button_label -%}{%- endblock -%}
 
 {% block form_label %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-        {% if label is same as(false) %}
-            {% set label_render = false %}
-        {% else %}
-            {% set label_render = true %}
-        {% endif %}
-    {% endif %}
     {{ parent() }}
     {% if help_label %}
         {{ block('help_label') }}
@@ -160,12 +161,12 @@ file that was distributed with this source code.
 
 {% block help_label_tooltip %}
     <span class="help-block">
-        <a href="#" data-bs-toggle="tooltip" data-bs-placement="{{ help_label_tooltip.placement}}" data-title="{{ help_label_tooltip.title|trans({}, translation_domain) }}">
+        <a href="#" data-bs-toggle="tooltip" data-bs-placement="{{ help_label_tooltip.placement}}" title="{{ help_label_tooltip.title|trans({}, translation_domain) }}">
             {% if help_label_tooltip.icon is not same as(false) %}
                 {{ networking_bootstrap_icon(help_label_tooltip.icon) }}
             {% endif %}
             {% if help_label_tooltip.text is not same as(null) %}
-                {{ help_label_tooltip.text }}
+                {{ help_label_tooltip.text|trans({}, translation_domain) }}
             {% endif %}
         </a>
     </span>
@@ -178,7 +179,7 @@ file that was distributed with this source code.
 
 {% block help_label_popover %}
     <span class="help-block">
-        <a href="#" data-bs-toggle="popover" data-trigger="hover" data-placement="{{ help_label_popover.placement}}" data-title="{{ help_label_popover.title|trans({}, translation_domain) }}" data-content="{{ help_label_popover.content|trans({}, translation_domain) }}" data-html="true">
+        <a href="#" data-bs-toggle="popover" data-trigger="hover" data-placement="{{ help_label_popover.placement}}" title="{{ help_label_popover.title|trans({}, translation_domain) }}" data-content="{{ help_label_popover.content|trans({}, translation_domain) }}" data-html="true">
             {% if help_label_popover.icon is not same as(false) %}
                 {{ networking_bootstrap_icon(help_label_popover.icon) }}
             {% endif %}
@@ -201,6 +202,18 @@ file that was distributed with this source code.
     {% endif %}
     {{ parent() }}
 {% endblock form_help %}
+
+{% block help_block %}
+    {% apply spaceless %}
+        {% if help_block %}<p class="form-text mb-0 help-text">{{ help_block|trans({}, translation_domain)|raw }}</p>{%endif %}
+        {% if help_block_tooltip.title %}
+            &nbsp;{{ block('help_block_tooltip') }}
+        {% endif %}
+        {% if help_block_popover.title %}
+            &nbsp;{{ block('help_block_popover') }}
+        {% endif %}
+    {% endapply %}
+{% endblock help_block %}
 
 {% block sonata_roles_matrix_widget %}
     {% apply spaceless %}
@@ -421,13 +434,15 @@ file that was distributed with this source code.
                 {%- endif -%}
             {%- endif -%}
 
-            {% set attr = attr|merge({placeholder: attr.placeholder|default(label)}) %}
+            {% set attr = attr|merge({placeholder: attr.placeholder|default(false)}) %}
             {% set placeholder = attr.placeholder %}
-            {% if translation_domain %}
+
+            {% if translation_domain and placeholder is not same as(false) %}
                 {% set placeholder = placeholder|trans({}, translation_domain) %}
+            {% else %}
+                {% set placeholder = 'Select'|trans %}
             {% endif %}
         {% endif %}
-
         {% set attr = attr|merge({'data-control': 'select2', 'data-placeholder': placeholder}) %}
     {% endif %}
     {% set allowClear = (multiple or not required?'true':'false') %}
@@ -818,7 +833,7 @@ file that was distributed with this source code.
     {% endif %}
     {% apply spaceless %}
         {% for attrname,attrvalue in help_widget_popover %}
-            data-{{ attrname }}="{{ attrvalue|trans({}, domain|default('messages')) }}"
+            data-bs-{{ attrname }}="{{ attrvalue|trans({}, domain|default('messages')) }}"
         {% endfor %}
     {% endapply %}
 {% endblock help_widget_popover %}
@@ -1061,5 +1076,83 @@ file that was distributed with this source code.
         {{- block('form_widget_simple') -}}
     {%- endif -%}
 {%- endblock money_widget %}
+
+{% block input_group_row %}
+
+    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
+        {% set translation_domain = sonata_admin.field_description.translationDomain %}
+        {% if label is same as(false) %}
+            {% set label_render = false %}
+        {% else %}
+            {% set label_render = true %}
+        {% endif %}
+    {% endif %}
+
+    {%- if compound is defined and compound -%}
+        {%- set element = 'fieldset' -%}
+    {%- endif -%}
+
+
+    {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
+
+    {% set widget_attr = {attr: {}} %}
+    {% set is_form_floating = false %}
+    {%- if 'form-floating' in row_class -%}
+        {% set row_class = row_class|replace({'form-floating': ''}) %}
+        {% set is_form_floating = true %}
+    {% endif %}
+
+
+    {%- if help is not empty -%}
+        {%- set attrs = widget_attr.attr|merge({'aria-describedby': id ~"_help"}) -%}
+        {%- set widget_attr = widget_attr|merge({attr: attrs }) -%}
+    {%- endif -%}
+
+    {% if help_widget_popover.selector is same as(null) %}
+        {% set help_widget_popover = help_widget_popover|merge({'selector': '#' ~ id }) %}
+    {% endif %}
+
+    <{{ element|default('div') }}
+    {% if help_widget_popover.title is not same as(null) %}{{ block('help_widget_popover') }}{% endif %}
+    {% with {attr: row_attr|merge({class: row_class})} %}{{ block('attributes') }}{% endwith %}>
+    {%- if is_form_floating is same as(true) -%}
+            {{- form_widget(form, widget_attr ) -}}
+    {%- else -%}
+        {{- form_label(form) -}}
+        {{- form_widget(form, widget_attr) -}}
+    {%- endif -%}
+    {{ form_help(form) }}
+    {{ block('help_block') }}
+    {{- form_errors(form) -}}
+    </{{ element|default('div') }}>
+{% endblock input_group_row %}
+
+{% block input_group_widget %}
+    {%- set prepend = widget_addon_prepend is not same as(null) -%}
+    {%- set append = widget_addon_append is not same as(null) -%}
+
+    {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
+    {%- if prepend or append -%}
+        <div class="input-group {{ group_class|default('') }}">
+            {%- if prepend -%}
+                <span class="input-group-text">{{ widget_addon_prepend }}</span>
+            {%- endif -%}
+            {% if 'form-floating' in row_class %}
+                {% set attr = attr|merge({placeholder: attr.placeholder|default('')}) %}
+                <span class="form-floating">
+                    {{- block('form_widget_simple') -}}
+                    {{- block('form_label') -}}
+                </span>
+            {% else %}
+                {{- block('form_widget_simple') -}}
+            {% endif %}
+            {%- if append -%}
+                <span class="input-group-text">{{ widget_addon_append }}</span>
+            {%- endif -%}
+        </div>
+    {%- else -%}
+        {{- block('form_widget_simple') -}}
+    {%- endif -%}
+{% endblock input_group_widget %}
 
 

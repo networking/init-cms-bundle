@@ -35,8 +35,8 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
 
     #[ORM\ManyToOne(
         targetEntity: MediaGallery::class,
-        fetch: 'LAZY',
-        cascade: ["merge"])]
+        cascade: ["merge"],
+        fetch: 'LAZY')]
     #[ORM\JoinColumn(name: 'media_gallery_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[Sonata\FormMapper(
         name: 'mediaGallery',
@@ -46,6 +46,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
             'data_class' => null,
             'class' => 'Networking\InitCmsBundle\Entity\Gallery',
             'layout' => 'horizontal',
+            'translation_domain' => 'messages',
             'required' => false,
         ]
     )]
@@ -60,6 +61,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
         options: [
             'label' => 'form.label_gallery_type',
             'choices' => ['list' => 'list', 'lightbox' => 'lightbox', 'carousel' => 'carousel'],
+            'translation_domain' => 'messages',
             'layout' => 'horizontal',
         ]
     )]

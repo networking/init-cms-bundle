@@ -13,15 +13,18 @@ file that was distributed with this source code.
       id="page-settings-form"
 >
     <input type="hidden" name="_method" value="PATCH">
-    {% if form.vars.errors|length > 0 %}
-        {{ form_errors(form) }}
-    {% endif %}
-    {% set form_group = admin.formgroups.page_settings %}
-    {% for field_name in form_group.fields %}
-        {% if admin.formfielddescriptions[field_name] is defined %}
-            {{ form_row(form[field_name]) }}
+    <div class="row">
+        {% if form.vars.errors|length > 0 %}
+            {{ form_errors(form) }}
         {% endif %}
-    {% endfor %}
+        {% set form_group = admin.formgroups.page_settings %}
+        {% for field_name in form_group.fields %}
+            {% if admin.formfielddescriptions[field_name] is defined %}
+                {{ form_row(form[field_name]) }}
+            {% endif %}
+        {% endfor %}
+    </div>
+
     <input name="{{ form['_token'].vars.full_name }}" type="hidden" value="{{ form['_token'].vars.data }}" />
     <input type="submit" class="btn btn-sm btn-primary" name="btn_update" id="pageSettingsSubmit"
            loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}" value="{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}"/>

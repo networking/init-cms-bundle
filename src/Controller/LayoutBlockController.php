@@ -367,8 +367,7 @@ class LayoutBlockController extends CRUDController
         foreach ($zones as $zone) {
             $zoneName = $zone['zone'];
             if (array_key_exists('layoutBlocks', $zone) && is_array($zone['layoutBlocks'])) {
-                foreach ($zone['layoutBlocks'] as $key => $layoutBlockStr) {
-                    $sort = ++$key;
+                foreach ($zone['layoutBlocks'] as $sort => $layoutBlockStr) {
                     $blockId = str_replace('layoutBlock_', '', (string) $layoutBlockStr);
 
                     if ($blockId) {
@@ -460,7 +459,7 @@ class LayoutBlockController extends CRUDController
         return new JsonResponse(
             [
                 'active' => $layoutBlock->getIsActive(),
-                'message' => $this->translate(sprintf('message.layout_block_%s', $status)),
+                'message' => $this->translate(sprintf('message.layout_block_%s', $status), [],  'PageAdmin'),
             ]
         );
     }
