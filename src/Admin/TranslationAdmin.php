@@ -163,16 +163,21 @@ class TranslationAdmin extends BaseAdmin
             ->add(
                 'key',
                 StringFilter::class,
+                [],
                 [
+                    'global_search' => false,
                     'field_options' => [
                         'translation_domain' => $this->getTranslationDomain(),
                     ],
                 ]
             )
+
             ->add(
                 'translations.content',
                 StringFilter::class,
+                [],
                 [
+                    'global_search' => false,
                     'field_options' => [
                         'translation_domain' => $this->getTranslationDomain(),
                     ],
@@ -183,6 +188,7 @@ class TranslationAdmin extends BaseAdmin
                 SimpleStringFilter::class,
                 [],
                 [
+                    'global_search' => false,
                     'field_type' => ChoiceType::class,
                     'field_options' => [
                         'choices' => $this->getDomains(),
