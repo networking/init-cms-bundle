@@ -1,0 +1,77 @@
+<!--begin::Main wrapper-->
+<div
+        id="kt_cms_search"
+        class="d-flex align-items-center w-lg-400px"
+
+        data-kt-search-keypress="true"
+        data-kt-search-min-length="2"
+        data-kt-search-enter="enter"
+        data-kt-search-layout="menu"
+        data-kt-search-responsive="lg"
+
+        data-kt-menu-trigger="auto"
+        data-kt-menu-permanent="true"
+        data-kt-menu-placement="bottom-start">
+
+    <!--begin::Tablet and mobile search toggle-->
+    <div data-kt-search-element="toggle" class="d-flex d-lg-none align-items-center">
+        <div class="btn btn-icon btn-active-light-primary">
+            <i class="ki-outline ki-magnifier fs-1"></i>
+        </div>
+    </div>
+    <!--end::Tablet and mobile search toggle-->
+
+    <!--begin::Form-->
+    <form action="{{ path('sonata_admin_search') }}" data-kt-search-element="form" class="d-none d-lg-block w-100 position-relative mb-5 mb-lg-0" autocomplete="off">
+        <!--begin::Hidden input(Added to disable form autocomplete)-->
+        <input type="hidden"/>
+        <!--end::Hidden input-->
+
+        <!--begin::Icon-->
+        <i class="ki-outline ki-magnifier fs-2 fs-lg-1 text-gray-500 position-absolute top-50 translate-middle-y ms-5"></i>
+        <!--end::Icon-->
+
+        <!--begin::Input-->
+        <input type="text" class="form-control form-control-sm form-control-solid ps-14" name="q" value="{{ app.request.get('q') }}" placeholder="{{ 'search_placeholder'|trans({}, 'SonataAdminBundle') }}..." data-kt-search-element="input"/>
+        <!--end::Input-->
+
+        <!--begin::Spinner-->
+        <span class="position-absolute top-50 end-0 translate-middle-y lh-0 d-none me-6" data-kt-search-element="spinner">
+            <span class="spinner-border h-15px w-15px align-middle text-gray-400"></span>
+        </span>
+        <!--end::Spinner-->
+
+        <!--begin::Reset-->
+        <span class="btn btn-flush btn-active-color-primary position-absolute top-50 end-0 translate-middle-y lh-0 me-5 d-none" data-kt-search-element="clear">
+            <i class="ki-outline ki-cross fs-2 fs-lg-1 me-0"></i>
+        </span>
+        <!--end::Reset-->
+    </form>
+    <!--end::Form-->
+
+    <!--begin::Menu-->
+    <div data-kt-search-element="content" style="max-height: 400px; overflow: auto" class="menu menu-sub menu-sub-dropdown w-300px w-md-400px py-7 px-7 scroll">
+        <!--begin::Wrapper-->
+        <div data-kt-search-element="wrapper">
+
+            <!--begin::Search results-->
+            <div data-kt-search-element="results" class="d-none">
+            </div>
+            <!--end::Search results-->
+
+            <!--begin::Empty search-->
+            <div data-kt-search-element="empty" class="text-center d-none">
+                {{ 'search_empty'|trans({}, 'SonataAdminBundle') }}
+            </div>
+            <!--end::Empty search-->
+        </div>
+        <!--end::Wrapper-->
+
+        <!--begin::Preferences-->
+        <div data-kt-search-element="preferences">
+        </div>
+        <!--end::Preferences-->
+</div>
+<!--end::Menu-->
+</div>
+<!--end::Main wrapper-->

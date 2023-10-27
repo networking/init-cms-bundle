@@ -20,6 +20,7 @@ module.exports = {
     },
     entry: {
         cmsAdmin: './assets/cms/cms-admin.js',
+        globalSearch: './assets/cms/global-search.js',
         list: './assets/cms/list.js',
         mediaAdmin: './assets/cms/media-admin.js',
         menuAdmin: './assets/cms/menu-admin.js',

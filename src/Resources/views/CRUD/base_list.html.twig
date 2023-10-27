@@ -64,6 +64,7 @@ file that was distributed with this source code.
 
                             {% for filterName in showFilters %}
                                 {% set filter = admin.datagrid.filters[filterName] %}
+
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center me-3 mb-3 w-50">
                                         {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
@@ -81,9 +82,9 @@ file that was distributed with this source code.
                                             {%- set row_attr = field_options.row_attr|default({})|merge({
                                                 'class': 'w-100 '  ~ field_options.row_attr.class|default('') }) -%}
 
-
                                             {{ form_row(form.children[filter.formName].children['value'],
                                                 {
+                                                    'label': field_options.label|default(filter.label),
                                                     'attr':{'placeholder': filter.options.attr.placeholder|default()},
                                                     'translation_domain': admin.translationDomain,
                                                     'row_attr': row_attr,

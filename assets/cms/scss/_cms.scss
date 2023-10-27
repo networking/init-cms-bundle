@@ -75,3 +75,19 @@ div#item_list > .tiles {
 table.dataTable > thead .sorting_asc, table.dataTable > thead .sorting_desc {
   vertical-align: bottom;
 }
+
+.sortable-item{
+  &.sortable-drag{
+    background: #f5f5f5;
+    border: 1px dashed #ccc;
+    cursor: move;
+    opacity: 0.5;
+  }
+}
+
+.modal{
+  .select2-container--open, .form-floating>label{
+    z-index: 9999;
+  }
+
+}

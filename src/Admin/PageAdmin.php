@@ -15,7 +15,6 @@ namespace Networking\InitCmsBundle\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Loggable\Entity\LogEntry;
-use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Entity\BasePage;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Entity\MenuItem;
@@ -56,7 +55,6 @@ use Symfony\Component\Validator\Constraints\Valid;
  */
 class PageAdmin extends BaseAdmin
 {
-
     /**
      * @var string
      */
@@ -77,21 +75,17 @@ class PageAdmin extends BaseAdmin
      */
     protected $pageManager;
 
-
     private ?LogEntry $lastEditedBy = null;
-
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false
     ): string {
         return 'cms/pages';
     }
 
-
     protected function generateBaseRouteName(bool $isChildAdmin = false): string
     {
         return 'admin_networking_initcms_page';
     }
-
 
     public function __construct(PageManagerInterface $pageManager)
     {
@@ -101,16 +95,11 @@ class PageAdmin extends BaseAdmin
 
     protected function configureDefaultSortValues(array &$sortValues): void
     {
-
         $sortValues[DatagridInterface::SORT_BY] = 'path';
         $sortValues[DatagridInterface::SORT_ORDER] = 'ASC';
         parent::configureDefaultSortValues($sortValues);
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     protected function configureRoutes(RouteCollectionInterface $collection
     ): void {
         $collection->add(
@@ -174,9 +163,6 @@ class PageAdmin extends BaseAdmin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureFormOptions(array &$formOptions): void
     {
         try {
@@ -186,7 +172,6 @@ class PageAdmin extends BaseAdmin
                 ->getCurrentRequest();
         }
 
-
         if ($this->hasObject()) {
             $this->pageLocale = $this->getSubject()->getLocale();
             $formOptions['attr'] = ['class' => 'row'];
@@ -194,17 +179,14 @@ class PageAdmin extends BaseAdmin
             $this->pageLocale = $request->get('locale')
                 ?: $request->getDefaultLocale();
 
-            if ($request->getMethod() === 'POST') {
+            if ('POST' === $request->getMethod()) {
                 $data = $request->request->all($this->getUniqId());
                 $this->pageLocale = $data['locale'];
             }
         }
 
-
         if (!$this->pageLocale) {
-            throw new InvalidArgumentException(
-                'Cannot create a page without a language'
-            );
+            throw new InvalidArgumentException('Cannot create a page without a language');
         }
         $validationGroups = ['default'];
 
@@ -220,7 +202,6 @@ class PageAdmin extends BaseAdmin
             }
         }
 
-
         $formOptions['constraints'] = new Valid();
 
         $formOptions['validation_groups'] = $validationGroups;
@@ -230,12 +211,8 @@ class PageAdmin extends BaseAdmin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureFormFields(FormMapper $form): void
     {
-
         $this->getRequest()->attributes->add(
             ['page_locale' => $this->pageLocale]
         );
@@ -248,11 +225,9 @@ class PageAdmin extends BaseAdmin
             $request = $requestStack->getCurrentRequest();
         }
 
-
         if (($this->hasObject() || $request->isXmlHttpRequest())
             && !$request->get('no_layout')
         ) {
-
             $form
                 ->with('page_content')
                 ->add(
@@ -270,7 +245,6 @@ class PageAdmin extends BaseAdmin
         }
 
         $form->with('page_settings', ['label' => false]);
-
 
         if ($this->canCreateHomepage && !$this->hasObject()) {
             $form->add(
@@ -292,7 +266,6 @@ class PageAdmin extends BaseAdmin
                         'preferred_choices' => [$this->pageLocale],
                         'help' => 'locale.helper.text',
                         'row_attr' => ['class' => 'form-floating mb-3'],
-
                     ]
                 );
         }
@@ -303,13 +276,10 @@ class PageAdmin extends BaseAdmin
             [
                 'row_attr' => ['class' => 'form-floating mb-3'],
                 'help' => 'page_name.helper.text',
-
-
             ]
         );
 
         if (!$this->canCreateHomepage) {
-
             if (!$this->hasObject() || !$this->getSubject()->isHome()) {
                 $form
                     ->add(
@@ -328,7 +298,6 @@ class PageAdmin extends BaseAdmin
                                 false,
                                 false
                             ),
-
                         ]
                     );
             }
@@ -351,7 +320,6 @@ class PageAdmin extends BaseAdmin
                                 true,
                                 true
                             ),
-
                         ],
                         ['display_method' => 'getAliasFullPath']
                     );
@@ -373,7 +341,6 @@ class PageAdmin extends BaseAdmin
                         ['display_method' => 'getFullPath']
                     );
             }
-
         } else {
             $form
                 ->add(
@@ -384,7 +351,6 @@ class PageAdmin extends BaseAdmin
                         //                        'help_label' => '/',
                         'help' => 'url.helper.text',
                         'row_attr' => ['class' => 'form-floating mb-4'],
-
                     ],
                     ['display_method' => 'getFullPath']
                 );
@@ -413,7 +379,6 @@ class PageAdmin extends BaseAdmin
                     'widget' => 'single_text',
                     'html5' => false,
                     'row_attr' => ['class' => 'form-floating mb-4 col-6'],
-
                 ]
             )
             ->add(
@@ -427,7 +392,6 @@ class PageAdmin extends BaseAdmin
                     'html5' => false,
                     'attr' => ['data-start-view' => 'hour'],
                     'row_attr' => ['class' => 'form-floating mb-4 col-6'],
-
                 ]
             )
             ->add(
@@ -440,7 +404,6 @@ class PageAdmin extends BaseAdmin
                     'choices' => $this->getPageTemplates(),
                     'data' => $this->getDefaultTemplate(),
                     'choice_translation_domain' => 'messages',
-
                 ]
             );
         $form->end();
@@ -453,7 +416,6 @@ class PageAdmin extends BaseAdmin
                 [
                     'help_block' => 'meta_title.helper.text',
                     'row_attr' => ['class' => 'form-floating mb-4'],
-
                 ]
             )
             ->add(
@@ -461,7 +423,6 @@ class PageAdmin extends BaseAdmin
                 null,
                 [
                     'row_attr' => ['class' => 'form-floating mb-4'],
-
                 ]
             )
             ->add(
@@ -470,7 +431,6 @@ class PageAdmin extends BaseAdmin
                 [
                     'row_attr' => ['class' => 'form-floating mb-4'],
                     'attr' => ['class' => 'h-500px'],
-
                 ]
             )
             ->add(
@@ -480,7 +440,6 @@ class PageAdmin extends BaseAdmin
                     'provider_name' => 'sonata.media.provider.image',
                     'widget_form_group_attr' => ['class' => 'form-group form-inline'],
                     'required' => false,
-
                 ]
             )
             ->end();
@@ -490,12 +449,8 @@ class PageAdmin extends BaseAdmin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-
         $filter
             ->add(
                 'locale',
@@ -507,10 +462,9 @@ class PageAdmin extends BaseAdmin
                 [
                     'field_type' => LanguageType::class,
                     'field_options' => [
-                        'label' => 'locale',
-                        'row_attr' => ['class' => 'w-100 form-floating'],
+                        'row_attr' => ['class' => 'form-floating'],
                         'choice_loader' => new CallbackChoiceLoader(
-                            fn() => $this->getLocaleChoices()
+                            fn () => $this->getLocaleChoices()
                         ),
                         'preferred_choices' => [$this->getDefaultLocale()],
                         'translation_domain' => $this->getTranslationDomain(),
@@ -586,18 +540,13 @@ class PageAdmin extends BaseAdmin
                 ]
             );
 
-
         foreach ($this->getExtensions() as $extension) {
             $extension->configureDatagridFilters($filter);
         }
     }
 
-    /**
-     * @param array $filterValues
-     */
     public function configureDefaultFilterValues(array &$filterValues): void
     {
-
         $filterValues['locale'] = [
             'type' => ContainsOperatorType::TYPE_EQUAL,
             'value' => $this->getDefaultLocale(),
@@ -605,10 +554,6 @@ class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param            $alias
-     * @param            $field
-     * @param            $data
-     *
      * @return bool
      */
     public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
@@ -616,9 +561,9 @@ class PageAdmin extends BaseAdmin
         if (!$data || !$data instanceof FilterData || !$data->hasValue()) {
             return false;
         }
-        $value = trim((string)$data->getValue());
+        $value = trim((string) $data->getValue());
 
-        if (strlen($value) == 0) {
+        if (0 == strlen($value)) {
             return false;
         }
 
@@ -641,11 +586,8 @@ class PageAdmin extends BaseAdmin
         return true;
     }
 
-
     /**
      * @param ProxyQuery $query
-     *
-     * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
      */
     public function configureQuery(ProxyQueryInterface $query
     ): ProxyQueryInterface {
@@ -659,8 +601,6 @@ class PageAdmin extends BaseAdmin
     }
 
     /**
-     * @param            $alias
-     * @param            $field
      * @param FilterData $data
      *
      * @return bool
@@ -675,7 +615,6 @@ class PageAdmin extends BaseAdmin
             $locale = $this->getDefaultLocale();
         }
 
-
         $alias = $ProxyQuery->getRootAlias();
         $ProxyQuery->andWhere(sprintf('%s.%s = :locale', $alias, $field));
         $ProxyQuery->orderBy(sprintf('%s.path', $alias), 'asc');
@@ -684,9 +623,6 @@ class PageAdmin extends BaseAdmin
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureListFields(ListMapper $list): void
     {
         $currentFilter = $this->getFilterParameters();
@@ -766,7 +702,6 @@ class PageAdmin extends BaseAdmin
         if (!$id = $this->getRequest()->get('id')) {
             return $translationLanguages;
         }
-
 
         /** @var $page PageInterface */
         $page = $this->pageManager->findById($id);
@@ -867,9 +802,6 @@ class PageAdmin extends BaseAdmin
         return $icons;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureBatchActions(array $actions): array
     {
         unset($actions['delete']);
@@ -900,13 +832,9 @@ class PageAdmin extends BaseAdmin
             ];
         }
 
-
         return $actions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExportFormats(): array
     {
         return [];
@@ -924,7 +852,7 @@ class PageAdmin extends BaseAdmin
         try {
             $this->getModelManager()->delete($contentRoute);
         } catch (\Exception) {
-            die;
+            exit;
         }
     }
 
@@ -932,7 +860,6 @@ class PageAdmin extends BaseAdmin
     {
         return $this->hasSubject() && $this->getSubject()->getId();
     }
-
 
     public function getPageByLayoutBlock(LayoutBlock $layoutBlock
     ): PageInterface {

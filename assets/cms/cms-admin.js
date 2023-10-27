@@ -1,4 +1,3 @@
-import './cms-admin.scss';
 window.axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}}
 
 import CMSMediaEntity from "./media-entity"

@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Admin\Extension;
 
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
@@ -19,7 +20,6 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
-use Sonata\DoctrineORMAdminBundle\Filter\ChoiceFilter;
 use Sonata\MediaBundle\Provider\Pool;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -32,13 +32,11 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
  */
 class GalleryAdminExtension extends AbstractAdminExtension
 {
-
     public function __construct(
-        private Pool $pool) {
+        private Pool $pool
+    ) {
     }
-    /**
-     * {@inheritdoc}
-     */
+
     public function configureFormFields(FormMapper $form): void
     {
         $form
@@ -61,15 +59,14 @@ class GalleryAdminExtension extends AbstractAdminExtension
         }
 
         $formats = [];
-        foreach ((array)$this->pool->getFormatNamesByContext($context) as $name => $options) {
+        foreach ((array) $this->pool->getFormatNamesByContext($context) as $name => $options) {
             $formats[$name] = $name;
         }
 
         $contexts = [];
-        foreach ((array)$this->pool->getContexts() as $contextItem => $format) {
+        foreach ((array) $this->pool->getContexts() as $contextItem => $format) {
             $contexts[$contextItem] = $contextItem;
         }
-
 
         $form
             ->with('Options')
@@ -101,7 +98,6 @@ class GalleryAdminExtension extends AbstractAdminExtension
                     'widget_add_btn' => [
                         'label' => false,
                     ],
-
                     'allow_add' => true,
                     'allow_delete' => true,
                     'required' => false,
@@ -113,9 +109,6 @@ class GalleryAdminExtension extends AbstractAdminExtension
             ->end();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter->remove('context');
@@ -126,22 +119,11 @@ class GalleryAdminExtension extends AbstractAdminExtension
                 'show_filter' => false,
                 'operator_type' => ContainsOperatorType::TYPE_EQUAL,
                 'field_type' => HiddenType::class,
-                'case_sensitive' => true
+                'force_case_insensitivity' => true,
             ]
-        )
-            ->add(
-                'providerName',
-                SimpleStringFilter::class,
-                [
-                    'operator_type' => ContainsOperatorType::TYPE_EQUAL,
-                    'case_sensitive' => true
-                ]
-            );
+        );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureListFields(ListMapper $list): void
     {
         $list->remove('defaultFormat')

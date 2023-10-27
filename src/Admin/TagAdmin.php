@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Admin;
 
 use Doctrine\ORM\EntityRepository;
@@ -17,10 +18,10 @@ use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Model\Tag;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 
 /**
@@ -30,15 +31,14 @@ use Sonata\AdminBundle\Route\RouteCollectionInterface;
  */
 class TagAdmin extends AbstractAdmin
 {
+    protected $formOptions = ['layout' => 'horizontal'];
 
-    protected $formOptions =['layout' => 'horizontal'];
-
-    public function configureDefaultSortValues(array &$sortValues) : void{
+    public function configureDefaultSortValues(array &$sortValues): void
+    {
         $sortValues[DatagridInterface::PER_PAGE] = 1000000;
         $sortValues[DatagridInterface::SORT_BY] = 'path';
         $sortValues[DatagridInterface::SORT_ORDER] = 'ASC';
     }
-
 
     /**
      * @param RouteCollection $collection
@@ -72,13 +72,8 @@ class TagAdmin extends AbstractAdmin
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureFormFields(FormMapper $form): void
     {
-
-
         $id = $this->getSubject() ? $this->getSubject()->getId() : null;
         $form
             ->with('tag.form.group_tag', ['label' => false])
@@ -114,18 +109,12 @@ class TagAdmin extends AbstractAdmin
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
-            ->add('path', null, ['label' => 'filter.label_name']);
+            ->add('path', null, ['label' => 'filter.label_name', 'global_search' => false]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureListFields(ListMapper $list): void
     {
         $list
@@ -146,34 +135,32 @@ class TagAdmin extends AbstractAdmin
 
     public function getTagTree($selected)
     {
-        $tags =  $this->getModelManager()->findBy($this->getClass(), ['level' => 1], ['path' => 'ASC']);
+        $tags = $this->getModelManager()->findBy($this->getClass(), ['level' => 1], ['path' => 'ASC']);
 
         $tagArray = [
             [
-                'text' =>  $this->getTranslator()->trans('show_all_media', [], $this->getTranslationDomain()),
+                'text' => $this->getTranslator()->trans('show_all_media', [], $this->getTranslationDomain()),
                 'a_attr' => ['class' => 'show_all_media'],
                 'data' => ['show_first' => true, 'id' => 0],
-                'children' =>  [],
-                'state' => ['selected' => $selected?false:true],
+                'children' => [],
+                'state' => ['selected' => $selected ? false : true],
             ],
         ];
 
         return $this->addTags($tags, $selected, $tagArray);
-
     }
 
     /**
      * @param Tag[] $tags
-     * @param $selected
-     * @param $tagArray
      */
-    private function addTags($tags, $selected, $tagArray){
-        foreach ( $tags as $tag){
+    private function addTags($tags, $selected, $tagArray)
+    {
+        foreach ($tags as $tag) {
             $item = [
-                'text' =>  $tag->getName(),
+                'text' => $tag->getName(),
                 'li_attr' => [
                     'id' => 'li_tag_'.$tag->getId(),
-                    'class' => sprintf('sortable-tag %s',(count($tag->getChildren())?' has-children':'')),
+                    'class' => sprintf('sortable-tag %s', count($tag->getChildren()) ? ' has-children' : ''),
                     'data-tag-name' => $tag->getName(),
                 ],
                 'a_attr' => [
@@ -181,19 +168,19 @@ class TagAdmin extends AbstractAdmin
                     'id' => 'tag_link_'.$tag->getId(),
                     'data-pk' => $tag->getId(),
                     'ondrop' => sprintf("dropTag(event, '%d')", $tag->getId()),
-                    "ondragover"=> sprintf("overList(event, '%d')", $tag->getId()),
-                    "ondragleave"=> sprintf("exitList(event, '%d')", $tag->getId()),
+                    'ondragover' => sprintf("overList(event, '%d')", $tag->getId()),
+                    'ondragleave' => sprintf("exitList(event, '%d')", $tag->getId()),
                 ],
                 'data' => [
                     'id' => $tag->getId(),
-                    'delete_link' => $this->generateObjectUrl('delete', $tag, ['returnToMedia' => true])
+                    'delete_link' => $this->generateObjectUrl('delete', $tag, ['returnToMedia' => true]),
                 ],
                 'state' => [
                     'selected' => $selected === $tag->getId(),
-                    'opened' => $tag->hasChild($selected)
+                    'opened' => $tag->hasChild($selected),
                 ],
             ];
-            if($tag->getChildren()){
+            if ($tag->getChildren()) {
                 $item['children'] = $this->addTags($tag->getChildren(), $selected, []);
             }
 

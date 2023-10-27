@@ -15,26 +15,19 @@ namespace Networking\InitCmsBundle\Admin;
 
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
-use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Form\Type\Filter\DefaultType;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
-use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
-use Sonata\Form\Type\CollectionType;
-use Sonata\Form\Type\EqualType;
 use Sonata\MediaBundle\Admin\BaseMediaAdmin as Admin;
 use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
-use Sonata\MediaBundle\Provider\Pool;
-use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -46,7 +39,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class MediaAdmin extends Admin
 {
-
     /**
      * @var array
      * @var array
@@ -90,7 +82,6 @@ class MediaAdmin extends Admin
         return $this->validator->validate($object);
     }
 
-
     public function configureDefaultSortValues(array &$sortValues): void
     {
         $sortValues[DatagridInterface::SORT_BY] = 'createdAt';
@@ -111,17 +102,12 @@ class MediaAdmin extends Admin
         $this->languages = $languages;
     }
 
-    /**
-     * @return array
-     */
     public function getTrackedActions(): array
     {
         return $this->trackedActions;
     }
 
     /**
-     * @param $trackedActions
-     *
      * @return $this
      */
     public function setTrackedActions($trackedActions)
@@ -132,8 +118,6 @@ class MediaAdmin extends Admin
     }
 
     /**
-     * @param $hasMultipleMediaTags
-     *
      * @return $this
      */
     public function setMultipleMediaTags($hasMultipleMediaTags)
@@ -163,10 +147,6 @@ class MediaAdmin extends Admin
         return $this->showTagTree;
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function configureRoutes(RouteCollectionInterface $collection): void
     {
         parent::configureRoutes($collection);
@@ -266,16 +246,10 @@ class MediaAdmin extends Admin
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureDefaultFilterValues(array &$filterValues): void
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
@@ -314,7 +288,6 @@ class MediaAdmin extends Admin
                 'show_filter' => false,
                 'operator_type' => ContainsOperatorType::TYPE_EQUAL,
                 'case_sensitive' => true,
-
             ],
             [
                 'field_type' => HiddenType::class,
@@ -334,10 +307,6 @@ class MediaAdmin extends Admin
             );
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function getExportFormats(): array
     {
         return [];
@@ -351,11 +320,12 @@ class MediaAdmin extends Admin
     /**
      * @param string $name
      *
-     * @return null|string
+     * @return string|null
      */
     public function getTemplate($name)
     {
-        if ($name === 'edit' && is_null($this->getSubject()->getId())
+        if (
+            'edit' === $name && is_null($this->getSubject()->getId())
             && !$this->getRequest()->query->get('gallery')
         ) {
             $provider = $this->pool->getProvider(
@@ -370,8 +340,6 @@ class MediaAdmin extends Admin
     }
 
     /**
-     * @param $media
-     *
      * @return object
      */
     public function checkForDuplicate($media)
@@ -387,18 +355,13 @@ class MediaAdmin extends Admin
         return $duplicate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureFormFields(FormMapper $form): void
     {
-
         $media = $this->getSubject();
 
         if (!$media) {
             $media = $this->getNewInstance();
         }
-
 
         if (!$media || !$media->getProviderName()) {
             return;
@@ -423,10 +386,11 @@ class MediaAdmin extends Admin
             $provider->buildCreateForm($form);
         }
 
-        if (in_array(
-            $media->getProviderName(),
-            $this->localisedMediaProviders
-        )
+        if (
+            in_array(
+                $media->getProviderName(),
+                $this->localisedMediaProviders
+            )
         ) {
             $form->add(
                 'locale',
@@ -453,7 +417,6 @@ class MediaAdmin extends Admin
             ]
         );
 
-
         $form->add('providerName', HiddenType::class);
     }
 
@@ -475,9 +438,6 @@ class MediaAdmin extends Admin
         return $locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureListFields(ListMapper $list): void
     {
         $list
@@ -492,25 +452,23 @@ class MediaAdmin extends Admin
             ->add('size', 'string', ['label' => 'label.size']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function alterNewInstance($object): void
     {
-
         foreach ($this->getExtensions() as $extension) {
             $extension->alterNewInstance($this, $object);
         }
 
         if ($this->hasRequest()) {
-            if ($this->getRequest()->isMethod('POST')
+            if (
+                $this->getRequest()->isMethod('POST')
                 && !$this->getRequest()->get('oneuploader')
             ) {
                 $uniqid = $this->getUniqid();
-                if (array_key_exists(
-                    'providerName',
-                    $this->getRequest()->get($uniqid, [])
-                )
+                if (
+                    array_key_exists(
+                        'providerName',
+                        $this->getRequest()->get($uniqid, [])
+                    )
                 ) {
                     $object->setProviderName(
                         $this->getRequest()->get($uniqid)['providerName']
@@ -526,9 +484,6 @@ class MediaAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configurePersistentParameters(): array
     {
         $parameters = [];
@@ -556,7 +511,7 @@ class MediaAdmin extends Admin
             $context = $filter['context']['value'];
         }
 
-        if (!$context || $context === '0') {
+        if (!$context || '0' === $context) {
             $context = $this->pool->getDefaultContext();
             $request->query->set('context', $context);
         }
@@ -576,7 +531,6 @@ class MediaAdmin extends Admin
             $parameters['provider'] = $provider;
         }
 
-
         return array_merge($parameters, [
             'context' => $context,
         ]);
@@ -584,8 +538,8 @@ class MediaAdmin extends Admin
 
     public function configureFilterParameters(array $parameters): array
     {
-
-        if (array_key_exists('context', $parameters)
+        if (
+            array_key_exists('context', $parameters)
             && !$parameters['context']['value']
         ) {
             $parameters['context']['value'] = $this->pool->getDefaultContext();
@@ -593,16 +547,15 @@ class MediaAdmin extends Admin
 
         $persistentParameters = $this->getPersistentParameters();
 
-        $context = $persistentParameters['context'];
-        $provider = $persistentParameters['provider'];
+        $context = array_key_exists('context', $persistentParameters) ? $persistentParameters['context'] : '';
+        $provider = array_key_exists('provider', $persistentParameters) ? $persistentParameters['provider'] : '';
 
         if ($context && array_key_exists('context', $parameters)) {
             if ($parameters['context']['value'] != $context) {
                 $parameters['context']['value'] = $context;
             }
-        } else {
-            $parameters['context']
-                = ['value' => $persistentParameters['context']];
+        } elseif ($context) {
+            $parameters['context'] = ['value' => $context];
         }
 
         if ($provider && array_key_exists('providerName', $parameters)) {
@@ -611,25 +564,21 @@ class MediaAdmin extends Admin
             }
         } elseif ($provider) {
             $parameters['providerName']['value'] = $provider;
-        } else {
-            $parameters['providerName']
-                = ['value' => $persistentParameters['provider']];
         }
 
         return $parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureBatchActions($actions): array
     {
-        if ($this->getRequest()
+        if (
+            $this->hasRequest()
             && !$this->getRequest()->query->get(
                 'galleryMode'
             )
         ) {
-            if ($this->hasRoute('edit') && $this->isGranted('EDIT')
+            if (
+                $this->hasRoute('edit') && $this->isGranted('EDIT')
                 && $this->hasRoute('delete')
                 && $this->isGranted('DELETE')
             ) {
