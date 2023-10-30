@@ -125,10 +125,10 @@ class SearchModule {
         }
 
         // Window resize handling
-        window.addEventListener('resize', function() {
-            var timer;
+        window.addEventListener('resize', () => {
+            let timer;
 
-            KTUtil.throttle(timer, function() {
+            KTUtil.throttle(timer, () => {
                this._update();
             }, 200);
         });

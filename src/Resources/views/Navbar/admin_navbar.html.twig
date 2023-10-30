@@ -20,13 +20,10 @@
             {% include '@NetworkingInitCms/Admin/top-menu.html.twig'  %}
             <!--begin::Navbar-->
             <div class="app-navbar flex-shrink-0">
+                {% if sonata_config.getOption('search') %}
+                    {%  include '@NetworkingInitCms/Core/global_search_form.html.twig' %}
+                {% endif %}
                 <div class="app-navbar-item ms-1 ms-md-3" id="kt_header_website_menu_toggle">
-                    {% block sonata_sidebar_search %}
-                        {% if sonata_config.getOption('search') %}
-                        {%  include '@NetworkingInitCms/Core/global_search_form.html.twig' %}
-                        {% endif %}
-                    {% endblock %}
-                    <!--layout-partial:partials/theme-mode/_main.html-->
                     {% if sonata_config is defined %}
                         <a href="#" class="btn btn-icon btn-custom btn-icon-muted btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
                            data-kt-menu-trigger="{default:'click', lg: 'hover'}"
