@@ -40,7 +40,7 @@ file that was distributed with this source code.
         {#        <link href="{{ asset('networking_initcms.css', 'init_cms') }}" type="text/css" rel="stylesheet" media="screen"/> #}
         {% block content_css %}
             {% for css in content_css() %}
-                <link href="{{ asset(css) }}" type="text/css" rel="stylesheet" media="screen"/>
+                <link href="{{ css }}" type="text/css" rel="stylesheet" media="screen"/>
             {% endfor %}
         {% endblock content_css %}
 
