@@ -116,6 +116,7 @@ class NetworkingHelperExtension extends AbstractExtension
             new TwigFilter('excerpt', $this->excerpt(...), ['needs_environment' => true]),
             new TwigFilter('highlight', $this->highlight(...)),
             new TwigFilter('base64_encode', $this->base64Encode(...)),
+            new TwigFilter('json_decode', $this->jsonDecode(...)),
         ];
     }
 
@@ -609,6 +610,14 @@ class NetworkingHelperExtension extends AbstractExtension
     public function base64Encode($value): string
     {
         return base64_encode((string) $value);
+    }
+
+    public function jsonDecode($value): ?array
+    {
+        if(!$value){
+            return null;
+        }
+        return json_decode((string) $value);
     }
 
     /**

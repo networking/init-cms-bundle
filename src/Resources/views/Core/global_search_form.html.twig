@@ -1,58 +1,69 @@
 <!--begin::Main wrapper-->
 <div
         id="kt_cms_search"
-        class="d-flex align-items-center w-lg-400px"
+        class="header-search d-flex align-items-stretch"
 
         data-kt-search-keypress="true"
         data-kt-search-min-length="2"
         data-kt-search-enter="enter"
         data-kt-search-layout="menu"
-        data-kt-search-responsive="lg"
-
         data-kt-menu-trigger="auto"
         data-kt-menu-permanent="true"
-        data-kt-menu-placement="bottom-start">
+        data-kt-menu-placement="bottom-end">
 
     <!--begin::Tablet and mobile search toggle-->
-    <div data-kt-search-element="toggle" class="d-flex d-lg-none align-items-center">
-        <div class="btn btn-icon btn-active-light-primary">
+    <div class="d-flex align-items-center" data-kt-search-element="toggle" id="kt_header_search_toggle">
+        <div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px">
             <i class="ki-outline ki-magnifier fs-1"></i>
         </div>
     </div>
     <!--end::Tablet and mobile search toggle-->
 
-    <!--begin::Form-->
-    <form action="{{ path('sonata_admin_search') }}" data-kt-search-element="form" class="d-none d-lg-block w-100 position-relative mb-5 mb-lg-0" autocomplete="off">
-        <!--begin::Hidden input(Added to disable form autocomplete)-->
-        <input type="hidden"/>
-        <!--end::Hidden input-->
-
-        <!--begin::Icon-->
-        <i class="ki-outline ki-magnifier fs-2 fs-lg-1 text-gray-500 position-absolute top-50 translate-middle-y ms-5"></i>
-        <!--end::Icon-->
-
-        <!--begin::Input-->
-        <input type="text" class="form-control form-control-sm form-control-solid ps-14" name="q" value="{{ app.request.get('q') }}" placeholder="{{ 'search_placeholder'|trans({}, 'SonataAdminBundle') }}..." data-kt-search-element="input"/>
-        <!--end::Input-->
-
-        <!--begin::Spinner-->
-        <span class="position-absolute top-50 end-0 translate-middle-y lh-0 d-none me-6" data-kt-search-element="spinner">
-            <span class="spinner-border h-15px w-15px align-middle text-gray-400"></span>
-        </span>
-        <!--end::Spinner-->
-
-        <!--begin::Reset-->
-        <span class="btn btn-flush btn-active-color-primary position-absolute top-50 end-0 translate-middle-y lh-0 me-5 d-none" data-kt-search-element="clear">
-            <i class="ki-outline ki-cross fs-2 fs-lg-1 me-0"></i>
-        </span>
-        <!--end::Reset-->
-    </form>
-    <!--end::Form-->
 
     <!--begin::Menu-->
     <div data-kt-search-element="content" style="max-height: 400px; overflow: auto" class="menu menu-sub menu-sub-dropdown w-300px w-md-400px py-7 px-7 scroll">
+
+
         <!--begin::Wrapper-->
         <div data-kt-search-element="wrapper">
+
+            <!--begin::Form-->
+            <form action="{{ path('sonata_admin_search') }}" data-kt-search-element="form" class="w-100 position-relative mb-3" autocomplete="off">
+                <!--begin::Hidden input(Added to disable form autocomplete)-->
+                <input type="hidden" name="admins" value=""/>
+                <!--end::Hidden input-->
+
+                <!--begin::Icon-->
+                <i class="ki-outline ki-magnifier fs-2 fs-lg-1 text-gray-500 position-absolute top-50 translate-middle-y "></i>
+                <!--end::Icon-->
+
+                <!--begin::Input-->
+                <input type="text" class="search-input form-control form-control-sm form-control-flush ps-14"
+                       name="q" value="{{ app.request.get('q') }}"
+                       placeholder="{{ 'search_placeholder'|trans({}, 'SonataAdminBundle') }}..." data-kt-search-element="input"/>
+                <!--end::Input-->
+
+                <!--begin::Spinner-->
+                        <span class="position-absolute top-50 end-0 translate-middle-y lh-0 d-none me-2" data-kt-search-element="spinner">
+                    <span class="spinner-border h-15px w-15px align-middle text-gray-400"></span>
+                </span>
+                        <!--end::Spinner-->
+
+                        <!--begin::Reset-->
+                <span class="btn btn-flush btn-active-color-primary position-absolute top-50 end-0 translate-middle-y lh-0 me-1  d-none" data-kt-search-element="clear">
+                        <i class="ki-outline ki-cross fs-2 fs-lg-1 me-0"></i>
+                </span>
+                <!--end::Reset-->
+{#                <div class="position-absolute top-50 end-0 translate-middle-y" >#}
+{#                    <!--begin::Preferences toggle-->#}
+{#                    <div data-kt-search-element="preferences-show" class="btn btn-icon w-20px btn-sm btn-active-color-primary me-1" data-bs-toggle="tooltip" title="Show search preferences">#}
+{#                        <i class="ki-outline ki-setting-2 fs-2">#}
+{#                        </i>#}
+{#                    </div>#}
+{#                    <!--end::Preferences toggle-->#}
+{#                </div>#}
+            </form>
+            <!--end::Form-->
 
             <!--begin::Search results-->
             <div data-kt-search-element="results" class="d-none">
@@ -65,11 +76,32 @@
             </div>
             <!--end::Empty search-->
         </div>
+
+        {% set admins = [] %}
         <!--end::Wrapper-->
+        {% for group in get_sonata_dashboard_groups_with_creatable_admins() %}
+            {% for admin in group.items %}
+                {% set admins = admins|merge([{code: admin.code, label: admin.label, icon: group.icon, translationdomain: admin.translationdomain}]) %}
+            {% endfor %}
+        {% endfor %}
 
         <!--begin::Preferences-->
-        <div data-kt-search-element="preferences">
-        </div>
+{#        <div data-kt-search-element="preferences" class="pt-1 d-none" data-cms-admin-groups="{{ admins|json_encode }}">#}
+{#            <h3 class="fw-semibold text-dark mb-7">Search Preferences</h3>#}
+{#            {% for admin in admins %}#}
+{#                <div class="py-4 border-bottom">#}
+{#                    <label class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack">#}
+{#                        <span class="form-check-label text-gray-700 fs-6 fw-semibold ms-0 me-2"><i class="{{ admin.icon }}">#}
+{#                            </i> {{ admin.label|trans({}, admin.translationdomain) }}</span>#}
+{#                        <input class="form-check-input admin-search-checkbox" name="group[{{ admin.code }}]" data-admin-code="{{ admin.code}}" type="checkbox" value="1" />#}
+{#                    </label>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#            <div class="d-flex justify-content-end pt-7">#}
+{#                <button type="reset" class="btn btn-sm btn-light fw-bold btn-active-light-primary me-2" data-kt-search-element="preferences-dismiss">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</button>#}
+{#                <button type="submit" class="btn btn-sm fw-bold btn-primary" data-kt-search-element="preferences-save">{{ 'btn_update'|trans({}, 'NetworkingInitCmsBundle') }}</button>#}
+{#            </div>#}
+{#        </div>#}
         <!--end::Preferences-->
 </div>
 <!--end::Menu-->

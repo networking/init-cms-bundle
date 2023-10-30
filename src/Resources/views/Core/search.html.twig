@@ -16,6 +16,13 @@ file that was distributed with this source code.
 {% block content %}
 
     {% if query is defined and query is not same as(false) %}
+
+        {% set admins = app.request.get('admins') %}
+        {% if admins is not iterable %}
+            {% set admins = admins|json_decode() %}
+        {% endif %}
+
+
         {% set count = 0 %}
 
         {% if app.request.xmlHttpRequest %}
@@ -25,6 +32,7 @@ file that was distributed with this source code.
 
                 {% if display %}
                     {% for admin in group.items %}
+                        {% if admins is same as(null) or admin.code in admins %}
                         {% set count = count + 1 %}
                         {% if admin.hasRoute('create') and admin.hasAccess('create') or admin.hasRoute('list') and admin.hasAccess('list') %}
                             {{ sonata_block_render({
@@ -36,6 +44,7 @@ file that was distributed with this source code.
                                 'per_page': 50,
                                 'icon': group.icon
                             }) }}
+                        {% endif %}
                         {% endif %}
                     {% endfor %}
                 {% endif %}
@@ -50,6 +59,8 @@ file that was distributed with this source code.
 
                 {% if display %}
                     {% for admin in group.items %}
+
+                        {% if admins is same as(null) or admin.code in admins %}
                         {% set count = count + 1 %}
                         {% if admin.hasRoute('create') and admin.hasAccess('create') or admin.hasRoute('list') and admin.hasAccess('list') %}
                             {{ sonata_block_render({
@@ -61,6 +72,8 @@ file that was distributed with this source code.
                                 'per_page': 50,
                                 'icon': group.icon
                             }) }}
+                        {% endif %}
+
                         {% endif %}
                     {% endfor %}
                 {% endif %}

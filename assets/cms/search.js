@@ -2,8 +2,6 @@
 
 class SearchModule {
 
-
-
     constructor(element, options) {
 
         if(!element) {
@@ -350,6 +348,10 @@ class SearchModule {
     // Plugin API
     show() {
         return this._show();
+    }
+
+    focus() {
+        return this.inputElement.focus();
     }
 
     hide() {
