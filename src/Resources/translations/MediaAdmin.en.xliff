@@ -525,6 +525,10 @@
                 <source>gallery</source>
                 <target>Gallery</target>
             </trans-unit>
+            <trans-unit id="confirm_selection">
+                <source>confirm_selection</source>
+                <target>Confirm selection</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

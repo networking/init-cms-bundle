@@ -323,6 +323,10 @@
              	<source>selected</source>
              	<target>Selected</target>
              </trans-unit>
+            <trans-unit id="btn_confirm">
+                <source>btn_confirm</source>
+                <target>Confirm</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

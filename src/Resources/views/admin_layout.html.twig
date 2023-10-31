@@ -33,11 +33,9 @@ file that was distributed with this source code.
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     {% block meta_config %}
         <meta name="init-cms-setup"
-              data-init-cms-config='{{ {'DEBUG':sonata_config.getOption('js_debug'),'CONFIRM_EXIT': true}|json_encode()|raw }}'
-              data-init-cms-translations='{{ {CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle')}|json_encode()|raw }}'>
+              data-init-cms-config='{{ {'DEBUG':sonata_config.getOption('js_debug'),'CONFIRM_EXIT': true}|json_encode()|raw }}'>
     {% endblock %}
     {% block stylesheets %}
-        {#        <link href="{{ asset('networking_initcms.css', 'init_cms') }}" type="text/css" rel="stylesheet" media="screen"/> #}
         {% block content_css %}
             {% for css in content_css() %}
                 <link href="{{ css }}" type="text/css" rel="stylesheet" media="screen"/>

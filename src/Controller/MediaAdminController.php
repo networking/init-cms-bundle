@@ -378,26 +378,29 @@ class MediaAdminController extends CRUDController
             $selected = explode(',', $selected);
         }
 
-        return $this->renderWithExtraParams(
+        $params = $this->addRenderExtraParams([
+            'multiSelect' => $multiSelect,
+            'selected' => $multiSelect?$selected:[],
+            'providers' => $mediaPool->getProvidersByContext($context),
+            'media_pool' => $mediaPool,
+            'persistent_parameters' => $persistentParameters,
+            'currentProvider' => array_key_exists('providerName', $filters)?$filters['providerName']['value']:$persistentParameters['provider'],
+            'tags' => $tags,
+            'tagAdmin' => $tagAdmin,
+            'tagJson' => $tagAdmin->getTagTree($selectedTag),
+            'lastItem' => 0,
+            'action' => 'list',
+            'form' => $formView,
+            'datagrid' => $datagrid,
+            'galleryListMode' => $galleryMode,
+            'csrf_token' => $this->getCsrfToken('sonata.batch'),
+            'show_actions' => true,
+        ]);
+
+        return $this->render(
             '@NetworkingInitCms/MediaAdmin/list.html.twig',
-            [
-                'multiSelect' => $multiSelect,
-                'selected' => $multiSelect?$selected:[],
-                'providers' => $mediaPool->getProvidersByContext($context),
-                'media_pool' => $mediaPool,
-                'persistent_parameters' => $persistentParameters,
-                'currentProvider' => array_key_exists('providerName', $filters)?$filters['providerName']['value']:$persistentParameters['filter'],
-                'tags' => $tags,
-                'tagAdmin' => $tagAdmin,
-                'tagJson' => $tagAdmin->getTagTree($selectedTag),
-                'lastItem' => 0,
-                'action' => 'list',
-                'form' => $formView,
-                'datagrid' => $datagrid,
-                'galleryListMode' => $galleryMode,
-                'csrf_token' => $this->getCsrfToken('sonata.batch'),
-                'show_actions' => true,
-            ]
+            $params
+
         );
     }
 

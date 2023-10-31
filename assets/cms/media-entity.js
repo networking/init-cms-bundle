@@ -20,9 +20,13 @@ class MediaEntity{
         this.selectMediaEventId = ''
         this.searchMediaEventId = ''
         this.addMediaEventId  = ''
+        this.perPageEventId  = ''
 
         KTUtil.on(this.element, '#' + this.id, 'change', this.updatePreview.bind(this));
-        KTUtil.on(this.element, '#field_dialog_' + this.id, 'hide.bs.modal', this.removeListeners.bind(this));
+        KTUtil.on(this.element, '#field_dialog_' + this.id, 'hide.bs.modal', () => {
+            this.removeListeners()
+            this.dialogContainer.querySelector('.modal-content').innerHTML = ''
+        });
 
         this.initialize()
 
@@ -52,11 +56,6 @@ class MediaEntity{
 
         this.dialogContainer = document.querySelector('#field_dialog_' + this.id)
         this.dialog = new bootstrap.Modal(this.dialogContainer, {height:'auto', width:650, show:false})
-
-
-        document.body.addEventListener('hidden.bs.modal', (event) => {
-            this.removeListeners()
-        })
 
     }
     setupTree(){
@@ -103,6 +102,7 @@ class MediaEntity{
         KTUtil.off(this.dialogContainer, 'click', this.selectMediaEventId);
         KTUtil.off(this.dialogContainer, 'submit', this.searchMediaEventId);
         KTUtil.off(this.dialogContainer, 'submit', this.addMediaEventId);
+        KTUtil.off(this.dialogContainer, 'change', this.perPageEventId);
     }
     addSearchListeners() {
         if(this.searchMediaEventId !== '') {
@@ -127,6 +127,28 @@ class MediaEntity{
             KTUtil.off(this.dialogContainer, 'click', this.selectMediaEventId);
         }
         this.selectMediaEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
+
+
+    }
+    addPerPageListeners() {
+       this.perPageEventId = KTUtil.on(this.dialogContainer, '.per-page', 'change', (e) => {
+            e.preventDefault();
+            let per_page = e.target.value;
+            let page = e.target.dataset.page;
+            let sort_order = e.target.dataset.sortOrder;
+            let sort_by = e.target.dataset.sortBy;
+            let tags = e.target.dataset.tags;
+            let name = e.target.dataset.name;
+
+           this.refreshList({
+               'filter[_per_page]': per_page,
+               'filter[_page]': page,
+               'filter[_sort_order]': sort_order,
+               'filter[_sort_by]':sort_by,
+               'filter[tags][value]': tags,
+               'filter[name][value]': name,
+           });
+        })
     }
     createListDialog(event) {
         event.preventDefault();
@@ -143,8 +165,10 @@ class MediaEntity{
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addSearchListeners()
             this.addClickOnLinkListeners()
+            this.addPerPageListeners()
             this.dialog.show();
             this.setupTree()
+            CMSAdmin.initToolTips(this.dialogContainer)
         })
     }
     clickLinkInDialog(event) {
@@ -189,6 +213,7 @@ class MediaEntity{
             this.addClickOnLinkListeners()
             CMSAdmin.initSpecialFields()
             this.setupTree()
+            CMSAdmin.initToolTips(this.dialogContainer)
         })
     }
     refreshList(filters) {
@@ -200,13 +225,13 @@ class MediaEntity{
             data.append(key, filters[key])
         }
 
-        data.set('galleryMode', 'gallery'),
-
-            filters = Object.fromEntries(data.entries());
+        data.set('galleryMode', 'gallery'), filters = Object.fromEntries(data.entries());
+        let tagsContainer = this.dialogContainer.querySelector('#tagsContainer')
 
         axios.get(tagsContainer.dataset.refreshListUrl, {...axiosConfig, params: filters})
-            .then(function (response) {
+            .then( (response) => {
                 document.querySelector('#item_list').innerHTML = response.data
+                CMSAdmin.initToolTips(this.dialogContainer)
             })
     }
     selectMedia(event) {

@@ -21,6 +21,7 @@ var CMSList = function () {
     var listDialog
     var advanceFilters;
     var advanceFilterToggle
+    var pageLengthAttr = location.protocol + '//' + location.host + location.pathname + '_page_length'
 
     // Private functions
     var initList = function () {
@@ -49,6 +50,12 @@ var CMSList = function () {
             lengthMenu = JSON.parse(table.dataset.lengthMenu);
         }
 
+        let defaultLength = lengthMenu[0][0];
+
+
+
+
+
         // Init datatable --- more info on datatables: https://datatables.net/manual/
         datatable = new DataTable(table,{
             'order': [],
@@ -59,6 +66,7 @@ var CMSList = function () {
             'classes': {
                 sLengthSelect: "form-select form-select-sm d-inline-block form-select-solid w-75px" ,
             },
+            pageLength: localStorage.getItem(pageLengthAttr) ? parseInt(localStorage.getItem(pageLengthAttr)) : defaultLength,
             language: language,
             "lengthMenu": lengthMenu,
         });
@@ -69,6 +77,10 @@ var CMSList = function () {
             toggleToolbars();
             KTMenu.init(); // reinit KTMenu instances
         });
+
+        datatable.on('length.dt', function () {
+            localStorage.setItem(pageLengthAttr, datatable.page.len());
+        })
     }
 
     // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()

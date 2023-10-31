@@ -54,7 +54,15 @@ const CMSAdmin = {
 
     },
 
+    initToolTips(el){
 
+        el ??= document.body;
+
+        var tooltipTriggerList = [].slice.call(el.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    },
     initLinkDialogs() {
 
         KTUtil.on(document.body, '.dialog-link', 'click', (event) => {
@@ -247,6 +255,7 @@ const CMSAdmin = {
 
         KTUtil.on(subject, '[data-collection-remove-btn]', 'click', (event) => {
             event.preventDefault()
+
 
             let btn = event.target
 

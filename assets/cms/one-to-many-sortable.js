@@ -11,7 +11,6 @@ class OneToManySortable{
             this.initialize()
         })
         document.body.addEventListener('sonata.delete_element', (event) => {
-            console.log(event)
             this.applyPosition()
         })
 

@@ -72,32 +72,22 @@
                         <div>
                             {% if not galleryListMode %}
                             {% if previewLink %}
-                                <a href="{% if previewType == 'iframe' %}#iframe{{ object.id }}{% else %}{{ previewLink }}{% endif %}"
-                                   data-fslightbox="lightbox-basic"
-                                        {% if previewType == 'iframe' %}
-                                           data-class="d-block"
-                                        {% endif %}
-                                   title="{{ object.name }}" class="has-action btn btn-clean btn-light btn-icon mr-2"><i
-                                            class="fbi bi-eye-fill text-primary"></i></a>
-                            {% if previewType == 'iframe' %}
-                                <iframe
-                                        src="{{ previewLink }}"
-                                        id="iframe{{ object.id }}"
-                                        width="{{ iframeWidth }}"
-                                        height="{{ iframeHeight }}"
-                                        frameBorder="0"
-                                        class="hidden-iframe"
-                                        allow="autoplay; fullscreen"
-                                        allowFullScreen
-                                ></iframe>
-                                {% endif %}
+                                <a href="{{ previewLink }}"
+                                   data-gallery="media-gallery"
+                                    {% if previewType == 'iframe' %}
+                                       data-class="d-block"
+                                        data-width="800px"
+                                        data-height="100vh"
+                                    {% endif %}
+                                     class="has-action btn btn-clean btn-light btn-icon mr-2 light-box-items">
+                                    <i class="fbi bi-eye-fill text-primary "></i>
+                                </a>
                             {% endif %}
-
-
 
                                 {% if app.request.isxmlhttprequest and not show_actions %}
                                     <a class="select-media btn btn-clean btn-icon mr-2  font-weight-bold btn-primary btn-shadow"
                                        href="#"
+                                       data-bs-toggle="tooltip"
                                        data-object-id="{{ object.id }}">
                                         {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
                                     </a>
@@ -127,6 +117,7 @@
                                     <input class="form-check-input" type="checkbox" value="" name="idx[]"
                                            {% if object.id in selected %}checked{% endif %}
                                            class="select_check_box"
+                                           data-bs-toggle="tooltip"
                                            data-path="{{ sonata_path(object, 'admin') }}"
                                            data-object-id="{{ object.id }}"
                                            value="{{ admin.id(object) }}"/>
@@ -142,7 +133,5 @@
 {% endfor %}
 
 </div>
-{% if datagrid.pager.haveToPaginate() %}
-    {% include "@NetworkingInitCms/MediaAdmin/page.html.twig" %}
-{% endif %}
+{% include "@NetworkingInitCms/MediaAdmin/page.html.twig" %}
 

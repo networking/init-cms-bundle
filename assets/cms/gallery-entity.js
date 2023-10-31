@@ -1,40 +1,67 @@
 import {CMSAdmin} from './cms-admin';
 import 'jstree'
 import CMSSortableCollection from "./sortable-collection";
-class GalleryEntity{
+
+class GalleryEntity {
     constructor(element) {
 
-        if(element.dataset.modelListInitialized) {
+        if (element.dataset.modelListInitialized) {
             return
         }
 
         this.element = element
         this.id = this.element.id
-        this.createModal()
+
         this.listLink = element.querySelector('.open-select-media')
         this.collectionContainer = element.dataset.cmsSortableContainer
         this.selectMediaEventId = ''
         this.searchMediaEventId = ''
         this.checkMediaInputId = ''
+        this.perPageEventId = ''
         this.selected = new Set()
         this.previousSelected = new Set()
+        this.galleryDialog = null
+        this.galleryDialogContainer = null
 
         CMSSortableCollection.init()
 
-        KTUtil.on(this.element, '#field_dialog_' + this.id, 'hide.bs.modal', this.removeListeners.bind(this));
+
+
+        KTUtil.on(this.element, '#gallery_dialog', 'hide.bs.modal', () => {
+            this.removeListeners()
+            this.galleryDialogContainer.querySelector('.modal-content').innerHTML = ''
+        });
 
         this.initialize()
 
+        KTUtil.on(this.element, '[data-collection-remove-btn]', 'click', (event) => {
+            event.preventDefault()
+
+
+            let btn = event.target
+
+            if (!btn.classList.contains('btn')) {
+                btn = btn.closest('.btn');
+            }
+            btn.closest('.collection-item').remove();
+            btn.dispatchEvent(new CustomEvent('afterRemoveItem', {bubbles: true}))
+
+        });
+
     }
+
     initialize() {
 
         this.element.dataset.modelListInitialized = true
 
         this.listLink.addEventListener('click', this.createListDialog.bind(this))
+        this.createModal()
+
     }
+
     createModal() {
         let modal = document.createElement('div')
-        modal.setAttribute('id', 'field_dialog_' + this.id)
+        modal.setAttribute('id', 'gallery_dialog')
         modal.setAttribute('class', 'modal fade')
         modal.setAttribute('tabindex', '-1')
         modal.setAttribute('role', 'dialog')
@@ -47,8 +74,8 @@ class GalleryEntity{
         `
         document.body.appendChild(modal)
 
-        this.dialogContainer = document.querySelector('#field_dialog_' + this.id)
-        this.dialog = new bootstrap.Modal(this.dialogContainer, {height:'auto', width:650, show:false})
+        this.galleryDialogContainer = document.querySelector('#gallery_dialog')
+        this.galleryDialog = new bootstrap.Modal(this.galleryDialogContainer, {height: 'auto', width: 650, show: false})
 
 
         document.body.addEventListener('hidden.bs.modal', (event) => {
@@ -56,8 +83,10 @@ class GalleryEntity{
         })
 
     }
-    setupTree(){
-        let tagsContainer = this.dialogContainer.querySelector('#tagsContainer')
+
+    setupTree() {
+
+        let tagsContainer = this.galleryDialogContainer.querySelector('#tagsContainer')
         let tree = $(tagsContainer)
 
         var lastLink = tagsContainer.dataset.selected
@@ -88,7 +117,7 @@ class GalleryEntity{
             'core':
                 {
                     "themes": {
-                        "variant":   "large"
+                        "variant": "large"
                     },
                     data: function (node, cb) {
                         cb(treeData)
@@ -96,27 +125,51 @@ class GalleryEntity{
                 }
         })
     }
+
     removeListeners() {
-        KTUtil.off(this.dialogContainer, 'click', this.selectMediaEventId);
-        KTUtil.off(this.dialogContainer, 'submit', this.searchMediaEventId);
-        KTUtil.off(this.dialogContainer, 'change', this.checkMediaInputId);
+        KTUtil.off(this.galleryDialogContainer, 'click', this.selectMediaEventId);
+        KTUtil.off(this.galleryDialogContainer, 'submit', this.searchMediaEventId);
+        KTUtil.off(this.galleryDialogContainer, 'change', this.checkMediaInputId);
+        KTUtil.off(this.galleryDialogContainer, 'change', this.perPageEventId);
     }
+
     addSearchListeners() {
-        if(this.selectMediaEventId !== '') {
+        if (this.selectMediaEventId !== '') {
             this.removeListeners()
         }
-        this.selectMediaEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
-        this.checkMediaInputId = KTUtil.on(this.dialogContainer, 'input[data-object-id]', 'change', this.selectMedia.bind(this));
-        this.searchMediaEventId = KTUtil.on(this.dialogContainer, 'form', 'submit', this.searchMedia.bind(this));
-        KTUtil.on(this.dialogContainer, '.confirm-select', 'click', this.submitSelectedMedia.bind(this));
+        this.selectMediaEventId = KTUtil.on(this.galleryDialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
+        this.checkMediaInputId = KTUtil.on(this.galleryDialogContainer, 'input[data-object-id]', 'change', this.selectMedia.bind(this));
+        this.searchMediaEventId = KTUtil.on(this.galleryDialogContainer, 'form', 'submit', this.searchMedia.bind(this));
+        KTUtil.on(this.galleryDialogContainer, '.confirm-select', 'click', this.submitSelectedMedia.bind(this));
+    }
+
+    addPerPageListeners() {
+        this.perPageEventId = KTUtil.on(this.galleryDialogContainer, '.per-page', 'change', (e) => {
+            e.preventDefault();
+            let per_page = e.target.value;
+            let page = e.target.dataset.page;
+            let sort_order = e.target.dataset.sortOrder;
+            let sort_by = e.target.dataset.sortBy;
+            let tags = e.target.dataset.tags;
+            let name = e.target.dataset.name;
+
+            this.refreshList({
+                'filter[_per_page]': per_page,
+                'filter[_page]': page,
+                'filter[_sort_order]': sort_order,
+                'filter[_sort_by]': sort_by,
+                'filter[tags][value]': tags,
+                'filter[name][value]': name,
+            });
+        })
     }
 
     createListDialog(event) {
         event.preventDefault();
 
-        let host =  window.location.protocol + '//' + window.location.host
+        let host = window.location.protocol + '//' + window.location.host
         let href = this.listLink.getAttribute('href')
-        if(href.indexOf(host) === -1) {
+        if (href.indexOf(host) === -1) {
             this.listLink.setAttribute('href', host + href)
         }
 
@@ -129,7 +182,6 @@ class GalleryEntity{
         listURL.searchParams.append('selected', Array.from(this.selected))
         listURL.searchParams.append('galleryMode', 'gallery')
 
-
         fetch(listURL, {
             method: 'GET',
             headers: {
@@ -138,39 +190,42 @@ class GalleryEntity{
         }).then(response => {
             return response.text()
         }).then(html => {
-
-            this.dialogContainer.querySelector('.modal-content').innerHTML = html;
-            this.addSearchListeners()
-            this.dialog.show();
+            this.galleryDialog.show()
+            this.galleryDialogContainer.querySelector('.modal-content').innerHTML = html;
             this.setupTree()
+            this.addSearchListeners()
+            CMSAdmin.initToolTips(this.galleryDialogContainer)
+            this.addPerPageListeners()
+
         })
     }
+
     clickLinkInDialog(event) {
         event.preventDefault();
         let link = event.target
-        if(link.classList.contains('select-media')) {
-            let input = this.dialogContainer.querySelector(`input[data-object-id="${link.dataset.objectId}"]`)
+        if (link.classList.contains('select-media')) {
+            let input = this.galleryDialogContainer.querySelector(`input[data-object-id="${link.dataset.objectId}"]`)
             this.selectMedia(input)
             return
         }
-        if(link.classList.contains('tag_link')) {
+        if (link.classList.contains('tag_link')) {
             var tagId = link.dataset.pk;
             this.refreshList({'filter[tags][value]': tagId});
             return
         }
-        if(link.classList.contains('show_all_media')) {
+        if (link.classList.contains('show_all_media')) {
             this.refreshList({'filter[tags][value]': ''});
             return
         }
         let url = link.getAttribute('href')
 
-        if(!url || url === '#') {
+        if (!url || url === '#') {
             return
         }
 
-        let host =  window.location.protocol + '//' + window.location.host
+        let host = window.location.protocol + '//' + window.location.host
         let href = url
-        if(url.indexOf(host) === -1) {
+        if (url.indexOf(host) === -1) {
             url = host + url
         }
 
@@ -189,17 +244,22 @@ class GalleryEntity{
         }).then(response => {
             return response.text()
         }).then(html => {
-            this.dialogContainer.querySelector('.modal-content').innerHTML = html;
-            this.addSearchListeners()
-            this.setupTree()
+
+                this.galleryDialogContainer.querySelector('.modal-content').innerHTML = html;
+                this.addSearchListeners()
+                this.addPerPageListeners()
+                this.setupTree()
+                CMSAdmin.initToolTips(this.galleryDialogContainer)
+
         })
     }
+
     refreshList(filters) {
         if (!filters) {
             filters = {}
         }
-        let data = new FormData( document.querySelector('#search-form'))
-        for(const key in filters){
+        let data = new FormData(document.querySelector('#search-form'))
+        for (const key in filters) {
             data.append(key, filters[key])
         }
 
@@ -208,21 +268,24 @@ class GalleryEntity{
         data.set('selected', Array.from(this.selected))
         filters = Object.fromEntries(data.entries());
 
+        let tagsContainer = this.galleryDialogContainer.querySelector('#tagsContainer')
         axios.get(tagsContainer.dataset.refreshListUrl, {...axiosConfig, params: filters})
-            .then(function (response) {
+            .then((response) => {
                 document.querySelector('#item_list').innerHTML = response.data
+                CMSAdmin.initToolTips(this.galleryDialogContainer)
             })
     }
+
     selectMedia(input) {
 
-        if(input instanceof Event) {
+        if (input instanceof Event) {
             input.preventDefault();
             input = input.target
-        }else{
+        } else {
             input.checked = !input.checked
         }
 
-        if(!input.checked) {
+        if (!input.checked) {
             input.closest('.overlay').classList.remove('overlay-block')
             this.selected.delete(input.dataset.objectId)
             return
@@ -230,12 +293,13 @@ class GalleryEntity{
         this.selected.add(input.dataset.objectId)
         input.closest('.overlay').classList.add('overlay-block')
     }
+
     searchMedia(event) {
         event.preventDefault();
         let form = event.target
         let url = new URL(form.action)
         let data = Object.fromEntries(new FormData(form).entries());
-        for(const key in data){
+        for (const key in data) {
             url.searchParams.append(key, data[key])
         }
 
@@ -245,16 +309,17 @@ class GalleryEntity{
 
         axios.get(url.toString(), {...axiosConfig})
             .then(response => {
-                this.dialogContainer.querySelector('.modal-content').innerHTML = response.data;
+                this.galleryDialogContainer.querySelector('.modal-content').innerHTML = response.data;
                 this.addSearchListeners()
+                this.addPerPageListeners()
                 this.setupTree()
             })
 
     }
+
     submitSelectedMedia(event) {
         event.preventDefault()
-        console.log(this.previousSelected)
-        this.dialogContainer.querySelectorAll('input[data-object-id]').forEach( (item, i)=> {
+        this.galleryDialogContainer.querySelectorAll('input[data-object-id]').forEach((item, i) => {
             let id = item.dataset.objectId
 
             if (item.checked && !this.previousSelected.has(id)) {
@@ -262,17 +327,18 @@ class GalleryEntity{
                 this.previousSelected.add(id)
             }
 
-            if(!item.checked && this.previousSelected.has(id)) {
+            if (!item.checked && this.previousSelected.has(id)) {
                 document.querySelector('[data-selected="' + id + '"]').remove()
                 this.previousSelected.delete(id)
             }
         });
         document.dispatchEvent(new CustomEvent('afterRemoveItem'))
         CMSAdmin.initSpecialFields()
-        this.dialog.hide();
+        this.galleryDialog.hide();
     }
+
     addItemToCollection(item) {
-        let node = `<a href="/admin/cms/media/${item.objectId}/edit?provider=sonata.media.provider.image&amp;context=default" target="new">
+        let node = `<a href="/admin/cms/media/${item.objectId}/edit" target="new">
                                             <img  src="${item.path}" width="75" height="60"></a> &nbsp;&nbsp;`;
         let counter = 0
         const containerName = this.collectionContainer
@@ -303,9 +369,13 @@ class GalleryEntity{
         document.querySelector(`#${fieldId}_media`).value = item.objectId
         document.querySelector(`#field_widget_${fieldId}_media`).querySelector('.inner-field-short-description').innerHTML = node
 
-        document.dispatchEvent(new CustomEvent('afterAddItem', {bubbles: true, detail: {proto: proto, counter: counter}}))
+        document.dispatchEvent(new CustomEvent('afterAddItem', {
+            bubbles: true,
+            detail: {proto: proto, counter: counter}
+        }))
 
     }
+
     addMediaDialog(event) {
         event.preventDefault();
         let addURL = this.addLink.getAttribute('href')
@@ -318,13 +388,14 @@ class GalleryEntity{
             return response.text()
         }).then(html => {
 
-            this.dialogContainer.querySelector('.modal-content').innerHTML = html;
+            this.galleryDialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addUploadListeners()
             this.dialog.show();
         })
     }
+
     updatePreview() {
-        if(this.field.value === '') {
+        if (this.field.value === '') {
             this.preview.innerHTML = ''
             return
         }
@@ -340,10 +411,11 @@ class GalleryEntity{
             this.preview.innerHTML = html;
         })
     }
+
     removeSelectedElement(event) {
         event.preventDefault();
 
-        if(this.field.options){
+        if (this.field.options) {
             var elements = this.field.options;
 
             elements.map((element) => {
@@ -355,9 +427,9 @@ class GalleryEntity{
     }
 }
 
-const CMSGalleryEntity =  {
+const CMSGalleryEntity = {
 
-    init(){
+    init() {
         document.querySelectorAll('[data-gallery-entity]').forEach((element) => {
             let mediaEntity = new GalleryEntity(element)
 

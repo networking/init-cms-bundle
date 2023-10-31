@@ -8,6 +8,10 @@ file that was distributed with this source code.
 #}
 
 {% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <link href="{{ asset('mediaAdmin.css', 'init_cms') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
 
 
 {% set active_tab = app.request.get('context') %}
@@ -353,7 +357,7 @@ file that was distributed with this source code.
         {% if galleryListMode and multiSelect %}
             <div class="modal-footer">
                 <a class="btn btn-primary  confirm-select">
-                    <i class="fa fa-plus"></i> {{ 'confirm_selection'|trans({}, 'admin') }}
+                    <i class="fa fa-plus"></i> {{ 'btn_confirm'|trans({}, 'NetworkingInitCmsBundle') }}
                 </a>
             </div>
         {% endif %}
@@ -370,7 +374,6 @@ file that was distributed with this source code.
         </div>
     </div>
     <script src="{{ asset('mediaAdmin.js', 'init_cms') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
     <script>
         {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
 

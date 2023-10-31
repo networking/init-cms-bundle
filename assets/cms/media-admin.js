@@ -1,5 +1,7 @@
 import {CMSAdmin, Routing} from './cms-admin';
 import 'jstree'
+import GLightbox from 'glightbox';
+import 'glightbox/dist/css/glightbox.min.css';
 
 var CMSMediaAdmin = function () {
     var tagDialog;
@@ -282,9 +284,19 @@ var CMSMediaAdmin = function () {
                 $('#item_list').html(response.data);
                 $("html, body").animate({scrollTop: $('#item_list').scrollTop()}, "slow");
 
-                refreshFsLightbox();
+                setUpMediaLightbox();
                 KTComponents.init();
         })
+    }
+
+    const setUpMediaLightbox = () => {
+
+        const lightbox = GLightbox({
+            touchNavigation: true,
+            loop: true,
+            autoplayVideos: true,
+            selector: '.light-box-items'
+        });
     }
 
     return {
@@ -294,6 +306,7 @@ var CMSMediaAdmin = function () {
             canDelete = tagsContainer.dataset.canDelete;
             setUpSortTree();
             initializeTagDialog();
+            setUpMediaLightbox();
 
             KTUtil.on(document.body, 'a.delete_check_box', 'click', function (e) {
                 e.preventDefault();
@@ -356,6 +369,7 @@ var CMSMediaAdmin = function () {
             })
 
             KTUtil.on(document.body, '.per-page', 'change', function (e) {
+
                 e.preventDefault();
                 let per_page = e.target.value;
                 let page = e.target.dataset.page;

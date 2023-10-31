@@ -525,6 +525,10 @@
                 <source>copy_to_clipboard</source>
                 <target>Die URL %item% wurde in die Zwischenablage kopiert</target>
             </trans-unit>
+            <trans-unit id="confirm_selection">
+                <source>confirm_selection</source>
+                <target>Auswahl bestätigen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
