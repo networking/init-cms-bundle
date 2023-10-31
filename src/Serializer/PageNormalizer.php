@@ -7,12 +7,10 @@ use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class PageNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-
-    const DESERIALIZE_TRANSLATIONS = 'deserialize_translations';
+    public const DESERIALIZE_TRANSLATIONS = 'deserialize_translations';
 
     public function __construct(
         private readonly string $pageClass,
@@ -20,33 +18,31 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
         private readonly NormalizerInterface $objectNormalizer
     ) {
     }
-    /**
-     * @inheritDoc
-     */
+
     public function normalize(
         mixed $object,
         string $format = null,
         array $context = []
     ) {
-        $context = $context + [
+        $context += [
                 AbstractNormalizer::CALLBACKS => [
-                    'translations' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertTranslationsToIntegerArray():[] ;
+                    'translations' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
+                        return $outerObject instanceof PageInterface ? $outerObject->convertTranslationsToIntegerArray() : [];
                     },
-                    'originals' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertOriginalsToIntegerArray():[];
+                    'originals' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
+                        return $outerObject instanceof PageInterface ? $outerObject->convertOriginalsToIntegerArray() : [];
                     },
-                    'parent' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): ?int {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertParentToInteger():null;
+                    'parent' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): ?int {
+                        return $outerObject instanceof PageInterface ? $outerObject->convertParentToInteger() : null;
                     },
                     'alias' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []): ?string {
-                        return $outerObject instanceof PageInterface ? $outerObject->getAlias()?->getFullPath():null;
+                        return $outerObject instanceof PageInterface ? $outerObject->getAlias()?->getFullPath() : null;
                     },
-                    'parents' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertParentsToArray():[];
+                    'parents' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
+                        return $outerObject instanceof PageInterface ? $outerObject->convertParentsToArray() : [];
                     },
-                    'children' => function ( $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertChildrenToIntegerArray():[];
+                    'children' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
+                        return $outerObject instanceof PageInterface ? $outerObject->convertChildrenToIntegerArray() : [];
                     },
                 ],
                 AbstractNormalizer::IGNORED_ATTRIBUTES => [
@@ -63,13 +59,12 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
                     'directTranslation',
                     '__initializer__',
                     '__cloner__',
-                    '__isInitialized__'
+                    '__isInitialized__',
                 ],
             ];
 
         return $this->objectNormalizer->normalize($object, $format, $context);
     }
-
 
     public function denormalize(
         mixed $data,
@@ -77,33 +72,26 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
         string $format = null,
         array $context = []
     ) {
-
-        if(is_integer($data)){
+        if (is_integer($data)) {
             return $this->pageManager->find($data);
         }
 
-
-        if(!$context[self::DESERIALIZE_TRANSLATIONS]){
+        if (!$context[self::DESERIALIZE_TRANSLATIONS]) {
             $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'translations';
         }
 
-       return $this->objectNormalizer->denormalize($data, $type, $format, $context);
+        return $this->objectNormalizer->denormalize($data, $type, $format, $context);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function supportsNormalization(mixed $data, string $format = null)
+    public function supportsNormalization(mixed $data, string $format = null, array $context = [])
     {
         return $data instanceof PageInterface;
     }
 
-    public function supportsDenormalization(mixed $data,string $type,string $format = null){
-
-
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = [])
+    {
         return $type === $this->pageClass;
     }
-
 
     public function getSupportedTypes(?string $format): array
     {
