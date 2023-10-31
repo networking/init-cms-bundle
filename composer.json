@@ -47,7 +47,6 @@
     "symfony/security-bundle": "^6.0",
     "symfony/serializer-pack": "^1.0",
     "symfony/translation": "^6.0",
-    "symfony/ux-translator": "^2.12",
     "symfony/twig-bundle": "^6.0",
     "symfony/validator": "^6.0",
     "symfony/webpack-encore-bundle": "^1.5",
