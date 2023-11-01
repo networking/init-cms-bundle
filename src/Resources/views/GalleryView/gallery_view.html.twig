@@ -1,0 +1,33 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% from "@NetworkingInitCms/GalleryView/macro.html.twig" import lightbox, carousel, list %}
+<div class="row">
+    {% if layoutBlock.getGalleryType() is same as('carousel') %}
+        {{ carousel(layoutBlock.mediaGallery, 'gallery_' ~ layoutBlock.id, 'slide' ) }}
+    {% elseif layoutBlock.getGalleryType() is same as('lightbox') %}
+        {{ lightbox(layoutBlock.mediaGallery, 'gallery_' ~ layoutBlock.mediaGallery.id, 'reference' ) }}
+    {% else %}
+        <div>
+            <ul class="list-inline">
+                {% for galleryMedia in layoutBlock.mediaGallery.galleryItems %}
+                    <li class="list-inline-item">
+                        <div class="thumbnail">
+                            {{ sonata_media(galleryMedia.media, 'admin') }}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+
+
+

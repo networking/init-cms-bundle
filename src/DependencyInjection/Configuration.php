@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\Cache\PageCache;
+use Networking\InitCmsBundle\Entity\GalleryView;
+use Networking\InitCmsBundle\Entity\Text;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -101,12 +103,23 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('name')->isRequired()->end()
                             ->scalarNode('class')->isRequired()->end()
                             ->scalarNode('icon')->defaultValue('ki-outline ki-abstract-7')->end()
+                            ->scalarNode('default_template')->defaultValue(false)->end()
                         ->end()
                     ->end()
                     ->defaultValue(
                         [
-                            ['name' => 'Text' , 'class' =>  'Networking\InitCmsBundle\Entity\Text'],
-                            ['name' => 'Gallery' , 'class' =>  'Networking\InitCmsBundle\Entity\GalleryView'],
+                            [
+                                'name' => 'Text' ,
+                                'class' =>  Text::class,
+                                'icon' => 'ki-outline ki-text-align-left',
+                                'default_templage' => '@NetworkingInitCms/Text/frontend_text_block.html.twig'
+                            ],
+                            [
+                                'name' => 'Gallery' ,
+                                'class' =>  GalleryView::class,
+                                'icon' => 'ki-outline ki-picture',
+                                'default_templage' => '@NetworkingInitCms/Gallery/frontend_gallery_block.html.twig'
+                            ],
                         ]
                     )
                 ->end()

@@ -45,7 +45,6 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
             'label' => 'form.label_gallery',
             'data_class' => null,
             'class' => 'Networking\InitCmsBundle\Entity\Gallery',
-            'layout' => 'horizontal',
             'translation_domain' => 'messages',
             'required' => false,
         ]
@@ -62,7 +61,6 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
             'label' => 'form.label_gallery_type',
             'choices' => ['list' => 'list', 'lightbox' => 'lightbox', 'carousel' => 'carousel'],
             'translation_domain' => 'messages',
-            'layout' => 'horizontal',
         ]
     )]
     protected string $galleryType = 'lightbox';
@@ -138,11 +136,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
      */
     public function getTemplateOptions($params = []): array
     {
-        return [
-            'mediaItems' => $this->getMediaGallery()->getGalleryItems(),
-            'gallery' => $this->getMediaGallery(),
-            'galleryView' => $this,
-        ];
+        return [];
     }
 
     /**
@@ -150,10 +144,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
      */
     public function getAdminContent(): array
     {
-        return [
-            'content' => ['galleryView' => $this],
-            'template' => '@NetworkingInitCms/GalleryAdmin/gallery_view_block.html.twig',
-        ];
+        return [];
     }
 
     public function hasMedia(): bool

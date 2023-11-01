@@ -115,10 +115,7 @@ abstract class BaseText extends LayoutBlock implements ContentInterface, TextInt
      */
     public function getAdminContent(): array
     {
-        return [
-            'content' => ['text' => $this->getText()],
-            'template' => '@NetworkingInitCms/Text/admin_text_block.html.twig',
-        ];
+        return [];
     }
 
     /**

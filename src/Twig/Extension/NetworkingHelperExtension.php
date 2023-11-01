@@ -145,6 +145,7 @@ class NetworkingHelperExtension extends AbstractExtension
             new TwigFunction('get_media_by_id', $this->getMediaById(...), ['is_safe' => ['html']]),
             new TwigFunction('get_content_type_name', $this->getContentTypeName(...), ['is_safe' => ['html']]),
             new TwigFunction('get_content_type_icon', $this->getContentTypeIcon(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_content_template', $this->getContentTemplate(...)),
             new TwigFunction('ckeditor_is_rendered', $this->ckeditorIsRendered(...)),
             new TwigFunction('content_css', $this->getContentCss(...)),
             new TwigFunction('get_file_icon', $this->getFileIcon(...)),
@@ -179,7 +180,19 @@ class NetworkingHelperExtension extends AbstractExtension
     {
         $adminContent = $layoutBlock->getAdminContent();
 
-        return $this->templating->render($adminContent['template'], $adminContent['content']);
+        $template = $this->getContentTemplate($layoutBlock, null);
+
+        $content = ['layoutBlock' => $layoutBlock, 'is_admin' => true];
+
+        if(array_key_exists('template', $adminContent)){
+            $template = $adminContent['template'];
+        }
+
+        if(array_key_exists('content', $adminContent)){
+            $content = array_merge($content, $adminContent['content']);
+        }
+
+        return $this->templating->render($template, $content);
     }
 
     public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
@@ -213,6 +226,17 @@ class NetworkingHelperExtension extends AbstractExtension
                 return $contentType['icon'];
             }
         }
+    }
+
+    public function getContentTemplate(LayoutBlockInterface $layoutBlock, ?string $fallback = null)
+    {
+        foreach ($this->contentTypes as $contentType) {
+            if ($contentType['class'] === $layoutBlock::class) {
+                return $contentType['default_template'];
+            }
+        }
+
+        return $layoutBlock->getTemplate()??$fallback;
     }
 
     /**
