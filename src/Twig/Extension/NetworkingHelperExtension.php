@@ -165,10 +165,11 @@ class NetworkingHelperExtension extends AbstractExtension
     public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = [])
     {
         $options = $layoutBlock->getTemplateOptions($params);
+        $context =  ['layoutBlock' => $layoutBlock, ...$params,  ...$options];
 
-        $options = array_merge($options, $params);
+        dump($context);
 
-        return $this->templating->render($template, $options);
+        return $this->templating->render($template, $context);
     }
 
     /**
