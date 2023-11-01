@@ -25,7 +25,7 @@ use Networking\InitCmsBundle\DependencyInjection\Compiler\OverrideServiceCompile
  */
 class NetworkingInitCmsBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
