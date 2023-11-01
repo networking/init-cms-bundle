@@ -29,6 +29,7 @@
     "add": "^2.0.6",
     "axios": "^0.26.1",
     "bazinga-translator": "^5.1.0",
+    "intl-messageformat": "^10.2.5",
     "bootstrap": "5",
     "file-loader": "^6.0.0",
     "fos-router": "../../friendsofsymfony/jsrouting-bundle/Resources/",
