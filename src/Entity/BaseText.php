@@ -99,18 +99,6 @@ abstract class BaseText extends LayoutBlock implements ContentInterface, TextInt
         return $this;
     }
 
-
-
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    public function getTemplateOptions($params = []): array
-    {
-        return ['text' => $this->getText()];
-    }
-
     /**
      * @return string
      */
@@ -128,9 +116,23 @@ abstract class BaseText extends LayoutBlock implements ContentInterface, TextInt
     public function getAdminContent(): array
     {
         return [
-            'content' => ['text' => $this],
+            'content' => ['text' => $this->getText()],
             'template' => '@NetworkingInitCms/Text/admin_text_block.html.twig',
         ];
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    public function getTemplateOptions($params = []): array
+    {
+        return ['text' => $this->getText()];
+    }
+
+    public function getTemplate() : ?string{
+        return '@NetworkingInitCms/Text/frontend_text_block.html.twig';
     }
 
     /**

@@ -353,4 +353,11 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
         $this->updatedAt = $published['updatedAt'];
         $this->snapshotContent = $published['snapshotContent'];
     }
+
+    public function getTemplate(): ?string
+    {
+        $adminContent = $this->getAdminContent();
+
+        return array_key_exists('template', $adminContent)?$adminContent['template']:null;
+    }
 }
