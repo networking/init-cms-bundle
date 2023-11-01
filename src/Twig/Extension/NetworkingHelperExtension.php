@@ -167,8 +167,6 @@ class NetworkingHelperExtension extends AbstractExtension
         $options = $layoutBlock->getTemplateOptions($params);
         $context =  ['layoutBlock' => $layoutBlock, ...$params,  ...$options];
 
-        dump($context);
-
         return $this->templating->render($template, $context);
     }
 
