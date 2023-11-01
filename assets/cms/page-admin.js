@@ -47,12 +47,13 @@ function initDropZone() {
 
                 hideContainerErrors()
 
-                if(evt.newIndex === evt.oldIndex){
+                if(evt.newIndex === evt.oldIndex && evt.to.id === evt.from.id){
                     return
                 }
 
+                console.log(evt)
                 saveLayoutBlockSort(evt, (response) => {
-                   // CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
+                   CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
                 })
             },
             onAdd: function (/**CustomEvent*/evt, dragEl) {
@@ -67,10 +68,7 @@ function initDropZone() {
                         .then((response) => {
 
                             item.outerHTML = response.data.html
-                            CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
-                            saveLayoutBlockSort(evt, (response) => {
-                                CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
-                            })
+                            saveLayoutBlockSort(evt)
                             document.querySelector('#layoutBlock_' + response.data.layoutBlockId + '  .create_block').click()
 
 
@@ -507,11 +505,7 @@ let deleteBlock = (e) => {
                     container.querySelector('.empty_layout_block').classList.add("d-none")
                     return
                 }
-
                 container.querySelector('.empty_layout_block').classList.remove("d-none")
-
-
-
             }).catch((err) => {
 
                 console.log(err)

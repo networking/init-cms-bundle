@@ -149,7 +149,7 @@ class LayoutBlockController extends CRUDController
         return new JsonResponse(
             [
                 'status' => $status === 200? 'success':'error',
-                'message' => $this->translate('message.layout_block_error', [],  'PageAdmin'),
+                'message' => $this->translate('message.layout_block_'.$status, [],  'PageAdmin'),
                 'html' => $html
             ],
             $status
