@@ -128,7 +128,7 @@ abstract class BaseText extends LayoutBlock implements ContentInterface, TextInt
      */
     public function getTemplateOptions($params = []): array
     {
-        return ['text' => $this->getText()];
+        return [];
     }
 
     public function getTemplate() : ?string{
