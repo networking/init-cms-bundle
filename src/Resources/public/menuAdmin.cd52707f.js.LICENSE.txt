@@ -52,23 +52,29 @@
 			*/
 
 /*!
+  * Bootstrap v5.3.2 (https://getbootstrap.com/)
+  * Copyright 2011-2023 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+  */
+
+/*!
  * if using jslint please allow for the jQuery global and use following options:
  * jslint: loopfunc: true, browser: true, ass: true, bitwise: true, continue: true, nomen: true, plusplus: true, regexp: true, unparam: true, todo: true, white: true
  */
 
 /*!
- * jQuery JavaScript Library v3.7.0
+ * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
  *
  * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2023-05-11T18:29Z
+ * Date: 2023-08-28T13:37Z
  */
 
 /*!
- * jsTree 3.3.15
+ * jsTree 3.3.16
  * http://jstree.com/
  *
  * Copyright (c) 2014 Ivan Bozhanov (http://vakata.com)
@@ -77,19 +83,15 @@
  *   http://www.opensource.org/licenses/mit-license.php
  */
 
-/*! ./cms-admin */
-
-/*! glightbox */
-
-/*! intl-messageformat */
+/*! bootstrap */
 
 /*! jquery */
 
 /*! jstree */
 
-/*!***********************************!*\
-  !*** ./assets/cms/media-admin.js ***!
-  \***********************************/
+/*!**********************************!*\
+  !*** ./assets/cms/menu-admin.js ***!
+  \**********************************/
 
 /*!********************************************!*\
   !*** ./node_modules/jquery/dist/jquery.js ***!
@@ -99,38 +101,6 @@
   !*** ./node_modules/jstree/dist/jstree.js ***!
   \********************************************/
 
-/*!*********************************************!*\
-  !*** ./assets/cms/cms-admin.js + 8 modules ***!
-  \*********************************************/
-
-/*!*************************************************!*\
-  !*** ./node_modules/select2/dist/js/select2.js ***!
-  \*************************************************/
-
-/*!*****************************************************!*\
-  !*** ./node_modules/fos-router/public/js/router.js ***!
-  \*****************************************************/
-
-/*!*********************************************************!*\
-  !*** ./node_modules/glightbox/dist/js/glightbox.min.js ***!
-  \*********************************************************/
-
-/*!**********************************************************!*\
-  !*** ./node_modules/bazinga-translator/js/translator.js ***!
-  \**********************************************************/
-
-/*!*******************************************************************!*\
-  !*** ./node_modules/intl-messageformat/lib/index.js + 15 modules ***!
-  \*******************************************************************/
-
-/**
- * @author William DURAND <william.durand1@gmail.com>
- * @license MIT Licensed
- */
-
-/**!
- * Sortable 1.15.0
- * @author	RubaXa   <trash@rubaxa.org>
- * @author	owenm    <owen23355@gmail.com>
- * @license MIT
- */
+/*!**********************************************************************!*\
+  !*** ./node_modules/bootstrap/dist/js/bootstrap.esm.js + 55 modules ***!
+  \**********************************************************************/

@@ -57,7 +57,7 @@ let KTSigninTwoFactor = function() {
 
             let validated = true;
 
-            let inputs = [].slice.call(form.querySelectorAll('input[maxlength="1"]'));
+            let inputs = [].slice.call(form.querySelectorAll('[data-inputmask]'));
             inputs.map(function (input) {
                 if (input.value === '' || input.value.length === 0) {
                     validated = false;
