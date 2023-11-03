@@ -26,6 +26,7 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Sonata\Form\Type\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -129,6 +130,7 @@ class NetworkingHelperExtension extends AbstractExtension
     {
         return [
             new TwigFunction('render_initcms_block', $this->renderInitCmsBlock(...), ['is_safe' => ['html']]),
+            new TwigFunction('render_layout_block', $this->renderLayoutBlock(...), ['is_safe' => ['html']]),
             new TwigFunction('get_initcms_template_zones', $this->getInitCmsTemplateZones(...), ['is_safe' => ['html']]),
             new TwigFunction('render_initcms_field_as_string', $this->renderInitcmsFieldAsString(...), ['is_safe' => ['html']]),
             new TwigFunction('get_form_field_zone', $this->getFormFieldZone(...), ['is_safe' => ['html']]),
@@ -166,7 +168,26 @@ class NetworkingHelperExtension extends AbstractExtension
     public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = [])
     {
         $options = $layoutBlock->getTemplateOptions($params);
-        $context =  ['layoutBlock' => $layoutBlock, ...$params,  ...$options];
+        $context = ['layoutBlock' => $layoutBlock, ...$params,  ...$options];
+
+        return $this->templating->render($template, $context);
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return string
+     *
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function renderLayoutBlock(LayoutBlockInterface $layoutBlock, $fallbackTemplate = null, $params = [])
+    {
+        $template = $this->getContentTemplate($layoutBlock, $fallbackTemplate);
+
+        $options = $layoutBlock->getTemplateOptions($params);
+        $context = ['layoutBlock' => $layoutBlock, ...$params,  ...$options];
 
         return $this->templating->render($template, $context);
     }
@@ -184,11 +205,11 @@ class NetworkingHelperExtension extends AbstractExtension
 
         $content = ['layoutBlock' => $layoutBlock, 'is_admin' => true];
 
-        if(array_key_exists('template', $adminContent)){
+        if (array_key_exists('template', $adminContent)) {
             $template = $adminContent['template'];
         }
 
-        if(array_key_exists('content', $adminContent)){
+        if (array_key_exists('content', $adminContent)) {
             $content = array_merge($content, $adminContent['content']);
         }
 
@@ -219,16 +240,18 @@ class NetworkingHelperExtension extends AbstractExtension
         return $this->translator->trans($name);
     }
 
-    public function getContentTypeIcon($class)
+    public function getContentTypeIcon($class): ?string
     {
         foreach ($this->contentTypes as $contentType) {
             if ($contentType['class'] === $class) {
                 return $contentType['icon'];
             }
         }
+
+        return null;
     }
 
-    public function getContentTemplate(LayoutBlockInterface $layoutBlock, ?string $fallback = null)
+    public function getContentTemplate(LayoutBlockInterface $layoutBlock, string $fallback = null): ?string
     {
         foreach ($this->contentTypes as $contentType) {
             if ($contentType['class'] === $layoutBlock::class) {
@@ -236,13 +259,10 @@ class NetworkingHelperExtension extends AbstractExtension
             }
         }
 
-        return $layoutBlock->getTemplate()??$fallback;
+        return $layoutBlock->getTemplate() ?? $fallback;
     }
 
-    /**
-     * @param string $adminCode
-     */
-    public function renderAdminSubNav(AdminInterface $admin, $adminCode = ''): bool|\Knp\Menu\ItemInterface
+    public function renderAdminSubNav(AdminInterface $admin, string $adminCode = ''): bool|\Knp\Menu\ItemInterface
     {
         $menu = false;
 
@@ -326,10 +346,10 @@ class NetworkingHelperExtension extends AbstractExtension
         $zones = $this->templates[$template]['zones'];
 
         foreach ($zones as $key => $zone) {
-//            $temp = array_map($this->jsString(...), $zone['restricted_types']);
-//            $test = '['.implode(',', $temp).']';
-//
-//            dump($test);
+            //            $temp = array_map($this->jsString(...), $zone['restricted_types']);
+            //            $test = '['.implode(',', $temp).']';
+            //
+            //            dump($test);
 
             $zones[$key]['restricted_types'] = json_encode($zone['restricted_types'], JSON_THROW_ON_ERROR);
         }
@@ -637,9 +657,10 @@ class NetworkingHelperExtension extends AbstractExtension
 
     public function jsonDecode($value): ?array
     {
-        if(!$value){
+        if (!$value) {
             return null;
         }
+
         return json_decode((string) $value);
     }
 
@@ -656,7 +677,7 @@ class NetworkingHelperExtension extends AbstractExtension
         FormView $formView,
         $translationDomain = null
     ) {
-        /** @var $fieldDescription \Sonata\DoctrineORMAdminBundle\Admin\FieldDescription */
+        /** @var $fieldDescription FieldDescriptionInterface */
         $fieldDescription = $formView->vars['sonata_admin']['field_description'];
         $value = '';
 
