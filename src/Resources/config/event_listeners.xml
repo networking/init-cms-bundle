@@ -20,7 +20,7 @@
         </service>
 
         <service id="Networking\InitCmsBundle\EventListener\LocaleListener">
-            <argument key="$accessMap" type="service" id="security.access_map"/>
+            <argument key="$firewallMap" type="service" id="security.firewall.map"/>
             <argument key="$availableLanguages">%networking_init_cms.page.languages%</argument>
             <argument key="$defaultLocale">%kernel.default_locale%</argument>
             <argument key="$allowLocaleCookie">%networking_init_cms.allow_locale_cookie%</argument>
