@@ -78,7 +78,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     protected $updatedAt;
 
 
-    protected string $classType;
+    protected string $classType = '';
 
 
     public function __clone(): void

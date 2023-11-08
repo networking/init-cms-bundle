@@ -76,7 +76,7 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
             return $this->pageManager->find($data);
         }
 
-        if (!$context[self::DESERIALIZE_TRANSLATIONS]) {
+        if (!array_key_exists(self::DESERIALIZE_TRANSLATIONS, $context) || $context[self::DESERIALIZE_TRANSLATIONS]) {
             $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'translations';
         }
 
