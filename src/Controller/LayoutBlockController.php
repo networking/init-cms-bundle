@@ -227,7 +227,7 @@ class LayoutBlockController extends CRUDController
                 $this->admin->update($layoutBlock);
 
                 $adminContent = $layoutBlock->getAdminContent();
-                $html = $this->renderView($adminContent['template'], $adminContent['content']);
+                $html = $this->renderView('@NetworkingInitCms/PageAdmin/admin_layout_block.html.twig', ['layout_block' => $layoutBlock]);
 
 
                 return new JsonResponse(
