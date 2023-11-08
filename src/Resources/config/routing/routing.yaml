@@ -2,12 +2,6 @@ NetworkingInitCmsBundle:
     resource: "@NetworkingInitCmsBundle/Resources/config/routing/cms.yaml"
     prefix:   /
 
-# Lexik Translation bundle
-
-lexik_translation_edition:
-    resource: "@LexikTranslationBundle/Resources/config/routing.yml"
-    prefix:   /translation
-
 # FOS Bundles
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
