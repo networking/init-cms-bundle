@@ -2,13 +2,6 @@ NetworkingInitCmsBundle:
     resource: "@NetworkingInitCmsBundle/Resources/config/routing/cms.yaml"
     prefix:   /
 
-# Lexik Translation bundle
-
-lexik_translation_edition:
-    resource: "@LexikTranslationBundle/Resources/config/routing.yml"
-    prefix:   /translation
-
-
 # Sonata-project Bundles
 admin:
     resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'

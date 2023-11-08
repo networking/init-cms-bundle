@@ -1,8 +1,9 @@
+.idea
+.DS_Store
 /vendor
 composer.phar
 phpunit.xml
 composer.lock
-.DS_Store
 php-cs-fixer.phar
 
 /node_modules
