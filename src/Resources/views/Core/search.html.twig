@@ -32,53 +32,58 @@ file that was distributed with this source code.
 
                 {% if display %}
                     {% for admin in group.items %}
-                        {% if admins is same as(null) or admin.code in admins %}
-                        {% set count = count + 1 %}
-                        {% if admin.hasRoute('create') and admin.hasAccess('create') or admin.hasRoute('list') and admin.hasAccess('list') %}
-                            {{ sonata_block_render({
-                                'type': 'sonata.admin.block.search_result'
-                            }, {
-                                'query': query,
-                                'admin_code': admin.code,
-                                'page': 0,
-                                'per_page': 50,
-                                'icon': group.icon
-                            }) }}
-                        {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-
-            {% else %}
-
-
-        <div class="grid grid-2-column" data-masonry='{ "itemSelector": ".search-box-item" }'>
-            {% for group in groups %}
-                {% set display = group.roles is empty or is_granted(sonata_config.getOption('role_super_admin')) or group.roles|filter(role => is_granted(role))|length > 0 %}
-
-                {% if display %}
-                    {% for admin in group.items %}
-
-                        {% if admins is same as(null) or admin.code in admins %}
-                        {% set count = count + 1 %}
-                        {% if admin.hasRoute('create') and admin.hasAccess('create') or admin.hasRoute('list') and admin.hasAccess('list') %}
-                            {{ sonata_block_render({
-                                'type': 'sonata.admin.block.search_result'
-                            }, {
-                                'query': query,
-                                'admin_code': admin.code,
-                                'page': 0,
-                                'per_page': 50,
-                                'icon': group.icon
-                            }) }}
-                        {% endif %}
-
+                        {% if admins is same as(null) or admins is empty or admin.code in admins %}
+                            {% set count = count + 1 %}
+                            {% if admin.hasRoute('create') and admin.hasAccess('create') or admin.hasRoute('list') and admin.hasAccess('list') %}
+                                {{ sonata_block_render({
+                                    'type': 'sonata.admin.block.search_result'
+                                }, {
+                                    'query': query,
+                                    'admin_code': admin.code,
+                                    'page': 0,
+                                    'per_page': 50,
+                                    'icon': group.icon
+                                }) }}
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 {% endif %}
             {% endfor %}
-        </div>
+
+        {% else %}
+
+
+
+            <div class="grid grid-2-column" data-masonry='{ "itemSelector": ".search-box-item" }'>
+
+                {% for group in groups %}
+
+                    {% set display = group.roles is empty or is_granted(sonata_config.getOption('role_super_admin')) or group.roles|filter(role => is_granted(role))|length > 0 %}
+
+                    {% if display %}
+                        {% for admin in group.items %}
+
+                            {% if admins is same as(null) or admins is empty or admin.code in admins %}
+                                {% set count = count + 1 %}
+
+                                {% if admin.hasRoute('create') and admin.hasAccess('create') or admin.hasRoute('list') and admin.hasAccess('list') %}
+
+                                    {{ sonata_block_render({
+                                        'type': 'sonata.admin.block.search_result'
+                                    }, {
+                                        'query': query,
+                                        'admin_code': admin.code,
+                                        'page': 0,
+                                        'per_page': 50,
+                                        'icon': group.icon
+                                    }) }}
+                                {% endif %}
+
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
         {% endif %}
     {% endif %}
 
