@@ -18,7 +18,7 @@ file that was distributed with this source code.
     {% set results_count = pager ? pager.countResults() : 0 %}
     {% set has_results = results_count > 0 %}
     {% set current_page_results = has_results ? pager.currentPageResults : [] %}
-    {% set visibility_class = (has_results ? 'd-flex w-auto' : 'opacity-2') %}
+    {% set visibility_class = (has_results ? 'd-flex w-auto' : 'opacity-50') %}
     {% if app.request.xmlHttpRequest %}
         {% if has_results %}
             <i class="{{ settings.icon }} me-1"></i>
