@@ -138,6 +138,10 @@ file that was distributed with this source code.
             {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
         {%- endif -%}
     {%- endif -%}
+    {% set row_class = row_attr.class|default('mb-3') %}
+    {% if 'form-floating' in row_class %}
+    {{ required|default(false) ? ' *' : '' }}
+    {% endif %}
 {%- endblock form_label_content -%}
 
 {%- block button_label -%}{%- endblock -%}
