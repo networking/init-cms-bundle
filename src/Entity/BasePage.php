@@ -121,8 +121,6 @@ abstract class BasePage implements PageInterface
 
     /**
      * @var Collection<int, PageInterface>
-     *
-     * @phpstan-var Collection<int, T>
      */
     protected Collection|array $translations;
 
@@ -588,7 +586,7 @@ abstract class BasePage implements PageInterface
     public function setMenuItem(MenuItemInterface $menuItem): self
     {
         $menuItem->setPage($this);
-        $this->menuItem = $menuItem;
+        $this->menuItem->add($menuItem);
 
         return $this;
     }
@@ -883,16 +881,12 @@ abstract class BasePage implements PageInterface
 
     public function getTemplateName(): ?string
     {
-        if (!$this->contentRoute) {
-            return null;
-        }
-
-        return $this->getContentRoute()->getTemplateName();
+        return $this->getContentRoute()?->getTemplateName();
     }
 
     public function getFullPath(): ?string
     {
-        return $this->getContentRoute()?->getPath() ?? null;
+        return $this->getContentRoute()?->getPath();
     }
 
     public function setAliasFullPath(?string $aliasFullPath): self
@@ -921,9 +915,7 @@ abstract class BasePage implements PageInterface
 
         $this->buildAllTranslations($translationsArray);
 
-        $allTranslations = new ArrayCollection($translationsArray);
-
-        return $allTranslations;
+        return new ArrayCollection($translationsArray);
     }
 
     public function buildAllTranslations(array &$translationsArray): void
@@ -955,13 +947,11 @@ abstract class BasePage implements PageInterface
 
     public static function getStatusList(): array
     {
-        $status = [
+        return [
             'status_draft' => self::STATUS_DRAFT,
             'status_review' => self::STATUS_REVIEW,
             'status_published' => self::STATUS_PUBLISHED,
         ];
-
-        return $status;
     }
 
     public static function getVisibilityList(): array
@@ -1053,11 +1043,11 @@ abstract class BasePage implements PageInterface
         return $children;
     }
 
-    public function convertTranslationsToIntegerArray(): array
+    public function convertTranslationsToArray(): array
     {
         $translations = [];
 
-        foreach ($this->translations as $translation) {
+        foreach ($this->getAllTranslations() as $translation) {
             $translations[] = [
                 'locale' => $translation->getLocale(),
                 'id' => $translation->getId(),
@@ -1071,7 +1061,7 @@ abstract class BasePage implements PageInterface
         return $translations;
     }
 
-    public function convertOriginalsToIntegerArray(): array
+    public function convertOriginalsToArray(): array
     {
         $originals = [];
 

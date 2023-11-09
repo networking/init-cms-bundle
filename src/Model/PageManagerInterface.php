@@ -23,6 +23,9 @@ use Symfony\Component\Serializer\SerializerInterface;
  * Class PageManagerInterface.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
+ * @method PageInterface|null find($id)
+ * @method PageInterface|null findOneBy(array $criteria)
+ * @method PageInterface[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInterface, ObjectRepository
 {
