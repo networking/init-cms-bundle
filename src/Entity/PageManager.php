@@ -25,15 +25,13 @@ use Doctrine\ORM\TransactionRequiredException;
 use Gedmo\Tool\Wrapper\EntityWrapper;
 use Gedmo\Tree\Entity\Repository\AbstractTreeRepository;
 use Gedmo\Tree\Strategy;
-use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
-use ReflectionClass;
-use ReflectionException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class PageManager.
@@ -46,12 +44,8 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
     public $deserializedEntities = [];
 
-
     /**
      * PageManager constructor.
-     *
-     * @param EntityManagerInterface $om
-     * @param                        $class
      */
     public function __construct(EntityManagerInterface $om, $class)
     {
@@ -64,8 +58,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
     /**
      * @param string $id
-     *
-     * @return object
      */
     public function findById($id): ?object
     {
@@ -73,7 +65,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param      $locale
      * @param null $id
      * @param bool $showHome
      * @param bool $showChildren
@@ -96,7 +87,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
                 $page = $this->findById($id);
                 $collection = new ArrayCollection($page->getAllChildren());
                 $childrenIds = $collection->map(
-                    fn(PageInterface $p) => $p->getId()
+                    fn (PageInterface $p) => $p->getId()
                 );
 
                 if ($childrenIds->count()) {
@@ -117,7 +108,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param      $locale
      * @param null $id
      */
     public function getParentPagesChoices($locale, $id = null): mixed
@@ -128,7 +118,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param        $sort
      * @param string $order
      * @param int    $hydrationMode
      */
@@ -143,7 +132,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param        $sort
      * @param string $order
      */
     public function getAllSortByQuery($sort, $order = 'DESC'): Query
@@ -180,84 +168,74 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         return $content->getId();
     }
 
-    public function revertToPublished(PageInterface $page, $serializer){
-        return $this->cancelDraft($page, $serializer);
+    public function revertToPublished(PageInterface $draftPage, $serializer)
+    {
+        return $this->cancelDraft($draftPage, $serializer);
     }
 
-    public function cancelDraft(PageInterface $page, \Symfony\Component\Serializer\SerializerInterface $serializer)
+    public function cancelDraft(PageInterface $page, SerializerInterface $serializer)
     {
-        $currentLayoutBlocks = $page->getLayoutBlocks();
         $pageSnapshot = $page->getSnapshot();
-        $contentRoute = $page->getContentRoute();
         $pageManager = $this;
         $context = [
             AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE => true,
-            AbstractObjectNormalizer::OBJECT_TO_POPULATE => $page,
+            AbstractNormalizer::OBJECT_TO_POPULATE => $page,
             AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES => true,
             AbstractNormalizer::CALLBACKS => [
-                'translations' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): array {
+                'translations' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use ($pageManager): array {
                     $translations = [];
-                    foreach ($innerObject as $key => $page){
+                    foreach ($innerObject as $key => $page) {
                         $translations[$key] = $pageManager->findById(
                             $page->getId()
                         );
                         $page->setTranslations($translations);
                     }
-                    return  $translations ;
-                },
-                'original' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): ?PageInterface {
-                    return $innerObject ? $pageManager->findById(
-                        $innerObject
-                    ):null;
-                },
-                'alias' => function ( $innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use($pageManager): ?PageInterface {
-                    return $innerObject ? $pageManager->findById(
-                        $innerObject
-                    ):null;
-                },
 
+                    return $translations;
+                },
+                'original' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use ($pageManager): ?PageInterface {
+                    return $innerObject ? $pageManager->findById(
+                        $innerObject
+                    ) : null;
+                },
+                'alias' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use ($pageManager): ?PageInterface {
+                    return $innerObject ? $pageManager->findById(
+                        $innerObject
+                    ) : null;
+                },
             ],
             AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true,
         ];
         $page = $serializer->deserialize($pageSnapshot->getVersionedData(), $page::class, 'json', $context);
 
-
         foreach ($page->getLayoutBlocks() as $layoutBlock) {
-
-            if(!$layoutBlock->getId()){
+            if (!$layoutBlock->getId()) {
                 $this->resetContent($layoutBlock);
             }
             $this->_em->persist($layoutBlock);
-
         }
-
 
         $this->_em->persist($page);
 
         $this->_em->flush();
-//
+
         return $page;
     }
 
-
-
-
     /**
-     *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function resetContent(LayoutBlock $layoutBlock): LayoutBlock
     {
-        $reflection = new ReflectionClass($layoutBlock);
+        $reflection = new \ReflectionClass($layoutBlock);
 
         $layoutBlockProperties = $reflection->getProperties();
 
-        $genericProperties = new ReflectionClass(LayoutBlock::class);
+        $genericProperties = new \ReflectionClass(LayoutBlock::class);
         foreach ($layoutBlockProperties as $property) {
-
-            if(!$genericProperties->hasProperty($property->getName())){
+            if (!$genericProperties->hasProperty($property->getName())) {
                 $this->revertObject($layoutBlock, $property);
             }
         }
@@ -266,32 +244,26 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param $object
-     * @param $var
-     * @param $property
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws TransactionRequiredException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function revertObject($object, \ReflectionProperty $property): mixed
     {
-
-        $reflection = new ReflectionClass($object);
+        $reflection = new \ReflectionClass($object);
 
         if ($reflection->implementsInterface(IgnoreRevertInterface::class)) {
             return $object;
         }
 
-        $method = sprintf('get%s', ucfirst((string)$property->getName()));
+        $method = sprintf('get%s', ucfirst((string) $property->getName()));
 
         if (!$reflection->hasMethod($method)) {
             return $object;
         }
 
         $var = $object->{$method}();
-
 
         if ($var instanceof Collection) {
             if ($var->count() < 1) {
@@ -300,33 +272,27 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
             $newCollection = [];
             foreach ($var as $v) {
-
                 $newVar = $this->revertObjectVars($object, $v);
                 $newCollection[] = $newVar;
             }
 
-            $method = sprintf('set%s', ucfirst((string)$property->getName()));
-            $reflection = new ReflectionClass($object);
+            $method = sprintf('set%s', ucfirst((string) $property->getName()));
+            $reflection = new \ReflectionClass($object);
 
             $persistentCollection = new PersistentCollection($this->_em, $property->class, new ArrayCollection($newCollection));
 
             if ($reflection->hasMethod($method)) {
-
                 $object->{$method}($persistentCollection);
             }
-
 
             return $object;
         }
 
-
         if (is_object($var) && $this->_em->getMetadataFactory()->hasMetadataFor($var::class)
         ) {
-
             $var = $this->revertObjectVars($object, $var);
 
-
-            $method = sprintf('set%s', ucfirst((string)$property->getName()));
+            $method = sprintf('set%s', ucfirst((string) $property->getName()));
             if ($reflection->hasMethod($method)) {
                 $object->{$method}($var);
             }
@@ -335,7 +301,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             return $object;
         }
 
-        $method = sprintf('set%s', ucfirst((string)$property->getName()));
+        $method = sprintf('set%s', ucfirst((string) $property->getName()));
         if ($reflection->hasMethod($method)) {
             $object->{$method}($var);
         }
@@ -344,38 +310,31 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * @param $parent
-     * @param $oldObject
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws TransactionRequiredException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function revertObjectVars($parent, $oldObject): ?object
     {
-
-
-        $reflection = new ReflectionClass($oldObject);
+        $reflection = new \ReflectionClass($oldObject);
 
         if ($reflection->implementsInterface(IgnoreRevertInterface::class)) {
             return $oldObject;
         }
 
-        if($oldObject->getId()){
+        if ($oldObject->getId()) {
             $object = $this->_em
                 ->getRepository($reflection->getName())
                 ->findOneBy(['id' => $oldObject->getId()]);
-
         }
-
 
         if (!$object) {
             $object = clone $oldObject;
         }
 
         if (array_key_exists($object::class, $this->deserializedEntities)) {
-            if (array_key_exists(  $object->getId(), $this->deserializedEntities[$object::class] ) ) {
+            if (array_key_exists($object->getId(), $this->deserializedEntities[$object::class])) {
                 return $this->deserializedEntities[$object::class][$object->getId(
                 )];
             }
@@ -385,27 +344,22 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             $method = sprintf('get%s', ucfirst($reflectionProperty->getName()));
             if ($reflection->hasMethod($method)) {
                 $val = $object->{$method}();
-                /** Prevent Recursive loop */
-
+                /* Prevent Recursive loop */
 
                 if ($val !== $parent) {
                     $object = $this->revertObject($object, $reflectionProperty);
-                    if($val instanceof PersistentCollection){
+                    if ($val instanceof PersistentCollection) {
                         dump($reflectionProperty->getName());
                         dump($object->{$method}());
                     }
                 }
-
-
             }
         }
 
         $this->deserializedEntities[$object::class][$object->getId()] = $object;
 
-
         return $object;
     }
-
 
     public function save(PageInterface $page): mixed
     {
@@ -423,7 +377,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * Get tree query builder
+     * Get tree query builder.
      *
      * @param object $rootNode
      */
@@ -439,7 +393,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * Get tree query
+     * Get tree query.
      *
      * @param object $rootNode
      */
@@ -449,7 +403,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * Get tree
+     * Get tree.
      *
      * @param object $rootNode
      *
@@ -486,7 +440,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * Get the Tree path query builder by given $node
+     * Get the Tree path query builder by given $node.
      *
      * @param object $node
      */
@@ -505,11 +459,11 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $node = new EntityWrapper($node, $this->_em);
         $nodePath = $node->getPropertyValue($config['path']);
         $paths = [];
-        $nodePathLength = strlen((string)$nodePath);
+        $nodePathLength = strlen((string) $nodePath);
         $separatorMatchOffset = 0;
         while ($separatorMatchOffset < $nodePathLength) {
             $separatorPos = strpos(
-                (string)$nodePath,
+                (string) $nodePath,
                 $config['path_separator'],
                 $separatorMatchOffset
             );
@@ -526,7 +480,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             } else {
                 // add node
                 $paths[] = substr(
-                    (string)$nodePath,
+                    (string) $nodePath,
                     0,
                     $config['path_ends_with_separator'] ? $separatorPos + 1
                         : $separatorPos
@@ -546,7 +500,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * Get the Tree path query by given $node
+     * Get the Tree path query by given $node.
      *
      * @param object $node
      */
@@ -556,7 +510,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
     }
 
     /**
-     * Get the Tree path of Nodes by given $node
+     * Get the Tree path of Nodes by given $node.
      *
      * @param object $node
      *
@@ -755,9 +709,9 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         )->getArrayResult();
         usort(
             $nodes,
-            static fn($a, $b): int => strcmp(
-                (string)$a[$path],
-                (string)$b[$path]
+            static fn ($a, $b): int => strcmp(
+                (string) $a[$path],
+                (string) $b[$path]
             )
         );
 

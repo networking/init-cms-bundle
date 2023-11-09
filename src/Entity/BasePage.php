@@ -14,11 +14,9 @@ namespace Networking\InitCmsBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Sluggable\Util\Urlizer;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Networking\InitCmsBundle\Entity\PageSnapshot;
+use Gedmo\Sluggable\Util\Urlizer;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
-use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Networking\InitCmsBundle\Model\MenuItemInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -26,7 +24,6 @@ use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Serializer\Annotation\Ignore;
-
 
 /**
  * Networking\InitCmsBundle\Entity\BasePage.
@@ -64,7 +61,7 @@ abstract class BasePage implements PageInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $url = null;
 
-    #[Gedmo\TreePath(separator: "/")]
+    #[Gedmo\TreePath(separator: '/')]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $path = null;
 
@@ -81,7 +78,7 @@ abstract class BasePage implements PageInterface
     protected PageInterface|int|null $parent = null;
 
     /**
-    * @var array<int, PageInterface>
+     * @var array<int, PageInterface>
      */
     #[Ignore]
     protected array $parents = [];
@@ -153,7 +150,6 @@ abstract class BasePage implements PageInterface
     #[Ignore]
     protected ?string $oldTitle = null;
 
-
     public function __construct()
     {
         $this->translations = new ArrayCollection();
@@ -161,8 +157,6 @@ abstract class BasePage implements PageInterface
         $this->layoutBlocks = new ArrayCollection();
         $this->menuItem = new ArrayCollection();
         $this->children = new ArrayCollection();
-
-
     }
 
     #[ORM\PrePersist()]
@@ -186,14 +180,12 @@ abstract class BasePage implements PageInterface
         return $this->id;
     }
 
-
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
-
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -291,8 +283,6 @@ abstract class BasePage implements PageInterface
     }
 
     /**
-     * @param $level
-     *
      * @return PageInterface|null
      */
     public function getParent(int $level = -1): PageInterface|int|null
@@ -353,8 +343,6 @@ abstract class BasePage implements PageInterface
     }
 
     /**
-     * @param PageInterface $children
-     *
      * @return $this
      */
     public function addChildren(PageInterface $children): self
@@ -378,11 +366,6 @@ abstract class BasePage implements PageInterface
         return $this;
     }
 
-    /**
-     * @param array $children
-     *
-     * @return array
-     */
     public function getAllChildren(array &$children = []): array
     {
         if (!$this->allChildren && $this->getChildren()) {
@@ -439,7 +422,6 @@ abstract class BasePage implements PageInterface
      */
     public function setVisibility(string $visibility): self
     {
-
         if (!in_array(
             $visibility,
             [self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC]
@@ -459,22 +441,22 @@ abstract class BasePage implements PageInterface
 
     public function isDraft(): bool
     {
-        return $this->status === self::STATUS_DRAFT;
+        return self::STATUS_DRAFT === $this->status;
     }
 
     public function isReview(): bool
     {
-        return $this->status === self::STATUS_REVIEW;
+        return self::STATUS_REVIEW === $this->status;
     }
 
     public function isPublished(): bool
     {
-        return $this->status === self::STATUS_PUBLISHED;
+        return self::STATUS_PUBLISHED === $this->status;
     }
 
     public function isOffline(): bool
     {
-        return $this->status == self::STATUS_OFFLINE;
+        return self::STATUS_OFFLINE == $this->status;
     }
 
     public function isActive(): bool
@@ -484,7 +466,7 @@ abstract class BasePage implements PageInterface
         if ($now->getTimestamp() >= $this->getActiveStart()->getTimestamp()
             && $now->getTimestamp() <= $this->getActiveEnd()->getTimestamp()
         ) {
-            return $this->status == self::STATUS_PUBLISHED;
+            return self::STATUS_PUBLISHED == $this->status;
         }
 
         return false;
@@ -516,7 +498,6 @@ abstract class BasePage implements PageInterface
     {
         return $this->activeTo;
     }
-
 
     public function setActiveFrom(?\DateTimeInterface $activeFrom): self
     {
@@ -554,10 +535,9 @@ abstract class BasePage implements PageInterface
         return $this;
     }
 
-
     public function setLayoutBlocks($layoutBlocks): self
     {
-        if (gettype($layoutBlocks) == 'array') {
+        if ('array' == gettype($layoutBlocks)) {
             $layoutBlocks = new ArrayCollection($layoutBlocks);
         }
 
@@ -588,15 +568,12 @@ abstract class BasePage implements PageInterface
         return $a->getSortOrder() - $b->getSortOrder();
     }
 
-
-    public function getLayoutBlocks(?string $zone = null, $includingInactive = false): Collection|array
+    public function getLayoutBlocks(string $zone = null, $includingInactive = false): Collection|array
     {
         if (!is_null($zone)) {
-
             return $this->layoutBlocks->filter(
                 function (?LayoutBlockInterface $layoutBlock) use ($zone, $includingInactive) {
-
-                    if(is_null($layoutBlock)){
+                    if (is_null($layoutBlock)) {
                         return false;
                     }
 
@@ -682,7 +659,7 @@ abstract class BasePage implements PageInterface
 
     public function setOriginals(array $originals): self
     {
-        if (gettype($originals) == 'array') {
+        if ('array' == gettype($originals)) {
             $originals = new ArrayCollection($originals);
         }
 
@@ -693,7 +670,7 @@ abstract class BasePage implements PageInterface
 
     public function setOriginal(?PageInterface $page): self
     {
-        if(!$page){
+        if (!$page) {
             return $this;
         }
         $this->originals->add($page);
@@ -709,7 +686,7 @@ abstract class BasePage implements PageInterface
     #[Ignore]
     public function getOriginal(): ?PageInterface
     {
-        return $this->originals->first()?:null;
+        return $this->originals->first() ?: null;
     }
 
     public function isDirectTranslation(PageInterface $page): bool
@@ -765,7 +742,7 @@ abstract class BasePage implements PageInterface
 
     public function setTranslations(array|Collection $translations): self
     {
-        if (gettype($translations) == 'array') {
+        if ('array' == gettype($translations)) {
             $translations = new ArrayCollection($translations);
         }
 
@@ -808,7 +785,7 @@ abstract class BasePage implements PageInterface
 
     public function setUrl(?string $url)
     {
-        if(!$url){
+        if (!$url) {
             return;
         }
         $url = Urlizer::urlize($url);
@@ -828,13 +805,11 @@ abstract class BasePage implements PageInterface
     }
 
     /**
-     * @param $snapshots
-     *
      * @return $this
      */
     public function setSnapshots($snapshots): self
     {
-        if (gettype($snapshots) == 'array') {
+        if ('array' == gettype($snapshots)) {
             $snapshots = new ArrayCollection($snapshots);
         } elseif (!$snapshots instanceof ArrayCollection) {
             $snapshots = new ArrayCollection([$snapshots]);
@@ -863,7 +838,6 @@ abstract class BasePage implements PageInterface
 
     public function getRoute(): RouteObjectInterface
     {
-
         return ContentRouteManager::generateRoute(
             $this->contentRoute,
             $this->contentRoute->getPath(),
@@ -930,8 +904,7 @@ abstract class BasePage implements PageInterface
 
     public function getAliasFullPath(): ?string
     {
-
-        if($this->aliasFullPath){
+        if ($this->aliasFullPath) {
             return $this->aliasFullPath;
         }
 
@@ -953,20 +926,16 @@ abstract class BasePage implements PageInterface
         return $allTranslations;
     }
 
-
     public function buildAllTranslations(array &$translationsArray): void
     {
-
         // find all possible translations
         if ($this->getTranslations() && !$this->getTranslations()->isEmpty()) {
-
-
             foreach ($this->getTranslations() as $translation) {
-                if (array_key_exists( $translation->getLocale(), $translationsArray) ) {
+                if (array_key_exists($translation->getLocale(), $translationsArray)) {
                     return;
                 }
                 // if we already meet you stop and go on with the next
-                $translationsArray[$translation->getLocale()]  = $translation;
+                $translationsArray[$translation->getLocale()] = $translation;
                 $translation->buildAllTranslations($translationsArray);
             }
         }
@@ -975,7 +944,7 @@ abstract class BasePage implements PageInterface
         if ($this->getOriginals() && !$this->getOriginals()->isEmpty()) {
             foreach ($this->getOriginals() as $translation) {
                 // if we already meet you stop and go on with the next
-                if (array_key_exists( $translation->getLocale(), $translationsArray) ) {
+                if (array_key_exists($translation->getLocale(), $translationsArray)) {
                     return;
                 }
                 $translationsArray[$translation->getLocale()] = $translation;
@@ -1007,7 +976,7 @@ abstract class BasePage implements PageInterface
     {
         $pageSnapshots = $this->getSnapshots();
 
-        return $pageSnapshots->first()?: null;
+        return $pageSnapshots->first() ?: null;
     }
 
     public function hasPublishedVersion(): bool
@@ -1062,7 +1031,6 @@ abstract class BasePage implements PageInterface
         return null;
     }
 
-
     public function convertParentsToArray(): array
     {
         $parents = [];
@@ -1073,7 +1041,6 @@ abstract class BasePage implements PageInterface
 
         return $parents;
     }
-
 
     public function convertChildrenToIntegerArray(): array
     {
@@ -1097,9 +1064,10 @@ abstract class BasePage implements PageInterface
                 'contentRoute' => [
                     'id' => $translation->getContentRoute()->getId(),
                     'path' => $translation->getContentRoute()->getPath(),
-                ]
+                ],
             ];
         }
+
         return $translations;
     }
 
@@ -1108,7 +1076,14 @@ abstract class BasePage implements PageInterface
         $originals = [];
 
         foreach ($this->originals as $original) {
-            $originals[] = $original->getId();
+            $originals[] = [
+                'locale' => $original->getLocale(),
+                'id' => $original->getId(),
+                'contentRoute' => [
+                    'id' => $original->getContentRoute()->getId(),
+                    'path' => $original->getContentRoute()->getPath(),
+                ],
+            ];
         }
 
         return $originals;
@@ -1155,8 +1130,7 @@ abstract class BasePage implements PageInterface
         $this->activeFrom = $publishedPage->getActiveFrom();
         $this->activeTo = $publishedPage->getActiveTo();
     }
-    
-    
+
     public function getContentRoute(): ContentRouteInterface
     {
         if (!$this->contentRoute) {

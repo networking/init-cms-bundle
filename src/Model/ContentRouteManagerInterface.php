@@ -12,6 +12,8 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Model;
 
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
+
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
@@ -22,17 +24,17 @@ interface ContentRouteManagerInterface
     /**
      * @param string $className
      */
-    public function setClassName($className = null);
+    public function setClassName(?string $className);
 
     /**
      * @return string
      */
-    public function getClassName();
+    public function getClassName(): string;
 
     /**
      * @param ContentRouteInterface $contentRoute
      */
-    public function initializeContentRoute(ContentRouteInterface &$contentRoute);
+    public function initializeContentRoute(ContentRouteInterface &$contentRoute): void;
 
     /**
      * @param ContentRouteInterface $contentRoute
@@ -53,5 +55,5 @@ interface ContentRouteManagerInterface
      *
      * @return mixed
      */
-    public function findContentByContentRoute(ContentRouteInterface $contentRoute);
+    public function findContentByContentRoute(ContentRouteInterface $contentRoute): ?RouteReferrersReadInterface;
 }

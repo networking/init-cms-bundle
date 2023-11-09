@@ -10,12 +10,14 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
 
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ObjectRepository;
 use Gedmo\Tree\RepositoryInterface;
 use Symfony\Cmf\Component\Routing\ContentRepositoryInterface;
-use Doctrine\Persistence\ObjectRepository;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class PageManagerInterface.
@@ -25,44 +27,21 @@ use Doctrine\Persistence\ObjectRepository;
 interface PageManagerInterface extends ContentRepositoryInterface, RepositoryInterface, ObjectRepository
 {
     /**
-     * @param $locale
      * @param null $id
      * @param bool $showHome
      * @param bool $showChildren
-     *
-     * @return mixed
      */
     public function getParentPagesQuery($locale, $id = null, $showHome = false, $showChildren = false);
 
     /**
-     * @param $locale
      * @param null $id
-     *
-     * @return mixed
      */
     public function getParentPagesChoices($locale, $id = null);
 
-    /**
-     * @param $sort
-     * @param string $order
-     * @param int    $hydrationMode
-     *
-     * @return mixed
-     */
+
     public function getAllSortBy($sort, $order = 'DESC', $hydrationMode = Query::HYDRATE_OBJECT);
 
-    /**
-     * @param $draftPage
-     * @param $serializer
-     *
-     * @return mixed
-     */
-    public function revertToPublished(PageInterface $draftPage,  \Symfony\Component\Serializer\SerializerInterface $serializer);
+    public function revertToPublished(PageInterface $draftPage, SerializerInterface $serializer);
 
-    /**
-     * @param PageInterface $page
-     *
-     * @return mixed
-     */
     public function save(PageInterface $page);
 }
