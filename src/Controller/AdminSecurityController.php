@@ -42,11 +42,14 @@ class AdminSecurityController extends AbstractController
 
         $token = $this->getWebToken($user);
 
+        $defaultTargetPath = $this->generateUrl('sonata_admin_dashboard');
+
         return $this->json([
             'user' => $user->getUserIdentifier(),
             'token' => $token,
             'redirect' => $request->getSession()->get(
-                '_security.admin.target_path'
+                '_security.admin.target_path',
+                $defaultTargetPath
             ),
         ]);
     }
