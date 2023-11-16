@@ -27,10 +27,10 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
         $context += [
                 AbstractNormalizer::CALLBACKS => [
                     'translations' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertTranslationsToIntegerArray() : [];
+                        return $outerObject instanceof PageInterface ? $outerObject->convertTranslationsToArray() : [];
                     },
                     'originals' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertOriginalsToIntegerArray() : [];
+                        return $outerObject instanceof PageInterface ? $outerObject->convertOriginalsToArray() : [];
                     },
                     'parent' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): ?int {
                         return $outerObject instanceof PageInterface ? $outerObject->convertParentToInteger() : null;

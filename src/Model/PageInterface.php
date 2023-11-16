@@ -11,20 +11,18 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 
 /**
  * Class PageInterface.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageInterface extends
-    \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
-    IgnoreRevertInterface,
-    \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
+interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterface, VersionableInterface
 {
     public const PATH_SEPARATOR = '/';
 
@@ -74,8 +72,6 @@ interface PageInterface extends
     public function getMetaDescription(): ?string;
 
     /**
-     * @param PageInterface $parent
-     *
      * @return $this
      */
     public function setParent(PageInterface $parent = null);
@@ -141,7 +137,6 @@ interface PageInterface extends
     public function orderLayoutBlocks(): void;
 
     /**
-     * @param string|null $zone
      * @return Collection<int, LayoutBlockInterface>
      */
     public function getLayoutBlocks(?string $zone): Collection|array;
@@ -244,12 +239,12 @@ interface PageInterface extends
     /**
      * @return array<int>
      */
-    public function convertTranslationsToIntegerArray(): array;
+    public function convertTranslationsToArray(): array;
 
     /**
      * @return array<int>
      */
-    public function convertOriginalsToIntegerArray(): array;
+    public function convertOriginalsToArray(): array;
 
     public function getStatusLabel(): string;
 

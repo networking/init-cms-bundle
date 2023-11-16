@@ -10,16 +10,19 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Networking\InitCmsBundle\Component\Routing\Route;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManagerInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
+use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
@@ -60,8 +63,6 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
 
     /**
      * ContentRouteManager constructor.
-     *
-     * @param $class
      */
     public function __construct(EntityManagerInterface $om, $class)
     {
@@ -69,62 +70,39 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
         $this->setClassName($class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setClassName($className = null)
+    public function setClassName(?string $className): void
     {
         $this->className = $className;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getClassName()
+    public function getClassName(): string
     {
         return $this->className;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteByName($name): Route
     {
         throw new RouteNotFoundException("No route found for name '$name'");
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutesByNames($names = null): array
     {
         return [];
     }
 
-    /**
-     * @param ContentRouteInterface $contentRoute
-     */
-    public function initializeContentRoute(ContentRouteInterface &$contentRoute)
-    {
+    public function initializeContentRoute(ContentRouteInterface &$contentRoute
+    ): void {
         $content = $this->getRouteContent($contentRoute);
 
         $contentRoute->setContent($content);
     }
 
-    /**
-     * @param ContentRouteInterface $contentRoute
-     *
-     * @return object
-     */
-    public function getRouteContent(ContentRouteInterface $contentRoute)
-    {
+    public function getRouteContent(ContentRouteInterface $contentRoute
+    ): ?RouteReferrersReadInterface {
         return $this->findContentByContentRoute($contentRoute);
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
@@ -137,17 +115,17 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
     }
 
     /**
-     * @param $path
-     * @param $content
-     * @param bool $addLocale
-     *
      * @return Route
      */
-    public static function generateRoute(ContentRouteInterface $contentRoute, $path, $content, bool $addLocale = true): RouteObjectInterface
-    {
+    public static function generateRoute(
+        ContentRouteInterface $contentRoute,
+        string $path,
+        PageInterface|PageSnapshotInterface|string $content,
+        bool $addLocale = true
+    ): RouteObjectInterface {
         $template = new Template($contentRoute->getTemplate());
 
-        if(!$path && $content instanceof PageInterface){
+        if (!$path && $content instanceof PageInterface) {
             $path = PageHelper::getPageRoutePath($content->getPath());
             $contentRoute->setPath($path);
         }
@@ -159,35 +137,28 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
             RouteObjectInterface::CONTENT_OBJECT => $content,
         ];
 
-        if($controller = $contentRoute->getController()){
+        if ($controller = $contentRoute->getController()) {
             $defaults[RouteObjectInterface::CONTROLLER_NAME] = $controller;
         }
-        if (self::hasLocaleUrl()  && $addLocale) {
+        if (self::hasLocaleUrl() && $addLocale) {
             $locale = substr($contentRoute->getLocale(), 0, 2);
             $path = self::stripLocale($path, $locale);
             $path = '/'.$locale.$path;
         }
 
-        
-
         return new Route($path, $defaults);
     }
 
-    /**
-     * @return bool
-     */
-    public static function hasLocaleUrl()
+    public static function hasLocaleUrl(): bool
     {
-        return (!getenv('ALLOW_LOCALE_COOKIE', true) && !getenv('SINGLE_LANGUAGE', true));
+        return !getenv('ALLOW_LOCALE_COOKIE', true)
+            && !getenv(
+                'SINGLE_LANGUAGE',
+                true
+            );
     }
 
-    /**
-     * @param $url
-     * @param $locale
-     *
-     * @return bool|string
-     */
-    protected static function stripLocale($url, $locale)
+    protected static function stripLocale($url, $locale): string
     {
         if (!self::hasLocaleUrl()) {
             return $url;
@@ -196,7 +167,7 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
         $locale = substr((string) $locale, 0, 2);
         $parts = explode('/', (string) $url);
 
-        if(count($parts) < 2){
+        if (count($parts) < 2) {
             return $url;
         }
 
@@ -210,40 +181,29 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
     }
 
     /**
-     * @param $criteria
-     *
-     * @return mixed
+     * @return mixed|object|null
+     * @deprecated will be removed
      */
     public function findContentRouteBy(array $criteria)
     {
         return $this->repository->findOneBy($criteria);
     }
 
-    /**
-     * @return object
-     */
-    public function findContentByContentRoute(ContentRouteInterface $contentRoute): RouteReferrersReadInterface
-    {
-        $repository = $this->objectManager->getRepository($contentRoute->getClassType());
+    public function findContentByContentRoute(
+        ContentRouteInterface $contentRoute
+    ): ?RouteReferrersReadInterface {
+        $repository = $this->objectManager->getRepository(
+            $contentRoute->getClassType()
+        );
 
         return $repository->find($contentRoute->getObjectId());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getRouteCollectionForRequest(Request $request): RouteCollection
-    {
+    public function getRouteCollectionForRequest(Request $request
+    ): RouteCollection {
         $url = $request->getPathInfo();
 
         $collection = new RouteCollection();
-
-//        $connection = $this->objectManager->getConnection();
-
-//        if (!$connection->isConnected()) {
-//            dump('not connected');
-//            return $collection;
-//        }
 
         $searchUrl = (!str_ends_with($url, '/')) ? $url.'/' : $url;
 
@@ -252,7 +212,9 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
         $params = ['path' => $searchUrl];
 
         try {
-            $contentRoutes = $this->objectManager->getRepository($this->className)->findBy($params);
+            $contentRoutes = $this->objectManager->getRepository(
+                $this->className
+            )->findBy($params);
         } catch (\UnexpectedValueException) {
             return $collection;
         }
@@ -276,34 +238,38 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
         }
 
         foreach ($tempContentRoutes as $key => $contentRoute) {
-            $viewStatus = ($request && $request->hasSession()) ? $request->getSession()->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED) : VersionableInterface::STATUS_PUBLISHED;
+            $viewStatus = ($request->hasSession()) ? $request->getSession()
+                ->get('_viewStatus', VersionableInterface::STATUS_PUBLISHED)
+                : VersionableInterface::STATUS_PUBLISHED;
 
-                try {
+            try {
                 $test = new \ReflectionClass($contentRoute->getClassType());
             } catch (\ReflectionException) {
                 continue;
             }
 
-            if ($viewStatus == VersionableInterface::STATUS_DRAFT
-                && ($test->implementsInterface(\Networking\InitCmsBundle\Doctrine\Extensions\Versionable\ResourceVersionInterface::class))
+            if (VersionableInterface::STATUS_DRAFT == $viewStatus
+                && $test->implementsInterface(ResourceVersionInterface::class)
             ) {
                 continue;
-            } elseif ($viewStatus == VersionableInterface::STATUS_PUBLISHED
-                && ($test->implementsInterface(\Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface::class))
+            } elseif (VersionableInterface::STATUS_PUBLISHED == $viewStatus
+                && $test->implementsInterface(VersionableInterface::class)
             ) {
                 continue;
             }
 
             $content = $this->getRouteContent($contentRoute);
 
-            if ($searchUrl === '/') {
+            if ('/' === $searchUrl) {
                 $collection->add(
                     sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
-                    static::generateRoute($contentRoute, $url, $content, false));
+                    static::generateRoute($contentRoute, $url, $content, false)
+                );
             } else {
                 $collection->add(
                     sprintf('%s/%s', $contentRoute->getLocale(), $searchUrl),
-                    static::generateRoute($contentRoute, $url, $content));
+                    static::generateRoute($contentRoute, $url, $content)
+                );
             }
         }
 

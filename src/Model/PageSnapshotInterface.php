@@ -118,7 +118,7 @@ interface PageSnapshotInterface extends RouteReferrersReadInterface, ResourceVer
     public function setContentRoute(ContentRouteInterface $contentRoute);
 
     /**
-     * @return ContentRoute
+     * @return ContentRouteInterface
      */
     public function getContentRoute();
 
