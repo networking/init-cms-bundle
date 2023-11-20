@@ -466,7 +466,6 @@ class MenuItemAdminController extends CRUDController
 
             $nodeArray = $this->addMenuPlacement($children, $selected);
             $selectedFirstArray = array_merge(array_splice($nodeArray, -1), $nodeArray);
-            dump($selectedFirstArray);
             $params = [
                 'admin' => $this->admin,
                 'menu' => [
