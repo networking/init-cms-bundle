@@ -235,7 +235,7 @@ class MenuItemAdmin extends BaseAdmin
                 'page',
                 AutocompleteType::class,
                 [
-                    'attr' => ['placeholder' => ''],
+                    'attr' => ['placeholder' => '', 'data-dropdown-parent' => '#menu_dialog'],
                     'class' => $pageClass,
                     'required' => false,
                     'layout' => 'horizontal',
