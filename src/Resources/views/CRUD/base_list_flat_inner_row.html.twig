@@ -1,6 +1,5 @@
 {% if admin.list.has('batch') and not app.request.isXmlHttpRequest %}
     <td class="sonata-ba-list-field sonata-ba-list-field-batch">
-        {{ dump(admin.list['batch']) }}
         {{ object|render_list_element(admin.list['batch']) }}
     </td>
 {% endif %}
