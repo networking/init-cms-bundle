@@ -133,7 +133,6 @@ class GalleryAdminExtension extends AbstractAdminExtension
                 'actions',
                 [
                     'actions' => [
-                        'show' => [],
                         'edit' => [],
                         'delete' => [],
                     ],
