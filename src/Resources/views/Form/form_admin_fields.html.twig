@@ -140,7 +140,6 @@ file that was distributed with this source code.
     {%- endif -%}
     {% set row_class = row_attr.class|default('mb-3') %}
     {% if 'form-floating' in row_class %}
-    {{ required|default(false) ? ' *' : '' }}
     {% endif %}
 {%- endblock form_label_content -%}
 
