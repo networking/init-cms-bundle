@@ -1,5 +1,6 @@
 "use strict";
 
+
 // Class Definition
 let KTSigninTwoFactor = function() {
     // Elements
@@ -50,7 +51,7 @@ let KTSigninTwoFactor = function() {
     }
 
     // Handle form
-    var handleForm = function(e) {        
+    var handleForm = async function(e) {
         // Handle form submit
         submitButton.addEventListener('click', function (e) {
             e.preventDefault();
@@ -73,7 +74,7 @@ let KTSigninTwoFactor = function() {
 
                 let code = inputs.reduce((acc, input) => acc + input.value, '')
 
-                axios.post('/admin', { _code: code }, {...axiosConfig}).then((response) => {
+                axios.post(CMSRouting.generate('networking_init_cms_admin_no_slash'), { _code: code }, {...axiosConfig}).then((response) => {
                     submitButton.disabled = false;
                     submitButton.removeAttribute('data-kt-indicator');
                     Swal.fire({
@@ -182,7 +183,6 @@ let KTSigninTwoFactor = function() {
         init: function() {
             form = document.querySelector('#kt_sing_in_two_factor_form');
             submitButton = document.querySelector('#kt_sing_in_two_factor_submit');
-
             handleForm();
             handleType();
         }
@@ -190,6 +190,6 @@ let KTSigninTwoFactor = function() {
 }();
 
 // On document ready
-KTUtil.onDOMContentLoaded(function() {
+document.addEventListener('DOMContentLoaded', () => {
     KTSigninTwoFactor.init();
 });

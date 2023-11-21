@@ -1,0 +1,25 @@
+{% extends base_template %}
+
+{% block meta_config %}
+    {{ parent() }}
+    <meta name="username" content="{{ app.user.userIdentifier }}">
+    <meta name="displayName" content="{{ app.user.displayName }}">
+{% endblock %}
+
+{% block title %}
+    {{ 'label.account_settings'|trans({}, 'security') }}
+{% endblock %}
+
+{% block sonata_admin_content %}
+    <div class="card">
+        <div class="card-body">
+            <div class="alert alert-danger d-flex align-items-center">
+                <i class="ki-duotone ki-shield-tick fs-2hx text-danger me-4 mb-5 mb-sm-0">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                </i>
+                <p class="my-0">{{ 'cannot_edit_impersonated_user_settings'|trans({}, 'security') }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

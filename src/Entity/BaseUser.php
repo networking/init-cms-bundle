@@ -52,6 +52,11 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
 
     protected ?string $locale = null;
 
+    public function getHexId()
+    {
+        return bin2hex('user_'.$this->getId());
+    }
+
     public function getLocale(): ?string
     {
         return $this->locale;
@@ -96,7 +101,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     public function getAdminSettings(): array
     {
 
-        return $this->adminSettings??[];
+        return $this->adminSettings ?? [];
     }
 
     /**
@@ -137,7 +142,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * @return BaseUser
      */
-    public function setTwoStepVerificationCode(mixed $twoStepVerificationCode)
+    public function setTwoStepVerificationCode(?string $twoStepVerificationCode): self
     {
         $this->twoStepVerificationCode = $twoStepVerificationCode;
 
@@ -245,8 +250,6 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     }
 
 
-
-
     /**
      * {@inheritdoc}
      */
@@ -283,16 +286,17 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     {
         return $this->lastname;
     }
-    
+
 
     /**
      * {@inheritdoc}
      */
     public function getFullname()
     {
-        if(!$this->getFirstname() && !$this->getLastname()){
+        if (!$this->getFirstname() && !$this->getLastname()) {
             return $this->getUsername();
         }
+
         return sprintf('%s %s', $this->getFirstname(), $this->getLastname());
     }
 
@@ -313,9 +317,8 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
         ];
     }
 
-    public function hasStepVerificationCode()
+    public function hasStepVerificationCode(): bool
     {
         return !!$this->twoStepVerificationCode;
     }
-
 }

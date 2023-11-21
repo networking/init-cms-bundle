@@ -6,6 +6,7 @@ namespace Networking\InitCmsBundle\GoogleAuthenticator;
 
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 interface HelperInterface
@@ -37,12 +38,12 @@ interface HelperInterface
     /**
      * @return string
      */
-    public function getSessionKey(UsernamePasswordToken $token);
+    public function getSessionKey(AbstractToken $token);
 
     /**
      * @return string
      */
-    public function getVerifySessionKey(UsernamePasswordToken $token);
+    public function getVerifySessionKey(AbstractToken $token);
 
     public function needToHaveGoogle2FACode(Request $request): bool;
 }

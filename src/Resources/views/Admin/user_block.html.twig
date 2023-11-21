@@ -25,8 +25,16 @@
                             <div class="fw-bold d-flex align-items-center fs-5">
                                 {{ app.user.firstname }} {{ app.user.lastname }}
                             </div>
-                            <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
+                            <a href="{{ url('admin_networking_initcms_user_profile_security') }}" class="fw-semibold text-muted text-hover-primary fs-7">
                                 {{ app.user.email }}</a>
+                            <!--begin::Menu item-->
+                            {% if is_granted('IS_IMPERSONATOR') and sonata_user.isImpersonatingEnabled %}
+                                    <a class="fw-semibold text-muted text-hover-primary fs-7 mt-2" href="{{ url(sonata_user.impersonatingRoute, sonata_user.impersonatingRouteParameters|merge({'_switch_user': '_exit'})) }}">
+                                        {{ 'switch_user_exit'|trans({}, 'SonataUserBundle', locale) }}
+                                        <i class="ki-outline ki-exit-right ms-2"></i>
+                                    </a>
+                            {% endif %}
+                            <!--end::Menu item-->
                         </div>
                         <!--end::Username-->
                     </div>
@@ -39,9 +47,8 @@
                 <!--begin::Menu item-->
                 <div class="menu-item px-5 my-1">
                     <a class="menu-link px-5"
-                       href="{{ url('admin_networking_initcms_user_edit', {id: app.user.id}) }}">{{ 'label.account_settings'|trans({}, 'PageAdmin', locale) }}</a>
+                       href="{{ url('admin_networking_initcms_user_profile_security') }}">{{ 'label.account_settings'|trans({}, 'security', locale) }}</a>
                 </div>
-                <!--end::Menu item-->
 
                 <div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                      data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
@@ -92,15 +99,6 @@
                     <!--end::Menu-->
                 </div>
 
-                <!--begin::Menu item-->
-                {% if is_granted('IS_IMPERSONATOR') and sonata_user.isImpersonatingEnabled %}
-                    <div class="menu-item px-5 my-1">
-                        <a class="menu-link px-5"href="{{ url(sonata_user.impersonatingRoute, sonata_user.impersonatingRouteParameters|merge({'_switch_user': '_exit'})) }}">
-                            ({{ 'switch_user_exit'|trans({}, 'SonataUserBundle', locale) }} )
-                        </a>
-                    </div>
-                {% endif %}
-                <!--end::Menu item-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-5">
                     <a href="{{ url('networking_init_cms_admin_security_logout') }}"

@@ -26,6 +26,16 @@ security:
             switch_user: true
             context: user
             pattern: /admin(.*)
+            webauthn:
+                registration:
+                    enabled: true
+                    routes:
+                        options_path: '/admin/register/options'
+                authentication:
+                    enabled: true
+                    routes:
+                        options_path: '/admin/assertion/options'
+                        result_path: '/admin/assertion'
             form_login:
                 provider: sonata_user_bundle
                 enable_csrf: true
@@ -72,6 +82,7 @@ security:
         - { path: ^/_profiler, role: PUBLIC_ACCESS }
         - { path: ^/login$, role: PUBLIC_ACCESS }
         - { path: ^/login_$, role: PUBLIC_ACCESS }
+        - { path: ^/admin/assertion,  roles: PUBLIC_ACCESS, requires_channel: 'https' }
 
         # -> custom access control for the admin area of the URL
         - { path: ^/admin/login$, role: PUBLIC_ACCESS }
@@ -93,3 +104,4 @@ security:
         - { path: ^/admin$, role: [ ROLE_SONATA_ADMIN ] }
         - { path: ^/admin/.*, role: [ ROLE_SONATA_ADMIN ] }
         - { path: ^/.*, role: PUBLIC_ACCESS }
+

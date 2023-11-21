@@ -1,0 +1,82 @@
+title: Security
+label:
+    account_settings: "Account settings"
+    account_security: "Security"
+tab:
+    account_settings: "User details"
+    two_factor_authentication: "Two-factor authentication"
+    passkeys: "Passkeys"
+
+test:
+    success_text: "Fantastic, looks like it is all working fine!"
+
+registration_complete:
+    title: "You’re all set!"
+    text: "You can now use your fingerprint, face or screen lock to sign in on this device."
+    test_button: "Test your passkey"
+
+registration_not_complete:
+    title: "Create a passkey on this device"
+    text: "Speed up your sign-in next time by creating a new passkey on this device."
+
+passkey_rename:
+    title: "Rename your passkey"
+    input_label: "Passkey name"
+    input_invalid: "Please enter a valid passkey name"
+
+passkey_delete:
+    title: "Delete your passkey"
+    text: "Are you sure you want to delete this passkey? You will no longer be able to sign in with it."
+
+passkey_create:
+    title: "Create a new passkey for your CMS account"
+    text: "Passkeys are easy to set up and let you securely sign in to your CMS Account using your fingerprint, face, screen lock or hardware security key. You can create a passkey on this device or use another device."
+    passkey_exists_for_device_method: "You already have a passkey for this device and method."
+    webauthn_not_available: "Passkeys are not supported on this device."
+
+
+passkey_text: >
+    Passkeys enable you to securely sign in to your Account using your fingerprint,
+    face, screen lock or hardware security key. Only set up passkeys on devices that you own.
+
+your_passkeys: Passkeys that you created
+
+create_a_passkey: Create a passkey
+
+cannot_edit_impersonated_user_settings: >-
+    You cannot edit your security settings while impersonating another user.
+    Please exit impersonating mode to edit your security settings.
+
+authenticator_description: >-
+    <p>Get verification codes from an authenticator app. It works even if your phone is offline.</p>
+    <p>First, download Google Authenticator from the <a
+                href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
+                target="_blank" rel="noreferrer noopener">Google Play
+            Store</a> or the <a
+                href="https://apps.apple.com/us/app/google-authenticator/id388497605"
+                target="_blank" rel="noreferrer noopener">iOS App
+            Store</a>, or use your preferred Authenticator app suche as 1 Password, or the Microsoft OneAuth app.</p>
+
+authenticator_edit:
+    current_authenticator: "Your authenticator"
+    change_authenticator_title: "Do you want to replace your authenticator codes?"
+    change_authenticator_text: "You will need to set up your authenticator code again, and will no longer be able to login with the old authenticator."
+    setup_authenticator_title: "Set up authenticator app"
+    setup_authenticator_text: >-
+        <ul class="text-start">
+            <li>In your Authenticator app, tap the + / add</li>
+            <li>Scan the QR code</li>
+        </ul>
+    setup_authenticator_text2: "If you can't scan the QR code, enter this code manually, along with your username:"
+    verify_code_title: "Verify your code"
+    verify_code_text: "Enter the code from your authenticator app"
+    no_authenticator_found: "No authenticator found"
+
+next: "Next"
+back: "Back"
+cancel: "Cancel"
+delete: "Delete"
+submit: "Submit"
+edit: "Edit"
+confirm: "Confirm"
+continue: "Continue"

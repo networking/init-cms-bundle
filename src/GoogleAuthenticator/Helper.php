@@ -2,28 +2,25 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the Sonata Project package.
- *
- * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace Networking\InitCmsBundle\GoogleAuthenticator;
 
-use Sonata\GoogleAuthenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
+use PragmaRX\Google2FA\Google2FA;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class Helper implements HelperInterface
 {
     /**
-     * @var BaseGoogleAuthenticator
+     * @var Google2FA
      */
     protected $authenticator;
 
@@ -34,12 +31,11 @@ class Helper implements HelperInterface
      */
     public function __construct(
         protected $server,
-        BaseGoogleAuthenticator $authenticator,
         private readonly AuthorizationCheckerInterface $authorizationChecker,
         private readonly array $forcedForRoles = [],
         private readonly array $trustedIpList = []
     ) {
-        $this->authenticator = $authenticator;
+        $this->authenticator = new Google2FA();
     }
 
     /**
@@ -59,7 +55,7 @@ class Helper implements HelperInterface
      */
     public function checkSecret($secret, $code)
     {
-        return $this->authenticator->checkCode($secret, $code);
+        return $this->authenticator->verifyKey($secret, $code);
     }
 
     /**
@@ -67,7 +63,8 @@ class Helper implements HelperInterface
      */
     public function getUrl(UserInterface $user)
     {
-       return GoogleQrUrl::generate($user->getUsername(),  $user->getTwoStepVerificationCode(), $this->server);
+
+        return $this->getUrlFromSecret($user, $user->getTwoStepVerificationCode());
     }
 
     /**
@@ -75,7 +72,22 @@ class Helper implements HelperInterface
      */
     public function getUrlFromSecret(UserInterface $user, $secret)
     {
-        return GoogleQrUrl::generate($user->getUsername(),  $secret, $this->server);
+
+        $qrCodeUrl = $this->authenticator->getQRCodeUrl(
+            $this->server,
+            $user->getUsername(),
+            $secret
+        );
+
+        $writer = new Writer(
+            new ImageRenderer(
+                new RendererStyle(400),
+                new SvgImageBackEnd()
+            )
+        );
+
+        return 'data:image/svg+xml;base64,'. base64_encode($writer->writeString($qrCodeUrl));
+
     }
 
     /**
@@ -83,15 +95,15 @@ class Helper implements HelperInterface
      */
     public function generateSecret()
     {
-        return $this->authenticator->generateSecret();
+        return $this->authenticator->generateSecretKey();
     }
 
-    public function getSessionKey(UsernamePasswordToken $token): string
+    public function getSessionKey(AbstractToken $token): string
     {
         return sprintf('networking_init_cms_google_authenticator_%s_%s', $token->getFirewallName(), $token->getUserIdentifier());
     }
 
-    public function getVerifySessionKey(UsernamePasswordToken $token): string
+    public function getVerifySessionKey(AbstractToken $token): string
     {
         return sprintf('networking_init_cms_google_authenticator_verify__%s_%s', $token->getFirewallName(), $token->getUserIdentifier());
     }

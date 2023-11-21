@@ -1,7 +1,9 @@
 "use strict";
 
-
-// Class definition
+//
+// // Class definition
+import {authenticate} from "../webauthn/client";
+import { browserSupportsWebAuthnAutofill, platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
 let KTSigninGeneral = function () {
     // Elements
     let form;
@@ -103,7 +105,6 @@ let KTSigninGeneral = function () {
 
 
     let handleSubmitAjax = async function (e) {
-        let CMSRouting = await CMSAdmin.getRouting();
         // Handle form submit
         submitButton.addEventListener('click', function (e) {
             // Prevent button default action
@@ -188,12 +189,59 @@ let KTSigninGeneral = function () {
         }
     }
 
+    let webauthnSignin = async function(){
+        try{
+            // Is conditional UI available in this browser?
+            const cma = await PublicKeyCredential.isConditionalMediationAvailable();
+            if (cma) {
+                const result = await authenticate();
+                if (result && 'ok' === result.status) {
+                    return location.href = document.querySelector('#redirect_route').value
+                }
+
+
+                throw new Error(result)
+            }
+        }catch (e) {
+            let message = e.message;
+
+            if(e.name === 'Error'){
+                message = translate('login_error');
+            }
+
+            Swal.fire({
+                text: message,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: translate('ok'),
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
+            });
+        }
+    }
+
     // Public functions
     return {
         // Initialization
         init: function () {
             form = document.querySelector('#kt_sign_in_form');
             submitButton = document.querySelector('#kt_sign_in_submit');
+
+            if (
+                window.PublicKeyCredential &&
+                PublicKeyCredential.isConditionalMediationAvailable
+            ) {
+                try {
+                    webauthnSignin();
+                } catch (e) {
+
+                    // A NotAllowedError indicates that the user canceled the operation.
+                    if (e.name !== "NotAllowedError") {
+                        CMSAdmin.createInitCmsMessageBox('error', e.message);
+                    }
+                }
+            }
 
             handleValidation();
 
@@ -205,6 +253,6 @@ let KTSigninGeneral = function () {
 }();
 
 // On document ready
-KTUtil.onDOMContentLoaded(function () {
+document.addEventListener('DOMContentLoaded', () => {
     KTSigninGeneral.init();
 });

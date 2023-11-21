@@ -137,6 +137,8 @@ class AdminSecurityController extends AbstractController
         $csrfToken = $this->csrfTokenManager->getToken('authenticate')
             ->getValue();
 
+        $defaultTargetPath = $this->generateUrl('sonata_admin_dashboard');
+
         return $this->render(
             '@NetworkingInitCms/Admin/Security/login.html.twig',
             [
@@ -151,6 +153,10 @@ class AdminSecurityController extends AbstractController
                     ),
                 'reset_route' => $this->generateUrl(
                     'sonata_user_admin_resetting_request'
+                ),
+                'redirect_route' => $request->getSession()->get(
+                    '_security.admin.target_path',
+                    $defaultTargetPath
                 ),
                 'template_registry' => $this->templateRegistry,
             ]

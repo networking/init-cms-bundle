@@ -327,6 +327,15 @@
                 <source>btn_confirm</source>
                 <target>Confirm</target>
             </trans-unit>
+            <trans-unit id="help">
+                <source>help</source>
+                <target>Help</target>
+            </trans-unit>
+
+             <trans-unit id="link.show_all">
+             	<source>link.show_all</source>
+             	<target>Show all</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

@@ -4,7 +4,6 @@ import Sortable from '../admin-theme/plugins/custom/sortablejs/sortablejs.bundle
 let containers = null;
 let dropzones = null;
 let contentTypeList = null;
-let CMSRouting = await CMSAdmin.getRouting();
 let addBlockUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_addBlock');
 let sortUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_updateLayoutBlockSort');
 let deleteUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_deleteAjax');

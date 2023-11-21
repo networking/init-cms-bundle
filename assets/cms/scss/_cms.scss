@@ -91,3 +91,26 @@ table.dataTable > thead .sorting_asc, table.dataTable > thead .sorting_desc {
   }
 
 }
+
+.stack {
+  display: grid;
+  > * {
+    grid-area: 1/1;
+  }
+}
+
+.swal2-html-container{
+  &.h-100{
+    max-height: initial;
+  }
+  &.h-250px{
+    max-height: initial;
+  }
+  &.h-350px{
+    max-height: initial;
+  }
+}
+
+.content_type_item {
+  background-color: var(--bs-app-aside-base-bg-color);
+}

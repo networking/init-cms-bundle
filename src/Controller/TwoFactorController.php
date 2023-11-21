@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Entity\BaseUser as User;
 use Networking\InitCmsBundle\GoogleAuthenticator\Helper;
 use Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface;
 use Sonata\UserBundle\Model\UserManagerInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class TwoFactorController extends AbstractController
 {
@@ -21,7 +23,7 @@ class TwoFactorController extends AbstractController
     }
 
 
-    public function setTwoFactorAuthentication(Request $request, TokenStorageInterface $tokenStorage)
+    public function setTwoFactorAuthentication(Request $request, TokenStorageInterface $tokenStorage,  #[CurrentUser] User $user)
     {
         try{
             $helper= $this->container->get('networking_init_cms.google.authenticator.helper');
@@ -30,7 +32,6 @@ class TwoFactorController extends AbstractController
         }
 
         $token = $tokenStorage->getToken();
-        $user = $token->getUser();
         $secret = $request->getSession()->get($helper->getVerifySessionKey($token), null);
         $state = 'success';
         if($secret && 'POST' === $request->getMethod()){

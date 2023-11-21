@@ -10,9 +10,12 @@
         <!--end::Sidebar mobile toggle-->
         <!--begin::Mobile logo-->
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-            <a href="{{ path('sonata_admin_dashboard') }}" class="d-lg-none">
-                <img  src="{{ sonata_config.logo ? sonata_config.logo : asset('bundles/networkinginitcms/img/logo_initcms.png') }}" alt="{{ sonata_config.title }}" class="h-30px"/>
+            <a href="{{ path('sonata_admin_dashboard') }}" class="d-lg-none d-flex align-items-end">
+                <img  src="{{ sonata_config.logo ? sonata_config.logo : asset('bundles/networkinginitcms/img/initcms-396x100.png') }}" alt="{{ sonata_config.title }}" class="h-30px"/>
+                <h2 class="text-muted mb-0 mx-3">{{ sonata_config.title }}</h2>
             </a>
+
+
         </div>
         <!--end::Mobile logo-->
         <!--begin::Header wrapper-->

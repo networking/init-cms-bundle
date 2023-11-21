@@ -1,7 +1,6 @@
 import 'jstree'
 import 'bootstrap'
 
-let CMSRouting = await CMSAdmin.getRouting()
 
 var CMSMenuAdmin = function () {
 

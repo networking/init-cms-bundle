@@ -19,6 +19,7 @@ module.exports = {
         filerobotImageEditor: 'FilerobotImageEditor'
     },
     entry: {
+        cmsRouting: './assets/cms/cms-routing.js',
         cmsAdmin: './assets/cms/cms-admin.js',
         globalSearch: './assets/cms/global-search.js',
         list: './assets/cms/list.js',
@@ -29,9 +30,11 @@ module.exports = {
         imageEditor: './assets/js/filebot.js',
         twoFactorSignin: './assets/cms/authentication/sign-in/two-factor.js',
         generalSignin: './assets/cms/authentication/sign-in/general.js',
+        webauthnRegister: './assets/cms/authentication/webauthn/register.js',
         networking_initcms: './assets/cms/scss/style.scss',
         'tui-image-editor': './assets/css/tui-image-editor.css',
         'admin-navbar': './assets/scss/admin-navbar-standalone.scss',
+
     },
     output: {
         publicPath: '/bundles/networkinginitcms',

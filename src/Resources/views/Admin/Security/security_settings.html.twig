@@ -1,0 +1,170 @@
+{% extends base_template %}
+
+{% block meta_config %}
+    {{ parent() }}
+    <meta name="username" content="{{ app.user.userIdentifier }}">
+    <meta name="displayName" content="{{ app.user.displayName }}">
+{% endblock %}
+
+{% block title %}
+    {{ 'label.account_settings'|trans({}, 'security') }}
+{% endblock %}
+
+{% block sonata_admin_content %}
+    <div class="card">
+        <div class="card-body">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs nav-line-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" href="#user_details" data-bs-toggle="tab" role="tab">
+                            {{ 'tab.account_settings'|trans({}, 'security') }}
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" href="#passkeys" data-bs-toggle="tab" role="tab" aria-selected="true">
+                            {% if passkeys|length > 0 %}
+                                <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}
+                                <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
+                            {% endif %}
+                            {{ 'tab.passkeys'|trans({}, 'security') }}</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link " href="#two_factor_authentication" data-bs-toggle="tab" role="tab"
+                           aria-selected="true">
+                            {% if hasStepVerificationCode %}
+                                <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}
+                                <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
+                            {% endif %}
+
+                            {{ 'tab.two_factor_authentication'|trans({}, 'security') }}</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="user_details" role="tabpanel">
+                        <form action="{{ url('admin_networking_initcms_user_profile_security', {'uniqid': admin.uniqId}) }}"
+                              method="POST">
+                            {% import "@NetworkingInitCms/CRUD/base_edit_form_macro.html.twig" as form_helper %}
+                            <div class="my-3 row">
+                                {% if form_helper.render_groups is defined %}
+                                    {% set tab_class = admin.formtabs['default'].class|default('row') %}
+                                    {{ form_helper.render_groups(admin, form, admin.formtabs['default'].groups, false, tab_class) }}
+                                {% endif %}
+
+                                {{ form_rest(form) }}
+                            </div>
+                            <div class="separator my-3"></div>
+                            <input type="submit" class="btn btn-sm btn-primary" name="btn_update_and_edit"
+                                   value="Update">
+                        </form>
+                    </div>
+                    <div class="tab-pane" id="passkeys" role="tabpanel">
+                        <div class="container-fluid pt-3">
+                            <section class="my-10 text-center d-flex justify-content-center">
+                                    <div class="stack w-150px position-relative">
+                                        <img src="/bundles/networkinginitcms/img/fido/face-id.svg" alt="WebAuthn" class="position-absolute top-50 w-25px">
+                                        <img src="/bundles/networkinginitcms/img/fido/fingerprint.svg" alt="WebAuthn" class="position-absolute top-25 end-0 w-30px">
+                                        <img src="/bundles/networkinginitcms/img/fido/passkey-local.svg" alt="WebAuthn" class="w-50px position-absolute top-50 start-50 translate-middle">
+                                        <img src="/bundles/networkinginitcms/img/fido/phone.svg" alt="WebAuthn" class="w-150px">
+                                        <img src="/bundles/networkinginitcms/img/fido/password.svg" alt="WebAuthn" class="w-30px position-absolute bottom-25 end-0">
+                                    </div>
+                            </section>
+                            <section>
+                                <div class="offset-2 col-8">
+                                    <p>{{ 'passkey_text'|trans({}, 'security') }}</p>
+                                </div>
+                            </section>
+                            <section id="passkeys-setup" class="offset-1 col-10 d-none">
+                                <div class="alert bg-light-success d-flex justify-content-between align-items-start">
+                                    <!--begin::Icon-->
+                                    <i class="ki-duotone ki-shield-tick fs-2hx text-success me-4 mb-5 mb-sm-0">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+                                    <!--begin::Content-->
+                                    <div class="d-flex flex-column w-75">
+                                        <h4 class="fw-semibold">{{ 'registration_complete.title'|trans({}, 'security') }}</h4>
+                                        <span>{{ 'registration_complete.text'|trans({}, 'security') }}</span>
+                                    </div>
+                                    <!--end::Content-->
+                                    <div>
+                                        <button id="test-signin"
+                                                class="btn btn-sm btn-success position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 ">
+                                            {{ 'registration_complete.test_button'|trans({}, 'security') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+                            <section id="passkeys-not-setup" class="offset-1 col-10 d-none">
+                                <div class="alert bg-light-info d-flex justify-content-between align-items-start">
+                                    <!--begin::Icon-->
+                                    <i class="ki-duotone ki-shield-tick fs-2hx text-info me-4 mb-5 mb-sm-0">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+                                    <!--begin::Content-->
+                                    <div class="d-flex flex-column w-75">
+                                        <h4 class="fw-semibold">{{ 'registration_not_complete.title'|trans({}, 'security') }}</h4>
+                                        <span>{{ 'registration_not_complete.text'|trans({}, 'security') }}</span>
+                                    </div>
+                                    <!--end::Content-->
+                                    <div>
+                                        <button class="create-passkey d-none btn btn-sm btn-info position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 ">
+                                            {{ 'create_a_passkey'|trans({}, 'security') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="offset-1 col-10">
+                            <div id="show-passkeys">
+                                <h3>{{ 'your_passkeys'|trans({}, 'security') }}</h3>
+                                <div id="list">
+                                </div>
+                            </div>
+                            <p id="message" class="instructions"></p>
+                            <button class="create-passkey d-none btn btn-sm btn-primary"><i
+                                        class="fa fa-fingerprint"></i> {{ 'create_a_passkey'|trans({}, 'security') }}
+                            </button>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="two_factor_authentication" role="tabpanel">
+                        <div class="container-fluid pt-3">
+                            <section class="my-10 text-center d-flex justify-content-center">
+                                <div class="stack w-150px position-relative text-success">
+                                        <i class="ki-outline ki-scan-barcode position-absolute fs-4x text-success top-50 start-50 translate-middle"></i>
+                                        <img src="/bundles/networkinginitcms/img/fido/phone.svg" alt="WebAuthn" class="w-150px">
+                                </div>
+                            </section>
+                            <section>
+                                <div class="offset-2 col-8">{{ 'authenticator_description'|trans({}, 'security')|raw }}</div>
+                            </section>
+                            <section class="offset-1 col-10">
+                                <div id="list-authenticator" ></div>
+                                <button id="create-authenticator" class="d-none btn btn-sm btn-primary">
+                                    <i class="ki-outline ki-scan-barcode"></i> Set up Authenticator
+                                </button>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block before_body_end %}
+    {{ parent() }}
+    <script>
+        if (window.location.hash) {
+            var hash = window.location.hash.substring(1);
+            if (hash) {
+                document.querySelector(`.nav-link[href="#${hash}"]`).click();
+            }
+        }
+    </script>
+    <script src="{{ asset('webauthnRegister.js', 'init_cms') }}"></script>
+{% endblock %}

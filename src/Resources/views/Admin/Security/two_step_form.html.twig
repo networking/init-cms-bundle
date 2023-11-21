@@ -60,41 +60,40 @@ file that was distributed with this source code.
                             <div class="text-muted fw-semibold fs-5 mb-5">{{ 'message_two_step_into'|trans({}, 'TwoFactor') }}</div>
                         </div>
 
-                        <div class="mb-10 text-center">
-                                    <p align="middle"><img src="{{ qrCodeUrl }}" alt="QR-code"></p>
-                                    <p class="text-muted fw-semibold">{{ 'qr_code_secret'|trans({}, 'TwoFactor') }} : {{ qrSecret }}</p>
-                            {% if state == 'error' %}
-                                <!--begin::Alert-->
-                                <div class="alert alert-danger d-flex align-items-center">
-                                    <!--begin::Icon-->
-                                    <i class="ki-duotone ki-shield-tick fs-2hx text-danger me-4"><span class="path1"></span><span class="path2"></span></i>
-                                    <!--end::Icon-->
+                    <div class="mb-10 text-center">
+                                <p align="middle"><img src="{{ qrCodeUrl }}" alt="QR-code"></p>
+                                <p class="text-muted fw-semibold">{{ 'qr_code_secret'|trans({}, 'TwoFactor') }} : {{ qrSecret }}</p>
+                        {% if state == 'error' %}
+                            <div class="alert alert-danger d-flex align-items-center">
+                                <!--begin::Icon-->
+                                <i class="ki-duotone ki-shield-tick fs-2hx text-danger me-4"><span class="path1"></span><span class="path2"></span></i>
+                                <!--end::Icon-->
 
-                                    <!--begin::Wrapper-->
-                                    <div class="d-flex flex-column">
-                                        <!--begin::Title-->
-                                        <h4 class="mb-1 text-danger">{{ 'flash_error'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
-                                        <!--end::Title-->
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-column">
+                                    <!--begin::Title-->
+                                    <h4 class="mb-1 text-danger">{{ 'flash_error'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
+                                    <!--end::Title-->
 
-                                        <!--begin::Content-->
-                                        <span>{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</span>
-                                        <!--end::Content-->
-                                    </div>
-                                    <!--end::Wrapper-->
+                                    <!--begin::Content-->
+                                    <span>{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</span>
+                                    <!--end::Content-->
                                 </div>
-                                <!--end::Alert-->
-                            {% endif %}
-                                    <input type="text" class="form-control  input-large" id="code" name="_code"
-                                           autocomplete='off' autofocus/>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Alert-->
+                        {% endif %}
+                        <input type="text" class="form-control  input-large" id="code" name="_code"
+                                       autocomplete='off' autofocus/>
 
-                        </div>
-                        <!--begin::Submit button-->
-                        <div class="d-grid mb-10">
-                            <button type="submit"  class="btn btn-primary">
-                                <span class="indicator-label">{{ 'confirm_code'|trans({}, 'TwoFactor') }}</span>
-                            </button>
-                        </div>
-                    </form>
+                    </div>
+                    <!--begin::Submit button-->
+                    <div class="d-grid mb-10">
+                        <button type="submit"  class="btn btn-primary">
+                            <span class="indicator-label">{{ 'confirm_code'|trans({}, 'TwoFactor') }}</span>
+                        </button>
+                    </div>
+                </form>
             </div>
             <!--end::Wrapper-->
             <!--begin::Footer-->

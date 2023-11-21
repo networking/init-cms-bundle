@@ -37,6 +37,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $bundles = $container->getParameter('kernel.bundles');
 
         $configs = $container->getExtensionConfig($this->getAlias());
+
         $isLanguageSet = false;
         $isCacheActive = false;
         foreach ($configs as $config) {
@@ -60,6 +61,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             ];
             $container->prependExtensionConfig($this->getAlias(), $config);
         }
+
 
         if (isset($bundles['LexikTranslationBundle'])) {
             $configs = $container->getExtensionConfig('lexik_translation');
@@ -127,6 +129,9 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+
+
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('blocks.xml');
         $loader->load('event_listeners.xml');
@@ -143,6 +148,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
         }
 
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('gedmo_doctrine_extensions.yaml');
 
@@ -151,6 +157,10 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.page.languages', $config['languages']);
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
+
+        $container->setParameter('networking_init_cms.webauthn.rp_id', $config['webauthn']['rp_id']);
+        $container->setParameter('networking_init_cms.webauthn.rp_name', $config['webauthn']['rp_name']);
+        $container->setParameter('networking_init_cms.webauthn.enabled', $config['webauthn']['enabled']);
 
         $layoutBlockAdmin = $container->getDefinition('networking_init_cms.admin.layout_block');
         $subClasses = [];
@@ -309,11 +319,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             return;
         }
 
-        if (!class_exists('Google\Authenticator\GoogleAuthenticator')
-            && !class_exists(\Sonata\GoogleAuthenticator\GoogleAuthenticator::class)) {
-            throw new \RuntimeException('Please add "sonata-project/google-authenticator" package');
-        }
-
         $container->setParameter('networking_init_cms.google.authenticator.forced_for_role', $config['google_authenticator']['forced_for_role']);
 
         $trustedIpList = $config['google_authenticator']['trusted_ip_list'];
@@ -436,6 +441,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                     'nullable' => 'true',
                 ])
         );
+
 
 
 

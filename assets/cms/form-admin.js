@@ -16,7 +16,6 @@ let formFields = new Map();
 let swappable = null;
 let postUrl = null;
 let objectId = null;
-let CMSRouting = await CMSAdmin.getRouting()
 
 let initFormFields = () => {
     let currentFields = formContent.querySelectorAll('.component');

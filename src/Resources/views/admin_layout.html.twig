@@ -52,6 +52,8 @@ file that was distributed with this source code.
               rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
     {% endblock %}
+    <script src="{{ asset('cmsRouting.js', 'init_cms')}}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'CMSRouting.setRouting' }) }}"></script>
 
     {% block javascripts %}
     {% endblock javascripts %}

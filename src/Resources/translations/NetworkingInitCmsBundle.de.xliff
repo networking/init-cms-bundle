@@ -325,10 +325,6 @@
              	<source>link.show_all</source>
              	<target>Alle anzeigen</target>
              </trans-unit>
-             <trans-unit id="help">
-             	<source>help</source>
-             	<target>Hilfe</target>
-             </trans-unit>
              <trans-unit id="selected">
              	<source>selected</source>
              	<target>Ausgewählt</target>
@@ -337,6 +333,10 @@
                 <source>btn_confirm</source>
                 <target>Bestätigen</target>
             </trans-unit>
+             <trans-unit id="help">
+             	<source>help</source>
+             	<target>Hilfe</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

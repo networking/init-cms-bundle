@@ -51,4 +51,8 @@ interface UserInterface extends \Sonata\UserBundle\Model\UserInterface
      * @return \DateTime
      */
     public function getLastActivity();
+
+    public function setTwoStepVerificationCode(?string $twoStepVerificationCode): self;
+
+    public function hasStepVerificationCode(): bool;
 }

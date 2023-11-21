@@ -1,17 +1,18 @@
 import Routing from 'fos-router';
 
-export const CMSRouting = {
-    instance: null,
-    async load(){
-        if(!this.instance) {
-            this.instance = await this.getRoutes();
-        }
-        return this.instance;
-    },
-    async getRoutes(){
-        let response = await fetch('/js/routing');
-        let data = await response.json();
-        Routing.setRoutingData(data);
-        return Routing;
+class CMSRoutingObject {
+    constructor() {
+        this.instance = null;
+    }
+    setRouting(routing){
+        Routing.setRoutingData(routing);
+        this.instance = Routing;
+    }
+    generate(name, params = {}, absolute = false){
+        return this.instance.generate(name, params, absolute);
     }
 }
+
+window.CMSRouting = new CMSRoutingObject()
+
+

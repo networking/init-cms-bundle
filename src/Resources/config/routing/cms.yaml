@@ -9,6 +9,9 @@ networking_init_cms_home:
 networking_init_cms_admin_no_slash:
     path: /admin
     defaults: {_controller: Networking\InitCmsBundle\Controller\FrontendPageController::adminAction}
+    options:
+        expose: true
+
 
 networking_init_cms_admin:
     path: /admin/
@@ -179,5 +182,9 @@ cms_api_login:
     defaults: { _controller: Networking\InitCmsBundle\Controller\AdminSecurityController::apiLogin}
     options:
         expose: true
+
+app_auth_register_request:
+    resource: '@NetworkingInitCmsBundle/Controller/WebAuthnController.php'
+    type: attribute
 
 

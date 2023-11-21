@@ -18,6 +18,7 @@ use Networking\InitCmsBundle\Entity\Text;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use lbuchs\WebAuthn\WebAuthn;
 
 /**
  * Class Configuration.
@@ -41,6 +42,25 @@ class Configuration implements ConfigurationInterface
         }
         //mongodb is not yet fully supported but will come (eventually)
         $supportedDrivers = ['orm'];
+
+        $rootNode
+            ->children()
+                ->arrayNode('webauthn')
+                    ->children()
+                        ->booleanNode('enabled')->defaultTrue()
+                            ->validate()
+                                ->ifTrue(function ($v) {
+
+                                    return $v && !class_exists(WebAuthn::class);
+                                })
+                                ->thenInvalid('The "webauthn" option requires the "lbuchs/webauthn" package to be installed and enabled.')
+                            ->end()
+                        ->end()
+                        ->scalarNode('rp_id')->isRequired()->end()
+                        ->scalarNode('rp_name')->defaultValue('InitCms')->end()
+                    ->end()
+                ->end()
+            ->end();
 
         $rootNode
             ->children()

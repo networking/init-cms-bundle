@@ -4,7 +4,6 @@ import CMSMediaEntity from "./media-entity"
 import CMSGalleryEntity from "./gallery-entity"
 import CMSOneToManySortable from "./one-to-many-sortable"
 import CMSModelList from "./model-list"
-import {CMSRouting} from "./cms-routing"
 import {CMSTranslator} from "./translator"
 import CMSSortableCollection from "./sortable-collection"
 import 'select2'
@@ -22,14 +21,6 @@ const CMSAdmin = {
     translations: null,
     collectionCounters: [],
 
-    async getRouting() {
-        if (!this.routing) {
-            this.routing = CMSRouting.load();
-        }
-
-        return this.routing;
-    },
-
     async getTranslations() {
         if (!this.translations) {
             this.translations = CMSTranslator.load();
@@ -39,8 +30,7 @@ const CMSAdmin = {
     },
 
     async init() {
-        this.routing = await this.getRouting();
-        this.translations = await this.getTranslations(this.routing);
+        this.translations = await this.getTranslations();
         CMSMediaEntity.init();
         CMSGalleryEntity.init();
         CMSModelList.init();
@@ -168,22 +158,22 @@ const CMSAdmin = {
 
             for (const [key, value] of Object.entries(config)) {
                 if (key === 'filebrowserBrowseRoute') {
-                    params['filebrowserBrowseUrl'] = this.routing.generate(value, config.filebrowserBrowseRouteParameters)
+                    params['filebrowserBrowseUrl'] = CMSRouting.generate(value, config.filebrowserBrowseRouteParameters)
                     continue;
                 }
 
                 if (key === 'filebrowserImageBrowseRoute') {
-                    params['filebrowserImageBrowseUrl'] = this.routing.generate(value, config.filebrowserImageBrowseRouteParameters)
+                    params['filebrowserImageBrowseUrl'] = CMSRouting.generate(value, config.filebrowserImageBrowseRouteParameters)
                     continue;
                 }
 
                 if (key === 'filebrowserUploadRoute') {
-                    params['filebrowserUploadUrl'] = this.routing.generate(value, config.filebrowserUploadRouteParameters)
+                    params['filebrowserUploadUrl'] = CMSRouting.generate(value, config.filebrowserUploadRouteParameters)
                     continue;
                 }
 
                 if (key === 'filebrowserImageUploadRoute') {
-                    params['filebrowserImageUploadUrl'] = this.routing.generate(value, config.filebrowserImageUploadRouteParameters)
+                    params['filebrowserImageUploadUrl'] = CMSRouting.generate(value, config.filebrowserImageUploadRouteParameters)
                     continue;
                 }
 
