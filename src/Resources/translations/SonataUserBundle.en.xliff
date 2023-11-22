@@ -70,6 +70,10 @@
                 <source>list.label_has_step_verification_code</source>
                 <target>2FA Activated</target>
             </trans-unit>
+			  <trans-unit id="group_general">
+				<source>General</source>
+				<target>General</target>
+			  </trans-unit>
         </body>
     </file>
 </xliff>
