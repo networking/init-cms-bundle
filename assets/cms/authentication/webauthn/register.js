@@ -394,6 +394,8 @@ async function testSignin() {
     } catch (e) {
 
         CMSAdmin.createInitCmsMessageBox('error', e.message);
+
+        return;
     }
 
     try{

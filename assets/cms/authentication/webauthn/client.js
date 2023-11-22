@@ -64,7 +64,6 @@ export async function authenticate(username) {
         payload.username = username;
     }
     const options = await _fetch('/admin/assertion/options', payload);
-
     if(username && options.allowCredentials === undefined){
         throw new Error('no_credentials');
     }
@@ -73,8 +72,9 @@ export async function authenticate(username) {
     let asseResp;
     try {
         // Pass the options to the authenticator and wait for a response
-        asseResp = await startAuthentication(options, true);
+        asseResp = await startAuthentication(options);
     } catch (error) {
+        console.log(error)
         throw error;
     }
 
