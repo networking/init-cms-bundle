@@ -31,8 +31,8 @@ class UserAdminController extends SonataCRUDController
     public function __construct(
         private readonly HelperInterface $helper,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly PublicKeyCredentialSourceRepositoryInterface $publicKeyCredentialSourceRepository,
-        private readonly PublicKeyCredentialUserEntityRepositoryInterface $publicKeyCredentialUserEntityRepository,
+        private readonly ?PublicKeyCredentialSourceRepositoryInterface $publicKeyCredentialSourceRepository,
+        private readonly ?PublicKeyCredentialUserEntityRepositoryInterface $publicKeyCredentialUserEntityRepository,
     )
     {
     }
@@ -42,9 +42,13 @@ class UserAdminController extends SonataCRUDController
         if(!$this->canEditUser($user)){
             return $this->render('@NetworkingInitCms/Admin/Security/security_settings_impersonator.html.twig');
         }
+        $passkeys = [];
+        if ($this->publicKeyCredentialSourceRepository && $this->publicKeyCredentialUserEntityRepository) {
+            $userEntity = $this->publicKeyCredentialUserEntityRepository->findOneByUsername($user->getUserIdentifier());
+            $passkeys = $this->publicKeyCredentialSourceRepository->findAllForUserEntity($userEntity);
+        }
 
-        $userEntity = $this->publicKeyCredentialUserEntityRepository->findOneByUsername($user->getUserIdentifier());
-        $passkeys = $this->publicKeyCredentialSourceRepository->findAllForUserEntity($userEntity);
+
 
 
         $this->admin->setSubject($user);

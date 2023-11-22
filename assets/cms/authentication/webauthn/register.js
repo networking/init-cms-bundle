@@ -16,6 +16,8 @@ const testSigninButton = document.querySelector('#test-signin');
 const deleteAuthenticatorButton = document.querySelector('#delete-authenticator');
 const createAuthenticatorButton = document.querySelector('#create-authenticator');
 const currentAuthenticator= document.querySelector('#current-authenticator');
+const webauthnEnabled = document.querySelector("meta[name='webauthn-enabled']").getAttribute("content");
+const googleAuthenticatorEnabled = document.querySelector("meta[name='google-authenticator-enabled']").getAttribute("content");
 
 
 async function rename(e) {
@@ -182,11 +184,12 @@ async function renderAutheticator() {
 async function register() {
     try {
         let username = document.querySelector('meta[name="username"]').getAttribute('content')
+        let displayName = document.querySelector('meta[name="displayName"]').getAttribute('content')
 
         // Start the loading UI.
 
         // Start creating a passkey.
-        await registerCredential(username);
+        await registerCredential(username, displayName);
 
         // Stop the loading UI.
 
@@ -419,45 +422,44 @@ async function testSignin() {
     }
 }
 
+if(webauthnEnabled){
+
+    if (browserSupportsWebAuthn() &&
+        PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable &&
+        PublicKeyCredential.isConditionalMediationAvailable) {
+        try {
+            const results = await Promise.all([
+
+                // Is platform authenticator available in this browser?
+                platformAuthenticatorIsAvailable(),
+
+                // Is conditional UI available in this browser?
+                browserSupportsWebAuthnAutofill()
+            ]);
 
 
-// Feature detections
-if (browserSupportsWebAuthn() &&
-    PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable &&
-    PublicKeyCredential.isConditionalMediationAvailable) {
-    try {
-        const results = await Promise.all([
+            if (results.every(r => r === true)) {
+                renderCredentials();
+            } else {
 
-            // Is platform authenticator available in this browser?
-            platformAuthenticatorIsAvailable(),
-
-            // Is conditional UI available in this browser?
-            browserSupportsWebAuthnAutofill()
-        ]);
-
-
-        if (results.every(r => r === true)) {
-            renderCredentials();
-        } else {
-
-            // If conditional UI isn't available, show a message.
-            document.querySelector('#message').innerText = Translator.trans('passkey_create.webauthn_not_available', [], 'security');
+                // If conditional UI isn't available, show a message.
+                document.querySelector('#message').innerText = Translator.trans('passkey_create.webauthn_not_available', [], 'security');
+            }
+        } catch (e) {
+            CMSAdmin.createInitCmsMessageBox('error', e);
         }
-    } catch (e) {
-        CMSAdmin.createInitCmsMessageBox('error', e);
-    }
-} else {
+    } else {
 
-    // If WebAuthn isn't available, show a message.
-    document.querySelector('#message').innerText = Translator.trans('passkey_create.webauthn_not_available', [], 'security')
+        // If WebAuthn isn't available, show a message.
+        document.querySelector('#message').innerText = Translator.trans('passkey_create.webauthn_not_available', [], 'security')
+    }
+    createPasskeyButtons.forEach((button) => {
+        button.addEventListener('click', startRegistration);
+    });
+    testSigninButton.addEventListener('click', testSignin);
 }
 
-
-renderAutheticator();
-
-
-createPasskeyButtons.forEach((button) => {
-    button.addEventListener('click', startRegistration);
-});
-testSigninButton.addEventListener('click', testSignin);
-createAuthenticatorButton.addEventListener('click', createAuthenticator);
+if(googleAuthenticatorEnabled){
+    renderAutheticator();
+    createAuthenticatorButton.addEventListener('click', createAuthenticator);
+}

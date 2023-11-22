@@ -183,8 +183,5 @@ cms_api_login:
     options:
         expose: true
 
-app_auth_register_request:
-    resource: '@NetworkingInitCmsBundle/Controller/WebAuthnController.php'
-    type: attribute
 
 

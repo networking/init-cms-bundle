@@ -20,6 +20,7 @@
                             {{ 'tab.account_settings'|trans({}, 'security') }}
                         </a>
                     </li>
+                    {% if webauthn_enabled %}
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" href="#passkeys" data-bs-toggle="tab" role="tab" aria-selected="true">
                             {% if passkeys|length > 0 %}
@@ -29,6 +30,8 @@
                             {% endif %}
                             {{ 'tab.passkeys'|trans({}, 'security') }}</a>
                     </li>
+                    {% endif %}
+                    {% if google_authenticator_enabled %}
                     <li class="nav-item" role="presentation">
                         <a class="nav-link " href="#two_factor_authentication" data-bs-toggle="tab" role="tab"
                            aria-selected="true">
@@ -40,6 +43,7 @@
 
                             {{ 'tab.two_factor_authentication'|trans({}, 'security') }}</a>
                     </li>
+                    {% endif %}
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="user_details" role="tabpanel">
@@ -59,6 +63,7 @@
                                    value="Update">
                         </form>
                     </div>
+                    {% if webauthn_enabled %}
                     <div class="tab-pane" id="passkeys" role="tabpanel">
                         <div class="container-fluid pt-3">
                             <section class="my-10 text-center d-flex justify-content-center">
@@ -130,7 +135,8 @@
                             </section>
                         </div>
                     </div>
-
+                    {% endif %}
+                    {% if google_authenticator_enabled %}
                     <div class="tab-pane" id="two_factor_authentication" role="tabpanel">
                         <div class="container-fluid pt-3">
                             <section class="my-10 text-center d-flex justify-content-center">
@@ -150,6 +156,7 @@
                             </section>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

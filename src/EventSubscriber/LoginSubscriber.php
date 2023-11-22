@@ -19,9 +19,9 @@ class LoginSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly PublicKeyCredentialUserEntityRepositoryInterface $userEntityRepository,
-        private readonly PublicKeyCredentialSourceRepositoryInterface $credentialSourceRepository,
         private readonly MessageBusInterface $messageBus,
+        private readonly ?PublicKeyCredentialUserEntityRepositoryInterface $userEntityRepository,
+        private readonly ?PublicKeyCredentialSourceRepositoryInterface $credentialSourceRepository,
     ){
 
     }

@@ -1,7 +1,6 @@
 "use strict";
 
-//
-// // Class definition
+
 import {authenticate} from "../webauthn/client";
 import { browserSupportsWebAuthnAutofill, platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
 let KTSigninGeneral = function () {
@@ -227,8 +226,10 @@ let KTSigninGeneral = function () {
         init: function () {
             form = document.querySelector('#kt_sign_in_form');
             submitButton = document.querySelector('#kt_sign_in_submit');
+            let webauthnEnabled = document.querySelector("meta[name='webauthn-enabled']").getAttribute("content");
 
             if (
+                webauthnEnabled &&
                 window.PublicKeyCredential &&
                 PublicKeyCredential.isConditionalMediationAvailable
             ) {

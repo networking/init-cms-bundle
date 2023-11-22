@@ -144,7 +144,7 @@ file that was distributed with this source code.
                             <!--begin::Email-->
                             <input type="text" placeholder="{{ 'security.login.username'|trans({}, 'SonataUserBundle') }}"
                                     autofocus name="_username" id="username"
-                                   value="{{ last_username }}" autocomplete="username webauthn" data-kt-translate="sign-in-input-email" class="form-control bg-transparent" />
+                                   value="{{ last_username }}" autocomplete="username{% if webauthn_enabled %} webauthn{% endif %}" data-kt-translate="sign-in-input-email" class="form-control bg-transparent" />
                             <!--end::Email-->
                         </div>
                         <div class="fv-row mb-8">

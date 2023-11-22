@@ -9,7 +9,7 @@
 
         <prototype namespace="Networking\InitCmsBundle\Controller\"
                    resource="../../Controller"
-                   exclude="../../Controller/OneUploader"
+                   exclude="../../Controller/{OneUploader,WebAuthn}"
                    public="true" autowire="true">
             <tag name="controller.service_arguments"/>
         </prototype>
@@ -209,17 +209,6 @@
             <argument key="$pageClass" type="string">%networking_init_cms.admin.page.class%</argument>
             <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
             <tag name="serializer.normalizer" priority="100"/>
-        </service>
-
-        <service id="Networking\InitCmsBundle\Controller\WebAuthnController">
-            <argument key="$optionsStorage" type="service" id="Webauthn\Bundle\Security\Storage\SessionStorage"></argument>
-            <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>
-        </service>
-
-        <service id="Networking\InitCmsBundle\Repository\WebauthnCredentialRepository" autowire="true" public="true">
-        </service>
-
-        <service id="Networking\InitCmsBundle\Repository\WebauthnUserEntityRepository" autowire="true" public="true">
         </service>
 
         <service id="Networking\InitCmsBundle\MessageHandler\UserMessageHandler" autowire="true" public="true">

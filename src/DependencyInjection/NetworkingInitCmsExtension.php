@@ -18,6 +18,7 @@ use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
 use Sonata\Doctrine\Mapper\Builder\OptionsBuilder;
 use Sonata\Doctrine\Mapper\DoctrineCollector;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
@@ -148,6 +149,9 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
         }
 
+        if($config['webauthn']['enabled']){
+            $loader->load('webauthn.xml');
+        }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('gedmo_doctrine_extensions.yaml');
@@ -210,10 +214,12 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
         $this->configureGoogleAuthenticator($config, $container);
 
+        $this->configureWebauthnAuthentication($config, $container, $loader);
+
         $this->registerContainerParametersRecursive($container, $this->getAlias(), $config['translation_admin']);
     }
 
-    public function configureCache($config, ContainerBuilder $container)
+    public function configureCache(array $config, ContainerBuilder $container)
     {
         $container->setParameter('networking_init_cms.cache.activate', $config['activate']);
         $container->setParameter('networking_init_cms.cache.cache_time', $config['cache_time']);
@@ -328,6 +334,11 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             ->replaceArgument(0, $config['google_authenticator']['server']);
         $container->setAlias( \Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface::class, 'networking_init_cms.google.authenticator.helper');
 
+    }
+
+    public function configureWebauthnAuthentication(array $config, ContainerBuilder $container)
+    {
+        $container->setParameter('networking_init_cms.webauthn.enabled', $config['webauthn']['enabled']);
     }
 
 

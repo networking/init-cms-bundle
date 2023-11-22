@@ -1,6 +1,6 @@
 <?php
 
-namespace Networking\InitCmsBundle\Controller;
+namespace Networking\InitCmsBundle\Controller\WebAuthn;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Jenssegers\Agent\Agent;

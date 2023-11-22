@@ -109,7 +109,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
      *
      * @return mixed
      */
-    public function getAdminSetting($key)
+    public function getAdminSetting($key): mixed
     {
         if (array_key_exists($key, $this->getAdminSettings())) {
             return $this->adminSettings[$key];
@@ -122,7 +122,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
      * @param $key
      * @param $value
      */
-    public function setAdminSetting($key, $value)
+    public function setAdminSetting($key, $value): void
     {
         if (!$this->adminSettings) {
             $this->adminSettings = [];
@@ -134,7 +134,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * @return mixed
      */
-    public function getTwoStepVerificationCode()
+    public function getTwoStepVerificationCode(): ?string
     {
         return $this->twoStepVerificationCode;
     }
@@ -150,7 +150,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     }
 
 
-    public function getHash()
+    public function getHash(): string
     {
         return md5(strtolower(trim($this->email)));
     }
@@ -158,7 +158,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * @param \DateTime $lastActivity
      */
-    public function setLastActivity($lastActivity)
+    public function setLastActivity($lastActivity): void
     {
         $this->updatedAt = $lastActivity;
     }
@@ -166,7 +166,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * @return \DateTime
      */
-    public function getLastActivity()
+    public function getLastActivity(): ?\DateTime
     {
         return $this->updatedAt;
     }
@@ -186,7 +186,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * @return BaseUser
      */
-    public function setGroups(mixed $groups)
+    public function setGroups(mixed $groups): self
     {
         foreach ($groups as $group) {
             $this->addGroup($group);
@@ -199,7 +199,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getGroups()
+    public function getGroups(): Collection|array
     {
         return $this->groups ?: $this->groups = new ArrayCollection();
     }
@@ -207,7 +207,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getGroupNames()
+    public function getGroupNames(): array
     {
         $names = [];
         foreach ($this->getGroups() as $group) {
@@ -220,7 +220,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function hasGroup($name)
+    public function hasGroup($name): bool
     {
         return in_array($name, $this->getGroupNames());
     }
@@ -228,7 +228,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function addGroup(Group $group)
+    public function addGroup(Group $group): self
     {
         if (!$this->getGroups()->contains($group)) {
             $this->getGroups()->add($group);
@@ -240,7 +240,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function removeGroup(Group $group)
+    public function removeGroup(Group $group): self
     {
         if ($this->getGroups()->contains($group)) {
             $this->getGroups()->removeElement($group);
@@ -253,7 +253,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): self
     {
         $this->firstname = $firstname;
 
@@ -263,7 +263,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getFirstname()
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
@@ -272,7 +272,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): self
     {
         $this->lastname = $lastname;
 
@@ -282,7 +282,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getLastname()
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
@@ -291,7 +291,7 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getFullname()
+    public function getFullname(): string
     {
         if (!$this->getFirstname() && !$this->getLastname()) {
             return $this->getUsername();
@@ -300,25 +300,14 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
         return sprintf('%s %s', $this->getFirstname(), $this->getLastname());
     }
 
-    /**
-
-
-    /**
-     * Returns the gender list.
-     *
-     * @return array
-     */
-    public static function getGenderList()
-    {
-        return [
-            'gender_unknown' => \Sonata\UserBundle\Model\UserInterface::GENDER_UNKNOWN,
-            'gender_female' => UserInterface::GENDER_FEMALE,
-            'gender_male' => UserInterface::GENDER_MALE,
-        ];
-    }
-
     public function hasStepVerificationCode(): bool
     {
         return !!$this->twoStepVerificationCode;
     }
+
+    public function getDisplayName(): string
+    {
+        return $this->getFullname();
+    }
+
 }

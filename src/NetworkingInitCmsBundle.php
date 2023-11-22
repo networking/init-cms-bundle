@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle;
 
+use Networking\InitCmsBundle\DependencyInjection\Compiler\GlobalVariablesCompilerPass;
 use Networking\InitCmsBundle\DependencyInjection\Compiler\MediaProviderCompilerPass;
 use Networking\InitCmsBundle\DependencyInjection\Compiler\CheckSessionPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -32,5 +33,6 @@ class NetworkingInitCmsBundle extends Bundle
         $container->addCompilerPass(new OverrideServiceCompilerPass());
         $container->addCompilerPass(new MediaProviderCompilerPass());
         $container->addCompilerPass(new CheckSessionPass());
+        $container->addCompilerPass(new GlobalVariablesCompilerPass());
     }
 }
