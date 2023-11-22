@@ -8,7 +8,7 @@ tab:
     passkeys: "Passkeys"
 
 test:
-    success_text: "Fantastisch, es sieht so aus, als würde alles gut funktionieren!"
+    success_text: "Fantastisch, das hat geklappt!"
 
 registration_complete:
     title: "Du bist bereit!"
@@ -36,8 +36,8 @@ passkey_create:
 
 
 passkey_text: >
-    Mit Passkeys kannst du dich mit deinem Fingerabdruck, deinem Gesicht oder deinem Hardware-Sicherheitsschlüssel sicher bei deinem Konto anmelden,
-    Gesicht, der Bildschirmsperre oder dem Hardware-Sicherheitsschlüssel anmelden. Richte Passkeys nur auf Geräten ein, die du besitzt.
+    Mit Passkeys kannst du dich sicher mit deinem Fingerabdruck, deinem Gesicht oder deinem Hardware-Sicherheitsschlüssel 
+    bei deinem Konto anmelden. Richte Passkeys nur auf Geräten ein, die du besitzt.
 
 your_passkeys: Passkeys, die du erstellt hast
 
