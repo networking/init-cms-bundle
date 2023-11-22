@@ -239,7 +239,7 @@ let KTSigninGeneral = function () {
 
                     // A NotAllowedError indicates that the user canceled the operation.
                     if (e.name !== "NotAllowedError") {
-                        CMSAdmin.createInitCmsMessageBox('error', e.message);
+                        //CMSAdmin.createInitCmsMessageBox('error', e.message);
                     }
                 }
             }
