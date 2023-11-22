@@ -6,9 +6,8 @@
     <services>
 
 
-        <service id="Networking\InitCmsBundle\Controller\WebAuthn\WebAuthnController">
+        <service id="Networking\InitCmsBundle\Controller\WebAuthn\WebAuthnController" autowire="true" autoconfigure="true">
             <argument key="$optionsStorage" type="service" id="Webauthn\Bundle\Security\Storage\SessionStorage"></argument>
-            <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>
             <tag name="controller.service_arguments"/>
         </service>
 
