@@ -158,10 +158,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.page.templates', $config['templates']);
         $container->setParameter('networking_init_cms.page.content_types', $config['content_types']);
 
-        $container->setParameter('networking_init_cms.webauthn.rp_id', $config['webauthn']['rp_id']);
-        $container->setParameter('networking_init_cms.webauthn.rp_name', $config['webauthn']['rp_name']);
-        $container->setParameter('networking_init_cms.webauthn.enabled', $config['webauthn']['enabled']);
-
         $layoutBlockAdmin = $container->getDefinition('networking_init_cms.admin.layout_block');
         $subClasses = [];
         foreach ($config['content_types'] as $contentType)
