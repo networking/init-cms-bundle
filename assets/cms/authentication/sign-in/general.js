@@ -1,61 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use strict";
 
 
@@ -66,6 +8,10 @@ let KTSigninGeneral = function () {
     let form;
     let submitButton;
     let validator;
+    let signInWithPasskeyButton;
+    let signInWithUsernameAndPasswordLink;
+    let signInWithPasskeyContainer;
+    let signInWithUsernameAndPasswordContainer;
 
     const lang = localStorage.getItem("kt_auth_lang")??document.getElementsByTagName('html')[0].getAttribute('lang');
 
@@ -246,12 +192,12 @@ let KTSigninGeneral = function () {
         }
     }
 
-    let webauthnSignin = async function(){
+    let webauthnSignin = async function(username){
         try{
             // Is conditional UI available in this browser?
             const cma = await PublicKeyCredential.isConditionalMediationAvailable();
             if (cma) {
-                const result = await authenticate();
+                const result = await authenticate(username);
                 if (result && 'ok' === result.status) {
                     return location.href = document.querySelector('#redirect_route').value
                 }
@@ -267,7 +213,11 @@ let KTSigninGeneral = function () {
             }
 
             if(e.name === 'NotAllowedError'){
-                return;
+                return signInWithUsernameAndPasswordLink.click()
+            }
+
+            if(e.message === 'no_credentials'){
+                return signInWithUsernameAndPasswordLink.click()
             }
 
             Swal.fire({
@@ -288,6 +238,7 @@ let KTSigninGeneral = function () {
         init: function () {
             form = document.querySelector('#kt_sign_in_form');
             submitButton = document.querySelector('#kt_sign_in_submit');
+            signInWithUsernameAndPasswordContainer = document.querySelector('#kt_sign_in_with_username_and_password_container');
             let webauthnEnabled = document.querySelector("meta[name='webauthn-enabled']").getAttribute("content");
 
             if (
@@ -295,15 +246,47 @@ let KTSigninGeneral = function () {
                 window.PublicKeyCredential &&
                 PublicKeyCredential.isConditionalMediationAvailable
             ) {
-                try {
-                    webauthnSignin();
-                } catch (e) {
+                signInWithPasskeyButton = document.querySelector('#kt_sign_in_with_passkey');
+                signInWithUsernameAndPasswordLink = document.querySelector('#kt_sign_in_with_username_and_password');
+                signInWithPasskeyContainer = document.querySelector('#kt_sign_in_with_passkey_container');
 
-                    // A NotAllowedError indicates that the user canceled the operation.
-                    if (e.name !== "NotAllowedError") {
-                        //CMSAdmin.createInitCmsMessageBox('error', e.message);
+
+                let typingTimer;                //timer identifier
+                let doneTypingInterval = 1000;  //time in ms (5 seconds)
+                let usernameInput = document.querySelector('#username');
+                const usernameEvent = () => {
+                    clearTimeout(typingTimer);
+                    if (usernameInput.value) {
+                        typingTimer = setTimeout(doneTyping, doneTypingInterval);
                     }
                 }
+
+                let eventListener = usernameInput.addEventListener('keyup', usernameEvent);
+
+                function doneTyping () {
+                    signInWithPasskeyButton.click()
+                }
+
+                signInWithPasskeyButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    try {
+                        webauthnSignin(usernameInput.value);
+                    } catch (e) {
+
+                        // A NotAllowedError indicates that the user canceled the operation.
+                        if (e.name !== "NotAllowedError") {
+                            //CMSAdmin.createInitCmsMessageBox('error', e.message);
+                        }
+                    }
+                })
+
+                signInWithUsernameAndPasswordLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    usernameInput.removeEventListener('keyup', usernameEvent);
+                    signInWithPasskeyContainer.classList.add('d-none');
+                    signInWithUsernameAndPasswordContainer.classList.remove('d-none');
+
+                })
             }
 
             handleValidation();

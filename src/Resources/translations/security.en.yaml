@@ -73,6 +73,11 @@ authenticator_edit:
     verify_code_text: "Enter the code from your authenticator app"
     no_authenticator_found: "No authenticator found"
 
+security:
+    login:
+        with_passkey: "Sign in with passkey"
+        with_usernane_and_password: "Sign in with username and password"
+
 next: "Next"
 back: "Back"
 cancel: "Cancel"
@@ -81,3 +86,5 @@ submit: "Submit"
 edit: "Edit"
 confirm: "Confirm"
 continue: "Continue"
+
+please_wait: "Please wait"

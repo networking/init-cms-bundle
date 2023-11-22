@@ -55,11 +55,19 @@ export async function registerCredential(username, displayName) {
     return await _fetch(CMSRouting.generate('initcms_webauthn_register_response'), attResp);
 
 }
-export async function authenticate() {
-
-    const options = await _fetch('/admin/assertion/options', {
+export async function authenticate(username) {
+    let payload = {
         requireUserVerification: 'preferred',
-    });
+    }
+
+    if(username){
+        payload.username = username;
+    }
+    const options = await _fetch('/admin/assertion/options', payload);
+
+    if(username && options.allowCredentials === undefined){
+        throw new Error('no_credentials');
+    }
 
 
     let asseResp;

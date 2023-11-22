@@ -80,7 +80,7 @@ file that was distributed with this source code.
                                  <div class="mb-10">
 									<!--begin::Input group-->
 									<div class="d-flex flex-wrap flex-stack">
-										<input type="text" name="code_1" autocomplete="one-time-code" autofocus data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
+										<input type="text" name="code_1" autofocus data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
 										<input type="text" name="code_2" data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
 										<input type="text" name="code_3" data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
 										<input type="text" name="code_4" data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
@@ -92,7 +92,7 @@ file that was distributed with this source code.
                                 <div class="d-flex flex-center">
 									<button type="button" id="kt_sing_in_two_factor_submit" class="btn btn-lg btn-primary fw-bold">
 										<span class="indicator-label">Submit</span>
-										<span class="indicator-progress">Please wait...
+										<span class="indicator-progress">{{ 'please_wait'|trans({}, 'security') }}...
 										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 									</button>
                                 </div>
@@ -105,6 +105,15 @@ file that was distributed with this source code.
                     <!--begin::Login Sign in form-->
                     <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="{{ url("sonata_user_admin_security_check") }}" method="post"
                           role="form">
+                        <section class="my-10 text-center d-flex justify-content-center">
+                            <div class="stack w-150px position-relative">
+                                <img src="/bundles/networkinginitcms/img/fido/face-id.svg" alt="WebAuthn" class="position-absolute top-50 w-25px">
+                                <img src="/bundles/networkinginitcms/img/fido/fingerprint.svg" alt="WebAuthn" class="position-absolute top-25 end-0 w-30px">
+                                <img src="/bundles/networkinginitcms/img/fido/passkey-local.svg" alt="WebAuthn" class="w-50px position-absolute top-50 start-50 translate-middle">
+                                <img src="/bundles/networkinginitcms/img/fido/phone.svg" alt="WebAuthn" class="w-150px">
+                                <img src="/bundles/networkinginitcms/img/fido/password.svg" alt="WebAuthn" class="w-30px position-absolute bottom-25 end-0">
+                            </div>
+                        </section>
                         <!--begin::Heading-->
                         <div class="text-center mb-11">
                             <!--begin::Title-->
@@ -147,28 +156,51 @@ file that was distributed with this source code.
                                    value="{{ last_username }}" autocomplete="username{% if webauthn_enabled %} webauthn{% endif %}" data-kt-translate="sign-in-input-email" class="form-control bg-transparent" />
                             <!--end::Email-->
                         </div>
-                        <div class="fv-row mb-8">
-                            <input class="form-control bg-transparent" type="password" placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
-                             data-kt-translate="sign-in-input-password" name="_password" autocomplete="current-password"/>
+                        <div id="kt_sign_in_with_username_and_password_container" class="{% if webauthn_enabled %}d-none{% endif %}">
+                            <div id="kt_sign_in_password_input" class="fv-row mb-8">
+                                <input class="form-control bg-transparent" type="password" placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
+                                 data-kt-translate="sign-in-input-password" name="_password" autocomplete="current-password"/>
+                            </div>
+                            <!--end::Input group=-->
+
+                            <!--begin::Submit button-->
+                            <div class="d-grid mb-10">
+                                <div id="forgot-password" class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+                                    <div></div>
+                                    <a href="{{ url('networking_init_cms_admin_resetting_request') }}" id="kt_login_forgot" data-kt-translate="sign-in-forgot-password">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
+                                </div>
+                                <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+                                    <!--begin::Indicator label-->
+                                    <span class="indicator-label">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</span>
+                                    <!--end::Indicator label-->
+                                    <!--begin::Indicator progress-->
+                                    <span class="indicator-progress" data-kt-translate="general-progress">{{ 'please_wait'|trans({}, 'security') }}...
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    <!--end::Indicator progress-->
+                                </button>
+
+                            </div>
                         </div>
-                        <!--end::Input group=-->
-                        <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-                            <div></div>
-                            <a href="{{ url('networking_init_cms_admin_resetting_request') }}" id="kt_login_forgot" data-kt-translate="sign-in-forgot-password">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
-                        </div>
-                        <!--begin::Submit button-->
-                        <div class="d-grid mb-10">
-                            <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
-                                <!--begin::Indicator label-->
-                                <span class="indicator-label">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</span>
-                                <!--end::Indicator label-->
-                                <!--begin::Indicator progress-->
-                                <span class="indicator-progress" data-kt-translate="general-progress">Please wait...
+                        {% if webauthn_enabled %}
+                            <div id="kt_sign_in_with_passkey_container" class="d-grid mb-10">
+                                <button type="submit" id="kt_sign_in_with_passkey" class="btn btn-primary">
+                                    <!--begin::Indicator label-->
+                                    <span class="indicator-label">
+                                        <i class="fa fa-fingerprint"></i> {{ 'security.login.with_passkey'|trans({}, 'security') }}</span>
+                                    <!--end::Indicator label-->
+                                    <!--begin::Indicator progress-->
+                                    <span class="indicator-progress" data-kt-translate="general-progress">{{ 'please_wait'|trans({}, 'security') }}...
 										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                <!--end::Indicator progress-->
-                            </button>
-                        </div>
-                        <input type="hidden" id="redirect_route" value="{{ redirect_route }}">
+                                    <!--end::Indicator progress-->
+                                </button>
+                                <div id="kt_sign_in_with_username_and_password" class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mt-8">
+                                    <strong>
+                                        <a href="#" id="kt_login_forgot" data-kt-translate="sign-in-forgot-password">{{ 'security.login.with_usernane_and_password'|trans({}, 'security') }}</a>
+                                    </strong>
+                                </div>
+                            </div>
+                            <input type="hidden" id="redirect_route" value="{{ redirect_route }}">
+                        {% endif %}
                         <!--end::Submit button-->
                     </form>
                     <!--end::Login Sign in form-->
