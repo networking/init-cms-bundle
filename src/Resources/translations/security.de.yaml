@@ -33,6 +33,7 @@ passkey_create:
     text: "Passkeys sind einfach einzurichten und ermöglichen es dir, dich mit deinem Fingerabdruck, deinem Gesicht, deiner Bildschirmsperre oder deinem Hardware-Sicherheitsschlüssel sicher bei deinem CMS-Konto anzumelden. Du kannst einen Passkey auf diesem Gerät erstellen oder ein anderes Gerät verwenden."
     passkey_exists_for_device_method: "Du hast bereits einen Hauptschlüssel für dieses Gerät und diese Methode."
     webauthn_not_available: "Passkeys werden auf diesem Gerät nicht unterstützt."
+    no_credentials_found: "Keine Passkeys gefunden"
 
 
 passkey_text: >

@@ -131,7 +131,7 @@ async function renderCredentials() {
                           </li>`)}
                   </ul>` : html`
                 <ul class="list-group">
-                    <li  class="list-group-item">No credentials found.</li>
+                    <li  class="list-group-item">${Translator.trans('passkey_create.no_credentials_found', [], 'security')}<</li>
                   </ul>`}`;
         render(creds, list);
 

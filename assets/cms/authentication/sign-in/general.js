@@ -1,3 +1,61 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use strict";
 
 
@@ -206,6 +264,10 @@ let KTSigninGeneral = function () {
 
             if(e.name === 'Error'){
                 message = translate('login_error');
+            }
+
+            if(e.name === 'NotAllowedError'){
+                return;
             }
 
             Swal.fire({
