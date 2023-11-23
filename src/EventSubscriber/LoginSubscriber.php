@@ -33,6 +33,10 @@ class LoginSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if(!$this->userEntityRepository || !$this->credentialSourceRepository){
+            return;
+        }
+
         $userEntity = $this->userEntityRepository->findOneByUsername($token->getUserIdentifier());
 
         $credentials = $this->credentialSourceRepository->findAllForUserEntity($userEntity);
