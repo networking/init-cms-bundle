@@ -29,8 +29,8 @@ class UserAdminController extends SonataCRUDController
 {
 
     public function __construct(
-        private readonly HelperInterface $helper,
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly ?HelperInterface $helper,
         private readonly ?PublicKeyCredentialSourceRepositoryInterface $publicKeyCredentialSourceRepository,
         private readonly ?PublicKeyCredentialUserEntityRepositoryInterface $publicKeyCredentialUserEntityRepository,
     )
@@ -77,17 +77,11 @@ class UserAdminController extends SonataCRUDController
                     )
                 );
 
-                // redirect to edit mode
                 return new RedirectResponse($this->admin->generateUrl('profile_security'));
             } catch (ModelManagerException $e) {
-                // NEXT_MAJOR: Remove this catch.
                 $this->handleModelManagerException($e);
-
-                $isFormValid = false;
             } catch (ModelManagerThrowable $e) {
                 $errorMessage = $this->handleModelManagerThrowable($e);
-
-                $isFormValid = false;
             } catch (LockException) {
                 $this->addFlash('sonata_flash_error', $this->trans('flash_lock_error', [
                     '%name%' => $this->escapeHtml($this->admin->toString($existingObject)),
@@ -106,7 +100,7 @@ class UserAdminController extends SonataCRUDController
             [
                 'hasStepVerificationCode' => $user->hasStepVerificationCode(),
                 'form' => $formView,
-                'qrCodeUrl' => $this->helper->getUrl($user),
+                'qrCodeUrl' => $this->helper?->getUrl($user),
                 'qrSecret' => $user->getTwoStepVerificationCode(),
                 'base_template' => $this->getBaseTemplate(),
                 'admin' => $this->admin,
