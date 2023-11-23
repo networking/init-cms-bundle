@@ -1,17 +1,13 @@
 {#
-
 This file is part of the Sonata package.
 
 (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% extends base_template %}
-
-{% block sidebar_left %}{% endblock %}
 
 {% block sonata_nav %}
 {% endblock sonata_nav %}
@@ -22,53 +18,132 @@ file that was distributed with this source code.
 {% block sonata_left_side %}
 {% endblock sonata_left_side %}
 
-{% block body_attributes %}class="sonata-bc login-page"{% endblock %}
 
-{% block content %}
-    <div class="row">
-        <div id="login" class="connection modal">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
+{% block page %}
+    <style>body {
+            background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}');
+        }
+
+        [data-bs-theme="dark"] body {
+            background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}');
+        }</style>
+    <!--begin::Authentication - Sign-in -->
+    <div class="d-flex flex-column flex-column-fluid flex-lg-row">
+        <!--begin::Aside-->
+        <div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
+            <!--begin::Aside-->
+            <div class="d-flex flex-center flex-lg-start flex-column">
+                <!--begin::Logo-->
+                <a href="https://www.initcms.com" target="_blank" class="mb-7">
+                    <img alt="Logo" src="{{ asset('bundles/networkinginitcms/img/initcms-396x100.png') }}"/>
+                </a>
+                <!--end::Logo-->
+                <!--begin::Title-->
+                <h2 class="text-white fw-normal m-0">Init CMS</h2>
+                <!--end::Title-->
+            </div>
+            <!--begin::Aside-->
+        </div>
+        <!--begin::Aside-->
+        <!--begin::Body-->
+        <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12 p-lg-20">
+            <!--begin::Card-->
+            <div class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20">
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20">
                     {% block sonata_user_reset_request_form %}
-                        {% block sonata_user_reset_request_error %}
-                            {% if invalid_username is defined %}
-                                <div class="alert alert-danger">{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}, 'FOSUserBundle') }}</div>
-                            {% endif %}
-                        {% endblock %}
-                        <form action="{{ path('networking_init_cms_admin_resetting_send_email') }}" method="post"
-                              role="form" class="form-vertical">
-                            <div class="modal-body">
-                                <p class="login-box-msg">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</p>
 
-                                <div class="form-group has-feedback">
-                                    <input type="text" class="form-control" id="username" name="username"
-                                           required="required"
-                                           placeholder="{{ 'resetting.request.username'|trans({}, 'FOSUserBundle')|replace({':': ''}) }}"/>
-                                    <span class="fa fa-user form-control-feedback"></span>
+                        <form action="{{ path('networking_init_cms_admin_resetting_request') }}" method="post"
+                              role="form" class="form w-100" novalidate="novalidate">
+
+
+                            <section class="my-10 text-center d-flex justify-content-center">
+                                <div class="stack w-150px position-relative">
+                                    <img src="/bundles/networkinginitcms/img/fido/face-id.svg" alt="WebAuthn"
+                                         class="position-absolute top-50 w-25px">
+                                    <img src="/bundles/networkinginitcms/img/fido/fingerprint.svg" alt="WebAuthn"
+                                         class="position-absolute top-25 end-0 w-30px">
+                                    <img src="/bundles/networkinginitcms/img/fido/passkey-local.svg" alt="WebAuthn"
+                                         class="w-50px position-absolute top-50 start-50 translate-middle">
+                                    <img src="/bundles/networkinginitcms/img/fido/phone.svg" alt="WebAuthn"
+                                         class="w-150px">
+                                    <img src="/bundles/networkinginitcms/img/fido/password.svg" alt="WebAuthn"
+                                         class="w-30px position-absolute bottom-25 end-0">
                                 </div>
-                                <p>
-                                    <a href="{{ path('networking_init_cms_admin_security_login') }}">{{ 'title_user_authentication'|trans({}, 'SonataUserBundle') }}</a>
-                                </p>
+                            </section>
+                            <div class="text-center mb-11">
+                                <!--begin::Title-->
+                                <h1 class="text-dark fw-bolder mb-3">{{ 'resetting.request.submit'|trans({}, 'SonataUserBundle') }}</h1>
+                                <!--end::Title-->
+                                <!--begin::Subtitle-->
+                                {#                            <div class="text-gray-500 fw-semibold fs-6">Your Social Campaigns</div> #}
+                                <!--end::Subtitle=-->
                             </div>
+                            {% block sonata_user_reset_request_error %}
+                                {% if invalid_username is defined %}
 
-                            <div class="modal-footer">
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <button type="submit"
-                                                class="btn btn-primary btn-block btn-flat">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</button>
+                                    <div class="alert alert-danger d-flex align-items-center p-5">
+                                        <!--begin::Icon-->
+                                        <i class="ki-duotone ki-shield-tick fs-2hx text-danger me-4"><span
+                                                    class="path1"></span><span class="path2"></span></i>
+                                        <!--end::Icon-->
 
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-column">
+                                            <!--begin::Title-->
+                                            <h4 class="mb-1 text-danger">{{ 'flash_error'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
+                                            <!--end::Title-->
+
+                                            <!--begin::Content-->
+                                            <span>{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}, 'FOSUserSonataUserBundleBundle') }}</span>
+                                            <!--end::Content-->
+                                        </div>
+                                        <!--end::Wrapper-->
                                     </div>
+                                {% endif %}
+                            {% endblock %}
+                            <div class="fv-row mb-8">
+                                {{ form_widget(form.username, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'resetting.request.username'|trans({}, 'SonataUserBundle')|replace({':': ''})
+                                }}) }}
+                                {{ form_errors(form.username) }}
+                            </div>
+
+                            <div class="d-grid mb-10">
+                                <button type="submit" class="btn btn-primary">
+                                    <!--begin::Indicator label-->
+                                    <span class="indicator-label">
+                                        {{ 'resetting.request.submit'|trans({}, 'SonataUserBundle') }}</span>
+                                    <!--end::Indicator label-->
+                                    <!--begin::Indicator progress-->
+                                    <span class="indicator-progress"
+                                          data-kt-translate="general-progress">{{ 'please_wait'|trans({}, 'security') }}...
+										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    <!--end::Indicator progress-->
+                                </button>
+                                <div id="kt_sign_in_with_username_and_password"
+                                     class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mt-8">
+                                    <strong>
+                                        <a href="{{ path('networking_init_cms_admin_security_login') }}">{{ 'title_user_authentication'|trans({}, 'SonataUserBundle') }}</a>
+                                    </strong>
                                 </div>
                             </div>
+                            {{ form_rest(form) }}
                         </form>
 
                     {% endblock %}
+                    <!--end::Form-->
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
+            <!--end::Wrapper-->
+            <!--begin::Footer-->
+            {% block footer %}
+
+            {% endblock footer %}
+            <!--end::Footer-->
         </div>
-        <!-- /.modal -->
+        <!--end::Card-->
     </div>
 
-{% endblock content %}
+{% endblock page %}

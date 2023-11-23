@@ -2,7 +2,6 @@ NetworkingInitCmsBundle:
     resource: "@NetworkingInitCmsBundle/Resources/config/routing/cms.yaml"
     prefix:   /
 
-# Sonata-project Bundles
 admin:
     resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
     prefix: /admin
@@ -12,6 +11,13 @@ _sonata_admin:
     type: sonata_admin
     prefix: /admin
 
+sonata_user_admin_security:
+    resource: '@SonataUserBundle/Resources/config/routing/admin_security.xml'
+    prefix: /admin
+
+sonata_user_admin_resetting:
+    resource: '@SonataUserBundle/Resources/config/routing/admin_resetting.xml'
+    prefix: /admin
 
 media:
     resource: '@SonataMediaBundle/Resources/config/routing/media.xml'

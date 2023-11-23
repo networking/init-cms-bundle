@@ -195,6 +195,13 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <service id="Networking\InitCmsBundle\Controller\AdminResettingController" autoconfigure="true" autowire="true" public="true">
+            <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>
+            <argument key="$tokenGenerator" type="service" id="sonata.user.util.token_generator"/>
+            <argument key="$mailer" type="service" id="sonata.user.mailer.default"/>
+            <tag name="controller.service_arguments"/>
+        </service>
+
         <service id="Networking\InitCmsBundle\Serializer\MediaNormalizer"  autowire="true" public="true">
             <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
             <argument key="$propertyNormalizer" type="service" id="serializer.normalizer.property"/>
@@ -216,5 +223,6 @@
 
         <service id="Networking\InitCmsBundle\MessageHandler\UserMessageHandler" autowire="true" public="true">
         </service>
+
     </services>
 </container>
