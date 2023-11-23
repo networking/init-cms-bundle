@@ -11,9 +11,9 @@ file that was distributed with this source code.
 {% block javascripts %}
     <!--begin::Custom Javascript(used for this page only)-->
     {% if two_step_submit|default(false) %}
-        <script src="{{ asset('twoFactorSignin.js', 'init_cms')}}"></script>
+        <script src="{{ asset('twoFactorSignin.js', 'init_cms') }}"></script>
     {% else %}
-        <script src="{{ asset('generalSignin.js', 'init_cms')}}"></script>
+        <script src="{{ asset('generalSignin.js', 'init_cms') }}"></script>
     {% endif %}
     <!--end::Custom Javascript-->
 {% endblock javascripts %}
@@ -29,192 +29,237 @@ file that was distributed with this source code.
 
 
 {% block page %}
-    <style>body { background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}'); } [data-bs-theme="dark"] body { background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}'); }</style>
+    <style>body {
+            background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}');
+        }
+
+        [data-bs-theme="dark"] body {
+            background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}');
+        }</style>
     <!--begin::Authentication - Sign-in -->
     <div class="d-flex flex-column flex-column-fluid flex-lg-row">
-    <!--begin::Aside-->
-    <div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
         <!--begin::Aside-->
-        <div class="d-flex flex-center flex-lg-start flex-column">
-            <!--begin::Logo-->
-            <a href="https://www.initcms.com" target="_blank" class="mb-7">
-                <img alt="Logo" src="{{ asset('bundles/networkinginitcms/img/initcms-396x100.png') }}" />
-            </a>
-            <!--end::Logo-->
-            <!--begin::Title-->
-            <h2 class="text-white fw-normal m-0">Init CMS</h2>
-            <!--end::Title-->
+        <div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
+            <!--begin::Aside-->
+            <div class="d-flex flex-center flex-lg-start flex-column">
+                <!--begin::Logo-->
+                <a href="https://www.initcms.com" target="_blank" class="mb-7">
+                    <img alt="Logo" src="{{ asset('bundles/networkinginitcms/img/initcms-white-396x100.png') }}"/>
+                </a>
+                <!--end::Logo-->
+                <!--begin::Title-->
+                <h2 class="text-white fw-normal m-0">Init CMS</h2>
+                <!--end::Title-->
+            </div>
+            <!--begin::Aside-->
         </div>
         <!--begin::Aside-->
-    </div>
-    <!--begin::Aside-->
-    <!--begin::Body-->
-    <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12 p-lg-20">
-    <!--begin::Card-->
-        <div class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20">
-        <!--begin::Wrapper-->
-            <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20">
-            <!--begin::Form-->
-                {% if two_step_submit|default(false) %}
-                    <form class="form" id="kt_sing_in_two_factor_form"  role="form" data-kt-redirect-url="/admin">
-                    <!--begin::Icon-->
-								<div class="text-center mb-10">
-									<img alt="Logo" class="mh-125px" src="/bundles/networkinginitcms/admin-theme/media/svg/misc/smartphone-2.svg" />
-								</div>
-								<!--end::Icon-->
-								<!--begin::Heading-->
-								<div class="text-center mb-10">
-									<!--begin::Title-->
-									<h1 class="text-dark mb-3">{{ 'label_two_step_code'|trans({}, 'SonataUserBundle') }}</h1>
-									<!--end::Title-->
-									<!--begin::Sub-title-->
-									<div class="text-muted fw-semibold fs-5 mb-5">{{ 'message_two_step_code_help'|trans({}, 'SonataUserBundle') }}</div>
-									<!--end::Sub-title-->
-									<!--begin::Mobile no-->
-									<!--end::Mobile no-->
-								</div>
-                        <div class="login-box modal-body">
-                            {% if state == 'error' %}
-                                <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
-                            {% endif %}
-                                 <div class="mb-10">
-									<!--begin::Input group-->
-									<div class="d-flex flex-wrap flex-stack">
-										<input type="text" name="code_1" autofocus data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
-										<input type="text" name="code_2" data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
-										<input type="text" name="code_3" data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
-										<input type="text" name="code_4" data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
-										<input type="text" name="code_5" data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
-										<input type="text" name="code_6" data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1" class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2" value="" inputmode="number">
-									</div>
-									<!--begin::Input group-->
-								</div>
+        <!--begin::Body-->
+        <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12 p-lg-20">
+            <!--begin::Card-->
+            <div class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20">
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20">
+                    <!--begin::Form-->
+                    {% if two_step_submit|default(false) %}
+                        <form class="form" id="kt_sing_in_two_factor_form" role="form" data-kt-redirect-url="/admin">
+                            <!--begin::Icon-->
+                            <div class="text-center mb-10">
+                                <img alt="Logo" class="mh-125px"
+                                     src="/bundles/networkinginitcms/admin-theme/media/svg/misc/smartphone-2.svg"/>
+                            </div>
+                            <!--end::Icon-->
+                            <!--begin::Heading-->
+                            <div class="text-center mb-10">
+                                <!--begin::Title-->
+                                <h1 class="text-dark mb-3">{{ 'label_two_step_code'|trans({}, 'SonataUserBundle') }}</h1>
+                                <!--end::Title-->
+                                <!--begin::Sub-title-->
+                                <div class="text-muted fw-semibold fs-5 mb-5">{{ 'message_two_step_code_help'|trans({}, 'SonataUserBundle') }}</div>
+                                <!--end::Sub-title-->
+                                <!--begin::Mobile no-->
+                                <!--end::Mobile no-->
+                            </div>
+                            <div class="login-box modal-body">
+                                {% if state == 'error' %}
+                                    <div class="alert alert-error">{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</div>
+                                {% endif %}
+                                <div class="mb-10">
+                                    <!--begin::Input group-->
+                                    <div class="d-flex flex-wrap flex-stack">
+                                        <input type="text" name="code_1" autofocus
+                                               data-inputmask="'mask': '9', 'placeholder': ''" maxlength="1"
+                                               class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2"
+                                               value="" inputmode="number">
+                                        <input type="text" name="code_2" data-inputmask="'mask': '9', 'placeholder': ''"
+                                               maxlength="1"
+                                               class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2"
+                                               value="" inputmode="number">
+                                        <input type="text" name="code_3" data-inputmask="'mask': '9', 'placeholder': ''"
+                                               maxlength="1"
+                                               class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2"
+                                               value="" inputmode="number">
+                                        <input type="text" name="code_4" data-inputmask="'mask': '9', 'placeholder': ''"
+                                               maxlength="1"
+                                               class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2"
+                                               value="" inputmode="number">
+                                        <input type="text" name="code_5" data-inputmask="'mask': '9', 'placeholder': ''"
+                                               maxlength="1"
+                                               class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2"
+                                               value="" inputmode="number">
+                                        <input type="text" name="code_6" data-inputmask="'mask': '9', 'placeholder': ''"
+                                               maxlength="1"
+                                               class="form-control bg-transparent h-60px w-60px fs-2qx text-center mx-1 my-2"
+                                               value="" inputmode="number">
+                                    </div>
+                                    <!--begin::Input group-->
+                                </div>
                                 <div class="d-flex flex-center">
-									<button type="button" id="kt_sing_in_two_factor_submit" class="btn btn-lg btn-primary fw-bold">
-										<span class="indicator-label">Submit</span>
-										<span class="indicator-progress">{{ 'please_wait'|trans({}, 'security') }}...
+                                    <button type="button" id="kt_sing_in_two_factor_submit"
+                                            class="btn btn-lg btn-primary fw-bold">
+                                        <span class="indicator-label">Submit</span>
+                                        <span class="indicator-progress">{{ 'please_wait'|trans({}, 'security') }}...
 										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-									</button>
+                                    </button>
                                 </div>
                                 <div class="text-center fw-semibold fs-5">
                                     <span class="help-block sonata-ba-field-help"></span>
                                 </div>
-                           </div>
-                    </form>
-                {% else %}
-                    <!--begin::Login Sign in form-->
-                    <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="{{ url("sonata_user_admin_security_check") }}" method="post"
-                          role="form">
-                        <section class="my-10 text-center d-flex justify-content-center">
-                            <div class="stack w-150px position-relative">
-                                <img src="/bundles/networkinginitcms/img/fido/face-id.svg" alt="WebAuthn" class="position-absolute top-50 w-25px">
-                                <img src="/bundles/networkinginitcms/img/fido/fingerprint.svg" alt="WebAuthn" class="position-absolute top-25 end-0 w-30px">
-                                <img src="/bundles/networkinginitcms/img/fido/passkey-local.svg" alt="WebAuthn" class="w-50px position-absolute top-50 start-50 translate-middle">
-                                <img src="/bundles/networkinginitcms/img/fido/phone.svg" alt="WebAuthn" class="w-150px">
-                                <img src="/bundles/networkinginitcms/img/fido/password.svg" alt="WebAuthn" class="w-30px position-absolute bottom-25 end-0">
                             </div>
-                        </section>
-                        <!--begin::Heading-->
-                        <div class="text-center mb-11">
-                            <!--begin::Title-->
-                            <h1 class="text-dark fw-bolder mb-3" data-kt-translate="sign-in-title">{{ 'link_login'|trans({}, 'SonataUserBundle')}}</h1>
-                            <!--end::Title-->
-                            <!--begin::Subtitle-->
-{#                            <div class="text-gray-500 fw-semibold fs-6">Your Social Campaigns</div>#}
-                            <!--end::Subtitle=-->
-                        </div>
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
-                        {% block sonata_user_login_error %}
-                            {% if error %}
-                                <!--begin::Alert-->
-                                <div class="alert alert-danger d-flex align-items-center p-5">
-                                    <!--begin::Icon-->
-                                    <i class="ki-duotone ki-shield-tick fs-2hx text-danger me-4"><span class="path1"></span><span class="path2"></span></i>
-                                    <!--end::Icon-->
+                        </form>
+                    {% else %}
+                        <!--begin::Login Sign in form-->
+                        <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form"
+                              action="{{ url("sonata_user_admin_security_check") }}" method="post"
+                              role="form">
+                            <section class="my-10 text-center d-flex justify-content-center">
+                                {% include '@NetworkingInitCms/fido.html.twig' %}
+                            </section>
+                            <!--begin::Heading-->
+                            <div class="text-center mb-11">
+                                <!--begin::Title-->
+                                <h1 class="text-dark fw-bolder mb-3"
+                                    data-kt-translate="sign-in-title">{{ 'link_login'|trans({}, 'SonataUserBundle') }}</h1>
+                                <!--end::Title-->
+                                <!--begin::Subtitle-->
+                                {#                            <div class="text-gray-500 fw-semibold fs-6">Your Social Campaigns</div> #}
+                                <!--end::Subtitle=-->
+                            </div>
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                            {% block sonata_user_login_error %}
+                                {% if error %}
+                                    <!--begin::Alert-->
+                                    <div class="alert alert-danger d-flex align-items-center p-5">
+                                        <!--begin::Icon-->
+                                        <i class="ki-duotone ki-shield-tick fs-2hx text-danger me-4"><span
+                                                    class="path1"></span><span class="path2"></span></i>
+                                        <!--end::Icon-->
 
-                                    <!--begin::Wrapper-->
-                                    <div class="d-flex flex-column">
-                                        <!--begin::Title-->
-                                        <h4 class="mb-1 text-danger">{{ 'flash_error'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
-                                        <!--end::Title-->
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-column">
+                                            <!--begin::Title-->
+                                            <h4 class="mb-1 text-danger">{{ 'flash_error'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
+                                            <!--end::Title-->
 
-                                        <!--begin::Content-->
-                                        <span>{{ error.messageKey|trans(error.messageData, 'security') }}.</span>
-                                        <!--end::Content-->
+                                            <!--begin::Content-->
+                                            <span>{{ error.messageKey|trans(error.messageData, 'security') }}.</span>
+                                            <!--end::Content-->
+                                        </div>
+                                        <!--end::Wrapper-->
                                     </div>
-                                    <!--end::Wrapper-->
-                                </div>
-                                <!--end::Alert-->
-                            {% endif %}
-                        {% endblock %}
+                                    <!--end::Alert-->
+                                {% endif %}
+                            {% endblock %}
 
-                        <!--begin::Input group=-->
-                        <div class="fv-row mb-8">
-                            <!--begin::Email-->
-                            <input type="text" placeholder="{{ 'security.login.username'|trans({}, 'SonataUserBundle') }}"
-                                    autofocus name="_username" id="username"
-                                   value="{{ last_username }}" autocomplete="username{% if webauthn_enabled %} webauthn{% endif %}" data-kt-translate="sign-in-input-email" class="form-control bg-transparent" />
-                            <!--end::Email-->
-                        </div>
-                        <div id="kt_sign_in_with_username_and_password_container" class="{% if webauthn_enabled %}d-none{% endif %}">
-                            <div id="kt_sign_in_password_input" class="fv-row mb-8">
-                                <input class="form-control bg-transparent" type="password" placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
-                                 data-kt-translate="sign-in-input-password" name="_password" autocomplete="current-password"/>
+                            <!--begin::Input group=-->
+                            <div class="fv-row mb-8">
+                                <!--begin::Email-->
+                                <input type="text"
+                                       placeholder="{{ 'security.login.username'|trans({}, 'SonataUserBundle') }}"
+                                       autofocus name="_username" id="username"
+                                       value="{{ last_username }}"
+                                       autocomplete="username{% if webauthn_enabled %} webauthn{% endif %}"
+                                       data-kt-translate="sign-in-input-email" class="form-control bg-transparent"/>
+                                <!--end::Email-->
                             </div>
-                            <!--end::Input group=-->
-
-                            <!--begin::Submit button-->
-                            <div class="d-grid mb-10">
-                                <div id="forgot-password" class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-                                    <div></div>
-                                    <a href="{{ url('networking_init_cms_admin_resetting_request') }}" id="kt_login_forgot" data-kt-translate="sign-in-forgot-password">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
+                            <div id="kt_sign_in_with_username_and_password_container"
+                                 class="{% if webauthn_enabled %}d-none{% endif %}">
+                                <div id="kt_sign_in_password_input" class="fv-row mb-8">
+                                    <input class="form-control bg-transparent" type="password"
+                                           placeholder="{{ 'security.login.password'|trans({}, 'SonataUserBundle') }}"
+                                           data-kt-translate="sign-in-input-password" name="_password"
+                                           autocomplete="current-password"/>
                                 </div>
-                                <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
-                                    <!--begin::Indicator label-->
-                                    <span class="indicator-label">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</span>
-                                    <!--end::Indicator label-->
-                                    <!--begin::Indicator progress-->
-                                    <span class="indicator-progress" data-kt-translate="general-progress">{{ 'please_wait'|trans({}, 'security') }}...
+                                <!--end::Input group=-->
+
+                                <!--begin::Submit button-->
+                                <div class="d-grid mb-10">
+                                    <div id="forgot-password"
+                                         class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+                                        <div></div>
+                                        <a href="{{ url('networking_init_cms_admin_resetting_request') }}"
+                                           id="kt_login_forgot"
+                                           data-kt-translate="sign-in-forgot-password">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
+                                    </div>
+                                    <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+                                        <!--begin::Indicator label-->
+                                        <span class="indicator-label">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</span>
+                                        <!--end::Indicator label-->
+                                        <!--begin::Indicator progress-->
+                                        <span class="indicator-progress"
+                                              data-kt-translate="general-progress">{{ 'please_wait'|trans({}, 'security') }}...
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                    <!--end::Indicator progress-->
-                                </button>
+                                        <!--end::Indicator progress-->
+                                    </button>
 
-                            </div>
-                        </div>
-                        {% if webauthn_enabled %}
-                            <div id="kt_sign_in_with_passkey_container" class="d-grid mb-10">
-                                <button type="submit" id="kt_sign_in_with_passkey" class="btn btn-primary">
-                                    <!--begin::Indicator label-->
-                                    <span class="indicator-label">
-                                        <i class="fa fa-fingerprint"></i> {{ 'security.login.with_passkey'|trans({}, 'security') }}</span>
-                                    <!--end::Indicator label-->
-                                    <!--begin::Indicator progress-->
-                                    <span class="indicator-progress" data-kt-translate="general-progress">{{ 'please_wait'|trans({}, 'security') }}...
-										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                    <!--end::Indicator progress-->
-                                </button>
-                                <div id="kt_sign_in_with_username_and_password" class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mt-8">
-                                    <strong>
-                                        <a href="#" id="kt_login_forgot" data-kt-translate="sign-in-forgot-password">{{ 'security.login.with_usernane_and_password'|trans({}, 'security') }}</a>
-                                    </strong>
                                 </div>
                             </div>
-                            <input type="hidden" id="redirect_route" value="{{ redirect_route }}">
-                        {% endif %}
-                        <!--end::Submit button-->
-                    </form>
-                    <!--end::Login Sign in form-->
-                {% endif %}
-            <!--end::Form-->
-            </div>
-        </div>
-        <!--end::Wrapper-->
-        <!--begin::Footer-->
-        {% block footer %}
+                            {% if webauthn_enabled %}
+                                <div id="kt_sign_in_with_passkey_container" class="d-grid mb-10">
+                                    <button type="submit" id="kt_sign_in_with_passkey" class="btn btn-primary">
+                                        <!--begin::Indicator label-->
+                                        <span class="indicator-label">
+                                        <svg width="25" height="25" viewBox="0 0 159 158" fill="none" class="text-light"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                        <g id="fingerprint">
+                                        <path id="Vector"
+                                              d="M13.4877 59.7997C12.9954 59.5536 12.7493 59.1536 12.7493 58.5997C12.7493 58.0459 12.8723 57.5228 13.1185 57.0304C20.7494 46.4456 30.4112 38.2608 42.1038 32.476C53.7963 26.6913 66.2889 23.7989 79.5815 23.7989C92.8741 23.7989 105.398 26.6298 117.152 32.2914C128.906 37.9531 138.66 46.0764 146.414 56.6612C146.783 57.2766 146.937 57.7689 146.875 58.1382C146.814 58.5074 146.598 58.8766 146.229 59.2459C145.86 59.6151 145.398 59.7997 144.845 59.7997C144.291 59.7997 143.768 59.492 143.275 58.8766C136.014 48.7841 126.752 41.0301 115.49 35.6146C104.228 30.1991 92.2588 27.4913 79.5815 27.4913C66.9043 27.4913 55.0271 30.2298 43.95 35.7069C32.8728 41.1839 23.6418 48.9072 16.257 58.8766C15.7647 59.492 15.3032 59.8613 14.8724 59.9844C14.4416 60.1074 13.9801 60.0459 13.4877 59.7997ZM101.551 152.663C88.8741 149.463 78.4431 143.125 70.2583 133.648C62.0735 124.17 57.9811 112.662 57.9811 99.1237C57.9811 93.339 60.1042 88.4773 64.3504 84.5388C68.5967 80.6002 73.6737 78.6309 79.5815 78.6309C85.4894 78.6309 90.5664 80.6002 94.8127 84.5388C99.0589 88.4773 101.182 93.339 101.182 99.1237C101.182 103.801 102.997 107.739 106.628 110.939C110.259 114.139 114.475 115.739 119.275 115.739C123.952 115.739 128.044 114.139 131.552 110.939C135.06 107.739 136.814 103.801 136.814 99.1237C136.814 83.9849 131.183 71.3077 119.921 61.0921C108.659 50.8765 95.2127 45.7687 79.5815 45.7687C63.9504 45.7687 50.504 50.8765 39.2422 61.0921C27.9804 71.3077 22.3495 83.9849 22.3495 99.1237C22.3495 102.078 22.688 105.924 23.3649 110.662C24.0418 115.401 25.488 120.786 27.7035 126.817C27.9496 127.432 27.9496 127.894 27.7035 128.201C27.4573 128.509 27.1496 128.786 26.7804 129.032C26.288 129.278 25.7649 129.34 25.2111 129.217C24.6572 129.094 24.2572 128.724 24.0111 128.109C22.411 123.432 21.1495 118.663 20.2264 113.801C19.3033 108.939 18.8417 104.047 18.8417 99.1237C18.8417 83.2464 24.8726 69.6769 36.9344 58.4151C48.9962 47.1533 63.2119 41.5224 79.5815 41.5224C96.3204 41.5224 110.69 47.061 122.69 58.1382C134.69 69.2153 140.691 82.8772 140.691 99.1237C140.691 104.785 138.598 109.585 134.414 113.524C130.229 117.463 125.183 119.432 119.275 119.432C113.244 119.432 108.075 117.463 103.767 113.524C99.4589 109.585 97.305 104.785 97.305 99.1237C97.305 94.3236 95.5511 90.3235 92.0434 87.1234C88.5356 83.9234 84.3817 82.3233 79.5815 82.3233C74.7814 82.3233 70.5967 83.9234 67.0274 87.1234C63.4581 90.3235 61.6735 94.3236 61.6735 99.1237C61.6735 111.924 65.5505 122.601 73.3045 131.155C81.0585 139.709 90.7203 145.709 102.29 149.156C103.028 149.402 103.49 149.709 103.674 150.079C103.859 150.448 103.89 150.879 103.767 151.371C103.644 151.986 103.397 152.417 103.028 152.663C102.659 152.91 102.167 152.91 101.551 152.663ZM36.3806 19.7373C35.7652 19.9834 35.3036 20.0142 34.9959 19.8296C34.6882 19.645 34.4113 19.3681 34.1651 18.9988C33.919 18.7527 33.7959 18.3834 33.7959 17.8911C33.7959 17.3988 33.9805 17.0295 34.3498 16.7834C41.3653 12.9679 48.7193 10.0755 56.4118 8.10626C64.1043 6.13698 71.8275 5.15234 79.5815 5.15234C87.5817 5.15234 95.4281 6.13698 103.121 8.10626C110.813 10.0755 118.167 12.8448 125.183 16.4141C125.798 16.6603 126.136 17.0295 126.198 17.5219C126.26 18.0142 126.167 18.445 125.921 18.8142C125.675 19.1834 125.336 19.4911 124.906 19.7373C124.475 19.9834 123.952 19.9834 123.336 19.7373C116.567 16.4141 109.49 13.7987 102.105 11.891C94.7204 9.98322 87.2125 9.02936 79.5815 9.02936C71.9506 9.02936 64.5043 9.92168 57.2426 11.7063C49.9809 13.491 43.0269 16.168 36.3806 19.7373ZM61.1196 150.633C53.981 143.248 48.4116 135.494 44.4115 127.371C40.4114 119.247 38.4114 109.832 38.4114 99.1237C38.4114 88.1696 42.4422 78.9386 50.504 71.4308C58.5657 63.9229 68.2582 60.169 79.5815 60.169C90.9049 60.169 100.659 63.9229 108.844 71.4308C117.029 78.9386 121.121 88.1696 121.121 99.1237C121.121 99.7391 120.967 100.201 120.659 100.508C120.352 100.816 119.89 100.97 119.275 100.97C118.659 100.97 118.167 100.816 117.798 100.508C117.429 100.201 117.244 99.7391 117.244 99.1237C117.244 89.1543 113.521 80.7848 106.074 74.0154C98.6281 67.2461 89.7972 63.8614 79.5815 63.8614C69.3659 63.8614 60.5965 67.2461 53.2733 74.0154C45.95 80.7848 42.2884 89.1543 42.2884 99.1237C42.2884 109.585 44.1038 118.509 47.7347 125.894C51.3655 133.278 56.7503 140.663 63.8889 148.048C64.3812 148.54 64.5966 149.002 64.5351 149.433C64.4735 149.863 64.2581 150.263 63.8889 150.633C63.6427 150.879 63.2427 151.094 62.6889 151.279C62.135 151.463 61.6119 151.248 61.1196 150.633ZM117.613 137.155C106.782 137.155 97.3973 133.555 89.4587 126.355C81.5201 119.155 77.5507 110.078 77.5507 99.1237C77.5507 98.5083 77.7046 98.016 78.0123 97.6468C78.32 97.2775 78.7815 97.0929 79.3969 97.0929C80.0123 97.0929 80.4739 97.2775 80.7816 97.6468C81.0893 98.016 81.2431 98.5083 81.2431 99.1237C81.2431 109.093 84.9048 117.309 92.228 123.77C99.5512 130.232 108.013 133.463 117.613 133.463C118.598 133.463 119.767 133.401 121.121 133.278C122.475 133.155 123.952 132.971 125.552 132.724C126.167 132.601 126.66 132.694 127.029 133.001C127.398 133.309 127.644 133.648 127.767 134.017C127.89 134.509 127.86 134.94 127.675 135.309C127.49 135.678 127.09 135.925 126.475 136.048C124.259 136.663 122.321 137.001 120.659 137.063C118.998 137.125 117.982 137.155 117.613 137.155Z"
+                                              stroke="currentColor" stroke-width="4.5"/>
+                                        </g>
+                                        </svg>
 
-        {% endblock footer %}
-        <!--end::Footer-->
-    </div>
+                                         {{ 'security.login.with_passkey'|trans({}, 'security') }}</span>
+                                        <!--end::Indicator label-->
+                                        <!--begin::Indicator progress-->
+                                        <span class="indicator-progress"
+                                              data-kt-translate="general-progress">{{ 'please_wait'|trans({}, 'security') }}...
+										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                        <!--end::Indicator progress-->
+                                    </button>
+                                    <div id="kt_sign_in_with_username_and_password"
+                                         class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mt-8">
+                                        <strong>
+                                            <a href="#" id="kt_login_forgot"
+                                               data-kt-translate="sign-in-forgot-password">{{ 'security.login.with_usernane_and_password'|trans({}, 'security') }}</a>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="redirect_route" value="{{ redirect_route }}">
+                            {% endif %}
+                            <!--end::Submit button-->
+                        </form>
+                        <!--end::Login Sign in form-->
+                    {% endif %}
+                    <!--end::Form-->
+                </div>
+            </div>
+            <!--end::Wrapper-->
+            <!--begin::Footer-->
+            {% block footer %}
+
+            {% endblock footer %}
+            <!--end::Footer-->
+        </div>
         <!--end::Card-->
     </div>
 

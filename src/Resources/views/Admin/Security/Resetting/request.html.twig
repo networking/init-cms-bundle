@@ -35,7 +35,7 @@ file that was distributed with this source code.
             <div class="d-flex flex-center flex-lg-start flex-column">
                 <!--begin::Logo-->
                 <a href="https://www.initcms.com" target="_blank" class="mb-7">
-                    <img alt="Logo" src="{{ asset('bundles/networkinginitcms/img/initcms-396x100.png') }}"/>
+                    <img alt="Logo" src="{{ asset('bundles/networkinginitcms/img/initcms-white-396x100.png') }}"/>
                 </a>
                 <!--end::Logo-->
                 <!--begin::Title-->
@@ -58,18 +58,7 @@ file that was distributed with this source code.
 
 
                             <section class="my-10 text-center d-flex justify-content-center">
-                                <div class="stack w-150px position-relative">
-                                    <img src="/bundles/networkinginitcms/img/fido/face-id.svg" alt="WebAuthn"
-                                         class="position-absolute top-50 w-25px">
-                                    <img src="/bundles/networkinginitcms/img/fido/fingerprint.svg" alt="WebAuthn"
-                                         class="position-absolute top-25 end-0 w-30px">
-                                    <img src="/bundles/networkinginitcms/img/fido/passkey-local.svg" alt="WebAuthn"
-                                         class="w-50px position-absolute top-50 start-50 translate-middle">
-                                    <img src="/bundles/networkinginitcms/img/fido/phone.svg" alt="WebAuthn"
-                                         class="w-150px">
-                                    <img src="/bundles/networkinginitcms/img/fido/password.svg" alt="WebAuthn"
-                                         class="w-30px position-absolute bottom-25 end-0">
-                                </div>
+                                {% include '@NetworkingInitCms/fido.html.twig' %}
                             </section>
                             <div class="text-center mb-11">
                                 <!--begin::Title-->
