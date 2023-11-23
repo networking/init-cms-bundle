@@ -1,10 +1,12 @@
 import FormCompnent from "./form-component";
 
+let Translator = await CMSAdmin.getTranslations()
+
 export default class TextInput extends FormCompnent{
     name = 'TextInput'
-    label = 'Text Input'
-    type = 'Text Input'
-    placeholder = 'Text Input'
+    label = Translator.trans('fields.text_input', {}, 'formGenerator')
+    type = Translator.trans('fields.text_input', {}, 'formGenerator')
+    placeholder = Translator.trans('fields.text_input', {}, 'formGenerator')
     required = false
     constructor(id, value, element) {
         super(id, value, element);
@@ -16,20 +18,20 @@ export default class TextInput extends FormCompnent{
     getForm() {
         return `<div data-popover-form="${this.id}">
                 <div class="mb-3">
-                    <label for="value_${this.id}" class="form-label required">Label</label>
+                    <label for="value_${this.id}" class="form-label required">${Translator.trans('fields.label', {}, 'formGenerator')}</label>
                     <input type="text" id="value_${this.id}" name="label" value="${this.value}" class="form-control">
                 </div>
                 <div class="mb-3">
-                    <label for="placeholder_${this.id}" class="form-label">Placeholder</label>
+                    <label for="placeholder_${this.id}" class="form-label">${Translator.trans('fields.placeholder', {}, 'formGenerator')}</label>
                     <input type="text" id="placeholder_${this.id}" name="placholder" value="${this.placeholder}" class="form-control">
                 </div>
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="required_${this.id}" name="required" value="required" ${this.required?'checked':''}>
-                    <label for="required_${this.id}" class="form-check-label">Required?</label>
+                    <label for="required_${this.id}" class="form-check-label">${Translator.trans('fields.required', {}, 'formGenerator')}?</label>
                  </div>
                   <div class="my-3">
-                  <button type="button" class="btn btn-sm btn-default" data-popover-dismiss="${this.id}">Close</button>
-                  <button type="button" class="btn btn-sm btn-primary" data-popover-save="${this.id}">Save changes</button>
+                  <button type="button" class="btn btn-sm btn-light" data-popover-dismiss="${this.id}">${Translator.trans('fields.close', {}, 'formGenerator')}</button>
+                  <button type="button" class="btn btn-sm btn-primary" data-popover-save="${this.id}">${Translator.trans('fields.save', {}, 'formGenerator')}</button>
                   </div>
             </div>`
     }

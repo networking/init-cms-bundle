@@ -1,15 +1,17 @@
 import FormCompnent from "./form-component";
 
+let Translator = await CMSAdmin.getTranslations()
+
 class FormLegend extends FormCompnent {
     name = 'Legend'
-    label = 'Legend'
-    type = 'Legend'
+    label = Translator.trans('fields.legend', {}, 'formGenerator')
+    type = Translator.trans('fields.legend', {}, 'formGenerator')
     getForm() {
         return`<div data-popover-form="${this.id}">
-                  <input type="text" name="form[legends][${this.id}][name]" class="form-control" placeholder="Form Legend" value="${this.value}">
+                  <input type="text" name="form[legends][${this.id}][name]" class="form-control" placeholder="${this.label}" value="${this.value}">
                   <div class="my-3">
-                  <button type="button" class="btn btn-sm btn-default" data-popover-dismiss="${this.id}">Close</button>
-                  <button type="button" class="btn btn-sm btn-primary" data-popover-save="${this.id}">Save changes</button>
+                  <button type="button" class="btn btn-sm btn-light" data-popover-dismiss="${this.id}">${Translator.trans('fields.close', {}, 'formGenerator')}</button>
+                  <button type="button" class="btn btn-sm btn-primary" data-popover-save="${this.id}">${Translator.trans('fields.save', {}, 'formGenerator')}</button>
                   </div>
             </div>`
     }

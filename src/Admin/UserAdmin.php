@@ -224,12 +224,13 @@ class UserAdmin extends BaseUserAdmin
                 null,
                 [
                     'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
                         'translation_domain' => $this->getTranslationDomain(),
                     ],
                 ]
             )
-            ->add('email', null, ['hidden' => true])
-            ->add('groups', null, ['hidden' => true]);
+            ->add('email', null, ['field_options' => ['row_attr' => ['class' => 'form-floating']]])
+            ->add('groups', null, ['field_options' => ['row_attr' => ['class' => 'form-floating']]]);
     }
 
     protected function configureFormFields(FormMapper $form): void

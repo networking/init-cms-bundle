@@ -350,6 +350,7 @@ class MenuItemAdmin extends BaseAdmin
                 [
                     'field_type' => LanguageType::class,
                     'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
                         'placeholder' => false,
                         'choice_loader' => new CallbackChoiceLoader(
                             fn() => $this->getLocaleChoices()

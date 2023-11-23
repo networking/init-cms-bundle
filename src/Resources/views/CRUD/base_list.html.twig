@@ -66,7 +66,7 @@ file that was distributed with this source code.
                                 {% set filter = admin.datagrid.filters[filterName] %}
 
                                 <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center me-3 mb-3 w-50">
+                                    <div class="d-flex align-items-center me-3 {% if not loop.last %}mb-3{% endif%} w-50">
                                         {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
                                             <div class="d-none col-md-2 {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
                                                 {% set attr = form[filter.formName].children['value'].vars.attr|default({}) %}

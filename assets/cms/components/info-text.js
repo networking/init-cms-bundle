@@ -1,16 +1,18 @@
 import ClassicEditor from '../../admin-theme/plugins/custom/ckeditor/ckeditor-classic.bundle.js';
 import FormCompnent from "./form-component";
 
+let Translator = await CMSAdmin.getTranslations()
+
 class InfoText extends FormCompnent{
     name = 'Infotext'
-    label = 'Infotext'
-    type = 'Infotext'
+    label = Translator.trans('fields.free_text_area', {}, 'formGenerator')
+    type = Translator.trans('fields.free_text_area', {}, 'formGenerator')
     getForm() {
        return `<div data-popover-form="${this.id}">
                   <textarea  id='ckeditor_${this.id}' class="min-w-500px min-h-500px">${this.value}</textarea>
                   <div class="my-3">
-                  <button type="button" class="btn btn-sm btn-default" data-popover-dismiss="${this.id}">Close</button>
-                  <button type="button" class="btn btn-sm btn-primary" data-popover-save="${this.id}">Save changes</button>
+                    <button type="button" class="btn btn-sm btn-light" data-popover-dismiss="${this.id}">${Translator.trans('fields.close', {}, 'formGenerator')}</button>
+                    <button type="button" class="btn btn-sm btn-primary" data-popover-save="${this.id}">${Translator.trans('fields.save', {}, 'formGenerator')}</button>
                   </div>
             </div>`
     }

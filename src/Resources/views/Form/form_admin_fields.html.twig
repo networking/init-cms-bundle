@@ -778,8 +778,16 @@ file that was distributed with this source code.
             data-inline="{{ inline|default(false) }}"
             data-input-sync="{{ input_sync|default(false) }}"
             data-filebrowser="{{ filebrowsers|json_encode }}"
+            data-autoload="{{ autoload }}"
             data-config="{{ config|merge({'language': app.request.locale, 'contentsCss': content_css(config_name)})|json_encode }}"
     >{{ value }}</textarea>
+
+    {% if autoload %}
+    <script type="text/javascript">
+        var CKEDITOR_BASEPATH = "/bundles/fosckeditor/";
+    </script>
+    <script type="text/javascript" src="/bundles/fosckeditor/ckeditor.js"></script>
+    {% endif %}
 
 
 {% endblock %}

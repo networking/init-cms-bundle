@@ -112,9 +112,9 @@ let initDropZone = ()=> {
             item.dataset.id = now
             item.id = 'item_' + now
 
-            let toolbar = document.createElement('div')
-            toolbar.classList.add('toolbar')
-            toolbar.innerHTML = `<button type="button"
+            let toolbar = item.querySelector('.toolbar')
+            toolbar.innerHTML = `<div class="d-flex align-items-center">
+                                        <button type="button"
                                                 data-id="${now}"
                                                 class="me-2 btn btn-sm btn-light-danger delete_block"
                                                 >
@@ -125,9 +125,9 @@ let initDropZone = ()=> {
                                                 class="me-2 btn btn-sm btn-light-primary edit_block"
                                                 >
                                             <i class="fa-regular fa-pen-to-square layout-link  pe-0"></i>
-                                        </button>`
+                                        </button>
+                                    </div>`
 
-            item.append(toolbar);
 
             let form = document.createElement('form');
             form.id = 'form_' + now

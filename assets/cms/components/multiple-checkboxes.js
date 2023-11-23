@@ -1,9 +1,10 @@
 import {SelectBasic} from './select-basic';
 
+let Translator = await CMSAdmin.getTranslations()
 class MultipleCheckboxes extends SelectBasic {
     name = 'MultipleCheckboxes'
-    label = 'Multiple Checkboxes'
-    type = 'Multiple Checkboxes'
+    label = Translator.trans('fields.multiple_checkboxes', {}, 'formGenerator')
+    type = Translator.trans('fields.multiple_checkboxes', {}, 'formGenerator')
     saveValues(popover) {
 
 
@@ -63,8 +64,8 @@ class MultipleCheckboxes extends SelectBasic {
 class MultipleCheckboxesInline extends SelectBasic {
 
     name = 'MultipleCheckboxesInline'
-    label = 'Multiple Checkboxes Inline'
-    type = 'Multiple Checkboxes Inline'
+    label = Translator.trans('fields.multiple_checkboxes_inline', {}, 'formGenerator')
+    type = Translator.trans('fields.multiple_checkboxes_inline', {}, 'formGenerator')
     saveValues(popover) {
 
 
@@ -125,8 +126,8 @@ class MultipleCheckboxesInline extends SelectBasic {
 class MultipleRadios extends SelectBasic {
 
     name = 'MultipleRadios'
-    label = 'Multiple Radios'
-    type = 'Multiple Radios'
+    label = Translator.trans('fields.radio_button_group', {}, 'formGenerator')
+    type = Translator.trans('fields.radio_button_group', {}, 'formGenerator')
     saveValues(popover) {
 
 
@@ -187,8 +188,8 @@ class MultipleRadios extends SelectBasic {
 class MultipleRadiosInline extends SelectBasic {
 
     name = 'MultipleRadiosInline'
-    label = 'Multiple Radios Inline'
-    type = 'Multiple Radios Inline'
+    label = Translator.trans('fields.radio_button_group_inline', {}, 'formGenerator')
+    type = Translator.trans('fields.radio_button_group_inline', {}, 'formGenerator')
     saveValues(popover) {
 
 

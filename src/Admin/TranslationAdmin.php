@@ -167,6 +167,7 @@ class TranslationAdmin extends BaseAdmin
                 [
                     'global_search' => false,
                     'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
                         'translation_domain' => $this->getTranslationDomain(),
                     ],
                 ]
@@ -179,6 +180,7 @@ class TranslationAdmin extends BaseAdmin
                 [
                     'global_search' => false,
                     'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
                         'translation_domain' => $this->getTranslationDomain(),
                     ],
                 ]
@@ -191,6 +193,7 @@ class TranslationAdmin extends BaseAdmin
                     'global_search' => false,
                     'field_type' => ChoiceType::class,
                     'field_options' => [
+                        'row_attr' => ['class' => 'form-floating'],
                         'choices' => $this->getDomains(),
                         'placeholder' => 'translation.domain.all_choices',
                         'translation_domain' => $this->getTranslationDomain(),

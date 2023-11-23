@@ -1,9 +1,9 @@
 import FormCompnent from "./form-component";
-
+let Translator = await CMSAdmin.getTranslations()
 class SelectBasic extends FormCompnent{
     name = 'SelectBasic'
-    label = 'Select Basic'
-    type = 'Select Basic'
+    label = Translator.trans('fields.dropdown_select_menu', {}, 'formGenerator')
+    type = Translator.trans('fields.dropdown_select_menu', {}, 'formGenerator')
     required = false
     options = []
     constructor(id, value, element) {
@@ -15,20 +15,20 @@ class SelectBasic extends FormCompnent{
     getForm() {
         return `<div data-popover-form="${this.id}">
                 <div class="mb-3">
-                    <label for="value_${this.id}" class="form-label required">Label</label>
+                    <label for="value_${this.id}" class="form-label required">${Translator.trans('fields.label', {}, 'formGenerator')}</label>
                     <input type="text" id="value_${this.id}" name="label" value="${this.value}" class="form-control">
                 </div>
                 <div class="mb-3">
-                    <label for="options_${this.id}" class="form-label">Options</label>
+                    <label for="options_${this.id}" class="form-label">${Translator.trans('fields.options', {}, 'formGenerator')}</label>
                     <textarea  id='options_${this.id}' class="form-control min-w-500px min-h-200px">${this.options.join("\n")}</textarea>
                 </div>
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="required_${this.id}" name="required" value="required" ${this.required?'checked':''}>
-                    <label for="required_${this.id}" class="form-check-label">Required?</label>
+                    <label for="required_${this.id}" class="form-check-label">${Translator.trans('fields.required', {}, 'formGenerator')}?</label>
                  </div>
-                 <div class="my-3">
-                  <button type="button" class="btn btn-sm btn-default" data-popover-dismiss="${this.id}">Close</button>
-                  <button type="button" class="btn btn-sm btn-primary" data-popover-save="${this.id}">Save changes</button>
+                  <div class="my-3">
+                  <button type="button" class="btn btn-sm btn-light" data-popover-dismiss="${this.id}">${Translator.trans('fields.close', {}, 'formGenerator')}</button>
+                  <button type="button" class="btn btn-sm btn-primary" data-popover-save="${this.id}">${Translator.trans('fields.save', {}, 'formGenerator')}</button>
                   </div>
             </div>`
     }
@@ -75,8 +75,8 @@ class SelectBasic extends FormCompnent{
 
 class SelectMultiple extends SelectBasic {
     name = 'SelectMultiple'
-    label = 'Select Multiple'
-    type = 'Select Multiple'
+    label = Translator.trans('fields.multiple_dropdown_select_menu', {}, 'formGenerator')
+    type = Translator.trans('fields.multiple_dropdown_select_menu', {}, 'formGenerator')
 }
 
 export {SelectBasic, SelectMultiple}

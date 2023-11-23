@@ -295,28 +295,16 @@ file that was distributed with this source code.
     <!--begin::Javascript-->
     <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/') }}";</script>
 
-    <script type="text/javascript">
-        var CKEDITOR_BASEPATH = "/bundles/fosckeditor/";
-    </script>
-    <script type="text/javascript" src="/bundles/fosckeditor/ckeditor.js"></script>
-    <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/vendor/bootstrap5-editable/js/bootstrap-editable.js') }}"></script>
+
     <script src="{{ asset('cmsAdmin.js', 'init_cms') }}"></script>
     <script src="{{ asset('globalSearch.js', 'init_cms') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/vendor/bootstrap5-editable/js/bootstrap-editable.js') }}"></script>
     <script src="{{ asset('cmsApp.js', 'init_cms') }}"></script>
 
-    <!--end::Global Javascript Bundle-->
-    <!--begin::Vendors Javascript(used for this page only)-->
-    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 
-    <!--end::Vendors Javascript-->
-    <!--begin::Custom Javascript(used for this page only)-->
-{#    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/widgets.bundle.js') }}"></script>#}
-{#    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/custom/widgets.js') }}"></script>#}
-    <!--end::Custom Javascript-->
-    <!--end::Javascript-->
 {% endblock before_body_end %}
     {# Render any javascript which was given usin the jsblock twig nodes #}
     {% jsblock 'render' %}
