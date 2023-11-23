@@ -5,7 +5,7 @@ let Translator = await CMSAdmin.getTranslations()
 export default class TextInput extends FormCompnent{
     name = 'TextInput'
     label = Translator.trans('fields.text_input', {}, 'formGenerator')
-    type = Translator.trans('fields.text_input', {}, 'formGenerator')
+    type = 'Text Input'
     placeholder = Translator.trans('fields.text_input', {}, 'formGenerator')
     required = false
     constructor(id, value, element) {

@@ -5,7 +5,7 @@ let Translator = await CMSAdmin.getTranslations()
 export default class TextArea extends FormCompnent{
     name = 'TextArea'
     label = Translator.trans('fields.text_area', {}, 'formGenerator')
-    type = Translator.trans('fields.text_area', {}, 'formGenerator')
+    type = 'Text Area'
     placeholder = Translator.trans('fields.text_area', {}, 'formGenerator')
     required = false
     constructor(id, value, element) {

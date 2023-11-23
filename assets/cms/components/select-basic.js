@@ -3,7 +3,7 @@ let Translator = await CMSAdmin.getTranslations()
 class SelectBasic extends FormCompnent{
     name = 'SelectBasic'
     label = Translator.trans('fields.dropdown_select_menu', {}, 'formGenerator')
-    type = Translator.trans('fields.dropdown_select_menu', {}, 'formGenerator')
+    type = 'Select Basic'
     required = false
     options = []
     constructor(id, value, element) {
@@ -76,7 +76,7 @@ class SelectBasic extends FormCompnent{
 class SelectMultiple extends SelectBasic {
     name = 'SelectMultiple'
     label = Translator.trans('fields.multiple_dropdown_select_menu', {}, 'formGenerator')
-    type = Translator.trans('fields.multiple_dropdown_select_menu', {}, 'formGenerator')
+    type = 'Select Multiple'
 }
 
 export {SelectBasic, SelectMultiple}

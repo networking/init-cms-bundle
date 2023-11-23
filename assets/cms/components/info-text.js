@@ -6,7 +6,7 @@ let Translator = await CMSAdmin.getTranslations()
 class InfoText extends FormCompnent{
     name = 'Infotext'
     label = Translator.trans('fields.free_text_area', {}, 'formGenerator')
-    type = Translator.trans('fields.free_text_area', {}, 'formGenerator')
+    type = 'Infotext'
     getForm() {
        return `<div data-popover-form="${this.id}">
                   <textarea  id='ckeditor_${this.id}' class="min-w-500px min-h-500px">${this.value}</textarea>

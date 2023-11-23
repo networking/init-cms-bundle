@@ -5,7 +5,7 @@ let Translator = await CMSAdmin.getTranslations()
 class FormLegend extends FormCompnent {
     name = 'Legend'
     label = Translator.trans('fields.legend', {}, 'formGenerator')
-    type = Translator.trans('fields.legend', {}, 'formGenerator')
+    type = 'Legend'
     getForm() {
         return`<div data-popover-form="${this.id}">
                   <input type="text" name="form[legends][${this.id}][name]" class="form-control" placeholder="${this.label}" value="${this.value}">
