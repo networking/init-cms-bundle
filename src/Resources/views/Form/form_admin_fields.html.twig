@@ -782,14 +782,6 @@ file that was distributed with this source code.
             data-config="{{ config|merge({'language': app.request.locale, 'contentsCss': content_css(config_name)})|json_encode }}"
     >{{ value }}</textarea>
 
-    {% if autoload %}
-    <script type="text/javascript">
-        var CKEDITOR_BASEPATH = "/bundles/fosckeditor/";
-    </script>
-    <script type="text/javascript" src="/bundles/fosckeditor/ckeditor.js"></script>
-    {% endif %}
-
-
 {% endblock %}
 
 
