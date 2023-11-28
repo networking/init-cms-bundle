@@ -60,7 +60,7 @@
     "willdurand/js-translation-bundle": "^5.1"
   },
   "suggest": {
-      "web-auth/webauthn-symfony-bundle": "To enable WebAuthn support",
+      "web-auth/webauthn-symfony-bundle": "To enable WebAuthn support"
   },
   "scripts": {
   },
