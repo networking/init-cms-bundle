@@ -94,7 +94,7 @@ class GroupAdmin extends BaseAdmin
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            ->add('name', null, [ 'layout' => $this->getRequest()->isXmlHttpRequest() ? 'horizontal' : 'inline'])
+            ->add('name', null, [ 'required' => true, 'row_attr' => ['class' => 'form-floating mb-3']])
             ->add(
                 'roles',
                 RolesMatrixType::class,

@@ -334,7 +334,39 @@ file that was distributed with this source code.
             document.body.addEventListener('fields:added', function (e) {
                 CMSAdmin.initSpecialFields()
             })
+
+            const copyButtons = document.querySelectorAll('.copy-to-clipboard');
+
+            copyButtons.forEach((button) => {
+                const target = document.querySelector(button.dataset.clipboardTarget);
+                // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+                var clipboard = new ClipboardJS(button, {
+                    target: target,
+                    text: function() {
+                        return target.value;
+                    }
+                });
+
+                // Success action handler
+                clipboard.on('success', function(e) {
+                    const currentLabel = button.innerHTML;
+
+                    // Exit label update when already in progress
+                    if(button.innerHTML === '<i class="fs-2 ki-outline ki-copy-success"></i>') {
+                        return;
+                    }
+
+                    // Update button label
+                    button.innerHTML = '<i class="fs-2 ki-outline ki-copy-success"></i>';
+
+                    // Revert button label after 3 seconds
+                    setTimeout(function(){
+                        button.innerHTML = currentLabel;
+                    }, 3000)
+                });
+            });
         });
+
     </script>
     {% endautoescape %}
 {% endblock body %}

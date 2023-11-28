@@ -100,6 +100,8 @@ file that was distributed with this source code.
             {{- form_widget(form, widget_attr ) -}}
             {{- form_label(form) -}}
         </div>
+    {% elseif 'form-floating' in attr.group_class|default('') %}
+        {{- form_widget(form, widget_attr) -}}
     {%- else -%}
         {{- form_label(form) -}}
         {{- form_widget(form, widget_attr) -}}
@@ -1037,68 +1039,32 @@ file that was distributed with this source code.
     {%- endif -%}
 {%- endblock money_widget %}
 
-{% block input_group_row %}
-
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-        {% if label is same as(false) %}
-            {% set label_render = false %}
-        {% else %}
-            {% set label_render = true %}
-        {% endif %}
-    {% endif %}
-
-    {%- if compound is defined and compound -%}
-        {%- set element = 'fieldset' -%}
-    {%- endif -%}
-
-
-    {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
-
-    {% set widget_attr = {attr: {}} %}
-    {% set is_form_floating = false %}
-    {%- if 'form-floating' in row_class -%}
-        {% set row_class = row_class|replace({'form-floating': ''}) %}
-        {% set is_form_floating = true %}
-    {% endif %}
-
-
-    {%- if help is not empty -%}
-        {%- set attrs = widget_attr.attr|merge({'aria-describedby': id ~"_help"}) -%}
-        {%- set widget_attr = widget_attr|merge({attr: attrs }) -%}
-    {%- endif -%}
-
-    {% if help_widget_popover.selector is same as(null) %}
-        {% set help_widget_popover = help_widget_popover|merge({'selector': '#' ~ id }) %}
-    {% endif %}
-
-    <{{ element|default('div') }}
-    {% if help_widget_popover.title is not same as(null) %}{{ block('help_widget_popover') }}{% endif %}
-    {% with {attr: row_attr|merge({class: row_class})} %}{{ block('attributes') }}{% endwith %}>
-    {%- if is_form_floating is same as(true) -%}
-            {{- form_widget(form, widget_attr ) -}}
-    {%- else -%}
-        {{- form_label(form) -}}
-        {{- form_widget(form, widget_attr) -}}
-    {%- endif -%}
-    {{ form_help(form) }}
-    {{ block('help_block') }}
-    {{- form_errors(form) -}}
-    </{{ element|default('div') }}>
-{% endblock input_group_row %}
 
 {% block input_group_widget %}
-    {%- set prepend = widget_addon_prepend is not same as(null) -%}
-    {%- set append = widget_addon_append is not same as(null) -%}
+    {%- set prepend = widget_addon_prepend |default(null) is not same as(null) or widget_btn_prepend|default(null) is not same as(null) -%}
+    {%- set append = widget_addon_append|default(null)  is not same as(null) or widget_btn_append|default(null) is not same as(null) -%}
 
-    {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
+    {%- if 'form-floating' in attr.group_class|default('') -%}
+        {% if admin %}
+            {% set translation_domain = admin.translationDomain %}
+        {% endif %}
+
+        {% set form_floating = 'form-floating' %}
+        {% set placeholder = label|trans({}, translation_domain) %}
+        {%- set attr = attr|merge({placeholder: label}) -%}
+    {% endif %}
+
     {%- if prepend or append -%}
         <div class="input-group {{ group_class|default('') }}">
-            {%- if prepend -%}
-                <span class="input-group-text">{{ widget_addon_prepend }}</span>
-            {%- endif -%}
-            {% if 'form-floating' in row_class %}
-                {% set attr = attr|merge({placeholder: attr.placeholder|default('')}) %}
+            {% if widget_btn_prepend|default(null) is not null %}
+                {% set widget_btns = widget_btn_prepend %}
+                {{ block('widget_btns') }}
+            {% endif %}
+            {% if widget_addon_prepend|default(null) is not null %}
+                {% set widget_addon = widget_addon_prepend %}
+                {{ block('widget_addon') }}
+            {% endif %}
+            {% if 'form-floating' in form_floating|default('') %}
                 <span class="form-floating">
                     {{- block('form_widget_simple') -}}
                     {{- block('form_label') -}}
@@ -1106,13 +1072,49 @@ file that was distributed with this source code.
             {% else %}
                 {{- block('form_widget_simple') -}}
             {% endif %}
-            {%- if append -%}
-                <span class="input-group-text">{{ widget_addon_append }}</span>
-            {%- endif -%}
+            {% if widget_addon_append|default(null) is not null %}
+                {% set widget_addon = widget_addon_append %}
+                {{ block('widget_addon') }}
+            {% endif %}
+            {% if widget_btn_append|default(null) is not null %}
+                {% set widget_btn = widget_btn_append %}
+                {{ block('widget_btns') }}
+            {% endif %}
         </div>
     {%- else -%}
         {{- block('form_widget_simple') -}}
     {%- endif -%}
 {% endblock input_group_widget %}
+
+{% block widget_addon %}
+    {% apply spaceless %}
+        {% set widget_addon_icon = widget_addon.icon is defined ? widget_addon.icon : null  %}
+        {% set widget_addon_icon_inverted = widget_addon.icon_inverted is defined ? widget_addon.icon_inverted : false  %}
+        <span class="input-group-text">{{ (widget_addon.text|default(false) ? widget_addon.text|trans({}, translation_domain)|raw : networking_bootstrap_icon(widget_addon_icon, widget_addon_icon_inverted)) }}</span>
+    {% endapply %}
+{% endblock widget_addon %}
+
+{% block widget_btns %}
+    {% apply spaceless %}
+
+        {% set attr = widget_btn.attr|default({}) %}
+        {% for key, value in attr %}
+
+            {% if value is same as('{{ id }}') %}
+                {% set attr = attr|merge({ (key): '#' ~ id}) %}
+            {% endif %}
+        {% endfor %}
+        <button
+                type="{{ widget_btn.type | default('button') }}"
+                class="{{ 'btn ' ~ widget_btn.class | default('btn-light-secondary') }}"
+                 {{ block('attributes') }}
+        >
+        {% if widget_btn.icon is not empty %}
+            {{ networking_bootstrap_icon(widget_btn.icon, widget_btn.icon_inverted | default(false), widget_btn.icon_set | default('kioutline')) }}
+        {% endif %}
+            {{ widget_btn.label | default("") | trans({}, translation_domain) }}
+        </button>
+    {% endapply %}
+{% endblock widget_btns %}
 
 

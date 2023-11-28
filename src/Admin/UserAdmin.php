@@ -26,8 +26,12 @@ use Sonata\UserBundle\Admin\Model\UserAdmin as BaseUserAdmin;
 use Sonata\UserBundle\Form\Type\RolesMatrixType;
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Intl\Locales;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -41,6 +45,8 @@ class UserAdmin extends BaseUserAdmin
      * @var array
      */
     protected $trackedActions = ['list'];
+
+    protected array $languages = [];
 
     private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
@@ -229,44 +235,95 @@ class UserAdmin extends BaseUserAdmin
                     ],
                 ]
             )
-            ->add('email', null, ['field_options' => ['row_attr' => ['class' => 'form-floating']]])
-            ->add('groups', null, ['field_options' => ['row_attr' => ['class' => 'form-floating']]]);
+            ->add(
+                'email',
+                null,
+                ['field_options' => ['row_attr' => ['class' => 'form-floating']]]
+            )
+            ->add(
+                'groups',
+                null,
+                ['field_options' => ['row_attr' => ['class' => 'form-floating']]]
+            );
     }
 
     protected function configureFormFields(FormMapper $form): void
     {
         $form
             ->with('General', ['class' => 'col-md-6'])
-            ->add('username')
-            ->add('email');
-
-           $form ->add(
-                'plainPassword',
-                TextType::class,
-                [
-                    'required' => (!$this->getSubject()
-                        || is_null(
-                            $this->getSubject()->getId()
-                        )),
-                ]
+            ->add(
+                'username',
+                null,
+                ['row_attr' => ['class' => 'form-floating mb-3']]
+            )
+            ->add(
+                'email',
+                EmailType::class,
+                ['row_attr' => ['class' => 'form-floating mb-3']]
             );
 
-            $form->end()
+        $form->add(
+            'plainPassword',
+            TextType::class,
+            [
+                'required' => (!$this->getSubject()
+                    || is_null(
+                        $this->getSubject()->getId()
+                    )),
+                'row_attr' => ['class' => 'form-floating mb-3'],
+            ]
+        );
+
+        $form->end()
             ->with('Profile', ['class' => 'col-md-6'])
-            ->add('firstname', null, ['required' => false])
-            ->add('lastname', null, ['required' => false])
-            ->add('locale', LocaleType::class, ['required' => false])
+            ->add(
+                'firstname',
+                null,
+                [
+                    'required' => false,
+                    'row_attr' => ['class' => 'form-floating mb-3'],
+                ]
+            )
+            ->add(
+                'lastname',
+                null,
+                [
+                    'required' => false,
+                    'row_attr' => ['class' => 'form-floating mb-3'],
+                ]
+            )
+            ->add(
+                'locale',
+                ChoiceType::class,
+                [
+                    'choices' => $this->getLocaleChoices(),
+                    'choice_translation_domain' => false,
+                    'row_attr' => ['class' => 'form-floating mb-3'],
+                ]
+            )
             ->end();
-            if ($this->googleAuthEnabled) {
-                $form->with('Keys', ['label' => false])
-                    ->add(
-                        'twoStepVerificationCode',
-                        null,
-                        ['required' => false, 'disabled' => true]
-                    )
-                    ->end();
-            }
-            $form->with('Groups', ['class' => 'col-md-3'])
+        if ($this->googleAuthEnabled) {
+            $form->with('Keys', ['label' => false])
+                ->add(
+                    'twoStepVerificationCode',
+                    TextType::class,
+                    [
+                        'required' => false,
+                        'attr' => ['group_class' => 'form-floating', 'readonly' => true],
+                        'block_prefix' => 'input_group',
+                        'widget_btn_append' => [
+                            'icon' => 'copy fs-2',
+                            'class' => 'btn-light-primary copy-to-clipboard btn-outline',
+                            'attr' => [
+                                'data-clipboard-target' => '{{ id }}',
+                            ],
+                        ]
+
+                    ]
+                )
+                ->end();
+        }
+        $form->with('Groups', ['class' => 'col-md-6'])
             ->add('groups', ModelType::class, [
                 'class' => Group::class,
                 'required' => false,
@@ -277,7 +334,7 @@ class UserAdmin extends BaseUserAdmin
 
         if (!$this->getSubject()->hasRole('ROLE_SUPER_ADMIN')) {
             $form
-                ->with('Management', ['class' => 'col-md-9'])
+                ->with('Management', ['class' => 'col-md-12'])
                 ->add(
                     'realRoles',
                     RolesMatrixType::class,
@@ -303,7 +360,39 @@ class UserAdmin extends BaseUserAdmin
                 )
                 ->end();
         }
+    }
 
 
+    /**
+     * Provide an array of locales where the locale is the key and the label is
+     * the value for easy display in a dropdown select for example
+     * example: array('de_CH' => 'Deutsch', 'en_GB' => 'English').
+     */
+    protected function getLocaleChoices(): array
+    {
+        $localeChoices = [];
+
+        if (!$this->getRequest()) {
+            return [];
+        }
+        $locale = $this->getRequest()->getLocale();
+
+        $localeList = Locales::getNames(substr($locale, 0, 2));
+
+        foreach ($this->languages as $language) {
+            $localeChoices[$localeList[$language['locale']]]
+                = $language['locale'];
+        }
+
+        return $localeChoices;
+    }
+
+    /**
+     * Set the language paramenter to contain a list of languages most likely
+     * passed from the config.yaml file.
+     */
+    public function setLanguages(array $languages): void
+    {
+        $this->languages = $languages;
     }
 }
