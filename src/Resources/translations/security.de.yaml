@@ -87,3 +87,30 @@ edit: "Bearbeiten"
 confirm: "Bestätigen"
 continue: "Weiter"
 please_wait: "Bitte warten"
+
+send_code_by_email: "Hast du deine Authenticator-App nicht? Sende einen Code per E-Mail"
+
+one_time_code:
+    email:
+        subject: "Ihr einmaliger Sicherheitscode"
+        message:
+            line_1: >-
+                Hallo %username%,
+    
+                Hier ist Ihr einmaliger Code:
+            line_2: >-
+                Dieser Code kann nur einmal verwendet werden, 
+                um sich bei Ihrem Konto anzumelden.
+
+resetting:
+    email:
+        subject: "Zurücksetzen Ihres Passworts"
+        message: >-
+            Hallo %username%,
+
+            Um Ihren Passwort zurückzusetzen, besuchen Sie bitte %confirmationUrl%.
+
+            Dieser Link kann nur einmal verwendet werden, um Ihren Passwort zurückzusetzen.
+            
+            Bitte ignorieren Sie diese E-Mail, wenn Sie Ihr Passwort nicht zurücksetzen möchten.
+

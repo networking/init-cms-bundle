@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <style type="text/css">
+        <!--
+        body, td, th {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #000000;
+            background-color: #FFF;
+            margin-left: 20px;
+            margin-top: 20px;
+            margin-right: 20px;
+            -webkit-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+            -webkit-font-smoothing: antialiased !important;
+        }
+
+
+        a:link {
+            color: #f4684e;
+            text-decoration: none;
+        }
+
+        a:visited {
+            text-decoration: none;
+            color: #f4684e;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #f4684e;
+        }
+
+        a:active {
+            text-decoration: none;
+            color: #f4684e;
+        }
+
+
+        a img {
+            border-top-style: none;
+            border-right-style: none;
+            border-bottom-style: none;
+            border-left-style: none;
+        }
+
+        #container {
+            width: 100%;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 8px;
+            padding-top: 0;
+
+        }
+
+        body {
+            margin: 20px;
+        }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
+
+        a img {
+            border-top-style: none;
+            border-right-style: none;
+            border-bottom-style: none;
+            border-left-style: none;
+        }
+
+
+        p {
+            margin-top: 0px;
+            margin-bottom: 8px;
+            padding-top: 0px;
+
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: normal;
+            margin-top: 0px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: normal;
+            margin-top: 0px;
+            margin-bottom: 8px;
+            background-repeat: no-repeat;
+        }
+
+
+        -->
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="main">
+        <div class="contentMiddle">
+<p>{{ 'one_time_code.email.message.line_1'|trans({'%username%': username}, 'security')|nl2br }}</p>
+{% apply spaceless %}{% for char in code %}<h2 style="display: inline; margin-left: 2px;">{{ char }}</h2>{% endfor %}{% endapply %}
+<br>
+<p>{{ 'one_time_code.email.message.line_2'|trans({}, 'security')|nl2br }}</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

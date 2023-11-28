@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Controller;
 
+use Networking\InitCmsBundle\Entity\OneTimeCodeRequest;
+use Networking\InitCmsBundle\Helper\OneTimeCodeHelper;
 use Sonata\UserBundle\Form\Type\ResetPasswordRequestFormType;
 use Sonata\UserBundle\Form\Type\ResettingFormType;
 use Sonata\UserBundle\Mailer\MailerInterface;
@@ -21,6 +23,7 @@ use Sonata\UserBundle\Model\UserManagerInterface;
 use Sonata\UserBundle\Util\TokenGeneratorInterface;
 use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -29,31 +32,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 
 class AdminResettingController extends AbstractController
 {
 
-
-    /**
-     * AdminResettingController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param RouterInterface               $router
-     * @param Pool                          $pool
-     * @param UserManagerInterface          $userManager
-     * @param TemplateRegistryInterface     $templateRegistry
-     * @param TokenGeneratorInterface       $tokenGenerator
-     * @param FactoryInterface\             $resettingFormFactory
-     * @param TranslatorInterface           $translator
-     * @param MailerInterface               $mailer
-     * @param                               $retryTTL
-     * @param                               $resettingTokenTTL
-     */
     public function __construct(
         private AuthorizationCheckerInterface $authorizationChecker,
         private RouterInterface $router,
@@ -64,6 +54,7 @@ class AdminResettingController extends AbstractController
         private FormFactoryInterface $formFactory,
         private TranslatorInterface $translator,
         private MailerInterface $mailer,
+        private OneTimeCodeHelper $oneTimeCodeHelper,
         private ?int $resettingTokenTTL = 86400,
         private ?int $retryTTL = 7200,
     ) {
@@ -219,5 +210,38 @@ class AdminResettingController extends AbstractController
                 'admin_pool' => $this->pool,
             ]
         );
+    }
+
+    public function sendEmailCodeAction(Request $request, #[CurrentUser] UserInterface $user): Response
+    {
+        if (null === $user) {
+            throw new NotFoundHttpException(sprintf('The user with "username" does not exist for value "%s"', $user->getUsername()));
+        }
+
+        return $this->processSendingOneTimeCodeRequestEmail($request, $user);
+    }
+
+    protected function processSendingOneTimeCodeRequestEmail(Request $request, UserInterface $user)
+    {
+        try {
+            $oneTimeCodeRequest = $this->oneTimeCodeHelper->generateOneTimeCodeRequest($user);
+        } catch (ResetPasswordExceptionInterface $e) {
+
+            return $this->redirectToRoute('app_check_email');
+        }
+        
+        try{
+            $this->oneTimeCodeHelper->sendOneTimeCodeRequestEmail($user, $oneTimeCodeRequest);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+
+
+        $request->getSession()->set('networing_init_cms.one_time_code', [
+            'user_id' => $user->getId(),
+            'requested_at' => $oneTimeCodeRequest->getRequestedAt()->getTimestamp(),
+        ]);
+
+        return new JsonResponse(['success' => true]);
     }
 }

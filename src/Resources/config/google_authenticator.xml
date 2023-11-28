@@ -15,6 +15,7 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="-1"/>
             <argument key="$helper" type="service" id="networking_init_cms.google.authenticator.helper"/>
             <argument key="$tokenStorage" type="service" id="security.token_storage"/>
+            <argument key="$oneTimeCodeHelper" type="service" id="Networking\InitCmsBundle\Helper\OneTimeCodeHelper"/>
             <argument key="$twig" type="service" id="twig"/>
         </service>
     </services>

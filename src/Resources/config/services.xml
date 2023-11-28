@@ -202,6 +202,13 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <service id="Networking\InitCmsBundle\Helper\OneTimeCodeHelper" autoconfigure="true" autowire="true" public="true">
+            <argument key="$signingKey">%kernel.secret%</argument>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Repository\OneTimeCodeRequestRepository" autowire="true" public="true">
+        </service>
+
         <service id="Networking\InitCmsBundle\Serializer\MediaNormalizer"  autowire="true" public="true">
             <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
             <argument key="$propertyNormalizer" type="service" id="serializer.normalizer.property"/>

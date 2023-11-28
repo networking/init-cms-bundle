@@ -12,9 +12,11 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Controller\AdminResettingController;
 use Networking\InitCmsBundle\Entity\BaseUser;
 use Networking\InitCmsBundle\Entity\Group;
 use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
+use Networking\InitCmsBundle\Helper\OneTimeCodeHelper;
 use Sonata\Doctrine\Mapper\Builder\OptionsBuilder;
 use Sonata\Doctrine\Mapper\DoctrineCollector;
 use Symfony\Component\Config\FileLocator;
@@ -217,6 +219,15 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $this->configureWebauthnAuthentication($config, $container, $loader);
 
         $this->registerContainerParametersRecursive($container, $this->getAlias(), $config['translation_admin']);
+
+        $this->configureAdminEmailAddress($container, $config['email_address']);
+    }
+
+    protected function configureAdminEmailAddress(ContainerBuilder $container, $config)
+    {
+        $container->getDefinition(OneTimeCodeHelper::class)
+            ->setArgument('$fromEmailAddress', $config['from_address'])
+            ->setArgument('$fromName', $config['from_name']);
     }
 
     public function configureCache(array $config, ContainerBuilder $container)

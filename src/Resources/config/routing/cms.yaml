@@ -172,5 +172,10 @@ cms_api_login:
     options:
         expose: true
 
+networking_init_cms_admin_send_one_time_code:
+    path: /admin/one_time_code
+    defaults: { _controller: Networking\InitCmsBundle\Controller\AdminResettingController::sendEmailCodeAction}
+    methods: [GET]
+
 
 

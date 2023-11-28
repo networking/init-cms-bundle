@@ -194,7 +194,22 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         $this->addEditableSection($rootNode);
+        $this->addEmailAddressSection($rootNode);
         return $treeBuilder;
+    }
+
+    protected function addEmailAddressSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('email_address')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('from_address')->defaultValue('admin@initcms.com')->end()
+                        ->scalarNode('from_name')->defaultValue('InitCMS')->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 
     protected function addEditableSection(ArrayNodeDefinition $node)

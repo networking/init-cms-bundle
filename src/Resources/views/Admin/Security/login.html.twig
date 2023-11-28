@@ -62,7 +62,7 @@ file that was distributed with this source code.
                 <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20">
                     <!--begin::Form-->
                     {% if two_step_submit|default(false) %}
-                        <form class="form" id="kt_sing_in_two_factor_form" role="form" data-kt-redirect-url="/admin">
+                        <form class="form" id="kt_sign_in_two_factor_form" role="form" data-kt-redirect-url="/admin">
                             <!--begin::Icon-->
                             <div class="text-center mb-10">
                                 <img alt="Logo" class="mh-125px"
@@ -114,16 +114,19 @@ file that was distributed with this source code.
                                     </div>
                                     <!--begin::Input group-->
                                 </div>
-                                <div class="d-flex flex-center">
-                                    <button type="button" id="kt_sing_in_two_factor_submit"
+                                <div class="d-grid">
+                                    <button type="button" id="kt_sign_in_two_factor_submit"
                                             class="btn btn-lg btn-primary fw-bold">
-                                        <span class="indicator-label">Submit</span>
+                                        <span class="indicator-label">{{ 'submit'|trans({}, 'security') }}</span>
                                         <span class="indicator-progress">{{ 'please_wait'|trans({}, 'security') }}...
 										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                     </button>
                                 </div>
-                                <div class="text-center fw-semibold fs-5">
-                                    <span class="help-block sonata-ba-field-help"></span>
+                                <div class="text-center fw-semibold fs-5 my-5">
+                                    <span class="help-block sonata-ba-field-help">
+                                    <a href="{{ url('networking_init_cms_admin_send_one_time_code') }}" id="kt_sign_in_two_factor_request_code"
+                                        >{{ 'send_code_by_email'|trans({}, 'security') }}</a>
+                                    </span>
                                 </div>
                             </div>
                         </form>
@@ -140,10 +143,6 @@ file that was distributed with this source code.
                                 <!--begin::Title-->
                                 <h1 class="text-dark fw-bolder mb-3"
                                     data-kt-translate="sign-in-title">{{ 'link_login'|trans({}, 'SonataUserBundle') }}</h1>
-                                <!--end::Title-->
-                                <!--begin::Subtitle-->
-                                {#                            <div class="text-gray-500 fw-semibold fs-6">Your Social Campaigns</div> #}
-                                <!--end::Subtitle=-->
                             </div>
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
                             {% block sonata_user_login_error %}

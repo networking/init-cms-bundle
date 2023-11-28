@@ -256,8 +256,17 @@ class UserAdmin extends BaseUserAdmin
             ->add('firstname', null, ['required' => false])
             ->add('lastname', null, ['required' => false])
             ->add('locale', LocaleType::class, ['required' => false])
-            ->end()
-            ->with('Groups', ['class' => 'col-md-3'])
+            ->end();
+            if ($this->googleAuthEnabled) {
+                $form->with('Keys', ['label' => false])
+                    ->add(
+                        'twoStepVerificationCode',
+                        null,
+                        ['required' => false, 'disabled' => true]
+                    )
+                    ->end();
+            }
+            $form->with('Groups', ['class' => 'col-md-3'])
             ->add('groups', ModelType::class, [
                 'class' => Group::class,
                 'required' => false,
@@ -295,28 +304,6 @@ class UserAdmin extends BaseUserAdmin
                 ->end();
         }
 
-        if ($this->googleAuthEnabled) {
-            $form->with('Keys', ['label' => false])
-                ->add(
-                    'twoStepVerificationCode',
-                    null,
-                    ['required' => false, 'disabled' => true]
-                )
-                ->end();
 
-            if ($this->getSubject() == $this->tokenStorage->getToken()->getUser(
-            )
-            ) {
-                $user = $this->tokenStorage->getToken()->getUser();
-
-                if ($user instanceof UserInterface && $user->getTwoStepVerificationCode()) {
-                    $qrCodeUrl = $this->googleAuthenticatorHelper->getUrl($user);
-
-                    $form->with('Keys')
-                        ->add('qrCode', QrCodeType::class, ['required' => false, 'mapped' => false, 'qrCodeUrl' => $qrCodeUrl])
-                        ->end();
-                }
-            }
-        }
     }
 }

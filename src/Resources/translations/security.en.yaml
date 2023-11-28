@@ -88,3 +88,28 @@ confirm: "Confirm"
 continue: "Continue"
 
 please_wait: "Please wait"
+send_code_by_email: Don't have your authenticator app? Send a code by email
+one_time_code:
+    email:
+        subject: "Your one-time security code"
+        message:
+            line_1: >-
+                Hello %username%,
+    
+                Here is your one-time code:
+            line_2: >-
+                This code can be used only once to sign in to your account.
+    
+                This email was sent automatically, please do not reply.
+
+resetting:
+    email:
+        subject: "Resetting your password"
+        message: >-
+            Hello %username%,
+
+            To reset your password, please visit %confirmationUrl%.
+
+            This link can be used only once to reset your password.
+
+            This email was sent automatically, please do not reply.

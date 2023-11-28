@@ -4,8 +4,9 @@
 // Class Definition
 let KTSigninTwoFactor = function() {
     // Elements
-    var form;
-    var submitButton;
+    let form;
+    let submitButton;
+    let requestCodeLink
 
     const lang = localStorage.getItem("kt_auth_lang")??document.getElementsByTagName('html')[0].getAttribute('lang');
 
@@ -13,22 +14,30 @@ let KTSigninTwoFactor = function() {
         'en': {
             'login_success': 'You have been successfully verified!',
             'login_error': 'Sorry, please enter valid securtiy code and try again.',
-            'ok': 'Ok, got it!'
+            'ok': 'Ok, got it!',
+            'request_code_sent': 'Security code has been sent to your email address.',
+            'request_code_not_sent': 'Security code could not be sent to your email address. Please try again later.'
         },
         'de': {
             'login_success': 'Sie wurden erfolgreich verifiziert!',
             'login_error': 'Entschuldigung, bitte geben Sie einen gültigen Sicherheitscode ein und versuchen Sie es erneut.',
-            'ok': 'Ok, verstanden!'
+            'ok': 'Ok, verstanden!',
+            'request_code_sent': 'Sicherheitscode wurde an Ihre E-Mail-Adresse gesendet.',
+            'request_code_not_sent': 'Sicherheitscode konnte nicht an Ihre E-Mail-Adresse gesendet werden. Bitte versuchen Sie es später erneut.'
         },
         'fr': {
             'login_success': 'Vous avez été vérifié avec succès !',
             'login_error': 'Désolé, veuillez saisir un code de sécurité valide et réessayer.',
-            'ok': 'Ok, compris!'
+            'ok': 'Ok, compris!',
+            'request_code_sent': 'Le code de sécurité a été envoyé à votre adresse e-mail.',
+            'request_code_not_sent': 'Le code de sécurité n\'a pas pu être envoyé à votre adresse e-mail. Veuillez réessayer plus tard.'
         },
         'it': {
             'login_success': 'Sei stato verificato con successo!',
-            'login_error': 'Spiacente, inserire un codice di sicurezza valido e riprovare.',
-            'ok': 'Ok, capito!'
+            'login_error': 'Spiacente, inserire un codice di sicurezza valido e riprolete.',
+            'ok': 'Ok, capito!',
+            'request_code_sent': 'Il codice di sicurezza è stato inviato al tuo indirizzo email.',
+            'request_code_not_sent': 'Il codice di sicurezza non è stato inviato al tuo indirizzo email. Riprova più tardi.'
         },
     }
 
@@ -51,7 +60,7 @@ let KTSigninTwoFactor = function() {
     }
 
     // Handle form
-    var handleForm = async function(e) {
+    let handleForm = async function(e) {
         // Handle form submit
         submitButton.addEventListener('click', function (e) {
             e.preventDefault();
@@ -117,13 +126,13 @@ let KTSigninTwoFactor = function() {
         });
     }
 
-    var handleType = function() {
-        var input1 = form.querySelector("[name=code_1]");
-        var input2 = form.querySelector("[name=code_2]");
-        var input3 = form.querySelector("[name=code_3]");
-        var input4 = form.querySelector("[name=code_4]");
-        var input5 = form.querySelector("[name=code_5]");
-        var input6 = form.querySelector("[name=code_6]");
+    let handleType = function() {
+        let input1 = form.querySelector("[name=code_1]");
+        let input2 = form.querySelector("[name=code_2]");
+        let input3 = form.querySelector("[name=code_3]");
+        let input4 = form.querySelector("[name=code_4]");
+        let input5 = form.querySelector("[name=code_5]");
+        let input6 = form.querySelector("[name=code_6]");
 
         input1.focus();
 
@@ -175,16 +184,46 @@ let KTSigninTwoFactor = function() {
                 input.value = value;
             })
         })
-    }    
+    }
+
+    let handleSendLink = function(){
+        requestCodeLink.addEventListener('click', function (e) {
+            e.preventDefault()
+            let link = e.target;
+
+            axios.get(link.attributes.href.value, {...axiosConfig}).then((response) => {
+                Swal.fire({
+                    text: translate('request_code_sent'),
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false,
+                })
+            }).catch((error) => {
+                let message = translate('request_code_not_sent'),
+                if(error.response.data && error.response.data.message){
+                    message = error.response.data.message;
+                }
+                Swal.fire({
+                    text: message,
+                    icon: "error",
+                    timer: 4000,
+                    showConfirmButton: false,
+                })
+            })
+        })
+    }
 
     // Public functions
     return {
         // Initialization
         init: function() {
-            form = document.querySelector('#kt_sing_in_two_factor_form');
-            submitButton = document.querySelector('#kt_sing_in_two_factor_submit');
+            form = document.querySelector('#kt_sign_in_two_factor_form');
+            submitButton = document.querySelector('#kt_sign_in_two_factor_submit');
+            requestCodeLink = document.querySelector('#kt_sign_in_two_factor_request_code');
+
             handleForm();
             handleType();
+            handleSendLink();
         }
     };
 }();

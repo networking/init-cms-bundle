@@ -138,7 +138,6 @@ let KTSigninGeneral = function () {
                             let redirect = response.data.redirect;
                             Swal.fire({
                                     text: translate('login_success'),
-                                    type: "success",
                                     icon: "success",
                                     timer: 1000,
                                     showConfirmButton: false,

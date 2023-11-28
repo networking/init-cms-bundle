@@ -337,6 +337,10 @@
              	<source>help</source>
              	<target>Hilfe</target>
              </trans-unit>
+			<trans-unit id="quick_search">
+				<source>quick search</source>
+				<target>Schnell Suche</target>
+			</trans-unit>
         </body>
     </file>
 </xliff>
