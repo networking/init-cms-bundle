@@ -21,7 +21,7 @@ const CMSAdmin = {
     translations: null,
     collectionCounters: [],
 
-    async getTranslations() {
+    async getTranslator() {
         if (!this.translations) {
             this.translations = CMSTranslator.load();
         }
@@ -29,8 +29,9 @@ const CMSAdmin = {
         return this.translations;
     },
 
+
     async init() {
-        this.translations = await this.getTranslations();
+        this.translations = await this.getTranslator();
         CMSMediaEntity.init();
         CMSGalleryEntity.init();
         CMSModelList.init();
@@ -43,6 +44,7 @@ const CMSAdmin = {
         this.initCollectionType()
 
     },
+    
 
     initToolTips(el){
 

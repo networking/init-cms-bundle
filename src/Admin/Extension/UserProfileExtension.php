@@ -18,6 +18,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\UserBundle\Form\Type\RolesMatrixType;
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -48,7 +49,16 @@ class UserProfileExtension extends AbstractAdminExtension implements AdminExtens
             ->with('Profile', ['class' => 'col-md-6'])
             ->add('firstname', null, ['required' => false])
             ->add('lastname', null, ['required' => false])
-            ->add('locale', LocaleType::class, ['required' => false])
+
+            ->add(
+                'locale',
+                ChoiceType::class,
+                [
+                    'choices' => $form->getAdmin()->getLocaleChoices(),
+                    'choice_translation_domain' => false,
+                    'row_attr' => ['class' => 'form-floating mb-3'],
+                ]
+            )
             ->end();
 
 

@@ -1,6 +1,6 @@
 import {SelectBasic} from './select-basic';
 
-let Translator = await CMSAdmin.getTranslations()
+let Translator = await CMSAdmin.getTranslator()
 class MultipleCheckboxes extends SelectBasic {
     name = 'MultipleCheckboxes'
     label = Translator.trans('fields.multiple_checkboxes', {}, 'formGenerator')

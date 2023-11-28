@@ -10,7 +10,7 @@ let deleteUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_delete
 let lastTranslationSettingsHtml = null;
 let pageId = null;
 let erroredContainers = new Set();
-let Translator = await CMSAdmin.getTranslations();
+let Translator = await CMSAdmin.getTranslator();
 
 function initDropZone() {
 

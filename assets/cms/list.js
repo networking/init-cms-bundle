@@ -8,7 +8,7 @@ import en from './lang/datables/en.json';
 import it from './lang/datables/it.json';
 
 
-let Translator =  await CMSAdmin.getTranslations();
+let Translator =  await CMSAdmin.getTranslator();
 
 
 // Class definition

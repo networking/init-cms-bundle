@@ -1,5 +1,5 @@
 import FormCompnent from "./form-component";
-let Translator = await CMSAdmin.getTranslations()
+let Translator = await CMSAdmin.getTranslator()
 class SelectBasic extends FormCompnent{
     name = 'SelectBasic'
     label = Translator.trans('fields.dropdown_select_menu', {}, 'formGenerator')

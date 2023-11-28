@@ -10,7 +10,7 @@ import {
     updateCredential,
     registerCredential, authenticate,
 } from './client.js';
-let Translator = await CMSAdmin.getTranslations();
+let Translator = await CMSAdmin.getTranslator();
 const createPasskeyButtons = document.querySelectorAll('.create-passkey');
 const testSigninButton = document.querySelector('#test-signin');
 const deleteAuthenticatorButton = document.querySelector('#delete-authenticator');

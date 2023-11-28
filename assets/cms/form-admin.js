@@ -142,7 +142,7 @@ let initDropZone = ()=> {
     });
 }
 
-let saveForm = (event)=> {
+let saveForm = async (event)=> {
     event.preventDefault()
     let items = swappable.toArray();
 
@@ -168,23 +168,30 @@ let saveForm = (event)=> {
     if(objectId) {
         headers = {"X-HTTP-Method-Override": "PUT", ...axiosConfig.headers}
     }
-
-    axios.post(form.action, formData, {headers: headers}).then((response) => {
+    let scroll = new SmoothScroll();
+    try{
+        let response = await axios.post(form.action, formData, {headers: headers})
         CMSAdmin.createInitCmsMessageBox('success', response.data.message);
 
-        let scroll = new SmoothScroll();
         scroll.animateScroll(document.querySelector('#kt_app_toolbar'), null, {header: '#kt_app_header_wrapper'})
-
-    }).catch((error) => {
+    }catch (error){
+        let translator = await CMSAdmin.getTranslator()
         let data = error.response.data
-        if(error.response.data.message) {
-            CMSAdmin.createInitCmsMessageBox('danger', error.response.data.message);
+
+        if(error.response.data.detail) {
+
+            CMSAdmin.createInitCmsMessageBox('danger', translator.trans('Form is invalid', 'validators'));
         }
         data.violations.forEach((item) => {
-            let path = item.property_path
-            let message = item.message
+            let path = item.propertyPath
+            let message = item.title
 
             let field = form.querySelector('#'+form.dataset.uniqId + '_'+path)
+
+
+            if(!field) {
+                return
+            }
             field.classList.add('is-invalid')
             field.setAttribute('required', 'required')
 
@@ -195,9 +202,9 @@ let saveForm = (event)=> {
             field.insertAdjacentHTML('afterend', '<div class="invalid-feedback">' + message + '</div>')
         })
 
-        let scroll = new SmoothScroll();
+
         scroll.animateScroll(form, null, {header: '#kt_app_header_wrapper'})
-    })
+    }
 }
 
 let editBlock = (event) => {

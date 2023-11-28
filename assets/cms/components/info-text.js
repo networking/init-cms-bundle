@@ -1,7 +1,7 @@
 import ClassicEditor from '../../admin-theme/plugins/custom/ckeditor/ckeditor-classic.bundle.js';
 import FormCompnent from "./form-component";
 
-let Translator = await CMSAdmin.getTranslations()
+let Translator = await CMSAdmin.getTranslator()
 
 class InfoText extends FormCompnent{
     name = 'Infotext'

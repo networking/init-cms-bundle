@@ -1,6 +1,6 @@
 import FormCompnent from "./form-component";
 
-let Translator = await CMSAdmin.getTranslations()
+let Translator = await CMSAdmin.getTranslator()
 
 class FormLegend extends FormCompnent {
     name = 'Legend'

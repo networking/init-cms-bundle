@@ -199,7 +199,7 @@ let KTSigninTwoFactor = function() {
                     showConfirmButton: false,
                 })
             }).catch((error) => {
-                let message = translate('request_code_not_sent'),
+                let message = translate('request_code_not_sent')
                 if(error.response.data && error.response.data.message){
                     message = error.response.data.message;
                 }

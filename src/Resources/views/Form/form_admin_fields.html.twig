@@ -95,7 +95,7 @@ file that was distributed with this source code.
     {% if help_widget_popover.title is not same as(null) %}{{ block('help_widget_popover') }}{% endif %}
     {% with {attr: row_attr|merge({class: row_class})} %}{{ block('attributes') }}{% endwith %}>
     {%- if is_form_floating is same as(true) -%}
-        {%- set widget_attr = {attr: {placeholder: attr.placeholder|default('')}} -%}
+        {%- set widget_attr = {attr: {placeholder: attr.placeholder|default(label)}} -%}
         <div class="form-floating">
             {{- form_widget(form, widget_attr ) -}}
             {{- form_label(form) -}}

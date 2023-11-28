@@ -1,6 +1,6 @@
 import FormCompnent from "./form-component";
 
-let Translator = await CMSAdmin.getTranslations()
+let Translator = await CMSAdmin.getTranslator()
 
 export default class TextInput extends FormCompnent{
     name = 'TextInput'

@@ -368,7 +368,7 @@ class UserAdmin extends BaseUserAdmin
      * the value for easy display in a dropdown select for example
      * example: array('de_CH' => 'Deutsch', 'en_GB' => 'English').
      */
-    protected function getLocaleChoices(): array
+    public  function getLocaleChoices(): array
     {
         $localeChoices = [];
 
